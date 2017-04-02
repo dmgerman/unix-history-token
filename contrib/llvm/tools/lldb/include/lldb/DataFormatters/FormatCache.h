@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- FormatCache.h ---------------------------------------------*- C++ -*-===//
+comment|//===-- FormatCache.h ---------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -74,13 +78,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt

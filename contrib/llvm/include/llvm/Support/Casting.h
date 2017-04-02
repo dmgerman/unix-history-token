@@ -722,7 +722,7 @@ operator|,
 name|class
 name|Y
 operator|>
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|LLVM_NODISCARD
 specifier|inline
 name|bool
 name|isa
@@ -1497,7 +1497,7 @@ operator|,
 name|class
 name|Y
 operator|>
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|LLVM_NODISCARD
 specifier|inline
 name|typename
 name|std
@@ -1574,7 +1574,7 @@ operator|,
 name|class
 name|Y
 operator|>
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|LLVM_NODISCARD
 specifier|inline
 name|typename
 name|std
@@ -1650,7 +1650,7 @@ operator|,
 name|class
 name|Y
 operator|>
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|LLVM_NODISCARD
 specifier|inline
 name|typename
 name|cast_retty
@@ -1740,7 +1740,7 @@ operator|,
 name|class
 name|Y
 operator|>
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|LLVM_NODISCARD
 specifier|inline
 name|typename
 name|std
@@ -1804,7 +1804,7 @@ operator|,
 name|class
 name|Y
 operator|>
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|LLVM_NODISCARD
 specifier|inline
 name|typename
 name|cast_retty
@@ -1851,7 +1851,7 @@ operator|,
 name|class
 name|Y
 operator|>
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|LLVM_NODISCARD
 specifier|inline
 name|typename
 name|cast_retty
@@ -1911,7 +1911,7 @@ operator|,
 name|class
 name|Y
 operator|>
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|LLVM_NODISCARD
 specifier|inline
 name|typename
 name|std
@@ -1979,7 +1979,7 @@ operator|,
 name|class
 name|Y
 operator|>
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|LLVM_NODISCARD
 specifier|inline
 name|typename
 name|std
@@ -2046,7 +2046,7 @@ operator|,
 name|class
 name|Y
 operator|>
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|LLVM_NODISCARD
 specifier|inline
 name|typename
 name|cast_retty

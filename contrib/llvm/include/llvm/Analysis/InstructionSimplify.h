@@ -1386,11 +1386,14 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// Given operands for an TruncInst, fold the result or return null.
+comment|/// Given operands for a CastInst, fold the result or return null.
 name|Value
 modifier|*
-name|SimplifyTruncInst
+name|SimplifyCastInst
 parameter_list|(
+name|unsigned
+name|CastOpc
+parameter_list|,
 name|Value
 modifier|*
 name|Op

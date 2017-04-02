@@ -72,10 +72,11 @@ block|{
 name|class
 name|Target
 decl_stmt|;
-specifier|extern
 name|Target
-name|TheMSP430Target
-decl_stmt|;
+modifier|&
+name|getTheMSP430Target
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

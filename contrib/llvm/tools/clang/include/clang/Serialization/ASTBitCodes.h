@@ -1147,7 +1147,23 @@ comment|/// \brief Record code for \#pragma ms_struct options.
 name|POINTERS_TO_MEMBERS_PRAGMA_OPTIONS
 init|=
 literal|56
-block|}
+block|,
+comment|/// \brief Number of unmatched #pragma clang cuda_force_host_device begin
+comment|/// directives we've seen.
+name|CUDA_PRAGMA_FORCE_HOST_DEVICE_DEPTH
+init|=
+literal|57
+block|,
+comment|/// \brief Record code for types associated with OpenCL extensions.
+name|OPENCL_EXTENSION_TYPES
+init|=
+literal|58
+block|,
+comment|/// \brief Record code for declarations associated with OpenCL extensions.
+name|OPENCL_EXTENSION_DECLS
+init|=
+literal|59
+block|,     }
 enum|;
 comment|/// \brief Record types used within a source manager block.
 enum|enum
@@ -1334,6 +1350,12 @@ comment|/// must be textually included.
 name|SUBMODULE_PRIVATE_TEXTUAL_HEADER
 init|=
 literal|15
+block|,
+comment|/// \brief Specifies some declarations with initializers that must be
+comment|/// emitted to initialize the module.
+name|SUBMODULE_INITIALIZERS
+init|=
+literal|16
 block|,     }
 enum|;
 comment|/// \brief Record types used within a comments block.
@@ -1837,6 +1859,11 @@ comment|/// \brief A PipeType record.
 name|TYPE_PIPE
 init|=
 literal|43
+block|,
+comment|/// \brief An ObjCTypeParamType record.
+name|TYPE_OBJC_TYPE_PARAM
+init|=
+literal|44
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -2096,6 +2123,12 @@ block|,
 comment|/// \brief A ParmVarDecl record.
 name|DECL_PARM_VAR
 block|,
+comment|/// \brief A DecompositionDecl record.
+name|DECL_DECOMPOSITION
+block|,
+comment|/// \brief A BindingDecl record.
+name|DECL_BINDING
+block|,
 comment|/// \brief A FileScopeAsmDecl record.
 name|DECL_FILE_SCOPE_ASM
 block|,
@@ -2136,6 +2169,9 @@ block|,
 comment|/// \brief A UsingDecl record.
 name|DECL_USING
 block|,
+comment|/// \brief A UsingPackDecl record.
+name|DECL_USING_PACK
+block|,
 comment|/// \brief A UsingShadowDecl record.
 name|DECL_USING_SHADOW
 block|,
@@ -2153,6 +2189,9 @@ name|DECL_UNRESOLVED_USING_TYPENAME
 block|,
 comment|/// \brief A LinkageSpecDecl record.
 name|DECL_LINKAGE_SPEC
+block|,
+comment|/// \brief An ExportDecl record.
+name|DECL_EXPORT
 block|,
 comment|/// \brief A CXXRecordDecl record.
 name|DECL_CXX_RECORD
@@ -2420,11 +2459,17 @@ block|,
 comment|/// \brief A DesignatedInitUpdateExpr record.
 name|EXPR_DESIGNATED_INIT_UPDATE
 block|,
-comment|/// \brief An ImplicitValueInitExpr record.
-name|EXPR_IMPLICIT_VALUE_INIT
-block|,
 comment|/// \brief An NoInitExpr record.
 name|EXPR_NO_INIT
+block|,
+comment|/// \brief An ArrayInitLoopExpr record.
+name|EXPR_ARRAY_INIT_LOOP
+block|,
+comment|/// \brief An ArrayInitIndexExpr record.
+name|EXPR_ARRAY_INIT_INDEX
+block|,
+comment|/// \brief An ImplicitValueInitExpr record.
+name|EXPR_IMPLICIT_VALUE_INIT
 block|,
 comment|/// \brief A VAArgExpr record.
 name|EXPR_VA_ARG
@@ -2775,6 +2820,26 @@ block|,
 name|STMT_OMP_DISTRIBUTE_SIMD_DIRECTIVE
 block|,
 name|STMT_OMP_TARGET_PARALLEL_FOR_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_TEAMS_DISTRIBUTE_DIRECTIVE
+block|,
+name|STMT_OMP_TEAMS_DISTRIBUTE_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_TEAMS_DISTRIBUTE_PARALLEL_FOR_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_TEAMS_DISTRIBUTE_PARALLEL_FOR_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_TEAMS_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_TEAMS_DISTRIBUTE_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_TEAMS_DISTRIBUTE_PARALLEL_FOR_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_TEAMS_DISTRIBUTE_PARALLEL_FOR_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_TEAMS_DISTRIBUTE_SIMD_DIRECTIVE
 block|,
 name|EXPR_OMP_ARRAY_SECTION
 block|,

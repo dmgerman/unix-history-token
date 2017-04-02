@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- lld/Core/LinkingContext.h - Linker Target Info Interface -----------===//
+comment|//===- lld/Core/LinkingContext.h - Linker Target Info Interface -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,25 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lld/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lld/Core/LLVM.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lld/Core/Node.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lld/Core/Reference.h"
 end_include
 
 begin_include
@@ -76,13 +58,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorOr.h"
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -512,8 +530,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|File
-operator|>
-expr|>
+operator|>>
 operator|&
 argument_list|)
 decl|const
@@ -859,6 +876,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLD_CORE_LINKING_CONTEXT_H
+end_comment
 
 end_unit
 

@@ -90,24 +90,141 @@ block|{
 name|class
 name|MachineRegisterInfo
 decl_stmt|;
+name|class
+name|AMDGPUImagePseudoSourceValue
+range|:
+name|public
+name|PseudoSourceValue
+block|{
+name|public
+operator|:
+name|explicit
+name|AMDGPUImagePseudoSourceValue
+argument_list|()
+operator|:
+name|PseudoSourceValue
+argument_list|(
+argument|PseudoSourceValue::TargetCustom
+argument_list|)
+block|{ }
+name|bool
+name|isConstant
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// This should probably be true for most images, but we will start by being
+comment|// conservative.
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isAliased
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// FIXME: If we ever change image intrinsics to accept fat pointers, then
+comment|// this could be true for some cases.
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|mayAlias
+argument_list|(
+argument|const MachineFrameInfo*
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// FIXME: If we ever change image intrinsics to accept fat pointers, then
+comment|// this could be true for some cases.
+return|return
+name|false
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|AMDGPUBufferPseudoSourceValue
+operator|:
+name|public
+name|PseudoSourceValue
+block|{
+name|public
+operator|:
+name|explicit
+name|AMDGPUBufferPseudoSourceValue
+argument_list|()
+operator|:
+name|PseudoSourceValue
+argument_list|(
+argument|PseudoSourceValue::TargetCustom
+argument_list|)
+block|{ }
+name|bool
+name|isConstant
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// This should probably be true for most images, but we will start by being
+comment|// conservative.
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isAliased
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// FIXME: If we ever change image intrinsics to accept fat pointers, then
+comment|// this could be true for some cases.
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|mayAlias
+argument_list|(
+argument|const MachineFrameInfo*
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// FIXME: If we ever change image intrinsics to accept fat pointers, then
+comment|// this could be true for some cases.
+return|return
+name|false
+return|;
+block|}
+expr|}
+block|;
 comment|/// This class keeps track of the SPI_SP_INPUT_ADDR config register, which
 comment|/// tells the hardware which interpolation parameters to load.
 name|class
 name|SIMachineFunctionInfo
 name|final
-range|:
+operator|:
 name|public
 name|AMDGPUMachineFunction
 block|{
 comment|// FIXME: This should be removed and getPreloadedValue moved here.
 name|friend
-expr|struct
+name|class
 name|SIRegisterInfo
-block|;
-name|void
-name|anchor
-argument_list|()
-name|override
 block|;
 name|unsigned
 name|TIDReg
@@ -119,6 +236,10 @@ name|ScratchRSrcReg
 block|;
 name|unsigned
 name|ScratchWaveOffsetReg
+block|;
+comment|// Input registers for non-HSA ABI
+name|unsigned
+name|PrivateMemoryPtrUserSGPR
 block|;
 comment|// Input registers setup for the HSA ABI.
 comment|// User SGPRs in allocation order.
@@ -175,12 +296,29 @@ block|;
 name|bool
 name|ReturnsVoid
 block|;
+comment|// A pair of default/requested minimum/maximum flat work group sizes.
+comment|// Minimum - first, maximum - second.
+name|std
+operator|::
+name|pair
+operator|<
 name|unsigned
-name|MaximumWorkGroupSize
+block|,
+name|unsigned
+operator|>
+name|FlatWorkGroupSizes
 block|;
-comment|// Number of reserved VGPRs for debugger usage.
+comment|// A pair of default/requested minimum/maximum number of waves per execution
+comment|// unit. Minimum - first, maximum - second.
+name|std
+operator|::
+name|pair
+operator|<
 name|unsigned
-name|DebuggerReservedVGPRCount
+block|,
+name|unsigned
+operator|>
+name|WavesPerEU
 block|;
 comment|// Stack object indices for work group IDs.
 name|std
@@ -203,6 +341,12 @@ block|,
 literal|3
 operator|>
 name|DebuggerWorkItemIDStackObjectIndices
+block|;
+name|AMDGPUBufferPseudoSourceValue
+name|BufferPSV
+block|;
+name|AMDGPUImagePseudoSourceValue
+name|ImagePSV
 block|;
 name|public
 operator|:
@@ -243,9 +387,6 @@ block|;
 name|bool
 name|HasNonSpillStackObjects
 block|;
-name|bool
-name|HasFlatInstructions
-block|;
 name|unsigned
 name|NumSpilledSGPRs
 block|;
@@ -269,12 +410,12 @@ operator|:
 literal|1
 block|;
 name|bool
-name|DispatchID
+name|KernargSegmentPtr
 operator|:
 literal|1
 block|;
 name|bool
-name|KernargSegmentPtr
+name|DispatchID
 operator|:
 literal|1
 block|;
@@ -338,6 +479,14 @@ literal|1
 block|;
 name|bool
 name|WorkItemIDZ
+operator|:
+literal|1
+block|;
+comment|// Private memory buffer
+comment|// Compute directly in sgpr[0:1]
+comment|// Other shaders indirect 64-bits at sgpr[0:1]
+name|bool
+name|PrivateMemoryInputPtr
 operator|:
 literal|1
 block|;
@@ -538,7 +687,25 @@ name|TRI
 argument_list|)
 block|;
 name|unsigned
+name|addDispatchID
+argument_list|(
+specifier|const
+name|SIRegisterInfo
+operator|&
+name|TRI
+argument_list|)
+block|;
+name|unsigned
 name|addFlatScratchInit
+argument_list|(
+specifier|const
+name|SIRegisterInfo
+operator|&
+name|TRI
+argument_list|)
+block|;
+name|unsigned
+name|addPrivateMemoryPtr
 argument_list|(
 specifier|const
 name|SIRegisterInfo
@@ -670,21 +837,21 @@ name|QueuePtr
 return|;
 block|}
 name|bool
-name|hasDispatchID
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DispatchID
-return|;
-block|}
-name|bool
 name|hasKernargSegmentPtr
 argument_list|()
 specifier|const
 block|{
 return|return
 name|KernargSegmentPtr
+return|;
+block|}
+name|bool
+name|hasDispatchID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DispatchID
 return|;
 block|}
 name|bool
@@ -795,6 +962,15 @@ return|return
 name|WorkItemIDZ
 return|;
 block|}
+name|bool
+name|hasPrivateMemoryInputPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PrivateMemoryInputPtr
+return|;
+block|}
 name|unsigned
 name|getNumUserSGPRs
 argument_list|()
@@ -895,6 +1071,15 @@ return|return
 name|QueuePtrUserSGPR
 return|;
 block|}
+name|unsigned
+name|getPrivateMemoryPtrUserSGPR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PrivateMemoryPtrUserSGPR
+return|;
+block|}
 name|bool
 name|hasSpilledSGPRs
 argument_list|()
@@ -951,25 +1136,6 @@ block|{
 name|HasNonSpillStackObjects
 operator|=
 name|StackObject
-block|;   }
-name|bool
-name|hasFlatInstructions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasFlatInstructions
-return|;
-block|}
-name|void
-name|setHasFlatInstructions
-argument_list|(
-argument|bool UseFlat = true
-argument_list|)
-block|{
-name|HasFlatInstructions
-operator|=
-name|UseFlat
 block|;   }
 name|unsigned
 name|getNumSpilledSGPRs
@@ -1066,14 +1232,88 @@ name|ReturnsVoid
 operator|=
 name|Value
 block|;   }
-comment|/// \returns Number of reserved VGPRs for debugger usage.
+comment|/// \returns A pair of default/requested minimum/maximum flat work group sizes
+comment|/// for this function.
+name|std
+operator|::
+name|pair
+operator|<
 name|unsigned
-name|getDebuggerReservedVGPRCount
+block|,
+name|unsigned
+operator|>
+name|getFlatWorkGroupSizes
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DebuggerReservedVGPRCount
+name|FlatWorkGroupSizes
+return|;
+block|}
+comment|/// \returns Default/requested minimum flat work group size for this function.
+name|unsigned
+name|getMinFlatWorkGroupSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FlatWorkGroupSizes
+operator|.
+name|first
+return|;
+block|}
+comment|/// \returns Default/requested maximum flat work group size for this function.
+name|unsigned
+name|getMaxFlatWorkGroupSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FlatWorkGroupSizes
+operator|.
+name|second
+return|;
+block|}
+comment|/// \returns A pair of default/requested minimum/maximum number of waves per
+comment|/// execution unit.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|getWavesPerEU
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WavesPerEU
+return|;
+block|}
+comment|/// \returns Default/requested minimum number of waves per execution unit.
+name|unsigned
+name|getMinWavesPerEU
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WavesPerEU
+operator|.
+name|first
+return|;
+block|}
+comment|/// \returns Default/requested maximum number of waves per execution unit.
+name|unsigned
+name|getMaxWavesPerEU
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WavesPerEU
+operator|.
+name|second
 return|;
 block|}
 comment|/// \returns Stack object index for \p Dim's work group ID.
@@ -1284,13 +1524,31 @@ literal|"unexpected dimension"
 argument_list|)
 expr_stmt|;
 block|}
-name|unsigned
-name|getMaximumWorkGroupSize
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
 specifier|const
-block|; }
+name|AMDGPUBufferPseudoSourceValue
+operator|*
+name|getBufferPSV
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|BufferPSV
+return|;
+block|}
+specifier|const
+name|AMDGPUImagePseudoSourceValue
+operator|*
+name|getImagePSV
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|ImagePSV
+return|;
+block|}
+expr|}
 block|;  }
 end_decl_stmt
 

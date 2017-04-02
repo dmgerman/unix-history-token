@@ -691,6 +691,25 @@ operator|<
 literal|256
 return|;
 block|}
+name|bool
+name|isJumpTableRelative
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|getTargetMachine
+argument_list|()
+operator|.
+name|isPositionIndependent
+argument_list|()
+operator|||
+name|ABI
+operator|.
+name|IsN64
+argument_list|()
+return|;
+block|}
 name|protected
 operator|:
 name|SDValue
@@ -1418,15 +1437,6 @@ specifier|const
 block|;
 comment|// Lower Operand specifics
 name|SDValue
-name|lowerBR_JT
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|lowerBRCOND
 argument_list|(
 argument|SDValue Op
@@ -1670,7 +1680,7 @@ argument|SmallVectorImpl<SDValue>&MemOpChains
 argument_list|,
 argument|SDValue StackPtr
 argument_list|,
-argument|MachineFrameInfo *MFI
+argument|MachineFrameInfo&MFI
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,

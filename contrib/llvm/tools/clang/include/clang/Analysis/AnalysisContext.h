@@ -1518,9 +1518,12 @@ specifier|const
 name|Decl
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|AnalysisDeclContext
-operator|*
-operator|>
+operator|>>
 name|ContextMap
 expr_stmt|;
 name|ContextMap

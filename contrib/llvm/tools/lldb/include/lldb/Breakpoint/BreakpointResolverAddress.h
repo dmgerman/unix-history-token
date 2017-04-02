@@ -76,8 +76,10 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class BreakpointResolverAddress BreakpointResolverAddress.h "lldb/Breakpoint/BreakpointResolverAddress.h"
-comment|/// @brief This class sets breakpoints on a given Address.  This breakpoint only takes
+comment|/// @class BreakpointResolverAddress BreakpointResolverAddress.h
+comment|/// "lldb/Breakpoint/BreakpointResolverAddress.h"
+comment|/// @brief This class sets breakpoints on a given Address.  This breakpoint only
+comment|/// takes
 comment|/// once, and then it won't attempt to reset itself.
 comment|//----------------------------------------------------------------------
 name|class
@@ -119,6 +121,34 @@ argument_list|)
 block|;
 operator|~
 name|BreakpointResolverAddress
+argument_list|()
+name|override
+block|;
+specifier|static
+name|BreakpointResolver
+operator|*
+name|CreateFromStructuredData
+argument_list|(
+name|Breakpoint
+operator|*
+name|bkpt
+argument_list|,
+specifier|const
+name|StructuredData
+operator|::
+name|Dictionary
+operator|&
+name|options_dict
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
 argument_list|()
 name|override
 block|;
@@ -227,12 +257,15 @@ operator|::
 name|addr_t
 name|m_resolved_addr
 block|;
-comment|// The current value of the resolved load address for this breakpoint,
+comment|// The current value of the resolved load
+comment|// address for this breakpoint,
 name|FileSpec
 name|m_module_filespec
 block|;
-comment|// If this filespec is Valid, and m_addr is an offset, then it will be converted
-comment|// to a Section+Offset address in this module, whenever that module gets around to
+comment|// If this filespec is Valid, and m_addr is an
+comment|// offset, then it will be converted
+comment|// to a Section+Offset address in this module, whenever that module gets
+comment|// around to
 comment|// being loaded.
 name|private
 operator|:

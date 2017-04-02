@@ -362,7 +362,7 @@ parameter_list|,
 name|DefineMatcher
 parameter_list|)
 define|\
-value|namespace internal {                                                         \   class matcher_##DefineMatcher##Matcher                                       \       : public ::clang::ast_matchers::internal::MatcherInterface<Type> {       \   public:                                                                      \     explicit matcher_##DefineMatcher##Matcher() {}                             \     bool matches(const Type&Node,                                             \                  ::clang::ast_matchers::internal::ASTMatchFinder *Finder,      \                  ::clang::ast_matchers::internal::BoundNodesTreeBuilder        \                      *Builder) const override;                                 \   };                                                                           \   }                                                                            \   inline ::clang::ast_matchers::internal::Matcher<Type> DefineMatcher() {      \     return ::clang::ast_matchers::internal::makeMatcher(                       \         new internal::matcher_##DefineMatcher##Matcher());                     \   }                                                                            \   inline bool internal::matcher_##DefineMatcher##Matcher::matches(             \       const Type&Node,                                                        \       ::clang::ast_matchers::internal::ASTMatchFinder *Finder,                 \       ::clang::ast_matchers::internal::BoundNodesTreeBuilder *Builder) const
+value|namespace internal {                                                         \   class matcher_##DefineMatcher##Matcher                                       \       : public ::clang::ast_matchers::internal::MatcherInterface<Type> {       \   public:                                                                      \     explicit matcher_##DefineMatcher##Matcher() = default;                     \     bool matches(const Type&Node,                                             \                  ::clang::ast_matchers::internal::ASTMatchFinder *Finder,      \                  ::clang::ast_matchers::internal::BoundNodesTreeBuilder        \                      *Builder) const override;                                 \   };                                                                           \   }                                                                            \   inline ::clang::ast_matchers::internal::Matcher<Type> DefineMatcher() {      \     return ::clang::ast_matchers::internal::makeMatcher(                       \         new internal::matcher_##DefineMatcher##Matcher());                     \   }                                                                            \   inline bool internal::matcher_##DefineMatcher##Matcher::matches(             \       const Type&Node,                                                        \       ::clang::ast_matchers::internal::ASTMatchFinder *Finder,                 \       ::clang::ast_matchers::internal::BoundNodesTreeBuilder *Builder) const
 end_define
 
 begin_comment
@@ -880,6 +880,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_ASTMATCHERS_ASTMATCHERSMACROS_H
+end_comment
 
 end_unit
 

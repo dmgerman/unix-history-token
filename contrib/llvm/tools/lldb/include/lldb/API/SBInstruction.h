@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDefines.h"
+file|"lldb/API/SBData.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBData.h"
+file|"lldb/API/SBDefines.h"
 end_include
 
 begin_include
@@ -62,7 +62,11 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|// There's a lot to be fixed here, but need to wait for underlying insn implementation
+comment|// There's a lot to be fixed here, but need to wait for underlying insn
+end_comment
+
+begin_comment
+comment|// implementation
 end_comment
 
 begin_comment
@@ -219,7 +223,9 @@ modifier|*
 name|triple
 parameter_list|)
 function_decl|;
-comment|// triple is to specify the architecture, e.g. 'armv6' or 'armv7-apple-ios'
+comment|// triple is to specify the
+comment|// architecture, e.g. 'armv6' or
+comment|// 'armv7-apple-ios'
 name|bool
 name|TestEmulation
 argument_list|(

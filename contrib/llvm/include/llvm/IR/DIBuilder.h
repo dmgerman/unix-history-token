@@ -66,7 +66,55 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/MapVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/DebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DebugInfoMetadata.h"
 end_include
 
 begin_include
@@ -78,13 +126,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/ValueHandle.h"
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -95,10 +149,16 @@ name|class
 name|BasicBlock
 decl_stmt|;
 name|class
-name|Instruction
+name|Constant
 decl_stmt|;
 name|class
 name|Function
+decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
+name|class
+name|LLVMContext
 decl_stmt|;
 name|class
 name|Module
@@ -106,23 +166,6 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-name|class
-name|Constant
-decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
-name|class
-name|StringRef
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|ArrayRef
-expr_stmt|;
 name|class
 name|DIBuilder
 block|{
@@ -193,6 +236,21 @@ literal|4
 operator|>
 name|AllImportedModules
 expr_stmt|;
+comment|/// Map Macro parent (which can be DIMacroFile or nullptr) to a list of
+comment|/// Metadata all of type DIMacroNode.
+comment|/// DIMacroNode's with nullptr parent are DICompileUnit direct children.
+name|MapVector
+operator|<
+name|MDNode
+operator|*
+operator|,
+name|SetVector
+operator|<
+name|Metadata
+operator|*
+operator|>>
+name|AllMacrosPerParent
+expr_stmt|;
 comment|/// Track nodes that may be unresolved.
 name|SmallVector
 operator|<
@@ -223,26 +281,6 @@ literal|1
 operator|>>
 name|PreservedVariables
 expr_stmt|;
-name|DIBuilder
-argument_list|(
-specifier|const
-name|DIBuilder
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|DIBuilder
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 comment|/// Create a temporary.
 comment|///
 comment|/// Create an \a temporary node and track it in \a UnresolvedNodes.
@@ -273,6 +311,27 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
+name|DIBuilder
+argument_list|(
+specifier|const
+name|DIBuilder
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|DIBuilder
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|DIBuilder
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 comment|/// Construct any deferred debug info descriptors.
 name|void
 name|finalize
@@ -281,8 +340,7 @@ function_decl|;
 comment|/// A CompileUnit provides an anchor for all debugging
 comment|/// information generated during this instance of compilation.
 comment|/// \param Lang          Source programming language, eg. dwarf::DW_LANG_C99
-comment|/// \param File          File name
-comment|/// \param Dir           Directory
+comment|/// \param File          File info.
 comment|/// \param Producer      Identify the producer of debugging information
 comment|///                      and code.  Usually this is a compiler
 comment|///                      version string.
@@ -305,11 +363,9 @@ argument_list|(
 name|unsigned
 name|Lang
 argument_list|,
-name|StringRef
+name|DIFile
+operator|*
 name|File
-argument_list|,
-name|StringRef
-name|Dir
 argument_list|,
 name|StringRef
 name|Producer
@@ -344,19 +400,94 @@ name|uint64_t
 name|DWOId
 operator|=
 literal|0
+argument_list|,
+name|bool
+name|SplitDebugInlining
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
-comment|/// Create a file descriptor to hold debugging information
-comment|/// for a file.
+comment|/// Create a file descriptor to hold debugging information for a file.
+comment|/// \param Filename  File name.
+comment|/// \param Directory Directory.
+comment|/// \param CSKind    Checksum kind (e.g. CSK_None, CSK_MD5, CSK_SHA1, etc.).
+comment|/// \param Checksum  Checksum data.
 name|DIFile
 modifier|*
 name|createFile
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Filename
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Directory
+argument_list|,
+name|DIFile
+operator|::
+name|ChecksumKind
+name|CSKind
+operator|=
+name|DIFile
+operator|::
+name|CSK_None
+argument_list|,
+name|StringRef
+name|Checksum
+operator|=
+name|StringRef
+argument_list|()
+argument_list|)
+decl_stmt|;
+comment|/// Create debugging information entry for a macro.
+comment|/// \param Parent     Macro parent (could be nullptr).
+comment|/// \param Line       Source line number where the macro is defined.
+comment|/// \param MacroType  DW_MACINFO_define or DW_MACINFO_undef.
+comment|/// \param Name       Macro name.
+comment|/// \param Value      Macro value.
+name|DIMacro
+modifier|*
+name|createMacro
+parameter_list|(
+name|DIMacroFile
+modifier|*
+name|Parent
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|unsigned
+name|MacroType
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+name|StringRef
+name|Value
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
+function_decl|;
+comment|/// Create debugging information temporary entry for a macro file.
+comment|/// List of macro node direct children will be calculated by DIBuilder,
+comment|/// using the \p Parent relationship.
+comment|/// \param Parent     Macro file parent (could be nullptr).
+comment|/// \param Line       Source line number where the macro file is included.
+comment|/// \param File       File descriptor containing the name of the macro file.
+name|DIMacroFile
+modifier|*
+name|createTempMacroFile
+parameter_list|(
+name|DIMacroFile
+modifier|*
+name|Parent
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|DIFile
+modifier|*
+name|File
 parameter_list|)
 function_decl|;
 comment|/// Create a single enumerator value.
@@ -390,7 +521,6 @@ comment|/// Create debugging information entry for a basic
 comment|/// type.
 comment|/// \param Name        Type name.
 comment|/// \param SizeInBits  Size of the type.
-comment|/// \param AlignInBits Type alignment.
 comment|/// \param Encoding    DWARF encoding code, e.g. dwarf::DW_ATE_float.
 name|DIBasicType
 modifier|*
@@ -401,9 +531,6 @@ name|Name
 parameter_list|,
 name|uint64_t
 name|SizeInBits
-parameter_list|,
-name|uint64_t
-name|AlignInBits
 parameter_list|,
 name|unsigned
 name|Encoding
@@ -441,7 +568,7 @@ parameter_list|,
 name|uint64_t
 name|SizeInBits
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 init|=
 literal|0
@@ -460,29 +587,33 @@ comment|/// \param Class Type for which this pointer points to members of.
 name|DIDerivedType
 modifier|*
 name|createMemberPointerType
-parameter_list|(
+argument_list|(
 name|DIType
-modifier|*
+operator|*
 name|PointeeTy
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|Class
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-parameter_list|,
-name|uint64_t
+argument_list|,
+name|uint32_t
 name|AlignInBits
-init|=
+operator|=
 literal|0
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-init|=
-literal|0
-parameter_list|)
-function_decl|;
+operator|=
+name|DINode
+operator|::
+name|FlagZero
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information entry for a c++
 comment|/// style reference or rvalue reference type.
 name|DIDerivedType
@@ -501,7 +632,7 @@ name|SizeInBits
 init|=
 literal|0
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 init|=
 literal|0
@@ -560,22 +691,24 @@ comment|///                     e.g. private
 name|DIDerivedType
 modifier|*
 name|createInheritance
-parameter_list|(
+argument_list|(
 name|DIType
-modifier|*
+operator|*
 name|Ty
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|BaseTy
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|BaseOffset
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information entry for a member.
 comment|/// \param Scope        Member scope.
 comment|/// \param Name         Member name.
@@ -589,45 +722,46 @@ comment|/// \param Ty           Parent type.
 name|DIDerivedType
 modifier|*
 name|createMemberType
-parameter_list|(
+argument_list|(
 name|DIScope
-modifier|*
+operator|*
 name|Scope
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|File
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNo
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-parameter_list|,
-name|uint64_t
+argument_list|,
+name|uint32_t
 name|AlignInBits
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|OffsetInBits
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|Ty
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information entry for a bit field member.
 comment|/// \param Scope               Member scope.
 comment|/// \param Name                Member name.
 comment|/// \param File                File where this member is defined.
 comment|/// \param LineNo              Line number.
 comment|/// \param SizeInBits          Member size.
-comment|/// \param AlignInBits         Member alignment.
 comment|/// \param OffsetInBits        Member offset.
 comment|/// \param StorageOffsetInBits Member storage offset.
 comment|/// \param Flags               Flags to encode member attribute.
@@ -635,41 +769,40 @@ comment|/// \param Ty                  Parent type.
 name|DIDerivedType
 modifier|*
 name|createBitFieldMemberType
-parameter_list|(
+argument_list|(
 name|DIScope
-modifier|*
+operator|*
 name|Scope
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|File
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNo
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-parameter_list|,
-name|uint64_t
-name|AlignInBits
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|OffsetInBits
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|StorageOffsetInBits
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|Ty
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information entry for a
 comment|/// C++ static data member.
 comment|/// \param Scope      Member scope.
@@ -679,6 +812,7 @@ comment|/// \param LineNo     Line number.
 comment|/// \param Ty         Type of the static member.
 comment|/// \param Flags      Flags to encode member attribute, e.g. private.
 comment|/// \param Val        Const initializer of the member.
+comment|/// \param AlignInBits  Member alignment.
 name|DIDerivedType
 modifier|*
 name|createStaticMemberType
@@ -701,14 +835,19 @@ name|DIType
 operator|*
 name|Ty
 argument_list|,
-name|unsigned
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
 argument_list|,
-name|llvm
-operator|::
 name|Constant
 operator|*
 name|Val
+argument_list|,
+name|uint32_t
+name|AlignInBits
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// Create debugging information entry for Objective-C
@@ -725,38 +864,40 @@ comment|/// \param PropertyNode Property associated with this ivar.
 name|DIDerivedType
 modifier|*
 name|createObjCIVar
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|File
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNo
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-parameter_list|,
-name|uint64_t
+argument_list|,
+name|uint32_t
 name|AlignInBits
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|OffsetInBits
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|Ty
-parameter_list|,
+argument_list|,
 name|MDNode
-modifier|*
+operator|*
 name|PropertyNode
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information entry for Objective-C
 comment|/// property.
 comment|/// \param Name         Property name.
@@ -813,58 +954,60 @@ comment|/// \param UniqueIdentifier A unique identifier for the class.
 name|DICompositeType
 modifier|*
 name|createClassType
-parameter_list|(
+argument_list|(
 name|DIScope
-modifier|*
+operator|*
 name|Scope
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|File
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNumber
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-parameter_list|,
-name|uint64_t
+argument_list|,
+name|uint32_t
 name|AlignInBits
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|OffsetInBits
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|DerivedFrom
-parameter_list|,
+argument_list|,
 name|DINodeArray
 name|Elements
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|VTableHolder
-init|=
+operator|=
 name|nullptr
-parameter_list|,
+argument_list|,
 name|MDNode
-modifier|*
+operator|*
 name|TemplateParms
-init|=
+operator|=
 name|nullptr
-parameter_list|,
+argument_list|,
 name|StringRef
 name|UniqueIdentifier
-init|=
+operator|=
 literal|""
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information entry for a struct.
 comment|/// \param Scope        Scope in which this struct is defined.
 comment|/// \param Name         Struct name.
@@ -879,54 +1022,56 @@ comment|/// \param UniqueIdentifier A unique identifier for the struct.
 name|DICompositeType
 modifier|*
 name|createStructType
-parameter_list|(
+argument_list|(
 name|DIScope
-modifier|*
+operator|*
 name|Scope
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|File
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNumber
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-parameter_list|,
-name|uint64_t
+argument_list|,
+name|uint32_t
 name|AlignInBits
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|DerivedFrom
-parameter_list|,
+argument_list|,
 name|DINodeArray
 name|Elements
-parameter_list|,
+argument_list|,
 name|unsigned
 name|RunTimeLang
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|VTableHolder
-init|=
+operator|=
 name|nullptr
-parameter_list|,
+argument_list|,
 name|StringRef
 name|UniqueIdentifier
-init|=
+operator|=
 literal|""
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information entry for an union.
 comment|/// \param Scope        Scope in which this union is defined.
 comment|/// \param Name         Union name.
@@ -941,44 +1086,46 @@ comment|/// \param UniqueIdentifier A unique identifier for the union.
 name|DICompositeType
 modifier|*
 name|createUnionType
-parameter_list|(
+argument_list|(
 name|DIScope
-modifier|*
+operator|*
 name|Scope
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|File
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNumber
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-parameter_list|,
-name|uint64_t
+argument_list|,
+name|uint32_t
 name|AlignInBits
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-parameter_list|,
+argument_list|,
 name|DINodeArray
 name|Elements
-parameter_list|,
+argument_list|,
 name|unsigned
 name|RunTimeLang
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 name|StringRef
 name|UniqueIdentifier
-init|=
+operator|=
 literal|""
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information for template
 comment|/// type parameter.
 comment|/// \param Scope        Scope in which this type is defined.
@@ -1086,7 +1233,7 @@ parameter_list|(
 name|uint64_t
 name|Size
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 parameter_list|,
 name|DIType
@@ -1109,7 +1256,7 @@ parameter_list|(
 name|uint64_t
 name|Size
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 parameter_list|,
 name|DIType
@@ -1152,7 +1299,7 @@ parameter_list|,
 name|uint64_t
 name|SizeInBits
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 parameter_list|,
 name|DINodeArray
@@ -1177,21 +1324,25 @@ comment|/// \param CC              Calling convention, e.g. dwarf::DW_CC_normal
 name|DISubroutineType
 modifier|*
 name|createSubroutineType
-parameter_list|(
+argument_list|(
 name|DITypeRefArray
 name|ParameterTypes
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-init|=
-literal|0
-parameter_list|,
+operator|=
+name|DINode
+operator|::
+name|FlagZero
+argument_list|,
 name|unsigned
 name|CC
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create an external type reference.
 comment|/// \param Tag              Dwarf TAG.
 comment|/// \param File             File in which the type is defined.
@@ -1264,7 +1415,7 @@ name|SizeInBits
 init|=
 literal|0
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 init|=
 literal|0
@@ -1279,52 +1430,54 @@ comment|/// Create a temporary forward-declared type.
 name|DICompositeType
 modifier|*
 name|createReplaceableCompositeType
-parameter_list|(
+argument_list|(
 name|unsigned
 name|Tag
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|DIScope
-modifier|*
+operator|*
 name|Scope
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|F
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Line
-parameter_list|,
+argument_list|,
 name|unsigned
 name|RuntimeLang
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-init|=
+operator|=
 literal|0
-parameter_list|,
-name|uint64_t
+argument_list|,
+name|uint32_t
 name|AlignInBits
-init|=
+operator|=
 literal|0
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-init|=
+operator|=
 name|DINode
 operator|::
 name|FlagFwdDecl
-parameter_list|,
+argument_list|,
 name|StringRef
 name|UniqueIdentifier
-init|=
+operator|=
 literal|""
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Retain DIScope* in a module even if it is not referenced
 comment|/// through debug info anchors.
 name|void
@@ -1345,6 +1498,18 @@ function_decl|;
 comment|/// Get a DINodeArray, create one if required.
 name|DINodeArray
 name|getOrCreateArray
+argument_list|(
+name|ArrayRef
+operator|<
+name|Metadata
+operator|*
+operator|>
+name|Elements
+argument_list|)
+decl_stmt|;
+comment|/// Get a DIMacroNodeArray, create one if required.
+name|DIMacroNodeArray
+name|getOrCreateMacroArray
 argument_list|(
 name|ArrayRef
 operator|<
@@ -1379,8 +1544,7 @@ name|int64_t
 name|Count
 parameter_list|)
 function_decl|;
-comment|/// Create a new descriptor for the specified
-comment|/// variable.
+comment|/// Create a new descriptor for the specified variable.
 comment|/// \param Context     Variable scope.
 comment|/// \param Name        Name of the variable.
 comment|/// \param LinkageName Mangled  name of the variable.
@@ -1389,92 +1553,99 @@ comment|/// \param LineNo      Line number.
 comment|/// \param Ty          Variable Type.
 comment|/// \param isLocalToUnit Boolean flag indicate whether this variable is
 comment|///                      externally visible or not.
-comment|/// \param Val         llvm::Value of the variable.
+comment|/// \param Expr        The location of the global relative to the attached
+comment|///                    GlobalVariable.
 comment|/// \param Decl        Reference to the corresponding declaration.
-name|DIGlobalVariable
+comment|/// \param AlignInBits Variable alignment(or 0 if no alignment attr was
+comment|///                    specified)
+name|DIGlobalVariableExpression
 modifier|*
-name|createGlobalVariable
-argument_list|(
+name|createGlobalVariableExpression
+parameter_list|(
 name|DIScope
-operator|*
+modifier|*
 name|Context
-argument_list|,
+parameter_list|,
 name|StringRef
 name|Name
-argument_list|,
+parameter_list|,
 name|StringRef
 name|LinkageName
-argument_list|,
+parameter_list|,
 name|DIFile
-operator|*
+modifier|*
 name|File
-argument_list|,
+parameter_list|,
 name|unsigned
 name|LineNo
-argument_list|,
+parameter_list|,
 name|DIType
-operator|*
+modifier|*
 name|Ty
-argument_list|,
+parameter_list|,
 name|bool
 name|isLocalToUnit
-argument_list|,
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|Val
-argument_list|,
-name|MDNode
-operator|*
-name|Decl
-operator|=
+parameter_list|,
+name|DIExpression
+modifier|*
+name|Expr
+init|=
 name|nullptr
-argument_list|)
-decl_stmt|;
+parameter_list|,
+name|MDNode
+modifier|*
+name|Decl
+init|=
+name|nullptr
+parameter_list|,
+name|uint32_t
+name|AlignInBits
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// Identical to createGlobalVariable
 comment|/// except that the resulting DbgNode is temporary and meant to be RAUWed.
 name|DIGlobalVariable
 modifier|*
 name|createTempGlobalVariableFwdDecl
-argument_list|(
+parameter_list|(
 name|DIScope
-operator|*
+modifier|*
 name|Context
-argument_list|,
+parameter_list|,
 name|StringRef
 name|Name
-argument_list|,
+parameter_list|,
 name|StringRef
 name|LinkageName
-argument_list|,
+parameter_list|,
 name|DIFile
-operator|*
+modifier|*
 name|File
-argument_list|,
+parameter_list|,
 name|unsigned
 name|LineNo
-argument_list|,
+parameter_list|,
 name|DIType
-operator|*
+modifier|*
 name|Ty
-argument_list|,
+parameter_list|,
 name|bool
 name|isLocalToUnit
-argument_list|,
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|Val
-argument_list|,
+parameter_list|,
 name|MDNode
-operator|*
+modifier|*
 name|Decl
-operator|=
+init|=
 name|nullptr
-argument_list|)
-decl_stmt|;
+parameter_list|,
+name|uint32_t
+name|AlignInBits
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// Create a new descriptor for an auto variable.  This is a local variable
 comment|/// that is not a subprogram parameter.
 comment|///
@@ -1486,36 +1657,45 @@ comment|/// containing subprogram, and will survive some optimizations.
 name|DILocalVariable
 modifier|*
 name|createAutoVariable
-parameter_list|(
+argument_list|(
 name|DIScope
-modifier|*
+operator|*
 name|Scope
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|File
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNo
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|Ty
-parameter_list|,
+argument_list|,
 name|bool
 name|AlwaysPreserve
-init|=
+operator|=
 name|false
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-init|=
+operator|=
+name|DINode
+operator|::
+name|FlagZero
+argument_list|,
+name|uint32_t
+name|AlignInBits
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create a new descriptor for a parameter variable.
 comment|///
 comment|/// \c Scope must be a \a DILocalScope, and thus its scope chain eventually
@@ -1530,39 +1710,43 @@ comment|/// containing subprogram, and will survive some optimizations.
 name|DILocalVariable
 modifier|*
 name|createParameterVariable
-parameter_list|(
+argument_list|(
 name|DIScope
-modifier|*
+operator|*
 name|Scope
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|unsigned
 name|ArgNo
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|File
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNo
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|Ty
-parameter_list|,
+argument_list|,
 name|bool
 name|AlwaysPreserve
-init|=
+operator|=
 name|false
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-init|=
-literal|0
-parameter_list|)
-function_decl|;
+operator|=
+name|DINode
+operator|::
+name|FlagZero
+argument_list|)
+decl_stmt|;
 comment|/// Create a new descriptor for the specified
 comment|/// variable which has a complex address expression for its address.
 comment|/// \param Addr        An array of complex address operations.
@@ -1597,7 +1781,7 @@ comment|/// \param OffsetInBits Offset of the piece in bits.
 comment|/// \param SizeInBits   Size of the piece in bits.
 name|DIExpression
 modifier|*
-name|createBitPieceExpression
+name|createFragmentExpression
 parameter_list|(
 name|unsigned
 name|OffsetInBits
@@ -1606,6 +1790,37 @@ name|unsigned
 name|SizeInBits
 parameter_list|)
 function_decl|;
+comment|/// Create an expression for a variable that does not have an address, but
+comment|/// does have a constant value.
+name|DIExpression
+modifier|*
+name|createConstantValueExpression
+parameter_list|(
+name|uint64_t
+name|Val
+parameter_list|)
+block|{
+return|return
+name|DIExpression
+operator|::
+name|get
+argument_list|(
+name|VMContext
+argument_list|,
+block|{
+name|dwarf
+operator|::
+name|DW_OP_constu
+operator|,
+name|Val
+operator|,
+name|dwarf
+operator|::
+name|DW_OP_stack_value
+block|}
+block|)
+function|;
+block|}
 comment|/// Create a new descriptor for the specified subprogram.
 comment|/// See comments in DISubprogram* for descriptions of these fields.
 comment|/// \param Scope         Function scope.
@@ -1624,117 +1839,125 @@ comment|/// \param TParams       Function template parameters.
 name|DISubprogram
 modifier|*
 name|createFunction
-parameter_list|(
+argument_list|(
 name|DIScope
-modifier|*
+operator|*
 name|Scope
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|StringRef
 name|LinkageName
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|File
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNo
-parameter_list|,
+argument_list|,
 name|DISubroutineType
-modifier|*
+operator|*
 name|Ty
-parameter_list|,
+argument_list|,
 name|bool
 name|isLocalToUnit
-parameter_list|,
+argument_list|,
 name|bool
 name|isDefinition
-parameter_list|,
+argument_list|,
 name|unsigned
 name|ScopeLine
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-init|=
-literal|0
-parameter_list|,
+operator|=
+name|DINode
+operator|::
+name|FlagZero
+argument_list|,
 name|bool
 name|isOptimized
-init|=
+operator|=
 name|false
-parameter_list|,
+argument_list|,
 name|DITemplateParameterArray
 name|TParams
-init|=
+operator|=
 name|nullptr
-parameter_list|,
+argument_list|,
 name|DISubprogram
-modifier|*
+operator|*
 name|Decl
-init|=
+operator|=
 name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Identical to createFunction,
 comment|/// except that the resulting DbgNode is meant to be RAUWed.
 name|DISubprogram
 modifier|*
 name|createTempFunctionFwdDecl
-parameter_list|(
+argument_list|(
 name|DIScope
-modifier|*
+operator|*
 name|Scope
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|StringRef
 name|LinkageName
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|File
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNo
-parameter_list|,
+argument_list|,
 name|DISubroutineType
-modifier|*
+operator|*
 name|Ty
-parameter_list|,
+argument_list|,
 name|bool
 name|isLocalToUnit
-parameter_list|,
+argument_list|,
 name|bool
 name|isDefinition
-parameter_list|,
+argument_list|,
 name|unsigned
 name|ScopeLine
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-init|=
-literal|0
-parameter_list|,
+operator|=
+name|DINode
+operator|::
+name|FlagZero
+argument_list|,
 name|bool
 name|isOptimized
-init|=
+operator|=
 name|false
-parameter_list|,
+argument_list|,
 name|DITemplateParameterArray
 name|TParams
-init|=
+operator|=
 name|nullptr
-parameter_list|,
+argument_list|,
 name|DISubprogram
-modifier|*
+operator|*
 name|Decl
-init|=
+operator|=
 name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create a new descriptor for the specified C++ method.
 comment|/// See comments in \a DISubprogram* for descriptions of these fields.
 comment|/// \param Scope         Function scope.
@@ -1760,77 +1983,82 @@ comment|/// \param TParams       Function template parameters.
 name|DISubprogram
 modifier|*
 name|createMethod
-parameter_list|(
+argument_list|(
 name|DIScope
-modifier|*
+operator|*
 name|Scope
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|StringRef
 name|LinkageName
-parameter_list|,
+argument_list|,
 name|DIFile
-modifier|*
+operator|*
 name|File
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNo
-parameter_list|,
+argument_list|,
 name|DISubroutineType
-modifier|*
+operator|*
 name|Ty
-parameter_list|,
+argument_list|,
 name|bool
 name|isLocalToUnit
-parameter_list|,
+argument_list|,
 name|bool
 name|isDefinition
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Virtuality
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 name|unsigned
 name|VTableIndex
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 name|int
 name|ThisAdjustment
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|VTableHolder
-init|=
+operator|=
 name|nullptr
-parameter_list|,
-name|unsigned
+argument_list|,
+name|DINode
+operator|::
+name|DIFlags
 name|Flags
-init|=
-literal|0
-parameter_list|,
+operator|=
+name|DINode
+operator|::
+name|FlagZero
+argument_list|,
 name|bool
 name|isOptimized
-init|=
+operator|=
 name|false
-parameter_list|,
+argument_list|,
 name|DITemplateParameterArray
 name|TParams
-init|=
+operator|=
 name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// This creates new descriptor for a namespace with the specified
 comment|/// parent scope.
 comment|/// \param Scope       Namespace scope
 comment|/// \param Name        Name of this namespace
 comment|/// \param File        Source file
 comment|/// \param LineNo      Line number
+comment|/// \param ExportSymbols True for C++ inline namespaces.
 name|DINamespace
 modifier|*
 name|createNameSpace
@@ -1848,6 +2076,9 @@ name|File
 parameter_list|,
 name|unsigned
 name|LineNo
+parameter_list|,
+name|bool
+name|ExportSymbols
 parameter_list|)
 function_decl|;
 comment|/// This creates new descriptor for a module with the specified
@@ -2260,15 +2491,10 @@ return|return
 name|Replacement
 return|;
 block|}
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace llvm
 end_comment
 
@@ -2276,6 +2502,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_DIBUILDER_H
+end_comment
 
 end_unit
 

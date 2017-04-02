@@ -83,14 +83,16 @@ name|lldb_private
 block|{
 comment|// this class is the high-level front-end of LLDB Data Visualization
 comment|// code in FormatManager.h/cpp is the low-level implementation of this feature
-comment|// clients should refer to this class as the entry-point into the data formatters
+comment|// clients should refer to this class as the entry-point into the data
+comment|// formatters
 comment|// unless they have a good reason to bypass this and go to the backend
 name|class
 name|DataVisualization
 block|{
 name|public
 label|:
-comment|// use this call to force the FM to consider itself updated even when there is no apparent reason for that
+comment|// use this call to force the FM to consider itself updated even when there is
+comment|// no apparent reason for that
 specifier|static
 name|void
 name|ForceUpdate
@@ -116,7 +118,7 @@ operator|::
 name|TypeFormatImplSP
 name|GetFormat
 argument_list|(
-argument|ValueObject& valobj
+argument|ValueObject&valobj
 argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|)
@@ -136,7 +138,7 @@ operator|::
 name|TypeSummaryImplSP
 name|GetSummaryFormat
 argument_list|(
-argument|ValueObject& valobj
+argument|ValueObject&valobj
 argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|)
@@ -196,7 +198,7 @@ operator|::
 name|SyntheticChildrenSP
 name|GetSyntheticChildren
 argument_list|(
-argument|ValueObject& valobj
+argument|ValueObject&valobj
 argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|)
@@ -209,7 +211,7 @@ operator|::
 name|TypeValidatorImplSP
 name|GetValidator
 argument_list|(
-argument|ValueObject& valobj
+argument|ValueObject&valobj
 argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|)

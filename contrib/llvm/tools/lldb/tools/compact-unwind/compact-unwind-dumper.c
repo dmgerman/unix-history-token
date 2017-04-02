@@ -2,73 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mach-o/loader.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mach-o/compact_unwind_encoding.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mach/machine.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdbool.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -80,13 +14,79 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<mach-o/compact_unwind_encoding.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mach-o/loader.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<mach-o/nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mach/machine.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_enum
@@ -231,7 +231,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|( (value>> __builtin_ctz(mask))& (((1<< __builtin_popcount(mask)))-1) )
+value|((value>> __builtin_ctz(mask))& (((1<< __builtin_popcount(mask))) - 1))
 end_define
 
 begin_comment
@@ -352,7 +352,8 @@ decl_stmt|;
 name|uint64_t
 name|eh_section_file_address
 decl_stmt|;
-comment|// the file address of the __TEXT,__eh_frame section
+comment|// the file address of the __TEXT,__eh_frame
+comment|// section
 name|uint8_t
 modifier|*
 name|lsda_array_start
@@ -1507,8 +1508,10 @@ name|dysymtab_cmd
 operator|.
 name|nextdefsym
 decl_stmt|;
-comment|// We're only going to create records for a small number of these symbols but to
-comment|// simplify the memory management I'll allocate enough space to store all of them.
+comment|// We're only going to create records for a small number of these symbols
+comment|// but to
+comment|// simplify the memory management I'll allocate enough space to store all
+comment|// of them.
 name|baton
 operator|->
 name|symbols
@@ -2268,7 +2271,8 @@ name|cur_cmd
 operator|++
 expr_stmt|;
 block|}
-comment|// Augment the symbol table with the function starts table -- adding symbol entries
+comment|// Augment the symbol table with the function starts table -- adding symbol
+comment|// entries
 comment|// for functions that were stripped.
 name|int
 name|unnamed_functions_to_add
@@ -2576,7 +2580,8 @@ comment|//    }
 comment|//    printf ("symbol table names& addresses\n");
 comment|//    for (int i = 0; i< baton->symbols_count; i++)
 comment|//    {
-comment|//        printf ("0x%012llx %s\n", baton->symbols[i].file_address, baton->symbols[i].name);
+comment|//        printf ("0x%012llx %s\n", baton->symbols[i].file_address,
+comment|//        baton->symbols[i].name);
 comment|//    }
 block|}
 end_function
@@ -2807,7 +2812,8 @@ argument_list|,
 name|UNWIND_X86_64_FRAMELESS_STACK_ADJUST
 argument_list|)
 decl_stmt|;
-comment|// offset into the function instructions; 0 == beginning of first instruction
+comment|// offset into the function instructions; 0 == beginning of first
+comment|// instruction
 name|uint32_t
 name|offset_to_subl_insn
 init|=
@@ -3830,7 +3836,8 @@ argument_list|,
 name|UNWIND_X86_FRAMELESS_STACK_ADJUST
 argument_list|)
 decl_stmt|;
-comment|// offset into the function instructions; 0 == beginning of first instruction
+comment|// offset into the function instructions; 0 == beginning of first
+comment|// instruction
 name|uint32_t
 name|offset_to_subl_insn
 init|=
@@ -6363,9 +6370,12 @@ operator|)
 operator|)
 decl_stmt|;
 comment|// UNWIND_SECOND_LEVEL_REGULAR entries have a funcOffset which includes the
-comment|// functionOffset from the containing index table already.  UNWIND_SECOND_LEVEL_COMPRESSED
-comment|// entries only have the offset from the containing index table functionOffset.
-comment|// So strip off the containing index table functionOffset value here so they can
+comment|// functionOffset from the containing index table already.
+comment|// UNWIND_SECOND_LEVEL_COMPRESSED
+comment|// entries only have the offset from the containing index table
+comment|// functionOffset.
+comment|// So strip off the containing index table functionOffset value here so they
+comment|// can
 comment|// be treated the same at the lower layers.
 name|print_function_encoding
 argument_list|(
@@ -6717,7 +6727,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  UNWIND_SECOND_LEVEL_COMPRESSED #%d entryPageOffset %d, entryCount %d, encodingsPageOffset %d, encodingsCount %d\n"
+literal|"  UNWIND_SECOND_LEVEL_COMPRESSED #%d entryPageOffset %d, "
+literal|"entryCount %d, encodingsPageOffset %d, encodingsCount %d\n"
 argument_list|,
 name|baton
 operator|.
@@ -6831,7 +6842,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"index section #%d: functionOffset %d, secondLevelPagesSectionOffset %d, lsdaIndexArraySectionOffset %d\n"
+literal|"index section #%d: functionOffset %d, "
+literal|"secondLevelPagesSectionOffset %d, lsdaIndexArraySectionOffset %d\n"
 argument_list|,
 name|cur_idx
 argument_list|,
@@ -7462,7 +7474,8 @@ operator|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"    Personality [%d]: personality function ptr @ offset %d (file address 0x%"
+literal|"    Personality [%d]: personality function ptr @ offset %d (file "
+literal|"address 0x%"
 name|PRIx64
 literal|")\n"
 argument_list|,

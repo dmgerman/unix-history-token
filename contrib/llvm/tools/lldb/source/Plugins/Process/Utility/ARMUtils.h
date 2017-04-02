@@ -119,7 +119,7 @@ name|type
 condition|)
 block|{
 default|default:
-comment|//assert(0&& "Invalid shift type");
+comment|// assert(0&& "Invalid shift type");
 case|case
 literal|0
 case|:
@@ -340,7 +340,7 @@ name|type
 condition|)
 block|{
 default|default:
-comment|//assert(0&& "Invalid shift type");
+comment|// assert(0&& "Invalid shift type");
 return|return
 name|SRType_Invalid
 return|;
@@ -1493,7 +1493,8 @@ name|uint32_t
 name|opcode
 parameter_list|)
 block|{
-comment|// 'carry_in' argument to following function call does not affect the imm32 result.
+comment|// 'carry_in' argument to following function call does not affect the imm32
+comment|// result.
 name|uint32_t
 name|carry_in
 init|=
@@ -1731,7 +1732,8 @@ name|uint32_t
 name|opcode
 parameter_list|)
 block|{
-comment|// 'carry_in' argument to following function call does not affect the imm32 result.
+comment|// 'carry_in' argument to following function call does not affect the imm32
+comment|// result.
 name|uint32_t
 name|carry_in
 init|=

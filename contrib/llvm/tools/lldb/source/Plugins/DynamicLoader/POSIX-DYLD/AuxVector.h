@@ -141,7 +141,7 @@ name|value
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 block|}
 struct|;
 comment|/// Constants describing the type of entry.
@@ -288,7 +288,8 @@ name|AT_SYSINFO
 init|=
 literal|32
 block|,
-comment|///< Pointer to the global system page used for system calls and other nice things.
+comment|///< Pointer to the global system page used for system
+comment|///calls and other nice things.
 name|AT_SYSINFO_EHDR
 init|=
 literal|33
@@ -309,7 +310,7 @@ block|,
 name|AT_L3_CACHESHAPE
 init|=
 literal|37
-block|,     }
+block|,   }
 enum|;
 name|private
 label|:

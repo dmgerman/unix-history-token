@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterContextPOSIXProcessMonitor_powerpc.h -------------*- C++ -*-===//
+comment|//===-- RegisterContextPOSIXProcessMonitor_powerpc.h -------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -46,13 +50,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"RegisterContextPOSIX.h"
+file|"Plugins/Process/Utility/RegisterContextPOSIX_powerpc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Plugins/Process/Utility/RegisterContextPOSIX_powerpc.h"
+file|"RegisterContextPOSIX.h"
 end_include
 
 begin_decl_stmt

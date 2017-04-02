@@ -72,6 +72,8 @@ literal|1
 operator|,
 name|feature_unsupported
 operator|,
+name|invalid_format
+operator|,
 name|corrupt_file
 operator|,
 name|insufficient_buffer
@@ -81,6 +83,10 @@ operator|,
 name|index_out_of_bounds
 operator|,
 name|invalid_block_address
+operator|,
+name|duplicate_entry
+operator|,
+name|no_entry
 operator|,
 name|not_writable
 operator|,

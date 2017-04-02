@@ -176,7 +176,7 @@ name|SetValueFromCString
 argument_list|(
 argument|const char *value_str
 argument_list|,
-argument|Error& error
+argument|Error&error
 argument_list|)
 name|override
 block|;
@@ -222,7 +222,8 @@ comment|///< The variable that this value object is based upon
 name|Value
 name|m_resolved_value
 block|;
-comment|///< The value that DWARFExpression resolves this variable to before we patch it up
+comment|///< The value that DWARFExpression resolves this
+comment|///variable to before we patch it up
 name|private
 operator|:
 name|ValueObjectVariable

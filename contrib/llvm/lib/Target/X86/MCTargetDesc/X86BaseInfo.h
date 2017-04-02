@@ -354,65 +354,37 @@ name|AddRegFrm
 init|=
 literal|2
 block|,
-comment|/// MRMDestReg - This form is used for instructions that use the Mod/RM byte
-comment|/// to specify a destination, which in this case is a register.
-comment|///
-name|MRMDestReg
-init|=
-literal|3
-block|,
-comment|/// MRMDestMem - This form is used for instructions that use the Mod/RM byte
-comment|/// to specify a destination, which in this case is memory.
-comment|///
-name|MRMDestMem
-init|=
-literal|4
-block|,
-comment|/// MRMSrcReg - This form is used for instructions that use the Mod/RM byte
-comment|/// to specify a source, which in this case is a register.
-comment|///
-name|MRMSrcReg
-init|=
-literal|5
-block|,
-comment|/// MRMSrcMem - This form is used for instructions that use the Mod/RM byte
-comment|/// to specify a source, which in this case is memory.
-comment|///
-name|MRMSrcMem
-init|=
-literal|6
-block|,
 comment|/// RawFrmMemOffs - This form is for instructions that store an absolute
 comment|/// memory offset as an immediate with a possible segment override.
 name|RawFrmMemOffs
 init|=
-literal|7
+literal|3
 block|,
 comment|/// RawFrmSrc - This form is for instructions that use the source index
 comment|/// register SI/ESI/RSI with a possible segment override.
 name|RawFrmSrc
 init|=
-literal|8
+literal|4
 block|,
 comment|/// RawFrmDst - This form is for instructions that use the destination index
 comment|/// register DI/EDI/ESI.
 name|RawFrmDst
 init|=
-literal|9
+literal|5
 block|,
 comment|/// RawFrmSrc - This form is for instructions that use the source index
 comment|/// register SI/ESI/ERI with a possible segment override, and also the
 comment|/// destination index register DI/ESI/RDI.
 name|RawFrmDstSrc
 init|=
-literal|10
+literal|6
 block|,
 comment|/// RawFrmImm8 - This is used for the ENTER instruction, which has two
 comment|/// immediates, the first of which is a 16-bit immediate (specified by
 comment|/// the imm encoding) and the second is a 8-bit fixed value.
 name|RawFrmImm8
 init|=
-literal|11
+literal|7
 block|,
 comment|/// RawFrmImm16 - This is used for CALL FAR instructions, which have two
 comment|/// immediates, the first of which is a 16 or 32-bit immediate (specified by
@@ -420,348 +392,410 @@ comment|/// the imm encoding) and the second is a 16-bit fixed value.  In the AM
 comment|/// manual, this operand is described as pntr16:32 and pntr16:16
 name|RawFrmImm16
 init|=
-literal|12
-block|,
-comment|/// MRMX[rm] - The forms are used to represent instructions that use a
-comment|/// Mod/RM byte, and don't use the middle field for anything.
-name|MRMXr
-init|=
-literal|14
-block|,
-name|MRMXm
-init|=
-literal|15
+literal|8
 block|,
 comment|/// MRM[0-7][rm] - These forms are used to represent instructions that use
 comment|/// a Mod/RM byte, and use the middle field to hold extended opcode
 comment|/// information.  In the intel manual these are represented as /0, /1, ...
 comment|///
-comment|// First, instructions that operate on a register r/m operand...
-name|MRM0r
+comment|/// MRMDestMem - This form is used for instructions that use the Mod/RM byte
+comment|/// to specify a destination, which in this case is memory.
+comment|///
+name|MRMDestMem
 init|=
-literal|16
+literal|32
 block|,
-name|MRM1r
+comment|/// MRMSrcMem - This form is used for instructions that use the Mod/RM byte
+comment|/// to specify a source, which in this case is memory.
+comment|///
+name|MRMSrcMem
 init|=
-literal|17
+literal|33
 block|,
-name|MRM2r
+comment|/// MRMSrcMem4VOp3 - This form is used for instructions that encode
+comment|/// operand 3 with VEX.VVVV and load from memory.
+comment|///
+name|MRMSrcMem4VOp3
 init|=
-literal|18
+literal|34
 block|,
-name|MRM3r
+comment|/// MRMSrcMemOp4 - This form is used for instructions that use the Mod/RM
+comment|/// byte to specify the fourth source, which in this case is memory.
+comment|///
+name|MRMSrcMemOp4
 init|=
-literal|19
+literal|35
 block|,
-comment|// Format /0 /1 /2 /3
-name|MRM4r
+comment|/// MRMXm - This form is used for instructions that use the Mod/RM byte
+comment|/// to specify a memory source, but doesn't use the middle field.
+comment|///
+name|MRMXm
 init|=
-literal|20
+literal|39
 block|,
-name|MRM5r
-init|=
-literal|21
-block|,
-name|MRM6r
-init|=
-literal|22
-block|,
-name|MRM7r
-init|=
-literal|23
-block|,
-comment|// Format /4 /5 /6 /7
+comment|// Instruction that uses Mod/RM but not the middle field.
 comment|// Next, instructions that operate on a memory r/m operand...
 name|MRM0m
 init|=
-literal|24
+literal|40
 block|,
 name|MRM1m
 init|=
-literal|25
+literal|41
 block|,
 name|MRM2m
 init|=
-literal|26
+literal|42
 block|,
 name|MRM3m
 init|=
-literal|27
+literal|43
 block|,
 comment|// Format /0 /1 /2 /3
 name|MRM4m
 init|=
-literal|28
+literal|44
 block|,
 name|MRM5m
 init|=
-literal|29
+literal|45
 block|,
 name|MRM6m
 init|=
-literal|30
+literal|46
 block|,
 name|MRM7m
 init|=
-literal|31
-block|,
-comment|// Format /4 /5 /6 /7
-comment|//// MRM_XX - A mod/rm byte of exactly 0xXX.
-name|MRM_C0
-init|=
-literal|32
-block|,
-name|MRM_C1
-init|=
-literal|33
-block|,
-name|MRM_C2
-init|=
-literal|34
-block|,
-name|MRM_C3
-init|=
-literal|35
-block|,
-name|MRM_C4
-init|=
-literal|36
-block|,
-name|MRM_C5
-init|=
-literal|37
-block|,
-name|MRM_C6
-init|=
-literal|38
-block|,
-name|MRM_C7
-init|=
-literal|39
-block|,
-name|MRM_C8
-init|=
-literal|40
-block|,
-name|MRM_C9
-init|=
-literal|41
-block|,
-name|MRM_CA
-init|=
-literal|42
-block|,
-name|MRM_CB
-init|=
-literal|43
-block|,
-name|MRM_CC
-init|=
-literal|44
-block|,
-name|MRM_CD
-init|=
-literal|45
-block|,
-name|MRM_CE
-init|=
-literal|46
-block|,
-name|MRM_CF
-init|=
 literal|47
 block|,
-name|MRM_D0
+comment|// Format /4 /5 /6 /7
+comment|/// MRMDestReg - This form is used for instructions that use the Mod/RM byte
+comment|/// to specify a destination, which in this case is a register.
+comment|///
+name|MRMDestReg
 init|=
 literal|48
 block|,
-name|MRM_D1
+comment|/// MRMSrcReg - This form is used for instructions that use the Mod/RM byte
+comment|/// to specify a source, which in this case is a register.
+comment|///
+name|MRMSrcReg
 init|=
 literal|49
 block|,
-name|MRM_D2
+comment|/// MRMSrcReg4VOp3 - This form is used for instructions that encode
+comment|/// operand 3 with VEX.VVVV and do not load from memory.
+comment|///
+name|MRMSrcReg4VOp3
 init|=
 literal|50
 block|,
-name|MRM_D3
+comment|/// MRMSrcRegOp4 - This form is used for instructions that use the Mod/RM
+comment|/// byte to specify the fourth source, which in this case is a register.
+comment|///
+name|MRMSrcRegOp4
 init|=
 literal|51
 block|,
-name|MRM_D4
-init|=
-literal|52
-block|,
-name|MRM_D5
-init|=
-literal|53
-block|,
-name|MRM_D6
-init|=
-literal|54
-block|,
-name|MRM_D7
+comment|/// MRMXr - This form is used for instructions that use the Mod/RM byte
+comment|/// to specify a register source, but doesn't use the middle field.
+comment|///
+name|MRMXr
 init|=
 literal|55
 block|,
-name|MRM_D8
+comment|// Instruction that uses Mod/RM but not the middle field.
+comment|// Instructions that operate on a register r/m operand...
+name|MRM0r
 init|=
 literal|56
 block|,
-name|MRM_D9
+name|MRM1r
 init|=
 literal|57
 block|,
-name|MRM_DA
+name|MRM2r
 init|=
 literal|58
 block|,
-name|MRM_DB
+name|MRM3r
 init|=
 literal|59
 block|,
-name|MRM_DC
+comment|// Format /0 /1 /2 /3
+name|MRM4r
 init|=
 literal|60
 block|,
-name|MRM_DD
+name|MRM5r
 init|=
 literal|61
 block|,
-name|MRM_DE
+name|MRM6r
 init|=
 literal|62
 block|,
-name|MRM_DF
+name|MRM7r
 init|=
 literal|63
 block|,
-name|MRM_E0
+comment|// Format /4 /5 /6 /7
+comment|/// MRM_XX - A mod/rm byte of exactly 0xXX.
+name|MRM_C0
 init|=
 literal|64
 block|,
-name|MRM_E1
+name|MRM_C1
 init|=
 literal|65
 block|,
-name|MRM_E2
+name|MRM_C2
 init|=
 literal|66
 block|,
-name|MRM_E3
+name|MRM_C3
 init|=
 literal|67
 block|,
-name|MRM_E4
+name|MRM_C4
 init|=
 literal|68
 block|,
-name|MRM_E5
+name|MRM_C5
 init|=
 literal|69
 block|,
-name|MRM_E6
+name|MRM_C6
 init|=
 literal|70
 block|,
-name|MRM_E7
+name|MRM_C7
 init|=
 literal|71
 block|,
-name|MRM_E8
+name|MRM_C8
 init|=
 literal|72
 block|,
-name|MRM_E9
+name|MRM_C9
 init|=
 literal|73
 block|,
-name|MRM_EA
+name|MRM_CA
 init|=
 literal|74
 block|,
-name|MRM_EB
+name|MRM_CB
 init|=
 literal|75
 block|,
-name|MRM_EC
+name|MRM_CC
 init|=
 literal|76
 block|,
-name|MRM_ED
+name|MRM_CD
 init|=
 literal|77
 block|,
-name|MRM_EE
+name|MRM_CE
 init|=
 literal|78
 block|,
-name|MRM_EF
+name|MRM_CF
 init|=
 literal|79
 block|,
-name|MRM_F0
+name|MRM_D0
 init|=
 literal|80
 block|,
-name|MRM_F1
+name|MRM_D1
 init|=
 literal|81
 block|,
-name|MRM_F2
+name|MRM_D2
 init|=
 literal|82
 block|,
-name|MRM_F3
+name|MRM_D3
 init|=
 literal|83
 block|,
-name|MRM_F4
+name|MRM_D4
 init|=
 literal|84
 block|,
-name|MRM_F5
+name|MRM_D5
 init|=
 literal|85
 block|,
-name|MRM_F6
+name|MRM_D6
 init|=
 literal|86
 block|,
-name|MRM_F7
+name|MRM_D7
 init|=
 literal|87
 block|,
-name|MRM_F8
+name|MRM_D8
 init|=
 literal|88
 block|,
-name|MRM_F9
+name|MRM_D9
 init|=
 literal|89
 block|,
-name|MRM_FA
+name|MRM_DA
 init|=
 literal|90
 block|,
-name|MRM_FB
+name|MRM_DB
 init|=
 literal|91
 block|,
-name|MRM_FC
+name|MRM_DC
 init|=
 literal|92
 block|,
-name|MRM_FD
+name|MRM_DD
 init|=
 literal|93
 block|,
-name|MRM_FE
+name|MRM_DE
 init|=
 literal|94
 block|,
-name|MRM_FF
+name|MRM_DF
 init|=
 literal|95
+block|,
+name|MRM_E0
+init|=
+literal|96
+block|,
+name|MRM_E1
+init|=
+literal|97
+block|,
+name|MRM_E2
+init|=
+literal|98
+block|,
+name|MRM_E3
+init|=
+literal|99
+block|,
+name|MRM_E4
+init|=
+literal|100
+block|,
+name|MRM_E5
+init|=
+literal|101
+block|,
+name|MRM_E6
+init|=
+literal|102
+block|,
+name|MRM_E7
+init|=
+literal|103
+block|,
+name|MRM_E8
+init|=
+literal|104
+block|,
+name|MRM_E9
+init|=
+literal|105
+block|,
+name|MRM_EA
+init|=
+literal|106
+block|,
+name|MRM_EB
+init|=
+literal|107
+block|,
+name|MRM_EC
+init|=
+literal|108
+block|,
+name|MRM_ED
+init|=
+literal|109
+block|,
+name|MRM_EE
+init|=
+literal|110
+block|,
+name|MRM_EF
+init|=
+literal|111
+block|,
+name|MRM_F0
+init|=
+literal|112
+block|,
+name|MRM_F1
+init|=
+literal|113
+block|,
+name|MRM_F2
+init|=
+literal|114
+block|,
+name|MRM_F3
+init|=
+literal|115
+block|,
+name|MRM_F4
+init|=
+literal|116
+block|,
+name|MRM_F5
+init|=
+literal|117
+block|,
+name|MRM_F6
+init|=
+literal|118
+block|,
+name|MRM_F7
+init|=
+literal|119
+block|,
+name|MRM_F8
+init|=
+literal|120
+block|,
+name|MRM_F9
+init|=
+literal|121
+block|,
+name|MRM_FA
+init|=
+literal|122
+block|,
+name|MRM_FB
+init|=
+literal|123
+block|,
+name|MRM_FC
+init|=
+literal|124
+block|,
+name|MRM_FD
+init|=
+literal|125
+block|,
+name|MRM_FE
+init|=
+literal|126
+block|,
+name|MRM_FF
+init|=
+literal|127
 block|,
 name|FormMask
 init|=
@@ -996,39 +1030,45 @@ literal|2
 operator|<<
 name|ImmShift
 block|,
-name|Imm16
+name|Imm8Reg
 init|=
 literal|3
 operator|<<
 name|ImmShift
 block|,
-name|Imm16PCRel
+name|Imm16
 init|=
 literal|4
 operator|<<
 name|ImmShift
 block|,
-name|Imm32
+name|Imm16PCRel
 init|=
 literal|5
 operator|<<
 name|ImmShift
 block|,
-name|Imm32PCRel
+name|Imm32
 init|=
 literal|6
 operator|<<
 name|ImmShift
 block|,
-name|Imm32S
+name|Imm32PCRel
 init|=
 literal|7
 operator|<<
 name|ImmShift
 block|,
-name|Imm64
+name|Imm32S
 init|=
 literal|8
+operator|<<
+name|ImmShift
+block|,
+name|Imm64
+init|=
+literal|9
 operator|<<
 name|ImmShift
 block|,
@@ -1215,42 +1255,13 @@ literal|1ULL
 operator|<<
 name|VEX_4VShift
 block|,
-comment|/// VEX_4VOp3 - Similar to VEX_4V, but used on instructions that encode
-comment|/// operand 3 with VEX.vvvv.
-name|VEX_4VOp3Shift
-init|=
-name|VEX_4VShift
-operator|+
-literal|1
-block|,
-name|VEX_4VOp3
-init|=
-literal|1ULL
-operator|<<
-name|VEX_4VOp3Shift
-block|,
-comment|/// VEX_I8IMM - Specifies that the last register used in a AVX instruction,
-comment|/// must be encoded in the i8 immediate field. This usually happens in
-comment|/// instructions with 4 operands.
-name|VEX_I8IMMShift
-init|=
-name|VEX_4VOp3Shift
-operator|+
-literal|1
-block|,
-name|VEX_I8IMM
-init|=
-literal|1ULL
-operator|<<
-name|VEX_I8IMMShift
-block|,
 comment|/// VEX_L - Stands for a bit in the VEX opcode prefix meaning the current
 comment|/// instruction uses 256-bit wide registers. This is usually auto detected
 comment|/// if a VR256 register is used, but some AVX instructions also have this
 comment|/// field marked when using a f256 memory references.
 name|VEX_LShift
 init|=
-name|VEX_I8IMMShift
+name|VEX_4VShift
 operator|+
 literal|1
 block|,
@@ -1260,31 +1271,10 @@ literal|1ULL
 operator|<<
 name|VEX_LShift
 block|,
-comment|// VEX_LIG - Specifies that this instruction ignores the L-bit in the VEX
-comment|// prefix. Usually used for scalar instructions. Needed by disassembler.
-name|VEX_LIGShift
-init|=
-name|VEX_LShift
-operator|+
-literal|1
-block|,
-name|VEX_LIG
-init|=
-literal|1ULL
-operator|<<
-name|VEX_LIGShift
-block|,
-comment|// TODO: we should combine VEX_L and VEX_LIG together to form a 2-bit field
-comment|// with following encoding:
-comment|// - 00 V128
-comment|// - 01 V256
-comment|// - 10 V512
-comment|// - 11 LIG (but, in insn encoding, leave VEX.L and EVEX.L in zeros.
-comment|// this will save 1 tsflag bit
 comment|// EVEX_K - Set if this instruction requires masking
 name|EVEX_KShift
 init|=
-name|VEX_LIGShift
+name|VEX_LShift
 operator|+
 literal|1
 block|,
@@ -1364,24 +1354,10 @@ literal|1ULL
 operator|<<
 name|Has3DNow0F0FOpcodeShift
 block|,
-comment|/// MemOp4 - Used to indicate swapping of operand 3 and 4 to be encoded in
-comment|/// ModRM or I8IMM. This is used for FMA4 and XOP instructions.
-name|MemOp4Shift
-init|=
-name|Has3DNow0F0FOpcodeShift
-operator|+
-literal|1
-block|,
-name|MemOp4
-init|=
-literal|1ULL
-operator|<<
-name|MemOp4Shift
-block|,
 comment|/// Explicitly specified rounding control
 name|EVEX_RCShift
 init|=
-name|MemOp4Shift
+name|Has3DNow0F0FOpcodeShift
 operator|+
 literal|1
 block|,
@@ -1466,6 +1442,11 @@ case|case
 name|X86II
 operator|::
 name|Imm8PCRel
+case|:
+case|case
+name|X86II
+operator|::
+name|Imm8Reg
 case|:
 return|return
 literal|1
@@ -1562,6 +1543,11 @@ case|:
 case|case
 name|X86II
 operator|::
+name|Imm8Reg
+case|:
+case|case
+name|X86II
+operator|::
 name|Imm16
 case|:
 case|case
@@ -1630,6 +1616,11 @@ case|:
 case|case
 name|X86II
 operator|::
+name|Imm8Reg
+case|:
+case|case
+name|X86II
+operator|::
 name|Imm16
 case|:
 case|case
@@ -1663,7 +1654,7 @@ comment|///                  in this instruction.
 comment|/// If this is a two-address instruction,skip one of the register operands.
 comment|/// FIXME: This should be handled during MCInst lowering.
 specifier|inline
-name|int
+name|unsigned
 name|getOperandBias
 parameter_list|(
 specifier|const
@@ -1679,11 +1670,6 @@ name|Desc
 operator|.
 name|getNumOperands
 argument_list|()
-decl_stmt|;
-name|unsigned
-name|CurOp
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1704,10 +1690,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-operator|++
-name|CurOp
-expr_stmt|;
-elseif|else
+return|return
+literal|1
+return|;
 if|if
 condition|(
 name|NumOps
@@ -1742,11 +1727,9 @@ literal|1
 condition|)
 comment|// Special case for AVX-512 GATHER with 2 TIED_TO operands
 comment|// Skip the first 2 operands: dst, mask_wb
-name|CurOp
-operator|+=
+return|return
 literal|2
-expr_stmt|;
-elseif|else
+return|;
 if|if
 condition|(
 name|NumOps
@@ -1783,11 +1766,9 @@ literal|1
 condition|)
 comment|// Special case for GATHER with 2 TIED_TO operands
 comment|// Skip the first 2 operands: dst, mask_wb
-name|CurOp
-operator|+=
+return|return
 literal|2
-expr_stmt|;
-elseif|else
+return|;
 if|if
 condition|(
 name|NumOps
@@ -1810,11 +1791,11 @@ operator|==
 literal|0
 condition|)
 comment|// SCATTER
-operator|++
-name|CurOp
-expr_stmt|;
 return|return
-name|CurOp
+literal|1
+return|;
+return|return
+literal|0
 return|;
 block|}
 comment|/// getMemoryOperandNo - The function returns the MCInst operand # for the
@@ -1841,15 +1822,6 @@ operator|&
 name|X86II
 operator|::
 name|VEX_4V
-decl_stmt|;
-name|bool
-name|HasMemOp4
-init|=
-name|TSFlags
-operator|&
-name|X86II
-operator|::
-name|MemOp4
 decl_stmt|;
 name|bool
 name|HasEVEX_K
@@ -1889,16 +1861,6 @@ case|case
 name|X86II
 operator|::
 name|AddRegFrm
-case|:
-case|case
-name|X86II
-operator|::
-name|MRMDestReg
-case|:
-case|case
-name|X86II
-operator|::
-name|MRMSrcReg
 case|:
 case|case
 name|X86II
@@ -1954,10 +1916,48 @@ literal|1
 operator|+
 name|HasVEX_4V
 operator|+
-name|HasMemOp4
+name|HasEVEX_K
+return|;
+case|case
+name|X86II
+operator|::
+name|MRMSrcMem4VOp3
+case|:
+comment|// Skip registers encoded in reg.
+return|return
+literal|1
 operator|+
 name|HasEVEX_K
 return|;
+case|case
+name|X86II
+operator|::
+name|MRMSrcMemOp4
+case|:
+comment|// Skip registers encoded in reg, VEX_VVVV, and I8IMM.
+return|return
+literal|3
+return|;
+case|case
+name|X86II
+operator|::
+name|MRMDestReg
+case|:
+case|case
+name|X86II
+operator|::
+name|MRMSrcReg
+case|:
+case|case
+name|X86II
+operator|::
+name|MRMSrcReg4VOp3
+case|:
+case|case
+name|X86II
+operator|::
+name|MRMSrcRegOp4
+case|:
 case|case
 name|X86II
 operator|::
@@ -2409,20 +2409,6 @@ name|RegNo
 operator|<=
 name|X86
 operator|::
-name|XMM15
-operator|)
-operator|||
-operator|(
-name|RegNo
-operator|>=
-name|X86
-operator|::
-name|XMM24
-operator|&&
-name|RegNo
-operator|<=
-name|X86
-operator|::
 name|XMM31
 operator|)
 operator|||
@@ -2437,20 +2423,6 @@ name|RegNo
 operator|<=
 name|X86
 operator|::
-name|YMM15
-operator|)
-operator|||
-operator|(
-name|RegNo
-operator|>=
-name|X86
-operator|::
-name|YMM24
-operator|&&
-name|RegNo
-operator|<=
-name|X86
-operator|::
 name|YMM31
 operator|)
 operator|||
@@ -2460,20 +2432,6 @@ operator|>=
 name|X86
 operator|::
 name|ZMM8
-operator|&&
-name|RegNo
-operator|<=
-name|X86
-operator|::
-name|ZMM15
-operator|)
-operator|||
-operator|(
-name|RegNo
-operator|>=
-name|X86
-operator|::
-name|ZMM24
 operator|&&
 name|RegNo
 operator|<=
@@ -2692,6 +2650,46 @@ name|X86
 operator|::
 name|CR15
 case|:
+case|case
+name|X86
+operator|::
+name|DR8
+case|:
+case|case
+name|X86
+operator|::
+name|DR9
+case|:
+case|case
+name|X86
+operator|::
+name|DR10
+case|:
+case|case
+name|X86
+operator|::
+name|DR11
+case|:
+case|case
+name|X86
+operator|::
+name|DR12
+case|:
+case|case
+name|X86
+operator|::
+name|DR13
+case|:
+case|case
+name|X86
+operator|::
+name|DR14
+case|:
+case|case
+name|X86
+operator|::
+name|DR15
+case|:
 return|return
 name|true
 return|;
@@ -2791,6 +2789,53 @@ name|X86
 operator|::
 name|DIL
 operator|)
+return|;
+block|}
+comment|/// isKMasked - Is this a masked instruction.
+specifier|inline
+name|bool
+name|isKMasked
+parameter_list|(
+name|uint64_t
+name|TSFlags
+parameter_list|)
+block|{
+return|return
+operator|(
+name|TSFlags
+operator|&
+name|X86II
+operator|::
+name|EVEX_K
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// isKMergedMasked - Is this a merge masked instruction.
+specifier|inline
+name|bool
+name|isKMergeMasked
+parameter_list|(
+name|uint64_t
+name|TSFlags
+parameter_list|)
+block|{
+return|return
+name|isKMasked
+argument_list|(
+name|TSFlags
+argument_list|)
+operator|&&
+operator|(
+name|TSFlags
+operator|&
+name|X86II
+operator|::
+name|EVEX_Z
+operator|)
+operator|==
+literal|0
 return|;
 block|}
 block|}

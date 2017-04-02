@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- LibCxx.h ---------------------------------------------------*- C++ -*-===//
+comment|//===-- LibCxx.h ---------------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -204,7 +208,7 @@ operator|::
 name|ValueObjectSP
 operator|>
 name|m_children
-block|;         }
+block|; }
 decl_stmt|;
 name|SyntheticChildrenFrontEnd
 modifier|*
@@ -289,7 +293,12 @@ operator|:
 name|ValueObject
 operator|*
 name|m_pair_ptr
-block|;         }
+block|;
+name|lldb
+operator|::
+name|ValueObjectSP
+name|m_pair_sp
+block|; }
 decl_stmt|;
 name|SyntheticChildrenFrontEnd
 modifier|*
@@ -387,7 +396,7 @@ name|lldb
 operator|::
 name|ByteOrder
 name|m_byte_order
-block|;         }
+block|; }
 decl_stmt|;
 name|SyntheticChildrenFrontEnd
 modifier|*
@@ -452,6 +461,18 @@ decl_stmt|;
 name|SyntheticChildrenFrontEnd
 modifier|*
 name|LibcxxInitializerListSyntheticFrontEndCreator
+argument_list|(
+name|CXXSyntheticChildren
+operator|*
+argument_list|,
+name|lldb
+operator|::
+name|ValueObjectSP
+argument_list|)
+decl_stmt|;
+name|SyntheticChildrenFrontEnd
+modifier|*
+name|LibcxxFunctionFrontEndCreator
 argument_list|(
 name|CXXSyntheticChildren
 operator|*

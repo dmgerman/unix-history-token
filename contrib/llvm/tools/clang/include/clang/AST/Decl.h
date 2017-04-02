@@ -1058,17 +1058,14 @@ name|getAsString
 argument_list|()
 return|;
 block|}
+name|virtual
 name|void
 name|printName
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
-block|{
-name|os
-operator|<<
-name|Name
-block|; }
+block|;
 comment|/// getDeclName - Get the actual, stored name of the declaration,
 comment|/// which may be a special name.
 name|DeclarationName
@@ -3170,7 +3167,7 @@ block|;
 name|protected
 operator|:
 comment|// A pointer union of Stmt * and EvaluatedStmt *. When an EvaluatedStmt, we
-comment|// have allocated the auxilliary struct of information there.
+comment|// have allocated the auxiliary struct of information there.
 comment|//
 comment|// TODO: It is a bit unfortunate to use a PointerUnion inside the VarDecl for
 comment|// this as *many* VarDecls are ParmVarDecls that don't have default
@@ -3336,6 +3333,14 @@ block|;
 name|unsigned
 operator|:
 name|NumVarDeclBits
+block|;
+comment|// FIXME: We need something similar to CXXRecordDecl::DefinitionData.
+comment|/// \brief Whether this variable is a definition which was demoted due to
+comment|/// module merge.
+name|unsigned
+name|IsThisDeclarationADemotedDefinition
+operator|:
+literal|1
 block|;
 comment|/// \brief Whether this variable is the exception variable in a C++ catch
 comment|/// or an Objective-C @catch statement.
@@ -4000,6 +4005,13 @@ operator|!=
 name|Decl
 operator|::
 name|Var
+operator|&&
+name|getKind
+argument_list|()
+operator|!=
+name|Decl
+operator|::
+name|Decomposition
 condition|)
 return|return
 name|false
@@ -4084,6 +4096,13 @@ operator|!=
 name|Decl
 operator|::
 name|Var
+operator|&&
+name|getKind
+argument_list|()
+operator|!=
+name|Decl
+operator|::
+name|Decomposition
 condition|)
 return|return
 name|false
@@ -4888,6 +4907,90 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief If this definition should pretend to be a declaration.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isThisDeclarationADemotedDefinition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+operator|?
+name|false
+operator|:
+name|NonParmVarDeclBits
+operator|.
+name|IsThisDeclarationADemotedDefinition
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief This is a definition which should be demoted to a declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// In some cases (mostly module merging) we can end up with two visible
+end_comment
+
+begin_comment
+comment|/// definitions one of which needs to be demoted to a declaration to keep
+end_comment
+
+begin_comment
+comment|/// the AST invariants.
+end_comment
+
+begin_function
+name|void
+name|demoteThisDefinitionToDeclaration
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|isThisDeclarationADefinition
+argument_list|()
+operator|&&
+literal|"Not a definition!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|!
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+operator|&&
+literal|"Cannot demote ParmVarDecls!"
+argument_list|)
+expr_stmt|;
+name|NonParmVarDeclBits
+operator|.
+name|IsThisDeclarationADemotedDefinition
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Determine whether this variable is the exception variable in a
 end_comment
 
@@ -5455,6 +5558,23 @@ name|Same
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Retrieve the variable declaration from which this variable could
+end_comment
+
+begin_comment
+comment|/// be instantiated, if it is an instantiation (rather than a non-template).
+end_comment
+
+begin_expr_stmt
+name|VarDecl
+operator|*
+name|getTemplateInstantiationPattern
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief If this variable is an instantiated static data member of a
@@ -6723,16 +6843,6 @@ modifier|*
 modifier|*
 name|ParamInfo
 decl_stmt|;
-comment|/// DeclsInPrototypeScope - Array of pointers to NamedDecls for
-comment|/// decls defined in the function prototype that are not parameters. E.g.
-comment|/// 'enum Y' in 'void f(enum Y {AA} x) {}'.
-name|ArrayRef
-operator|<
-name|NamedDecl
-operator|*
-operator|>
-name|DeclsInPrototypeScope
-expr_stmt|;
 name|LazyDeclStmtPtr
 name|Body
 decl_stmt|;
@@ -6821,6 +6931,14 @@ comment|/// \brief Indicates if the function was a definition but its body was
 comment|/// skipped.
 name|unsigned
 name|HasSkippedBody
+range|:
+literal|1
+decl_stmt|;
+comment|/// Indicates if the function declaration will have a body, once we're done
+comment|/// parsing it.  (We don't set it to false when we're done parsing, in the
+comment|/// hopes this is simpler.)
+name|unsigned
+name|WillHaveBody
 range|:
 literal|1
 decl_stmt|;
@@ -7096,6 +7214,11 @@ name|false
 argument_list|)
 operator|,
 name|HasSkippedBody
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|WillHaveBody
 argument_list|(
 name|false
 argument_list|)
@@ -8048,6 +8171,30 @@ operator|=
 name|Skipped
 expr_stmt|;
 block|}
+comment|/// True if this function will eventually have a body, once it's fully parsed.
+name|bool
+name|willHaveBody
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WillHaveBody
+return|;
+block|}
+name|void
+name|setWillHaveBody
+parameter_list|(
+name|bool
+name|V
+init|=
+name|true
+parameter_list|)
+block|{
+name|WillHaveBody
+operator|=
+name|V
+expr_stmt|;
+block|}
 name|void
 name|setPreviousDeclaration
 parameter_list|(
@@ -8301,30 +8448,6 @@ name|NewParamInfo
 argument_list|)
 expr_stmt|;
 block|}
-name|ArrayRef
-operator|<
-name|NamedDecl
-operator|*
-operator|>
-name|getDeclsInPrototypeScope
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DeclsInPrototypeScope
-return|;
-block|}
-name|void
-name|setDeclsInPrototypeScope
-argument_list|(
-name|ArrayRef
-operator|<
-name|NamedDecl
-operator|*
-operator|>
-name|NewDecls
-argument_list|)
-decl_stmt|;
 comment|/// getMinRequiredArguments - Returns the minimum number of arguments
 comment|/// needed to call this function. This may be fewer than the number of
 comment|/// function parameters, if some of the parameters have default
@@ -8374,6 +8497,13 @@ comment|/// function return type. This may omit qualifiers and other information
 comment|/// limited representation in the AST.
 name|SourceRange
 name|getReturnTypeSourceRange
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Attempt to compute an informative source range covering the
+comment|/// function exception specification, if any.
+name|SourceRange
+name|getExceptionSpecSourceRange
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -16014,6 +16144,305 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|/// \brief Represents a C++ Modules TS module export declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// For example:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|///   export void foo();
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_decl_stmt
+name|class
+name|ExportDecl
+name|final
+range|:
+name|public
+name|Decl
+decl_stmt|,
+name|public
+name|DeclContext
+block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+name|private
+label|:
+comment|/// \brief The source location for the right brace (if valid).
+name|SourceLocation
+name|RBraceLoc
+decl_stmt|;
+name|ExportDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation ExportLoc
+argument_list|)
+block|:
+name|Decl
+argument_list|(
+name|Export
+argument_list|,
+name|DC
+argument_list|,
+name|ExportLoc
+argument_list|)
+operator|,
+name|DeclContext
+argument_list|(
+name|Export
+argument_list|)
+operator|,
+name|RBraceLoc
+argument_list|(
+argument|SourceLocation()
+argument_list|)
+block|{ }
+name|friend
+name|class
+name|ASTDeclReader
+expr_stmt|;
+name|public
+label|:
+specifier|static
+name|ExportDecl
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|ExportLoc
+parameter_list|)
+function_decl|;
+specifier|static
+name|ExportDecl
+modifier|*
+name|CreateDeserialized
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|)
+function_decl|;
+name|SourceLocation
+name|getExportLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocation
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getRBraceLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RBraceLoc
+return|;
+block|}
+name|void
+name|setRBraceLoc
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
+block|{
+name|RBraceLoc
+operator|=
+name|L
+expr_stmt|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+if|if
+condition|(
+name|RBraceLoc
+operator|.
+name|isValid
+argument_list|()
+condition|)
+return|return
+name|RBraceLoc
+return|;
+comment|// No braces: get the end location of the (only) declaration in context
+comment|// (if present).
+return|return
+name|decls_empty
+argument_list|()
+condition|?
+name|getLocation
+argument_list|()
+else|:
+name|decls_begin
+argument_list|()
+operator|->
+name|getLocEnd
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|override
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getLocation
+argument_list|()
+argument_list|,
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bool
+name|classofKind
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
+block|{
+return|return
+name|K
+operator|==
+name|Export
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|DeclContext
+modifier|*
+name|castToDeclContext
+parameter_list|(
+specifier|const
+name|ExportDecl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|ExportDecl
+operator|*
+operator|>
+operator|(
+name|D
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|ExportDecl
+modifier|*
+name|castFromDeclContext
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|ExportDecl
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|DC
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+unit|};
 comment|/// \brief Represents an empty-declaration.
 end_comment
 

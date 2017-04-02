@@ -58,18 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Error.h"
 end_include
 
@@ -77,6 +65,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/MainLoop.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
 end_include
 
 begin_include
@@ -127,20 +127,11 @@ name|SoftwareBreakpoint
 block|;
 name|public
 operator|:
-comment|// lldb_private::Host calls should be used to launch a process for debugging, and
-comment|// then the process should be attached to. When attaching to a process
-comment|// lldb_private::Host calls should be used to locate the process to attach to,
-comment|// and then this function should be called.
-name|NativeProcessProtocol
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|)
-block|;
 name|virtual
 operator|~
 name|NativeProcessProtocol
 argument_list|()
-block|{         }
+block|{}
 name|virtual
 name|Error
 name|Resume
@@ -522,7 +513,7 @@ block|{
 name|m_current_thread_id
 operator|=
 name|tid
-block|;         }
+block|; }
 name|lldb
 operator|::
 name|tid_t
@@ -609,7 +600,7 @@ name|process
 argument_list|)
 operator|=
 literal|0
-block|;         }
+block|;   }
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Register a native delegate.
@@ -859,6 +850,16 @@ block|;
 name|uint32_t
 name|m_stop_id
 block|;
+comment|// lldb_private::Host calls should be used to launch a process for debugging,
+comment|// and
+comment|// then the process should be attached to. When attaching to a process
+comment|// lldb_private::Host calls should be used to locate the process to attach to,
+comment|// and then this function should be called.
+name|NativeProcessProtocol
+argument_list|(
+argument|lldb::pid_t pid
+argument_list|)
+block|;
 comment|// -----------------------------------------------------------
 comment|// Internal interface for state handling
 comment|// -----------------------------------------------------------
@@ -923,6 +924,18 @@ argument_list|(
 argument|lldb::tid_t tid
 argument_list|)
 block|;
+comment|// -----------------------------------------------------------
+comment|// Static helper methods for derived classes.
+comment|// -----------------------------------------------------------
+specifier|static
+name|Error
+name|ResolveProcessArchitecture
+argument_list|(
+argument|lldb::pid_t pid
+argument_list|,
+argument|ArchSpec&arch
+argument_list|)
+block|;
 name|private
 operator|:
 name|void
@@ -930,7 +943,7 @@ name|SynchronouslyNotifyProcessStateChanged
 argument_list|(
 argument|lldb::StateType state
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

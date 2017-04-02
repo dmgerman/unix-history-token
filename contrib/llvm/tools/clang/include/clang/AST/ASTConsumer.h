@@ -59,12 +59,6 @@ directive|define
 name|LLVM_CLANG_AST_ASTCONSUMER_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang

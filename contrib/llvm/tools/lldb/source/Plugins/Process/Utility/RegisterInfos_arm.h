@@ -62,12 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/lldb-defines.h"
 end_include
 
@@ -80,13 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"Utility/ARM_ehframe_Registers.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"Utility/ARM_DWARF_Registers.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"Utility/ARM_ehframe_Registers.h"
 end_include
 
 begin_decl_stmt
@@ -2083,8 +2083,13 @@ name|g_register_infos_arm
 index|[]
 init|=
 block|{
-comment|//  NAME         ALT     SZ   OFFSET          ENCODING          FORMAT                  EH_FRAME             DWARF                GENERIC                     PROCESS PLUGIN       LLDB NATIVE      VALUE REGS      INVALIDATE REGS
-comment|//  ===========  ======= ==   ==============  ================  ====================    ===================  ===================  ==========================  ===================  =============    ==============  =================
+comment|//  NAME         ALT     SZ   OFFSET          ENCODING          FORMAT
+comment|//  EH_FRAME             DWARF                GENERIC
+comment|//  PROCESS PLUGIN       LLDB NATIVE      VALUE REGS      INVALIDATE REGS
+comment|//  ===========  ======= ==   ==============  ================
+comment|//  ====================    ===================  ===================
+comment|//  ==========================  ===================  =============
+comment|//  ==============  =================
 block|{
 literal|"r0"
 block|,

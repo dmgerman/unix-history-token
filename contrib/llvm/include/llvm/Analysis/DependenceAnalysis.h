@@ -238,18 +238,23 @@ name|protected
 label|:
 name|Dependence
 argument_list|(
-specifier|const
 name|Dependence
-operator|&
+operator|&&
 argument_list|)
 operator|=
 expr|default
 expr_stmt|;
-comment|// FIXME: When we move to MSVC 2015 as the base compiler for Visual Studio
-comment|// support, uncomment this line to allow a defaulted move constructor for
-comment|// Dependence. Currently, FullDependence relies on the copy constructor, but
-comment|// that is acceptable given the triviality of the class.
-comment|// Dependence(Dependence&&) = default;
+name|Dependence
+modifier|&
+name|operator
+init|=
+operator|(
+name|Dependence
+operator|&&
+operator|)
+operator|=
+expr|default
+decl_stmt|;
 name|public
 label|:
 name|Dependence
@@ -742,49 +747,6 @@ argument_list|,
 argument|unsigned Levels
 argument_list|)
 block|;
-name|FullDependence
-argument_list|(
-name|FullDependence
-operator|&&
-name|RHS
-argument_list|)
-operator|:
-name|Dependence
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-argument_list|)
-argument_list|)
-block|,
-name|Levels
-argument_list|(
-name|RHS
-operator|.
-name|Levels
-argument_list|)
-block|,
-name|LoopIndependent
-argument_list|(
-name|RHS
-operator|.
-name|LoopIndependent
-argument_list|)
-block|,
-name|Consistent
-argument_list|(
-name|RHS
-operator|.
-name|Consistent
-argument_list|)
-block|,
-name|DV
-argument_list|(
-argument|std::move(RHS.DV)
-argument_list|)
-block|{}
 comment|/// isLoopIndependent - Returns true if this is a loop-independent
 comment|/// dependence.
 name|bool
@@ -2753,8 +2715,8 @@ decl_stmt|;
 name|private
 label|:
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 decl_stmt|;
 name|friend
 block|struct

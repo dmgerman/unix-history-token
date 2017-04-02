@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/GlobalISel/GISelAccessor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/CallingConv.h"
 end_include
 
@@ -375,6 +381,11 @@ comment|/// True if SHLD instructions are slow.
 name|bool
 name|IsSHLDSlow
 block|;
+comment|/// True if the PMULLD instruction is slow compared to PMULLW/PMULHW and
+comment|//  PMULUDQ.
+name|bool
+name|IsPMULLDSlow
+block|;
 comment|/// True if unaligned memory accesses of 16-bytes are slow.
 name|bool
 name|IsUAMem16Slow
@@ -403,15 +414,29 @@ comment|/// of a YMM register without clearing the upper part.
 name|bool
 name|HasFastPartialYMMWrite
 block|;
+comment|/// True if hardware SQRTSS instruction is at least as fast (latency) as
+comment|/// RSQRTSS followed by a Newton-Raphson iteration.
+name|bool
+name|HasFastScalarFSQRT
+block|;
+comment|/// True if hardware SQRTPS/VSQRTPS instructions are at least as fast
+comment|/// (throughput) as RSQRTPS/VRSQRTPS followed by a Newton-Raphson iteration.
+name|bool
+name|HasFastVectorFSQRT
+block|;
 comment|/// True if 8-bit divisions are significantly faster than
 comment|/// 32-bit divisions and should be used when possible.
 name|bool
 name|HasSlowDivide32
 block|;
-comment|/// True if 16-bit divides are significantly faster than
+comment|/// True if 32-bit divides are significantly faster than
 comment|/// 64-bit divisions and should be used when possible.
 name|bool
 name|HasSlowDivide64
+block|;
+comment|/// True if LZCNT instruction is fast.
+name|bool
+name|HasFastLZCNT
 block|;
 comment|/// True if the short functions should be padded to prevent
 comment|/// a stall when returning too early.
@@ -518,6 +543,17 @@ comment|/// Instruction itineraries for scheduling
 name|InstrItineraryData
 name|InstrItins
 block|;
+comment|/// Gather the accessor points to GlobalISel-related APIs.
+comment|/// This is used to avoid ifndefs spreading around while GISel is
+comment|/// an optional library.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|GISelAccessor
+operator|>
+name|GISel
+block|;
 name|private
 operator|:
 comment|/// Override the stack alignment.
@@ -568,6 +604,23 @@ argument_list|,
 argument|unsigned StackAlignOverride
 argument_list|)
 block|;
+comment|/// This object will take onwership of \p GISelAccessor.
+name|void
+name|setGISelAccessor
+argument_list|(
+argument|GISelAccessor&GISel
+argument_list|)
+block|{
+name|this
+operator|->
+name|GISel
+operator|.
+name|reset
+argument_list|(
+operator|&
+name|GISel
+argument_list|)
+block|; }
 specifier|const
 name|X86TargetLowering
 operator|*
@@ -669,6 +722,39 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|)
+block|;
+comment|/// Methods used by Global ISel
+specifier|const
+name|CallLowering
+operator|*
+name|getCallLowering
+argument_list|()
+specifier|const
+name|override
+block|;
+specifier|const
+name|InstructionSelector
+operator|*
+name|getInstructionSelector
+argument_list|()
+specifier|const
+name|override
+block|;
+specifier|const
+name|LegalizerInfo
+operator|*
+name|getLegalizerInfo
+argument_list|()
+specifier|const
+name|override
+block|;
+specifier|const
+name|RegisterBankInfo
+operator|*
+name|getRegBankInfo
+argument_list|()
+specifier|const
+name|override
 block|;
 name|private
 operator|:
@@ -1279,6 +1365,15 @@ name|IsSHLDSlow
 return|;
 block|}
 name|bool
+name|isPMULLDSlow
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPMULLDSlow
+return|;
+block|}
+name|bool
 name|isUnalignedMem16Slow
 argument_list|()
 specifier|const
@@ -1330,6 +1425,33 @@ specifier|const
 block|{
 return|return
 name|HasFastPartialYMMWrite
+return|;
+block|}
+name|bool
+name|hasFastScalarFSQRT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFastScalarFSQRT
+return|;
+block|}
+name|bool
+name|hasFastVectorFSQRT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFastVectorFSQRT
+return|;
+block|}
+name|bool
+name|hasFastLZCNT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFastLZCNT
 return|;
 block|}
 name|bool
@@ -1467,6 +1589,18 @@ return|return
 name|HasMPX
 return|;
 block|}
+name|virtual
+name|bool
+name|isXRaySupported
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|is64Bit
+argument_list|()
+return|;
+block|}
 name|bool
 name|isAtom
 argument_list|()
@@ -1581,7 +1715,7 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|isPS4
+name|isPS4CPU
 argument_list|()
 return|;
 block|}

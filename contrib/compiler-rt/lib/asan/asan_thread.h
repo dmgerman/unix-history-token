@@ -441,6 +441,14 @@ parameter_list|(
 name|FakeStack
 modifier|*
 name|fake_stack_save
+parameter_list|,
+name|uptr
+modifier|*
+name|bottom_old
+parameter_list|,
+name|uptr
+modifier|*
+name|size_old
 parameter_list|)
 function_decl|;
 name|bool

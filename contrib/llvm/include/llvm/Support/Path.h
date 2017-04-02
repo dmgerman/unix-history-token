@@ -608,6 +608,20 @@ operator|&
 name|path
 argument_list|)
 decl_stmt|;
+comment|/// @brief Replaces backslashes with slashes if Windows.
+comment|///
+comment|/// @param path processed path
+comment|/// @result The result of replacing backslashes with forward slashes if Windows.
+comment|/// On Unix, this function is a no-op because backslashes are valid path
+comment|/// chracters.
+name|std
+operator|::
+name|string
+name|convert_to_slash
+argument_list|(
+argument|StringRef path
+argument_list|)
+expr_stmt|;
 comment|/// @}
 comment|/// @name Lexical Observers
 comment|/// @{
@@ -1015,7 +1029,8 @@ function_decl|;
 comment|/// @brief In-place remove any './' and optionally '../' components from a path.
 comment|///
 comment|/// @param path processed path
-comment|/// @param remove_dot_dot specify if '../' should be removed
+comment|/// @param remove_dot_dot specify if '../' (except for leading "../") should be
+comment|/// removed
 comment|/// @result True if path was changed
 name|bool
 name|remove_dots

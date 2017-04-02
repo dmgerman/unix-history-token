@@ -1379,9 +1379,10 @@ name|StorageClassSpecLoc
 decl_stmt|,
 name|ThreadStorageClassSpecLoc
 decl_stmt|;
+name|SourceRange
+name|TSWRange
+decl_stmt|;
 name|SourceLocation
-name|TSWLoc
-decl_stmt|,
 name|TSCLoc
 decl_stmt|,
 name|TSSLoc
@@ -2027,7 +2028,19 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TSWLoc
+name|TSWRange
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceRange
+name|getTypeSpecWidthRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TSWRange
 return|;
 block|}
 name|SourceLocation
@@ -4616,13 +4629,19 @@ comment|/// cannot be parsed immediately (because it occurs within the
 comment|/// declaration of a member function), it will be stored here as a
 comment|/// sequence of tokens to be parsed once the class definition is
 comment|/// complete. Non-NULL indicates that there is a default argument.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CachedTokens
-modifier|*
+operator|>
 name|DefaultArgTokens
-decl_stmt|;
+expr_stmt|;
 name|ParamInfo
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|ParamInfo
 argument_list|(
 argument|IdentifierInfo *ident
@@ -4631,7 +4650,7 @@ argument|SourceLocation iloc
 argument_list|,
 argument|Decl *param
 argument_list|,
-argument|CachedTokens *DefArgTokens = nullptr
+argument|std::unique_ptr<CachedTokens> DefArgTokens = nullptr
 argument_list|)
 block|:
 name|Ident
@@ -4651,7 +4670,7 @@ argument_list|)
 operator|,
 name|DefaultArgTokens
 argument_list|(
-argument|DefArgTokens
+argument|std::move(DefArgTokens)
 argument_list|)
 block|{}
 block|}
@@ -4744,10 +4763,11 @@ comment|/// declarator.
 name|unsigned
 name|NumParams
 block|;
-comment|/// NumExceptions - This is the number of types in the dynamic-exception-
-comment|/// decl, if the function has one.
+comment|/// NumExceptionsOrDecls - This is the number of types in the
+comment|/// dynamic-exception-decl, if the function has one. In C, this is the
+comment|/// number of declarations in the function prototype.
 name|unsigned
-name|NumExceptions
+name|NumExceptionsOrDecls
 block|;
 comment|/// \brief The location of the ref-qualifier, if any.
 comment|///
@@ -4813,6 +4833,14 @@ comment|/// that has not yet been parsed.
 name|CachedTokens
 operator|*
 name|ExceptionSpecTokens
+block|;
+comment|/// Pointer to a new[]'d array of declarations that need to be available
+comment|/// for lookup inside the function body, if one exists. Does not exist in
+comment|/// C++.
+name|NamedDecl
+operator|*
+operator|*
+name|DeclsInPrototype
 block|;     }
 block|;
 comment|/// \brief If HasTrailingReturnType is true, this is the trailing return
@@ -4841,25 +4869,16 @@ condition|;
 operator|++
 name|I
 control|)
-block|{
-name|delete
 name|Params
 index|[
 name|I
 index|]
 operator|.
 name|DefaultArgTokens
-expr_stmt|;
-name|Params
-index|[
-name|I
-index|]
 operator|.
-name|DefaultArgTokens
-operator|=
-name|nullptr
+name|reset
+argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|DeleteParams
@@ -4881,7 +4900,7 @@ expr_stmt|;
 block|}
 name|void
 name|destroy
-argument_list|()
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -4891,28 +4910,44 @@ name|delete
 index|[]
 name|Params
 decl_stmt|;
-if|if
+switch|switch
 condition|(
 name|getExceptionSpecType
 argument_list|()
-operator|==
-name|EST_Dynamic
 condition|)
+block|{
+default|default:
+break|break;
+case|case
+name|EST_Dynamic
+case|:
 name|delete
 index|[]
 name|Exceptions
 decl_stmt|;
-elseif|else
-if|if
-condition|(
-name|getExceptionSpecType
-argument_list|()
-operator|==
+break|break;
+case|case
 name|EST_Unparsed
-condition|)
+case|:
 name|delete
 name|ExceptionSpecTokens
 decl_stmt|;
+break|break;
+case|case
+name|EST_None
+case|:
+if|if
+condition|(
+name|NumExceptionsOrDecls
+operator|!=
+literal|0
+condition|)
+name|delete
+index|[]
+name|DeclsInPrototype
+decl_stmt|;
+break|break;
+block|}
 block|}
 comment|/// isKNRPrototype - Return true if this is a K&R style identifier list,
 comment|/// like "void foo(a,b,c)".  In a function definition, this will be followed
@@ -5138,6 +5173,52 @@ name|ExceptionSpecType
 operator|)
 return|;
 block|}
+comment|/// \brief Get the number of dynamic exception specifications.
+name|unsigned
+name|getNumExceptions
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ExceptionSpecType
+operator|!=
+name|EST_None
+argument_list|)
+block|;
+return|return
+name|NumExceptionsOrDecls
+return|;
+block|}
+comment|/// \brief Get the non-parameter decls defined within this function
+comment|/// prototype. Typically these are tag declarations.
+name|ArrayRef
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+name|getDeclsInPrototype
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ExceptionSpecType
+operator|==
+name|EST_None
+argument_list|)
+block|;
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|DeclsInPrototype
+argument_list|,
+name|NumExceptionsOrDecls
+argument_list|)
+return|;
+block|}
 comment|/// \brief Determine whether this function declarator had a
 comment|/// trailing-return-type.
 name|bool
@@ -5201,22 +5282,18 @@ literal|5
 block|;
 comment|// CXXScopeSpec has a constructor, so it can't be a direct member.
 comment|// So we need some pointer-aligned storage and a bit of trickery.
-expr|union
-block|{
-name|void
-operator|*
-name|Aligner
-block|;
+name|alignas
+argument_list|(
+argument|CXXScopeSpec
+argument_list|)
 name|char
-name|Mem
+name|ScopeMem
 index|[
 sizeof|sizeof
 argument_list|(
 name|CXXScopeSpec
 argument_list|)
 index|]
-block|;     }
-name|ScopeMem
 block|;
 name|CXXScopeSpec
 operator|&
@@ -5232,8 +5309,6 @@ operator|*
 operator|>
 operator|(
 name|ScopeMem
-operator|.
-name|Mem
 operator|)
 return|;
 block|}
@@ -5254,8 +5329,6 @@ operator|*
 operator|>
 operator|(
 name|ScopeMem
-operator|.
-name|Mem
 operator|)
 return|;
 block|}
@@ -5740,6 +5813,8 @@ argument|Expr *NoexceptExpr
 argument_list|,
 argument|CachedTokens *ExceptionSpecTokens
 argument_list|,
+argument|ArrayRef<NamedDecl *> DeclsInPrototype
+argument_list|,
 argument|SourceLocation LocalRangeBegin
 argument_list|,
 argument|SourceLocation LocalRangeEnd
@@ -5892,7 +5967,7 @@ name|nullptr
 block|;
 name|new
 argument_list|(
-argument|I.Mem.ScopeMem.Mem
+argument|I.Mem.ScopeMem
 argument_list|)
 name|CXXScopeSpec
 argument_list|(
@@ -5955,6 +6030,203 @@ return|return
 name|Kind
 operator|==
 name|Paren
+return|;
+block|}
+expr|}
+block|;
+comment|/// A parsed C++17 decomposition declarator of the form
+comment|///   '[' identifier-list ']'
+name|class
+name|DecompositionDeclarator
+block|{
+name|public
+operator|:
+expr|struct
+name|Binding
+block|{
+name|IdentifierInfo
+operator|*
+name|Name
+block|;
+name|SourceLocation
+name|NameLoc
+block|;   }
+block|;
+name|private
+operator|:
+comment|/// The locations of the '[' and ']' tokens.
+name|SourceLocation
+name|LSquareLoc
+block|,
+name|RSquareLoc
+block|;
+comment|/// The bindings.
+name|Binding
+operator|*
+name|Bindings
+block|;
+name|unsigned
+name|NumBindings
+operator|:
+literal|31
+block|;
+name|unsigned
+name|DeleteBindings
+operator|:
+literal|1
+block|;
+name|friend
+name|class
+name|Declarator
+block|;
+name|public
+operator|:
+name|DecompositionDeclarator
+argument_list|()
+operator|:
+name|Bindings
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|NumBindings
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DeleteBindings
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|DecompositionDeclarator
+argument_list|(
+specifier|const
+name|DecompositionDeclarator
+operator|&
+name|G
+argument_list|)
+operator|=
+name|delete
+block|;
+name|DecompositionDeclarator
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|DecompositionDeclarator
+operator|&
+name|G
+operator|)
+operator|=
+name|delete
+block|;
+operator|~
+name|DecompositionDeclarator
+argument_list|()
+block|{
+if|if
+condition|(
+name|DeleteBindings
+condition|)
+name|delete
+index|[]
+name|Bindings
+decl_stmt|;
+block|}
+name|void
+name|clear
+argument_list|()
+block|{
+name|LSquareLoc
+operator|=
+name|RSquareLoc
+operator|=
+name|SourceLocation
+argument_list|()
+block|;
+if|if
+condition|(
+name|DeleteBindings
+condition|)
+name|delete
+index|[]
+name|Bindings
+decl_stmt|;
+name|Bindings
+operator|=
+name|nullptr
+block|;
+name|NumBindings
+operator|=
+literal|0
+block|;
+name|DeleteBindings
+operator|=
+name|false
+block|;   }
+name|ArrayRef
+operator|<
+name|Binding
+operator|>
+name|bindings
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|Bindings
+argument_list|,
+name|NumBindings
+argument_list|)
+return|;
+block|}
+name|bool
+name|isSet
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LSquareLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLSquareLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LSquareLoc
+return|;
+block|}
+name|SourceLocation
+name|getRSquareLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RSquareLoc
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|LSquareLoc
+argument_list|,
+name|RSquareLoc
+argument_list|)
 return|;
 block|}
 expr|}
@@ -6083,6 +6355,10 @@ comment|/// \brief Where we are parsing this declarator.
 name|TheContext
 name|Context
 block|;
+comment|/// The C++17 structured binding, if any. This is an alternative to a Name.
+name|DecompositionDeclarator
+name|BindingGroup
+block|;
 comment|/// DeclTypeInfo - This holds each type that the declarator includes as it is
 comment|/// parsed.  This is pushed from the identifier out, which means that element
 comment|/// #0 will be the most closely bound to the identifier, and
@@ -6122,29 +6398,6 @@ name|Redeclaration
 operator|:
 literal|1
 block|;
-comment|/// Attrs - Attributes.
-name|ParsedAttributes
-name|Attrs
-block|;
-comment|/// \brief The asm label, if specified.
-name|Expr
-operator|*
-name|AsmLabel
-block|;
-comment|/// InlineParams - This is a local array used for the first function decl
-comment|/// chunk to avoid going to the heap for the common case when we have one
-comment|/// function chunk in the declarator.
-name|DeclaratorChunk
-operator|::
-name|ParamInfo
-name|InlineParams
-index|[
-literal|16
-index|]
-block|;
-name|bool
-name|InlineParamsUsed
-block|;
 comment|/// \brief true if the declaration is preceded by \c __extension__.
 name|unsigned
 name|Extension
@@ -6163,6 +6416,54 @@ name|ObjCWeakProperty
 operator|:
 literal|1
 block|;
+comment|/// Indicates whether the InlineParams / InlineBindings storage has been used.
+name|unsigned
+name|InlineStorageUsed
+operator|:
+literal|1
+block|;
+comment|/// Attrs - Attributes.
+name|ParsedAttributes
+name|Attrs
+block|;
+comment|/// \brief The asm label, if specified.
+name|Expr
+operator|*
+name|AsmLabel
+block|;
+ifndef|#
+directive|ifndef
+name|_MSC_VER
+expr|union
+block|{
+endif|#
+directive|endif
+comment|/// InlineParams - This is a local array used for the first function decl
+comment|/// chunk to avoid going to the heap for the common case when we have one
+comment|/// function chunk in the declarator.
+name|DeclaratorChunk
+operator|::
+name|ParamInfo
+name|InlineParams
+index|[
+literal|16
+index|]
+block|;
+name|DecompositionDeclarator
+operator|::
+name|Binding
+name|InlineBindings
+index|[
+literal|16
+index|]
+block|;
+ifndef|#
+directive|ifndef
+name|_MSC_VER
+block|}
+block|;
+endif|#
+directive|endif
 comment|/// \brief If this is the second or subsequent declarator in this declaration,
 comment|/// the location of the comma before this declarator.
 name|SourceLocation
@@ -6231,6 +6532,26 @@ argument_list|(
 name|false
 argument_list|)
 block|,
+name|Extension
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|ObjCIvar
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|ObjCWeakProperty
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|InlineStorageUsed
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|Attrs
 argument_list|(
 name|ds
@@ -6244,29 +6565,9 @@ argument_list|)
 block|,
 name|AsmLabel
 argument_list|(
-name|nullptr
+argument|nullptr
 argument_list|)
-block|,
-name|InlineParamsUsed
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|Extension
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|ObjCIvar
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|ObjCWeakProperty
-argument_list|(
-argument|false
-argument_list|)
-block|{   }
+block|{}
 operator|~
 name|Declarator
 argument_list|()
@@ -6351,6 +6652,17 @@ argument_list|()
 block|{
 return|return
 name|Name
+return|;
+block|}
+specifier|const
+name|DecompositionDeclarator
+operator|&
+name|getDecompositionDeclarator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BindingGroup
 return|;
 block|}
 name|TheContext
@@ -6562,6 +6874,11 @@ operator|.
 name|getSourceRange
 argument_list|()
 block|;
+name|BindingGroup
+operator|.
+name|clear
+argument_list|()
+block|;
 for|for
 control|(
 name|unsigned
@@ -6605,7 +6922,7 @@ name|AsmLabel
 operator|=
 name|nullptr
 block|;
-name|InlineParamsUsed
+name|InlineStorageUsed
 operator|=
 name|false
 block|;
@@ -6911,6 +7228,106 @@ literal|"unknown context kind!"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// Return true if the context permits a C++17 decomposition declarator.
+name|bool
+name|mayHaveDecompositionDeclarator
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|Context
+condition|)
+block|{
+case|case
+name|FileContext
+case|:
+comment|// FIXME: It's not clear that the proposal meant to allow file-scope
+comment|// structured bindings, but it does.
+case|case
+name|BlockContext
+case|:
+case|case
+name|ForContext
+case|:
+case|case
+name|InitStmtContext
+case|:
+return|return
+name|true
+return|;
+case|case
+name|ConditionContext
+case|:
+case|case
+name|MemberContext
+case|:
+case|case
+name|PrototypeContext
+case|:
+case|case
+name|TemplateParamContext
+case|:
+comment|// Maybe one day...
+return|return
+name|false
+return|;
+comment|// These contexts don't allow any kind of non-abstract declarator.
+case|case
+name|KNRTypeListContext
+case|:
+case|case
+name|TypeNameContext
+case|:
+case|case
+name|AliasDeclContext
+case|:
+case|case
+name|AliasTemplateContext
+case|:
+case|case
+name|LambdaExprParameterContext
+case|:
+case|case
+name|ObjCParameterContext
+case|:
+case|case
+name|ObjCResultContext
+case|:
+case|case
+name|CXXNewContext
+case|:
+case|case
+name|CXXCatchContext
+case|:
+case|case
+name|ObjCCatchContext
+case|:
+case|case
+name|BlockLiteralContext
+case|:
+case|case
+name|LambdaExprContext
+case|:
+case|case
+name|ConversionIdContext
+case|:
+case|case
+name|TemplateTypeArgContext
+case|:
+case|case
+name|TrailingReturnContext
+case|:
+return|return
+name|false
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"unknown context kind!"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// mayBeFollowedByCXXDirectInit - Return true if the declarator can be
 comment|/// followed by a C++ direct initializer, e.g. "int x(1);".
 name|bool
@@ -7093,7 +7510,11 @@ comment|/// isPastIdentifier - Return true if we have parsed beyond the point wh
 end_comment
 
 begin_comment
-comment|/// the
+comment|/// the name would appear. (This may happen even if we haven't actually parsed
+end_comment
+
+begin_comment
+comment|/// a name, perhaps because this context doesn't require one.)
 end_comment
 
 begin_macro
@@ -7123,7 +7544,11 @@ comment|/// identifier (accessible via getIdentifier()) or some kind of
 end_comment
 
 begin_comment
-comment|/// special C++ name (constructor, destructor, etc.).
+comment|/// special C++ name (constructor, destructor, etc.), or a structured
+end_comment
+
+begin_comment
+comment|/// binding (which is not exactly a name, but occupies the same position).
 end_comment
 
 begin_expr_stmt
@@ -7145,6 +7570,28 @@ operator|||
 name|Name
 operator|.
 name|Identifier
+operator|||
+name|isDecompositionDeclarator
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Return whether this declarator is a decomposition declarator.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isDecompositionDeclarator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BindingGroup
+operator|.
+name|isSet
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -7224,6 +7671,31 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// Set the decomposition bindings for this declarator.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setDecompositionBindings
+argument_list|(
+name|SourceLocation
+name|LSquareLoc
+argument_list|,
+name|ArrayRef
+operator|<
+name|DecompositionDeclarator
+operator|::
+name|Binding
+operator|>
+name|Bindings
+argument_list|,
+name|SourceLocation
+name|RSquareLoc
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// AddTypeInfo - Add a chunk to this declarator. Also extend the range to
@@ -8874,6 +9346,11 @@ block|,
 name|VS_Sealed
 init|=
 literal|4
+block|,
+comment|// Represents the __final keyword, which is legal for gcc in pre-C++11 mode.
+name|VS_GNU_Final
+init|=
+literal|8
 block|}
 enum|;
 name|VirtSpecifiers
@@ -8942,6 +9419,8 @@ operator|(
 name|VS_Final
 operator||
 name|VS_Sealed
+operator||
+name|VS_GNU_Final
 operator|)
 return|;
 block|}

@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/IOObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/Pipe.h"
 end_include
 
@@ -95,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/Predicate.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/IOObject.h"
 end_include
 
 begin_decl_stmt
@@ -219,7 +219,7 @@ operator|::
 name|ConnectionStatus
 name|Connect
 argument_list|(
-argument|const char *s
+argument|llvm::StringRef s
 argument_list|,
 argument|Error *error_ptr
 argument_list|)
@@ -241,7 +241,7 @@ argument|void *dst
 argument_list|,
 argument|size_t dst_len
 argument_list|,
-argument|uint32_t timeout_usec
+argument|const Timeout<std::micro>&timeout
 argument_list|,
 argument|lldb::ConnectionStatus&status
 argument_list|,
@@ -274,9 +274,19 @@ operator|::
 name|ConnectionStatus
 name|BytesAvailable
 argument_list|(
-argument|uint32_t timeout_usec
+specifier|const
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+operator|&
+name|timeout
 argument_list|,
-argument|Error *error_ptr
+name|Error
+operator|*
+name|error_ptr
 argument_list|)
 block|;
 name|bool
@@ -327,14 +337,9 @@ operator|::
 name|ConnectionStatus
 name|SocketListenAndAccept
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|host_and_port
+argument|llvm::StringRef host_and_port
 argument_list|,
-name|Error
-operator|*
-name|error_ptr
+argument|Error *error_ptr
 argument_list|)
 block|;
 name|lldb
@@ -342,14 +347,9 @@ operator|::
 name|ConnectionStatus
 name|ConnectTCP
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|host_and_port
+argument|llvm::StringRef host_and_port
 argument_list|,
-name|Error
-operator|*
-name|error_ptr
+argument|Error *error_ptr
 argument_list|)
 block|;
 name|lldb
@@ -357,14 +357,9 @@ operator|::
 name|ConnectionStatus
 name|ConnectUDP
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|args
+argument|llvm::StringRef args
 argument_list|,
-name|Error
-operator|*
-name|error_ptr
+argument|Error *error_ptr
 argument_list|)
 block|;
 name|lldb
@@ -372,14 +367,9 @@ operator|::
 name|ConnectionStatus
 name|NamedSocketConnect
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|socket_name
+argument|llvm::StringRef socket_name
 argument_list|,
-name|Error
-operator|*
-name|error_ptr
+argument|Error *error_ptr
 argument_list|)
 block|;
 name|lldb
@@ -387,14 +377,9 @@ operator|::
 name|ConnectionStatus
 name|NamedSocketAccept
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|socket_name
+argument|llvm::StringRef socket_name
 argument_list|,
-name|Error
-operator|*
-name|error_ptr
+argument|Error *error_ptr
 argument_list|)
 block|;
 name|lldb
@@ -402,14 +387,9 @@ operator|::
 name|ConnectionStatus
 name|UnixAbstractSocketConnect
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|socket_name
+argument|llvm::StringRef socket_name
 argument_list|,
-name|Error
-operator|*
-name|error_ptr
+argument|Error *error_ptr
 argument_list|)
 block|;
 name|lldb
@@ -447,7 +427,8 @@ name|bool
 operator|>
 name|m_shutting_down
 block|;
-comment|// This marks that we are shutting down so if we get woken up from
+comment|// This marks that we are shutting down so
+comment|// if we get woken up from
 comment|// BytesAvailable to disconnect, we won't try to read again.
 name|bool
 name|m_waiting_for_accept

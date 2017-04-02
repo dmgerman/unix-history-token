@@ -67,6 +67,15 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+enum|enum
+name|AsmComments
+block|{
+name|AC_EVEX_2_VEX
+init|=
+literal|0x2
+comment|// For instr that was compressed from EVEX to VEX.
+block|}
+enum|;
 name|class
 name|MCInst
 decl_stmt|;

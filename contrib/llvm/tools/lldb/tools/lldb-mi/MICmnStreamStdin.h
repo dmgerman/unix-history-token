@@ -44,18 +44,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MIUtilString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MIUtilThreadBaseStd.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MICmnBase.h"
 end_include
 
@@ -65,8 +53,24 @@ directive|include
 file|"MIUtilSingletonBase.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"MIUtilString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MIUtilThreadBaseStd.h"
+end_include
+
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -74,7 +78,11 @@ comment|// Details: MI common code class. Used to handle stream data from Stdin.
 end_comment
 
 begin_comment
-comment|//          Singleton class using the Visitor pattern. A driver using the interface
+comment|//          Singleton class using the Visitor pattern. A driver using the
+end_comment
+
+begin_comment
+comment|//          interface
 end_comment
 
 begin_comment
@@ -214,7 +222,8 @@ comment|// Command line prompt as shown to the user
 name|bool
 name|m_bShowPrompt
 decl_stmt|;
-comment|// True = Yes prompt is shown/output to the user (stdout), false = no prompt
+comment|// True = Yes prompt is shown/output to the user (stdout),
+comment|// false = no prompt
 specifier|static
 specifier|const
 name|int

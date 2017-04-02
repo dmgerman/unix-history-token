@@ -99,7 +99,8 @@ name|class
 name|IRExecutionUnit
 decl_stmt|;
 comment|//----------------------------------------------------------------------
-comment|/// @class ClangExpressionParser ClangExpressionParser.h "lldb/Expression/ClangExpressionParser.h"
+comment|/// @class ClangExpressionParser ClangExpressionParser.h
+comment|/// "lldb/Expression/ClangExpressionParser.h"
 comment|/// @brief Encapsulates an instance of Clang that can parse expressions.
 comment|///
 comment|/// ClangExpressionParser is responsible for preparing an instance of
@@ -348,7 +349,8 @@ name|LLDBPreprocessorCallbacks
 operator|*
 name|m_pp_callbacks
 block|;
-comment|///< Called when the preprocessor encounters module imports
+comment|///< Called when the preprocessor
+comment|///encounters module imports
 name|std
 operator|::
 name|unique_ptr

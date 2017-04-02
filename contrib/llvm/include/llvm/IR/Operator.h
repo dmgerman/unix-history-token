@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Constants.h"
 end_include
 
@@ -93,19 +105,28 @@ directive|include
 file|"llvm/IR/Type.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|GetElementPtrInst
-decl_stmt|;
-name|class
-name|BinaryOperator
-decl_stmt|;
-name|class
-name|ConstantExpr
-decl_stmt|;
 comment|/// This is a utility class that provides an abstraction for the common
 comment|/// functionality between Instructions and ConstantExprs.
 name|class
@@ -114,10 +135,25 @@ range|:
 name|public
 name|User
 block|{
-name|private
+name|protected
+operator|:
+comment|// NOTE: Cannot use = delete because it's not legal to delete
+comment|// an overridden method that's not deleted in the base class. Cannot leave
+comment|// this unimplemented because that leads to an ODR-violation.
+operator|~
+name|Operator
+argument_list|()
+name|override
+block|;
+name|public
 operator|:
 comment|// The Operator class is intended to be used as a utility, and is never itself
 comment|// instantiated.
+name|Operator
+argument_list|()
+operator|=
+name|delete
+block|;
 name|void
 operator|*
 name|operator
@@ -140,23 +176,6 @@ argument_list|)
 operator|=
 name|delete
 block|;
-name|Operator
-argument_list|()
-operator|=
-name|delete
-block|;
-name|protected
-operator|:
-comment|// NOTE: Cannot use = delete because it's not legal to delete
-comment|// an overridden method that's not deleted in the base class. Cannot leave
-comment|// this unimplemented because that leads to an ODR-violation.
-operator|~
-name|Operator
-argument_list|()
-name|override
-block|;
-name|public
-operator|:
 comment|/// Return the opcode for this Instruction or ConstantExpr.
 name|unsigned
 name|getOpcode
@@ -792,6 +811,8 @@ name|FPMathOperator
 block|;
 name|unsigned
 name|Flags
+operator|=
+literal|0
 block|;
 name|FastMathFlags
 argument_list|(
@@ -850,12 +871,9 @@ block|}
 block|;
 name|FastMathFlags
 argument_list|()
-operator|:
-name|Flags
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
+operator|=
+expr|default
+block|;
 comment|/// Whether any flag is set
 name|bool
 name|any
@@ -1329,9 +1347,9 @@ name|SubclassOptionalData
 argument_list|)
 return|;
 block|}
-comment|/// \brief Get the maximum error permitted by this operation in ULPs.  An
-comment|/// accuracy of 0.0 means that the operation should be performed with the
-comment|/// default precision.
+comment|/// Get the maximum error permitted by this operation in ULPs. An accuracy of
+comment|/// 0.0 means that the operation should be performed with the default
+comment|/// precision.
 name|float
 name|getFPAccuracy
 argument_list|()
@@ -1638,7 +1656,15 @@ name|Instruction
 operator|::
 name|GetElementPtr
 operator|>
-block|{   enum
+block|{
+name|friend
+name|class
+name|GetElementPtrInst
+block|;
+name|friend
+name|class
+name|ConstantExpr
+block|;    enum
 block|{
 name|IsInBounds
 operator|=
@@ -1647,15 +1673,9 @@ literal|1
 operator|<<
 literal|0
 operator|)
+block|,
+comment|// InRangeIndex: bits 1-6
 block|}
-block|;
-name|friend
-name|class
-name|GetElementPtrInst
-block|;
-name|friend
-name|class
-name|ConstantExpr
 block|;
 name|void
 name|setIsInBounds
@@ -1690,6 +1710,37 @@ return|return
 name|SubclassOptionalData
 operator|&
 name|IsInBounds
+return|;
+block|}
+comment|/// Returns the offset of the index with an inrange attachment, or None if
+comment|/// none.
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|getInRangeIndex
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|SubclassOptionalData
+operator|>>
+literal|1
+operator|==
+literal|0
+condition|)
+return|return
+name|None
+return|;
+return|return
+operator|(
+name|SubclassOptionalData
+operator|>>
+literal|1
+operator|)
+operator|-
+literal|1
 return|;
 block|}
 specifier|inline
@@ -2116,13 +2167,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_OPERATOR_H
+end_comment
 
 end_unit
 

@@ -119,7 +119,8 @@ block|{
 name|eHashFunctionDJB
 init|=
 literal|0u
-comment|// Daniel J Bernstein hash function that is also used by the ELF GNU_HASH sections
+comment|// Daniel J Bernstein hash function that is also used
+comment|// by the ELF GNU_HASH sections
 block|}
 enum|;
 specifier|static
@@ -212,15 +213,11 @@ return|;
 default|default:
 break|break;
 block|}
-name|assert
+name|llvm_unreachable
 argument_list|(
-operator|!
 literal|"Invalid hash function index"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 specifier|static
 specifier|const
@@ -267,11 +264,13 @@ comment|// The number of buckets in this hash table
 name|uint32_t
 name|hashes_count
 decl_stmt|;
-comment|// The total number of unique hash values and hash data offsets in this table
+comment|// The total number of unique hash values and hash
+comment|// data offsets in this table
 name|uint32_t
 name|header_data_len
 decl_stmt|;
-comment|// The size in bytes of the "header_data" template member below
+comment|// The size in bytes of the "header_data" template
+comment|// member below
 name|HeaderData
 name|header_data
 decl_stmt|;
@@ -314,7 +313,7 @@ argument_list|)
 operator|,
 name|header_data
 argument_list|()
-block|{ 		}
+block|{}
 name|virtual
 operator|~
 name|Header
@@ -669,7 +668,8 @@ name|LLDB_INVALID_OFFSET
 return|;
 block|}
 comment|//
-comment|//        // Returns a buffer that contains a serialized version of this table
+comment|//        // Returns a buffer that contains a serialized version of this
+comment|//        table
 comment|//        // that must be freed with free().
 comment|//        virtual void *
 comment|//        Write (int fd);
@@ -1180,7 +1180,9 @@ name|bucket_entry_empties
 init|=
 literal|0
 decl_stmt|;
-comment|//StreamString hash_file_data(Stream::eBinary, dwarf->GetObjectFile()->GetAddressByteSize(), dwarf->GetObjectFile()->GetByteSize());
+comment|// StreamString hash_file_data(Stream::eBinary,
+comment|// dwarf->GetObjectFile()->GetAddressByteSize(),
+comment|// dwarf->GetObjectFile()->GetByteSize());
 comment|// Push all of the hashes into their buckets and create all bucket
 comment|// entries all populated with data.
 for|for
@@ -1645,7 +1647,8 @@ name|eResultKeyMatch
 init|=
 literal|0u
 block|,
-comment|// The entry was found, key matched and "pair" was filled in successfully
+comment|// The entry was found, key matched and "pair" was
+comment|// filled in successfully
 name|eResultKeyMismatch
 init|=
 literal|1u
@@ -1655,7 +1658,8 @@ name|eResultEndOfHashData
 init|=
 literal|2u
 block|,
-comment|// The chain of items for this hash data in this bucket is terminated, search no more
+comment|// The chain of items for this hash data in
+comment|// this bucket is terminated, search no more
 name|eResultError
 init|=
 literal|3u
@@ -1806,7 +1810,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}          virtual
+unit|}      virtual
 operator|~
 name|MemoryTable
 argument_list|()
@@ -2124,7 +2128,8 @@ break|break;
 case|case
 name|eResultEndOfHashData
 case|:
-comment|// The last HashData for this key has been reached, stop searching
+comment|// The last HashData for this key has been reached, stop
+comment|// searching
 return|return
 name|false
 return|;

@@ -232,64 +232,6 @@ block|;
 name|StackMapShadowTracker
 name|SMShadowTracker
 block|;
-comment|// This describes the kind of sled we're storing in the XRay table.
-block|enum
-name|class
-name|SledKind
-operator|:
-name|uint8_t
-block|{
-name|FUNCTION_ENTER
-operator|=
-literal|0
-block|,
-name|FUNCTION_EXIT
-operator|=
-literal|1
-block|,
-name|TAIL_CALL
-operator|=
-literal|2
-block|,   }
-block|;
-comment|// The table will contain these structs that point to the sled, the function
-comment|// containing the sled, and what kind of sled (and whether they should always
-comment|// be instrumented).
-block|struct
-name|XRayFunctionEntry
-block|{
-specifier|const
-name|MCSymbol
-operator|*
-name|Sled
-block|;
-specifier|const
-name|MCSymbol
-operator|*
-name|Function
-block|;
-name|SledKind
-name|Kind
-block|;
-name|bool
-name|AlwaysInstrument
-block|;
-specifier|const
-name|class
-name|Function
-operator|*
-name|Fn
-block|;   }
-block|;
-comment|// All the sleds to be emitted.
-name|std
-operator|::
-name|vector
-operator|<
-name|XRayFunctionEntry
-operator|>
-name|Sleds
-block|;
 comment|// All instructions emitted by the X86AsmPrinter should use this helper
 comment|// method.
 comment|//
@@ -424,17 +366,6 @@ name|void
 name|EmitXRayTable
 argument_list|()
 block|;
-comment|// Helper function to record a given XRay sled.
-name|void
-name|recordSled
-argument_list|(
-argument|MCSymbol *Sled
-argument_list|,
-argument|const MachineInstr&MI
-argument_list|,
-argument|SledKind Kind
-argument_list|)
-block|;
 name|public
 operator|:
 name|explicit
@@ -476,16 +407,14 @@ argument_list|(
 argument|*this
 argument_list|)
 block|{}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const
 name|override
 block|{
 return|return
-literal|"X86 Assembly / Object Emitter"
+literal|"X86 Assembly Printer"
 return|;
 block|}
 specifier|const

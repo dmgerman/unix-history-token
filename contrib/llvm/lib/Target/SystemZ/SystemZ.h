@@ -758,6 +758,15 @@ parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createSystemZExpandPseudoPass
+parameter_list|(
+name|SystemZTargetMachine
+modifier|&
+name|TM
+parameter_list|)
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createSystemZShortenInstPass
 parameter_list|(
 name|SystemZTargetMachine

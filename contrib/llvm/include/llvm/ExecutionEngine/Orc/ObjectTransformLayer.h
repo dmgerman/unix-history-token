@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"JITSymbol.h"
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_decl_stmt
@@ -321,7 +321,7 @@ name|void
 modifier|*
 name|LocalAddress
 parameter_list|,
-name|TargetAddress
+name|JITTargetAddress
 name|TargetAddr
 parameter_list|)
 block|{

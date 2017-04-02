@@ -70,19 +70,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/CGSCCPassManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/LoopPassManager.h"
+file|"llvm/IR/PassManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/PassManager.h"
+file|"llvm/Transforms/Scalar/LoopPassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -295,19 +307,44 @@ modifier|&
 name|LAM
 parameter_list|)
 function_decl|;
-comment|/// \brief Add a per-module default optimization pipeline to a pass manager.
+comment|/// Construct the core LLVM function canonicalization and simplification
+comment|/// pipeline.
+comment|///
+comment|/// This is a long pipeline and uses most of the per-function optimization
+comment|/// passes in LLVM to canonicalize and simplify the IR. It is suitable to run
+comment|/// repeatedly over the IR and is not expected to destroy important
+comment|/// information about the semantics of the IR.
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
+name|FunctionPassManager
+name|buildFunctionSimplificationPipeline
+parameter_list|(
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Build a per-module default optimization pipeline.
 comment|///
 comment|/// This provides a good default optimization pipeline for per-module
 comment|/// optimization and code generation without any link-time optimization. It
 comment|/// typically correspond to frontend "-O[123]" options for optimization
 comment|/// levels \c O1, \c O2 and \c O3 resp.
-name|void
-name|addPerModuleDefaultPipeline
-parameter_list|(
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
 name|ModulePassManager
-modifier|&
-name|MPM
-parameter_list|,
+name|buildPerModuleDefaultPipeline
+parameter_list|(
 name|OptimizationLevel
 name|Level
 parameter_list|,
@@ -317,20 +354,21 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// \brief Add a pre-link, LTO-targeting default optimization pipeline to
-comment|/// a pass manager.
+comment|/// Build a pre-link, LTO-targeting default optimization pipeline to a pass
+comment|/// manager.
 comment|///
 comment|/// This adds the pre-link optimizations tuned to work well with a later LTO
 comment|/// run. It works to minimize the IR which needs to be analyzed without
 comment|/// making irreversible decisions which could be made better during the LTO
 comment|/// run.
-name|void
-name|addLTOPreLinkDefaultPipeline
-parameter_list|(
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
 name|ModulePassManager
-modifier|&
-name|MPM
-parameter_list|,
+name|buildLTOPreLinkDefaultPipeline
+parameter_list|(
 name|OptimizationLevel
 name|Level
 parameter_list|,
@@ -340,19 +378,20 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// \brief Add an LTO default optimization pipeline to a pass manager.
+comment|/// Build an LTO default optimization pipeline to a pass manager.
 comment|///
 comment|/// This provides a good default optimization pipeline for link-time
 comment|/// optimization and code generation. It is particularly tuned to fit well
 comment|/// when IR coming into the LTO phase was first run through \c
 comment|/// addPreLinkLTODefaultPipeline, and the two coordinate closely.
-name|void
-name|addLTODefaultPipeline
-parameter_list|(
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
 name|ModulePassManager
-modifier|&
-name|MPM
-parameter_list|,
+name|buildLTODefaultPipeline
+parameter_list|(
 name|OptimizationLevel
 name|Level
 parameter_list|,
@@ -361,6 +400,12 @@ name|DebugLogging
 init|=
 name|false
 parameter_list|)
+function_decl|;
+comment|/// Build the default `AAManager` with the default alias analysis pipeline
+comment|/// registered.
+name|AAManager
+name|buildDefaultAAPipeline
+parameter_list|()
 function_decl|;
 comment|/// \brief Parse a textual pass pipeline description into a \c ModulePassManager.
 comment|///
@@ -439,51 +484,111 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
+comment|/// A struct to capture parsed pass pipeline names.
+struct|struct
+name|PipelineElement
+block|{
+name|StringRef
+name|Name
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|PipelineElement
+operator|>
+name|InnerPipeline
+expr_stmt|;
+block|}
+struct|;
+specifier|static
+name|Optional
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+name|PipelineElement
+operator|>>
+name|parsePipelineText
+argument_list|(
+argument|StringRef Text
+argument_list|)
+expr_stmt|;
 name|bool
-name|parseModulePassName
+name|parseModulePass
 parameter_list|(
 name|ModulePassManager
 modifier|&
 name|MPM
 parameter_list|,
-name|StringRef
-name|Name
+specifier|const
+name|PipelineElement
+modifier|&
+name|E
+parameter_list|,
+name|bool
+name|VerifyEachPass
 parameter_list|,
 name|bool
 name|DebugLogging
 parameter_list|)
 function_decl|;
 name|bool
-name|parseCGSCCPassName
+name|parseCGSCCPass
 parameter_list|(
 name|CGSCCPassManager
 modifier|&
 name|CGPM
 parameter_list|,
-name|StringRef
-name|Name
+specifier|const
+name|PipelineElement
+modifier|&
+name|E
+parameter_list|,
+name|bool
+name|VerifyEachPass
+parameter_list|,
+name|bool
+name|DebugLogging
 parameter_list|)
 function_decl|;
 name|bool
-name|parseFunctionPassName
+name|parseFunctionPass
 parameter_list|(
 name|FunctionPassManager
 modifier|&
 name|FPM
 parameter_list|,
-name|StringRef
-name|Name
+specifier|const
+name|PipelineElement
+modifier|&
+name|E
+parameter_list|,
+name|bool
+name|VerifyEachPass
+parameter_list|,
+name|bool
+name|DebugLogging
 parameter_list|)
 function_decl|;
 name|bool
-name|parseLoopPassName
+name|parseLoopPass
 parameter_list|(
 name|LoopPassManager
 modifier|&
 name|LPM
 parameter_list|,
-name|StringRef
-name|Name
+specifier|const
+name|PipelineElement
+modifier|&
+name|E
+parameter_list|,
+name|bool
+name|VerifyEachPass
+parameter_list|,
+name|bool
+name|DebugLogging
 parameter_list|)
 function_decl|;
 name|bool
@@ -499,76 +604,84 @@ parameter_list|)
 function_decl|;
 name|bool
 name|parseLoopPassPipeline
-parameter_list|(
+argument_list|(
 name|LoopPassManager
-modifier|&
+operator|&
 name|LPM
-parameter_list|,
-name|StringRef
-modifier|&
-name|PipelineText
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
+name|PipelineElement
+operator|>
+name|Pipeline
+argument_list|,
 name|bool
 name|VerifyEachPass
-parameter_list|,
+argument_list|,
 name|bool
 name|DebugLogging
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|parseFunctionPassPipeline
-parameter_list|(
+argument_list|(
 name|FunctionPassManager
-modifier|&
+operator|&
 name|FPM
-parameter_list|,
-name|StringRef
-modifier|&
-name|PipelineText
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
+name|PipelineElement
+operator|>
+name|Pipeline
+argument_list|,
 name|bool
 name|VerifyEachPass
-parameter_list|,
+argument_list|,
 name|bool
 name|DebugLogging
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|parseCGSCCPassPipeline
-parameter_list|(
+argument_list|(
 name|CGSCCPassManager
-modifier|&
+operator|&
 name|CGPM
-parameter_list|,
-name|StringRef
-modifier|&
-name|PipelineText
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
+name|PipelineElement
+operator|>
+name|Pipeline
+argument_list|,
 name|bool
 name|VerifyEachPass
-parameter_list|,
+argument_list|,
 name|bool
 name|DebugLogging
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|parseModulePassPipeline
-parameter_list|(
+argument_list|(
 name|ModulePassManager
-modifier|&
+operator|&
 name|MPM
-parameter_list|,
-name|StringRef
-modifier|&
-name|PipelineText
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
+name|PipelineElement
+operator|>
+name|Pipeline
+argument_list|,
 name|bool
 name|VerifyEachPass
-parameter_list|,
+argument_list|,
 name|bool
 name|DebugLogging
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

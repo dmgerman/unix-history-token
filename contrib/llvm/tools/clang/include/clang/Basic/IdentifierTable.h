@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -94,13 +100,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<new>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -117,6 +159,10 @@ name|DenseMapInfo
 expr_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -163,6 +209,10 @@ comment|/// set, and all tok::identifier tokens have a pointer to one of these.
 name|class
 name|IdentifierInfo
 block|{
+name|friend
+name|class
+name|IdentifierTable
+decl_stmt|;
 name|unsigned
 name|TokenID
 range|:
@@ -280,6 +330,11 @@ operator|>
 operator|*
 name|Entry
 expr_stmt|;
+name|public
+label|:
+name|IdentifierInfo
+argument_list|()
+expr_stmt|;
 name|IdentifierInfo
 argument_list|(
 specifier|const
@@ -289,7 +344,8 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-name|void
+name|IdentifierInfo
+modifier|&
 name|operator
 init|=
 operator|(
@@ -300,15 +356,6 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|friend
-name|class
-name|IdentifierTable
-decl_stmt|;
-name|public
-label|:
-name|IdentifierInfo
-argument_list|()
-expr_stmt|;
 comment|/// \brief Return true if this is the identifier for the specified string.
 comment|///
 comment|/// This is intended to be used for string literals only: II->isStr("foo").
@@ -334,7 +381,6 @@ name|StrLen
 operator|-
 literal|1
 operator|&&
-operator|!
 name|memcmp
 argument_list|(
 name|getNameStart
@@ -346,6 +392,8 @@ name|StrLen
 operator|-
 literal|1
 argument_list|)
+operator|==
+literal|0
 return|;
 block|}
 comment|/// \brief Return the beginning of the actual null-terminated string for this
@@ -553,7 +601,7 @@ condition|)
 block|{
 name|NeedsHandleIdentifier
 operator|=
-literal|1
+name|true
 expr_stmt|;
 name|HadMacro
 operator|=
@@ -863,11 +911,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// 0 is not-built-in.  1 is builtin-for-some-nonprimary-target.
-end_comment
-
-begin_comment
-comment|/// 2+ are specific builtin functions.
+comment|/// 0 is not-built-in. 1+ are specific builtin functions.
 end_comment
 
 begin_expr_stmt
@@ -1002,7 +1046,7 @@ name|Val
 condition|)
 name|NeedsHandleIdentifier
 operator|=
-literal|1
+name|true
 expr_stmt|;
 else|else
 name|RecomputeNeedsHandleIdentifier
@@ -1061,7 +1105,7 @@ name|Val
 condition|)
 name|NeedsHandleIdentifier
 operator|=
-literal|1
+name|true
 expr_stmt|;
 else|else
 name|RecomputeNeedsHandleIdentifier
@@ -1098,7 +1142,7 @@ name|Value
 condition|)
 name|NeedsHandleIdentifier
 operator|=
-literal|1
+name|true
 expr_stmt|;
 else|else
 name|RecomputeNeedsHandleIdentifier
@@ -1151,7 +1195,7 @@ name|Val
 condition|)
 name|NeedsHandleIdentifier
 operator|=
-literal|1
+name|true
 expr_stmt|;
 else|else
 name|RecomputeNeedsHandleIdentifier
@@ -1701,7 +1745,14 @@ begin_decl_stmt
 name|class
 name|IdentifierIterator
 block|{
-name|private
+name|protected
+label|:
+name|IdentifierIterator
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|public
 label|:
 name|IdentifierIterator
 argument_list|(
@@ -1712,7 +1763,8 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-name|void
+name|IdentifierIterator
+modifier|&
 name|operator
 init|=
 operator|(
@@ -1723,13 +1775,6 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|protected
-label|:
-name|IdentifierIterator
-argument_list|()
-block|{ }
-name|public
-label|:
 name|virtual
 operator|~
 name|IdentifierIterator
@@ -3098,6 +3143,11 @@ modifier|*
 name|Impl
 decl_stmt|;
 comment|// Actually a SelectorTableImpl
+name|public
+label|:
+name|SelectorTable
+argument_list|()
+expr_stmt|;
 name|SelectorTable
 argument_list|(
 specifier|const
@@ -3107,7 +3157,8 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-name|void
+name|SelectorTable
+modifier|&
 name|operator
 init|=
 operator|(
@@ -3118,11 +3169,6 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|public
-label|:
-name|SelectorTable
-argument_list|()
-expr_stmt|;
 operator|~
 name|SelectorTable
 argument_list|()
@@ -3654,6 +3700,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_BASIC_IDENTIFIERTABLE_H
+end_comment
 
 end_unit
 

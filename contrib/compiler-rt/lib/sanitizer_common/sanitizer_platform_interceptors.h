@@ -460,47 +460,12 @@ name|SANITIZER_INTERCEPT_MEMMEM
 value|SI_NOT_WINDOWS
 end_define
 
-begin_comment
-comment|// The function memchr() contains a jump in the first 6 bytes
-end_comment
-
-begin_comment
-comment|// that is problematic to intercept correctly on Win64.
-end_comment
-
-begin_comment
-comment|// Disable memchr() interception for Win64.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|SANITIZER_WINDOWS64
-end_if
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_INTERCEPT_MEMCHR
-value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_MEMCHR
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1405,6 +1370,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SANITIZER_INTERCEPT_TTYNAME_R
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
 name|SANITIZER_INTERCEPT_TEMPNAM
 value|SI_NOT_WINDOWS
 end_define
@@ -1820,6 +1792,20 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT___LXSTAT64
 value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_UTMP
+value|SI_NOT_WINDOWS&& !SI_MAC&& !SI_FREEBSD
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_UTMPX
+value|SI_LINUX_NOT_ANDROID || SI_MAC || SI_FREEBSD
 end_define
 
 begin_define

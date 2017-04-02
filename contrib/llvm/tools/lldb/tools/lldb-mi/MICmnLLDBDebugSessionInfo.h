@@ -44,18 +44,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/API/SBDebugger.h"
 end_include
 
@@ -77,6 +65,18 @@ directive|include
 file|"lldb/API/SBTarget.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_comment
 comment|// In-house headers:
 end_comment
@@ -85,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|"MICmnBase.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MIUtilSingletonBase.h"
 end_include
 
 begin_include
@@ -109,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"MIUtilMapIdToVariant.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MIUtilSingletonBase.h"
 end_include
 
 begin_include
@@ -146,7 +146,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -204,9 +208,12 @@ expr_stmt|;
 comment|// Structs:
 name|public
 label|:
-comment|//++ ============================================================================
-comment|// Details: Break point information object. Used to easily pass information about
-comment|//          a break around and record break point information to be recalled by
+comment|//++
+comment|//============================================================================
+comment|// Details: Break point information object. Used to easily pass information
+comment|// about
+comment|//          a break around and record break point information to be recalled
+comment|//          by
 comment|//          other commands or LLDB event handling functions.
 comment|//--
 struct|struct
@@ -274,7 +281,7 @@ name|m_nBrkPtThreadId
 argument_list|(
 literal|0
 argument_list|)
-block|{         }
+block|{}
 name|MIuint
 name|m_id
 expr_stmt|;
@@ -316,7 +323,8 @@ comment|// File line number.
 name|bool
 name|m_bHaveArgOptionThreadGrp
 decl_stmt|;
-comment|// True = include MI field, false = do not include "thread-groups".
+comment|// True = include MI field, false = do not
+comment|// include "thread-groups".
 name|CMIUtilString
 name|m_strOptThrdGrp
 decl_stmt|;
@@ -332,15 +340,18 @@ comment|// The name of the break point.
 name|bool
 name|m_bPending
 decl_stmt|;
-comment|// True = the breakpoint has not been established yet, false = location found
+comment|// True = the breakpoint has not been established yet,
+comment|// false = location found
 name|MIuint
 name|m_nIgnore
 decl_stmt|;
-comment|// The number of time the breakpoint is run over before it is stopped on a hit
+comment|// The number of time the breakpoint is run over before it
+comment|// is stopped on a hit
 name|bool
 name|m_bCondition
 decl_stmt|;
-comment|// True = break point is conditional, use condition expression, false = no condition
+comment|// True = break point is conditional, use condition
+comment|// expression, false = no condition
 name|CMIUtilString
 name|m_strCondition
 decl_stmt|;
@@ -348,7 +359,8 @@ comment|// Break point condition expression
 name|bool
 name|m_bBrkPtThreadId
 decl_stmt|;
-comment|// True = break point is specified to work with a specific thread, false = no specified thread given
+comment|// True = break point is specified to work with a
+comment|// specific thread, false = no specified thread given
 name|MIuint
 name|m_nBrkPtThreadId
 decl_stmt|;
@@ -359,7 +371,8 @@ comment|// Enumerations:
 name|public
 label|:
 comment|//++ ===================================================================
-comment|// Details: The type of variable used by MIResponseFormVariableInfo family functions.
+comment|// Details: The type of variable used by MIResponseFormVariableInfo family
+comment|// functions.
 comment|//--
 enum|enum
 name|VariableType_e
@@ -402,7 +415,8 @@ comment|// Arguments.
 block|}
 enum|;
 comment|//++ ===================================================================
-comment|// Details: Determine the information that should be shown by using MIResponseFormVariableInfo family functions.
+comment|// Details: Determine the information that should be shown by using
+comment|// MIResponseFormVariableInfo family functions.
 comment|//--
 enum|enum
 name|VariableInfoFormat_e
@@ -421,7 +435,8 @@ literal|2
 block|}
 enum|;
 comment|//++ ===================================================================
-comment|// Details: Determine the information that should be shown by using MIResponseFormThreadInfo family functions.
+comment|// Details: Determine the information that should be shown by using
+comment|// MIResponseFormThreadInfo family functions.
 comment|//--
 enum|enum
 name|ThreadInfoFormat_e
@@ -432,7 +447,8 @@ name|eThreadInfoFormat_AllFrames
 block|}
 enum|;
 comment|//++ ===================================================================
-comment|// Details: Determine the information that should be shown by using MIResponseFormFrameInfo family functions.
+comment|// Details: Determine the information that should be shown by using
+comment|// MIResponseFormFrameInfo family functions.
 comment|//--
 enum|enum
 name|FrameInfoFormat_e
@@ -469,7 +485,8 @@ name|Shutdown
 argument_list|()
 name|override
 expr_stmt|;
-comment|// Variant type data which can be assigned and retrieved across all command instances
+comment|// Variant type data which can be assigned and retrieved across all command
+comment|// instances
 name|template
 operator|<
 name|typename
@@ -770,7 +787,8 @@ name|tid_t
 name|m_currentSelectedThread
 expr_stmt|;
 comment|// These are keys that can be used to access the shared data map
-comment|// Note: This list is expected to grow and will be moved and abstracted in the future.
+comment|// Note: This list is expected to grow and will be moved and abstracted in the
+comment|// future.
 specifier|const
 name|CMIUtilString
 name|m_constStrSharedDataKeyWkDir
@@ -970,7 +988,9 @@ label|:
 name|CMIUtilMapIdToVariant
 name|m_mapIdToSessionData
 decl_stmt|;
-comment|// Hold and retrieve key to value data available across all commands
+comment|// Hold and retrieve key to value
+comment|// data available across all
+comment|// commands
 name|VecVarObj_t
 name|m_vecVarObj
 decl_stmt|;
@@ -989,15 +1009,27 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: Command instances can create and share data between other instances of commands.
+comment|//------------------------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//          This function adds new data to the shared data. Using the same ID more than
+comment|// Details: Command instances can create and share data between other instances
+end_comment
+
+begin_comment
+comment|// of commands.
+end_comment
+
+begin_comment
+comment|//          This function adds new data to the shared data. Using the same ID
+end_comment
+
+begin_comment
+comment|//          more than
 end_comment
 
 begin_comment
@@ -1094,11 +1126,19 @@ end_return
 
 begin_comment
 unit|}
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: Command instances can create and share data between other instances of commands.
+comment|//------------------------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|// Details: Command instances can create and share data between other instances
+end_comment
+
+begin_comment
+comment|// of commands.
 end_comment
 
 begin_comment
@@ -1122,7 +1162,11 @@ comment|//          vData - (W) The data.
 end_comment
 
 begin_comment
-comment|// Return:  bool  - True = data found, false = data not found or an error occurred trying to fetch.
+comment|// Return:  bool  - True = data found, false = data not found or an error
+end_comment
+
+begin_comment
+comment|// occurred trying to fetch.
 end_comment
 
 begin_comment

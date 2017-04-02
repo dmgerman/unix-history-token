@@ -75,10 +75,8 @@ directive|define
 name|HANDLE_TARGET_OPCODE
 parameter_list|(
 name|OPC
-parameter_list|,
-name|NUM
 parameter_list|)
-value|OPC = NUM,
+value|OPC,
 define|#
 directive|define
 name|HANDLE_TARGET_OPCODE_MARKER
@@ -115,6 +113,24 @@ name|PRE_ISEL_GENERIC_OPCODE_START
 operator|&&
 name|Opcode
 operator|<=
+name|TargetOpcode
+operator|::
+name|PRE_ISEL_GENERIC_OPCODE_END
+return|;
+block|}
+comment|/// Check whether the given Opcode is a target-specific opcode.
+specifier|static
+specifier|inline
+name|bool
+name|isTargetSpecificOpcode
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|)
+block|{
+return|return
+name|Opcode
+operator|>
 name|TargetOpcode
 operator|::
 name|PRE_ISEL_GENERIC_OPCODE_END

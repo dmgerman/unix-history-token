@@ -92,9 +92,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|ModuleSummaryIndex
-decl_stmt|;
-name|class
 name|Pass
 decl_stmt|;
 name|class
@@ -205,6 +202,11 @@ comment|/// EP_Peephole - This extension point allows adding passes that perform
 comment|/// peephole optimizations similar to the instruction combiner. These passes
 comment|/// will be inserted after each instance of the instruction combiner pass.
 name|EP_Peephole
+block|,
+comment|/// EP_CGSCCOptimizerLate - This extension point allows adding CallGraphSCC
+comment|/// passes at the end of the main CallGraphSCC passes and before any
+comment|/// function simplification passes run by CGPassManager.
+name|EP_CGSCCOptimizerLate
 block|,   }
 enum|;
 comment|/// The Optimization Level - Specify the basic optimization level.
@@ -229,12 +231,6 @@ comment|/// added to the per-module passes.
 name|Pass
 modifier|*
 name|Inliner
-decl_stmt|;
-comment|/// The module summary index to use for function importing.
-specifier|const
-name|ModuleSummaryIndex
-modifier|*
-name|ModuleSummary
 decl_stmt|;
 name|bool
 name|DisableTailCalls
@@ -261,6 +257,9 @@ name|bool
 name|LoadCombine
 decl_stmt|;
 name|bool
+name|NewGVN
+decl_stmt|;
+name|bool
 name|DisableGVNLoadPRE
 decl_stmt|;
 name|bool
@@ -281,6 +280,10 @@ decl_stmt|;
 name|bool
 name|PerformThinLTO
 decl_stmt|;
+comment|/// Enable profile instrumentation pass.
+name|bool
+name|EnablePGOInstrGen
+decl_stmt|;
 comment|/// Profile data file name that the instrumentation will be written to.
 name|std
 operator|::
@@ -292,6 +295,12 @@ name|std
 operator|::
 name|string
 name|PGOInstrUse
+expr_stmt|;
+comment|/// Path of the sample Profile data file.
+name|std
+operator|::
+name|string
+name|PGOSampleUse
 expr_stmt|;
 name|private
 label|:

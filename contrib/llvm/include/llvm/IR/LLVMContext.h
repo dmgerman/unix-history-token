@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/CBindingWrapping.h"
 end_include
 
@@ -75,34 +81,28 @@ directive|include
 file|"llvm/Support/Options.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|LLVMContextImpl
-decl_stmt|;
-name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|Twine
-decl_stmt|;
-name|class
-name|Instruction
-decl_stmt|;
-name|class
-name|Module
-decl_stmt|;
-name|class
-name|MDString
-decl_stmt|;
-name|class
-name|DICompositeType
-decl_stmt|;
-name|class
-name|SMDiagnostic
-decl_stmt|;
 name|class
 name|DiagnosticInfo
 decl_stmt|;
@@ -111,6 +111,21 @@ name|DiagnosticSeverity
 enum_decl|:
 name|char
 enum_decl|;
+name|class
+name|Function
+decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
+name|class
+name|LLVMContextImpl
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
+name|class
+name|OptBisect
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -120,14 +135,22 @@ name|class
 name|SmallVectorImpl
 expr_stmt|;
 name|class
-name|Function
+name|SMDiagnostic
 decl_stmt|;
 name|class
-name|DebugLoc
+name|StringRef
 decl_stmt|;
 name|class
-name|OptBisect
+name|Twine
 decl_stmt|;
+name|namespace
+name|yaml
+block|{
+name|class
+name|Output
+decl_stmt|;
+block|}
+comment|// end namespace yaml
 comment|/// This is an important class for using LLVM in a threaded context.  It
 comment|/// (opaquely) owns and manages the core "global" data of LLVM's core
 comment|/// infrastructure, including the type and constant uniquing tables.
@@ -146,6 +169,26 @@ decl_stmt|;
 name|LLVMContext
 argument_list|()
 expr_stmt|;
+name|LLVMContext
+argument_list|(
+name|LLVMContext
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|LLVMContext
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|LLVMContext
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 operator|~
 name|LLVMContext
 argument_list|()
@@ -254,6 +297,16 @@ init|=
 literal|19
 block|,
 comment|// "type"
+name|MD_section_prefix
+init|=
+literal|20
+block|,
+comment|// "section_prefix"
+name|MD_absolute_symbol
+init|=
+literal|21
+block|,
+comment|// "absolute_symbol"
 block|}
 enum|;
 comment|/// Known operand bundle tag IDs, which always have the same value.  All
@@ -550,6 +603,35 @@ name|bool
 name|Requested
 parameter_list|)
 function_decl|;
+comment|/// \brief Return the YAML file used by the backend to save optimization
+comment|/// diagnostics.  If null, diagnostics are not saved in a file but only
+comment|/// emitted via the diagnostic handler.
+name|yaml
+operator|::
+name|Output
+operator|*
+name|getDiagnosticsOutputFile
+argument_list|()
+expr_stmt|;
+comment|/// Set the diagnostics output file used for optimization diagnostics.
+comment|///
+comment|/// By default or if invoked with null, diagnostics are not saved in a file
+comment|/// but only emitted via the diagnostic handler.  Even if an output file is
+comment|/// set, the handler is invoked for each diagnostic message.
+name|void
+name|setDiagnosticsOutputFile
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|yaml
+operator|::
+name|Output
+operator|>
+name|F
+argument_list|)
+decl_stmt|;
 comment|/// \brief Get the prefix that should be printed in front of a diagnostic of
 comment|///        the given \p Severity
 specifier|static
@@ -710,23 +792,10 @@ parameter_list|()
 function_decl|;
 name|private
 label|:
-name|LLVMContext
-argument_list|(
-name|LLVMContext
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-name|LLVMContext
-operator|&
-operator|)
-operator|=
-name|delete
+comment|// Module needs access to the add/removeModule methods.
+name|friend
+name|class
+name|Module
 decl_stmt|;
 comment|/// addModule - Register a module as being instantiated in this context.  If
 comment|/// the context is deleted, the module will be deleted as well.
@@ -745,11 +814,6 @@ name|Module
 modifier|*
 parameter_list|)
 function_decl|;
-comment|// Module needs access to the add/removeModule methods.
-name|friend
-name|class
-name|Module
-decl_stmt|;
 block|}
 empty_stmt|;
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
@@ -817,10 +881,18 @@ block|}
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_LLVMCONTEXT_H
+end_comment
 
 end_unit
 

@@ -554,6 +554,13 @@ name|ConfigMacrosExhaustive
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether files in this module can only include non-modular headers
+comment|/// and headers from used modules.
+name|unsigned
+name|NoUndeclaredIncludes
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief Describes the visibility of the various names within a
 comment|/// particular module.
 enum|enum

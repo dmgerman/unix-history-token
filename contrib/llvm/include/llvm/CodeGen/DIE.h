@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/PointerUnion.h"
 end_include
 
 begin_include
@@ -86,13 +86,85 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/DwarfStringPoolEntry.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/Support/AlignOf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<new>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -103,7 +175,16 @@ name|class
 name|AsmPrinter
 decl_stmt|;
 name|class
+name|DIE
+decl_stmt|;
+name|class
+name|DIEUnit
+decl_stmt|;
+name|class
 name|MCExpr
+decl_stmt|;
+name|class
+name|MCSection
 decl_stmt|;
 name|class
 name|MCSymbol
@@ -111,29 +192,27 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-name|class
-name|DwarfTypeUnit
-decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEAbbrevData - Dwarf abbreviation data, describes one attribute of a
-comment|/// Dwarf abbreviation.
+comment|/// Dwarf abbreviation data, describes one attribute of a Dwarf abbreviation.
 name|class
 name|DIEAbbrevData
 block|{
-comment|/// Attribute - Dwarf attribute code.
-comment|///
+comment|/// Dwarf attribute code.
 name|dwarf
 operator|::
 name|Attribute
 name|Attribute
 expr_stmt|;
-comment|/// Form - Dwarf form code.
-comment|///
+comment|/// Dwarf form code.
 name|dwarf
 operator|::
 name|Form
 name|Form
 expr_stmt|;
+comment|/// Dwarf attribute value for DW_FORM_implicit_const
+name|int64_t
+name|Value
+decl_stmt|;
 name|public
 label|:
 name|DIEAbbrevData
@@ -150,10 +229,40 @@ argument_list|)
 operator|,
 name|Form
 argument_list|(
-argument|F
+name|F
+argument_list|)
+operator|,
+name|Value
+argument_list|(
+literal|0
 argument_list|)
 block|{}
-comment|// Accessors.
+name|DIEAbbrevData
+argument_list|(
+argument|dwarf::Attribute A
+argument_list|,
+argument|int64_t V
+argument_list|)
+operator|:
+name|Attribute
+argument_list|(
+name|A
+argument_list|)
+operator|,
+name|Form
+argument_list|(
+name|dwarf
+operator|::
+name|DW_FORM_implicit_const
+argument_list|)
+operator|,
+name|Value
+argument_list|(
+argument|V
+argument_list|)
+block|{}
+comment|/// Accessors.
+comment|/// @{
 name|dwarf
 operator|::
 name|Attribute
@@ -176,8 +285,17 @@ return|return
 name|Form
 return|;
 block|}
-comment|/// Profile - Used to gather unique data for the abbreviation folding set.
-comment|///
+name|int64_t
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+return|;
+block|}
+comment|/// @}
+comment|/// Used to gather unique data for the abbreviation folding set.
 name|void
 name|Profile
 argument_list|(
@@ -190,8 +308,8 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEAbbrev - Dwarf abbreviation, describes the organization of a debug
-comment|/// information object.
+comment|/// Dwarf abbreviation, describes the organization of a debug information
+comment|/// object.
 name|class
 name|DIEAbbrev
 range|:
@@ -199,26 +317,23 @@ name|public
 name|FoldingSetNode
 block|{
 comment|/// Unique number for node.
-comment|///
 name|unsigned
 name|Number
 block|;
-comment|/// Tag - Dwarf tag code.
-comment|///
+comment|/// Dwarf tag code.
 name|dwarf
 operator|::
 name|Tag
 name|Tag
 block|;
-comment|/// Children - Whether or not this node has children.
+comment|/// Whether or not this node has children.
 comment|///
-comment|// This cheats a bit in all of the uses since the values in the standard
-comment|// are 0 and 1 for no children and children respectively.
+comment|/// This cheats a bit in all of the uses since the values in the standard
+comment|/// are 0 and 1 for no children and children respectively.
 name|bool
 name|Children
 block|;
-comment|/// Data - Raw data bytes for abbreviation.
-comment|///
+comment|/// Raw data bytes for abbreviation.
 name|SmallVector
 operator|<
 name|DIEAbbrevData
@@ -243,13 +358,11 @@ argument_list|)
 block|,
 name|Children
 argument_list|(
-name|C
+argument|C
 argument_list|)
-block|,
-name|Data
-argument_list|()
 block|{}
-comment|// Accessors.
+comment|/// Accessors.
+comment|/// @{
 name|dwarf
 operator|::
 name|Tag
@@ -313,8 +426,8 @@ name|Number
 operator|=
 name|N
 block|; }
-comment|/// AddAttribute - Adds another set of attribute information to the
-comment|/// abbreviation.
+comment|/// @}
+comment|/// Adds another set of attribute information to the abbreviation.
 name|void
 name|AddAttribute
 argument_list|(
@@ -335,8 +448,28 @@ name|Form
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// Profile - Used to gather unique data for the abbreviation folding set.
-comment|///
+comment|/// Adds attribute with DW_FORM_implicit_const value
+name|void
+name|AddImplicitConstAttribute
+argument_list|(
+argument|dwarf::Attribute Attribute
+argument_list|,
+argument|int64_t Value
+argument_list|)
+block|{
+name|Data
+operator|.
+name|push_back
+argument_list|(
+name|DIEAbbrevData
+argument_list|(
+name|Attribute
+argument_list|,
+name|Value
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// Used to gather unique data for the abbreviation folding set.
 name|void
 name|Profile
 argument_list|(
@@ -344,8 +477,7 @@ argument|FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|;
-comment|/// Emit - Print the abbreviation using the specified asm printer.
-comment|///
+comment|/// Print the abbreviation using the specified asm printer.
 name|void
 name|Emit
 argument_list|(
@@ -367,7 +499,92 @@ argument_list|()
 block|; }
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEInteger - An integer value DIE.
+comment|/// Helps unique DIEAbbrev objects and assigns abbreviation numbers.
+comment|///
+comment|/// This class will unique the DIE abbreviations for a llvm::DIE object and
+comment|/// assign a unique abbreviation number to each unique DIEAbbrev object it
+comment|/// finds. The resulting collection of DIEAbbrev objects can then be emitted
+comment|/// into the .debug_abbrev section.
+name|class
+name|DIEAbbrevSet
+block|{
+comment|/// The bump allocator to use when creating DIEAbbrev objects in the uniqued
+comment|/// storage container.
+name|BumpPtrAllocator
+modifier|&
+name|Alloc
+decl_stmt|;
+comment|/// \brief FoldingSet that uniques the abbreviations.
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|DIEAbbrev
+operator|>
+name|AbbreviationsSet
+expr_stmt|;
+comment|/// A list of all the unique abbreviations in use.
+name|std
+operator|::
+name|vector
+operator|<
+name|DIEAbbrev
+operator|*
+operator|>
+name|Abbreviations
+expr_stmt|;
+name|public
+label|:
+name|DIEAbbrevSet
+argument_list|(
+name|BumpPtrAllocator
+operator|&
+name|A
+argument_list|)
+operator|:
+name|Alloc
+argument_list|(
+argument|A
+argument_list|)
+block|{}
+operator|~
+name|DIEAbbrevSet
+argument_list|()
+expr_stmt|;
+comment|/// Generate the abbreviation declaration for a DIE and return a pointer to
+comment|/// the generated abbreviation.
+comment|///
+comment|/// \param Die the debug info entry to generate the abbreviation for.
+comment|/// \returns A reference to the uniqued abbreviation declaration that is
+comment|/// owned by this class.
+name|DIEAbbrev
+modifier|&
+name|uniqueAbbreviation
+parameter_list|(
+name|DIE
+modifier|&
+name|Die
+parameter_list|)
+function_decl|;
+comment|/// Print all abbreviations using the specified asm printer.
+name|void
+name|Emit
+argument_list|(
+specifier|const
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|,
+name|MCSection
+operator|*
+name|Section
+argument_list|)
+decl|const
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|/// An integer value DIE.
 comment|///
 name|class
 name|DIEInteger
@@ -388,8 +605,7 @@ argument_list|(
 argument|I
 argument_list|)
 block|{}
-comment|/// BestForm - Choose the best form for integer.
-comment|///
+comment|/// Choose the best form for integer.
 specifier|static
 name|dwarf
 operator|::
@@ -572,8 +788,7 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEExpr - An expression DIE.
-comment|//
+comment|/// An expression DIE.
 name|class
 name|DIEExpr
 block|{
@@ -598,8 +813,7 @@ argument_list|(
 argument|E
 argument_list|)
 block|{}
-comment|/// getValue - Get MCExpr.
-comment|///
+comment|/// Get MCExpr.
 specifier|const
 name|MCExpr
 operator|*
@@ -653,8 +867,7 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIELabel - A label DIE.
-comment|//
+comment|/// A label DIE.
 name|class
 name|DIELabel
 block|{
@@ -679,8 +892,7 @@ argument_list|(
 argument|L
 argument_list|)
 block|{}
-comment|/// getValue - Get MCSymbol.
-comment|///
+comment|/// Get MCSymbol.
 specifier|const
 name|MCSymbol
 operator|*
@@ -734,7 +946,7 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEDelta - A simple label difference DIE.
+comment|/// A simple label difference DIE.
 comment|///
 name|class
 name|DIEDelta
@@ -810,8 +1022,9 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEString - A container for string values.
+comment|/// A container for string pool string values.
 comment|///
+comment|/// This class is used with the DW_FORM_strp and DW_FORM_GNU_str_index forms.
 name|class
 name|DIEString
 block|{
@@ -830,7 +1043,7 @@ argument_list|(
 argument|S
 argument_list|)
 block|{}
-comment|/// getString - Grab the string out of the object.
+comment|/// Grab the string out of the object.
 name|StringRef
 name|getString
 argument_list|()
@@ -885,9 +1098,96 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEEntry - A pointer to another debug information entry.  An instance of
-comment|/// this class can also be used as a proxy for a debug information entry not
-comment|/// yet defined (ie. types.)
+comment|/// A container for inline string values.
+comment|///
+comment|/// This class is used with the DW_FORM_string form.
+name|class
+name|DIEInlineString
+block|{
+name|StringRef
+name|S
+decl_stmt|;
+name|public
+label|:
+name|template
+operator|<
+name|typename
+name|Allocator
+operator|>
+name|explicit
+name|DIEInlineString
+argument_list|(
+argument|StringRef Str
+argument_list|,
+argument|Allocator&A
+argument_list|)
+operator|:
+name|S
+argument_list|(
+argument|Str.copy(A)
+argument_list|)
+block|{}
+operator|~
+name|DIEInlineString
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+comment|/// Grab the string out of the object.
+name|StringRef
+name|getString
+argument_list|()
+specifier|const
+block|{
+return|return
+name|S
+return|;
+block|}
+name|void
+name|EmitValue
+argument_list|(
+specifier|const
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|,
+name|dwarf
+operator|::
+name|Form
+name|Form
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|SizeOf
+argument_list|(
+specifier|const
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|,
+name|dwarf
+operator|::
+name|Form
+name|Form
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|)
+decl|const
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|/// A pointer to another debug information entry.  An instance of this class can
+comment|/// also be used as a proxy for a debug information entry not yet defined
+comment|/// (ie. types.)
 name|class
 name|DIE
 decl_stmt|;
@@ -929,17 +1229,6 @@ operator|*
 name|Entry
 return|;
 block|}
-comment|/// Returns size of a ref_addr entry.
-specifier|static
-name|unsigned
-name|getRefAddrSize
-parameter_list|(
-specifier|const
-name|AsmPrinter
-modifier|*
-name|AP
-parameter_list|)
-function_decl|;
 name|void
 name|EmitValue
 argument_list|(
@@ -969,25 +1258,7 @@ name|Form
 name|Form
 argument_list|)
 decl|const
-block|{
-return|return
-name|Form
-operator|==
-name|dwarf
-operator|::
-name|DW_FORM_ref_addr
-condition|?
-name|getRefAddrSize
-argument_list|(
-name|AP
-argument_list|)
-else|:
-sizeof|sizeof
-argument_list|(
-name|int32_t
-argument_list|)
-return|;
-block|}
+decl_stmt|;
 name|void
 name|print
 argument_list|(
@@ -1000,13 +1271,12 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIELocList - Represents a pointer to a location list in the debug_loc
+comment|/// Represents a pointer to a location list in the debug_loc
 comment|/// section.
-comment|//
 name|class
 name|DIELocList
 block|{
-comment|// Index into the .debug_loc vector.
+comment|/// Index into the .debug_loc vector.
 name|size_t
 name|Index
 decl_stmt|;
@@ -1022,7 +1292,7 @@ argument_list|(
 argument|I
 argument_list|)
 block|{}
-comment|/// getValue - Grab the current index out.
+comment|/// Grab the current index out.
 name|size_t
 name|getValue
 argument_list|()
@@ -1074,9 +1344,8 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEValue - A debug information entry value. Some of these roughly correlate
+comment|/// A debug information entry value. Some of these roughly correlate
 comment|/// to DWARF attribute classes.
-comment|///
 name|class
 name|DIEBlock
 decl_stmt|;
@@ -1107,8 +1376,7 @@ block|}
 enum|;
 name|private
 label|:
-comment|/// Ty - Type of data stored in the value.
-comment|///
+comment|/// Type of data stored in the value.
 name|Type
 name|Ty
 init|=
@@ -1499,7 +1767,8 @@ value|DIEValue(dwarf::Attribute Attribute, dwarf::Form Form, const DIE##T *V)   
 include|#
 directive|include
 file|"llvm/CodeGen/DIEValue.def"
-comment|// Accessors
+comment|/// Accessors.
+comment|/// @{
 name|Type
 name|getType
 argument_list|()
@@ -1541,6 +1810,7 @@ return|return
 name|Ty
 return|;
 block|}
+comment|/// @}
 define|#
 directive|define
 name|HANDLE_DIEVALUE_SMALL
@@ -1560,8 +1830,7 @@ value|const DIE##T&getDIE##T() const {                                          
 include|#
 directive|include
 file|"llvm/CodeGen/DIEValue.def"
-comment|/// EmitValue - Emit value via the Dwarf writer.
-comment|///
+comment|/// Emit value via the Dwarf writer.
 name|void
 name|EmitValue
 argument_list|(
@@ -1572,8 +1841,7 @@ name|AP
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// SizeOf - Return the size of a value in bytes.
-comment|///
+comment|/// Return the size of a value in bytes.
 name|unsigned
 name|SizeOf
 argument_list|(
@@ -2523,8 +2791,6 @@ name|values
 argument_list|()
 block|{
 return|return
-name|llvm
-operator|::
 name|make_range
 argument_list|(
 name|value_iterator
@@ -2551,8 +2817,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|make_range
 argument_list|(
 name|const_value_iterator
@@ -2576,7 +2840,7 @@ block|}
 expr|}
 block|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIE - A structured debug information entry.  Has an abbreviation which
+comment|/// A structured debug information entry.  Has an abbreviation which
 comment|/// describes its organization.
 name|class
 name|DIE
@@ -2593,13 +2857,15 @@ operator|<
 name|DIE
 operator|>
 block|;
-comment|/// Offset - Offset in debug info section.
-comment|///
+name|friend
+name|class
+name|DIEUnit
+block|;
+comment|/// Dwarf unit relative offset.
 name|unsigned
 name|Offset
 block|;
-comment|/// Size - Size of instance + children.
-comment|///
+comment|/// Size of instance + children.
 name|unsigned
 name|Size
 block|;
@@ -2609,8 +2875,7 @@ operator|=
 operator|~
 literal|0u
 block|;
-comment|/// Tag - Dwarf tag code.
-comment|///
+comment|/// Dwarf tag code.
 name|dwarf
 operator|::
 name|Tag
@@ -2623,6 +2888,11 @@ name|Tag
 operator|)
 literal|0
 block|;
+comment|/// Set to true to force a DIE to emit an abbreviation that says it has
+comment|/// children even when it doesn't. This is used for unit testing purposes.
+name|bool
+name|ForceChildren
+block|;
 comment|/// Children DIEs.
 name|IntrusiveBackList
 operator|<
@@ -2630,11 +2900,17 @@ name|DIE
 operator|>
 name|Children
 block|;
+comment|/// The owner is either the parent DIE for children of other DIEs, or a
+comment|/// DIEUnit which contains this DIE as its unit DIE.
+name|PointerUnion
+operator|<
 name|DIE
 operator|*
-name|Parent
-operator|=
-name|nullptr
+block|,
+name|DIEUnit
+operator|*
+operator|>
+name|Owner
 block|;
 name|DIE
 argument_list|()
@@ -2659,7 +2935,12 @@ argument_list|)
 block|,
 name|Tag
 argument_list|(
-argument|Tag
+name|Tag
+argument_list|)
+block|,
+name|ForceChildren
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|public
@@ -2685,6 +2966,49 @@ name|Tag
 argument_list|)
 return|;
 block|}
+name|DIE
+argument_list|(
+specifier|const
+name|DIE
+operator|&
+name|RHS
+argument_list|)
+operator|=
+name|delete
+block|;
+name|DIE
+argument_list|(
+name|DIE
+operator|&&
+name|RHS
+argument_list|)
+operator|=
+name|delete
+block|;
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|DIE
+operator|&
+name|RHS
+operator|)
+operator|=
+name|delete
+block|;
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|DIE
+operator|&&
+name|RHS
+operator|)
+operator|=
+name|delete
+block|;
 comment|// Accessors.
 name|unsigned
 name|getAbbrevNumber
@@ -2706,6 +3030,7 @@ return|return
 name|Tag
 return|;
 block|}
+comment|/// Get the compile/type unit relative offset of this DIE.
 name|unsigned
 name|getOffset
 argument_list|()
@@ -2730,6 +3055,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|ForceChildren
+operator|||
 operator|!
 name|Children
 operator|.
@@ -2737,6 +3064,16 @@ name|empty
 argument_list|()
 return|;
 block|}
+name|void
+name|setForceChildren
+argument_list|(
+argument|bool B
+argument_list|)
+block|{
+name|ForceChildren
+operator|=
+name|B
+block|; }
 typedef|typedef
 name|IntrusiveBackList
 operator|<
@@ -2774,8 +3111,6 @@ name|children
 parameter_list|()
 block|{
 return|return
-name|llvm
-operator|::
 name|make_range
 argument_list|(
 name|Children
@@ -2796,8 +3131,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|make_range
 argument_list|(
 name|Children
@@ -2817,11 +3150,7 @@ operator|*
 name|getParent
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Parent
-return|;
-block|}
+expr_stmt|;
 comment|/// Generate the abbreviation for this DIE.
 comment|///
 comment|/// Calculate the abbreviation for this, which should be uniqued and
@@ -2844,21 +3173,66 @@ operator|=
 name|I
 expr_stmt|;
 block|}
-comment|/// Climb up the parent chain to get the compile or type unit DIE this DIE
-comment|/// belongs to.
-specifier|const
-name|DIE
-operator|*
-name|getUnit
+comment|/// Get the absolute offset within the .debug_info or .debug_types section
+comment|/// for this DIE.
+name|unsigned
+name|getDebugSectionOffset
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Similar to getUnit, returns null when DIE is not added to an
-comment|/// owner yet.
+comment|/// Compute the offset of this DIE and all its children.
+comment|///
+comment|/// This function gets called just before we are going to generate the debug
+comment|/// information and gives each DIE a chance to figure out its CU relative DIE
+comment|/// offset, unique its abbreviation and fill in the abbreviation code, and
+comment|/// return the unit offset that points to where the next DIE will be emitted
+comment|/// within the debug unit section. After this function has been called for all
+comment|/// DIE objects, the DWARF can be generated since all DIEs will be able to
+comment|/// properly refer to other DIE objects since all DIEs have calculated their
+comment|/// offsets.
+comment|///
+comment|/// \param AP AsmPrinter to use when calculating sizes.
+comment|/// \param AbbrevSet the abbreviation used to unique DIE abbreviations.
+comment|/// \param CUOffset the compile/type unit relative offset in bytes.
+comment|/// \returns the offset for the DIE that follows this DIE within the
+comment|/// current compile/type unit.
+name|unsigned
+name|computeOffsetsAndAbbrevs
+parameter_list|(
+specifier|const
+name|AsmPrinter
+modifier|*
+name|AP
+parameter_list|,
+name|DIEAbbrevSet
+modifier|&
+name|AbbrevSet
+parameter_list|,
+name|unsigned
+name|CUOffset
+parameter_list|)
+function_decl|;
+comment|/// Climb up the parent chain to get the compile unit or type unit DIE that
+comment|/// this DIE belongs to.
+comment|///
+comment|/// \returns the compile or type unit DIE that owns this DIE, or NULL if
+comment|/// this DIE hasn't been added to a unit DIE.
 specifier|const
 name|DIE
 operator|*
-name|getUnitOrNull
+name|getUnitDie
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Climb up the parent chain to get the compile unit or type unit that this
+comment|/// DIE belongs to.
+comment|///
+comment|/// \returns the DIEUnit that represents the compile or type unit that owns
+comment|/// this DIE, or NULL if this DIE hasn't been added to a unit DIE.
+specifier|const
+name|DIEUnit
+operator|*
+name|getUnit
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -2909,7 +3283,7 @@ argument_list|)
 expr_stmt|;
 name|Child
 operator|->
-name|Parent
+name|Owner
 operator|=
 name|this
 expr_stmt|;
@@ -2960,6 +3334,231 @@ name|void
 name|dump
 parameter_list|()
 function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|/// Represents a compile or type unit.
+end_comment
+
+begin_decl_stmt
+name|class
+name|DIEUnit
+block|{
+comment|/// The compile unit or type unit DIE. This variable must be an instance of
+comment|/// DIE so that we can calculate the DIEUnit from any DIE by traversing the
+comment|/// parent backchain and getting the Unit DIE, and then casting itself to a
+comment|/// DIEUnit. This allows us to be able to find the DIEUnit for any DIE without
+comment|/// having to store a pointer to the DIEUnit in each DIE instance.
+name|DIE
+name|Die
+decl_stmt|;
+comment|/// The section this unit will be emitted in. This may or may not be set to
+comment|/// a valid section depending on the client that is emitting DWARF.
+name|MCSection
+modifier|*
+name|Section
+decl_stmt|;
+name|uint64_t
+name|Offset
+decl_stmt|;
+comment|/// .debug_info or .debug_types absolute section offset.
+name|uint32_t
+name|Length
+decl_stmt|;
+comment|/// The length in bytes of all of the DIEs in this unit.
+specifier|const
+name|uint16_t
+name|Version
+decl_stmt|;
+comment|/// The Dwarf version number for this unit.
+specifier|const
+name|uint8_t
+name|AddrSize
+decl_stmt|;
+comment|/// The size in bytes of an address for this unit.
+name|public
+label|:
+name|DIEUnit
+argument_list|(
+argument|uint16_t Version
+argument_list|,
+argument|uint8_t AddrSize
+argument_list|,
+argument|dwarf::Tag UnitTag
+argument_list|)
+empty_stmt|;
+name|DIEUnit
+argument_list|(
+specifier|const
+name|DIEUnit
+operator|&
+name|RHS
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|DIEUnit
+argument_list|(
+name|DIEUnit
+operator|&&
+name|RHS
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|DIEUnit
+operator|&
+name|RHS
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|DIEUnit
+operator|&&
+name|RHS
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+comment|/// Set the section that this DIEUnit will be emitted into.
+comment|///
+comment|/// This function is used by some clients to set the section. Not all clients
+comment|/// that emit DWARF use this section variable.
+name|void
+name|setSection
+parameter_list|(
+name|MCSection
+modifier|*
+name|Section
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|this
+operator|->
+name|Section
+argument_list|)
+expr_stmt|;
+name|this
+operator|->
+name|Section
+operator|=
+name|Section
+expr_stmt|;
+block|}
+comment|/// Return the section that this DIEUnit will be emitted into.
+comment|///
+comment|/// \returns Section pointer which can be NULL.
+name|MCSection
+operator|*
+name|getSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Section
+return|;
+block|}
+name|void
+name|setDebugSectionOffset
+parameter_list|(
+name|unsigned
+name|O
+parameter_list|)
+block|{
+name|Offset
+operator|=
+name|O
+expr_stmt|;
+block|}
+name|unsigned
+name|getDebugSectionOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Offset
+return|;
+block|}
+name|void
+name|setLength
+parameter_list|(
+name|uint64_t
+name|L
+parameter_list|)
+block|{
+name|Length
+operator|=
+name|L
+expr_stmt|;
+block|}
+name|uint64_t
+name|getLength
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Length
+return|;
+block|}
+name|uint16_t
+name|getDwarfVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Version
+return|;
+block|}
+name|uint16_t
+name|getAddressSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AddrSize
+return|;
+block|}
+name|DIE
+modifier|&
+name|getUnitDie
+parameter_list|()
+block|{
+return|return
+name|Die
+return|;
+block|}
+specifier|const
+name|DIE
+operator|&
+name|getUnitDie
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Die
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -3297,13 +3896,17 @@ end_decl_stmt
 
 begin_comment
 unit|};  }
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_CODEGEN_ASMPRINTER_DIE_H
+end_comment
 
 end_unit
 

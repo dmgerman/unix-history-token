@@ -52,13 +52,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"lldb/Core/dwarf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/dwarf.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_comment
@@ -89,7 +89,7 @@ parameter_list|(
 name|regname
 parameter_list|)
 define|\
-value|(LLVM_EXTENSION offsetof(UserArea, gpr) + \          LLVM_EXTENSION offsetof(GPR_linux_mips, regname))
+value|(LLVM_EXTENSION offsetof(UserArea, gpr) +                                    \    LLVM_EXTENSION offsetof(GPR_linux_mips, regname))
 end_define
 
 begin_else
@@ -104,7 +104,6 @@ name|GPR_OFFSET
 parameter_list|(
 name|regname
 parameter_list|)
-define|\
 value|(LLVM_EXTENSION offsetof(GPR_freebsd_mips, regname))
 end_define
 
@@ -125,7 +124,7 @@ parameter_list|(
 name|regname
 parameter_list|)
 define|\
-value|(LLVM_EXTENSION offsetof(UserArea, fpr) + \       LLVM_EXTENSION offsetof(FPR_linux_mips, regname))
+value|(LLVM_EXTENSION offsetof(UserArea, fpr) +                                    \    LLVM_EXTENSION offsetof(FPR_linux_mips, regname))
 end_define
 
 begin_comment
@@ -140,7 +139,7 @@ parameter_list|(
 name|regname
 parameter_list|)
 define|\
-value|(LLVM_EXTENSION offsetof(UserArea, msa) + \       LLVM_EXTENSION offsetof(MSA_linux_mips, regname))
+value|(LLVM_EXTENSION offsetof(UserArea, msa) +                                    \    LLVM_EXTENSION offsetof(MSA_linux_mips, regname))
 end_define
 
 begin_comment
@@ -199,7 +198,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((GPR_freebsd_mips*)0)->reg), GPR_OFFSET(reg), eEncodingUint, \           eFormatHex, { kind1, kind2, kind3, kind4, gpr_##reg##_mips64 }, NULL, NULL, NULL, 0}
+value|{                                                                            \     #reg, alt, sizeof(((GPR_freebsd_mips *) 0)->reg),                          \                       GPR_OFFSET(reg), eEncodingUint, eFormatHex,              \                                  {kind1, kind2, kind3, kind4,                  \                                   gpr_##reg##_mips64 },                        \                                   NULL, NULL, NULL, 0                          \   }
 end_define
 
 begin_endif
@@ -336,7 +335,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((MSA_linux_mips*)0)->reg), MSA_OFFSET(reg), eEncodingVector,   \       eFormatVectorOfUInt8, { kind1, kind2, kind3, kind4, msa_##reg##_mips64 }, NULL, NULL, NULL, 0}
+value|{                                                                            \     #reg, alt, sizeof(((MSA_linux_mips *) 0)->reg),                            \                       MSA_OFFSET(reg), eEncodingVector, eFormatVectorOfUInt8,  \                                  {kind1, kind2, kind3, kind4,                  \                                   msa_##reg##_mips64 },                        \                                   NULL, NULL, NULL, 0                          \   }
 end_define
 
 begin_define
@@ -357,7 +356,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((MSA_linux_mips*)0)->reg), MSA_OFFSET(reg), eEncodingUint,   \       eFormatHex, { kind1, kind2, kind3, kind4, msa_##reg##_mips64 }, NULL, NULL, NULL, 0}
+value|{                                                                            \     #reg, alt, sizeof(((MSA_linux_mips *) 0)->reg),                            \                       MSA_OFFSET(reg), eEncodingUint, eFormatHex,              \                                  {kind1, kind2, kind3, kind4,                  \                                   msa_##reg##_mips64 },                        \                                   NULL, NULL, NULL, 0                          \   }
 end_define
 
 begin_decl_stmt
@@ -367,7 +366,8 @@ name|g_register_infos_mips64
 index|[]
 init|=
 block|{
-comment|// General purpose registers.            EH_Frame,                  DWARF,              Generic,    Process Plugin
+comment|// General purpose registers.            EH_Frame,                  DWARF,
+comment|// Generic,    Process Plugin
 ifndef|#
 directive|ifndef
 name|LINUX_MIPS64

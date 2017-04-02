@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Target/ExecutionContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/ExecutionContext.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -60,13 +60,17 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class StoppointCallbackContext StoppointCallbackContext.h "lldb/Breakpoint/StoppointCallbackContext.h"
-comment|/// @brief Class holds the information that a breakpoint callback needs to evaluate this stop.
+comment|/// @class StoppointCallbackContext StoppointCallbackContext.h
+comment|/// "lldb/Breakpoint/StoppointCallbackContext.h"
+comment|/// @brief Class holds the information that a breakpoint callback needs to
+comment|/// evaluate this stop.
 comment|//----------------------------------------------------------------------
 comment|//----------------------------------------------------------------------
 comment|/// General Outline:
-comment|/// When we hit a breakpoint we need to package up whatever information is needed
-comment|/// to evaluate breakpoint commands and conditions.  This class is the container of
+comment|/// When we hit a breakpoint we need to package up whatever information is
+comment|/// needed
+comment|/// to evaluate breakpoint commands and conditions.  This class is the container
+comment|/// of
 comment|/// that information.
 comment|//----------------------------------------------------------------------
 name|class
@@ -112,7 +116,8 @@ comment|// This tells us where we have stopped, what thread.
 name|bool
 name|is_synchronous
 decl_stmt|;
-comment|// Is the callback being executed synchronously with the breakpoint,
+comment|// Is the callback being executed synchronously with the
+comment|// breakpoint,
 comment|// or asynchronously as the event is retrieved?
 block|}
 empty_stmt|;

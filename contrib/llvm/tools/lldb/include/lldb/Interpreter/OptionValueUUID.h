@@ -91,7 +91,7 @@ argument_list|()
 block|,
 name|m_uuid
 argument_list|()
-block|{     }
+block|{}
 name|OptionValueUUID
 argument_list|(
 specifier|const
@@ -107,12 +107,12 @@ name|m_uuid
 argument_list|(
 argument|uuid
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionValueUUID
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
@@ -147,6 +147,20 @@ argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
+block|;
+name|Error
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|VarSetOperationType
+operator|=
+name|eVarSetOperationAssign
+argument_list|)
+operator|=
+name|delete
 block|;
 name|bool
 name|Clear
@@ -206,13 +220,13 @@ block|{
 name|m_uuid
 operator|=
 name|value
-block|;     }
+block|; }
 name|size_t
 name|AutoComplete
 argument_list|(
 argument|CommandInterpreter&interpreter
 argument_list|,
-argument|const char *s
+argument|llvm::StringRef s
 argument_list|,
 argument|int match_start_point
 argument_list|,

@@ -269,7 +269,7 @@ block|;
 name|void
 name|emitELFSize
 argument_list|(
-argument|MCSymbolELF *Symbol
+argument|MCSymbol *Symbol
 argument_list|,
 argument|const MCExpr *Value
 argument_list|)

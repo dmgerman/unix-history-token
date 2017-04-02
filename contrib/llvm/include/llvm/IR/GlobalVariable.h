@@ -86,6 +86,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -107,15 +113,33 @@ directive|include
 file|"llvm/IR/OperandTraits.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|Module
+name|Constant
 decl_stmt|;
 name|class
-name|Constant
+name|Module
 decl_stmt|;
 name|template
 operator|<
@@ -125,6 +149,12 @@ operator|>
 name|class
 name|SymbolTableListTraits
 expr_stmt|;
+name|class
+name|DIGlobalVariable
+decl_stmt|;
+name|class
+name|DIGlobalVariableExpression
+decl_stmt|;
 name|class
 name|GlobalVariable
 range|:
@@ -144,46 +174,6 @@ operator|<
 name|GlobalVariable
 operator|>
 expr_stmt|;
-name|void
-modifier|*
-name|operator
-name|new
-parameter_list|(
-name|size_t
-parameter_list|,
-name|unsigned
-parameter_list|)
-init|=
-name|delete
-function_decl|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|GlobalVariable
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-name|GlobalVariable
-argument_list|(
-specifier|const
-name|GlobalVariable
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|setParent
-parameter_list|(
-name|Module
-modifier|*
-name|parent
-parameter_list|)
-function_decl|;
 name|bool
 name|isConstantGlobal
 range|:
@@ -201,28 +191,6 @@ comment|// value before global
 comment|// initializers are run?
 name|public
 label|:
-comment|// allocate space for exactly one operand
-name|void
-modifier|*
-name|operator
-name|new
-parameter_list|(
-name|size_t
-name|s
-parameter_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|1
-argument_list|)
-return|;
-block|}
 comment|/// GlobalVariable ctor - If a parent module is specified, the global is
 comment|/// automatically inserted into the end of the specified modules global list.
 name|GlobalVariable
@@ -273,6 +241,27 @@ argument_list|,
 argument|bool isExternallyInitialized = false
 argument_list|)
 empty_stmt|;
+name|GlobalVariable
+argument_list|(
+specifier|const
+name|GlobalVariable
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|GlobalVariable
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|GlobalVariable
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 operator|~
 name|GlobalVariable
 argument_list|()
@@ -287,6 +276,39 @@ argument_list|(
 literal|1
 argument_list|)
 block|;   }
+comment|// allocate space for exactly one operand
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+name|void
+modifier|*
+name|operator
+name|new
+parameter_list|(
+name|size_t
+parameter_list|,
+name|unsigned
+parameter_list|)
+init|=
+name|delete
+function_decl|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -530,6 +552,29 @@ name|void
 name|dropAllReferences
 parameter_list|()
 function_decl|;
+comment|/// Attach a DIGlobalVariableExpression.
+name|void
+name|addDebugInfo
+parameter_list|(
+name|DIGlobalVariableExpression
+modifier|*
+name|GV
+parameter_list|)
+function_decl|;
+comment|/// Fill the vector with all debug info attachements.
+name|void
+name|getDebugInfo
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|DIGlobalVariableExpression
+operator|*
+operator|>
+operator|&
+name|GVs
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -581,13 +626,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_GLOBALVARIABLE_H
+end_comment
 
 end_unit
 

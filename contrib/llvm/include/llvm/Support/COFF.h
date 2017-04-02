@@ -184,6 +184,46 @@ block|,
 literal|'\xb8'
 block|,   }
 decl_stmt|;
+specifier|static
+specifier|const
+name|char
+name|ClGlObjMagic
+index|[]
+init|=
+block|{
+literal|'\x38'
+block|,
+literal|'\xfe'
+block|,
+literal|'\xb3'
+block|,
+literal|'\x0c'
+block|,
+literal|'\xa5'
+block|,
+literal|'\xd9'
+block|,
+literal|'\xab'
+block|,
+literal|'\x4d'
+block|,
+literal|'\xac'
+block|,
+literal|'\x9b'
+block|,
+literal|'\xd6'
+block|,
+literal|'\xb6'
+block|,
+literal|'\x22'
+block|,
+literal|'\x26'
+block|,
+literal|'\x53'
+block|,
+literal|'\xc2'
+block|,   }
+decl_stmt|;
 comment|// Sizes in bytes of various things in the COFF format.
 enum|enum
 block|{
@@ -2063,7 +2103,7 @@ operator|&
 literal|0x1C
 operator|)
 operator|>>
-literal|3
+literal|2
 operator|)
 return|;
 block|}

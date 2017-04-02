@@ -52,19 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/IdentifierTable.h"
+file|"lldb/Symbol/ClangASTImporter.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/Symbol/ClangExternalASTSourceCommon.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/ClangASTImporter.h"
 end_include
 
 begin_include
@@ -77,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/Target.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/IdentifierTable.h"
 end_include
 
 begin_include
@@ -163,7 +163,7 @@ name|m_target
 operator|->
 name|GetClangASTImporter
 argument_list|()
-block|;     }
+block|;   }
 comment|//------------------------------------------------------------------
 comment|/// Destructor
 comment|//------------------------------------------------------------------
@@ -641,7 +641,8 @@ name|m_lookups_enabled
 return|;
 block|}
 comment|//----------------------------------------------------------------------
-comment|/// @class ClangASTSourceProxy ClangASTSource.h "lldb/Expression/ClangASTSource.h"
+comment|/// @class ClangASTSourceProxy ClangASTSource.h
+comment|/// "lldb/Expression/ClangASTSource.h"
 comment|/// @brief Proxy for ClangASTSource
 comment|///
 comment|/// Clang AST contexts like to own their AST sources, so this is a
@@ -666,7 +667,7 @@ name|m_original
 argument_list|(
 argument|original
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|FindExternalVisibleDeclsByName
 argument_list|(
@@ -805,7 +806,7 @@ name|ClangASTMetadata
 operator|*
 name|GetMetadata
 argument_list|(
-argument|const void * object
+argument|const void *object
 argument_list|)
 block|{
 return|return
@@ -820,7 +821,7 @@ block|}
 name|void
 name|SetMetadata
 argument_list|(
-argument|const void * object
+argument|const void *object
 argument_list|,
 argument|ClangASTMetadata&metadata
 argument_list|)
@@ -839,7 +840,7 @@ block|}
 name|bool
 name|HasMetadata
 argument_list|(
-argument|const void * object
+argument|const void *object
 argument_list|)
 block|{
 return|return
@@ -856,7 +857,7 @@ operator|:
 name|ClangASTSource
 operator|&
 name|m_original
-block|;     }
+block|;   }
 decl_stmt|;
 name|clang
 operator|::
@@ -916,9 +917,6 @@ comment|///
 comment|/// @param[in] current_id
 comment|///     The ID for the current FindExternalVisibleDecls invocation,
 comment|///     for logging purposes.
-comment|///
-comment|/// @return
-comment|///     True on success; false otherwise.
 comment|//------------------------------------------------------------------
 name|void
 name|FindExternalVisibleDecls
@@ -1087,7 +1085,10 @@ operator|::
 name|NamespaceMapSP
 name|m_namespace_map
 expr_stmt|;
-comment|///< The mapping of all namespaces found for this request back to their modules
+comment|///< The mapping of all
+comment|///namespaces found for this
+comment|///request back to their
+comment|///modules
 specifier|const
 name|clang
 operator|::
@@ -1114,7 +1115,10 @@ literal|5
 operator|>
 name|m_function_types
 expr_stmt|;
-comment|///< All the types of functions that have been reported, so we don't report conflicts
+comment|///< All the types of
+comment|///functions that have been
+comment|///reported, so we don't
+comment|///report conflicts
 struct|struct
 block|{
 name|bool
@@ -1227,7 +1231,7 @@ argument_list|(
 name|m_found
 argument_list|)
 argument_list|)
-block|;     }
+block|;   }
 comment|//------------------------------------------------------------------
 comment|/// Create a VarDecl with the name being searched for and the provided
 comment|/// type and register it in the right places.

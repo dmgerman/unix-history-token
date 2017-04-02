@@ -139,7 +139,7 @@ name|GetSyntheticChildAtOffset
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const CompilerType& type
+argument|const CompilerType&type
 argument_list|,
 argument|bool can_create
 argument_list|,
@@ -159,7 +159,7 @@ block|;
 name|size_t
 name|GetPointeeData
 argument_list|(
-argument|DataExtractor& data
+argument|DataExtractor&data
 argument_list|,
 argument|uint32_t item_idx =
 literal|0

@@ -118,6 +118,9 @@ name|class
 name|LoopInfo
 decl_stmt|;
 name|class
+name|OptimizationRemarkEmitter
+decl_stmt|;
+name|class
 name|Pass
 decl_stmt|;
 name|class
@@ -892,7 +895,7 @@ comment|// If this a min/max recurrence the kind of recurrence.
 name|MinMaxRecurrenceKind
 name|MinMaxKind
 decl_stmt|;
-comment|// First occurance of unasfe algebra in the PHI's use-chain.
+comment|// First occurrence of unasfe algebra in the PHI's use-chain.
 name|Instruction
 modifier|*
 name|UnsafeAlgebraInst
@@ -935,7 +938,10 @@ name|IK_IntInduction
 block|,
 comment|///< Integer induction variable. Step = C.
 name|IK_PtrInduction
+block|,
 comment|///< Pointer induction var. Step = C / sizeof(elem).
+name|IK_FpInduction
+comment|///< Floating point induction variable.
 block|}
 enum|;
 name|public
@@ -955,6 +961,11 @@ name|IK_NoInduction
 argument_list|)
 operator|,
 name|Step
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|InductionBinOp
 argument_list|(
 argument|nullptr
 argument_list|)
@@ -1035,9 +1046,9 @@ name|getConstIntStepValue
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Returns true if \p Phi is an induction. If \p Phi is an induction,
-comment|/// the induction descriptor \p D will contain the data describing this
-comment|/// induction. If by some other means the caller has a better SCEV
+comment|/// Returns true if \p Phi is an induction in the loop \p L. If \p Phi is an
+comment|/// induction, the induction descriptor \p D will contain the data describing
+comment|/// this induction. If by some other means the caller has a better SCEV
 comment|/// expression for \p Phi than the one returned by the ScalarEvolution
 comment|/// analysis, it can be passed through \p Expr.
 specifier|static
@@ -1047,6 +1058,11 @@ parameter_list|(
 name|PHINode
 modifier|*
 name|Phi
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|L
 parameter_list|,
 name|ScalarEvolution
 modifier|*
@@ -1064,9 +1080,35 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// Returns true if \p Phi is an induction, in the context associated with
-comment|/// the run-time predicate of PSE. If \p Assume is true, this can add further
-comment|/// SCEV predicates to \p PSE in order to prove that \p Phi is an induction.
+comment|/// Returns true if \p Phi is a floating point induction in the loop \p L.
+comment|/// If \p Phi is an induction, the induction descriptor \p D will contain
+comment|/// the data describing this induction.
+specifier|static
+name|bool
+name|isFPInductionPHI
+parameter_list|(
+name|PHINode
+modifier|*
+name|Phi
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+name|ScalarEvolution
+modifier|*
+name|SE
+parameter_list|,
+name|InductionDescriptor
+modifier|&
+name|D
+parameter_list|)
+function_decl|;
+comment|/// Returns true if \p Phi is a loop \p L induction, in the context associated
+comment|/// with the run-time predicate of PSE. If \p Assume is true, this can add
+comment|/// further SCEV predicates to \p PSE in order to prove that \p Phi is an
+comment|/// induction.
 comment|/// If \p Phi is an induction, \p D will contain the data describing this
 comment|/// induction.
 specifier|static
@@ -1076,6 +1118,11 @@ parameter_list|(
 name|PHINode
 modifier|*
 name|Phi
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|L
 parameter_list|,
 name|PredicatedScalarEvolution
 modifier|&
@@ -1091,6 +1138,80 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// Returns true if the induction type is FP and the binary operator does
+comment|/// not have the "fast-math" property. Such operation requires a relaxed FP
+comment|/// mode.
+name|bool
+name|hasUnsafeAlgebra
+parameter_list|()
+block|{
+return|return
+name|InductionBinOp
+operator|&&
+operator|!
+name|cast
+operator|<
+name|FPMathOperator
+operator|>
+operator|(
+name|InductionBinOp
+operator|)
+operator|->
+name|hasUnsafeAlgebra
+argument_list|()
+return|;
+block|}
+comment|/// Returns induction operator that does not have "fast-math" property
+comment|/// and requires FP unsafe mode.
+name|Instruction
+modifier|*
+name|getUnsafeAlgebraInst
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|InductionBinOp
+operator|||
+name|cast
+operator|<
+name|FPMathOperator
+operator|>
+operator|(
+name|InductionBinOp
+operator|)
+operator|->
+name|hasUnsafeAlgebra
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+return|return
+name|InductionBinOp
+return|;
+block|}
+comment|/// Returns binary opcode of the induction operator.
+name|Instruction
+operator|::
+name|BinaryOps
+name|getInductionOpcode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InductionBinOp
+operator|?
+name|InductionBinOp
+operator|->
+name|getOpcode
+argument_list|()
+operator|:
+name|Instruction
+operator|::
+name|BinaryOpsEnd
+return|;
+block|}
 name|private
 label|:
 comment|/// Private constructor - used by \c isInductionPHI.
@@ -1101,6 +1222,8 @@ argument_list|,
 argument|InductionKind K
 argument_list|,
 argument|const SCEV *Step
+argument_list|,
+argument|BinaryOperator *InductionBinOp = nullptr
 argument_list|)
 empty_stmt|;
 comment|/// Start value.
@@ -1119,6 +1242,11 @@ specifier|const
 name|SCEV
 modifier|*
 name|Step
+decl_stmt|;
+comment|// Instruction that advances induction variable.
+name|BinaryOperator
+modifier|*
+name|InductionBinOp
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1239,8 +1367,8 @@ comment|/// reverse depth first order w.r.t the DominatorTree. This allows us to
 comment|/// uses before definitions, allowing us to sink a loop body in one pass without
 comment|/// iteration. Takes DomTreeNode, AliasAnalysis, LoopInfo, DominatorTree,
 comment|/// DataLayout, TargetLibraryInfo, Loop, AliasSet information for all
-comment|/// instructions of the loop and loop safety information as arguments.
-comment|/// It returns changed status.
+comment|/// instructions of the loop and loop safety information as
+comment|/// arguments. Diagnostics is emitted via \p ORE. It returns changed status.
 name|bool
 name|sinkRegion
 parameter_list|(
@@ -1267,6 +1395,10 @@ modifier|*
 parameter_list|,
 name|LoopSafetyInfo
 modifier|*
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
 parameter_list|)
 function_decl|;
 comment|/// \brief Walk the specified region of the CFG (defined by all blocks
@@ -1275,7 +1407,8 @@ comment|/// first order w.r.t the DominatorTree.  This allows us to visit defini
 comment|/// before uses, allowing us to hoist a loop body in one pass without iteration.
 comment|/// Takes DomTreeNode, AliasAnalysis, LoopInfo, DominatorTree, DataLayout,
 comment|/// TargetLibraryInfo, Loop, AliasSet information for all instructions of the
-comment|/// loop and loop safety information as arguments. It returns changed status.
+comment|/// loop and loop safety information as arguments. Diagnostics is emitted via \p
+comment|/// ORE. It returns changed status.
 name|bool
 name|hoistRegion
 parameter_list|(
@@ -1302,6 +1435,10 @@ modifier|*
 parameter_list|,
 name|LoopSafetyInfo
 modifier|*
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
 parameter_list|)
 function_decl|;
 comment|/// \brief Try to promote memory values to scalars by sinking stores out of
@@ -1310,7 +1447,8 @@ comment|/// the stores in the loop, looking for stores to Must pointers which ar
 comment|/// loop invariant. It takes AliasSet, Loop exit blocks vector, loop exit blocks
 comment|/// insertion point vector, PredIteratorCache, LoopInfo, DominatorTree, Loop,
 comment|/// AliasSet information for all instructions of the loop and loop safety
-comment|/// information as arguments. It returns changed status.
+comment|/// information as arguments. Diagnostics is emitted via \p ORE. It returns
+comment|/// changed status.
 name|bool
 name|promoteLoopAccessesToScalars
 argument_list|(
@@ -1351,6 +1489,9 @@ name|AliasSetTracker
 operator|*
 argument_list|,
 name|LoopSafetyInfo
+operator|*
+argument_list|,
+name|OptimizationRemarkEmitter
 operator|*
 argument_list|)
 decl_stmt|;
@@ -1446,6 +1587,20 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// \brief Get a loop's estimated trip count based on branch weight metadata.
+comment|/// Returns 0 when the count is estimated to be 0, or None when a meaningful
+comment|/// estimate can not be made.
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|getLoopEstimatedTripCount
+argument_list|(
+name|Loop
+operator|*
+name|L
+argument_list|)
+expr_stmt|;
 comment|/// Helper to consistently add the set of standard passes to a loop pass's \c
 comment|/// AnalysisUsage.
 comment|///
@@ -1457,6 +1612,47 @@ parameter_list|(
 name|AnalysisUsage
 modifier|&
 name|AU
+parameter_list|)
+function_decl|;
+comment|/// Returns true if the hoister and sinker can handle this instruction.
+comment|/// If SafetyInfo is null, we are checking for sinking instructions from
+comment|/// preheader to loop body (no speculation).
+comment|/// If SafetyInfo is not null, we are checking for hoisting/sinking
+comment|/// instructions from loop body to preheader/exit. Check if the instruction
+comment|/// can execute speculatively.
+comment|/// If \p ORE is set use it to emit optimization remarks.
+name|bool
+name|canSinkOrHoistInst
+parameter_list|(
+name|Instruction
+modifier|&
+name|I
+parameter_list|,
+name|AAResults
+modifier|*
+name|AA
+parameter_list|,
+name|DominatorTree
+modifier|*
+name|DT
+parameter_list|,
+name|Loop
+modifier|*
+name|CurLoop
+parameter_list|,
+name|AliasSetTracker
+modifier|*
+name|CurAST
+parameter_list|,
+name|LoopSafetyInfo
+modifier|*
+name|SafetyInfo
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 block|}

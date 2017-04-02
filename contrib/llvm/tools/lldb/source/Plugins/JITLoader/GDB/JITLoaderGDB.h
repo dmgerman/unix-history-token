@@ -257,7 +257,8 @@ argument_list|,
 argument|lldb::StateType state
 argument_list|)
 block|;
-comment|// A collection of in-memory jitted object addresses and their corresponding modules
+comment|// A collection of in-memory jitted object addresses and their corresponding
+comment|// modules
 typedef|typedef
 name|std
 operator|::

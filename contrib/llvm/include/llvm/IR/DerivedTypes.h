@@ -78,7 +78,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
@@ -90,7 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -105,17 +129,6 @@ name|APInt
 decl_stmt|;
 name|class
 name|LLVMContext
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|ArrayRef
-expr_stmt|;
-name|class
-name|StringRef
 decl_stmt|;
 comment|/// Class to represent integer types. Note that this class is also used to
 comment|/// represent the built-in integer types: Int1Ty, Int8Ty, Int16Ty, Int32Ty and
@@ -168,13 +181,14 @@ operator|=
 operator|(
 literal|1
 operator|<<
-literal|23
+literal|24
 operator|)
 operator|-
 literal|1
 comment|///< Maximum number of bits that can be specified
 comment|///< Note that bit width is stored in the Type classes SubclassData field
-comment|///< which has 23 bits. This yields a maximum bit width of 8,388,607 bits.
+comment|///< which has 24 bits. This yields a maximum bit width of 16,777,215
+comment|///< bits.
 block|}
 block|;
 comment|/// This static method is the primary way of constructing an IntegerType.
@@ -310,6 +324,17 @@ name|Type
 block|{
 name|FunctionType
 argument_list|(
+argument|Type *Result
+argument_list|,
+argument|ArrayRef<Type*> Params
+argument_list|,
+argument|bool IsVarArgs
+argument_list|)
+block|;
+name|public
+operator|:
+name|FunctionType
+argument_list|(
 specifier|const
 name|FunctionType
 operator|&
@@ -317,7 +342,6 @@ argument_list|)
 operator|=
 name|delete
 block|;
-specifier|const
 name|FunctionType
 operator|&
 name|operator
@@ -330,17 +354,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|FunctionType
-argument_list|(
-argument|Type *Result
-argument_list|,
-argument|ArrayRef<Type*> Params
-argument_list|,
-argument|bool IsVarArgs
-argument_list|)
-block|;
-name|public
-operator|:
 comment|/// This static method is the primary way of constructing a FunctionType.
 specifier|static
 name|FunctionType
@@ -513,20 +526,16 @@ expr|}
 block|;
 name|static_assert
 argument_list|(
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|FunctionType
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|>=
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|Type
 operator|*
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 argument_list|,
 literal|"Alignment sufficient for objects appended to FunctionType"
 argument_list|)
@@ -596,7 +605,7 @@ name|getNumParams
 argument_list|()
 return|;
 block|}
-comment|/// Common super class of ArrayType, StructType, PointerType and VectorType.
+comment|/// Common super class of ArrayType, StructType and VectorType.
 name|class
 name|CompositeType
 operator|:
@@ -682,13 +691,6 @@ operator|->
 name|getTypeID
 argument_list|()
 operator|==
-name|PointerTyID
-operator|||
-name|T
-operator|->
-name|getTypeID
-argument_list|()
-operator|==
 name|VectorTyID
 return|;
 block|}
@@ -720,28 +722,6 @@ operator|:
 name|public
 name|CompositeType
 block|{
-name|StructType
-argument_list|(
-specifier|const
-name|StructType
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-specifier|const
-name|StructType
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|StructType
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
 name|StructType
 argument_list|(
 name|LLVMContext
@@ -791,6 +771,27 @@ name|SymbolTableEntry
 block|;
 name|public
 operator|:
+name|StructType
+argument_list|(
+specifier|const
+name|StructType
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|StructType
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|StructType
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 comment|/// This creates an identified struct.
 specifier|static
 name|StructType
@@ -1212,12 +1213,12 @@ name|N
 argument_list|)
 return|;
 block|}
-comment|/// This is the superclass of the array, pointer and vector type classes.
-comment|/// All of these represent "arrays" in memory. The array type represents a
-comment|/// specifically sized array, pointer types are unsized/unknown size arrays,
-comment|/// vector types represent specifically sized arrays that allow for use of SIMD
-comment|/// instructions. SequentialType holds the common features of all, which stem
-comment|/// from the fact that all three lay their components out in memory identically.
+comment|/// This is the superclass of the array and vector type classes. Both of these
+comment|/// represent "arrays" in memory. The array type represents a specifically sized
+comment|/// array, and the vector type represents a specifically sized array that allows
+comment|/// for use of SIMD instructions. SequentialType holds the common features of
+comment|/// both, which stem from the fact that both lay their components out in memory
+comment|/// identically.
 name|class
 name|SequentialType
 operator|:
@@ -1229,27 +1230,8 @@ operator|*
 name|ContainedType
 block|;
 comment|///< Storage for the single contained type.
-name|SequentialType
-argument_list|(
-specifier|const
-name|SequentialType
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-specifier|const
-name|SequentialType
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|SequentialType
-operator|&
-operator|)
-operator|=
-name|delete
+name|uint64_t
+name|NumElements
 block|;
 name|protected
 operator|:
@@ -1258,6 +1240,8 @@ argument_list|(
 argument|TypeID TID
 argument_list|,
 argument|Type *ElType
+argument_list|,
+argument|uint64_t NumElements
 argument_list|)
 operator|:
 name|CompositeType
@@ -1272,7 +1256,12 @@ argument_list|)
 block|,
 name|ContainedType
 argument_list|(
-argument|ElType
+name|ElType
+argument_list|)
+block|,
+name|NumElements
+argument_list|(
+argument|NumElements
 argument_list|)
 block|{
 name|ContainedTys
@@ -1286,6 +1275,36 @@ literal|1
 block|;   }
 name|public
 operator|:
+name|SequentialType
+argument_list|(
+specifier|const
+name|SequentialType
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|SequentialType
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|SequentialType
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
+name|uint64_t
+name|getNumElements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumElements
+return|;
+block|}
 name|Type
 operator|*
 name|getElementType
@@ -1293,8 +1312,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getSequentialElementType
-argument_list|()
+name|ContainedType
 return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast.
@@ -1319,13 +1337,6 @@ operator|->
 name|getTypeID
 argument_list|()
 operator|==
-name|PointerTyID
-operator|||
-name|T
-operator|->
-name|getTypeID
-argument_list|()
-operator|==
 name|VectorTyID
 return|;
 block|}
@@ -1338,9 +1349,15 @@ operator|:
 name|public
 name|SequentialType
 block|{
-name|uint64_t
-name|NumElements
+name|ArrayType
+argument_list|(
+argument|Type *ElType
+argument_list|,
+argument|uint64_t NumEl
+argument_list|)
 block|;
+name|public
+operator|:
 name|ArrayType
 argument_list|(
 specifier|const
@@ -1350,7 +1367,6 @@ argument_list|)
 operator|=
 name|delete
 block|;
-specifier|const
 name|ArrayType
 operator|&
 name|operator
@@ -1363,15 +1379,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|ArrayType
-argument_list|(
-argument|Type *ElType
-argument_list|,
-argument|uint64_t NumEl
-argument_list|)
-block|;
-name|public
-operator|:
 comment|/// This static method is the primary way to construct an ArrayType
 specifier|static
 name|ArrayType
@@ -1393,15 +1400,6 @@ operator|*
 name|ElemTy
 argument_list|)
 block|;
-name|uint64_t
-name|getNumElements
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumElements
-return|;
-block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
 specifier|inline
@@ -1449,9 +1447,15 @@ operator|:
 name|public
 name|SequentialType
 block|{
-name|unsigned
-name|NumElements
+name|VectorType
+argument_list|(
+argument|Type *ElType
+argument_list|,
+argument|unsigned NumEl
+argument_list|)
 block|;
+name|public
+operator|:
 name|VectorType
 argument_list|(
 specifier|const
@@ -1461,7 +1465,6 @@ argument_list|)
 operator|=
 name|delete
 block|;
-specifier|const
 name|VectorType
 operator|&
 name|operator
@@ -1474,15 +1477,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|VectorType
-argument_list|(
-argument|Type *ElType
-argument_list|,
-argument|unsigned NumEl
-argument_list|)
-block|;
-name|public
-operator|:
 comment|/// This static method is the primary way to construct an VectorType.
 specifier|static
 name|VectorType
@@ -1763,16 +1757,6 @@ operator|*
 name|ElemTy
 argument_list|)
 block|;
-comment|/// Return the number of elements in the Vector type.
-name|unsigned
-name|getNumElements
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumElements
-return|;
-block|}
 comment|/// Return the number of bits in the Vector type.
 comment|/// Returns zero when the vector is a vector of pointers.
 name|unsigned
@@ -1781,7 +1765,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NumElements
+name|getNumElements
+argument_list|()
 operator|*
 name|getElementType
 argument_list|()
@@ -1835,8 +1820,22 @@ name|class
 name|PointerType
 operator|:
 name|public
-name|SequentialType
+name|Type
 block|{
+name|explicit
+name|PointerType
+argument_list|(
+argument|Type *ElType
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|)
+block|;
+name|Type
+operator|*
+name|PointeeTy
+block|;
+name|public
+operator|:
 name|PointerType
 argument_list|(
 specifier|const
@@ -1846,7 +1845,6 @@ argument_list|)
 operator|=
 name|delete
 block|;
-specifier|const
 name|PointerType
 operator|&
 name|operator
@@ -1859,16 +1857,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|explicit
-name|PointerType
-argument_list|(
-argument|Type *ElType
-argument_list|,
-argument|unsigned AddrSpace
-argument_list|)
-block|;
-name|public
-operator|:
 comment|/// This constructs a pointer to an object of the specified type in a numbered
 comment|/// address space.
 specifier|static
@@ -1900,6 +1888,16 @@ name|ElementType
 argument_list|,
 literal|0
 argument_list|)
+return|;
+block|}
+name|Type
+operator|*
+name|getElementType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PointeeTy
 return|;
 block|}
 comment|/// Return true if the specified type is valid as a element type.
@@ -1979,13 +1977,17 @@ expr|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_DERIVEDTYPES_H
+end_comment
 
 end_unit
 

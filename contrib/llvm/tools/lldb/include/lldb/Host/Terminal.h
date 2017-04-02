@@ -55,13 +55,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Host/Config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Config.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_struct_decl
@@ -89,11 +89,11 @@ name|m_fd
 argument_list|(
 argument|fd
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|Terminal
 argument_list|()
-block|{     }
+block|{}
 name|bool
 name|IsATerminal
 argument_list|()

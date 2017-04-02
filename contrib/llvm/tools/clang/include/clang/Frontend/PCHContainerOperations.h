@@ -74,9 +74,6 @@ block|{
 name|class
 name|raw_pwrite_stream
 decl_stmt|;
-name|class
-name|BitstreamReader
-decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -200,22 +197,15 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// Initialize an llvm::BitstreamReader with the serialized AST inside
-comment|/// the PCH container Buffer.
+comment|/// Returns the serialized AST inside the PCH container Buffer.
 name|virtual
-name|void
+name|StringRef
 name|ExtractPCH
 argument_list|(
 name|llvm
 operator|::
 name|MemoryBufferRef
 name|Buffer
-argument_list|,
-name|llvm
-operator|::
-name|BitstreamReader
-operator|&
-name|StreamFile
 argument_list|)
 decl|const
 init|=
@@ -281,13 +271,11 @@ return|return
 literal|"raw"
 return|;
 block|}
-comment|/// Initialize an llvm::BitstreamReader with Buffer.
-name|void
+comment|/// Simply returns the buffer contained in Buffer.
+name|StringRef
 name|ExtractPCH
 argument_list|(
 argument|llvm::MemoryBufferRef Buffer
-argument_list|,
-argument|llvm::BitstreamReader&StreamFile
 argument_list|)
 specifier|const
 name|override

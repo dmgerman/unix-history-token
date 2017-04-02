@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/ConstantRange.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Instruction.h"
 end_include
 
@@ -164,6 +158,7 @@ comment|/// for all of the elements in the vector.
 name|void
 name|computeKnownBits
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -231,10 +226,12 @@ comment|/// Return true if LHS and RHS have no common bits set.
 name|bool
 name|haveNoCommonBitsSet
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|LHS
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|RHS
@@ -270,6 +267,7 @@ comment|/// wrapper around computeKnownBits.
 name|void
 name|ComputeSignBit
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -321,6 +319,7 @@ comment|/// value is either a power of two or zero.
 name|bool
 name|isKnownToBeAPowerOfTwo
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -368,6 +367,7 @@ comment|/// integers.
 name|bool
 name|isKnownNonZero
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -407,6 +407,7 @@ comment|/// Returns true if the give value is known to be non-negative.
 name|bool
 name|isKnownNonNegative
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -447,6 +448,7 @@ comment|/// and non-zero).
 name|bool
 name|isKnownPositive
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -487,6 +489,7 @@ comment|/// and non-zero).
 name|bool
 name|isKnownNegative
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -527,10 +530,12 @@ comment|/// Supports scalar integer types only.
 name|bool
 name|isKnownNonEqual
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V1
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|V2
@@ -573,6 +578,7 @@ comment|/// for all of the elements in the vector.
 name|bool
 name|MaskedValueIsZero
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -623,6 +629,7 @@ comment|/// bits.
 name|unsigned
 name|ComputeNumSignBits
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|Op
@@ -724,6 +731,7 @@ parameter_list|)
 function_decl|;
 comment|/// Return true if we can prove that the specified FP value is either a NaN or
 comment|/// never less than 0.0.
+comment|/// If \p IncludeNeg0 is false, -0.0 is considered less than 0.0.
 name|bool
 name|CannotBeOrderedLessThanZero
 parameter_list|(
@@ -736,11 +744,22 @@ specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
+parameter_list|)
+function_decl|;
+comment|/// \returns true if we can prove that the specified FP value has a 0 sign
+comment|/// bit.
+name|bool
+name|SignBitMustBeZero
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
 parameter_list|,
-name|unsigned
-name|Depth
-init|=
-literal|0
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 parameter_list|)
 function_decl|;
 comment|/// If the specified value can be set by repeating the same byte in memory,
@@ -889,6 +908,7 @@ comment|/// pointer, return 'len+1'.  If we can't, return 0.
 name|uint64_t
 name|GetStringLength
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -1105,9 +1125,9 @@ name|V
 parameter_list|)
 function_decl|;
 comment|/// Return true if this pointer couldn't possibly be null. If the context
-comment|/// instruction is specified, perform context-sensitive analysis and return
-comment|/// true if the pointer couldn't possibly be null at the specified
-comment|/// instruction.
+comment|/// instruction and dominator tree are specified, perform context-sensitive
+comment|/// analysis and return true if the pointer couldn't possibly be null at the
+comment|/// specified instruction.
 name|bool
 name|isKnownNonNullAt
 parameter_list|(
@@ -1169,10 +1189,12 @@ empty_stmt|;
 name|OverflowResult
 name|computeOverflowForUnsignedMul
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|LHS
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|RHS
@@ -1200,10 +1222,12 @@ function_decl|;
 name|OverflowResult
 name|computeOverflowForUnsignedAdd
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|LHS
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|RHS
@@ -1231,10 +1255,12 @@ function_decl|;
 name|OverflowResult
 name|computeOverflowForSignedAdd
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|LHS
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|RHS
@@ -1269,6 +1295,7 @@ comment|/// This version also leverages the sign bit of Add if known.
 name|OverflowResult
 name|computeOverflowForSignedAdd
 parameter_list|(
+specifier|const
 name|AddOperator
 modifier|*
 name|Add
@@ -1305,10 +1332,12 @@ comment|/// not overflowing, \p II being an<op>.with.overflow intrinsic.
 name|bool
 name|isOverflowIntrinsicNoWrap
 parameter_list|(
+specifier|const
 name|IntrinsicInst
 modifier|*
 name|II
 parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|&
 name|DT
@@ -1542,17 +1571,94 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// Parse out a conservative ConstantRange from !range metadata.
-comment|///
-comment|/// E.g. if RangeMD is !{i32 0, i32 10, i32 15, i32 20} then return [0, 20).
-name|ConstantRange
-name|getConstantRangeFromMetadata
-parameter_list|(
-name|MDNode
-modifier|&
-name|RangeMD
-parameter_list|)
-function_decl|;
+specifier|static
+specifier|inline
+name|SelectPatternResult
+name|matchSelectPattern
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|,
+specifier|const
+name|Value
+operator|*
+operator|&
+name|LHS
+argument_list|,
+specifier|const
+name|Value
+operator|*
+operator|&
+name|RHS
+argument_list|,
+name|Instruction
+operator|::
+name|CastOps
+operator|*
+name|CastOp
+operator|=
+name|nullptr
+argument_list|)
+block|{
+name|Value
+modifier|*
+name|L
+init|=
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|LHS
+operator|)
+decl_stmt|;
+name|Value
+modifier|*
+name|R
+init|=
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|RHS
+operator|)
+decl_stmt|;
+name|auto
+name|Result
+init|=
+name|matchSelectPattern
+argument_list|(
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|,
+name|L
+argument_list|,
+name|R
+argument_list|)
+decl_stmt|;
+name|LHS
+operator|=
+name|L
+expr_stmt|;
+name|RHS
+operator|=
+name|R
+expr_stmt|;
+return|return
+name|Result
+return|;
+block|}
 comment|/// Return true if RHS is known to be implied true by LHS.  Return false if
 comment|/// RHS is known to be implied false by LHS.  Otherwise, return None if no
 comment|/// implication can be made.
@@ -1569,9 +1675,9 @@ name|bool
 operator|>
 name|isImpliedCondition
 argument_list|(
-argument|Value *LHS
+argument|const Value *LHS
 argument_list|,
-argument|Value *RHS
+argument|const Value *RHS
 argument_list|,
 argument|const DataLayout&DL
 argument_list|,

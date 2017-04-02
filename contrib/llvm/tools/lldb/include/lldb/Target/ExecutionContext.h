@@ -68,13 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Target/StackID.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/StackID.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -106,7 +106,8 @@ comment|/// These classes are designed to be used as baton objects that get pass
 comment|/// to a wide variety of functions that require execution contexts.
 comment|//===----------------------------------------------------------------------===//
 comment|//----------------------------------------------------------------------
-comment|/// @class ExecutionContextRef ExecutionContext.h "lldb/Target/ExecutionContext.h"
+comment|/// @class ExecutionContextRef ExecutionContext.h
+comment|/// "lldb/Target/ExecutionContext.h"
 comment|/// @brief A class that holds a weak reference to an execution context.
 comment|///
 comment|/// ExecutionContextRef objects are designed to hold onto an execution
@@ -584,11 +585,13 @@ operator|::
 name|tid_t
 name|m_tid
 expr_stmt|;
-comment|///< The thread ID that this object refers to in case the backing object changes
+comment|///< The thread ID that this object refers to in case the
+comment|///backing object changes
 name|StackID
 name|m_stack_id
 decl_stmt|;
-comment|///< The stack ID that this object refers to in case the backing object changes
+comment|///< The stack ID that this object refers to in case the
+comment|///backing object changes
 block|}
 empty_stmt|;
 comment|//----------------------------------------------------------------------
@@ -639,7 +642,7 @@ comment|// Adopt the target and optionally its current context.
 comment|//------------------------------------------------------------------
 name|ExecutionContext
 argument_list|(
-argument|Target* t
+argument|Target *t
 argument_list|,
 argument|bool fill_current_process_thread_frame = true
 argument_list|)
@@ -739,7 +742,8 @@ argument_list|,
 argument|bool thread_and_frame_only_if_stopped = false
 argument_list|)
 empty_stmt|;
-comment|// These two variants take in a locker, and grab the target, lock the API mutex into locker, then
+comment|// These two variants take in a locker, and grab the target, lock the API
+comment|// mutex into locker, then
 comment|// fill in the rest of the shared pointers.
 name|ExecutionContext
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/IR/Statepoint.h - gc.statepoint utilities ------ --*- C++ -*-===//
+comment|//===-- llvm/IR/Statepoint.h - gc.statepoint utilities ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Attributes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/BasicBlock.h"
 end_include
 
@@ -125,6 +131,36 @@ directive|include
 file|"llvm/IR/Intrinsics.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -145,9 +181,19 @@ literal|1
 operator|,
 comment|///< Indicates that this statepoint is a transition from
 comment|///< GC-aware code to code that is not GC-aware.
+comment|/// Mark the deopt arguments associated with the statepoint as only being
+comment|/// "live-in". By default, deopt arguments are "live-through".  "live-through"
+comment|/// requires that they the value be live on entry, on exit, and at any point
+comment|/// during the call.  "live-in" only requires the value be available at the
+comment|/// start of the call.  In particular, "live-in" values can be placed in
+comment|/// unused argument registers or other non-callee saved registers.
+name|DeoptLiveIn
+operator|=
+literal|2
+operator|,
 name|MaskAll
 operator|=
-name|GCTransition
+literal|3
 comment|///< A bitmask that includes all valid flags.
 block|}
 empty_stmt|;
@@ -156,9 +202,6 @@ name|GCRelocateInst
 decl_stmt|;
 name|class
 name|GCResultInst
-decl_stmt|;
-name|class
-name|ImmutableStatepoint
 decl_stmt|;
 name|bool
 name|isStatepoint
@@ -224,28 +267,6 @@ name|StatepointBase
 block|{
 name|CallSiteTy
 name|StatepointCS
-block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-operator|=
-name|delete
 block|;
 name|protected
 operator|:
@@ -333,6 +354,29 @@ operator|=
 literal|5
 block|,   }
 expr_stmt|;
+name|void
+modifier|*
+name|operator
+name|new
+parameter_list|(
+name|size_t
+parameter_list|,
+name|unsigned
+parameter_list|)
+init|=
+name|delete
+function_decl|;
+name|void
+modifier|*
+name|operator
+name|new
+parameter_list|(
+name|size_t
+name|s
+parameter_list|)
+init|=
+name|delete
+function_decl|;
 name|explicit
 name|operator
 name|bool
@@ -2104,11 +2148,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_STATEPOINT_H
+end_comment
 
 end_unit
 

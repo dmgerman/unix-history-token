@@ -711,6 +711,12 @@ argument_list|,
 argument|bool IsLittleEndian
 argument_list|,
 argument|bool Is64Bits
+argument_list|,
+argument|uint32_t UniversalCputype =
+literal|0
+argument_list|,
+argument|uint32_t UniversalIndex =
+literal|0
 argument_list|)
 expr_stmt|;
 name|void
@@ -743,6 +749,11 @@ specifier|const
 name|override
 expr_stmt|;
 comment|// MachO specific.
+name|Error
+name|checkSymbolTable
+argument_list|()
+specifier|const
+expr_stmt|;
 name|std
 operator|::
 name|error_code
@@ -1065,13 +1076,13 @@ decl_stmt|;
 comment|// TODO: Would be useful to have an iterator based version
 comment|// of the load command interface too.
 name|basic_symbol_iterator
-name|symbol_begin_impl
+name|symbol_begin
 argument_list|()
 specifier|const
 name|override
 expr_stmt|;
 name|basic_symbol_iterator
-name|symbol_end_impl
+name|symbol_end
 argument_list|()
 specifier|const
 name|override
@@ -1898,6 +1909,14 @@ modifier|*
 name|McpuDefault
 init|=
 name|nullptr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|ArchFlag
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 specifier|static
@@ -2069,6 +2088,12 @@ argument_list|,
 argument|bool Is64Bits
 argument_list|,
 argument|Error&Err
+argument_list|,
+argument|uint32_t UniversalCputype =
+literal|0
+argument_list|,
+argument|uint32_t UniversalIndex =
+literal|0
 argument_list|)
 empty_stmt|;
 name|uint64_t

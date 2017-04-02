@@ -152,10 +152,46 @@ name|OPERAND_PCREL
 init|=
 literal|4
 block|,
+name|OPERAND_FIRST_GENERIC
+init|=
+literal|6
+block|,
+name|OPERAND_GENERIC_0
+init|=
+literal|6
+block|,
+name|OPERAND_GENERIC_1
+init|=
+literal|7
+block|,
+name|OPERAND_GENERIC_2
+init|=
+literal|8
+block|,
+name|OPERAND_GENERIC_3
+init|=
+literal|9
+block|,
+name|OPERAND_GENERIC_4
+init|=
+literal|10
+block|,
+name|OPERAND_GENERIC_5
+init|=
+literal|11
+block|,
+name|OPERAND_LAST_GENERIC
+init|=
+literal|11
+block|,
 name|OPERAND_FIRST_TARGET
 init|=
-literal|5
-block|}
+literal|12
+block|, }
+enum|;
+enum|enum
+name|GenericOperandType
+block|{ }
 enum|;
 block|}
 comment|/// \brief This holds information about one operand of a machine instruction,
@@ -242,6 +278,46 @@ name|OptionalDef
 operator|)
 return|;
 block|}
+name|bool
+name|isGenericType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OperandType
+operator|>=
+name|MCOI
+operator|::
+name|OPERAND_FIRST_GENERIC
+operator|&&
+name|OperandType
+operator|<=
+name|MCOI
+operator|::
+name|OPERAND_LAST_GENERIC
+return|;
+block|}
+name|unsigned
+name|getGenericTypeIndex
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isGenericType
+argument_list|()
+operator|&&
+literal|"non-generic types don't have an index"
+argument_list|)
+block|;
+return|return
+name|OperandType
+operator|-
+name|MCOI
+operator|::
+name|OPERAND_FIRST_GENERIC
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -322,6 +398,8 @@ block|,
 name|InsertSubreg
 block|,
 name|Convergent
+block|,
+name|Add
 block|}
 enum|;
 block|}
@@ -542,7 +620,7 @@ name|NumDefs
 return|;
 block|}
 comment|/// \brief Return flags of this instruction.
-name|unsigned
+name|uint64_t
 name|getFlags
 argument_list|()
 specifier|const
@@ -564,7 +642,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -583,7 +661,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -602,7 +680,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -620,11 +698,29 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
 name|Return
+operator|)
+return|;
+block|}
+comment|/// \brief Return true if the instruction is an add instruction.
+name|bool
+name|isAdd
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1ULL
+operator|<<
+name|MCID
+operator|::
+name|Add
 operator|)
 return|;
 block|}
@@ -638,7 +734,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -658,7 +754,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -681,7 +777,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -702,7 +798,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -721,7 +817,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -803,7 +899,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -821,7 +917,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -840,7 +936,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -858,7 +954,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -876,7 +972,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -896,7 +992,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -915,7 +1011,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -939,7 +1035,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -966,7 +1062,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -994,7 +1090,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1021,7 +1117,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1042,7 +1138,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1065,7 +1161,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1086,7 +1182,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1115,7 +1211,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1145,7 +1241,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1176,7 +1272,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1201,7 +1297,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1222,7 +1318,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1245,7 +1341,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1271,7 +1367,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1294,7 +1390,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::
@@ -1317,7 +1413,7 @@ return|return
 name|Flags
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCID
 operator|::

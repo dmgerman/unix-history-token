@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"VarBypassDetector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/CharUnits.h"
 end_include
 
@@ -311,6 +317,9 @@ name|class
 name|CodeGenTypes
 decl_stmt|;
 name|class
+name|CGCallee
+decl_stmt|;
+name|class
 name|CGFunctionInfo
 decl_stmt|;
 name|class
@@ -343,6 +352,9 @@ decl_stmt|;
 struct_decl|struct
 name|OMPTaskDataTy
 struct_decl|;
+struct_decl|struct
+name|CGCoroData
+struct_decl|;
 comment|/// The kind of evaluation to perform on values of a particular
 comment|/// type.  Basically, is the code in CGExprScalar, CGExprComplex, or
 comment|/// CGExprAgg?
@@ -356,6 +368,31 @@ block|,
 name|TEK_Complex
 block|,
 name|TEK_Aggregate
+block|}
+enum|;
+define|#
+directive|define
+name|LIST_SANITIZER_CHECKS
+define|\
+value|SANITIZER_CHECK(AddOverflow, add_overflow, 0)                                \   SANITIZER_CHECK(BuiltinUnreachable, builtin_unreachable, 0)                  \   SANITIZER_CHECK(CFICheckFail, cfi_check_fail, 0)                             \   SANITIZER_CHECK(DivremOverflow, divrem_overflow, 0)                          \   SANITIZER_CHECK(DynamicTypeCacheMiss, dynamic_type_cache_miss, 0)            \   SANITIZER_CHECK(FloatCastOverflow, float_cast_overflow, 0)                   \   SANITIZER_CHECK(FunctionTypeMismatch, function_type_mismatch, 0)             \   SANITIZER_CHECK(LoadInvalidValue, load_invalid_value, 0)                     \   SANITIZER_CHECK(MissingReturn, missing_return, 0)                            \   SANITIZER_CHECK(MulOverflow, mul_overflow, 0)                                \   SANITIZER_CHECK(NegateOverflow, negate_overflow, 0)                          \   SANITIZER_CHECK(NonnullArg, nonnull_arg, 0)                                  \   SANITIZER_CHECK(NonnullReturn, nonnull_return, 0)                            \   SANITIZER_CHECK(OutOfBounds, out_of_bounds, 0)                               \   SANITIZER_CHECK(ShiftOutOfBounds, shift_out_of_bounds, 0)                    \   SANITIZER_CHECK(SubOverflow, sub_overflow, 0)                                \   SANITIZER_CHECK(TypeMismatch, type_mismatch, 1)                              \   SANITIZER_CHECK(VLABoundNotPositive, vla_bound_not_positive, 0)
+enum|enum
+name|SanitizerHandler
+block|{
+define|#
+directive|define
+name|SANITIZER_CHECK
+parameter_list|(
+name|Enum
+parameter_list|,
+name|Name
+parameter_list|,
+name|Version
+parameter_list|)
+value|Enum,
+name|LIST_SANITIZER_CHECKS
+undef|#
+directive|undef
+name|SANITIZER_CHECK
 block|}
 enum|;
 comment|/// CodeGenFunction - This class organizes the per-function state that is used
@@ -541,6 +578,11 @@ decl_stmt|;
 name|CGBuilderTy
 name|Builder
 decl_stmt|;
+comment|// Stores variables for which we can't generate correct lifetime markers
+comment|// because of jumps.
+name|VarBypassDetector
+name|Bypasses
+decl_stmt|;
 comment|/// \brief CGBuilder insert helper. This function is called after an
 comment|/// instruction is created using Builder.
 name|void
@@ -601,6 +643,32 @@ name|Function
 operator|*
 name|CurFn
 expr_stmt|;
+comment|// Holds coroutine data if the current function is a coroutine. We use a
+comment|// wrapper to manage its lifetime, so that we don't have to define CGCoroData
+comment|// in this header.
+struct|struct
+name|CGCoroInfo
+block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|CGCoroData
+operator|>
+name|Data
+expr_stmt|;
+name|CGCoroInfo
+argument_list|()
+expr_stmt|;
+operator|~
+name|CGCoroInfo
+argument_list|()
+expr_stmt|;
+block|}
+struct|;
+name|CGCoroInfo
+name|CurCoro
+decl_stmt|;
 comment|/// CurGD - The GlobalDecl for the current function being compiled.
 name|GlobalDecl
 name|CurGD
@@ -1647,14 +1715,10 @@ argument_list|(
 name|Header
 argument_list|)
 operator|%
-name|llvm
-operator|::
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|T
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|==
 literal|0
 argument_list|,
@@ -3686,19 +3750,83 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_macro
-name|OpaqueValueMapping
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|const OpaqueValueExpr *opaqueValue
-argument_list|,
-argument|LValue lvalue
-argument_list|)
-end_macro
+begin_comment
+comment|/// Build the opaque value mapping for an OpaqueValueExpr whose source
+end_comment
+
+begin_comment
+comment|/// expression is set to the expression the OVE represents.
+end_comment
 
 begin_expr_stmt
-unit|:
+name|OpaqueValueMapping
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|OpaqueValueExpr
+operator|*
+name|OV
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+argument|CGF
+argument_list|)
+block|{
+if|if
+condition|(
+name|OV
+condition|)
+block|{
+name|assert
+argument_list|(
+name|OV
+operator|->
+name|getSourceExpr
+argument_list|()
+operator|&&
+literal|"wrong form of OpaqueValueMapping used "
+literal|"for OVE with no source expression"
+argument_list|)
+expr_stmt|;
+name|Data
+operator|=
+name|OpaqueValueMappingData
+operator|::
+name|bind
+argument_list|(
+name|CGF
+argument_list|,
+name|OV
+argument_list|,
+name|OV
+operator|->
+name|getSourceExpr
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|}      OpaqueValueMapping
+operator|(
+name|CodeGenFunction
+operator|&
+name|CGF
+operator|,
+specifier|const
+name|OpaqueValueExpr
+operator|*
+name|opaqueValue
+operator|,
+name|LValue
+name|lvalue
+operator|)
+operator|:
 name|CGF
 argument_list|(
 name|CGF
@@ -5019,6 +5147,78 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/// The scope of an ArrayInitLoopExpr. Within this scope, the value of the
+end_comment
+
+begin_comment
+comment|/// current loop index is overridden.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ArrayInitLoopExprScope
+block|{
+name|public
+label|:
+name|ArrayInitLoopExprScope
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Index
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+name|CGF
+argument_list|)
+operator|,
+name|OldArrayInitIndex
+argument_list|(
+argument|CGF.ArrayInitIndex
+argument_list|)
+block|{
+name|CGF
+operator|.
+name|ArrayInitIndex
+operator|=
+name|Index
+block|;     }
+operator|~
+name|ArrayInitLoopExprScope
+argument_list|()
+block|{
+name|CGF
+operator|.
+name|ArrayInitIndex
+operator|=
+name|OldArrayInitIndex
+block|;     }
+name|private
+operator|:
+name|CodeGenFunction
+operator|&
+name|CGF
+expr_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|OldArrayInitIndex
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_decl_stmt
 name|class
 name|InlinedInheritingConstructorScope
@@ -5394,6 +5594,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// The current array initialization index when evaluating an
+end_comment
+
+begin_comment
+comment|/// ArrayInitIndexExpr within an ArrayInitLoopExpr.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ArrayInitIndex
+operator|=
+name|nullptr
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// The values of function arguments to use when evaluating
 end_comment
 
@@ -5524,6 +5743,17 @@ operator|*
 name|TrapBB
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// True if we need emit the life-time markers.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|bool
+name|ShouldEmitLifetimeMarkers
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Add a kernel metadata node to the named metadata node 'opencl.kernels'.
@@ -6460,21 +6690,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|EmitBlockLiteral
-argument_list|(
-specifier|const
-name|CGBlockInfo
-operator|&
-name|Info
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -7031,7 +7246,7 @@ name|EmitCallAndReturnForThunk
 argument_list|(
 name|llvm
 operator|::
-name|Value
+name|Constant
 operator|*
 name|Callee
 argument_list|,
@@ -7145,30 +7360,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitInitializerForField
-argument_list|(
+parameter_list|(
 name|FieldDecl
-operator|*
+modifier|*
 name|Field
-argument_list|,
+parameter_list|,
 name|LValue
 name|LHS
-argument_list|,
+parameter_list|,
 name|Expr
-operator|*
+modifier|*
 name|Init
-argument_list|,
-name|ArrayRef
-operator|<
-name|VarDecl
-operator|*
-operator|>
-name|ArrayIndexes
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Struct with all informations about dynamic [sub]class needed to set vptr.
@@ -9426,6 +9634,24 @@ block|}
 end_function
 
 begin_comment
+comment|/// Get the index of the current ArrayInitLoopExpr, if any.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getArrayInitIndex
+argument_list|()
+block|{
+return|return
+name|ArrayInitIndex
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getAccessedFieldNo - Given an encoded value and a result number, return
 end_comment
 
@@ -10396,6 +10622,20 @@ name|Ptr
 argument_list|,
 name|QualType
 name|DeleteTy
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|NumElements
+operator|=
+name|nullptr
+argument_list|,
+name|CharUnits
+name|CookieSize
+operator|=
+name|CharUnits
+argument_list|()
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -10695,6 +10935,21 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Converts Location to a DebugLoc, if debug information is enabled.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|DebugLoc
+name|SourceLocToDebugLoc
+argument_list|(
+argument|SourceLocation Location
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
@@ -10776,22 +11031,6 @@ name|capturedByInit
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|void
-name|EmitScalarInit
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|init
-argument_list|,
-name|LValue
-name|lvalue
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -11850,6 +12089,34 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|EmitCoroutineBody
+parameter_list|(
+specifier|const
+name|CoroutineBodyStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|RValue
+name|EmitCoroutineIntrinsic
+parameter_list|(
+specifier|const
+name|CallExpr
+modifier|*
+name|E
+parameter_list|,
+name|unsigned
+name|int
+name|IID
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|EnterCXXTryStmt
 parameter_list|(
 specifier|const
@@ -12523,6 +12790,36 @@ name|PrivateScope
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|void
+name|EmitOMPUseDevicePtrClause
+argument_list|(
+specifier|const
+name|OMPClause
+operator|&
+name|C
+argument_list|,
+name|OMPPrivateScope
+operator|&
+name|PrivateScope
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|ValueDecl
+operator|*
+argument_list|,
+name|Address
+operator|>
+operator|&
+name|CaptureDeviceAddrMap
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Emit code for copyin clause in \a D directive. The next code is
@@ -13377,6 +13674,126 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|EmitOMPTargetSimdDirective
+parameter_list|(
+specifier|const
+name|OMPTargetSimdDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPTeamsDistributeDirective
+parameter_list|(
+specifier|const
+name|OMPTeamsDistributeDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPTeamsDistributeSimdDirective
+parameter_list|(
+specifier|const
+name|OMPTeamsDistributeSimdDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPTeamsDistributeParallelForSimdDirective
+parameter_list|(
+specifier|const
+name|OMPTeamsDistributeParallelForSimdDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPTeamsDistributeParallelForDirective
+parameter_list|(
+specifier|const
+name|OMPTeamsDistributeParallelForDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPTargetTeamsDirective
+parameter_list|(
+specifier|const
+name|OMPTargetTeamsDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPTargetTeamsDistributeDirective
+parameter_list|(
+specifier|const
+name|OMPTargetTeamsDistributeDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPTargetTeamsDistributeParallelForDirective
+parameter_list|(
+specifier|const
+name|OMPTargetTeamsDistributeParallelForDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPTargetTeamsDistributeParallelForSimdDirective
+parameter_list|(
+specifier|const
+name|OMPTargetTeamsDistributeParallelForSimdDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPTargetTeamsDistributeSimdDirective
+parameter_list|(
+specifier|const
+name|OMPTargetTeamsDistributeSimdDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// Emit outlined function for the target directive.
 end_comment
@@ -13539,6 +13956,25 @@ begin_label
 name|private
 label|:
 end_label
+
+begin_comment
+comment|/// Helpers for blocks
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitBlockLiteral
+argument_list|(
+specifier|const
+name|CGBlockInfo
+operator|&
+name|Info
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Helpers for the OpenMP loop directives.
@@ -15323,23 +15759,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitDeclRefExprDbgValue
-argument_list|(
+parameter_list|(
 specifier|const
 name|DeclRefExpr
-operator|*
+modifier|*
 name|E
-argument_list|,
-name|llvm
-operator|::
-name|Constant
-operator|*
+parameter_list|,
+specifier|const
+name|APValue
+modifier|&
 name|Init
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -15372,12 +15807,11 @@ argument_list|(
 specifier|const
 name|CGFunctionInfo
 operator|&
-name|FnInfo
+name|CallInfo
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+specifier|const
+name|CGCallee
+operator|&
 name|Callee
 argument_list|,
 name|ReturnValueSlot
@@ -15387,12 +15821,6 @@ specifier|const
 name|CallArgList
 operator|&
 name|Args
-argument_list|,
-name|CGCalleeInfo
-name|CalleeInfo
-operator|=
-name|CGCalleeInfo
-argument_list|()
 argument_list|,
 name|llvm
 operator|::
@@ -15413,10 +15841,9 @@ argument_list|(
 name|QualType
 name|FnType
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+specifier|const
+name|CGCallee
+operator|&
 name|Callee
 argument_list|,
 specifier|const
@@ -15426,12 +15853,6 @@ name|E
 argument_list|,
 name|ReturnValueSlot
 name|ReturnValue
-argument_list|,
-name|CGCalleeInfo
-name|CalleeInfo
-operator|=
-name|CGCalleeInfo
-argument_list|()
 argument_list|,
 name|llvm
 operator|::
@@ -15458,6 +15879,33 @@ name|ReturnValue
 init|=
 name|ReturnValueSlot
 argument_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|RValue
+name|EmitSimpleCallExpr
+parameter_list|(
+specifier|const
+name|CallExpr
+modifier|*
+name|E
+parameter_list|,
+name|ReturnValueSlot
+name|ReturnValue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|CGCallee
+name|EmitCallee
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15695,11 +16143,8 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_decl_stmt
+name|CGCallee
 name|BuildAppleKextVirtualCall
 argument_list|(
 specifier|const
@@ -15717,24 +16162,28 @@ name|Type
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function_decl
+name|CGCallee
 name|BuildAppleKextVirtualDestructorCall
-argument_list|(
-argument|const CXXDestructorDecl *DD
-argument_list|,
-argument|CXXDtorType Type
-argument_list|,
-argument|const CXXRecordDecl *RD
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|(
+specifier|const
+name|CXXDestructorDecl
+modifier|*
+name|DD
+parameter_list|,
+name|CXXDtorType
+name|Type
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|RValue
@@ -15743,12 +16192,11 @@ argument_list|(
 specifier|const
 name|CXXMethodDecl
 operator|*
-name|MD
+name|Method
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+specifier|const
+name|CGCallee
+operator|&
 name|Callee
 argument_list|,
 name|ReturnValueSlot
@@ -15773,6 +16221,10 @@ specifier|const
 name|CallExpr
 operator|*
 name|E
+argument_list|,
+name|CallArgList
+operator|*
+name|RtlArgs
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -15786,10 +16238,9 @@ name|CXXDestructorDecl
 operator|*
 name|DD
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+specifier|const
+name|CGCallee
+operator|&
 name|Callee
 argument_list|,
 name|llvm
@@ -15935,6 +16386,18 @@ name|MD
 parameter_list|,
 name|ReturnValueSlot
 name|ReturnValue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|RValue
+name|EmitCXXPseudoDestructorExpr
+parameter_list|(
+specifier|const
+name|CXXPseudoDestructorExpr
+modifier|*
+name|E
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -16316,6 +16779,37 @@ operator|*
 name|EmitWebAssemblyBuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID
+argument_list|,
+argument|const CallExpr *E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_decl_stmt
+name|enum
+name|class
+name|MSVCIntrin
+decl_stmt|;
+end_decl_stmt
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitMSVCBuiltinExpr
+argument_list|(
+argument|MSVCIntrin BuiltinID
 argument_list|,
 argument|const CallExpr *E
 argument_list|)
@@ -18126,8 +18620,8 @@ name|SanitizerMask
 operator|>>
 name|Checked
 argument_list|,
-name|StringRef
-name|CheckName
+name|SanitizerHandler
+name|Check
 argument_list|,
 name|ArrayRef
 operator|<
@@ -18782,6 +19276,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|enum
+name|class
+name|EvaluationOrder
+block|{
+comment|///! No language constraints on evaluation order.
+name|Default
+operator|,
+comment|///! Language semantics require left-to-right evaluation.
+name|ForceLeftToRight
+operator|,
+comment|///! Language semantics require right-to-left evaluation.
+name|ForceRightToLeft
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/// EmitCallArgs - Emit call arguments for a function.
 end_comment
@@ -18805,6 +19319,8 @@ argument|const FunctionDecl *CalleeDecl = nullptr
 argument_list|,
 argument|unsigned ParamsToSkip =
 literal|0
+argument_list|,
+argument|EvaluationOrder Order = EvaluationOrder::Default
 argument_list|)
 block|{
 name|SmallVector
@@ -19035,10 +19551,17 @@ name|ArgTypes
 operator|.
 name|push_back
 argument_list|(
+name|CallArgTypeInfo
+condition|?
 name|getVarArgType
 argument_list|(
 name|A
 argument_list|)
+else|:
+name|A
+operator|->
+name|getType
+argument_list|()
 argument_list|)
 expr_stmt|;
 end_for
@@ -19055,6 +19578,8 @@ argument_list|,
 name|CalleeDecl
 argument_list|,
 name|ParamsToSkip
+argument_list|,
+name|Order
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -19073,6 +19598,8 @@ argument|const FunctionDecl *CalleeDecl = nullptr
 argument_list|,
 argument|unsigned ParamsToSkip =
 literal|0
+argument_list|,
+argument|EvaluationOrder Order = EvaluationOrder::Default
 argument_list|)
 end_macro
 

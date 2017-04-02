@@ -181,6 +181,24 @@ modifier|&
 name|F
 parameter_list|)
 function_decl|;
+comment|/// Downgrade the debug info in a module to contain only line table information.
+comment|///
+comment|/// In order to convert debug info to what -gline-tables-only would have
+comment|/// created, this does the following:
+comment|///   1) Delete all debug intrinsics.
+comment|///   2) Delete all non-CU named metadata debug info nodes.
+comment|///   3) Create new DebugLocs for each instruction.
+comment|///   4) Create a new CU debug info, and similarly for every metadata node
+comment|///      that's reachable from the CU debug info.
+comment|///   All debug type metadata nodes are unreachable and garbage collected.
+name|bool
+name|stripNonLineTableDebugInfo
+parameter_list|(
+name|Module
+modifier|&
+name|M
+parameter_list|)
+function_decl|;
 comment|/// \brief Return Debug Info Metadata Version by checking module flags.
 name|unsigned
 name|getDebugMetadataVersionFromModule
@@ -310,7 +328,7 @@ function_decl|;
 name|bool
 name|addGlobalVariable
 parameter_list|(
-name|DIGlobalVariable
+name|DIGlobalVariableExpression
 modifier|*
 name|DIG
 parameter_list|)
@@ -364,12 +382,12 @@ expr_stmt|;
 typedef|typedef
 name|SmallVectorImpl
 operator|<
-name|DIGlobalVariable
+name|DIGlobalVariableExpression
 operator|*
 operator|>
 operator|::
 name|const_iterator
-name|global_variable_iterator
+name|global_variable_expression_iterator
 expr_stmt|;
 typedef|typedef
 name|SmallVectorImpl
@@ -439,7 +457,7 @@ return|;
 block|}
 name|iterator_range
 operator|<
-name|global_variable_iterator
+name|global_variable_expression_iterator
 operator|>
 name|global_variables
 argument_list|()
@@ -588,7 +606,7 @@ name|SPs
 expr_stmt|;
 name|SmallVector
 operator|<
-name|DIGlobalVariable
+name|DIGlobalVariableExpression
 operator|*
 operator|,
 literal|8

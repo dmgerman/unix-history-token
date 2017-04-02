@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Target/PathMappingList.h"
+file|"lldb/Interpreter/OptionValue.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/OptionValue.h"
+file|"lldb/Target/PathMappingList.h"
 end_include
 
 begin_decl_stmt
@@ -98,12 +98,12 @@ name|m_notify_changes
 argument_list|(
 argument|notify_changes
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionValuePathMappings
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
@@ -138,6 +138,20 @@ argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
+block|;
+name|Error
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|VarSetOperationType
+operator|=
+name|eVarSetOperationAssign
+argument_list|)
+operator|=
+name|delete
 block|;
 name|bool
 name|Clear

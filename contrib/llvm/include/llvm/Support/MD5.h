@@ -33,6 +33,12 @@ directive|include
 file|"llvm/Support/Endian.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<array>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -137,6 +143,25 @@ operator|&
 name|Str
 argument_list|)
 decl_stmt|;
+comment|/// \brief Computes the hash for a given bytes.
+specifier|static
+name|std
+operator|::
+name|array
+operator|<
+name|uint8_t
+operator|,
+literal|16
+operator|>
+name|hash
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Data
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 specifier|const

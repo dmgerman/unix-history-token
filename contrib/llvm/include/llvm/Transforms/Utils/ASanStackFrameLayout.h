@@ -101,6 +101,20 @@ name|kAsanStackRightRedzoneMagic
 init|=
 literal|0xf3
 decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|kAsanStackUseAfterReturnMagic
+init|=
+literal|0xf5
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|kAsanStackUseAfterScopeMagic
+init|=
+literal|0xf8
+decl_stmt|;
 comment|// Input/output data struct for ComputeASanStackFrameLayout.
 struct|struct
 name|ASanStackVariableDescription
@@ -117,6 +131,11 @@ name|Size
 decl_stmt|;
 comment|// Size of the variable in bytes.
 name|size_t
+name|LifetimeSize
+decl_stmt|;
+comment|// Size in bytes to use for lifetime analysis check.
+comment|// Will be rounded up to Granularity.
+name|size_t
 name|Alignment
 decl_stmt|;
 comment|// Alignment of the variable (power of 2).
@@ -130,29 +149,20 @@ name|Offset
 decl_stmt|;
 comment|// Offset from the beginning of the frame;
 comment|// set by ComputeASanStackFrameLayout.
+name|unsigned
+name|Line
+decl_stmt|;
+comment|// Line number.
 block|}
 struct|;
 comment|// Output data struct for ComputeASanStackFrameLayout.
 struct|struct
 name|ASanStackFrameLayout
 block|{
-comment|// Frame description, see DescribeAddressIfStack in ASan runtime.
-name|SmallString
-operator|<
-literal|64
-operator|>
-name|DescriptionString
-expr_stmt|;
-comment|// The contents of the shadow memory for the stack frame that we need
-comment|// to set at function entry.
-name|SmallVector
-operator|<
-name|uint8_t
-operator|,
-literal|64
-operator|>
-name|ShadowBytes
-expr_stmt|;
+name|size_t
+name|Granularity
+decl_stmt|;
+comment|// Shadow granularity.
 name|size_t
 name|FrameAlignment
 decl_stmt|;
@@ -163,7 +173,7 @@ decl_stmt|;
 comment|// Size of the frame in bytes.
 block|}
 struct|;
-name|void
+name|ASanStackFrameLayout
 name|ComputeASanStackFrameLayout
 argument_list|(
 comment|// The array of stack variables. The elements may get reordered and changed.
@@ -183,13 +193,74 @@ comment|// At least 4 pointer sizes, power of 2, and>= Granularity.
 comment|// The resulting FrameSize should be multiple of MinHeaderSize.
 name|size_t
 name|MinHeaderSize
-argument_list|,
-comment|// The result is put here.
-name|ASanStackFrameLayout
-operator|*
-name|Layout
 argument_list|)
 decl_stmt|;
+comment|// Compute frame description, see DescribeAddressIfStack in ASan runtime.
+name|SmallString
+operator|<
+literal|64
+operator|>
+name|ComputeASanStackFrameDescription
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ASanStackVariableDescription
+operator|>
+operator|&
+name|Vars
+argument_list|)
+expr_stmt|;
+comment|// Returns shadow bytes with marked red zones. This shadow represents the state
+comment|// if the stack frame when all local variables are inside of the own scope.
+name|SmallVector
+operator|<
+name|uint8_t
+operator|,
+literal|64
+operator|>
+name|GetShadowBytes
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ASanStackVariableDescription
+operator|>
+operator|&
+name|Vars
+argument_list|,
+specifier|const
+name|ASanStackFrameLayout
+operator|&
+name|Layout
+argument_list|)
+expr_stmt|;
+comment|// Returns shadow bytes with marked red zones and after scope. This shadow
+comment|// represents the state if the stack frame when all local variables are outside
+comment|// of the own scope.
+name|SmallVector
+operator|<
+name|uint8_t
+operator|,
+literal|64
+operator|>
+name|GetShadowBytesAfterScope
+argument_list|(
+comment|// The array of stack variables. The elements may get reordered and changed.
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ASanStackVariableDescription
+operator|>
+operator|&
+name|Vars
+argument_list|,
+specifier|const
+name|ASanStackFrameLayout
+operator|&
+name|Layout
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

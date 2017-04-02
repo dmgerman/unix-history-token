@@ -109,9 +109,9 @@ name|lowerFormalArguments
 argument_list|(
 argument|MachineIRBuilder&MIRBuilder
 argument_list|,
-argument|const Function::ArgumentListType&Args
+argument|const Function&F
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&VRegs
+argument|ArrayRef<unsigned> VRegs
 argument_list|)
 specifier|const
 name|override

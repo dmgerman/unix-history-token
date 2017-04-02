@@ -159,22 +159,18 @@ argument_list|,
 argument|int64_t Addend
 argument_list|)
 block|;
-name|void
-name|resolveARMRelocation
+name|bool
+name|resolveAArch64ShortBranch
 argument_list|(
-argument|const SectionEntry&Section
+argument|unsigned SectionID
 argument_list|,
-argument|uint64_t Offset
+argument|relocation_iterator RelI
 argument_list|,
-argument|uint32_t Value
-argument_list|,
-argument|uint32_t Type
-argument_list|,
-argument|int32_t Addend
+argument|const RelocationValueRef&Value
 argument_list|)
 block|;
 name|void
-name|resolveMIPSRelocation
+name|resolveARMRelocation
 argument_list|(
 argument|const SectionEntry&Section
 argument_list|,
@@ -227,52 +223,6 @@ argument_list|,
 argument|uint32_t Type
 argument_list|,
 argument|int64_t Addend
-argument_list|)
-block|;
-name|void
-name|resolveMIPS64Relocation
-argument_list|(
-argument|const SectionEntry&Section
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|uint64_t Value
-argument_list|,
-argument|uint32_t Type
-argument_list|,
-argument|int64_t Addend
-argument_list|,
-argument|uint64_t SymOffset
-argument_list|,
-argument|SID SectionID
-argument_list|)
-block|;
-name|int64_t
-name|evaluateMIPS64Relocation
-argument_list|(
-argument|const SectionEntry&Section
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|uint64_t Value
-argument_list|,
-argument|uint32_t Type
-argument_list|,
-argument|int64_t Addend
-argument_list|,
-argument|uint64_t SymOffset
-argument_list|,
-argument|SID SectionID
-argument_list|)
-block|;
-name|void
-name|applyMIPS64Relocation
-argument_list|(
-argument|uint8_t *TargetPtr
-argument_list|,
-argument|int64_t CalculatedValue
-argument_list|,
-argument|uint32_t Type
 argument_list|)
 block|;
 name|unsigned
@@ -437,10 +387,14 @@ modifier|&
 name|Rel
 parameter_list|)
 function_decl|;
+name|protected
+label|:
 name|size_t
 name|getGOTEntrySize
 parameter_list|()
 function_decl|;
+name|private
+label|:
 name|SectionEntry
 modifier|&
 name|getSection
@@ -555,6 +509,8 @@ comment|// that consume more than one slot)
 name|unsigned
 name|CurrentGOTIndex
 decl_stmt|;
+name|protected
+label|:
 comment|// A map from section to a GOT section that has entries for section's GOT
 comment|// relocations. (Mips64 specific)
 name|DenseMap
@@ -565,6 +521,8 @@ name|SID
 operator|>
 name|SectionToGOTMap
 expr_stmt|;
+name|private
+label|:
 comment|// A map to avoid duplicate got entries (Mips64 specific)
 name|StringMap
 operator|<
@@ -629,9 +587,7 @@ name|MemoryManager
 operator|&
 name|MemMgr
 argument_list|,
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|&
 name|Resolver
 argument_list|)
@@ -640,6 +596,22 @@ operator|~
 name|RuntimeDyldELF
 argument_list|()
 name|override
+expr_stmt|;
+specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|RuntimeDyldELF
+operator|>
+name|create
+argument_list|(
+argument|Triple::ArchType Arch
+argument_list|,
+argument|RuntimeDyld::MemoryManager&MemMgr
+argument_list|,
+argument|JITSymbolResolver&Resolver
+argument_list|)
 expr_stmt|;
 name|std
 operator|::

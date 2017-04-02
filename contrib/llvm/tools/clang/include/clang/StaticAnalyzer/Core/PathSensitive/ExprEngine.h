@@ -747,6 +747,8 @@ argument_list|(
 argument|NodeBuilderContext& BC
 argument_list|,
 argument|ExplodedNode *Pred
+argument_list|,
+argument|const ReturnStmt *RS = nullptr
 argument_list|)
 name|override
 block|;
@@ -806,15 +808,6 @@ argument_list|,
 argument|SVal cond
 argument_list|,
 argument|bool assumption
-argument_list|)
-name|override
-block|;
-comment|/// wantsRegionChangeUpdate - Called by ProgramStateManager to determine if a
-comment|///  region change should trigger a processRegionChanges update.
-name|bool
-name|wantsRegionChangeUpdate
-argument_list|(
-argument|ProgramStateRef state
 argument_list|)
 name|override
 block|;
@@ -1705,6 +1698,50 @@ else|:
 name|X
 return|;
 block|}
+name|ProgramStateRef
+name|handleLValueBitCast
+argument_list|(
+argument|ProgramStateRef state
+argument_list|,
+argument|const Expr *Ex
+argument_list|,
+argument|const LocationContext *LCtx
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|QualType ExTy
+argument_list|,
+argument|const CastExpr *CastE
+argument_list|,
+argument|StmtNodeBuilder&Bldr
+argument_list|,
+argument|ExplodedNode *Pred
+argument_list|)
+block|;
+name|ProgramStateRef
+name|handleLVectorSplat
+argument_list|(
+argument|ProgramStateRef state
+argument_list|,
+argument|const LocationContext *LCtx
+argument_list|,
+argument|const CastExpr *CastE
+argument_list|,
+argument|StmtNodeBuilder&Bldr
+argument_list|,
+argument|ExplodedNode *Pred
+argument_list|)
+block|;
+name|void
+name|handleUOExtension
+argument_list|(
+argument|ExplodedNodeSet::iterator I
+argument_list|,
+argument|const UnaryOperator* U
+argument_list|,
+argument|StmtNodeBuilder&Bldr
+argument_list|)
+block|;
 name|public
 operator|:
 name|SVal

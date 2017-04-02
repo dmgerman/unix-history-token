@@ -491,7 +491,7 @@ name|uint16_t
 name|form
 decl_stmt|;
 comment|// DWARF DW_FORM_ defines
-name|LLVM_CONSTEXPR
+name|constexpr
 name|Atom
 argument_list|(
 argument|uint16_t type

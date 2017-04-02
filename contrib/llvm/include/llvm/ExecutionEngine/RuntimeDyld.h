@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"JITSymbolFlags.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -80,13 +80,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/JITSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/ObjectFile.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Memory.h"
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -104,22 +134,22 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|StringRef
-decl_stmt|;
 name|namespace
 name|object
 block|{
-name|class
-name|ObjectFile
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -129,6 +159,7 @@ name|class
 name|OwningBinary
 expr_stmt|;
 block|}
+comment|// end namespace object
 comment|/// Base class for errors originating in RuntimeDyld, e.g. missing relocation
 comment|/// support.
 name|class
@@ -206,26 +237,6 @@ name|friend
 name|class
 name|RuntimeDyldCheckerImpl
 decl_stmt|;
-name|RuntimeDyld
-argument_list|(
-specifier|const
-name|RuntimeDyld
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|RuntimeDyld
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|protected
 label|:
 comment|// Change the address associated with a section when resolving relocations.
@@ -242,78 +253,6 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
-comment|/// \brief Information about a named symbol.
-name|class
-name|SymbolInfo
-range|:
-name|public
-name|JITSymbolBase
-block|{
-name|public
-operator|:
-name|SymbolInfo
-argument_list|(
-name|std
-operator|::
-name|nullptr_t
-argument_list|)
-operator|:
-name|JITSymbolBase
-argument_list|(
-name|JITSymbolFlags
-operator|::
-name|None
-argument_list|)
-block|,
-name|Address
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|SymbolInfo
-argument_list|(
-argument|uint64_t Address
-argument_list|,
-argument|JITSymbolFlags Flags
-argument_list|)
-operator|:
-name|JITSymbolBase
-argument_list|(
-name|Flags
-argument_list|)
-block|,
-name|Address
-argument_list|(
-argument|Address
-argument_list|)
-block|{}
-name|explicit
-name|operator
-name|bool
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Address
-operator|!=
-literal|0
-return|;
-block|}
-name|uint64_t
-name|getAddress
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Address
-return|;
-block|}
-name|private
-operator|:
-name|uint64_t
-name|Address
-block|;   }
-decl_stmt|;
 comment|/// \brief Information about the loaded object.
 name|class
 name|LoadedObjectInfo
@@ -495,17 +434,16 @@ name|public
 operator|:
 name|MemoryManager
 argument_list|()
-operator|:
-name|FinalizationLocked
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|virtual
 operator|~
 name|MemoryManager
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// Allocate a memory block of (at least) the given size suitable for
 comment|/// executable code. The SectionID is a unique identifier assigned by the
 comment|/// RuntimeDyld instance, and optionally recorded by the memory manager to
@@ -667,71 +605,8 @@ argument_list|()
 block|;
 name|bool
 name|FinalizationLocked
-block|;   }
-block|;
-comment|/// \brief Symbol resolution.
-name|class
-name|SymbolResolver
-block|{
-name|public
-operator|:
-name|virtual
-operator|~
-name|SymbolResolver
-argument_list|()
-block|{}
-comment|/// This method returns the address of the specified symbol if it exists
-comment|/// within the logical dynamic library represented by this
-comment|/// RTDyldMemoryManager. Unlike findSymbol, queries through this
-comment|/// interface should return addresses for hidden symbols.
-comment|///
-comment|/// This is of particular importance for the Orc JIT APIs, which support lazy
-comment|/// compilation by breaking up modules: Each of those broken out modules
-comment|/// must be able to resolve hidden symbols provided by the others. Clients
-comment|/// writing memory managers for MCJIT can usually ignore this method.
-comment|///
-comment|/// This method will be queried by RuntimeDyld when checking for previous
-comment|/// definitions of common symbols.
-name|virtual
-name|SymbolInfo
-name|findSymbolInLogicalDylib
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-argument_list|)
 operator|=
-literal|0
-block|;
-comment|/// This method returns the address of the specified function or variable.
-comment|/// It is used to resolve symbols during module linking.
-comment|///
-comment|/// If the returned symbol's address is equal to ~0ULL then RuntimeDyld will
-comment|/// skip all relocations for that symbol, and the client will be responsible
-comment|/// for handling them manually.
-name|virtual
-name|SymbolInfo
-name|findSymbol
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-argument_list|)
-operator|=
-literal|0
-block|;
-name|private
-operator|:
-name|virtual
-name|void
-name|anchor
-argument_list|()
+name|false
 block|;   }
 block|;
 comment|/// \brief Construct a RuntimeDyld instance.
@@ -741,10 +616,30 @@ name|MemoryManager
 operator|&
 name|MemMgr
 argument_list|,
-name|SymbolResolver
+name|JITSymbolResolver
 operator|&
 name|Resolver
 argument_list|)
+block|;
+name|RuntimeDyld
+argument_list|(
+specifier|const
+name|RuntimeDyld
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|RuntimeDyld
+operator|&
+operator|)
+operator|=
+name|delete
 block|;
 operator|~
 name|RuntimeDyld
@@ -781,7 +676,7 @@ specifier|const
 block|;
 comment|/// Get the target address and flags for the named symbol.
 comment|/// This address is the one used for relocation.
-name|SymbolInfo
+name|JITEvaluatedSymbol
 name|getSymbol
 argument_list|(
 argument|StringRef Name
@@ -891,7 +786,7 @@ name|MemoryManager
 operator|&
 name|MemMgr
 block|;
-name|SymbolResolver
+name|JITSymbolResolver
 operator|&
 name|Resolver
 block|;

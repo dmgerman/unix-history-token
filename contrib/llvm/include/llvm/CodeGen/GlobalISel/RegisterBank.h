@@ -111,18 +111,23 @@ specifier|const
 name|unsigned
 name|InvalidID
 decl_stmt|;
-comment|/// Only the RegisterBankInfo can create RegisterBank.
-comment|/// The default constructor will leave the object in
-comment|/// an invalid state. I.e. isValid() == false.
-comment|/// The field must be updated to fix that.
-name|RegisterBank
-argument_list|()
-expr_stmt|;
+comment|/// Only the RegisterBankInfo can initialize RegisterBank properly.
 name|friend
 name|RegisterBankInfo
 decl_stmt|;
 name|public
 label|:
+name|RegisterBank
+argument_list|(
+argument|unsigned ID
+argument_list|,
+argument|const char *Name
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|const uint32_t *ContainedRegClasses
+argument_list|)
+empty_stmt|;
 comment|/// Get the identifier of this register bank.
 name|unsigned
 name|getID

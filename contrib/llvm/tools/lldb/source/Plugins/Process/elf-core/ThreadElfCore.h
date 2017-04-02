@@ -68,23 +68,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Thread.h"
+file|"lldb/Core/DataExtractor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataExtractor.h"
+file|"lldb/Target/Thread.h"
 end_include
 
 begin_struct
 struct|struct
 name|compat_timeval
 block|{
-name|int64_t
+name|alignas
+argument_list|(
+literal|8
+argument_list|)
+name|uint64_t
 name|tv_sec
 decl_stmt|;
-name|int32_t
+name|alignas
+argument_list|(
+literal|8
+argument_list|)
+name|uint64_t
 name|tv_usec
 decl_stmt|;
 block|}
@@ -96,34 +104,24 @@ comment|// PRSTATUS structure's size differs based on architecture.
 end_comment
 
 begin_comment
-comment|// Currently parsing done only for x86-64 architecture by
+comment|// This is the layout in the x86-64 arch.
 end_comment
 
 begin_comment
-comment|// simply reading data from the buffer.
+comment|// In the i386 case we parse it manually and fill it again
 end_comment
 
 begin_comment
-comment|// The following macros are used to specify the size.
+comment|// in the same structure
 end_comment
 
 begin_comment
-comment|// Calculating size using sizeof() wont work because of padding.
+comment|// The gp registers are also a part of this struct, but they are handled
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ELFLINUXPRSTATUS64_SIZE
-value|(112)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ELFLINUXPRPSINFO64_SIZE
-value|(132)
-end_define
+begin_comment
+comment|// separately
+end_comment
 
 begin_undef
 undef|#
@@ -159,9 +157,17 @@ decl_stmt|;
 name|int16_t
 name|pr_cursig
 decl_stmt|;
+name|alignas
+argument_list|(
+literal|8
+argument_list|)
 name|uint64_t
 name|pr_sigpend
 decl_stmt|;
+name|alignas
+argument_list|(
+literal|8
+argument_list|)
 name|uint64_t
 name|pr_sighold
 decl_stmt|;
@@ -192,7 +198,9 @@ decl_stmt|;
 name|ELFLinuxPrStatus
 argument_list|()
 expr_stmt|;
-name|bool
+name|lldb_private
+operator|::
+name|Error
 name|Parse
 argument_list|(
 name|lldb_private
@@ -207,7 +215,12 @@ name|ArchSpec
 operator|&
 name|arch
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+comment|// Return the bytesize of the structure
+comment|// 64 bit - just sizeof
+comment|// 32 bit - hardcoded because we are reusing the struct, but some of the
+comment|// members are smaller -
+comment|// so the layout is not the same
 specifier|static
 name|size_t
 name|GetSize
@@ -242,7 +255,27 @@ operator|::
 name|eCore_x86_64_x86_64
 case|:
 return|return
-name|ELFLINUXPRSTATUS64_SIZE
+sizeof|sizeof
+argument_list|(
+name|ELFLinuxPrStatus
+argument_list|)
+return|;
+case|case
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|::
+name|eCore_x86_32_i386
+case|:
+case|case
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|::
+name|eCore_x86_32_i486
+case|:
+return|return
+literal|72
 return|;
 default|default:
 return|return
@@ -253,6 +286,159 @@ block|}
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ELFLinuxPrStatus
+argument_list|)
+operator|==
+literal|112
+argument_list|,
+literal|"sizeof ELFLinuxPrStatus is not correct!"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|ELFLinuxSigInfo
+block|{
+name|int32_t
+name|si_signo
+decl_stmt|;
+name|int32_t
+name|si_code
+decl_stmt|;
+name|int32_t
+name|si_errno
+decl_stmt|;
+name|ELFLinuxSigInfo
+argument_list|()
+expr_stmt|;
+name|lldb_private
+operator|::
+name|Error
+name|Parse
+argument_list|(
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|data
+argument_list|,
+specifier|const
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch
+argument_list|)
+expr_stmt|;
+comment|// Return the bytesize of the structure
+comment|// 64 bit - just sizeof
+comment|// 32 bit - hardcoded because we are reusing the struct, but some of the
+comment|// members are smaller -
+comment|// so the layout is not the same
+specifier|static
+name|size_t
+name|GetSize
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|arch
+operator|.
+name|GetCore
+argument_list|()
+condition|)
+block|{
+case|case
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|::
+name|eCore_x86_64_x86_64
+case|:
+return|return
+sizeof|sizeof
+argument_list|(
+name|ELFLinuxSigInfo
+argument_list|)
+return|;
+case|case
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|::
+name|eCore_s390x_generic
+case|:
+case|case
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|::
+name|eCore_x86_32_i386
+case|:
+case|case
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|::
+name|eCore_x86_32_i486
+case|:
+return|return
+literal|12
+return|;
+default|default:
+return|return
+literal|0
+return|;
+block|}
+block|}
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ELFLinuxSigInfo
+argument_list|)
+operator|==
+literal|12
+argument_list|,
+literal|"sizeof ELFLinuxSigInfo is not correct!"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// PRPSINFO structure's size differs based on architecture.
+end_comment
+
+begin_comment
+comment|// This is the layout in the x86-64 arch case.
+end_comment
+
+begin_comment
+comment|// In the i386 case we parse it manually and fill it again
+end_comment
+
+begin_comment
+comment|// in the same structure
+end_comment
 
 begin_struct
 struct|struct
@@ -270,6 +456,10 @@ decl_stmt|;
 name|char
 name|pr_nice
 decl_stmt|;
+name|alignas
+argument_list|(
+literal|8
+argument_list|)
 name|uint64_t
 name|pr_flag
 decl_stmt|;
@@ -306,7 +496,9 @@ decl_stmt|;
 name|ELFLinuxPrPsInfo
 argument_list|()
 expr_stmt|;
-name|bool
+name|lldb_private
+operator|::
+name|Error
 name|Parse
 argument_list|(
 name|lldb_private
@@ -321,7 +513,12 @@ name|ArchSpec
 operator|&
 name|arch
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+comment|// Return the bytesize of the structure
+comment|// 64 bit - just sizeof
+comment|// 32 bit - hardcoded because we are reusing the struct, but some of the
+comment|// members are smaller -
+comment|// so the layout is not the same
 specifier|static
 name|size_t
 name|GetSize
@@ -356,7 +553,27 @@ operator|::
 name|eCore_x86_64_x86_64
 case|:
 return|return
-name|ELFLINUXPRPSINFO64_SIZE
+sizeof|sizeof
+argument_list|(
+name|ELFLinuxPrPsInfo
+argument_list|)
+return|;
+case|case
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|::
+name|eCore_x86_32_i386
+case|:
+case|case
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|::
+name|eCore_x86_32_i486
+case|:
+return|return
+literal|124
 return|;
 default|default:
 return|return
@@ -367,6 +584,21 @@ block|}
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ELFLinuxPrPsInfo
+argument_list|)
+operator|==
+literal|136
+argument_list|,
+literal|"sizeof ELFLinuxPrPsInfo is not correct!"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -394,6 +626,13 @@ name|tid
 expr_stmt|;
 name|int
 name|signo
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|prstatus_sig
+init|=
+literal|0
 decl_stmt|;
 name|std
 operator|::

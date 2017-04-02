@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/FileManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/SourceManager.h"
 end_include
 

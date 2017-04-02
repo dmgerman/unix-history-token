@@ -68,7 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/FileSpecList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/RegularExpression.h"
 end_include
 
 begin_include
@@ -80,13 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/FileSpecList.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/RegularExpression.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -99,8 +99,10 @@ block|{
 name|public
 label|:
 comment|//----------------------------------------------------------------------
-comment|// This is the command completion callback that is used to complete the argument of the option
-comment|// it is bound to (in the OptionDefinition table below).  Return the total number of matches.
+comment|// This is the command completion callback that is used to complete the
+comment|// argument of the option
+comment|// it is bound to (in the OptionDefinition table below).  Return the total
+comment|// number of matches.
 comment|//----------------------------------------------------------------------
 typedef|typedef
 name|int
@@ -112,16 +114,17 @@ name|CommandInterpreter
 operator|&
 name|interpreter
 operator|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|completion_str
 operator|,
 comment|// This is the argument we are completing
 name|int
 name|match_start_point
 operator|,
-comment|// This is the point in the list of matches that you should start returning elements
+comment|// This is the point in the list of matches that
+comment|// you should start returning elements
 name|int
 name|max_return_elements
 operator|,
@@ -251,137 +254,137 @@ struct|;
 specifier|static
 name|bool
 name|InvokeCommonCompletionCallbacks
-parameter_list|(
+argument_list|(
 name|CommandInterpreter
-modifier|&
+operator|&
 name|interpreter
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|completion_mask
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|completion_str
-parameter_list|,
+argument_list|,
 name|int
 name|match_start_point
-parameter_list|,
+argument_list|,
 name|int
 name|max_return_elements
-parameter_list|,
+argument_list|,
 name|SearchFilter
-modifier|*
+operator|*
 name|searcher
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|word_complete
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|matches
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// These are the generic completer functions:
 comment|//----------------------------------------------------------------------
 specifier|static
 name|int
 name|DiskFiles
-parameter_list|(
+argument_list|(
 name|CommandInterpreter
-modifier|&
+operator|&
 name|interpreter
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|partial_file_name
-parameter_list|,
+argument_list|,
 name|int
 name|match_start_point
-parameter_list|,
+argument_list|,
 name|int
 name|max_return_elements
-parameter_list|,
+argument_list|,
 name|SearchFilter
-modifier|*
+operator|*
 name|searcher
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|word_complete
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|matches
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|int
 name|DiskDirectories
-parameter_list|(
+argument_list|(
 name|CommandInterpreter
-modifier|&
+operator|&
 name|interpreter
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|partial_file_name
-parameter_list|,
+argument_list|,
 name|int
 name|match_start_point
-parameter_list|,
+argument_list|,
 name|int
 name|max_return_elements
-parameter_list|,
+argument_list|,
 name|SearchFilter
-modifier|*
+operator|*
 name|searcher
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|word_complete
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|matches
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|int
 name|SourceFiles
-parameter_list|(
+argument_list|(
 name|CommandInterpreter
-modifier|&
+operator|&
 name|interpreter
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|partial_file_name
-parameter_list|,
+argument_list|,
 name|int
 name|match_start_point
-parameter_list|,
+argument_list|,
 name|int
 name|max_return_elements
-parameter_list|,
+argument_list|,
 name|SearchFilter
-modifier|*
+operator|*
 name|searcher
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|word_complete
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|matches
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|int
 name|Modules
@@ -390,9 +393,9 @@ name|CommandInterpreter
 operator|&
 name|interpreter
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|partial_file_name
 argument_list|,
 name|int
@@ -424,9 +427,9 @@ name|CommandInterpreter
 operator|&
 name|interpreter
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|partial_file_name
 argument_list|,
 name|int
@@ -458,9 +461,9 @@ name|CommandInterpreter
 operator|&
 name|interpreter
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|partial_file_name
 argument_list|,
 name|int
@@ -492,9 +495,9 @@ name|CommandInterpreter
 operator|&
 name|interpreter
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|partial_file_name
 argument_list|,
 name|int
@@ -526,9 +529,9 @@ name|CommandInterpreter
 operator|&
 name|interpreter
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|partial_file_name
 argument_list|,
 name|int
@@ -560,9 +563,9 @@ name|CommandInterpreter
 operator|&
 name|interpreter
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|partial_file_name
 argument_list|,
 name|int
@@ -603,7 +606,7 @@ name|Completer
 argument_list|(
 argument|CommandInterpreter&interpreter
 argument_list|,
-argument|const char *completion_str
+argument|llvm::StringRef completion_str
 argument_list|,
 argument|int match_start_point
 argument_list|,
@@ -677,7 +680,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|Completer
 argument_list|)
-block|;     }
+block|;   }
 decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// SourceFileCompleter implements the source file completer
@@ -696,7 +699,7 @@ argument|CommandInterpreter&interpreter
 argument_list|,
 argument|bool include_support_files
 argument_list|,
-argument|const char *completion_str
+argument|llvm::StringRef completion_str
 argument_list|,
 argument|int match_start_point
 argument_list|,
@@ -756,7 +759,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|SourceFileCompleter
 argument_list|)
-block|;     }
+block|;   }
 decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// ModuleCompleter implements the module completer
@@ -773,7 +776,7 @@ name|ModuleCompleter
 argument_list|(
 argument|CommandInterpreter&interpreter
 argument_list|,
-argument|const char *completion_str
+argument|llvm::StringRef completion_str
 argument_list|,
 argument|int match_start_point
 argument_list|,
@@ -827,7 +830,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ModuleCompleter
 argument_list|)
-block|;     }
+block|;   }
 decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// SymbolCompleter implements the symbol completer
@@ -844,7 +847,7 @@ name|SymbolCompleter
 argument_list|(
 argument|CommandInterpreter&interpreter
 argument_list|,
-argument|const char *completion_str
+argument|llvm::StringRef completion_str
 argument_list|,
 argument|int match_start_point
 argument_list|,
@@ -885,7 +888,8 @@ block|;
 name|private
 operator|:
 comment|//        struct NameCmp {
-comment|//            bool operator() (const ConstString& lhs, const ConstString& rhs) const
+comment|//            bool operator() (const ConstString& lhs, const ConstString&
+comment|//            rhs) const
 comment|//            {
 comment|//                return lhs< rhs;
 comment|//            }

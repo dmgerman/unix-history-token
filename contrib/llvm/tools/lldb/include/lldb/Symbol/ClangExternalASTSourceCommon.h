@@ -180,6 +180,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/Core/dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-defines.h"
 end_include
 
@@ -187,12 +193,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-enumerations.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/dwarf.h"
 end_include
 
 begin_decl_stmt
@@ -236,7 +236,7 @@ name|m_is_dynamic_cxx
 argument_list|(
 argument|true
 argument_list|)
-block|{     }
+block|{}
 name|bool
 name|GetIsDynamicCXXType
 argument_list|()

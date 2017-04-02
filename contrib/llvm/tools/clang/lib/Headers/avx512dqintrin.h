@@ -100,27 +100,27 @@ return|return
 operator|(
 name|__m512i
 operator|)
-name|__builtin_ia32_pmullq512_mask
+name|__builtin_ia32_selectq_512
 argument_list|(
 operator|(
-name|__v8di
+name|__mmask8
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v8di
 operator|)
+name|_mm512_mullo_epi64
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v8di
 operator|)
 name|__W
-argument_list|,
-operator|(
-name|__mmask8
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -147,28 +147,28 @@ return|return
 operator|(
 name|__m512i
 operator|)
-name|__builtin_ia32_pmullq512_mask
+name|__builtin_ia32_selectq_512
 argument_list|(
 operator|(
-name|__v8di
+name|__mmask8
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v8di
 operator|)
+name|_mm512_mullo_epi64
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v8di
 operator|)
 name|_mm512_setzero_si512
 argument_list|()
-argument_list|,
-operator|(
-name|__mmask8
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -231,27 +231,27 @@ return|return
 operator|(
 name|__m512d
 operator|)
-name|__builtin_ia32_xorpd512_mask
+name|__builtin_ia32_selectpd_512
 argument_list|(
 operator|(
-name|__v8df
+name|__mmask8
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v8df
 operator|)
+name|_mm512_xor_pd
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v8df
 operator|)
 name|__W
-argument_list|,
-operator|(
-name|__mmask8
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -278,28 +278,28 @@ return|return
 operator|(
 name|__m512d
 operator|)
-name|__builtin_ia32_xorpd512_mask
+name|__builtin_ia32_selectpd_512
 argument_list|(
 operator|(
-name|__v8df
+name|__mmask8
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v8df
 operator|)
+name|_mm512_xor_pd
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v8df
 operator|)
 name|_mm512_setzero_pd
 argument_list|()
-argument_list|,
-operator|(
-name|__mmask8
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -362,27 +362,27 @@ return|return
 operator|(
 name|__m512
 operator|)
-name|__builtin_ia32_xorps512_mask
+name|__builtin_ia32_selectps_512
 argument_list|(
 operator|(
-name|__v16sf
+name|__mmask16
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
+name|_mm512_xor_ps
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
 name|__W
-argument_list|,
-operator|(
-name|__mmask16
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -409,28 +409,28 @@ return|return
 operator|(
 name|__m512
 operator|)
-name|__builtin_ia32_xorps512_mask
+name|__builtin_ia32_selectps_512
 argument_list|(
 operator|(
-name|__v16sf
+name|__mmask16
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
+name|_mm512_xor_ps
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
 name|_mm512_setzero_ps
 argument_list|()
-argument_list|,
-operator|(
-name|__mmask16
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -493,27 +493,27 @@ return|return
 operator|(
 name|__m512d
 operator|)
-name|__builtin_ia32_orpd512_mask
+name|__builtin_ia32_selectpd_512
 argument_list|(
 operator|(
-name|__v8df
+name|__mmask8
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v8df
 operator|)
+name|_mm512_or_pd
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v8df
 operator|)
 name|__W
-argument_list|,
-operator|(
-name|__mmask8
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -540,28 +540,28 @@ return|return
 operator|(
 name|__m512d
 operator|)
-name|__builtin_ia32_orpd512_mask
+name|__builtin_ia32_selectpd_512
 argument_list|(
 operator|(
-name|__v8df
+name|__mmask8
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v8df
 operator|)
+name|_mm512_or_pd
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v8df
 operator|)
 name|_mm512_setzero_pd
 argument_list|()
-argument_list|,
-operator|(
-name|__mmask8
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -624,27 +624,27 @@ return|return
 operator|(
 name|__m512
 operator|)
-name|__builtin_ia32_orps512_mask
+name|__builtin_ia32_selectps_512
 argument_list|(
 operator|(
-name|__v16sf
+name|__mmask16
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
+name|_mm512_or_ps
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
 name|__W
-argument_list|,
-operator|(
-name|__mmask16
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -671,28 +671,28 @@ return|return
 operator|(
 name|__m512
 operator|)
-name|__builtin_ia32_orps512_mask
+name|__builtin_ia32_selectps_512
 argument_list|(
 operator|(
-name|__v16sf
+name|__mmask16
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
+name|_mm512_or_ps
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
 name|_mm512_setzero_ps
 argument_list|()
-argument_list|,
-operator|(
-name|__mmask16
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -755,27 +755,27 @@ return|return
 operator|(
 name|__m512d
 operator|)
-name|__builtin_ia32_andpd512_mask
+name|__builtin_ia32_selectpd_512
 argument_list|(
 operator|(
-name|__v8df
+name|__mmask8
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v8df
 operator|)
+name|_mm512_and_pd
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v8df
 operator|)
 name|__W
-argument_list|,
-operator|(
-name|__mmask8
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -802,28 +802,28 @@ return|return
 operator|(
 name|__m512d
 operator|)
-name|__builtin_ia32_andpd512_mask
+name|__builtin_ia32_selectpd_512
 argument_list|(
 operator|(
-name|__v8df
+name|__mmask8
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v8df
 operator|)
+name|_mm512_and_pd
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v8df
 operator|)
 name|_mm512_setzero_pd
 argument_list|()
-argument_list|,
-operator|(
-name|__mmask8
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -886,27 +886,27 @@ return|return
 operator|(
 name|__m512
 operator|)
-name|__builtin_ia32_andps512_mask
+name|__builtin_ia32_selectps_512
 argument_list|(
 operator|(
-name|__v16sf
+name|__mmask16
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
+name|_mm512_and_ps
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
 name|__W
-argument_list|,
-operator|(
-name|__mmask16
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -933,28 +933,28 @@ return|return
 operator|(
 name|__m512
 operator|)
-name|__builtin_ia32_andps512_mask
+name|__builtin_ia32_selectps_512
 argument_list|(
 operator|(
-name|__v16sf
+name|__mmask16
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
+name|_mm512_and_ps
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
 name|_mm512_setzero_ps
 argument_list|()
-argument_list|,
-operator|(
-name|__mmask16
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -975,32 +975,20 @@ name|__B
 parameter_list|)
 block|{
 return|return
-operator|(
+call|(
 name|__m512d
-operator|)
-name|__builtin_ia32_andnpd512_mask
+call|)
 argument_list|(
+operator|~
 operator|(
-name|__v8df
+name|__v8du
 operator|)
 name|__A
-argument_list|,
+operator|&
 operator|(
-name|__v8df
+name|__v8du
 operator|)
 name|__B
-argument_list|,
-operator|(
-name|__v8df
-operator|)
-name|_mm512_setzero_pd
-argument_list|()
-argument_list|,
-operator|(
-name|__mmask8
-operator|)
-operator|-
-literal|1
 argument_list|)
 return|;
 block|}
@@ -1030,27 +1018,27 @@ return|return
 operator|(
 name|__m512d
 operator|)
-name|__builtin_ia32_andnpd512_mask
+name|__builtin_ia32_selectpd_512
 argument_list|(
 operator|(
-name|__v8df
+name|__mmask8
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v8df
 operator|)
+name|_mm512_andnot_pd
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v8df
 operator|)
 name|__W
-argument_list|,
-operator|(
-name|__mmask8
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -1077,28 +1065,28 @@ return|return
 operator|(
 name|__m512d
 operator|)
-name|__builtin_ia32_andnpd512_mask
+name|__builtin_ia32_selectpd_512
 argument_list|(
 operator|(
-name|__v8df
+name|__mmask8
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v8df
 operator|)
+name|_mm512_andnot_pd
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v8df
 operator|)
 name|_mm512_setzero_pd
 argument_list|()
-argument_list|,
-operator|(
-name|__mmask8
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -1119,32 +1107,20 @@ name|__B
 parameter_list|)
 block|{
 return|return
-operator|(
+call|(
 name|__m512
-operator|)
-name|__builtin_ia32_andnps512_mask
+call|)
 argument_list|(
+operator|~
 operator|(
-name|__v16sf
+name|__v16su
 operator|)
 name|__A
-argument_list|,
+operator|&
 operator|(
-name|__v16sf
+name|__v16su
 operator|)
 name|__B
-argument_list|,
-operator|(
-name|__v16sf
-operator|)
-name|_mm512_setzero_ps
-argument_list|()
-argument_list|,
-operator|(
-name|__mmask16
-operator|)
-operator|-
-literal|1
 argument_list|)
 return|;
 block|}
@@ -1174,27 +1150,27 @@ return|return
 operator|(
 name|__m512
 operator|)
-name|__builtin_ia32_andnps512_mask
+name|__builtin_ia32_selectps_512
 argument_list|(
 operator|(
-name|__v16sf
+name|__mmask16
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
+name|_mm512_andnot_ps
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
 name|__W
-argument_list|,
-operator|(
-name|__mmask16
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -1221,28 +1197,28 @@ return|return
 operator|(
 name|__m512
 operator|)
-name|__builtin_ia32_andnps512_mask
+name|__builtin_ia32_selectps_512
 argument_list|(
 operator|(
-name|__v16sf
+name|__mmask16
 operator|)
-name|__A
+name|__U
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
+name|_mm512_andnot_ps
+argument_list|(
+name|__A
+argument_list|,
 name|__B
+argument_list|)
 argument_list|,
 operator|(
 name|__v16sf
 operator|)
 name|_mm512_setzero_ps
 argument_list|()
-argument_list|,
-operator|(
-name|__mmask16
-operator|)
-name|__U
 argument_list|)
 return|;
 block|}
@@ -4844,7 +4820,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m256)__builtin_ia32_extractf32x8_mask((__v16sf)(__m512)(A), (int)(imm), \                                            (__v8sf)_mm256_setzero_ps(), \                                            (__mmask8)-1); })
+value|__extension__ ({ \   (__m256)__builtin_shufflevector((__v16sf)(__m512)(A),           \                                   (__v16sf)_mm512_undefined_ps(), \                                   ((imm)& 1) ?  8 : 0,           \                                   ((imm)& 1) ?  9 : 1,           \                                   ((imm)& 1) ? 10 : 2,           \                                   ((imm)& 1) ? 11 : 3,           \                                   ((imm)& 1) ? 12 : 4,           \                                   ((imm)& 1) ? 13 : 5,           \                                   ((imm)& 1) ? 14 : 6,           \                                   ((imm)& 1) ? 15 : 7); })
 end_define
 
 begin_define
@@ -4860,7 +4836,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m256)__builtin_ia32_extractf32x8_mask((__v16sf)(__m512)(A), (int)(imm), \                                            (__v8sf)(__m256)(W), \                                            (__mmask8)(U)); })
+value|__extension__ ({ \   (__m256)__builtin_ia32_selectps_256((__mmask8)(U), \                                    (__v8sf)_mm512_extractf32x8_ps((A), (imm)), \                                    (__v8sf)(W)); })
 end_define
 
 begin_define
@@ -4874,7 +4850,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m256)__builtin_ia32_extractf32x8_mask((__v16sf)(__m512)(A), (int)(imm), \                                            (__v8sf)_mm256_setzero_ps(), \                                            (__mmask8)(U)); })
+value|__extension__ ({ \   (__m256)__builtin_ia32_selectps_256((__mmask8)(U), \                                    (__v8sf)_mm512_extractf32x8_ps((A), (imm)), \                                    (__v8sf)_mm256_setzero_ps()); })
 end_define
 
 begin_define
@@ -4886,7 +4862,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_extractf64x2_512_mask((__v8df)(__m512d)(A), \                                                 (int)(imm), \                                                 (__v2df)_mm_setzero_pd(), \                                                 (__mmask8)-1); })
+value|__extension__ ({ \   (__m128d)__builtin_shufflevector((__v8df)(__m512d)(A),          \                                    (__v8df)_mm512_undefined_pd(), \                                    0 + ((imm)& 0x3) * 2,         \                                    1 + ((imm)& 0x3) * 2); })
 end_define
 
 begin_define
@@ -4902,7 +4878,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_extractf64x2_512_mask((__v8df)(__m512d)(A), \                                                 (int)(imm), \                                                 (__v2df)(__m128d)(W), \                                                 (__mmask8)(U)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_selectpd_128((__mmask8)(U), \                                    (__v2df)_mm512_extractf64x2_pd((A), (imm)), \                                    (__v2df)(W)); })
 end_define
 
 begin_define
@@ -4916,7 +4892,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_extractf64x2_512_mask((__v8df)(__m512d)(A), \                                                 (int)(imm), \                                                 (__v2df)_mm_setzero_pd(), \                                                 (__mmask8)(U)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_selectpd_128((__mmask8)(U), \                                    (__v2df)_mm512_extractf64x2_pd((A), (imm)), \                                    (__v2df)_mm_setzero_pd()); })
 end_define
 
 begin_define
@@ -4928,7 +4904,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m256i)__builtin_ia32_extracti32x8_mask((__v16si)(__m512i)(A), (int)(imm), \                                             (__v8si)_mm256_setzero_si256(), \                                             (__mmask8)-1); })
+value|__extension__ ({ \   (__m256i)__builtin_shufflevector((__v16si)(__m512i)(A),             \                                    (__v16si)_mm512_undefined_epi32(), \                                    ((imm)& 1) ?  8 : 0,              \                                    ((imm)& 1) ?  9 : 1,              \                                    ((imm)& 1) ? 10 : 2,              \                                    ((imm)& 1) ? 11 : 3,              \                                    ((imm)& 1) ? 12 : 4,              \                                    ((imm)& 1) ? 13 : 5,              \                                    ((imm)& 1) ? 14 : 6,              \                                    ((imm)& 1) ? 15 : 7); })
 end_define
 
 begin_define
@@ -4944,7 +4920,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m256i)__builtin_ia32_extracti32x8_mask((__v16si)(__m512i)(A), (int)(imm), \                                             (__v8si)(__m256i)(W), \                                             (__mmask8)(U)); })
+value|__extension__ ({ \   (__m256i)__builtin_ia32_selectd_256((__mmask8)(U), \                                 (__v8si)_mm512_extracti32x8_epi32((A), (imm)), \                                 (__v8si)(W)); })
 end_define
 
 begin_define
@@ -4958,7 +4934,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m256i)__builtin_ia32_extracti32x8_mask((__v16si)(__m512i)(A), (int)(imm), \                                             (__v8si)_mm256_setzero_si256(), \                                             (__mmask8)(U)); })
+value|__extension__ ({ \   (__m256i)__builtin_ia32_selectd_256((__mmask8)(U), \                                 (__v8si)_mm512_extracti32x8_epi32((A), (imm)), \                                 (__v8si)_mm256_setzero_si256()); })
 end_define
 
 begin_define
@@ -4970,7 +4946,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m128i)__builtin_ia32_extracti64x2_512_mask((__v8di)(__m512i)(A), \                                                 (int)(imm), \                                                 (__v2di)_mm_setzero_di(), \                                                 (__mmask8)-1); })
+value|__extension__ ({ \   (__m128i)__builtin_shufflevector((__v8di)(__m512i)(A),          \                                    (__v8di)_mm512_undefined_epi32(), \                                    0 + ((imm)& 0x3) * 2,           \                                    1 + ((imm)& 0x3) * 2); })
 end_define
 
 begin_define
@@ -4986,7 +4962,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m128i)__builtin_ia32_extracti64x2_512_mask((__v8di)(__m512i)(A), \                                                 (int)(imm), \                                                 (__v2di)(__m128i)(W), \                                                 (__mmask8)(U)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_selectq_128((__mmask8)(U), \                                 (__v2di)_mm512_extracti64x2_epi64((A), (imm)), \                                 (__v2di)(W)); })
 end_define
 
 begin_define
@@ -5000,7 +4976,7 @@ name|A
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m128i)__builtin_ia32_extracti64x2_512_mask((__v8di)(__m512i)(A), \                                                 (int)(imm), \                                                 (__v2di)_mm_setzero_di(), \                                                 (__mmask8)(U)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_selectq_128((__mmask8)(U), \                                 (__v2di)_mm512_extracti64x2_epi64((A), (imm)), \                                 (__v2di)_mm_setzero_di()); })
 end_define
 
 begin_define
@@ -5014,7 +4990,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_insertf32x8_mask((__v16sf)(__m512)(A), \                                           (__v8sf)(__m256)(B), (int)(imm), \                                           (__v16sf)_mm512_setzero_ps(), \                                           (__mmask16)-1); })
+value|__extension__ ({ \   (__m512)__builtin_shufflevector((__v16sf)(__m512)(A), \                                   (__v16sf)_mm512_castps256_ps512((__m256)(B)),\                                   ((imm)& 0x1) ?  0 : 16, \                                   ((imm)& 0x1) ?  1 : 17, \                                   ((imm)& 0x1) ?  2 : 18, \                                   ((imm)& 0x1) ?  3 : 19, \                                   ((imm)& 0x1) ?  4 : 20, \                                   ((imm)& 0x1) ?  5 : 21, \                                   ((imm)& 0x1) ?  6 : 22, \                                   ((imm)& 0x1) ?  7 : 23, \                                   ((imm)& 0x1) ? 16 :  8, \                                   ((imm)& 0x1) ? 17 :  9, \                                   ((imm)& 0x1) ? 18 : 10, \                                   ((imm)& 0x1) ? 19 : 11, \                                   ((imm)& 0x1) ? 20 : 12, \                                   ((imm)& 0x1) ? 21 : 13, \                                   ((imm)& 0x1) ? 22 : 14, \                                   ((imm)& 0x1) ? 23 : 15); })
 end_define
 
 begin_define
@@ -5032,7 +5008,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_insertf32x8_mask((__v16sf)(__m512)(A), \                                           (__v8sf)(__m256)(B), (int)(imm), \                                           (__v16sf)(__m512)(W), \                                           (__mmask16)(U)); })
+value|__extension__ ({ \   (__m512)__builtin_ia32_selectps_512((__mmask16)(U), \                                  (__v16sf)_mm512_insertf32x8((A), (B), (imm)), \                                  (__v16sf)(W)); })
 end_define
 
 begin_define
@@ -5048,7 +5024,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_insertf32x8_mask((__v16sf)(__m512)(A), \                                           (__v8sf)(__m256)(B), (int)(imm), \                                           (__v16sf)_mm512_setzero_ps(), \                                           (__mmask16)(U)); })
+value|__extension__ ({ \   (__m512)__builtin_ia32_selectps_512((__mmask16)(U), \                                  (__v16sf)_mm512_insertf32x8((A), (B), (imm)), \                                  (__v16sf)_mm512_setzero_ps()); })
 end_define
 
 begin_define
@@ -5062,7 +5038,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_insertf64x2_512_mask((__v8df)(__m512d)(A), \                                                (__v2df)(__m128d)(B), \                                                (int)(imm), \                                                (__v8df)_mm512_setzero_pd(), \                                                (__mmask8)-1); })
+value|__extension__ ({ \   (__m512d)__builtin_shufflevector((__v8df)(__m512d)(A), \                                   (__v8df)_mm512_castpd128_pd512((__m128d)(B)),\                                   (((imm)& 0x3) == 0) ? 8 : 0, \                                   (((imm)& 0x3) == 0) ? 9 : 1, \                                   (((imm)& 0x3) == 1) ? 8 : 2, \                                   (((imm)& 0x3) == 1) ? 9 : 3, \                                   (((imm)& 0x3) == 2) ? 8 : 4, \                                   (((imm)& 0x3) == 2) ? 9 : 5, \                                   (((imm)& 0x3) == 3) ? 8 : 6, \                                   (((imm)& 0x3) == 3) ? 9 : 7); })
 end_define
 
 begin_define
@@ -5080,7 +5056,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_insertf64x2_512_mask((__v8df)(__m512d)(A), \                                                (__v2df)(__m128d)(B), \                                                (int)(imm), \                                                (__v8df)(__m512d)(W), \                                                (__mmask8)(U)); })
+value|__extension__ ({ \   (__m512d)__builtin_ia32_selectpd_512((__mmask8)(U), \                                   (__v8df)_mm512_insertf64x2((A), (B), (imm)), \                                   (__v8df)(W)); })
 end_define
 
 begin_define
@@ -5096,7 +5072,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_insertf64x2_512_mask((__v8df)(__m512d)(A), \                                                (__v2df)(__m128d)(B), \                                                (int)(imm), \                                                (__v8df)_mm512_setzero_pd(), \                                                (__mmask8)(U)); })
+value|__extension__ ({ \   (__m512d)__builtin_ia32_selectpd_512((__mmask8)(U), \                                   (__v8df)_mm512_insertf64x2((A), (B), (imm)), \                                   (__v8df)_mm512_setzero_pd()); })
 end_define
 
 begin_define
@@ -5110,7 +5086,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512i)__builtin_ia32_inserti32x8_mask((__v16si)(__m512i)(A), \                                            (__v8si)(__m256i)(B), (int)(imm), \                                            (__v16si)_mm512_setzero_si512(), \                                            (__mmask16)-1); })
+value|__extension__ ({ \   (__m512i)__builtin_shufflevector((__v16si)(__m512i)(A), \                                  (__v16si)_mm512_castsi256_si512((__m256i)(B)),\                                  ((imm)& 0x1) ?  0 : 16, \                                  ((imm)& 0x1) ?  1 : 17, \                                  ((imm)& 0x1) ?  2 : 18, \                                  ((imm)& 0x1) ?  3 : 19, \                                  ((imm)& 0x1) ?  4 : 20, \                                  ((imm)& 0x1) ?  5 : 21, \                                  ((imm)& 0x1) ?  6 : 22, \                                  ((imm)& 0x1) ?  7 : 23, \                                  ((imm)& 0x1) ? 16 :  8, \                                  ((imm)& 0x1) ? 17 :  9, \                                  ((imm)& 0x1) ? 18 : 10, \                                  ((imm)& 0x1) ? 19 : 11, \                                  ((imm)& 0x1) ? 20 : 12, \                                  ((imm)& 0x1) ? 21 : 13, \                                  ((imm)& 0x1) ? 22 : 14, \                                  ((imm)& 0x1) ? 23 : 15); })
 end_define
 
 begin_define
@@ -5128,7 +5104,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512i)__builtin_ia32_inserti32x8_mask((__v16si)(__m512i)(A), \                                            (__v8si)(__m256i)(B), (int)(imm), \                                            (__v16si)(__m512i)(W), \                                            (__mmask16)(U)); })
+value|__extension__ ({ \   (__m512i)__builtin_ia32_selectd_512((__mmask16)(U), \                                  (__v16si)_mm512_inserti32x8((A), (B), (imm)), \                                  (__v16si)(W)); })
 end_define
 
 begin_define
@@ -5144,7 +5120,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512i)__builtin_ia32_inserti32x8_mask((__v16si)(__m512i)(A), \                                            (__v8si)(__m256i)(B), (int)(imm), \                                            (__v16si)_mm512_setzero_si512(), \                                            (__mmask16)(U)); })
+value|__extension__ ({ \   (__m512i)__builtin_ia32_selectd_512((__mmask16)(U), \                                  (__v16si)_mm512_inserti32x8((A), (B), (imm)), \                                  (__v16si)_mm512_setzero_si512()); })
 end_define
 
 begin_define
@@ -5158,7 +5134,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512i)__builtin_ia32_inserti64x2_512_mask((__v8di)(__m512i)(A), \                                                (__v2di)(__m128i)(B), \                                                (int)(imm), \                                                (__v8di)_mm512_setzero_si512(), \                                                (__mmask8)-1); })
+value|__extension__ ({ \   (__m512i)__builtin_shufflevector((__v8di)(__m512i)(A), \                                   (__v8di)_mm512_castsi128_si512((__m128i)(B)),\                                   (((imm)& 0x3) == 0) ? 8 : 0, \                                   (((imm)& 0x3) == 0) ? 9 : 1, \                                   (((imm)& 0x3) == 1) ? 8 : 2, \                                   (((imm)& 0x3) == 1) ? 9 : 3, \                                   (((imm)& 0x3) == 2) ? 8 : 4, \                                   (((imm)& 0x3) == 2) ? 9 : 5, \                                   (((imm)& 0x3) == 3) ? 8 : 6, \                                   (((imm)& 0x3) == 3) ? 9 : 7); })
 end_define
 
 begin_define
@@ -5176,7 +5152,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512i)__builtin_ia32_inserti64x2_512_mask((__v8di)(__m512i)(A), \                                                (__v2di)(__m128i)(B), \                                                (int)(imm), \                                                (__v8di)(__m512i)(W), \                                                (__mmask8)(U)); })
+value|__extension__ ({ \   (__m512i)__builtin_ia32_selectq_512((__mmask8)(U), \                                   (__v8di)_mm512_inserti64x2((A), (B), (imm)), \                                   (__v8di)(W)); })
 end_define
 
 begin_define
@@ -5192,7 +5168,7 @@ name|B
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   (__m512i)__builtin_ia32_inserti64x2_512_mask((__v8di)(__m512i)(A), \                                                (__v2di)(__m128i)(B), \                                                (int)(imm), \                                                (__v8di)_mm512_setzero_si512(), \                                                (__mmask8)(U)); })
+value|__extension__ ({ \   (__m512i)__builtin_ia32_selectq_512((__mmask8)(U), \                                   (__v8di)_mm512_inserti64x2((A), (B), (imm)), \                                   (__v8di)_mm512_setzero_si512()); })
 end_define
 
 begin_define

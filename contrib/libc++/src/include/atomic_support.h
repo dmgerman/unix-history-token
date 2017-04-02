@@ -249,7 +249,7 @@ name|_AO_Consume
 init|=
 name|__ATOMIC_CONSUME
 block|,
-name|_AO_Aquire
+name|_AO_Acquire
 init|=
 name|__ATOMIC_ACQUIRE
 block|,

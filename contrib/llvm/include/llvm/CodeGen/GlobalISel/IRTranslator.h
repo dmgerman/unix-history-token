@@ -138,6 +138,9 @@ decl_stmt|;
 name|class
 name|MachineRegisterInfo
 decl_stmt|;
+name|class
+name|TargetPassConfig
+decl_stmt|;
 comment|// Technically the pass should run on an hypothetical MachineModule,
 comment|// since it should translate Global into some sort of MachineGlobal.
 comment|// The MachineGlobal should ultimately just be a transfer of ownership of
@@ -189,6 +192,9 @@ literal|8
 operator|>
 name|Constants
 block|;
+comment|// N.b. it's not completely obvious that this will be sufficient for every
+comment|// LLVM IR construct (with "invoke" being the obvious candidate to mess up our
+comment|// lives.
 name|DenseMap
 operator|<
 specifier|const
@@ -200,11 +206,43 @@ operator|*
 operator|>
 name|BBToMBB
 block|;
+comment|// List of stubbed PHI instructions, for values and basic blocks to be filled
+comment|// in once all MachineBasicBlocks have been created.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|PHINode
+operator|*
+block|,
+name|MachineInstr
+operator|*
+operator|>
+block|,
+literal|4
+operator|>
+name|PendingPHIs
+block|;
+comment|/// Record of what frame index has been allocated to specified allocas for
+comment|/// this function.
+name|DenseMap
+operator|<
+specifier|const
+name|AllocaInst
+operator|*
+block|,
+name|int
+operator|>
+name|FrameIndices
+block|;
 comment|/// Methods for translating form LLVM IR to MachineInstr.
 comment|/// \see ::translate for general information on the translate methods.
 comment|/// @{
 comment|/// Translate \p Inst into its corresponding MachineInstr instruction(s).
-comment|/// Insert the newly translated instruction(s) right where the MIRBuilder
+comment|/// Insert the newly translated instruction(s) right where the CurBuilder
 comment|/// is set.
 comment|///
 comment|/// The general algorithm is:
@@ -233,59 +271,1240 @@ operator|&
 name|Inst
 argument_list|)
 block|;
+comment|/// Materialize \p C into virtual-register \p Reg. The generic instructions
+comment|/// performing this materialization will be inserted into the entry block of
+comment|/// the function.
+comment|///
+comment|/// \return true if the materialization succeeded.
+name|bool
+name|translate
+argument_list|(
+argument|const Constant&C
+argument_list|,
+argument|unsigned Reg
+argument_list|)
+block|;
+comment|/// Translate an LLVM bitcast into generic IR. Either a COPY or a G_BITCAST is
+comment|/// emitted.
+name|bool
+name|translateBitCast
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+comment|/// Translate an LLVM load instruction into generic IR.
+name|bool
+name|translateLoad
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+comment|/// Translate an LLVM store instruction into generic IR.
+name|bool
+name|translateStore
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateMemcpy
+argument_list|(
+specifier|const
+name|CallInst
+operator|&
+name|CI
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|void
+name|getStackGuard
+argument_list|(
+argument|unsigned DstReg
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateOverflowIntrinsic
+argument_list|(
+argument|const CallInst&CI
+argument_list|,
+argument|unsigned Op
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateKnownIntrinsic
+argument_list|(
+argument|const CallInst&CI
+argument_list|,
+argument|Intrinsic::ID ID
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|;
+comment|/// Translate call instruction.
+comment|/// \pre \p U is a call instruction.
+name|bool
+name|translateCall
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateInvoke
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateLandingPad
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+comment|/// Translate one of LLVM's cast instructions into MachineInstrs, with the
+comment|/// given generic Opcode.
+name|bool
+name|translateCast
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|;
+comment|/// Translate static alloca instruction (i.e. one  of constant size and in the
+comment|/// first basic block).
+name|bool
+name|translateStaticAlloca
+argument_list|(
+specifier|const
+name|AllocaInst
+operator|&
+name|Inst
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+comment|/// Translate a phi instruction.
+name|bool
+name|translatePHI
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+comment|/// Translate a comparison (icmp or fcmp) instruction or constant.
+name|bool
+name|translateCompare
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+comment|/// Translate an integer compare instruction (or constant).
+name|bool
+name|translateICmp
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCompare
+argument_list|(
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+comment|/// Translate a floating-point compare instruction (or constant).
+name|bool
+name|translateFCmp
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCompare
+argument_list|(
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+comment|/// Add remaining operands onto phis we've translated. Executed after all
+comment|/// MachineBasicBlocks for the function have been created.
+name|void
+name|finishPendingPhis
+argument_list|()
+block|;
 comment|/// Translate \p Inst into a binary operation \p Opcode.
-comment|/// \pre \p Inst is a binary operation.
+comment|/// \pre \p U is a binary operation.
 name|bool
 name|translateBinaryOp
 argument_list|(
 argument|unsigned Opcode
 argument_list|,
-argument|const Instruction&Inst
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
 argument_list|)
 block|;
 comment|/// Translate branch (br) instruction.
-comment|/// \pre \p Inst is a branch instruction.
+comment|/// \pre \p U is a branch instruction.
 name|bool
 name|translateBr
 argument_list|(
 specifier|const
-name|Instruction
+name|User
 operator|&
-name|Inst
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateSwitch
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateExtractValue
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateInsertValue
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateSelect
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateGetElementPtr
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
 argument_list|)
 block|;
 comment|/// Translate return (ret) instruction.
 comment|/// The target needs to implement CallLowering::lowerReturn for
 comment|/// this to succeed.
-comment|/// \pre \p Inst is a return instruction.
+comment|/// \pre \p U is a return instruction.
 name|bool
-name|translateReturn
+name|translateRet
 argument_list|(
 specifier|const
-name|Instruction
+name|User
 operator|&
-name|Inst
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
 argument_list|)
 block|;
+name|bool
+name|translateAdd
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_ADD
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateSub
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_SUB
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateAnd
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_AND
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateMul
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_MUL
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateOr
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_OR
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateXor
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_XOR
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateUDiv
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_UDIV
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateSDiv
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_SDIV
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateURem
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_UREM
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateSRem
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_SREM
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateAlloca
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateStaticAlloca
+argument_list|(
+name|cast
+operator|<
+name|AllocaInst
+operator|>
+operator|(
+name|U
+operator|)
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateIntToPtr
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCast
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_INTTOPTR
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translatePtrToInt
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCast
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_PTRTOINT
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateTrunc
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCast
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_TRUNC
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateFPTrunc
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCast
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_FPTRUNC
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateFPExt
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCast
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_FPEXT
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateFPToUI
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCast
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_FPTOUI
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateFPToSI
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCast
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_FPTOSI
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateUIToFP
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCast
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_UITOFP
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateSIToFP
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCast
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_SITOFP
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateUnreachable
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|translateSExt
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCast
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_SEXT
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateZExt
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateCast
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_ZEXT
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateShl
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_SHL
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateLShr
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_LSHR
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateAShr
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_ASHR
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateFAdd
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_FADD
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateFSub
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_FSUB
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateFMul
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_FMUL
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateFDiv
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_FDIV
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+name|bool
+name|translateFRem
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|translateBinaryOp
+argument_list|(
+name|TargetOpcode
+operator|::
+name|G_FREM
+argument_list|,
+name|U
+argument_list|,
+name|MIRBuilder
+argument_list|)
+return|;
+block|}
+comment|// Stubs to keep the compiler happy while we implement the rest of the
+comment|// translation.
+name|bool
+name|translateIndirectBr
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateResume
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateCleanupRet
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateCatchRet
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateCatchSwitch
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateFence
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateAtomicCmpXchg
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateAtomicRMW
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateAddrSpaceCast
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateCleanupPad
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateCatchPad
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateUserOp1
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateUserOp2
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateVAArg
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateExtractElement
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateInsertElement
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|translateShuffleVector
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// @}
 comment|// Builder for machine instruction a la IRBuilder.
 comment|// I.e., compared to regular MIBuilder, this one also inserts the instruction
 comment|// in the current block, it can creates block, etc., basically a kind of
 comment|// IRBuilder, but for Machine IR.
 name|MachineIRBuilder
-name|MIRBuilder
+name|CurBuilder
+block|;
+comment|// Builder set to the entry block (just after ABI lowering instructions). Used
+comment|// as a convenient location for Constants.
+name|MachineIRBuilder
+name|EntryBuilder
+block|;
+comment|// The MachineFunction currently being translated.
+name|MachineFunction
+operator|*
+name|MF
 block|;
 comment|/// MachineRegisterInfo used to create virtual registers.
 name|MachineRegisterInfo
 operator|*
 name|MRI
 block|;
+specifier|const
+name|DataLayout
+operator|*
+name|DL
+block|;
+comment|/// Current target configuration. Controls how the pass handles errors.
+specifier|const
+name|TargetPassConfig
+operator|*
+name|TPC
+block|;
 comment|// * Insert all the code needed to materialize the constants
 comment|// at the proper place. E.g., Entry block or dominator block
 comment|// of each constant depending on how fancy we want to be.
 comment|// * Clear the different maps.
 name|void
-name|finalize
+name|finalizeFunction
 argument_list|()
 block|;
 comment|/// Get the VReg that represents \p Val.
@@ -297,6 +1516,29 @@ specifier|const
 name|Value
 operator|&
 name|Val
+argument_list|)
+block|;
+comment|/// Get the frame index that represents \p Val.
+comment|/// If such VReg does not exist, it is created.
+name|int
+name|getOrCreateFrameIndex
+argument_list|(
+specifier|const
+name|AllocaInst
+operator|&
+name|AI
+argument_list|)
+block|;
+comment|/// Get the alignment of the given memory operation instruction. This will
+comment|/// either be the explicitly specified value or the ABI-required alignment for
+comment|/// the type being accessed (according to the Module's DataLayout).
+name|unsigned
+name|getMemOpAlignment
+argument_list|(
+specifier|const
+name|Instruction
+operator|&
+name|I
 argument_list|)
 block|;
 comment|/// Get the MachineBasicBlock that represents \p BB.
@@ -317,9 +1559,7 @@ comment|// Ctor, nothing fancy.
 name|IRTranslator
 argument_list|()
 block|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const
@@ -329,6 +1569,14 @@ return|return
 literal|"IRTranslator"
 return|;
 block|}
+name|void
+name|getAnalysisUsage
+argument_list|(
+argument|AnalysisUsage&AU
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|// Algo:
 comment|//   CallLowering = MF.subtarget.getCallLowering()
 comment|//   F = MF.getParent()

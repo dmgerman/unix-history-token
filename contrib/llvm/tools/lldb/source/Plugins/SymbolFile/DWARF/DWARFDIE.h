@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-types.h"
+file|"lldb/Core/dwarf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/dwarf.h"
+file|"lldb/lldb-types.h"
 end_include
 
 begin_struct_decl
@@ -121,7 +121,7 @@ name|m_die
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{     }
+block|{}
 name|DWARFDIE
 argument_list|(
 name|DWARFCompileUnit
@@ -142,7 +142,7 @@ name|m_die
 argument_list|(
 argument|die
 argument_list|)
-block|{     }
+block|{}
 name|DWARFDIE
 argument_list|(
 specifier|const
@@ -171,7 +171,7 @@ name|m_die
 argument_list|(
 argument|die
 argument_list|)
-block|{     }
+block|{}
 name|DWARFDIE
 argument_list|(
 name|DWARFCompileUnit
@@ -193,7 +193,7 @@ name|m_die
 argument_list|(
 argument|const_cast<DWARFDebugInfoEntry *>(die)
 argument_list|)
-block|{     }
+block|{}
 name|DWARFDIE
 argument_list|(
 specifier|const
@@ -223,7 +223,7 @@ name|m_die
 argument_list|(
 argument|const_cast<DWARFDebugInfoEntry *>(die)
 argument_list|)
-block|{     }
+block|{}
 comment|//----------------------------------------------------------------------
 comment|// Tests
 comment|//----------------------------------------------------------------------

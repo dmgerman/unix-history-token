@@ -96,11 +96,11 @@ name|CommandObjectRegexCommand
 argument_list|(
 argument|CommandInterpreter&interpreter
 argument_list|,
-argument|const char *name
+argument|llvm::StringRef name
 argument_list|,
-argument|const char *help
+argument|llvm::StringRef help
 argument_list|,
-argument|const char *syntax
+argument|llvm::StringRef syntax
 argument_list|,
 argument|uint32_t max_matches
 argument_list|,
@@ -180,7 +180,7 @@ argument_list|,
 argument|CommandReturnObject&result
 argument_list|)
 name|override
-block|;      struct
+block|;    struct
 name|Entry
 block|{
 name|RegularExpression
@@ -190,7 +190,7 @@ name|std
 operator|::
 name|string
 name|command
-block|;     }
+block|;   }
 block|;
 typedef|typedef
 name|std

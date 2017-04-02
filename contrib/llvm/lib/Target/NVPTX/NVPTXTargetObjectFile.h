@@ -52,6 +52,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCSection.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/SectionKind.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetLoweringObjectFile.h"
 end_include
 
@@ -59,12 +71,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|GlobalVariable
-decl_stmt|;
-name|class
-name|Module
-decl_stmt|;
 name|class
 name|NVPTXTargetObjectFile
 range|:
@@ -152,10 +158,10 @@ name|DwarfMacinfoSection
 operator|=
 name|nullptr
 block|;   }
-name|virtual
 operator|~
 name|NVPTXTargetObjectFile
 argument_list|()
+name|override
 block|;
 name|void
 name|Initialize
@@ -483,11 +489,9 @@ name|MCSection
 operator|*
 name|getExplicitSectionGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -502,11 +506,9 @@ name|MCSection
 operator|*
 name|SelectSectionForGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -525,6 +527,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_NVPTX_NVPTXTARGETOBJECTFILE_H
+end_comment
 
 end_unit
 

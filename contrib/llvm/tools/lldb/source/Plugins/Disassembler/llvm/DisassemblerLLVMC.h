@@ -155,8 +155,10 @@ name|lldb_private
 operator|::
 name|Disassembler
 block|{
-comment|// Since we need to make two actual MC Disassemblers for ARM (ARM& THUMB), and there's a bit of goo to set up and own
-comment|// in the MC disassembler world, I added this class to manage the actual disassemblers.
+comment|// Since we need to make two actual MC Disassemblers for ARM (ARM& THUMB),
+comment|// and there's a bit of goo to set up and own
+comment|// in the MC disassembler world, I added this class to manage the actual
+comment|// disassemblers.
 name|class
 name|LLVMCDisassembler
 block|{
@@ -233,6 +235,16 @@ argument_list|)
 block|;
 name|bool
 name|HasDelaySlot
+argument_list|(
+name|llvm
+operator|::
+name|MCInst
+operator|&
+name|mc_inst
+argument_list|)
+block|;
+name|bool
+name|IsCall
 argument_list|(
 name|llvm
 operator|::
@@ -323,7 +335,7 @@ operator|::
 name|MCDisassembler
 operator|>
 name|m_disasm_ap
-block|;     }
+block|;   }
 block|;
 name|public
 operator|:
@@ -393,7 +405,7 @@ name|DecodeInstructions
 argument_list|(
 argument|const lldb_private::Address&base_addr
 argument_list|,
-argument|const lldb_private::DataExtractor& data
+argument|const lldb_private::DataExtractor&data
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
@@ -537,7 +549,7 @@ block|;
 name|m_exe_ctx
 operator|=
 name|exe_ctx
-block|;     }
+block|;   }
 name|void
 name|Unlock
 argument_list|()
@@ -554,7 +566,7 @@ name|m_mutex
 operator|.
 name|unlock
 argument_list|()
-block|;     }
+block|;   }
 specifier|const
 name|lldb_private
 operator|::

@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Sema/SemaConsumer.h"
+file|"lldb/Core/ClangForward.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ClangForward.h"
+file|"clang/Sema/SemaConsumer.h"
 end_include
 
 begin_decl_stmt
@@ -72,10 +72,12 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class ASTStructExtractor ASTStructExtractor.h "lldb/Expression/ASTStructExtractor.h"
+comment|/// @class ASTStructExtractor ASTStructExtractor.h
+comment|/// "lldb/Expression/ASTStructExtractor.h"
 comment|/// @brief Extracts and describes the argument structure for a wrapped function.
 comment|///
-comment|/// This pass integrates with ClangFunctionCaller, which calls functions with custom
+comment|/// This pass integrates with ClangFunctionCaller, which calls functions with
+comment|/// custom
 comment|/// sets of arguments.  To avoid having to implement the full calling convention
 comment|/// for the target's architecture, ClangFunctionCaller writes a simple wrapper
 comment|/// function that takes a pointer to an argument structure that contains room
@@ -110,7 +112,8 @@ comment|///     The name of the structure to extract from the wrapper function.
 comment|///
 comment|/// @param[in] function
 comment|///     The caller object whose members should be populated with information
-comment|///     about the argument struct.  ClangFunctionCaller friends ASTStructExtractor
+comment|///     about the argument struct.  ClangFunctionCaller friends
+comment|///     ASTStructExtractor
 comment|///     for this purpose.
 comment|//----------------------------------------------------------------------
 name|ASTStructExtractor
@@ -289,14 +292,18 @@ name|ASTConsumer
 operator|*
 name|m_passthrough
 block|;
-comment|///< The ASTConsumer down the chain, for passthrough.  NULL if it's a SemaConsumer.
+comment|///< The ASTConsumer down the chain, for
+comment|///passthrough.  NULL if it's a
+comment|///SemaConsumer.
 name|clang
 operator|::
 name|SemaConsumer
 operator|*
 name|m_passthrough_sema
 block|;
-comment|///< The SemaConsumer down the chain, for passthrough.  NULL if it's an ASTConsumer.
+comment|///< The SemaConsumer down the chain,
+comment|///for passthrough.  NULL if it's an
+comment|///ASTConsumer.
 name|clang
 operator|::
 name|Sema
@@ -315,7 +322,8 @@ name|ClangFunctionCaller
 operator|&
 name|m_function
 block|;
-comment|///< The function to populate with information about the argument structure.
+comment|///< The function to populate with
+comment|///information about the argument structure.
 name|std
 operator|::
 name|string

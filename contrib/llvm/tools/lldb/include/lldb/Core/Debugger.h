@@ -60,13 +60,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<memory>
+file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<memory>
 end_include
 
 begin_include
@@ -88,12 +88,6 @@ end_comment
 begin_comment
 comment|// Project includes
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-public.h"
-end_include
 
 begin_include
 include|#
@@ -159,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/TargetList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -481,9 +481,12 @@ return|return
 name|m_listener_sp
 return|;
 block|}
-comment|// This returns the Debugger's scratch source manager.  It won't be able to look up files in debug
-comment|// information, but it can look up files by absolute path and display them to you.
-comment|// To get the target's source manager, call GetSourceManager on the target instead.
+comment|// This returns the Debugger's scratch source manager.  It won't be able to
+comment|// look up files in debug
+comment|// information, but it can look up files by absolute path and display them to
+comment|// you.
+comment|// To get the target's source manager, call GetSourceManager on the target
+comment|// instead.
 name|SourceManager
 modifier|&
 name|GetSourceManager
@@ -747,14 +750,14 @@ argument_list|,
 name|VarSetOperationType
 name|op
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|property_path
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|value
 argument_list|)
 name|override
@@ -791,6 +794,15 @@ name|GetThreadFormat
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|const
+name|FormatEntity
+operator|::
+name|Entry
+operator|*
+name|GetThreadStopFormat
+argument_list|()
+specifier|const
+expr_stmt|;
 name|lldb
 operator|::
 name|ScriptLanguage
@@ -819,21 +831,31 @@ name|uint32_t
 name|term_width
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetPrompt
 argument_list|()
 specifier|const
 expr_stmt|;
 name|void
 name|SetPrompt
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|p
+argument_list|)
+decl_stmt|;
+name|void
+name|SetPrompt
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|p
 parameter_list|)
+init|=
+name|delete
 function_decl|;
 name|bool
 name|GetUseExternalEditor
@@ -859,6 +881,31 @@ name|bool
 name|use_color
 parameter_list|)
 function_decl|;
+name|lldb
+operator|::
+name|StopShowColumn
+name|GetStopShowColumn
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|FormatEntity
+operator|::
+name|Entry
+operator|*
+name|GetStopShowColumnAnsiPrefix
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|FormatEntity
+operator|::
+name|Entry
+operator|*
+name|GetStopShowColumnAnsiSuffix
+argument_list|()
+specifier|const
+expr_stmt|;
 name|uint32_t
 name|GetStopSourceLineCount
 argument_list|(
@@ -1007,8 +1054,10 @@ operator|*
 name|repl_options
 argument_list|)
 decl_stmt|;
-comment|// This is for use in the command interpreter, when you either want the selected target, or if no target
-comment|// is present you want to prime the dummy target with entities that will be copied over to new targets.
+comment|// This is for use in the command interpreter, when you either want the
+comment|// selected target, or if no target
+comment|// is present you want to prime the dummy target with entities that will be
+comment|// copied over to new targets.
 name|Target
 modifier|*
 name|GetSelectedOrDummyTarget
@@ -1182,7 +1231,9 @@ operator|::
 name|BroadcasterManagerSP
 name|m_broadcaster_manager_sp
 expr_stmt|;
-comment|// The debugger acts as a broadcaster manager of last resort.
+comment|// The debugger acts as a
+comment|// broadcaster manager of
+comment|// last resort.
 comment|// It needs to get constructed before the target_list or any other
 comment|// member that might want to broadcast through the debugger.
 name|TerminalState
@@ -1207,13 +1258,19 @@ name|SourceManager
 operator|>
 name|m_source_manager_ap
 expr_stmt|;
-comment|// This is a scratch source manager that we return if we have no targets.
+comment|// This is a scratch
+comment|// source manager that we
+comment|// return if we have no
+comment|// targets.
 name|SourceManager
 operator|::
 name|SourceFileCache
 name|m_source_file_cache
 expr_stmt|;
-comment|// All the source managers for targets created in this debugger used this shared
+comment|// All the source managers
+comment|// for targets created in
+comment|// this debugger used this
+comment|// shared
 comment|// source file cache.
 name|std
 operator|::
@@ -1303,7 +1360,7 @@ literal|1
 operator|<<
 literal|0
 operator|)
-block|,     }
+block|,   }
 enum|;
 name|private
 label|:

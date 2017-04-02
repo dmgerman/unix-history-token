@@ -76,12 +76,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/FileSpec.h"
 end_include
 
@@ -89,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/HostThread.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
 end_include
 
 begin_decl_stmt
@@ -287,7 +287,8 @@ comment|///
 comment|/// Reads from this file descriptor yield both the standard output and
 comment|/// standard error of this debugee.  Even if stderr and stdout were
 comment|/// redirected on launch it may still happen that data is available on this
-comment|/// descriptor (if the inferior process opens /dev/tty, for example). This descriptor is
+comment|/// descriptor (if the inferior process opens /dev/tty, for example). This
+comment|/// descriptor is
 comment|/// closed after a call to StopMonitor().
 comment|///
 comment|/// If this monitor was attached to an existing process this method returns

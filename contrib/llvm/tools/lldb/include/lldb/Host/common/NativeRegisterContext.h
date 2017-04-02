@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Host/common/NativeWatchpointList.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/common/NativeWatchpointList.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -333,8 +333,10 @@ comment|// on this address. This function emulates the instruction at PC and
 comment|// finds the base address used in the load/store instruction. This gives the
 comment|// exact address used to read/write the variable being watched.
 comment|// For example:
-comment|// 'n' is at 0x120010d00 and 'm' is 0x120010d04. When a watchpoint is set at 'm',
-comment|// then watch exception is generated even when 'n' is read/written. This function
+comment|// 'n' is at 0x120010d00 and 'm' is 0x120010d04. When a watchpoint is set at
+comment|// 'm',
+comment|// then watch exception is generated even when 'n' is read/written. This
+comment|// function
 comment|// returns address of 'n' so that client can check whether a watchpoint is set
 comment|// on this address or not.
 name|virtual
@@ -405,7 +407,7 @@ name|RegisterInfo
 operator|*
 name|GetRegisterInfoByName
 argument_list|(
-argument|const char *reg_name
+argument|llvm::StringRef reg_name
 argument_list|,
 argument|uint32_t start_idx =
 literal|0
@@ -556,8 +558,10 @@ comment|// The thread that this register context belongs to.
 name|uint32_t
 name|m_concrete_frame_idx
 block|;
-comment|// The concrete frame index for this register context
-comment|// uint32_t m_stop_id;             // The stop ID that any data in this context is valid for
+comment|// The concrete frame index for this register
+comment|// context
+comment|// uint32_t m_stop_id;             // The stop ID that any data in this
+comment|// context is valid for
 name|private
 operator|:
 comment|//------------------------------------------------------------------

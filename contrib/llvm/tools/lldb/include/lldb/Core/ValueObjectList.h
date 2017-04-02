@@ -68,12 +68,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/UserID.h"
 end_include
 
@@ -81,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/ExecutionContextScope.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -233,6 +233,24 @@ operator|.
 name|clear
 argument_list|()
 expr_stmt|;
+block|}
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|ValueObjectSP
+operator|>
+operator|&
+name|GetObjects
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_value_objects
+return|;
 block|}
 name|protected
 label|:

@@ -222,6 +222,7 @@ name|AddSegment
 condition|?
 literal|"__DATA,"
 name|INSTR_PROF_DATA_SECT_NAME_STR
+literal|",regular,live_support"
 else|:
 name|INSTR_PROF_DATA_SECT_NAME_STR
 return|;
@@ -288,7 +289,7 @@ block|{
 return|return
 name|AddSegment
 condition|?
-literal|"__DATA,"
+literal|"__LLVM_COV,"
 name|INSTR_PROF_COVMAP_SECT_NAME_STR
 else|:
 name|INSTR_PROF_COVMAP_SECT_NAME_STR
@@ -448,7 +449,10 @@ name|getInstrProfRuntimeHookVarName
 parameter_list|()
 block|{
 return|return
-literal|"__llvm_profile_runtime"
+name|INSTR_PROF_QUOTE
+argument_list|(
+name|INSTR_PROF_PROFILE_RUNTIME_VAR
+argument_list|)
 return|;
 block|}
 comment|/// Return the name of the compiler generated function that references the
@@ -460,17 +464,6 @@ parameter_list|()
 block|{
 return|return
 literal|"__llvm_profile_runtime_user"
-return|;
-block|}
-comment|/// Return the name of the profile runtime interface that overrides the default
-comment|/// profile data file name.
-specifier|inline
-name|StringRef
-name|getInstrProfFileOverriderFuncName
-parameter_list|()
-block|{
-return|return
-literal|"__llvm_profile_override_default_filename"
 return|;
 block|}
 comment|/// Return the marker used to separate PGO names during serialization.
@@ -654,7 +647,7 @@ name|class
 name|InstrProfSymtab
 decl_stmt|;
 comment|/// \c NameStrings is a string composed of one of more sub-strings encoded in
-comment|/// the format described above. The substrings are seperated by 0 or more zero
+comment|/// the format described above. The substrings are separated by 0 or more zero
 comment|/// bytes. This method decodes the string and populates the \c Symtab.
 name|Error
 name|readPGOFuncNameStrings
@@ -665,6 +658,34 @@ parameter_list|,
 name|InstrProfSymtab
 modifier|&
 name|Symtab
+parameter_list|)
+function_decl|;
+comment|/// Check if INSTR_PROF_RAW_VERSION_VAR is defined. This global is only being
+comment|/// set in IR PGO compilation.
+name|bool
+name|isIRPGOFlagSet
+parameter_list|(
+specifier|const
+name|Module
+modifier|*
+name|M
+parameter_list|)
+function_decl|;
+comment|/// Check if we can safely rename this Comdat function. Instances of the same
+comment|/// comdat function may have different control flows thus can not share the
+comment|/// same counter variable.
+name|bool
+name|canRenameComdatFunc
+parameter_list|(
+specifier|const
+name|Function
+modifier|&
+name|F
+parameter_list|,
+name|bool
+name|CheckAddressTaken
+init|=
+name|false
 parameter_list|)
 function_decl|;
 enum|enum
@@ -812,6 +833,22 @@ name|StringRef
 name|PGOFuncName
 parameter_list|)
 function_decl|;
+comment|/// Check if we can use Comdat for profile variables. This will eliminate
+comment|/// the duplicated profile variables for Comdat functions.
+name|bool
+name|needsComdatForCounter
+parameter_list|(
+specifier|const
+name|Function
+modifier|&
+name|F
+parameter_list|,
+specifier|const
+name|Module
+modifier|&
+name|M
+parameter_list|)
+function_decl|;
 specifier|const
 name|std
 operator|::
@@ -859,6 +896,8 @@ operator|,
 name|compress_failed
 operator|,
 name|uncompress_failed
+operator|,
+name|empty_raw_profile
 block|}
 empty_stmt|;
 specifier|inline

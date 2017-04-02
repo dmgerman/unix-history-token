@@ -46,24 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo/CodeView/CodeView.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo/CodeView/CVRecord.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/CodeView/TypeRecord.h"
 end_include
 
@@ -93,34 +75,18 @@ name|virtual
 operator|~
 name|TypeVisitorCallbacks
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Action to take on unknown types. By default, they are ignored.
 name|virtual
 name|Error
 name|visitUnknownType
-argument_list|(
-argument|const CVRecord<TypeLeafKind>&Record
-argument_list|)
-block|{
-return|return
-name|Error
-operator|::
-name|success
-argument_list|()
-return|;
-block|}
-name|virtual
-name|Error
-name|visitUnknownMember
-argument_list|(
-specifier|const
-name|CVRecord
-operator|<
-name|TypeLeafKind
-operator|>
-operator|&
+parameter_list|(
+name|CVType
+modifier|&
 name|Record
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|Error
@@ -130,19 +96,16 @@ argument_list|()
 return|;
 block|}
 comment|/// Paired begin/end actions for all types. Receives all record data,
-comment|/// including the fixed-length record prefix.
+comment|/// including the fixed-length record prefix.  visitTypeBegin() should return
+comment|/// the type of the Record, or an error if it cannot be determined.
 name|virtual
 name|Error
 name|visitTypeBegin
-argument_list|(
-specifier|const
-name|CVRecord
-operator|<
-name|TypeLeafKind
-operator|>
-operator|&
+parameter_list|(
+name|CVType
+modifier|&
 name|Record
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|Error
@@ -154,15 +117,11 @@ block|}
 name|virtual
 name|Error
 name|visitTypeEnd
-argument_list|(
-specifier|const
-name|CVRecord
-operator|<
-name|TypeLeafKind
-operator|>
-operator|&
+parameter_list|(
+name|CVType
+modifier|&
 name|Record
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|Error
@@ -173,16 +132,12 @@ return|;
 block|}
 name|virtual
 name|Error
-name|visitFieldListBegin
-argument_list|(
-specifier|const
-name|CVRecord
-operator|<
-name|TypeLeafKind
-operator|>
-operator|&
+name|visitUnknownMember
+parameter_list|(
+name|CVMemberRecord
+modifier|&
 name|Record
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|Error
@@ -193,16 +148,28 @@ return|;
 block|}
 name|virtual
 name|Error
-name|visitFieldListEnd
-argument_list|(
-specifier|const
-name|CVRecord
-operator|<
-name|TypeLeafKind
-operator|>
-operator|&
+name|visitMemberBegin
+parameter_list|(
+name|CVMemberRecord
+modifier|&
 name|Record
-argument_list|)
+parameter_list|)
+block|{
+return|return
+name|Error
+operator|::
+name|success
+argument_list|()
+return|;
+block|}
+name|virtual
+name|Error
+name|visitMemberEnd
+parameter_list|(
+name|CVMemberRecord
+modifier|&
+name|Record
+parameter_list|)
 block|{
 return|return
 name|Error
@@ -222,7 +189,7 @@ parameter_list|,
 name|Name
 parameter_list|)
 define|\
-value|virtual Error visit##Name(Name##Record&Record) { return Error::success(); }
+value|virtual Error visitKnownRecord(CVType&CVR, Name##Record&Record) {          \     return Error::success();                                                   \   }
 define|#
 directive|define
 name|MEMBER_RECORD
@@ -234,7 +201,7 @@ parameter_list|,
 name|Name
 parameter_list|)
 define|\
-value|TYPE_RECORD(EnumName, EnumVal, Name)
+value|virtual Error visitKnownMember(CVMemberRecord&CVM, Name##Record&Record) {  \     return Error::success();                                                   \   }
 define|#
 directive|define
 name|TYPE_RECORD_ALIAS
@@ -265,13 +232,22 @@ file|"TypeRecords.def"
 block|}
 empty_stmt|;
 block|}
+comment|// end namespace codeview
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_TYPEVISITORCALLBACKS_H
+end_comment
 
 end_unit
 

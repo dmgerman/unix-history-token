@@ -56,31 +56,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MIUtilString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MICmnBase.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MICmnResources.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MICmdInvoker.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MICmdFactory.h"
+file|"MICmdArgSet.h"
 end_include
 
 begin_include
@@ -92,13 +68,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MICmdFactory.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MICmdInvoker.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MICmnBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MICmnMIResultRecord.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MICmdArgSet.h"
+file|"MICmnResources.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MIUtilString.h"
 end_include
 
 begin_comment
@@ -112,7 +112,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -168,7 +172,11 @@ comment|//          events set up.
 end_comment
 
 begin_comment
-comment|//          A command's Execute(), Acknowledge() and event callback functions are
+comment|//          A command's Execute(), Acknowledge() and event callback functions
+end_comment
+
+begin_comment
+comment|//          are
 end_comment
 
 begin_comment
@@ -176,7 +184,11 @@ comment|//          carried out in the main thread.
 end_comment
 
 begin_comment
-comment|//          A command may use the argument derived object classes (CMICmdArgValBase)
+comment|//          A command may use the argument derived object classes
+end_comment
+
+begin_comment
+comment|//          (CMICmdArgValBase)
 end_comment
 
 begin_comment
@@ -357,15 +369,20 @@ expr_stmt|;
 name|CMIUtilString
 name|m_strCurrentErrDescription
 decl_stmt|;
-comment|// Reason for Execute or Acknowledge function failure
+comment|// Reason for Execute or Acknowledge
+comment|// function failure
 name|SMICmdData
 name|m_cmdData
 decl_stmt|;
-comment|// Holds information/status of *this command. Used by other MI code to report or determine state of a command.
+comment|// Holds information/status of *this command. Used by
+comment|// other MI code to report or determine state of a
+comment|// command.
 name|bool
 name|m_bWaitForEventFromSBDebugger
 decl_stmt|;
-comment|// True = yes event type command wait, false = command calls Acknowledge() straight after Execute()
+comment|// True = yes event type command wait,
+comment|// false = command calls Acknowledge()
+comment|// straight after Execute()
 comment|// no waiting
 name|CMIUtilString
 name|m_strMiCmd
@@ -374,27 +391,39 @@ comment|// The MI text identifying *this command i.e. 'break-insert'
 name|CMICmnMIResultRecord
 name|m_miResultRecord
 decl_stmt|;
-comment|// This is completed in the Acknowledge() function and returned to the Command Invoker to proceed
+comment|// This is completed in the
+comment|// Acknowledge() function and returned
+comment|// to the Command Invoker to proceed
 comment|// stdout output. Each command forms 1 response to its input.
 name|CMIUtilString
 name|m_miResultRecordExtra
 decl_stmt|;
-comment|// This is completed in the Acknowledge() function and returned to the Command Invoker to proceed
-comment|// stdout output. Hack command produce more response text to help the client because of using LLDB
+comment|// This is completed in the Acknowledge()
+comment|// function and returned to the Command
+comment|// Invoker to proceed
+comment|// stdout output. Hack command produce more response text to help the client
+comment|// because of using LLDB
 name|CMICmnLLDBDebugSessionInfo
 modifier|&
 name|m_rLLDBDebugSessionInfo
 decl_stmt|;
-comment|// Access to command sharing information or data across any and all command based derived classes.
+comment|// Access to command
+comment|// sharing information or
+comment|// data across any and
+comment|// all command based
+comment|// derived classes.
 name|bool
 name|m_bHasResultRecordExtra
 decl_stmt|;
-comment|// True = Yes command produced additional MI output to its 1 line response, false = no extra MI output
+comment|// True = Yes command produced additional MI
+comment|// output to its 1 line response, false = no
+comment|// extra MI output
 comment|// formed.
 name|CMICmdArgSet
 name|m_setCmdArgs
 decl_stmt|;
-comment|// The list of arguments *this command needs to parse from the options string to carry out work.
+comment|// The list of arguments *this command needs to
+comment|// parse from the options string to carry out work.
 specifier|const
 name|CMIUtilString
 name|m_constStrArgThreadGroup
@@ -430,23 +459,43 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: Retrieve the command argument or option object pointer so that it can be
+comment|//------------------------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//          examined. If the option found and valid get the value (number, string or list
+comment|// Details: Retrieve the command argument or option object pointer so that it
 end_comment
 
 begin_comment
-comment|//          - see CMICmdArgValBase class) from it to use with the command's decision
+comment|// can be
 end_comment
 
 begin_comment
-comment|//          making. If the argument is not found the command's error description is set
+comment|//          examined. If the option found and valid get the value (number,
+end_comment
+
+begin_comment
+comment|//          string or list
+end_comment
+
+begin_comment
+comment|//          - see CMICmdArgValBase class) from it to use with the command's
+end_comment
+
+begin_comment
+comment|//          decision
+end_comment
+
+begin_comment
+comment|//          making. If the argument is not found the command's error description
+end_comment
+
+begin_comment
+comment|//          is set
 end_comment
 
 begin_comment
@@ -458,11 +507,19 @@ comment|// Type:    Template method.
 end_comment
 
 begin_comment
-comment|// Args:    vStrOptionName  - (R)   The text name of the argument or option to search for in
+comment|// Args:    vStrOptionName  - (R)   The text name of the argument or option to
 end_comment
 
 begin_comment
-comment|//                                  the list of the command's possible arguments or options.
+comment|// search for in
+end_comment
+
+begin_comment
+comment|//                                  the list of the command's possible arguments
+end_comment
+
+begin_comment
+comment|//                                  or options.
 end_comment
 
 begin_comment
@@ -470,7 +527,11 @@ comment|// Return:  T * - CMICmdArgValBase derived object.
 end_comment
 
 begin_comment
-comment|//              - nullptr = function has failed, unable to retrieve the option/arg object.
+comment|//              - nullptr = function has failed, unable to retrieve the
+end_comment
+
+begin_comment
+comment|//              option/arg object.
 end_comment
 
 begin_comment
@@ -561,15 +622,27 @@ end_return
 
 begin_comment
 unit|}
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: Retrieve the command argument or option object pointer using template function
+comment|//------------------------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//          CMICmdBase::GetOption(). Should the argument (by name) not be found the
+comment|// Details: Retrieve the command argument or option object pointer using
+end_comment
+
+begin_comment
+comment|// template function
+end_comment
+
+begin_comment
+comment|//          CMICmdBase::GetOption(). Should the argument (by name) not be found
+end_comment
+
+begin_comment
+comment|//          the
 end_comment
 
 begin_comment
@@ -585,11 +658,19 @@ comment|// Args:    a   - (R) The actual variable's name.
 end_comment
 
 begin_comment
-comment|//          b   - (R) The type of variable (appended to CMICmdArgVal i.e. CMICmdArgValString).
+comment|//          b   - (R) The type of variable (appended to CMICmdArgVal i.e.
 end_comment
 
 begin_comment
-comment|//          c   - (R) The text name of the argument or option to search for in the list of
+comment|//          CMICmdArgValString).
+end_comment
+
+begin_comment
+comment|//          c   - (R) The text name of the argument or option to search for in
+end_comment
+
+begin_comment
+comment|//          the list of
 end_comment
 
 begin_comment
@@ -601,7 +682,11 @@ comment|// Return:  T * - CMICmdArgValBase derived object.
 end_comment
 
 begin_comment
-comment|//              - nullptr = function has failed, unable to retrieve the option/arg object.
+comment|//              - nullptr = function has failed, unable to retrieve the
+end_comment
+
+begin_comment
+comment|//              option/arg object.
 end_comment
 
 begin_comment
@@ -624,7 +709,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|CMICmdArgVal##b *a = CMICmdBase::GetOption<CMICmdArgVal##b>(c);                                                                        \     if (a == nullptr)                                                                                                                      \         return MIstatus::failure;
+value|CMICmdArgVal##b *a = CMICmdBase::GetOption<CMICmdArgVal##b>(c);              \   if (a == nullptr)                                                            \     return MIstatus::failure;
 end_define
 
 begin_comment

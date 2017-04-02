@@ -55,13 +55,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -223,7 +223,8 @@ comment|/// @param[in] full
 comment|///     Should FileSpec::Equal be called with "full" true or false.
 comment|///
 comment|/// @param[in] remove_backup_dots
-comment|///     Should FileSpec::Equal be called with "remove_backup_dots" true or false.
+comment|///     Should FileSpec::Equal be called with "remove_backup_dots" true or
+comment|///     false.
 comment|///
 comment|/// @return
 comment|///     The index of the file that matches \a file if it is found,

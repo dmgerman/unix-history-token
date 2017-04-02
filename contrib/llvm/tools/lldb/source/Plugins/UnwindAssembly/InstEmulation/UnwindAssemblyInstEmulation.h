@@ -62,12 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/EmulateInstruction.h"
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/UnwindAssembly.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -110,45 +110,58 @@ block|;
 name|bool
 name|GetNonCallSiteUnwindPlanFromAssembly
 argument_list|(
-argument|lldb_private::AddressRange& func
+argument|lldb_private::AddressRange&func
 argument_list|,
-argument|lldb_private::Thread& thread
+argument|lldb_private::Thread&thread
 argument_list|,
-argument|lldb_private::UnwindPlan& unwind_plan
+argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
 name|override
 block|;
 name|bool
+name|GetNonCallSiteUnwindPlanFromAssembly
+argument_list|(
+argument|lldb_private::AddressRange&func
+argument_list|,
+argument|uint8_t *opcode_data
+argument_list|,
+argument|size_t opcode_size
+argument_list|,
+argument|lldb_private::UnwindPlan&unwind_plan
+argument_list|)
+block|;
+name|bool
 name|AugmentUnwindPlanFromCallSite
 argument_list|(
-argument|lldb_private::AddressRange& func
+argument|lldb_private::AddressRange&func
 argument_list|,
-argument|lldb_private::Thread& thread
+argument|lldb_private::Thread&thread
 argument_list|,
-argument|lldb_private::UnwindPlan& unwind_plan
+argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
 name|override
 block|;
 name|bool
 name|GetFastUnwindPlan
 argument_list|(
-argument|lldb_private::AddressRange& func
+argument|lldb_private::AddressRange&func
 argument_list|,
-argument|lldb_private::Thread& thread
+argument|lldb_private::Thread&thread
 argument_list|,
 argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
 name|override
 block|;
-comment|// thread may be NULL in which case we only use the Target (e.g. if this is called pre-process-launch).
+comment|// thread may be NULL in which case we only use the Target (e.g. if this is
+comment|// called pre-process-launch).
 name|bool
 name|FirstNonPrologueInsn
 argument_list|(
-argument|lldb_private::AddressRange& func
+argument|lldb_private::AddressRange&func
 argument_list|,
 argument|const lldb_private::ExecutionContext&exe_ctx
 argument_list|,
-argument|lldb_private::Address& first_non_prologue_insn
+argument|lldb_private::Address&first_non_prologue_insn
 argument_list|)
 name|override
 block|;
@@ -236,11 +249,6 @@ name|inst_emulator
 argument_list|)
 block|,
 name|m_range_ptr
-argument_list|(
-name|NULL
-argument_list|)
-block|,
-name|m_thread_ptr
 argument_list|(
 name|NULL
 argument_list|)
@@ -548,12 +556,6 @@ name|m_range_ptr
 block|;
 name|lldb_private
 operator|::
-name|Thread
-operator|*
-name|m_thread_ptr
-block|;
-name|lldb_private
-operator|::
 name|UnwindPlan
 operator|*
 name|m_unwind_plan_ptr
@@ -624,11 +626,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// While processing the instruction stream, we need to communicate some state change
+comment|// While processing the instruction stream, we need to communicate some state
 end_comment
 
 begin_comment
-comment|// information up to the higher level loop that makes decisions about how to push
+comment|// change
+end_comment
+
+begin_comment
+comment|// information up to the higher level loop that makes decisions about how to
+end_comment
+
+begin_comment
+comment|// push
 end_comment
 
 begin_comment
@@ -646,7 +656,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The instruction is branching forward with the given offset. 0 value means no branching.
+comment|// The instruction is branching forward with the given offset. 0 value means
+end_comment
+
+begin_comment
+comment|// no branching.
 end_comment
 
 begin_decl_stmt

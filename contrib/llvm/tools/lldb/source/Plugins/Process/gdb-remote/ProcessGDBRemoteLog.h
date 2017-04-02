@@ -108,6 +108,7 @@ begin_define
 define|#
 directive|define
 name|GDBR_LOG_MEMORY_DATA_SHORT
+define|\
 value|(1u<< 5)
 end_define
 

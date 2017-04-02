@@ -82,6 +82,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/BasicBlock.h"
 end_include
 
@@ -89,6 +95,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/SymbolTableListTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_decl_stmt
@@ -173,7 +191,9 @@ typedef|;
 comment|// Default constructor
 name|InstIterator
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|// Copy constructor...
 name|template
 operator|<
@@ -1000,13 +1020,17 @@ end_function
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_INSTITERATOR_H
+end_comment
 
 end_unit
 

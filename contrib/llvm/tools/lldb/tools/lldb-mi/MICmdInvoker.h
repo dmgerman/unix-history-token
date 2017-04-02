@@ -54,12 +54,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MICmnBase.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MICmdData.h"
 end_include
 
@@ -67,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"MICmdMgrSetCmdDeleteCallback.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MICmnBase.h"
 end_include
 
 begin_include
@@ -92,7 +92,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -104,11 +108,19 @@ comment|//          There two main jobs; action command Execute() function, foll
 end_comment
 
 begin_comment
-comment|//          the command's Acknowledge() function. When a command has finished its
+comment|//          the command's Acknowledge() function. When a command has finished
 end_comment
 
 begin_comment
-comment|//          execute function it returns to the invoker. The invoker then calls the
+comment|//          its
+end_comment
+
+begin_comment
+comment|//          execute function it returns to the invoker. The invoker then calls
+end_comment
+
+begin_comment
+comment|//          the
 end_comment
 
 begin_comment
@@ -140,7 +152,11 @@ comment|//          The Invoker takes ownership of any commands created which me
 end_comment
 
 begin_comment
-comment|//          is the only object to delete them when a command is finished working.
+comment|//          is the only object to delete them when a command is finished
+end_comment
+
+begin_comment
+comment|//          working.
 end_comment
 
 begin_comment

@@ -91,7 +91,7 @@ name|m_process
 argument_list|(
 argument|LLDB_INVALID_PROCESS
 argument_list|)
-block|{     }
+block|{}
 name|explicit
 name|HostNativeProcessBase
 argument_list|(

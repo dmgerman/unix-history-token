@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-types.h"
+file|"lldb/Interpreter/CommandObjectMultiword.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/CommandObjectMultiword.h"
+file|"lldb/lldb-types.h"
 end_include
 
 begin_decl_stmt
@@ -108,7 +108,7 @@ name|CommandReturnObject
 operator|&
 name|result
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

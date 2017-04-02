@@ -83,10 +83,10 @@ name|m_is_dwarf64
 argument_list|(
 argument|false
 argument_list|)
-block|{ }
+block|{}
 name|DWARFDataExtractor
 argument_list|(
-argument|const DWARFDataExtractor& data
+argument|const DWARFDataExtractor&data
 argument_list|,
 argument|lldb::offset_t offset
 argument_list|,
@@ -106,7 +106,7 @@ name|m_is_dwarf64
 argument_list|(
 argument|false
 argument_list|)
-block|{ }
+block|{}
 name|uint64_t
 name|GetDWARFInitialLength
 argument_list|(

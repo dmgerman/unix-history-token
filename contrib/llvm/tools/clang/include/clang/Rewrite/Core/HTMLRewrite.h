@@ -256,12 +256,8 @@ parameter_list|,
 name|FileID
 name|FID
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|title
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// SyntaxHighlight - Relex the specified FileID and annotate the HTML with

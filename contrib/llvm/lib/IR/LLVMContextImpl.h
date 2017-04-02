@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Constants.h"
 end_include
 
@@ -169,6 +175,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/YAMLTraits.h"
 end_include
 
 begin_include
@@ -330,6 +342,7 @@ argument_list|(
 name|APFloat
 operator|::
 name|Bogus
+argument_list|()
 argument_list|,
 literal|1
 argument_list|)
@@ -347,6 +360,7 @@ argument_list|(
 name|APFloat
 operator|::
 name|Bogus
+argument_list|()
 argument_list|,
 literal|2
 argument_list|)
@@ -1957,7 +1971,7 @@ block|;
 name|uint64_t
 name|SizeInBits
 block|;
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 block|;
 name|unsigned
@@ -1971,7 +1985,7 @@ argument|MDString *Name
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|unsigned Encoding
 argument_list|)
@@ -2149,10 +2163,10 @@ name|uint64_t
 name|SizeInBits
 block|;
 name|uint64_t
-name|AlignInBits
-block|;
-name|uint64_t
 name|OffsetInBits
+block|;
+name|uint32_t
+name|AlignInBits
 block|;
 name|unsigned
 name|Flags
@@ -2177,7 +2191,7 @@ argument|Metadata *BaseType
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
@@ -2221,14 +2235,14 @@ argument_list|(
 name|SizeInBits
 argument_list|)
 block|,
-name|AlignInBits
+name|OffsetInBits
 argument_list|(
-name|AlignInBits
+name|OffsetInBits
 argument_list|)
 block|,
-name|OffsetInBits
+name|AlignInBits
 argument_list|(
-name|OffsetInBits
+name|AlignInBits
 argument_list|)
 block|,
 name|Flags
@@ -2305,19 +2319,19 @@ name|getSizeInBits
 argument_list|()
 argument_list|)
 block|,
-name|AlignInBits
-argument_list|(
-name|N
-operator|->
-name|getAlignInBits
-argument_list|()
-argument_list|)
-block|,
 name|OffsetInBits
 argument_list|(
 name|N
 operator|->
 name|getOffsetInBits
+argument_list|()
+argument_list|)
+block|,
+name|AlignInBits
+argument_list|(
+name|N
+operator|->
+name|getAlignInBits
 argument_list|()
 argument_list|)
 block|,
@@ -2718,10 +2732,10 @@ name|uint64_t
 name|SizeInBits
 block|;
 name|uint64_t
-name|AlignInBits
-block|;
-name|uint64_t
 name|OffsetInBits
+block|;
+name|uint32_t
+name|AlignInBits
 block|;
 name|unsigned
 name|Flags
@@ -2761,7 +2775,7 @@ argument|Metadata *BaseType
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
@@ -2813,14 +2827,14 @@ argument_list|(
 name|SizeInBits
 argument_list|)
 block|,
-name|AlignInBits
+name|OffsetInBits
 argument_list|(
-name|AlignInBits
+name|OffsetInBits
 argument_list|)
 block|,
-name|OffsetInBits
+name|AlignInBits
 argument_list|(
-name|OffsetInBits
+name|AlignInBits
 argument_list|)
 block|,
 name|Flags
@@ -2917,19 +2931,19 @@ name|getSizeInBits
 argument_list|()
 argument_list|)
 block|,
-name|AlignInBits
-argument_list|(
-name|N
-operator|->
-name|getAlignInBits
-argument_list|()
-argument_list|)
-block|,
 name|OffsetInBits
 argument_list|(
 name|N
 operator|->
 name|getOffsetInBits
+argument_list|()
+argument_list|)
+block|,
+name|AlignInBits
+argument_list|(
+name|N
+operator|->
+name|getAlignInBits
 argument_list|()
 argument_list|)
 block|,
@@ -3263,15 +3277,24 @@ name|MDString
 operator|*
 name|Directory
 block|;
+name|DIFile
+operator|::
+name|ChecksumKind
+name|CSKind
+block|;
+name|MDString
+operator|*
+name|Checksum
+block|;
 name|MDNodeKeyImpl
 argument_list|(
-name|MDString
-operator|*
-name|Filename
+argument|MDString *Filename
 argument_list|,
-name|MDString
-operator|*
-name|Directory
+argument|MDString *Directory
+argument_list|,
+argument|DIFile::ChecksumKind CSKind
+argument_list|,
+argument|MDString *Checksum
 argument_list|)
 operator|:
 name|Filename
@@ -3281,7 +3304,17 @@ argument_list|)
 block|,
 name|Directory
 argument_list|(
-argument|Directory
+name|Directory
+argument_list|)
+block|,
+name|CSKind
+argument_list|(
+name|CSKind
+argument_list|)
+block|,
+name|Checksum
+argument_list|(
+argument|Checksum
 argument_list|)
 block|{}
 name|MDNodeKeyImpl
@@ -3302,7 +3335,23 @@ argument_list|)
 block|,
 name|Directory
 argument_list|(
-argument|N->getRawDirectory()
+name|N
+operator|->
+name|getRawDirectory
+argument_list|()
+argument_list|)
+block|,
+name|CSKind
+argument_list|(
+name|N
+operator|->
+name|getChecksumKind
+argument_list|()
+argument_list|)
+block|,
+name|Checksum
+argument_list|(
+argument|N->getRawChecksum()
 argument_list|)
 block|{}
 name|bool
@@ -3326,6 +3375,20 @@ name|RHS
 operator|->
 name|getRawDirectory
 argument_list|()
+operator|&&
+name|CSKind
+operator|==
+name|RHS
+operator|->
+name|getChecksumKind
+argument_list|()
+operator|&&
+name|Checksum
+operator|==
+name|RHS
+operator|->
+name|getRawChecksum
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -3339,6 +3402,10 @@ argument_list|(
 name|Filename
 argument_list|,
 name|Directory
+argument_list|,
+name|CSKind
+argument_list|,
+name|Checksum
 argument_list|)
 return|;
 block|}
@@ -4409,6 +4476,9 @@ block|;
 name|unsigned
 name|Line
 block|;
+name|bool
+name|ExportSymbols
+block|;
 name|MDNodeKeyImpl
 argument_list|(
 argument|Metadata *Scope
@@ -4418,6 +4488,8 @@ argument_list|,
 argument|MDString *Name
 argument_list|,
 argument|unsigned Line
+argument_list|,
+argument|bool ExportSymbols
 argument_list|)
 operator|:
 name|Scope
@@ -4437,7 +4509,12 @@ argument_list|)
 block|,
 name|Line
 argument_list|(
-argument|Line
+name|Line
+argument_list|)
+block|,
+name|ExportSymbols
+argument_list|(
+argument|ExportSymbols
 argument_list|)
 block|{}
 name|MDNodeKeyImpl
@@ -4474,7 +4551,15 @@ argument_list|)
 block|,
 name|Line
 argument_list|(
-argument|N->getLine()
+name|N
+operator|->
+name|getLine
+argument_list|()
+argument_list|)
+block|,
+name|ExportSymbols
+argument_list|(
+argument|N->getExportSymbols()
 argument_list|)
 block|{}
 name|bool
@@ -4511,6 +4596,13 @@ operator|==
 name|RHS
 operator|->
 name|getLine
+argument_list|()
+operator|&&
+name|ExportSymbols
+operator|==
+name|RHS
+operator|->
+name|getExportSymbols
 argument_list|()
 return|;
 block|}
@@ -5017,11 +5109,10 @@ name|IsDefinition
 block|;
 name|Metadata
 operator|*
-name|Variable
-block|;
-name|Metadata
-operator|*
 name|StaticDataMemberDeclaration
+block|;
+name|uint32_t
+name|AlignInBits
 block|;
 name|MDNodeKeyImpl
 argument_list|(
@@ -5041,9 +5132,9 @@ argument|bool IsLocalToUnit
 argument_list|,
 argument|bool IsDefinition
 argument_list|,
-argument|Metadata *Variable
-argument_list|,
 argument|Metadata *StaticDataMemberDeclaration
+argument_list|,
+argument|uint32_t AlignInBits
 argument_list|)
 operator|:
 name|Scope
@@ -5086,14 +5177,14 @@ argument_list|(
 name|IsDefinition
 argument_list|)
 block|,
-name|Variable
-argument_list|(
-name|Variable
-argument_list|)
-block|,
 name|StaticDataMemberDeclaration
 argument_list|(
-argument|StaticDataMemberDeclaration
+name|StaticDataMemberDeclaration
+argument_list|)
+block|,
+name|AlignInBits
+argument_list|(
+argument|AlignInBits
 argument_list|)
 block|{}
 name|MDNodeKeyImpl
@@ -5168,17 +5259,17 @@ name|isDefinition
 argument_list|()
 argument_list|)
 block|,
-name|Variable
+name|StaticDataMemberDeclaration
 argument_list|(
 name|N
 operator|->
-name|getRawVariable
+name|getRawStaticDataMemberDeclaration
 argument_list|()
 argument_list|)
 block|,
-name|StaticDataMemberDeclaration
+name|AlignInBits
 argument_list|(
-argument|N->getRawStaticDataMemberDeclaration()
+argument|N->getAlignInBits()
 argument_list|)
 block|{}
 name|bool
@@ -5245,18 +5336,18 @@ operator|->
 name|isDefinition
 argument_list|()
 operator|&&
-name|Variable
-operator|==
-name|RHS
-operator|->
-name|getRawVariable
-argument_list|()
-operator|&&
 name|StaticDataMemberDeclaration
 operator|==
 name|RHS
 operator|->
 name|getRawStaticDataMemberDeclaration
+argument_list|()
+operator|&&
+name|AlignInBits
+operator|==
+name|RHS
+operator|->
+name|getAlignInBits
 argument_list|()
 return|;
 block|}
@@ -5265,6 +5356,13 @@ name|getHashValue
 argument_list|()
 specifier|const
 block|{
+comment|// We do not use AlignInBits in hashing function here on purpose:
+comment|// in most cases this param for local variable is zero (for function param
+comment|// it is always zero). This leads to lots of hash collisions and errors on
+comment|// cases with lots of similar variables.
+comment|// clang/test/CodeGen/debug-info-257-args.c is an example of this problem,
+comment|// generated IR is random for each run and test fails with Align included.
+comment|// TODO: make hashing work fine with such situations
 return|return
 name|hash_combine
 argument_list|(
@@ -5284,8 +5382,7 @@ name|IsLocalToUnit
 argument_list|,
 name|IsDefinition
 argument_list|,
-name|Variable
-argument_list|,
+comment|/* AlignInBits, */
 name|StaticDataMemberDeclaration
 argument_list|)
 return|;
@@ -5328,6 +5425,9 @@ block|;
 name|unsigned
 name|Flags
 block|;
+name|uint32_t
+name|AlignInBits
+block|;
 name|MDNodeKeyImpl
 argument_list|(
 argument|Metadata *Scope
@@ -5343,6 +5443,8 @@ argument_list|,
 argument|unsigned Arg
 argument_list|,
 argument|unsigned Flags
+argument_list|,
+argument|uint32_t AlignInBits
 argument_list|)
 operator|:
 name|Scope
@@ -5377,7 +5479,12 @@ argument_list|)
 block|,
 name|Flags
 argument_list|(
-argument|Flags
+name|Flags
+argument_list|)
+block|,
+name|AlignInBits
+argument_list|(
+argument|AlignInBits
 argument_list|)
 block|{}
 name|MDNodeKeyImpl
@@ -5438,7 +5545,15 @@ argument_list|)
 block|,
 name|Flags
 argument_list|(
-argument|N->getFlags()
+name|N
+operator|->
+name|getFlags
+argument_list|()
+argument_list|)
+block|,
+name|AlignInBits
+argument_list|(
+argument|N->getAlignInBits()
 argument_list|)
 block|{}
 name|bool
@@ -5497,6 +5612,13 @@ name|RHS
 operator|->
 name|getFlags
 argument_list|()
+operator|&&
+name|AlignInBits
+operator|==
+name|RHS
+operator|->
+name|getAlignInBits
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -5504,6 +5626,13 @@ name|getHashValue
 argument_list|()
 specifier|const
 block|{
+comment|// We do not use AlignInBits in hashing function here on purpose:
+comment|// in most cases this param for local variable is zero (for function param
+comment|// it is always zero). This leads to lots of hash collisions and errors on
+comment|// cases with lots of similar variables.
+comment|// clang/test/CodeGen/debug-info-257-args.c is an example of this problem,
+comment|// generated IR is random for each run and test fails with Align included.
+comment|// TODO: make hashing work fine with such situations
 return|return
 name|hash_combine
 argument_list|(
@@ -5602,6 +5731,106 @@ name|Elements
 operator|.
 name|end
 argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
+name|template
+operator|<
+operator|>
+expr|struct
+name|MDNodeKeyImpl
+operator|<
+name|DIGlobalVariableExpression
+operator|>
+block|{
+name|Metadata
+operator|*
+name|Variable
+block|;
+name|Metadata
+operator|*
+name|Expression
+block|;
+name|MDNodeKeyImpl
+argument_list|(
+name|Metadata
+operator|*
+name|Variable
+argument_list|,
+name|Metadata
+operator|*
+name|Expression
+argument_list|)
+operator|:
+name|Variable
+argument_list|(
+name|Variable
+argument_list|)
+block|,
+name|Expression
+argument_list|(
+argument|Expression
+argument_list|)
+block|{}
+name|MDNodeKeyImpl
+argument_list|(
+specifier|const
+name|DIGlobalVariableExpression
+operator|*
+name|N
+argument_list|)
+operator|:
+name|Variable
+argument_list|(
+name|N
+operator|->
+name|getRawVariable
+argument_list|()
+argument_list|)
+block|,
+name|Expression
+argument_list|(
+argument|N->getRawExpression()
+argument_list|)
+block|{}
+name|bool
+name|isKeyOf
+argument_list|(
+argument|const DIGlobalVariableExpression *RHS
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Variable
+operator|==
+name|RHS
+operator|->
+name|getRawVariable
+argument_list|()
+operator|&&
+name|Expression
+operator|==
+name|RHS
+operator|->
+name|getRawExpression
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getHashValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hash_combine
+argument_list|(
+name|Variable
+argument_list|,
+name|Expression
 argument_list|)
 return|;
 block|}
@@ -6291,7 +6520,7 @@ operator|->
 name|getRawFile
 argument_list|()
 operator|&&
-name|File
+name|Elements
 operator|==
 name|RHS
 operator|->
@@ -6683,19 +6912,11 @@ name|Attachments
 operator|.
 name|erase
 argument_list|(
-name|std
+name|llvm
 operator|::
 name|remove_if
 argument_list|(
 name|Attachments
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Attachments
-operator|.
-name|end
-argument_list|()
 argument_list|,
 name|shouldRemove
 argument_list|)
@@ -6868,6 +7089,16 @@ decl_stmt|;
 name|bool
 name|DiagnosticHotnessRequested
 decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|yaml
+operator|::
+name|Output
+operator|>
+name|DiagnosticsOutputFile
+expr_stmt|;
 name|LLVMContext
 operator|::
 name|YieldCallbackTy
@@ -6882,8 +7113,12 @@ name|DenseMap
 operator|<
 name|APInt
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ConstantInt
-operator|*
+operator|>
 operator|,
 name|DenseMapAPIntKeyInfo
 operator|>
@@ -6897,8 +7132,12 @@ name|DenseMap
 operator|<
 name|APFloat
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ConstantFP
-operator|*
+operator|>
 operator|,
 name|DenseMapAPFloatKeyInfo
 operator|>
@@ -7007,9 +7246,12 @@ operator|<
 name|Type
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ConstantAggregateZero
-operator|*
-operator|>
+operator|>>
 name|CAZConstants
 expr_stmt|;
 typedef|typedef
@@ -7047,9 +7289,12 @@ operator|<
 name|PointerType
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ConstantPointerNull
-operator|*
-operator|>
+operator|>>
 name|CPNConstants
 expr_stmt|;
 name|DenseMap
@@ -7057,9 +7302,12 @@ operator|<
 name|Type
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|UndefValue
-operator|*
-operator|>
+operator|>>
 name|UVConstants
 expr_stmt|;
 name|StringMap
@@ -7312,6 +7560,23 @@ operator|,
 name|MDGlobalAttachmentMap
 operator|>
 name|GlobalObjectMetadata
+expr_stmt|;
+comment|/// Collection of per-GlobalObject sections used in this context.
+name|DenseMap
+operator|<
+specifier|const
+name|GlobalObject
+operator|*
+operator|,
+name|StringRef
+operator|>
+name|GlobalObjectSections
+expr_stmt|;
+comment|/// Stable collection of section strings.
+name|StringSet
+operator|<
+operator|>
+name|SectionStrings
 expr_stmt|;
 comment|/// DiscriminatorTable - This table maps file:line locations to an
 comment|/// integer representing the next DWARF path discriminator to assign to

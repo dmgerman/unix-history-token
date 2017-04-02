@@ -68,6 +68,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/../../source/Commands/CommandObjectExpression.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/OptionGroupFormat.h"
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/OptionGroupValueObjectDisplay.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/../../source/Commands/CommandObjectExpression.h"
 end_include
 
 begin_decl_stmt
@@ -132,22 +132,26 @@ argument_list|()
 name|override
 block|;
 comment|//------------------------------------------------------------------
-comment|/// Get a REPL with an existing target (or, failing that, a debugger to use), and (optional) extra arguments for the compiler.
+comment|/// Get a REPL with an existing target (or, failing that, a debugger to use),
+comment|/// and (optional) extra arguments for the compiler.
 comment|///
 comment|/// @param[out] error
-comment|///     If this language is supported but the REPL couldn't be created, this error is populated with the reason.
+comment|///     If this language is supported but the REPL couldn't be created, this
+comment|///     error is populated with the reason.
 comment|///
 comment|/// @param[in] language
 comment|///     The language to create a REPL for.
 comment|///
 comment|/// @param[in] debugger
-comment|///     If provided, and target is nullptr, the debugger to use when setting up a top-level REPL.
+comment|///     If provided, and target is nullptr, the debugger to use when setting
+comment|///     up a top-level REPL.
 comment|///
 comment|/// @param[in] target
 comment|///     If provided, the target to put the REPL inside.
 comment|///
 comment|/// @param[in] repl_options
-comment|///     If provided, additional options for the compiler when parsing REPL expressions.
+comment|///     If provided, additional options for the compiler when parsing REPL
+comment|///     expressions.
 comment|///
 comment|/// @return
 comment|///     The range of the containing object in the target process.
@@ -178,7 +182,7 @@ block|{
 name|m_format_options
 operator|=
 name|options
-block|;     }
+block|;   }
 name|void
 name|SetValueObjectDisplayOptions
 argument_list|(
@@ -188,7 +192,7 @@ block|{
 name|m_varobj_options
 operator|=
 name|options
-block|;     }
+block|;   }
 name|void
 name|SetCommandOptions
 argument_list|(
@@ -198,7 +202,7 @@ block|{
 name|m_command_options
 operator|=
 name|options
-block|;     }
+block|;   }
 name|void
 name|SetCompilerOptions
 argument_list|(

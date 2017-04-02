@@ -104,147 +104,6 @@ init|=
 literal|101
 block|}
 enum|;
-enum|enum
-name|PropertyAnnotation
-block|{
-name|PROPERTY_MAXNTID_X
-init|=
-literal|0
-block|,
-name|PROPERTY_MAXNTID_Y
-block|,
-name|PROPERTY_MAXNTID_Z
-block|,
-name|PROPERTY_REQNTID_X
-block|,
-name|PROPERTY_REQNTID_Y
-block|,
-name|PROPERTY_REQNTID_Z
-block|,
-name|PROPERTY_MINNCTAPERSM
-block|,
-name|PROPERTY_ISTEXTURE
-block|,
-name|PROPERTY_ISSURFACE
-block|,
-name|PROPERTY_ISSAMPLER
-block|,
-name|PROPERTY_ISREADONLY_IMAGE_PARAM
-block|,
-name|PROPERTY_ISWRITEONLY_IMAGE_PARAM
-block|,
-name|PROPERTY_ISREADWRITE_IMAGE_PARAM
-block|,
-name|PROPERTY_ISKERNEL_FUNCTION
-block|,
-name|PROPERTY_ALIGN
-block|,
-name|PROPERTY_MANAGED
-block|,
-comment|// last property
-name|PROPERTY_LAST
-block|}
-enum|;
-specifier|const
-name|unsigned
-name|AnnotationNameLen
-init|=
-literal|9
-decl_stmt|;
-comment|// length of each annotation name
-specifier|const
-name|char
-name|PropertyAnnotationNames
-index|[
-name|PROPERTY_LAST
-operator|+
-literal|1
-index|]
-index|[
-name|AnnotationNameLen
-operator|+
-literal|1
-index|]
-init|=
-block|{
-literal|"maxntidx"
-block|,
-comment|// PROPERTY_MAXNTID_X
-literal|"maxntidy"
-block|,
-comment|// PROPERTY_MAXNTID_Y
-literal|"maxntidz"
-block|,
-comment|// PROPERTY_MAXNTID_Z
-literal|"reqntidx"
-block|,
-comment|// PROPERTY_REQNTID_X
-literal|"reqntidy"
-block|,
-comment|// PROPERTY_REQNTID_Y
-literal|"reqntidz"
-block|,
-comment|// PROPERTY_REQNTID_Z
-literal|"minctasm"
-block|,
-comment|// PROPERTY_MINNCTAPERSM
-literal|"texture"
-block|,
-comment|// PROPERTY_ISTEXTURE
-literal|"surface"
-block|,
-comment|// PROPERTY_ISSURFACE
-literal|"sampler"
-block|,
-comment|// PROPERTY_ISSAMPLER
-literal|"rdoimage"
-block|,
-comment|// PROPERTY_ISREADONLY_IMAGE_PARAM
-literal|"wroimage"
-block|,
-comment|// PROPERTY_ISWRITEONLY_IMAGE_PARAM
-literal|"rdwrimage"
-block|,
-comment|// PROPERTY_ISREADWRITE_IMAGE_PARAM
-literal|"kernel"
-block|,
-comment|// PROPERTY_ISKERNEL_FUNCTION
-literal|"align"
-block|,
-comment|// PROPERTY_ALIGN
-literal|"managed"
-block|,
-comment|// PROPERTY_MANAGED
-comment|// last property
-literal|"proplast"
-block|,
-comment|// PROPERTY_LAST
-block|}
-decl_stmt|;
-comment|// name of named metadata used for global annotations
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-comment|// As this is declared to be static but some of the .cpp files that
-comment|// include NVVM.h do not use this array, gcc gives a warning when
-comment|// compiling those .cpp files, hence __attribute__((unused)).
-name|__attribute__
-argument_list|(
-argument|(unused)
-argument_list|)
-endif|#
-directive|endif
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|NamedMDForAnnotations
-init|=
-literal|"nvvm.annotations"
-decl_stmt|;
 name|namespace
 name|NVPTXII
 block|{
@@ -277,8 +136,13 @@ literal|0x1000
 block|}
 enum|;
 block|}
+comment|// namespace NVPTXII
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

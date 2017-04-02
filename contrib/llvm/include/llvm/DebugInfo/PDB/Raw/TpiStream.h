@@ -46,31 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StreamArray.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo/CodeView/StreamRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/CodeView/TypeRecord.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/PDBTypes.h"
+file|"llvm/DebugInfo/MSF/StreamArray.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/Raw/MappedBlockStream.h"
+file|"llvm/DebugInfo/PDB/PDBTypes.h"
 end_include
 
 begin_include
@@ -102,6 +90,13 @@ name|namespace
 name|llvm
 block|{
 name|namespace
+name|msf
+block|{
+name|class
+name|MappedBlockStream
+decl_stmt|;
+block|}
+name|namespace
 name|pdb
 block|{
 name|class
@@ -110,9 +105,10 @@ decl_stmt|;
 name|class
 name|TpiStream
 block|{
-struct_decl|struct
-name|HeaderInfo
-struct_decl|;
+name|friend
+name|class
+name|TpiStreamBuilder
+decl_stmt|;
 name|public
 label|:
 name|TpiStream
@@ -126,6 +122,8 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|Stream
@@ -179,7 +177,7 @@ name|NumHashBuckets
 argument_list|()
 specifier|const
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -191,7 +189,7 @@ name|getHashValues
 argument_list|()
 specifier|const
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -201,7 +199,7 @@ name|getTypeIndexOffsets
 argument_list|()
 specifier|const
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -244,6 +242,8 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|Stream
@@ -257,11 +257,13 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|MappedBlockStream
+name|msf
+operator|::
+name|ReadableStream
 operator|>
 name|HashStream
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -271,7 +273,7 @@ name|ulittle32_t
 operator|>
 name|HashValues
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -279,7 +281,7 @@ name|TypeIndexOffset
 operator|>
 name|TypeIndexOffsets
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -288,7 +290,7 @@ operator|>
 name|HashAdjustments
 expr_stmt|;
 specifier|const
-name|HeaderInfo
+name|TpiStreamHeader
 modifier|*
 name|Header
 decl_stmt|;

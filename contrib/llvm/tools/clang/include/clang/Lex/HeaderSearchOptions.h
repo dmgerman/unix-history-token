@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/CachedHashString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
@@ -134,41 +140,35 @@ comment|/// HeaderSearchOptions - Helper class for storing options related to th
 comment|/// initialization of the HeaderSearch object.
 name|class
 name|HeaderSearchOptions
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|HeaderSearchOptions
-operator|>
 block|{
 name|public
-operator|:
-expr|struct
+label|:
+struct|struct
 name|Entry
 block|{
 name|std
 operator|::
 name|string
 name|Path
-block|;
+expr_stmt|;
 name|frontend
 operator|::
 name|IncludeDirGroup
 name|Group
-block|;
+expr_stmt|;
 name|unsigned
 name|IsFramework
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// IgnoreSysRoot - This is false if an absolute path should be treated
 comment|/// relative to the sysroot, or true if it should always be the absolute
 comment|/// path.
 name|unsigned
 name|IgnoreSysRoot
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|Entry
 argument_list|(
 argument|StringRef path
@@ -179,29 +179,30 @@ argument|bool isFramework
 argument_list|,
 argument|bool ignoreSysRoot
 argument_list|)
-operator|:
+block|:
 name|Path
 argument_list|(
 name|path
 argument_list|)
-block|,
+operator|,
 name|Group
 argument_list|(
 name|group
 argument_list|)
-block|,
+operator|,
 name|IsFramework
 argument_list|(
 name|isFramework
 argument_list|)
-block|,
+operator|,
 name|IgnoreSysRoot
 argument_list|(
 argument|ignoreSysRoot
 argument_list|)
 block|{}
 block|}
-block|;    struct
+struct|;
+struct|struct
 name|SystemHeaderPrefix
 block|{
 comment|/// A prefix to be matched against paths in \#include directives.
@@ -209,38 +210,38 @@ name|std
 operator|::
 name|string
 name|Prefix
-block|;
+expr_stmt|;
 comment|/// True if paths beginning with this prefix should be treated as system
 comment|/// headers.
 name|bool
 name|IsSystemHeader
-block|;
+decl_stmt|;
 name|SystemHeaderPrefix
 argument_list|(
 argument|StringRef Prefix
 argument_list|,
 argument|bool IsSystemHeader
 argument_list|)
-operator|:
+block|:
 name|Prefix
 argument_list|(
 name|Prefix
 argument_list|)
-block|,
+operator|,
 name|IsSystemHeader
 argument_list|(
 argument|IsSystemHeader
 argument_list|)
 block|{}
 block|}
-block|;
+struct|;
 comment|/// If non-empty, the directory to use as a "virtual system root" for include
 comment|/// paths.
 name|std
 operator|::
 name|string
 name|Sysroot
-block|;
+expr_stmt|;
 comment|/// User specified include entries.
 name|std
 operator|::
@@ -249,7 +250,7 @@ operator|<
 name|Entry
 operator|>
 name|UserEntries
-block|;
+expr_stmt|;
 comment|/// User-specified system header prefixes.
 name|std
 operator|::
@@ -258,48 +259,59 @@ operator|<
 name|SystemHeaderPrefix
 operator|>
 name|SystemHeaderPrefixes
-block|;
+expr_stmt|;
 comment|/// The directory which holds the compiler resource files (builtin includes,
 comment|/// etc.).
 name|std
 operator|::
 name|string
 name|ResourceDir
-block|;
+expr_stmt|;
 comment|/// \brief The directory used for the module cache.
 name|std
 operator|::
 name|string
 name|ModuleCachePath
-block|;
+expr_stmt|;
 comment|/// \brief The directory used for a user build.
 name|std
 operator|::
 name|string
 name|ModuleUserBuildPath
-block|;
+expr_stmt|;
+comment|/// \brief The directories used to load prebuilt module files.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|PrebuiltModulePaths
+expr_stmt|;
 comment|/// The module/pch container format.
 name|std
 operator|::
 name|string
 name|ModuleFormat
-block|;
+expr_stmt|;
 comment|/// \brief Whether we should disable the use of the hash string within the
 comment|/// module cache.
 comment|///
 comment|/// Note: Only used for testing!
 name|unsigned
 name|DisableModuleHash
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// \brief Implicit module maps.  This option is enabld by default when
 comment|/// modules is enabled.
 name|unsigned
 name|ImplicitModuleMaps
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// \brief Set the 'home directory' of a module map file to the current
 comment|/// working directory (or the home directory of the module map file that
 comment|/// contained the 'extern module' directive importing this module map file
@@ -309,9 +321,9 @@ comment|/// The home directory is where we look for files named in the module ma
 comment|/// file.
 name|unsigned
 name|ModuleMapFileHomeIsCwd
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// \brief The interval (in seconds) between pruning operations.
 comment|///
 comment|/// This operation is expensive, because it requires Clang to walk through
@@ -321,7 +333,7 @@ comment|///
 comment|/// The default value is large, e.g., the operation runs once a week.
 name|unsigned
 name|ModuleCachePruneInterval
-block|;
+decl_stmt|;
 comment|/// \brief The time (in seconds) after which an unused module file will be
 comment|/// considered unused and will, therefore, be pruned.
 comment|///
@@ -331,28 +343,28 @@ comment|/// large, e.g., a month, to avoid forcing infrequently-used modules to 
 comment|/// regenerated often.
 name|unsigned
 name|ModuleCachePruneAfter
-block|;
+decl_stmt|;
 comment|/// \brief The time in seconds when the build session started.
 comment|///
 comment|/// This time is used by other optimizations in header search and module
 comment|/// loading.
 name|uint64_t
 name|BuildSessionTimestamp
-block|;
+decl_stmt|;
 comment|/// \brief The set of macro names that should be ignored for the purposes
 comment|/// of computing the module hash.
 name|llvm
 operator|::
 name|SmallSetVector
 operator|<
-name|std
+name|llvm
 operator|::
-name|string
-block|,
+name|CachedHashString
+operator|,
 literal|16
 operator|>
 name|ModulesIgnoreMacros
-block|;
+expr_stmt|;
 comment|/// \brief The set of user-provided virtual filesystem overlay files.
 name|std
 operator|::
@@ -363,88 +375,93 @@ operator|::
 name|string
 operator|>
 name|VFSOverlayFiles
-block|;
+expr_stmt|;
 comment|/// Include the compiler builtin includes.
 name|unsigned
 name|UseBuiltinIncludes
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// Include the system standard include search directories.
 name|unsigned
 name|UseStandardSystemIncludes
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// Include the system standard C++ library include search directories.
 name|unsigned
 name|UseStandardCXXIncludes
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// Use libc++ instead of the default libstdc++.
 name|unsigned
 name|UseLibcxx
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// Whether header search information should be output as for -v.
 name|unsigned
 name|Verbose
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// \brief If true, skip verifying input files used by modules if the
 comment|/// module was already verified during this build session (see
 comment|/// \c BuildSessionTimestamp).
 name|unsigned
 name|ModulesValidateOncePerBuildSession
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// \brief Whether to validate system input files when a module is loaded.
 name|unsigned
 name|ModulesValidateSystemHeaders
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// Whether the module includes debug information (-gmodules).
 name|unsigned
 name|UseDebugInfo
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
+name|unsigned
+name|ModulesValidateDiagnosticOptions
+range|:
+literal|1
+decl_stmt|;
 name|HeaderSearchOptions
 argument_list|(
 argument|StringRef _Sysroot =
 literal|"/"
 argument_list|)
-operator|:
+block|:
 name|Sysroot
 argument_list|(
 name|_Sysroot
 argument_list|)
-block|,
+operator|,
 name|ModuleFormat
 argument_list|(
 literal|"raw"
 argument_list|)
-block|,
+operator|,
 name|DisableModuleHash
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|ImplicitModuleMaps
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|ModuleMapFileHomeIsCwd
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|ModuleCachePruneInterval
 argument_list|(
 literal|7
@@ -455,7 +472,7 @@ literal|60
 operator|*
 literal|60
 argument_list|)
-block|,
+operator|,
 name|ModuleCachePruneAfter
 argument_list|(
 literal|31
@@ -466,50 +483,55 @@ literal|60
 operator|*
 literal|60
 argument_list|)
-block|,
+operator|,
 name|BuildSessionTimestamp
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|UseBuiltinIncludes
 argument_list|(
 name|true
 argument_list|)
-block|,
+operator|,
 name|UseStandardSystemIncludes
 argument_list|(
 name|true
 argument_list|)
-block|,
+operator|,
 name|UseStandardCXXIncludes
 argument_list|(
 name|true
 argument_list|)
-block|,
+operator|,
 name|UseLibcxx
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|Verbose
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|ModulesValidateOncePerBuildSession
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|ModulesValidateSystemHeaders
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|UseDebugInfo
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|ModulesValidateDiagnosticOptions
+argument_list|(
+argument|true
 argument_list|)
 block|{}
 comment|/// AddPath - Add the \p Path path to the specified \p Group list.
@@ -571,8 +593,21 @@ argument_list|(
 name|Name
 argument_list|)
 block|;   }
+name|void
+name|AddPrebuiltModulePath
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|{
+name|PrebuiltModulePaths
+operator|.
+name|push_back
+argument_list|(
+name|Name
+argument_list|)
+block|;   }
 block|}
-decl_stmt|;
+empty_stmt|;
 block|}
 end_decl_stmt
 

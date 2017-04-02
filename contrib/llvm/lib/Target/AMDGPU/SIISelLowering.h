@@ -115,6 +115,8 @@ argument_list|,
 argument|unsigned Offset
 argument_list|,
 argument|bool Signed
+argument_list|,
+argument|const ISD::InputArg *Arg = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -171,15 +173,6 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerFrameIndex
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerLOAD
 argument_list|(
 argument|SDValue Op
@@ -208,6 +201,15 @@ specifier|const
 block|;
 name|SDValue
 name|lowerFDIV_FAST
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFDIV16
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -289,6 +291,31 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Converts \p Op, which must be of floating point type, to the
+comment|/// floating point type \p VT, by either extending or truncating it.
+name|SDValue
+name|getFPExtOrFPTrunc
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDValue Op
+argument_list|,
+argument|const SDLoc&DL
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Custom lowering for ISD::FP_ROUND for MVT::f16.
+name|SDValue
+name|lowerFP_ROUND
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|SDValue
 name|getSegmentAperture
 argument_list|(
@@ -346,6 +373,30 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|performMemSDNodeCombine
+argument_list|(
+argument|MemSDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|splitBinaryBitConstantOp
+argument_list|(
+argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|const SDLoc&SL
+argument_list|,
+argument|unsigned Opc
+argument_list|,
+argument|SDValue LHS
+argument_list|,
+argument|const ConstantSDNode *CRHS
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|performAndCombine
 argument_list|(
 argument|SDNode *N
@@ -356,6 +407,15 @@ specifier|const
 block|;
 name|SDValue
 name|performOrCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performXorCombine
 argument_list|(
 argument|SDNode *N
 argument_list|,
@@ -390,8 +450,46 @@ argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
 block|;
+name|unsigned
+name|getFusedOpcode
+argument_list|(
+argument|const SelectionDAG&DAG
+argument_list|,
+argument|const SDNode *N0
+argument_list|,
+argument|const SDNode *N1
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performFAddCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performFSubCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
 name|SDValue
 name|performSetCCCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performCvtF32UByteNCombine
 argument_list|(
 argument|SDNode *N
 argument_list|,
@@ -424,6 +522,33 @@ name|void
 name|createDebuggerPrologueStackObjects
 argument_list|(
 argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns True if fixup needs to be emitted for given global value \p GV,
+comment|/// false otherwise.
+name|bool
+name|shouldEmitFixup
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns True if GOT relocation needs to be emitted for given global value
+comment|/// \p GV, false otherwise.
+name|bool
+name|shouldEmitGOTReloc
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns True if PC-relative relocation needs to be emitted for given
+comment|/// global value \p GV, false otherwise.
+name|bool
+name|shouldEmitPCReloc
+argument_list|(
+argument|const GlobalValue *GV
 argument_list|)
 specifier|const
 block|;
@@ -529,7 +654,24 @@ argument_list|)
 specifier|const
 block|;
 name|bool
+name|isMemOpHasNoClobberedMemOperand
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|isNoopAddrSpaceCast
+argument_list|(
+argument|unsigned SrcAS
+argument_list|,
+argument|unsigned DestAS
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isCheapAddrSpaceCast
 argument_list|(
 argument|unsigned SrcAS
 argument_list|,
@@ -727,13 +869,6 @@ argument|SDNode *Node
 argument_list|)
 specifier|const
 name|override
-block|;
-name|int32_t
-name|analyzeImmediate
-argument_list|(
-argument|const SDNode *N
-argument_list|)
-specifier|const
 block|;
 name|SDValue
 name|CreateLiveInRegister

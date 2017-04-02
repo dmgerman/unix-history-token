@@ -236,6 +236,19 @@ comment|// -ftrapv
 block|}
 enum|;
 enum|enum
+name|CompilingModuleKind
+block|{
+name|CMK_None
+block|,
+comment|///< Not compiling a module interface at all.
+name|CMK_ModuleMap
+block|,
+comment|///< Compiling a module from a module map.
+name|CMK_ModuleInterface
+comment|///< Compiling a C++ modules TS module interface unit.
+block|}
+enum|;
+enum|enum
 name|PragmaMSPointersToMembersKind
 block|{
 name|PPTMK_BestCase
@@ -385,6 +398,11 @@ operator|::
 name|string
 name|OMPHostIRFile
 expr_stmt|;
+comment|/// \brief Indicates whether the front-end is explicitly told that the
+comment|/// input is a header file (i.e. -x c-header).
+name|bool
+name|IsHeaderFile
+decl_stmt|;
 name|LangOptions
 argument_list|()
 expr_stmt|;
@@ -420,6 +438,19 @@ value|Type get##Name() const { return static_cast<Type>(Name); } \   void set##N
 include|#
 directive|include
 file|"clang/Basic/LangOptions.def"
+comment|/// Are we compiling a module interface (.cppm or module map)?
+name|bool
+name|isCompilingModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCompilingModule
+argument_list|()
+operator|!=
+name|CMK_None
+return|;
+block|}
 name|bool
 name|isSignedOverflowDefined
 argument_list|()
@@ -474,9 +505,7 @@ comment|/// builtin because a -fno-builtin-* option has been specified?
 name|bool
 name|isNoBuiltinFunc
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Name
 argument_list|)
 decl|const

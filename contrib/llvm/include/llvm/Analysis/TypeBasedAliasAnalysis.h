@@ -109,22 +109,6 @@ operator|>
 block|;
 name|public
 operator|:
-name|explicit
-name|TypeBasedAAResult
-argument_list|()
-block|{}
-name|TypeBasedAAResult
-argument_list|(
-name|TypeBasedAAResult
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|AAResultBase
-argument_list|(
-argument|std::move(Arg)
-argument_list|)
-block|{}
 comment|/// Handle invalidation events from the new pass manager.
 comment|///
 comment|/// By definition, this result is stateless and so remains valid.
@@ -134,6 +118,8 @@ argument_list|(
 argument|Function&
 argument_list|,
 argument|const PreservedAnalyses&
+argument_list|,
+argument|FunctionAnalysisManager::Invalidator&
 argument_list|)
 block|{
 return|return
@@ -231,8 +217,8 @@ name|TypeBasedAA
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
@@ -247,10 +233,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)

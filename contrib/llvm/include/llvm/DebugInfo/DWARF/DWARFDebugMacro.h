@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Dwarf.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -130,7 +130,9 @@ name|public
 label|:
 name|DWARFDebugMacro
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Print the macro list found within the debug_macinfo section.
 name|void
 name|dump
@@ -154,10 +156,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARF_DWARFDEBUGMACRO_H
+end_comment
 
 end_unit
 

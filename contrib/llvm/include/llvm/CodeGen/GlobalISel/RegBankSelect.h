@@ -291,7 +291,13 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|TargetPassConfig
+decl_stmt|;
+name|class
 name|TargetRegisterInfo
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 comment|/// This pass implements the reg bank selector pass used in the GlobalISel
 comment|/// pipeline. At the end of this pass, all register operands have been assigned
@@ -1562,6 +1568,50 @@ operator|*
 name|this
 return|;
 block|}
+comment|/// Print this on dbgs() stream.
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Print this on \p OS;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Overload the stream operator for easy debug printing.
+name|friend
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|MappingCost
+operator|&
+name|Cost
+operator|)
+block|{
+name|Cost
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -1663,11 +1713,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Current target configuration. Controls how the pass handles errors.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|TargetPassConfig
+modifier|*
+name|TPC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Assign the register bank of each operand of \p MI.
 end_comment
 
+begin_comment
+comment|/// \return True on success, false otherwise.
+end_comment
+
 begin_function_decl
-name|void
+name|bool
 name|assignInstr
 parameter_list|(
 name|MachineInstr
@@ -1850,8 +1916,16 @@ begin_comment
 comment|/// I.e., Reg = op ... =><NewRegs> = NewOp ...
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \return True if the repairing worked, false otherwise.
+end_comment
+
 begin_decl_stmt
-name|void
+name|bool
 name|repairReg
 argument_list|(
 name|MachineOperand
@@ -2092,8 +2166,12 @@ begin_comment
 comment|/// applied.
 end_comment
 
+begin_comment
+comment|/// \return True if the mapping was applied sucessfully, false otherwise.
+end_comment
+
 begin_decl_stmt
-name|void
+name|bool
 name|applyMapping
 argument_list|(
 name|MachineInstr
@@ -2138,9 +2216,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_expr_stmt
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const
@@ -2164,6 +2240,61 @@ decl|const
 name|override
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|MachineFunctionProperties
+name|getRequiredProperties
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|MachineFunctionProperties
+argument_list|()
+operator|.
+name|set
+argument_list|(
+name|MachineFunctionProperties
+operator|::
+name|Property
+operator|::
+name|IsSSA
+argument_list|)
+operator|.
+name|set
+argument_list|(
+name|MachineFunctionProperties
+operator|::
+name|Property
+operator|::
+name|Legalized
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|MachineFunctionProperties
+name|getSetProperties
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|MachineFunctionProperties
+argument_list|()
+operator|.
+name|set
+argument_list|(
+name|MachineFunctionProperties
+operator|::
+name|Property
+operator|::
+name|RegBankSelected
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// Walk through \p MF and assign a register bank to every virtual register
@@ -2270,7 +2401,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|}; }
+unit|};  }
 comment|// End namespace llvm.
 end_comment
 

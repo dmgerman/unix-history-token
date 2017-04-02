@@ -100,8 +100,6 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|unsigned Encoding
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
@@ -116,8 +114,6 @@ operator|*
 name|getCFIPersonalitySymbol
 argument_list|(
 argument|const GlobalValue *GV
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|,

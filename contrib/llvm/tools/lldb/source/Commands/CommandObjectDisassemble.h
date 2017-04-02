@@ -101,11 +101,7 @@ block|{
 name|public
 operator|:
 name|CommandOptions
-argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
-argument_list|)
+argument_list|()
 block|;
 operator|~
 name|CommandOptions
@@ -117,18 +113,25 @@ name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_arg
+argument|llvm::StringRef option_arg
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
 name|void
 name|OptionParsingStarting
-argument_list|()
+argument_list|(
+argument|ExecutionContext *execution_context
+argument_list|)
 name|override
 block|;
-specifier|const
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
@@ -184,7 +187,9 @@ return|;
 block|}
 name|Error
 name|OptionParsingFinished
-argument_list|()
+argument_list|(
+argument|ExecutionContext *execution_context
+argument_list|)
 name|override
 block|;
 name|bool
@@ -243,7 +248,8 @@ block|;
 name|bool
 name|some_location_specified
 block|;
-comment|// If no location was specified, we'll select "at_pc".  This should be set
+comment|// If no location was specified, we'll select
+comment|// "at_pc".  This should be set
 comment|// in SetOptionValue if anything the selects a location is set.
 name|lldb
 operator|::
@@ -254,7 +260,7 @@ specifier|static
 name|OptionDefinition
 name|g_option_table
 index|[]
-block|;     }
+block|;   }
 decl_stmt|;
 name|CommandObjectDisassemble
 argument_list|(

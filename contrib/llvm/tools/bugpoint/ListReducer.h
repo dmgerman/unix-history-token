@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorHandling.h"
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
@@ -118,10 +118,7 @@ name|KeepSuffix
 block|,
 comment|// The suffix alone satisfies the predicate
 name|KeepPrefix
-block|,
 comment|// The prefix alone satisfies the predicate
-name|InternalError
-comment|// Encountered an error trying to run the predicate
 block|}
 block|;
 name|virtual
@@ -129,13 +126,15 @@ operator|~
 name|ListReducer
 argument_list|()
 block|{}
-comment|// doTest - This virtual function should be overriden by subclasses to
-comment|// implement the test desired.  The testcase is only required to test to see
-comment|// if the Kept list still satisfies the property, but if it is going to check
-comment|// the prefix anyway, it can.
-comment|//
+comment|/// This virtual function should be overriden by subclasses to implement the
+comment|/// test desired.  The testcase is only required to test to see if the Kept
+comment|/// list still satisfies the property, but if it is going to check the prefix
+comment|/// anyway, it can.
 name|virtual
+name|Expected
+operator|<
 name|TestResult
+operator|>
 name|doTest
 argument_list|(
 name|std
@@ -155,26 +154,20 @@ name|ElTy
 operator|>
 operator|&
 name|Kept
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|Error
 argument_list|)
 operator|=
 literal|0
 block|;
-comment|// reduceList - This function attempts to reduce the length of the specified
-comment|// list while still maintaining the "test" property.  This is the core of the
-comment|// "work" that bugpoint does.
-comment|//
+comment|/// This function attempts to reduce the length of the specified list while
+comment|/// still maintaining the "test" property.  This is the core of the "work"
+comment|/// that bugpoint does.
+name|Expected
+operator|<
 name|bool
+operator|>
 name|reduceList
 argument_list|(
 argument|std::vector<ElTy>&TheList
-argument_list|,
-argument|std::string&Error
 argument_list|)
 block|{
 name|std
@@ -193,16 +186,41 @@ literal|0x6e5ea738
 argument_list|)
 block|;
 comment|// Seed the random number generator
-switch|switch
-condition|(
+name|Expected
+operator|<
+name|TestResult
+operator|>
+name|Result
+operator|=
 name|doTest
 argument_list|(
 name|TheList
 argument_list|,
 name|empty
-argument_list|,
-name|Error
 argument_list|)
+block|;
+if|if
+condition|(
+name|Error
+name|E
+init|=
+name|Result
+operator|.
+name|takeError
+argument_list|()
+condition|)
+return|return
+name|std
+operator|::
+name|move
+argument_list|(
+name|E
+argument_list|)
+return|;
+switch|switch
+condition|(
+operator|*
+name|Result
 condition|)
 block|{
 case|case
@@ -241,21 +259,6 @@ return|return
 name|false
 return|;
 comment|// there is no failure with the full set of passes/funcs!
-case|case
-name|InternalError
-case|:
-name|assert
-argument_list|(
-operator|!
-name|Error
-operator|.
-name|empty
-argument_list|()
-argument_list|)
-expr_stmt|;
-return|return
-name|true
-return|;
 block|}
 comment|// Maximal number of allowed splitting iterations,
 comment|// before the elements are randomly shuffled.
@@ -266,7 +269,7 @@ init|=
 literal|3
 decl_stmt|;
 comment|// Maximal number of allowed single-element trim iterations. We add a
-comment|// threshhold here as single-element reductions may otherwise take a
+comment|// threshold here as single-element reductions may otherwise take a
 comment|// very long time to complete.
 specifier|const
 name|unsigned
@@ -365,17 +368,38 @@ argument_list|()
 operator|<<
 literal|"\n\n*** Testing shuffled set...\n\n"
 expr_stmt|;
-comment|// Check that random shuffle doesn't loose the bug
-if|if
-condition|(
+comment|// Check that random shuffle doesn't lose the bug
+name|Expected
+operator|<
+name|TestResult
+operator|>
+name|Result
+operator|=
 name|doTest
 argument_list|(
 name|ShuffledList
 argument_list|,
 name|empty
-argument_list|,
-name|Error
 argument_list|)
+expr_stmt|;
+comment|// TODO: Previously, this error was ignored and we treated it as if
+comment|// shuffling hid the bug. This should really either be consumeError if
+comment|// that behaviour was sensible, or we should propagate the error.
+name|assert
+argument_list|(
+operator|!
+name|Result
+operator|.
+name|takeError
+argument_list|()
+operator|&&
+literal|"Shuffling caused internal error?"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|Result
 operator|==
 name|KeepPrefix
 condition|)
@@ -396,7 +420,7 @@ name|size
 argument_list|()
 expr_stmt|;
 comment|// Must increase the shuffling treshold to avoid the small
-comment|// probability of inifinite looping without making progress.
+comment|// probability of infinite looping without making progress.
 name|MaxIterations
 operator|+=
 literal|2
@@ -474,16 +498,41 @@ name|end
 argument_list|()
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
+name|Expected
+operator|<
+name|TestResult
+operator|>
+name|Result
+operator|=
 name|doTest
 argument_list|(
 name|Prefix
 argument_list|,
 name|Suffix
-argument_list|,
-name|Error
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Error
+name|E
+init|=
+name|Result
+operator|.
+name|takeError
+argument_list|()
+condition|)
+return|return
+name|std
+operator|::
+name|move
+argument_list|(
+name|E
+argument_list|)
+return|;
+switch|switch
+condition|(
+operator|*
+name|Result
 condition|)
 block|{
 case|case
@@ -556,24 +605,7 @@ name|NumOfIterationsWithoutProgress
 operator|++
 expr_stmt|;
 break|break;
-case|case
-name|InternalError
-case|:
-return|return
-name|true
-return|;
-comment|// Error was set by doTest.
 block|}
-name|assert
-argument_list|(
-name|Error
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"doTest did not return InternalError for error"
-argument_list|)
-expr_stmt|;
 block|}
 comment|// Probability of backjumping from the trimming loop back to the binary
 comment|// split reduction loop.
@@ -702,16 +734,41 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|Expected
+operator|<
+name|TestResult
+operator|>
+name|Result
+operator|=
 name|doTest
 argument_list|(
 name|EmptyList
 argument_list|,
 name|TestList
-argument_list|,
-name|Error
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Error
+name|E
+init|=
+name|Result
+operator|.
+name|takeError
+argument_list|()
+condition|)
+return|return
+name|std
+operator|::
+name|move
+argument_list|(
+name|E
+argument_list|)
+return|;
+if|if
+condition|(
+operator|*
+name|Result
 operator|==
 name|KeepSuffix
 condition|)
@@ -733,17 +790,6 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|Error
-operator|.
-name|empty
-argument_list|()
-condition|)
-return|return
-name|true
-return|;
 block|}
 if|if
 condition|(
@@ -762,15 +808,10 @@ name|true
 return|;
 comment|// there are some failure and we've narrowed them down
 block|}
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
+unit|};  }
 comment|// End llvm namespace
 end_comment
 

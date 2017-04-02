@@ -114,6 +114,9 @@ decl_stmt|;
 name|uptr
 name|module_offset
 decl_stmt|;
+name|ModuleArch
+name|module_arch
+decl_stmt|;
 specifier|static
 specifier|const
 name|uptr
@@ -160,6 +163,9 @@ name|mod_name
 parameter_list|,
 name|uptr
 name|mod_offset
+parameter_list|,
+name|ModuleArch
+name|arch
 parameter_list|)
 function_decl|;
 block|}
@@ -209,6 +215,9 @@ name|module
 decl_stmt|;
 name|uptr
 name|module_offset
+decl_stmt|;
+name|ModuleArch
+name|module_arch
 decl_stmt|;
 name|char
 modifier|*
@@ -495,6 +504,10 @@ parameter_list|,
 name|uptr
 modifier|*
 name|module_offset
+parameter_list|,
+name|ModuleArch
+modifier|*
+name|module_arch
 parameter_list|)
 function_decl|;
 name|ListOfModules

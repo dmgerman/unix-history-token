@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Symbol/Type.h"
 end_include
 
@@ -64,13 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt

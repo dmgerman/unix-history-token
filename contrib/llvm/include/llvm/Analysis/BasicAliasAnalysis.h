@@ -140,9 +140,10 @@ name|LoopInfo
 decl_stmt|;
 comment|/// This is the AA result object for the basic, local, and stateless alias
 comment|/// analysis. It implements the AA query interface in an entirely stateless
-comment|/// manner. As one consequence, it is never invalidated. While it does retain
-comment|/// some storage, that is used as an optimization and not to preserve
-comment|/// information from query to query.
+comment|/// manner. As one consequence, it is never invalidated due to IR changes.
+comment|/// While it does retain some storage, that is used as an optimization and not
+comment|/// to preserve information from query to query. However it does retain handles
+comment|/// to various other analyses and must be recomputed when those analyses are.
 name|class
 name|BasicAAResult
 range|:
@@ -335,21 +336,26 @@ argument_list|(
 argument|Arg.LI
 argument_list|)
 block|{}
-comment|/// Handle invalidation events from the new pass manager.
-comment|///
-comment|/// By definition, this result is stateless and so remains valid.
+comment|/// Handle invalidation events in the new pass manager.
 name|bool
 name|invalidate
 argument_list|(
-argument|Function&
+name|Function
+operator|&
+name|F
 argument_list|,
-argument|const PreservedAnalyses&
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+name|Inv
 argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
+block|;
 name|AliasResult
 name|alias
 argument_list|(
@@ -832,6 +838,11 @@ specifier|const
 name|AAMDNodes
 modifier|&
 name|V2AAInfo
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|UnderV2
 parameter_list|)
 function_decl|;
 name|AliasResult
@@ -862,6 +873,11 @@ specifier|const
 name|AAMDNodes
 modifier|&
 name|V2AAInfo
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|UnderV2
 parameter_list|)
 function_decl|;
 name|AliasResult
@@ -888,6 +904,20 @@ name|V2Size
 parameter_list|,
 name|AAMDNodes
 name|V2AATag
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|O1
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|O2
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 block|}
@@ -918,8 +948,8 @@ name|BasicAA
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
@@ -934,10 +964,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)

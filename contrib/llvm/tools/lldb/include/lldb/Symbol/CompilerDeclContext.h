@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -85,7 +85,7 @@ name|m_opaque_decl_ctx
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{     }
+block|{}
 name|CompilerDeclContext
 argument_list|(
 name|TypeSystem
@@ -106,11 +106,11 @@ name|m_opaque_decl_ctx
 argument_list|(
 argument|decl_ctx
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|CompilerDeclContext
 argument_list|()
-block|{     }
+block|{}
 comment|//----------------------------------------------------------------------
 comment|// Tests
 comment|//----------------------------------------------------------------------

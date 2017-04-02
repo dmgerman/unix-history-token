@@ -121,7 +121,7 @@ name|virtual
 operator|~
 name|HistorySource
 argument_list|()
-block|{     }
+block|{}
 comment|// Create a new history event. Subclasses should use any data or members
 comment|// in the subclass of this class to produce a history event and push it
 comment|// onto the end of the history stack.
@@ -267,12 +267,12 @@ name|m_curr_id
 argument_list|(
 argument|start_value
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|HistorySourceUInt
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|// Create a new history event. Subclasses should use any data or members
 comment|// in the subclass of this class to produce a history event and push it
 comment|// onto the end of the history stack.

@@ -101,17 +101,6 @@ argument_list|,
 name|ModuleAnalysisManager
 operator|&
 argument_list|)
-block|;
-name|private
-operator|:
-name|Function
-operator|*
-name|unswitchFunction
-argument_list|(
-name|Function
-operator|*
-name|F
-argument_list|)
 block|; }
 decl_stmt|;
 block|}

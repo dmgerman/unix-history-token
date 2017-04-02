@@ -110,9 +110,9 @@ comment|//------------------------------------------------------------
 name|bool
 name|GetModuleSpec
 argument_list|(
-argument|const lldb_private::FileSpec& module_file_spec
+argument|const lldb_private::FileSpec&module_file_spec
 argument_list|,
-argument|const lldb_private::ArchSpec& arch
+argument|const lldb_private::ArchSpec&arch
 argument_list|,
 argument|lldb_private::ModuleSpec&module_spec
 argument_list|)
@@ -158,9 +158,9 @@ operator|::
 name|Error
 name|PutFile
 argument_list|(
-argument|const lldb_private::FileSpec& source
+argument|const lldb_private::FileSpec&source
 argument_list|,
-argument|const lldb_private::FileSpec& destination
+argument|const lldb_private::FileSpec&destination
 argument_list|,
 argument|uint32_t uid = UINT32_MAX
 argument_list|,
@@ -173,7 +173,7 @@ operator|::
 name|user_id_t
 name|OpenFile
 argument_list|(
-argument|const lldb_private::FileSpec& file_spec
+argument|const lldb_private::FileSpec&file_spec
 argument_list|,
 argument|uint32_t flags
 argument_list|,
@@ -214,7 +214,7 @@ argument|lldb::user_id_t fd
 argument_list|,
 argument|uint64_t offset
 argument_list|,
-argument|const void* src
+argument|const void *src
 argument_list|,
 argument|uint64_t src_len
 argument_list|,
@@ -227,7 +227,7 @@ operator|::
 name|user_id_t
 name|GetFileSize
 argument_list|(
-argument|const lldb_private::FileSpec& file_spec
+argument|const lldb_private::FileSpec&file_spec
 argument_list|)
 name|override
 block|;
@@ -325,14 +325,17 @@ argument_list|,
 comment|// Shouldn't be nullptr
 argument|const lldb_private::FileSpec&working_dir
 argument_list|,
-comment|// Pass empty FileSpec to use the current working directory
+comment|// Pass empty FileSpec to use
+comment|// the current working
+comment|// directory
 argument|int *status_ptr
 argument_list|,
 comment|// Pass nullptr if you don't want the process exit status
 argument|int *signo_ptr
 argument_list|,
-comment|// Pass nullptr if you don't want the signal that caused the process to exit
-argument|std::string *command_output
+comment|// Pass nullptr if you don't want the signal that caused
+comment|// the process to exit
+argument|std::string           *command_output
 argument_list|,
 comment|// Pass nullptr if you don't want the command output
 argument|uint32_t timeout_sec
@@ -376,7 +379,7 @@ block|;
 name|bool
 name|GetFileExists
 argument_list|(
-argument|const lldb_private::FileSpec& file_spec
+argument|const lldb_private::FileSpec&file_spec
 argument_list|)
 name|override
 block|;
@@ -418,7 +421,10 @@ argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
-comment|// Can be nullptr, if nullptr create a new target, else use existing one
+comment|// Can be nullptr, if
+comment|// nullptr create a new
+comment|// target, else use
+comment|// existing one
 argument|lldb_private::Error&error
 argument_list|)
 name|override
@@ -434,7 +440,11 @@ argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
-comment|// Can be nullptr, if nullptr create a new target, else use existing one
+comment|// Can be nullptr,
+comment|// if nullptr
+comment|// create a new
+comment|// target, else use
+comment|// existing one
 argument|lldb_private::Error&error
 argument_list|)
 name|override
@@ -449,7 +459,7 @@ block|;
 name|bool
 name|CalculateMD5
 argument_list|(
-argument|const lldb_private::FileSpec& file_spec
+argument|const lldb_private::FileSpec&file_spec
 argument_list|,
 argument|uint64_t&low
 argument_list|,
@@ -467,7 +477,7 @@ operator|::
 name|Error
 name|ConnectRemote
 argument_list|(
-argument|lldb_private::Args& args
+argument|lldb_private::Args&args
 argument_list|)
 name|override
 block|;
@@ -481,11 +491,11 @@ block|;
 name|uint32_t
 name|DoLoadImage
 argument_list|(
-argument|lldb_private::Process* process
+argument|lldb_private::Process *process
 argument_list|,
-argument|const lldb_private::FileSpec& remote_file
+argument|const lldb_private::FileSpec&remote_file
 argument_list|,
-argument|lldb_private::Error& error
+argument|lldb_private::Error&error
 argument_list|)
 name|override
 block|;
@@ -494,7 +504,7 @@ operator|::
 name|Error
 name|UnloadImage
 argument_list|(
-argument|lldb_private::Process* process
+argument|lldb_private::Process *process
 argument_list|,
 argument|uint32_t image_token
 argument_list|)
@@ -505,9 +515,9 @@ operator|::
 name|ProcessSP
 name|ConnectProcess
 argument_list|(
-argument|const char* connect_url
+argument|llvm::StringRef connect_url
 argument_list|,
-argument|const char* plugin_name
+argument|llvm::StringRef plugin_name
 argument_list|,
 argument|lldb_private::Debugger&debugger
 argument_list|,
@@ -520,9 +530,9 @@ block|;
 name|size_t
 name|ConnectToWaitingProcesses
 argument_list|(
-argument|lldb_private::Debugger& debugger
+argument|lldb_private::Debugger&debugger
 argument_list|,
-argument|lldb_private::Error& error
+argument|lldb_private::Error&error
 argument_list|)
 name|override
 block|;
@@ -582,7 +592,8 @@ operator|::
 name|PlatformSP
 name|m_remote_platform_sp
 block|;
-comment|// Allow multiple ways to connect to a remote POSIX-compliant OS
+comment|// Allow multiple ways to connect to a
+comment|// remote POSIX-compliant OS
 name|lldb_private
 operator|::
 name|Error

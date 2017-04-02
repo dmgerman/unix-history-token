@@ -60,6 +60,30 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// Unlike ADT/* graph algorithms, generic dominator tree has more reuiqrement
+end_comment
+
+begin_comment
+comment|/// on the graph's NodeRef. The NodeRef should be a pointer and, depending on
+end_comment
+
+begin_comment
+comment|/// the implementation, e.g. NodeRef->getParent() return the parent node.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// FIXME: Maybe GenericDomTree needs a TreeTraits, instead of GraphTraits.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -133,6 +157,72 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|class
+name|NodeT
+operator|>
+name|class
+name|DominatorTreeBase
+expr_stmt|;
+name|namespace
+name|detail
+block|{
+name|template
+operator|<
+name|typename
+name|GT
+operator|>
+expr|struct
+name|DominatorTreeBaseTraits
+block|{
+name|static_assert
+argument_list|(
+argument|std::is_pointer<typename GT::NodeRef>::value
+argument_list|,
+literal|"Currently NodeRef must be a pointer type."
+argument_list|)
+block|;
+name|using
+name|type
+operator|=
+name|DominatorTreeBase
+operator|<
+name|typename
+name|std
+operator|::
+name|remove_pointer
+operator|<
+name|typename
+name|GT
+operator|::
+name|NodeRef
+operator|>
+operator|::
+name|type
+operator|>
+block|; }
+expr_stmt|;
+block|}
+comment|// End namespace detail
+name|template
+operator|<
+name|typename
+name|GT
+operator|>
+name|using
+name|DominatorTreeBaseByGraphTraits
+operator|=
+name|typename
+name|detail
+operator|::
+name|DominatorTreeBaseTraits
+operator|<
+name|GT
+operator|>
+operator|::
+name|type
+expr_stmt|;
 comment|/// \brief Base class that other, more interesting dominator analyses
 comment|/// inherit from.
 name|template
@@ -281,15 +371,7 @@ name|IsPostDominators
 return|;
 block|}
 expr|}
-block|;
-name|template
-operator|<
-name|class
-name|NodeT
-operator|>
-name|class
-name|DominatorTreeBase
-block|; struct
+block|;  struct
 name|PostDominatorTree
 block|;
 comment|/// \brief Base class for the actual dominator tree node.
@@ -696,23 +778,11 @@ operator|::
 name|iterator
 name|I
 operator|=
-name|std
-operator|::
 name|find
 argument_list|(
 name|IDom
 operator|->
 name|Children
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|IDom
-operator|->
-name|Children
-operator|.
-name|end
-argument_list|()
 argument_list|,
 name|this
 argument_list|)
@@ -993,9 +1063,18 @@ operator|>
 name|void
 name|Calculate
 argument_list|(
-argument|DominatorTreeBase<typename GraphTraits<N>::NodeType>&DT
+name|DominatorTreeBaseByGraphTraits
+operator|<
+name|GraphTraits
+operator|<
+name|N
+operator|>>
+operator|&
+name|DT
 argument_list|,
-argument|FuncT&F
+name|FuncT
+operator|&
+name|F
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1384,9 +1463,9 @@ operator|>
 name|void
 name|Split
 argument_list|(
-argument|DominatorTreeBase<typename GraphT::NodeType>&DT
+argument|DominatorTreeBaseByGraphTraits<GraphT>&DT
 argument_list|,
-argument|typename GraphT::NodeType *NewBB
+argument|typename GraphT::NodeRef NewBB
 argument_list|)
 block|{
 name|assert
@@ -1418,8 +1497,7 @@ block|;
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|NewBBSucc
 operator|=
 operator|*
@@ -1437,8 +1515,7 @@ operator|<
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 operator|>
 name|PredBlocks
 block|;
@@ -1553,8 +1630,7 @@ block|{
 name|typename
 name|InvTraits
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|ND
 operator|=
 operator|*
@@ -3163,15 +3239,39 @@ comment|// the CFG...
 end_comment
 
 begin_comment
-comment|/// addNewBlock - Add a new node to the dominator tree information.  This
+comment|/// Add a new node to the dominator tree information.
 end_comment
 
 begin_comment
-comment|/// creates a new node as a child of DomBB dominator node,linking it into
+comment|///
 end_comment
 
 begin_comment
-comment|/// the children list of the immediate dominator.
+comment|/// This creates a new node as a child of DomBB dominator node, linking it
+end_comment
+
+begin_comment
+comment|/// into the children list of the immediate dominator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param BB New node in CFG.
+end_comment
+
+begin_comment
+comment|/// \param DomBB CFG node that is dominator for BB.
+end_comment
+
+begin_comment
+comment|/// \returns New dominator tree node that represents new CFG node.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_expr_stmt
@@ -3256,6 +3356,183 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// Add a new node to the forward dominator tree and make it a new root.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param BB New node in CFG.
+end_comment
+
+begin_comment
+comment|/// \returns New dominator tree node that represents new CFG node.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_expr_stmt
+name|DomTreeNodeBase
+operator|<
+name|NodeT
+operator|>
+operator|*
+name|setNewRoot
+argument_list|(
+argument|NodeT *BB
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|getNode
+argument_list|(
+name|BB
+argument_list|)
+operator|==
+name|nullptr
+operator|&&
+literal|"Block already in dominator tree!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+name|this
+operator|->
+name|isPostDominator
+argument_list|()
+operator|&&
+literal|"Cannot change root of post-dominator tree"
+argument_list|)
+block|;
+name|DFSInfoValid
+operator|=
+name|false
+block|;
+name|auto
+operator|&
+name|Roots
+operator|=
+name|DominatorBase
+operator|<
+name|NodeT
+operator|>
+operator|::
+name|Roots
+block|;
+name|DomTreeNodeBase
+operator|<
+name|NodeT
+operator|>
+operator|*
+name|NewNode
+operator|=
+operator|(
+name|DomTreeNodes
+index|[
+name|BB
+index|]
+operator|=
+name|llvm
+operator|::
+name|make_unique
+operator|<
+name|DomTreeNodeBase
+operator|<
+name|NodeT
+operator|>>
+operator|(
+name|BB
+operator|,
+name|nullptr
+operator|)
+operator|)
+operator|.
+name|get
+argument_list|()
+block|;
+if|if
+condition|(
+name|Roots
+operator|.
+name|empty
+argument_list|()
+condition|)
+block|{
+name|addRoot
+argument_list|(
+name|BB
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_else
+else|else
+block|{
+name|assert
+argument_list|(
+name|Roots
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|1
+argument_list|)
+expr_stmt|;
+name|NodeT
+modifier|*
+name|OldRoot
+init|=
+name|Roots
+operator|.
+name|front
+argument_list|()
+decl_stmt|;
+name|DomTreeNodes
+index|[
+name|OldRoot
+index|]
+operator|=
+name|NewNode
+operator|->
+name|addChild
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|DomTreeNodes
+index|[
+name|OldRoot
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|Roots
+index|[
+literal|0
+index|]
+operator|=
+name|BB
+expr_stmt|;
+block|}
+end_else
+
+begin_return
+return|return
+name|RootNode
+operator|=
+name|NewNode
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// changeImmediateDominator - This method is used to update the dominator
 end_comment
 
@@ -3267,24 +3544,17 @@ begin_comment
 comment|///
 end_comment
 
-begin_decl_stmt
-name|void
+begin_macro
+unit|void
 name|changeImmediateDominator
 argument_list|(
-name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
-operator|*
-name|N
+argument|DomTreeNodeBase<NodeT> *N
 argument_list|,
-name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
-operator|*
-name|NewIDom
+argument|DomTreeNodeBase<NodeT> *NewIDom
 argument_list|)
+end_macro
+
+begin_block
 block|{
 name|assert
 argument_list|(
@@ -3307,7 +3577,7 @@ name|NewIDom
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_block
 
 begin_function
 name|void
@@ -3424,23 +3694,11 @@ operator|::
 name|iterator
 name|I
 operator|=
-name|std
-operator|::
 name|find
 argument_list|(
 name|IDom
 operator|->
 name|Children
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|IDom
-operator|->
-name|Children
-operator|.
-name|end
-argument_list|()
 argument_list|,
 name|Node
 argument_list|)
@@ -3644,13 +3902,12 @@ name|friend
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|Eval
 argument_list|(
-argument|DominatorTreeBase<typename GraphT::NodeType>&DT
+argument|DominatorTreeBaseByGraphTraits<GraphT>&DT
 argument_list|,
-argument|typename GraphT::NodeType *V
+argument|typename GraphT::NodeRef V
 argument_list|,
 argument|unsigned LastLinked
 argument_list|)
@@ -3667,9 +3924,9 @@ name|friend
 name|unsigned
 name|DFSPass
 argument_list|(
-argument|DominatorTreeBase<typename GraphT::NodeType>&DT
+argument|DominatorTreeBaseByGraphTraits<GraphT>&DT
 argument_list|,
-argument|typename GraphT::NodeType *V
+argument|typename GraphT::NodeRef V
 argument_list|,
 argument|unsigned N
 argument_list|)
@@ -3689,9 +3946,18 @@ name|friend
 name|void
 name|Calculate
 argument_list|(
-argument|DominatorTreeBase<typename GraphTraits<N>::NodeType>&DT
+name|DominatorTreeBaseByGraphTraits
+operator|<
+name|GraphTraits
+operator|<
+name|N
+operator|>>
+operator|&
+name|DT
 argument_list|,
-argument|FuncT&F
+name|FuncT
+operator|&
+name|F
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4242,7 +4508,6 @@ name|TraitsTy
 operator|::
 name|child_begin
 argument_list|(
-operator|&
 operator|*
 name|I
 argument_list|)
@@ -4251,14 +4516,12 @@ name|TraitsTy
 operator|::
 name|child_end
 argument_list|(
-operator|&
 operator|*
 name|I
 argument_list|)
 condition|)
 name|addRoot
 argument_list|(
-operator|&
 operator|*
 name|I
 argument_list|)

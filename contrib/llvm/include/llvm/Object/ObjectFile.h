@@ -124,6 +124,9 @@ name|class
 name|MachOObjectFile
 decl_stmt|;
 name|class
+name|WasmObjectFile
+decl_stmt|;
+name|class
 name|SymbolRef
 decl_stmt|;
 name|class
@@ -1323,6 +1326,26 @@ operator|<
 name|MachOObjectFile
 operator|>>
 name|createMachOObjectFile
+argument_list|(
+argument|MemoryBufferRef Object
+argument_list|,
+argument|uint32_t UniversalCputype =
+literal|0
+argument_list|,
+argument|uint32_t UniversalIndex =
+literal|0
+argument_list|)
+expr_stmt|;
+specifier|static
+name|Expected
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|WasmObjectFile
+operator|>>
+name|createWasmObjectFile
 argument_list|(
 argument|MemoryBufferRef Object
 argument_list|)

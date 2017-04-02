@@ -178,7 +178,7 @@ name|m_language_type
 argument_list|(
 argument|lldb::eLanguageTypeUnknown
 argument_list|)
-block|{                 }
+block|{}
 name|ReadStringAndDumpToStreamOptions
 argument_list|(
 name|ValueObject
@@ -664,7 +664,7 @@ name|m_language_type
 argument_list|(
 argument|lldb::eLanguageTypeUnknown
 argument_list|)
-block|{                 }
+block|{}
 name|ReadBufferAndDumpToStreamOptions
 argument_list|(
 name|ValueObject
@@ -1045,10 +1045,13 @@ name|m_language_type
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|// I can't use a std::unique_ptr for this because the Deleter is a template argument there
-comment|// and I want the same type to represent both pointers I want to free and pointers I don't need
+comment|// I can't use a std::unique_ptr for this because the Deleter is a template
+comment|// argument there
+comment|// and I want the same type to represent both pointers I want to free and
+comment|// pointers I don't need
 comment|// to free - which is what this class essentially is
-comment|// It's very specialized to the needs of this file, and not suggested for general use
+comment|// It's very specialized to the needs of this file, and not suggested for
+comment|// general use
 name|template
 operator|<
 name|typename
@@ -1105,7 +1108,7 @@ argument_list|()
 block|{}
 name|StringPrinterBufferPointer
 argument_list|(
-argument|const T* bytes
+argument|const T *bytes
 argument_list|,
 argument|S size
 argument_list|,
@@ -1129,7 +1132,7 @@ argument_list|)
 block|{}
 name|StringPrinterBufferPointer
 argument_list|(
-argument|const U* bytes
+argument|const U *bytes
 argument_list|,
 argument|S size
 argument_list|,
@@ -1190,7 +1193,7 @@ operator|.
 name|m_data
 operator|=
 name|nullptr
-block|;                 }
+block|;     }
 name|StringPrinterBufferPointer
 argument_list|(
 specifier|const
@@ -1434,7 +1437,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|};              }
+unit|};  }
 comment|// namespace formatters
 end_comment
 

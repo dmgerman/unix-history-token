@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<utility>
 end_include
 
@@ -196,6 +190,9 @@ name|TemplateParameterList
 decl_stmt|,
 name|NamedDecl
 modifier|*
+decl_stmt|,
+name|Expr
+modifier|*
 decl|>
 block|{
 comment|/// The location of the 'template' keyword.
@@ -213,12 +210,18 @@ comment|/// parameter list.
 name|unsigned
 name|NumParams
 range|:
-literal|31
+literal|30
 decl_stmt|;
 comment|/// Whether this template parameter list contains an unexpanded parameter
 comment|/// pack.
 name|unsigned
 name|ContainsUnexpandedParameterPack
+range|:
+literal|1
+decl_stmt|;
+comment|/// Whether this template parameter list has an associated requires-clause
+name|unsigned
+name|HasRequiresClause
 range|:
 literal|1
 decl_stmt|;
@@ -239,6 +242,21 @@ return|return
 name|NumParams
 return|;
 block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+name|OverloadToken
+operator|<
+name|Expr
+operator|*
+operator|>
+argument_list|)
+decl|const
+block|{
+return|return
+name|HasRequiresClause
+return|;
+block|}
 name|TemplateParameterList
 argument_list|(
 argument|SourceLocation TemplateLoc
@@ -248,6 +266,8 @@ argument_list|,
 argument|ArrayRef<NamedDecl *> Params
 argument_list|,
 argument|SourceLocation RAngleLoc
+argument_list|,
+argument|Expr *RequiresClause
 argument_list|)
 empty_stmt|;
 name|public
@@ -277,6 +297,10 @@ name|Params
 argument_list|,
 name|SourceLocation
 name|RAngleLoc
+argument_list|,
+name|Expr
+operator|*
+name|RequiresClause
 argument_list|)
 decl_stmt|;
 comment|/// \brief Iterates through the template parameters in this list.
@@ -484,6 +508,50 @@ return|return
 name|ContainsUnexpandedParameterPack
 return|;
 block|}
+comment|/// \brief The constraint-expression of the associated requires-clause.
+name|Expr
+modifier|*
+name|getRequiresClause
+parameter_list|()
+block|{
+return|return
+name|HasRequiresClause
+condition|?
+operator|*
+name|getTrailingObjects
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|)
+else|:
+name|nullptr
+return|;
+block|}
+comment|/// \brief The constraint-expression of the associated requires-clause.
+specifier|const
+name|Expr
+operator|*
+name|getRequiresClause
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasRequiresClause
+operator|?
+operator|*
+name|getTrailingObjects
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|)
+operator|:
+name|nullptr
+return|;
+block|}
 name|SourceLocation
 name|getTemplateLoc
 argument_list|()
@@ -533,37 +601,70 @@ name|template
 operator|<
 name|size_t
 name|N
+operator|,
+name|bool
+name|HasRequiresClause
 operator|>
 name|friend
 name|class
 name|FixedSizeTemplateParameterListStorage
 expr_stmt|;
+name|public
+label|:
+comment|// FIXME: workaround for MSVC 2013; remove when no longer needed
+name|using
+name|FixedSizeStorageOwner
+init|=
+name|TrailingObjects
+operator|::
+name|FixedSizeStorageOwner
+decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// \brief Stores a list of template parameters for a TemplateDecl and its
-comment|/// derived classes. Suitable for creating on the stack.
+comment|/// \brief Stores a list of template parameters and the associated
+comment|/// requires-clause (if any) for a TemplateDecl and its derived classes.
+comment|/// Suitable for creating on the stack.
 name|template
 operator|<
 name|size_t
 name|N
+operator|,
+name|bool
+name|HasRequiresClause
 operator|>
 name|class
 name|FixedSizeTemplateParameterListStorage
-block|{
-comment|// This is kinda ugly: TemplateParameterList usually gets allocated
-comment|// in a block of memory with NamedDecls appended to it. Here, to get
-comment|// it stack allocated, we include the params as a separate
-comment|// variable. After allocation, the TemplateParameterList object
-comment|// treats them as part of itself.
+operator|:
+name|public
 name|TemplateParameterList
-name|List
-block|;
+operator|::
+name|FixedSizeStorageOwner
+block|{
+name|typename
+name|TemplateParameterList
+operator|::
+name|FixedSizeStorage
+operator|<
 name|NamedDecl
 operator|*
-name|Params
-index|[
+block|,
+name|Expr
+operator|*
+operator|>
+operator|::
+name|with_counts
+operator|<
 name|N
-index|]
+block|,
+name|HasRequiresClause
+operator|?
+literal|1u
+operator|:
+literal|0u
+operator|>
+operator|::
+name|type
+name|storage
 block|;
 name|public
 operator|:
@@ -576,101 +677,43 @@ argument_list|,
 argument|ArrayRef<NamedDecl *> Params
 argument_list|,
 argument|SourceLocation RAngleLoc
+argument_list|,
+argument|Expr *RequiresClause
 argument_list|)
 operator|:
-name|List
+name|FixedSizeStorageOwner
 argument_list|(
-argument|TemplateLoc
-argument_list|,
-argument|LAngleLoc
-argument_list|,
-argument|Params
-argument_list|,
-argument|RAngleLoc
+argument|(assert(N == Params.size()),              assert(HasRequiresClause == static_cast<bool>(RequiresClause)),              new (static_cast<void *>(&storage)) TemplateParameterList(                  TemplateLoc, LAngleLoc, Params, RAngleLoc, RequiresClause))
 argument_list|)
-block|{
-comment|// Because we're doing an evil layout hack above, have some
-comment|// asserts, just to double-check everything is laid out like
-comment|// expected.
-name|assert
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|this
-argument_list|)
-operator|==
-name|TemplateParameterList
-operator|::
-name|totalSizeToAlloc
-operator|<
-name|NamedDecl
-operator|*
-operator|>
-operator|(
-name|N
-operator|)
-operator|&&
-literal|"Object layout not as expected"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|this
-operator|->
-name|Params
-operator|==
-name|List
-operator|.
-name|getTrailingObjects
-operator|<
-name|NamedDecl
-operator|*
-operator|>
-operator|(
-operator|)
-operator|&&
-literal|"Object layout not as expected"
-argument_list|)
-block|;   }
-name|TemplateParameterList
-operator|*
-name|get
-argument_list|()
-block|{
-return|return
-operator|&
-name|List
-return|;
+block|{}
 block|}
-expr|}
-block|;
+expr_stmt|;
 comment|/// \brief A template argument list.
 name|class
 name|TemplateArgumentList
 name|final
-operator|:
+range|:
 name|private
 name|llvm
 operator|::
 name|TrailingObjects
 operator|<
 name|TemplateArgumentList
-block|,
+decl_stmt|,
 name|TemplateArgument
-operator|>
+decl|>
 block|{
 comment|/// \brief The template argument list.
 specifier|const
 name|TemplateArgument
-operator|*
+modifier|*
 name|Arguments
-block|;
+decl_stmt|;
 comment|/// \brief The number of template arguments in this template
 comment|/// argument list.
 name|unsigned
 name|NumArguments
-block|;
+decl_stmt|;
 name|TemplateArgumentList
 argument_list|(
 specifier|const
@@ -680,10 +723,10 @@ name|Other
 argument_list|)
 operator|=
 name|delete
-block|;
+expr_stmt|;
 name|void
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|TemplateArgumentList
@@ -692,7 +735,7 @@ name|Other
 operator|)
 operator|=
 name|delete
-block|;
+decl_stmt|;
 comment|// Constructs an instance with an internal Argument list, containing
 comment|// a copy of the Args array. (Called by CreateCopy)
 name|TemplateArgumentList
@@ -703,22 +746,22 @@ name|TemplateArgument
 operator|>
 name|Args
 argument_list|)
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 comment|/// \brief Type used to indicate that the template argument list itself is a
 comment|/// stack object. It does not own its template arguments.
-expr|enum
+enum|enum
 name|OnStackType
 block|{
 name|OnStack
 block|}
-block|;
+enum|;
 comment|/// \brief Create a new template argument list that copies the given set of
 comment|/// template arguments.
 specifier|static
 name|TemplateArgumentList
-operator|*
+modifier|*
 name|CreateCopy
 argument_list|(
 name|ASTContext
@@ -731,7 +774,7 @@ name|TemplateArgument
 operator|>
 name|Args
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Construct a new, temporary template argument list on the stack.
 comment|///
 comment|/// The template argument list does not own the template arguments
@@ -747,7 +790,7 @@ name|TemplateArgument
 operator|>
 name|Args
 argument_list|)
-operator|:
+range|:
 name|Arguments
 argument_list|(
 name|Args
@@ -755,10 +798,13 @@ operator|.
 name|data
 argument_list|()
 argument_list|)
-block|,
+decl_stmt|,
 name|NumArguments
 argument_list|(
-argument|Args.size()
+name|Args
+operator|.
+name|size
+argument_list|()
 argument_list|)
 block|{}
 comment|/// \brief Produces a shallow copy of the given template argument list.
@@ -783,7 +829,7 @@ operator|->
 name|data
 argument_list|()
 argument_list|)
-block|,
+operator|,
 name|NumArguments
 argument_list|(
 argument|Other->size()
@@ -819,14 +865,14 @@ block|}
 comment|/// \brief Retrieve the template argument at a given index.
 specifier|const
 name|TemplateArgument
-operator|&
+modifier|&
 name|operator
 index|[]
-operator|(
+argument_list|(
 name|unsigned
 name|Idx
-operator|)
-specifier|const
+argument_list|)
+decl|const
 block|{
 return|return
 name|get
@@ -882,18 +928,19 @@ return|;
 block|}
 name|friend
 name|TrailingObjects
-block|; }
-block|;
+decl_stmt|;
+block|}
+empty_stmt|;
 name|void
-operator|*
+modifier|*
 name|allocateDefaultArgStorageChain
-argument_list|(
+parameter_list|(
 specifier|const
 name|ASTContext
-operator|&
+modifier|&
 name|C
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// Storage for a default argument. This is conceptually either empty, or an
 comment|/// argument value, or a pointer to a previous declaration that had a default
 comment|/// argument.
@@ -906,7 +953,7 @@ name|template
 operator|<
 name|typename
 name|ParmDecl
-block|,
+operator|,
 name|typename
 name|ArgType
 operator|>
@@ -1011,7 +1058,7 @@ name|Parm
 return|;
 block|}
 name|public
-operator|:
+label|:
 name|DefaultArgStorage
 argument_list|()
 operator|:
@@ -1489,6 +1536,25 @@ specifier|const
 block|{
 return|return
 name|TemplateParams
+return|;
+block|}
+comment|/// Get the constraint-expression from the associated requires-clause (if any)
+specifier|const
+name|Expr
+operator|*
+name|getRequiresClause
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TemplateParams
+operator|?
+name|TemplateParams
+operator|->
+name|getRequiresClause
+argument_list|()
+operator|:
+name|nullptr
 return|;
 block|}
 comment|/// Get the underlying, templated declaration.
@@ -7453,8 +7519,6 @@ argument_list|,
 argument|TemplateParameterList *Params
 argument_list|,
 argument|NamedDecl *Decl
-argument_list|,
-argument|ClassTemplateDecl *PrevDecl
 argument_list|)
 block|;
 comment|/// \brief Create an empty class template node.

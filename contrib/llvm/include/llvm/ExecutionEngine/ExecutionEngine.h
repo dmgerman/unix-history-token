@@ -423,9 +423,7 @@ name|std
 operator|::
 name|shared_ptr
 operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|>
 name|SR
 argument_list|,
@@ -464,9 +462,7 @@ name|std
 operator|::
 name|shared_ptr
 operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|>
 name|SR
 argument_list|,
@@ -637,8 +633,12 @@ return|return
 name|DL
 return|;
 block|}
-comment|/// removeModule - Remove a Module from the list of modules.  Returns true if
-comment|/// M is found.
+comment|/// removeModule - Removes a Module from the list of modules, but does not
+comment|/// free the module's memory. Returns true if M is found, in which case the
+comment|/// caller assumes responsibility for deleting the module.
+comment|//
+comment|// FIXME: This stealth ownership transfer is horrible. This will probably be
+comment|//        fixed by deleting ExecutionEngine.
 name|virtual
 name|bool
 name|removeModule
@@ -656,9 +656,7 @@ name|Function
 modifier|*
 name|FindFunctionNamed
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|FnName
 parameter_list|)
 function_decl|;
@@ -670,9 +668,7 @@ name|GlobalVariable
 modifier|*
 name|FindGlobalVariableNamed
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Name
 parameter_list|,
 name|bool
@@ -683,6 +679,13 @@ parameter_list|)
 function_decl|;
 comment|/// runFunction - Execute the specified function with the specified arguments,
 comment|/// and return the result.
+comment|///
+comment|/// For MCJIT execution engines, clients are encouraged to use the
+comment|/// "GetFunctionAddress" method (rather than runFunction) and cast the
+comment|/// returned uint64_t to the desired function pointer type. However, for
+comment|/// backwards compatibility MCJIT's implementation can execute 'main-like'
+comment|/// function (i.e. those returning void or int, and taking either no
+comment|/// arguments or (int, char*[])).
 name|virtual
 name|GenericValue
 name|runFunction
@@ -1497,9 +1500,7 @@ name|std
 operator|::
 name|shared_ptr
 operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|>
 name|Resolver
 expr_stmt|;
@@ -1629,9 +1630,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|>
 name|SR
 argument_list|)

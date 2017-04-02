@@ -851,6 +851,86 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Returns true if \p BB is a loop-latch.
+comment|/// A latch block is a block that contains a branch back to the header.
+comment|/// This function is useful when there are multiple latches in a loop
+comment|/// because \fn getLoopLatch will return nullptr in that case.
+name|bool
+name|isLoopLatch
+argument_list|(
+specifier|const
+name|BlockT
+operator|*
+name|BB
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|contains
+argument_list|(
+name|BB
+argument_list|)
+operator|&&
+literal|"block does not belong to the loop"
+argument_list|)
+expr_stmt|;
+name|BlockT
+modifier|*
+name|Header
+init|=
+name|getHeader
+argument_list|()
+decl_stmt|;
+name|auto
+name|PredBegin
+init|=
+name|GraphTraits
+operator|<
+name|Inverse
+operator|<
+name|BlockT
+operator|*
+operator|>
+expr|>
+operator|::
+name|child_begin
+argument_list|(
+name|Header
+argument_list|)
+decl_stmt|;
+name|auto
+name|PredEnd
+init|=
+name|GraphTraits
+operator|<
+name|Inverse
+operator|<
+name|BlockT
+operator|*
+operator|>
+expr|>
+operator|::
+name|child_end
+argument_list|(
+name|Header
+argument_list|)
+decl_stmt|;
+return|return
+name|std
+operator|::
+name|find
+argument_list|(
+name|PredBegin
+argument_list|,
+name|PredEnd
+argument_list|,
+name|BB
+argument_list|)
+operator|!=
+name|PredEnd
+return|;
+block|}
 comment|/// Calculate the number of back edges to the loop header.
 name|unsigned
 name|getNumBackEdges
@@ -1657,19 +1737,9 @@ block|{
 name|auto
 name|I
 init|=
-name|std
-operator|::
 name|find
 argument_list|(
 name|Blocks
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Blocks
-operator|.
-name|end
-argument_list|()
 argument_list|,
 name|BB
 argument_list|)
@@ -1736,6 +1806,10 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Print loop with all the BBs inside it.
+end_comment
+
 begin_decl_stmt
 name|void
 name|print
@@ -1748,6 +1822,11 @@ name|unsigned
 name|Depth
 operator|=
 literal|0
+argument_list|,
+name|bool
+name|Verbose
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1878,6 +1957,101 @@ decl|>
 block|{
 name|public
 label|:
+comment|/// \brief A range representing the start and end location of a loop.
+name|class
+name|LocRange
+block|{
+name|DebugLoc
+name|Start
+decl_stmt|;
+name|DebugLoc
+name|End
+decl_stmt|;
+name|public
+label|:
+name|LocRange
+argument_list|()
+block|{}
+name|LocRange
+argument_list|(
+argument|DebugLoc Start
+argument_list|)
+block|:
+name|Start
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Start
+argument_list|)
+argument_list|)
+operator|,
+name|End
+argument_list|(
+argument|std::move(Start)
+argument_list|)
+block|{}
+name|LocRange
+argument_list|(
+argument|DebugLoc Start
+argument_list|,
+argument|DebugLoc End
+argument_list|)
+operator|:
+name|Start
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Start
+argument_list|)
+argument_list|)
+operator|,
+name|End
+argument_list|(
+argument|std::move(End)
+argument_list|)
+block|{}
+specifier|const
+name|DebugLoc
+operator|&
+name|getStart
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Start
+return|;
+block|}
+specifier|const
+name|DebugLoc
+operator|&
+name|getEnd
+argument_list|()
+specifier|const
+block|{
+return|return
+name|End
+return|;
+block|}
+comment|/// \brief Check for null.
+comment|///
+name|explicit
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Start
+operator|&&
+name|End
+return|;
+block|}
+block|}
+empty_stmt|;
 name|Loop
 argument_list|()
 block|{}
@@ -1989,6 +2163,11 @@ argument_list|(
 name|DominatorTree
 operator|&
 name|DT
+argument_list|,
+specifier|const
+name|LoopInfo
+operator|&
+name|LI
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2086,6 +2265,11 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+name|void
+name|dumpVerbose
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Return the debug location of the start of this loop.
 comment|/// This looks for a BB terminating instruction with a known debug
 comment|/// location by looking at the preheader and header blocks. If it
@@ -2093,6 +2277,12 @@ comment|/// cannot find a terminating instruction with location information,
 comment|/// it returns an unknown location.
 name|DebugLoc
 name|getStartLoc
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Return the source code span of the loop.
+name|LocRange
+name|getLocRange
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -2811,19 +3001,9 @@ block|{
 name|auto
 name|I
 init|=
-name|std
-operator|::
 name|find
 argument_list|(
 name|TopLevelLoops
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|TopLevelLoops
-operator|.
-name|end
-argument_list|()
 argument_list|,
 name|OldLoop
 argument_list|)
@@ -3061,13 +3241,21 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|void
 name|verify
-argument_list|()
+argument_list|(
 specifier|const
-expr_stmt|;
-end_expr_stmt
+name|DominatorTreeBase
+operator|<
+name|BlockT
+operator|>
+operator|&
+name|DomTree
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};
@@ -3631,7 +3819,8 @@ block|{
 typedef|typedef
 specifier|const
 name|Loop
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 end_expr_stmt
 
@@ -3646,8 +3835,7 @@ end_typedef
 
 begin_function
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
 specifier|const
@@ -3664,12 +3852,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -3684,12 +3870,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -3716,7 +3900,8 @@ operator|>
 block|{
 typedef|typedef
 name|Loop
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 end_expr_stmt
 
@@ -3731,8 +3916,7 @@ end_typedef
 
 begin_function
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
 name|Loop
@@ -3748,12 +3932,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -3768,12 +3950,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -3808,8 +3988,8 @@ name|LoopAnalysis
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
@@ -3824,10 +4004,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)
@@ -3875,10 +4052,36 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
+name|FunctionAnalysisManager
+operator|&
+name|AM
+argument_list|)
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Verifier pass for the \c LoopAnalysis results.
+end_comment
+
+begin_decl_stmt
+name|struct
+name|LoopVerifierPass
+range|:
+name|public
+name|PassInfoMixin
 operator|<
-name|Function
+name|LoopVerifierPass
 operator|>
+block|{
+name|PreservedAnalyses
+name|run
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)
@@ -3990,35 +4193,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Pass for printing a loop's contents as LLVM's text IR assembly.
+comment|/// Function to print a loop's contents as LLVM's text IR assembly.
 end_comment
 
 begin_decl_stmt
-name|class
-name|PrintLoopPass
-range|:
-name|public
-name|PassInfoMixin
-operator|<
-name|PrintLoopPass
-operator|>
-block|{
-name|raw_ostream
-operator|&
-name|OS
-block|;
-name|std
-operator|::
-name|string
-name|Banner
-block|;
-name|public
-operator|:
-name|PrintLoopPass
-argument_list|()
-block|;
-name|PrintLoopPass
+name|void
+name|printLoop
 argument_list|(
+name|Loop
+operator|&
+name|L
+argument_list|,
 name|raw_ostream
 operator|&
 name|OS
@@ -4032,21 +4217,6 @@ name|Banner
 operator|=
 literal|""
 argument_list|)
-block|;
-name|PreservedAnalyses
-name|run
-argument_list|(
-name|Loop
-operator|&
-name|L
-argument_list|,
-name|AnalysisManager
-operator|<
-name|Loop
-operator|>
-operator|&
-argument_list|)
-block|; }
 decl_stmt|;
 end_decl_stmt
 

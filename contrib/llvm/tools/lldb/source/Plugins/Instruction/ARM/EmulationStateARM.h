@@ -336,7 +336,9 @@ name|uint32_t
 operator|>
 name|m_memory
 expr_stmt|;
-comment|// Eventually will want to change uint32_t to a data buffer heap type.
+comment|// Eventually will want to change
+comment|// uint32_t to a data buffer heap
+comment|// type.
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|EmulationStateARM

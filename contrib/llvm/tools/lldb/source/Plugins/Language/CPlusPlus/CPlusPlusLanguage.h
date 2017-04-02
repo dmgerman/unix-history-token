@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -74,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -87,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/Language.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -150,7 +156,7 @@ name|m_parse_error
 argument_list|(
 argument|false
 argument_list|)
-block|{         }
+block|{}
 name|MethodName
 argument_list|(
 specifier|const
@@ -190,7 +196,7 @@ name|m_parse_error
 argument_list|(
 argument|false
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -322,7 +328,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Full name:    "lldb::SBTarget::GetBreakpointAtIndex(unsigned int) const"
+comment|// Full name:
+end_comment
+
+begin_comment
+comment|// "lldb::SBTarget::GetBreakpointAtIndex(unsigned int)
+end_comment
+
+begin_comment
+comment|// const"
 end_comment
 
 begin_expr_stmt
@@ -428,6 +442,19 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|TypeScavenger
+operator|>
+name|GetTypeScavenger
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|TypeCategoryImplSP
@@ -522,23 +549,43 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// Extract C++ context and identifier from a string using heuristic matching (as opposed to
+comment|// Extract C++ context and identifier from a string using heuristic matching
 end_comment
 
 begin_comment
-comment|// CPlusPlusLanguage::MethodName which has to have a fully qualified C++ name with parens and arguments.
+comment|// (as opposed to
 end_comment
 
 begin_comment
-comment|// If the name is a lone C identifier (e.g. C) or a qualified C identifier (e.g. A::B::C) it will return true,
+comment|// CPlusPlusLanguage::MethodName which has to have a fully qualified C++ name
 end_comment
 
 begin_comment
-comment|// and identifier will be the identifier (C and C respectively) and the context will be "" and "A::B::" respectively.
+comment|// with parens and arguments.
 end_comment
 
 begin_comment
-comment|// If the name fails the heuristic matching for a qualified or unqualified C/C++ identifier, then it will return false
+comment|// If the name is a lone C identifier (e.g. C) or a qualified C identifier
+end_comment
+
+begin_comment
+comment|// (e.g. A::B::C) it will return true,
+end_comment
+
+begin_comment
+comment|// and identifier will be the identifier (C and C respectively) and the
+end_comment
+
+begin_comment
+comment|// context will be "" and "A::B::" respectively.
+end_comment
+
+begin_comment
+comment|// If the name fails the heuristic matching for a qualified or unqualified
+end_comment
+
+begin_comment
+comment|// C/C++ identifier, then it will return false
 end_comment
 
 begin_comment
@@ -571,19 +618,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// in some cases, compilers will output different names for one same type. when that happens, it might be impossible
+comment|// in some cases, compilers will output different names for one same type.
 end_comment
 
 begin_comment
-comment|// to construct SBType objects for a valid type, because the name that is available is not the same as the name that
+comment|// when that happens, it might be impossible
 end_comment
 
 begin_comment
-comment|// can be used as a search key in FindTypes(). the equivalents map here is meant to return possible alternative names
+comment|// to construct SBType objects for a valid type, because the name that is
 end_comment
 
 begin_comment
-comment|// for a type through which a search can be conducted. Currently, this is only enabled for C++ but can be extended
+comment|// available is not the same as the name that
+end_comment
+
+begin_comment
+comment|// can be used as a search key in FindTypes(). the equivalents map here is
+end_comment
+
+begin_comment
+comment|// meant to return possible alternative names
+end_comment
+
+begin_comment
+comment|// for a type through which a search can be conducted. Currently, this is only
+end_comment
+
+begin_comment
+comment|// enabled for C++ but can be extended
 end_comment
 
 begin_comment
@@ -606,6 +669,35 @@ name|ConstString
 operator|>
 operator|&
 name|equivalents
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Given a mangled function name, calculates some alternative manglings since
+end_comment
+
+begin_comment
+comment|// the compiler mangling may not line up with the symbol we are expecting
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|uint32_t
+name|FindAlternateFunctionManglings
+argument_list|(
+specifier|const
+name|ConstString
+name|mangled
+argument_list|,
+name|std
+operator|::
+name|set
+operator|<
+name|ConstString
+operator|>
+operator|&
+name|candidates
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -639,7 +731,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|};      }
+unit|};  }
 comment|// namespace lldb_private
 end_comment
 

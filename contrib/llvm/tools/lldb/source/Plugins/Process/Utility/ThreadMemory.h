@@ -288,7 +288,7 @@ return|;
 end_return
 
 begin_macro
-unit|}      void
+unit|}    void
 name|RefreshStateAfterStop
 argument_list|()
 end_macro
@@ -347,7 +347,8 @@ name|thread_sp
 argument_list|)
 name|override
 block|{
-comment|//printf ("Thread 0x%llx is being backed by thread 0x%llx\n", GetID(), thread_sp->GetID());
+comment|// printf ("Thread 0x%llx is being backed by thread 0x%llx\n", GetID(),
+comment|// thread_sp->GetID());
 name|m_backing_thread_sp
 operator|=
 name|thread_sp

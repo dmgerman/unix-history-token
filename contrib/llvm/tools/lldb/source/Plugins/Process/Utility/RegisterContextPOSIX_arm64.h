@@ -62,18 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/RegisterContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"RegisterInfoInterface.h"
 end_include
 
@@ -81,6 +69,18 @@ begin_include
 include|#
 directive|include
 file|"lldb-arm64-register-enums.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/RegisterContext.h"
 end_include
 
 begin_decl_stmt
@@ -222,7 +222,7 @@ name|last_fpr_v
 block|;
 name|uint32_t
 name|gpr_flags
-block|;     }
+block|;   }
 block|;
 comment|// based on RegisterContextDarwin_arm64.h
 block|struct
@@ -233,7 +233,7 @@ name|bytes
 index|[
 literal|16
 index|]
-block|;     }
+block|;   }
 block|;
 comment|// based on RegisterContextDarwin_arm64.h
 block|struct
@@ -250,7 +250,7 @@ name|fpsr
 block|;
 name|uint32_t
 name|fpcr
-block|;     }
+block|;   }
 block|;
 name|uint64_t
 name|m_gpr_arm64
@@ -260,10 +260,13 @@ operator|::
 name|k_num_gpr_registers_arm64
 index|]
 block|;
-comment|// 64-bit general purpose registers.
+comment|// 64-bit
+comment|// general
+comment|// purpose
+comment|// registers.
 name|RegInfo
 name|m_reg_info
-block|;     struct
+block|;   struct
 name|RegisterContextPOSIX_arm64
 operator|::
 name|FPU
@@ -281,7 +284,8 @@ operator|>
 name|m_register_info_ap
 block|;
 comment|// Register Info Interface (FreeBSD or Linux)
-comment|// Determines if an extended register set is supported on the processor running the inferior process.
+comment|// Determines if an extended register set is supported on the processor
+comment|// running the inferior process.
 name|virtual
 name|bool
 name|IsRegisterSetAvailable

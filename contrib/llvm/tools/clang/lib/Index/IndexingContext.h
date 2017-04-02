@@ -384,6 +384,11 @@ name|bool
 name|isBase
 init|=
 name|false
+parameter_list|,
+name|bool
+name|isIBType
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|void
@@ -406,6 +411,11 @@ name|nullptr
 parameter_list|,
 name|bool
 name|isBase
+init|=
+name|false
+parameter_list|,
+name|bool
+name|isIBType
 init|=
 name|false
 parameter_list|)

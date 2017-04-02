@@ -98,10 +98,10 @@ argument|unsigned TransAl =
 literal|1
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|AMDGPUFrameLowering
 argument_list|()
+name|override
 block|;
 comment|/// \returns The number of 32-bit sub-registers that are used when storing
 comment|/// values to the stack.
@@ -137,17 +137,21 @@ name|false
 return|;
 block|}
 expr|}
-block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_AMDGPU_AMDGPUFRAMELOWERING_H
+end_comment
 
 end_unit
 

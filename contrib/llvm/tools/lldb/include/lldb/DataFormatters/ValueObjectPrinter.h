@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ValueObjectPrinter.h ---------------------------------------*- C++ -*-===//
+comment|//===-- ValueObjectPrinter.h ---------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -172,13 +176,13 @@ comment|// only this class (and subclasses, if any) should ever be concerned wit
 comment|// the depth mechanism
 name|ValueObjectPrinter
 argument_list|(
-argument|ValueObject* valobj
+argument|ValueObject *valobj
 argument_list|,
-argument|Stream* s
+argument|Stream *s
 argument_list|,
-argument|const DumpValueObjectOptions& options
+argument|const DumpValueObjectOptions&options
 argument_list|,
-argument|const DumpValueObjectOptions::PointerDepth& ptr_depth
+argument|const DumpValueObjectOptions::PointerDepth&ptr_depth
 argument_list|,
 argument|uint32_t curr_depth
 argument_list|,
@@ -394,7 +398,7 @@ operator|::
 name|ValueObjectSP
 name|GenerateChild
 argument_list|(
-argument|ValueObject* synth_valobj
+argument|ValueObject *synth_valobj
 argument_list|,
 argument|size_t idx
 argument_list|)

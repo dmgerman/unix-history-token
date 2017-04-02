@@ -119,7 +119,7 @@ comment|///     A new address byte size value.
 comment|//------------------------------------------------------------------
 name|DataEncoder
 argument_list|(
-argument|void* data
+argument|void *data
 argument_list|,
 argument|uint32_t data_length
 argument_list|,
@@ -147,7 +147,7 @@ comment|///     A new address byte size value.
 comment|//------------------------------------------------------------------
 name|DataEncoder
 argument_list|(
-argument|const lldb::DataBufferSP& data_sp
+argument|const lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::ByteOrder byte_order
 argument_list|,
@@ -728,14 +728,16 @@ comment|///< The byte order of the data we are extracting from.
 name|uint8_t
 name|m_addr_size
 decl_stmt|;
-comment|///< The address size to use when extracting pointers or addresses
+comment|///< The address size to use when extracting pointers or
+comment|///addresses
 name|mutable
 name|lldb
 operator|::
 name|DataBufferSP
 name|m_data_sp
 expr_stmt|;
-comment|///< The shared pointer to data that can be shared among multiple instances
+comment|///< The shared pointer to data that can
+comment|///be shared among multiple instances
 name|private
 label|:
 name|DISALLOW_COPY_AND_ASSIGN

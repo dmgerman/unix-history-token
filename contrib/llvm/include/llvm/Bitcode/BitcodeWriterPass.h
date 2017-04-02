@@ -130,22 +130,28 @@ comment|/// Note that this is intended for use with the new pass manager. To con
 comment|/// a pass for the legacy pass manager, use the function above.
 name|class
 name|BitcodeWriterPass
+range|:
+name|public
+name|PassInfoMixin
+operator|<
+name|BitcodeWriterPass
+operator|>
 block|{
 name|raw_ostream
-modifier|&
+operator|&
 name|OS
-decl_stmt|;
+block|;
 name|bool
 name|ShouldPreserveUseListOrder
-decl_stmt|;
+block|;
 name|bool
 name|EmitSummaryIndex
-decl_stmt|;
+block|;
 name|bool
 name|EmitModuleHash
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 comment|/// \brief Construct a bitcode writer pass around a particular output stream.
 comment|///
 comment|/// If \c ShouldPreserveUseListOrder, encode use-list order so it can be
@@ -164,22 +170,22 @@ argument|bool EmitSummaryIndex = false
 argument_list|,
 argument|bool EmitModuleHash = false
 argument_list|)
-block|:
+operator|:
 name|OS
 argument_list|(
 name|OS
 argument_list|)
-operator|,
+block|,
 name|ShouldPreserveUseListOrder
 argument_list|(
 name|ShouldPreserveUseListOrder
 argument_list|)
-operator|,
+block|,
 name|EmitSummaryIndex
 argument_list|(
 name|EmitSummaryIndex
 argument_list|)
-operator|,
+block|,
 name|EmitModuleHash
 argument_list|(
 argument|EmitModuleHash
@@ -197,18 +203,8 @@ argument_list|,
 name|ModuleAnalysisManager
 operator|&
 argument_list|)
-expr_stmt|;
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"BitcodeWriterPass"
-return|;
-block|}
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

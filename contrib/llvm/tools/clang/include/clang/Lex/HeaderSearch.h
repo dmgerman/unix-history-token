@@ -392,7 +392,9 @@ decl_stmt|;
 block|}
 struct|;
 comment|/// \brief Header-search options used to initialize this header search.
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|HeaderSearchOptions
 operator|>
@@ -699,7 +701,9 @@ name|public
 label|:
 name|HeaderSearch
 argument_list|(
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|HeaderSearchOptions
 operator|>
@@ -1277,6 +1281,9 @@ parameter_list|,
 name|bool
 name|isImport
 parameter_list|,
+name|bool
+name|ModulesEnabled
+parameter_list|,
 name|Module
 modifier|*
 name|CorrespondingModule
@@ -1476,6 +1483,21 @@ modifier|*
 name|FE
 parameter_list|)
 function_decl|;
+comment|/// \brief Get filenames for all registered header maps.
+name|void
+name|getHeaderMapFileNames
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Names
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Retrieve the name of the module file that should be used to
 comment|/// load the given module.
 comment|///
@@ -1501,6 +1523,8 @@ comment|///
 comment|/// \param ModuleMapPath A path that when combined with \c ModuleName
 comment|/// uniquely identifies this module. See Module::ModuleMap.
 comment|///
+comment|/// \param UsePrebuiltPath Whether we should use the prebuilt module path.
+comment|///
 comment|/// \returns The name of the module file that corresponds to this module,
 comment|/// or an empty string if this module does not correspond to any module file.
 name|std
@@ -1511,6 +1535,8 @@ argument_list|(
 argument|StringRef ModuleName
 argument_list|,
 argument|StringRef ModuleMapPath
+argument_list|,
+argument|bool UsePrebuiltPath
 argument_list|)
 expr_stmt|;
 comment|/// \brief Lookup a module Search for a module with the given name.
@@ -1588,12 +1614,15 @@ function_decl|;
 comment|/// \brief Retrieve the module that corresponds to the given file, if any.
 comment|///
 comment|/// \param File The header that we wish to map to a module.
+comment|/// \param AllowTextual Whether we want to find textual headers too.
 name|ModuleMap
 operator|::
 name|KnownHeader
 name|findModuleForHeader
 argument_list|(
 argument|const FileEntry *File
+argument_list|,
+argument|bool AllowTextual = false
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1637,6 +1666,27 @@ parameter_list|()
 function_decl|;
 name|private
 label|:
+comment|/// \brief Lookup a module with the given module name and search-name.
+comment|///
+comment|/// \param ModuleName The name of the module we're looking for.
+comment|///
+comment|/// \param SearchName The "search-name" to derive filesystem paths from
+comment|/// when looking for the module map; this is usually equal to ModuleName,
+comment|/// but for compatibility with some buggy frameworks, additional attempts
+comment|/// may be made to find the module under a related-but-different search-name.
+comment|///
+comment|/// \returns The module named ModuleName.
+name|Module
+modifier|*
+name|lookupModule
+parameter_list|(
+name|StringRef
+name|ModuleName
+parameter_list|,
+name|StringRef
+name|SearchName
+parameter_list|)
+function_decl|;
 comment|/// \brief Retrieve a module with the given name, which may be part of the
 comment|/// given framework.
 comment|///

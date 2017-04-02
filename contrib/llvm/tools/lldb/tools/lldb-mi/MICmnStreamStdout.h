@@ -44,19 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MIUtilString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MICmnBase.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MIUtilThreadBaseStd.h"
 end_include
 
 begin_include
@@ -65,8 +53,24 @@ directive|include
 file|"MIUtilSingletonBase.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"MIUtilString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MIUtilThreadBaseStd.h"
+end_include
+
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment

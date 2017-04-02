@@ -78,6 +78,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Constant.h"
 end_include
 
@@ -90,13 +102,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MD5.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<system_error>
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -107,7 +149,13 @@ name|class
 name|Comdat
 decl_stmt|;
 name|class
-name|PointerType
+name|ConstantRange
+decl_stmt|;
+name|class
+name|Error
+decl_stmt|;
+name|class
+name|GlobalObject
 decl_stmt|;
 name|class
 name|Module
@@ -121,21 +169,13 @@ enum_decl|:
 name|unsigned
 enum_decl|;
 block|}
+comment|// end namespace Intrinsic
 name|class
 name|GlobalValue
 range|:
 name|public
 name|Constant
 block|{
-name|GlobalValue
-argument_list|(
-specifier|const
-name|GlobalValue
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
 comment|/// @brief An enumeration for the kinds of linkage for global values.
@@ -285,6 +325,11 @@ argument_list|(
 name|NotThreadLocal
 argument_list|)
 block|,
+name|HasLLVMReservedName
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|IntID
 argument_list|(
 operator|(
@@ -308,6 +353,13 @@ block|;   }
 name|Type
 operator|*
 name|ValueType
+block|;
+specifier|static
+specifier|const
+name|unsigned
+name|GlobalValueSubClassDataBits
+operator|=
+literal|18
 block|;
 comment|// All bitfields use unsigned as the underlying type so that MSVC will pack
 comment|// them.
@@ -342,25 +394,26 @@ literal|3
 block|;
 comment|// Is this symbol "Thread Local", if so, what is
 comment|// the desired model?
-specifier|static
-specifier|const
+comment|/// True if the function's name starts with "llvm.".  This corresponds to the
+comment|/// value of Function::isIntrinsic(), which may be true even if
+comment|/// Function::intrinsicID() returns Intrinsic::not_intrinsic.
 name|unsigned
-name|GlobalValueSubClassDataBits
-operator|=
-literal|19
+name|HasLLVMReservedName
+operator|:
+literal|1
 block|;
 name|private
 operator|:
+name|friend
+name|class
+name|Constant
+block|;
 comment|// Give subclasses access to what otherwise would be wasted padding.
-comment|// (19 + 4 + 2 + 2 + 2 + 3) == 32.
+comment|// (18 + 4 + 2 + 2 + 2 + 3 + 1) == 32.
 name|unsigned
 name|SubClassData
 operator|:
 name|GlobalValueSubClassDataBits
-block|;
-name|friend
-name|class
-name|Constant
 block|;
 name|void
 name|destroyConstantImpl
@@ -490,6 +543,17 @@ operator|*
 name|Parent
 block|;
 comment|// The containing module.
+comment|// Used by SymbolTableListTraits.
+name|void
+name|setParent
+argument_list|(
+argument|Module *parent
+argument_list|)
+block|{
+name|Parent
+operator|=
+name|parent
+block|;   }
 name|public
 operator|:
 expr|enum
@@ -507,6 +571,15 @@ name|InitialExecTLSModel
 block|,
 name|LocalExecTLSModel
 block|}
+block|;
+name|GlobalValue
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|&
+argument_list|)
+operator|=
+name|delete
 block|;
 operator|~
 name|GlobalValue
@@ -2159,25 +2232,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Make sure this GlobalValue is fully read. If the module is corrupt, this
+comment|/// Make sure this GlobalValue is fully read.
 end_comment
 
-begin_comment
-comment|/// returns true and fills in the optional string with information about the
-end_comment
-
-begin_comment
-comment|/// problem.  If successful, this returns false.
-end_comment
-
-begin_expr_stmt
-name|std
-operator|::
-name|error_code
+begin_function_decl
+name|Error
 name|materialize
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// @}
@@ -2280,6 +2343,69 @@ end_comment
 begin_expr_stmt
 name|bool
 name|canIncreaseAlignment
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|GlobalObject
+operator|*
+name|getBaseObject
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|GlobalValue
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getBaseObject
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_function_decl
+name|GlobalObject
+modifier|*
+name|getBaseObject
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Returns whether this is a reference to an absolute symbol.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isAbsoluteSymbolRef
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// If this is an absolute symbol reference, returns the range of the symbol,
+end_comment
+
+begin_comment
+comment|/// otherwise returns None.
+end_comment
+
+begin_expr_stmt
+name|Optional
+operator|<
+name|ConstantRange
+operator|>
+name|getAbsoluteSymbolRange
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -2404,13 +2530,17 @@ end_function
 
 begin_comment
 unit|};  }
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_GLOBALVALUE_H
+end_comment
 
 end_unit
 

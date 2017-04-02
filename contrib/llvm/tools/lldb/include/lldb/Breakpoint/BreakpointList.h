@@ -117,7 +117,7 @@ operator|::
 name|break_id_t
 name|Add
 argument_list|(
-argument|lldb::BreakpointSP& bp_sp
+argument|lldb::BreakpointSP&bp_sp
 argument_list|,
 argument|bool notify
 argument_list|)
@@ -153,7 +153,8 @@ argument|lldb::break_id_t breakID
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Returns a shared pointer to the breakpoint with id \a breakID.  Const version.
+comment|/// Returns a shared pointer to the breakpoint with id \a breakID.  Const
+comment|/// version.
 comment|///
 comment|/// @param[in] breakID
 comment|///   The breakpoint ID to seek for.
@@ -210,6 +211,28 @@ argument|size_t i
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Find all the breakpoints with a given name
+comment|///
+comment|/// @param[in] name
+comment|///   The breakpoint name for which to search.
+comment|///
+comment|/// @result
+comment|///   \bfalse if the input name was not a legal breakpoint name.
+comment|//------------------------------------------------------------------
+name|bool
+name|FindBreakpointsByName
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|BreakpointList
+modifier|&
+name|matching_bps
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Returns the number of elements in this breakpoint list.
 comment|///

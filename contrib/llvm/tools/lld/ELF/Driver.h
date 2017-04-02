@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lld/Core/Reproduce.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -99,9 +105,6 @@ modifier|*
 name|Driver
 decl_stmt|;
 name|class
-name|CpioFile
-decl_stmt|;
-name|class
 name|LinkerDriver
 block|{
 name|public
@@ -116,6 +119,9 @@ name|char
 operator|*
 operator|>
 name|Args
+argument_list|,
+name|bool
+name|CanExitEarly
 argument_list|)
 decl_stmt|;
 name|void
@@ -132,21 +138,6 @@ name|StringRef
 name|Name
 parameter_list|)
 function_decl|;
-name|llvm
-operator|::
-name|LLVMContext
-name|Context
-expr_stmt|;
-comment|// to parse bitcode ifles
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|CpioFile
-operator|>
-name|Cpio
-expr_stmt|;
-comment|// for reproduce
 name|private
 label|:
 name|std
@@ -158,17 +149,6 @@ operator|>
 name|getArchiveMembers
 argument_list|(
 argument|MemoryBufferRef MB
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|MemoryBufferRef
-operator|>
-name|readFile
-argument_list|(
-argument|StringRef Path
 argument_list|)
 expr_stmt|;
 name|void
@@ -195,6 +175,10 @@ operator|&
 name|Args
 argument_list|)
 decl_stmt|;
+name|void
+name|inferMachineType
+parameter_list|()
+function_decl|;
 name|template
 operator|<
 name|class
@@ -214,7 +198,7 @@ argument_list|)
 expr_stmt|;
 comment|// True if we are in --whole-archive and --no-whole-archive.
 name|bool
-name|WholeArchive
+name|InWholeArchive
 init|=
 name|false
 decl_stmt|;
@@ -224,34 +208,20 @@ name|InLib
 init|=
 name|false
 decl_stmt|;
-name|llvm
-operator|::
-name|BumpPtrAllocator
-name|Alloc
-expr_stmt|;
+comment|// True if we are in -format=binary and -format=elf.
+name|bool
+name|InBinary
+init|=
+name|false
+decl_stmt|;
 name|std
 operator|::
 name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
 operator|<
 name|InputFile
-operator|>>
+operator|*
+operator|>
 name|Files
-expr_stmt|;
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MemoryBuffer
-operator|>>
-name|OwningMBs
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -286,13 +256,6 @@ operator|*
 operator|>
 name|Argv
 argument_list|)
-block|;
-name|private
-operator|:
-name|llvm
-operator|::
-name|BumpPtrAllocator
-name|Alloc
 block|; }
 decl_stmt|;
 comment|// Create enum with OPT_xxx values for each option in Options.td
@@ -337,75 +300,6 @@ directive|undef
 name|OPTION
 block|}
 enum|;
-comment|// This is the class to create a .cpio file for --reproduce.
-comment|//
-comment|// If "--reproduce foo" is given, we create a file "foo.cpio" and
-comment|// copy all input files to the archive, along with a response file
-comment|// to re-run the same command with the same inputs.
-comment|// It is useful for reporting issues to LLD developers.
-comment|//
-comment|// Cpio as a file format is a deliberate choice. It's standardized in
-comment|// POSIX and very easy to create. cpio command is available virtually
-comment|// on all Unix systems. See
-comment|// http://pubs.opengroup.org/onlinepubs/9699919799/utilities/pax.html#tag_20_92_13_07
-comment|// for the format details.
-name|class
-name|CpioFile
-block|{
-name|public
-label|:
-specifier|static
-name|CpioFile
-modifier|*
-name|create
-parameter_list|(
-name|StringRef
-name|OutputPath
-parameter_list|)
-function_decl|;
-name|void
-name|append
-parameter_list|(
-name|StringRef
-name|Path
-parameter_list|,
-name|StringRef
-name|Data
-parameter_list|)
-function_decl|;
-name|private
-label|:
-name|CpioFile
-argument_list|(
-argument|std::unique_ptr<llvm::raw_fd_ostream> OS
-argument_list|,
-argument|StringRef Basename
-argument_list|)
-empty_stmt|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|llvm
-operator|::
-name|raw_fd_ostream
-operator|>
-name|OS
-expr_stmt|;
-name|llvm
-operator|::
-name|StringSet
-operator|<
-operator|>
-name|Seen
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|Basename
-expr_stmt|;
-block|}
-empty_stmt|;
 name|void
 name|printHelp
 parameter_list|(
@@ -415,12 +309,6 @@ modifier|*
 name|Argv0
 parameter_list|)
 function_decl|;
-name|std
-operator|::
-name|string
-name|getVersionString
-argument_list|()
-expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -447,38 +335,30 @@ operator|&
 name|Args
 argument_list|)
 expr_stmt|;
+name|llvm
+operator|::
+name|Optional
+operator|<
 name|std
 operator|::
 name|string
-name|relativeToRoot
-argument_list|(
-argument|StringRef Path
-argument_list|)
-expr_stmt|;
-name|std
-operator|::
-name|string
+operator|>
 name|findFromSearchPaths
 argument_list|(
 argument|StringRef Path
 argument_list|)
 expr_stmt|;
+name|llvm
+operator|::
+name|Optional
+operator|<
 name|std
 operator|::
 name|string
+operator|>
 name|searchLibrary
 argument_list|(
 argument|StringRef Path
-argument_list|)
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|buildSysrootedPath
-argument_list|(
-argument|llvm::StringRef Dir
-argument_list|,
-argument|llvm::StringRef File
 argument_list|)
 expr_stmt|;
 block|}

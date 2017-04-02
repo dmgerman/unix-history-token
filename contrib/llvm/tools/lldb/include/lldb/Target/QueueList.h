@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/UserID.h"
 end_include
 
@@ -71,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Utility/Iterable.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt

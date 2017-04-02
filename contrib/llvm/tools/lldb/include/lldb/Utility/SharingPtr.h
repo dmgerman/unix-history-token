@@ -546,7 +546,7 @@ operator|>
 operator|::
 name|on_zero_shared
 argument_list|()
-block|{ }
+block|{}
 block|}
 comment|// namespace imp
 name|template
@@ -1018,7 +1018,7 @@ name|cntrl_
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{ }
+block|{}
 name|template
 operator|<
 name|class
@@ -1046,7 +1046,7 @@ name|cntrl_
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{ }
+block|{}
 name|template
 operator|<
 name|class
@@ -1156,7 +1156,7 @@ name|cntrl_
 argument_list|(
 argument|cntrl_block
 argument_list|)
-block|{ }
+block|{}
 name|template
 operator|<
 name|class
@@ -1444,7 +1444,7 @@ operator|>
 operator|::
 name|swap
 argument_list|(
-argument|SharingPtr& r
+argument|SharingPtr&r
 argument_list|)
 block|{
 name|std
@@ -1532,7 +1532,7 @@ operator|>
 operator|::
 name|reset
 argument_list|(
-argument|Y* p
+argument|Y *p
 argument_list|)
 block|{
 name|SharingPtr
@@ -1640,7 +1640,7 @@ operator|>
 operator|::
 name|make_shared
 argument_list|(
-argument|A0& a0
+argument|A0&a0
 argument_list|)
 block|{
 typedef|typedef
@@ -1725,9 +1725,9 @@ operator|>
 operator|::
 name|make_shared
 argument_list|(
-argument|A0& a0
+argument|A0&a0
 argument_list|,
-argument|A1& a1
+argument|A1&a1
 argument_list|)
 block|{
 typedef|typedef
@@ -1817,11 +1817,11 @@ operator|>
 operator|::
 name|make_shared
 argument_list|(
-argument|A0& a0
+argument|A0&a0
 argument_list|,
-argument|A1& a1
+argument|A1&a1
 argument_list|,
-argument|A2& a2
+argument|A2&a2
 argument_list|)
 block|{
 typedef|typedef
@@ -1916,13 +1916,13 @@ operator|>
 operator|::
 name|make_shared
 argument_list|(
-argument|A0& a0
+argument|A0&a0
 argument_list|,
-argument|A1& a1
+argument|A1&a1
 argument_list|,
-argument|A2& a2
+argument|A2&a2
 argument_list|,
-argument|A3& a3
+argument|A3&a3
 argument_list|)
 block|{
 typedef|typedef
@@ -2022,15 +2022,15 @@ operator|>
 operator|::
 name|make_shared
 argument_list|(
-argument|A0& a0
+argument|A0&a0
 argument_list|,
-argument|A1& a1
+argument|A1&a1
 argument_list|,
-argument|A2& a2
+argument|A2&a2
 argument_list|,
-argument|A3& a3
+argument|A3&a3
 argument_list|,
-argument|A4& a4
+argument|A4&a4
 argument_list|)
 block|{
 typedef|typedef
@@ -2140,7 +2140,7 @@ name|T
 operator|>
 name|make_shared
 argument_list|(
-argument|A0& a0
+argument|A0&a0
 argument_list|)
 block|{
 return|return
@@ -2176,9 +2176,9 @@ name|T
 operator|>
 name|make_shared
 argument_list|(
-argument|A0& a0
+argument|A0&a0
 argument_list|,
-argument|A1& a1
+argument|A1&a1
 argument_list|)
 block|{
 return|return
@@ -2219,11 +2219,11 @@ name|T
 operator|>
 name|make_shared
 argument_list|(
-argument|A0& a0
+argument|A0&a0
 argument_list|,
-argument|A1& a1
+argument|A1&a1
 argument_list|,
-argument|A2& a2
+argument|A2&a2
 argument_list|)
 block|{
 return|return
@@ -2269,13 +2269,13 @@ name|T
 operator|>
 name|make_shared
 argument_list|(
-argument|A0& a0
+argument|A0&a0
 argument_list|,
-argument|A1& a1
+argument|A1&a1
 argument_list|,
-argument|A2& a2
+argument|A2&a2
 argument_list|,
-argument|A3& a3
+argument|A3&a3
 argument_list|)
 block|{
 return|return
@@ -2326,15 +2326,15 @@ name|T
 operator|>
 name|make_shared
 argument_list|(
-argument|A0& a0
+argument|A0&a0
 argument_list|,
-argument|A1& a1
+argument|A1&a1
 argument_list|,
-argument|A2& a2
+argument|A2&a2
 argument_list|,
-argument|A3& a3
+argument|A3&a3
 argument_list|,
-argument|A4& a4
+argument|A4&a4
 argument_list|)
 block|{
 return|return
@@ -2501,9 +2501,9 @@ specifier|inline
 name|void
 name|swap
 argument_list|(
-argument|SharingPtr<T>& __x
+argument|SharingPtr<T>&__x
 argument_list|,
-argument|SharingPtr<T>& __y
+argument|SharingPtr<T>&__y
 argument_list|)
 block|{
 name|__x
@@ -2528,7 +2528,7 @@ name|T
 operator|>
 name|static_pointer_cast
 argument_list|(
-argument|const SharingPtr<U>& r
+argument|const SharingPtr<U>&r
 argument_list|)
 block|{
 return|return
@@ -2570,7 +2570,7 @@ name|T
 operator|>
 name|const_pointer_cast
 argument_list|(
-argument|const SharingPtr<U>& r
+argument|const SharingPtr<U>&r
 argument_list|)
 block|{
 return|return
@@ -2670,7 +2670,7 @@ name|LoggingSharingPtr
 argument_list|(
 argument|Callback cb
 argument_list|,
-argument|void* baton
+argument|void *baton
 argument_list|)
 operator|:
 name|cb_
@@ -2735,11 +2735,11 @@ name|Y
 operator|>
 name|LoggingSharingPtr
 argument_list|(
-argument|Y* p
+argument|Y *p
 argument_list|,
 argument|Callback cb
 argument_list|,
-argument|void* baton
+argument|void *baton
 argument_list|)
 operator|:
 name|base
@@ -2918,7 +2918,7 @@ return|;
 end_return
 
 begin_macro
-unit|}      void
+unit|}    void
 name|reset
 argument_list|()
 end_macro
@@ -2956,7 +2956,7 @@ operator|>
 name|void
 name|reset
 argument_list|(
-argument|Y* p
+argument|Y *p
 argument_list|)
 block|{
 if|if
@@ -3000,12 +3000,12 @@ expr_stmt|;
 end_if
 
 begin_macro
-unit|}          void
+unit|}    void
 name|SetCallback
 argument_list|(
 argument|Callback cb
 argument_list|,
-argument|void* baton
+argument|void *baton
 argument_list|)
 end_macro
 
@@ -3088,7 +3088,7 @@ argument_list|(
 argument|-
 literal|1
 argument_list|)
-block|{     }
+block|{}
 name|void
 name|add_shared
 argument_list|()
@@ -3270,7 +3270,7 @@ argument_list|(
 argument|-
 literal|1
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|ReferenceCountedBaseVirtual
 argument_list|()
@@ -3300,7 +3300,7 @@ operator|>
 operator|::
 name|on_zero_shared
 argument_list|()
-block|{ }
+block|{}
 name|template
 operator|<
 name|typename
@@ -3323,7 +3323,7 @@ name|ptr_
 argument_list|(
 literal|0
 argument_list|)
-block|{     }
+block|{}
 name|explicit
 name|IntrusiveSharingPtr
 argument_list|(
@@ -3339,7 +3339,7 @@ argument_list|)
 block|{
 name|add_shared
 argument_list|()
-block|;     }
+block|; }
 name|IntrusiveSharingPtr
 argument_list|(
 specifier|const
@@ -3355,7 +3355,7 @@ argument_list|)
 block|{
 name|add_shared
 argument_list|()
-block|;     }
+block|;   }
 name|template
 operator|<
 name|class
@@ -3379,7 +3379,7 @@ argument_list|)
 block|{
 name|add_shared
 argument_list|()
-block|;     }
+block|;   }
 name|IntrusiveSharingPtr
 operator|&
 name|operator
@@ -3495,7 +3495,8 @@ name|nullptr
 block|;
 endif|#
 directive|endif
-comment|// #if defined (LLDB_CONFIGURATION_DEBUG) || defined (LLDB_CONFIGURATION_RELEASE)
+comment|// #if defined (LLDB_CONFIGURATION_DEBUG) || defined
+comment|// (LLDB_CONFIGURATION_RELEASE)
 block|}
 name|T
 operator|&
@@ -3664,7 +3665,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          bool
+unit|}    bool
 name|unique
 argument_list|()
 end_macro

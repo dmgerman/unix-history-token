@@ -89,9 +89,7 @@ name|MemoryManager
 operator|&
 name|MM
 argument_list|,
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|&
 name|Resolver
 argument_list|)
@@ -499,8 +497,9 @@ operator|&&
 literal|"Only expected load / store instructions."
 argument_list|)
 expr_stmt|;
+name|LLVM_FALLTHROUGH
+expr_stmt|;
 block|}
-comment|// fall-through
 case|case
 name|MachO
 operator|::
@@ -1041,8 +1040,9 @@ name|void
 operator|)
 name|p
 expr_stmt|;
+name|LLVM_FALLTHROUGH
+expr_stmt|;
 block|}
-comment|// fall-through
 case|case
 name|MachO
 operator|::

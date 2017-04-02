@@ -97,6 +97,9 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
+name|GlobalVariable
+decl_stmt|;
+name|class
 name|LLVMContext
 decl_stmt|;
 name|class
@@ -117,6 +120,8 @@ block|,
 name|CPLSDA
 block|,
 name|CPMachineBasicBlock
+block|,
+name|CPPromotedGlobal
 block|}
 enum|;
 enum|enum
@@ -140,6 +145,9 @@ comment|/// Thread Pointer Offset
 name|SECREL
 block|,
 comment|/// Section Relative (Windows TLS)
+name|SBREL
+block|,
+comment|/// Static Base Relative (RWPI)
 block|}
 enum|;
 block|}
@@ -365,9 +373,7 @@ return|return
 name|Modifier
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getModifierText
 argument_list|()
 specifier|const
@@ -476,6 +482,19 @@ operator|==
 name|ARMCP
 operator|::
 name|CPMachineBasicBlock
+return|;
+block|}
+name|bool
+name|isPromotedGlobal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|ARMCP
+operator|::
+name|CPPromotedGlobal
 return|;
 block|}
 name|int
@@ -611,6 +630,13 @@ operator|*
 name|CVal
 block|;
 comment|// Constant being loaded.
+specifier|const
+name|GlobalVariable
+operator|*
+name|GVar
+operator|=
+name|nullptr
+block|;
 name|ARMConstantPoolConstant
 argument_list|(
 argument|const Constant *C
@@ -643,6 +669,19 @@ argument_list|,
 argument|bool AddCurrentAddress
 argument_list|)
 block|;
+name|ARMConstantPoolConstant
+argument_list|(
+specifier|const
+name|GlobalVariable
+operator|*
+name|GV
+argument_list|,
+specifier|const
+name|Constant
+operator|*
+name|Init
+argument_list|)
+block|;
 name|public
 operator|:
 specifier|static
@@ -663,6 +702,22 @@ argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
 argument|ARMCP::ARMCPModifier Modifier
+argument_list|)
+block|;
+specifier|static
+name|ARMConstantPoolConstant
+operator|*
+name|Create
+argument_list|(
+specifier|const
+name|GlobalVariable
+operator|*
+name|GV
+argument_list|,
+specifier|const
+name|Constant
+operator|*
+name|Initializer
 argument_list|)
 block|;
 specifier|static
@@ -711,6 +766,34 @@ name|getBlockAddress
 argument_list|()
 specifier|const
 block|;
+specifier|const
+name|GlobalVariable
+operator|*
+name|getPromotedGlobal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|dyn_cast_or_null
+operator|<
+name|GlobalVariable
+operator|>
+operator|(
+name|GVar
+operator|)
+return|;
+block|}
+specifier|const
+name|Constant
+operator|*
+name|getPromotedGlobalInit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CVal
+return|;
+block|}
 name|int
 name|getExistingMachineCPValue
 argument_list|(
@@ -766,6 +849,11 @@ name|APV
 operator|->
 name|isLSDA
 argument_list|()
+operator|||
+name|APV
+operator|->
+name|isPromotedGlobal
+argument_list|()
 return|;
 block|}
 name|bool
@@ -811,7 +899,7 @@ name|ARMConstantPoolSymbol
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
-argument|const char *s
+argument|StringRef s
 argument_list|,
 argument|unsigned id
 argument_list|,
@@ -831,25 +919,20 @@ name|Create
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
-argument|const char *s
+argument|StringRef s
 argument_list|,
 argument|unsigned ID
 argument_list|,
 argument|unsigned char PCAdj
 argument_list|)
 block|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getSymbol
 argument_list|()
 specifier|const
 block|{
 return|return
 name|S
-operator|.
-name|c_str
-argument_list|()
 return|;
 block|}
 name|int

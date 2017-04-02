@@ -78,19 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclarationName.h"
+file|"clang/AST/TemplateBase.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"clang/Frontend/PCHContainerOperations.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/TemplateBase.h"
 end_include
 
 begin_include
@@ -138,12 +132,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -151,12 +139,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Bitcode/BitstreamWriter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
 end_include
 
 begin_include
@@ -181,9 +163,6 @@ decl_stmt|;
 name|class
 name|APInt
 decl_stmt|;
-name|class
-name|BitstreamWriter
-decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -191,6 +170,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|DeclarationName
+decl_stmt|;
 name|class
 name|ASTContext
 decl_stmt|;
@@ -386,21 +368,29 @@ comment|/// \brief The ASTContext we're writing.
 name|ASTContext
 modifier|*
 name|Context
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// \brief The preprocessor we're writing.
 name|Preprocessor
 modifier|*
 name|PP
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// \brief The reader of existing AST files, if we're chaining.
 name|ASTReader
 modifier|*
 name|Chain
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// \brief The module we're currently writing, if any.
 name|Module
 modifier|*
 name|WritingModule
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// \brief The base directory for any relative paths we emit.
 name|std
@@ -419,15 +409,21 @@ comment|/// \brief Indicates when the AST writing is actively performing
 comment|/// serialization, rather than just queueing updates.
 name|bool
 name|WritingAST
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Indicates that we are done serializing the collection of decls
 comment|/// and types to emit.
 name|bool
 name|DoneWritingDeclsAndTypes
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Indicates that the AST contained compiler errors.
 name|bool
 name|ASTHasCompilerErrors
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Mapping from input file entries to the index into the
 comment|/// offset table where information about that input file is stored.
@@ -575,12 +571,18 @@ name|serialization
 operator|::
 name|DeclID
 name|FirstDeclID
+operator|=
+name|serialization
+operator|::
+name|NUM_PREDEF_DECL_IDS
 expr_stmt|;
 comment|/// \brief The decl ID that will be assigned to the next new decl.
 name|serialization
 operator|::
 name|DeclID
 name|NextDeclID
+operator|=
+name|FirstDeclID
 expr_stmt|;
 comment|/// \brief Map that provides the ID numbers of each declaration within
 comment|/// the output stream, as well as those deserialized from a chained PCH.
@@ -681,12 +683,18 @@ name|serialization
 operator|::
 name|TypeID
 name|FirstTypeID
+operator|=
+name|serialization
+operator|::
+name|NUM_PREDEF_TYPE_IDS
 expr_stmt|;
 comment|/// \brief The type ID that will be assigned to the next new type.
 name|serialization
 operator|::
 name|TypeID
 name|NextTypeID
+operator|=
+name|FirstTypeID
 expr_stmt|;
 comment|/// \brief Map that provides the ID numbers of each type within the
 comment|/// output stream, plus those deserialized from a chained PCH.
@@ -715,12 +723,18 @@ name|serialization
 operator|::
 name|IdentID
 name|FirstIdentID
+operator|=
+name|serialization
+operator|::
+name|NUM_PREDEF_IDENT_IDS
 expr_stmt|;
 comment|/// \brief The identifier ID that will be assigned to the next new identifier.
 name|serialization
 operator|::
 name|IdentID
 name|NextIdentID
+operator|=
+name|FirstIdentID
 expr_stmt|;
 comment|/// \brief Map that provides the ID numbers of each identifier in
 comment|/// the output stream.
@@ -747,12 +761,18 @@ name|serialization
 operator|::
 name|MacroID
 name|FirstMacroID
+operator|=
+name|serialization
+operator|::
+name|NUM_PREDEF_MACRO_IDS
 expr_stmt|;
 comment|/// \brief The identifier ID that will be assigned to the next new identifier.
 name|serialization
 operator|::
 name|MacroID
 name|NextMacroID
+operator|=
+name|FirstMacroID
 expr_stmt|;
 comment|/// \brief Map that provides the ID numbers of each macro.
 name|llvm
@@ -849,24 +869,36 @@ name|serialization
 operator|::
 name|SubmoduleID
 name|FirstSubmoduleID
+operator|=
+name|serialization
+operator|::
+name|NUM_PREDEF_SUBMODULE_IDS
 expr_stmt|;
 comment|/// \brief The submodule ID that will be assigned to the next new submodule.
 name|serialization
 operator|::
 name|SubmoduleID
 name|NextSubmoduleID
+operator|=
+name|FirstSubmoduleID
 expr_stmt|;
 comment|/// \brief The first ID number we can use for our own selectors.
 name|serialization
 operator|::
 name|SelectorID
 name|FirstSelectorID
+operator|=
+name|serialization
+operator|::
+name|NUM_PREDEF_SELECTOR_IDS
 expr_stmt|;
 comment|/// \brief The selector ID that will be assigned to the next new selector.
 name|serialization
 operator|::
 name|SelectorID
 name|NextSelectorID
+operator|=
+name|FirstSelectorID
 expr_stmt|;
 comment|/// \brief Map that provides the ID numbers of each Selector.
 name|llvm
@@ -1239,8 +1271,9 @@ literal|16
 operator|>
 name|UpdatedDeclContexts
 expr_stmt|;
-comment|/// \brief Keeps track of visible decls that were added in DeclContexts
-comment|/// coming from another AST file.
+comment|/// \brief Keeps track of declarations that we must emit, even though we're
+comment|/// not guaranteed to be able to find them by walking the AST starting at the
+comment|/// translation unit.
 name|SmallVector
 operator|<
 specifier|const
@@ -1249,7 +1282,7 @@ operator|*
 operator|,
 literal|16
 operator|>
-name|UpdatingVisibleDecls
+name|DeclsToEmitEvenIfUnreferenced
 expr_stmt|;
 comment|/// \brief The set of Objective-C class that have categories we
 comment|/// should serialize.
@@ -1307,20 +1340,28 @@ expr_stmt|;
 comment|/// \brief The number of statements written to the AST file.
 name|unsigned
 name|NumStatements
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of macros written to the AST file.
 name|unsigned
 name|NumMacros
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of lexical declcontexts written to the AST
 comment|/// file.
 name|unsigned
 name|NumLexicalDeclContexts
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of visible declcontexts written to the AST
 comment|/// file.
 name|unsigned
 name|NumVisibleDeclContexts
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief A mapping from each known submodule to its ID number, which will
 comment|/// be a positive integer.
@@ -1471,9 +1512,13 @@ parameter_list|)
 function_decl|;
 name|unsigned
 name|TypeExtQualAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|TypeFunctionProtoAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|void
 name|WriteTypeAbbrevs
@@ -1630,6 +1675,30 @@ name|SemaRef
 parameter_list|)
 function_decl|;
 name|void
+name|WriteOpenCLExtensionTypes
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|)
+function_decl|;
+name|void
+name|WriteOpenCLExtensionDecls
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|)
+function_decl|;
+name|void
+name|WriteCUDAPragmas
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|)
+function_decl|;
+name|void
 name|WriteObjCCategories
 parameter_list|()
 function_decl|;
@@ -1679,48 +1748,78 @@ parameter_list|)
 function_decl|;
 name|unsigned
 name|DeclParmVarAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|DeclContextLexicalAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|DeclContextVisibleLookupAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|UpdateVisibleAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|DeclRecordAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|DeclTypedefAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|DeclVarAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|DeclFieldAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|DeclEnumAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|DeclObjCIvarAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|DeclCXXMethodAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|DeclRefExprAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|CharacterLiteralAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|IntegerLiteralAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|ExprImplicitCastAbbrev
+init|=
+literal|0
 decl_stmt|;
 name|void
 name|WriteDeclAbbrevs
@@ -1768,7 +1867,7 @@ name|ASTWriter
 argument_list|(
 argument|llvm::BitstreamWriter&Stream
 argument_list|,
-argument|ArrayRef<llvm::IntrusiveRefCntPtr<ModuleFileExtension>> Extensions
+argument|ArrayRef<std::shared_ptr<ModuleFileExtension>> Extensions
 argument_list|,
 argument|bool IncludeTimestamps = true
 argument_list|)
@@ -2507,6 +2606,51 @@ argument_list|)
 name|override
 decl_stmt|;
 name|void
+name|AddedCXXTemplateSpecialization
+argument_list|(
+specifier|const
+name|ClassTemplateDecl
+operator|*
+name|TD
+argument_list|,
+specifier|const
+name|ClassTemplateSpecializationDecl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|AddedCXXTemplateSpecialization
+argument_list|(
+specifier|const
+name|VarTemplateDecl
+operator|*
+name|TD
+argument_list|,
+specifier|const
+name|VarTemplateSpecializationDecl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|AddedCXXTemplateSpecialization
+argument_list|(
+specifier|const
+name|FunctionTemplateDecl
+operator|*
+name|TD
+argument_list|,
+specifier|const
+name|FunctionDecl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+name|void
 name|ResolvedExceptionSpec
 argument_list|(
 specifier|const
@@ -2569,6 +2713,16 @@ name|DefaultArgumentInstantiated
 argument_list|(
 specifier|const
 name|ParmVarDecl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|DefaultMemberInitializerInstantiated
+argument_list|(
+specifier|const
+name|FieldDecl
 operator|*
 name|D
 argument_list|)
@@ -3548,12 +3702,6 @@ operator|::
 name|string
 name|OutputFile
 block|;
-name|clang
-operator|::
-name|Module
-operator|*
-name|Module
-block|;
 name|std
 operator|::
 name|string
@@ -3627,13 +3775,11 @@ argument|const Preprocessor&PP
 argument_list|,
 argument|StringRef OutputFile
 argument_list|,
-argument|clang::Module *Module
-argument_list|,
 argument|StringRef isysroot
 argument_list|,
 argument|std::shared_ptr<PCHBuffer> Buffer
 argument_list|,
-argument|ArrayRef<llvm::IntrusiveRefCntPtr<ModuleFileExtension>> Extensions
+argument|ArrayRef<std::shared_ptr<ModuleFileExtension>> Extensions
 argument_list|,
 argument|bool AllowASTWithErrors = false
 argument_list|,

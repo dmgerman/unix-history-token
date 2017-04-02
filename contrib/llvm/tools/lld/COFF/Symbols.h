@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"Memory.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lld/Core/LLVM.h"
 end_include
 
@@ -144,34 +150,12 @@ decl_stmt|;
 name|class
 name|ObjectFile
 decl_stmt|;
+struct_decl|struct
+name|Symbol
+struct_decl|;
 name|class
-name|SymbolBody
+name|SymbolTable
 decl_stmt|;
-comment|// A real symbol object, SymbolBody, is usually accessed indirectly
-comment|// through a Symbol. There's always one Symbol for each symbol name.
-comment|// The resolver updates SymbolBody pointers as it resolves symbols.
-struct|struct
-name|Symbol
-block|{
-name|explicit
-name|Symbol
-argument_list|(
-name|SymbolBody
-operator|*
-name|P
-argument_list|)
-operator|:
-name|Body
-argument_list|(
-argument|P
-argument_list|)
-block|{}
-name|SymbolBody
-operator|*
-name|Body
-expr_stmt|;
-block|}
-struct|;
 comment|// The base class for real symbol classes.
 name|class
 name|SymbolBody
@@ -246,61 +230,43 @@ name|StringRef
 name|getName
 parameter_list|()
 function_decl|;
-comment|// A SymbolBody has a backreference to a Symbol. Originally they are
-comment|// doubly-linked. A backreference will never change. But the pointer
-comment|// in the Symbol may be mutated by the resolver. If you have a
-comment|// pointer P to a SymbolBody and are not sure whether the resolver
-comment|// has chosen the object among other objects having the same name,
-comment|// you can access P->Backref->Body to get the resolver's result.
-name|void
-name|setBackref
-parameter_list|(
+comment|// Returns the file from which this symbol was created.
+name|InputFile
+modifier|*
+name|getFile
+parameter_list|()
+function_decl|;
 name|Symbol
 modifier|*
-name|P
-parameter_list|)
-block|{
-name|Backref
-operator|=
-name|P
-expr_stmt|;
-block|}
-name|SymbolBody
-modifier|*
-name|repl
+name|symbol
 parameter_list|()
+function_decl|;
+specifier|const
+name|Symbol
+operator|*
+name|symbol
+argument_list|()
+specifier|const
 block|{
 return|return
-name|Backref
-condition|?
-name|Backref
-operator|->
-name|Body
-else|:
+name|const_cast
+operator|<
+name|SymbolBody
+operator|*
+operator|>
+operator|(
 name|this
+operator|)
+operator|->
+name|symbol
+argument_list|()
 return|;
 block|}
-comment|// Decides which symbol should "win" in the symbol table, this or
-comment|// the Other. Returns 1 if this wins, -1 if the Other wins, or 0 if
-comment|// they are duplicate (conflicting) symbols.
-name|int
-name|compare
-parameter_list|(
-name|SymbolBody
-modifier|*
-name|Other
-parameter_list|)
-function_decl|;
-comment|// Returns a name of this symbol including source file name.
-comment|// Used only for debugging and logging.
-name|std
-operator|::
-name|string
-name|getDebugName
-argument_list|()
-expr_stmt|;
 name|protected
 label|:
+name|friend
+name|SymbolTable
+decl_stmt|;
 name|explicit
 name|SymbolBody
 argument_list|(
@@ -326,6 +292,11 @@ name|false
 argument_list|)
 operator|,
 name|IsReplaceable
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|WrittenToSymtab
 argument_list|(
 name|false
 argument_list|)
@@ -358,14 +329,18 @@ name|IsReplaceable
 range|:
 literal|1
 decl_stmt|;
+name|public
+label|:
+comment|// This bit is used by Writer::createSymbolAndStringTable().
+name|unsigned
+name|WrittenToSymtab
+range|:
+literal|1
+decl_stmt|;
+name|protected
+label|:
 name|StringRef
 name|Name
-decl_stmt|;
-name|Symbol
-modifier|*
-name|Backref
-init|=
-name|nullptr
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -487,26 +462,25 @@ operator|<=
 name|LastDefinedCOFFKind
 return|;
 block|}
-name|int
-name|getFileIndex
+name|ObjectFile
+operator|*
+name|getFile
 argument_list|()
 block|{
 return|return
 name|File
-operator|->
-name|Index
 return|;
 block|}
 name|COFFSymbolRef
 name|getCOFFSymbol
 argument_list|()
 block|;
-name|protected
-operator|:
 name|ObjectFile
 operator|*
 name|File
 block|;
+name|protected
+operator|:
 specifier|const
 name|coff_symbol_generic
 operator|*
@@ -697,7 +671,7 @@ block|}
 name|private
 operator|:
 name|friend
-name|SymbolBody
+name|SymbolTable
 block|;
 name|uint64_t
 name|getSize
@@ -941,33 +915,17 @@ operator|==
 name|LazyKind
 return|;
 block|}
-comment|// Returns an object file for this symbol, or a nullptr if the file
-comment|// was already returned.
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|InputFile
-operator|>
-name|getMember
-argument_list|()
-block|;
-name|int
-name|getFileIndex
-argument_list|()
-block|{
-return|return
-name|File
-operator|->
-name|Index
-return|;
-block|}
-name|private
-operator|:
 name|ArchiveFile
 operator|*
 name|File
 block|;
+name|private
+operator|:
+name|friend
+name|SymbolTable
+block|;
+name|private
+operator|:
 specifier|const
 name|Archive
 operator|::
@@ -1047,13 +1005,9 @@ name|public
 operator|:
 name|DefinedImportData
 argument_list|(
-argument|StringRef D
-argument_list|,
 argument|StringRef N
 argument_list|,
-argument|StringRef E
-argument_list|,
-argument|const coff_import_header *H
+argument|ImportFile *F
 argument_list|)
 operator|:
 name|Defined
@@ -1063,19 +1017,9 @@ argument_list|,
 name|N
 argument_list|)
 block|,
-name|DLLName
+name|File
 argument_list|(
-name|D
-argument_list|)
-block|,
-name|ExternalName
-argument_list|(
-name|E
-argument_list|)
-block|,
-name|Hdr
-argument_list|(
-argument|H
+argument|F
 argument_list|)
 block|{   }
 specifier|static
@@ -1099,6 +1043,8 @@ name|getRVA
 argument_list|()
 block|{
 return|return
+name|File
+operator|->
 name|Location
 operator|->
 name|getRVA
@@ -1110,6 +1056,8 @@ name|getDLLName
 argument_list|()
 block|{
 return|return
+name|File
+operator|->
 name|DLLName
 return|;
 block|}
@@ -1118,6 +1066,8 @@ name|getExternalName
 argument_list|()
 block|{
 return|return
+name|File
+operator|->
 name|ExternalName
 return|;
 block|}
@@ -1127,6 +1077,8 @@ argument_list|(
 argument|Chunk *AddressTable
 argument_list|)
 block|{
+name|File
+operator|->
 name|Location
 operator|=
 name|AddressTable
@@ -1136,6 +1088,8 @@ name|getOrdinal
 argument_list|()
 block|{
 return|return
+name|File
+operator|->
 name|Hdr
 operator|->
 name|OrdinalHint
@@ -1143,22 +1097,9 @@ return|;
 block|}
 name|private
 operator|:
-name|StringRef
-name|DLLName
-block|;
-name|StringRef
-name|ExternalName
-block|;
-specifier|const
-name|coff_import_header
+name|ImportFile
 operator|*
-name|Hdr
-block|;
-name|Chunk
-operator|*
-name|Location
-operator|=
-name|nullptr
+name|File
 block|; }
 decl_stmt|;
 comment|// This class represents a symbol for a jump table entry which jumps
@@ -1217,19 +1158,12 @@ argument_list|()
 block|{
 return|return
 name|Data
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|private
 operator|:
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|Chunk
-operator|>
+operator|*
 name|Data
 block|; }
 decl_stmt|;
@@ -1262,7 +1196,7 @@ argument_list|)
 block|,
 name|Data
 argument_list|(
-argument|S
+argument|make<LocalImportChunk>(S)
 argument_list|)
 block|{}
 specifier|static
@@ -1287,7 +1221,7 @@ argument_list|()
 block|{
 return|return
 name|Data
-operator|.
+operator|->
 name|getRVA
 argument_list|()
 return|;
@@ -1298,13 +1232,13 @@ name|getChunk
 argument_list|()
 block|{
 return|return
-operator|&
 name|Data
 return|;
 block|}
 name|private
 operator|:
 name|LocalImportChunk
+operator|*
 name|Data
 block|; }
 decl_stmt|;
@@ -1340,6 +1274,11 @@ argument_list|(
 argument|F
 argument_list|)
 block|{
+comment|// IsReplaceable tracks whether the bitcode symbol may be replaced with some
+comment|// other (defined, common or bitcode) symbol. This is the case for common,
+comment|// comdat and weak external symbols. We try to replace bitcode symbols with
+comment|// "real" symbols (see SymbolTable::add{Regular,Bitcode}), and resolve the
+comment|// result against the real symbol from the combined LTO object.
 name|this
 operator|->
 name|IsReplaceable
@@ -1362,8 +1301,6 @@ operator|==
 name|DefinedBitcodeKind
 return|;
 block|}
-name|private
-operator|:
 name|BitcodeFile
 operator|*
 name|File
@@ -1513,9 +1450,245 @@ literal|"unknown symbol kind"
 argument_list|)
 expr_stmt|;
 block|}
+comment|// A real symbol object, SymbolBody, is usually stored within a Symbol. There's
+comment|// always one Symbol for each symbol name. The resolver updates the SymbolBody
+comment|// stored in the Body field of this object as it resolves symbols. Symbol also
+comment|// holds computed properties of symbol names.
+expr|struct
+name|Symbol
+block|{
+comment|// True if this symbol was referenced by a regular (non-bitcode) object.
+name|unsigned
+name|IsUsedInRegularObj
+operator|:
+literal|1
+block|;
+comment|// True if we've seen both a lazy and an undefined symbol with this symbol
+comment|// name, which means that we have enqueued an archive member load and should
+comment|// not load any more archive members to resolve the same symbol.
+name|unsigned
+name|PendingArchiveLoad
+operator|:
+literal|1
+block|;
+comment|// This field is used to store the Symbol's SymbolBody. This instantiation of
+comment|// AlignedCharArrayUnion gives us a struct with a char array field that is
+comment|// large and aligned enough to store any derived class of SymbolBody.
+name|llvm
+operator|::
+name|AlignedCharArrayUnion
+operator|<
+name|DefinedRegular
+block|,
+name|DefinedCommon
+block|,
+name|DefinedAbsolute
+block|,
+name|DefinedRelative
+block|,
+name|Lazy
+block|,
+name|Undefined
+block|,
+name|DefinedImportData
+block|,
+name|DefinedImportThunk
+block|,
+name|DefinedLocalImport
+block|,
+name|DefinedBitcode
+operator|>
+name|Body
+block|;
+name|SymbolBody
+operator|*
+name|body
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|SymbolBody
+operator|*
+operator|>
+operator|(
+name|Body
+operator|.
+name|buffer
+operator|)
+return|;
 block|}
+specifier|const
+name|SymbolBody
+operator|*
+name|body
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Symbol
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|body
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+name|template
+operator|<
+name|typename
+name|T
+block|,
+name|typename
+operator|...
+name|ArgT
+operator|>
+name|void
+name|replaceBody
+argument_list|(
+argument|Symbol *S
+argument_list|,
+argument|ArgT&&... Arg
+argument_list|)
+block|{
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|S
+operator|->
+name|Body
+argument_list|)
+argument_list|,
+literal|"Body too small"
+argument_list|)
+block|;
+name|static_assert
+argument_list|(
+name|alignof
+argument_list|(
+name|T
+argument_list|)
+operator|<=
+name|alignof
+argument_list|(
+name|decltype
+argument_list|(
+name|S
+operator|->
+name|Body
+argument_list|)
+argument_list|)
+argument_list|,
+literal|"Body not aligned enough"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|static_cast
+operator|<
+name|SymbolBody
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|nullptr
+operator|)
+operator|)
+operator|==
+name|nullptr
+operator|&&
+literal|"Not a SymbolBody"
+argument_list|)
+block|;
+name|new
+argument_list|(
+argument|S->Body.buffer
+argument_list|)
+name|T
+argument_list|(
+name|std
+operator|::
+name|forward
+operator|<
+name|ArgT
+operator|>
+operator|(
+name|Arg
+operator|)
+operator|...
+argument_list|)
+block|; }
+specifier|inline
+name|Symbol
+operator|*
+name|SymbolBody
+operator|::
+name|symbol
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|isExternal
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+name|Symbol
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+name|char
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|-
+name|offsetof
+argument_list|(
+name|Symbol
+argument_list|,
+name|Body
+argument_list|)
+operator|)
+return|;
+block|}
+expr|}
 comment|// namespace coff
-block|}
+name|std
+operator|::
+name|string
+name|toString
+argument_list|(
+name|coff
+operator|::
+name|SymbolBody
+operator|&
+name|B
+argument_list|)
+block|; }
 end_decl_stmt
 
 begin_comment

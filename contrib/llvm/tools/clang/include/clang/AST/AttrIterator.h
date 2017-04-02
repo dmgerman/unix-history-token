@@ -209,20 +209,9 @@ operator|<
 name|Attr
 operator|*
 operator|,
-literal|2
+literal|4
 operator|>
 name|AttrVec
-expr_stmt|;
-typedef|typedef
-name|SmallVector
-operator|<
-specifier|const
-name|Attr
-operator|*
-operator|,
-literal|2
-operator|>
-name|ConstAttrVec
 expr_stmt|;
 comment|/// specific_attr_iterator - Iterates over a subrange of an AttrVec, only
 comment|/// providing attributes that are of a specific type.

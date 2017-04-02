@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"DebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MachONormalizedFile.h"
 end_include
 
@@ -77,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Format.h"
 end_include
 
 begin_include
@@ -109,6 +121,7 @@ name|SimpleFile
 block|{
 name|public
 operator|:
+comment|/// Real file constructor - for on-disk files.
 name|MachOFile
 argument_list|(
 name|std
@@ -151,6 +164,7 @@ argument_list|(
 argument|ctx
 argument_list|)
 block|{}
+comment|/// Dummy file constructor - for virtual files.
 name|MachOFile
 argument_list|(
 argument|StringRef path
@@ -1272,6 +1286,68 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|void
+name|setDebugInfo
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DebugInfo
+operator|>
+name|debugInfo
+argument_list|)
+block|{
+name|_debugInfo
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|debugInfo
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|DebugInfo
+operator|*
+name|debugInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_debugInfo
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DebugInfo
+operator|>
+name|takeDebugInfo
+argument_list|()
+block|{
+return|return
+name|std
+operator|::
+name|move
+argument_list|(
+name|_debugInfo
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_label
 name|protected
 label|:
@@ -1587,6 +1663,17 @@ name|MH_SUBSECTIONS_VIA_SYMBOLS
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DebugInfo
+operator|>
+name|_debugInfo
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 unit|};
 name|class
@@ -1726,6 +1813,7 @@ block|;   }
 name|StringRef
 name|installName
 argument_list|()
+specifier|const
 block|{
 return|return
 name|_installName

@@ -67,6 +67,9 @@ block|,
 comment|/// Text - Text section, used for functions and other executable code.
 name|Text
 block|,
+comment|/// ExecuteOnly, Text section that is not readable.
+name|ExecuteOnly
+block|,
 comment|/// ReadOnly - Data that is never written to at program runtime by the
 comment|/// program or the dynamic linker.  Things in the top-level readonly
 comment|/// SectionKind are not mergeable.
@@ -169,6 +172,21 @@ return|return
 name|K
 operator|==
 name|Text
+operator|||
+name|K
+operator|==
+name|ExecuteOnly
+return|;
+block|}
+name|bool
+name|isExecuteOnly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|K
+operator|==
+name|ExecuteOnly
 return|;
 block|}
 name|bool
@@ -496,6 +514,18 @@ return|return
 name|get
 argument_list|(
 name|Text
+argument_list|)
+return|;
+block|}
+specifier|static
+name|SectionKind
+name|getExecuteOnly
+parameter_list|()
+block|{
+return|return
+name|get
+argument_list|(
+name|ExecuteOnly
 argument_list|)
 return|;
 block|}

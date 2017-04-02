@@ -50,6 +50,16 @@ name|LLDB_DISABLE_PYTHON
 end_ifndef
 
 begin_comment
+comment|// LLDB Python header must be included first
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb-python.h"
+end_include
+
+begin_comment
 comment|// C Includes
 end_comment
 
@@ -68,25 +78,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-defines.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
+file|"lldb/Core/Flags.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Flags.h"
+file|"lldb/Core/StructuredData.h"
 end_include
 
 begin_include
@@ -99,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/OptionValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
 end_include
 
 begin_include
@@ -143,7 +153,7 @@ name|StructuredData
 operator|::
 name|Generic
 argument_list|()
-block|{     }
+block|{}
 name|StructuredPythonObject
 argument_list|(
 name|void
@@ -163,7 +173,7 @@ argument_list|(
 name|GetValue
 argument_list|()
 argument_list|)
-block|;     }
+block|;   }
 operator|~
 name|StructuredPythonObject
 argument_list|()
@@ -184,7 +194,7 @@ name|SetValue
 argument_list|(
 name|nullptr
 argument_list|)
-block|;     }
+block|;   }
 name|bool
 name|IsValid
 argument_list|()
@@ -207,6 +217,11 @@ argument_list|(
 name|Stream
 operator|&
 name|s
+argument_list|,
+name|bool
+name|pretty_print
+operator|=
+name|true
 argument_list|)
 decl|const
 name|override
@@ -307,7 +322,7 @@ name|m_py_obj
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{     }
+block|{}
 name|PythonObject
 argument_list|(
 argument|PyRefType type
@@ -326,7 +341,7 @@ name|type
 argument_list|,
 name|py_obj
 argument_list|)
-block|;     }
+block|;   }
 name|PythonObject
 argument_list|(
 specifier|const
@@ -344,7 +359,7 @@ name|Reset
 argument_list|(
 name|rhs
 argument_list|)
-block|;     }
+block|; }
 name|virtual
 operator|~
 name|PythonObject
@@ -352,7 +367,7 @@ argument_list|()
 block|{
 name|Reset
 argument_list|()
-block|;     }
+block|; }
 name|void
 name|Reset
 argument_list|()
@@ -815,7 +830,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}      StructuredData
+unit|}    StructuredData
 operator|::
 name|ObjectSP
 name|CreateStructuredObject
@@ -1691,7 +1706,7 @@ name|bool
 name|has_kwargs
 operator|:
 literal|1
-block|;     }
+block|;   }
 block|;
 name|PythonCallable
 argument_list|()
@@ -1811,7 +1826,7 @@ name|args
 operator|...
 block|}
 block|)
-block|;     }
+block|;   }
 end_decl_stmt
 
 begin_decl_stmt

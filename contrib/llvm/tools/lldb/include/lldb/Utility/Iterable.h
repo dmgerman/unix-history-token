@@ -169,14 +169,14 @@ name|m_iter
 argument_list|(
 argument|backing_iterator
 argument_list|)
-block|{     }
+block|{}
 comment|// Default-constructible
 name|AdaptedConstIterator
 argument_list|()
 operator|:
 name|m_iter
 argument_list|()
-block|{     }
+block|{}
 comment|// Copy-constructible
 name|AdaptedConstIterator
 argument_list|(
@@ -190,7 +190,7 @@ name|m_iter
 argument_list|(
 argument|rhs.m_iter
 argument_list|)
-block|{     }
+block|{}
 comment|// Copy-assignable
 name|AdaptedConstIterator
 operator|&
@@ -955,7 +955,7 @@ name|m_container
 argument_list|(
 argument|container
 argument_list|)
-block|{     }
+block|{}
 name|AdaptedConstIterator
 operator|<
 name|C
@@ -1086,7 +1086,7 @@ name|m_mutex
 operator|->
 name|lock
 argument_list|()
-block|;     }
+block|;   }
 name|LockingAdaptedIterable
 argument_list|(
 name|LockingAdaptedIterable
@@ -1116,7 +1116,7 @@ operator|.
 name|m_mutex
 operator|=
 name|nullptr
-block|;     }
+block|;   }
 operator|~
 name|LockingAdaptedIterable
 argument_list|()
@@ -1142,12 +1142,31 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DISALLOW_COPY_AND_ASSIGN
-argument_list|(
 name|LockingAdaptedIterable
+argument_list|(
+specifier|const
+name|LockingAdaptedIterable
+operator|&
 argument_list|)
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|LockingAdaptedIterable
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|LockingAdaptedIterable
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};  }

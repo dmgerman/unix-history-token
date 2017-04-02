@@ -348,7 +348,8 @@ specifier|const
 name|LangOptions
 name|LangOpts
 decl_stmt|;
-name|AnalyzerOptionsRef
+name|AnalyzerOptions
+modifier|&
 name|AOptions
 decl_stmt|;
 name|CheckName
@@ -358,11 +359,16 @@ name|public
 label|:
 name|CheckerManager
 argument_list|(
-argument|const LangOptions&langOpts
+specifier|const
+name|LangOptions
+operator|&
+name|langOpts
 argument_list|,
-argument|AnalyzerOptionsRef AOptions
+name|AnalyzerOptions
+operator|&
+name|AOptions
 argument_list|)
-block|:
+operator|:
 name|LangOpts
 argument_list|(
 name|langOpts
@@ -370,7 +376,7 @@ argument_list|)
 operator|,
 name|AOptions
 argument_list|(
-argument|std::move(AOptions)
+argument|AOptions
 argument_list|)
 block|{}
 operator|~
@@ -424,7 +430,6 @@ name|getAnalyzerOptions
 parameter_list|()
 block|{
 return|return
-operator|*
 name|AOptions
 return|;
 block|}
@@ -1471,20 +1476,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief True if at least one checker wants to check region changes.
-end_comment
-
-begin_function_decl
-name|bool
-name|wantsRegionChangeUpdate
-parameter_list|(
-name|ProgramStateRef
-name|state
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Run checkers for region changes.
 end_comment
 
@@ -2124,19 +2115,6 @@ begin_typedef
 typedef|typedef
 name|CheckerFn
 operator|<
-name|bool
-argument_list|(
-name|ProgramStateRef
-argument_list|)
-operator|>
-name|WantsRegionChangeUpdateFunc
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|CheckerFn
-operator|<
 name|ProgramStateRef
 argument_list|(
 argument|ProgramStateRef
@@ -2388,9 +2366,6 @@ name|_registerForRegionChanges
 parameter_list|(
 name|CheckRegionChangesFunc
 name|checkfn
-parameter_list|,
-name|WantsRegionChangeUpdateFunc
-name|wantUpdateFn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3027,26 +3002,12 @@ name|DeadSymbolsCheckers
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|RegionChangesCheckerInfo
-block|{
-name|CheckRegionChangesFunc
-name|CheckFn
-decl_stmt|;
-name|WantsRegionChangeUpdateFunc
-name|WantUpdateFn
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_expr_stmt
 name|std
 operator|::
 name|vector
 operator|<
-name|RegionChangesCheckerInfo
+name|CheckRegionChangesFunc
 operator|>
 name|RegionChangesCheckers
 expr_stmt|;

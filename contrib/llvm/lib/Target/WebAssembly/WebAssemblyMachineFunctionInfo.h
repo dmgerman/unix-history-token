@@ -104,6 +104,22 @@ name|MVT
 operator|>
 name|Params
 block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|MVT
+operator|>
+name|Results
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|MVT
+operator|>
+name|Locals
+block|;
 comment|/// A mapping from CodeGen vreg index to WebAssembly register number.
 name|std
 operator|::
@@ -127,6 +143,14 @@ comment|// functions. It is created and set in TLI::LowerFormalArguments and rea
 comment|// TLI::LowerVASTART
 name|unsigned
 name|VarargVreg
+operator|=
+operator|-
+literal|1U
+block|;
+comment|// A virtual register holding the base pointer for functions that have
+comment|// overaligned values on the user stack.
+name|unsigned
+name|BasePtrVreg
 operator|=
 operator|-
 literal|1U
@@ -180,6 +204,64 @@ return|return
 name|Params
 return|;
 block|}
+name|void
+name|addResult
+argument_list|(
+argument|MVT VT
+argument_list|)
+block|{
+name|Results
+operator|.
+name|push_back
+argument_list|(
+name|VT
+argument_list|)
+block|; }
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|MVT
+operator|>
+operator|&
+name|getResults
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Results
+return|;
+block|}
+name|void
+name|addLocal
+argument_list|(
+argument|MVT VT
+argument_list|)
+block|{
+name|Locals
+operator|.
+name|push_back
+argument_list|(
+name|VT
+argument_list|)
+block|; }
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|MVT
+operator|>
+operator|&
+name|getLocals
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Locals
+return|;
+block|}
 name|unsigned
 name|getVarargBufferVreg
 argument_list|()
@@ -209,6 +291,35 @@ name|VarargVreg
 operator|=
 name|Reg
 block|; }
+name|unsigned
+name|getBasePointerVreg
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|BasePtrVreg
+operator|!=
+operator|-
+literal|1U
+operator|&&
+literal|"Base ptr vreg hasn't been set"
+argument_list|)
+block|;
+return|return
+name|BasePtrVreg
+return|;
+block|}
+name|void
+name|setBasePointerVreg
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|BasePtrVreg
+operator|=
+name|Reg
+block|; }
 specifier|static
 specifier|const
 name|unsigned
@@ -223,6 +334,19 @@ argument_list|(
 argument|unsigned VReg
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|MF
+operator|.
+name|getRegInfo
+argument_list|()
+operator|.
+name|getUniqueVRegDef
+argument_list|(
+name|VReg
+argument_list|)
+argument_list|)
+block|;
 if|if
 condition|(
 name|TargetRegisterInfo
@@ -424,8 +548,68 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+unit|};
+name|void
+name|ComputeLegalValueVTs
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|TargetMachine
+operator|&
+name|TM
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MVT
+operator|>
+operator|&
+name|ValueVTs
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ComputeSignatureVTs
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|TargetMachine
+operator|&
+name|TM
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MVT
+operator|>
+operator|&
+name|Params
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MVT
+operator|>
+operator|&
+name|Results
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-unit|};  }
+unit|}
 comment|// end namespace llvm
 end_comment
 

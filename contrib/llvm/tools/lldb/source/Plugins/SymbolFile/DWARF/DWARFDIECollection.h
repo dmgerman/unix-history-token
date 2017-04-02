@@ -66,11 +66,11 @@ argument_list|()
 operator|:
 name|m_dies
 argument_list|()
-block|{     }
+block|{}
 operator|~
 name|DWARFDIECollection
 argument_list|()
-block|{     }
+block|{}
 name|void
 name|Append
 argument_list|(

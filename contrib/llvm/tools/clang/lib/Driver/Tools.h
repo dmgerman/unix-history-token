@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -406,6 +412,36 @@ name|Compiler
 operator|>
 name|CLFallback
 block|;
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|raw_fd_ostream
+operator|>
+name|CompilationDatabase
+operator|=
+name|nullptr
+block|;
+name|void
+name|DumpCompilationDatabase
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|StringRef Filename
+argument_list|,
+argument|StringRef Target
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfo&Input
+argument_list|,
+argument|const llvm::opt::ArgList&Args
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 comment|// CAUTION! The first constructor argument ("clang") is not arbitrary,
@@ -527,6 +563,15 @@ argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
+name|void
+name|AddX86TargetArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|hasGoodDiagnostics
 argument_list|()
@@ -565,6 +610,81 @@ argument_list|,
 argument|const JobAction&JA
 argument_list|,
 argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
+comment|/// Offload bundler tool.
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|OffloadBundler
+name|final
+range|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|OffloadBundler
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"offload bundler"
+argument_list|,
+literal|"clang-offload-bundler"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|ConstructJobMultipleOutputs
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfoList&Outputs
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
@@ -2715,6 +2835,75 @@ name|override
 block|; }
 block|; }
 comment|// end namespace nacltools
+name|namespace
+name|fuchsia
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Linker
+operator|:
+name|public
+name|GnuTool
+block|{
+name|public
+operator|:
+name|Linker
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|GnuTool
+argument_list|(
+literal|"fuchsia::Linker"
+argument_list|,
+literal|"ld.lld"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|; }
+comment|// end namespace fuchsia
 comment|/// minix -- Directly call GNU Binutils assembler and linker
 name|namespace
 name|minix
@@ -3094,20 +3283,6 @@ comment|/// Visual studio tools.
 name|namespace
 name|visualstudio
 block|{
-name|VersionTuple
-name|getMSVCVersion
-argument_list|(
-argument|const Driver *D
-argument_list|,
-argument|const ToolChain&TC
-argument_list|,
-argument|const llvm::Triple&Triple
-argument_list|,
-argument|const llvm::opt::ArgList&Args
-argument_list|,
-argument|bool IsWindowsMSVC
-argument_list|)
-block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Linker
@@ -4212,6 +4387,75 @@ name|override
 block|; }
 block|;  }
 comment|// end namespace NVPTX
+name|namespace
+name|AVR
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Linker
+operator|:
+name|public
+name|GnuTool
+block|{
+name|public
+operator|:
+name|Linker
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|GnuTool
+argument_list|(
+literal|"AVR::Linker"
+argument_list|,
+literal|"avr-ld"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|; }
+comment|// end namespace AVR
 block|}
 comment|// end namespace tools
 block|}

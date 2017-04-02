@@ -62,12 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-enumerations.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/IOHandler.h"
 end_include
 
@@ -101,6 +95,12 @@ directive|include
 file|"lldb/Target/ExecutionContext.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-enumerations.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -132,14 +132,12 @@ name|CommandOptions
 argument_list|()
 name|override
 block|;
-name|uint32_t
-name|GetNumDefinitions
-argument_list|()
-name|override
-block|;
-specifier|const
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
@@ -147,18 +145,18 @@ block|;
 name|Error
 name|SetOptionValue
 argument_list|(
-argument|CommandInterpreter&interpreter
-argument_list|,
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_value
+argument|llvm::StringRef option_value
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|(
-argument|CommandInterpreter&interpreter
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
@@ -205,7 +203,7 @@ name|m_verbosity
 block|;
 name|LazyBool
 name|auto_apply_fixits
-block|;     }
+block|;   }
 decl_stmt|;
 name|CommandObjectExpression
 argument_list|(

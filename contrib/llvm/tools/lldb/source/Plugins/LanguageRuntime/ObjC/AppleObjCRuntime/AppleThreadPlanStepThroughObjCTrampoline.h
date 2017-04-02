@@ -62,13 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-enumerations.h"
+file|"AppleObjCTrampolineHandler.h"
 end_include
 
 begin_include
@@ -86,7 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"AppleObjCTrampolineHandler.h"
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
 end_include
 
 begin_decl_stmt
@@ -205,14 +205,17 @@ name|AppleObjCTrampolineHandler
 operator|*
 name|m_trampoline_handler
 block|;
-comment|// FIXME - ensure this doesn't go away on us?  SP maybe?
+comment|// FIXME - ensure this
+comment|// doesn't go away on us?
+comment|// SP maybe?
 name|lldb
 operator|::
 name|addr_t
 name|m_args_addr
 block|;
-comment|// Stores the address for our step through function result structure.
-comment|//lldb::addr_t m_object_addr;  // This is only for Description.
+comment|// Stores the address for our step through function
+comment|// result structure.
+comment|// lldb::addr_t m_object_addr;  // This is only for Description.
 name|ValueList
 name|m_input_values
 block|;
@@ -221,7 +224,8 @@ operator|::
 name|addr_t
 name|m_isa_addr
 block|;
-comment|// isa_addr and sel_addr are the keys we will use to cache the implementation.
+comment|// isa_addr and sel_addr are the keys we will use to
+comment|// cache the implementation.
 name|lldb
 operator|::
 name|addr_t
@@ -232,7 +236,8 @@ operator|::
 name|ThreadPlanSP
 name|m_func_sp
 block|;
-comment|// This is the function call plan.  We fill it at start, then set it
+comment|// This is the function call plan.  We fill it
+comment|// at start, then set it
 comment|// to NULL when this plan is done.  That way we know to go to:
 name|lldb
 operator|::

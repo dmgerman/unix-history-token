@@ -54,13 +54,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MIDataTypes.h"
+file|"MICmnMIValueTuple.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MICmnMIValueTuple.h"
+file|"MIDataTypes.h"
 end_include
 
 begin_comment
@@ -74,7 +74,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -280,16 +284,6 @@ name|SBValue
 operator|&
 name|m_rValue
 expr_stmt|;
-specifier|const
-name|char
-modifier|*
-name|m_pUnkwn
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|m_pComposite
-decl_stmt|;
 name|bool
 name|m_bValidSBValue
 decl_stmt|;
@@ -297,11 +291,13 @@ comment|// True = SBValue is a valid object, false = not valid.
 name|bool
 name|m_bHandleCharType
 decl_stmt|;
-comment|// True = Yes return text molding to char type, false = just return data.
+comment|// True = Yes return text molding to char type, false
+comment|// = just return data.
 name|bool
 name|m_bHandleArrayType
 decl_stmt|;
-comment|// True = Yes return special stub for array type, false = just return data.
+comment|// True = Yes return special stub for array type,
+comment|// false = just return data.
 block|}
 end_decl_stmt
 

@@ -122,13 +122,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-types.h"
+file|"lldb/Symbol/CompilerDeclContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/CompilerDeclContext.h"
+file|"lldb/lldb-types.h"
 end_include
 
 begin_include
@@ -412,7 +412,7 @@ name|m_file_manager
 argument_list|(
 argument|clang::FileSystemOptions()
 argument_list|)
-block|{     }
+block|{}
 name|clang
 operator|::
 name|QualType
@@ -794,8 +794,7 @@ operator|::
 name|ModuleSP
 operator|,
 name|CompilerDeclContext
-operator|>
-expr|>
+operator|>>
 name|NamespaceMap
 expr_stmt|;
 typedef|typedef
@@ -994,7 +993,7 @@ name|decl
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{         }
+block|{}
 name|DeclOrigin
 argument_list|(
 name|clang
@@ -1019,7 +1018,7 @@ name|decl
 argument_list|(
 argument|_decl
 argument_list|)
-block|{         }
+block|{}
 name|DeclOrigin
 argument_list|(
 argument|const DeclOrigin&rhs
@@ -1036,7 +1035,7 @@ operator|=
 name|rhs
 operator|.
 name|decl
-block|;         }
+block|;     }
 name|void
 name|operator
 operator|=
@@ -1058,7 +1057,7 @@ operator|=
 name|rhs
 operator|.
 name|decl
-block|;         }
+block|;     }
 name|bool
 name|Valid
 argument_list|()
@@ -1174,7 +1173,7 @@ name|m_source_ctx
 argument_list|(
 argument|source_ctx
 argument_list|)
-block|{         }
+block|{}
 comment|// A call to "InitDeportWorkQueues" puts the minion into deport mode.
 comment|// In deport mode, every copied Decl that could require completion is
 comment|// recorded and placed into the decls_to_deport set.
@@ -1290,7 +1289,7 @@ operator|::
 name|ASTContext
 operator|*
 name|m_source_ctx
-block|;     }
+block|;   }
 decl_stmt|;
 typedef|typedef
 name|std
@@ -1360,7 +1359,7 @@ name|m_map_completer
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{         }
+block|{}
 name|clang
 operator|::
 name|ASTContext

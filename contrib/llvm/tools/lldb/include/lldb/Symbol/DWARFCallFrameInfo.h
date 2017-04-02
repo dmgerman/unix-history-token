@@ -126,9 +126,9 @@ name|public
 label|:
 name|DWARFCallFrameInfo
 argument_list|(
-argument|ObjectFile& objfile
+argument|ObjectFile&objfile
 argument_list|,
-argument|lldb::SectionSP& section
+argument|lldb::SectionSP&section
 argument_list|,
 argument|lldb::RegisterKind reg_kind
 argument_list|,
@@ -182,13 +182,15 @@ comment|// Build a vector of file address and size for all functions in this Mod
 comment|// based on the eh_frame FDE entries.
 comment|//
 comment|// The eh_frame information can be a useful source of file address and size of
-comment|// the functions in a Module.  Often a binary's non-exported symbols are stripped
+comment|// the functions in a Module.  Often a binary's non-exported symbols are
+comment|// stripped
 comment|// before shipping so lldb won't know the start addr / size of many functions
 comment|// in the Module.  But the eh_frame can help to give the addresses of these
 comment|// stripped symbols, at least.
 comment|//
 comment|// @param[out] function_info
-comment|//      A vector provided by the caller is filled out.  May be empty if no FDEs/no eh_frame
+comment|//      A vector provided by the caller is filled out.  May be empty if no
+comment|//      FDEs/no eh_frame
 comment|//      is present in this Module.
 name|void
 name|GetFunctionAddressAndSizeVector
@@ -249,7 +251,8 @@ index|[
 name|CFI_AUG_MAX_SIZE
 index|]
 decl_stmt|;
-comment|// This is typically empty or very short.
+comment|// This is typically empty or very
+comment|// short.
 name|uint32_t
 name|code_align
 decl_stmt|;
@@ -273,13 +276,15 @@ decl_stmt|;
 name|uint8_t
 name|lsda_addr_encoding
 decl_stmt|;
-comment|// The encoding of the LSDA address in the FDE augmentation data
+comment|// The encoding of the LSDA address in the FDE
+comment|// augmentation data
 name|lldb
 operator|::
 name|addr_t
 name|personality_loc
 expr_stmt|;
-comment|// (file) address of the pointer to the personality routine
+comment|// (file) address of the pointer to the
+comment|// personality routine
 name|lldb_private
 operator|::
 name|UnwindPlan
@@ -345,7 +350,7 @@ argument_list|)
 operator|,
 name|initial_row
 argument_list|()
-block|{          }
+block|{}
 block|}
 struct|;
 typedef|typedef
@@ -369,7 +374,8 @@ operator|>
 name|cie_map_t
 expr_stmt|;
 comment|// Start address (file address), size, offset of FDE location
-comment|// used for finding an FDE for a given File address; the start address field is
+comment|// used for finding an FDE for a given File address; the start address field
+comment|// is
 comment|// an offset into an individual Module.
 typedef|typedef
 name|RangeDataVector
@@ -435,8 +441,10 @@ name|void
 name|GetCFIData
 parameter_list|()
 function_decl|;
-comment|// Applies the specified DWARF opcode to the given row. This function handle the commands
-comment|// operates only on a single row (these are the ones what can appear both in CIE and in FDE).
+comment|// Applies the specified DWARF opcode to the given row. This function handle
+comment|// the commands
+comment|// operates only on a single row (these are the ones what can appear both in
+comment|// CIE and in FDE).
 comment|// Returns true if the opcode is handled and false otherwise.
 name|bool
 name|HandleCommonDwarfOpcode

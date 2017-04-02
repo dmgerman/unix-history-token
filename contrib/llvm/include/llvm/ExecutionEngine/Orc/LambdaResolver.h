@@ -100,9 +100,7 @@ name|class
 name|LambdaResolver
 operator|:
 name|public
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 block|{
 name|public
 operator|:
@@ -123,9 +121,7 @@ argument_list|(
 argument|ExternalLookupFtor
 argument_list|)
 block|{}
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 name|findSymbolInLogicalDylib
 argument_list|(
 argument|const std::string&Name
@@ -139,9 +135,7 @@ name|Name
 argument_list|)
 return|;
 block|}
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 name|findSymbol
 argument_list|(
 argument|const std::string&Name

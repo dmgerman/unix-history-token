@@ -232,6 +232,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printBDRAddrOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printBDVAddrOperand
 argument_list|(
 argument|const MCInst *MI
@@ -362,6 +372,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printU48ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printPCRelOperand
 argument_list|(
 argument|const MCInst *MI
@@ -373,16 +393,6 @@ argument_list|)
 block|;
 name|void
 name|printPCRelTLSOperand
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|int OpNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
-name|printAccessRegOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

@@ -343,6 +343,18 @@ name|string
 operator|>
 name|ConfigTable
 expr_stmt|;
+specifier|static
+name|std
+operator|::
+name|vector
+operator|<
+name|StringRef
+operator|>
+name|getRegisteredCheckers
+argument_list|(
+argument|bool IncludeExperimental = false
+argument_list|)
+decl_stmt|;
 comment|/// \brief Pair of checker name and enable/disable.
 name|std
 operator|::
@@ -355,12 +367,12 @@ operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 name|bool
 operator|>
-block|>
+expr|>
 name|CheckersControlList
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief A key-value table of use-specified configuration values.
 name|ConfigTable
 name|Config
@@ -398,6 +410,11 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|ShowCheckerHelp
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|ShowEnabledCheckerList
 range|:
 literal|1
 decl_stmt|;
@@ -652,6 +669,13 @@ operator|<
 name|bool
 operator|>
 name|WidenLoops
+expr_stmt|;
+comment|/// \sa shouldDisplayNotesAsEvents
+name|Optional
+operator|<
+name|bool
+operator|>
+name|DisplayNotesAsEvents
 expr_stmt|;
 comment|/// A helper function that retrieves option for a given full-qualified
 comment|/// checker name.
@@ -1080,6 +1104,16 @@ name|bool
 name|shouldWidenLoops
 parameter_list|()
 function_decl|;
+comment|/// Returns true if the bug reporter should transparently treat extra note
+comment|/// diagnostic pieces as event diagnostic pieces. Useful when the diagnostic
+comment|/// consumer doesn't support the extra note pieces.
+comment|///
+comment|/// This is controlled by the 'extra-notes-as-events' option, which defaults
+comment|/// to false when unset.
+name|bool
+name|shouldDisplayNotesAsEvents
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|AnalyzerOptions
@@ -1111,6 +1145,11 @@ literal|0
 argument_list|)
 operator|,
 name|ShowCheckerHelp
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|ShowEnabledCheckerList
 argument_list|(
 literal|0
 argument_list|)

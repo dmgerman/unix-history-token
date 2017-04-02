@@ -126,31 +126,31 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TRANSFORMS_UTILS_SYMBOL_REWRITER_H
+name|LLVM_TRANSFORMS_UTILS_SYMBOLREWRITER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TRANSFORMS_UTILS_SYMBOL_REWRITER_H
+name|LLVM_TRANSFORMS_UTILS_SYMBOLREWRITER_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ilist_node.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<list>
 end_include
 
 begin_decl_stmt
@@ -192,12 +192,6 @@ comment|/// select the symbols to rewrite.  This descriptor list is passed to th
 comment|/// SymbolRewriter pass.
 name|class
 name|RewriteDescriptor
-range|:
-name|public
-name|ilist_node
-operator|<
-name|RewriteDescriptor
-operator|>
 block|{
 name|RewriteDescriptor
 argument_list|(
@@ -207,12 +201,12 @@ operator|&
 argument_list|)
 operator|=
 name|delete
-block|;
+expr_stmt|;
 specifier|const
 name|RewriteDescriptor
-operator|&
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|RewriteDescriptor
@@ -220,27 +214,27 @@ operator|&
 operator|)
 operator|=
 name|delete
-block|;
+decl_stmt|;
 name|public
-operator|:
-expr|enum
+label|:
+name|enum
 name|class
 name|Type
 block|{
 name|Invalid
-block|,
+operator|,
 comment|/// invalid
 name|Function
-block|,
+operator|,
 comment|/// function - descriptor rewrites a function
 name|GlobalVariable
-block|,
+operator|,
 comment|/// global variable - descriptor rewrites a global variable
 name|NamedAlias
-block|,
+operator|,
 comment|/// named alias - descriptor rewrites a global alias
 block|}
-block|;
+empty_stmt|;
 name|virtual
 operator|~
 name|RewriteDescriptor
@@ -258,39 +252,46 @@ block|}
 name|virtual
 name|bool
 name|performOnModule
-argument_list|(
+parameter_list|(
 name|Module
-operator|&
+modifier|&
 name|M
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-block|;
+function_decl|;
 name|protected
-operator|:
+label|:
 name|explicit
 name|RewriteDescriptor
 argument_list|(
 argument|Type T
 argument_list|)
-operator|:
+block|:
 name|Kind
 argument_list|(
 argument|T
 argument_list|)
 block|{}
 name|private
-operator|:
+label|:
 specifier|const
 name|Type
 name|Kind
-block|; }
 decl_stmt|;
+block|}
+empty_stmt|;
 typedef|typedef
-name|iplist
+name|std
+operator|::
+name|list
+operator|<
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|RewriteDescriptor
-operator|>
+operator|>>
 name|RewriteDescriptorList
 expr_stmt|;
 name|class
@@ -433,121 +434,13 @@ decl_stmt|;
 block|}
 empty_stmt|;
 block|}
-name|template
-operator|<
-operator|>
-expr|struct
-name|ilist_traits
-operator|<
-name|SymbolRewriter
-operator|::
-name|RewriteDescriptor
-operator|>
-operator|:
-name|public
-name|ilist_default_traits
-operator|<
-name|SymbolRewriter
-operator|::
-name|RewriteDescriptor
-operator|>
-block|{
-name|mutable
-name|ilist_half_node
-operator|<
-name|SymbolRewriter
-operator|::
-name|RewriteDescriptor
-operator|>
-name|Sentinel
-block|;
-name|public
-operator|:
-comment|// createSentinel is used to get a reference to a node marking the end of
-comment|// the list.  Because the sentinel is relative to this instance, use a
-comment|// non-static method.
-name|SymbolRewriter
-operator|::
-name|RewriteDescriptor
-operator|*
-name|createSentinel
-argument_list|()
-specifier|const
-block|{
-comment|// since i[p] lists always publicly derive from the corresponding
-comment|// traits, placing a data member in this class will augment the
-comment|// i[p]list.  Since the NodeTy is expected to publicly derive from
-comment|// ilist_node<NodeTy>, there is a legal viable downcast from it to
-comment|// NodeTy.  We use this trick to superpose i[p]list with a "ghostly"
-comment|// NodeTy, which becomes the sentinel.  Dereferencing the sentinel is
-comment|// forbidden (save the ilist_node<NodeTy>) so no one will ever notice
-comment|// the superposition.
-return|return
-name|static_cast
-operator|<
-name|SymbolRewriter
-operator|::
-name|RewriteDescriptor
-operator|*
-operator|>
-operator|(
-operator|&
-name|Sentinel
-operator|)
-return|;
-block|}
-name|void
-name|destroySentinel
-argument_list|(
-argument|SymbolRewriter::RewriteDescriptor *
-argument_list|)
-block|{}
-name|SymbolRewriter
-operator|::
-name|RewriteDescriptor
-operator|*
-name|provideInitialHead
-argument_list|()
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-name|SymbolRewriter
-operator|::
-name|RewriteDescriptor
-operator|*
-name|ensureHead
-argument_list|(
-argument|SymbolRewriter::RewriteDescriptor *&
-argument_list|)
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-specifier|static
-name|void
-name|noteHead
-argument_list|(
-argument|SymbolRewriter::RewriteDescriptor *
-argument_list|,
-argument|SymbolRewriter::RewriteDescriptor *
-argument_list|)
-block|{}
-expr|}
-block|;
 name|ModulePass
-operator|*
+modifier|*
 name|createRewriteSymbolsPass
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|ModulePass
-operator|*
+modifier|*
 name|createRewriteSymbolsPass
 argument_list|(
 name|SymbolRewriter
@@ -555,13 +448,85 @@ operator|::
 name|RewriteDescriptorList
 operator|&
 argument_list|)
+decl_stmt|;
+name|class
+name|RewriteSymbolPass
+range|:
+name|public
+name|PassInfoMixin
+operator|<
+name|RewriteSymbolPass
+operator|>
+block|{
+name|public
+operator|:
+name|RewriteSymbolPass
+argument_list|()
+block|{
+name|loadAndParseMapFiles
+argument_list|()
 block|; }
+name|RewriteSymbolPass
+argument_list|(
+argument|SymbolRewriter::RewriteDescriptorList&DL
+argument_list|)
+block|{
+name|Descriptors
+operator|.
+name|splice
+argument_list|(
+name|Descriptors
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|DL
+argument_list|)
+block|;   }
+name|PreservedAnalyses
+name|run
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|,
+name|ModuleAnalysisManager
+operator|&
+name|AM
+argument_list|)
+block|;
+comment|// Glue for old PM
+name|bool
+name|runImpl
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|)
+block|;
+name|private
+operator|:
+name|void
+name|loadAndParseMapFiles
+argument_list|()
+block|;
+name|SymbolRewriter
+operator|::
+name|RewriteDescriptorList
+name|Descriptors
+block|;   }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|//LLVM_TRANSFORMS_UTILS_SYMBOLREWRITER_H
+end_comment
 
 end_unit
 

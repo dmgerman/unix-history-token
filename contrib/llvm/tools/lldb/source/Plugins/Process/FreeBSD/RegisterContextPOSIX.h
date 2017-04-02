@@ -58,6 +58,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"RegisterInfoInterface.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/ArchSpec.h"
 end_include
 
@@ -65,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/RegisterContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"RegisterInfoInterface.h"
 end_include
 
 begin_comment

@@ -80,13 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/ClangForward.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ClangForward.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -144,7 +144,7 @@ name|m_type_system
 argument_list|(
 argument|rhs.m_type_system
 argument_list|)
-block|{     }
+block|{}
 name|CompilerType
 argument_list|()
 operator|:
@@ -157,7 +157,7 @@ name|m_type_system
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|CompilerType
 argument_list|()
@@ -678,6 +678,14 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|CompilerType
+name|GetArrayType
+argument_list|(
+name|uint64_t
+name|size
+argument_list|)
+decl|const
+decl_stmt|;
+name|CompilerType
 name|GetCanonicalType
 argument_list|()
 specifier|const
@@ -687,7 +695,8 @@ name|GetFullyUnqualifiedType
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// Returns -1 if this isn't a function of if the function doesn't have a prototype
+comment|// Returns -1 if this isn't a function of if the function doesn't have a
+comment|// prototype
 comment|// Returns a value>= 0 if there is a prototype.
 name|int
 name|GetFunctionArgumentCount
@@ -1118,7 +1127,8 @@ decl_stmt|;
 comment|// Lookup a child member given a name. This function will match member names
 comment|// only and will descend into "clang_type" children in search for the first
 comment|// member in this class, or any base class that matches "name".
-comment|// TODO: Return all matches for a given name by returning a vector<vector<uint32_t>>
+comment|// TODO: Return all matches for a given name by returning a
+comment|// vector<vector<uint32_t>>
 comment|// so we catch all names that match a given child name, not just the first.
 name|size_t
 name|GetIndexOfChildMemberWithName

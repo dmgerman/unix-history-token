@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StreamArray.h"
+file|"llvm/DebugInfo/MSF/StreamArray.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StreamRef.h"
+file|"llvm/DebugInfo/MSF/StreamRef.h"
 end_include
 
 begin_include
@@ -96,7 +96,7 @@ name|namespace
 name|llvm
 block|{
 name|namespace
-name|codeview
+name|msf
 block|{
 name|class
 name|StreamReader
@@ -116,7 +116,7 @@ expr_stmt|;
 name|Error
 name|load
 argument_list|(
-name|codeview
+name|msf
 operator|::
 name|StreamReader
 operator|&
@@ -166,7 +166,7 @@ name|Str
 argument_list|)
 decl|const
 decl_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -180,12 +180,12 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
-name|codeview
+name|msf
 operator|::
-name|StreamRef
+name|ReadableStreamRef
 name|NamesBuffer
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<

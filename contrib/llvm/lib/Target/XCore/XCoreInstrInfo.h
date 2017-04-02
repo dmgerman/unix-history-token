@@ -169,7 +169,7 @@ specifier|const
 name|override
 block|;
 name|unsigned
-name|InsertBranch
+name|insertBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -180,14 +180,18 @@ argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|const DebugLoc&DL
+argument_list|,
+argument|int *BytesAdded = nullptr
 argument_list|)
 specifier|const
 name|override
 block|;
 name|unsigned
-name|RemoveBranch
+name|removeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
+argument_list|,
+argument|int *BytesRemoved = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -249,7 +253,7 @@ specifier|const
 name|override
 block|;
 name|bool
-name|ReverseBranchCondition
+name|reverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)

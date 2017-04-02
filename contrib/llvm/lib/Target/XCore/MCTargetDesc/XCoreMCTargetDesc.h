@@ -72,10 +72,11 @@ block|{
 name|class
 name|Target
 decl_stmt|;
-specifier|extern
 name|Target
-name|TheXCoreTarget
-decl_stmt|;
+modifier|&
+name|getTheXCoreTarget
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

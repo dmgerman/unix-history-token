@@ -48,7 +48,11 @@ file|"MIDataTypes.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -167,7 +171,8 @@ name|private
 label|:
 comment|//++ ----------------------------------------------------------------------
 comment|// Details: Base class wrapper to hold the variant's data object when
-comment|//          assigned to it by the Set() function. Do not use the CDataObjectBase
+comment|//          assigned to it by the Set() function. Do not use the
+comment|//          CDataObjectBase
 comment|//          to create objects, use only CDataObjectBase derived objects,
 comment|//          see CDataObject() class.
 comment|//--
@@ -401,7 +406,7 @@ name|private
 operator|:
 name|T
 name|m_dataObj
-block|;     }
+block|;   }
 expr_stmt|;
 comment|// Methods
 name|private
@@ -446,7 +451,11 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------------------------
 end_comment
 
 begin_comment
@@ -488,8 +497,9 @@ operator|>
 operator|::
 name|CDataObject
 argument_list|()
-block|{ }
-comment|//++ ------------------------------------------------------------------------------------
+block|{}
+comment|//++
+comment|//------------------------------------------------------------------------------------
 comment|// Details: CDataObject constructor.
 comment|// Type:    Method.
 comment|// Args:    T       - The object's type.
@@ -518,7 +528,8 @@ name|m_dataObj
 operator|=
 name|vArg
 block|; }
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
+comment|//------------------------------------------------------------------------------------
 comment|// Details: CDataObject destructor.
 comment|// Type:    Overridden.
 comment|// Args:    T   - The object's type.
@@ -544,7 +555,8 @@ block|{
 name|Destroy
 argument_list|()
 block|; }
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
+comment|//------------------------------------------------------------------------------------
 comment|// Details: Retrieve the data object hold by *this object wrapper.
 comment|// Type:    Method.
 comment|// Args:    T   - The object's type.
@@ -575,7 +587,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------------------------
 end_comment
 
 begin_comment
@@ -642,7 +658,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------------------------
 end_comment
 
 begin_comment
@@ -698,7 +718,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------------------------
 end_comment
 
 begin_comment
@@ -761,7 +785,8 @@ name|vrOther
 operator|.
 name|m_dataObj
 block|; }
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
+comment|//------------------------------------------------------------------------------------
 comment|// Details: Release any resources used by *this object.
 comment|// Type:    Overridden.
 comment|// Args:    None.
@@ -792,7 +817,8 @@ block|; }
 comment|//---------------------------------------------------------------------------------------
 comment|//---------------------------------------------------------------------------------------
 comment|//---------------------------------------------------------------------------------------
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
+comment|//------------------------------------------------------------------------------------
 comment|// Details: Assign to the variant an object of a specified type.
 comment|// Type:    Template method.
 comment|// Args:    T       - The object's type.
@@ -824,11 +850,13 @@ operator|(
 name|vArg
 operator|)
 block|; }
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
+comment|//------------------------------------------------------------------------------------
 comment|// Details: Retrieve the data object from *this variant.
 comment|// Type:    Template method.
 comment|// Args:    T   - The object's type.
-comment|// Return:  T * - Pointer the data object, NULL = data object not assigned to *this variant.
+comment|// Return:  T * - Pointer the data object, NULL = data object not assigned to
+comment|// *this variant.
 comment|// Throws:  None.
 comment|//--
 name|template
@@ -888,7 +916,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// Do not use a CDataObjectBase object, use only CDataObjectBase derived objects
+comment|// Do not use a CDataObjectBase object, use only CDataObjectBase derived
+end_comment
+
+begin_comment
+comment|// objects
 end_comment
 
 begin_return

@@ -225,9 +225,7 @@ specifier|static
 name|bool
 name|get
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Path
 argument_list|,
 name|FileData
@@ -326,9 +324,7 @@ name|virtual
 name|LookupResult
 name|getStat
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Path
 argument_list|,
 name|FileData
@@ -361,9 +357,7 @@ decl_stmt|;
 name|LookupResult
 name|statChained
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Path
 argument_list|,
 name|FileData
@@ -507,7 +501,7 @@ block|}
 name|LookupResult
 name|getStat
 argument_list|(
-argument|const char *Path
+argument|StringRef Path
 argument_list|,
 argument|FileData&Data
 argument_list|,

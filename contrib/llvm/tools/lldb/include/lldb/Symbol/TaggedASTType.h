@@ -81,12 +81,12 @@ name|CompilerType
 argument_list|(
 argument|compiler_type
 argument_list|)
-block|{     }
+block|{}
 name|TaggedASTType
 argument_list|(
 argument|lldb::opaque_compiler_type_t type
 argument_list|,
-argument|TypeSystem * type_system
+argument|TypeSystem *type_system
 argument_list|)
 operator|:
 name|CompilerType
@@ -95,7 +95,7 @@ argument|type_system
 argument_list|,
 argument|type
 argument_list|)
-block|{     }
+block|{}
 name|TaggedASTType
 argument_list|(
 specifier|const
@@ -111,18 +111,18 @@ name|CompilerType
 argument_list|(
 argument|tw
 argument_list|)
-block|{     }
+block|{}
 name|TaggedASTType
 argument_list|()
 operator|:
 name|CompilerType
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|TaggedASTType
 argument_list|()
-block|{     }
+block|{}
 name|TaggedASTType
 operator|<
 name|C

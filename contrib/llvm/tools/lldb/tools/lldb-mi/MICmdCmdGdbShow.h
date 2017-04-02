@@ -40,11 +40,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|//              To implement new MI commands, derive a new command class from the command base
+comment|//              To implement new MI commands, derive a new command class from
 end_comment
 
 begin_comment
-comment|//              class. To enable the new command for interpretation add the new command class
+comment|//              the command base
+end_comment
+
+begin_comment
+comment|//              class. To enable the new command for interpretation add the new
+end_comment
+
+begin_comment
+comment|//              command class
 end_comment
 
 begin_comment
@@ -64,7 +72,11 @@ comment|//                  MICmdCmd.h / .cpp
 end_comment
 
 begin_comment
-comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+comment|//              For an introduction to adding a new command see
+end_comment
+
+begin_comment
+comment|//              CMICmdCmdSupportInfoMiCmdQuery
 end_comment
 
 begin_comment
@@ -88,7 +100,11 @@ file|"MICmdBase.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -100,7 +116,11 @@ comment|//          *this class implements MI command "gdb-show".
 end_comment
 
 begin_comment
-comment|//          This command does not follow the MI documentation exactly. While *this
+comment|//          This command does not follow the MI documentation exactly. While
+end_comment
+
+begin_comment
+comment|//          *this
 end_comment
 
 begin_comment
@@ -124,7 +144,11 @@ comment|//          the task of information gathering and printing to stdout is 
 end_comment
 
 begin_comment
-comment|//          *this class. Should the request function become more complicated then
+comment|//          *this class. Should the request function become more complicated
+end_comment
+
+begin_comment
+comment|//          then
 end_comment
 
 begin_comment
@@ -132,7 +156,11 @@ comment|//          that request should really reside in a command type class. T
 end_comment
 
 begin_comment
-comment|//          class instantiates a request info command for a matching request. The
+comment|//          class instantiates a request info command for a matching request.
+end_comment
+
+begin_comment
+comment|//          The
 end_comment
 
 begin_comment
@@ -303,6 +331,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
+name|OptionFnDisassemblyFlavor
+argument_list|(
+specifier|const
+name|CMIUtilString
+operator|::
+name|VecString_t
+operator|&
+name|vrWords
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
 name|OptionFnFallback
 argument_list|(
 specifier|const
@@ -346,7 +388,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True = This command has a function with a name that matches the Print argument, false = not found
+comment|// True = This command has a function with a name
+end_comment
+
+begin_comment
+comment|// that matches the Print argument, false = not
+end_comment
+
+begin_comment
+comment|// found
 end_comment
 
 begin_decl_stmt
@@ -356,7 +406,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True = The print function completed its task ok, false = function failed for some reason
+comment|// True = The print function completed its task
+end_comment
+
+begin_comment
+comment|// ok, false = function failed for some reason
 end_comment
 
 begin_decl_stmt
@@ -366,7 +420,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True = The option function has an error condition (not the command!), false = option function ok.
+comment|// True = The option function has an error
+end_comment
+
+begin_comment
+comment|// condition (not the command!), false = option
+end_comment
+
+begin_comment
+comment|// function ok.
 end_comment
 
 begin_decl_stmt

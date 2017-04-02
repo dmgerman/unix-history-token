@@ -1476,8 +1476,8 @@ name|IsLambda
 operator|=
 name|true
 block|;
-comment|// C++11 [expr.prim.lambda]p3:
-comment|//   This class type is neither an aggregate nor a literal type.
+comment|// C++1z [expr.prim.lambda]p4:
+comment|//   This class type is not an aggregate type.
 name|Aggregate
 operator|=
 name|false
@@ -1485,10 +1485,6 @@ block|;
 name|PlainOldData
 operator|=
 name|false
-block|;
-name|HasNonLiteralTypeFieldsOrBases
-operator|=
-name|true
 block|;     }
 comment|/// \brief Whether this lambda is known to be dependent, even if its
 comment|/// context isn't dependent.
@@ -1536,8 +1532,7 @@ comment|/// \brief The declaration that provides context for this lambda, if the
 comment|/// actual DeclContext does not suffice. This is used for lambdas that
 comment|/// occur within default arguments of function parameters within the class
 comment|/// or within a data member initializer.
-name|Decl
-operator|*
+name|LazyDeclPtr
 name|ContextDecl
 block|;
 comment|/// \brief The list of captures, both explicit and implicit, for this
@@ -3016,6 +3011,13 @@ operator|&&
 operator|!
 name|hasUserDeclaredDestructor
 argument_list|()
+operator|&&
+comment|// C++1z [expr.prim.lambda]p21: "the closure type has a deleted copy
+comment|// assignment operator". The intent is that this counts as a user
+comment|// declared copy assignment, but we do not model it that way.
+operator|!
+name|isLambda
+argument_list|()
 return|;
 block|}
 comment|/// \brief Determine whether we need to eagerly declare a move assignment
@@ -3439,6 +3441,33 @@ name|data
 argument_list|()
 operator|.
 name|Empty
+return|;
+block|}
+comment|/// \brief Determine whether this class has direct non-static data members.
+name|bool
+name|hasDirectFields
+argument_list|()
+specifier|const
+block|{
+name|auto
+operator|&
+name|D
+operator|=
+name|data
+argument_list|()
+block|;
+return|return
+name|D
+operator|.
+name|HasPublicFields
+operator|||
+name|D
+operator|.
+name|HasProtectedFields
+operator|||
+name|D
+operator|.
+name|HasPrivateFields
 return|;
 block|}
 comment|/// Whether this class is polymorphic (C++ [class.virtual]),
@@ -3977,6 +4006,8 @@ comment|///       types
 comment|///
 comment|/// We resolve DR1361 by ignoring the second bullet. We resolve DR1452 by
 comment|/// treating types with trivial default constructors as literal types.
+comment|///
+comment|/// Only in C++1z and beyond, are lambdas literal types.
 name|bool
 name|isLiteral
 argument_list|()
@@ -3987,7 +4018,28 @@ name|hasTrivialDestructor
 argument_list|()
 operator|&&
 operator|(
+operator|!
+name|isLambda
+argument_list|()
+operator|||
+name|getASTContext
+argument_list|()
+operator|.
+name|getLangOpts
+argument_list|()
+operator|.
+name|CPlusPlus1z
+operator|)
+operator|&&
+operator|!
+name|hasNonLiteralTypeFieldsOrBases
+argument_list|()
+operator|&&
+operator|(
 name|isAggregate
+argument_list|()
+operator|||
+name|isLambda
 argument_list|()
 operator|||
 name|hasConstexprNonCopyMoveConstructor
@@ -3996,10 +4048,6 @@ operator|||
 name|hasTrivialDefaultConstructor
 argument_list|()
 operator|)
-operator|&&
-operator|!
-name|hasNonLiteralTypeFieldsOrBases
-argument_list|()
 return|;
 block|}
 comment|/// \brief If this record is an instantiation of a member class,
@@ -5291,22 +5339,7 @@ operator|*
 name|getLambdaContextDecl
 argument_list|()
 specifier|const
-block|{
-name|assert
-argument_list|(
-name|isLambda
-argument_list|()
-operator|&&
-literal|"Not a lambda closure type!"
-argument_list|)
-block|;
-return|return
-name|getLambdaData
-argument_list|()
-operator|.
-name|ContextDecl
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -6539,17 +6572,6 @@ begin_decl_stmt
 name|class
 name|CXXCtorInitializer
 name|final
-range|:
-name|private
-name|llvm
-operator|::
-name|TrailingObjects
-operator|<
-name|CXXCtorInitializer
-decl_stmt|,
-name|VarDecl
-modifier|*
-decl|>
 block|{
 comment|/// \brief Either the base class name/delegating constructor type (stored as
 comment|/// a TypeSourceInfo*), an normal field (FieldDecl), or an anonymous field
@@ -6614,33 +6636,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// If IsWritten is true, then this number keeps track of the textual order
-comment|/// of this initializer in the original sources, counting from 0; otherwise,
-comment|/// it stores the number of array index variables stored after this object
-comment|/// in memory.
+comment|/// of this initializer in the original sources, counting from 0.
 name|unsigned
-name|SourceOrderOrNumArrayIndices
+name|SourceOrder
 range|:
 literal|13
 decl_stmt|;
-name|CXXCtorInitializer
-argument_list|(
-argument|ASTContext&Context
-argument_list|,
-argument|FieldDecl *Member
-argument_list|,
-argument|SourceLocation MemberLoc
-argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|Expr *Init
-argument_list|,
-argument|SourceLocation R
-argument_list|,
-argument|VarDecl **Indices
-argument_list|,
-argument|unsigned NumIndices
-argument_list|)
-empty_stmt|;
 name|public
 label|:
 comment|/// \brief Creates a new base-class initializer.
@@ -6745,43 +6746,6 @@ name|Init
 parameter_list|,
 name|SourceLocation
 name|R
-parameter_list|)
-function_decl|;
-comment|/// \brief Creates a new member initializer that optionally contains
-comment|/// array indices used to describe an elementwise initialization.
-specifier|static
-name|CXXCtorInitializer
-modifier|*
-name|Create
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Context
-parameter_list|,
-name|FieldDecl
-modifier|*
-name|Member
-parameter_list|,
-name|SourceLocation
-name|MemberLoc
-parameter_list|,
-name|SourceLocation
-name|L
-parameter_list|,
-name|Expr
-modifier|*
-name|Init
-parameter_list|,
-name|SourceLocation
-name|R
-parameter_list|,
-name|VarDecl
-modifier|*
-modifier|*
-name|Indices
-parameter_list|,
-name|unsigned
-name|NumIndices
 parameter_list|)
 function_decl|;
 comment|/// \brief Determine whether this initializer is initializing a base class.
@@ -7182,7 +7146,7 @@ operator|<
 name|int
 operator|>
 operator|(
-name|SourceOrderOrNumArrayIndices
+name|SourceOrder
 operator|)
 operator|:
 operator|-
@@ -7224,7 +7188,7 @@ name|void
 name|setSourceOrder
 parameter_list|(
 name|int
-name|pos
+name|Pos
 parameter_list|)
 block|{
 name|assert
@@ -7232,21 +7196,21 @@ argument_list|(
 operator|!
 name|IsWritten
 operator|&&
+literal|"setSourceOrder() used on implicit initializer"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|SourceOrder
+operator|==
+literal|0
+operator|&&
 literal|"calling twice setSourceOrder() on the same initializer"
 argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|SourceOrderOrNumArrayIndices
-operator|==
-literal|0
-operator|&&
-literal|"setSourceOrder() used when there are implicit array indices"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|pos
+name|Pos
 operator|>=
 literal|0
 operator|&&
@@ -7257,14 +7221,14 @@ name|IsWritten
 operator|=
 name|true
 expr_stmt|;
-name|SourceOrderOrNumArrayIndices
+name|SourceOrder
 operator|=
 name|static_cast
 operator|<
 name|unsigned
 operator|>
 operator|(
-name|pos
+name|Pos
 operator|)
 expr_stmt|;
 block|}
@@ -7295,175 +7259,6 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine the number of implicit array indices used while
-end_comment
-
-begin_comment
-comment|/// described an array member initialization.
-end_comment
-
-begin_expr_stmt
-name|unsigned
-name|getNumArrayIndices
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsWritten
-operator|?
-literal|0
-operator|:
-name|SourceOrderOrNumArrayIndices
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Retrieve a particular array index variable used to
-end_comment
-
-begin_comment
-comment|/// describe an array member initialization.
-end_comment
-
-begin_function
-name|VarDecl
-modifier|*
-name|getArrayIndex
-parameter_list|(
-name|unsigned
-name|I
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|I
-operator|<
-name|getNumArrayIndices
-argument_list|()
-operator|&&
-literal|"Out of bounds member array index"
-argument_list|)
-expr_stmt|;
-return|return
-name|getTrailingObjects
-operator|<
-name|VarDecl
-operator|*
-operator|>
-operator|(
-operator|)
-index|[
-name|I
-index|]
-return|;
-block|}
-end_function
-
-begin_decl_stmt
-specifier|const
-name|VarDecl
-modifier|*
-name|getArrayIndex
-argument_list|(
-name|unsigned
-name|I
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|I
-operator|<
-name|getNumArrayIndices
-argument_list|()
-operator|&&
-literal|"Out of bounds member array index"
-argument_list|)
-expr_stmt|;
-return|return
-name|getTrailingObjects
-operator|<
-name|VarDecl
-operator|*
-operator|>
-operator|(
-operator|)
-index|[
-name|I
-index|]
-return|;
-block|}
-end_decl_stmt
-
-begin_function
-name|void
-name|setArrayIndex
-parameter_list|(
-name|unsigned
-name|I
-parameter_list|,
-name|VarDecl
-modifier|*
-name|Index
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|I
-operator|<
-name|getNumArrayIndices
-argument_list|()
-operator|&&
-literal|"Out of bounds member array index"
-argument_list|)
-expr_stmt|;
-name|getTrailingObjects
-operator|<
-name|VarDecl
-operator|*
-operator|>
-operator|(
-operator|)
-index|[
-name|I
-index|]
-operator|=
-name|Index
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|ArrayRef
-operator|<
-name|VarDecl
-operator|*
-operator|>
-name|getArrayIndices
-argument_list|()
-block|{
-return|return
-name|llvm
-operator|::
-name|makeArrayRef
-argument_list|(
-name|getTrailingObjects
-operator|<
-name|VarDecl
-operator|*
-operator|>
-operator|(
-operator|)
-argument_list|,
-name|getNumArrayIndices
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Get the initializer.
 end_comment
 
@@ -7486,12 +7281,6 @@ operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_decl_stmt
-name|friend
-name|TrailingObjects
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 unit|};
@@ -10601,15 +10390,11 @@ argument_list|(
 argument|TargetInVirtualBase
 argument_list|)
 block|{
-comment|// If we found a constructor for a non-virtual base class, but it chains to
-comment|// a constructor for a virtual base, we should directly call the virtual
-comment|// base constructor instead.
+comment|// If we found a constructor that chains to a constructor for a virtual
+comment|// base, we should directly call that virtual base constructor instead.
 comment|// FIXME: This logic belongs in Sema.
 if|if
 condition|(
-operator|!
-name|TargetInVirtualBase
-operator|&&
 name|NominatedBaseClassShadowDecl
 operator|&&
 name|NominatedBaseClassShadowDecl
@@ -10639,11 +10424,22 @@ argument_list|)
 operator|:
 name|UsingShadowDecl
 argument_list|(
-argument|ConstructorUsingShadow
+name|ConstructorUsingShadow
 argument_list|,
-argument|C
+name|C
 argument_list|,
-argument|Empty
+name|Empty
+argument_list|)
+block|,
+name|NominatedBaseClassShadowDecl
+argument_list|()
+block|,
+name|ConstructedBaseClassShadowDecl
+argument_list|()
+block|,
+name|IsVirtual
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|public
@@ -11517,6 +11313,349 @@ end_decl_stmt
 
 begin_comment
 unit|};
+comment|/// Represents a pack of using declarations that a single
+end_comment
+
+begin_comment
+comment|/// using-declarator pack-expanded into.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// template<typename ...T> struct X : T... {
+end_comment
+
+begin_comment
+comment|///   using T::operator()...;
+end_comment
+
+begin_comment
+comment|///   using T::operator T...;
+end_comment
+
+begin_comment
+comment|/// };
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// In the second case above, the UsingPackDecl will have the name
+end_comment
+
+begin_comment
+comment|/// 'operator T' (which contains an unexpanded pack), but the individual
+end_comment
+
+begin_comment
+comment|/// UsingDecls and UsingShadowDecls will have more reasonable names.
+end_comment
+
+begin_decl_stmt
+name|class
+name|UsingPackDecl
+name|final
+range|:
+name|public
+name|NamedDecl
+decl_stmt|,
+name|public
+name|Mergeable
+decl|<
+name|UsingPackDecl
+decl|>
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|UsingPackDecl
+decl_stmt|,
+name|NamedDecl
+modifier|*
+decl|>
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
+expr_stmt|;
+comment|/// The UnresolvedUsingValueDecl or UnresolvedUsingTypenameDecl from
+comment|/// which this waas instantiated.
+name|NamedDecl
+modifier|*
+name|InstantiatedFrom
+decl_stmt|;
+comment|/// The number of using-declarations created by this pack expansion.
+name|unsigned
+name|NumExpansions
+decl_stmt|;
+name|UsingPackDecl
+argument_list|(
+name|DeclContext
+operator|*
+name|DC
+argument_list|,
+name|NamedDecl
+operator|*
+name|InstantiatedFrom
+argument_list|,
+name|ArrayRef
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+name|UsingDecls
+argument_list|)
+operator|:
+name|NamedDecl
+argument_list|(
+name|UsingPack
+argument_list|,
+name|DC
+argument_list|,
+name|InstantiatedFrom
+condition|?
+name|InstantiatedFrom
+operator|->
+name|getLocation
+argument_list|()
+else|:
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|InstantiatedFrom
+condition|?
+name|InstantiatedFrom
+operator|->
+name|getDeclName
+argument_list|()
+else|:
+name|DeclarationName
+argument_list|()
+argument_list|)
+operator|,
+name|InstantiatedFrom
+argument_list|(
+name|InstantiatedFrom
+argument_list|)
+operator|,
+name|NumExpansions
+argument_list|(
+argument|UsingDecls.size()
+argument_list|)
+block|{
+name|std
+operator|::
+name|uninitialized_copy
+argument_list|(
+name|UsingDecls
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|UsingDecls
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|getTrailingObjects
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|)
+block|;   }
+name|public
+operator|:
+comment|/// Get the using declaration from which this was instantiated. This will
+comment|/// always be an UnresolvedUsingValueDecl or an UnresolvedUsingTypenameDecl
+comment|/// that is a pack expansion.
+name|NamedDecl
+operator|*
+name|getInstantiatedFromUsingDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InstantiatedFrom
+return|;
+block|}
+comment|/// Get the set of using declarations that this pack expanded into. Note that
+comment|/// some of these may still be unresolved.
+name|ArrayRef
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+name|expansions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getTrailingObjects
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|NumExpansions
+argument_list|)
+return|;
+block|}
+specifier|static
+name|UsingPackDecl
+modifier|*
+name|Create
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|DeclContext
+operator|*
+name|DC
+argument_list|,
+name|NamedDecl
+operator|*
+name|InstantiatedFrom
+argument_list|,
+name|ArrayRef
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+name|UsingDecls
+argument_list|)
+decl_stmt|;
+specifier|static
+name|UsingPackDecl
+modifier|*
+name|CreateDeserialized
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|,
+name|unsigned
+name|NumExpansions
+parameter_list|)
+function_decl|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|override
+name|LLVM_READONLY
+block|{
+return|return
+name|InstantiatedFrom
+operator|->
+name|getSourceRange
+argument_list|()
+return|;
+block|}
+name|UsingPackDecl
+modifier|*
+name|getCanonicalDecl
+parameter_list|()
+function|override
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
+specifier|const
+name|UsingPackDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
+block|{
+return|return
+name|K
+operator|==
+name|UsingPack
+return|;
+block|}
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
+name|friend
+name|class
+name|ASTDeclWriter
+decl_stmt|;
+name|friend
+name|TrailingObjects
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Represents a dependent using declaration which was not marked with
 end_comment
 
@@ -11582,6 +11721,10 @@ comment|/// \brief The source location of the 'using' keyword
 name|SourceLocation
 name|UsingLocation
 decl_stmt|;
+comment|/// \brief If this is a pack expansion, the location of the '...'.
+name|SourceLocation
+name|EllipsisLoc
+decl_stmt|;
 comment|/// \brief The nested-name-specifier that precedes the name.
 name|NestedNameSpecifierLoc
 name|QualifierLoc
@@ -11602,6 +11745,8 @@ argument_list|,
 argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
+argument_list|,
+argument|SourceLocation EllipsisLoc
 argument_list|)
 block|:
 name|ValueDecl
@@ -11626,6 +11771,11 @@ operator|,
 name|UsingLocation
 argument_list|(
 name|UsingLoc
+argument_list|)
+operator|,
+name|EllipsisLoc
+argument_list|(
+name|EllipsisLoc
 argument_list|)
 operator|,
 name|QualifierLoc
@@ -11719,6 +11869,29 @@ name|DNLoc
 argument_list|)
 return|;
 block|}
+comment|/// \brief Determine whether this is a pack expansion.
+name|bool
+name|isPackExpansion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EllipsisLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get the location of the ellipsis if this is a pack expansion.
+name|SourceLocation
+name|getEllipsisLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EllipsisLoc
+return|;
+block|}
 specifier|static
 name|UnresolvedUsingValueDecl
 modifier|*
@@ -11742,6 +11915,9 @@ specifier|const
 name|DeclarationNameInfo
 modifier|&
 name|NameInfo
+parameter_list|,
+name|SourceLocation
+name|EllipsisLoc
 parameter_list|)
 function_decl|;
 specifier|static
@@ -11903,6 +12079,10 @@ comment|/// \brief The source location of the 'typename' keyword
 name|SourceLocation
 name|TypenameLocation
 decl_stmt|;
+comment|/// \brief If this is a pack expansion, the location of the '...'.
+name|SourceLocation
+name|EllipsisLoc
+decl_stmt|;
 comment|/// \brief The nested-name-specifier that precedes the name.
 name|NestedNameSpecifierLoc
 name|QualifierLoc
@@ -11920,6 +12100,8 @@ argument_list|,
 argument|SourceLocation TargetNameLoc
 argument_list|,
 argument|IdentifierInfo *TargetName
+argument_list|,
+argument|SourceLocation EllipsisLoc
 argument_list|)
 block|:
 name|TypeDecl
@@ -11938,6 +12120,11 @@ operator|,
 name|TypenameLocation
 argument_list|(
 name|TypenameLoc
+argument_list|)
+operator|,
+name|EllipsisLoc
+argument_list|(
+name|EllipsisLoc
 argument_list|)
 operator|,
 name|QualifierLoc
@@ -11997,6 +12184,45 @@ name|getNestedNameSpecifier
 argument_list|()
 return|;
 block|}
+name|DeclarationNameInfo
+name|getNameInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeclarationNameInfo
+argument_list|(
+name|getDeclName
+argument_list|()
+argument_list|,
+name|getLocation
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Determine whether this is a pack expansion.
+name|bool
+name|isPackExpansion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EllipsisLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get the location of the ellipsis if this is a pack expansion.
+name|SourceLocation
+name|getEllipsisLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EllipsisLoc
+return|;
+block|}
 specifier|static
 name|UnresolvedUsingTypenameDecl
 modifier|*
@@ -12024,6 +12250,9 @@ name|TargetNameLoc
 parameter_list|,
 name|DeclarationName
 name|TargetName
+parameter_list|,
+name|SourceLocation
+name|EllipsisLoc
 parameter_list|)
 function_decl|;
 specifier|static
@@ -12334,6 +12563,448 @@ name|ASTDeclReader
 block|; }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// A binding in a decomposition declaration. For instance, given:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   int n[3];
+end_comment
+
+begin_comment
+comment|///   auto&[a, b, c] = n;
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// a, b, and c are BindingDecls, whose bindings are the expressions
+end_comment
+
+begin_comment
+comment|/// x[0], x[1], and x[2] respectively, where x is the implicit
+end_comment
+
+begin_comment
+comment|/// DecompositionDecl of type 'int (&)[3]'.
+end_comment
+
+begin_decl_stmt
+name|class
+name|BindingDecl
+range|:
+name|public
+name|ValueDecl
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
+block|;
+comment|/// The binding represented by this declaration. References to this
+comment|/// declaration are effectively equivalent to this expression (except
+comment|/// that it is only evaluated once at the point of declaration of the
+comment|/// binding).
+name|Expr
+operator|*
+name|Binding
+block|;
+name|BindingDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation IdLoc
+argument_list|,
+argument|IdentifierInfo *Id
+argument_list|)
+operator|:
+name|ValueDecl
+argument_list|(
+name|Decl
+operator|::
+name|Binding
+argument_list|,
+name|DC
+argument_list|,
+name|IdLoc
+argument_list|,
+name|Id
+argument_list|,
+name|QualType
+argument_list|()
+argument_list|)
+block|,
+name|Binding
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|public
+operator|:
+specifier|static
+name|BindingDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation IdLoc
+argument_list|,
+argument|IdentifierInfo *Id
+argument_list|)
+block|;
+specifier|static
+name|BindingDecl
+operator|*
+name|CreateDeserialized
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned ID
+argument_list|)
+block|;
+comment|/// Get the expression to which this declaration is bound. This may be null
+comment|/// in two different cases: while parsing the initializer for the
+comment|/// decomposition declaration, and when the initializer is type-dependent.
+name|Expr
+operator|*
+name|getBinding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Binding
+return|;
+block|}
+comment|/// Get the variable (if any) that holds the value of evaluating the binding.
+comment|/// Only present for user-defined bindings for tuple-like types.
+name|VarDecl
+operator|*
+name|getHoldingVar
+argument_list|()
+specifier|const
+block|;
+comment|/// Set the binding for this BindingDecl, along with its declared type (which
+comment|/// should be a possibly-cv-qualified form of the type of the binding, or a
+comment|/// reference to such a type).
+name|void
+name|setBinding
+argument_list|(
+argument|QualType DeclaredType
+argument_list|,
+argument|Expr *Binding
+argument_list|)
+block|{
+name|setType
+argument_list|(
+name|DeclaredType
+argument_list|)
+block|;
+name|this
+operator|->
+name|Binding
+operator|=
+name|Binding
+block|;   }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+argument_list|(
+argument|Kind K
+argument_list|)
+block|{
+return|return
+name|K
+operator|==
+name|Decl
+operator|::
+name|Binding
+return|;
+block|}
+name|friend
+name|class
+name|ASTDeclReader
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// A decomposition declaration. For instance, given:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   int n[3];
+end_comment
+
+begin_comment
+comment|///   auto&[a, b, c] = n;
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// the second line declares a DecompositionDecl of type 'int (&)[3]', and
+end_comment
+
+begin_comment
+comment|/// three BindingDecls (named a, b, and c). An instance of this class is always
+end_comment
+
+begin_comment
+comment|/// unnamed, but behaves in almost all other respects like a VarDecl.
+end_comment
+
+begin_decl_stmt
+name|class
+name|DecompositionDecl
+name|final
+range|:
+name|public
+name|VarDecl
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|DecompositionDecl
+decl_stmt|,
+name|BindingDecl
+modifier|*
+decl|>
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
+expr_stmt|;
+comment|/// The number of BindingDecl*s following this object.
+name|unsigned
+name|NumBindings
+decl_stmt|;
+name|DecompositionDecl
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LSquareLoc
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|,
+argument|StorageClass SC
+argument_list|,
+argument|ArrayRef<BindingDecl *> Bindings
+argument_list|)
+block|:
+name|VarDecl
+argument_list|(
+name|Decomposition
+argument_list|,
+name|C
+argument_list|,
+name|DC
+argument_list|,
+name|StartLoc
+argument_list|,
+name|LSquareLoc
+argument_list|,
+name|nullptr
+argument_list|,
+name|T
+argument_list|,
+name|TInfo
+argument_list|,
+name|SC
+argument_list|)
+operator|,
+name|NumBindings
+argument_list|(
+argument|Bindings.size()
+argument_list|)
+block|{
+name|std
+operator|::
+name|uninitialized_copy
+argument_list|(
+name|Bindings
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Bindings
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|getTrailingObjects
+operator|<
+name|BindingDecl
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|)
+block|;   }
+name|public
+operator|:
+specifier|static
+name|DecompositionDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LSquareLoc
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|,
+argument|StorageClass S
+argument_list|,
+argument|ArrayRef<BindingDecl *> Bindings
+argument_list|)
+expr_stmt|;
+specifier|static
+name|DecompositionDecl
+modifier|*
+name|CreateDeserialized
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|,
+name|unsigned
+name|NumBindings
+parameter_list|)
+function_decl|;
+name|ArrayRef
+operator|<
+name|BindingDecl
+operator|*
+operator|>
+name|bindings
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getTrailingObjects
+operator|<
+name|BindingDecl
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|NumBindings
+argument_list|)
+return|;
+block|}
+name|void
+name|printName
+argument_list|(
+name|raw_ostream
+operator|&
+name|os
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
+block|{
+return|return
+name|K
+operator|==
+name|Decomposition
+return|;
+block|}
+name|friend
+name|TrailingObjects
+decl_stmt|;
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/// An instance of this class represents the declaration of a property

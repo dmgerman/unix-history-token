@@ -78,7 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/SourceLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -90,7 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/IntrusiveRefCntPtr.h"
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
@@ -114,7 +132,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -153,7 +195,9 @@ name|virtual
 operator|~
 name|ModuleMapCallbacks
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// \brief Called when a module map file has been read.
 comment|///
 comment|/// \param FileStart A SourceLocation referring to the start of the file's
@@ -163,13 +207,18 @@ comment|/// \param IsSystem Whether this is a module map from a system include p
 name|virtual
 name|void
 name|moduleMapFileRead
-argument_list|(
-argument|SourceLocation FileStart
-argument_list|,
-argument|const FileEntry&File
-argument_list|,
-argument|bool IsSystem
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|FileStart
+parameter_list|,
+specifier|const
+name|FileEntry
+modifier|&
+name|File
+parameter_list|,
+name|bool
+name|IsSystem
+parameter_list|)
 block|{}
 comment|/// \brief Called when a header is added during module map parsing.
 comment|///
@@ -177,9 +226,10 @@ comment|/// \param Filename The header file itself.
 name|virtual
 name|void
 name|moduleMapAddHeader
-argument_list|(
-argument|StringRef Filename
-argument_list|)
+parameter_list|(
+name|StringRef
+name|Filename
+parameter_list|)
 block|{}
 comment|/// \brief Called when an umbrella header is added during module map parsing.
 comment|///
@@ -188,11 +238,16 @@ comment|/// \param Header The umbrella header to collect.
 name|virtual
 name|void
 name|moduleMapAddUmbrellaHeader
-argument_list|(
-argument|FileManager *FileMgr
-argument_list|,
-argument|const FileEntry *Header
-argument_list|)
+parameter_list|(
+name|FileManager
+modifier|*
+name|FileMgr
+parameter_list|,
+specifier|const
+name|FileEntry
+modifier|*
+name|Header
+parameter_list|)
 block|{}
 block|}
 empty_stmt|;
@@ -519,8 +574,7 @@ operator|<
 name|KnownHeader
 operator|,
 literal|1
-operator|>
-expr|>
+operator|>>
 name|HeadersMap
 expr_stmt|;
 comment|/// \brief Mapping from each header to the module that owns the contents of
@@ -562,6 +616,9 @@ argument_list|()
 operator|,
 name|IsExhaustive
 argument_list|()
+operator|,
+name|NoUndeclaredIncludes
+argument_list|()
 block|{}
 comment|/// \brief Whether this is a system module.
 name|unsigned
@@ -578,6 +635,13 @@ decl_stmt|;
 comment|/// \brief Whether this is an exhaustive set of configuration macros.
 name|unsigned
 name|IsExhaustive
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether files in this module can only include non-modular headers
+comment|/// and headers from used modules.
+name|unsigned
+name|NoUndeclaredIncludes
 range|:
 literal|1
 decl_stmt|;
@@ -912,6 +976,27 @@ operator|=
 name|Dir
 expr_stmt|;
 block|}
+comment|/// \brief Get the directory that contains Clang-supplied include files.
+specifier|const
+name|DirectoryEntry
+operator|*
+name|getBuiltinDir
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BuiltinIncludeDir
+return|;
+block|}
+comment|/// \brief Is this a compiler builtin header?
+specifier|static
+name|bool
+name|isBuiltinHeader
+parameter_list|(
+name|StringRef
+name|FileName
+parameter_list|)
+function_decl|;
 comment|/// \brief Add a module map callback.
 name|void
 name|addModuleMapCallbacks
@@ -942,6 +1027,10 @@ comment|/// \brief Retrieve the module that owns the given header file, if any.
 comment|///
 comment|/// \param File The header file that is likely to be included.
 comment|///
+comment|/// \param AllowTextual If \c true and \p File is a textual header, return
+comment|/// its owning module. Otherwise, no KnownHeader will be returned if the
+comment|/// file is only known as a textual header.
+comment|///
 comment|/// \returns The module KnownHeader, which provides the module that owns the
 comment|/// given header file.  The KnownHeader is default constructed to indicate
 comment|/// that no module owns this header file.
@@ -952,6 +1041,11 @@ specifier|const
 name|FileEntry
 modifier|*
 name|File
+parameter_list|,
+name|bool
+name|AllowTextual
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Retrieve all the modules that contain the given header file. This
@@ -1127,6 +1221,24 @@ argument_list|,
 argument|bool IsExplicit
 argument_list|)
 expr_stmt|;
+comment|/// \brief Create a new module for a C++ Modules TS module interface unit.
+comment|/// The module must not already exist, and will be configured for the current
+comment|/// compilation.
+comment|///
+comment|/// Note that this also sets the current module to the newly-created module.
+comment|///
+comment|/// \returns The newly-created module.
+name|Module
+modifier|*
+name|createModuleForInterfaceUnit
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
 comment|/// \brief Infer the contents of a framework module map from the given
 comment|/// framework directory.
 name|Module
@@ -1497,10 +1609,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace clang
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_LEX_MODULEMAP_H
+end_comment
 
 end_unit
 

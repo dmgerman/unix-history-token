@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDefines.h"
+file|"lldb/API/SBBreakpoint.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBBreakpoint.h"
+file|"lldb/API/SBDefines.h"
 end_include
 
 begin_decl_stmt

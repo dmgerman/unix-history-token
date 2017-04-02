@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ThreadPlanCallFunctionUsingABI.h --------------------------------*- C++ -*-===//
+comment|//===-- ThreadPlanCallFunctionUsingABI.h --------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -62,12 +66,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/ABI.h"
 end_include
 
@@ -81,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/ThreadPlanCallFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -105,10 +109,14 @@ range|:
 name|public
 name|ThreadPlanCallFunction
 block|{
-comment|// Create a thread plan to call a function at the address passed in the "function"
-comment|// argument, this function is executed using register manipulation instead of JIT.
-comment|// Class derives from ThreadPlanCallFunction and differs by calling a alternative
-comment|// ABI interface ABI::PrepareTrivialCall() which provides more detailed information.
+comment|// Create a thread plan to call a function at the address passed in the
+comment|// "function"
+comment|// argument, this function is executed using register manipulation instead of
+comment|// JIT.
+comment|// Class derives from ThreadPlanCallFunction and differs by calling a
+comment|// alternative
+comment|// ABI interface ABI::PrepareTrivialCall() which provides more detailed
+comment|// information.
 name|public
 operator|:
 name|ThreadPlanCallFunctionUsingABI

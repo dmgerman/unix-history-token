@@ -204,12 +204,12 @@ operator|=
 name|rhs
 operator|.
 name|m_streams
-block|;     }
+block|;   }
 operator|~
 name|StreamTee
 argument_list|()
 name|override
-block|{     }
+block|{}
 name|StreamTee
 operator|&
 name|operator
@@ -551,7 +551,7 @@ name|m_streams
 operator|.
 name|size
 argument_list|()
-block|;         }
+block|;     }
 return|return
 name|result
 return|;

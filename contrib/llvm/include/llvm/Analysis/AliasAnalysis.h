@@ -307,10 +307,17 @@ name|FMRL_ArgumentPointees
 init|=
 literal|4
 block|,
+comment|/// Memory that is inaccessible via LLVM IR.
+name|FMRL_InaccessibleMem
+init|=
+literal|8
+block|,
 comment|/// Access to any memory.
 name|FMRL_Anywhere
 init|=
-literal|8
+literal|16
+operator||
+name|FMRL_InaccessibleMem
 operator||
 name|FMRL_ArgumentPointees
 block|}
@@ -352,6 +359,31 @@ comment|///
 comment|/// This property corresponds to the IntrArgMemOnly LLVM intrinsic flag.
 name|FMRB_OnlyAccessesArgumentPointees
 init|=
+name|FMRL_ArgumentPointees
+operator||
+name|MRI_ModRef
+block|,
+comment|/// The only memory references in this function (if it has any) are
+comment|/// references of memory that is otherwise inaccessible via LLVM IR.
+comment|///
+comment|/// This property corresponds to the LLVM IR inaccessiblememonly attribute.
+name|FMRB_OnlyAccessesInaccessibleMem
+init|=
+name|FMRL_InaccessibleMem
+operator||
+name|MRI_ModRef
+block|,
+comment|/// The function may perform non-volatile loads and stores of objects
+comment|/// pointed to by its pointer-typed arguments, with arbitrary offsets, and
+comment|/// it may also perform loads and stores of memory that is otherwise
+comment|/// inaccessible via LLVM IR.
+comment|///
+comment|/// This property corresponds to the LLVM IR
+comment|/// inaccessiblemem_or_argmemonly attribute.
+name|FMRB_OnlyAccessesInaccessibleOrArgMem
+init|=
+name|FMRL_InaccessibleMem
+operator||
 name|FMRL_ArgumentPointees
 operator||
 name|MRI_ModRef
@@ -441,6 +473,47 @@ argument_list|(
 argument|new Model<AAResultT>(AAResult, *this)
 argument_list|)
 block|;   }
+comment|/// Register a function analysis ID that the results aggregation depends on.
+comment|///
+comment|/// This is used in the new pass manager to implement the invalidation logic
+comment|/// where we must invalidate the results aggregation if any of our component
+comment|/// analyses become invalid.
+name|void
+name|addAADependencyID
+argument_list|(
+argument|AnalysisKey *ID
+argument_list|)
+block|{
+name|AADeps
+operator|.
+name|push_back
+argument_list|(
+name|ID
+argument_list|)
+block|; }
+comment|/// Handle invalidation events in the new pass manager.
+comment|///
+comment|/// The aggregation is invalidated if any of the underlying analyses is
+comment|/// invalidated.
+name|bool
+name|invalidate
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+name|Inv
+argument_list|)
+expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// \name Alias Queries
 comment|/// @{
@@ -450,18 +523,18 @@ comment|/// each other. This is the interface that must be implemented by specif
 comment|/// alias analysis implementations.
 name|AliasResult
 name|alias
-argument_list|(
+parameter_list|(
 specifier|const
 name|MemoryLocation
-operator|&
+modifier|&
 name|LocA
-argument_list|,
+parameter_list|,
 specifier|const
 name|MemoryLocation
-operator|&
+modifier|&
 name|LocB
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// A convenience wrapper around the primary \c alias interface.
 name|AliasResult
 name|alias
@@ -962,6 +1035,79 @@ operator|(
 name|MRB
 operator|&
 name|FMRL_ArgumentPointees
+operator|)
+return|;
+block|}
+comment|/// Checks if functions with the specified behavior are known to read and
+comment|/// write at most from memory that is inaccessible from LLVM IR.
+specifier|static
+name|bool
+name|onlyAccessesInaccessibleMem
+parameter_list|(
+name|FunctionModRefBehavior
+name|MRB
+parameter_list|)
+block|{
+return|return
+operator|!
+operator|(
+name|MRB
+operator|&
+name|FMRL_Anywhere
+operator|&
+operator|~
+name|FMRL_InaccessibleMem
+operator|)
+return|;
+block|}
+comment|/// Checks if functions with the specified behavior are known to potentially
+comment|/// read or write from memory that is inaccessible from LLVM IR.
+specifier|static
+name|bool
+name|doesAccessInaccessibleMem
+parameter_list|(
+name|FunctionModRefBehavior
+name|MRB
+parameter_list|)
+block|{
+return|return
+operator|(
+name|MRB
+operator|&
+name|MRI_ModRef
+operator|)
+operator|&&
+operator|(
+name|MRB
+operator|&
+name|FMRL_InaccessibleMem
+operator|)
+return|;
+block|}
+comment|/// Checks if functions with the specified behavior are known to read and
+comment|/// write at most from memory that is inaccessible from LLVM IR or objects
+comment|/// pointed to by their pointer-typed arguments (with arbitrary offsets).
+specifier|static
+name|bool
+name|onlyAccessesInaccessibleOrArgMem
+parameter_list|(
+name|FunctionModRefBehavior
+name|MRB
+parameter_list|)
+block|{
+return|return
+operator|!
+operator|(
+name|MRB
+operator|&
+name|FMRL_Anywhere
+operator|&
+operator|~
+operator|(
+name|FMRL_InaccessibleMem
+operator||
+name|FMRL_ArgumentPointees
+operator|)
 operator|)
 return|;
 block|}
@@ -2109,6 +2255,15 @@ name|Concept
 operator|>>
 name|AAs
 expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|AnalysisKey
+operator|*
+operator|>
+name|AADeps
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// Temporary typedef for legacy code that uses a generic \c AliasAnalysis
@@ -2976,84 +3131,6 @@ typedef|typedef
 name|AAResults
 name|Result
 typedef|;
-comment|// This type hase value semantics. We have to spell these out because MSVC
-comment|// won't synthesize them.
-name|AAManager
-argument_list|()
-block|{}
-name|AAManager
-argument_list|(
-name|AAManager
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|ResultGetters
-argument_list|(
-argument|std::move(Arg.ResultGetters)
-argument_list|)
-block|{}
-name|AAManager
-argument_list|(
-specifier|const
-name|AAManager
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|ResultGetters
-argument_list|(
-argument|Arg.ResultGetters
-argument_list|)
-block|{}
-name|AAManager
-operator|&
-name|operator
-operator|=
-operator|(
-name|AAManager
-operator|&&
-name|RHS
-operator|)
-block|{
-name|ResultGetters
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|ResultGetters
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|AAManager
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|AAManager
-operator|&
-name|RHS
-operator|)
-block|{
-name|ResultGetters
-operator|=
-name|RHS
-operator|.
-name|ResultGetters
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 comment|/// Register a specific AA result.
 name|template
 operator|<
@@ -3101,7 +3178,7 @@ name|run
 argument_list|(
 argument|Function&F
 argument_list|,
-argument|AnalysisManager<Function>&AM
+argument|FunctionAnalysisManager&AM
 argument_list|)
 block|{
 name|Result
@@ -3151,8 +3228,8 @@ name|AAManager
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|SmallVector
 operator|<
@@ -3165,10 +3242,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|,
@@ -3192,7 +3266,7 @@ name|getFunctionAAResultImpl
 argument_list|(
 argument|Function&F
 argument_list|,
-argument|AnalysisManager<Function>&AM
+argument|FunctionAnalysisManager&AM
 argument_list|,
 argument|AAResults&AAResults
 argument_list|)
@@ -3202,6 +3276,16 @@ operator|.
 name|addAAResult
 argument_list|(
 argument|AM.template getResult<AnalysisT>(F)
+argument_list|)
+block|;
+name|AAResults
+operator|.
+name|addAADependencyID
+argument_list|(
+name|AnalysisT
+operator|::
+name|ID
+argument_list|()
 argument_list|)
 block|;   }
 name|template
@@ -3215,14 +3299,14 @@ name|getModuleAAResultImpl
 argument_list|(
 argument|Function&F
 argument_list|,
-argument|AnalysisManager<Function>&AM
+argument|FunctionAnalysisManager&AM
 argument_list|,
 argument|AAResults&AAResults
 argument_list|)
 block|{
 name|auto
 operator|&
-name|MAM
+name|MAMProxy
 operator|=
 name|AM
 operator|.
@@ -3233,6 +3317,12 @@ operator|>
 operator|(
 name|F
 operator|)
+block|;
+name|auto
+operator|&
+name|MAM
+operator|=
+name|MAMProxy
 operator|.
 name|getManager
 argument_list|()
@@ -3258,6 +3348,7 @@ name|getParent
 argument_list|()
 operator|)
 condition|)
+block|{
 name|AAResults
 operator|.
 name|addAAResult
@@ -3266,8 +3357,21 @@ operator|*
 name|R
 argument_list|)
 expr_stmt|;
+name|MAMProxy
+operator|.
+name|template
+name|registerOuterAnalysisInvalidation
+operator|<
+name|AnalysisT
+operator|,
+name|AAManager
+operator|>
+operator|(
+operator|)
+expr_stmt|;
 block|}
-expr|}
+block|}
+block|}
 block|;
 comment|/// A wrapper pass to provide the legacy pass manager access to a suitably
 comment|/// prepared AAResults object.

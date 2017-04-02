@@ -62,6 +62,12 @@ block|{
 name|namespace
 name|pdb
 block|{
+specifier|const
+name|uint16_t
+name|kInvalidStreamIndex
+init|=
+literal|0xFFFF
+decl_stmt|;
 enum|enum
 name|PdbRaw_ImplVer
 enum|:
@@ -206,7 +212,9 @@ block|,
 name|StreamIPI
 init|=
 literal|4
-block|, }
+block|,
+name|kSpecialStreamCount
+block|}
 enum|;
 name|enum
 name|class

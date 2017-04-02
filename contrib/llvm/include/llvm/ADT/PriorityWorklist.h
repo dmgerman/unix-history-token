@@ -76,7 +76,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Sequence.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -94,7 +112,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<cstddef>
 end_include
 
 begin_include
@@ -188,7 +206,9 @@ expr_stmt|;
 comment|/// Construct an empty PriorityWorklist
 name|PriorityWorklist
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Determine if the PriorityWorklist is empty or not.
 name|bool
 name|empty
@@ -387,7 +407,185 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Insert a sequence of new elements into the PriorityWorklist.
+name|template
+operator|<
+name|typename
+name|SequenceT
+operator|>
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+operator|!
+name|std
+operator|::
+name|is_convertible
+operator|<
+name|SequenceT
+operator|,
+name|T
+operator|>
+operator|::
+name|value
+operator|>
+operator|::
+name|type
+name|insert
+argument_list|(
+argument|SequenceT&&Input
+argument_list|)
+block|{
+if|if
+condition|(
+name|std
+operator|::
+name|begin
+argument_list|(
+name|Input
+argument_list|)
+operator|==
+name|std
+operator|::
+name|end
+argument_list|(
+name|Input
+argument_list|)
+condition|)
+comment|// Nothing to do for an empty input sequence.
+return|return;
+comment|// First pull the input sequence into the vector as a bulk append
+comment|// operation.
+name|ptrdiff_t
+name|StartIndex
+operator|=
+name|V
+operator|.
+name|size
+argument_list|()
+expr_stmt|;
+name|V
+operator|.
+name|insert
+argument_list|(
+name|V
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|std
+operator|::
+name|begin
+argument_list|(
+name|Input
+argument_list|)
+argument_list|,
+name|std
+operator|::
+name|end
+argument_list|(
+name|Input
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// Now walk backwards fixing up the index map and deleting any duplicates.
+for|for
+control|(
+name|ptrdiff_t
+name|i
+init|=
+name|V
+operator|.
+name|size
+argument_list|()
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+name|StartIndex
+condition|;
+operator|--
+name|i
+control|)
+block|{
+name|auto
+name|InsertResult
+init|=
+name|M
+operator|.
+name|insert
+argument_list|(
+block|{
+name|V
+index|[
+name|i
+index|]
+block|,
+name|i
+block|}
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|InsertResult
+operator|.
+name|second
+condition|)
+continue|continue;
+comment|// If the existing index is before this insert's start, nuke that one and
+comment|// move it up.
+name|ptrdiff_t
+modifier|&
+name|Index
+init|=
+name|InsertResult
+operator|.
+name|first
+operator|->
+name|second
+decl_stmt|;
+if|if
+condition|(
+name|Index
+operator|<
+name|StartIndex
+condition|)
+block|{
+name|V
+index|[
+name|Index
+index|]
+operator|=
+name|T
+argument_list|()
+expr_stmt|;
+name|Index
+operator|=
+name|i
+expr_stmt|;
+continue|continue;
+block|}
+comment|// Otherwise the existing one comes first so just clear out the value in
+comment|// this slot.
+name|V
+index|[
+name|i
+index|]
+operator|=
+name|T
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Remove the last element of the PriorityWorklist.
+end_comment
+
+begin_function
 name|void
 name|pop_back
 parameter_list|()
@@ -446,8 +644,11 @@ argument_list|()
 condition|)
 do|;
 block|}
+end_function
+
+begin_function
+name|LLVM_NODISCARD
 name|T
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|pop_back_val
 parameter_list|()
 block|{
@@ -464,9 +665,21 @@ return|return
 name|Ret
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Erase an item from the worklist.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that this is constant time due to the nature of the worklist implementation.
+end_comment
+
+begin_function
 name|bool
 name|erase
 parameter_list|(
@@ -581,19 +794,61 @@ return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Erase items from the set vector based on a predicate function.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This is intended to be equivalent to the following code, if we could
+end_comment
+
+begin_comment
 comment|/// write it:
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
-comment|///   V.erase(std::remove_if(V.begin(), V.end(), P), V.end());
+end_comment
+
+begin_comment
+comment|///   V.erase(remove_if(V, P), V.end());
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// However, PriorityWorklist doesn't expose non-const iterators, making any
+end_comment
+
+begin_comment
 comment|/// algorithm like remove_if impossible to use.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \returns true if any element is removed.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -611,19 +866,9 @@ operator|::
 name|iterator
 name|E
 operator|=
-name|std
-operator|::
 name|remove_if
 argument_list|(
 name|V
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|V
-operator|.
-name|end
-argument_list|()
 argument_list|,
 name|TestAndEraseFromMap
 operator|<
@@ -648,6 +893,9 @@ condition|)
 return|return
 name|false
 return|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|auto
@@ -686,6 +934,9 @@ operator|.
 name|begin
 argument_list|()
 expr_stmt|;
+end_for
+
+begin_expr_stmt
 name|V
 operator|.
 name|erase
@@ -698,20 +949,42 @@ name|end
 argument_list|()
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|true
 return|;
-block|}
-end_decl_stmt
+end_return
+
+begin_comment
+unit|}
+comment|/// Reverse the items in the PriorityWorklist.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This does an in-place reversal. Other kinds of reverse aren't easy to
+end_comment
+
+begin_comment
+comment|/// support in the face of the worklist semantics.
+end_comment
 
 begin_comment
 comment|/// Completely clear the PriorityWorklist
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|clear
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|M
 operator|.
@@ -724,7 +997,7 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_label
 name|private
@@ -912,16 +1185,25 @@ name|public
 operator|:
 name|SmallPriorityWorklist
 argument_list|()
-block|{}
-block|}
+operator|=
+expr|default
+block|; }
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_PRIORITYWORKLIST_H
+end_comment
 
 end_unit
 

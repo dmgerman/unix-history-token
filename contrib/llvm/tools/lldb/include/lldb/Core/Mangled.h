@@ -55,13 +55,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -134,18 +134,20 @@ comment|/// @param[in] is_mangled
 comment|///     If \b true then \a name is a mangled name, if \b false then
 comment|///     \a name is demangled.
 comment|//----------------------------------------------------------------------
-name|explicit
 name|Mangled
-parameter_list|(
-specifier|const
-name|ConstString
-modifier|&
-name|name
-parameter_list|,
-name|bool
-name|is_mangled
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const ConstString&name
+argument_list|,
+argument|bool is_mangled
+argument_list|)
+empty_stmt|;
+name|Mangled
+argument_list|(
+argument|llvm::StringRef name
+argument_list|,
+argument|bool is_mangled
+argument_list|)
+empty_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// Construct with name.
 comment|///
@@ -164,6 +166,15 @@ modifier|&
 name|name
 parameter_list|)
 function_decl|;
+name|explicit
+name|Mangled
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|name
+argument_list|)
+decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// Destructor
 comment|///
@@ -564,7 +575,8 @@ name|mutable
 name|ConstString
 name|m_demangled
 decl_stmt|;
-comment|///< Mutable so we can get it on demand with a const version of this object
+comment|///< Mutable so we can get it on demand with
+comment|///a const version of this object
 block|}
 empty_stmt|;
 name|Stream

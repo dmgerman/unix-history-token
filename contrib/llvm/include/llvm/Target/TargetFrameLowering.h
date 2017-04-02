@@ -517,22 +517,6 @@ name|PrologueMBB
 argument_list|)
 decl|const
 block|{}
-comment|/// Adjust the prologue to add an allocation at a fixed offset from the frame
-comment|/// pointer.
-name|virtual
-name|void
-name|adjustForFrameAllocatePrologue
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|MachineBasicBlock
-operator|&
-name|PrologueMBB
-argument_list|)
-decl|const
-block|{}
 comment|/// spillCalleeSavedRegisters - Issues instruction(s) to spill all callee
 comment|/// saved registers and returns true if it isn't possible / profitable to do
 comment|/// so by issuing a series of store instructions via

@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineLoopInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCInstrInfo.h"
 end_include
 
@@ -651,6 +657,21 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+comment|/// Returns the size in bytes of the specified MachineInstr, or ~0U
+comment|/// when this function is not implemented by a target.
+name|virtual
+name|unsigned
+name|getInstSizeInBytes
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+return|return
+operator|~
+literal|0U
+return|;
+block|}
 comment|/// Return true if the instruction is as cheap as a move instruction.
 comment|///
 comment|/// Targets for different archs need to override this, and different
@@ -675,9 +696,6 @@ comment|///
 comment|/// MachineSink determines on its own whether the instruction is safe to sink;
 comment|/// this gives the target a hook to override the default behavior with regards
 comment|/// to which instructions should be sunk.
-comment|/// The default behavior is to not sink insert_subreg, subreg_to_reg, and
-comment|/// reg_sequence. These are meant to be close to the source to make it easier
-comment|/// to coalesce.
 name|virtual
 name|bool
 name|shouldSink
@@ -687,23 +705,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-operator|!
-name|MI
-operator|.
-name|isInsertSubreg
-argument_list|()
-operator|&&
-operator|!
-name|MI
-operator|.
-name|isSubregToReg
-argument_list|()
-operator|&&
-operator|!
-name|MI
-operator|.
-name|isRegSequence
-argument_list|()
+name|true
 return|;
 block|}
 comment|/// Re-issue the specified 'original' instruction at the
@@ -1011,6 +1013,65 @@ argument|const MachineRegisterInfo *MRI = nullptr
 argument_list|)
 specifier|const
 block|;
+comment|/// \returns true if a branch from an instruction with opcode \p BranchOpc
+comment|///  bytes is capable of jumping to a position \p BrOffset bytes away.
+name|virtual
+name|bool
+name|isBranchOffsetInRange
+argument_list|(
+argument|unsigned BranchOpc
+argument_list|,
+argument|int64_t BrOffset
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"target did not implement"
+argument_list|)
+block|;   }
+comment|/// \returns The block that branch instruction \p MI jumps to.
+name|virtual
+name|MachineBasicBlock
+operator|*
+name|getBranchDestBlock
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"target did not implement"
+argument_list|)
+block|;   }
+comment|/// Insert an unconditional indirect branch at the end of \p MBB to \p
+comment|/// NewDestBB.  \p BrOffset indicates the offset of \p NewDestBB relative to
+comment|/// the offset of the position to insert the new branch.
+comment|///
+comment|/// \returns The number of bytes added to the block.
+name|virtual
+name|unsigned
+name|insertIndirectBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock&NewDestBB
+argument_list|,
+argument|const DebugLoc&DL
+argument_list|,
+argument|int64_t BrOffset =
+literal|0
+argument_list|,
+argument|RegScavenger *RS = nullptr
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"target did not implement"
+argument_list|)
+block|;   }
 comment|/// Analyze the branching code at the end of MBB, returning
 comment|/// true if it cannot be understood (e.g. it's a switch dispatch or isn't
 comment|/// implemented for a target).  Upon success, this returns false and returns
@@ -1030,7 +1091,7 @@ comment|///    'false' destination in FBB, and a list of operands that evaluate 
 comment|///    condition.  These operands can be passed to other TargetInstrInfo
 comment|///    methods to create new branches.
 comment|///
-comment|/// Note that RemoveBranch and InsertBranch must be implemented to support
+comment|/// Note that removeBranch and insertBranch must be implemented to support
 comment|/// cases where this method returns success.
 comment|///
 comment|/// If AllowModify is true, then this routine is allowed to modify the basic
@@ -1183,24 +1244,28 @@ block|}
 comment|/// Remove the branching code at the end of the specific MBB.
 comment|/// This is only invoked in cases where AnalyzeBranch returns success. It
 comment|/// returns the number of instructions that were removed.
+comment|/// If \p BytesRemoved is non-null, report the change in code size from the
+comment|/// removed instructions.
 name|virtual
 name|unsigned
-name|RemoveBranch
+name|removeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
+argument_list|,
+argument|int *BytesRemoved = nullptr
 argument_list|)
 specifier|const
 block|{
 name|llvm_unreachable
 argument_list|(
-literal|"Target didn't implement TargetInstrInfo::RemoveBranch!"
+literal|"Target didn't implement TargetInstrInfo::removeBranch!"
 argument_list|)
 block|;   }
-comment|/// Insert branch code into the end of the specified MachineBasicBlock.
-comment|/// The operands to this method are the same as those
-comment|/// returned by AnalyzeBranch.  This is only invoked in cases where
-comment|/// AnalyzeBranch returns success. It returns the number of instructions
-comment|/// inserted.
+comment|/// Insert branch code into the end of the specified MachineBasicBlock. The
+comment|/// operands to this method are the same as those returned by AnalyzeBranch.
+comment|/// This is only invoked in cases where AnalyzeBranch returns success. It
+comment|/// returns the number of instructions inserted. If \p BytesAdded is non-null,
+comment|/// report the change in code size from the added instructions.
 comment|///
 comment|/// It is also invoked by tail merging to add unconditional branches in
 comment|/// cases where AnalyzeBranch doesn't apply because there was no original
@@ -1211,7 +1276,7 @@ comment|/// The CFG information in MBB.Predecessors and MBB.Successors must be v
 comment|/// before calling this function.
 name|virtual
 name|unsigned
-name|InsertBranch
+name|insertBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -1222,12 +1287,97 @@ argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|const DebugLoc&DL
+argument_list|,
+argument|int *BytesAdded = nullptr
 argument_list|)
 specifier|const
 block|{
 name|llvm_unreachable
 argument_list|(
-literal|"Target didn't implement TargetInstrInfo::InsertBranch!"
+literal|"Target didn't implement TargetInstrInfo::insertBranch!"
+argument_list|)
+block|;   }
+name|unsigned
+name|insertUnconditionalBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *DestBB
+argument_list|,
+argument|const DebugLoc&DL
+argument_list|,
+argument|int *BytesAdded = nullptr
+argument_list|)
+specifier|const
+block|{
+return|return
+name|insertBranch
+argument_list|(
+name|MBB
+argument_list|,
+name|DestBB
+argument_list|,
+name|nullptr
+argument_list|,
+name|ArrayRef
+operator|<
+name|MachineOperand
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|DL
+argument_list|,
+name|BytesAdded
+argument_list|)
+return|;
+block|}
+comment|/// Analyze the loop code, return true if it cannot be understoo. Upon
+comment|/// success, this function returns false and returns information about the
+comment|/// induction variable and compare instruction used at the end.
+name|virtual
+name|bool
+name|analyzeLoop
+argument_list|(
+argument|MachineLoop&L
+argument_list|,
+argument|MachineInstr *&IndVarInst
+argument_list|,
+argument|MachineInstr *&CmpInst
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Generate code to reduce the loop iteration by one and check if the loop is
+comment|/// finished.  Return the value/register of the the new loop count.  We need
+comment|/// this function when peeling off one or more iterations of a loop. This
+comment|/// function assumes the nth iteration is peeled first.
+name|virtual
+name|unsigned
+name|reduceLoopCount
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineInstr *IndVar
+argument_list|,
+argument|MachineInstr&Cmp
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|SmallVectorImpl<MachineInstr *>&PrevInsts
+argument_list|,
+argument|unsigned Iter
+argument_list|,
+argument|unsigned MaxIter
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement ReduceLoopCount"
 argument_list|)
 block|;   }
 comment|/// Delete the instruction OldInst and everything after it, replacing it with
@@ -1242,64 +1392,6 @@ argument|MachineBasicBlock *NewDest
 argument_list|)
 specifier|const
 block|;
-comment|/// Get an instruction that performs an unconditional branch to the given
-comment|/// symbol.
-name|virtual
-name|void
-name|getUnconditionalBranch
-argument_list|(
-argument|MCInst&MI
-argument_list|,
-argument|const MCSymbolRefExpr *BranchTarget
-argument_list|)
-specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Target didn't implement "
-literal|"TargetInstrInfo::getUnconditionalBranch!"
-argument_list|)
-block|;   }
-comment|/// Get a machine trap instruction.
-name|virtual
-name|void
-name|getTrap
-argument_list|(
-argument|MCInst&MI
-argument_list|)
-specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Target didn't implement TargetInstrInfo::getTrap!"
-argument_list|)
-block|;   }
-comment|/// Get a number of bytes that suffices to hold
-comment|/// either the instruction returned by getUnconditionalBranch or the
-comment|/// instruction returned by getTrap. This only makes sense because
-comment|/// getUnconditionalBranch returns a single, specific instruction. This
-comment|/// information is needed by the jumptable construction code, since it must
-comment|/// decide how many bytes to use for a jumptable entry so it can generate the
-comment|/// right mask.
-comment|///
-comment|/// Note that if the jumptable instruction requires alignment, then that
-comment|/// alignment should be factored into this required bound so that the
-comment|/// resulting bound gives the right alignment for the instruction.
-name|virtual
-name|unsigned
-name|getJumpInstrTableEntryBound
-argument_list|()
-specifier|const
-block|{
-comment|// This method gets called by LLVMTargetMachine always, so it can't fail
-comment|// just because there happens to be no implementation for this target.
-comment|// Any code that tries to use a jumptable annotation without defining
-comment|// getUnconditionalBranch on the appropriate Target will fail anyway, and
-comment|// the value returned here won't matter in that case.
-return|return
-literal|0
-return|;
-block|}
 comment|/// Return true if it's legal to split the given basic
 comment|/// block at the specified instruction (i.e. instruction would be the start
 comment|/// of a new basic block).
@@ -1683,6 +1775,28 @@ name|expandPostRAPseudo
 argument_list|(
 argument|MachineInstr&MI
 argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Check whether the target can fold a load that feeds a subreg operand
+comment|/// (or a subreg operand that feeds a store).
+comment|/// For example, X86 may want to return true if it can fold
+comment|/// movl (%esp), %eax
+comment|/// subb, %al, ...
+comment|/// Into:
+comment|/// subb (%esp), ...
+comment|///
+comment|/// Ideally, we'd like the target implementation of foldMemoryOperand() to
+comment|/// reject subregs - but since this behavior used to be enforced in the
+comment|/// target-independent code, moving this responsibility to the targets
+comment|/// has the potential of causing nasty silent breakage in out-of-tree targets.
+name|virtual
+name|bool
+name|isSubregFoldable
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2146,26 +2260,46 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Return true if the instruction contains a base register and offset. If
+comment|/// true, the function also sets the operand position in the instruction
+comment|/// for the base register and offset.
 name|virtual
 name|bool
-name|enableClusterLoads
-argument_list|()
+name|getBaseAndOffsetPosition
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned&BasePos
+argument_list|,
+argument|unsigned&OffsetPos
+argument_list|)
 specifier|const
 block|{
 return|return
 name|false
 return|;
 block|}
+comment|/// If the instruction is an increment of a constant value, return the amount.
 name|virtual
 name|bool
-name|enableClusterStores
-argument_list|()
+name|getIncrementValue
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|int&Value
+argument_list|)
 specifier|const
 block|{
 return|return
 name|false
 return|;
 block|}
+comment|/// Returns true if the two given memory operations should be scheduled
+comment|/// adjacent. Note that you have to add:
+comment|///   DAG->addMutation(createLoadClusterDAGMutation(DAG->TII, DAG->TRI));
+comment|/// or
+comment|///   DAG->addMutation(createStoreClusterDAGMutation(DAG->TII, DAG->TRI));
+comment|/// to TargetPassConfig::createMachineScheduler() to have an effect.
 name|virtual
 name|bool
 name|shouldClusterMemOps
@@ -2178,31 +2312,35 @@ argument|unsigned NumLoads
 argument_list|)
 specifier|const
 block|{
-return|return
-name|false
-return|;
-block|}
+name|llvm_unreachable
+argument_list|(
+literal|"target did not implement shouldClusterMemOps()"
+argument_list|)
+block|;   }
 comment|/// Can this target fuse the given instructions if they are scheduled
-comment|/// adjacent.
+comment|/// adjacent. Note that you have to add:
+comment|///   DAG.addMutation(createMacroFusionDAGMutation());
+comment|/// to TargetPassConfig::createMachineScheduler() to have an effect.
 name|virtual
 name|bool
 name|shouldScheduleAdjacent
 argument_list|(
-argument|MachineInstr&First
+argument|const MachineInstr&First
 argument_list|,
-argument|MachineInstr&Second
+argument|const MachineInstr&Second
 argument_list|)
 specifier|const
 block|{
-return|return
-name|false
-return|;
-block|}
+name|llvm_unreachable
+argument_list|(
+literal|"target did not implement shouldScheduleAdjacent()"
+argument_list|)
+block|;   }
 comment|/// Reverses the branch condition of the specified condition list,
 comment|/// returning false on success and true if it cannot be reversed.
 name|virtual
 name|bool
-name|ReverseBranchCondition
+name|reverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
@@ -2232,6 +2370,19 @@ argument|MCInst&NopInst
 argument_list|)
 specifier|const
 block|;
+comment|/// Return true for post-incremented instructions.
+name|virtual
+name|bool
+name|isPostIncrement
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Returns true if the instruction is already predicated.
 name|virtual
 name|bool
@@ -2601,32 +2752,6 @@ argument_list|,
 argument|unsigned DefIdx
 argument_list|,
 argument|const MachineInstr&UseMI
-argument_list|,
-argument|unsigned UseIdx
-argument_list|)
-specifier|const
-block|;
-comment|/// Compute and return the latency of the given data dependent def and use
-comment|/// when the operand indices are already known. UseMI may be \c nullptr for
-comment|/// an unknown use.
-comment|///
-comment|/// FindMin may be set to get the minimum vs. expected latency. Minimum
-comment|/// latency is used for scheduling groups, while expected latency is for
-comment|/// instruction cost and critical path.
-comment|///
-comment|/// Depending on the subtarget's itinerary properties, this may or may not
-comment|/// need to call getOperandLatency(). For most subtargets, we don't need
-comment|/// DefIdx or UseIdx to compute min latency.
-name|unsigned
-name|computeOperandLatency
-argument_list|(
-argument|const InstrItineraryData *ItinData
-argument_list|,
-argument|const MachineInstr&DefMI
-argument_list|,
-argument|unsigned DefIdx
-argument_list|,
-argument|const MachineInstr *UseMI
 argument_list|,
 argument|unsigned UseIdx
 argument_list|)
@@ -3115,6 +3240,19 @@ specifier|const
 block|{
 return|return
 name|None
+return|;
+block|}
+comment|/// Determines whether |Inst| is a tail call instruction.
+name|virtual
+name|bool
+name|isTailCall
+argument_list|(
+argument|const MachineInstr&Inst
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
 return|;
 block|}
 name|private

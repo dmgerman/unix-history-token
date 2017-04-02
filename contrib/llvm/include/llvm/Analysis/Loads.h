@@ -87,10 +87,9 @@ decl_stmt|;
 name|class
 name|MDNode
 decl_stmt|;
-comment|/// isDereferenceablePointer - Return true if this is always a dereferenceable
-comment|/// pointer. If the context instruction is specified perform context-sensitive
-comment|/// analysis and return true if the pointer is dereferenceable at the
-comment|/// specified instruction.
+comment|/// Return true if this is always a dereferenceable pointer. If the context
+comment|/// instruction is specified perform context-sensitive analysis and return true
+comment|/// if the pointer is dereferenceable at the specified instruction.
 name|bool
 name|isDereferenceablePointer
 parameter_list|(
@@ -154,8 +153,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// isSafeToLoadUnconditionally - Return true if we know that executing a load
-comment|/// from this value cannot trap.
+comment|/// Return true if we know that executing a load from this value cannot trap.
 comment|///
 comment|/// If DT and ScanFrom are specified this method performs context-sensitive
 comment|/// analysis and returns true if it is safe to load immediately before ScanFrom.
@@ -192,11 +190,11 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// DefMaxInstsToScan - the default number of maximum instructions
-comment|/// to scan in the block, used by FindAvailableLoadedValue().
+comment|/// The default number of maximum instructions to scan in the block, used by
+comment|/// FindAvailableLoadedValue().
 extern|extern cl::opt<unsigned> DefMaxInstsToScan;
-comment|/// \brief Scan backwards to see if we have the value of the given load
-comment|/// available locally within a small number of instructions.
+comment|/// Scan backwards to see if we have the value of the given load available
+comment|/// locally within a small number of instructions.
 comment|///
 comment|/// You can use this function to scan across multiple blocks: after you call
 comment|/// this function, if ScanFrom points at the beginning of the block, it's safe
@@ -208,15 +206,13 @@ comment|/// to be merged.  (This doesn't matter for store-to-load forwarding bec
 comment|/// the only relevant load gets deleted.)
 comment|///
 comment|/// \param Load The load we want to replace.
-comment|/// \param ScanBB The basic block to scan. FIXME: This is redundant.
+comment|/// \param ScanBB The basic block to scan.
 comment|/// \param [in,out] ScanFrom The location to start scanning from. When this
 comment|/// function returns, it points at the last instruction scanned.
 comment|/// \param MaxInstsToScan The maximum number of instructions to scan. If this
 comment|/// is zero, the whole block will be scanned.
 comment|/// \param AA Optional pointer to alias analysis, to make the scan more
 comment|/// precise.
-comment|/// \param [out] AATags The aliasing metadata for the operation which produced
-comment|/// the value. FIXME: This is basically useless.
 comment|/// \param [out] IsLoadCSE Whether the returned value is a load from the same
 comment|/// location in memory, as opposed to the value operand of a store.
 comment|///
@@ -247,12 +243,6 @@ argument_list|,
 name|AliasAnalysis
 operator|*
 name|AA
-operator|=
-name|nullptr
-argument_list|,
-name|AAMDNodes
-operator|*
-name|AATags
 operator|=
 name|nullptr
 argument_list|,

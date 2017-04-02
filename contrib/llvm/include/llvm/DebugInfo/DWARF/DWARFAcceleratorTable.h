@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdint>
 end_include
 
@@ -105,9 +111,11 @@ name|uint16_t
 name|AtomType
 typedef|;
 typedef|typedef
-name|uint16_t
+name|dwarf
+operator|::
 name|Form
-typedef|;
+name|Form
+expr_stmt|;
 name|uint32_t
 name|DIEOffsetBase
 decl_stmt|;

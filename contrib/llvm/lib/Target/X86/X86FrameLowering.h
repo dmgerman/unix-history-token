@@ -133,10 +133,8 @@ name|StackPtr
 block|;
 comment|/// Emit target stack probe code. This is required for all
 comment|/// large stack allocations on Windows. The caller is required to materialize
-comment|/// the number of bytes to probe in RAX/EAX. Returns instruction just
-comment|/// after the expansion.
-name|MachineInstr
-operator|*
+comment|/// the number of bytes to probe in RAX/EAX.
+name|void
 name|emitStackProbe
 argument_list|(
 argument|MachineFunction&MF
@@ -505,8 +503,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Emit target stack probe as a call to a helper function
-name|MachineInstr
-operator|*
+name|void
 name|emitStackProbeCall
 argument_list|(
 argument|MachineFunction&MF
@@ -522,8 +519,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Emit target stack probe as an inline sequence.
-name|MachineInstr
-operator|*
+name|void
 name|emitStackProbeInline
 argument_list|(
 argument|MachineFunction&MF
@@ -539,8 +535,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Emit a stub to later inline the target stack probe.
-name|MachineInstr
-operator|*
+name|void
 name|emitStackProbeInlineStub
 argument_list|(
 argument|MachineFunction&MF

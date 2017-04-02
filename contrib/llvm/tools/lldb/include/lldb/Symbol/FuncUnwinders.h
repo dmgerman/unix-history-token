@@ -32,13 +32,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ArchSpec.h"
+file|"lldb/Core/AddressRange.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/AddressRange.h"
+file|"lldb/Core/ArchSpec.h"
 end_include
 
 begin_decl_stmt
@@ -71,7 +71,7 @@ comment|// instructions are finished for migrating breakpoints past the
 comment|// stack frame setup instructions when we don't have line table information.
 name|FuncUnwinders
 argument_list|(
-argument|lldb_private::UnwindTable& unwind_table
+argument|lldb_private::UnwindTable&unwind_table
 argument_list|,
 argument|AddressRange range
 argument_list|)
@@ -82,8 +82,10 @@ argument_list|()
 expr_stmt|;
 comment|// current_offset is the byte offset into the function.
 comment|// 0 means no instructions have executed yet.  -1 means the offset is unknown.
-comment|// On architectures where the pc points to the next instruction that will execute, this
-comment|// offset value will have already been decremented by 1 to stay within the bounds of the
+comment|// On architectures where the pc points to the next instruction that will
+comment|// execute, this
+comment|// offset value will have already been decremented by 1 to stay within the
+comment|// bounds of the
 comment|// correct function body.
 name|lldb
 operator|::
@@ -100,9 +102,9 @@ operator|::
 name|UnwindPlanSP
 name|GetUnwindPlanAtNonCallSite
 argument_list|(
-argument|Target& target
+argument|Target&target
 argument_list|,
-argument|lldb_private::Thread& thread
+argument|lldb_private::Thread&thread
 argument_list|,
 argument|int current_offset
 argument_list|)
@@ -182,9 +184,12 @@ name|addr
 argument_list|)
 return|;
 block|}
-comment|// A function may have a Language Specific Data Area specified -- a block of data in
-comment|// the object file which is used in the processing of an exception throw / catch.
-comment|// If any of the UnwindPlans have the address of the LSDA region for this function,
+comment|// A function may have a Language Specific Data Area specified -- a block of
+comment|// data in
+comment|// the object file which is used in the processing of an exception throw /
+comment|// catch.
+comment|// If any of the UnwindPlans have the address of the LSDA region for this
+comment|// function,
 comment|// this will return it.
 name|Address
 name|GetLSDAAddress
@@ -196,7 +201,8 @@ parameter_list|)
 function_decl|;
 comment|// A function may have a Personality Routine associated with it -- used in the
 comment|// processing of throwing an exception.  If any of the UnwindPlans have the
-comment|// address of the personality routine, this will return it.  Read the target-pointer
+comment|// address of the personality routine, this will return it.  Read the
+comment|// target-pointer
 comment|// at this address to get the personality function address.
 name|Address
 name|GetPersonalityRoutinePtrAddress
@@ -206,8 +212,10 @@ modifier|&
 name|target
 parameter_list|)
 function_decl|;
-comment|// The following methods to retrieve specific unwind plans should rarely be used.
-comment|// Instead, clients should ask for the *behavior* they are looking for, using one
+comment|// The following methods to retrieve specific unwind plans should rarely be
+comment|// used.
+comment|// Instead, clients should ask for the *behavior* they are looking for, using
+comment|// one
 comment|// of the above UnwindPlan retrieval methods.
 name|lldb
 operator|::
@@ -351,7 +359,10 @@ operator|::
 name|UnwindPlanSP
 name|m_unwind_plan_eh_frame_augmented_sp
 expr_stmt|;
-comment|// augmented by assembly inspection so it's valid everywhere
+comment|// augmented by
+comment|// assembly inspection
+comment|// so it's valid
+comment|// everywhere
 name|std
 operator|::
 name|vector
@@ -441,7 +452,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//liblldb_FuncUnwinders_h
+comment|// liblldb_FuncUnwinders_h
 end_comment
 
 end_unit

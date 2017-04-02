@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeDumper.h"
+file|"llvm/DebugInfo/CodeView/CVTypeDumper.h"
 end_include
 
 begin_include
@@ -120,6 +120,14 @@ argument_list|()
 block|;
 name|Error
 name|dumpDbiStream
+argument_list|()
+block|;
+name|Error
+name|dumpTpiStream
+argument_list|()
+block|;
+name|Error
+name|dumpIpiStream
 argument_list|()
 block|;
 name|void

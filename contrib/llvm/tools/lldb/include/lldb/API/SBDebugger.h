@@ -401,7 +401,7 @@ argument|const char *platform_name
 argument_list|,
 argument|bool add_dependent_modules
 argument_list|,
-argument|lldb::SBError& error
+argument|lldb::SBError&error
 argument_list|)
 expr_stmt|;
 name|lldb

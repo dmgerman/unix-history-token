@@ -43,19 +43,16 @@ directive|define
 name|liblldb_Flags_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -100,7 +97,7 @@ name|m_flags
 argument_list|(
 argument|flags
 argument_list|)
-block|{     }
+block|{}
 comment|//----------------------------------------------------------------------
 comment|/// Copy constructor.
 comment|///
@@ -121,14 +118,14 @@ name|m_flags
 argument_list|(
 argument|rhs.m_flags
 argument_list|)
-block|{     }
+block|{}
 comment|//----------------------------------------------------------------------
 comment|/// Destructor.
 comment|//----------------------------------------------------------------------
 operator|~
 name|Flags
 argument_list|()
-block|{     }
+block|{}
 comment|//----------------------------------------------------------------------
 comment|/// Get accessor for all flags.
 comment|///
@@ -495,15 +492,6 @@ end_decl_stmt
 
 begin_comment
 comment|// namespace lldb_private
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// #if defined(__cplusplus)
 end_comment
 
 begin_endif

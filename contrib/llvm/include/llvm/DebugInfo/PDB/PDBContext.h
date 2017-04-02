@@ -55,6 +55,24 @@ directive|include
 file|"llvm/DebugInfo/PDB/IPDBSession.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -66,6 +84,7 @@ name|class
 name|COFFObjectFile
 decl_stmt|;
 block|}
+comment|// end namespace object
 name|namespace
 name|pdb
 block|{
@@ -81,25 +100,6 @@ range|:
 name|public
 name|DIContext
 block|{
-name|PDBContext
-argument_list|(
-name|PDBContext
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|PDBContext
-operator|&
-name|operator
-operator|=
-operator|(
-name|PDBContext
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
 name|PDBContext
@@ -119,6 +119,25 @@ name|IPDBSession
 operator|>
 name|PDBSession
 argument_list|)
+block|;
+name|PDBContext
+argument_list|(
+name|PDBContext
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|PDBContext
+operator|&
+name|operator
+operator|=
+operator|(
+name|PDBContext
+operator|&
+operator|)
+operator|=
+name|delete
 block|;
 specifier|static
 name|bool
@@ -144,6 +163,8 @@ argument_list|,
 argument|DIDumpType DumpType = DIDT_All
 argument_list|,
 argument|bool DumpEH = false
+argument_list|,
+argument|bool SummarizeTypes = false
 argument_list|)
 name|override
 block|;
@@ -199,13 +220,22 @@ name|Session
 block|;   }
 decl_stmt|;
 block|}
+comment|// end namespace pdb
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_PDB_PDBCONTEXT_H
+end_comment
 
 end_unit
 

@@ -320,6 +320,11 @@ name|AMDGPU_KERNEL
 init|=
 literal|91
 block|,
+comment|/// Register calling convention used for parameters transfer optimization
+name|X86_RegCall
+init|=
+literal|92
+block|,
 comment|/// The highest possible calling convention ID. Must be some 2^k - 1.
 name|MaxID
 init|=

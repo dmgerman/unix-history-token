@@ -55,72 +55,86 @@ end_define
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
 name|SIInstrFlags
 block|{
 comment|// This needs to be kept in sync with the field bits in InstSI.
-enum|enum
+enum_decl|enum :
+name|uint64_t
 block|{
+comment|// Low bits - basic encoding information.
 name|SALU
 init|=
 literal|1
 operator|<<
-literal|3
+literal|0
 block|,
 name|VALU
 init|=
 literal|1
 operator|<<
-literal|4
+literal|1
 block|,
+comment|// SALU instruction formats.
 name|SOP1
 init|=
 literal|1
 operator|<<
-literal|5
+literal|2
 block|,
 name|SOP2
 init|=
 literal|1
 operator|<<
-literal|6
+literal|3
 block|,
 name|SOPC
 init|=
 literal|1
 operator|<<
-literal|7
+literal|4
 block|,
 name|SOPK
 init|=
 literal|1
 operator|<<
-literal|8
+literal|5
 block|,
 name|SOPP
 init|=
 literal|1
 operator|<<
-literal|9
+literal|6
 block|,
+comment|// VALU instruction formats.
 name|VOP1
 init|=
 literal|1
 operator|<<
-literal|10
+literal|7
 block|,
 name|VOP2
 init|=
 literal|1
 operator|<<
-literal|11
+literal|8
 block|,
+name|VOPC
+init|=
+literal|1
+operator|<<
+literal|9
+block|,
+comment|// TODO: Should this be spilt into VOP3 a and b?
 name|VOP3
 init|=
 literal|1
 operator|<<
-literal|12
+literal|10
 block|,
-name|VOPC
+name|VINTRP
 init|=
 literal|1
 operator|<<
@@ -138,6 +152,7 @@ literal|1
 operator|<<
 literal|15
 block|,
+comment|// Memory instruction formats.
 name|MUBUF
 init|=
 literal|1
@@ -156,13 +171,13 @@ literal|1
 operator|<<
 literal|18
 block|,
-name|DS
+name|MIMG
 init|=
 literal|1
 operator|<<
 literal|19
 block|,
-name|MIMG
+name|EXP
 init|=
 literal|1
 operator|<<
@@ -174,97 +189,117 @@ literal|1
 operator|<<
 literal|21
 block|,
-name|WQM
+name|DS
 init|=
 literal|1
 operator|<<
 literal|22
 block|,
+comment|// Pseudo instruction formats.
 name|VGPRSpill
 init|=
 literal|1
 operator|<<
 literal|23
 block|,
-name|VOPAsmPrefer32Bit
+name|SGPRSpill
 init|=
 literal|1
 operator|<<
 literal|24
 block|,
-name|Gather4
-init|=
-literal|1
-operator|<<
-literal|25
-block|,
-name|DisableWQM
-init|=
-literal|1
-operator|<<
-literal|26
-block|}
-enum|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|namespace
-name|AMDGPU
-block|{
-enum|enum
-name|OperandType
-block|{
-comment|/// Operand with register or 32-bit immediate
-name|OPERAND_REG_IMM32
-init|=
-name|MCOI
-operator|::
-name|OPERAND_FIRST_TARGET
-block|,
-comment|/// Operand with register or inline constant
-name|OPERAND_REG_INLINE_C
-block|,
-comment|/// Operand with 32-bit immediate that uses the constant bus. The standard
-comment|/// OPERAND_IMMEDIATE should be used for special immediates such as source
-comment|/// modifiers.
-name|OPERAND_KIMM32
-block|}
-enum|;
-block|}
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
-name|SIInstrFlags
-block|{
-enum|enum
-name|Flags
-block|{
-comment|// First 4 bits are the instruction encoding
+comment|// High bits - other information.
 name|VM_CNT
 init|=
+name|UINT64_C
+argument_list|(
 literal|1
+argument_list|)
 operator|<<
-literal|0
+literal|32
 block|,
 name|EXP_CNT
 init|=
+name|UINT64_C
+argument_list|(
 literal|1
+argument_list|)
 operator|<<
-literal|1
+literal|33
 block|,
 name|LGKM_CNT
 init|=
+name|UINT64_C
+argument_list|(
 literal|1
+argument_list|)
 operator|<<
-literal|2
+literal|34
+block|,
+name|WQM
+init|=
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|35
+block|,
+name|DisableWQM
+init|=
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|36
+block|,
+name|Gather4
+init|=
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|37
+block|,
+name|SOPK_ZEXT
+init|=
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|38
+block|,
+name|SCALAR_STORE
+init|=
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|39
+block|,
+name|FIXED_SIZE
+init|=
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|40
+block|,
+name|VOPAsmPrefer32Bit
+init|=
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|41
 block|}
-enum|;
+enum_decl|;
 comment|// v_cmp_class_* etc. use a 10-bit mask for what operation is checked.
 comment|// The result is true if any of these tests are true.
 enum|enum
@@ -342,17 +377,78 @@ comment|// Positive infinity
 block|}
 enum|;
 block|}
-end_decl_stmt
-
-begin_comment
+name|namespace
+name|AMDGPU
+block|{
+enum|enum
+name|OperandType
+block|{
+comment|/// Operands with register or 32-bit immediate
+name|OPERAND_REG_IMM_INT32
+init|=
+name|MCOI
+operator|::
+name|OPERAND_FIRST_TARGET
+block|,
+name|OPERAND_REG_IMM_INT64
+block|,
+name|OPERAND_REG_IMM_INT16
+block|,
+name|OPERAND_REG_IMM_FP32
+block|,
+name|OPERAND_REG_IMM_FP64
+block|,
+name|OPERAND_REG_IMM_FP16
+block|,
+comment|/// Operands with register or inline constant
+name|OPERAND_REG_INLINE_C_INT16
+block|,
+name|OPERAND_REG_INLINE_C_INT32
+block|,
+name|OPERAND_REG_INLINE_C_INT64
+block|,
+name|OPERAND_REG_INLINE_C_FP16
+block|,
+name|OPERAND_REG_INLINE_C_FP32
+block|,
+name|OPERAND_REG_INLINE_C_FP64
+block|,
+name|OPERAND_REG_IMM_FIRST
+init|=
+name|OPERAND_REG_IMM_INT32
+block|,
+name|OPERAND_REG_IMM_LAST
+init|=
+name|OPERAND_REG_IMM_FP16
+block|,
+name|OPERAND_REG_INLINE_C_FIRST
+init|=
+name|OPERAND_REG_INLINE_C_INT16
+block|,
+name|OPERAND_REG_INLINE_C_LAST
+init|=
+name|OPERAND_REG_INLINE_C_FP64
+block|,
+name|OPERAND_SRC_FIRST
+init|=
+name|OPERAND_REG_IMM_INT32
+block|,
+name|OPERAND_SRC_LAST
+init|=
+name|OPERAND_REG_INLINE_C_LAST
+block|,
+comment|// Operand for source modifiers for VOP instructions
+name|OPERAND_INPUT_MODS
+block|,
+comment|/// Operand with 32-bit immediate that uses the constant bus.
+name|OPERAND_KIMM32
+block|,
+name|OPERAND_KIMM16
+block|}
+enum|;
+block|}
 comment|// Input operand modifiers bit-masks
-end_comment
-
-begin_comment
 comment|// NEG and SEXT share same bit-mask because they can't be set simultaneously.
-end_comment
-
-begin_decl_stmt
 name|namespace
 name|SISrcMods
 block|{
@@ -381,9 +477,6 @@ comment|// Integer sign-extend modifier
 block|}
 enum|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|namespace
 name|SIOutMods
 block|{
@@ -407,12 +500,60 @@ literal|3
 block|}
 enum|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|namespace
-name|llvm
+name|VGPRIndexMode
 block|{
+enum|enum
+block|{
+name|SRC0_ENABLE
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+name|SRC1_ENABLE
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+name|SRC2_ENABLE
+init|=
+literal|1
+operator|<<
+literal|2
+block|,
+name|DST_ENABLE
+init|=
+literal|1
+operator|<<
+literal|3
+block|}
+enum|;
+block|}
+name|namespace
+name|AMDGPUAsmVariants
+block|{
+enum|enum
+block|{
+name|DEFAULT
+init|=
+literal|0
+block|,
+name|VOP3
+init|=
+literal|1
+block|,
+name|SDWA
+init|=
+literal|2
+block|,
+name|DPP
+init|=
+literal|3
+block|}
+enum|;
+block|}
 name|namespace
 name|AMDGPU
 block|{
@@ -476,17 +617,6 @@ block|}
 comment|// namespace EncValues
 block|}
 comment|// namespace AMDGPU
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
 name|namespace
 name|AMDGPU
 block|{
@@ -696,6 +826,34 @@ init|=
 literal|1
 block|,
 comment|// There are corresponding symbolic names defined.
+name|ID_MODE
+init|=
+literal|1
+block|,
+name|ID_STATUS
+init|=
+literal|2
+block|,
+name|ID_TRAPSTS
+init|=
+literal|3
+block|,
+name|ID_HW_ID
+init|=
+literal|4
+block|,
+name|ID_GPR_ALLOC
+init|=
+literal|5
+block|,
+name|ID_LDS_ALLOC
+init|=
+literal|6
+block|,
+name|ID_IB_STS
+init|=
+literal|7
+block|,
 name|ID_SYMBOLIC_LAST_
 init|=
 literal|8
@@ -793,30 +951,69 @@ block|}
 enum|;
 block|}
 comment|// namespace Hwreg
+name|namespace
+name|SDWA
+block|{
+enum|enum
+name|SdwaSel
+block|{
+name|BYTE_0
+init|=
+literal|0
+block|,
+name|BYTE_1
+init|=
+literal|1
+block|,
+name|BYTE_2
+init|=
+literal|2
+block|,
+name|BYTE_3
+init|=
+literal|3
+block|,
+name|WORD_0
+init|=
+literal|4
+block|,
+name|WORD_1
+init|=
+literal|5
+block|,
+name|DWORD
+init|=
+literal|6
+block|, }
+enum|;
+enum|enum
+name|DstUnused
+block|{
+name|UNUSED_PAD
+init|=
+literal|0
+block|,
+name|UNUSED_SEXT
+init|=
+literal|1
+block|,
+name|UNUSED_PRESERVE
+init|=
+literal|2
+block|, }
+enum|;
+block|}
+comment|// namespace SDWA
 block|}
 comment|// namespace AMDGPU
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
-
-begin_define
 define|#
 directive|define
 name|R_00B028_SPI_SHADER_PGM_RSRC1_PS
 value|0x00B028
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_00B02C_SPI_SHADER_PGM_RSRC2_PS
 value|0x00B02C
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B02C_EXTRA_LDS_SIZE
@@ -824,30 +1021,18 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0xFF)<< 8)
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_00B128_SPI_SHADER_PGM_RSRC1_VS
 value|0x00B128
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_00B228_SPI_SHADER_PGM_RSRC1_GS
 value|0x00B228
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_00B848_COMPUTE_PGM_RSRC1
 value|0x00B848
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B028_VGPRS
@@ -855,9 +1040,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x3F)<< 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B028_SGPRS
@@ -865,16 +1047,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x0F)<< 6)
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_00B84C_COMPUTE_PGM_RSRC2
 value|0x00B84C
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B84C_SCRATCH_EN
@@ -882,9 +1058,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1)<< 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B84C_SCRATCH_EN
@@ -892,16 +1065,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 0)& 0x1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B84C_SCRATCH_EN
 value|0xFFFFFFFE
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B84C_USER_SGPR
@@ -909,9 +1076,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1F)<< 1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B84C_USER_SGPR
@@ -919,16 +1083,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 1)& 0x1F)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B84C_USER_SGPR
 value|0xFFFFFFC1
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B84C_TGID_X_EN
@@ -936,9 +1094,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1)<< 7)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B84C_TGID_X_EN
@@ -946,16 +1101,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 7)& 0x1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B84C_TGID_X_EN
 value|0xFFFFFF7F
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B84C_TGID_Y_EN
@@ -963,9 +1112,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1)<< 8)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B84C_TGID_Y_EN
@@ -973,16 +1119,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 8)& 0x1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B84C_TGID_Y_EN
 value|0xFFFFFEFF
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B84C_TGID_Z_EN
@@ -990,9 +1130,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1)<< 9)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B84C_TGID_Z_EN
@@ -1000,16 +1137,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 9)& 0x1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B84C_TGID_Z_EN
 value|0xFFFFFDFF
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B84C_TG_SIZE_EN
@@ -1017,9 +1148,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1)<< 10)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B84C_TG_SIZE_EN
@@ -1027,16 +1155,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 10)& 0x1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B84C_TG_SIZE_EN
 value|0xFFFFFBFF
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B84C_TIDIG_COMP_CNT
@@ -1044,9 +1166,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x03)<< 11)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B84C_TIDIG_COMP_CNT
@@ -1054,20 +1173,11 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 11)& 0x03)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B84C_TIDIG_COMP_CNT
 value|0xFFFFE7FF
-end_define
-
-begin_comment
 comment|/* CIK */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|S_00B84C_EXCP_EN_MSB
@@ -1075,9 +1185,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x03)<< 13)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B84C_EXCP_EN_MSB
@@ -1085,20 +1192,11 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 13)& 0x03)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B84C_EXCP_EN_MSB
 value|0xFFFF9FFF
-end_define
-
-begin_comment
 comment|/*     */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|S_00B84C_LDS_SIZE
@@ -1106,9 +1204,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1FF)<< 15)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B84C_LDS_SIZE
@@ -1116,16 +1211,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 15)& 0x1FF)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B84C_LDS_SIZE
 value|0xFF007FFF
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B84C_EXCP_EN
@@ -1133,9 +1222,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x7F)<< 24)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B84C_EXCP_EN
@@ -1143,36 +1229,21 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 24)& 0x7F)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B84C_EXCP_EN
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_0286CC_SPI_PS_INPUT_ENA
 value|0x0286CC
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_0286D0_SPI_PS_INPUT_ADDR
 value|0x0286D0
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_00B848_COMPUTE_PGM_RSRC1
 value|0x00B848
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B848_VGPRS
@@ -1180,9 +1251,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x3F)<< 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B848_VGPRS
@@ -1190,16 +1258,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 0)& 0x3F)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B848_VGPRS
 value|0xFFFFFFC0
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B848_SGPRS
@@ -1207,9 +1269,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x0F)<< 6)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B848_SGPRS
@@ -1217,16 +1276,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 6)& 0x0F)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B848_SGPRS
 value|0xFFFFFC3F
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B848_PRIORITY
@@ -1234,9 +1287,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x03)<< 10)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B848_PRIORITY
@@ -1244,16 +1294,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 10)& 0x03)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B848_PRIORITY
 value|0xFFFFF3FF
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B848_FLOAT_MODE
@@ -1261,9 +1305,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0xFF)<< 12)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B848_FLOAT_MODE
@@ -1271,16 +1312,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 12)& 0xFF)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B848_FLOAT_MODE
 value|0xFFF00FFF
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B848_PRIV
@@ -1288,9 +1323,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1)<< 20)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B848_PRIV
@@ -1298,16 +1330,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 20)& 0x1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B848_PRIV
 value|0xFFEFFFFF
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B848_DX10_CLAMP
@@ -1315,9 +1341,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1)<< 21)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B848_DX10_CLAMP
@@ -1325,16 +1348,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 21)& 0x1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B848_DX10_CLAMP
 value|0xFFDFFFFF
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B848_DEBUG_MODE
@@ -1342,9 +1359,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1)<< 22)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B848_DEBUG_MODE
@@ -1352,16 +1366,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 22)& 0x1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B848_DEBUG_MODE
 value|0xFFBFFFFF
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B848_IEEE_MODE
@@ -1369,9 +1377,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1)<< 23)
-end_define
-
-begin_define
 define|#
 directive|define
 name|G_00B848_IEEE_MODE
@@ -1379,56 +1384,29 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> 23)& 0x1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|C_00B848_IEEE_MODE
 value|0xFF7FFFFF
-end_define
-
-begin_comment
 comment|// Helpers for setting FLOAT_MODE
-end_comment
-
-begin_define
 define|#
 directive|define
 name|FP_ROUND_ROUND_TO_NEAREST
 value|0
-end_define
-
-begin_define
 define|#
 directive|define
 name|FP_ROUND_ROUND_TO_INF
 value|1
-end_define
-
-begin_define
 define|#
 directive|define
 name|FP_ROUND_ROUND_TO_NEGINF
 value|2
-end_define
-
-begin_define
 define|#
 directive|define
 name|FP_ROUND_ROUND_TO_ZERO
 value|3
-end_define
-
-begin_comment
 comment|// Bits 3:0 control rounding mode. 1:0 control single precision, 3:2 double
-end_comment
-
-begin_comment
 comment|// precision.
-end_comment
-
-begin_define
 define|#
 directive|define
 name|FP_ROUND_MODE_SP
@@ -1436,9 +1414,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)& 0x3)
-end_define
-
-begin_define
 define|#
 directive|define
 name|FP_ROUND_MODE_DP
@@ -1446,45 +1421,24 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x3)<< 2)
-end_define
-
-begin_define
 define|#
 directive|define
 name|FP_DENORM_FLUSH_IN_FLUSH_OUT
 value|0
-end_define
-
-begin_define
 define|#
 directive|define
 name|FP_DENORM_FLUSH_OUT
 value|1
-end_define
-
-begin_define
 define|#
 directive|define
 name|FP_DENORM_FLUSH_IN
 value|2
-end_define
-
-begin_define
 define|#
 directive|define
 name|FP_DENORM_FLUSH_NONE
 value|3
-end_define
-
-begin_comment
 comment|// Bits 7:4 control denormal handling. 5:4 control single precision, 6:7 double
-end_comment
-
-begin_comment
 comment|// precision.
-end_comment
-
-begin_define
 define|#
 directive|define
 name|FP_DENORM_MODE_SP
@@ -1492,9 +1446,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x3)<< 4)
-end_define
-
-begin_define
 define|#
 directive|define
 name|FP_DENORM_MODE_DP
@@ -1502,16 +1453,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x3)<< 6)
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_00B860_COMPUTE_TMPRING_SIZE
 value|0x00B860
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_00B860_WAVESIZE
@@ -1519,16 +1464,10 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1FFF)<< 12)
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_0286E8_SPI_TMPRING_SIZE
 value|0x0286E8
-end_define
-
-begin_define
 define|#
 directive|define
 name|S_0286E8_WAVESIZE
@@ -1536,21 +1475,20 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1FFF)<< 12)
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_SPILLED_SGPRS
 value|0x4
-end_define
-
-begin_define
 define|#
 directive|define
 name|R_SPILLED_VGPRS
 value|0x8
-end_define
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// End namespace llvm
+end_comment
 
 begin_endif
 endif|#

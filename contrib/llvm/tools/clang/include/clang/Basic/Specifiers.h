@@ -512,6 +512,9 @@ comment|// __attribute__((ms_abi))
 name|CC_X86_64SysV
 block|,
 comment|// __attribute__((sysv_abi))
+name|CC_X86RegCall
+block|,
+comment|// __attribute__((regcall))
 name|CC_AAPCS
 block|,
 comment|// __attribute__((pcs("aapcs")))
@@ -561,6 +564,9 @@ name|CC_X86FastCall
 case|:
 case|case
 name|CC_X86ThisCall
+case|:
+case|case
+name|CC_X86RegCall
 case|:
 case|case
 name|CC_X86Pascal

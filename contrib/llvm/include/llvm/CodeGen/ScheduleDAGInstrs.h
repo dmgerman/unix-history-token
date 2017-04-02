@@ -416,7 +416,7 @@ name|MLI
 block|;
 specifier|const
 name|MachineFrameInfo
-operator|*
+operator|&
 name|MFI
 block|;
 comment|/// TargetSchedModel provides an interface to the machine model.
@@ -474,12 +474,6 @@ name|SUnit
 operator|*
 operator|>
 name|MISUnitMap
-block|;
-comment|/// After calling BuildSchedGraph, each vreg used in the scheduling region
-comment|/// is mapped to a set of SUnits. These include all local vreg uses, not
-comment|/// just the uses for a singly defined vreg.
-name|VReg2SUnitMultiMap
-name|VRegUses
 block|;
 comment|/// State internal to DAG building.
 comment|/// -------------------------------
@@ -1063,14 +1057,6 @@ name|MO
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|collectVRegUses
-parameter_list|(
-name|SUnit
-modifier|*
-name|SU
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 
@@ -1149,19 +1135,6 @@ operator|)
 operator|&&
 literal|"SUnits std::vector reallocated on the fly!"
 argument_list|)
-block|;
-name|SUnits
-operator|.
-name|back
-argument_list|()
-operator|.
-name|OrigNode
-operator|=
-operator|&
-name|SUnits
-operator|.
-name|back
-argument_list|()
 block|;
 return|return
 operator|&

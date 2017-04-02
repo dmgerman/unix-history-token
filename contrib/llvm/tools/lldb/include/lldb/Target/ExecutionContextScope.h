@@ -70,7 +70,8 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class ExecutionContextScope ExecutionContextScope.h "lldb/Symbol/ExecutionContextScope.h"
+comment|/// @class ExecutionContextScope ExecutionContextScope.h
+comment|/// "lldb/Symbol/ExecutionContextScope.h"
 comment|/// @brief Inherit from this if your object can reconstruct its
 comment|///        execution context.
 comment|///

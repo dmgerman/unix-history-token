@@ -121,7 +121,7 @@ specifier|const
 name|char
 operator|*
 name|description
-block|;     }
+block|;   }
 decl_stmt|;
 typedef|typedef
 name|UniqueCStringMap
@@ -195,6 +195,20 @@ name|eVarSetOperationAssign
 argument_list|)
 name|override
 decl_stmt|;
+name|Error
+name|SetValueFromString
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|VarSetOperationType
+init|=
+name|eVarSetOperationAssign
+parameter_list|)
+init|=
+name|delete
+function_decl|;
 name|bool
 name|Clear
 parameter_list|()
@@ -227,9 +241,9 @@ name|CommandInterpreter
 operator|&
 name|interpreter
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|s
 argument_list|,
 name|int

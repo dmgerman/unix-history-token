@@ -162,7 +162,7 @@ name|m_invalid_value_is_valid
 argument_list|(
 argument|false
 argument_list|)
-block|{     }
+block|{}
 comment|//----------------------------------------------------------------------
 comment|// Constructor that sets the current value and also the invalid value.
 comment|// The cleanup function will be called on "m_value" as long as it isn't
@@ -201,7 +201,7 @@ name|m_invalid_value_is_valid
 argument_list|(
 argument|true
 argument_list|)
-block|{     }
+block|{}
 comment|//----------------------------------------------------------------------
 comment|// Automatically cleanup when this object goes out of scope.
 comment|//----------------------------------------------------------------------
@@ -211,7 +211,7 @@ argument_list|()
 block|{
 name|clean
 argument_list|()
-block|;     }
+block|; }
 comment|//----------------------------------------------------------------------
 comment|// Access the value stored in this class
 comment|//----------------------------------------------------------------------
@@ -530,7 +530,7 @@ name|m_argument
 argument_list|(
 argument|arg
 argument_list|)
-block|{     }
+block|{}
 comment|//----------------------------------------------------------------------
 comment|// Constructor that sets the current value and also the invalid value.
 comment|// The cleanup function will be called on "m_value" as long as it isn't
@@ -576,7 +576,7 @@ name|m_argument
 argument_list|(
 argument|arg
 argument_list|)
-block|{     }
+block|{}
 comment|//----------------------------------------------------------------------
 comment|// Automatically cleanup when this object goes out of scope.
 comment|//----------------------------------------------------------------------
@@ -586,7 +586,7 @@ argument_list|()
 block|{
 name|clean
 argument_list|()
-block|;     }
+block|; }
 comment|//----------------------------------------------------------------------
 comment|// Access the value stored in this class
 comment|//----------------------------------------------------------------------

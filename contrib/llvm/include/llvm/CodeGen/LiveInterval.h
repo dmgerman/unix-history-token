@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/AlignOf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -207,7 +201,7 @@ argument_list|(
 argument|d
 argument_list|)
 block|{ }
-comment|/// VNInfo construtor, copies values from orig, except for the value number.
+comment|/// VNInfo constructor, copies values from orig, except for the value number.
 name|VNInfo
 argument_list|(
 argument|unsigned i
@@ -1230,6 +1224,17 @@ operator|&
 name|VNInfoAllocator
 argument_list|)
 decl_stmt|;
+comment|/// Create a def of value @p VNI. Return @p VNI. If there already exists
+comment|/// a definition at VNI->def, the value defined there must be @p VNI.
+name|VNInfo
+modifier|*
+name|createDeadDef
+parameter_list|(
+name|VNInfo
+modifier|*
+name|VNI
+parameter_list|)
+function_decl|;
 comment|/// Create a copy of the given value. The new value will be identical except
 comment|/// for the Value number.
 name|VNInfo
@@ -1761,9 +1766,43 @@ name|Segment
 name|S
 parameter_list|)
 function_decl|;
+comment|/// Attempt to extend a value defined after @p StartIdx to include @p Use.
+comment|/// Both @p StartIdx and @p Use should be in the same basic block. In case
+comment|/// of subranges, an extension could be prevented by an explicit "undef"
+comment|/// caused by a<def,read-undef> on a non-overlapping lane. The list of
+comment|/// location of such "undefs" should be provided in @p Undefs.
+comment|/// The return value is a pair: the first element is VNInfo of the value
+comment|/// that was extended (possibly nullptr), the second is a boolean value
+comment|/// indicating whether an "undef" was encountered.
 comment|/// If this range is live before @p Use in the basic block that starts at
-comment|/// @p StartIdx, extend it to be live up to @p Use, and return the value. If
-comment|/// there is no segment before @p Use, return nullptr.
+comment|/// @p StartIdx, and there is no intervening "undef", extend it to be live
+comment|/// up to @p Use, and return the pair {value, false}. If there is no
+comment|/// segment before @p Use and there is no "undef" between @p StartIdx and
+comment|/// @p Use, return {nullptr, false}. If there is an "undef" before @p Use,
+comment|/// return {nullptr, true}.
+name|std
+operator|::
+name|pair
+operator|<
+name|VNInfo
+operator|*
+operator|,
+name|bool
+operator|>
+name|extendInBlock
+argument_list|(
+argument|ArrayRef<SlotIndex> Undefs
+argument_list|,
+argument|SlotIndex StartIdx
+argument_list|,
+argument|SlotIndex Use
+argument_list|)
+expr_stmt|;
+comment|/// Simplified version of the above "extendInBlock", which assumes that
+comment|/// no register lanes are undefined by<def,read-undef> operands.
+comment|/// If this range is live before @p Use in the basic block that starts
+comment|/// at @p StartIdx, extend it to be live up to @p Use, and return the
+comment|/// value. If there is no segment before @p Use, return nullptr.
 name|VNInfo
 modifier|*
 name|extendInBlock
@@ -1772,7 +1811,7 @@ name|SlotIndex
 name|StartIdx
 parameter_list|,
 name|SlotIndex
-name|Use
+name|Kill
 parameter_list|)
 function_decl|;
 comment|/// join - Join two live ranges (this, and other) together.  This applies
@@ -2202,6 +2241,40 @@ operator|<
 name|otherIndex
 return|;
 block|}
+comment|/// Returns true if there is an explicit "undef" between @p Begin
+comment|/// @p End.
+name|bool
+name|isUndefIn
+argument_list|(
+name|ArrayRef
+operator|<
+name|SlotIndex
+operator|>
+name|Undefs
+argument_list|,
+name|SlotIndex
+name|Begin
+argument_list|,
+name|SlotIndex
+name|End
+argument_list|)
+decl|const
+block|{
+return|return
+name|std
+operator|::
+name|any_of
+argument_list|(
+argument|Undefs.begin()
+argument_list|,
+argument|Undefs.end()
+argument_list|,
+argument|[Begin
+argument_list|,
+argument|End] (SlotIndex Idx) -> bool {                   return Begin<= Idx&& Idx< End;                 }
+argument_list|)
+return|;
+block|}
 comment|/// Flush segment set into the regular segment vector.
 comment|/// The method is to be called after the live range
 comment|/// has been created, if use of the segment set was
@@ -2496,7 +2569,6 @@ name|SingleLinkedListIterator
 operator|<
 name|T
 operator|>
-operator|&
 name|operator
 operator|++
 operator|(
@@ -2919,6 +2991,42 @@ name|huge_valf
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// For a given lane mask @p LaneMask, compute indexes at which the
+end_comment
+
+begin_comment
+comment|/// lane is marked undefined by subregister<def,read-undef> definitions.
+end_comment
+
+begin_decl_stmt
+name|void
+name|computeSubRangeUndefs
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|SlotIndex
+operator|>
+operator|&
+name|Undefs
+argument_list|,
+name|LaneBitmask
+name|LaneMask
+argument_list|,
+specifier|const
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+specifier|const
+name|SlotIndexes
+operator|&
+name|Indexes
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|bool

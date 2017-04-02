@@ -68,7 +68,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -84,7 +88,11 @@ comment|//          An argument knows what type of argument it is and how it is 
 end_comment
 
 begin_comment
-comment|//          interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a
+end_comment
+
+begin_comment
+comment|//          matching
 end_comment
 
 begin_comment
@@ -216,11 +224,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: Retrieve the first argument or option value from the list of 1 or more options
+comment|//------------------------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|// Details: Retrieve the first argument or option value from the list of 1 or
+end_comment
+
+begin_comment
+comment|// more options
 end_comment
 
 begin_comment
@@ -240,7 +256,11 @@ comment|//          vnAt        - (R) Value at the specific position.
 end_comment
 
 begin_comment
-comment|//          T1          - The argument value's class type of the data hold in the list of options.
+comment|//          T1          - The argument value's class type of the data hold in
+end_comment
+
+begin_comment
+comment|//          the list of options.
 end_comment
 
 begin_comment

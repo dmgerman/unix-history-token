@@ -86,13 +86,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Utility/Iterable.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Iterable.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -943,7 +943,8 @@ comment|///     Source line to locate.
 comment|///
 comment|/// @param[in] function
 comment|///     Optional filter function. Addresses within this function will be
-comment|///     added to the 'local' list. All others will be added to the 'extern' list.
+comment|///     added to the 'local' list. All others will be added to the 'extern'
+comment|///     list.
 comment|///
 comment|/// @param[out] output_local
 comment|///     All matching addresses within 'function'
@@ -1040,7 +1041,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// @copydoc Module::ResolveSymbolContextForAddress (const Address&,uint32_t,SymbolContext&)
+comment|/// @copydoc Module::ResolveSymbolContextForAddress (const Address
+comment|///&,uint32_t,SymbolContext&)
 comment|//------------------------------------------------------------------
 name|uint32_t
 name|ResolveSymbolContextForAddress
@@ -1060,7 +1062,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// @copydoc Module::ResolveSymbolContextForFilePath (const char *,uint32_t,bool,uint32_t,SymbolContextList&)
+comment|/// @copydoc Module::ResolveSymbolContextForFilePath (const char
+comment|/// *,uint32_t,bool,uint32_t,SymbolContextList&)
 comment|//------------------------------------------------------------------
 name|uint32_t
 name|ResolveSymbolContextForFilePath
@@ -1086,7 +1089,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// @copydoc Module::ResolveSymbolContextsForFileSpec (const FileSpec&,uint32_t,bool,uint32_t,SymbolContextList&)
+comment|/// @copydoc Module::ResolveSymbolContextsForFileSpec (const FileSpec
+comment|///&,uint32_t,bool,uint32_t,SymbolContextList&)
 comment|//------------------------------------------------------------------
 name|uint32_t
 name|ResolveSymbolContextsForFileSpec

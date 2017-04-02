@@ -32,15 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//TODO: wire up window size changes
+comment|// TODO: wire up window size changes
 end_comment
 
 begin_comment
-comment|// If we ever get a private copy of libedit, there are a number of defects that would be nice to fix;
+comment|// If we ever get a private copy of libedit, there are a number of defects that
 end_comment
 
 begin_comment
-comment|// a) Sometimes text just disappears while editing.  In an 80-column editor paste the following text, without
+comment|// would be nice to fix;
+end_comment
+
+begin_comment
+comment|// a) Sometimes text just disappears while editing.  In an 80-column editor
+end_comment
+
+begin_comment
+comment|// paste the following text, without
 end_comment
 
 begin_comment
@@ -48,11 +56,19 @@ comment|//    the quotes:
 end_comment
 
 begin_comment
-comment|//    "This is a test of the input system missing Hello, World!  Do you disappear when it gets to a particular length?"
+comment|//    "This is a test of the input system missing Hello, World!  Do you
 end_comment
 
 begin_comment
-comment|//    Now press ^A to move to the start and type 3 characters, and you'll see a good amount of the text will
+comment|//    disappear when it gets to a particular length?"
+end_comment
+
+begin_comment
+comment|//    Now press ^A to move to the start and type 3 characters, and you'll see a
+end_comment
+
+begin_comment
+comment|//    good amount of the text will
 end_comment
 
 begin_comment
@@ -60,7 +76,11 @@ comment|//    disappear.  It's still in the buffer, just invisible.
 end_comment
 
 begin_comment
-comment|// b) The prompt printing logic for dealing with ANSI formatting characters is broken, which is why we're
+comment|// b) The prompt printing logic for dealing with ANSI formatting characters is
+end_comment
+
+begin_comment
+comment|// broken, which is why we're
 end_comment
 
 begin_comment
@@ -68,15 +88,27 @@ comment|//    working around it here.
 end_comment
 
 begin_comment
-comment|// c) When resizing the terminal window, if the cursor moves between rows libedit will get confused.
+comment|// c) When resizing the terminal window, if the cursor moves between rows
 end_comment
 
 begin_comment
-comment|// d) The incremental search uses escape to cancel input, so it's confused by ANSI sequences starting with escape.
+comment|// libedit will get confused.
 end_comment
 
 begin_comment
-comment|// e) Emoji support is fairly terrible, presumably it doesn't understand composed characters?
+comment|// d) The incremental search uses escape to cancel input, so it's confused by
+end_comment
+
+begin_comment
+comment|// ANSI sequences starting with escape.
+end_comment
+
+begin_comment
+comment|// e) Emoji support is fairly terrible, presumably it doesn't understand
+end_comment
+
+begin_comment
+comment|// composed characters?
 end_comment
 
 begin_ifndef
@@ -103,6 +135,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<locale>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sstream>
 end_include
 
@@ -112,22 +150,28 @@ directive|include
 file|<vector>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<locale>
-end_include
-
 begin_comment
-comment|// components needed to handle wide characters (<codecvt>, codecvt_utf8, libedit built with '--enable-widec' )
+comment|// components needed to handle wide characters (<codecvt>, codecvt_utf8,
 end_comment
 
 begin_comment
-comment|// are available on some platforms. The wchar_t versions of libedit functions will only be
+comment|// libedit built with '--enable-widec' )
 end_comment
 
 begin_comment
-comment|// used in cases where this is true.  This is a compile time dependecy, for now selected per target Platform
+comment|// are available on some platforms. The wchar_t versions of libedit functions
+end_comment
+
+begin_comment
+comment|// will only be
+end_comment
+
+begin_comment
+comment|// used in cases where this is true.  This is a compile time dependecy, for now
+end_comment
+
+begin_comment
+comment|// selected per target Platform
 end_comment
 
 begin_if
@@ -136,6 +180,11 @@ directive|if
 name|defined
 argument_list|(
 name|__APPLE__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
 argument_list|)
 operator|||
 name|defined
@@ -177,13 +226,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Host/ConnectionFileDescriptor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/ConnectionFileDescriptor.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_if
@@ -201,31 +250,21 @@ directive|include
 file|"lldb/Host/windows/editlinewin.h"
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
+begin_elif
+elif|#
+directive|elif
 operator|!
 name|defined
 argument_list|(
-name|__ANDROID_NDK__
+name|__ANDROID__
 argument_list|)
-end_if
+end_elif
 
 begin_include
 include|#
 directive|include
 file|<histedit.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -248,12 +287,6 @@ begin_include
 include|#
 directive|include
 file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Condition.h"
 end_include
 
 begin_include
@@ -468,7 +501,8 @@ modifier|*
 name|baton
 parameter_list|)
 function_decl|;
-comment|/// Status used to decide when and how to start editing another line in multi-line sessions
+comment|/// Status used to decide when and how to start editing another line in
+comment|/// multi-line sessions
 name|enum
 name|class
 name|EditorStatus
@@ -497,10 +531,12 @@ operator|,
 comment|/// The start of the current line in a multi-line edit session
 name|EditingPrompt
 operator|,
-comment|/// The location of the cursor on the current line in a multi-line edit session
+comment|/// The location of the cursor on the current line in a multi-line edit
+comment|/// session
 name|EditingCursor
 operator|,
-comment|/// The location immediately after the last character in a multi-line edit session
+comment|/// The location immediately after the last character in a multi-line edit
+comment|/// session
 name|BlockEnd
 block|}
 empty_stmt|;
@@ -509,7 +545,8 @@ name|using
 name|namespace
 name|line_editor
 decl_stmt|;
-comment|/// Instances of Editline provide an abstraction over libedit's EditLine facility.  Both
+comment|/// Instances of Editline provide an abstraction over libedit's EditLine
+comment|/// facility.  Both
 comment|/// single- and multi-line editing are supported.
 name|class
 name|Editline
@@ -518,13 +555,13 @@ name|public
 label|:
 name|Editline
 argument_list|(
-argument|const char * editor_name
+argument|const char *editor_name
 argument_list|,
-argument|FILE * input_file
+argument|FILE *input_file
 argument_list|,
-argument|FILE * output_file
+argument|FILE *output_file
 argument_list|,
-argument|FILE * error_file
+argument|FILE *error_file
 argument_list|,
 argument|bool color_prompts
 argument_list|)
@@ -533,7 +570,8 @@ operator|~
 name|Editline
 argument_list|()
 expr_stmt|;
-comment|/// Uses the user data storage of EditLine to retrieve an associated instance of Editline.
+comment|/// Uses the user data storage of EditLine to retrieve an associated instance
+comment|/// of Editline.
 specifier|static
 name|Editline
 modifier|*
@@ -545,7 +583,8 @@ operator|*
 name|editline
 argument_list|)
 decl_stmt|;
-comment|/// Sets a string to be used as a prompt, or combined with a line number to form a prompt.
+comment|/// Sets a string to be used as a prompt, or combined with a line number to
+comment|/// form a prompt.
 name|void
 name|SetPrompt
 parameter_list|(
@@ -555,7 +594,8 @@ modifier|*
 name|prompt
 parameter_list|)
 function_decl|;
-comment|/// Sets an alternate string to be used as a prompt for the second line and beyond in multi-line
+comment|/// Sets an alternate string to be used as a prompt for the second line and
+comment|/// beyond in multi-line
 comment|/// editing scenarios.
 name|void
 name|SetContinuationPrompt
@@ -566,7 +606,8 @@ modifier|*
 name|continuation_prompt
 parameter_list|)
 function_decl|;
-comment|/// Required to update the width of the terminal registered for I/O.  It is critical that this
+comment|/// Required to update the width of the terminal registered for I/O.  It is
+comment|/// critical that this
 comment|/// be correct at all times.
 name|void
 name|TerminalSizeChanged
@@ -619,7 +660,8 @@ name|baton
 parameter_list|)
 function_decl|;
 comment|/// Register a callback for determining the appropriate indentation for a line
-comment|/// when creating a newline.  An optional set of insertable characters can also
+comment|/// when creating a newline.  An optional set of insertable characters can
+comment|/// also
 comment|/// trigger the callback.
 name|bool
 name|SetFixIndentationCallback
@@ -686,7 +728,8 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-comment|/// Sets the lowest line number for multi-line editing sessions.  A value of zero suppresses
+comment|/// Sets the lowest line number for multi-line editing sessions.  A value of
+comment|/// zero suppresses
 comment|/// line number printing in the prompt.
 name|void
 name|SetBaseLineNumber
@@ -695,8 +738,10 @@ name|int
 name|line_number
 parameter_list|)
 function_decl|;
-comment|/// Returns the complete prompt by combining the prompt or continuation prompt with line numbers
-comment|/// as appropriate.  The line index is a zero-based index into the current multi-line session.
+comment|/// Returns the complete prompt by combining the prompt or continuation prompt
+comment|/// with line numbers
+comment|/// as appropriate.  The line index is a zero-based index into the current
+comment|/// multi-line session.
 name|std
 operator|::
 name|string
@@ -705,7 +750,8 @@ argument_list|(
 argument|int line_index
 argument_list|)
 expr_stmt|;
-comment|/// Sets the current line index between line edits to allow free movement between lines.  Updates
+comment|/// Sets the current line index between line edits to allow free movement
+comment|/// between lines.  Updates
 comment|/// the prompt to match.
 name|void
 name|SetCurrentLine
@@ -714,19 +760,22 @@ name|int
 name|line_index
 parameter_list|)
 function_decl|;
-comment|/// Determines the width of the prompt in characters.  The width is guaranteed to be the same for
+comment|/// Determines the width of the prompt in characters.  The width is guaranteed
+comment|/// to be the same for
 comment|/// all lines of the current multi-line session.
 name|int
 name|GetPromptWidth
 parameter_list|()
 function_decl|;
-comment|/// Returns true if the underlying EditLine session's keybindings are Emacs-based, or false if
+comment|/// Returns true if the underlying EditLine session's keybindings are
+comment|/// Emacs-based, or false if
 comment|/// they are VI-based.
 name|bool
 name|IsEmacs
 parameter_list|()
 function_decl|;
-comment|/// Returns true if the current EditLine buffer contains nothing but spaces, or is empty.
+comment|/// Returns true if the current EditLine buffer contains nothing but spaces,
+comment|/// or is empty.
 name|bool
 name|IsOnlySpaces
 parameter_list|()
@@ -742,7 +791,8 @@ name|int
 name|cursor_row
 parameter_list|)
 function_decl|;
-comment|/// Move the cursor from one well-established location to another using relative line positioning
+comment|/// Move the cursor from one well-established location to another using
+comment|/// relative line positioning
 comment|/// and absolute column positioning.
 name|void
 name|MoveCursor
@@ -754,8 +804,10 @@ name|CursorLocation
 name|to
 parameter_list|)
 function_decl|;
-comment|/// Clear from cursor position to bottom of screen and print input lines including prompts, optionally
-comment|/// starting from a specific line.  Lines are drawn with an extra space at the end to reserve room for
+comment|/// Clear from cursor position to bottom of screen and print input lines
+comment|/// including prompts, optionally
+comment|/// starting from a specific line.  Lines are drawn with an extra space at the
+comment|/// end to reserve room for
 comment|/// the rightmost cursor position.
 name|void
 name|DisplayInput
@@ -766,8 +818,10 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// Counts the number of rows a given line of content will end up occupying, taking into account both
-comment|/// the preceding prompt and a single trailing space occupied by a cursor when at the end of the line.
+comment|/// Counts the number of rows a given line of content will end up occupying,
+comment|/// taking into account both
+comment|/// the preceding prompt and a single trailing space occupied by a cursor when
+comment|/// at the end of the line.
 name|int
 name|CountRowsForLine
 parameter_list|(
@@ -792,8 +846,10 @@ init|=
 name|UINT32_MAX
 parameter_list|)
 function_decl|;
-comment|/// Replaces the current multi-line session with the next entry from history.  When the parameter is
-comment|/// true it will take the next earlier entry from history, when it is false it takes the next most
+comment|/// Replaces the current multi-line session with the next entry from history.
+comment|/// When the parameter is
+comment|/// true it will take the next earlier entry from history, when it is false it
+comment|/// takes the next most
 comment|/// recent.
 name|unsigned
 name|char
@@ -803,7 +859,8 @@ name|bool
 name|earlier
 parameter_list|)
 function_decl|;
-comment|/// Character reading implementation for EditLine that supports our multi-line editing trickery.
+comment|/// Character reading implementation for EditLine that supports our multi-line
+comment|/// editing trickery.
 name|int
 name|GetCharacter
 parameter_list|(
@@ -855,7 +912,8 @@ name|int
 name|ch
 parameter_list|)
 function_decl|;
-comment|/// Line navigation command used when ^P or up arrow are pressed in multi-line mode.
+comment|/// Line navigation command used when ^P or up arrow are pressed in multi-line
+comment|/// mode.
 name|unsigned
 name|char
 name|PreviousLineCommand
@@ -864,7 +922,8 @@ name|int
 name|ch
 parameter_list|)
 function_decl|;
-comment|/// Line navigation command used when ^N or down arrow are pressed in multi-line mode.
+comment|/// Line navigation command used when ^N or down arrow are pressed in
+comment|/// multi-line mode.
 name|unsigned
 name|char
 name|NextLineCommand
@@ -873,7 +932,8 @@ name|int
 name|ch
 parameter_list|)
 function_decl|;
-comment|/// History navigation command used when Alt + up arrow is pressed in multi-line mode.
+comment|/// History navigation command used when Alt + up arrow is pressed in
+comment|/// multi-line mode.
 name|unsigned
 name|char
 name|PreviousHistoryCommand
@@ -882,7 +942,8 @@ name|int
 name|ch
 parameter_list|)
 function_decl|;
-comment|/// History navigation command used when Alt + down arrow is pressed in multi-line mode.
+comment|/// History navigation command used when Alt + down arrow is pressed in
+comment|/// multi-line mode.
 name|unsigned
 name|char
 name|NextHistoryCommand
@@ -909,7 +970,8 @@ name|int
 name|ch
 parameter_list|)
 function_decl|;
-comment|/// Context-sensitive tab insertion or code completion command used when the tab key is typed.
+comment|/// Context-sensitive tab insertion or code completion command used when the
+comment|/// tab key is typed.
 name|unsigned
 name|char
 name|TabCommand
@@ -936,12 +998,24 @@ name|int
 name|ch
 parameter_list|)
 function_decl|;
-comment|/// Ensures that the current EditLine instance is properly configured for single or multi-line editing.
+comment|/// Ensures that the current EditLine instance is properly configured for
+comment|/// single or multi-line editing.
 name|void
 name|ConfigureEditor
 parameter_list|(
 name|bool
 name|multiline
+parameter_list|)
+function_decl|;
+name|bool
+name|CompleteCharacter
+parameter_list|(
+name|char
+name|ch
+parameter_list|,
+name|EditLineCharType
+modifier|&
+name|out
 parameter_list|)
 function_decl|;
 name|private

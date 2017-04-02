@@ -144,6 +144,20 @@ name|num_intrinsics
 block|}
 enum|;
 comment|/// Return the LLVM name for an intrinsic, such as "llvm.ppc.altivec.lvx".
+comment|/// Note, this version is for intrinsics with no overloads.  Use the other
+comment|/// version of getName if overloads are required.
+name|StringRef
+name|getName
+parameter_list|(
+name|ID
+name|id
+parameter_list|)
+function_decl|;
+comment|/// Return the LLVM name for an intrinsic, such as "llvm.ppc.altivec.lvx".
+comment|/// Note, this version of getName supports overloads, but is less efficient
+comment|/// than the StringRef version of this function.  If no overloads are
+comment|/// requried, it is safe to use this version, but better to use the StringRef
+comment|/// version.
 name|std
 operator|::
 name|string
@@ -151,7 +165,7 @@ name|getName
 argument_list|(
 argument|ID id
 argument_list|,
-argument|ArrayRef<Type*> Tys = None
+argument|ArrayRef<Type*> Tys
 argument_list|)
 expr_stmt|;
 comment|/// Return the function type for an intrinsic.
@@ -262,9 +276,7 @@ name|char
 modifier|*
 name|Prefix
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|BuiltinName
 parameter_list|)
 function_decl|;
@@ -277,9 +289,7 @@ name|char
 modifier|*
 name|Prefix
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|BuiltinName
 parameter_list|)
 function_decl|;
@@ -326,6 +336,8 @@ block|,
 name|SameVecWidthArgument
 block|,
 name|PtrToArgument
+block|,
+name|PtrToElt
 block|,
 name|VecOfPtrsToElt
 block|}
@@ -397,6 +409,10 @@ operator|||
 name|Kind
 operator|==
 name|PtrToArgument
+operator|||
+name|Kind
+operator|==
+name|PtrToElt
 operator|||
 name|Kind
 operator|==

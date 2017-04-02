@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<type_traits>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/Attr.h"
 end_include
 
@@ -79,6 +73,18 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/Decl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclarationName.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclBase.h"
 end_include
 
 begin_include
@@ -138,7 +144,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/LambdaCapture.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/NestedNameSpecifier.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/OpenMPClause.h"
 end_include
 
 begin_include
@@ -187,6 +205,60 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/TypeLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/Specifiers.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
 end_include
 
 begin_comment
@@ -251,7 +323,7 @@ parameter_list|(
 name|CALL_EXPR
 parameter_list|)
 define|\
-value|do {                                                                         \     if (!getDerived().CALL_EXPR)                                               \       return false;                                                            \   } while (0)
+value|do {                                                                         \     if (!getDerived().CALL_EXPR)                                               \       return false;                                                            \   } while (false)
 comment|/// \brief A class that does preordor or postorder
 comment|/// depth-first traversal on the entire Clang AST and visits each node.
 comment|///
@@ -612,7 +684,8 @@ modifier|*
 name|Init
 parameter_list|)
 function_decl|;
-comment|/// \brief Recursively visit a lambda capture.
+comment|/// \brief Recursively visit a lambda capture. \c Init is the expression that
+comment|/// will be used to initialize the capture.
 comment|///
 comment|/// \returns false if the visitation was terminated early, true otherwise.
 name|bool
@@ -626,6 +699,10 @@ specifier|const
 name|LambdaCapture
 modifier|*
 name|C
+parameter_list|,
+name|Expr
+modifier|*
+name|Init
 parameter_list|)
 function_decl|;
 comment|/// \brief Recursively visit the body of a lambda expression.
@@ -784,7 +861,7 @@ parameter_list|(
 name|S
 parameter_list|)
 define|\
-value|do {                                                                         \     if (!TRAVERSE_STMT_BASE(Stmt, Stmt, S, Queue))                             \       return false;                                                            \   } while (0)
+value|do {                                                                         \     if (!TRAVERSE_STMT_BASE(Stmt, Stmt, S, Queue))                             \       return false;                                                            \   } while (false)
 name|public
 label|:
 comment|// Declare Traverse*() for all concrete Stmt classes.
@@ -862,7 +939,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|bool TraverseUnary##NAME(UnaryOperator *S,                                   \                            DataRecursionQueue *Queue = nullptr) {              \     TRY_TO(WalkUpFromUnary##NAME(S));                                          \     TRY_TO_TRAVERSE_OR_ENQUEUE_STMT(S->getSubExpr());                          \     return true;                                                               \   }                                                                            \   bool WalkUpFromUnary##NAME(UnaryOperator *S) {                               \     TRY_TO(WalkUpFromUnaryOperator(S));                                        \     TRY_TO(VisitUnary##NAME(S));                                               \     return true;                                                               \   }                                                                            \   bool VisitUnary##NAME(UnaryOperator *S) { return true; }
+value|bool TraverseUnary##NAME(UnaryOperator *S,                                   \                            DataRecursionQueue *Queue = nullptr) {              \     if (!getDerived().shouldTraversePostOrder())                               \       TRY_TO(WalkUpFromUnary##NAME(S));                                        \     TRY_TO_TRAVERSE_OR_ENQUEUE_STMT(S->getSubExpr());                          \     return true;                                                               \   }                                                                            \   bool WalkUpFromUnary##NAME(UnaryOperator *S) {                               \     TRY_TO(WalkUpFromUnaryOperator(S));                                        \     TRY_TO(VisitUnary##NAME(S));                                               \     return true;                                                               \   }                                                                            \   bool VisitUnary##NAME(UnaryOperator *S) { return true; }
 name|UNARYOP_LIST
 argument_list|()
 undef|#
@@ -1188,6 +1265,20 @@ modifier|*
 name|TPL
 parameter_list|)
 function_decl|;
+comment|// Traverses template parameter lists of either a DeclaratorDecl or TagDecl.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|bool
+name|TraverseDeclTemplateParameterLists
+argument_list|(
+name|T
+operator|*
+name|D
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|DEF_TRAVERSE_TMPL_INST
@@ -3074,43 +3165,6 @@ argument_list|)
 expr_stmt|;
 end_if
 
-begin_if
-if|if
-condition|(
-name|getDerived
-argument_list|()
-operator|.
-name|shouldVisitImplicitCode
-argument_list|()
-condition|)
-comment|// The braces for this one-line loop are required for MSVC2013.  It
-comment|// refuses to compile
-comment|//     for (int i : int_vec)
-comment|//       do {} while(false);
-comment|// without braces on the for loop.
-for|for
-control|(
-name|VarDecl
-modifier|*
-name|VD
-range|:
-name|Init
-operator|->
-name|getArrayIndices
-argument_list|()
-control|)
-block|{
-name|TRY_TO
-argument_list|(
-name|TraverseDecl
-argument_list|(
-name|VD
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_if
-
 begin_return
 return|return
 name|true
@@ -3134,6 +3188,8 @@ argument_list|(
 argument|LambdaExpr *LE
 argument_list|,
 argument|const LambdaCapture *C
+argument_list|,
+argument|Expr *Init
 argument_list|)
 block|{
 if|if
@@ -3153,6 +3209,15 @@ name|C
 operator|->
 name|getCapturedVar
 argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|TRY_TO
+argument_list|(
+name|TraverseStmt
+argument_list|(
+name|Init
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3559,6 +3624,15 @@ argument_list|(
 argument|PackExpansionType
 argument_list|,
 argument|{ TRY_TO(TraverseType(T->getPattern())); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_TYPE
+argument_list|(
+argument|ObjCTypeParamType
+argument_list|,
+argument|{}
 argument_list|)
 end_macro
 
@@ -4133,6 +4207,15 @@ end_macro
 begin_macro
 name|DEF_TRAVERSE_TYPELOC
 argument_list|(
+argument|ObjCTypeParamType
+argument_list|,
+argument|{}
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_TYPELOC
+argument_list|(
 argument|ObjCInterfaceType
 argument_list|,
 argument|{}
@@ -4374,6 +4457,12 @@ argument|{}
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
+argument|ExportDecl
+argument_list|,
+argument|{}
+argument_list|)
+name|DEF_TRAVERSE_DECL
+argument_list|(
 argument|ObjCPropertyImplDecl
 argument_list|,
 argument|{
@@ -4519,6 +4608,12 @@ argument|{   TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc()));   TRY
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
+argument|UsingPackDecl
+argument_list|,
+argument|{}
+argument_list|)
+name|DEF_TRAVERSE_DECL
+argument_list|(
 argument|UsingDirectiveDecl
 argument_list|,
 argument|{   TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc())); }
@@ -4619,6 +4714,71 @@ unit|}   return
 name|true
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TraverseDeclTemplateParameterLists
+argument_list|(
+argument|T *D
+argument_list|)
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|D
+operator|->
+name|getNumTemplateParameterLists
+argument_list|()
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|TemplateParameterList
+modifier|*
+name|TPL
+init|=
+name|D
+operator|->
+name|getTemplateParameterList
+argument_list|(
+name|i
+argument_list|)
+decl_stmt|;
+name|TraverseTemplateParameterListHelper
+argument_list|(
+name|TPL
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+name|true
+return|;
+end_return
 
 begin_expr_stmt
 unit|}  template
@@ -5029,7 +5189,7 @@ name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|EnumDecl
 argument_list|,
-argument|{   if (D->getTypeForDecl())     TRY_TO(TraverseType(QualType(D->getTypeForDecl(),
+argument|{   TRY_TO(TraverseDeclTemplateParameterLists(D));    if (D->getTypeForDecl())     TRY_TO(TraverseType(QualType(D->getTypeForDecl(),
 literal|0
 argument|)));    TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc()));
 comment|// The enumerators are already traversed by
@@ -5055,6 +5215,14 @@ argument_list|)
 block|{
 comment|// We shouldn't traverse D->getTypeForDecl(); it's a result of
 comment|// declaring the type, not something that was written in the source.
+name|TRY_TO
+argument_list|(
+name|TraverseDeclTemplateParameterLists
+argument_list|(
+name|D
+argument_list|)
+argument_list|)
+block|;
 name|TRY_TO
 argument_list|(
 name|TraverseNestedNameSpecifierLoc
@@ -5318,6 +5486,14 @@ argument_list|)
 block|{
 name|TRY_TO
 argument_list|(
+name|TraverseDeclTemplateParameterLists
+argument_list|(
+name|D
+argument_list|)
+argument_list|)
+block|;
+name|TRY_TO
+argument_list|(
 name|TraverseNestedNameSpecifierLoc
 argument_list|(
 name|D
@@ -5371,24 +5547,69 @@ end_return
 begin_expr_stmt
 unit|}  DEF_TRAVERSE_DECL
 operator|(
-name|MSPropertyDecl
+name|DecompositionDecl
 operator|,
 block|{
 name|TRY_TO
 argument_list|(
-name|TraverseDeclaratorHelper
+name|TraverseVarHelper
 argument_list|(
 name|D
 argument_list|)
 argument_list|)
-block|; }
-operator|)
+block|;
+for|for
+control|(
+name|auto
+operator|*
+name|Binding
+operator|:
+name|D
+operator|->
+name|bindings
+argument_list|()
+control|)
+block|{
+name|TRY_TO
+argument_list|(
+name|TraverseDecl
+argument_list|(
+name|Binding
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_macro
+unit|})
+name|DEF_TRAVERSE_DECL
+argument_list|(
+argument|BindingDecl
+argument_list|,
+argument|{   if (getDerived().shouldVisitImplicitCode())     TRY_TO(TraverseStmt(D->getBinding())); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_DECL
+argument_list|(
+argument|MSPropertyDecl
+argument_list|,
+argument|{ TRY_TO(TraverseDeclaratorHelper(D)); }
+argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|FieldDecl
 argument_list|,
 argument|{   TRY_TO(TraverseDeclaratorHelper(D));   if (D->isBitField())     TRY_TO(TraverseStmt(D->getBitWidth()));   else if (D->hasInClassInitializer())     TRY_TO(TraverseStmt(D->getInClassInitializer())); }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|ObjCAtDefsFieldDecl
@@ -5397,6 +5618,9 @@ argument|{   TRY_TO(TraverseDeclaratorHelper(D));   if (D->isBitField())     TRY
 comment|// FIXME: implement the rest.
 argument|}
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|ObjCIvarDecl
@@ -5405,6 +5629,9 @@ argument|{   TRY_TO(TraverseDeclaratorHelper(D));   if (D->isBitField())     TRY
 comment|// FIXME: implement the rest.
 argument|}
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -5421,6 +5648,14 @@ argument_list|(
 argument|FunctionDecl *D
 argument_list|)
 block|{
+name|TRY_TO
+argument_list|(
+name|TraverseDeclTemplateParameterLists
+argument_list|(
+name|D
+argument_list|)
+argument_list|)
+block|;
 name|TRY_TO
 argument_list|(
 name|TraverseNestedNameSpecifierLoc
@@ -6389,7 +6624,9 @@ name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|LambdaExpr
 argument_list|,
-argument|{   for (LambdaExpr::capture_iterator C = S->explicit_capture_begin(),                                     CEnd = S->explicit_capture_end();        C != CEnd; ++C) {     TRY_TO(TraverseLambdaCapture(S, C));   }    TypeLoc TL = S->getCallOperator()->getTypeSourceInfo()->getTypeLoc();   FunctionProtoTypeLoc Proto = TL.castAs<FunctionProtoTypeLoc>();    if (S->hasExplicitParameters()&& S->hasExplicitResultType()) {
+argument|{   for (unsigned I =
+literal|0
+argument|, N = S->capture_size(); I != N; ++I) {     const LambdaCapture *C = S->capture_begin() + I;     if (C->isExplicit() || getDerived().shouldVisitImplicitCode()) {       TRY_TO(TraverseLambdaCapture(S, C, S->capture_init_begin()[I]));     }   }    TypeLoc TL = S->getCallOperator()->getTypeSourceInfo()->getTypeLoc();   FunctionProtoTypeLoc Proto = TL.castAs<FunctionProtoTypeLoc>();    if (S->hasExplicitParameters()&& S->hasExplicitResultType()) {
 comment|// Visit the whole type.
 argument|TRY_TO(TraverseTypeLoc(TL));   } else {     if (S->hasExplicitParameters()) {
 comment|// Visit parameters.
@@ -6481,7 +6718,7 @@ name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXDefaultArgExpr
 argument_list|,
-argument|{}
+argument|{   if (getDerived().shouldVisitImplicitCode())     TRY_TO(TraverseStmt(S->getExpr())); }
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
@@ -6576,6 +6813,21 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|NoInitExpr
+argument_list|,
+argument|{}
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|ArrayInitLoopExpr
+argument_list|,
+argument|{
+comment|// FIXME: The source expression of the OVE should be listed as
+comment|// a child of the ArrayInitLoopExpr.
+argument|if (OpaqueValueExpr *OVE = S->getCommonExpr())     TRY_TO_TRAVERSE_OR_ENQUEUE_STMT(OVE->getSourceExpr()); }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|ArrayInitIndexExpr
 argument_list|,
 argument|{}
 argument_list|)
@@ -7328,6 +7580,96 @@ begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|OMPTargetParallelForSimdDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTargetSimdDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTeamsDistributeDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTeamsDistributeSimdDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTeamsDistributeParallelForSimdDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTeamsDistributeParallelForDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTargetTeamsDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTargetTeamsDistributeDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTargetTeamsDistributeParallelForDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTargetTeamsDistributeParallelForSimdDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTargetTeamsDistributeSimdDirective
 argument_list|,
 argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
 argument_list|)

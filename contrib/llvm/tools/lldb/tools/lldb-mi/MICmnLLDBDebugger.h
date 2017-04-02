@@ -44,6 +44,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/API/SBDebugger.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBEvent.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBListener.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<condition_variable>
 end_include
 
@@ -59,24 +77,6 @@ directive|include
 file|<mutex>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"lldb/API/SBDebugger.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/API/SBListener.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/API/SBEvent.h"
-end_include
-
 begin_comment
 comment|// In-house headers:
 end_comment
@@ -90,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MIUtilThreadBaseStd.h"
+file|"MIUtilSingletonBase.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MIUtilSingletonBase.h"
+file|"MIUtilThreadBaseStd.h"
 end_include
 
 begin_comment
@@ -116,7 +116,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -546,13 +550,16 @@ operator|::
 name|SBDebugger
 name|m_lldbDebugger
 expr_stmt|;
-comment|// SBDebugger is the primordial object that creates SBTargets and provides access to them
+comment|// SBDebugger is the primordial object that
+comment|// creates SBTargets and provides access to
+comment|// them
 name|lldb
 operator|::
 name|SBListener
 name|m_lldbListener
 expr_stmt|;
-comment|// API clients can register its own listener to debugger events
+comment|// API clients can register its own listener
+comment|// to debugger events
 specifier|const
 name|CMIUtilString
 name|m_constStrThisThreadId

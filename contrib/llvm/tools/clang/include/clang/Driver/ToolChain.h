@@ -94,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Path.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetOptions.h"
 end_include
 
@@ -156,10 +150,16 @@ name|class
 name|Compilation
 decl_stmt|;
 name|class
+name|CudaInstallationDetector
+decl_stmt|;
+name|class
 name|Driver
 decl_stmt|;
 name|class
 name|JobAction
+decl_stmt|;
+name|class
+name|RegisterEffectiveTriple
 decl_stmt|;
 name|class
 name|SanitizerArgs
@@ -286,6 +286,15 @@ name|Tool
 operator|>
 name|Link
 expr_stmt|;
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Tool
+operator|>
+name|OffloadBundler
+expr_stmt|;
 name|Tool
 operator|*
 name|getClang
@@ -310,6 +319,12 @@ name|getClangAs
 argument_list|()
 specifier|const
 expr_stmt|;
+name|Tool
+operator|*
+name|getOffloadBundler
+argument_list|()
+specifier|const
+expr_stmt|;
 name|mutable
 name|std
 operator|::
@@ -319,17 +334,37 @@ name|SanitizerArgs
 operator|>
 name|SanitizerArguments
 expr_stmt|;
+comment|/// The effective clang triple for the current Job.
+name|mutable
+name|llvm
+operator|::
+name|Triple
+name|EffectiveTriple
+expr_stmt|;
+comment|/// Set the toolchain's effective clang triple.
+name|void
+name|setEffectiveTriple
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+name|ET
+argument_list|)
+decl|const
+block|{
+name|EffectiveTriple
+operator|=
+name|ET
+expr_stmt|;
+block|}
+name|friend
+name|class
+name|RegisterEffectiveTriple
+decl_stmt|;
 name|protected
 label|:
 name|MultilibSet
 name|Multilibs
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|DefaultLinker
-init|=
-literal|"ld"
 decl_stmt|;
 name|ToolChain
 argument_list|(
@@ -533,6 +568,25 @@ return|return
 name|Triple
 return|;
 block|}
+comment|/// Get the toolchain's aux triple, if it has one.
+comment|///
+comment|/// Exactly what the aux triple represents depends on the toolchain, but for
+comment|/// example when compiling CUDA code for the GPU, the triple might be NVPTX,
+comment|/// while the aux triple is the host (CPU) toolchain, e.g. x86-linux-gnu.
+name|virtual
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|*
+name|getAuxTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
 name|llvm
 operator|::
 name|Triple
@@ -604,6 +658,34 @@ name|Triple
 operator|.
 name|getTriple
 argument_list|()
+return|;
+block|}
+comment|/// Get the toolchain's effective clang triple.
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|getEffectiveTriple
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|EffectiveTriple
+operator|.
+name|getTriple
+argument_list|()
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"No effective triple"
+argument_list|)
+block|;
+return|return
+name|EffectiveTriple
 return|;
 block|}
 name|path_list
@@ -722,9 +804,12 @@ expr_stmt|;
 comment|// Tool access.
 comment|/// TranslateArgs - Create a new derived argument list for any argument
 comment|/// translations this ToolChain may wish to perform, or 0 if no tool chain
-comment|/// specific translations are needed.
+comment|/// specific translations are needed. If \p DeviceOffloadKind is specified
+comment|/// the translation specific for that offload kind is performed.
 comment|///
 comment|/// \param BoundArch - The bound architecture name, or 0.
+comment|/// \param DeviceOffloadKind - The device offload kind used for the
+comment|/// translation.
 name|virtual
 name|llvm
 operator|::
@@ -736,7 +821,9 @@ name|TranslateArgs
 argument_list|(
 argument|const llvm::opt::DerivedArgList&Args
 argument_list|,
-argument|const char *BoundArch
+argument|StringRef BoundArch
+argument_list|,
+argument|Action::OffloadKind DeviceOffloadKind
 argument_list|)
 specifier|const
 block|{
@@ -828,7 +915,7 @@ operator|::
 name|ID
 name|LookupTypeForExtension
 argument_list|(
-argument|const char *Ext
+argument|StringRef Ext
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -922,6 +1009,19 @@ decl|const
 block|{
 return|return
 literal|0
+return|;
+block|}
+comment|/// GetDefaultLinker - Get the default linker to use.
+name|virtual
+specifier|const
+name|char
+operator|*
+name|getDefaultLinker
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|"ld"
 return|;
 block|}
 comment|/// GetDefaultRuntimeLibType - Get the default runtime library variant to use.
@@ -1536,6 +1636,27 @@ name|CC1Args
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief On Windows, returns the MSVC compatibility version.
+name|virtual
+name|VersionTuple
+name|computeMSVCVersion
+argument_list|(
+specifier|const
+name|Driver
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return sanitizers which are available in this toolchain.
 name|virtual
 name|SanitizerMask
@@ -1554,19 +1675,54 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// \brief On Windows, returns the version of cl.exe.  On other platforms,
-comment|/// returns an empty VersionTuple.
-name|virtual
-name|VersionTuple
-name|getMSVCVersionFromExe
-argument_list|()
-specifier|const
-block|{
-return|return
-name|VersionTuple
-argument_list|()
-return|;
 block|}
+empty_stmt|;
+comment|/// Set a ToolChain's effective triple. Reset it when the registration object
+comment|/// is destroyed.
+name|class
+name|RegisterEffectiveTriple
+block|{
+specifier|const
+name|ToolChain
+modifier|&
+name|TC
+decl_stmt|;
+name|public
+label|:
+name|RegisterEffectiveTriple
+argument_list|(
+argument|const ToolChain&TC
+argument_list|,
+argument|llvm::Triple T
+argument_list|)
+block|:
+name|TC
+argument_list|(
+argument|TC
+argument_list|)
+block|{
+name|TC
+operator|.
+name|setEffectiveTriple
+argument_list|(
+name|T
+argument_list|)
+expr_stmt|;
+block|}
+operator|~
+name|RegisterEffectiveTriple
+argument_list|()
+block|{
+name|TC
+operator|.
+name|setEffectiveTriple
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+argument_list|()
+argument_list|)
+block|; }
 block|}
 empty_stmt|;
 block|}

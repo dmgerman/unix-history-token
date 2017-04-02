@@ -80,8 +80,9 @@ name|TypeDescriptor
 modifier|&
 name|Type
 decl_stmt|;
-name|uptr
-name|Alignment
+name|unsigned
+name|char
+name|LogAlignment
 decl_stmt|;
 name|unsigned
 name|char
@@ -114,7 +115,7 @@ comment|/// pointer, a null pointer, or a pointer to insufficient storage for th
 comment|/// type.
 name|RECOVERABLE
 argument_list|(
-argument|type_mismatch
+argument|type_mismatch_v1
 argument_list|,
 argument|TypeMismatchData *Data
 argument_list|,

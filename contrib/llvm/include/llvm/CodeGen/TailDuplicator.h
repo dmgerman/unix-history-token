@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBranchProbabilityInfo.h"
 end_include
 
@@ -115,6 +121,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+extern|extern cl::opt<unsigned> TailDupIndirectBranchSize;
 comment|/// Utility class to perform tail duplication.
 name|class
 name|TailDuplicator
@@ -143,8 +150,18 @@ name|MachineRegisterInfo
 modifier|*
 name|MRI
 decl_stmt|;
+name|MachineFunction
+modifier|*
+name|MF
+decl_stmt|;
 name|bool
 name|PreRegAlloc
+decl_stmt|;
+name|bool
+name|LayoutMode
+decl_stmt|;
+name|unsigned
+name|TailDupSize
 decl_stmt|;
 comment|// A list of virtual registers for which to update SSA form.
 name|SmallVector
@@ -183,6 +200,14 @@ name|SSAUpdateVals
 expr_stmt|;
 name|public
 label|:
+comment|/// Prepare to run on a specific machine function.
+comment|/// @param MF - Function that will be processed
+comment|/// @param MBPI - Branch Probability Info. Used to propagate correct
+comment|///     probabilities when modifying the CFG.
+comment|/// @param LayoutMode - When true, don't use the existing layout to make
+comment|///     decisions.
+comment|/// @param TailDupSize - Maxmimum size of blocks to tail-duplicate. Zero
+comment|///     default implies using the command line value TailDupSize.
 name|void
 name|initMF
 parameter_list|(
@@ -191,23 +216,22 @@ modifier|&
 name|MF
 parameter_list|,
 specifier|const
-name|MachineModuleInfo
-modifier|*
-name|MMI
-parameter_list|,
-specifier|const
 name|MachineBranchProbabilityInfo
 modifier|*
 name|MBPI
+parameter_list|,
+name|bool
+name|LayoutMode
+parameter_list|,
+name|unsigned
+name|TailDupSize
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|bool
 name|tailDuplicateBlocks
-parameter_list|(
-name|MachineFunction
-modifier|&
-name|MF
-parameter_list|)
+parameter_list|()
 function_decl|;
 specifier|static
 name|bool
@@ -221,11 +245,6 @@ function_decl|;
 name|bool
 name|shouldTailDuplicate
 parameter_list|(
-specifier|const
-name|MachineFunction
-modifier|&
-name|MF
-parameter_list|,
 name|bool
 name|IsSimple
 parameter_list|,
@@ -234,21 +253,65 @@ modifier|&
 name|TailBB
 parameter_list|)
 function_decl|;
+comment|/// Returns true if TailBB can successfully be duplicated into PredBB
 name|bool
-name|tailDuplicateAndUpdate
+name|canTailDuplicate
 parameter_list|(
-name|MachineFunction
-modifier|&
-name|MF
-parameter_list|,
-name|bool
-name|IsSimple
+name|MachineBasicBlock
+modifier|*
+name|TailBB
 parameter_list|,
 name|MachineBasicBlock
 modifier|*
-name|MBB
+name|PredBB
 parameter_list|)
 function_decl|;
+comment|/// Tail duplicate a single basic block into its predecessors, and then clean
+comment|/// up.
+comment|/// If \p DuplicatePreds is not null, it will be updated to contain the list
+comment|/// of predecessors that received a copy of \p MBB.
+comment|/// If \p RemovalCallback is non-null. It will be called before MBB is
+comment|/// deleted.
+name|bool
+name|tailDuplicateAndUpdate
+argument_list|(
+name|bool
+name|IsSimple
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|ForcedLayoutPred
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|*
+name|DuplicatedPreds
+operator|=
+name|nullptr
+argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|MachineBasicBlock
+operator|*
+argument_list|)
+operator|>
+operator|*
+name|RemovalCallback
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 typedef|typedef
@@ -334,10 +397,6 @@ argument_list|,
 name|MachineBasicBlock
 operator|*
 name|PredBB
-argument_list|,
-name|MachineFunction
-operator|&
-name|MF
 argument_list|,
 name|DenseMap
 operator|<
@@ -429,16 +488,16 @@ decl_stmt|;
 name|bool
 name|tailDuplicate
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
 name|bool
 name|IsSimple
 argument_list|,
 name|MachineBasicBlock
 operator|*
 name|TailBB
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|ForcedLayoutPred
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -488,12 +547,27 @@ argument_list|)
 decl_stmt|;
 name|void
 name|removeDeadBlock
-parameter_list|(
+argument_list|(
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|MBB
-parameter_list|)
-function_decl|;
+argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|MachineBasicBlock
+operator|*
+argument_list|)
+operator|>
+operator|*
+name|RemovalCallback
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -142,13 +142,13 @@ block|, }
 enum|;
 comment|// Bits indicating post- and pre-operators should be tested and set using Is*
 comment|// and Make* utility functions
-name|constexpr
+specifier|const
 name|int
 name|Lanai_PRE_OP
 init|=
 literal|0x40
 decl_stmt|;
-name|constexpr
+specifier|const
 name|int
 name|Lanai_POST_OP
 init|=

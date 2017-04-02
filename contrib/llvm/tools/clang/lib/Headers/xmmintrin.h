@@ -115,7 +115,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VADDSS / ADDSS instructions.
+comment|/// This intrinsic corresponds to the<c> VADDSS / ADDSS</c> instructions.
 end_comment
 
 begin_comment
@@ -209,7 +209,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VADDPS / ADDPS instructions.
+comment|/// This intrinsic corresponds to the<c> VADDPS / ADDPS</c> instructions.
 end_comment
 
 begin_comment
@@ -294,7 +294,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VSUBSS / SUBSS instructions.
+comment|/// This intrinsic corresponds to the<c> VSUBSS / SUBSS</c> instructions.
 end_comment
 
 begin_comment
@@ -392,7 +392,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VSUBPS / SUBPS instructions.
+comment|/// This intrinsic corresponds to the<c> VSUBPS / SUBPS</c> instructions.
 end_comment
 
 begin_comment
@@ -477,7 +477,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMULSS / MULSS instructions.
+comment|/// This intrinsic corresponds to the<c> VMULSS / MULSS</c> instructions.
 end_comment
 
 begin_comment
@@ -571,7 +571,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMULPS / MULPS instructions.
+comment|/// This intrinsic corresponds to the<c> VMULPS / MULPS</c> instructions.
 end_comment
 
 begin_comment
@@ -656,7 +656,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VDIVSS / DIVSS instructions.
+comment|/// This intrinsic corresponds to the<c> VDIVSS / DIVSS</c> instructions.
 end_comment
 
 begin_comment
@@ -746,7 +746,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VDIVPS / DIVPS instructions.
+comment|/// This intrinsic corresponds to the<c> VDIVPS / DIVPS</c> instructions.
 end_comment
 
 begin_comment
@@ -831,7 +831,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VSQRTSS / SQRTSS instructions.
+comment|/// This intrinsic corresponds to the<c> VSQRTSS / SQRTSS</c> instructions.
 end_comment
 
 begin_comment
@@ -930,7 +930,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VSQRTPS / SQRTPS instructions.
+comment|/// This intrinsic corresponds to the<c> VSQRTPS / SQRTPS</c> instructions.
 end_comment
 
 begin_comment
@@ -997,7 +997,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VRCPSS / RCPSS instructions.
+comment|/// This intrinsic corresponds to the<c> VRCPSS / RCPSS</c> instructions.
 end_comment
 
 begin_comment
@@ -1096,7 +1096,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VRCPPS / RCPPS instructions.
+comment|/// This intrinsic corresponds to the<c> VRCPPS / RCPPS</c> instructions.
 end_comment
 
 begin_comment
@@ -1163,7 +1163,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VRSQRTSS / RSQRTSS instructions.
+comment|/// This intrinsic corresponds to the<c> VRSQRTSS / RSQRTSS</c> instructions.
 end_comment
 
 begin_comment
@@ -1266,7 +1266,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VRSQRTPS / RSQRTPS instructions.
+comment|/// This intrinsic corresponds to the<c> VRSQRTPS / RSQRTPS</c> instructions.
 end_comment
 
 begin_comment
@@ -1337,7 +1337,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMINSS / MINSS instructions.
+comment|/// This intrinsic corresponds to the<c> VMINSS / MINSS</c> instructions.
 end_comment
 
 begin_comment
@@ -1412,11 +1412,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Compares two 128-bit vectors of [4 x float] and returns the
+comment|/// \brief Compares two 128-bit vectors of [4 x float] and returns the lesser
 end_comment
 
 begin_comment
-comment|///    lesser of each pair of values.
+comment|///    of each pair of values.
 end_comment
 
 begin_comment
@@ -1432,7 +1432,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMINPS / MINPS instructions.
+comment|/// This intrinsic corresponds to the<c> VMINPS / MINPS</c> instructions.
 end_comment
 
 begin_comment
@@ -1499,11 +1499,11 @@ comment|/// \brief Compares two 32-bit float values in the low-order bits of bot
 end_comment
 
 begin_comment
-comment|///    operands and returns the greater value in the low-order bits of
+comment|///    operands and returns the greater value in the low-order bits of a 128-bit
 end_comment
 
 begin_comment
-comment|///    a vector [4 x float].
+comment|///    vector of [4 x float].
 end_comment
 
 begin_comment
@@ -1519,7 +1519,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMAXSS / MAXSS instructions.
+comment|/// This intrinsic corresponds to the<c> VMAXSS / MAXSS</c> instructions.
 end_comment
 
 begin_comment
@@ -1614,7 +1614,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMAXPS / MAXPS instructions.
+comment|/// This intrinsic corresponds to the<c> VMAXPS / MAXPS</c> instructions.
 end_comment
 
 begin_comment
@@ -1693,7 +1693,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VANDPS / ANDPS instructions.
+comment|/// This intrinsic corresponds to the<c> VANDPS / ANDPS</c> instructions.
 end_comment
 
 begin_comment
@@ -1782,7 +1782,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VANDNPS / ANDNPS instructions.
+comment|/// This intrinsic corresponds to the<c> VANDNPS / ANDNPS</c> instructions.
 end_comment
 
 begin_comment
@@ -1872,7 +1872,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VORPS / ORPS instructions.
+comment|/// This intrinsic corresponds to the<c> VORPS / ORPS</c> instructions.
 end_comment
 
 begin_comment
@@ -1957,7 +1957,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VXORPS / XORPS instructions.
+comment|/// This intrinsic corresponds to the<c> VXORPS / XORPS</c> instructions.
 end_comment
 
 begin_comment
@@ -2046,7 +2046,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPEQSS / CMPEQSS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPEQSS / CMPEQSS</c> instructions.
 end_comment
 
 begin_comment
@@ -2140,7 +2140,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPEQPS / CMPEQPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPEQPS / CMPEQPS</c> instructions.
 end_comment
 
 begin_comment
@@ -2230,7 +2230,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPLTSS / CMPLTSS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPLTSS / CMPLTSS</c> instructions.
 end_comment
 
 begin_comment
@@ -2328,7 +2328,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPLTPS / CMPLTPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPLTPS / CMPLTPS</c> instructions.
 end_comment
 
 begin_comment
@@ -2422,7 +2422,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPLESS / CMPLESS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPLESS / CMPLESS</c> instructions.
 end_comment
 
 begin_comment
@@ -2520,7 +2520,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPLEPS / CMPLEPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPLEPS / CMPLEPS</c> instructions.
 end_comment
 
 begin_comment
@@ -2610,7 +2610,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPLTSS / CMPLTSS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPLTSS / CMPLTSS</c> instructions.
 end_comment
 
 begin_comment
@@ -2727,7 +2727,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPLTPS / CMPLTPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPLTPS / CMPLTPS</c> instructions.
 end_comment
 
 begin_comment
@@ -2821,7 +2821,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPLESS / CMPLESS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPLESS / CMPLESS</c> instructions.
 end_comment
 
 begin_comment
@@ -2938,7 +2938,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPLEPS / CMPLEPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPLEPS / CMPLEPS</c> instructions.
 end_comment
 
 begin_comment
@@ -3024,7 +3024,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPNEQSS / CMPNEQSS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPNEQSS / CMPNEQSS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -3118,7 +3122,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPNEQPS / CMPNEQPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPNEQPS / CMPNEQPS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -3208,7 +3216,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPNLTSS / CMPNLTSS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPNLTSS / CMPNLTSS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -3306,7 +3318,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPNLTPS / CMPNLTPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPNLTPS / CMPNLTPS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -3400,7 +3416,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPNLESS / CMPNLESS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPNLESS / CMPNLESS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -3498,7 +3518,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPNLEPS / CMPNLEPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPNLEPS / CMPNLEPS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -3592,7 +3616,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPNLTSS / CMPNLTSS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPNLTSS / CMPNLTSS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -3709,7 +3737,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPNLTPS / CMPNLTPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPNLTPS / CMPNLTPS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -3803,7 +3835,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPNLESS / CMPNLESS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPNLESS / CMPNLESS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -3920,7 +3956,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPNLEPS / CMPNLEPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPNLEPS / CMPNLEPS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -4014,7 +4054,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPORDSS / CMPORDSS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPORDSS / CMPORDSS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -4112,7 +4156,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPORDPS / CMPORDPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPORDPS / CMPORDPS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -4206,7 +4254,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPUNORDSS / CMPUNORDSS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPUNORDSS / CMPUNORDSS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -4304,7 +4356,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCMPUNORDPS / CMPUNORDPS instructions.
+comment|/// This intrinsic corresponds to the<c> VCMPUNORDPS / CMPUNORDPS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -4386,7 +4442,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCOMISS / COMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VCOMISS / COMISS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -4477,7 +4537,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCOMISS / COMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VCOMISS / COMISS</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -4568,7 +4632,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCOMISS / COMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VCOMISS / COMISS</c> instructions.
 end_comment
 
 begin_comment
@@ -4659,7 +4723,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCOMISS / COMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VCOMISS / COMISS</c> instructions.
 end_comment
 
 begin_comment
@@ -4750,7 +4814,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCOMISS / COMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VCOMISS / COMISS</c> instructions.
 end_comment
 
 begin_comment
@@ -4841,7 +4905,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCOMISS / COMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VCOMISS / COMISS</c> instructions.
 end_comment
 
 begin_comment
@@ -4932,7 +4996,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VUCOMISS / UCOMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VUCOMISS / UCOMISS</c> instructions.
 end_comment
 
 begin_comment
@@ -5023,7 +5087,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VUCOMISS / UCOMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VUCOMISS / UCOMISS</c> instructions.
 end_comment
 
 begin_comment
@@ -5094,15 +5158,15 @@ comment|/// \brief Performs an unordered comparison of two 32-bit float values u
 end_comment
 
 begin_comment
-comment|///    the low-order bits of both operands to determine if the first operand
+comment|///    the low-order bits of both operands to determine if the first operand is
 end_comment
 
 begin_comment
-comment|///    is less than or equal to the second operand and returns the result of
+comment|///    less than or equal to the second operand and returns the result of the
 end_comment
 
 begin_comment
-comment|///    the comparison.
+comment|///    comparison.
 end_comment
 
 begin_comment
@@ -5118,7 +5182,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VUCOMISS / UCOMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VUCOMISS / UCOMISS</c> instructions.
 end_comment
 
 begin_comment
@@ -5189,11 +5253,11 @@ comment|/// \brief Performs an unordered comparison of two 32-bit float values u
 end_comment
 
 begin_comment
-comment|///    the low-order bits of both operands to determine if the first operand
+comment|///    the low-order bits of both operands to determine if the first operand is
 end_comment
 
 begin_comment
-comment|///    is greater than the second operand and returns the result of the
+comment|///    greater than the second operand and returns the result of the
 end_comment
 
 begin_comment
@@ -5213,7 +5277,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VUCOMISS / UCOMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VUCOMISS / UCOMISS</c> instructions.
 end_comment
 
 begin_comment
@@ -5308,7 +5372,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VUCOMISS / UCOMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VUCOMISS / UCOMISS</c> instructions.
 end_comment
 
 begin_comment
@@ -5399,7 +5463,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VUCOMISS / UCOMISS instructions.
+comment|/// This intrinsic corresponds to the<c> VUCOMISS / UCOMISS</c> instructions.
 end_comment
 
 begin_comment
@@ -5486,7 +5550,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTSS2SI / CVTSS2SI instructions.
+comment|/// This intrinsic corresponds to the<c> VCVTSS2SI / CVTSS2SI</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -5553,7 +5621,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTSS2SI / CVTSS2SI instructions.
+comment|/// This intrinsic corresponds to the<c> VCVTSS2SI / CVTSS2SI</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -5623,7 +5695,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTSS2SI / CVTSS2SI instructions.
+comment|/// This intrinsic corresponds to the<c> VCVTSS2SI / CVTSS2SI</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -5696,7 +5772,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTPS2PI instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPS2PI</c> instruction.
 end_comment
 
 begin_comment
@@ -5762,7 +5838,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTPS2PI instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPS2PI</c> instruction.
 end_comment
 
 begin_comment
@@ -5826,7 +5902,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTTSS2SI / CVTTSS2SI instructions.
+comment|/// This intrinsic corresponds to the<c> VCVTTSS2SI / CVTTSS2SI</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -5897,7 +5977,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTTSS2SI / CVTTSS2SI instructions.
+comment|/// This intrinsic corresponds to the<c> VCVTTSS2SI / CVTTSS2SI</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -5940,6 +6024,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
+
 begin_comment
 comment|/// \brief Converts a float value contained in the lower 32 bits of a vector of
 end_comment
@@ -5965,7 +6055,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTTSS2SI / CVTTSS2SI instructions.
+comment|/// This intrinsic corresponds to the<c> VCVTTSS2SI / CVTTSS2SI</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -6012,6 +6106,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/// \brief Converts two low-order float values in a 128-bit vector of
 end_comment
@@ -6037,7 +6136,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTTPS2PI / VTTPS2PI instructions.
+comment|/// This intrinsic corresponds to the<c> CVTTPS2PI / VTTPS2PI</c>
+end_comment
+
+begin_comment
+comment|///   instructions.
 end_comment
 
 begin_comment
@@ -6107,7 +6210,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTTPS2PI instruction.
+comment|/// This intrinsic corresponds to the<c> CVTTPS2PI</c> instruction.
 end_comment
 
 begin_comment
@@ -6175,7 +6278,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTSI2SS / CVTSI2SS instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTSI2SS / CVTSI2SS</c> instruction.
 end_comment
 
 begin_comment
@@ -6266,7 +6369,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTSI2SS / CVTSI2SS instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTSI2SS / CVTSI2SS</c> instruction.
 end_comment
 
 begin_comment
@@ -6361,7 +6464,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTSI2SS / CVTSI2SS instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTSI2SS / CVTSI2SS</c> instruction.
 end_comment
 
 begin_comment
@@ -6458,7 +6561,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTPI2PS instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS</c> instruction.
 end_comment
 
 begin_comment
@@ -6557,7 +6660,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTPI2PS instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS</c> instruction.
 end_comment
 
 begin_comment
@@ -6642,7 +6745,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVSS / MOVSS instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVSS / MOVSS</c> instruction.
 end_comment
 
 begin_comment
@@ -6686,7 +6789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Loads two packed float values from the address __p into the
+comment|/// \brief Loads two packed float values from the address \a __p into the
 end_comment
 
 begin_comment
@@ -6710,7 +6813,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVHPD / MOVHPD instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVHPD / MOVHPD</c> instruction.
 end_comment
 
 begin_comment
@@ -6836,15 +6939,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Loads two packed float values from the address __p into the low-order
+comment|/// \brief Loads two packed float values from the address \a __p into the
 end_comment
 
 begin_comment
-comment|///    bits of a 128-bit vector of [4 x float]. The high-order bits are copied
+comment|///    low-order bits of a 128-bit vector of [4 x float]. The high-order bits
 end_comment
 
 begin_comment
-comment|///    from the high-order bits of the first operand.
+comment|///    are copied from the high-order bits of the first operand.
 end_comment
 
 begin_comment
@@ -6860,7 +6963,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVLPD / MOVLPD instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVLPD / MOVLPD</c> instruction.
 end_comment
 
 begin_comment
@@ -7014,7 +7117,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVSS / MOVSS instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVSS / MOVSS</c> instruction.
 end_comment
 
 begin_comment
@@ -7126,7 +7229,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVSS / MOVSS + \c shuffling
+comment|/// This intrinsic corresponds to the<c> VMOVSS / MOVSS + shuffling</c>
 end_comment
 
 begin_comment
@@ -7146,11 +7249,11 @@ comment|///    A pointer to a float value to be loaded and duplicated.
 end_comment
 
 begin_comment
-comment|/// \returns A 128-bit vector of [4 x float] containing the loaded
+comment|/// \returns A 128-bit vector of [4 x float] containing the loaded and
 end_comment
 
 begin_comment
-comment|///    and duplicated values.
+comment|///    duplicated values.
 end_comment
 
 begin_function
@@ -7244,7 +7347,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVAPS / MOVAPS instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVAPS / MOVAPS</c> instruction.
 end_comment
 
 begin_comment
@@ -7312,7 +7415,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVUPS / MOVUPS instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVUPS / MOVUPS</c> instruction.
 end_comment
 
 begin_comment
@@ -7400,7 +7503,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVAPS / MOVAPS + \c shuffling
+comment|/// This intrinsic corresponds to the<c> VMOVAPS / MOVAPS + shuffling</c>
 end_comment
 
 begin_comment
@@ -7550,7 +7653,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVSS / MOVSS instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVSS / MOVSS</c> instruction.
 end_comment
 
 begin_comment
@@ -7634,7 +7737,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPERMILPS / PERMILPS instruction.
+comment|/// This intrinsic corresponds to the<c> VPERMILPS / PERMILPS</c> instruction.
 end_comment
 
 begin_comment
@@ -7714,7 +7817,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPERMILPS / PERMILPS instruction.
+comment|/// This intrinsic corresponds to the<c> VPERMILPS / PERMILPS</c> instruction.
 end_comment
 
 begin_comment
@@ -8024,7 +8127,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VXORPS / XORPS instruction.
+comment|/// This intrinsic corresponds to the<c> VXORPS / XORPS</c> instruction.
 end_comment
 
 begin_comment
@@ -8087,7 +8190,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPEXTRQ / MOVQ instruction.
+comment|/// This intrinsic corresponds to the<c> VPEXTRQ / MOVQ</c> instruction.
 end_comment
 
 begin_comment
@@ -8163,7 +8266,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVLPS / MOVLPS instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVLPS / MOVLPS</c> instruction.
 end_comment
 
 begin_comment
@@ -8239,7 +8342,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVSS / MOVSS instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVSS / MOVSS</c> instruction.
 end_comment
 
 begin_comment
@@ -8313,11 +8416,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Stores float values from a 128-bit vector of [4 x float] to an
+comment|/// \brief Stores a 128-bit vector of [4 x float] to an unaligned memory
 end_comment
 
 begin_comment
-comment|///    unaligned memory location.
+comment|///    location.
 end_comment
 
 begin_comment
@@ -8333,7 +8436,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVUPS / MOVUPS instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVUPS / MOVUPS</c> instruction.
 end_comment
 
 begin_comment
@@ -8408,11 +8511,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Stores the lower 32 bits of a 128-bit vector of [4 x float] into
+comment|/// \brief Stores a 128-bit vector of [4 x float] into an aligned memory
 end_comment
 
 begin_comment
-comment|///    four contiguous elements in an aligned memory location.
+comment|///    location.
 end_comment
 
 begin_comment
@@ -8428,11 +8531,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to \c VMOVAPS / MOVAPS + \c shuffling
-end_comment
-
-begin_comment
-comment|///    instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVAPS / MOVAPS</c> instruction.
 end_comment
 
 begin_comment
@@ -8444,7 +8543,11 @@ comment|/// \param __p
 end_comment
 
 begin_comment
-comment|///    A pointer to a 128-bit memory location.
+comment|///    A pointer to a 128-bit memory location. The address of the memory
+end_comment
+
+begin_comment
+comment|///    location has to be 16-byte aligned.
 end_comment
 
 begin_comment
@@ -8452,11 +8555,7 @@ comment|/// \param __a
 end_comment
 
 begin_comment
-comment|///    A 128-bit vector of [4 x float] whose lower 32 bits are stored to each
-end_comment
-
-begin_comment
-comment|///    of the four contiguous elements pointed by __p.
+comment|///    A 128-bit vector of [4 x float] containing the values to be stored.
 end_comment
 
 begin_function
@@ -8507,7 +8606,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to \c VMOVAPS / MOVAPS + \c shuffling
+comment|/// This intrinsic corresponds to<c> VMOVAPS / MOVAPS + shuffling</c>
 end_comment
 
 begin_comment
@@ -8535,7 +8634,7 @@ comment|///    A 128-bit vector of [4 x float] whose lower 32 bits are stored to
 end_comment
 
 begin_comment
-comment|///    of the four contiguous elements pointed by __p.
+comment|///    of the four contiguous elements pointed by \a __p.
 end_comment
 
 begin_function
@@ -8587,11 +8686,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Stores float values from a 128-bit vector of [4 x float] to an
+comment|/// \brief Stores the lower 32 bits of a 128-bit vector of [4 x float] into
 end_comment
 
 begin_comment
-comment|///    aligned memory location.
+comment|///    four contiguous elements in an aligned memory location.
 end_comment
 
 begin_comment
@@ -8607,7 +8706,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVAPS / MOVAPS instruction.
+comment|/// This intrinsic corresponds to<c> VMOVAPS / MOVAPS + shuffling</c>
+end_comment
+
+begin_comment
+comment|///    instruction.
 end_comment
 
 begin_comment
@@ -8619,11 +8722,7 @@ comment|/// \param __p
 end_comment
 
 begin_comment
-comment|///    A pointer to a 128-bit memory location. The address of the memory
-end_comment
-
-begin_comment
-comment|///    location has to be 128-bit aligned.
+comment|///    A pointer to a 128-bit memory location.
 end_comment
 
 begin_comment
@@ -8631,7 +8730,11 @@ comment|/// \param __a
 end_comment
 
 begin_comment
-comment|///    A 128-bit vector of [4 x float] containing the values to be stored.
+comment|///    A 128-bit vector of [4 x float] whose lower 32 bits are stored to each
+end_comment
+
+begin_comment
+comment|///    of the four contiguous elements pointed by \a __p.
 end_comment
 
 begin_function
@@ -8681,7 +8784,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVAPS / MOVAPS + \c shuffling
+comment|/// This intrinsic corresponds to the<c> VMOVAPS / MOVAPS + shuffling</c>
 end_comment
 
 begin_comment
@@ -8835,7 +8938,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PREFETCHNTA instruction.
+comment|/// This intrinsic corresponds to the<c> PREFETCHNTA</c> instruction.
 end_comment
 
 begin_comment
@@ -8855,15 +8958,19 @@ comment|/// \param sel
 end_comment
 
 begin_comment
-comment|///    A predefined integer constant specifying the type of prefetch operation:
+comment|///    A predefined integer constant specifying the type of prefetch
 end_comment
 
 begin_comment
-comment|///    _MM_HINT_NTA: Move data using the non-temporal access (NTA) hint.
+comment|///    operation: \n
 end_comment
 
 begin_comment
-comment|///    The PREFETCHNTA instruction will be generated.
+comment|///    _MM_HINT_NTA: Move data using the non-temporal access (NTA) hint. The
+end_comment
+
+begin_comment
+comment|///    PREFETCHNTA instruction will be generated. \n
 end_comment
 
 begin_comment
@@ -8871,7 +8978,7 @@ comment|///    _MM_HINT_T0: Move data using the T0 hint. The PREFETCHT0 instruct
 end_comment
 
 begin_comment
-comment|///    be generated.
+comment|///    be generated. \n
 end_comment
 
 begin_comment
@@ -8879,7 +8986,7 @@ comment|///    _MM_HINT_T1: Move data using the T1 hint. The PREFETCHT1 instruct
 end_comment
 
 begin_comment
-comment|///    be generated.
+comment|///    be generated. \n
 end_comment
 
 begin_comment
@@ -8932,7 +9039,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c MOVNTQ instruction.
+comment|/// This intrinsic corresponds to the<c> MOVNTQ</c> instruction.
 end_comment
 
 begin_comment
@@ -9005,7 +9112,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVNTPS / MOVNTPS instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVNTPS / MOVNTPS</c> instruction.
 end_comment
 
 begin_comment
@@ -9064,57 +9171,53 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 comment|/// \brief Forces strong memory ordering (serialization) between store
-end_comment
-
-begin_comment
 comment|///    instructions preceding this instruction and store instructions following
-end_comment
-
-begin_comment
 comment|///    this instruction, ensuring the system completes all previous stores
-end_comment
-
-begin_comment
 comment|///    before executing subsequent stores.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \headerfile<x86intrin.h>
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
-comment|/// This intrinsic corresponds to the \c SFENCE instruction.
-end_comment
-
-begin_comment
+comment|/// This intrinsic corresponds to the<c> SFENCE</c> instruction.
 comment|///
-end_comment
-
-begin_function
-specifier|static
-name|__inline__
 name|void
-name|__DEFAULT_FN_ATTRS
 name|_mm_sfence
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-name|__builtin_ia32_sfence
-argument_list|()
-expr_stmt|;
+function_decl|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
 block|}
-end_function
+end_extern
+
+begin_comment
+comment|// extern "C"
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/// \brief Extracts 16-bit element from a 64-bit vector of [4 x i16] and
@@ -9137,7 +9240,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPEXTRW / PEXTRW instruction.
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// void _mm_extract_pi(__m64 a, int n);
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_comment
@@ -9145,7 +9256,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param __a
+comment|/// This intrinsic corresponds to the<c> VPEXTRW / PEXTRW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
 end_comment
 
 begin_comment
@@ -9153,23 +9272,23 @@ comment|///    A 64-bit vector of [4 x i16].
 end_comment
 
 begin_comment
-comment|/// \param __n
+comment|/// \param n
 end_comment
 
 begin_comment
-comment|///    An immediate integer operand that determines which bits are extracted:
+comment|///    An immediate integer operand that determines which bits are extracted: \n
 end_comment
 
 begin_comment
-comment|///    0: Bits [15:0] are copied to the destination.
+comment|///    0: Bits [15:0] are copied to the destination. \n
 end_comment
 
 begin_comment
-comment|///    1: Bits [31:16] are copied to the destination.
+comment|///    1: Bits [31:16] are copied to the destination. \n
 end_comment
 
 begin_comment
-comment|///    2: Bits [47:32] are copied to the destination.
+comment|///    2: Bits [47:32] are copied to the destination. \n
 end_comment
 
 begin_comment
@@ -9201,7 +9320,7 @@ comment|///    and inserts the lower 16-bits of an integer operand at the 16-bit
 end_comment
 
 begin_comment
-comment|///    specified by the immediate operand __n.
+comment|///    specified by the immediate operand \a n.
 end_comment
 
 begin_comment
@@ -9217,7 +9336,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPINSRW / PINSRW instruction.
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// void _mm_insert_pi(__m64 a, int d, int n);
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_comment
@@ -9225,7 +9352,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param __a
+comment|/// This intrinsic corresponds to the<c> VPINSRW / PINSRW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
 end_comment
 
 begin_comment
@@ -9233,7 +9368,7 @@ comment|///    A 64-bit vector of [4 x i16].
 end_comment
 
 begin_comment
-comment|/// \param __d
+comment|/// \param d
 end_comment
 
 begin_comment
@@ -9241,11 +9376,11 @@ comment|///    An integer. The lower 16-bit value from this operand is written t
 end_comment
 
 begin_comment
-comment|///    destination at the offset specified by operand __n.
+comment|///    destination at the offset specified by operand \a n.
 end_comment
 
 begin_comment
-comment|/// \param __n
+comment|/// \param n
 end_comment
 
 begin_comment
@@ -9253,23 +9388,23 @@ comment|///    An immediate integer operant that determines which the bits to be
 end_comment
 
 begin_comment
-comment|///    in the destination.
+comment|///    in the destination. \n
 end_comment
 
 begin_comment
-comment|///    0: Bits [15:0] are copied to the destination.
+comment|///    0: Bits [15:0] are copied to the destination. \n
 end_comment
 
 begin_comment
-comment|///    1: Bits [31:16] are copied to the destination.
+comment|///    1: Bits [31:16] are copied to the destination. \n
 end_comment
 
 begin_comment
-comment|///    2: Bits [47:32] are copied to the destination.
+comment|///    2: Bits [47:32] are copied to the destination. \n
 end_comment
 
 begin_comment
-comment|///    3: Bits [63:48] are copied to the destination.
+comment|///    3: Bits [63:48] are copied to the destination.  \n
 end_comment
 
 begin_comment
@@ -9277,7 +9412,7 @@ comment|///    The remaining bits in the destination are copied from the corresp
 end_comment
 
 begin_comment
-comment|///    bits in operand __a.
+comment|///    bits in operand \a a.
 end_comment
 
 begin_comment
@@ -9327,7 +9462,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PMAXSW instruction.
+comment|/// This intrinsic corresponds to the<c> PMAXSW</c> instruction.
 end_comment
 
 begin_comment
@@ -9413,7 +9548,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PMAXUB instruction.
+comment|/// This intrinsic corresponds to the<c> PMAXUB</c> instruction.
 end_comment
 
 begin_comment
@@ -9499,7 +9634,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PMINSW instruction.
+comment|/// This intrinsic corresponds to the<c> PMINSW</c> instruction.
 end_comment
 
 begin_comment
@@ -9585,7 +9720,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PMINUB instruction.
+comment|/// This intrinsic corresponds to the<c> PMINUB</c> instruction.
 end_comment
 
 begin_comment
@@ -9671,7 +9806,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PMOVMSKB instruction.
+comment|/// This intrinsic corresponds to the<c> PMOVMSKB</c> instruction.
 end_comment
 
 begin_comment
@@ -9742,7 +9877,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PMULHUW instruction.
+comment|/// This intrinsic corresponds to the<c> PMULHUW</c> instruction.
 end_comment
 
 begin_comment
@@ -9824,14 +9959,6 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSHUFW instruction.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
 comment|/// \code
 end_comment
 
@@ -9841,6 +9968,14 @@ end_comment
 
 begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> PSHUFW</c> instruction.
 end_comment
 
 begin_comment
@@ -9864,47 +9999,63 @@ comment|///    An immediate value containing an 8-bit value specifying which ele
 end_comment
 
 begin_comment
-comment|///    copy from a. The destinations within the 64-bit destination are assigned
+comment|///    copy from \a a. The destinations within the 64-bit destination are
 end_comment
 
 begin_comment
-comment|///    values as follows:
+comment|///    assigned values as follows: \n
 end_comment
 
 begin_comment
-comment|///    Bits [1:0] are used to assign values to bits [15:0] in the destination.
+comment|///    Bits [1:0] are used to assign values to bits [15:0] in the
 end_comment
 
 begin_comment
-comment|///    Bits [3:2] are used to assign values to bits [31:16] in the destination.
+comment|///    destination. \n
 end_comment
 
 begin_comment
-comment|///    Bits [5:4] are used to assign values to bits [47:32] in the destination.
+comment|///    Bits [3:2] are used to assign values to bits [31:16] in the
 end_comment
 
 begin_comment
-comment|///    Bits [7:6] are used to assign values to bits [63:48] in the destination.
+comment|///    destination. \n
 end_comment
 
 begin_comment
-comment|///    Bit value assignments:
+comment|///    Bits [5:4] are used to assign values to bits [47:32] in the
 end_comment
 
 begin_comment
-comment|///    00: assigned from bits [15:0] of a.
+comment|///    destination. \n
 end_comment
 
 begin_comment
-comment|///    01: assigned from bits [31:16] of a.
+comment|///    Bits [7:6] are used to assign values to bits [63:48] in the
 end_comment
 
 begin_comment
-comment|///    10: assigned from bits [47:32] of a.
+comment|///    destination. \n
 end_comment
 
 begin_comment
-comment|///    11: assigned from bits [63:48] of a.
+comment|///    Bit value assignments: \n
+end_comment
+
+begin_comment
+comment|///    00: assigned from bits [15:0] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    01: assigned from bits [31:16] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    10: assigned from bits [47:32] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    11: assigned from bits [63:48] of \a a.
 end_comment
 
 begin_comment
@@ -9956,7 +10107,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c MASKMOVQ instruction.
+comment|/// This intrinsic corresponds to the<c> MASKMOVQ</c> instruction.
 end_comment
 
 begin_comment
@@ -9980,15 +10131,15 @@ comment|///    A 64-bit integer vector operand. The most significant bit from ea
 end_comment
 
 begin_comment
-comment|///    element determines whether the corresponding element in operand __d is
+comment|///    element determines whether the corresponding element in operand \a __d
 end_comment
 
 begin_comment
-comment|///    copied. If the most significant bit of a given element is 1, the
+comment|///    is copied. If the most significant bit of a given element is 1, the
 end_comment
 
 begin_comment
-comment|///    corresponding element in operand __d is copied.
+comment|///    corresponding element in operand \a __d is copied.
 end_comment
 
 begin_comment
@@ -10068,7 +10219,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PAVGB instruction.
+comment|/// This intrinsic corresponds to the<c> PAVGB</c> instruction.
 end_comment
 
 begin_comment
@@ -10154,7 +10305,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PAVGW instruction.
+comment|/// This intrinsic corresponds to the<c> PAVGW</c> instruction.
 end_comment
 
 begin_comment
@@ -10244,7 +10395,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSADBW instruction.
+comment|/// This intrinsic corresponds to the<c> PSADBW</c> instruction.
 end_comment
 
 begin_comment
@@ -10313,315 +10464,148 @@ return|;
 block|}
 end_function
 
-begin_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 comment|/// \brief Returns the contents of the MXCSR register as a 32-bit unsigned
-end_comment
-
-begin_comment
-comment|///    integer value. There are several groups of macros associated with this
-end_comment
-
-begin_comment
+comment|///    integer value.
+comment|///
+comment|///    There are several groups of macros associated with this
 comment|///    intrinsic, including:
-end_comment
-
-begin_comment
-comment|///    * For checking exception states: _MM_EXCEPT_INVALID, _MM_EXCEPT_DIV_ZERO,
-end_comment
-
-begin_comment
+comment|///<ul>
+comment|///<li>
+comment|///      For checking exception states: _MM_EXCEPT_INVALID, _MM_EXCEPT_DIV_ZERO,
 comment|///      _MM_EXCEPT_DENORM, _MM_EXCEPT_OVERFLOW, _MM_EXCEPT_UNDERFLOW,
-end_comment
-
-begin_comment
 comment|///      _MM_EXCEPT_INEXACT. There is a convenience wrapper
-end_comment
-
-begin_comment
 comment|///      _MM_GET_EXCEPTION_STATE().
-end_comment
-
-begin_comment
-comment|///    * For checking exception masks: _MM_MASK_UNDERFLOW, _MM_MASK_OVERFLOW,
-end_comment
-
-begin_comment
+comment|///</li>
+comment|///<li>
+comment|///      For checking exception masks: _MM_MASK_UNDERFLOW, _MM_MASK_OVERFLOW,
 comment|///      _MM_MASK_INVALID, _MM_MASK_DENORM, _MM_MASK_DIV_ZERO, _MM_MASK_INEXACT.
-end_comment
-
-begin_comment
 comment|///      There is a convenience wrapper _MM_GET_EXCEPTION_MASK().
-end_comment
-
-begin_comment
-comment|///    * For checking rounding modes: _MM_ROUND_NEAREST, _MM_ROUND_DOWN,
-end_comment
-
-begin_comment
+comment|///</li>
+comment|///<li>
+comment|///      For checking rounding modes: _MM_ROUND_NEAREST, _MM_ROUND_DOWN,
 comment|///      _MM_ROUND_UP, _MM_ROUND_TOWARD_ZERO. There is a convenience wrapper
-end_comment
-
-begin_comment
 comment|///      _MM_GET_ROUNDING_MODE(x) where x is one of these macros.
-end_comment
-
-begin_comment
-comment|///    * For checking flush-to-zero mode: _MM_FLUSH_ZERO_ON, _MM_FLUSH_ZERO_OFF.
-end_comment
-
-begin_comment
+comment|///</li>
+comment|///<li>
+comment|///      For checking flush-to-zero mode: _MM_FLUSH_ZERO_ON, _MM_FLUSH_ZERO_OFF.
 comment|///      There is a convenience wrapper _MM_GET_FLUSH_ZERO_MODE().
-end_comment
-
-begin_comment
-comment|///    * For checking denormals-are-zero mode: _MM_DENORMALS_ZERO_ON,
-end_comment
-
-begin_comment
+comment|///</li>
+comment|///<li>
+comment|///      For checking denormals-are-zero mode: _MM_DENORMALS_ZERO_ON,
 comment|///      _MM_DENORMALS_ZERO_OFF. There is a convenience wrapper
-end_comment
-
-begin_comment
 comment|///      _MM_GET_DENORMALS_ZERO_MODE().
-end_comment
-
-begin_comment
+comment|///</li>
+comment|///</ul>
 comment|///
-end_comment
-
-begin_comment
 comment|///    For example, the expression below checks if an overflow exception has
-end_comment
-
-begin_comment
 comment|///    occurred:
-end_comment
-
-begin_comment
 comment|///      ( _mm_getcsr()& _MM_EXCEPT_OVERFLOW )
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///    The following example gets the current rounding mode:
-end_comment
-
-begin_comment
 comment|///      _MM_GET_ROUNDING_MODE()
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \headerfile<x86intrin.h>
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
-comment|/// This intrinsic corresponds to the \c VSTMXCSR / STMXCSR instruction.
-end_comment
-
-begin_comment
+comment|/// This intrinsic corresponds to the<c> VSTMXCSR / STMXCSR</c> instruction.
 comment|///
-end_comment
-
-begin_comment
 comment|/// \returns A 32-bit unsigned integer containing the contents of the MXCSR
-end_comment
-
-begin_comment
 comment|///    register.
-end_comment
-
-begin_function
-specifier|static
-name|__inline__
 name|unsigned
 name|int
-name|__DEFAULT_FN_ATTRS
 name|_mm_getcsr
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-return|return
-name|__builtin_ia32_stmxcsr
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// \brief Sets the MXCSR register with the 32-bit unsigned integer value. There
-end_comment
-
-begin_comment
-comment|///    are several groups of macros associated with this intrinsic, including:
-end_comment
-
-begin_comment
-comment|///    * For setting exception states: _MM_EXCEPT_INVALID, _MM_EXCEPT_DIV_ZERO,
-end_comment
-
-begin_comment
+function_decl|;
+comment|/// \brief Sets the MXCSR register with the 32-bit unsigned integer value.
+comment|///
+comment|///    There are several groups of macros associated with this intrinsic,
+comment|///    including:
+comment|///<ul>
+comment|///<li>
+comment|///      For setting exception states: _MM_EXCEPT_INVALID, _MM_EXCEPT_DIV_ZERO,
 comment|///      _MM_EXCEPT_DENORM, _MM_EXCEPT_OVERFLOW, _MM_EXCEPT_UNDERFLOW,
-end_comment
-
-begin_comment
 comment|///      _MM_EXCEPT_INEXACT. There is a convenience wrapper
-end_comment
-
-begin_comment
 comment|///      _MM_SET_EXCEPTION_STATE(x) where x is one of these macros.
-end_comment
-
-begin_comment
-comment|///    * For setting exception masks: _MM_MASK_UNDERFLOW, _MM_MASK_OVERFLOW,
-end_comment
-
-begin_comment
+comment|///</li>
+comment|///<li>
+comment|///      For setting exception masks: _MM_MASK_UNDERFLOW, _MM_MASK_OVERFLOW,
 comment|///      _MM_MASK_INVALID, _MM_MASK_DENORM, _MM_MASK_DIV_ZERO, _MM_MASK_INEXACT.
-end_comment
-
-begin_comment
 comment|///      There is a convenience wrapper _MM_SET_EXCEPTION_MASK(x) where x is one
-end_comment
-
-begin_comment
 comment|///      of these macros.
-end_comment
-
-begin_comment
-comment|///    * For setting rounding modes: _MM_ROUND_NEAREST, _MM_ROUND_DOWN,
-end_comment
-
-begin_comment
+comment|///</li>
+comment|///<li>
+comment|///      For setting rounding modes: _MM_ROUND_NEAREST, _MM_ROUND_DOWN,
 comment|///      _MM_ROUND_UP, _MM_ROUND_TOWARD_ZERO. There is a convenience wrapper
-end_comment
-
-begin_comment
 comment|///      _MM_SET_ROUNDING_MODE(x) where x is one of these macros.
-end_comment
-
-begin_comment
-comment|///    * For setting flush-to-zero mode: _MM_FLUSH_ZERO_ON, _MM_FLUSH_ZERO_OFF.
-end_comment
-
-begin_comment
+comment|///</li>
+comment|///<li>
+comment|///      For setting flush-to-zero mode: _MM_FLUSH_ZERO_ON, _MM_FLUSH_ZERO_OFF.
 comment|///      There is a convenience wrapper _MM_SET_FLUSH_ZERO_MODE(x) where x is
-end_comment
-
-begin_comment
 comment|///      one of these macros.
-end_comment
-
-begin_comment
-comment|///    * For setting denormals-are-zero mode: _MM_DENORMALS_ZERO_ON,
-end_comment
-
-begin_comment
+comment|///</li>
+comment|///<li>
+comment|///      For setting denormals-are-zero mode: _MM_DENORMALS_ZERO_ON,
 comment|///      _MM_DENORMALS_ZERO_OFF. There is a convenience wrapper
-end_comment
-
-begin_comment
 comment|///      _MM_SET_DENORMALS_ZERO_MODE(x) where x is one of these macros.
-end_comment
-
-begin_comment
+comment|///</li>
+comment|///</ul>
 comment|///
-end_comment
-
-begin_comment
 comment|///    For example, the following expression causes subsequent floating-point
-end_comment
-
-begin_comment
 comment|///    operations to round up:
-end_comment
-
-begin_comment
 comment|///      _mm_setcsr(_mm_getcsr() | _MM_ROUND_UP)
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///    The following example sets the DAZ and FTZ flags:
-end_comment
-
-begin_comment
 comment|///      void setFlags() {
-end_comment
-
-begin_comment
 comment|///        _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON)
-end_comment
-
-begin_comment
 comment|///        _MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON)
-end_comment
-
-begin_comment
 comment|///      }
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \headerfile<x86intrin.h>
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
-comment|/// This intrinsic corresponds to the \c VLDMXCSR / LDMXCSR instruction.
-end_comment
-
-begin_comment
+comment|/// This intrinsic corresponds to the<c> VLDMXCSR / LDMXCSR</c> instruction.
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param __i
-end_comment
-
-begin_comment
 comment|///    A 32-bit unsigned integer value to be written to the MXCSR register.
-end_comment
-
-begin_function
-specifier|static
-name|__inline__
 name|void
-name|__DEFAULT_FN_ATTRS
 name|_mm_setcsr
 parameter_list|(
 name|unsigned
 name|int
-name|__i
 parameter_list|)
-block|{
-name|__builtin_ia32_ldmxcsr
+function_decl|;
+if|#
+directive|if
+name|defined
 argument_list|(
-name|__i
+name|__cplusplus
 argument_list|)
-expr_stmt|;
 block|}
-end_function
+end_extern
+
+begin_comment
+comment|// extern "C"
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/// \brief Selects 4 float values from the 128-bit operands of [4 x float], as
@@ -10660,7 +10644,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VSHUFPS / SHUFPS instruction.
+comment|/// This intrinsic corresponds to the<c> VSHUFPS / SHUFPS</c> instruction.
 end_comment
 
 begin_comment
@@ -10692,51 +10676,71 @@ comment|///    An immediate value containing an 8-bit value specifying which ele
 end_comment
 
 begin_comment
-comment|///    copy from a and b.
+comment|///    copy from \ a and \a b. \n
 end_comment
 
 begin_comment
-comment|///    Bits [3:0] specify the values copied from operand a.
+comment|///    Bits [3:0] specify the values copied from operand \a a. \n
 end_comment
 
 begin_comment
-comment|///    Bits [7:4] specify the values copied from operand b. The destinations
+comment|///    Bits [7:4] specify the values copied from operand \a b. \n
 end_comment
 
 begin_comment
-comment|///    within the 128-bit destination are assigned values as follows:
+comment|///    The destinations within the 128-bit destination are assigned values as
 end_comment
 
 begin_comment
-comment|///    Bits [1:0] are used to assign values to bits [31:0] in the destination.
+comment|///    follows: \n
 end_comment
 
 begin_comment
-comment|///    Bits [3:2] are used to assign values to bits [63:32] in the destination.
+comment|///    Bits [1:0] are used to assign values to bits [31:0] in the
 end_comment
 
 begin_comment
-comment|///    Bits [5:4] are used to assign values to bits [95:64] in the destination.
+comment|///    destination. \n
 end_comment
 
 begin_comment
-comment|///    Bits [7:6] are used to assign values to bits [127:96] in the destination.
+comment|///    Bits [3:2] are used to assign values to bits [63:32] in the
 end_comment
 
 begin_comment
-comment|///    Bit value assignments:
+comment|///    destination. \n
 end_comment
 
 begin_comment
-comment|///    00: Bits [31:0] copied from the specified operand.
+comment|///    Bits [5:4] are used to assign values to bits [95:64] in the
 end_comment
 
 begin_comment
-comment|///    01: Bits [63:32] copied from the specified operand.
+comment|///    destination. \n
 end_comment
 
 begin_comment
-comment|///    10: Bits [95:64] copied from the specified operand.
+comment|///    Bits [7:6] are used to assign values to bits [127:96] in the
+end_comment
+
+begin_comment
+comment|///    destination. \n
+end_comment
+
+begin_comment
+comment|///    Bit value assignments: \n
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] copied from the specified operand. \n
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] copied from the specified operand. \n
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] copied from the specified operand. \n
 end_comment
 
 begin_comment
@@ -10766,11 +10770,7 @@ comment|/// \brief Unpacks the high-order (index 2,3) values from two 128-bit ve
 end_comment
 
 begin_comment
-comment|///    [4 x float] and interleaves them into a 128-bit vector of [4 x
-end_comment
-
-begin_comment
-comment|///    float].
+comment|///    [4 x float] and interleaves them into a 128-bit vector of [4 x float].
 end_comment
 
 begin_comment
@@ -10786,7 +10786,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VUNPCKHPS / UNPCKHPS instruction.
+comment|/// This intrinsic corresponds to the<c> VUNPCKHPS / UNPCKHPS</c> instruction.
 end_comment
 
 begin_comment
@@ -10798,11 +10798,11 @@ comment|/// \param __a
 end_comment
 
 begin_comment
-comment|///    A 128-bit vector of [4 x float].
+comment|///    A 128-bit vector of [4 x float]. \n
 end_comment
 
 begin_comment
-comment|///    Bits [95:64] are written to bits [31:0] of the destination.
+comment|///    Bits [95:64] are written to bits [31:0] of the destination. \n
 end_comment
 
 begin_comment
@@ -10818,7 +10818,7 @@ comment|///    A 128-bit vector of [4 x float].
 end_comment
 
 begin_comment
-comment|///    Bits [95:64] are written to bits [63:32] of the destination.
+comment|///    Bits [95:64] are written to bits [63:32] of the destination. \n
 end_comment
 
 begin_comment
@@ -10873,11 +10873,7 @@ comment|/// \brief Unpacks the low-order (index 0,1) values from two 128-bit vec
 end_comment
 
 begin_comment
-comment|///    [4 x float] and interleaves them into a 128-bit vector of [4 x
-end_comment
-
-begin_comment
-comment|///    float].
+comment|///    [4 x float] and interleaves them into a 128-bit vector of [4 x float].
 end_comment
 
 begin_comment
@@ -10893,7 +10889,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VUNPCKLPS / UNPCKLPS instruction.
+comment|/// This intrinsic corresponds to the<c> VUNPCKLPS / UNPCKLPS</c> instruction.
 end_comment
 
 begin_comment
@@ -10905,11 +10901,11 @@ comment|/// \param __a
 end_comment
 
 begin_comment
-comment|///    A 128-bit vector of [4 x float].
+comment|///    A 128-bit vector of [4 x float]. \n
 end_comment
 
 begin_comment
-comment|///    Bits [31:0] are written to bits [31:0] of the destination.
+comment|///    Bits [31:0] are written to bits [31:0] of the destination.  \n
 end_comment
 
 begin_comment
@@ -10921,11 +10917,11 @@ comment|/// \param __b
 end_comment
 
 begin_comment
-comment|///    A 128-bit vector of [4 x float].
+comment|///    A 128-bit vector of [4 x float]. \n
 end_comment
 
 begin_comment
-comment|///    Bits [31:0] are written to bits [63:32] of the destination.
+comment|///    Bits [31:0] are written to bits [63:32] of the destination. \n
 end_comment
 
 begin_comment
@@ -11000,7 +10996,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVSS / MOVSS instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVSS / MOVSS</c> instruction.
 end_comment
 
 begin_comment
@@ -11099,7 +11095,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VUNPCKHPD / UNPCKHPD instruction.
+comment|/// This intrinsic corresponds to the<c> VUNPCKHPD / UNPCKHPD</c> instruction.
 end_comment
 
 begin_comment
@@ -11198,7 +11194,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VUNPCKLPD / UNPCKLPD instruction.
+comment|/// This intrinsic corresponds to the<c> VUNPCKLPD / UNPCKLPD</c> instruction.
 end_comment
 
 begin_comment
@@ -11293,7 +11289,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTPI2PS + \c COMPOSITE instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS + \c COMPOSITE</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
 end_comment
 
 begin_comment
@@ -11430,7 +11430,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTPI2PS + \c COMPOSITE instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS + \c COMPOSITE</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
 end_comment
 
 begin_comment
@@ -11558,7 +11562,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTPI2PS + \c COMPOSITE instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS + \c COMPOSITE</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
 end_comment
 
 begin_comment
@@ -11652,7 +11660,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTPI2PS + \c COMPOSITE instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS + \c COMPOSITE</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
 end_comment
 
 begin_comment
@@ -11741,7 +11753,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTPI2PS + \c COMPOSITE instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS + \c COMPOSITE</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
 end_comment
 
 begin_comment
@@ -11856,11 +11872,11 @@ comment|///    element is greater than 0x7FFFFFFF or less than -0x8000, it is co
 end_comment
 
 begin_comment
-comment|///    to 0x8000. Otherwise if the floating-point element is greater
+comment|///    to 0x8000. Otherwise if the floating-point element is greater than
 end_comment
 
 begin_comment
-comment|///    than 0x7FFF, it is converted to 0x7FFF.
+comment|///    0x7FFF, it is converted to 0x7FFF.
 end_comment
 
 begin_comment
@@ -11876,7 +11892,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTPS2PI + \c COMPOSITE instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPS2PI + \c COMPOSITE</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
 end_comment
 
 begin_comment
@@ -11974,11 +11994,11 @@ comment|///    element is greater than 0x7FFFFFFF or less than -0x80, it is conv
 end_comment
 
 begin_comment
-comment|///    to 0x80. Otherwise if the floating-point element is greater
+comment|///    to 0x80. Otherwise if the floating-point element is greater than 0x7F,
 end_comment
 
 begin_comment
-comment|///    than 0x7F, it is converted to 0x7F.
+comment|///    it is converted to 0x7F.
 end_comment
 
 begin_comment
@@ -11994,7 +12014,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c CVTPS2PI + \c COMPOSITE instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPS2PI + \c COMPOSITE</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
 end_comment
 
 begin_comment
@@ -12085,7 +12109,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVMSKPS / MOVMSKPS instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVMSKPS / MOVMSKPS</c> instruction.
 end_comment
 
 begin_comment

@@ -194,14 +194,10 @@ name|Allocate
 argument_list|(
 name|Sz
 argument_list|,
-name|llvm
-operator|::
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|AlignmentType
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 argument_list|)
 return|;
 block|}

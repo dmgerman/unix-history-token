@@ -149,13 +149,6 @@ directive|include
 file|"llvm/Support/Debug.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEBUG_TYPE
-value|"format-formatter"
-end_define
-
 begin_decl_stmt
 name|namespace
 name|clang
@@ -289,15 +282,6 @@ return|return
 name|ID
 return|;
 block|}
-name|StringRef
-name|getFileName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FileName
-return|;
-block|}
 name|ArrayRef
 operator|<
 name|CharSourceRange
@@ -325,9 +309,6 @@ name|private
 label|:
 name|FileID
 name|ID
-decl_stmt|;
-name|StringRef
-name|FileName
 decl_stmt|;
 name|SmallVector
 operator|<
@@ -420,12 +401,6 @@ argument_list|,
 name|FormatTokenLexer
 operator|&
 name|Tokens
-argument_list|,
-name|tooling
-operator|::
-name|Replacements
-operator|&
-name|Result
 argument_list|)
 operator|=
 literal|0

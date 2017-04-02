@@ -31,22 +31,84 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// In LLD, we have three levels of errors: fatal, error or warn.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Fatal makes the program exit immediately with an error message.
+end_comment
+
+begin_comment
+comment|// You shouldn't use it except for reporting a corrupted input file.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Error prints out an error message and increment a global variable
+end_comment
+
+begin_comment
+comment|// ErrorCount to record the fact that we met an error condition. It does
+end_comment
+
+begin_comment
+comment|// not exit, so it is safe for a lld-as-a-library use case. It is generally
+end_comment
+
+begin_comment
+comment|// useful because it can report more than one errors in a single run.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Warn doesn't do anything but printing out a given message.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLD_COFF_ERROR_H
+name|LLD_ELF_ERROR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLD_COFF_ERROR_H
+name|LLD_ELF_ERROR_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"lld/Core/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
 end_include
 
 begin_decl_stmt
@@ -57,10 +119,11 @@ name|namespace
 name|elf
 block|{
 specifier|extern
-name|bool
-name|HasError
+name|uint64_t
+name|ErrorCount
 decl_stmt|;
 extern|extern llvm::raw_ostream *ErrorOS;
+extern|extern llvm::StringRef Argv0;
 name|void
 name|log
 parameter_list|(
@@ -71,7 +134,7 @@ name|Msg
 parameter_list|)
 function_decl|;
 name|void
-name|warning
+name|warn
 parameter_list|(
 specifier|const
 name|Twine
@@ -102,39 +165,14 @@ operator|&
 name|Prefix
 argument_list|)
 decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|void
-name|error
-argument_list|(
-argument|const ErrorOr<T>&V
-argument_list|,
-argument|const Twine&Prefix
-argument_list|)
-block|{
-name|error
-argument_list|(
-name|V
-operator|.
-name|getError
-argument_list|()
-argument_list|,
-name|Prefix
-argument_list|)
-block|; }
 name|LLVM_ATTRIBUTE_NORETURN
 name|void
-name|fatal
-argument_list|(
-specifier|const
-name|Twine
-operator|&
-name|Msg
-argument_list|)
-expr_stmt|;
+name|exitLld
+parameter_list|(
+name|int
+name|Val
+parameter_list|)
+function_decl|;
 name|LLVM_ATTRIBUTE_NORETURN
 name|void
 name|fatal
@@ -143,6 +181,30 @@ specifier|const
 name|Twine
 modifier|&
 name|Msg
+parameter_list|)
+function_decl|;
+name|LLVM_ATTRIBUTE_NORETURN
+name|void
+name|fatal
+argument_list|(
+name|std
+operator|::
+name|error_code
+name|EC
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Prefix
+argument_list|)
+decl_stmt|;
+name|LLVM_ATTRIBUTE_NORETURN
+name|void
+name|fatal
+parameter_list|(
+name|Error
+modifier|&
+name|E
 parameter_list|,
 specifier|const
 name|Twine
@@ -150,6 +212,8 @@ modifier|&
 name|Prefix
 parameter_list|)
 function_decl|;
+comment|// check() functions are convenient functions to strip errors
+comment|// from error-or-value objects.
 name|template
 operator|<
 name|class
@@ -207,16 +271,15 @@ name|E
 condition|)
 name|fatal
 argument_list|(
-name|errorToErrorCode
+name|llvm
+operator|::
+name|toString
 argument_list|(
 name|E
 operator|.
 name|takeError
 argument_list|()
 argument_list|)
-operator|.
-name|message
-argument_list|()
 argument_list|)
 expr_stmt|;
 return|return
@@ -257,12 +320,14 @@ argument_list|()
 condition|)
 name|fatal
 argument_list|(
+name|Prefix
+operator|+
+literal|": "
+operator|+
 name|EC
 operator|.
 name|message
 argument_list|()
-argument_list|,
-name|Prefix
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -300,6 +365,10 @@ name|E
 condition|)
 name|fatal
 argument_list|(
+name|Prefix
+operator|+
+literal|": "
+operator|+
 name|errorToErrorCode
 argument_list|(
 name|E
@@ -310,8 +379,6 @@ argument_list|)
 operator|.
 name|message
 argument_list|()
-argument_list|,
-name|Prefix
 argument_list|)
 expr_stmt|;
 end_expr_stmt

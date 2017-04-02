@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/Options.h"
+file|"lldb/Interpreter/OptionValueUInt64.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/OptionValueUInt64.h"
+file|"lldb/Interpreter/Options.h"
 end_include
 
 begin_decl_stmt
@@ -110,42 +110,61 @@ name|OptionGroupUInt64
 argument_list|()
 name|override
 block|;
-name|uint32_t
-name|GetNumDefinitions
-argument_list|()
-name|override
-block|{
-return|return
-literal|1
-return|;
-block|}
-specifier|const
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
 block|{
 return|return
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|OptionDefinition
+operator|>
+operator|(
 operator|&
 name|m_option_definition
+expr|,
+literal|1
+operator|)
 return|;
 block|}
 name|Error
 name|SetOptionValue
 argument_list|(
-argument|CommandInterpreter&interpreter
-argument_list|,
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_value
+argument|llvm::StringRef option_value
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
+block|;
+name|Error
+name|SetOptionValue
+argument_list|(
+name|uint32_t
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|ExecutionContext
+operator|*
+argument_list|)
+operator|=
+name|delete
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|(
-argument|CommandInterpreter&interpreter
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
@@ -176,7 +195,7 @@ name|m_value
 block|;
 name|OptionDefinition
 name|m_option_definition
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

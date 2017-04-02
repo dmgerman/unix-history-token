@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCInstPrinter.h"
 end_include
 
@@ -69,9 +75,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MCOperand
-decl_stmt|;
 name|class
 name|LanaiInstPrinter
 range|:
@@ -129,8 +132,7 @@ argument|unsigned OpNo
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier =
-literal|0
+argument|const char *Modifier = nullptr
 argument_list|)
 block|;
 name|void
@@ -152,8 +154,7 @@ argument|int OpNo
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier =
-literal|0
+argument|const char *Modifier = nullptr
 argument_list|)
 block|;
 name|void
@@ -165,8 +166,7 @@ argument|int OpNo
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier =
-literal|0
+argument|const char *Modifier = nullptr
 argument_list|)
 block|;
 name|void
@@ -178,8 +178,7 @@ argument|int OpNo
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier =
-literal|0
+argument|const char *Modifier = nullptr
 argument_list|)
 block|;
 name|void
@@ -358,7 +357,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

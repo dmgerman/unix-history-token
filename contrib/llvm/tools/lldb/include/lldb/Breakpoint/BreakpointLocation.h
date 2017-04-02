@@ -74,12 +74,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Breakpoint/StoppointLocation.h"
 end_include
 
@@ -95,13 +89,21 @@ directive|include
 file|"lldb/Core/UserID.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class BreakpointLocation BreakpointLocation.h "lldb/Breakpoint/BreakpointLocation.h"
-comment|/// @brief Class that manages one unique (by address) instance of a logical breakpoint.
+comment|/// @class BreakpointLocation BreakpointLocation.h
+comment|/// "lldb/Breakpoint/BreakpointLocation.h"
+comment|/// @brief Class that manages one unique (by address) instance of a logical
+comment|/// breakpoint.
 comment|//----------------------------------------------------------------------
 comment|//----------------------------------------------------------------------
 comment|/// General Outline:
@@ -554,7 +556,8 @@ name|context
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Returns whether we should resolve Indirect functions in setting the breakpoint site
+comment|/// Returns whether we should resolve Indirect functions in setting the
+comment|/// breakpoint site
 comment|/// for this location.
 comment|///
 comment|/// @return
@@ -570,7 +573,8 @@ name|m_should_resolve_indirect_functions
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Returns whether the address set in the breakpoint site for this location was found by resolving
+comment|/// Returns whether the address set in the breakpoint site for this location
+comment|/// was found by resolving
 comment|/// an indirect symbol.
 comment|///
 comment|/// @return
@@ -597,7 +601,8 @@ name|is_indirect
 expr_stmt|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Returns whether the address set in the breakpoint location was re-routed to the target of a
+comment|/// Returns whether the address set in the breakpoint location was re-routed
+comment|/// to the target of a
 comment|/// re-exported symbol.
 comment|///
 comment|/// @return
@@ -624,8 +629,10 @@ name|is_reexported
 expr_stmt|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Returns whether the two breakpoint locations might represent "equivalent locations".
-comment|/// This is used when modules changed to determine if a Location in the old module might
+comment|/// Returns whether the two breakpoint locations might represent "equivalent
+comment|/// locations".
+comment|/// This is used when modules changed to determine if a Location in the old
+comment|/// module might
 comment|/// be the "same as" the input location.
 comment|///
 comment|/// @param[in] location
@@ -776,30 +783,37 @@ name|BreakpointOptions
 operator|>
 name|m_options_ap
 expr_stmt|;
-comment|///< Breakpoint options pointer, nullptr if we're using our breakpoint's options.
+comment|///< Breakpoint options
+comment|///pointer, nullptr if we're
+comment|///using our breakpoint's
+comment|///options.
 name|lldb
 operator|::
 name|BreakpointSiteSP
 name|m_bp_site_sp
 expr_stmt|;
-comment|///< Our breakpoint site (it may be shared by more than one location.)
+comment|///< Our breakpoint site (it may be
+comment|///shared by more than one location.)
 name|lldb
 operator|::
 name|UserExpressionSP
 name|m_user_expression_sp
 expr_stmt|;
-comment|///< The compiled expression to use in testing our condition.
+comment|///< The compiled expression to
+comment|///use in testing our condition.
 name|std
 operator|::
 name|mutex
 name|m_condition_mutex
 expr_stmt|;
-comment|///< Guards parsing and evaluation of the condition, which could be evaluated by
+comment|///< Guards parsing and evaluation of the
+comment|///condition, which could be evaluated by
 comment|/// multiple processes.
 name|size_t
 name|m_condition_hash
 decl_stmt|;
-comment|///< For testing whether the condition source code changed.
+comment|///< For testing whether the condition source code
+comment|///changed.
 name|void
 name|SetShouldResolveIndirectFunctions
 parameter_list|(

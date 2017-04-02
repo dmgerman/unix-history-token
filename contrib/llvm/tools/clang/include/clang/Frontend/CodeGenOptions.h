@@ -187,9 +187,6 @@ operator|:
 expr|enum
 name|InliningMethod
 block|{
-name|NoInlining
-block|,
-comment|// Perform no inlining whatsoever.
 name|NormalInlining
 block|,
 comment|// Use the standard function inlining pass.
@@ -206,9 +203,12 @@ name|NoLibrary
 block|,
 comment|// Don't use any vector library.
 name|Accelerate
+block|,
 comment|// Use the Accelerate framework.
+name|SVML
+comment|// Intel short vector math library.
 block|}
-block|;    enum
+block|;     enum
 name|ObjCDispatchMethodKind
 block|{
 name|Legacy
@@ -294,12 +294,19 @@ operator|::
 name|string
 name|CodeModel
 block|;
-comment|/// The filename with path we use for coverage files. The extension will be
-comment|/// replaced.
+comment|/// The filename with path we use for coverage data files. The runtime
+comment|/// allows further manipulation with the GCOV_PREFIX and GCOV_PREFIX_STRIP
+comment|/// environment variables.
 name|std
 operator|::
 name|string
-name|CoverageFile
+name|CoverageDataFile
+block|;
+comment|/// The filename with path we use for coverage notes files.
+name|std
+operator|::
+name|string
+name|CoverageNotesFile
 block|;
 comment|/// The version string to put into coverage files.
 name|char
@@ -346,6 +353,12 @@ name|std
 operator|::
 name|string
 name|FloatABI
+block|;
+comment|/// The floating-point denormal mode to use.
+name|std
+operator|::
+name|string
+name|FPDenormalMode
 block|;
 comment|/// The float precision limit to use, if non-empty.
 name|std
@@ -475,6 +488,13 @@ operator|::
 name|string
 operator|>
 name|CudaGpuBinaryFileNames
+block|;
+comment|/// The name of the file to which the backend should save YAML optimization
+comment|/// records.
+name|std
+operator|::
+name|string
+name|OptRecordFile
 block|;
 comment|/// Regular expression to select optimizations for which we should enable
 comment|/// optimization remarks. Transformation passes whose name matches this

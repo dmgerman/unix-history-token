@@ -132,12 +132,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringSwitch.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -192,7 +186,13 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
+name|CodeGenOptions
+decl_stmt|;
+name|class
 name|MacroBuilder
+decl_stmt|;
+name|class
+name|QualType
 decl_stmt|;
 name|class
 name|SourceLocation
@@ -340,6 +340,10 @@ name|unsigned
 name|short
 name|SimdDefaultAlign
 block|;
+name|unsigned
+name|short
+name|NewAlign
+block|;
 name|std
 operator|::
 name|unique_ptr
@@ -415,6 +419,11 @@ literal|1
 block|;
 name|unsigned
 name|HasBuiltinMSVaList
+operator|:
+literal|1
+block|;
+name|unsigned
+name|IsRenderScriptTarget
 operator|:
 literal|1
 block|;
@@ -953,6 +962,31 @@ name|AddrSpace
 argument_list|)
 return|;
 block|}
+comment|/// \brief Return the maximum width of pointers on this target.
+name|virtual
+name|uint64_t
+name|getMaxPointerWidth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PointerWidth
+return|;
+block|}
+comment|/// \brief Get integer value for null pointer.
+comment|/// \param AddrSpace address space of pointee in source language.
+name|virtual
+name|uint64_t
+name|getNullPointerValue
+argument_list|(
+argument|unsigned AddrSpace
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// \brief Return the size of '_Bool' and C++ 'bool' for this target, in bits.
 name|unsigned
 name|getBoolWidth
@@ -1136,6 +1170,29 @@ specifier|const
 block|{
 return|return
 name|MinGlobalAlign
+return|;
+block|}
+comment|/// Return the largest alignment for which a suitably-sized allocation with
+comment|/// '::operator new(size_t)' is guaranteed to produce a correctly-aligned
+comment|/// pointer.
+name|unsigned
+name|getNewAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NewAlign
+condition|?
+name|NewAlign
+else|:
+name|std
+operator|::
+name|max
+argument_list|(
+name|LongDoubleAlign
+argument_list|,
+name|LongLongAlign
+argument_list|)
 return|;
 block|}
 comment|/// getWCharWidth/Align - Return the size of 'wchar_t' for this target, in
@@ -1806,6 +1863,16 @@ return|return
 name|HasBuiltinMSVaList
 return|;
 block|}
+comment|/// Returns true for RenderScript.
+name|bool
+name|isRenderScriptTarget
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsRenderScriptTarget
+return|;
+block|}
 comment|/// \brief Returns whether the passed in string is a valid clobber in an
 comment|/// inline asm statement.
 comment|///
@@ -1830,14 +1897,33 @@ specifier|const
 block|;
 comment|/// \brief Returns the "normalized" GCC register name.
 comment|///
-comment|/// For example, on x86 it will return "ax" when "eax" is passed in.
+comment|/// ReturnCannonical true will return the register name without any additions
+comment|/// such as "{}" or "%" in it's canonical form, for example:
+comment|/// ReturnCanonical = true and Name = "rax", will return "ax".
 name|StringRef
 name|getNormalizedGCCRegisterName
 argument_list|(
 argument|StringRef Name
+argument_list|,
+argument|bool ReturnCanonical = false
 argument_list|)
 specifier|const
-block|;    struct
+block|;
+name|virtual
+name|StringRef
+name|getConstraintRegister
+argument_list|(
+argument|const StringRef&Constraint
+argument_list|,
+argument|const StringRef&Expression
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|""
+return|;
+block|}
+expr|struct
 name|ConstraintInfo
 block|{     enum
 block|{
@@ -2622,6 +2708,17 @@ operator|&
 name|Opts
 argument_list|)
 block|;
+comment|/// \brief Adjust target options based on codegen options.
+name|virtual
+name|void
+name|adjustTargetOptions
+argument_list|(
+argument|const CodeGenOptions&CGOpts
+argument_list|,
+argument|TargetOptions&TargetOpts
+argument_list|)
+specifier|const
+block|{}
 comment|/// \brief Initialize the map with the default set of target features for the
 comment|/// CPU this should include all legal feature strings on the target.
 comment|///
@@ -2949,6 +3046,16 @@ return|return
 name|BigEndian
 return|;
 block|}
+name|bool
+name|isLittleEndian
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|BigEndian
+return|;
+block|}
 expr|enum
 name|CallingConvMethodType
 block|{
@@ -3027,7 +3134,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// \brief Whether target allows to overalign ABI-specified prefered alignment
+comment|/// \brief Whether target allows to overalign ABI-specified preferred alignment
 name|virtual
 name|bool
 name|allowsLargerPreferedTypeAlignment
@@ -3044,6 +3151,37 @@ name|void
 name|setSupportedOpenCLOpts
 argument_list|()
 block|{}
+comment|/// \brief Set supported OpenCL extensions as written on command line
+name|virtual
+name|void
+name|setOpenCLExtensionOpts
+argument_list|()
+block|{
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|Ext
+range|:
+name|getTargetOpts
+argument_list|()
+operator|.
+name|OpenCLExtensionsAsWritten
+control|)
+block|{
+name|getTargetOpts
+argument_list|()
+operator|.
+name|SupportedOpenCLOptions
+operator|.
+name|support
+argument_list|(
+name|Ext
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/// \brief Get supported OpenCL extensions and optional core features.
 name|OpenCLOptions
 operator|&
@@ -3070,6 +3208,21 @@ name|getTargetOpts
 argument_list|()
 operator|.
 name|SupportedOpenCLOptions
+return|;
+block|}
+comment|/// \brief Get OpenCL image type address space.
+name|virtual
+name|LangAS
+operator|::
+name|ID
+name|getOpenCLImageAddrSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LangAS
+operator|::
+name|opencl_global
 return|;
 block|}
 comment|/// \brief Check the target is valid after it is fully initialized.

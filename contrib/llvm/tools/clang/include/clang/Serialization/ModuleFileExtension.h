@@ -146,22 +146,14 @@ comment|/// custom writer that can then be accessed via a custom reader when
 comment|/// the module file or precompiled header is loaded.
 name|class
 name|ModuleFileExtension
-range|:
-name|public
-name|llvm
-operator|::
-name|RefCountedBase
-operator|<
-name|ModuleFileExtension
-operator|>
 block|{
 name|public
-operator|:
+label|:
 name|virtual
 operator|~
 name|ModuleFileExtension
 argument_list|()
-block|;
+expr_stmt|;
 comment|/// Retrieves the metadata for this module file extension.
 name|virtual
 name|ModuleFileExtensionMetadata
@@ -170,7 +162,7 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-block|;
+expr_stmt|;
 comment|/// Hash information about the presence of this extension into the
 comment|/// module hash code.
 comment|///
@@ -193,7 +185,7 @@ argument_list|(
 argument|llvm::hash_code c
 argument_list|)
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Create a new module file extension writer, which will be
 comment|/// responsible for writing the extension contents into a particular
 comment|/// module file.
@@ -212,7 +204,7 @@ name|Writer
 argument_list|)
 operator|=
 literal|0
-block|;
+expr_stmt|;
 comment|/// Create a new module file extension reader, given the
 comment|/// metadata read from the block and the cursor into the extension
 comment|/// block.
@@ -252,8 +244,9 @@ name|Stream
 argument_list|)
 operator|=
 literal|0
-block|; }
-decl_stmt|;
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/// Abstract base class that writes a module file extension block into
 comment|/// a module file.
 name|class

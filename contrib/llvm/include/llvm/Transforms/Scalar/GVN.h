@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/LoopInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/MemoryDependenceAnalysis.h"
 end_include
 
@@ -131,6 +137,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|OptimizationRemarkEmitter
+decl_stmt|;
 comment|/// A private "module" namespace for types and utilities used by GVN. These
 comment|/// are implementation details and should not be used by clients.
 name|namespace
@@ -170,10 +179,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)
@@ -485,6 +491,10 @@ operator|*
 operator|>
 name|DeadBlocks
 block|;
+name|OptimizationRemarkEmitter
+operator|*
+name|ORE
+block|;
 name|ValueTable
 name|VN
 block|;
@@ -603,6 +613,14 @@ parameter_list|,
 name|MemoryDependenceResults
 modifier|*
 name|RunMD
+parameter_list|,
+name|LoopInfo
+modifier|*
+name|LI
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
 parameter_list|)
 function_decl|;
 comment|/// Push a new Value to the LeaderTable onto the list for its value number.
@@ -1158,10 +1176,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)

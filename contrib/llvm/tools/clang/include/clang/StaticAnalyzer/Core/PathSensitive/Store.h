@@ -83,12 +83,6 @@ directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/Optional.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang
@@ -457,16 +451,19 @@ name|bool
 name|IsVirtual
 parameter_list|)
 function_decl|;
-comment|/// \brief Evaluates C++ dynamic_cast cast.
+comment|/// \brief Attempts to do a down cast. Used to model BaseToDerived and C++
+comment|///        dynamic_cast.
 comment|/// The callback may result in the following 3 scenarios:
 comment|///  - Successful cast (ex: derived is subclass of base).
 comment|///  - Failed cast (ex: derived is definitely not a subclass of base).
+comment|///    The distinction of this case from the next one is necessary to model
+comment|///    dynamic_cast.
 comment|///  - We don't know (base is a symbolic region and we don't have
 comment|///    enough info to determine if the cast will succeed at run time).
 comment|/// The function returns an SVal representing the derived class; it's
 comment|/// valid only if Failed flag is set to false.
 name|SVal
-name|evalDynamicCast
+name|attemptDownCast
 parameter_list|(
 name|SVal
 name|Base

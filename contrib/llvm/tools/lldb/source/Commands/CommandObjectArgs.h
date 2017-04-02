@@ -108,28 +108,29 @@ name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_arg
+argument|llvm::StringRef option_arg
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
 name|void
 name|OptionParsingStarting
-argument_list|()
+argument_list|(
+argument|ExecutionContext *execution_context
+argument_list|)
 name|override
 block|;
-specifier|const
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
-block|;
-comment|// Options table: Required for subclasses of Options.
-specifier|static
-name|OptionDefinition
-name|g_option_table
-index|[]
-block|;         }
+block|;   }
 block|;
 name|CommandObjectArgs
 argument_list|(
@@ -157,12 +158,12 @@ block|;
 name|bool
 name|DoExecute
 argument_list|(
-argument|Args& command
+argument|Args&command
 argument_list|,
 argument|CommandReturnObject&result
 argument_list|)
 name|override
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

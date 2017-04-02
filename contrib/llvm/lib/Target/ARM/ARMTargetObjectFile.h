@@ -65,6 +65,12 @@ range|:
 name|public
 name|TargetLoweringObjectFileELF
 block|{
+name|mutable
+name|bool
+name|genExecuteOnly
+operator|=
+name|false
+block|;
 name|protected
 operator|:
 specifier|const
@@ -109,8 +115,6 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|unsigned Encoding
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
@@ -127,6 +131,32 @@ operator|*
 name|getDebugThreadLocalSymbol
 argument_list|(
 argument|const MCSymbol *Sym
+argument_list|)
+specifier|const
+name|override
+block|;
+name|MCSection
+operator|*
+name|getExplicitSectionGlobal
+argument_list|(
+argument|const GlobalObject *GO
+argument_list|,
+argument|SectionKind Kind
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|;
+name|MCSection
+operator|*
+name|SelectSectionForGlobal
+argument_list|(
+argument|const GlobalObject *GO
+argument_list|,
+argument|SectionKind Kind
+argument_list|,
+argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 name|override

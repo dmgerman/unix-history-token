@@ -36,23 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines IntrusiveRefCntPtr, a template class that
+comment|// This file defines the RefCountedBase, ThreadSafeRefCountedBase, and
 end_comment
 
 begin_comment
-comment|// implements a "smart" pointer for objects that maintain their own
-end_comment
-
-begin_comment
-comment|// internal reference count, and RefCountedBase/RefCountedBaseVPTR, two
-end_comment
-
-begin_comment
-comment|// generic base classes for objects that wish to have their lifetimes
-end_comment
-
-begin_comment
-comment|// managed using reference counting.
+comment|// IntrusiveRefCntPtr classes.
 end_comment
 
 begin_comment
@@ -60,11 +48,163 @@ comment|//
 end_comment
 
 begin_comment
-comment|// IntrusiveRefCntPtr is similar to Boost's intrusive_ptr with added
+comment|// IntrusiveRefCntPtr is a smart pointer to an object which maintains a
 end_comment
 
 begin_comment
-comment|// LLVM-style casting.
+comment|// reference count.  (ThreadSafe)RefCountedBase is a mixin class that adds a
+end_comment
+
+begin_comment
+comment|// refcount member variable and methods for updating the refcount.  An object
+end_comment
+
+begin_comment
+comment|// that inherits from (ThreadSafe)RefCountedBase deletes itself when its
+end_comment
+
+begin_comment
+comment|// refcount hits zero.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// For example:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   class MyClass : public RefCountedBase<MyClass> {};
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   void foo() {
+end_comment
+
+begin_comment
+comment|//     // Constructing an IntrusiveRefCntPtr increases the pointee's refcount by
+end_comment
+
+begin_comment
+comment|//     // 1 (from 0 in this case).
+end_comment
+
+begin_comment
+comment|//     IntrusiveRefCntPtr<MyClass> Ptr1(new MyClass());
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//     // Copying an IntrusiveRefCntPtr increases the pointee's refcount by 1.
+end_comment
+
+begin_comment
+comment|//     IntrusiveRefCntPtr<MyClass> Ptr2(Ptr1);
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//     // Constructing an IntrusiveRefCntPtr has no effect on the object's
+end_comment
+
+begin_comment
+comment|//     // refcount.  After a move, the moved-from pointer is null.
+end_comment
+
+begin_comment
+comment|//     IntrusiveRefCntPtr<MyClass> Ptr3(std::move(Ptr1));
+end_comment
+
+begin_comment
+comment|//     assert(Ptr1 == nullptr);
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//     // Clearing an IntrusiveRefCntPtr decreases the pointee's refcount by 1.
+end_comment
+
+begin_comment
+comment|//     Ptr2.reset();
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//     // The object deletes itself when we return from the function, because
+end_comment
+
+begin_comment
+comment|//     // Ptr3's destructor decrements its refcount to 0.
+end_comment
+
+begin_comment
+comment|//   }
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// You can use IntrusiveRefCntPtr with isa<T>(), dyn_cast<T>(), etc.:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   IntrusiveRefCntPtr<MyClass> Ptr(new MyClass());
+end_comment
+
+begin_comment
+comment|//   OtherClass *Other = dyn_cast<OtherClass>(Ptr);  // Ptr.get() not required
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// IntrusiveRefCntPtr works with any class that
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//  - inherits from (ThreadSafe)RefCountedBase,
+end_comment
+
+begin_comment
+comment|//  - has Retain() and Release() methods, or
+end_comment
+
+begin_comment
+comment|//  - specializes IntrusiveRefCntPtrInfo.
 end_comment
 
 begin_comment
@@ -109,24 +249,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|class
-name|IntrusiveRefCntPtr
-expr_stmt|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// RefCountedBase - A generic base class for objects that wish to
-comment|///  have their lifetimes managed using reference counts. Classes
-comment|///  subclass RefCountedBase to obtain such functionality, and are
-comment|///  typically handled with IntrusiveRefCntPtr "smart pointers" (see below)
-comment|///  which automatically handle the management of reference counts.
-comment|///  Objects that subclass RefCountedBase should not be allocated on
-comment|///  the stack, as invoking "delete" (which is called when the
-comment|///  reference count hits 0) on such objects is an error.
-comment|//===----------------------------------------------------------------------===//
+comment|/// A CRTP mixin class that adds reference counting to a type.
+comment|///
+comment|/// The lifetime of an object which inherits from RefCountedBase is managed by
+comment|/// calls to Release() and Retain(), which increment and decrement the object's
+comment|/// refcount, respectively.  When a Release() call decrements the refcount to 0,
+comment|/// the object deletes itself.
 name|template
 operator|<
 name|class
@@ -137,18 +265,17 @@ name|RefCountedBase
 block|{
 name|mutable
 name|unsigned
-name|ref_cnt
+name|RefCount
+operator|=
+literal|0
 block|;
 name|public
 operator|:
 name|RefCountedBase
 argument_list|()
-operator|:
-name|ref_cnt
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|RefCountedBase
 argument_list|(
 specifier|const
@@ -156,7 +283,7 @@ name|RefCountedBase
 operator|&
 argument_list|)
 operator|:
-name|ref_cnt
+name|RefCount
 argument_list|(
 literal|0
 argument_list|)
@@ -167,7 +294,7 @@ argument_list|()
 specifier|const
 block|{
 operator|++
-name|ref_cnt
+name|RefCount
 block|; }
 name|void
 name|Release
@@ -176,7 +303,7 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|ref_cnt
+name|RefCount
 operator|>
 literal|0
 operator|&&
@@ -186,7 +313,7 @@ block|;
 if|if
 condition|(
 operator|--
-name|ref_cnt
+name|RefCount
 operator|==
 literal|0
 condition|)
@@ -204,137 +331,7 @@ expr_stmt|;
 block|}
 expr|}
 block|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// RefCountedBaseVPTR - A class that has the same function as
-comment|///  RefCountedBase, but with a virtual destructor. Should be used
-comment|///  instead of RefCountedBase for classes that already have virtual
-comment|///  methods to enforce dynamic allocation via 'new'. Classes that
-comment|///  inherit from RefCountedBaseVPTR can't be allocated on stack -
-comment|///  attempting to do this will produce a compile error.
-comment|//===----------------------------------------------------------------------===//
-name|class
-name|RefCountedBaseVPTR
-block|{
-name|mutable
-name|unsigned
-name|ref_cnt
-block|;
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
-name|protected
-operator|:
-name|RefCountedBaseVPTR
-argument_list|()
-operator|:
-name|ref_cnt
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|RefCountedBaseVPTR
-argument_list|(
-specifier|const
-name|RefCountedBaseVPTR
-operator|&
-argument_list|)
-operator|:
-name|ref_cnt
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|virtual
-operator|~
-name|RefCountedBaseVPTR
-argument_list|()
-block|{}
-name|void
-name|Retain
-argument_list|()
-specifier|const
-block|{
-operator|++
-name|ref_cnt
-block|; }
-name|void
-name|Release
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|ref_cnt
-operator|>
-literal|0
-operator|&&
-literal|"Reference count is already zero."
-argument_list|)
-block|;
-if|if
-condition|(
-operator|--
-name|ref_cnt
-operator|==
-literal|0
-condition|)
-name|delete
-name|this
-decl_stmt|;
-block|}
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|friend
-expr|struct
-name|IntrusiveRefCntPtrInfo
-block|;   }
-block|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-expr|struct
-name|IntrusiveRefCntPtrInfo
-block|{
-specifier|static
-name|void
-name|retain
-argument_list|(
-argument|T *obj
-argument_list|)
-block|{
-name|obj
-operator|->
-name|Retain
-argument_list|()
-block|; }
-specifier|static
-name|void
-name|release
-argument_list|(
-argument|T *obj
-argument_list|)
-block|{
-name|obj
-operator|->
-name|Release
-argument_list|()
-block|; }
-block|}
-block|;
-comment|/// \brief A thread-safe version of \c llvm::RefCountedBase.
-comment|///
-comment|/// A generic base class for objects that wish to have their lifetimes managed
-comment|/// using reference counts. Classes subclass \c ThreadSafeRefCountedBase to
-comment|/// obtain such functionality, and are typically handled with
-comment|/// \c IntrusiveRefCntPtr "smart pointers" which automatically handle the
-comment|/// management of reference counts.
+comment|/// A thread-safe version of \c RefCountedBase.
 name|template
 operator|<
 name|class
@@ -369,8 +366,16 @@ name|Retain
 argument_list|()
 specifier|const
 block|{
-operator|++
 name|RefCount
+operator|.
+name|fetch_add
+argument_list|(
+literal|1
+argument_list|,
+name|std
+operator|::
+name|memory_order_relaxed
+argument_list|)
 block|; }
 name|void
 name|Release
@@ -380,8 +385,18 @@ block|{
 name|int
 name|NewRefCount
 operator|=
-operator|--
 name|RefCount
+operator|.
+name|fetch_sub
+argument_list|(
+literal|1
+argument_list|,
+name|std
+operator|::
+name|memory_order_acq_rel
+argument_list|)
+operator|-
+literal|1
 block|;
 name|assert
 argument_list|(
@@ -412,23 +427,66 @@ expr_stmt|;
 block|}
 expr|}
 block|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// IntrusiveRefCntPtr - A template class that implements a "smart pointer"
-comment|///  that assumes the wrapped object has a reference count associated
-comment|///  with it that can be managed via calls to
-comment|///  IntrusivePtrAddRef/IntrusivePtrRelease.  The smart pointers
-comment|///  manage reference counts via the RAII idiom: upon creation of
-comment|///  smart pointer the reference count of the wrapped object is
-comment|///  incremented and upon destruction of the smart pointer the
-comment|///  reference count is decremented.  This class also safely handles
-comment|///  wrapping NULL pointers.
+comment|/// Class you can specialize to provide custom retain/release functionality for
+comment|/// a type.
 comment|///
-comment|/// Reference counting is implemented via calls to
-comment|///  Obj->Retain()/Obj->Release(). Release() is required to destroy
-comment|///  the object when the reference count reaches zero. Inheriting from
-comment|///  RefCountedBase/RefCountedBaseVPTR takes care of this
-comment|///  automatically.
-comment|//===----------------------------------------------------------------------===//
+comment|/// Usually specializing this class is not necessary, as IntrusiveRefCntPtr
+comment|/// works with any type which defines Retain() and Release() functions -- you
+comment|/// can define those functions yourself if RefCountedBase doesn't work for you.
+comment|///
+comment|/// One case when you might want to specialize this type is if you have
+comment|///  - Foo.h defines type Foo and includes Bar.h, and
+comment|///  - Bar.h uses IntrusiveRefCntPtr<Foo> in inline functions.
+comment|///
+comment|/// Because Foo.h includes Bar.h, Bar.h can't include Foo.h in order to pull in
+comment|/// the declaration of Foo.  Without the declaration of Foo, normally Bar.h
+comment|/// wouldn't be able to use IntrusiveRefCntPtr<Foo>, which wants to call
+comment|/// T::Retain and T::Release.
+comment|///
+comment|/// To resolve this, Bar.h could include a third header, FooFwd.h, which
+comment|/// forward-declares Foo and specializes IntrusiveRefCntPtrInfo<Foo>.  Then
+comment|/// Bar.h could use IntrusiveRefCntPtr<Foo>, although it still couldn't call any
+comment|/// functions on Foo itself, because Foo would be an incomplete type.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|IntrusiveRefCntPtrInfo
+block|{
+specifier|static
+name|void
+name|retain
+argument_list|(
+argument|T *obj
+argument_list|)
+block|{
+name|obj
+operator|->
+name|Retain
+argument_list|()
+block|; }
+specifier|static
+name|void
+name|release
+argument_list|(
+argument|T *obj
+argument_list|)
+block|{
+name|obj
+operator|->
+name|Release
+argument_list|()
+block|; }
+block|}
+block|;
+comment|/// A smart pointer to a reference-counted object that inherits from
+comment|/// RefCountedBase or ThreadSafeRefCountedBase.
+comment|///
+comment|/// This class increments its pointee's reference count when it is created, and
+comment|/// decrements its refcount when it's destroyed (or is changed to point to a
+comment|/// different object).
 name|template
 operator|<
 name|typename
@@ -440,6 +498,8 @@ block|{
 name|T
 operator|*
 name|Obj
+operator|=
+name|nullptr
 block|;
 name|public
 operator|:
@@ -450,12 +510,9 @@ typedef|;
 name|explicit
 name|IntrusiveRefCntPtr
 argument_list|()
-operator|:
-name|Obj
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+block|default
+block|;
 name|IntrusiveRefCntPtr
 argument_list|(
 name|T
@@ -470,7 +527,7 @@ argument_list|)
 block|{
 name|retain
 argument_list|()
-block|;     }
+block|; }
 name|IntrusiveRefCntPtr
 argument_list|(
 specifier|const
@@ -486,7 +543,7 @@ argument_list|)
 block|{
 name|retain
 argument_list|()
-block|;     }
+block|; }
 name|IntrusiveRefCntPtr
 argument_list|(
 name|IntrusiveRefCntPtr
@@ -504,7 +561,7 @@ operator|.
 name|Obj
 operator|=
 name|nullptr
-block|;     }
+block|; }
 name|template
 operator|<
 name|class
@@ -530,7 +587,7 @@ operator|.
 name|Obj
 operator|=
 name|nullptr
-block|;     }
+block|;   }
 name|template
 operator|<
 name|class
@@ -554,7 +611,7 @@ argument_list|)
 block|{
 name|retain
 argument_list|()
-block|;     }
+block|;   }
 name|IntrusiveRefCntPtr
 operator|&
 name|operator
@@ -629,7 +686,7 @@ block|}
 name|void
 name|swap
 argument_list|(
-argument|IntrusiveRefCntPtr& other
+argument|IntrusiveRefCntPtr&other
 argument_list|)
 block|{
 name|T
@@ -649,7 +706,7 @@ block|;
 name|Obj
 operator|=
 name|tmp
-block|;     }
+block|;   }
 name|void
 name|reset
 argument_list|()
@@ -660,7 +717,7 @@ block|;
 name|Obj
 operator|=
 name|nullptr
-block|;     }
+block|;   }
 name|void
 name|resetWithoutRelease
 argument_list|()
@@ -668,7 +725,7 @@ block|{
 name|Obj
 operator|=
 name|nullptr
-block|;     }
+block|; }
 name|private
 operator|:
 name|void
@@ -717,7 +774,7 @@ operator|>
 name|friend
 name|class
 name|IntrusiveRefCntPtr
-block|;   }
+block|; }
 expr_stmt|;
 name|template
 operator|<
@@ -1064,9 +1121,8 @@ name|B
 operator|)
 return|;
 block|}
-comment|//===----------------------------------------------------------------------===//
-comment|// LLVM-style downcasting support for IntrusiveRefCntPtr objects
-comment|//===----------------------------------------------------------------------===//
+comment|// Make IntrusiveRefCntPtr work with dyn_cast, isa, and the other idioms from
+comment|// Casting.h.
 name|template
 operator|<
 name|typename
@@ -1086,8 +1142,7 @@ operator|<
 name|IntrusiveRefCntPtr
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 block|{
 typedef|typedef
 name|T
@@ -1098,7 +1153,7 @@ specifier|static
 name|SimpleType
 name|getSimplifiedValue
 argument_list|(
-argument|IntrusiveRefCntPtr<T>& Val
+argument|IntrusiveRefCntPtr<T>&Val
 argument_list|)
 block|{
 return|return
@@ -1122,8 +1177,7 @@ specifier|const
 name|IntrusiveRefCntPtr
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 block|{
 typedef|typedef
 comment|/*const*/
@@ -1135,7 +1189,7 @@ specifier|static
 name|SimpleType
 name|getSimplifiedValue
 argument_list|(
-argument|const IntrusiveRefCntPtr<T>& Val
+argument|const IntrusiveRefCntPtr<T>&Val
 argument_list|)
 block|{
 return|return

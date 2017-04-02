@@ -94,7 +94,7 @@ name|m_default_value
 argument_list|(
 argument|value
 argument_list|)
-block|{     }
+block|{}
 name|OptionValueBoolean
 argument_list|(
 argument|bool current_value
@@ -114,12 +114,12 @@ name|m_default_value
 argument_list|(
 argument|default_value
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionValueBoolean
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
@@ -155,6 +155,20 @@ argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
 block|;
+name|Error
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|VarSetOperationType
+operator|=
+name|eVarSetOperationAssign
+argument_list|)
+operator|=
+name|delete
+block|;
 name|bool
 name|Clear
 argument_list|()
@@ -177,7 +191,7 @@ name|AutoComplete
 argument_list|(
 argument|CommandInterpreter&interpreter
 argument_list|,
-argument|const char *s
+argument|llvm::StringRef s
 argument_list|,
 argument|int match_start_point
 argument_list|,
@@ -262,7 +276,7 @@ block|{
 name|m_current_value
 operator|=
 name|value
-block|;     }
+block|; }
 name|void
 name|SetDefaultValue
 argument_list|(
@@ -272,7 +286,7 @@ block|{
 name|m_default_value
 operator|=
 name|value
-block|;     }
+block|; }
 name|lldb
 operator|::
 name|OptionValueSP

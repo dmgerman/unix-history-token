@@ -62,12 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/RegisterValue.h"
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/ValueObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -395,7 +395,7 @@ name|SetValueFromCString
 argument_list|(
 argument|const char *value_str
 argument_list|,
-argument|Error& error
+argument|Error&error
 argument_list|)
 name|override
 block|;
@@ -422,7 +422,7 @@ argument|Stream&s
 argument_list|,
 argument|bool qualify_cxx_base_classes
 argument_list|,
-argument|GetExpressionPathFormat epformat = eGetExpressionPathFormatDereferencePointers
+argument|GetExpressionPathFormat epformat =                         eGetExpressionPathFormatDereferencePointers
 argument_list|)
 name|override
 block|;

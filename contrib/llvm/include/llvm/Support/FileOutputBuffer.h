@@ -245,6 +245,8 @@ argument_list|,
 argument|StringRef Path
 argument_list|,
 argument|StringRef TempPath
+argument_list|,
+argument|bool IsRegular
 argument_list|)
 empty_stmt|;
 name|std
@@ -273,6 +275,9 @@ literal|128
 operator|>
 name|TempPath
 expr_stmt|;
+name|bool
+name|IsRegular
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -96,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/YAMLTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm-c/Types.h"
 end_include
 
@@ -103,6 +121,24 @@ begin_include
 include|#
 directive|include
 file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_include
@@ -156,8 +192,6 @@ comment|/// This enum should be extended with a new ID for each added concrete s
 enum|enum
 name|DiagnosticKind
 block|{
-name|DK_Bitcode
-block|,
 name|DK_InlineAsm
 block|,
 name|DK_ResourceLimit
@@ -169,6 +203,8 @@ block|,
 name|DK_DebugMetadataVersion
 block|,
 name|DK_DebugMetadataInvalid
+block|,
+name|DK_ISelFallback
 block|,
 name|DK_SampleProfile
 block|,
@@ -258,7 +294,9 @@ name|virtual
 operator|~
 name|DiagnosticInfo
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/* DiagnosticKind */
 name|int
 name|getKind
@@ -1254,6 +1292,244 @@ name|DiagnosticInfoWithDebugLocBase
 block|{
 name|public
 operator|:
+comment|/// \brief Used to set IsVerbose via the stream interface.
+expr|struct
+name|setIsVerbose
+block|{}
+block|;
+comment|/// \brief When an instance of this is inserted into the stream, the arguments
+comment|/// following will not appear in the remark printed in the compiler output
+comment|/// (-Rpass) but only in the optimization record file
+comment|/// (-fsave-optimization-record).
+block|struct
+name|setExtraArgs
+block|{}
+block|;
+comment|/// \brief Used in the streaming interface as the general argument type.  It
+comment|/// internally converts everything into a key-value pair.
+block|struct
+name|Argument
+block|{
+name|StringRef
+name|Key
+block|;
+name|std
+operator|::
+name|string
+name|Val
+block|;
+comment|// If set, the debug location corresponding to the value.
+name|DebugLoc
+name|DLoc
+block|;
+name|explicit
+name|Argument
+argument_list|(
+argument|StringRef Str =
+literal|""
+argument_list|)
+operator|:
+name|Key
+argument_list|(
+literal|"String"
+argument_list|)
+block|,
+name|Val
+argument_list|(
+argument|Str
+argument_list|)
+block|{}
+name|Argument
+argument_list|(
+argument|StringRef Key
+argument_list|,
+argument|Value *V
+argument_list|)
+block|;
+name|Argument
+argument_list|(
+argument|StringRef Key
+argument_list|,
+argument|Type *T
+argument_list|)
+block|;
+name|Argument
+argument_list|(
+argument|StringRef Key
+argument_list|,
+argument|int N
+argument_list|)
+block|;
+name|Argument
+argument_list|(
+argument|StringRef Key
+argument_list|,
+argument|unsigned N
+argument_list|)
+block|;
+name|Argument
+argument_list|(
+argument|StringRef Key
+argument_list|,
+argument|bool B
+argument_list|)
+operator|:
+name|Key
+argument_list|(
+name|Key
+argument_list|)
+block|,
+name|Val
+argument_list|(
+argument|B ?
+literal|"true"
+argument|:
+literal|"false"
+argument_list|)
+block|{}
+block|}
+block|;
+comment|/// \p PassName is the name of the pass emitting this diagnostic. \p
+comment|/// RemarkName is a textual identifier for the remark.  \p Fn is the function
+comment|/// where the diagnostic is being emitted. \p DLoc is the location information
+comment|/// to use in the diagnostic. If line table information is available, the
+comment|/// diagnostic will include the source code location. \p CodeRegion is IR
+comment|/// value (currently basic block) that the optimization operates on.  This is
+comment|/// currently used to provide run-time hotness information with PGO.
+name|DiagnosticInfoOptimizationBase
+argument_list|(
+argument|enum DiagnosticKind Kind
+argument_list|,
+argument|enum DiagnosticSeverity Severity
+argument_list|,
+argument|const char *PassName
+argument_list|,
+argument|StringRef RemarkName
+argument_list|,
+argument|const Function&Fn
+argument_list|,
+argument|const DebugLoc&DLoc
+argument_list|,
+argument|Value *CodeRegion = nullptr
+argument_list|)
+operator|:
+name|DiagnosticInfoWithDebugLocBase
+argument_list|(
+name|Kind
+argument_list|,
+name|Severity
+argument_list|,
+name|Fn
+argument_list|,
+name|DLoc
+argument_list|)
+block|,
+name|PassName
+argument_list|(
+name|PassName
+argument_list|)
+block|,
+name|RemarkName
+argument_list|(
+name|RemarkName
+argument_list|)
+block|,
+name|CodeRegion
+argument_list|(
+argument|CodeRegion
+argument_list|)
+block|{}
+comment|/// \brief This is ctor variant allows a pass to build an optimization remark
+comment|/// from an existing remark.
+comment|///
+comment|/// This is useful when a transformation pass (e.g LV) wants to emit a remark
+comment|/// (\p Orig) generated by one of its analyses (e.g. LAA) as its own analysis
+comment|/// remark.  The string \p Prepend will be emitted before the original
+comment|/// message.
+name|DiagnosticInfoOptimizationBase
+argument_list|(
+argument|const char *PassName
+argument_list|,
+argument|StringRef Prepend
+argument_list|,
+argument|const DiagnosticInfoOptimizationBase&Orig
+argument_list|)
+operator|:
+name|DiagnosticInfoWithDebugLocBase
+argument_list|(
+operator|(
+name|DiagnosticKind
+operator|)
+name|Orig
+operator|.
+name|getKind
+argument_list|()
+argument_list|,
+name|Orig
+operator|.
+name|getSeverity
+argument_list|()
+argument_list|,
+name|Orig
+operator|.
+name|getFunction
+argument_list|()
+argument_list|,
+name|Orig
+operator|.
+name|getDebugLoc
+argument_list|()
+argument_list|)
+block|,
+name|PassName
+argument_list|(
+name|PassName
+argument_list|)
+block|,
+name|RemarkName
+argument_list|(
+name|Orig
+operator|.
+name|RemarkName
+argument_list|)
+block|,
+name|CodeRegion
+argument_list|(
+argument|Orig.getCodeRegion()
+argument_list|)
+block|{
+operator|*
+name|this
+operator|<<
+name|Prepend
+block|;
+name|std
+operator|::
+name|copy
+argument_list|(
+name|Orig
+operator|.
+name|Args
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Orig
+operator|.
+name|Args
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|std
+operator|::
+name|back_inserter
+argument_list|(
+name|Args
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// Legacy interface.
 comment|/// \p PassName is the name of the pass emitting this diagnostic.
 comment|/// \p Fn is the function where the diagnostic is being emitted. \p DLoc is
 comment|/// the location information to use in the diagnostic. If line table
@@ -1294,16 +1570,60 @@ argument_list|(
 name|PassName
 argument_list|)
 block|,
-name|Msg
-argument_list|(
-name|Msg
-argument_list|)
-block|,
 name|Hotness
 argument_list|(
 argument|Hotness
 argument_list|)
-block|{}
+block|{
+name|Args
+operator|.
+name|push_back
+argument_list|(
+name|Argument
+argument_list|(
+name|Msg
+operator|.
+name|str
+argument_list|()
+argument_list|)
+argument_list|)
+block|;   }
+name|DiagnosticInfoOptimizationBase
+operator|&
+name|operator
+operator|<<
+operator|(
+name|StringRef
+name|S
+operator|)
+block|;
+name|DiagnosticInfoOptimizationBase
+operator|&
+name|operator
+operator|<<
+operator|(
+name|Argument
+name|A
+operator|)
+block|;
+name|DiagnosticInfoOptimizationBase
+operator|&
+name|operator
+operator|<<
+operator|(
+name|setIsVerbose
+name|V
+operator|)
+block|;
+name|DiagnosticInfoOptimizationBase
+operator|&
+name|operator
+operator|<<
+operator|(
+name|setExtraArgs
+name|EA
+operator|)
+block|;
 comment|/// \see DiagnosticInfo::print.
 name|void
 name|print
@@ -1326,9 +1646,7 @@ specifier|const
 operator|=
 literal|0
 block|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const
@@ -1337,15 +1655,52 @@ return|return
 name|PassName
 return|;
 block|}
-specifier|const
-name|Twine
-operator|&
+name|std
+operator|::
+name|string
 name|getMsg
+argument_list|()
+specifier|const
+block|;
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getHotness
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Msg
+name|Hotness
+return|;
+block|}
+name|void
+name|setHotness
+argument_list|(
+argument|Optional<uint64_t> H
+argument_list|)
+block|{
+name|Hotness
+operator|=
+name|H
+block|; }
+name|Value
+operator|*
+name|getCodeRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeRegion
+return|;
+block|}
+name|bool
+name|isVerbose
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsVerbose
 return|;
 block|}
 specifier|static
@@ -1381,11 +1736,10 @@ name|char
 operator|*
 name|PassName
 block|;
-comment|/// Message to report.
-specifier|const
-name|Twine
-operator|&
-name|Msg
+comment|/// Textual identifier for the remark.  Can be used by external tools reading
+comment|/// the YAML output file for optimization remarks to identify the remark.
+name|StringRef
+name|RemarkName
 block|;
 comment|/// If profile information is available, this is the number of times the
 comment|/// corresponding code was executed in a profile instrumentation run.
@@ -1394,11 +1748,51 @@ operator|<
 name|uint64_t
 operator|>
 name|Hotness
+block|;
+comment|/// The IR value (currently basic block) that the optimization operates on.
+comment|/// This is currently used to provide run-time hotness information with PGO.
+name|Value
+operator|*
+name|CodeRegion
+block|;
+comment|/// Arguments collected via the streaming interface.
+name|SmallVector
+operator|<
+name|Argument
+block|,
+literal|4
+operator|>
+name|Args
+block|;
+comment|/// The remark is expected to be noisy.
+name|bool
+name|IsVerbose
+operator|=
+name|false
+block|;
+comment|/// \brief If positive, the index of the first argument that only appear in
+comment|/// the optimization records and not in the remark printed in the compiler
+comment|/// output.
+name|int
+name|FirstExtraArgIndex
+operator|=
+operator|-
+literal|1
+block|;
+name|friend
+expr|struct
+name|yaml
+operator|::
+name|MappingTraits
+operator|<
+name|DiagnosticInfoOptimizationBase
+operator|*
+operator|>
 block|; }
 block|;
 comment|/// Diagnostic information for applied optimization remarks.
 name|class
-name|DiagnosticInfoOptimizationRemark
+name|OptimizationRemark
 operator|:
 name|public
 name|DiagnosticInfoOptimizationBase
@@ -1413,7 +1807,7 @@ comment|/// diagnostic. If line table information is available, the diagnostic
 comment|/// will include the source code location. \p Msg is the message to show.
 comment|/// Note that this class does not copy this message, so this reference
 comment|/// must be valid for the whole life time of the diagnostic.
-name|DiagnosticInfoOptimizationRemark
+name|OptimizationRemark
 argument_list|(
 specifier|const
 name|char
@@ -1434,6 +1828,14 @@ specifier|const
 name|Twine
 operator|&
 name|Msg
+argument_list|,
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|Hotness
+operator|=
+name|None
 argument_list|)
 operator|:
 name|DiagnosticInfoOptimizationBase
@@ -1449,8 +1851,37 @@ argument_list|,
 argument|DLoc
 argument_list|,
 argument|Msg
+argument_list|,
+argument|Hotness
 argument_list|)
 block|{}
+comment|/// \p PassName is the name of the pass emitting this diagnostic. If this name
+comment|/// matches the regular expression given in -Rpass=, then the diagnostic will
+comment|/// be emitted.  \p RemarkName is a textual identifier for the remark.  \p
+comment|/// DLoc is the debug location and \p CodeRegion is the region that the
+comment|/// optimization operates on (currently on block is supported).
+name|OptimizationRemark
+argument_list|(
+argument|const char *PassName
+argument_list|,
+argument|StringRef RemarkName
+argument_list|,
+argument|const DebugLoc&DLoc
+argument_list|,
+argument|Value *CodeRegion
+argument_list|)
+block|;
+comment|/// Same as above but the debug location and code region is derived from \p
+comment|/// Instr.
+name|OptimizationRemark
+argument_list|(
+argument|const char *PassName
+argument_list|,
+argument|StringRef RemarkName
+argument_list|,
+argument|Instruction *Inst
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1477,7 +1908,7 @@ block|; }
 block|;
 comment|/// Diagnostic information for missed-optimization remarks.
 name|class
-name|DiagnosticInfoOptimizationRemarkMissed
+name|OptimizationRemarkMissed
 operator|:
 name|public
 name|DiagnosticInfoOptimizationBase
@@ -1492,7 +1923,7 @@ comment|/// diagnostic. If line table information is available, the diagnostic
 comment|/// will include the source code location. \p Msg is the message to show.
 comment|/// Note that this class does not copy this message, so this reference
 comment|/// must be valid for the whole life time of the diagnostic.
-name|DiagnosticInfoOptimizationRemarkMissed
+name|OptimizationRemarkMissed
 argument_list|(
 specifier|const
 name|char
@@ -1540,6 +1971,33 @@ argument_list|,
 argument|Hotness
 argument_list|)
 block|{}
+comment|/// \p PassName is the name of the pass emitting this diagnostic. If this name
+comment|/// matches the regular expression given in -Rpass-missed=, then the
+comment|/// diagnostic will be emitted.  \p RemarkName is a textual identifier for the
+comment|/// remark.  \p DLoc is the debug location and \p CodeRegion is the region
+comment|/// that the optimization operates on (currently on block is supported).
+name|OptimizationRemarkMissed
+argument_list|(
+argument|const char *PassName
+argument_list|,
+argument|StringRef RemarkName
+argument_list|,
+argument|const DebugLoc&DLoc
+argument_list|,
+argument|Value *CodeRegion
+argument_list|)
+block|;
+comment|/// \brief Same as above but \p Inst is used to derive code region and debug
+comment|/// location.
+name|OptimizationRemarkMissed
+argument_list|(
+argument|const char *PassName
+argument_list|,
+argument|StringRef RemarkName
+argument_list|,
+argument|Instruction *Inst
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1566,7 +2024,7 @@ block|; }
 block|;
 comment|/// Diagnostic information for optimization analysis remarks.
 name|class
-name|DiagnosticInfoOptimizationRemarkAnalysis
+name|OptimizationRemarkAnalysis
 operator|:
 name|public
 name|DiagnosticInfoOptimizationBase
@@ -1581,7 +2039,7 @@ comment|/// diagnostic. If line table information is available, the diagnostic w
 comment|/// include the source code location. \p Msg is the message to show. Note that
 comment|/// this class does not copy this message, so this reference must be valid for
 comment|/// the whole life time of the diagnostic.
-name|DiagnosticInfoOptimizationRemarkAnalysis
+name|OptimizationRemarkAnalysis
 argument_list|(
 specifier|const
 name|char
@@ -1602,6 +2060,14 @@ specifier|const
 name|Twine
 operator|&
 name|Msg
+argument_list|,
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|Hotness
+operator|=
+name|None
 argument_list|)
 operator|:
 name|DiagnosticInfoOptimizationBase
@@ -1617,8 +2083,62 @@ argument_list|,
 argument|DLoc
 argument_list|,
 argument|Msg
+argument_list|,
+argument|Hotness
 argument_list|)
 block|{}
+comment|/// \p PassName is the name of the pass emitting this diagnostic. If this name
+comment|/// matches the regular expression given in -Rpass-analysis=, then the
+comment|/// diagnostic will be emitted.  \p RemarkName is a textual identifier for the
+comment|/// remark.  \p DLoc is the debug location and \p CodeRegion is the region
+comment|/// that the optimization operates on (currently on block is supported).
+name|OptimizationRemarkAnalysis
+argument_list|(
+argument|const char *PassName
+argument_list|,
+argument|StringRef RemarkName
+argument_list|,
+argument|const DebugLoc&DLoc
+argument_list|,
+argument|Value *CodeRegion
+argument_list|)
+block|;
+comment|/// \brief This is ctor variant allows a pass to build an optimization remark
+comment|/// from an existing remark.
+comment|///
+comment|/// This is useful when a transformation pass (e.g LV) wants to emit a remark
+comment|/// (\p Orig) generated by one of its analyses (e.g. LAA) as its own analysis
+comment|/// remark.  The string \p Prepend will be emitted before the original
+comment|/// message.
+name|OptimizationRemarkAnalysis
+argument_list|(
+argument|const char *PassName
+argument_list|,
+argument|StringRef Prepend
+argument_list|,
+argument|const OptimizationRemarkAnalysis&Orig
+argument_list|)
+operator|:
+name|DiagnosticInfoOptimizationBase
+argument_list|(
+argument|PassName
+argument_list|,
+argument|Prepend
+argument_list|,
+argument|Orig
+argument_list|)
+block|{}
+comment|/// \brief Same as above but \p Inst is used to derive code region and debug
+comment|/// location.
+name|OptimizationRemarkAnalysis
+argument_list|(
+argument|const char *PassName
+argument_list|,
+argument|StringRef RemarkName
+argument_list|,
+argument|Instruction *Inst
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1662,7 +2182,7 @@ return|;
 block|}
 name|protected
 operator|:
-name|DiagnosticInfoOptimizationRemarkAnalysis
+name|OptimizationRemarkAnalysis
 argument_list|(
 argument|enum DiagnosticKind Kind
 argument_list|,
@@ -1673,6 +2193,8 @@ argument_list|,
 argument|const DebugLoc&DLoc
 argument_list|,
 argument|const Twine&Msg
+argument_list|,
+argument|Optional<uint64_t> Hotness
 argument_list|)
 operator|:
 name|DiagnosticInfoOptimizationBase
@@ -1688,17 +2210,31 @@ argument_list|,
 argument|DLoc
 argument_list|,
 argument|Msg
+argument_list|,
+argument|Hotness
 argument_list|)
 block|{}
-expr|}
+name|OptimizationRemarkAnalysis
+argument_list|(
+argument|enum DiagnosticKind Kind
+argument_list|,
+argument|const char *PassName
+argument_list|,
+argument|StringRef RemarkName
+argument_list|,
+argument|const DebugLoc&DLoc
+argument_list|,
+argument|Value *CodeRegion
+argument_list|)
+block|; }
 block|;
 comment|/// Diagnostic information for optimization analysis remarks related to
 comment|/// floating-point non-commutativity.
 name|class
-name|DiagnosticInfoOptimizationRemarkAnalysisFPCommute
+name|OptimizationRemarkAnalysisFPCommute
 operator|:
 name|public
-name|DiagnosticInfoOptimizationRemarkAnalysis
+name|OptimizationRemarkAnalysis
 block|{
 name|public
 operator|:
@@ -1712,7 +2248,7 @@ comment|/// front-end will append its own message related to options that addres
 comment|/// floating-point non-commutativity. Note that this class does not copy this
 comment|/// message, so this reference must be valid for the whole life time of the
 comment|/// diagnostic.
-name|DiagnosticInfoOptimizationRemarkAnalysisFPCommute
+name|OptimizationRemarkAnalysisFPCommute
 argument_list|(
 specifier|const
 name|char
@@ -1733,9 +2269,17 @@ specifier|const
 name|Twine
 operator|&
 name|Msg
+argument_list|,
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|Hotness
+operator|=
+name|None
 argument_list|)
 operator|:
-name|DiagnosticInfoOptimizationRemarkAnalysis
+name|OptimizationRemarkAnalysis
 argument_list|(
 argument|DK_OptimizationRemarkAnalysisFPCommute
 argument_list|,
@@ -1746,6 +2290,39 @@ argument_list|,
 argument|DLoc
 argument_list|,
 argument|Msg
+argument_list|,
+argument|Hotness
+argument_list|)
+block|{}
+comment|/// \p PassName is the name of the pass emitting this diagnostic. If this name
+comment|/// matches the regular expression given in -Rpass-analysis=, then the
+comment|/// diagnostic will be emitted.  \p RemarkName is a textual identifier for the
+comment|/// remark.  \p DLoc is the debug location and \p CodeRegion is the region
+comment|/// that the optimization operates on (currently on block is supported). The
+comment|/// front-end will append its own message related to options that address
+comment|/// floating-point non-commutativity.
+name|OptimizationRemarkAnalysisFPCommute
+argument_list|(
+argument|const char *PassName
+argument_list|,
+argument|StringRef RemarkName
+argument_list|,
+argument|const DebugLoc&DLoc
+argument_list|,
+argument|Value *CodeRegion
+argument_list|)
+operator|:
+name|OptimizationRemarkAnalysis
+argument_list|(
+argument|DK_OptimizationRemarkAnalysisFPCommute
+argument_list|,
+argument|PassName
+argument_list|,
+argument|RemarkName
+argument_list|,
+argument|DLoc
+argument_list|,
+argument|CodeRegion
 argument_list|)
 block|{}
 specifier|static
@@ -1769,10 +2346,10 @@ block|;
 comment|/// Diagnostic information for optimization analysis remarks related to
 comment|/// pointer aliasing.
 name|class
-name|DiagnosticInfoOptimizationRemarkAnalysisAliasing
+name|OptimizationRemarkAnalysisAliasing
 operator|:
 name|public
-name|DiagnosticInfoOptimizationRemarkAnalysis
+name|OptimizationRemarkAnalysis
 block|{
 name|public
 operator|:
@@ -1786,7 +2363,7 @@ comment|/// front-end will append its own message related to options that addres
 comment|/// pointer aliasing legality. Note that this class does not copy this
 comment|/// message, so this reference must be valid for the whole life time of the
 comment|/// diagnostic.
-name|DiagnosticInfoOptimizationRemarkAnalysisAliasing
+name|OptimizationRemarkAnalysisAliasing
 argument_list|(
 specifier|const
 name|char
@@ -1807,9 +2384,17 @@ specifier|const
 name|Twine
 operator|&
 name|Msg
+argument_list|,
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|Hotness
+operator|=
+name|None
 argument_list|)
 operator|:
-name|DiagnosticInfoOptimizationRemarkAnalysis
+name|OptimizationRemarkAnalysis
 argument_list|(
 argument|DK_OptimizationRemarkAnalysisAliasing
 argument_list|,
@@ -1820,6 +2405,39 @@ argument_list|,
 argument|DLoc
 argument_list|,
 argument|Msg
+argument_list|,
+argument|Hotness
+argument_list|)
+block|{}
+comment|/// \p PassName is the name of the pass emitting this diagnostic. If this name
+comment|/// matches the regular expression given in -Rpass-analysis=, then the
+comment|/// diagnostic will be emitted.  \p RemarkName is a textual identifier for the
+comment|/// remark.  \p DLoc is the debug location and \p CodeRegion is the region
+comment|/// that the optimization operates on (currently on block is supported). The
+comment|/// front-end will append its own message related to options that address
+comment|/// pointer aliasing legality.
+name|OptimizationRemarkAnalysisAliasing
+argument_list|(
+argument|const char *PassName
+argument_list|,
+argument|StringRef RemarkName
+argument_list|,
+argument|const DebugLoc&DLoc
+argument_list|,
+argument|Value *CodeRegion
+argument_list|)
+operator|:
+name|OptimizationRemarkAnalysis
+argument_list|(
+argument|DK_OptimizationRemarkAnalysisAliasing
+argument_list|,
+argument|PassName
+argument_list|,
+argument|RemarkName
+argument_list|,
+argument|DLoc
+argument_list|,
+argument|CodeRegion
 argument_list|)
 block|{}
 specifier|static
@@ -1906,6 +2524,77 @@ name|getKind
 argument_list|()
 operator|==
 name|DK_MIRParser
+return|;
+block|}
+expr|}
+block|;
+comment|/// Diagnostic information for ISel fallback path.
+name|class
+name|DiagnosticInfoISelFallback
+operator|:
+name|public
+name|DiagnosticInfo
+block|{
+comment|/// The function that is concerned by this diagnostic.
+specifier|const
+name|Function
+operator|&
+name|Fn
+block|;
+name|public
+operator|:
+name|DiagnosticInfoISelFallback
+argument_list|(
+argument|const Function&Fn
+argument_list|,
+argument|DiagnosticSeverity Severity = DS_Warning
+argument_list|)
+operator|:
+name|DiagnosticInfo
+argument_list|(
+name|DK_ISelFallback
+argument_list|,
+name|Severity
+argument_list|)
+block|,
+name|Fn
+argument_list|(
+argument|Fn
+argument_list|)
+block|{}
+specifier|const
+name|Function
+operator|&
+name|getFunction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Fn
+return|;
+block|}
+name|void
+name|print
+argument_list|(
+argument|DiagnosticPrinter&DP
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DiagnosticInfo *DI
+argument_list|)
+block|{
+return|return
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DK_ISelFallback
 return|;
 block|}
 expr|}

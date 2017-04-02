@@ -339,6 +339,7 @@ name|LLDB_WATCH_TYPE_IS_VALID
 parameter_list|(
 name|type
 parameter_list|)
+define|\
 value|((type | LLDB_WATCH_TYPE_READ) || (type | LLDB_WATCH_TYPE_WRITE))
 end_define
 
@@ -413,6 +414,7 @@ begin_define
 define|#
 directive|define
 name|LLDB_REGNUM_GENERIC_ARG1
+define|\
 value|5
 end_define
 
@@ -424,6 +426,7 @@ begin_define
 define|#
 directive|define
 name|LLDB_REGNUM_GENERIC_ARG2
+define|\
 value|6
 end_define
 
@@ -435,6 +438,7 @@ begin_define
 define|#
 directive|define
 name|LLDB_REGNUM_GENERIC_ARG3
+define|\
 value|7
 end_define
 
@@ -446,6 +450,7 @@ begin_define
 define|#
 directive|define
 name|LLDB_REGNUM_GENERIC_ARG4
+define|\
 value|8
 end_define
 
@@ -457,6 +462,7 @@ begin_define
 define|#
 directive|define
 name|LLDB_REGNUM_GENERIC_ARG5
+define|\
 value|9
 end_define
 
@@ -468,6 +474,7 @@ begin_define
 define|#
 directive|define
 name|LLDB_REGNUM_GENERIC_ARG6
+define|\
 value|10
 end_define
 
@@ -479,6 +486,7 @@ begin_define
 define|#
 directive|define
 name|LLDB_REGNUM_GENERIC_ARG7
+define|\
 value|11
 end_define
 
@@ -490,6 +498,7 @@ begin_define
 define|#
 directive|define
 name|LLDB_REGNUM_GENERIC_ARG8
+define|\
 value|12
 end_define
 
@@ -764,7 +773,8 @@ name|A
 parameter_list|,
 name|B
 parameter_list|)
-value|(((1U<< (B)) - 1) ^ (((1U<< (A))-1)>> 1))
+define|\
+value|(((1U<< (B)) - 1) ^ (((1U<< (A)) - 1)>> 1))
 end_define
 
 begin_if
@@ -794,15 +804,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-end_ifdef
-
 begin_comment
 comment|// ignore GCC function attributes
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -865,7 +884,7 @@ parameter_list|(
 name|TypeName
 parameter_list|)
 define|\
-value|TypeName(const TypeName&); \     const TypeName& operator=(const TypeName&)
+value|TypeName(const TypeName&) = delete;                                         \   const TypeName&operator=(const TypeName&) = delete
 end_define
 
 begin_endif

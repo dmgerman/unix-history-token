@@ -149,7 +149,11 @@ block|,
 comment|///< Parse and apply any fixits to the source.
 name|GenerateModule
 block|,
-comment|///< Generate pre-compiled module.
+comment|///< Generate pre-compiled module from a module map.
+name|GenerateModuleInterface
+block|,
+comment|///< Generate pre-compiled module from a C++ module
+comment|///< interface file.
 name|GeneratePCH
 block|,
 comment|///< Generate pre-compiled header.
@@ -798,7 +802,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|ModuleFileExtension
 operator|>>
@@ -880,6 +886,12 @@ name|std
 operator|::
 name|string
 name|FindPchSource
+expr_stmt|;
+comment|/// Filename to write statistics to.
+name|std
+operator|::
+name|string
+name|StatsFile
 expr_stmt|;
 name|public
 label|:

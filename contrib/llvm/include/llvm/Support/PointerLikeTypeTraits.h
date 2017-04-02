@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/AlignOf.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<type_traits>
 end_include
 
 begin_decl_stmt
@@ -201,12 +201,10 @@ name|detail
 operator|::
 name|ConstantLog2
 operator|<
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|T
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|>
 operator|::
 name|value

@@ -68,12 +68,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/DataExtractor.h"
 end_include
 
@@ -81,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/RegisterContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -242,7 +242,8 @@ operator|::
 name|addr_t
 name|m_reg_data_addr
 block|;
-comment|// If this is valid, then we have a register context that is stored in memmory
+comment|// If this is valid, then we have a register
+comment|// context that is stored in memmory
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN

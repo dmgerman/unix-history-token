@@ -42,6 +42,17 @@ value|"https://bugs.freebsd.org/submit/"
 end_define
 
 begin_comment
+comment|/* Default linker to use. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLANG_DEFAULT_LINKER
+value|""
+end_define
+
+begin_comment
 comment|/* Default C++ stdlib to use. */
 end_comment
 
@@ -49,6 +60,17 @@ begin_define
 define|#
 directive|define
 name|CLANG_DEFAULT_CXX_STDLIB
+value|""
+end_define
+
+begin_comment
+comment|/* Default runtime library to use. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLANG_DEFAULT_RTLIB
 value|""
 end_define
 
@@ -124,6 +146,17 @@ comment|/* #undef CLANG_HAVE_LIBXML */
 end_comment
 
 begin_comment
+comment|/* Define if we have sys/resource.h (rlimits) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLANG_HAVE_RLIMITS
+value|1
+end_define
+
+begin_comment
 comment|/* The LLVM product name and version */
 end_comment
 
@@ -131,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|BACKEND_PACKAGE_STRING
-value|"LLVM 3.9.1"
+value|"LLVM 4.0.0"
 end_define
 
 begin_comment

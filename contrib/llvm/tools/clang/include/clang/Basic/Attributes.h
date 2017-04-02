@@ -72,6 +72,9 @@ operator|,
 comment|/// Is the identifier known as a __declspec-style attribute?
 name|Declspec
 operator|,
+comment|/// Is the identifier known as a [] Microsoft-style attribute?
+name|Microsoft
+operator|,
 comment|// Is the identifier known as a C++-style attribute?
 name|CXX
 operator|,

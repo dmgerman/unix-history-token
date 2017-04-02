@@ -161,6 +161,17 @@ comment|/// 'arguments' is a list of command line arguments that will not be une
 comment|///
 comment|/// JSON compilation databases can for example be generated in CMake projects
 comment|/// by setting the flag -DCMAKE_EXPORT_COMPILE_COMMANDS.
+name|enum
+name|class
+name|JSONCommandLineSyntax
+block|{
+name|Windows
+operator|,
+name|Gnu
+operator|,
+name|AutoDetect
+block|}
+empty_stmt|;
 name|class
 name|JSONCompilationDatabase
 range|:
@@ -185,6 +196,8 @@ argument_list|(
 argument|StringRef FilePath
 argument_list|,
 argument|std::string&ErrorMessage
+argument_list|,
+argument|JSONCommandLineSyntax Syntax
 argument_list|)
 block|;
 comment|/// \brief Loads a JSON compilation database from a data buffer.
@@ -202,9 +215,11 @@ argument_list|(
 argument|StringRef DatabaseString
 argument_list|,
 argument|std::string&ErrorMessage
+argument_list|,
+argument|JSONCommandLineSyntax Syntax
 argument_list|)
 block|;
-comment|/// \brief Returns all compile comamnds in which the specified file was
+comment|/// \brief Returns all compile commands in which the specified file was
 comment|/// compiled.
 comment|///
 comment|/// FIXME: Currently FilePath must be an absolute path inside the
@@ -256,15 +271,9 @@ operator|:
 comment|/// \brief Constructs a JSON compilation database on a memory buffer.
 name|JSONCompilationDatabase
 argument_list|(
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|>
-name|Database
+argument|std::unique_ptr<llvm::MemoryBuffer> Database
+argument_list|,
+argument|JSONCommandLineSyntax Syntax
 argument_list|)
 operator|:
 name|Database
@@ -275,6 +284,11 @@ name|move
 argument_list|(
 name|Database
 argument_list|)
+argument_list|)
+block|,
+name|Syntax
+argument_list|(
+name|Syntax
 argument_list|)
 block|,
 name|YAMLStream
@@ -298,12 +312,13 @@ operator|&
 name|ErrorMessage
 argument_list|)
 block|;
-comment|// Tuple (directory, filename, commandline) where 'commandline' points to the
-comment|// corresponding scalar nodes in the YAML stream.
+comment|// Tuple (directory, filename, commandline, output) where 'commandline'
+comment|// points to the corresponding scalar nodes in the YAML stream.
 comment|// If the command line contains a single argument, it is a shell-escaped
 comment|// command line.
 comment|// Otherwise, each entry in the command line vector is a literal
 comment|// argument to the compiler.
+comment|// The output field may be a nullptr.
 typedef|typedef
 name|std
 operator|::
@@ -333,7 +348,15 @@ name|yaml
 operator|::
 name|ScalarNode
 operator|*
-operator|>>
+operator|>
+operator|,
+name|llvm
+operator|::
+name|yaml
+operator|::
+name|ScalarNode
+operator|*
+operator|>
 name|CompileCommandRef
 expr_stmt|;
 comment|/// \brief Converts the given array of CompileCommandRefs to CompileCommands.
@@ -382,6 +405,9 @@ name|MemoryBuffer
 operator|>
 name|Database
 expr_stmt|;
+name|JSONCommandLineSyntax
+name|Syntax
+decl_stmt|;
 name|llvm
 operator|::
 name|SourceMgr

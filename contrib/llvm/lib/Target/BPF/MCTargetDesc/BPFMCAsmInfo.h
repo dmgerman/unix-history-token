@@ -130,6 +130,25 @@ block|;
 name|SupportsDebugInformation
 operator|=
 name|true
+block|;
+name|ExceptionsType
+operator|=
+name|ExceptionHandling
+operator|::
+name|DwarfCFI
+block|;
+name|MinInstAlignment
+operator|=
+literal|8
+block|;
+comment|// the default is 4 and it only affects dwarf elf output
+comment|// so if not set correctly, the dwarf data will be
+comment|// messed up in random places by 4 bytes. .debug_line
+comment|// section will be parsable, but with odd offsets and
+comment|// line numbers, etc.
+name|PointerSize
+operator|=
+literal|8
 block|;   }
 block|}
 end_decl_stmt

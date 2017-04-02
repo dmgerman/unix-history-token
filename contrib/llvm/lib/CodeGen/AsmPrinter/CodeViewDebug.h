@@ -98,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/MemoryTypeTableBuilder.h"
+file|"llvm/DebugInfo/CodeView/TypeIndex.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeIndex.h"
+file|"llvm/DebugInfo/CodeView/TypeTableBuilder.h"
 end_include
 
 begin_include
@@ -156,9 +156,14 @@ name|MCStreamer
 operator|&
 name|OS
 block|;
+name|llvm
+operator|::
+name|BumpPtrAllocator
+name|Allocator
+block|;
 name|codeview
 operator|::
-name|MemoryTypeTableBuilder
+name|TypeTableBuilder
 name|TypeTable
 block|;
 comment|/// Represents the most general definition range.
@@ -178,10 +183,17 @@ name|DataOffset
 operator|:
 literal|31
 block|;
-comment|/// Offset of the data into the user level struct. If zero, no splitting
-comment|/// occurred.
+comment|/// Non-zero if this is a piece of an aggregate.
+name|uint16_t
+name|IsSubfield
+operator|:
+literal|1
+block|;
+comment|/// Offset into aggregate.
 name|uint16_t
 name|StructOffset
+operator|:
+literal|15
 block|;
 comment|/// Register containing the data or the register base of the memory
 comment|/// location containing the data.
@@ -208,6 +220,12 @@ operator|!=
 name|O
 operator|.
 name|DataOffset
+operator|||
+name|IsSubfield
+operator|!=
+name|O
+operator|.
+name|IsSubfield
 operator|||
 name|StructOffset
 operator|!=
@@ -253,9 +271,17 @@ argument_list|)
 block|;
 specifier|static
 name|LocalVarDefRange
-name|createDefRangeReg
+name|createDefRangeGeneral
 argument_list|(
 argument|uint16_t CVRegister
+argument_list|,
+argument|bool InMemory
+argument_list|,
+argument|int Offset
+argument_list|,
+argument|bool IsSubfield
+argument_list|,
+argument|uint16_t StructOffset
 argument_list|)
 block|;
 comment|/// Similar to DbgVariable in DwarfDebug, but not dwarf-specific.
@@ -678,6 +704,10 @@ name|emitTypeInformation
 parameter_list|()
 function_decl|;
 name|void
+name|emitCompilerInformation
+parameter_list|()
+function_decl|;
+name|void
 name|emitInlineeLinesSubsection
 parameter_list|()
 function_decl|;
@@ -729,6 +759,11 @@ specifier|const
 name|DIGlobalVariable
 modifier|*
 name|DIGV
+parameter_list|,
+specifier|const
+name|GlobalVariable
+modifier|*
+name|GV
 parameter_list|,
 name|MCSymbol
 modifier|*
@@ -791,7 +826,7 @@ name|SP
 parameter_list|)
 function_decl|;
 name|void
-name|collectVariableInfoFromMMITable
+name|collectVariableInfoFromMFTable
 argument_list|(
 name|DenseSet
 operator|<
@@ -985,6 +1020,17 @@ name|lowerTypeFunction
 argument_list|(
 specifier|const
 name|DISubroutineType
+operator|*
+name|Ty
+argument_list|)
+expr_stmt|;
+name|codeview
+operator|::
+name|TypeIndex
+name|lowerTypeVFTableShape
+argument_list|(
+specifier|const
+name|DIDerivedType
 operator|*
 name|Ty
 argument_list|)

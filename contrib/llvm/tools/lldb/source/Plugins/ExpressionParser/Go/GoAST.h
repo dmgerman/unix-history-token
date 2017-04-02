@@ -54,6 +54,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"Plugins/ExpressionParser/Go/GoLexer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-forward.h"
 end_include
 
@@ -67,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"Plugins/ExpressionParser/Go/GoLexer.h"
 end_include
 
 begin_decl_stmt
@@ -104,7 +104,7 @@ block|,
 name|eChanSend
 block|,
 name|eChanRecv
-block|,     }
+block|,   }
 enum|;
 enum|enum
 name|NodeKind
@@ -210,7 +210,7 @@ block|,
 name|eField
 block|,
 name|eFieldList
-block|,     }
+block|,   }
 enum|;
 name|virtual
 operator|~
@@ -263,7 +263,7 @@ name|m_kind
 argument_list|(
 argument|kind
 argument_list|)
-block|{ }
+block|{}
 name|private
 label|:
 specifier|const
@@ -352,7 +352,7 @@ name|GoASTNode
 argument_list|(
 argument|kind
 argument_list|)
-block|{ }
+block|{}
 name|private
 operator|:
 name|GoASTDecl
@@ -436,7 +436,7 @@ name|GoASTNode
 argument_list|(
 argument|kind
 argument_list|)
-block|{ }
+block|{}
 name|private
 operator|:
 name|GoASTExpr
@@ -520,7 +520,7 @@ name|GoASTNode
 argument_list|(
 argument|kind
 argument_list|)
-block|{ }
+block|{}
 name|private
 operator|:
 name|GoASTSpec
@@ -604,7 +604,7 @@ name|GoASTNode
 argument_list|(
 argument|kind
 argument_list|)
-block|{ }
+block|{}
 name|private
 operator|:
 name|GoASTStmt
@@ -725,7 +725,7 @@ name|reset
 argument_list|(
 name|len
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -752,7 +752,7 @@ name|reset
 argument_list|(
 name|elt
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -908,7 +908,7 @@ operator|(
 name|lhs
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|size_t
 name|NumRhs
 argument_list|()
@@ -960,7 +960,7 @@ operator|(
 name|rhs
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|bool
 name|GetDefine
 argument_list|()
@@ -979,7 +979,7 @@ block|{
 name|m_define
 operator|=
 name|define
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -995,8 +995,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTExpr
-operator|>
-expr|>
+operator|>>
 name|m_lhs
 block|;
 name|std
@@ -1008,8 +1007,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTExpr
-operator|>
-expr|>
+operator|>>
 name|m_rhs
 block|;
 name|bool
@@ -1337,7 +1335,7 @@ block|{
 name|m_value
 operator|=
 name|value
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -1468,7 +1466,7 @@ name|reset
 argument_list|(
 name|x
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -1495,7 +1493,7 @@ name|reset
 argument_list|(
 name|y
 argument_list|)
-block|;     }
+block|; }
 name|TokenType
 name|GetOp
 argument_list|()
@@ -1514,7 +1512,7 @@ block|{
 name|m_op
 operator|=
 name|op
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -1665,7 +1663,7 @@ operator|(
 name|list
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 name|friend
@@ -1681,8 +1679,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTStmt
-operator|>
-expr|>
+operator|>>
 name|m_list
 block|;
 name|GoASTBlockStmt
@@ -1785,7 +1782,7 @@ block|{
 name|m_name
 operator|=
 name|name
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -1909,7 +1906,7 @@ name|reset
 argument_list|(
 name|label
 argument_list|)
-block|;     }
+block|; }
 name|TokenType
 name|GetTok
 argument_list|()
@@ -1928,7 +1925,7 @@ block|{
 name|m_tok
 operator|=
 name|tok
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -2054,7 +2051,7 @@ name|reset
 argument_list|(
 name|fun
 argument_list|)
-block|;     }
+block|; }
 name|size_t
 name|NumArgs
 argument_list|()
@@ -2106,7 +2103,7 @@ operator|(
 name|args
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|bool
 name|GetEllipsis
 argument_list|()
@@ -2125,7 +2122,7 @@ block|{
 name|m_ellipsis
 operator|=
 name|ellipsis
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -2149,8 +2146,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTExpr
-operator|>
-expr|>
+operator|>>
 name|m_args
 block|;
 name|bool
@@ -2281,7 +2277,7 @@ operator|(
 name|list
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|size_t
 name|NumBody
 argument_list|()
@@ -2333,7 +2329,7 @@ operator|(
 name|body
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 name|friend
@@ -2349,8 +2345,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTExpr
-operator|>
-expr|>
+operator|>>
 name|m_list
 block|;
 name|std
@@ -2362,8 +2357,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTStmt
-operator|>
-expr|>
+operator|>>
 name|m_body
 block|;
 name|GoASTCaseClause
@@ -2472,7 +2466,7 @@ block|{
 name|m_dir
 operator|=
 name|dir
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -2499,7 +2493,7 @@ name|reset
 argument_list|(
 name|value
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -2617,7 +2611,7 @@ name|reset
 argument_list|(
 name|comm
 argument_list|)
-block|;     }
+block|; }
 name|size_t
 name|NumBody
 argument_list|()
@@ -2669,7 +2663,7 @@ operator|(
 name|body
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 name|friend
@@ -2693,8 +2687,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTStmt
-operator|>
-expr|>
+operator|>>
 name|m_body
 block|;
 name|GoASTCommClause
@@ -2797,7 +2790,7 @@ name|reset
 argument_list|(
 name|type
 argument_list|)
-block|;     }
+block|; }
 name|size_t
 name|NumElts
 argument_list|()
@@ -2849,7 +2842,7 @@ operator|(
 name|elts
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 name|friend
@@ -2873,8 +2866,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTExpr
-operator|>
-expr|>
+operator|>>
 name|m_elts
 block|;
 name|GoASTCompositeLit
@@ -2987,7 +2979,7 @@ name|reset
 argument_list|(
 name|decl
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -3112,7 +3104,7 @@ name|reset
 argument_list|(
 name|call
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -3237,7 +3229,7 @@ name|reset
 argument_list|(
 name|elt
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -3436,7 +3428,7 @@ name|reset
 argument_list|(
 name|x
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -3576,7 +3568,7 @@ operator|(
 name|names
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -3603,7 +3595,7 @@ name|reset
 argument_list|(
 name|type
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTBasicLit
 operator|*
@@ -3630,7 +3622,7 @@ name|reset
 argument_list|(
 name|tag
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -3646,8 +3638,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTIdent
-operator|>
-expr|>
+operator|>>
 name|m_names
 block|;
 name|std
@@ -3791,7 +3782,7 @@ operator|(
 name|list
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 name|friend
@@ -3807,8 +3798,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTField
-operator|>
-expr|>
+operator|>>
 name|m_list
 block|;
 name|GoASTFieldList
@@ -3947,7 +3937,7 @@ name|reset
 argument_list|(
 name|init
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -3974,7 +3964,7 @@ name|reset
 argument_list|(
 name|cond
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTStmt
 operator|*
@@ -4001,7 +3991,7 @@ name|reset
 argument_list|(
 name|post
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTBlockStmt
 operator|*
@@ -4028,7 +4018,7 @@ name|reset
 argument_list|(
 name|body
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -4185,7 +4175,7 @@ name|reset
 argument_list|(
 name|params
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTFieldList
 operator|*
@@ -4212,7 +4202,7 @@ name|reset
 argument_list|(
 name|results
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -4371,7 +4361,7 @@ name|reset
 argument_list|(
 name|recv
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTIdent
 operator|*
@@ -4398,7 +4388,7 @@ name|reset
 argument_list|(
 name|name
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTFuncType
 operator|*
@@ -4425,7 +4415,7 @@ name|reset
 argument_list|(
 name|type
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTBlockStmt
 operator|*
@@ -4452,7 +4442,7 @@ name|reset
 argument_list|(
 name|body
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -4609,7 +4599,7 @@ name|reset
 argument_list|(
 name|type
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTBlockStmt
 operator|*
@@ -4636,7 +4626,7 @@ name|reset
 argument_list|(
 name|body
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -4759,7 +4749,7 @@ block|{
 name|m_tok
 operator|=
 name|tok
-block|;     }
+block|; }
 name|size_t
 name|NumSpecs
 argument_list|()
@@ -4811,7 +4801,7 @@ operator|(
 name|specs
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 name|friend
@@ -4830,8 +4820,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTSpec
-operator|>
-expr|>
+operator|>>
 name|m_specs
 block|;
 name|GoASTGenDecl
@@ -4944,7 +4933,7 @@ name|reset
 argument_list|(
 name|call
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -5095,7 +5084,7 @@ name|reset
 argument_list|(
 name|init
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -5122,7 +5111,7 @@ name|reset
 argument_list|(
 name|cond
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTBlockStmt
 operator|*
@@ -5149,7 +5138,7 @@ name|reset
 argument_list|(
 name|body
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTStmt
 operator|*
@@ -5176,7 +5165,7 @@ name|reset
 argument_list|(
 name|els
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -5333,7 +5322,7 @@ name|reset
 argument_list|(
 name|name
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTBasicLit
 operator|*
@@ -5360,7 +5349,7 @@ name|reset
 argument_list|(
 name|path
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -5497,7 +5486,7 @@ name|reset
 argument_list|(
 name|x
 argument_list|)
-block|;     }
+block|; }
 name|TokenType
 name|GetTok
 argument_list|()
@@ -5516,7 +5505,7 @@ block|{
 name|m_tok
 operator|=
 name|tok
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -5652,7 +5641,7 @@ name|reset
 argument_list|(
 name|x
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -5679,7 +5668,7 @@ name|reset
 argument_list|(
 name|index
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -5812,7 +5801,7 @@ name|reset
 argument_list|(
 name|methods
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -5945,7 +5934,7 @@ name|reset
 argument_list|(
 name|key
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -5972,7 +5961,7 @@ name|reset
 argument_list|(
 name|value
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -6113,7 +6102,7 @@ name|reset
 argument_list|(
 name|label
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTStmt
 operator|*
@@ -6140,7 +6129,7 @@ name|reset
 argument_list|(
 name|stmt
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -6281,7 +6270,7 @@ name|reset
 argument_list|(
 name|key
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -6308,7 +6297,7 @@ name|reset
 argument_list|(
 name|value
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -6441,7 +6430,7 @@ name|reset
 argument_list|(
 name|x
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -6591,7 +6580,7 @@ name|reset
 argument_list|(
 name|key
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -6618,7 +6607,7 @@ name|reset
 argument_list|(
 name|value
 argument_list|)
-block|;     }
+block|; }
 name|bool
 name|GetDefine
 argument_list|()
@@ -6637,7 +6626,7 @@ block|{
 name|m_define
 operator|=
 name|define
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -6664,7 +6653,7 @@ name|reset
 argument_list|(
 name|x
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTBlockStmt
 operator|*
@@ -6691,7 +6680,7 @@ name|reset
 argument_list|(
 name|body
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -6858,7 +6847,7 @@ operator|(
 name|results
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 name|friend
@@ -6874,8 +6863,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTExpr
-operator|>
-expr|>
+operator|>>
 name|m_results
 block|;
 name|GoASTReturnStmt
@@ -6988,7 +6976,7 @@ name|reset
 argument_list|(
 name|body
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -7121,7 +7109,7 @@ name|reset
 argument_list|(
 name|x
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTIdent
 operator|*
@@ -7148,7 +7136,7 @@ name|reset
 argument_list|(
 name|sel
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -7289,7 +7277,7 @@ name|reset
 argument_list|(
 name|chan
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -7316,7 +7304,7 @@ name|reset
 argument_list|(
 name|value
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -7474,7 +7462,7 @@ name|reset
 argument_list|(
 name|x
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -7501,7 +7489,7 @@ name|reset
 argument_list|(
 name|low
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -7528,7 +7516,7 @@ name|reset
 argument_list|(
 name|high
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -7555,7 +7543,7 @@ name|reset
 argument_list|(
 name|max
 argument_list|)
-block|;     }
+block|; }
 name|bool
 name|GetSlice3
 argument_list|()
@@ -7574,7 +7562,7 @@ block|{
 name|m_slice3
 operator|=
 name|slice3
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -7726,7 +7714,7 @@ name|reset
 argument_list|(
 name|x
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -7851,7 +7839,7 @@ name|reset
 argument_list|(
 name|fields
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -7993,7 +7981,7 @@ name|reset
 argument_list|(
 name|init
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -8020,7 +8008,7 @@ name|reset
 argument_list|(
 name|tag
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTBlockStmt
 operator|*
@@ -8047,7 +8035,7 @@ name|reset
 argument_list|(
 name|body
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -8196,7 +8184,7 @@ name|reset
 argument_list|(
 name|x
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -8223,7 +8211,7 @@ name|reset
 argument_list|(
 name|type
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -8364,7 +8352,7 @@ name|reset
 argument_list|(
 name|name
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -8391,7 +8379,7 @@ name|reset
 argument_list|(
 name|type
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -8541,7 +8529,7 @@ name|reset
 argument_list|(
 name|init
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTStmt
 operator|*
@@ -8568,7 +8556,7 @@ name|reset
 argument_list|(
 name|assign
 argument_list|)
-block|;     }
+block|; }
 specifier|const
 name|GoASTBlockStmt
 operator|*
@@ -8595,7 +8583,7 @@ name|reset
 argument_list|(
 name|body
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -8732,7 +8720,7 @@ block|{
 name|m_op
 operator|=
 name|op
-block|;     }
+block|; }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -8759,7 +8747,7 @@ name|reset
 argument_list|(
 name|x
 argument_list|)
-block|;     }
+block|; }
 name|private
 operator|:
 name|friend
@@ -8902,7 +8890,7 @@ operator|(
 name|names
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 specifier|const
 name|GoASTExpr
 operator|*
@@ -8929,7 +8917,7 @@ name|reset
 argument_list|(
 name|type
 argument_list|)
-block|;     }
+block|; }
 name|size_t
 name|NumValues
 argument_list|()
@@ -8981,7 +8969,7 @@ operator|(
 name|values
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 name|friend
@@ -8997,8 +8985,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTIdent
-operator|>
-expr|>
+operator|>>
 name|m_names
 block|;
 name|std
@@ -9018,8 +9005,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|GoASTExpr
-operator|>
-expr|>
+operator|>>
 name|m_values
 block|;
 name|GoASTValueSpec
@@ -9058,7 +9044,7 @@ name|GoASTDecl
 operator|::
 name|Visit
 argument_list|(
-argument|V* v
+argument|V *v
 argument_list|)
 specifier|const
 block|{
@@ -9151,7 +9137,7 @@ name|GoASTExpr
 operator|::
 name|Visit
 argument_list|(
-argument|V* v
+argument|V *v
 argument_list|)
 specifier|const
 block|{
@@ -9628,7 +9614,7 @@ name|GoASTSpec
 operator|::
 name|Visit
 argument_list|(
-argument|V* v
+argument|V *v
 argument_list|)
 specifier|const
 block|{
@@ -9721,7 +9707,7 @@ name|GoASTStmt
 operator|::
 name|Visit
 argument_list|(
-argument|V* v
+argument|V *v
 argument_list|)
 specifier|const
 block|{

@@ -534,38 +534,6 @@ name|Name
 argument_list|)
 return|;
 block|}
-name|llvm
-operator|::
-name|LoadInst
-operator|*
-name|CreateAlignedLoad
-argument_list|(
-argument|llvm::Value *Addr
-argument_list|,
-argument|CharUnits Align
-argument_list|,
-argument|bool IsVolatile
-argument_list|,
-argument|const llvm::Twine&Name =
-literal|""
-argument_list|)
-block|{
-return|return
-name|CreateAlignedLoad
-argument_list|(
-name|Addr
-argument_list|,
-name|Align
-operator|.
-name|getQuantity
-argument_list|()
-argument_list|,
-name|IsVolatile
-argument_list|,
-name|Name
-argument_list|)
-return|;
-block|}
 comment|// Note that we intentionally hide the CreateStore APIs that don't
 comment|// take an alignment.
 name|llvm
@@ -641,82 +609,6 @@ return|;
 block|}
 comment|// FIXME: these "default-aligned" APIs should be removed,
 comment|// but I don't feel like fixing all the builtin code right now.
-name|llvm
-operator|::
-name|LoadInst
-operator|*
-name|CreateDefaultAlignedLoad
-argument_list|(
-argument|llvm::Value *Addr
-argument_list|,
-argument|const llvm::Twine&Name =
-literal|""
-argument_list|)
-block|{
-return|return
-name|CGBuilderBaseTy
-operator|::
-name|CreateLoad
-argument_list|(
-name|Addr
-argument_list|,
-name|false
-argument_list|,
-name|Name
-argument_list|)
-return|;
-block|}
-name|llvm
-operator|::
-name|LoadInst
-operator|*
-name|CreateDefaultAlignedLoad
-argument_list|(
-argument|llvm::Value *Addr
-argument_list|,
-argument|const char *Name
-argument_list|)
-block|{
-return|return
-name|CGBuilderBaseTy
-operator|::
-name|CreateLoad
-argument_list|(
-name|Addr
-argument_list|,
-name|false
-argument_list|,
-name|Name
-argument_list|)
-return|;
-block|}
-name|llvm
-operator|::
-name|LoadInst
-operator|*
-name|CreateDefaultAlignedLoad
-argument_list|(
-argument|llvm::Value *Addr
-argument_list|,
-argument|bool IsVolatile
-argument_list|,
-argument|const llvm::Twine&Name =
-literal|""
-argument_list|)
-block|{
-return|return
-name|CGBuilderBaseTy
-operator|::
-name|CreateLoad
-argument_list|(
-name|Addr
-argument_list|,
-name|IsVolatile
-argument_list|,
-name|Name
-argument_list|)
-return|;
-block|}
 name|llvm
 operator|::
 name|StoreInst

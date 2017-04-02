@@ -298,9 +298,9 @@ block|{
 comment|// Register Pass using default constructor...
 name|RegisterPass
 argument_list|(
-argument|const char *PassArg
+argument|StringRef PassArg
 argument_list|,
-argument|const char *Name
+argument|StringRef Name
 argument_list|,
 argument|bool CFGOnly = false
 argument_list|,
@@ -364,7 +364,7 @@ name|public
 operator|:
 name|RegisterAGBase
 argument_list|(
-argument|const char *Name
+argument|StringRef Name
 argument_list|,
 argument|const void *InterfaceID
 argument_list|,

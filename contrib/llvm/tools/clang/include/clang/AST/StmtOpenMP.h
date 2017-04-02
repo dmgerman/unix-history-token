@@ -262,7 +262,7 @@ argument_list|)
 block|,
 name|ClausesOffset
 argument_list|(
-argument|llvm::alignTo(sizeof(T), llvm::alignOf<OMPClause *>())
+argument|llvm::alignTo(sizeof(T), alignof(OMPClause *))
 argument_list|)
 block|{}
 comment|/// \brief Sets the list of variables for this clause.
@@ -3858,6 +3858,41 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|OMPTargetParallelForSimdDirectiveClass
+operator|||
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTargetSimdDirectiveClass
+operator|||
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTeamsDistributeDirectiveClass
+operator|||
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTeamsDistributeSimdDirectiveClass
+operator|||
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTeamsDistributeParallelForSimdDirectiveClass
+operator|||
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTeamsDistributeParallelForDirectiveClass
 return|;
 block|}
 expr|}
@@ -9730,6 +9765,1539 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|OMPTargetParallelForSimdDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents '#pragma omp target simd' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target simd private(a) map(b) safelen(c)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target simd' has clauses 'private'
+comment|/// with the variable 'a', 'map' with the variable 'b' and 'safelen' with
+comment|/// the variable 'c'.
+comment|///
+name|class
+name|OMPTargetSimdDirective
+name|final
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTargetSimdDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetSimdDirectiveClass
+argument_list|,
+argument|OMPD_target_simd
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTargetSimdDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetSimdDirectiveClass
+argument_list|,
+argument|OMPD_target_simd
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPTargetSimdDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// Creates an empty directive with the place for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTargetSimdDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTargetSimdDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents '#pragma omp teams distribute' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp teams distribute private(a,b)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp teams distribute' has clauses
+comment|/// 'private' with the variables 'a' and 'b'
+comment|///
+name|class
+name|OMPTeamsDistributeDirective
+name|final
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTeamsDistributeDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTeamsDistributeDirectiveClass
+argument_list|,
+argument|OMPD_teams_distribute
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTeamsDistributeDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTeamsDistributeDirectiveClass
+argument_list|,
+argument|OMPD_teams_distribute
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPTeamsDistributeDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// Creates an empty directive with the place for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTeamsDistributeDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTeamsDistributeDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents '#pragma omp teams distribute simd'
+comment|/// combined directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp teams distribute simd private(a,b)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp teams distribute simd'
+comment|/// has clause 'private' with the variables 'a' and 'b'
+comment|///
+name|class
+name|OMPTeamsDistributeSimdDirective
+name|final
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTeamsDistributeSimdDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTeamsDistributeSimdDirectiveClass
+argument_list|,
+argument|OMPD_teams_distribute_simd
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTeamsDistributeSimdDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTeamsDistributeSimdDirectiveClass
+argument_list|,
+argument|OMPD_teams_distribute_simd
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPTeamsDistributeSimdDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// Creates an empty directive with the place
+comment|/// for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTeamsDistributeSimdDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTeamsDistributeSimdDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents '#pragma omp teams distribute parallel for simd' composite
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp teams distribute parallel for simd private(x)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp teams distribute parallel for simd'
+comment|/// has clause 'private' with the variables 'x'
+comment|///
+name|class
+name|OMPTeamsDistributeParallelForSimdDirective
+name|final
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTeamsDistributeParallelForSimdDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTeamsDistributeParallelForSimdDirectiveClass
+argument_list|,
+argument|OMPD_teams_distribute_parallel_for_simd
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTeamsDistributeParallelForSimdDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTeamsDistributeParallelForSimdDirectiveClass
+argument_list|,
+argument|OMPD_teams_distribute_parallel_for_simd
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPTeamsDistributeParallelForSimdDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// Creates an empty directive with the place for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTeamsDistributeParallelForSimdDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTeamsDistributeParallelForSimdDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents '#pragma omp teams distribute parallel for' composite
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp teams distribute parallel for private(x)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp teams distribute parallel for'
+comment|/// has clause 'private' with the variables 'x'
+comment|///
+name|class
+name|OMPTeamsDistributeParallelForDirective
+name|final
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTeamsDistributeParallelForDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTeamsDistributeParallelForDirectiveClass
+argument_list|,
+argument|OMPD_teams_distribute_parallel_for
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTeamsDistributeParallelForDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTeamsDistributeParallelForDirectiveClass
+argument_list|,
+argument|OMPD_teams_distribute_parallel_for
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPTeamsDistributeParallelForDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// Creates an empty directive with the place for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTeamsDistributeParallelForDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTeamsDistributeParallelForDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents '#pragma omp target teams' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target teams if(a>0)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target teams' has clause 'if' with
+comment|/// condition 'a>0'.
+comment|///
+name|class
+name|OMPTargetTeamsDirective
+name|final
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTargetTeamsDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetTeamsDirectiveClass
+argument_list|,
+argument|OMPD_target_teams
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+comment|/// Build an empty directive.
+comment|///
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTargetTeamsDirective
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetTeamsDirectiveClass
+argument_list|,
+argument|OMPD_target_teams
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPTargetTeamsDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// Creates an empty directive with the place for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTargetTeamsDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTargetTeamsDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents '#pragma omp target teams distribute' combined directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target teams distribute private(x)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target teams distribute' has clause
+comment|/// 'private' with the variables 'x'
+comment|///
+name|class
+name|OMPTargetTeamsDistributeDirective
+name|final
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTargetTeamsDistributeDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetTeamsDistributeDirectiveClass
+argument_list|,
+argument|OMPD_target_teams_distribute
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTargetTeamsDistributeDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetTeamsDistributeDirectiveClass
+argument_list|,
+argument|OMPD_target_teams_distribute
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPTargetTeamsDistributeDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// Creates an empty directive with the place for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTargetTeamsDistributeDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTargetTeamsDistributeDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents '#pragma omp target teams distribute parallel for' combined
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target teams distribute parallel for private(x)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target teams distribute parallel
+comment|/// for' has clause 'private' with the variables 'x'
+comment|///
+name|class
+name|OMPTargetTeamsDistributeParallelForDirective
+name|final
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTargetTeamsDistributeParallelForDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetTeamsDistributeParallelForDirectiveClass
+argument_list|,
+argument|OMPD_target_teams_distribute_parallel_for
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTargetTeamsDistributeParallelForDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetTeamsDistributeParallelForDirectiveClass
+argument_list|,
+argument|OMPD_target_teams_distribute_parallel_for
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPTargetTeamsDistributeParallelForDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// Creates an empty directive with the place for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTargetTeamsDistributeParallelForDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTargetTeamsDistributeParallelForDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents '#pragma omp target teams distribute parallel for simd'
+comment|/// combined directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target teams distribute parallel for simd private(x)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target teams distribute parallel
+comment|/// for simd' has clause 'private' with the variables 'x'
+comment|///
+name|class
+name|OMPTargetTeamsDistributeParallelForSimdDirective
+name|final
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTargetTeamsDistributeParallelForSimdDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetTeamsDistributeParallelForSimdDirectiveClass
+argument_list|,
+argument|OMPD_target_teams_distribute_parallel_for_simd
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTargetTeamsDistributeParallelForSimdDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetTeamsDistributeParallelForSimdDirectiveClass
+argument_list|,
+argument|OMPD_target_teams_distribute_parallel_for_simd
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPTargetTeamsDistributeParallelForSimdDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// Creates an empty directive with the place for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTargetTeamsDistributeParallelForSimdDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTargetTeamsDistributeParallelForSimdDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents '#pragma omp target teams distribute simd' combined
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target teams distribute simd private(x)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target teams distribute simd'
+comment|/// has clause 'private' with the variables 'x'
+comment|///
+name|class
+name|OMPTargetTeamsDistributeSimdDirective
+name|final
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTargetTeamsDistributeSimdDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetTeamsDistributeSimdDirectiveClass
+argument_list|,
+argument|OMPD_target_teams_distribute_simd
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTargetTeamsDistributeSimdDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetTeamsDistributeSimdDirectiveClass
+argument_list|,
+argument|OMPD_target_teams_distribute_simd
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPTargetTeamsDistributeSimdDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// Creates an empty directive with the place for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTargetTeamsDistributeSimdDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTargetTeamsDistributeSimdDirectiveClass
 return|;
 block|}
 expr|}

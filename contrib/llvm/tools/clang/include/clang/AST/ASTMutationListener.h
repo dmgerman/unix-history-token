@@ -88,6 +88,9 @@ name|class
 name|DeclContext
 decl_stmt|;
 name|class
+name|FieldDecl
+decl_stmt|;
+name|class
 name|FunctionDecl
 decl_stmt|;
 name|class
@@ -321,6 +324,17 @@ name|DefaultArgumentInstantiated
 parameter_list|(
 specifier|const
 name|ParmVarDecl
+modifier|*
+name|D
+parameter_list|)
+block|{}
+comment|/// \brief A default member initializer was instantiated.
+name|virtual
+name|void
+name|DefaultMemberInitializerInstantiated
+parameter_list|(
+specifier|const
+name|FieldDecl
 modifier|*
 name|D
 parameter_list|)

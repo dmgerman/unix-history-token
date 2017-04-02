@@ -55,6 +55,12 @@ directive|include
 file|<iterator>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -76,6 +82,32 @@ comment|///
 comment|/// Another abstraction that this doesn't provide is implementing increment in
 comment|/// terms of addition of one. These aren't equivalent for all iterator
 comment|/// categories, and respecting that adds a lot of complexity for little gain.
+comment|///
+comment|/// Classes wishing to use `iterator_facade_base` should implement the following
+comment|/// methods:
+comment|///
+comment|/// Forward Iterators:
+comment|///   (All of the following methods)
+comment|///   - DerivedT&operator=(const DerivedT&R);
+comment|///   - bool operator==(const DerivedT&R) const;
+comment|///   - const T&operator*() const;
+comment|///   - T&operator*();
+comment|///   - DerivedT&operator++();
+comment|///
+comment|/// Bidirectional Iterators:
+comment|///   (All methods of forward iterators, plus the following)
+comment|///   - DerivedT&operator--();
+comment|///
+comment|/// Random-access Iterators:
+comment|///   (All methods of bidirectional iterators excluding the following)
+comment|///   - DerivedT&operator++();
+comment|///   - DerivedT&operator--();
+comment|///   (and plus the following)
+comment|///   - bool operator<(const DerivedT&RHS) const;
+comment|///   - DifferenceTypeT operator-(const DerivedT&R) const;
+comment|///   - DerivedT&operator+=(DifferenceTypeT N);
+comment|///   - DerivedT&operator-=(DifferenceTypeT N);
+comment|///
 name|template
 operator|<
 name|typename
@@ -1238,11 +1270,121 @@ return|;
 block|}
 end_expr_stmt
 
-begin_endif
+begin_expr_stmt
+unit|};
+name|template
+operator|<
+name|typename
+name|WrappedIteratorT
+operator|,
+name|typename
+name|T
+operator|=
+name|decltype
+argument_list|(
+operator|&
+operator|*
+name|std
+operator|::
+name|declval
+operator|<
+name|WrappedIteratorT
+operator|>
+operator|(
+operator|)
+argument_list|)
+operator|>
+name|class
+name|pointer_iterator
+operator|:
+name|public
+name|iterator_adaptor_base
+operator|<
+name|pointer_iterator
+operator|<
+name|WrappedIteratorT
+operator|>
+operator|,
+name|WrappedIteratorT
+operator|,
+name|T
+operator|>
+block|{
+name|mutable
+name|T
+name|Ptr
+block|;
+name|public
+operator|:
+name|pointer_iterator
+argument_list|()
+operator|=
+expr|default
+block|;
+name|explicit
+name|pointer_iterator
+argument_list|(
+argument|WrappedIteratorT u
+argument_list|)
+operator|:
+name|pointer_iterator
+operator|::
+name|iterator_adaptor_base
+argument_list|(
+argument|std::move(u)
+argument_list|)
+block|{}
+name|T
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+block|{
+return|return
+name|Ptr
+operator|=
+operator|&
+operator|*
+name|this
+operator|->
+name|I
+return|;
+block|}
+specifier|const
+name|T
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|Ptr
+operator|=
+operator|&
+operator|*
+name|this
+operator|->
+name|I
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 unit|};  }
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_ITERATOR_H
+end_comment
 
 end_unit
 

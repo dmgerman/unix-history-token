@@ -66,15 +66,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCInst
-decl_stmt|;
-name|class
-name|MemoryObject
-decl_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
 name|AArch64Disassembler
 range|:
 name|public
@@ -104,7 +95,10 @@ block|{}
 operator|~
 name|AArch64Disassembler
 argument_list|()
-block|{}
+name|override
+operator|=
+expr|default
+block|;
 name|MCDisassembler
 operator|::
 name|DecodeStatus
@@ -130,13 +124,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_AARCH64_DISASSEMBLER_AARCH64DISASSEMBLER_H
+end_comment
 
 end_unit
 

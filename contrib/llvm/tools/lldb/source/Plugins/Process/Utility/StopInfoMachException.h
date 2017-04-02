@@ -120,7 +120,7 @@ name|m_exc_subcode
 argument_list|(
 argument|exc_subcode
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|StopInfoMachException
 argument_list|()

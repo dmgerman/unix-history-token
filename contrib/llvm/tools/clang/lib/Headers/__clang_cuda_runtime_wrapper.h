@@ -138,7 +138,7 @@ literal|7000
 operator|||
 name|CUDA_VERSION
 operator|>
-literal|7050
+literal|8000
 end_elif
 
 begin_error
@@ -181,11 +181,11 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"cuda_builtin_vars.h"
+file|"__clang_cuda_builtin_vars.h"
 end_include
 
 begin_comment
-comment|// No need for device_launch_parameters.h as cuda_builtin_vars.h above
+comment|// No need for device_launch_parameters.h as __clang_cuda_builtin_vars.h above
 end_comment
 
 begin_comment
@@ -381,6 +381,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|__cxa_vec_new
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|__cxa_vec_new2
 end_undef
 
@@ -413,6 +419,50 @@ undef|#
 directive|undef
 name|__cxa_pure_virtual
 end_undef
+
+begin_comment
+comment|// math_functions.hpp expects this host function be defined on MacOS, but it
+end_comment
+
+begin_comment
+comment|// ends up not being there because of the games we play here.  Just define it
+end_comment
+
+begin_comment
+comment|// ourselves; it's simple enough.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__APPLE__
+end_ifdef
+
+begin_function
+specifier|inline
+name|__host__
+name|double
+name|__signbitd
+parameter_list|(
+name|double
+name|x
+parameter_list|)
+block|{
+return|return
+name|std
+operator|::
+name|signbit
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// We need decls for functions in CUDA's libdevice with __device__
@@ -481,6 +531,80 @@ directive|define
 name|__host__
 value|UNEXPECTED_HOST_ATTRIBUTE
 end_define
+
+begin_comment
+comment|// CUDA 8.0.41 relies on __USE_FAST_MATH__ and __CUDA_PREC_DIV's values.
+end_comment
+
+begin_comment
+comment|// Previous versions used to check whether they are defined or not.
+end_comment
+
+begin_comment
+comment|// CU_DEVICE_INVALID macro is only defined in 8.0.41, so we use it
+end_comment
+
+begin_comment
+comment|// here to detect the switch.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CU_DEVICE_INVALID
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__USE_FAST_MATH__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__USE_FAST_MATH__
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__CUDA_PREC_DIV
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__CUDA_PREC_DIV
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// device_functions.hpp and math_functions*.hpp use 'static
@@ -566,6 +690,7 @@ begin_define
 define|#
 directive|define
 name|__USE_FAST_MATH__
+value|1
 end_define
 
 begin_endif
@@ -951,6 +1076,31 @@ begin_comment
 comment|// reason about our code.
 end_comment
 
+begin_if
+if|#
+directive|if
+name|CUDA_VERSION
+operator|>=
+literal|8000
+end_if
+
+begin_include
+include|#
+directive|include
+file|"sm_60_atomic_functions.hpp"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sm_61_intrinsics.hpp"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_undef
 undef|#
 directive|undef
@@ -1317,11 +1467,11 @@ comment|// namespace std
 end_comment
 
 begin_comment
-comment|// Out-of-line implementations from cuda_builtin_vars.h.  These need to come
+comment|// Out-of-line implementations from __clang_cuda_builtin_vars.h.  These need to
 end_comment
 
 begin_comment
-comment|// after we've pulled in the definition of uint3 and dim3.
+comment|// come after we've pulled in the definition of uint3 and dim3.
 end_comment
 
 begin_expr_stmt
@@ -1456,6 +1606,12 @@ directive|include
 file|<__clang_cuda_intrinsics.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<__clang_cuda_complex_builtins.h>
+end_include
+
 begin_comment
 comment|// curand_mtgp32_kernel helpfully redeclares blockDim and threadIdx in host
 end_comment
@@ -1465,19 +1621,19 @@ comment|// mode, giving them their "proper" types of dim3 and uint3.  This is
 end_comment
 
 begin_comment
-comment|// incompatible with the types we give in cuda_builtin_vars.h.  As as hack,
+comment|// incompatible with the types we give in __clang_cuda_builtin_vars.h.  As as
 end_comment
 
 begin_comment
-comment|// force-include the header (nvcc doesn't include it by default) but redefine
+comment|// hack, force-include the header (nvcc doesn't include it by default) but
 end_comment
 
 begin_comment
-comment|// dim3 and uint3 to our builtin types.  (Thankfully dim3 and uint3 are only
+comment|// redefine dim3 and uint3 to our builtin types.  (Thankfully dim3 and uint3 are
 end_comment
 
 begin_comment
-comment|// used here for the redeclarations of blockDim and threadIdx.)
+comment|// only used here for the redeclarations of blockDim and threadIdx.)
 end_comment
 
 begin_pragma

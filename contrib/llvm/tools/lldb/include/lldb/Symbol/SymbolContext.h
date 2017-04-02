@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Address.h"
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Utility/Iterable.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -428,10 +428,14 @@ comment|//------------------------------------------------------------------
 comment|/// Get the address range contained within a symbol context.
 comment|///
 comment|/// Address range priority is as follows:
-comment|///     - line_entry address range if line_entry is valid and eSymbolContextLineEntry is set in \a scope
-comment|///     - block address range if block is not nullptr and eSymbolContextBlock is set in \a scope
-comment|///     - function address range if function is not nullptr and eSymbolContextFunction is set in \a scope
-comment|///     - symbol address range if symbol is not nullptr and eSymbolContextSymbol is set in \a scope
+comment|///     - line_entry address range if line_entry is valid and
+comment|///     eSymbolContextLineEntry is set in \a scope
+comment|///     - block address range if block is not nullptr and eSymbolContextBlock
+comment|///     is set in \a scope
+comment|///     - function address range if function is not nullptr and
+comment|///     eSymbolContextFunction is set in \a scope
+comment|///     - symbol address range if symbol is not nullptr and
+comment|///     eSymbolContextSymbol is set in \a scope
 comment|///
 comment|/// @param[in] scope
 comment|///     A mask of symbol context bits telling this function which

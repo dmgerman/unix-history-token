@@ -64,6 +64,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<functional>
 end_include
 
@@ -144,32 +156,35 @@ name|GUID
 operator|>
 name|ExportSetTy
 expr_stmt|;
-comment|/// Create a Function Importer.
-name|FunctionImporter
-argument_list|(
-specifier|const
-name|ModuleSummaryIndex
-operator|&
-name|Index
-argument_list|,
+comment|/// A function of this type is used to load modules referenced by the index.
+typedef|typedef
 name|std
 operator|::
 name|function
+operator|<
+name|Expected
 operator|<
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|Module
-operator|>
+operator|>>
 operator|(
 name|StringRef
 name|Identifier
 operator|)
 operator|>
-name|ModuleLoader
+name|ModuleLoaderTy
+expr_stmt|;
+comment|/// Create a Function Importer.
+name|FunctionImporter
+argument_list|(
+argument|const ModuleSummaryIndex&Index
+argument_list|,
+argument|ModuleLoaderTy ModuleLoader
 argument_list|)
-operator|:
+block|:
 name|Index
 argument_list|(
 name|Index
@@ -184,7 +199,10 @@ comment|/// Import functions in Module \p M based on the supplied import list.
 comment|/// \p ForceImportReferencedDiscardableSymbols will set the ModuleLinker in
 comment|/// a mode where referenced discarable symbols in the source modules will be
 comment|/// imported as well even if they are not present in the ImportList.
+name|Expected
+operator|<
 name|bool
+operator|>
 name|importFunctions
 argument_list|(
 argument|Module&M
@@ -203,25 +221,36 @@ modifier|&
 name|Index
 decl_stmt|;
 comment|/// Factory function to load a Module for a given identifier
-name|std
-operator|::
-name|function
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|Module
-operator|>
-operator|(
-name|StringRef
-name|Identifier
-operator|)
-operator|>
+name|ModuleLoaderTy
 name|ModuleLoader
-expr_stmt|;
+decl_stmt|;
 block|}
 empty_stmt|;
+comment|/// The function importing pass
+name|class
+name|FunctionImportPass
+range|:
+name|public
+name|PassInfoMixin
+operator|<
+name|FunctionImportPass
+operator|>
+block|{
+name|public
+operator|:
+name|PreservedAnalyses
+name|run
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|,
+name|ModuleAnalysisManager
+operator|&
+name|AM
+argument_list|)
+block|; }
+decl_stmt|;
 comment|/// Compute all the imports and exports for every module in the Index.
 comment|///
 comment|/// \p ModuleToDefinedGVSummaries contains for each Module a map
@@ -234,6 +263,9 @@ comment|///
 comment|/// \p ExportLists contains for each Module the set of globals (GUID) that will
 comment|/// be imported by another module, or referenced by such a function. I.e. this
 comment|/// is the set of globals that need to be promoted/renamed appropriately.
+comment|///
+comment|/// \p DeadSymbols (optional) contains a list of GUID that are deemed "dead" and
+comment|/// will be ignored for the purpose of importing.
 name|void
 name|ComputeCrossModuleImport
 argument_list|(
@@ -267,6 +299,18 @@ name|ExportSetTy
 operator|>
 operator|&
 name|ExportLists
+argument_list|,
+specifier|const
+name|DenseSet
+operator|<
+name|GlobalValue
+operator|::
+name|GUID
+operator|>
+operator|*
+name|DeadSymbols
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// Compute all the imports for the given module using the Index.
@@ -291,6 +335,33 @@ operator|&
 name|ImportList
 argument_list|)
 decl_stmt|;
+comment|/// Compute all the symbols that are "dead": i.e these that can't be reached
+comment|/// in the graph from any of the given symbols listed in
+comment|/// \p GUIDPreservedSymbols.
+name|DenseSet
+operator|<
+name|GlobalValue
+operator|::
+name|GUID
+operator|>
+name|computeDeadSymbols
+argument_list|(
+specifier|const
+name|ModuleSummaryIndex
+operator|&
+name|Index
+argument_list|,
+specifier|const
+name|DenseSet
+operator|<
+name|GlobalValue
+operator|::
+name|GUID
+operator|>
+operator|&
+name|GUIDPreservedSymbols
+argument_list|)
+expr_stmt|;
 comment|/// Compute the set of summaries needed for a ThinLTO backend compilation of
 comment|/// \p ModulePath.
 comment|//
@@ -316,14 +387,11 @@ operator|&
 name|ModuleToDefinedGVSummaries
 argument_list|,
 specifier|const
-name|StringMap
-operator|<
 name|FunctionImporter
 operator|::
 name|ImportMapTy
-operator|>
 operator|&
-name|ImportLists
+name|ImportList
 argument_list|,
 name|std
 operator|::
@@ -339,6 +407,7 @@ operator|&
 name|ModuleToSummariesForIndex
 argument_list|)
 decl_stmt|;
+comment|/// Emit into \p OutputFilename the files module \p ModulePath will import from.
 name|std
 operator|::
 name|error_code
@@ -348,7 +417,7 @@ argument|StringRef ModulePath
 argument_list|,
 argument|StringRef OutputFilename
 argument_list|,
-argument|const StringMap<FunctionImporter::ImportMapTy>&ImportLists
+argument|const FunctionImporter::ImportMapTy&ModuleImports
 argument_list|)
 expr_stmt|;
 comment|/// Resolve WeakForLinker values in \p TheModule based on the information

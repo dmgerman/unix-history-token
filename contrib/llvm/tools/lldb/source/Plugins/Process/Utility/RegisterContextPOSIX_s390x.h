@@ -62,13 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/RegisterContext.h"
+file|"RegisterContext_s390x.h"
 end_include
 
 begin_include
@@ -80,13 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"RegisterContext_s390x.h"
+file|"lldb-s390x-register-enums.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb-s390x-register-enums.h"
+file|"lldb/Core/Log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/RegisterContext.h"
 end_include
 
 begin_decl_stmt
@@ -214,7 +214,7 @@ name|first_fpr
 block|;
 name|uint32_t
 name|last_fpr
-block|;     }
+block|;   }
 block|;
 name|RegInfo
 name|m_reg_info

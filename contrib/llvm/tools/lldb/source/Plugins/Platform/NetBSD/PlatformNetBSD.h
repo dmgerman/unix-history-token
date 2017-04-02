@@ -178,9 +178,9 @@ comment|//------------------------------------------------------------
 name|bool
 name|GetModuleSpec
 argument_list|(
-argument|const FileSpec& module_file_spec
+argument|const FileSpec&module_file_spec
 argument_list|,
-argument|const ArchSpec& arch
+argument|const ArchSpec&arch
 argument_list|,
 argument|ModuleSpec&module_spec
 argument_list|)
@@ -248,7 +248,7 @@ block|;
 name|Error
 name|ConnectRemote
 argument_list|(
-argument|Args& args
+argument|Args&args
 argument_list|)
 name|override
 block|;
@@ -338,7 +338,7 @@ name|GetFileWithUUID
 argument_list|(
 argument|const FileSpec&platform_file
 argument_list|,
-argument|const UUID* uuid
+argument|const UUID *uuid
 argument_list|,
 argument|FileSpec&local_file
 argument_list|)
@@ -349,7 +349,7 @@ name|GetSharedModule
 argument_list|(
 argument|const ModuleSpec&module_spec
 argument_list|,
-argument|Process* process
+argument|Process *process
 argument_list|,
 argument|lldb::ModuleSP&module_sp
 argument_list|,
@@ -389,14 +389,15 @@ operator|::
 name|PlatformSP
 name|m_remote_platform_sp
 block|;
-comment|// Allow multiple ways to connect to a remote netbsd OS
+comment|// Allow multiple ways to connect to a
+comment|// remote netbsd OS
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|PlatformNetBSD
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 comment|// namespace platform_netbsd

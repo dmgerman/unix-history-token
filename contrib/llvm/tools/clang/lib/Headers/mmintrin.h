@@ -99,7 +99,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c EMMS instruction.
+comment|/// This intrinsic corresponds to the<c> EMMS</c> instruction.
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVD / MOVD instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVD / MOVD</c> instruction.
 end_comment
 
 begin_comment
@@ -212,7 +212,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVD / MOVD instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVD / MOVD</c> instruction.
 end_comment
 
 begin_comment
@@ -277,7 +277,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVQ / MOVD instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVQ / MOVD</c> instruction.
 end_comment
 
 begin_comment
@@ -338,7 +338,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVQ / MOVD instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVQ / MOVD</c> instruction.
 end_comment
 
 begin_comment
@@ -416,7 +416,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PACKSSWB instruction.
+comment|/// This intrinsic corresponds to the<c> PACKSSWB</c> instruction.
 end_comment
 
 begin_comment
@@ -546,7 +546,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PACKSSDW instruction.
+comment|/// This intrinsic corresponds to the<c> PACKSSDW</c> instruction.
 end_comment
 
 begin_comment
@@ -676,7 +676,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PACKUSWB instruction.
+comment|/// This intrinsic corresponds to the<c> PACKUSWB</c> instruction.
 end_comment
 
 begin_comment
@@ -794,7 +794,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PUNPCKHBW instruction.
+comment|/// This intrinsic corresponds to the<c> PUNPCKHBW</c> instruction.
 end_comment
 
 begin_comment
@@ -806,19 +806,19 @@ comment|/// \param __m1
 end_comment
 
 begin_comment
-comment|///    A 64-bit integer vector of [8 x i8].
+comment|///    A 64-bit integer vector of [8 x i8]. \n
 end_comment
 
 begin_comment
-comment|///    Bits [39:32] are written to bits [7:0] of the result.
+comment|///    Bits [39:32] are written to bits [7:0] of the result. \n
 end_comment
 
 begin_comment
-comment|///    Bits [47:40] are written to bits [23:16] of the result.
+comment|///    Bits [47:40] are written to bits [23:16] of the result. \n
 end_comment
 
 begin_comment
-comment|///    Bits [55:48] are written to bits [39:32] of the result.
+comment|///    Bits [55:48] are written to bits [39:32] of the result. \n
 end_comment
 
 begin_comment
@@ -834,15 +834,15 @@ comment|///    A 64-bit integer vector of [8 x i8].
 end_comment
 
 begin_comment
-comment|///    Bits [39:32] are written to bits [15:8] of the result.
+comment|///    Bits [39:32] are written to bits [15:8] of the result. \n
 end_comment
 
 begin_comment
-comment|///    Bits [47:40] are written to bits [31:24] of the result.
+comment|///    Bits [47:40] are written to bits [31:24] of the result. \n
 end_comment
 
 begin_comment
-comment|///    Bits [55:48] are written to bits [47:40] of the result.
+comment|///    Bits [55:48] are written to bits [47:40] of the result. \n
 end_comment
 
 begin_comment
@@ -912,7 +912,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PUNPCKHWD instruction.
+comment|/// This intrinsic corresponds to the<c> PUNPCKHWD</c> instruction.
 end_comment
 
 begin_comment
@@ -928,7 +928,7 @@ comment|///    A 64-bit integer vector of [4 x i16].
 end_comment
 
 begin_comment
-comment|///    Bits [47:32] are written to bits [15:0] of the result.
+comment|///    Bits [47:32] are written to bits [15:0] of the result. \n
 end_comment
 
 begin_comment
@@ -944,7 +944,7 @@ comment|///    A 64-bit integer vector of [4 x i16].
 end_comment
 
 begin_comment
-comment|///    Bits [47:32] are written to bits [31:16] of the result.
+comment|///    Bits [47:32] are written to bits [31:16] of the result. \n
 end_comment
 
 begin_comment
@@ -1014,7 +1014,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PUNPCKHDQ instruction.
+comment|/// This intrinsic corresponds to the<c> PUNPCKHDQ</c> instruction.
 end_comment
 
 begin_comment
@@ -1108,7 +1108,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PUNPCKLBW instruction.
+comment|/// This intrinsic corresponds to the<c> PUNPCKLBW</c> instruction.
 end_comment
 
 begin_comment
@@ -1124,15 +1124,15 @@ comment|///    A 64-bit integer vector of [8 x i8].
 end_comment
 
 begin_comment
-comment|///    Bits [7:0] are written to bits [7:0] of the result.
+comment|///    Bits [7:0] are written to bits [7:0] of the result. \n
 end_comment
 
 begin_comment
-comment|///    Bits [15:8] are written to bits [23:16] of the result.
+comment|///    Bits [15:8] are written to bits [23:16] of the result. \n
 end_comment
 
 begin_comment
-comment|///    Bits [23:16] are written to bits [39:32] of the result.
+comment|///    Bits [23:16] are written to bits [39:32] of the result. \n
 end_comment
 
 begin_comment
@@ -1148,15 +1148,15 @@ comment|///    A 64-bit integer vector of [8 x i8].
 end_comment
 
 begin_comment
-comment|///    Bits [7:0] are written to bits [15:8] of the result.
+comment|///    Bits [7:0] are written to bits [15:8] of the result. \n
 end_comment
 
 begin_comment
-comment|///    Bits [15:8] are written to bits [31:24] of the result.
+comment|///    Bits [15:8] are written to bits [31:24] of the result. \n
 end_comment
 
 begin_comment
-comment|///    Bits [23:16] are written to bits [47:40] of the result.
+comment|///    Bits [23:16] are written to bits [47:40] of the result. \n
 end_comment
 
 begin_comment
@@ -1226,7 +1226,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PUNPCKLWD instruction.
+comment|/// This intrinsic corresponds to the<c> PUNPCKLWD</c> instruction.
 end_comment
 
 begin_comment
@@ -1242,7 +1242,7 @@ comment|///    A 64-bit integer vector of [4 x i16].
 end_comment
 
 begin_comment
-comment|///    Bits [15:0] are written to bits [15:0] of the result.
+comment|///    Bits [15:0] are written to bits [15:0] of the result. \n
 end_comment
 
 begin_comment
@@ -1258,7 +1258,7 @@ comment|///    A 64-bit integer vector of [4 x i16].
 end_comment
 
 begin_comment
-comment|///    Bits [15:0] are written to bits [31:16] of the result.
+comment|///    Bits [15:0] are written to bits [31:16] of the result. \n
 end_comment
 
 begin_comment
@@ -1328,7 +1328,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PUNPCKLDQ instruction.
+comment|/// This intrinsic corresponds to the<c> PUNPCKLDQ</c> instruction.
 end_comment
 
 begin_comment
@@ -1430,7 +1430,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PADDB instruction.
+comment|/// This intrinsic corresponds to the<c> PADDB</c> instruction.
 end_comment
 
 begin_comment
@@ -1524,7 +1524,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PADDW instruction.
+comment|/// This intrinsic corresponds to the<c> PADDW</c> instruction.
 end_comment
 
 begin_comment
@@ -1618,7 +1618,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PADDD instruction.
+comment|/// This intrinsic corresponds to the<c> PADDD</c> instruction.
 end_comment
 
 begin_comment
@@ -1716,7 +1716,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PADDSB instruction.
+comment|/// This intrinsic corresponds to the<c> PADDSB</c> instruction.
 end_comment
 
 begin_comment
@@ -1818,7 +1818,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PADDSW instruction.
+comment|/// This intrinsic corresponds to the<c> PADDSW</c> instruction.
 end_comment
 
 begin_comment
@@ -1916,7 +1916,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PADDUSB instruction.
+comment|/// This intrinsic corresponds to the<c> PADDUSB</c> instruction.
 end_comment
 
 begin_comment
@@ -2014,7 +2014,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PADDUSW instruction.
+comment|/// This intrinsic corresponds to the<c> PADDUSW</c> instruction.
 end_comment
 
 begin_comment
@@ -2108,7 +2108,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSUBB instruction.
+comment|/// This intrinsic corresponds to the<c> PSUBB</c> instruction.
 end_comment
 
 begin_comment
@@ -2202,7 +2202,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSUBW instruction.
+comment|/// This intrinsic corresponds to the<c> PSUBW</c> instruction.
 end_comment
 
 begin_comment
@@ -2296,7 +2296,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSUBD instruction.
+comment|/// This intrinsic corresponds to the<c> PSUBD</c> instruction.
 end_comment
 
 begin_comment
@@ -2398,7 +2398,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSUBSB instruction.
+comment|/// This intrinsic corresponds to the<c> PSUBSB</c> instruction.
 end_comment
 
 begin_comment
@@ -2500,7 +2500,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSUBSW instruction.
+comment|/// This intrinsic corresponds to the<c> PSUBSW</c> instruction.
 end_comment
 
 begin_comment
@@ -2602,7 +2602,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSUBUSB instruction.
+comment|/// This intrinsic corresponds to the<c> PSUBUSB</c> instruction.
 end_comment
 
 begin_comment
@@ -2704,7 +2704,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSUBUSW instruction.
+comment|/// This intrinsic corresponds to the<c> PSUBUSW</c> instruction.
 end_comment
 
 begin_comment
@@ -2814,7 +2814,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PMADDWD instruction.
+comment|/// This intrinsic corresponds to the<c> PMADDWD</c> instruction.
 end_comment
 
 begin_comment
@@ -2908,7 +2908,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PMULHW instruction.
+comment|/// This intrinsic corresponds to the<c> PMULHW</c> instruction.
 end_comment
 
 begin_comment
@@ -3002,7 +3002,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PMULLW instruction.
+comment|/// This intrinsic corresponds to the<c> PMULLW</c> instruction.
 end_comment
 
 begin_comment
@@ -3100,7 +3100,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSLLW instruction.
+comment|/// This intrinsic corresponds to the<c> PSLLW</c> instruction.
 end_comment
 
 begin_comment
@@ -3128,7 +3128,11 @@ comment|/// \returns A 64-bit integer vector of [4 x i16] containing the left-sh
 end_comment
 
 begin_comment
-comment|///    values. If __count is greater or equal to 16, the result is set to all 0.
+comment|///    values. If \a __count is greater or equal to 16, the result is set to all
+end_comment
+
+begin_comment
+comment|///    0.
 end_comment
 
 begin_function
@@ -3191,7 +3195,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSLLW instruction.
+comment|/// This intrinsic corresponds to the<c> PSLLW</c> instruction.
 end_comment
 
 begin_comment
@@ -3219,7 +3223,11 @@ comment|/// \returns A 64-bit integer vector of [4 x i16] containing the left-sh
 end_comment
 
 begin_comment
-comment|///    values. If __count is greater or equal to 16, the result is set to all 0.
+comment|///    values. If \a __count is greater or equal to 16, the result is set to all
+end_comment
+
+begin_comment
+comment|///    0.
 end_comment
 
 begin_function
@@ -3286,7 +3294,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSLLD instruction.
+comment|/// This intrinsic corresponds to the<c> PSLLD</c> instruction.
 end_comment
 
 begin_comment
@@ -3314,7 +3322,11 @@ comment|/// \returns A 64-bit integer vector of [2 x i32] containing the left-sh
 end_comment
 
 begin_comment
-comment|///    values. If __count is greater or equal to 32, the result is set to all 0.
+comment|///    values. If \a __count is greater or equal to 32, the result is set to all
+end_comment
+
+begin_comment
+comment|///    0.
 end_comment
 
 begin_function
@@ -3377,7 +3389,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSLLD instruction.
+comment|/// This intrinsic corresponds to the<c> PSLLD</c> instruction.
 end_comment
 
 begin_comment
@@ -3405,7 +3417,11 @@ comment|/// \returns A 64-bit integer vector of [2 x i32] containing the left-sh
 end_comment
 
 begin_comment
-comment|///    values. If __count is greater or equal to 32, the result is set to all 0.
+comment|///    values. If \a __count is greater or equal to 32, the result is set to all
+end_comment
+
+begin_comment
+comment|///    0.
 end_comment
 
 begin_function
@@ -3464,7 +3480,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSLLQ instruction.
+comment|/// This intrinsic corresponds to the<c> PSLLQ</c> instruction.
 end_comment
 
 begin_comment
@@ -3492,7 +3508,7 @@ comment|/// \returns A 64-bit integer vector containing the left-shifted value. 
 end_comment
 
 begin_comment
-comment|///     __count is greater or equal to 64, the result is set to 0.
+comment|///     \a __count is greater or equal to 64, the result is set to 0.
 end_comment
 
 begin_function
@@ -3551,7 +3567,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSLLQ instruction.
+comment|/// This intrinsic corresponds to the<c> PSLLQ</c> instruction.
 end_comment
 
 begin_comment
@@ -3579,7 +3595,7 @@ comment|/// \returns A 64-bit integer vector containing the left-shifted value. 
 end_comment
 
 begin_comment
-comment|///     __count is greater or equal to 64, the result is set to 0.
+comment|///     \a __count is greater or equal to 64, the result is set to 0.
 end_comment
 
 begin_function
@@ -3650,7 +3666,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSRAW instruction.
+comment|/// This intrinsic corresponds to the<c> PSRAW</c> instruction.
 end_comment
 
 begin_comment
@@ -3745,7 +3761,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSRAW instruction.
+comment|/// This intrinsic corresponds to the<c> PSRAW</c> instruction.
 end_comment
 
 begin_comment
@@ -3844,7 +3860,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSRAD instruction.
+comment|/// This intrinsic corresponds to the<c> PSRAD</c> instruction.
 end_comment
 
 begin_comment
@@ -3939,7 +3955,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSRAD instruction.
+comment|/// This intrinsic corresponds to the<c> PSRAD</c> instruction.
 end_comment
 
 begin_comment
@@ -4034,7 +4050,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSRLW instruction.
+comment|/// This intrinsic corresponds to the<c> PSRLW</c> instruction.
 end_comment
 
 begin_comment
@@ -4125,7 +4141,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSRLW instruction.
+comment|/// This intrinsic corresponds to the<c> PSRLW</c> instruction.
 end_comment
 
 begin_comment
@@ -4220,7 +4236,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSRLD instruction.
+comment|/// This intrinsic corresponds to the<c> PSRLD</c> instruction.
 end_comment
 
 begin_comment
@@ -4311,7 +4327,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSRLD instruction.
+comment|/// This intrinsic corresponds to the<c> PSRLD</c> instruction.
 end_comment
 
 begin_comment
@@ -4398,7 +4414,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSRLQ instruction.
+comment|/// This intrinsic corresponds to the<c> PSRLQ</c> instruction.
 end_comment
 
 begin_comment
@@ -4481,7 +4497,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSRLQ instruction.
+comment|/// This intrinsic corresponds to the<c> PSRLQ</c> instruction.
 end_comment
 
 begin_comment
@@ -4556,7 +4572,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PAND instruction.
+comment|/// This intrinsic corresponds to the<c> PAND</c> instruction.
 end_comment
 
 begin_comment
@@ -4643,7 +4659,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PANDN instruction.
+comment|/// This intrinsic corresponds to the<c> PANDN</c> instruction.
 end_comment
 
 begin_comment
@@ -4726,7 +4742,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c POR instruction.
+comment|/// This intrinsic corresponds to the<c> POR</c> instruction.
 end_comment
 
 begin_comment
@@ -4805,7 +4821,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PXOR instruction.
+comment|/// This intrinsic corresponds to the<c> PXOR</c> instruction.
 end_comment
 
 begin_comment
@@ -4896,7 +4912,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PCMPEQB instruction.
+comment|/// This intrinsic corresponds to the<c> PCMPEQB</c> instruction.
 end_comment
 
 begin_comment
@@ -4990,7 +5006,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PCMPEQW instruction.
+comment|/// This intrinsic corresponds to the<c> PCMPEQW</c> instruction.
 end_comment
 
 begin_comment
@@ -5084,7 +5100,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PCMPEQD instruction.
+comment|/// This intrinsic corresponds to the<c> PCMPEQD</c> instruction.
 end_comment
 
 begin_comment
@@ -5178,7 +5194,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PCMPGTB instruction.
+comment|/// This intrinsic corresponds to the<c> PCMPGTB</c> instruction.
 end_comment
 
 begin_comment
@@ -5272,7 +5288,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PCMPGTW instruction.
+comment|/// This intrinsic corresponds to the<c> PCMPGTW</c> instruction.
 end_comment
 
 begin_comment
@@ -5366,7 +5382,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PCMPGTD instruction.
+comment|/// This intrinsic corresponds to the<c> PCMPGTD</c> instruction.
 end_comment
 
 begin_comment
@@ -5448,7 +5464,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the the \c VXORPS / XORPS instruction.
+comment|/// This intrinsic corresponds to the the<c> VXORPS / XORPS</c> instruction.
 end_comment
 
 begin_comment
@@ -5857,7 +5873,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSHUFD / PSHUFD instruction.
+comment|/// This intrinsic corresponds to the<c> VPSHUFD / PSHUFD</c> instruction.
 end_comment
 
 begin_comment
@@ -5927,7 +5943,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSHUFLW / PSHUFLW instruction.
+comment|/// This intrinsic corresponds to the<c> VPSHUFLW / PSHUFLW</c> instruction.
 end_comment
 
 begin_comment
@@ -5997,11 +6013,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPUNPCKLBW + VPSHUFLW / \c PUNPCKLBW +
+comment|/// This intrinsic corresponds to the<c> VPUNPCKLBW + VPSHUFLW / PUNPCKLBW +
 end_comment
 
 begin_comment
-comment|///    PSHUFLW instruction.
+comment|///    PSHUFLW</c> instruction.
 end_comment
 
 begin_comment

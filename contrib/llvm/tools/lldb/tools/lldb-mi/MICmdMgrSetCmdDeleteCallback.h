@@ -75,11 +75,13 @@ begin_decl_stmt
 name|namespace
 name|CMICmdMgrSetCmdDeleteCallback
 block|{
-comment|//++ ============================================================================
+comment|//++
+comment|//============================================================================
 comment|// Details: MI Command Manager interface for client call back.
 comment|//          Objects that want to be notified of a command being deleted
 comment|//          inherit this interface and register interest in command object
-comment|//          deletion. An object deleting a command must not do it itself but call
+comment|//          deletion. An object deleting a command must not do it itself but
+comment|//          call
 comment|//          the Command Manager CmdDelete() function to delete a command object.
 comment|//--
 name|class
@@ -106,12 +108,16 @@ argument_list|()
 block|{}
 block|}
 empty_stmt|;
-comment|//++ ============================================================================
-comment|// Details: MI Command Manager container for clients registered interest in command
-comment|//          objects being deleted. Objects register an interest so when a command
+comment|//++
+comment|//============================================================================
+comment|// Details: MI Command Manager container for clients registered interest in
+comment|// command
+comment|//          objects being deleted. Objects register an interest so when a
+comment|//          command
 comment|//          is to be deleted that object wanting the delete calls the Command
 comment|//          Manager to delete the command object. In so do all other registered
-comment|//          objects get called to about the deletion including the object wanting
+comment|//          objects get called to about the deletion including the object
+comment|//          wanting
 comment|//          to do the delete in the first place.
 comment|//--
 name|class
@@ -179,7 +185,9 @@ label|:
 name|bool
 name|m_bClientUnregistered
 decl_stmt|;
-comment|// True = yes while deleting a client unregistered, false = no client unregistered during deletion
+comment|// True = yes while deleting a client
+comment|// unregistered, false = no client unregistered
+comment|// during deletion
 block|}
 empty_stmt|;
 block|}

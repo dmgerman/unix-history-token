@@ -80,13 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/Expression/UtilityFunction.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Expression/UtilityFunction.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -598,7 +598,9 @@ name|int
 operator|>
 name|MsgsendMap
 expr_stmt|;
-comment|// This table maps an dispatch fn address to the index in g_dispatch_functions
+comment|// This table maps an dispatch
+comment|// fn address to the index in
+comment|// g_dispatch_functions
 name|MsgsendMap
 name|m_msgSend_map
 decl_stmt|;

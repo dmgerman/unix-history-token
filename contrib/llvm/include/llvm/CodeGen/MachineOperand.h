@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Intrinsics.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -104,6 +110,9 @@ name|ModuleSlotTracker
 decl_stmt|;
 name|class
 name|TargetMachine
+decl_stmt|;
+name|class
+name|TargetIntrinsicInfo
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
@@ -184,7 +193,14 @@ name|MO_MCSymbol
 block|,
 comment|///< MCSymbol reference (for debug/eh info)
 name|MO_CFIIndex
+block|,
 comment|///< MCCFIInstruction index.
+name|MO_IntrinsicID
+block|,
+comment|///< Intrinsic ID for ISel
+name|MO_Predicate
+block|,
+comment|///< Generic predicate for ISel
 block|}
 enum|;
 name|private
@@ -363,6 +379,16 @@ name|unsigned
 name|CFIIndex
 decl_stmt|;
 comment|// For MO_CFI.
+name|Intrinsic
+operator|::
+name|ID
+name|IntrinsicID
+expr_stmt|;
+comment|// For MO_IntrinsicID.
+name|unsigned
+name|Pred
+decl_stmt|;
+comment|// For MO_Predicate
 struct|struct
 block|{
 comment|// For MO_Register.
@@ -586,6 +612,13 @@ operator|*
 name|TRI
 operator|=
 name|nullptr
+argument_list|,
+specifier|const
+name|TargetIntrinsicInfo
+operator|*
+name|IntrinsicInfo
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -606,9 +639,22 @@ operator|*
 name|TRI
 operator|=
 name|nullptr
+argument_list|,
+specifier|const
+name|TargetIntrinsicInfo
+operator|*
+name|IntrinsicInfo
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
+name|LLVM_DUMP_METHOD
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Accessors that tell you what kind of MachineOperand you're looking at.
 comment|//===--------------------------------------------------------------------===//
@@ -812,6 +858,28 @@ return|return
 name|OpKind
 operator|==
 name|MO_CFIIndex
+return|;
+block|}
+name|bool
+name|isIntrinsicID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpKind
+operator|==
+name|MO_IntrinsicID
+return|;
+block|}
+name|bool
+name|isPredicate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpKind
+operator|==
+name|MO_Predicate
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -1548,6 +1616,46 @@ operator|.
 name|CFIIndex
 return|;
 block|}
+name|Intrinsic
+operator|::
+name|ID
+name|getIntrinsicID
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isIntrinsicID
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|Contents
+operator|.
+name|IntrinsicID
+return|;
+block|}
+name|unsigned
+name|getPredicate
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isPredicate
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|Contents
+operator|.
+name|Pred
+return|;
+block|}
 comment|/// Return the offset from the symbol in this operand. This always returns 0
 comment|/// for ExternalSymbol operands.
 name|int64_t
@@ -1956,8 +2064,8 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Other methods.
 comment|//===--------------------------------------------------------------------===//
-comment|/// isIdenticalTo - Return true if this operand is identical to the specified
-comment|/// operand. Note: This method ignores isKill and isDead properties.
+comment|/// Returns true if this operand is identical to the specified operand except
+comment|/// for liveness related flags (isKill, isUndef and isDead).
 name|bool
 name|isIdenticalTo
 argument_list|(
@@ -2028,6 +2136,14 @@ parameter_list|(
 name|MCSymbol
 modifier|*
 name|Sym
+parameter_list|)
+function_decl|;
+comment|/// Replace this operand with a frame index.
+name|void
+name|ChangeToFrameIndex
+parameter_list|(
+name|int
+name|Idx
 parameter_list|)
 function_decl|;
 comment|/// ChangeToRegister - Replace this operand with a new register operand of
@@ -2900,6 +3016,64 @@ operator|.
 name|CFIIndex
 operator|=
 name|CFIIndex
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
+specifier|static
+name|MachineOperand
+name|CreateIntrinsicID
+argument_list|(
+name|Intrinsic
+operator|::
+name|ID
+name|ID
+argument_list|)
+block|{
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_IntrinsicID
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|Contents
+operator|.
+name|IntrinsicID
+operator|=
+name|ID
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
+specifier|static
+name|MachineOperand
+name|CreatePredicate
+parameter_list|(
+name|unsigned
+name|Pred
+parameter_list|)
+block|{
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_Predicate
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|Contents
+operator|.
+name|Pred
+operator|=
+name|Pred
 expr_stmt|;
 return|return
 name|Op

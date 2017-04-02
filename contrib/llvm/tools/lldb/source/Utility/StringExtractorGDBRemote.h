@@ -107,7 +107,25 @@ name|m_validator
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{     }
+block|{}
+name|StringExtractorGDBRemote
+argument_list|(
+argument|llvm::StringRef str
+argument_list|)
+operator|:
+name|StringExtractor
+argument_list|(
+name|str
+argument_list|)
+decl_stmt|,
+name|m_validator
+argument_list|(
+name|nullptr
+argument_list|)
+block|{}
+end_decl_stmt
+
+begin_expr_stmt
 name|StringExtractorGDBRemote
 argument_list|(
 specifier|const
@@ -120,15 +138,12 @@ name|StringExtractor
 argument_list|(
 name|cstr
 argument_list|)
-decl_stmt|,
+operator|,
 name|m_validator
 argument_list|(
-name|nullptr
+argument|nullptr
 argument_list|)
-block|{     }
-end_decl_stmt
-
-begin_expr_stmt
+block|{}
 name|StringExtractorGDBRemote
 argument_list|(
 specifier|const
@@ -146,12 +161,12 @@ name|m_validator
 argument_list|(
 argument|rhs.m_validator
 argument_list|)
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|StringExtractorGDBRemote
 argument_list|()
-block|{     }
+block|{}
 name|bool
 name|ValidateResponse
 argument_list|()
@@ -368,6 +383,8 @@ block|,
 name|eServerPacketType_qXfer_auxv_read
 block|,
 name|eServerPacketType_jSignalsInfo
+block|,
+name|eServerPacketType_jModulesInfo
 block|,
 name|eServerPacketType_vAttach
 block|,

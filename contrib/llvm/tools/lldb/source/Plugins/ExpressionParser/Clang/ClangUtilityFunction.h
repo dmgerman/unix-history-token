@@ -54,13 +54,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string>
+file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<string>
 end_include
 
 begin_include
@@ -86,18 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ClangForward.h"
 end_include
 
@@ -107,12 +95,25 @@ directive|include
 file|"lldb/Expression/UtilityFunction.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class ClangUtilityFunction ClangUtilityFunction.h "lldb/Expression/ClangUtilityFunction.h"
+comment|/// @class ClangUtilityFunction ClangUtilityFunction.h
+comment|/// "lldb/Expression/ClangUtilityFunction.h"
 comment|/// @brief Encapsulates a single expression for use with Clang
 comment|///
 comment|/// LLDB uses expressions for various purposes, notably to call functions
@@ -140,7 +141,7 @@ name|public
 operator|:
 name|ClangUtilityFunctionHelper
 argument_list|()
-block|{         }
+block|{}
 operator|~
 name|ClangUtilityFunctionHelper
 argument_list|()
@@ -171,11 +172,11 @@ name|m_expr_decl_map_up
 operator|.
 name|reset
 argument_list|()
-block|;         }
+block|; }
 name|void
 name|ResetDeclMap
 argument_list|(
-argument|ExecutionContext& exe_ctx
+argument|ExecutionContext&exe_ctx
 argument_list|,
 argument|bool keep_result_in_memory
 argument_list|)
@@ -211,7 +212,7 @@ operator|<
 name|ClangExpressionDeclMap
 operator|>
 name|m_expr_decl_map_up
-block|;     }
+block|;   }
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor
@@ -275,11 +276,11 @@ name|m_type_system_helper
 operator|.
 name|ResetDeclMap
 argument_list|()
-block|;     }
+block|; }
 name|void
 name|ResetDeclMap
 argument_list|(
-argument|ExecutionContext& exe_ctx
+argument|ExecutionContext&exe_ctx
 argument_list|,
 argument|bool keep_result_in_memory
 argument_list|)
@@ -292,7 +293,7 @@ name|exe_ctx
 argument_list|,
 name|keep_result_in_memory
 argument_list|)
-block|;     }
+block|;   }
 name|bool
 name|Install
 argument_list|(
@@ -307,7 +308,9 @@ operator|:
 name|ClangUtilityFunctionHelper
 name|m_type_system_helper
 block|;
-comment|///< The map to use when parsing and materializing the expression.
+comment|///< The map to use when
+comment|///parsing and materializing
+comment|///the expression.
 block|}
 decl_stmt|;
 block|}

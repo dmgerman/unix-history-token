@@ -109,6 +109,11 @@ name|MCInst
 operator|*
 name|MI
 argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|,
 name|raw_ostream
 operator|&
 name|O
@@ -156,6 +161,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -175,6 +182,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -216,17 +225,19 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
 name|printNamedBit
 argument_list|(
-argument|const MCInst* MI
+argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
-argument|raw_ostream& O
+argument|raw_ostream&O
 argument_list|,
 argument|StringRef BitName
 argument_list|)
@@ -278,6 +289,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -287,6 +300,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -298,15 +313,31 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printSMRDOffset
+name|printSMRDOffset8
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printSMRDOffset20
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -318,6 +349,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -327,6 +360,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -338,6 +373,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -347,6 +384,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -358,6 +397,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -367,6 +408,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -378,6 +421,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -387,6 +432,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -398,6 +445,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -407,6 +456,32 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printExpCompr
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printExpVM
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -426,13 +501,27 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printImmediate16
+argument_list|(
+argument|uint32_t Imm
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
 name|printImmediate32
 argument_list|(
-argument|uint32_t I
+argument|uint32_t Imm
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -440,7 +529,9 @@ block|;
 name|void
 name|printImmediate64
 argument_list|(
-argument|uint64_t I
+argument|uint64_t Imm
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -452,6 +543,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -461,6 +554,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -472,6 +567,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -481,6 +578,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -492,6 +591,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -502,6 +603,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -511,6 +614,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -532,6 +637,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -541,6 +648,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -552,6 +661,8 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
@@ -562,16 +673,55 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printInterpSlot
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
-argument|unsigned OpNum
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printInterpAttr
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printInterpAttrChan
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printVGPRIndexMode
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -582,6 +732,85 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|template
+operator|<
+name|unsigned
+name|N
+operator|>
+name|void
+name|printExpSrcN
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printExpSrc0
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printExpSrc1
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printExpSrc2
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printExpSrc3
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printExpTgt
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -615,7 +844,6 @@ argument_list|,
 argument|char Asm
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printAbs
 argument_list|(
@@ -623,10 +851,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printClamp
 argument_list|(
@@ -634,10 +863,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printClampSI
 argument_list|(
@@ -645,16 +875,19 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printOModSI
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -666,10 +899,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printLast
 argument_list|(
@@ -677,10 +911,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printNeg
 argument_list|(
@@ -688,10 +923,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printOMOD
 argument_list|(
@@ -699,10 +935,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printRel
 argument_list|(
@@ -710,10 +947,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printUpdateExecMask
 argument_list|(
@@ -721,10 +959,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printUpdatePred
 argument_list|(
@@ -732,10 +971,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printWrite
 argument_list|(
@@ -743,10 +983,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printSel
 argument_list|(
@@ -757,7 +998,6 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printBankSwizzle
 argument_list|(
@@ -765,10 +1005,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printRSel
 argument_list|(
@@ -776,10 +1017,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printCT
 argument_list|(
@@ -787,10 +1029,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printKCache
 argument_list|(
@@ -798,10 +1041,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printSendMsg
 argument_list|(
@@ -809,10 +1053,11 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printWaitFlag
 argument_list|(
@@ -820,16 +1065,19 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-specifier|static
 name|void
 name|printHwreg
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)

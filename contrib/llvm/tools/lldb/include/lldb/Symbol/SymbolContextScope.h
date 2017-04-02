@@ -70,7 +70,8 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class SymbolContextScope SymbolContextScope.h "lldb/Symbol/SymbolContextScope.h"
+comment|/// @class SymbolContextScope SymbolContextScope.h
+comment|/// "lldb/Symbol/SymbolContextScope.h"
 comment|/// @brief Inherit from this if your object is part of a symbol context
 comment|///        and can reconstruct its symbol context.
 comment|///

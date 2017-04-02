@@ -202,7 +202,7 @@ directive|define
 name|GET_ATTR_ENUM
 include|#
 directive|include
-file|"llvm/IR/Attributes.inc"
+file|"llvm/IR/Attributes.gen"
 name|EndAttrKinds
 comment|///< Sentinal value useful for loops
 block|}
@@ -1128,6 +1128,16 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Equivalent to hasAttribute(AttributeSet::FunctionIndex, Kind) but
+comment|/// may be faster.
+name|bool
+name|hasFnAttribute
+argument_list|(
+name|StringRef
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return true if the specified attribute is set for at least one
 comment|/// parameter or for the return value. If Index is not nullptr, the index
 comment|/// of a parameter with the specified attribute is provided.
@@ -1306,15 +1316,6 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// AttributeSet Introspection
 comment|//===--------------------------------------------------------------------===//
-comment|// FIXME: Remove this.
-name|uint64_t
-name|Raw
-argument_list|(
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// \brief Return a raw pointer that uniquely identifies this attribute list.
 name|void
 operator|*
@@ -1605,47 +1606,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-name|explicit
-name|AttrBuilder
-argument_list|(
-argument|uint64_t Val
-argument_list|)
-operator|:
-name|Attrs
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Alignment
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|StackAlignment
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|DerefBytes
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|DerefOrNullBytes
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|AllocSizeArgs
-argument_list|(
-literal|0
-argument_list|)
-block|{
-name|addRawValue
-argument_list|(
-name|Val
-argument_list|)
-block|;   }
 name|AttrBuilder
 argument_list|(
 specifier|const
@@ -2158,16 +2118,6 @@ name|B
 operator|)
 return|;
 block|}
-comment|// FIXME: Remove this in 4.0.
-comment|/// \brief Add the raw value to the internal representation.
-name|AttrBuilder
-modifier|&
-name|addRawValue
-parameter_list|(
-name|uint64_t
-name|Val
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

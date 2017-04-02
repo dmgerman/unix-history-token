@@ -178,6 +178,15 @@ operator|=
 literal|1
 argument_list|)
 decl_stmt|;
+comment|/// Merge existing function counts from the given writer.
+name|Error
+name|mergeRecordsFromWriter
+argument_list|(
+name|InstrProfWriter
+operator|&&
+name|IPW
+argument_list|)
+decl_stmt|;
 comment|/// Write the profile to \c OS
 name|void
 name|write

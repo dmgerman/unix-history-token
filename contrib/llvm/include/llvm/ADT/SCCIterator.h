@@ -116,6 +116,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -353,7 +371,9 @@ block|}
 comment|/// End is when the DFS stack is empty.
 name|scc_iterator
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|public
 label|:
 specifier|static
@@ -1099,8 +1119,7 @@ operator|<
 name|Inverse
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 name|scc_begin
 argument_list|(
 argument|const Inverse<T>&G
@@ -1112,8 +1131,7 @@ operator|<
 name|Inverse
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 operator|::
 name|begin
 argument_list|(
@@ -1138,8 +1156,7 @@ operator|<
 name|Inverse
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 name|scc_end
 argument_list|(
 argument|const Inverse<T>&G
@@ -1151,8 +1168,7 @@ operator|<
 name|Inverse
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 operator|::
 name|end
 argument_list|(
@@ -1164,13 +1180,17 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_SCCITERATOR_H
+end_comment
 
 end_unit
 

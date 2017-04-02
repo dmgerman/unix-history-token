@@ -116,6 +116,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMapInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -134,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Mutex.h"
 end_include
 
@@ -146,7 +164,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
 end_include
 
 begin_include
@@ -158,7 +188,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<memory>
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -323,8 +359,7 @@ operator|=
 name|ValueMapConfig
 operator|<
 name|KeyT
-operator|>
-expr|>
+operator|>>
 name|class
 name|ValueMap
 block|{
@@ -363,8 +398,7 @@ operator|,
 name|DenseMapInfo
 operator|<
 name|ValueMapCVH
-operator|>
-expr|>
+operator|>>
 name|MapT
 expr_stmt|;
 end_typedef
@@ -419,33 +453,6 @@ name|bool
 name|MayMapMetadata
 init|=
 name|true
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|ValueMap
-argument_list|(
-specifier|const
-name|ValueMap
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|ValueMap
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|ValueMap
-operator|&
-operator|)
-operator|=
-name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -530,6 +537,33 @@ argument_list|(
 argument|Data
 argument_list|)
 block|{}
+name|ValueMap
+argument_list|(
+specifier|const
+name|ValueMap
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|ValueMap
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|ValueMap
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|hasMD
 argument_list|()
@@ -1854,8 +1888,7 @@ operator|,
 name|ValueT
 operator|,
 name|Config
-operator|>
-expr|>
+operator|>>
 block|{
 typedef|typedef
 name|ValueMapCallbackVH
@@ -2580,6 +2613,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_VALUEMAP_H
+end_comment
 
 end_unit
 

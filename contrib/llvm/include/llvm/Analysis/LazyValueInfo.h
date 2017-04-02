@@ -487,8 +487,8 @@ decl_stmt|;
 name|private
 label|:
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 decl_stmt|;
 name|friend
 block|struct

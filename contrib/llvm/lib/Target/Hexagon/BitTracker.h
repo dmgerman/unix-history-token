@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- BitTracker.h -----------------------------------------------------===//
+comment|//===--- BitTracker.h -------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|BITTRACKER_H
+name|LLVM_LIB_TARGET_HEXAGON_BITTRACKER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|BITTRACKER_H
+name|LLVM_LIB_TARGET_HEXAGON_BITTRACKER_H
 end_define
 
 begin_include
@@ -64,6 +64,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineOperand.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -77,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -94,9 +118,6 @@ name|MachineBasicBlock
 decl_stmt|;
 name|class
 name|MachineInstr
-decl_stmt|;
-name|class
-name|MachineOperand
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -231,6 +252,24 @@ specifier|const
 name|MachineBasicBlock
 operator|*
 name|B
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|visit
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
+function_decl|;
+name|void
+name|print_cells
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1002,7 +1041,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}   inline
+unit|}  inline
 name|BitTracker
 operator|::
 name|BitValue
@@ -1050,17 +1089,9 @@ name|BitMask
 block|{
 name|BitMask
 argument_list|()
-operator|:
-name|B
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|E
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|BitMask
 argument_list|(
 argument|uint16_t b
@@ -1106,8 +1137,16 @@ end_label
 begin_decl_stmt
 name|uint16_t
 name|B
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint16_t
 name|E
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1618,7 +1657,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}   inline
+unit|}  inline
 name|BitTracker
 operator|::
 name|RegisterCell
@@ -1674,7 +1713,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}   inline
+unit|}  inline
 name|BitTracker
 operator|::
 name|RegisterCell
@@ -1787,7 +1826,9 @@ name|virtual
 operator|~
 name|MachineEvaluator
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|uint16_t
 name|getRegBitWidth
 argument_list|(
@@ -2443,6 +2484,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_HEXAGON_BITTRACKER_H
+end_comment
 
 end_unit
 

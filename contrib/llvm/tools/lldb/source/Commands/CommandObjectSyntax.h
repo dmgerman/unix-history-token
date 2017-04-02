@@ -97,7 +97,7 @@ operator|:
 name|bool
 name|DoExecute
 argument_list|(
-argument|Args& command
+argument|Args&command
 argument_list|,
 argument|CommandReturnObject&result
 argument_list|)

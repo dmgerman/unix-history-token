@@ -122,26 +122,16 @@ modifier|&
 name|MF
 parameter_list|)
 function_decl|;
-comment|/// getBundleStart - Returns the first instruction in the bundle containing MI.
-comment|///
+comment|/// Returns an iterator to the first instruction in the bundle containing \p I.
 specifier|inline
-name|MachineInstr
-modifier|&
-name|getBundleStart
-parameter_list|(
-name|MachineInstr
-modifier|&
-name|MI
-parameter_list|)
-block|{
 name|MachineBasicBlock
 operator|::
 name|instr_iterator
-name|I
+name|getBundleStart
 argument_list|(
-name|MI
+argument|MachineBasicBlock::instr_iterator I
 argument_list|)
-expr_stmt|;
+block|{
 while|while
 condition|(
 name|I
@@ -153,30 +143,25 @@ operator|--
 name|I
 expr_stmt|;
 return|return
-operator|*
 name|I
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Returns an iterator to the first instruction in the bundle containing \p I.
+end_comment
+
+begin_expr_stmt
 specifier|inline
-specifier|const
-name|MachineInstr
-modifier|&
-name|getBundleStart
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|&
-name|MI
-parameter_list|)
-block|{
 name|MachineBasicBlock
 operator|::
 name|const_instr_iterator
-name|I
+name|getBundleStart
 argument_list|(
-name|MI
+argument|MachineBasicBlock::const_instr_iterator I
 argument_list|)
-expr_stmt|;
+block|{
 while|while
 condition|(
 name|I
@@ -187,29 +172,29 @@ condition|)
 operator|--
 name|I
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
-operator|*
 name|I
 return|;
-block|}
-comment|/// Return an iterator pointing beyond the bundle containing MI.
-specifier|inline
+end_return
+
+begin_comment
+unit|}
+comment|/// Returns an iterator pointing beyond the bundle containing \p I.
+end_comment
+
+begin_expr_stmt
+unit|inline
 name|MachineBasicBlock
 operator|::
 name|instr_iterator
 name|getBundleEnd
 argument_list|(
-argument|MachineInstr&MI
+argument|MachineBasicBlock::instr_iterator I
 argument_list|)
 block|{
-name|MachineBasicBlock
-operator|::
-name|instr_iterator
-name|I
-argument_list|(
-name|MI
-argument_list|)
-block|;
 while|while
 condition|(
 name|I
@@ -220,35 +205,30 @@ condition|)
 operator|++
 name|I
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|++
 name|I
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
-comment|/// Return an iterator pointing beyond the bundle containing MI.
+unit|}
+comment|/// Returns an iterator pointing beyond the bundle containing \p I.
 end_comment
 
 begin_expr_stmt
-specifier|inline
+unit|inline
 name|MachineBasicBlock
 operator|::
 name|const_instr_iterator
 name|getBundleEnd
 argument_list|(
-argument|const MachineInstr&MI
+argument|MachineBasicBlock::const_instr_iterator I
 argument_list|)
 block|{
-name|MachineBasicBlock
-operator|::
-name|const_instr_iterator
-name|I
-argument_list|(
-name|MI
-argument_list|)
-block|;
 while|while
 condition|(
 name|I
@@ -423,10 +403,10 @@ operator|=
 name|getBundleStart
 argument_list|(
 name|MI
-argument_list|)
 operator|.
 name|getIterator
 argument_list|()
+argument_list|)
 expr_stmt|;
 name|InstrE
 operator|=

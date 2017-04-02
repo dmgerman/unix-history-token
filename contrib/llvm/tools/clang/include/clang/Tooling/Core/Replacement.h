@@ -82,6 +82,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/FileManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LangOptions.h"
 end_include
 
@@ -94,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -101,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
@@ -119,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_include
@@ -497,6 +521,203 @@ name|ReplacementText
 expr_stmt|;
 block|}
 empty_stmt|;
+name|enum
+name|class
+name|replacement_error
+block|{
+name|fail_to_apply
+operator|=
+literal|0
+operator|,
+name|wrong_file_path
+operator|,
+name|overlap_conflict
+operator|,
+name|insert_conflict
+operator|,
+block|}
+empty_stmt|;
+comment|/// \brief Carries extra error information in replacement-related llvm::Error,
+comment|/// e.g. fail applying replacements and replacements conflict.
+name|class
+name|ReplacementError
+range|:
+name|public
+name|llvm
+operator|::
+name|ErrorInfo
+operator|<
+name|ReplacementError
+operator|>
+block|{
+name|public
+operator|:
+name|ReplacementError
+argument_list|(
+argument|replacement_error Err
+argument_list|)
+operator|:
+name|Err
+argument_list|(
+argument|Err
+argument_list|)
+block|{}
+comment|/// \brief Constructs an error related to an existing replacement.
+name|ReplacementError
+argument_list|(
+argument|replacement_error Err
+argument_list|,
+argument|Replacement Existing
+argument_list|)
+operator|:
+name|Err
+argument_list|(
+name|Err
+argument_list|)
+block|,
+name|ExistingReplacement
+argument_list|(
+argument|std::move(Existing)
+argument_list|)
+block|{}
+comment|/// \brief Constructs an error related to a new replacement and an existing
+comment|/// replacement in a set of replacements.
+name|ReplacementError
+argument_list|(
+argument|replacement_error Err
+argument_list|,
+argument|Replacement New
+argument_list|,
+argument|Replacement Existing
+argument_list|)
+operator|:
+name|Err
+argument_list|(
+name|Err
+argument_list|)
+block|,
+name|NewReplacement
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|New
+argument_list|)
+argument_list|)
+block|,
+name|ExistingReplacement
+argument_list|(
+argument|std::move(Existing)
+argument_list|)
+block|{}
+name|std
+operator|::
+name|string
+name|message
+argument_list|()
+specifier|const
+name|override
+block|;
+name|void
+name|log
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+name|override
+block|{
+name|OS
+operator|<<
+name|message
+argument_list|()
+block|; }
+name|replacement_error
+name|get
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Err
+return|;
+block|}
+specifier|static
+name|char
+name|ID
+block|;
+specifier|const
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|Replacement
+operator|>
+operator|&
+name|getNewReplacement
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NewReplacement
+return|;
+block|}
+specifier|const
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|Replacement
+operator|>
+operator|&
+name|getExistingReplacement
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExistingReplacement
+return|;
+block|}
+name|private
+operator|:
+comment|// Users are not expected to use error_code.
+name|std
+operator|::
+name|error_code
+name|convertToErrorCode
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|llvm
+operator|::
+name|inconvertibleErrorCode
+argument_list|()
+return|;
+block|}
+name|replacement_error
+name|Err
+block|;
+comment|// A new replacement, which is to expected be added into a set of
+comment|// replacements, that is causing problem.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|Replacement
+operator|>
+name|NewReplacement
+block|;
+comment|// An existing replacement in a replacements set that is causing problem.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|Replacement
+operator|>
+name|ExistingReplacement
+block|; }
+decl_stmt|;
 comment|/// \brief Less-than operator between two Replacements.
 name|bool
 name|operator
@@ -529,8 +750,14 @@ operator|&
 name|RHS
 operator|)
 expr_stmt|;
-comment|/// \brief A set of Replacements.
-comment|/// FIXME: Change to a vector and deduplicate in the RefactoringTool.
+comment|/// \brief Maintains a set of replacements that are conflict-free.
+comment|/// Two replacements are considered conflicts if they overlap or have the same
+comment|/// offset (i.e. order-dependent).
+name|class
+name|Replacements
+block|{
+name|private
+label|:
 typedef|typedef
 name|std
 operator|::
@@ -538,8 +765,284 @@ name|set
 operator|<
 name|Replacement
 operator|>
-name|Replacements
+name|ReplacementsImpl
 expr_stmt|;
+name|public
+label|:
+typedef|typedef
+name|ReplacementsImpl
+operator|::
+name|const_iterator
+name|const_iterator
+expr_stmt|;
+typedef|typedef
+name|ReplacementsImpl
+operator|::
+name|const_reverse_iterator
+name|const_reverse_iterator
+expr_stmt|;
+name|Replacements
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|explicit
+name|Replacements
+parameter_list|(
+specifier|const
+name|Replacement
+modifier|&
+name|R
+parameter_list|)
+block|{
+name|Replaces
+operator|.
+name|insert
+argument_list|(
+name|R
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Adds a new replacement \p R to the current set of replacements.
+comment|/// \p R must have the same file path as all existing replacements.
+comment|/// Returns `success` if the replacement is successfully inserted; otherwise,
+comment|/// it returns an llvm::Error, i.e. there is a conflict between R and the
+comment|/// existing replacements (i.e. they are order-dependent) or R's file path is
+comment|/// different from the filepath of existing replacements. Callers must
+comment|/// explicitly check the Error returned, and the returned error can be
+comment|/// converted to a string message with `llvm::toString()`. This prevents users
+comment|/// from adding order-dependent replacements. To control the order in which
+comment|/// order-dependent replacements are applied, use merge({R}) with R referring
+comment|/// to the changed code after applying all existing replacements.
+comment|/// Two replacements A and B are considered order-independent if applying them
+comment|/// in either order produces the same result. Note that the range of the
+comment|/// replacement that is applied later still refers to the original code.
+comment|/// These include (but not restricted to) replacements that:
+comment|///   - don't overlap (being directly adjacent is fine) and
+comment|///   - are overlapping deletions.
+comment|///   - are insertions at the same offset and applying them in either order
+comment|///     has the same effect, i.e. X + Y = Y + X when inserting X and Y
+comment|///     respectively.
+comment|///   - are identical replacements, i.e. applying the same replacement twice
+comment|///     is equivalent to applying it once.
+comment|/// Examples:
+comment|/// 1. Replacement A(0, 0, "a") and B(0, 0, "aa") are order-independent since
+comment|///    applying them in either order gives replacement (0, 0, "aaa").
+comment|///    However, A(0, 0, "a") and B(0, 0, "b") are order-dependent since
+comment|///    applying A first gives (0, 0, "ab") while applying B first gives (B, A,
+comment|///    "ba").
+comment|/// 2. Replacement A(0, 2, "123") and B(0, 2, "123") are order-independent
+comment|///    since applying them in either order gives (0, 2, "123").
+comment|/// 3. Replacement A(0, 3, "123") and B(2, 3, "321") are order-independent
+comment|///    since either order gives (0, 5, "12321").
+comment|/// 4. Replacement A(0, 3, "ab") and B(0, 3, "ab") are order-independent since
+comment|///    applying the same replacement twice is equivalent to applying it once.
+comment|/// Replacements with offset UINT_MAX are special - we do not detect conflicts
+comment|/// for such replacements since users may add them intentionally as a special
+comment|/// category of replacements.
+name|llvm
+operator|::
+name|Error
+name|add
+argument_list|(
+specifier|const
+name|Replacement
+operator|&
+name|R
+argument_list|)
+expr_stmt|;
+comment|/// \brief Merges \p Replaces into the current replacements. \p Replaces
+comment|/// refers to code after applying the current replacements.
+name|Replacements
+name|merge
+argument_list|(
+specifier|const
+name|Replacements
+operator|&
+name|Replaces
+argument_list|)
+decl|const
+decl_stmt|;
+comment|// Returns the affected ranges in the changed code.
+name|std
+operator|::
+name|vector
+operator|<
+name|Range
+operator|>
+name|getAffectedRanges
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// Returns the new offset in the code after replacements being applied.
+comment|// Note that if there is an insertion at Offset in the current replacements,
+comment|// \p Offset will be shifted to Offset + Length in inserted text.
+name|unsigned
+name|getShiftedCodePosition
+argument_list|(
+name|unsigned
+name|Position
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Replaces
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|void
+name|clear
+parameter_list|()
+block|{
+name|Replaces
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Replaces
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Replaces
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Replaces
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_reverse_iterator
+name|rbegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Replaces
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+name|const_reverse_iterator
+name|rend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Replaces
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|Replacements
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|Replaces
+operator|==
+name|RHS
+operator|.
+name|Replaces
+return|;
+block|}
+name|private
+label|:
+name|Replacements
+argument_list|(
+argument|const_iterator Begin
+argument_list|,
+argument|const_iterator End
+argument_list|)
+block|:
+name|Replaces
+argument_list|(
+argument|Begin
+argument_list|,
+argument|End
+argument_list|)
+block|{}
+comment|// Returns `R` with new range that refers to code after `Replaces` being
+comment|// applied.
+name|Replacement
+name|getReplacementInChangedCode
+argument_list|(
+specifier|const
+name|Replacement
+operator|&
+name|R
+argument_list|)
+decl|const
+decl_stmt|;
+comment|// Returns a set of replacements that is equivalent to the current
+comment|// replacements by merging all adjacent replacements. Two sets of replacements
+comment|// are considered equivalent if they have the same effect when they are
+comment|// applied.
+name|Replacements
+name|getCanonicalReplacements
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// If `R` and all existing replacements are order-indepedent, then merge it
+comment|// with `Replaces` and returns the merged replacements; otherwise, returns an
+comment|// error.
+name|llvm
+operator|::
+name|Expected
+operator|<
+name|Replacements
+operator|>
+name|mergeIfOrderIndependent
+argument_list|(
+argument|const Replacement&R
+argument_list|)
+specifier|const
+expr_stmt|;
+name|ReplacementsImpl
+name|Replaces
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|/// \brief Apply all replacements in \p Replaces to the Rewriter \p Rewrite.
 comment|///
 comment|/// Replacement applications happen independently of the success of
@@ -559,30 +1062,6 @@ modifier|&
 name|Rewrite
 parameter_list|)
 function_decl|;
-comment|/// \brief Apply all replacements in \p Replaces to the Rewriter \p Rewrite.
-comment|///
-comment|/// Replacement applications happen independently of the success of
-comment|/// other applications.
-comment|///
-comment|/// \returns true if all replacements apply. false otherwise.
-name|bool
-name|applyAllReplacements
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|Replacement
-operator|>
-operator|&
-name|Replaces
-argument_list|,
-name|Rewriter
-operator|&
-name|Rewrite
-argument_list|)
-decl_stmt|;
 comment|/// \brief Applies all replacements in \p Replaces to \p Code.
 comment|///
 comment|/// This completely ignores the path stored in each replacement. If all
@@ -605,70 +1084,6 @@ argument_list|,
 argument|const Replacements&Replaces
 argument_list|)
 expr_stmt|;
-comment|/// \brief Calculates how a code \p Position is shifted when \p Replaces are
-comment|/// applied.
-name|unsigned
-name|shiftedCodePosition
-parameter_list|(
-specifier|const
-name|Replacements
-modifier|&
-name|Replaces
-parameter_list|,
-name|unsigned
-name|Position
-parameter_list|)
-function_decl|;
-comment|/// \brief Calculates how a code \p Position is shifted when \p Replaces are
-comment|/// applied.
-comment|///
-comment|/// \pre Replaces[i].getOffset()<= Replaces[i+1].getOffset().
-name|unsigned
-name|shiftedCodePosition
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|Replacement
-operator|>
-operator|&
-name|Replaces
-argument_list|,
-name|unsigned
-name|Position
-argument_list|)
-decl_stmt|;
-comment|/// \brief Removes duplicate Replacements and reports if Replacements conflict
-comment|/// with one another. All Replacements are assumed to be in the same file.
-comment|///
-comment|/// \post Replaces[i].getOffset()<= Replaces[i+1].getOffset().
-comment|///
-comment|/// This function sorts \p Replaces so that conflicts can be reported simply by
-comment|/// offset into \p Replaces and number of elements in the conflict.
-name|void
-name|deduplicate
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|Replacement
-operator|>
-operator|&
-name|Replaces
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|Range
-operator|>
-operator|&
-name|Conflicts
-argument_list|)
-decl_stmt|;
 comment|/// \brief Collection of Replacements generated from a single translation unit.
 struct|struct
 name|TranslationUnitReplacements
@@ -678,14 +1093,6 @@ name|std
 operator|::
 name|string
 name|MainSourceFile
-expr_stmt|;
-comment|/// A freeform chunk of text to describe the context of the replacements.
-comment|/// Will be printed, for example, when detecting conflicts during replacement
-comment|/// deduplication.
-name|std
-operator|::
-name|string
-name|Context
 expr_stmt|;
 name|std
 operator|::
@@ -697,26 +1104,6 @@ name|Replacements
 expr_stmt|;
 block|}
 struct|;
-comment|/// \brief Calculates the ranges in a single file that are affected by the
-comment|/// Replacements. Overlapping ranges will be merged.
-comment|///
-comment|/// \pre Replacements must be for the same file.
-comment|///
-comment|/// \returns a non-overlapping and sorted ranges.
-name|std
-operator|::
-name|vector
-operator|<
-name|Range
-operator|>
-name|calculateChangedRanges
-argument_list|(
-specifier|const
-name|Replacements
-operator|&
-name|Replaces
-argument_list|)
-expr_stmt|;
 comment|/// \brief Calculates the new ranges after \p Replaces are applied. These
 comment|/// include both the original \p Ranges and the affected ranges of \p Replaces
 comment|/// in the new code.
@@ -749,8 +1136,9 @@ operator|&
 name|Ranges
 argument_list|)
 expr_stmt|;
-comment|/// \brief Groups a random set of replacements by file path. Replacements
-comment|/// related to the same file entry are put into the same vector.
+comment|/// \brief If there are multiple<File, Replacements> pairs with the same file
+comment|/// entry, we only keep one pair and discard the rest.
+comment|/// If a file does not exist, its corresponding replacements will be ignored.
 name|std
 operator|::
 name|map
@@ -763,29 +1151,25 @@ name|Replacements
 operator|>
 name|groupReplacementsByFile
 argument_list|(
-specifier|const
-name|Replacements
+name|FileManager
 operator|&
-name|Replaces
+name|FileMgr
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|string
+argument_list|,
+name|Replacements
+operator|>
+operator|&
+name|FileToReplaces
 argument_list|)
 expr_stmt|;
-comment|/// \brief Merges two sets of replacements with the second set referring to the
-comment|/// code after applying the first set. Within both 'First' and 'Second',
-comment|/// replacements must not overlap.
-name|Replacements
-name|mergeReplacements
-parameter_list|(
-specifier|const
-name|Replacements
-modifier|&
-name|First
-parameter_list|,
-specifier|const
-name|Replacements
-modifier|&
-name|Second
-parameter_list|)
-function_decl|;
 name|template
 operator|<
 name|typename

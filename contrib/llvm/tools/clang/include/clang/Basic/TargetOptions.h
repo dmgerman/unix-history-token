@@ -172,6 +172,18 @@ comment|/// Supported OpenCL extensions and optional core features.
 name|OpenCLOptions
 name|SupportedOpenCLOptions
 decl_stmt|;
+comment|/// \brief The list of OpenCL extensions to enable or disable, as written on
+comment|/// the command line.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|OpenCLExtensionsAsWritten
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

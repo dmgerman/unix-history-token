@@ -128,7 +128,91 @@ decl_stmt|;
 name|class
 name|TargetMachine
 decl_stmt|;
+comment|/// Wrapper around MemoryBufferRef, owning the identifier
+name|class
+name|ThinLTOBuffer
+block|{
+name|std
+operator|::
+name|string
+name|OwnedIdentifier
+expr_stmt|;
+name|StringRef
+name|Buffer
+decl_stmt|;
+name|public
+label|:
+name|ThinLTOBuffer
+argument_list|(
+argument|StringRef Buffer
+argument_list|,
+argument|StringRef Identifier
+argument_list|)
+block|:
+name|OwnedIdentifier
+argument_list|(
+name|Identifier
+argument_list|)
+operator|,
+name|Buffer
+argument_list|(
+argument|Buffer
+argument_list|)
+block|{}
+name|MemoryBufferRef
+name|getMemBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MemoryBufferRef
+argument_list|(
+name|Buffer
+argument_list|,
+block|{
+name|OwnedIdentifier
+operator|.
+name|c_str
+argument_list|()
+operator|,
+name|OwnedIdentifier
+operator|.
+name|size
+argument_list|()
+block|}
+block|)
+expr_stmt|;
+block|}
+name|StringRef
+name|getBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+return|;
+block|}
+name|StringRef
+name|getBufferIdentifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwnedIdentifier
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// Helper to gather options relevant to the target machine creation
+end_comment
+
+begin_struct
 struct|struct
 name|TargetMachineBuilder
 block|{
@@ -163,7 +247,7 @@ name|CGOptLevel
 operator|=
 name|CodeGenOpt
 operator|::
-name|Default
+name|Aggressive
 expr_stmt|;
 name|std
 operator|::
@@ -177,12 +261,33 @@ specifier|const
 expr_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/// This class define an interface similar to the LTOCodeGenerator, but adapted
+end_comment
+
+begin_comment
 comment|/// for ThinLTO processing.
+end_comment
+
+begin_comment
 comment|/// The ThinLTOCodeGenerator is not intended to be reuse for multiple
+end_comment
+
+begin_comment
 comment|/// compilation: the model is that the client adds modules to the generator and
+end_comment
+
+begin_comment
 comment|/// ask to perform the ThinLTO optimizations / codegen, and finally destroys the
+end_comment
+
+begin_comment
 comment|/// codegenerator.
+end_comment
+
+begin_decl_stmt
 name|class
 name|ThinLTOCodeGenerator
 block|{
@@ -215,12 +320,12 @@ name|StringRef
 name|Name
 parameter_list|)
 function_decl|;
-comment|/**    * Process all the modules that were added to the code generator in parallel.    *    * Client can access the resulting object files using getProducedBinaries()    */
+comment|/**    * Process all the modules that were added to the code generator in parallel.    *    * Client can access the resulting object files using getProducedBinaries(),    * unless setGeneratedObjectsDirectory() has been called, in which case    * results are available through getProducedBinaryFiles().    */
 name|void
 name|run
 parameter_list|()
 function_decl|;
-comment|/**    * Return the "in memory" binaries produced by the code generator.    */
+comment|/**    * Return the "in memory" binaries produced by the code generator. This is    * filled after run() unless setGeneratedObjectsDirectory() has been    * called, in which case results are available through    * getProducedBinaryFiles().    */
 name|std
 operator|::
 name|vector
@@ -237,6 +342,23 @@ argument_list|()
 block|{
 return|return
 name|ProducedBinaries
+return|;
+block|}
+comment|/**    * Return the "on-disk" binaries produced by the code generator. This is    * filled after run() when setGeneratedObjectsDirectory() has been    * called, in which case results are available through getProducedBinaries().    */
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|getProducedBinaryFiles
+argument_list|()
+block|{
+return|return
+name|ProducedBinaryFiles
 return|;
 block|}
 comment|/**    * \defgroup Options setters    * @{    */
@@ -379,6 +501,29 @@ name|Path
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// Set the path to a directory where to save generated object files. This
+comment|/// path can be used by a linker to request on-disk files instead of in-memory
+comment|/// buffers. When set, results are available through getProducedBinaryFiles()
+comment|/// instead of getProducedBinaries().
+name|void
+name|setGeneratedObjectsDirectory
+argument_list|(
+name|std
+operator|::
+name|string
+name|Path
+argument_list|)
+block|{
+name|SavedObjectsDirectoryPath
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|Path
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// CPU to use to initialize the TargetMachine
 name|void
 name|setCpu
@@ -478,6 +623,27 @@ operator|.
 name|CGOptLevel
 operator|=
 name|CGOptLevel
+expr_stmt|;
+block|}
+comment|/// IR optimization level: from 0 to 3.
+name|void
+name|setOptLevel
+parameter_list|(
+name|unsigned
+name|NewOptLevel
+parameter_list|)
+block|{
+name|OptLevel
+operator|=
+operator|(
+name|NewOptLevel
+operator|>
+literal|3
+operator|)
+condition|?
+literal|3
+else|:
+name|NewOptLevel
 expr_stmt|;
 block|}
 comment|/// Disable CodeGen, only run the stages till codegen and stop. The output
@@ -630,7 +796,8 @@ comment|/// Helper factory to build a TargetMachine
 name|TargetMachineBuilder
 name|TMBuilder
 decl_stmt|;
-comment|/// Vector holding the in-memory buffer containing the produced binaries.
+comment|/// Vector holding the in-memory buffer containing the produced binaries, when
+comment|/// SavedObjectsDirectoryPath isn't set.
 name|std
 operator|::
 name|vector
@@ -643,13 +810,24 @@ name|MemoryBuffer
 operator|>>
 name|ProducedBinaries
 expr_stmt|;
+comment|/// Path to generated files in the supplied SavedObjectsDirectoryPath if any.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ProducedBinaryFiles
+expr_stmt|;
 comment|/// Vector holding the input buffers containing the bitcode modules to
 comment|/// process.
 name|std
 operator|::
 name|vector
 operator|<
-name|MemoryBufferRef
+name|ThinLTOBuffer
 operator|>
 name|Modules
 expr_stmt|;
@@ -676,6 +854,12 @@ operator|::
 name|string
 name|SaveTempsDir
 expr_stmt|;
+comment|/// Path to a directory to save the generated object files.
+name|std
+operator|::
+name|string
+name|SavedObjectsDirectoryPath
+expr_stmt|;
 comment|/// Flag to enable/disable CodeGen. When set to true, the process stops after
 comment|/// optimizations and a bitcode is produced.
 name|bool
@@ -690,12 +874,21 @@ name|CodeGenOnly
 init|=
 name|false
 decl_stmt|;
-block|}
-empty_stmt|;
+comment|/// IR Optimization Level [0-3].
+name|unsigned
+name|OptLevel
+init|=
+literal|3
+decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

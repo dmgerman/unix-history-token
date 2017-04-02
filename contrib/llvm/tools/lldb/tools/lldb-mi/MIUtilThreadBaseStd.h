@@ -65,13 +65,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<thread>
+file|<mutex>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mutex>
+file|<thread>
 end_include
 
 begin_comment
@@ -91,7 +91,11 @@ file|"MIUtilString.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -159,7 +163,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -256,7 +264,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -381,7 +393,8 @@ specifier|volatile
 name|MIuint
 name|m_references
 decl_stmt|;
-comment|// Stores the current lifetime state of this thread, 0 = running,> 0 = shutting down
+comment|// Stores the current lifetime state of this
+comment|// thread, 0 = running,> 0 = shutting down
 specifier|volatile
 name|bool
 name|m_bHasBeenKilled
@@ -394,7 +407,9 @@ comment|// The execution thread
 name|CMIUtilThreadMutex
 name|m_mutex
 decl_stmt|;
-comment|// This mutex allows us to safely communicate with this thread object across the interface from multiple threads
+comment|// This mutex allows us to safely communicate with
+comment|// this thread object across the interface from
+comment|// multiple threads
 block|}
 end_decl_stmt
 
@@ -403,7 +418,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -446,7 +465,7 @@ name|m_rMutex
 operator|.
 name|Lock
 argument_list|()
-block|;     }
+block|;   }
 comment|// Overrideable:
 name|public
 operator|:

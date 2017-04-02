@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ClangForward.h"
 end_include
 
@@ -83,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/Declaration.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -124,7 +124,7 @@ name|name
 argument_list|(
 argument|n
 argument_list|)
-block|{     }
+block|{}
 name|bool
 name|operator
 operator|==
@@ -195,7 +195,7 @@ name|m_symbol_file
 argument_list|(
 argument|symbol_file
 argument_list|)
-block|{         }
+block|{}
 name|SymbolFileType
 argument_list|(
 name|SymbolFile
@@ -213,7 +213,7 @@ expr_stmt|;
 operator|~
 name|SymbolFileType
 argument_list|()
-block|{         }
+block|{}
 name|Type
 operator|*
 name|operator
@@ -277,34 +277,46 @@ block|,
 comment|///< This type is the type whose UID is m_encoding_uid
 name|eEncodingIsConstUID
 block|,
-comment|///< This type is the type whose UID is m_encoding_uid with the const qualifier added
+comment|///< This type is the type whose UID is m_encoding_uid
+comment|///with the const qualifier added
 name|eEncodingIsRestrictUID
 block|,
-comment|///< This type is the type whose UID is m_encoding_uid with the restrict qualifier added
+comment|///< This type is the type whose UID is
+comment|///m_encoding_uid with the restrict qualifier added
 name|eEncodingIsVolatileUID
 block|,
-comment|///< This type is the type whose UID is m_encoding_uid with the volatile qualifier added
+comment|///< This type is the type whose UID is
+comment|///m_encoding_uid with the volatile qualifier added
 name|eEncodingIsTypedefUID
 block|,
-comment|///< This type is pointer to a type whose UID is m_encoding_uid
+comment|///< This type is pointer to a type whose UID is
+comment|///m_encoding_uid
 name|eEncodingIsPointerUID
 block|,
-comment|///< This type is pointer to a type whose UID is m_encoding_uid
+comment|///< This type is pointer to a type whose UID is
+comment|///m_encoding_uid
 name|eEncodingIsLValueReferenceUID
 block|,
-comment|///< This type is L value reference to a type whose UID is m_encoding_uid
+comment|///< This type is L value reference to a type
+comment|///whose UID is m_encoding_uid
 name|eEncodingIsRValueReferenceUID
 block|,
-comment|///< This type is R value reference to a type whose UID is m_encoding_uid
+comment|///< This type is R value reference to a type
+comment|///whose UID is m_encoding_uid
 name|eEncodingIsSyntheticUID
 block|}
 name|EncodingDataType
 typedef|;
-comment|// We must force the underlying type of the enum to be unsigned here.  Not all compilers
-comment|// behave the same with regards to the default underlying type of an enum, but because
-comment|// this enum is used in an enum bitfield and integer comparisons are done with the value
-comment|// we need to guarantee that it's always unsigned so that, for example, eResolveStateFull
-comment|// doesn't compare less than eResolveStateUnresolved when used in a 2-bit bitfield.
+comment|// We must force the underlying type of the enum to be unsigned here.  Not all
+comment|// compilers
+comment|// behave the same with regards to the default underlying type of an enum, but
+comment|// because
+comment|// this enum is used in an enum bitfield and integer comparisons are done with
+comment|// the value
+comment|// we need to guarantee that it's always unsigned so that, for example,
+comment|// eResolveStateFull
+comment|// doesn't compare less than eResolveStateUnresolved when used in a 2-bit
+comment|// bitfield.
 typedef|typedef
 enum|enum
 name|ResolveStateTag
@@ -333,7 +345,7 @@ name|Type
 argument_list|(
 argument|lldb::user_id_t uid
 argument_list|,
-argument|SymbolFile* symbol_file
+argument|SymbolFile *symbol_file
 argument_list|,
 argument|const ConstString&name
 argument_list|,
@@ -345,14 +357,15 @@ argument|lldb::user_id_t encoding_uid
 argument_list|,
 argument|EncodingDataType encoding_uid_type
 argument_list|,
-argument|const Declaration& decl
+argument|const Declaration&decl
 argument_list|,
 argument|const CompilerType&compiler_qual_type
 argument_list|,
 argument|ResolveState compiler_type_resolve_state
 argument_list|)
 empty_stmt|;
-comment|// This makes an invalid type.  Used for functions that return a Type when they
+comment|// This makes an invalid type.  Used for functions that return a Type when
+comment|// they
 comment|// get an error.
 name|Type
 argument_list|()
@@ -738,20 +751,21 @@ name|bool
 name|GetTypeScopeAndBasename
 argument_list|(
 specifier|const
-name|char
-operator|*
-operator|&
-name|name_cstr
-argument_list|,
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
+operator|&
+name|name
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 operator|&
 name|scope
 argument_list|,
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 operator|&
 name|basename
 argument_list|,
@@ -904,7 +918,7 @@ argument_list|()
 operator|,
 name|type_sp
 argument_list|()
-block|{     }
+block|{}
 name|TypePair
 argument_list|(
 argument|CompilerType type
@@ -917,7 +931,7 @@ argument_list|)
 operator|,
 name|type_sp
 argument_list|()
-block|{     }
+block|{}
 name|TypePair
 argument_list|(
 argument|lldb::TypeSP type
@@ -937,7 +951,7 @@ name|type_sp
 operator|->
 name|GetForwardCompilerType
 argument_list|()
-block|;     }
+block|;   }
 name|bool
 name|IsValid
 argument_list|()
@@ -1121,7 +1135,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          void
+unit|}    void
 name|SetType
 argument_list|(
 argument|CompilerType type
@@ -1233,7 +1247,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          CompilerType
+unit|}    CompilerType
 name|GetPointeeType
 argument_list|()
 end_macro
@@ -1266,7 +1280,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          CompilerType
+unit|}    CompilerType
 name|GetReferenceType
 argument_list|()
 end_macro
@@ -1415,7 +1429,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}          TypeSystem
+unit|}    TypeSystem
 operator|*
 name|GetTypeSystem
 argument_list|()
@@ -1460,7 +1474,7 @@ return|;
 end_return
 
 begin_decl_stmt
-unit|} protected:
+unit|}  protected:
 name|CompilerType
 name|compiler_type
 decl_stmt|;
@@ -1792,11 +1806,11 @@ argument_list|()
 operator|:
 name|m_content
 argument_list|()
-block|{     }
+block|{}
 name|void
 name|Append
 argument_list|(
-argument|const lldb::TypeImplSP& type
+argument|const lldb::TypeImplSP&type
 argument_list|)
 block|{
 name|m_content
@@ -1805,7 +1819,7 @@ name|push_back
 argument_list|(
 name|type
 argument_list|)
-block|;     }
+block|; }
 name|class
 name|AppendVisitor
 block|{
@@ -1822,7 +1836,7 @@ name|m_type_list
 argument_list|(
 argument|type_list
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|operator
 argument_list|()
@@ -1841,13 +1855,13 @@ name|Append
 argument_list|(
 name|type
 argument_list|)
-block|;         }
+block|; }
 name|private
 operator|:
 name|TypeListImpl
 operator|&
 name|m_type_list
-block|;     }
+block|;   }
 expr_stmt|;
 name|void
 name|Append
@@ -1955,7 +1969,7 @@ name|m_is_bitfield
 argument_list|(
 argument|false
 argument_list|)
-block|{     }
+block|{}
 name|TypeMemberImpl
 argument_list|(
 argument|const lldb::TypeImplSP&type_impl_sp
@@ -1994,7 +2008,7 @@ name|m_is_bitfield
 argument_list|(
 argument|is_bitfield
 argument_list|)
-block|{     }
+block|{}
 name|TypeMemberImpl
 argument_list|(
 argument|const lldb::TypeImplSP&type_impl_sp
@@ -2143,15 +2157,27 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Sometimes you can find the name of the type corresponding to an object, but we don't have debug
+comment|/// Sometimes you can find the name of the type corresponding to an object, but
 end_comment
 
 begin_comment
-comment|/// information for it.  If that is the case, you can return one of these objects, and then if it
+comment|/// we don't have debug
 end_comment
 
 begin_comment
-comment|/// has a full type, you can use that, but if not at least you can print the name for informational
+comment|/// information for it.  If that is the case, you can return one of these
+end_comment
+
+begin_comment
+comment|/// objects, and then if it
+end_comment
+
+begin_comment
+comment|/// has a full type, you can use that, but if not at least you can print the
+end_comment
+
+begin_comment
+comment|/// name for informational
 end_comment
 
 begin_comment
@@ -2394,7 +2420,7 @@ name|m_kind
 argument_list|(
 argument|lldb::eMemberFunctionKindUnknown
 argument_list|)
-block|{     }
+block|{   }
 name|TypeMemberFunctionImpl
 argument_list|(
 specifier|const
@@ -2441,7 +2467,7 @@ name|m_kind
 argument_list|(
 argument|kind
 argument_list|)
-block|{     }
+block|{}
 name|bool
 name|IsValid
 argument_list|()
@@ -2549,7 +2575,7 @@ name|m_valid
 argument_list|(
 argument|false
 argument_list|)
-block|{     }
+block|{}
 name|TypeEnumMemberImpl
 argument_list|(
 specifier|const
@@ -2605,7 +2631,7 @@ name|m_valid
 argument_list|(
 argument|rhs.m_valid
 argument_list|)
-block|{     }
+block|{}
 name|TypeEnumMemberImpl
 operator|&
 name|operator
@@ -2709,11 +2735,11 @@ argument_list|()
 operator|:
 name|m_content
 argument_list|()
-block|{     }
+block|{}
 name|void
 name|Append
 argument_list|(
-argument|const lldb::TypeEnumMemberImplSP& type
+argument|const lldb::TypeEnumMemberImplSP&type
 argument_list|)
 block|{
 name|m_content
@@ -2722,7 +2748,7 @@ name|push_back
 argument_list|(
 name|type
 argument_list|)
-block|;     }
+block|;   }
 name|void
 name|Append
 argument_list|(

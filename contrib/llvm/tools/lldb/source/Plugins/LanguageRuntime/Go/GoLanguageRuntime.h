@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Breakpoint/BreakpointResolver.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Breakpoint/BreakpointResolver.h"
+file|"lldb/Core/Value.h"
 end_include
 
 begin_include
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Value.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -260,7 +260,7 @@ name|LanguageRuntime
 argument_list|(
 argument|process
 argument_list|)
-block|{ }
+block|{   }
 comment|// Call CreateInstance instead.
 block|}
 decl_stmt|;

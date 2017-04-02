@@ -123,6 +123,9 @@ name|namespace
 name|CodeGen
 block|{
 name|class
+name|CGCallee
+decl_stmt|;
+name|class
 name|CodeGenFunction
 decl_stmt|;
 name|class
@@ -490,25 +493,40 @@ comment|/// Load a member function from an object and a member function
 comment|/// pointer.  Apply the this-adjustment and set 'This' to the
 comment|/// adjusted value.
 name|virtual
+name|CGCallee
+name|EmitLoadOfMemberFunctionPointer
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|E
+argument_list|,
+name|Address
+name|This
+argument_list|,
 name|llvm
 operator|::
 name|Value
 operator|*
-name|EmitLoadOfMemberFunctionPointer
-argument_list|(
-argument|CodeGenFunction&CGF
+operator|&
+name|ThisPtrForCall
 argument_list|,
-argument|const Expr *E
+name|llvm
+operator|::
+name|Value
+operator|*
+name|MemPtr
 argument_list|,
-argument|Address This
-argument_list|,
-argument|llvm::Value *&ThisPtrForCall
-argument_list|,
-argument|llvm::Value *MemPtr
-argument_list|,
-argument|const MemberPointerType *MPT
+specifier|const
+name|MemberPointerType
+operator|*
+name|MPT
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/// Calculate an l-value from an object and a data member pointer.
 name|virtual
 name|llvm
@@ -1425,25 +1443,31 @@ literal|0
 expr_stmt|;
 comment|/// Build a virtual function pointer in the ABI-specific way.
 name|virtual
-name|llvm
-operator|::
-name|Value
-operator|*
+name|CGCallee
 name|getVirtualFunctionPointer
 argument_list|(
-argument|CodeGenFunction&CGF
+name|CodeGenFunction
+operator|&
+name|CGF
 argument_list|,
-argument|GlobalDecl GD
+name|GlobalDecl
+name|GD
 argument_list|,
-argument|Address This
+name|Address
+name|This
 argument_list|,
-argument|llvm::Type *Ty
+name|llvm
+operator|::
+name|Type
+operator|*
+name|Ty
 argument_list|,
-argument|SourceLocation Loc
+name|SourceLocation
+name|Loc
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 comment|/// Emit the ABI-specific virtual destructor call.
 name|virtual
 name|llvm

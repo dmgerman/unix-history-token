@@ -102,12 +102,6 @@ typedef|typedef
 name|clang
 operator|::
 name|Stmt
-name|NodeType
-expr_stmt|;
-typedef|typedef
-name|clang
-operator|::
-name|Stmt
 operator|*
 name|NodeRef
 expr_stmt|;
@@ -132,8 +126,7 @@ operator|>
 name|nodes_iterator
 expr_stmt|;
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 name|clang
@@ -148,12 +141,10 @@ name|S
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -174,12 +165,10 @@ argument_list|()
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -261,20 +250,10 @@ specifier|const
 name|clang
 operator|::
 name|Stmt
-name|NodeType
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-specifier|const
-name|clang
-operator|::
-name|Stmt
 operator|*
 name|NodeRef
 expr_stmt|;
-end_typedef
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -305,8 +284,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 specifier|const
@@ -325,12 +303,10 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -354,12 +330,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{

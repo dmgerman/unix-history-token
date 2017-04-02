@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-forward.h"
+file|"NativeBreakpoint.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"NativeBreakpoint.h"
+file|"lldb/lldb-private-forward.h"
 end_include
 
 begin_decl_stmt
@@ -159,7 +159,7 @@ argument|const uint8_t *bp_opcode_bytes
 argument_list|,
 argument|uint8_t *saved_opcode_bytes
 argument_list|)
-block|;      }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

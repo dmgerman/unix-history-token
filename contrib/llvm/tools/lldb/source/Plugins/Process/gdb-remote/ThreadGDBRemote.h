@@ -280,7 +280,7 @@ block|{
 name|m_thread_dispatch_qaddr
 operator|=
 name|thread_dispatch_qaddr
-block|;     }
+block|;   }
 name|void
 name|ClearQueueInfo
 argument_list|()
@@ -366,7 +366,7 @@ name|PrivateSetRegisterValue
 argument_list|(
 argument|uint32_t reg
 argument_list|,
-argument|StringExtractor&response
+argument|llvm::ArrayRef<uint8_t> data
 argument_list|)
 block|;
 name|bool

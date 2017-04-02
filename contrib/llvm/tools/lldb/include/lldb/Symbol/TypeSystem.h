@@ -98,12 +98,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/PluginInterface.h"
 end_include
 
@@ -123,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/CompilerDeclContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -194,6 +194,8 @@ name|eKindGo
 block|,
 name|eKindJava
 block|,
+name|eKindOCaml
+block|,
 name|kNumKinds
 block|}
 block|;
@@ -241,7 +243,8 @@ argument_list|,
 argument|Target *target
 argument_list|)
 block|;
-comment|// Free up any resources associated with this TypeSystem.  Done before removing
+comment|// Free up any resources associated with this TypeSystem.  Done before
+comment|// removing
 comment|// all the TypeSystems from the TypeSystemMap.
 name|virtual
 name|void
@@ -280,7 +283,7 @@ block|{
 name|m_sym_file
 operator|=
 name|sym_file
-block|;     }
+block|; }
 comment|//----------------------------------------------------------------------
 comment|// CompilerDecl functions
 comment|//----------------------------------------------------------------------
@@ -708,6 +711,15 @@ literal|0
 block|;
 name|virtual
 name|CompilerType
+name|GetArrayType
+argument_list|(
+argument|lldb::opaque_compiler_type_t type
+argument_list|,
+argument|uint64_t size
+argument_list|)
+block|;
+name|virtual
+name|CompilerType
 name|GetCanonicalType
 argument_list|(
 argument|lldb::opaque_compiler_type_t type
@@ -715,7 +727,8 @@ argument_list|)
 operator|=
 literal|0
 block|;
-comment|// Returns -1 if this isn't a function of if the function doesn't have a prototype
+comment|// Returns -1 if this isn't a function of if the function doesn't have a
+comment|// prototype
 comment|// Returns a value>= 0 if there is a prototype.
 name|virtual
 name|int
@@ -906,9 +919,9 @@ name|ForEachEnumerator
 argument_list|(
 argument|lldb::opaque_compiler_type_t type
 argument_list|,
-argument|std::function<bool (const CompilerType&integer_type, const ConstString&name, const llvm::APSInt&value)> const&callback
+argument|std::function<bool(const CompilerType&integer_type,                          const ConstString&name,                          const llvm::APSInt&value)> const&callback
 argument_list|)
-block|{     }
+block|{}
 name|virtual
 name|uint32_t
 name|GetNumFields
@@ -926,7 +939,7 @@ argument|lldb::opaque_compiler_type_t type
 argument_list|,
 argument|size_t idx
 argument_list|,
-argument|std::string& name
+argument|std::string&name
 argument_list|,
 argument|uint64_t *bit_offset_ptr
 argument_list|,
@@ -997,7 +1010,7 @@ argument|bool omit_empty_base_classes
 argument_list|,
 argument|bool ignore_array_bounds
 argument_list|,
-argument|std::string& child_name
+argument|std::string&child_name
 argument_list|,
 argument|uint32_t&child_byte_size
 argument_list|,
@@ -1036,7 +1049,8 @@ block|;
 comment|// Lookup a child member given a name. This function will match member names
 comment|// only and will descend into "clang_type" children in search for the first
 comment|// member in this class, or any base class that matches "name".
-comment|// TODO: Return all matches for a given name by returning a vector<vector<uint32_t>>
+comment|// TODO: Return all matches for a given name by returning a
+comment|// vector<vector<uint32_t>>
 comment|// so we catch all names that match a given child name, not just the first.
 name|virtual
 name|size_t
@@ -1048,7 +1062,7 @@ argument|const char *name
 argument_list|,
 argument|bool omit_empty_base_classes
 argument_list|,
-argument|std::vector<uint32_t>& child_indexes
+argument|std::vector<uint32_t>&child_indexes
 argument_list|)
 operator|=
 literal|0
@@ -1292,7 +1306,7 @@ name|IsHomogeneousAggregate
 argument_list|(
 argument|lldb::opaque_compiler_type_t type
 argument_list|,
-argument|CompilerType* base_type_ptr
+argument|CompilerType *base_type_ptr
 argument_list|)
 operator|=
 literal|0
@@ -1364,7 +1378,7 @@ argument|lldb::opaque_compiler_type_t type
 argument_list|,
 argument|CompilerType *pointee_type
 argument_list|,
-argument|bool* is_rvalue
+argument|bool *is_rvalue
 argument_list|)
 operator|=
 literal|0
@@ -1390,9 +1404,9 @@ name|UserExpression
 operator|*
 name|GetUserExpression
 argument_list|(
-argument|const char *expr
+argument|llvm::StringRef expr
 argument_list|,
-argument|const char *expr_prefix
+argument|llvm::StringRef prefix
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
@@ -1412,7 +1426,7 @@ name|GetFunctionCaller
 argument_list|(
 argument|const CompilerType&return_type
 argument_list|,
-argument|const Address& function_address
+argument|const Address&function_address
 argument_list|,
 argument|const ValueList&arg_value_list
 argument_list|,
@@ -1469,15 +1483,24 @@ operator|*
 name|valobj
 argument_list|)
 block|;
-comment|// Type systems can have types that are placeholder types, which are meant to indicate
-comment|// the presence of a type, but offer no actual information about said types, and leave
-comment|// the burden of actually figuring type information out to dynamic type resolution. For instance
-comment|// a language with a generics system, can use placeholder types to indicate "type argument goes here",
-comment|// without promising uniqueness of the placeholder, nor attaching any actually idenfiable information
-comment|// to said placeholder. This API allows type systems to tell LLDB when such a type has been encountered
-comment|// In response, the debugger can react by not using this type as a cache entry in any type-specific way
-comment|// For instance, LLDB will currently not cache any formatters that are discovered on such a type as
-comment|// attributable to the meaningless type itself, instead preferring to use the dynamic type
+comment|// Type systems can have types that are placeholder types, which are meant to
+comment|// indicate
+comment|// the presence of a type, but offer no actual information about said types,
+comment|// and leave
+comment|// the burden of actually figuring type information out to dynamic type
+comment|// resolution. For instance
+comment|// a language with a generics system, can use placeholder types to indicate
+comment|// "type argument goes here",
+comment|// without promising uniqueness of the placeholder, nor attaching any actually
+comment|// idenfiable information
+comment|// to said placeholder. This API allows type systems to tell LLDB when such a
+comment|// type has been encountered
+comment|// In response, the debugger can react by not using this type as a cache entry
+comment|// in any type-specific way
+comment|// For instance, LLDB will currently not cache any formatters that are
+comment|// discovered on such a type as
+comment|// attributable to the meaningless type itself, instead preferring to use the
+comment|// dynamic type
 name|virtual
 name|bool
 name|IsMeaninglessWithoutDynamicResolution
@@ -1497,7 +1520,7 @@ comment|// Support for llvm casting
 name|SymbolFile
 operator|*
 name|m_sym_file
-block|;  }
+block|; }
 decl_stmt|;
 name|class
 name|TypeSystemMap
@@ -1612,7 +1635,8 @@ operator|::
 name|mutex
 name|m_mutex
 expr_stmt|;
-comment|///< A mutex to keep this object happy in multi-threaded environments.
+comment|///< A mutex to keep this object happy in
+comment|///multi-threaded environments.
 name|collection
 name|m_map
 decl_stmt|;

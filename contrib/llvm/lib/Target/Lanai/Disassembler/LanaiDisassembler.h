@@ -77,12 +77,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCInst
-decl_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
 name|LanaiDisassembler
 range|:
 name|public
@@ -106,7 +100,9 @@ operator|~
 name|LanaiDisassembler
 argument_list|()
 name|override
-block|{}
+operator|=
+expr|default
+block|;
 comment|// getInstruction - See MCDisassembler.
 name|MCDisassembler
 operator|::
@@ -133,7 +129,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

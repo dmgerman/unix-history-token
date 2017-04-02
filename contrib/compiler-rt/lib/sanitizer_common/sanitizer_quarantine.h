@@ -188,6 +188,25 @@ argument_list|,
 argument|uptr cache_size
 argument_list|)
 block|{
+comment|// Thread local quarantine size can be zero only when global quarantine size
+comment|// is zero (it allows us to perform just one atomic read per Put() call).
+name|CHECK
+argument_list|(
+operator|(
+name|size
+operator|==
+literal|0
+operator|&&
+name|cache_size
+operator|==
+literal|0
+operator|)
+operator|||
+name|cache_size
+operator|!=
+literal|0
+argument_list|)
+block|;
 name|atomic_store
 argument_list|(
 operator|&
@@ -195,7 +214,7 @@ name|max_size_
 argument_list|,
 name|size
 argument_list|,
-name|memory_order_release
+name|memory_order_relaxed
 argument_list|)
 block|;
 name|atomic_store
@@ -209,13 +228,19 @@ literal|10
 operator|*
 literal|9
 argument_list|,
-name|memory_order_release
+name|memory_order_relaxed
 argument_list|)
 block|;
 comment|// 90% of max size.
+name|atomic_store
+argument_list|(
+operator|&
 name|max_cache_size_
-operator|=
+argument_list|,
 name|cache_size
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
 block|;   }
 name|uptr
 name|GetSize
@@ -228,7 +253,22 @@ argument_list|(
 operator|&
 name|max_size_
 argument_list|,
-name|memory_order_acquire
+name|memory_order_relaxed
+argument_list|)
+return|;
+block|}
+name|uptr
+name|GetCacheSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|atomic_load
+argument_list|(
+operator|&
+name|max_cache_size_
+argument_list|,
+name|memory_order_relaxed
 argument_list|)
 return|;
 block|}
@@ -250,6 +290,17 @@ name|uptr
 name|size
 parameter_list|)
 block|{
+name|uptr
+name|cache_size
+init|=
+name|GetCacheSize
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|cache_size
+condition|)
+block|{
 name|c
 operator|->
 name|Enqueue
@@ -261,6 +312,19 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|// cache_size == 0 only when size == 0 (see Init).
+name|cb
+operator|.
+name|Recycle
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
+block|}
+comment|// Check cache size anyway to accommodate for runtime cache_size change.
 if|if
 condition|(
 name|c
@@ -268,7 +332,7 @@ operator|->
 name|Size
 argument_list|()
 operator|>
-name|max_cache_size_
+name|cache_size
 condition|)
 name|Drain
 argument_list|(
@@ -327,22 +391,33 @@ name|cb
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|PrintStats
+argument_list|()
+specifier|const
+block|{
+comment|// It assumes that the world is stopped, just as the allocator's PrintStats.
+name|cache_
+operator|.
+name|PrintStats
+argument_list|()
+block|;   }
 name|private
-label|:
+operator|:
 comment|// Read-only data.
 name|char
 name|pad0_
 index|[
 name|kCacheLineSize
 index|]
-decl_stmt|;
+expr_stmt|;
 name|atomic_uintptr_t
 name|max_size_
 decl_stmt|;
 name|atomic_uintptr_t
 name|min_size_
 decl_stmt|;
-name|uptr
+name|atomic_uintptr_t
 name|max_cache_size_
 decl_stmt|;
 name|char
@@ -385,7 +460,7 @@ argument_list|(
 operator|&
 name|min_size_
 argument_list|,
-name|memory_order_acquire
+name|memory_order_relaxed
 argument_list|)
 decl_stmt|;
 block|{
@@ -831,19 +906,108 @@ return|;
 block|}
 end_function
 
-begin_label
-name|private
-label|:
-end_label
-
 begin_expr_stmt
+name|void
+name|PrintStats
+argument_list|()
+specifier|const
+block|{
+name|uptr
+name|batch_count
+operator|=
+literal|0
+block|;
+name|uptr
+name|total_quarantine_bytes
+operator|=
+literal|0
+block|;
+name|uptr
+name|total_quarantine_chunks
+operator|=
+literal|0
+block|;
+for|for
+control|(
+name|List
+operator|::
+name|ConstIterator
+name|it
+operator|=
+name|list_
+operator|.
+name|begin
+argument_list|()
+init|;
+name|it
+operator|!=
+name|list_
+operator|.
+name|end
+argument_list|()
+condition|;
+operator|++
+name|it
+control|)
+block|{
+name|batch_count
+operator|++
+expr_stmt|;
+name|total_quarantine_bytes
+operator|+=
+operator|(
+operator|*
+name|it
+operator|)
+operator|.
+name|size
+expr_stmt|;
+name|total_quarantine_chunks
+operator|+=
+operator|(
+operator|*
+name|it
+operator|)
+operator|.
+name|count
+expr_stmt|;
+block|}
+name|Printf
+argument_list|(
+literal|"Global quarantine stats: batches: %zd; bytes: %zd; chunks: %zd "
+literal|"(capacity: %zd chunks)\n"
+argument_list|,
+name|batch_count
+argument_list|,
+name|total_quarantine_bytes
+argument_list|,
+name|total_quarantine_chunks
+argument_list|,
+name|batch_count
+operator|*
+name|QuarantineBatch
+operator|::
+name|kSize
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+unit|}   private:
+typedef|typedef
 name|IntrusiveList
 operator|<
 name|QuarantineBatch
 operator|>
-name|list_
+name|List
 expr_stmt|;
-end_expr_stmt
+end_typedef
+
+begin_decl_stmt
+name|List
+name|list_
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|atomic_uintptr_t
@@ -959,7 +1123,7 @@ block|}
 end_function
 
 begin_comment
-unit|}; }
+unit|};  }
 comment|// namespace __sanitizer
 end_comment
 

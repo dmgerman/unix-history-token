@@ -74,19 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Breakpoint/StoppointLocation.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/Breakpoint/WatchpointOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Breakpoint/StoppointLocation.h"
 end_include
 
 begin_include
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/Target.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -240,11 +240,11 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|WatchpointEventData
 argument_list|)
-block|;     }
+block|;   }
 decl_stmt|;
 name|Watchpoint
 argument_list|(
-argument|Target& target
+argument|Target&target
 argument_list|,
 argument|lldb::addr_t addr
 argument_list|,
@@ -269,6 +269,9 @@ name|IsEnabled
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|// This doesn't really enable/disable the watchpoint.
+comment|// It is currently just for use in the Process plugin's
+comment|// {Enable,Disable}Watchpoint, which should be used instead.
 name|void
 name|SetEnabled
 parameter_list|(
@@ -652,15 +655,19 @@ comment|// True if set via 'watchpoint set variable'.
 name|bool
 name|m_is_ephemeral
 decl_stmt|;
-comment|// True if the watchpoint is in the ephemeral mode, meaning that it is
+comment|// True if the watchpoint is in the ephemeral mode,
+comment|// meaning that it is
 comment|// undergoing a pair of temporary disable/enable actions to avoid recursively
 comment|// triggering further watchpoint events.
 name|uint32_t
 name|m_disabled_count
 decl_stmt|;
-comment|// Keep track of the count that the watchpoint is disabled while in ephemeral mode.
-comment|// At the end of the ephemeral mode when the watchpoint is to be enabled again,
-comment|// we check the count, if it is more than 1, it means the user-supplied actions
+comment|// Keep track of the count that the watchpoint is
+comment|// disabled while in ephemeral mode.
+comment|// At the end of the ephemeral mode when the watchpoint is to be enabled
+comment|// again,
+comment|// we check the count, if it is more than 1, it means the user-supplied
+comment|// actions
 comment|// actually want the watchpoint to be disabled!
 name|uint32_t
 name|m_watch_read
@@ -682,7 +689,8 @@ name|m_watch_was_written
 range|:
 literal|1
 decl_stmt|;
-comment|// Set to 1 when watchpoint is hit for a write access
+comment|// Set to 1 when watchpoint is hit for a write
+comment|// access
 name|uint32_t
 name|m_ignore_count
 decl_stmt|;
@@ -719,7 +727,8 @@ decl_stmt|;
 name|Error
 name|m_error
 decl_stmt|;
-comment|// An error object describing errors associated with this watchpoint.
+comment|// An error object describing errors associated with this
+comment|// watchpoint.
 name|WatchpointOptions
 name|m_options
 decl_stmt|;

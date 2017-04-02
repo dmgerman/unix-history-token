@@ -90,6 +90,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/EHPersonalities.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -109,6 +121,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Metadata.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCDwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCSymbol.h"
 end_include
 
 begin_include
@@ -191,89 +215,29 @@ name|template
 operator|<
 operator|>
 expr|struct
-name|ilist_traits
-operator|<
-name|MachineBasicBlock
-operator|>
-operator|:
-name|public
-name|ilist_default_traits
+name|ilist_alloc_traits
 operator|<
 name|MachineBasicBlock
 operator|>
 block|{
-name|mutable
-name|ilist_half_node
-operator|<
-name|MachineBasicBlock
-operator|>
-name|Sentinel
-block|;
-name|public
-operator|:
-comment|// FIXME: This downcast is UB. See llvm.org/PR26753.
-name|LLVM_NO_SANITIZE
-argument_list|(
-literal|"object-size"
-argument_list|)
-name|MachineBasicBlock
-operator|*
-name|createSentinel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|(
-operator|&
-name|Sentinel
-operator|)
-return|;
-block|}
 name|void
-name|destroySentinel
+name|deleteNode
 argument_list|(
-argument|MachineBasicBlock *
-argument_list|)
-specifier|const
-block|{}
 name|MachineBasicBlock
 operator|*
-name|provideInitialHead
-argument_list|()
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
+name|MBB
+argument_list|)
+block|; }
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|ilist_callback_traits
+operator|<
 name|MachineBasicBlock
-operator|*
-name|ensureHead
-argument_list|(
-argument|MachineBasicBlock*
-argument_list|)
-specifier|const
+operator|>
 block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-specifier|static
-name|void
-name|noteHead
-argument_list|(
-argument|MachineBasicBlock*
-argument_list|,
-argument|MachineBasicBlock*
-argument_list|)
-block|{}
 name|void
 name|addNodeToList
 argument_list|(
@@ -290,24 +254,27 @@ operator|*
 name|MBB
 argument_list|)
 block|;
+name|template
+operator|<
+name|class
+name|Iterator
+operator|>
 name|void
-name|deleteNode
+name|transferNodesFromList
 argument_list|(
-name|MachineBasicBlock
-operator|*
-name|MBB
+argument|ilist_callback_traits&OldList
+argument_list|,
+argument|Iterator
+argument_list|,
+argument|Iterator
 argument_list|)
-block|;
-name|private
-operator|:
-name|void
-name|createNode
+block|{
+name|llvm_unreachable
 argument_list|(
-specifier|const
-name|MachineBasicBlock
-operator|&
+literal|"Never transfer between lists"
 argument_list|)
-block|; }
+block|;   }
+block|}
 expr_stmt|;
 comment|/// MachineFunctionInfo - This class can be derived from and used by targets to
 comment|/// hold private target-specific information for each MachineFunction.  Objects
@@ -359,8 +326,6 @@ comment|/// require that a property be set.
 name|class
 name|MachineFunctionProperties
 block|{
-comment|// TODO: Add MachineVerifier checks for AllVRegsAllocated
-comment|// TODO: Add a way to print the properties and make more useful error messages
 comment|// Possible TODO: Allow targets to extend this (perhaps by allowing the
 comment|// constructor to specify the size of the bit vector)
 comment|// Possible TODO: Allow requiring the negative (e.g. VRegsAllocated could be
@@ -372,6 +337,7 @@ comment|// that the property hold, but not that it does not hold.
 comment|// Property descriptions:
 comment|// IsSSA: True when the machine function is in SSA form and virtual registers
 comment|//  have a single def.
+comment|// NoPHIs: The machine function does not contain any PHI instruction.
 comment|// TracksLiveness: True when tracking register liveness accurately.
 comment|//  While this property is set, register liveness information in basic block
 comment|//  live-in lists and machine instruction operands (e.g. kill flags, implicit
@@ -379,8 +345,21 @@ comment|//  defs) is accurate. This means it can be used to change the code in w
 comment|//  that affect the values in registers, for example by the register
 comment|//  scavenger.
 comment|//  When this property is clear, liveness is no longer reliable.
-comment|// AllVRegsAllocated: All virtual registers have been allocated; i.e. all
-comment|//  register operands are physical registers.
+comment|// NoVRegs: The machine function does not use any virtual registers.
+comment|// Legalized: In GlobalISel: the MachineLegalizer ran and all pre-isel generic
+comment|//  instructions have been legalized; i.e., all instructions are now one of:
+comment|//   - generic and always legal (e.g., COPY)
+comment|//   - target-specific
+comment|//   - legal pre-isel generic instructions.
+comment|// RegBankSelected: In GlobalISel: the RegBankSelect pass ran and all generic
+comment|//  virtual registers have been assigned to a register bank.
+comment|// Selected: In GlobalISel: the InstructionSelect pass ran and all pre-isel
+comment|//  generic instructions have been eliminated; i.e., all instructions are now
+comment|//  target-specific or non-pre-isel generic instructions (e.g., COPY).
+comment|//  Since only pre-isel generic instructions can have generic virtual register
+comment|//  operands, this also means that all generic virtual registers have been
+comment|//  constrained to virtual registers (assigned to register classes) and that
+comment|//  all sizes attached to them have been eliminated.
 name|enum
 name|class
 name|Property
@@ -389,11 +368,23 @@ name|unsigned
 block|{
 name|IsSSA
 block|,
+name|NoPHIs
+block|,
 name|TracksLiveness
 block|,
-name|AllVRegsAllocated
+name|NoVRegs
+block|,
+name|FailedISel
+block|,
+name|Legalized
+block|,
+name|RegBankSelected
+block|,
+name|Selected
 block|,
 name|LastProperty
+operator|=
+name|Selected
 block|,   }
 decl_stmt|;
 name|bool
@@ -445,7 +436,7 @@ return|;
 block|}
 name|MachineFunctionProperties
 modifier|&
-name|clear
+name|reset
 parameter_list|(
 name|Property
 name|P
@@ -463,6 +454,22 @@ operator|(
 name|P
 operator|)
 argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// Reset all the properties.
+name|MachineFunctionProperties
+modifier|&
+name|reset
+parameter_list|()
+block|{
+name|Properties
+operator|.
+name|reset
+argument_list|()
 expr_stmt|;
 return|return
 operator|*
@@ -492,7 +499,7 @@ return|;
 block|}
 name|MachineFunctionProperties
 modifier|&
-name|clear
+name|reset
 parameter_list|(
 specifier|const
 name|MachineFunctionProperties
@@ -538,19 +545,13 @@ name|Properties
 argument_list|)
 return|;
 block|}
-comment|// Print the MachineFunctionProperties in human-readable form. If OnlySet is
-comment|// true, only print the properties that are set.
+comment|/// Print the MachineFunctionProperties in human-readable form.
 name|void
 name|print
 argument_list|(
 name|raw_ostream
 operator|&
-name|ROS
-argument_list|,
-name|bool
-name|OnlySet
-operator|=
-name|false
+name|OS
 argument_list|)
 decl|const
 decl_stmt|;
@@ -570,10 +571,101 @@ name|Property
 operator|::
 name|LastProperty
 operator|)
+operator|+
+literal|1
 argument_list|)
 decl_stmt|;
 block|}
 empty_stmt|;
+struct|struct
+name|SEHHandler
+block|{
+comment|/// Filter or finally function. Null indicates a catch-all.
+specifier|const
+name|Function
+modifier|*
+name|FilterOrFinally
+decl_stmt|;
+comment|/// Address of block to recover at. Null for a finally handler.
+specifier|const
+name|BlockAddress
+modifier|*
+name|RecoverBA
+decl_stmt|;
+block|}
+struct|;
+comment|/// This structure is used to retain landing pad info for the current function.
+struct|struct
+name|LandingPadInfo
+block|{
+name|MachineBasicBlock
+modifier|*
+name|LandingPadBlock
+decl_stmt|;
+comment|// Landing pad block.
+name|SmallVector
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+literal|1
+operator|>
+name|BeginLabels
+expr_stmt|;
+comment|// Labels prior to invoke.
+name|SmallVector
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+literal|1
+operator|>
+name|EndLabels
+expr_stmt|;
+comment|// Labels after invoke.
+name|SmallVector
+operator|<
+name|SEHHandler
+operator|,
+literal|1
+operator|>
+name|SEHHandlers
+expr_stmt|;
+comment|// SEH handlers active at this lpad.
+name|MCSymbol
+modifier|*
+name|LandingPadLabel
+decl_stmt|;
+comment|// Label at beginning of landing pad.
+name|std
+operator|::
+name|vector
+operator|<
+name|int
+operator|>
+name|TypeIds
+expr_stmt|;
+comment|// List of type ids (filters negative).
+name|explicit
+name|LandingPadInfo
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
+operator|:
+name|LandingPadBlock
+argument_list|(
+name|MBB
+argument_list|)
+operator|,
+name|LandingPadLabel
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+block|}
+struct|;
 name|class
 name|MachineFunction
 block|{
@@ -708,6 +800,13 @@ name|HasInlineAsm
 init|=
 name|false
 decl_stmt|;
+comment|/// True if any WinCFI instruction have been emitted in this function.
+name|Optional
+operator|<
+name|bool
+operator|>
+name|HasWinCFI
+expr_stmt|;
 comment|/// Current high-level properties of the IR of the function (e.g. is in SSA
 comment|/// form or whether registers have been allocated)
 name|MachineFunctionProperties
@@ -722,6 +821,104 @@ name|PseudoSourceValueManager
 operator|>
 name|PSVManager
 expr_stmt|;
+comment|/// List of moves done by a function's prolog.  Used to construct frame maps
+comment|/// by debug and exception handling consumers.
+name|std
+operator|::
+name|vector
+operator|<
+name|MCCFIInstruction
+operator|>
+name|FrameInstructions
+expr_stmt|;
+comment|/// \name Exception Handling
+comment|/// \{
+comment|/// List of LandingPadInfo describing the landing pad information.
+name|std
+operator|::
+name|vector
+operator|<
+name|LandingPadInfo
+operator|>
+name|LandingPads
+expr_stmt|;
+comment|/// Map a landing pad's EH symbol to the call site indexes.
+name|DenseMap
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|4
+operator|>
+expr|>
+name|LPadToCallSiteMap
+expr_stmt|;
+comment|/// Map of invoke call site index values to associated begin EH_LABEL.
+name|DenseMap
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|CallSiteMap
+expr_stmt|;
+name|bool
+name|CallsEHReturn
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|CallsUnwindInit
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|HasEHFunclets
+init|=
+name|false
+decl_stmt|;
+comment|/// List of C++ TypeInfo used.
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+operator|>
+name|TypeInfos
+expr_stmt|;
+comment|/// List of typeids encoding filters used.
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|FilterIds
+expr_stmt|;
+comment|/// List of the indices in FilterIds corresponding to filter terminators.
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|FilterEnds
+expr_stmt|;
+name|EHPersonality
+name|PersonalityTypeCache
+init|=
+name|EHPersonality
+operator|::
+name|Unknown
+decl_stmt|;
+comment|/// \}
 name|MachineFunction
 argument_list|(
 specifier|const
@@ -742,8 +939,90 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
+comment|/// Clear all the members of this MachineFunction, but the ones used
+comment|/// to initialize again the MachineFunction.
+comment|/// More specifically, this deallocates all the dynamically allocated
+comment|/// objects and get rid of all the XXXInfo data structure, but keep
+comment|/// unchanged the references to Fn, Target, MMI, and FunctionNumber.
+name|void
+name|clear
+parameter_list|()
+function_decl|;
+comment|/// Allocate and initialize the different members.
+comment|/// In particular, the XXXInfo data structure.
+comment|/// \pre Fn, Target, MMI, and FunctionNumber are properly set.
+name|void
+name|init
+parameter_list|()
+function_decl|;
 name|public
 label|:
+struct|struct
+name|VariableDbgInfo
+block|{
+specifier|const
+name|DILocalVariable
+modifier|*
+name|Var
+decl_stmt|;
+specifier|const
+name|DIExpression
+modifier|*
+name|Expr
+decl_stmt|;
+name|unsigned
+name|Slot
+decl_stmt|;
+specifier|const
+name|DILocation
+modifier|*
+name|Loc
+decl_stmt|;
+name|VariableDbgInfo
+argument_list|(
+argument|const DILocalVariable *Var
+argument_list|,
+argument|const DIExpression *Expr
+argument_list|,
+argument|unsigned Slot
+argument_list|,
+argument|const DILocation *Loc
+argument_list|)
+block|:
+name|Var
+argument_list|(
+name|Var
+argument_list|)
+operator|,
+name|Expr
+argument_list|(
+name|Expr
+argument_list|)
+operator|,
+name|Slot
+argument_list|(
+name|Slot
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+argument|Loc
+argument_list|)
+block|{}
+block|}
+struct|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|VariableDbgInfo
+operator|,
+literal|4
+operator|>
+name|VariableDbgInfoMapTy
+expr_stmt|;
+name|VariableDbgInfoMapTy
+name|VariableDbgInfos
+decl_stmt|;
 name|MachineFunction
 argument_list|(
 argument|const Function *Fn
@@ -759,6 +1038,18 @@ operator|~
 name|MachineFunction
 argument_list|()
 expr_stmt|;
+comment|/// Reset the instance as if it was just created.
+name|void
+name|reset
+parameter_list|()
+block|{
+name|clear
+argument_list|()
+expr_stmt|;
+name|init
+argument_list|()
+expr_stmt|;
+block|}
 name|MachineModuleInfo
 operator|&
 name|getMMI
@@ -927,22 +1218,24 @@ comment|/// This object contains information about objects allocated on the stac
 comment|/// frame of the current function in an abstract way.
 comment|///
 name|MachineFrameInfo
-modifier|*
+modifier|&
 name|getFrameInfo
 parameter_list|()
 block|{
 return|return
+operator|*
 name|FrameInfo
 return|;
 block|}
 specifier|const
 name|MachineFrameInfo
-operator|*
+operator|&
 name|getFrameInfo
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|*
 name|FrameInfo
 return|;
 block|}
@@ -1117,6 +1410,38 @@ block|{
 name|HasInlineAsm
 operator|=
 name|B
+expr_stmt|;
+block|}
+name|bool
+name|hasWinCFI
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|HasWinCFI
+operator|.
+name|hasValue
+argument_list|()
+operator|&&
+literal|"HasWinCFI not set yet!"
+argument_list|)
+block|;
+return|return
+operator|*
+name|HasWinCFI
+return|;
+block|}
+name|void
+name|setHasWinCFI
+parameter_list|(
+name|bool
+name|v
+parameter_list|)
+block|{
+name|HasWinCFI
+operator|=
+name|v
 expr_stmt|;
 block|}
 comment|/// Get the function properties
@@ -1382,21 +1707,15 @@ name|const_iterator
 name|const_iterator
 expr_stmt|;
 typedef|typedef
-name|std
+name|BasicBlockListType
 operator|::
-name|reverse_iterator
-operator|<
-name|const_iterator
-operator|>
+name|const_reverse_iterator
 name|const_reverse_iterator
 expr_stmt|;
 typedef|typedef
-name|std
+name|BasicBlockListType
 operator|::
 name|reverse_iterator
-operator|<
-name|iterator
-operator|>
 name|reverse_iterator
 expr_stmt|;
 comment|/// Support for MachineBasicBlock::getNextNode().
@@ -1980,6 +2299,25 @@ operator|*
 name|Ranges
 operator|=
 name|nullptr
+argument_list|,
+name|SynchronizationScope
+name|SynchScope
+operator|=
+name|CrossThread
+argument_list|,
+name|AtomicOrdering
+name|Ordering
+operator|=
+name|AtomicOrdering
+operator|::
+name|NotAtomic
+argument_list|,
+name|AtomicOrdering
+name|FailureOrdering
+operator|=
+name|AtomicOrdering
+operator|::
+name|NotAtomic
 argument_list|)
 decl_stmt|;
 comment|/// getMachineMemOperand - Allocate a new MachineMemOperand by copying
@@ -2209,12 +2547,554 @@ name|getPICBaseSymbol
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Returns a reference to a list of cfi instructions in the function's
+comment|/// prologue.  Used to construct frame maps for debug and exception handling
+comment|/// comsumers.
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|MCCFIInstruction
+operator|>
+operator|&
+name|getFrameInstructions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FrameInstructions
+return|;
+block|}
+name|LLVM_NODISCARD
+name|unsigned
+name|addFrameInst
+parameter_list|(
+specifier|const
+name|MCCFIInstruction
+modifier|&
+name|Inst
+parameter_list|)
+block|{
+name|FrameInstructions
+operator|.
+name|push_back
+argument_list|(
+name|Inst
+argument_list|)
+expr_stmt|;
+return|return
+name|FrameInstructions
+operator|.
+name|size
+argument_list|()
+operator|-
+literal|1
+return|;
+block|}
+comment|/// \name Exception Handling
+comment|/// \{
+name|bool
+name|callsEHReturn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CallsEHReturn
+return|;
+block|}
+name|void
+name|setCallsEHReturn
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|CallsEHReturn
+operator|=
+name|b
+expr_stmt|;
+block|}
+name|bool
+name|callsUnwindInit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CallsUnwindInit
+return|;
+block|}
+name|void
+name|setCallsUnwindInit
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|CallsUnwindInit
+operator|=
+name|b
+expr_stmt|;
+block|}
+name|bool
+name|hasEHFunclets
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasEHFunclets
+return|;
+block|}
+name|void
+name|setHasEHFunclets
+parameter_list|(
+name|bool
+name|V
+parameter_list|)
+block|{
+name|HasEHFunclets
+operator|=
+name|V
+expr_stmt|;
+block|}
+comment|/// Find or create an LandingPadInfo for the specified MachineBasicBlock.
+name|LandingPadInfo
+modifier|&
+name|getOrCreateLandingPadInfo
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+parameter_list|)
+function_decl|;
+comment|/// Remap landing pad labels and remove any deleted landing pads.
+name|void
+name|tidyLandingPads
+argument_list|(
+name|DenseMap
+operator|<
+name|MCSymbol
+operator|*
+argument_list|,
+name|uintptr_t
+operator|>
+operator|*
+name|LPMap
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+comment|/// Return a reference to the landing pad info for the current function.
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|LandingPadInfo
+operator|>
+operator|&
+name|getLandingPads
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LandingPads
+return|;
+block|}
+comment|/// Provide the begin and end labels of an invoke style call and associate it
+comment|/// with a try landing pad block.
+name|void
+name|addInvoke
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+parameter_list|,
+name|MCSymbol
+modifier|*
+name|BeginLabel
+parameter_list|,
+name|MCSymbol
+modifier|*
+name|EndLabel
+parameter_list|)
+function_decl|;
+comment|/// Add a new panding pad.  Returns the label ID for the landing pad entry.
+name|MCSymbol
+modifier|*
+name|addLandingPad
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+parameter_list|)
+function_decl|;
+comment|/// Provide the catch typeinfo for a landing pad.
+name|void
+name|addCatchTypeInfo
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|LandingPad
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+operator|>
+name|TyInfo
+argument_list|)
+decl_stmt|;
+comment|/// Provide the filter typeinfo for a landing pad.
+name|void
+name|addFilterTypeInfo
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|LandingPad
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+operator|>
+name|TyInfo
+argument_list|)
+decl_stmt|;
+comment|/// Add a cleanup action for a landing pad.
+name|void
+name|addCleanup
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+parameter_list|)
+function_decl|;
+name|void
+name|addSEHCatchHandler
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+parameter_list|,
+specifier|const
+name|Function
+modifier|*
+name|Filter
+parameter_list|,
+specifier|const
+name|BlockAddress
+modifier|*
+name|RecoverLabel
+parameter_list|)
+function_decl|;
+name|void
+name|addSEHCleanupHandler
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+parameter_list|,
+specifier|const
+name|Function
+modifier|*
+name|Cleanup
+parameter_list|)
+function_decl|;
+comment|/// Return the type id for the specified typeinfo.  This is function wide.
+name|unsigned
+name|getTypeIDFor
+parameter_list|(
+specifier|const
+name|GlobalValue
+modifier|*
+name|TI
+parameter_list|)
+function_decl|;
+comment|/// Return the id of the filter encoded by TyIds.  This is function wide.
+name|int
+name|getFilterIDFor
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|TyIds
+argument_list|)
+decl_stmt|;
+comment|/// Map the landing pad's EH symbol to the call site indexes.
+name|void
+name|setCallSiteLandingPad
+argument_list|(
+name|MCSymbol
+operator|*
+name|Sym
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Sites
+argument_list|)
+decl_stmt|;
+comment|/// Get the call site indexes for a landing pad EH symbol.
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|getCallSiteLandingPad
+argument_list|(
+argument|MCSymbol *Sym
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|hasCallSiteLandingPad
+argument_list|(
+name|Sym
+argument_list|)
+operator|&&
+literal|"missing call site number for landing pad!"
+argument_list|)
+block|;
+return|return
+name|LPadToCallSiteMap
+index|[
+name|Sym
+index|]
+return|;
+block|}
+comment|/// Return true if the landing pad Eh symbol has an associated call site.
+name|bool
+name|hasCallSiteLandingPad
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Sym
+parameter_list|)
+block|{
+return|return
+operator|!
+name|LPadToCallSiteMap
+index|[
+name|Sym
+index|]
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// Map the begin label for a call site.
+name|void
+name|setCallSiteBeginLabel
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|BeginLabel
+parameter_list|,
+name|unsigned
+name|Site
+parameter_list|)
+block|{
+name|CallSiteMap
+index|[
+name|BeginLabel
+index|]
+operator|=
+name|Site
+expr_stmt|;
+block|}
+comment|/// Get the call site number for a begin label.
+name|unsigned
+name|getCallSiteBeginLabel
+argument_list|(
+name|MCSymbol
+operator|*
+name|BeginLabel
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|hasCallSiteBeginLabel
+argument_list|(
+name|BeginLabel
+argument_list|)
+operator|&&
+literal|"Missing call site number for EH_LABEL!"
+argument_list|)
+expr_stmt|;
+return|return
+name|CallSiteMap
+operator|.
+name|lookup
+argument_list|(
+name|BeginLabel
+argument_list|)
+return|;
+block|}
+comment|/// Return true if the begin label has a call site number associated with it.
+name|bool
+name|hasCallSiteBeginLabel
+argument_list|(
+name|MCSymbol
+operator|*
+name|BeginLabel
+argument_list|)
+decl|const
+block|{
+return|return
+name|CallSiteMap
+operator|.
+name|count
+argument_list|(
+name|BeginLabel
+argument_list|)
+return|;
+block|}
+comment|/// Return a reference to the C++ typeinfo for the current function.
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+operator|>
+operator|&
+name|getTypeInfos
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeInfos
+return|;
+block|}
+comment|/// Return a reference to the typeids encoding filters used in the current
+comment|/// function.
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|getFilterIds
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FilterIds
+return|;
+block|}
+comment|/// \}
+comment|/// Collect information used to emit debugging information of a variable.
+name|void
+name|setVariableDbgInfo
+parameter_list|(
+specifier|const
+name|DILocalVariable
+modifier|*
+name|Var
+parameter_list|,
+specifier|const
+name|DIExpression
+modifier|*
+name|Expr
+parameter_list|,
+name|unsigned
+name|Slot
+parameter_list|,
+specifier|const
+name|DILocation
+modifier|*
+name|Loc
+parameter_list|)
+block|{
+name|VariableDbgInfos
+operator|.
+name|emplace_back
+argument_list|(
+name|Var
+argument_list|,
+name|Expr
+argument_list|,
+name|Slot
+argument_list|,
+name|Loc
+argument_list|)
+expr_stmt|;
+block|}
+name|VariableDbgInfoMapTy
+modifier|&
+name|getVariableDbgInfo
+parameter_list|()
+block|{
+return|return
+name|VariableDbgInfos
+return|;
+block|}
+specifier|const
+name|VariableDbgInfoMapTy
+operator|&
+name|getVariableDbgInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VariableDbgInfos
+return|;
+block|}
 block|}
 end_decl_stmt
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// \name Exception Handling
+end_comment
+
+begin_comment
+comment|/// \{
+end_comment
+
+begin_comment
+comment|/// Extract the exception handling information from the landingpad instruction
+end_comment
+
+begin_comment
+comment|/// and add them to the specified machine module info.
+end_comment
+
+begin_function_decl
+name|void
+name|addLandingPadInfo
+parameter_list|(
+specifier|const
+name|LandingPadInst
+modifier|&
+name|I
+parameter_list|,
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \}
+end_comment
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -2267,8 +3147,7 @@ operator|*
 operator|>
 block|{
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 argument|MachineFunction *F
@@ -2290,9 +3169,12 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|pointer_iterator
+operator|<
 name|MachineFunction
 operator|::
 name|iterator
+operator|>
 name|nodes_iterator
 expr_stmt|;
 end_typedef
@@ -2308,10 +3190,13 @@ name|F
 parameter_list|)
 block|{
 return|return
+name|nodes_iterator
+argument_list|(
 name|F
 operator|->
 name|begin
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
@@ -2327,10 +3212,13 @@ name|F
 parameter_list|)
 block|{
 return|return
+name|nodes_iterator
+argument_list|(
 name|F
 operator|->
 name|end
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
@@ -2376,8 +3264,7 @@ operator|*
 operator|>
 block|{
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 argument|const MachineFunction *F
@@ -2399,9 +3286,12 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|pointer_iterator
+operator|<
 name|MachineFunction
 operator|::
 name|const_iterator
+operator|>
 name|nodes_iterator
 expr_stmt|;
 end_typedef
@@ -2418,10 +3308,13 @@ name|F
 parameter_list|)
 block|{
 return|return
+name|nodes_iterator
+argument_list|(
 name|F
 operator|->
 name|begin
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
@@ -2438,10 +3331,13 @@ name|F
 parameter_list|)
 block|{
 return|return
+name|nodes_iterator
+argument_list|(
 name|F
 operator|->
 name|end
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
@@ -2512,11 +3408,10 @@ operator|>
 expr|>
 block|{
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
-argument|Inverse<MachineFunction*> G
+argument|Inverse<MachineFunction *> G
 argument_list|)
 block|{
 return|return
@@ -2559,8 +3454,7 @@ operator|>
 expr|>
 block|{
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 argument|Inverse<const MachineFunction *> G

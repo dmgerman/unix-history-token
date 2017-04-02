@@ -113,6 +113,19 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|virtual
+name|bool
+name|isPicRel
+argument_list|(
+name|uint32_t
+name|Type
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
 name|uint32_t
 name|getDynRel
 argument_list|(
@@ -151,6 +164,21 @@ argument_list|)
 decl|const
 block|{}
 empty_stmt|;
+name|virtual
+name|void
+name|writeIgotPlt
+argument_list|(
+name|uint8_t
+operator|*
+name|Buf
+argument_list|,
+specifier|const
+name|SymbolBody
+operator|&
+name|S
+argument_list|)
+decl|const
+decl_stmt|;
 name|virtual
 name|uint64_t
 name|getImplicitAddend
@@ -291,12 +319,15 @@ name|PageSize
 init|=
 literal|4096
 decl_stmt|;
-comment|// On freebsd x86_64 the first page cannot be mmaped.
-comment|// On linux that is controled by vm.mmap_min_addr. At least on some x86_64
+name|unsigned
+name|DefaultMaxPageSize
+init|=
+literal|4096
+decl_stmt|;
+comment|// On FreeBSD x86_64 the first page cannot be mmaped.
+comment|// On Linux that is controled by vm.mmap_min_addr. At least on some x86_64
 comment|// installs that is 65536, so the first 15 pages cannot be used.
 comment|// Given that, the smallest value that can be used in here is 0x10000.
-comment|// If using 2MB pages, the smallest page aligned address that works is
-comment|// 0x200000, but it looks like every OS uses 4k pages for executables.
 name|uint64_t
 name|DefaultImageBase
 init|=
@@ -331,9 +362,13 @@ name|TlsOffsetRel
 decl_stmt|;
 name|unsigned
 name|GotEntrySize
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|GotPltEntrySize
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|PltEntrySize
@@ -353,6 +388,11 @@ name|unsigned
 name|TcbSize
 init|=
 literal|0
+decl_stmt|;
+name|bool
+name|NeedsThunks
+init|=
+name|false
 decl_stmt|;
 name|virtual
 name|RelExpr
@@ -450,23 +490,17 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
-name|StringRef
-name|getRelName
-parameter_list|(
-name|uint32_t
-name|Type
-parameter_list|)
-function_decl|;
 name|uint64_t
 name|getPPC64TocBase
 parameter_list|()
 function_decl|;
-specifier|const
-name|unsigned
-name|MipsGPOffset
-init|=
-literal|0x7ff0
-decl_stmt|;
+name|uint64_t
+name|getAArch64Page
+parameter_list|(
+name|uint64_t
+name|Expr
+parameter_list|)
+function_decl|;
 specifier|extern
 name|TargetInfo
 modifier|*
@@ -478,6 +512,14 @@ name|createTarget
 parameter_list|()
 function_decl|;
 block|}
+name|std
+operator|::
+name|string
+name|toString
+argument_list|(
+argument|uint32_t RelType
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

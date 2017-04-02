@@ -756,6 +756,64 @@ condition|)
 return|return
 literal|"'this' object"
 return|;
+comment|// Objective-C objects are not normal symbolic regions. At least,
+comment|// they're always on the heap.
+if|if
+condition|(
+name|R
+operator|->
+name|getSymbol
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+operator|.
+name|getCanonicalType
+argument_list|()
+operator|->
+name|getAs
+operator|<
+name|ObjCObjectPointerType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+literal|"object at "
+operator|+
+name|Visit
+argument_list|(
+name|R
+operator|->
+name|getSymbol
+argument_list|()
+argument_list|)
+return|;
+comment|// Other heap-based symbolic regions are also special.
+if|if
+condition|(
+name|isa
+operator|<
+name|HeapSpaceRegion
+operator|>
+operator|(
+name|R
+operator|->
+name|getMemorySpace
+argument_list|()
+operator|)
+condition|)
+return|return
+literal|"heap segment that starts at "
+operator|+
+name|Visit
+argument_list|(
+name|R
+operator|->
+name|getSymbol
+argument_list|()
+argument_list|)
+return|;
 return|return
 literal|"pointee of "
 operator|+
@@ -976,6 +1034,25 @@ if|if
 condition|(
 name|VD
 operator|->
+name|hasAttr
+operator|<
+name|BlocksAttr
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+literal|"block variable '"
+operator|+
+name|Name
+operator|+
+literal|"'"
+return|;
+elseif|else
+if|if
+condition|(
+name|VD
+operator|->
 name|hasLocalStorage
 argument_list|()
 condition|)
@@ -1022,6 +1099,39 @@ argument_list|(
 literal|"A variable is either local or global"
 argument_list|)
 expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|string
+name|VisitObjCIvarRegion
+argument_list|(
+argument|const ObjCIvarRegion *R
+argument_list|)
+block|{
+return|return
+literal|"instance variable '"
+operator|+
+name|R
+operator|->
+name|getDecl
+argument_list|()
+operator|->
+name|getNameAsString
+argument_list|()
+operator|+
+literal|"' of "
+operator|+
+name|Visit
+argument_list|(
+name|R
+operator|->
+name|getSuperRegion
+argument_list|()
+argument_list|)
+return|;
 block|}
 end_expr_stmt
 

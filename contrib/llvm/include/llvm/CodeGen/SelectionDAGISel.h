@@ -959,7 +959,7 @@ argument|SDNode *NodeToMatch
 argument_list|,
 argument|SDValue InputChain
 argument_list|,
-argument|const SmallVectorImpl<SDNode *>&ChainNodesMatched
+argument|SmallVectorImpl<SDNode *>&ChainNodesMatched
 argument_list|,
 argument|bool isMorphNodeTo
 argument_list|)

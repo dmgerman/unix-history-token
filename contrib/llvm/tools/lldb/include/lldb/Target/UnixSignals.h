@@ -54,13 +54,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string>
+file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<string>
 end_include
 
 begin_comment
@@ -74,13 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -256,7 +256,8 @@ name|value
 parameter_list|)
 function_decl|;
 comment|// These provide an iterator through the signals available on this system.
-comment|// Call GetFirstSignalNumber to get the first entry, then iterate on GetNextSignalNumber
+comment|// Call GetFirstSignalNumber to get the first entry, then iterate on
+comment|// GetNextSignalNumber
 comment|// till you get back LLDB_INVALID_SIGNAL_NUMBER.
 name|int32_t
 name|GetFirstSignalNumber
@@ -292,10 +293,14 @@ name|name
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// We assume that the elements of this object are constant once it is constructed,
-comment|// since a process should never need to add or remove symbols as it runs.  So don't
-comment|// call these functions anywhere but the constructor of your subclass of UnixSignals or in
-comment|// your Process Plugin's GetUnixSignals method before you return the UnixSignal object.
+comment|// We assume that the elements of this object are constant once it is
+comment|// constructed,
+comment|// since a process should never need to add or remove symbols as it runs.  So
+comment|// don't
+comment|// call these functions anywhere but the constructor of your subclass of
+comment|// UnixSignals or in
+comment|// your Process Plugin's GetUnixSignals method before you return the
+comment|// UnixSignal object.
 name|void
 name|AddSignal
 parameter_list|(

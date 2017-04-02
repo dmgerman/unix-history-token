@@ -62,6 +62,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/PBQPRAConstraint.h"
 end_include
 
@@ -92,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -103,10 +127,10 @@ name|class
 name|CallLowering
 decl_stmt|;
 name|class
-name|DataLayout
+name|InstructionSelector
 decl_stmt|;
 name|class
-name|MachineFunction
+name|LegalizerInfo
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -116,6 +140,9 @@ name|RegisterBankInfo
 decl_stmt|;
 name|class
 name|SDep
+decl_stmt|;
+name|class
+name|SelectionDAGTargetInfo
 decl_stmt|;
 name|class
 name|SUnit
@@ -138,20 +165,9 @@ decl_stmt|;
 name|class
 name|TargetSchedModel
 decl_stmt|;
-name|class
-name|SelectionDAGTargetInfo
-decl_stmt|;
 struct_decl|struct
 name|MachineSchedPolicy
 struct_decl|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// TargetSubtargetInfo - Generic base class for all target subtargets.  All
@@ -164,31 +180,6 @@ range|:
 name|public
 name|MCSubtargetInfo
 block|{
-name|TargetSubtargetInfo
-argument_list|(
-specifier|const
-name|TargetSubtargetInfo
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|TargetSubtargetInfo
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
-name|TargetSubtargetInfo
-argument_list|()
-operator|=
-name|delete
-block|;
 name|protected
 operator|:
 comment|// Can only create subclasses...
@@ -243,11 +234,46 @@ operator|*
 operator|>
 name|RegClassVector
 expr_stmt|;
+name|TargetSubtargetInfo
+argument_list|()
+init|=
+name|delete
+empty_stmt|;
+name|TargetSubtargetInfo
+argument_list|(
+specifier|const
+name|TargetSubtargetInfo
+operator|&
+argument_list|)
+init|=
+name|delete
+empty_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|TargetSubtargetInfo
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 name|virtual
 decl|~
 name|TargetSubtargetInfo
 argument_list|()
 empty_stmt|;
+name|virtual
+name|bool
+name|isXRaySupported
+argument_list|()
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|// Interfaces to the major aspects of target machine information:
 comment|//
 comment|// -- Instruction opcode and operand information
@@ -318,6 +344,22 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|// FIXME: This lets targets specialize the selector by subtarget (which lets
+comment|// us do things like a dedicated avx512 selector).  However, we might want
+comment|// to also specialize selectors by MachineFunction, which would let us be
+comment|// aware of optsize/optnone and such.
+name|virtual
+decl|const
+name|InstructionSelector
+modifier|*
+name|getInstructionSelector
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
 comment|/// Target can subclass this hook to select a different DAG scheduler.
 name|virtual
 name|RegisterScheduler
@@ -329,6 +371,18 @@ name|CodeGenOpt
 operator|::
 name|Level
 argument_list|)
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+name|virtual
+decl|const
+name|LegalizerInfo
+modifier|*
+name|getLegalizerInfo
+argument_list|()
 decl|const
 block|{
 return|return
@@ -529,6 +583,16 @@ argument|std::vector<std::unique_ptr<ScheduleDAGMutation>>&Mutations
 argument_list|)
 specifier|const
 block|{   }
+comment|// \brief Provide an ordered list of schedule DAG mutations for the machine
+comment|// pipeliner.
+name|virtual
+name|void
+name|getSMSMutations
+argument_list|(
+argument|std::vector<std::unique_ptr<ScheduleDAGMutation>>&Mutations
+argument_list|)
+specifier|const
+block|{   }
 comment|// For use with PostRAScheduling: get the minimum optimization level needed
 comment|// to enable post-RA scheduling.
 name|virtual
@@ -595,6 +659,8 @@ name|nullptr
 return|;
 block|}
 comment|/// Enable tracking of subregister liveness in register allocator.
+comment|/// Please use MachineRegisterInfo::subRegLivenessEnabled() instead where
+comment|/// possible.
 name|virtual
 name|bool
 name|enableSubRegLiveness
@@ -611,13 +677,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TARGET_TARGETSUBTARGETINFO_H
+end_comment
 
 end_unit
 

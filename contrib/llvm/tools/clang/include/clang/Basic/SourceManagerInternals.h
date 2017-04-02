@@ -338,9 +338,7 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getFilename
 argument_list|(
 name|unsigned
@@ -366,7 +364,7 @@ index|[
 name|ID
 index|]
 operator|->
-name|getKeyData
+name|getKey
 argument_list|()
 return|;
 block|}

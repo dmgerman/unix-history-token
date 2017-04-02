@@ -805,6 +805,8 @@ argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType Type
+argument_list|,
+argument|SourceLocation StartLoc
 argument_list|)
 operator|:
 name|VarDecl
@@ -815,7 +817,7 @@ argument|C
 argument_list|,
 argument|DC
 argument_list|,
-argument|SourceLocation()
+argument|StartLoc
 argument_list|,
 argument|SourceLocation()
 argument_list|,
@@ -845,6 +847,8 @@ argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|SourceLocation StartLoc
 argument_list|)
 block|;
 specifier|static
@@ -856,6 +860,13 @@ argument|ASTContext&C
 argument_list|,
 argument|unsigned ID
 argument_list|)
+block|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|override
+name|LLVM_READONLY
 block|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static

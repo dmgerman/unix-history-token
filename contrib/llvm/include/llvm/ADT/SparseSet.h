@@ -98,13 +98,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdlib>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<limits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -287,8 +305,6 @@ block|,
 name|typename
 name|KeyFunctorT
 operator|=
-name|llvm
-operator|::
 name|identity
 operator|<
 name|unsigned
@@ -352,9 +368,13 @@ block|;
 name|SparseT
 operator|*
 name|Sparse
+operator|=
+name|nullptr
 block|;
 name|unsigned
 name|Universe
+operator|=
+literal|0
 block|;
 name|KeyFunctorT
 name|KeyIndexOf
@@ -368,29 +388,6 @@ block|,
 name|KeyFunctorT
 operator|>
 name|ValIndexOf
-block|;
-comment|// Disable copy construction and assignment.
-comment|// This data structure is not meant to be used that way.
-name|SparseSet
-argument_list|(
-specifier|const
-name|SparseSet
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|SparseSet
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|SparseSet
-operator|&
-operator|)
-operator|=
-name|delete
 block|;
 name|public
 operator|:
@@ -422,17 +419,30 @@ name|const_pointer
 typedef|;
 name|SparseSet
 argument_list|()
-operator|:
-name|Sparse
+operator|=
+expr|default
+expr_stmt|;
+name|SparseSet
 argument_list|(
-name|nullptr
+specifier|const
+name|SparseSet
+operator|&
 argument_list|)
-operator|,
-name|Universe
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+name|delete
+expr_stmt|;
+name|SparseSet
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|SparseSet
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 operator|~
 name|SparseSet
 argument_list|()
@@ -1308,6 +1318,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_SPARSESET_H
+end_comment
 
 end_unit
 

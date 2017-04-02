@@ -43,8 +43,24 @@ directive|define
 name|liblldb_RegisterContext_mips64_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
 begin_comment
-comment|// eh_frame and DWARF Register numbers (eRegisterKindEHFrame& eRegisterKindDWARF)
+comment|// eh_frame and DWARF Register numbers (eRegisterKindEHFrame&
+end_comment
+
+begin_comment
+comment|// eRegisterKindDWARF)
 end_comment
 
 begin_enum

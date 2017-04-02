@@ -371,6 +371,11 @@ asm|__asm("r1") = (int) (intptr_t) end;
 specifier|const
 specifier|register
 name|int
+name|flags
+asm|__asm("r2") = 0;
+specifier|const
+specifier|register
+name|int
 name|syscall_nr
 asm|__asm("r7") = __ARM_NR_cacheflush;
 asm|__asm __volatile("svc 0x0"
@@ -391,6 +396,10 @@ argument_list|)
 decl_stmt|, "r"
 argument_list|(
 name|end_reg
+argument_list|)
+decl_stmt|,                             "r"
+argument_list|(
+name|flags
 argument_list|)
 decl_stmt|);
 if|if

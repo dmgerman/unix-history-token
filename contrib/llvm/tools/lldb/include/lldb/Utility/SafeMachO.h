@@ -44,11 +44,19 @@ name|liblldb_SafeMachO_h_
 end_define
 
 begin_comment
-comment|// This header file is required to work around collisions between the defines in mach/machine.h, and enum members
+comment|// This header file is required to work around collisions between the defines in
 end_comment
 
 begin_comment
-comment|// of the same name in llvm's MachO.h.  If you want to use llvm/Support/MachO.h, use this file instead.
+comment|// mach/machine.h, and enum members
+end_comment
+
+begin_comment
+comment|// of the same name in llvm's MachO.h.  If you want to use llvm/Support/MachO.h,
+end_comment
+
+begin_comment
+comment|// use this file instead.
 end_comment
 
 begin_comment
@@ -56,7 +64,11 @@ comment|// The caveats are:
 end_comment
 
 begin_comment
-comment|// 1) You can only use the MachO.h enums, you can't use the defines.  That won't make a difference since the values
+comment|// 1) You can only use the MachO.h enums, you can't use the defines.  That won't
+end_comment
+
+begin_comment
+comment|// make a difference since the values
 end_comment
 
 begin_comment
@@ -64,15 +76,27 @@ comment|//    are the same.
 end_comment
 
 begin_comment
-comment|// 2) If you need any header file that relies on mach/machine.h, you must include that first.
+comment|// 2) If you need any header file that relies on mach/machine.h, you must
 end_comment
 
 begin_comment
-comment|// 3) This isn't a total solution, it doesn't undef every define that MachO.h has borrowed from various system headers,
+comment|// include that first.
 end_comment
 
 begin_comment
-comment|//    only the ones that come from mach/machine.h because that is the one we ended up pulling in from various places.
+comment|// 3) This isn't a total solution, it doesn't undef every define that MachO.h
+end_comment
+
+begin_comment
+comment|// has borrowed from various system headers,
+end_comment
+
+begin_comment
+comment|//    only the ones that come from mach/machine.h because that is the one we
+end_comment
+
+begin_comment
+comment|//    ended up pulling in from various places.
 end_comment
 
 begin_comment

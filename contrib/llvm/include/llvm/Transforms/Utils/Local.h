@@ -131,6 +131,9 @@ name|class
 name|DbgDeclareInst
 decl_stmt|;
 name|class
+name|DbgValueInst
+decl_stmt|;
+name|class
 name|StoreInst
 decl_stmt|;
 name|class
@@ -176,6 +179,16 @@ name|T
 operator|>
 name|class
 name|SmallVectorImpl
+expr_stmt|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|DbgValueInst
+operator|*
+operator|,
+literal|1
+operator|>
+name|DbgValueList
 expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Local constant propagation.
@@ -466,10 +479,15 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// If the specified pointer has an alignment that we can determine, return it,
-comment|/// otherwise return 0. If PrefAlign is specified, and it is more than the
-comment|/// alignment of the ultimate object, see if we can increase the alignment of
-comment|/// the ultimate object, making this check succeed.
+comment|/// Try to ensure that the alignment of \p V is at least \p PrefAlign bytes. If
+comment|/// the owning object can be modified and has an alignment less than \p
+comment|/// PrefAlign, it will be increased and \p PrefAlign returned. If the alignment
+comment|/// cannot be increased, the known alignment of the value is returned.
+comment|///
+comment|/// It is not always possible to modify the alignment of the underlying object,
+comment|/// so if alignment is important, a more reliable approach is to simply align
+comment|/// all global variables and allocation instructions to their preferred
+comment|/// alignment from the beginning.
 name|unsigned
 name|getOrEnforceKnownAlignment
 parameter_list|(
@@ -748,14 +766,10 @@ name|StructType
 modifier|*
 name|STy
 init|=
-name|dyn_cast
-operator|<
-name|StructType
-operator|>
-operator|(
-operator|*
 name|GTI
-operator|)
+operator|.
+name|getStructTypeOrNull
+argument_list|()
 condition|)
 block|{
 if|if
@@ -994,7 +1008,7 @@ comment|///  Dbg Intrinsic utilities
 comment|///
 comment|/// Inserts a llvm.dbg.value intrinsic before a store to an alloca'd value
 comment|/// that has an associated llvm.dbg.decl intrinsic.
-name|bool
+name|void
 name|ConvertDebugDeclareToDebugValue
 parameter_list|(
 name|DbgDeclareInst
@@ -1012,7 +1026,7 @@ parameter_list|)
 function_decl|;
 comment|/// Inserts a llvm.dbg.value intrinsic before a load of an alloca'd value
 comment|/// that has an associated llvm.dbg.decl intrinsic.
-name|bool
+name|void
 name|ConvertDebugDeclareToDebugValue
 parameter_list|(
 name|DbgDeclareInst
@@ -1020,6 +1034,24 @@ modifier|*
 name|DDI
 parameter_list|,
 name|LoadInst
+modifier|*
+name|LI
+parameter_list|,
+name|DIBuilder
+modifier|&
+name|Builder
+parameter_list|)
+function_decl|;
+comment|/// Inserts a llvm.dbg.value intrinsic after a phi of an alloca'd value
+comment|/// that has an associated llvm.dbg.decl intrinsic.
+name|void
+name|ConvertDebugDeclareToDebugValue
+parameter_list|(
+name|DbgDeclareInst
+modifier|*
+name|DDI
+parameter_list|,
+name|PHINode
 modifier|*
 name|LI
 parameter_list|,
@@ -1043,6 +1075,19 @@ name|DbgDeclareInst
 modifier|*
 name|FindAllocaDbgDeclare
 parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
+comment|/// Finds the llvm.dbg.value intrinsics corresponding to an alloca, if any.
+name|void
+name|FindAllocaDbgValues
+parameter_list|(
+name|DbgValueList
+modifier|&
+name|DbgValues
+parameter_list|,
 name|Value
 modifier|*
 name|V
@@ -1155,6 +1200,28 @@ name|I
 parameter_list|,
 name|bool
 name|UseLLVMTrap
+parameter_list|,
+name|bool
+name|PreserveLCSSA
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Convert the CallInst to InvokeInst with the specified unwind edge basic
+comment|/// block.  This also splits the basic block where CI is located, because
+comment|/// InvokeInst is a terminator instruction.  Returns the newly split basic
+comment|/// block.
+name|BasicBlock
+modifier|*
+name|changeToInvokeAndSplitBasicBlock
+parameter_list|(
+name|CallInst
+modifier|*
+name|CI
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|UnwindEdge
 parameter_list|)
 function_decl|;
 comment|/// Replace 'BB's terminator with one that does not have an unwind successor
@@ -1210,6 +1277,23 @@ operator|>
 name|KnownIDs
 argument_list|)
 decl_stmt|;
+comment|/// Combine the metadata of two instructions so that K can replace J. This
+comment|/// specifically handles the case of CSE-like transformations.
+comment|///
+comment|/// Unknown metadata is removed.
+name|void
+name|combineMetadataForCSE
+parameter_list|(
+name|Instruction
+modifier|*
+name|K
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|J
+parameter_list|)
+function_decl|;
 comment|/// Replace each use of 'From' with 'To' if that use is dominated by
 comment|/// the given edge.  Returns the number of replacements made.
 name|unsigned

@@ -78,19 +78,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tuple>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -120,6 +138,10 @@ decl_stmt|;
 name|uint32_t
 name|Column
 decl_stmt|;
+comment|// DWARF-specific.
+name|uint32_t
+name|Discriminator
+decl_stmt|;
 name|DILineInfo
 argument_list|()
 operator|:
@@ -139,6 +161,11 @@ literal|0
 argument_list|)
 operator|,
 name|Column
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Discriminator
 argument_list|(
 literal|0
 argument_list|)
@@ -201,6 +228,53 @@ name|RHS
 operator|)
 return|;
 block|}
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|DILineInfo
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|tie
+argument_list|(
+name|FileName
+argument_list|,
+name|FunctionName
+argument_list|,
+name|Line
+argument_list|,
+name|Column
+argument_list|)
+operator|<
+name|std
+operator|::
+name|tie
+argument_list|(
+name|RHS
+operator|.
+name|FileName
+argument_list|,
+name|RHS
+operator|.
+name|FunctionName
+argument_list|,
+name|RHS
+operator|.
+name|Line
+argument_list|,
+name|RHS
+operator|.
+name|Column
+argument_list|)
+return|;
+block|}
 block|}
 struct|;
 typedef|typedef
@@ -235,7 +309,9 @@ name|public
 label|:
 name|DIInliningInfo
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|DILineInfo
 name|getFrame
 argument_list|(
@@ -471,6 +547,8 @@ name|DIDT_AppleObjC
 block|,
 name|DIDT_CUIndex
 block|,
+name|DIDT_GdbIndex
+block|,
 name|DIDT_TUIndex
 block|, }
 enum|;
@@ -487,15 +565,6 @@ block|,
 name|CK_PDB
 block|}
 enum|;
-name|DIContextKind
-name|getKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Kind
-return|;
-block|}
 name|DIContext
 argument_list|(
 argument|DIContextKind K
@@ -510,20 +579,44 @@ name|virtual
 operator|~
 name|DIContext
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
+name|DIContextKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
 name|virtual
 name|void
 name|dump
-argument_list|(
-argument|raw_ostream&OS
-argument_list|,
-argument|DIDumpType DumpType = DIDT_All
-argument_list|,
-argument|bool DumpEH = false
-argument_list|)
-operator|=
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|DIDumpType
+name|DumpType
+init|=
+name|DIDT_All
+parameter_list|,
+name|bool
+name|DumpEH
+init|=
+name|false
+parameter_list|,
+name|bool
+name|SummarizeTypes
+init|=
+name|false
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|virtual
 name|DILineInfo
 name|getLineInfoForAddress
@@ -688,10 +781,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DICONTEXT_H
+end_comment
 
 end_unit
 

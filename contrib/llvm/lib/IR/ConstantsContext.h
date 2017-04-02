@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ConstantsContext.h - Constants-related Context Interals -----------===//
+comment|//===-- ConstantsContext.h - Constants-related Context Interals -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMapInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
@@ -78,19 +90,55 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Constants.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DerivedTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/InlineAsm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Instructions.h"
+file|"llvm/IR/Instruction.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Operator.h"
+file|"llvm/IR/OperandTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
@@ -109,6 +157,30 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_define
@@ -135,41 +207,8 @@ name|anchor
 argument_list|()
 name|override
 block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
-comment|// allocate space for exactly one operand
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|1
-argument_list|)
-return|;
-block|}
 name|UnaryConstantExpr
 argument_list|(
 argument|unsigned Opcode
@@ -201,6 +240,39 @@ operator|)
 operator|=
 name|C
 block|;   }
+comment|// allocate space for exactly one operand
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+operator|=
+name|delete
+block|;
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 name|Value
@@ -220,41 +292,8 @@ name|anchor
 argument_list|()
 name|override
 block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
-comment|// allocate space for exactly two operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
 name|BinaryConstantExpr
 argument_list|(
 argument|unsigned Opcode
@@ -301,6 +340,39 @@ name|SubclassOptionalData
 operator|=
 name|Flags
 block|;   }
+comment|// allocate space for exactly two operands
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|2
+argument_list|)
+return|;
+block|}
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+operator|=
+name|delete
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -321,41 +393,8 @@ name|anchor
 argument_list|()
 name|override
 block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
-comment|// allocate space for exactly three operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|3
-argument_list|)
-return|;
-block|}
 name|SelectConstantExpr
 argument_list|(
 name|Constant
@@ -411,6 +450,39 @@ operator|)
 operator|=
 name|C3
 block|;   }
+comment|// allocate space for exactly three operands
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+operator|=
+name|delete
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -432,41 +504,8 @@ name|anchor
 argument_list|()
 name|override
 block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
-comment|// allocate space for exactly two operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
 name|ExtractElementConstantExpr
 argument_list|(
 name|Constant
@@ -509,6 +548,39 @@ operator|)
 operator|=
 name|C2
 block|;   }
+comment|// allocate space for exactly two operands
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|2
+argument_list|)
+return|;
+block|}
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+operator|=
+name|delete
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -530,41 +602,8 @@ name|anchor
 argument_list|()
 name|override
 block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
-comment|// allocate space for exactly three operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|3
-argument_list|)
-return|;
-block|}
 name|InsertElementConstantExpr
 argument_list|(
 name|Constant
@@ -620,41 +659,6 @@ operator|)
 operator|=
 name|C3
 block|;   }
-comment|/// Transparently provide more efficient getOperand methods.
-name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
-argument_list|(
-name|Value
-argument_list|)
-block|; }
-decl_stmt|;
-comment|/// ShuffleVectorConstantExpr - This class is private to
-comment|/// Constants.cpp, and is used behind the scenes to implement
-comment|/// shufflevector constant exprs.
-name|class
-name|ShuffleVectorConstantExpr
-range|:
-name|public
-name|ConstantExpr
-block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
-name|public
-operator|:
 comment|// allocate space for exactly three operands
 name|void
 operator|*
@@ -676,6 +680,41 @@ literal|3
 argument_list|)
 return|;
 block|}
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+operator|=
+name|delete
+block|;
+comment|/// Transparently provide more efficient getOperand methods.
+name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
+argument_list|(
+name|Value
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// ShuffleVectorConstantExpr - This class is private to
+comment|/// Constants.cpp, and is used behind the scenes to implement
+comment|/// shufflevector constant exprs.
+name|class
+name|ShuffleVectorConstantExpr
+range|:
+name|public
+name|ConstantExpr
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
+block|;
+name|public
+operator|:
 name|ShuffleVectorConstantExpr
 argument_list|(
 name|Constant
@@ -731,6 +770,39 @@ operator|)
 operator|=
 name|C3
 block|;   }
+comment|// allocate space for exactly three operands
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+operator|=
+name|delete
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -752,41 +824,8 @@ name|anchor
 argument_list|()
 name|override
 block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
-comment|// allocate space for exactly one operand
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|1
-argument_list|)
-return|;
-block|}
 name|ExtractValueConstantExpr
 argument_list|(
 name|Constant
@@ -839,6 +878,39 @@ operator|)
 operator|=
 name|Agg
 block|;   }
+comment|// allocate space for exactly one operand
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+operator|=
+name|delete
+block|;
 comment|/// Indices - These identify which value to extract.
 specifier|const
 name|SmallVector
@@ -917,41 +989,8 @@ name|anchor
 argument_list|()
 name|override
 block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
-comment|// allocate space for exactly one operand
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
 name|InsertValueConstantExpr
 argument_list|(
 name|Constant
@@ -1017,6 +1056,39 @@ operator|)
 operator|=
 name|Val
 block|;   }
+comment|// allocate space for exactly one operand
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|2
+argument_list|)
+return|;
+block|}
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+operator|=
+name|delete
+block|;
 comment|/// Indices - These identify the position for the insertion.
 specifier|const
 name|SmallVector
@@ -1097,11 +1169,6 @@ name|Type
 operator|*
 name|ResElementTy
 block|;
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|GetElementPtrConstantExpr
 argument_list|(
 name|Type
@@ -1123,6 +1190,11 @@ name|Type
 operator|*
 name|DestTy
 argument_list|)
+block|;
+name|void
+name|anchor
+argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -1252,41 +1324,8 @@ name|anchor
 argument_list|()
 name|override
 block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
-comment|// allocate space for exactly two operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
 name|unsigned
 name|short
 name|predicate
@@ -1344,6 +1383,39 @@ operator|)
 operator|=
 name|RHS
 block|;   }
+comment|// allocate space for exactly two operands
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|2
+argument_list|)
+return|;
+block|}
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+operator|=
+name|delete
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1978,7 +2050,7 @@ return|;
 end_return
 
 begin_macro
-unit|}   unsigned
+unit|}    unsigned
 name|getHash
 argument_list|()
 end_macro
@@ -3975,6 +4047,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_IR_CONSTANTSCONTEXT_H
+end_comment
 
 end_unit
 

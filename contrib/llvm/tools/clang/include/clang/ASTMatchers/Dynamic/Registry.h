@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- Registry.h - Matcher registry -----*- C++ -*-===//
+comment|//===--- Registry.h - Matcher registry --------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LLVM.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -105,6 +99,24 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -124,6 +136,7 @@ name|class
 name|MatcherDescriptor
 decl_stmt|;
 block|}
+comment|// end namespace internal
 typedef|typedef
 specifier|const
 name|internal
@@ -137,7 +150,9 @@ name|MatcherCompletion
 block|{
 name|MatcherCompletion
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|MatcherCompletion
 argument_list|(
 argument|StringRef TypedText
@@ -162,26 +177,6 @@ argument_list|(
 argument|Specificity
 argument_list|)
 block|{}
-comment|/// \brief The text to type to select this matcher.
-name|std
-operator|::
-name|string
-name|TypedText
-expr_stmt|;
-comment|/// \brief The "declaration" of the matcher, with type information.
-name|std
-operator|::
-name|string
-name|MatcherDecl
-expr_stmt|;
-comment|/// \brief Value corresponding to the "specificity" of the converted matcher.
-comment|///
-comment|/// Zero specificity indicates that this conversion would produce a trivial
-comment|/// matcher that will either always or never match.
-comment|/// Such matchers are excluded from code completion results.
-name|unsigned
-name|Specificity
-decl_stmt|;
 name|bool
 name|operator
 operator|==
@@ -207,6 +202,26 @@ operator|.
 name|MatcherDecl
 return|;
 block|}
+comment|/// \brief The text to type to select this matcher.
+name|std
+operator|::
+name|string
+name|TypedText
+expr_stmt|;
+comment|/// \brief The "declaration" of the matcher, with type information.
+name|std
+operator|::
+name|string
+name|MatcherDecl
+expr_stmt|;
+comment|/// \brief Value corresponding to the "specificity" of the converted matcher.
+comment|///
+comment|/// Zero specificity indicates that this conversion would produce a trivial
+comment|/// matcher that will either always or never match.
+comment|/// Such matchers are excluded from code completion results.
+name|unsigned
+name|Specificity
+decl_stmt|;
 block|}
 struct|;
 name|class
@@ -214,6 +229,11 @@ name|Registry
 block|{
 name|public
 label|:
+name|Registry
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
 comment|/// \brief Look up a matcher in the registry by name,
 comment|///
 comment|/// \return An opaque value which may be used to refer to the matcher
@@ -353,24 +373,17 @@ operator|*
 name|Error
 argument_list|)
 decl_stmt|;
-name|private
-label|:
-name|Registry
-argument_list|()
-operator|=
-name|delete
-expr_stmt|;
 block|}
 empty_stmt|;
 block|}
-comment|// namespace dynamic
+comment|// end namespace dynamic
 block|}
-comment|// namespace ast_matchers
+comment|// end namespace ast_matchers
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace clang
+comment|// end namespace clang
 end_comment
 
 begin_endif

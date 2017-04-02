@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|35
+value|37
 end_define
 
 begin_define
@@ -339,7 +339,7 @@ name|CXFile
 name|file
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve a file handle within the given translation unit.  *  * \param tu the translation unit  * * \param file_name the name of the file.  *  * \returns the file handle for the named file in the translation unit \p tu,  * or a NULL file handle if the file was not a part of this translation unit.  */
+comment|/**  * \brief Retrieve a file handle within the given translation unit.  *  * \param tu the translation unit  *  * \param file_name the name of the file.  *  * \returns the file handle for the named file in the translation unit \p tu,  * or a NULL file handle if the file was not a part of this translation unit.  */
 name|CINDEX_LINKAGE
 name|CXFile
 name|clang_getFile
@@ -684,6 +684,16 @@ name|tu
 parameter_list|,
 name|CXFile
 name|file
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve all ranges from all files that were skipped by the  * preprocessor.  *  * The preprocessor will skip lines when they are surrounded by an  * if/ifdef/ifndef directive whose condition does not evaluate to true.  */
+name|CINDEX_LINKAGE
+name|CXSourceRangeList
+modifier|*
+name|clang_getAllSkippedRanges
+parameter_list|(
+name|CXTranslationUnit
+name|tu
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Destroy the given \c CXSourceRangeList.  */
@@ -2447,9 +2457,59 @@ name|CXCursor_OMPTargetParallelForSimdDirective
 init|=
 literal|269
 block|,
+comment|/** \brief OpenMP target simd directive.    */
+name|CXCursor_OMPTargetSimdDirective
+init|=
+literal|270
+block|,
+comment|/** \brief OpenMP teams distribute directive.    */
+name|CXCursor_OMPTeamsDistributeDirective
+init|=
+literal|271
+block|,
+comment|/** \brief OpenMP teams distribute simd directive.    */
+name|CXCursor_OMPTeamsDistributeSimdDirective
+init|=
+literal|272
+block|,
+comment|/** \brief OpenMP teams distribute parallel for simd directive.    */
+name|CXCursor_OMPTeamsDistributeParallelForSimdDirective
+init|=
+literal|273
+block|,
+comment|/** \brief OpenMP teams distribute parallel for directive.    */
+name|CXCursor_OMPTeamsDistributeParallelForDirective
+init|=
+literal|274
+block|,
+comment|/** \brief OpenMP target teams directive.    */
+name|CXCursor_OMPTargetTeamsDirective
+init|=
+literal|275
+block|,
+comment|/** \brief OpenMP target teams distribute directive.    */
+name|CXCursor_OMPTargetTeamsDistributeDirective
+init|=
+literal|276
+block|,
+comment|/** \brief OpenMP target teams distribute parallel for directive.    */
+name|CXCursor_OMPTargetTeamsDistributeParallelForDirective
+init|=
+literal|277
+block|,
+comment|/** \brief OpenMP target teams distribute parallel for simd directive.    */
+name|CXCursor_OMPTargetTeamsDistributeParallelForSimdDirective
+init|=
+literal|278
+block|,
+comment|/** \brief OpenMP target teams distribute simd directive.    */
+name|CXCursor_OMPTargetTeamsDistributeSimdDirective
+init|=
+literal|279
+block|,
 name|CXCursor_LastStmt
 init|=
-name|CXCursor_OMPTargetParallelForSimdDirective
+name|CXCursor_OMPTargetTeamsDistributeSimdDirective
 block|,
 comment|/**    * \brief Cursor that represents the translation unit itself.    *    * The translation unit cursor exists primarily to act as the root    * cursor for traversing the contents of a translation unit.    */
 name|CXCursor_TranslationUnit
@@ -2590,13 +2650,18 @@ name|CXCursor_StaticAssert
 init|=
 literal|602
 block|,
+comment|/**    * \brief a friend declaration.    */
+name|CXCursor_FriendDecl
+init|=
+literal|603
+block|,
 name|CXCursor_FirstExtraDecl
 init|=
 name|CXCursor_ModuleImportDecl
 block|,
 name|CXCursor_LastExtraDecl
 init|=
-name|CXCursor_StaticAssert
+name|CXCursor_FriendDecl
 block|,
 comment|/**    * \brief A code completion overload candidate.    */
 name|CXCursor_OverloadCandidate
@@ -3332,7 +3397,10 @@ name|CXCallingConv_AAPCS_VFP
 init|=
 literal|7
 block|,
-comment|/* Value 8 was PnaclCall, but it was never used, so it could safely be re-used. */
+name|CXCallingConv_X86RegCall
+init|=
+literal|8
+block|,
 name|CXCallingConv_IntelOclBicc
 init|=
 literal|9
@@ -3910,7 +3978,7 @@ comment|/** \brief An rvalue ref-qualifier was provided (\c&&). */
 name|CXRefQualifier_RValue
 block|}
 enum|;
-comment|/**  * \brief Returns the number of template arguments for given class template  * specialization, or -1 if type \c T is not a class template specialization.  *  * Variadic argument packs count as only one argument, and can not be inspected  * further.  */
+comment|/**  * \brief Returns the number of template arguments for given template  * specialization, or -1 if type \c T is not a template specialization.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_Type_getNumTemplateArguments
@@ -5620,6 +5688,36 @@ comment|/**  * \brief Returns the evaluation result as integer if the  * kind is
 name|CINDEX_LINKAGE
 name|int
 name|clang_EvalResult_getAsInt
+parameter_list|(
+name|CXEvalResult
+name|E
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the evaluation result as a long long integer if the  * kind is Int. This prevents overflows that may happen if the result is  * returned with clang_EvalResult_getAsInt.  */
+name|CINDEX_LINKAGE
+name|long
+name|long
+name|clang_EvalResult_getAsLongLong
+parameter_list|(
+name|CXEvalResult
+name|E
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns a non-zero value if the kind is Int and the evaluation  * result resulted in an unsigned integer.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_EvalResult_isUnsignedInt
+parameter_list|(
+name|CXEvalResult
+name|E
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the evaluation result as an unsigned integer if  * the kind is Int and clang_EvalResult_isUnsignedInt is non-zero.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|long
+name|long
+name|clang_EvalResult_getAsUnsigned
 parameter_list|(
 name|CXEvalResult
 name|E

@@ -77,6 +77,12 @@ directive|include
 file|"llvm/IR/PassManager.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Scalar/LoopPassManager.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -102,12 +108,17 @@ name|Loop
 operator|&
 name|L
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Loop
-operator|>
+name|LoopAnalysisManager
 operator|&
 name|AM
+argument_list|,
+name|LoopStandardAnalysisResults
+operator|&
+name|AR
+argument_list|,
+name|LPMUpdater
+operator|&
+name|U
 argument_list|)
 block|;
 name|bool

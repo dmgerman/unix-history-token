@@ -95,11 +95,9 @@ name|MCSection
 operator|*
 name|SelectSectionForGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)

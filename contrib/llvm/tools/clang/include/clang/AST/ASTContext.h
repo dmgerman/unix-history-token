@@ -90,6 +90,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclarationName.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/ExternalASTSource.h"
 end_include
 
@@ -109,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/RawCommentList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/TemplateBase.h"
 end_include
 
 begin_include
@@ -144,6 +162,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Linkage.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Module.h"
 end_include
 
@@ -168,7 +198,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/VersionTuple.h"
+file|"clang/Basic/SourceLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/Specifiers.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/APSInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -192,7 +240,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/MapVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerUnion.h"
 end_include
 
 begin_include
@@ -204,7 +282,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/TinyPtrVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/AlignOf.h"
 end_include
 
 begin_include
@@ -216,7 +318,61 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<new>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -235,18 +391,22 @@ struct_decl|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
 name|class
-name|FileManager
-decl_stmt|;
-name|class
-name|AtomicExpr
+name|ASTMutationListener
 decl_stmt|;
 name|class
 name|ASTRecordLayout
+decl_stmt|;
+name|class
+name|AtomicExpr
 decl_stmt|;
 name|class
 name|BlockExpr
@@ -255,31 +415,22 @@ name|class
 name|CharUnits
 decl_stmt|;
 name|class
+name|CXXABI
+decl_stmt|;
+name|class
 name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|Expr
 decl_stmt|;
 name|class
-name|ASTMutationListener
-decl_stmt|;
-name|class
-name|IdentifierTable
+name|MangleNumberingContext
 decl_stmt|;
 name|class
 name|MaterializeTemporaryExpr
 decl_stmt|;
 name|class
-name|SelectorTable
-decl_stmt|;
-name|class
 name|TargetInfo
-decl_stmt|;
-name|class
-name|CXXABI
-decl_stmt|;
-name|class
-name|MangleNumberingContext
 decl_stmt|;
 comment|// Decls
 name|class
@@ -310,6 +461,7 @@ name|class
 name|Context
 decl_stmt|;
 block|}
+comment|// end namespace Builtin
 enum_decl|enum
 name|BuiltinTemplateKind
 enum_decl|:
@@ -322,6 +474,7 @@ name|class
 name|FullComment
 decl_stmt|;
 block|}
+comment|// end namespace comments
 struct|struct
 name|TypeInfo
 block|{
@@ -585,6 +738,15 @@ operator|<
 name|TemplateTypeParmType
 operator|>
 name|TemplateTypeParmTypes
+block|;
+name|mutable
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|ObjCTypeParamType
+operator|>
+name|ObjCTypeParamTypes
 block|;
 name|mutable
 name|llvm
@@ -1233,6 +1395,56 @@ operator|*
 operator|>>
 name|MergedDefModules
 expr_stmt|;
+comment|/// \brief Initializers for a module, in order. Each Decl will be either
+comment|/// something that has a semantic effect on startup (such as a variable with
+comment|/// a non-constant initializer), or an ImportDecl (which recursively triggers
+comment|/// initialization of another module).
+struct|struct
+name|PerModuleInitializers
+block|{
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|Decl
+operator|*
+operator|,
+literal|4
+operator|>
+name|Initializers
+expr_stmt|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint32_t
+operator|,
+literal|4
+operator|>
+name|LazyInitializers
+expr_stmt|;
+name|void
+name|resolve
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Ctx
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|Module
+operator|*
+operator|,
+name|PerModuleInitializers
+operator|*
+operator|>
+name|ModuleInitializers
+expr_stmt|;
 name|public
 label|:
 comment|/// \brief A type synonym for the TemplateOrInstantiation mapping.
@@ -1293,11 +1505,11 @@ name|TemplateOrSpecializationInfo
 operator|>
 name|TemplateOrInstantiation
 expr_stmt|;
-comment|/// \brief Keeps track of the declaration from which a UsingDecl was
+comment|/// \brief Keeps track of the declaration from which a using declaration was
 comment|/// created during instantiation.
 comment|///
-comment|/// The source declaration is always a UsingDecl, an UnresolvedUsingValueDecl,
-comment|/// or an UnresolvedUsingTypenameDecl.
+comment|/// The source and target declarations are always a UsingDecl, an
+comment|/// UnresolvedUsingValueDecl, or an UnresolvedUsingTypenameDecl.
 comment|///
 comment|/// For example:
 comment|/// \code
@@ -1320,7 +1532,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
-name|UsingDecl
+name|NamedDecl
 operator|*
 operator|,
 name|NamedDecl
@@ -1392,9 +1604,12 @@ specifier|const
 name|DeclContext
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MangleNumberingContext
-operator|*
-operator|>
+operator|>>
 name|MangleNumberingContexts
 expr_stmt|;
 comment|/// \brief Side-table of mangling numbers for declarations which rarely
@@ -2195,14 +2410,10 @@ argument_list|(
 name|T
 argument_list|)
 argument_list|,
-name|llvm
-operator|::
-name|alignOf
-operator|<
+name|alignof
+argument_list|(
 name|T
-operator|>
-operator|(
-operator|)
+argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -3237,7 +3448,7 @@ name|NamedDecl
 modifier|*
 name|getInstantiatedFromUsingDecl
 parameter_list|(
-name|UsingDecl
+name|NamedDecl
 modifier|*
 name|Inst
 parameter_list|)
@@ -3256,7 +3467,7 @@ begin_function_decl
 name|void
 name|setInstantiatedFromUsingDecl
 parameter_list|(
-name|UsingDecl
+name|NamedDecl
 modifier|*
 name|Inst
 parameter_list|,
@@ -3696,8 +3907,76 @@ name|second
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/// Add a declaration to the list of declarations that are initialized
+end_comment
+
+begin_comment
+comment|/// for a module. This will typically be a global variable (with internal
+end_comment
+
+begin_comment
+comment|/// linkage) that runs module initializers, such as the iostream initializer,
+end_comment
+
+begin_comment
+comment|/// or an ImportDecl nominating another module that has initializers.
+end_comment
+
 begin_expr_stmt
-unit|}    TranslationUnitDecl
+unit|void
+name|addModuleInitializer
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+name|Decl
+operator|*
+name|Init
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|addLazyModuleInitializers
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint32_t
+operator|>
+name|IDs
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Get the initializations to perform when importing a module, if any.
+end_comment
+
+begin_expr_stmt
+name|ArrayRef
+operator|<
+name|Decl
+operator|*
+operator|>
+name|getModuleInitializers
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TranslationUnitDecl
 operator|*
 name|getTranslationUnitDecl
 argument_list|()
@@ -4053,6 +4332,33 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|ASTContext
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|ASTContext
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|ASTContext
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 operator|~
 name|ASTContext
 argument_list|()
@@ -4340,6 +4646,20 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|QualType
+name|getPipeType
+argument_list|(
+name|QualType
+name|T
+argument_list|,
+name|bool
+name|ReadOnly
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_label
 name|public
 label|:
@@ -4378,6 +4698,49 @@ name|T
 argument_list|,
 name|unsigned
 name|AddressSpace
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Apply Objective-C protocol qualifiers to the given type.
+end_comment
+
+begin_comment
+comment|/// \param allowOnPointerType specifies if we can apply protocol
+end_comment
+
+begin_comment
+comment|/// qualifiers on ObjCObjectPointerType. It can be set to true when
+end_comment
+
+begin_comment
+comment|/// contructing the canonical type of a Objective-C type parameter.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|applyObjCProtocolQualifiers
+argument_list|(
+name|QualType
+name|type
+argument_list|,
+name|ArrayRef
+operator|<
+name|ObjCProtocolDecl
+operator|*
+operator|>
+name|protocols
+argument_list|,
+name|bool
+operator|&
+name|hasError
+argument_list|,
+name|bool
+name|allowOnPointerType
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4601,6 +4964,27 @@ name|FD
 parameter_list|,
 name|QualType
 name|ResultType
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Determine whether two function types are the same, ignoring
+end_comment
+
+begin_comment
+comment|/// exception specifications in cases where they're part of the type.
+end_comment
+
+begin_function_decl
+name|bool
+name|hasSameFunctionTypeIgnoringExceptionSpec
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|QualType
+name|U
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4886,12 +5270,27 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Return pipe type for the specified type.
+comment|/// \brief Return a read_only pipe type for the specified type.
 end_comment
 
 begin_decl_stmt
 name|QualType
-name|getPipeType
+name|getReadPipeType
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Return a write_only pipe type for the specified type.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getWritePipeType
 argument_list|(
 name|QualType
 name|T
@@ -5400,8 +5799,62 @@ operator|&
 name|EPI
 argument_list|)
 decl|const
+block|{
+return|return
+name|getFunctionTypeInternal
+argument_list|(
+name|ResultTy
+argument_list|,
+name|Args
+argument_list|,
+name|EPI
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_comment
+comment|/// \brief Return a normal function type with a typed argument list.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getFunctionTypeInternal
+argument_list|(
+name|QualType
+name|ResultTy
+argument_list|,
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+name|Args
+argument_list|,
+specifier|const
+name|FunctionProtoType
+operator|::
+name|ExtProtoInfo
+operator|&
+name|EPI
+argument_list|,
+name|bool
+name|OnlyWantCanonical
+argument_list|)
+decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_label
+name|public
+label|:
+end_label
 
 begin_comment
 comment|/// \brief Return the unique reference to the type for the specified type
@@ -5830,6 +6283,37 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Get a template argument list with one argument per template parameter
+end_comment
+
+begin_comment
+comment|/// in a template parameter list, such as for the injected class name of
+end_comment
+
+begin_comment
+comment|/// a class template.
+end_comment
+
+begin_decl_stmt
+name|void
+name|getInjectedTemplateArgs
+argument_list|(
+specifier|const
+name|TemplateParameterList
+operator|*
+name|Params
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|TemplateArgument
+operator|>
+operator|&
+name|Args
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|QualType
 name|getPackExpansionType
@@ -5911,6 +6395,32 @@ name|protocols
 argument_list|,
 name|bool
 name|isKindOf
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|QualType
+name|getObjCTypeParamType
+argument_list|(
+specifier|const
+name|ObjCTypeParamDecl
+operator|*
+name|Decl
+argument_list|,
+name|ArrayRef
+operator|<
+name|ObjCProtocolDecl
+operator|*
+operator|>
+name|protocols
+argument_list|,
+name|QualType
+name|Canonical
+operator|=
+name|QualType
+argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
@@ -7221,23 +7731,17 @@ begin_comment
 comment|/// types is incomplete), false otherwise.
 end_comment
 
-begin_decl_stmt
-name|bool
-name|getObjCEncodingForFunctionDecl
-argument_list|(
-specifier|const
-name|FunctionDecl
-operator|*
-name|Decl
-argument_list|,
+begin_expr_stmt
 name|std
 operator|::
 name|string
-operator|&
-name|S
+name|getObjCEncodingForFunctionDecl
+argument_list|(
+argument|const FunctionDecl *Decl
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Emit the encoded type for the method declaration \p Decl into
@@ -7247,41 +7751,19 @@ begin_comment
 comment|/// \p S.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \returns true if an error occurred (e.g., because one of the parameter
-end_comment
-
-begin_comment
-comment|/// types is incomplete), false otherwise.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|getObjCEncodingForMethodDecl
-argument_list|(
-specifier|const
-name|ObjCMethodDecl
-operator|*
-name|Decl
-argument_list|,
+begin_expr_stmt
 name|std
 operator|::
 name|string
-operator|&
-name|S
+name|getObjCEncodingForMethodDecl
+argument_list|(
+argument|const ObjCMethodDecl *Decl
 argument_list|,
-name|bool
-name|Extended
-operator|=
-name|false
+argument|bool Extended = false
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Return the encoded type for this block declaration.
@@ -7315,29 +7797,19 @@ begin_comment
 comment|/// only be NULL when getting encodings for protocol properties.
 end_comment
 
-begin_decl_stmt
-name|void
-name|getObjCEncodingForPropertyDecl
-argument_list|(
-specifier|const
-name|ObjCPropertyDecl
-operator|*
-name|PD
-argument_list|,
-specifier|const
-name|Decl
-operator|*
-name|Container
-argument_list|,
+begin_expr_stmt
 name|std
 operator|::
 name|string
-operator|&
-name|S
+name|getObjCEncodingForPropertyDecl
+argument_list|(
+argument|const ObjCPropertyDecl *PD
+argument_list|,
+argument|const Decl *Container
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|bool
@@ -8592,6 +9064,29 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Return the ABI-specified alignment of a type, in bits, or 0 if
+end_comment
+
+begin_comment
+comment|/// the type is incomplete and we cannot determine the alignment (for
+end_comment
+
+begin_comment
+comment|/// example, from alignment attributes).
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|getTypeAlignIfKnown
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return the ABI-specified alignment of a (complete) type \p T, in
 end_comment
 
@@ -8755,15 +9250,13 @@ begin_comment
 comment|/// this target, to be used if no alignment value is specified.
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 name|unsigned
 name|getTargetDefaultAlignForAttributeAligned
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Return the alignment in bits that should be given to a
@@ -10499,6 +10992,25 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// Get target-dependent integer value for null pointer which is used for
+end_comment
+
+begin_comment
+comment|/// constant folding.
+end_comment
+
+begin_decl_stmt
+name|uint64_t
+name|getTargetNullPointerValue
+argument_list|(
+name|QualType
+name|QT
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|bool
 name|addressSpaceMapManglingFor
@@ -11520,41 +12032,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|addDefaultArgExprForConstructor
-parameter_list|(
-specifier|const
-name|CXXConstructorDecl
-modifier|*
-name|CD
-parameter_list|,
-name|unsigned
-name|ParmIdx
-parameter_list|,
-name|Expr
-modifier|*
-name|DAE
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|Expr
-modifier|*
-name|getDefaultArgExprForConstructor
-parameter_list|(
-specifier|const
-name|CXXConstructorDecl
-modifier|*
-name|CD
-parameter_list|,
-name|unsigned
-name|ParmIdx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|addTypedefNameForUnnamedTagDecl
 parameter_list|(
 name|TagDecl
@@ -11687,8 +12164,12 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MangleNumberingContext
-operator|*
+operator|>
 name|createMangleNumberingContext
 argument_list|()
 specifier|const
@@ -11928,37 +12409,6 @@ begin_decl_stmt
 specifier|static
 name|unsigned
 name|NumImplicitDestructorsDeclared
-decl_stmt|;
-end_decl_stmt
-
-begin_label
-name|private
-label|:
-end_label
-
-begin_expr_stmt
-name|ASTContext
-argument_list|(
-specifier|const
-name|ASTContext
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|ASTContext
-operator|&
-operator|)
-operator|=
-name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -12481,7 +12931,9 @@ name|SectionFlags
 decl_stmt|;
 name|SectionInfo
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|SectionInfo
 argument_list|(
 argument|DeclaratorDecl *Decl
@@ -13107,6 +13559,10 @@ unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_AST_ASTCONTEXT_H
+end_comment
 
 end_unit
 

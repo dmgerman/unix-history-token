@@ -62,13 +62,91 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/BitmaskEnum.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Metadata.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<climits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_comment
@@ -671,7 +749,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// \brief Tagged DWARF-like metadata node.
+comment|/// Tagged DWARF-like metadata node.
 end_comment
 
 begin_comment
@@ -888,7 +966,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Debug info flags.
+comment|/// Debug info flags.
 end_comment
 
 begin_comment
@@ -906,6 +984,8 @@ end_comment
 begin_enum
 enum|enum
 name|DIFlags
+enum|:
+name|uint32_t
 block|{
 define|#
 directive|define
@@ -916,6 +996,9 @@ parameter_list|,
 name|NAME
 parameter_list|)
 value|Flag##NAME = ID,
+define|#
+directive|define
+name|DI_FLAG_LARGEST_NEEDED
 include|#
 directive|include
 file|"llvm/IR/DebugInfoFlags.def"
@@ -934,13 +1017,18 @@ operator||
 name|FlagMultipleInheritance
 operator||
 name|FlagVirtualInheritance
-block|,   }
+block|,
+name|LLVM_MARK_AS_BITMASK_ENUM
+argument_list|(
+argument|FlagLargest
+argument_list|)
+block|}
 enum|;
 end_enum
 
 begin_function_decl
 specifier|static
-name|unsigned
+name|DIFlags
 name|getFlag
 parameter_list|(
 name|StringRef
@@ -951,19 +1039,17 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getFlagString
 parameter_list|(
-name|unsigned
+name|DIFlags
 name|Flag
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Split up a flags bitfield.
+comment|/// Split up a flags bitfield.
 end_comment
 
 begin_comment
@@ -980,15 +1066,15 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
+name|DIFlags
 name|splitFlags
 argument_list|(
-name|unsigned
+name|DIFlags
 name|Flags
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|unsigned
+name|DIFlags
 operator|>
 operator|&
 name|SplitFlags
@@ -1151,7 +1237,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Generic tagged DWARF-like metadata node.
+comment|/// Generic tagged DWARF-like metadata node.
 end_comment
 
 begin_comment
@@ -1364,7 +1450,7 @@ argument|(unsigned Tag, MDString *Header,                                     Ar
 argument_list|,
 argument|(Tag, Header, DwarfOps)
 argument_list|)
-comment|/// \brief Return a (temporary) clone of this.
+comment|/// Return a (temporary) clone of this.
 name|TempGenericDINode
 name|clone
 argument_list|()
@@ -1515,7 +1601,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Array subrange.
+comment|/// Array subrange.
 comment|///
 comment|/// TODO: Merge into node for DW_TAG_array_type, which should have a custom
 comment|/// type.
@@ -1674,7 +1760,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Enumeration value.
+comment|/// Enumeration value.
 comment|///
 comment|/// TODO: Add a pointer to the context (DW_TAG_enumeration_type) once that no
 comment|/// longer creates a type cycle.
@@ -1886,7 +1972,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Base class for scope-like contexts.
+comment|/// Base class for scope-like contexts.
 comment|///
 comment|/// Base class for lexical scopes and types (which are also declaration
 comment|/// contexts).
@@ -1973,7 +2059,7 @@ name|getScope
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Return the raw underlying file.
+comment|/// Return the raw underlying file.
 comment|///
 comment|/// An \a DIFile is an \a DIScope, but it doesn't point at a separate file
 comment|/// (it\em is the file).  If \c this is an \a DIFile, we need to return \c
@@ -2075,7 +2161,7 @@ block|}
 block|}
 expr|}
 block|;
-comment|/// \brief File.
+comment|/// File.
 comment|///
 comment|/// TODO: Merge with directory/file node (including users).
 comment|/// TODO: Canonicalize paths on creation.
@@ -2093,26 +2179,57 @@ name|friend
 name|class
 name|MDNode
 block|;
+name|public
+operator|:
+expr|enum
+name|ChecksumKind
+block|{
+name|CSK_None
+block|,
+name|CSK_MD5
+block|,
+name|CSK_SHA1
+block|,
+name|CSK_Last
+operator|=
+name|CSK_SHA1
+comment|// Should be last enumeration.
+block|}
+block|;
+name|private
+operator|:
+name|ChecksumKind
+name|CSKind
+block|;
 name|DIFile
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
 argument|StorageType Storage
 argument_list|,
+argument|ChecksumKind CSK
+argument_list|,
 argument|ArrayRef<Metadata *> Ops
 argument_list|)
 operator|:
 name|DIScope
 argument_list|(
-argument|C
+name|C
 argument_list|,
-argument|DIFileKind
+name|DIFileKind
 argument_list|,
-argument|Storage
+name|Storage
 argument_list|,
-argument|dwarf::DW_TAG_file_type
+name|dwarf
+operator|::
+name|DW_TAG_file_type
 argument_list|,
-argument|Ops
+name|Ops
+argument_list|)
+block|,
+name|CSKind
+argument_list|(
+argument|CSK
 argument_list|)
 block|{}
 operator|~
@@ -2131,6 +2248,10 @@ argument_list|,
 argument|StringRef Filename
 argument_list|,
 argument|StringRef Directory
+argument_list|,
+argument|ChecksumKind CSK
+argument_list|,
+argument|StringRef CS
 argument_list|,
 argument|StorageType Storage
 argument_list|,
@@ -2156,6 +2277,15 @@ argument_list|,
 name|Directory
 argument_list|)
 argument_list|,
+name|CSK
+argument_list|,
+name|getCanonicalMDString
+argument_list|(
+name|Context
+argument_list|,
+name|CS
+argument_list|)
+argument_list|,
 name|Storage
 argument_list|,
 name|ShouldCreate
@@ -2172,6 +2302,10 @@ argument_list|,
 argument|MDString *Filename
 argument_list|,
 argument|MDString *Directory
+argument_list|,
+argument|ChecksumKind CSK
+argument_list|,
+argument|MDString *CS
 argument_list|,
 argument|StorageType Storage
 argument_list|,
@@ -2194,6 +2328,12 @@ argument_list|()
 argument_list|,
 name|getDirectory
 argument_list|()
+argument_list|,
+name|getChecksumKind
+argument_list|()
+argument_list|,
+name|getChecksum
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -2203,17 +2343,17 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIFile
 argument_list|,
-argument|(StringRef Filename, StringRef Directory)
+argument|(StringRef Filename, StringRef Directory,                              ChecksumKind CSK = CSK_None,                              StringRef CS = StringRef())
 argument_list|,
-argument|(Filename, Directory)
+argument|(Filename, Directory, CSK, CS)
 argument_list|)
 name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIFile
 argument_list|,
-argument|(MDString * Filename, MDString *Directory)
+argument|(MDString *Filename, MDString *Directory,                              ChecksumKind CSK = CSK_None,                              MDString *CS = nullptr)
 argument_list|,
-argument|(Filename, Directory)
+argument|(Filename, Directory, CSK, CS)
 argument_list|)
 name|TempDIFile
 name|clone
@@ -2249,6 +2389,32 @@ literal|1
 argument_list|)
 return|;
 block|}
+name|StringRef
+name|getChecksum
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringOperand
+argument_list|(
+literal|2
+argument_list|)
+return|;
+block|}
+name|ChecksumKind
+name|getChecksumKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CSKind
+return|;
+block|}
+name|StringRef
+name|getChecksumKindAsString
+argument_list|()
+specifier|const
+block|;
 name|MDString
 operator|*
 name|getRawFilename
@@ -2281,6 +2447,29 @@ literal|1
 operator|)
 return|;
 block|}
+name|MDString
+operator|*
+name|getRawChecksum
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperandAs
+operator|<
+name|MDString
+operator|>
+operator|(
+literal|2
+operator|)
+return|;
+block|}
+specifier|static
+name|ChecksumKind
+name|getChecksumKind
+argument_list|(
+argument|StringRef CSKindStr
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|classof
@@ -2351,7 +2540,7 @@ return|return
 literal|""
 return|;
 block|}
-comment|/// \brief Base class for types.
+comment|/// Base class for types.
 comment|///
 comment|/// TODO: Remove the hardcoded name and context, since many types don't use
 comment|/// them.
@@ -2365,17 +2554,17 @@ block|{
 name|unsigned
 name|Line
 block|;
-name|unsigned
+name|DIFlags
 name|Flags
 block|;
 name|uint64_t
 name|SizeInBits
 block|;
 name|uint64_t
-name|AlignInBits
-block|;
-name|uint64_t
 name|OffsetInBits
+block|;
+name|uint32_t
+name|AlignInBits
 block|;
 name|protected
 operator|:
@@ -2393,11 +2582,11 @@ argument|unsigned Line
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|ArrayRef<Metadata *> Ops
 argument_list|)
@@ -2441,11 +2630,11 @@ argument|unsigned Line
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|)
 block|{
 name|this
@@ -2488,11 +2677,11 @@ argument|unsigned Line
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|)
 block|{
 name|assert
@@ -2565,13 +2754,25 @@ return|return
 name|SizeInBits
 return|;
 block|}
-name|uint64_t
+name|uint32_t
 name|getAlignInBits
 argument_list|()
 specifier|const
 block|{
 return|return
 name|AlignInBits
+return|;
+block|}
+name|uint32_t
+name|getAlignInBytes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getAlignInBits
+argument_list|()
+operator|/
+name|CHAR_BIT
 return|;
 block|}
 name|uint64_t
@@ -2583,7 +2784,7 @@ return|return
 name|OffsetInBits
 return|;
 block|}
-name|unsigned
+name|DIFlags
 name|getFlags
 argument_list|()
 specifier|const
@@ -2649,7 +2850,7 @@ block|}
 name|void
 name|setFlags
 argument_list|(
-argument|unsigned NewFlags
+argument|DIFlags NewFlags
 argument_list|)
 block|{
 name|assert
@@ -2907,7 +3108,7 @@ block|}
 block|}
 expr|}
 block|;
-comment|/// \brief Basic type, like 'int' or 'float'.
+comment|/// Basic type, like 'int' or 'float'.
 comment|///
 comment|/// TODO: Split out DW_TAG_unspecified_type.
 comment|/// TODO: Drop unused accessors.
@@ -2938,7 +3139,7 @@ argument|unsigned Tag
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|unsigned Encoding
 argument_list|,
@@ -2963,7 +3164,7 @@ name|AlignInBits
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|FlagZero
 argument_list|,
 name|Ops
 argument_list|)
@@ -2992,7 +3193,7 @@ argument|StringRef Name
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|unsigned Encoding
 argument_list|,
@@ -3040,7 +3241,7 @@ argument|MDString *Name
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|unsigned Encoding
 argument_list|,
@@ -3097,7 +3298,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIBasicType
 argument_list|,
-argument|(unsigned Tag, StringRef Name, uint64_t SizeInBits,                      uint64_t AlignInBits, unsigned Encoding)
+argument|(unsigned Tag, StringRef Name, uint64_t SizeInBits,                      uint32_t AlignInBits, unsigned Encoding)
 argument_list|,
 argument|(Tag, Name, SizeInBits, AlignInBits, Encoding)
 argument_list|)
@@ -3105,7 +3306,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIBasicType
 argument_list|,
-argument|(unsigned Tag, MDString *Name, uint64_t SizeInBits,                      uint64_t AlignInBits, unsigned Encoding)
+argument|(unsigned Tag, MDString *Name, uint64_t SizeInBits,                      uint32_t AlignInBits, unsigned Encoding)
 argument_list|,
 argument|(Tag, Name, SizeInBits, AlignInBits, Encoding)
 argument_list|)
@@ -3146,7 +3347,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Derived types.
+comment|/// Derived types.
 comment|///
 comment|/// This includes qualified types, pointers, references, friends, typedefs, and
 comment|/// class members.
@@ -3178,11 +3379,11 @@ argument|unsigned Line
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|ArrayRef<Metadata *> Ops
 argument_list|)
@@ -3237,11 +3438,11 @@ argument|DITypeRef BaseType
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|Metadata *ExtraData
 argument_list|,
@@ -3309,11 +3510,11 @@ argument|Metadata *BaseType
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|Metadata *ExtraData
 argument_list|,
@@ -3374,7 +3575,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIDerivedType
 argument_list|,
-argument|(unsigned Tag, MDString *Name, Metadata *File,                      unsigned Line, Metadata *Scope, Metadata *BaseType,                      uint64_t SizeInBits, uint64_t AlignInBits,                      uint64_t OffsetInBits, unsigned Flags,                      Metadata *ExtraData = nullptr)
+argument|(unsigned Tag, MDString *Name, Metadata *File,                      unsigned Line, Metadata *Scope, Metadata *BaseType,                      uint64_t SizeInBits, uint32_t AlignInBits,                      uint64_t OffsetInBits, DIFlags Flags,                      Metadata *ExtraData = nullptr)
 argument_list|,
 argument|(Tag, Name, File, Line, Scope, BaseType, SizeInBits,                      AlignInBits, OffsetInBits, Flags, ExtraData)
 argument_list|)
@@ -3382,7 +3583,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIDerivedType
 argument_list|,
-argument|(unsigned Tag, StringRef Name, DIFile *File, unsigned Line,                      DIScopeRef Scope, DITypeRef BaseType, uint64_t SizeInBits,                      uint64_t AlignInBits, uint64_t OffsetInBits,                      unsigned Flags, Metadata *ExtraData = nullptr)
+argument|(unsigned Tag, StringRef Name, DIFile *File, unsigned Line,                      DIScopeRef Scope, DITypeRef BaseType, uint64_t SizeInBits,                      uint32_t AlignInBits, uint64_t OffsetInBits,                      DIFlags Flags, Metadata *ExtraData = nullptr)
 argument_list|,
 argument|(Tag, Name, File, Line, Scope, BaseType, SizeInBits,                      AlignInBits, OffsetInBits, Flags, ExtraData)
 argument_list|)
@@ -3423,7 +3624,7 @@ literal|3
 argument_list|)
 return|;
 block|}
-comment|/// \brief Get extra data associated with this derived type.
+comment|/// Get extra data associated with this derived type.
 comment|///
 comment|/// Class type for pointer-to-members, objective-c property node for ivars,
 comment|/// or global constant wrapper for static members.
@@ -3454,7 +3655,7 @@ literal|4
 argument_list|)
 return|;
 block|}
-comment|/// \brief Get casted version of extra data.
+comment|/// Get casted version of extra data.
 comment|/// @{
 name|DITypeRef
 name|getClassType
@@ -3603,7 +3804,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Composite types.
+comment|/// Composite types.
 comment|///
 comment|/// TODO: Detach from DerivedTypeBase (split out MDEnumType?).
 comment|/// TODO: Create a custom, unrelated node for DW_TAG_array_type.
@@ -3638,11 +3839,11 @@ argument|unsigned RuntimeLang
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|ArrayRef<Metadata *> Ops
 argument_list|)
@@ -3693,11 +3894,11 @@ argument|unsigned RuntimeLang
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|)
 block|{
 name|assert
@@ -3760,11 +3961,11 @@ argument|DITypeRef BaseType
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|uint64_t Flags
+argument|DIFlags Flags
 argument_list|,
 argument|DINodeArray Elements
 argument_list|,
@@ -3859,11 +4060,11 @@ argument|Metadata *BaseType
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|Metadata *Elements
 argument_list|,
@@ -3944,7 +4145,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DICompositeType
 argument_list|,
-argument|(unsigned Tag, StringRef Name, DIFile *File, unsigned Line,                      DIScopeRef Scope, DITypeRef BaseType, uint64_t SizeInBits,                      uint64_t AlignInBits, uint64_t OffsetInBits,                      unsigned Flags, DINodeArray Elements, unsigned RuntimeLang,                      DITypeRef VTableHolder,                      DITemplateParameterArray TemplateParams = nullptr,                      StringRef Identifier =
+argument|(unsigned Tag, StringRef Name, DIFile *File, unsigned Line,                      DIScopeRef Scope, DITypeRef BaseType, uint64_t SizeInBits,                      uint32_t AlignInBits, uint64_t OffsetInBits,                      DIFlags Flags, DINodeArray Elements, unsigned RuntimeLang,                      DITypeRef VTableHolder,                      DITemplateParameterArray TemplateParams = nullptr,                      StringRef Identifier =
 literal|""
 argument|)
 argument_list|,
@@ -3954,7 +4155,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DICompositeType
 argument_list|,
-argument|(unsigned Tag, MDString *Name, Metadata *File,                      unsigned Line, Metadata *Scope, Metadata *BaseType,                      uint64_t SizeInBits, uint64_t AlignInBits,                      uint64_t OffsetInBits, unsigned Flags, Metadata *Elements,                      unsigned RuntimeLang, Metadata *VTableHolder,                      Metadata *TemplateParams = nullptr,                      MDString *Identifier = nullptr)
+argument|(unsigned Tag, MDString *Name, Metadata *File,                      unsigned Line, Metadata *Scope, Metadata *BaseType,                      uint64_t SizeInBits, uint32_t AlignInBits,                      uint64_t OffsetInBits, DIFlags Flags, Metadata *Elements,                      unsigned RuntimeLang, Metadata *VTableHolder,                      Metadata *TemplateParams = nullptr,                      MDString *Identifier = nullptr)
 argument_list|,
 argument|(Tag, Name, File, Line, Scope, BaseType, SizeInBits,                      AlignInBits, OffsetInBits, Flags, Elements, RuntimeLang,                      VTableHolder, TemplateParams, Identifier)
 argument_list|)
@@ -3998,11 +4199,11 @@ argument|Metadata *BaseType
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|Metadata *Elements
 argument_list|,
@@ -4059,11 +4260,11 @@ argument|Metadata *BaseType
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
-argument|uint64_t AlignInBits
+argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|Metadata *Elements
 argument_list|,
@@ -4221,7 +4422,7 @@ literal|7
 operator|)
 return|;
 block|}
-comment|/// \brief Replace operands.
+comment|/// Replace operands.
 comment|///
 comment|/// If this \a isUniqued() and not \a isResolved(), on a uniquing collision
 comment|/// this will be RAUW'ed and deleted.  Use a \a TrackingMDRef to keep track
@@ -4247,18 +4448,11 @@ argument_list|()
 control|)
 name|assert
 argument_list|(
-name|std
-operator|::
-name|find
+name|is_contained
 argument_list|(
 name|Elements
 operator|->
-name|op_begin
-argument_list|()
-argument_list|,
-name|Elements
-operator|->
-name|op_end
+name|operands
 argument_list|()
 argument_list|,
 name|Op
@@ -4327,7 +4521,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Type array for a subprogram.
+comment|/// Type array for a subprogram.
 comment|///
 comment|/// TODO: Fold the array of types in directly as operands.
 name|class
@@ -4355,7 +4549,7 @@ argument|LLVMContext&C
 argument_list|,
 argument|StorageType Storage
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|uint8_t CC
 argument_list|,
@@ -4405,7 +4599,7 @@ name|getImpl
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|uint8_t CC
 argument_list|,
@@ -4443,7 +4637,7 @@ name|getImpl
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|uint8_t CC
 argument_list|,
@@ -4482,7 +4676,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DISubroutineType
 argument_list|,
-argument|(unsigned Flags, uint8_t CC, DITypeRefArray TypeArray)
+argument|(DIFlags Flags, uint8_t CC, DITypeRefArray TypeArray)
 argument_list|,
 argument|(Flags, CC, TypeArray)
 argument_list|)
@@ -4490,7 +4684,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DISubroutineType
 argument_list|,
-argument|(unsigned Flags, uint8_t CC, Metadata *TypeArray)
+argument|(DIFlags Flags, uint8_t CC, Metadata *TypeArray)
 argument_list|,
 argument|(Flags, CC, TypeArray)
 argument_list|)
@@ -4560,7 +4754,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Compile unit.
+comment|/// Compile unit.
 name|class
 name|DICompileUnit
 operator|:
@@ -4631,6 +4825,9 @@ block|;
 name|uint64_t
 name|DWOId
 block|;
+name|bool
+name|SplitDebugInlining
+block|;
 name|DICompileUnit
 argument_list|(
 argument|LLVMContext&C
@@ -4646,6 +4843,8 @@ argument_list|,
 argument|unsigned EmissionKind
 argument_list|,
 argument|uint64_t DWOId
+argument_list|,
+argument|bool SplitDebugInlining
 argument_list|,
 argument|ArrayRef<Metadata *> Ops
 argument_list|)
@@ -4687,7 +4886,12 @@ argument_list|)
 block|,
 name|DWOId
 argument_list|(
-argument|DWOId
+name|DWOId
+argument_list|)
+block|,
+name|SplitDebugInlining
+argument_list|(
+argument|SplitDebugInlining
 argument_list|)
 block|{
 name|assert
@@ -4730,13 +4934,15 @@ argument|DICompositeTypeArray EnumTypes
 argument_list|,
 argument|DIScopeArray RetainedTypes
 argument_list|,
-argument|DIGlobalVariableArray GlobalVariables
+argument|DIGlobalVariableExpressionArray GlobalVariables
 argument_list|,
 argument|DIImportedEntityArray ImportedEntities
 argument_list|,
 argument|DIMacroNodeArray Macros
 argument_list|,
 argument|uint64_t DWOId
+argument_list|,
+argument|bool SplitDebugInlining
 argument_list|,
 argument|StorageType Storage
 argument_list|,
@@ -4806,6 +5012,8 @@ argument_list|()
 argument_list|,
 name|DWOId
 argument_list|,
+name|SplitDebugInlining
+argument_list|,
 name|Storage
 argument_list|,
 name|ShouldCreate
@@ -4846,6 +5054,8 @@ argument_list|,
 argument|Metadata *Macros
 argument_list|,
 argument|uint64_t DWOId
+argument_list|,
+argument|bool SplitDebugInlining
 argument_list|,
 argument|StorageType Storage
 argument_list|,
@@ -4903,9 +5113,14 @@ name|getMacros
 argument_list|()
 argument_list|,
 name|DWOId
+argument_list|,
+name|getSplitDebugInlining
+argument_list|()
 argument_list|)
 return|;
 block|}
+name|public
+operator|:
 specifier|static
 name|void
 name|get
@@ -4920,23 +5135,21 @@ argument_list|()
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 name|DEFINE_MDNODE_GET_DISTINCT_TEMPORARY
 argument_list|(
 argument|DICompileUnit
 argument_list|,
-argument|(unsigned SourceLanguage, DIFile *File, StringRef Producer,        bool IsOptimized, StringRef Flags, unsigned RuntimeVersion,        StringRef SplitDebugFilename, DebugEmissionKind EmissionKind,        DICompositeTypeArray EnumTypes, DIScopeArray RetainedTypes,        DIGlobalVariableArray GlobalVariables,        DIImportedEntityArray ImportedEntities, DIMacroNodeArray Macros,        uint64_t DWOId)
+argument|(unsigned SourceLanguage, DIFile *File, StringRef Producer,        bool IsOptimized, StringRef Flags, unsigned RuntimeVersion,        StringRef SplitDebugFilename, DebugEmissionKind EmissionKind,        DICompositeTypeArray EnumTypes, DIScopeArray RetainedTypes,        DIGlobalVariableExpressionArray GlobalVariables,        DIImportedEntityArray ImportedEntities, DIMacroNodeArray Macros,        uint64_t DWOId, bool SplitDebugInlining)
 argument_list|,
-argument|(SourceLanguage, File, Producer, IsOptimized, Flags, RuntimeVersion,        SplitDebugFilename, EmissionKind, EnumTypes, RetainedTypes,        GlobalVariables, ImportedEntities, Macros, DWOId)
+argument|(SourceLanguage, File, Producer, IsOptimized, Flags, RuntimeVersion,        SplitDebugFilename, EmissionKind, EnumTypes, RetainedTypes,        GlobalVariables, ImportedEntities, Macros, DWOId, SplitDebugInlining)
 argument_list|)
 name|DEFINE_MDNODE_GET_DISTINCT_TEMPORARY
 argument_list|(
 argument|DICompileUnit
 argument_list|,
-argument|(unsigned SourceLanguage, Metadata *File, MDString *Producer,        bool IsOptimized, MDString *Flags, unsigned RuntimeVersion,        MDString *SplitDebugFilename, unsigned EmissionKind, Metadata *EnumTypes,        Metadata *RetainedTypes, Metadata *GlobalVariables,        Metadata *ImportedEntities, Metadata *Macros, uint64_t DWOId)
+argument|(unsigned SourceLanguage, Metadata *File, MDString *Producer,        bool IsOptimized, MDString *Flags, unsigned RuntimeVersion,        MDString *SplitDebugFilename, unsigned EmissionKind, Metadata *EnumTypes,        Metadata *RetainedTypes, Metadata *GlobalVariables,        Metadata *ImportedEntities, Metadata *Macros, uint64_t DWOId,        bool SplitDebugInlining)
 argument_list|,
-argument|(SourceLanguage, File, Producer, IsOptimized, Flags, RuntimeVersion,        SplitDebugFilename, EmissionKind, EnumTypes, RetainedTypes,        GlobalVariables, ImportedEntities, Macros, DWOId)
+argument|(SourceLanguage, File, Producer, IsOptimized, Flags, RuntimeVersion,        SplitDebugFilename, EmissionKind, EnumTypes, RetainedTypes,        GlobalVariables, ImportedEntities, Macros, DWOId, SplitDebugInlining)
 argument_list|)
 name|TempDICompileUnit
 name|clone
@@ -5055,7 +5268,7 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|DIGlobalVariableArray
+name|DIGlobalVariableExpressionArray
 name|getGlobalVariables
 argument_list|()
 specifier|const
@@ -5122,6 +5335,27 @@ name|DWOId
 operator|=
 name|DwoId
 block|; }
+name|bool
+name|getSplitDebugInlining
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SplitDebugInlining
+return|;
+block|}
+name|void
+name|setSplitDebugInlining
+argument_list|(
+argument|bool SplitDebugInlining
+argument_list|)
+block|{
+name|this
+operator|->
+name|SplitDebugInlining
+operator|=
+name|SplitDebugInlining
+block|;   }
 name|MDString
 operator|*
 name|getRawProducer
@@ -5235,7 +5469,7 @@ literal|8
 argument_list|)
 return|;
 block|}
-comment|/// \brief Replace arrays.
+comment|/// Replace arrays.
 comment|///
 comment|/// If this \a isUniqued() and not \a isResolved(), it will be RAUW'ed and
 comment|/// deleted on a uniquing collision.  In practice, uniquing collisions on \a
@@ -5276,7 +5510,7 @@ block|;   }
 name|void
 name|replaceGlobalVariables
 argument_list|(
-argument|DIGlobalVariableArray N
+argument|DIGlobalVariableExpressionArray N
 argument_list|)
 block|{
 name|replaceOperandWith
@@ -5340,7 +5574,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief A scope for locals.
+comment|/// A scope for locals.
 comment|///
 comment|/// A legal scope for lexical blocks, local variables, and debug info
 comment|/// locations.  Subclasses are \a DISubprogram, \a DILexicalBlock, and \a
@@ -5387,7 +5621,7 @@ expr|default
 block|;
 name|public
 operator|:
-comment|/// \brief Get the subprogram for this scope.
+comment|/// Get the subprogram for this scope.
 comment|///
 comment|/// Return this if it's an \a DISubprogram; otherwise, look up the scope
 comment|/// chain.
@@ -5439,7 +5673,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Debug location.
+comment|/// Debug location.
 comment|///
 comment|/// A debug location in source code, used for debug info and otherwise.
 name|class
@@ -5576,6 +5810,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|public
+operator|:
 comment|// Disallow replacing operands.
 name|void
 name|replaceOperandWith
@@ -5587,8 +5823,6 @@ argument_list|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DILocation
@@ -5605,7 +5839,7 @@ argument|(unsigned Line, unsigned Column, DILocalScope *Scope,                  
 argument_list|,
 argument|(Line, Column, Scope, InlinedAt)
 argument_list|)
-comment|/// \brief Return a (temporary) clone of this.
+comment|/// Return a (temporary) clone of this.
 name|TempDILocation
 name|clone
 argument_list|()
@@ -5708,7 +5942,7 @@ name|getDirectory
 argument_list|()
 return|;
 block|}
-comment|/// \brief Get the scope where this is inlined.
+comment|/// Get the scope where this is inlined.
 comment|///
 comment|/// Walk through \a getInlinedAt() and return \a getScope() from the deepest
 comment|/// location.
@@ -5738,19 +5972,11 @@ name|getScope
 argument_list|()
 return|;
 block|}
-comment|/// \brief Check whether this can be discriminated from another location.
+comment|/// Check whether this can be discriminated from another location.
 comment|///
 comment|/// Check \c this can be discriminated from \c RHS in a linetable entry.
 comment|/// Scope and inlined-at chains are not recorded in the linetable, so they
 comment|/// cannot be used to distinguish basic blocks.
-comment|///
-comment|/// The current implementation is weaker than it should be, since it just
-comment|/// checks filename and line.
-comment|///
-comment|/// FIXME: Add a check for getDiscriminator().
-comment|/// FIXME: Add a check for getColumn().
-comment|/// FIXME: Change the getFilename() check to getFile() (or add one for
-comment|/// getDirectory()).
 name|bool
 name|canDiscriminate
 argument_list|(
@@ -5759,6 +5985,30 @@ argument_list|)
 specifier|const
 block|{
 return|return
+name|getLine
+argument_list|()
+operator|!=
+name|RHS
+operator|.
+name|getLine
+argument_list|()
+operator|||
+name|getColumn
+argument_list|()
+operator|!=
+name|RHS
+operator|.
+name|getColumn
+argument_list|()
+operator|||
+name|getDiscriminator
+argument_list|()
+operator|!=
+name|RHS
+operator|.
+name|getDiscriminator
+argument_list|()
+operator|||
 name|getFilename
 argument_list|()
 operator|!=
@@ -5767,16 +6017,16 @@ operator|.
 name|getFilename
 argument_list|()
 operator|||
-name|getLine
+name|getDirectory
 argument_list|()
 operator|!=
 name|RHS
 operator|.
-name|getLine
+name|getDirectory
 argument_list|()
 return|;
 block|}
-comment|/// \brief Get the DWARF discriminator.
+comment|/// Get the DWARF discriminator.
 comment|///
 comment|/// DWARF discriminators distinguish identical file locations between
 comment|/// instructions that are on different basic blocks.
@@ -5786,6 +6036,69 @@ name|getDiscriminator
 argument_list|()
 specifier|const
 block|;
+comment|/// Returns a new DILocation with updated \p Discriminator.
+specifier|inline
+name|DILocation
+operator|*
+name|cloneWithDiscriminator
+argument_list|(
+argument|unsigned Discriminator
+argument_list|)
+specifier|const
+block|;
+comment|/// When two instructions are combined into a single instruction we also
+comment|/// need to combine the original locations into a single location.
+comment|///
+comment|/// When the locations are the same we can use either location. When they
+comment|/// differ, we need a third location which is distinct from either. If
+comment|/// they have the same file/line but have a different discriminator we
+comment|/// could create a location with a new discriminator. If they are from
+comment|/// different files/lines the location is ambiguous and can't be
+comment|/// represented in a single line entry.  In this case, no location
+comment|/// should be set.
+comment|///
+comment|/// Currently the function does not create a new location. If the locations
+comment|/// are the same, or cannot be discriminated, the first location is returned.
+comment|/// Otherwise an empty location will be used.
+specifier|static
+specifier|const
+name|DILocation
+operator|*
+name|getMergedLocation
+argument_list|(
+argument|const DILocation *LocA
+argument_list|,
+argument|const DILocation *LocB
+argument_list|)
+block|{
+if|if
+condition|(
+name|LocA
+operator|&&
+name|LocB
+operator|&&
+operator|(
+name|LocA
+operator|==
+name|LocB
+operator|||
+operator|!
+name|LocA
+operator|->
+name|canDiscriminate
+argument_list|(
+operator|*
+name|LocB
+argument_list|)
+operator|)
+condition|)
+return|return
+name|LocA
+return|;
+return|return
+name|nullptr
+return|;
+block|}
 name|Metadata
 operator|*
 name|getRawScope
@@ -5840,7 +6153,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Subprogram description.
+comment|/// Subprogram description.
 comment|///
 comment|/// TODO: Remove DisplayName.  It's always equal to Name.
 comment|/// TODO: Split up flags.
@@ -5880,11 +6193,6 @@ name|Virtuality
 operator|:
 literal|2
 block|;
-name|unsigned
-name|Flags
-operator|:
-literal|27
-block|;
 comment|// These are boolean flags so one bit is enough.
 comment|// MSVC starts a new container field every time the base
 comment|// type changes so we can't use 'bool' to ensure these bits
@@ -5904,6 +6212,14 @@ name|IsOptimized
 operator|:
 literal|1
 block|;
+name|unsigned
+name|Padding
+operator|:
+literal|3
+block|;
+name|DIFlags
+name|Flags
+block|;
 name|DISubprogram
 argument_list|(
 argument|LLVMContext&C
@@ -5920,7 +6236,7 @@ argument|unsigned VirtualIndex
 argument_list|,
 argument|int ThisAdjustment
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|bool IsLocalToUnit
 argument_list|,
@@ -5971,11 +6287,6 @@ argument_list|(
 name|Virtuality
 argument_list|)
 block|,
-name|Flags
-argument_list|(
-name|Flags
-argument_list|)
-block|,
 name|IsLocalToUnit
 argument_list|(
 name|IsLocalToUnit
@@ -5988,7 +6299,12 @@ argument_list|)
 block|,
 name|IsOptimized
 argument_list|(
-argument|IsOptimized
+name|IsOptimized
+argument_list|)
+block|,
+name|Flags
+argument_list|(
+argument|Flags
 argument_list|)
 block|{
 name|static_assert
@@ -6009,21 +6325,6 @@ operator|<
 literal|4
 operator|&&
 literal|"Virtuality out of range"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-operator|(
-name|Flags
-operator|<
-operator|(
-literal|1
-operator|<<
-literal|27
-operator|)
-operator|)
-operator|&&
-literal|"Flags out of range"
 argument_list|)
 block|;   }
 operator|~
@@ -6065,7 +6366,7 @@ argument|unsigned VirtualIndex
 argument_list|,
 argument|int ThisAdjustment
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|bool IsOptimized
 argument_list|,
@@ -6180,7 +6481,7 @@ argument|unsigned VirtualIndex
 argument_list|,
 argument|int ThisAdjustment
 argument_list|,
-argument|unsigned Flags
+argument|DIFlags Flags
 argument_list|,
 argument|bool IsOptimized
 argument_list|,
@@ -6273,7 +6574,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DISubprogram
 argument_list|,
-argument|(DIScopeRef Scope, StringRef Name, StringRef LinkageName,                      DIFile *File, unsigned Line, DISubroutineType *Type,                      bool IsLocalToUnit, bool IsDefinition, unsigned ScopeLine,                      DITypeRef ContainingType, unsigned Virtuality,                      unsigned VirtualIndex, int ThisAdjustment, unsigned Flags,                      bool IsOptimized, DICompileUnit *Unit,                      DITemplateParameterArray TemplateParams = nullptr,                      DISubprogram *Declaration = nullptr,                      DILocalVariableArray Variables = nullptr)
+argument|(DIScopeRef Scope, StringRef Name, StringRef LinkageName,                      DIFile *File, unsigned Line, DISubroutineType *Type,                      bool IsLocalToUnit, bool IsDefinition, unsigned ScopeLine,                      DITypeRef ContainingType, unsigned Virtuality,                      unsigned VirtualIndex, int ThisAdjustment, DIFlags Flags,                      bool IsOptimized, DICompileUnit *Unit,                      DITemplateParameterArray TemplateParams = nullptr,                      DISubprogram *Declaration = nullptr,                      DILocalVariableArray Variables = nullptr)
 argument_list|,
 argument|(Scope, Name, LinkageName, File, Line, Type, IsLocalToUnit,                      IsDefinition, ScopeLine, ContainingType, Virtuality,                      VirtualIndex, ThisAdjustment, Flags, IsOptimized, Unit,                      TemplateParams, Declaration, Variables)
 argument_list|)
@@ -6281,7 +6582,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DISubprogram
 argument_list|,
-argument|(Metadata * Scope, MDString *Name, MDString *LinkageName, Metadata *File,        unsigned Line, Metadata *Type, bool IsLocalToUnit, bool IsDefinition,        unsigned ScopeLine, Metadata *ContainingType, unsigned Virtuality,        unsigned VirtualIndex, int ThisAdjustment, unsigned Flags,        bool IsOptimized, Metadata *Unit, Metadata *TemplateParams = nullptr,        Metadata *Declaration = nullptr, Metadata *Variables = nullptr)
+argument|(Metadata * Scope, MDString *Name, MDString *LinkageName, Metadata *File,        unsigned Line, Metadata *Type, bool IsLocalToUnit, bool IsDefinition,        unsigned ScopeLine, Metadata *ContainingType, unsigned Virtuality,        unsigned VirtualIndex, int ThisAdjustment, DIFlags Flags,        bool IsOptimized, Metadata *Unit, Metadata *TemplateParams = nullptr,        Metadata *Declaration = nullptr, Metadata *Variables = nullptr)
 argument_list|,
 argument|(Scope, Name, LinkageName, File, Line, Type, IsLocalToUnit, IsDefinition,        ScopeLine, ContainingType, Virtuality, VirtualIndex, ThisAdjustment,        Flags, IsOptimized, Unit, TemplateParams, Declaration, Variables)
 argument_list|)
@@ -6342,7 +6643,7 @@ return|return
 name|ScopeLine
 return|;
 block|}
-name|unsigned
+name|DIFlags
 name|getFlags
 argument_list|()
 specifier|const
@@ -6378,7 +6679,7 @@ return|return
 name|IsOptimized
 return|;
 block|}
-name|unsigned
+name|bool
 name|isArtificial
 argument_list|()
 specifier|const
@@ -6462,11 +6763,23 @@ operator|&
 name|FlagPrototyped
 return|;
 block|}
-comment|/// \brief Check if this is reference-qualified.
+name|bool
+name|isMainSubprogram
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlags
+argument_list|()
+operator|&
+name|FlagMainSubprogram
+return|;
+block|}
+comment|/// Check if this is reference-qualified.
 comment|///
 comment|/// Return true if this subprogram is a C++11 reference-qualified non-static
 comment|/// member function (void foo()&).
-name|unsigned
+name|bool
 name|isLValueReference
 argument_list|()
 specifier|const
@@ -6478,11 +6791,11 @@ operator|&
 name|FlagLValueReference
 return|;
 block|}
-comment|/// \brief Check if this is rvalue-reference-qualified.
+comment|/// Check if this is rvalue-reference-qualified.
 comment|///
 comment|/// Return true if this subprogram is a C++11 rvalue-reference-qualified
 comment|/// non-static member function (void foo()&&).
-name|unsigned
+name|bool
 name|isRValueReference
 argument_list|()
 specifier|const
@@ -6492,6 +6805,21 @@ name|getFlags
 argument_list|()
 operator|&
 name|FlagRValueReference
+return|;
+block|}
+comment|/// Check if this is marked as noreturn.
+comment|///
+comment|/// Return true if this subprogram is C++11 noreturn or C11 _Noreturn
+name|bool
+name|isNoReturn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlags
+argument_list|()
+operator|&
+name|FlagNoReturn
 return|;
 block|}
 name|DIScopeRef
@@ -6775,7 +7103,7 @@ literal|10
 argument_list|)
 return|;
 block|}
-comment|/// \brief Check if this subprogram describes the given function.
+comment|/// Check if this subprogram describes the given function.
 comment|///
 comment|/// FIXME: Should this be looking through bitcasts?
 name|bool
@@ -7374,6 +7702,107 @@ return|return
 literal|0
 return|;
 block|}
+name|DILocation
+operator|*
+name|DILocation
+operator|::
+name|cloneWithDiscriminator
+argument_list|(
+argument|unsigned Discriminator
+argument_list|)
+specifier|const
+block|{
+name|DIScope
+operator|*
+name|Scope
+operator|=
+name|getScope
+argument_list|()
+block|;
+comment|// Skip all parent DILexicalBlockFile that already have a discriminator
+comment|// assigned. We do not want to have nested DILexicalBlockFiles that have
+comment|// mutliple discriminators because only the leaf DILexicalBlockFile's
+comment|// dominator will be used.
+for|for
+control|(
+name|auto
+operator|*
+name|LBF
+operator|=
+name|dyn_cast
+operator|<
+name|DILexicalBlockFile
+operator|>
+operator|(
+name|Scope
+operator|)
+init|;
+name|LBF
+operator|&&
+name|LBF
+operator|->
+name|getDiscriminator
+argument_list|()
+operator|!=
+literal|0
+condition|;
+name|LBF
+operator|=
+name|dyn_cast
+operator|<
+name|DILexicalBlockFile
+operator|>
+operator|(
+name|Scope
+operator|)
+control|)
+name|Scope
+operator|=
+name|LBF
+operator|->
+name|getScope
+argument_list|()
+expr_stmt|;
+name|DILexicalBlockFile
+operator|*
+name|NewScope
+operator|=
+name|DILexicalBlockFile
+operator|::
+name|get
+argument_list|(
+name|getContext
+argument_list|()
+argument_list|,
+name|Scope
+argument_list|,
+name|getFile
+argument_list|()
+argument_list|,
+name|Discriminator
+argument_list|)
+block|;
+return|return
+name|DILocation
+operator|::
+name|get
+argument_list|(
+name|getContext
+argument_list|()
+argument_list|,
+name|getLine
+argument_list|()
+argument_list|,
+name|getColumn
+argument_list|()
+argument_list|,
+name|NewScope
+argument_list|,
+name|getInlinedAt
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|class
 name|DINamespace
 operator|:
@@ -7391,6 +7820,11 @@ block|;
 name|unsigned
 name|Line
 block|;
+name|unsigned
+name|ExportSymbols
+operator|:
+literal|1
+block|;
 name|DINamespace
 argument_list|(
 argument|LLVMContext&Context
@@ -7398,6 +7832,8 @@ argument_list|,
 argument|StorageType Storage
 argument_list|,
 argument|unsigned Line
+argument_list|,
+argument|bool ExportSymbols
 argument_list|,
 argument|ArrayRef<Metadata *> Ops
 argument_list|)
@@ -7419,7 +7855,12 @@ argument_list|)
 block|,
 name|Line
 argument_list|(
-argument|Line
+name|Line
+argument_list|)
+block|,
+name|ExportSymbols
+argument_list|(
+argument|ExportSymbols
 argument_list|)
 block|{}
 operator|~
@@ -7442,6 +7883,8 @@ argument_list|,
 argument|StringRef Name
 argument_list|,
 argument|unsigned Line
+argument_list|,
+argument|bool ExportSymbols
 argument_list|,
 argument|StorageType Storage
 argument_list|,
@@ -7466,6 +7909,8 @@ argument_list|)
 argument_list|,
 name|Line
 argument_list|,
+name|ExportSymbols
+argument_list|,
 name|Storage
 argument_list|,
 name|ShouldCreate
@@ -7486,6 +7931,8 @@ argument_list|,
 argument|MDString *Name
 argument_list|,
 argument|unsigned Line
+argument_list|,
+argument|bool ExportSymbols
 argument_list|,
 argument|StorageType Storage
 argument_list|,
@@ -7514,6 +7961,9 @@ argument_list|()
 argument_list|,
 name|getLine
 argument_list|()
+argument_list|,
+name|getExportSymbols
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -7523,17 +7973,17 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DINamespace
 argument_list|,
-argument|(DIScope * Scope, DIFile *File, StringRef Name,                                   unsigned Line)
+argument|(DIScope * Scope, DIFile *File, StringRef Name,                                   unsigned Line, bool ExportSymbols)
 argument_list|,
-argument|(Scope, File, Name, Line)
+argument|(Scope, File, Name, Line, ExportSymbols)
 argument_list|)
 name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DINamespace
 argument_list|,
-argument|(Metadata * Scope, Metadata *File,                                   MDString *Name, unsigned Line)
+argument|(Metadata * Scope, Metadata *File, MDString *Name,                      unsigned Line, bool ExportSymbols)
 argument_list|,
-argument|(Scope, File, Name, Line)
+argument|(Scope, File, Name, Line, ExportSymbols)
 argument_list|)
 name|TempDINamespace
 name|clone
@@ -7552,6 +8002,15 @@ specifier|const
 block|{
 return|return
 name|Line
+return|;
+block|}
+name|bool
+name|getExportSymbols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExportSymbols
 return|;
 block|}
 name|DIScope
@@ -7630,7 +8089,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief A (clang) module that has been imported by the compile unit.
+comment|/// A (clang) module that has been imported by the compile unit.
 comment|///
 name|class
 name|DIModule
@@ -7671,7 +8130,9 @@ block|{}
 operator|~
 name|DIModule
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 specifier|static
 name|DIModule
 operator|*
@@ -7973,7 +8434,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Base class for template parameters.
+comment|/// Base class for template parameters.
 name|class
 name|DITemplateParameter
 operator|:
@@ -8446,7 +8907,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Base class for variables.
+comment|/// Base class for variables.
 name|class
 name|DIVariable
 operator|:
@@ -8455,6 +8916,9 @@ name|DINode
 block|{
 name|unsigned
 name|Line
+block|;
+name|uint32_t
+name|AlignInBits
 block|;
 name|protected
 operator|:
@@ -8469,6 +8933,9 @@ argument_list|,
 argument|unsigned Line
 argument_list|,
 argument|ArrayRef<Metadata *> Ops
+argument_list|,
+argument|uint32_t AlignInBits =
+literal|0
 argument_list|)
 operator|:
 name|DINode
@@ -8488,7 +8955,12 @@ argument_list|)
 block|,
 name|Line
 argument_list|(
-argument|Line
+name|Line
+argument_list|)
+block|,
+name|AlignInBits
+argument_list|(
+argument|AlignInBits
 argument_list|)
 block|{}
 operator|~
@@ -8565,6 +9037,27 @@ argument_list|(
 name|getRawType
 argument_list|()
 argument_list|)
+return|;
+block|}
+name|uint32_t
+name|getAlignInBits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AlignInBits
+return|;
+block|}
+name|uint32_t
+name|getAlignInBytes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getAlignInBits
+argument_list|()
+operator|/
+name|CHAR_BIT
 return|;
 block|}
 name|StringRef
@@ -8695,780 +9188,11 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Global variables.
-comment|///
-comment|/// TODO: Remove DisplayName.  It's always equal to Name.
-name|class
-name|DIGlobalVariable
-operator|:
-name|public
-name|DIVariable
-block|{
-name|friend
-name|class
-name|LLVMContextImpl
-block|;
-name|friend
-name|class
-name|MDNode
-block|;
-name|bool
-name|IsLocalToUnit
-block|;
-name|bool
-name|IsDefinition
-block|;
-name|DIGlobalVariable
-argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|StorageType Storage
-argument_list|,
-argument|unsigned Line
-argument_list|,
-argument|bool IsLocalToUnit
-argument_list|,
-argument|bool IsDefinition
-argument_list|,
-argument|ArrayRef<Metadata *> Ops
-argument_list|)
-operator|:
-name|DIVariable
-argument_list|(
-name|C
-argument_list|,
-name|DIGlobalVariableKind
-argument_list|,
-name|Storage
-argument_list|,
-name|Line
-argument_list|,
-name|Ops
-argument_list|)
-block|,
-name|IsLocalToUnit
-argument_list|(
-name|IsLocalToUnit
-argument_list|)
-block|,
-name|IsDefinition
-argument_list|(
-argument|IsDefinition
-argument_list|)
-block|{}
-operator|~
-name|DIGlobalVariable
-argument_list|()
-operator|=
-expr|default
-block|;
-specifier|static
-name|DIGlobalVariable
-operator|*
-name|getImpl
-argument_list|(
-argument|LLVMContext&Context
-argument_list|,
-argument|DIScope *Scope
-argument_list|,
-argument|StringRef Name
-argument_list|,
-argument|StringRef LinkageName
-argument_list|,
-argument|DIFile *File
-argument_list|,
-argument|unsigned Line
-argument_list|,
-argument|DITypeRef Type
-argument_list|,
-argument|bool IsLocalToUnit
-argument_list|,
-argument|bool IsDefinition
-argument_list|,
-argument|Constant *Variable
-argument_list|,
-argument|DIDerivedType *StaticDataMemberDeclaration
-argument_list|,
-argument|StorageType Storage
-argument_list|,
-argument|bool ShouldCreate = true
-argument_list|)
-block|{
-return|return
-name|getImpl
-argument_list|(
-name|Context
-argument_list|,
-name|Scope
-argument_list|,
-name|getCanonicalMDString
-argument_list|(
-name|Context
-argument_list|,
-name|Name
-argument_list|)
-argument_list|,
-name|getCanonicalMDString
-argument_list|(
-name|Context
-argument_list|,
-name|LinkageName
-argument_list|)
-argument_list|,
-name|File
-argument_list|,
-name|Line
-argument_list|,
-name|Type
-argument_list|,
-name|IsLocalToUnit
-argument_list|,
-name|IsDefinition
-argument_list|,
-name|Variable
-operator|?
-name|ConstantAsMetadata
-operator|::
-name|get
-argument_list|(
-name|Variable
-argument_list|)
-operator|:
-name|nullptr
-argument_list|,
-name|StaticDataMemberDeclaration
-argument_list|,
-name|Storage
-argument_list|,
-name|ShouldCreate
-argument_list|)
-return|;
-block|}
-specifier|static
-name|DIGlobalVariable
-operator|*
-name|getImpl
-argument_list|(
-argument|LLVMContext&Context
-argument_list|,
-argument|Metadata *Scope
-argument_list|,
-argument|MDString *Name
-argument_list|,
-argument|MDString *LinkageName
-argument_list|,
-argument|Metadata *File
-argument_list|,
-argument|unsigned Line
-argument_list|,
-argument|Metadata *Type
-argument_list|,
-argument|bool IsLocalToUnit
-argument_list|,
-argument|bool IsDefinition
-argument_list|,
-argument|Metadata *Variable
-argument_list|,
-argument|Metadata *StaticDataMemberDeclaration
-argument_list|,
-argument|StorageType Storage
-argument_list|,
-argument|bool ShouldCreate = true
-argument_list|)
-block|;
-name|TempDIGlobalVariable
-name|cloneImpl
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTemporary
-argument_list|(
-name|getContext
-argument_list|()
-argument_list|,
-name|getScope
-argument_list|()
-argument_list|,
-name|getName
-argument_list|()
-argument_list|,
-name|getLinkageName
-argument_list|()
-argument_list|,
-name|getFile
-argument_list|()
-argument_list|,
-name|getLine
-argument_list|()
-argument_list|,
-name|getType
-argument_list|()
-argument_list|,
-name|isLocalToUnit
-argument_list|()
-argument_list|,
-name|isDefinition
-argument_list|()
-argument_list|,
-name|getVariable
-argument_list|()
-argument_list|,
-name|getStaticDataMemberDeclaration
-argument_list|()
-argument_list|)
-return|;
-block|}
-name|public
-operator|:
-name|DEFINE_MDNODE_GET
-argument_list|(
-argument|DIGlobalVariable
-argument_list|,
-argument|(DIScope * Scope, StringRef Name, StringRef LinkageName,                      DIFile *File, unsigned Line, DITypeRef Type,                      bool IsLocalToUnit, bool IsDefinition, Constant *Variable,                      DIDerivedType *StaticDataMemberDeclaration)
-argument_list|,
-argument|(Scope, Name, LinkageName, File, Line, Type, IsLocalToUnit,                      IsDefinition, Variable, StaticDataMemberDeclaration)
-argument_list|)
-name|DEFINE_MDNODE_GET
-argument_list|(
-argument|DIGlobalVariable
-argument_list|,
-argument|(Metadata * Scope, MDString *Name, MDString *LinkageName,                      Metadata *File, unsigned Line, Metadata *Type,                      bool IsLocalToUnit, bool IsDefinition, Metadata *Variable,                      Metadata *StaticDataMemberDeclaration)
-argument_list|,
-argument|(Scope, Name, LinkageName, File, Line, Type, IsLocalToUnit,                      IsDefinition, Variable, StaticDataMemberDeclaration)
-argument_list|)
-name|TempDIGlobalVariable
-name|clone
-argument_list|()
-specifier|const
-block|{
-return|return
-name|cloneImpl
-argument_list|()
-return|;
-block|}
-name|bool
-name|isLocalToUnit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsLocalToUnit
-return|;
-block|}
-name|bool
-name|isDefinition
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsDefinition
-return|;
-block|}
-name|StringRef
-name|getDisplayName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getStringOperand
-argument_list|(
-literal|4
-argument_list|)
-return|;
-block|}
-name|StringRef
-name|getLinkageName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getStringOperand
-argument_list|(
-literal|5
-argument_list|)
-return|;
-block|}
-name|Constant
-operator|*
-name|getVariable
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|auto
-operator|*
-name|C
-operator|=
-name|cast_or_null
-operator|<
-name|ConstantAsMetadata
-operator|>
-operator|(
-name|getRawVariable
-argument_list|()
-operator|)
-condition|)
-return|return
-name|dyn_cast
-operator|<
-name|Constant
-operator|>
-operator|(
-name|C
-operator|->
-name|getValue
-argument_list|()
-operator|)
-return|;
-return|return
-name|nullptr
-return|;
-block|}
-name|DIDerivedType
-operator|*
-name|getStaticDataMemberDeclaration
-argument_list|()
-specifier|const
-block|{
-return|return
-name|cast_or_null
-operator|<
-name|DIDerivedType
-operator|>
-operator|(
-name|getRawStaticDataMemberDeclaration
-argument_list|()
-operator|)
-return|;
-block|}
-name|MDString
-operator|*
-name|getRawLinkageName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOperandAs
-operator|<
-name|MDString
-operator|>
-operator|(
-literal|5
-operator|)
-return|;
-block|}
-name|Metadata
-operator|*
-name|getRawVariable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOperand
-argument_list|(
-literal|6
-argument_list|)
-return|;
-block|}
-name|Metadata
-operator|*
-name|getRawStaticDataMemberDeclaration
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOperand
-argument_list|(
-literal|7
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Metadata *MD
-argument_list|)
-block|{
-return|return
-name|MD
-operator|->
-name|getMetadataID
-argument_list|()
-operator|==
-name|DIGlobalVariableKind
-return|;
-block|}
-expr|}
-block|;
-comment|/// \brief Local variable.
-comment|///
-comment|/// TODO: Split up flags.
-name|class
-name|DILocalVariable
-operator|:
-name|public
-name|DIVariable
-block|{
-name|friend
-name|class
-name|LLVMContextImpl
-block|;
-name|friend
-name|class
-name|MDNode
-block|;
-name|unsigned
-name|Arg
-operator|:
-literal|16
-block|;
-name|unsigned
-name|Flags
-operator|:
-literal|16
-block|;
-name|DILocalVariable
-argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|StorageType Storage
-argument_list|,
-argument|unsigned Line
-argument_list|,
-argument|unsigned Arg
-argument_list|,
-argument|unsigned Flags
-argument_list|,
-argument|ArrayRef<Metadata *> Ops
-argument_list|)
-operator|:
-name|DIVariable
-argument_list|(
-name|C
-argument_list|,
-name|DILocalVariableKind
-argument_list|,
-name|Storage
-argument_list|,
-name|Line
-argument_list|,
-name|Ops
-argument_list|)
-block|,
-name|Arg
-argument_list|(
-name|Arg
-argument_list|)
-block|,
-name|Flags
-argument_list|(
-argument|Flags
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Flags
-operator|<
-operator|(
-literal|1
-operator|<<
-literal|16
-operator|)
-operator|&&
-literal|"DILocalVariable: Flags out of range"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|Arg
-operator|<
-operator|(
-literal|1
-operator|<<
-literal|16
-operator|)
-operator|&&
-literal|"DILocalVariable: Arg out of range"
-argument_list|)
-block|;   }
-operator|~
-name|DILocalVariable
-argument_list|()
-operator|=
-expr|default
-block|;
-specifier|static
-name|DILocalVariable
-operator|*
-name|getImpl
-argument_list|(
-argument|LLVMContext&Context
-argument_list|,
-argument|DIScope *Scope
-argument_list|,
-argument|StringRef Name
-argument_list|,
-argument|DIFile *File
-argument_list|,
-argument|unsigned Line
-argument_list|,
-argument|DITypeRef Type
-argument_list|,
-argument|unsigned Arg
-argument_list|,
-argument|unsigned Flags
-argument_list|,
-argument|StorageType Storage
-argument_list|,
-argument|bool ShouldCreate = true
-argument_list|)
-block|{
-return|return
-name|getImpl
-argument_list|(
-name|Context
-argument_list|,
-name|Scope
-argument_list|,
-name|getCanonicalMDString
-argument_list|(
-name|Context
-argument_list|,
-name|Name
-argument_list|)
-argument_list|,
-name|File
-argument_list|,
-name|Line
-argument_list|,
-name|Type
-argument_list|,
-name|Arg
-argument_list|,
-name|Flags
-argument_list|,
-name|Storage
-argument_list|,
-name|ShouldCreate
-argument_list|)
-return|;
-block|}
-specifier|static
-name|DILocalVariable
-operator|*
-name|getImpl
-argument_list|(
-argument|LLVMContext&Context
-argument_list|,
-argument|Metadata *Scope
-argument_list|,
-argument|MDString *Name
-argument_list|,
-argument|Metadata *File
-argument_list|,
-argument|unsigned Line
-argument_list|,
-argument|Metadata *Type
-argument_list|,
-argument|unsigned Arg
-argument_list|,
-argument|unsigned Flags
-argument_list|,
-argument|StorageType Storage
-argument_list|,
-argument|bool ShouldCreate = true
-argument_list|)
-block|;
-name|TempDILocalVariable
-name|cloneImpl
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTemporary
-argument_list|(
-name|getContext
-argument_list|()
-argument_list|,
-name|getScope
-argument_list|()
-argument_list|,
-name|getName
-argument_list|()
-argument_list|,
-name|getFile
-argument_list|()
-argument_list|,
-name|getLine
-argument_list|()
-argument_list|,
-name|getType
-argument_list|()
-argument_list|,
-name|getArg
-argument_list|()
-argument_list|,
-name|getFlags
-argument_list|()
-argument_list|)
-return|;
-block|}
-name|public
-operator|:
-name|DEFINE_MDNODE_GET
-argument_list|(
-argument|DILocalVariable
-argument_list|,
-argument|(DILocalScope * Scope, StringRef Name, DIFile *File,                      unsigned Line, DITypeRef Type, unsigned Arg,                      unsigned Flags)
-argument_list|,
-argument|(Scope, Name, File, Line, Type, Arg, Flags)
-argument_list|)
-name|DEFINE_MDNODE_GET
-argument_list|(
-argument|DILocalVariable
-argument_list|,
-argument|(Metadata * Scope, MDString *Name, Metadata *File,                      unsigned Line, Metadata *Type, unsigned Arg,                      unsigned Flags)
-argument_list|,
-argument|(Scope, Name, File, Line, Type, Arg, Flags)
-argument_list|)
-name|TempDILocalVariable
-name|clone
-argument_list|()
-specifier|const
-block|{
-return|return
-name|cloneImpl
-argument_list|()
-return|;
-block|}
-comment|/// \brief Get the local scope for this variable.
-comment|///
-comment|/// Variables must be defined in a local scope.
-name|DILocalScope
-operator|*
-name|getScope
-argument_list|()
-specifier|const
-block|{
-return|return
-name|cast
-operator|<
-name|DILocalScope
-operator|>
-operator|(
-name|DIVariable
-operator|::
-name|getScope
-argument_list|()
-operator|)
-return|;
-block|}
-name|bool
-name|isParameter
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Arg
-return|;
-block|}
-name|unsigned
-name|getArg
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Arg
-return|;
-block|}
-name|unsigned
-name|getFlags
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Flags
-return|;
-block|}
-name|bool
-name|isArtificial
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getFlags
-argument_list|()
-operator|&
-name|FlagArtificial
-return|;
-block|}
-name|bool
-name|isObjectPointer
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getFlags
-argument_list|()
-operator|&
-name|FlagObjectPointer
-return|;
-block|}
-comment|/// \brief Check that a location is valid for this variable.
-comment|///
-comment|/// Check that \c DL exists, is in the same subprogram, and has the same
-comment|/// inlined-at location as \c this.  (Otherwise, it's not a valid attachment
-comment|/// to a \a DbgInfoIntrinsic.)
-name|bool
-name|isValidLocationForIntrinsic
-argument_list|(
-argument|const DILocation *DL
-argument_list|)
-specifier|const
-block|{
-return|return
-name|DL
-operator|&&
-name|getScope
-argument_list|()
-operator|->
-name|getSubprogram
-argument_list|()
-operator|==
-name|DL
-operator|->
-name|getScope
-argument_list|()
-operator|->
-name|getSubprogram
-argument_list|()
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Metadata *MD
-argument_list|)
-block|{
-return|return
-name|MD
-operator|->
-name|getMetadataID
-argument_list|()
-operator|==
-name|DILocalVariableKind
-return|;
-block|}
-expr|}
-block|;
-comment|/// \brief DWARF expression.
+comment|/// DWARF expression.
 comment|///
 comment|/// This is (almost) a DWARF expression that modifies the location of a
-comment|/// variable or (or the location of a single piece of a variable).
+comment|/// variable, or the location of a single piece of a variable, or (when using
+comment|/// DW_OP_stack_value) is the constant variable value.
 comment|///
 comment|/// FIXME: Instead of DW_OP_plus taking an argument, this should use DW_OP_const
 comment|/// and have DW_OP_plus consume the topmost elements on the stack.
@@ -9631,21 +9355,9 @@ name|I
 index|]
 return|;
 block|}
-comment|/// \brief Return whether this is a piece of an aggregate variable.
+comment|/// Determine whether this represents a standalone constant value.
 name|bool
-name|isBitPiece
-argument_list|()
-specifier|const
-block|;
-comment|/// \brief Return the offset of this piece in bits.
-name|uint64_t
-name|getBitPieceOffset
-argument_list|()
-specifier|const
-block|;
-comment|/// \brief Return the size of this piece in bits.
-name|uint64_t
-name|getBitPieceSize
+name|isConstant
 argument_list|()
 specifier|const
 block|;
@@ -9684,7 +9396,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// \brief A lightweight wrapper around an expression operand.
+comment|/// A lightweight wrapper around an expression operand.
 comment|///
 comment|/// TODO: Store arguments directly and change \a DIExpression to store a
 comment|/// range of these.
@@ -9695,9 +9407,16 @@ specifier|const
 name|uint64_t
 operator|*
 name|Op
+operator|=
+name|nullptr
 block|;
 name|public
 operator|:
+name|ExprOperand
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|ExprOperand
 argument_list|(
@@ -9723,7 +9442,7 @@ return|return
 name|Op
 return|;
 block|}
-comment|/// \brief Get the operand code.
+comment|/// Get the operand code.
 name|uint64_t
 name|getOp
 argument_list|()
@@ -9734,7 +9453,7 @@ operator|*
 name|Op
 return|;
 block|}
-comment|/// \brief Get an argument to the operand.
+comment|/// Get an argument to the operand.
 comment|///
 comment|/// Never returns the operand itself.
 name|uint64_t
@@ -9765,7 +9484,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// \brief Return the size of the operand.
+comment|/// Return the size of the operand.
 comment|///
 comment|/// Return the number of elements in the operand (1 + args).
 name|unsigned
@@ -9774,7 +9493,7 @@ argument_list|()
 specifier|const
 block|;   }
 block|;
-comment|/// \brief An iterator for expression operands.
+comment|/// An iterator for expression operands.
 name|class
 name|expr_op_iterator
 operator|:
@@ -9795,6 +9514,11 @@ name|Op
 block|;
 name|public
 operator|:
+name|expr_op_iterator
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|expr_op_iterator
 argument_list|(
@@ -9881,7 +9605,7 @@ return|return
 name|T
 return|;
 block|}
-comment|/// \brief Get the next iterator.
+comment|/// Get the next iterator.
 comment|///
 comment|/// \a std::next() doesn't work because this is technically an
 comment|/// input_iterator, but it's a perfectly valid operation.  This is an
@@ -9963,7 +9687,7 @@ argument_list|)
 block|; }
 expr|}
 block|;
-comment|/// \brief Visit the elements via ExprOperand wrappers.
+comment|/// Visit the elements via ExprOperand wrappers.
 comment|///
 comment|/// These range iterators visit elements through \a ExprOperand wrappers.
 comment|/// This is not guaranteed to be a valid range unless \a isValid() gives \c
@@ -10017,6 +9741,799 @@ name|getMetadataID
 argument_list|()
 operator|==
 name|DIExpressionKind
+return|;
+block|}
+comment|/// Is the first element a DW_OP_deref?.
+name|bool
+name|startsWithDeref
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumElements
+argument_list|()
+operator|>
+literal|0
+operator|&&
+name|getElement
+argument_list|(
+literal|0
+argument_list|)
+operator|==
+name|dwarf
+operator|::
+name|DW_OP_deref
+return|;
+block|}
+comment|/// Holds the characteristics of one fragment of a larger variable.
+expr|struct
+name|FragmentInfo
+block|{
+name|uint64_t
+name|SizeInBits
+block|;
+name|uint64_t
+name|OffsetInBits
+block|;   }
+block|;
+comment|/// Retrieve the details of this fragment expression.
+specifier|static
+name|Optional
+operator|<
+name|FragmentInfo
+operator|>
+name|getFragmentInfo
+argument_list|(
+argument|expr_op_iterator Start
+argument_list|,
+argument|expr_op_iterator End
+argument_list|)
+block|;
+comment|/// Retrieve the details of this fragment expression.
+name|Optional
+operator|<
+name|FragmentInfo
+operator|>
+name|getFragmentInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFragmentInfo
+argument_list|(
+name|expr_op_begin
+argument_list|()
+argument_list|,
+name|expr_op_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Return whether this is a piece of an aggregate variable.
+name|bool
+name|isFragment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFragmentInfo
+argument_list|()
+operator|.
+name|hasValue
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// Global variables.
+comment|///
+comment|/// TODO: Remove DisplayName.  It's always equal to Name.
+name|class
+name|DIGlobalVariable
+operator|:
+name|public
+name|DIVariable
+block|{
+name|friend
+name|class
+name|LLVMContextImpl
+block|;
+name|friend
+name|class
+name|MDNode
+block|;
+name|bool
+name|IsLocalToUnit
+block|;
+name|bool
+name|IsDefinition
+block|;
+name|DIGlobalVariable
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|StorageType Storage
+argument_list|,
+argument|unsigned Line
+argument_list|,
+argument|bool IsLocalToUnit
+argument_list|,
+argument|bool IsDefinition
+argument_list|,
+argument|uint32_t AlignInBits
+argument_list|,
+argument|ArrayRef<Metadata *> Ops
+argument_list|)
+operator|:
+name|DIVariable
+argument_list|(
+name|C
+argument_list|,
+name|DIGlobalVariableKind
+argument_list|,
+name|Storage
+argument_list|,
+name|Line
+argument_list|,
+name|Ops
+argument_list|,
+name|AlignInBits
+argument_list|)
+block|,
+name|IsLocalToUnit
+argument_list|(
+name|IsLocalToUnit
+argument_list|)
+block|,
+name|IsDefinition
+argument_list|(
+argument|IsDefinition
+argument_list|)
+block|{}
+operator|~
+name|DIGlobalVariable
+argument_list|()
+operator|=
+expr|default
+block|;
+specifier|static
+name|DIGlobalVariable
+operator|*
+name|getImpl
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|DIScope *Scope
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|StringRef LinkageName
+argument_list|,
+argument|DIFile *File
+argument_list|,
+argument|unsigned Line
+argument_list|,
+argument|DITypeRef Type
+argument_list|,
+argument|bool IsLocalToUnit
+argument_list|,
+argument|bool IsDefinition
+argument_list|,
+argument|DIDerivedType *StaticDataMemberDeclaration
+argument_list|,
+argument|uint32_t AlignInBits
+argument_list|,
+argument|StorageType Storage
+argument_list|,
+argument|bool ShouldCreate = true
+argument_list|)
+block|{
+return|return
+name|getImpl
+argument_list|(
+name|Context
+argument_list|,
+name|Scope
+argument_list|,
+name|getCanonicalMDString
+argument_list|(
+name|Context
+argument_list|,
+name|Name
+argument_list|)
+argument_list|,
+name|getCanonicalMDString
+argument_list|(
+name|Context
+argument_list|,
+name|LinkageName
+argument_list|)
+argument_list|,
+name|File
+argument_list|,
+name|Line
+argument_list|,
+name|Type
+argument_list|,
+name|IsLocalToUnit
+argument_list|,
+name|IsDefinition
+argument_list|,
+name|StaticDataMemberDeclaration
+argument_list|,
+name|AlignInBits
+argument_list|,
+name|Storage
+argument_list|,
+name|ShouldCreate
+argument_list|)
+return|;
+block|}
+specifier|static
+name|DIGlobalVariable
+operator|*
+name|getImpl
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|Metadata *Scope
+argument_list|,
+argument|MDString *Name
+argument_list|,
+argument|MDString *LinkageName
+argument_list|,
+argument|Metadata *File
+argument_list|,
+argument|unsigned Line
+argument_list|,
+argument|Metadata *Type
+argument_list|,
+argument|bool IsLocalToUnit
+argument_list|,
+argument|bool IsDefinition
+argument_list|,
+argument|Metadata *StaticDataMemberDeclaration
+argument_list|,
+argument|uint32_t AlignInBits
+argument_list|,
+argument|StorageType Storage
+argument_list|,
+argument|bool ShouldCreate = true
+argument_list|)
+block|;
+name|TempDIGlobalVariable
+name|cloneImpl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTemporary
+argument_list|(
+name|getContext
+argument_list|()
+argument_list|,
+name|getScope
+argument_list|()
+argument_list|,
+name|getName
+argument_list|()
+argument_list|,
+name|getLinkageName
+argument_list|()
+argument_list|,
+name|getFile
+argument_list|()
+argument_list|,
+name|getLine
+argument_list|()
+argument_list|,
+name|getType
+argument_list|()
+argument_list|,
+name|isLocalToUnit
+argument_list|()
+argument_list|,
+name|isDefinition
+argument_list|()
+argument_list|,
+name|getStaticDataMemberDeclaration
+argument_list|()
+argument_list|,
+name|getAlignInBits
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|public
+operator|:
+name|DEFINE_MDNODE_GET
+argument_list|(
+argument|DIGlobalVariable
+argument_list|,
+argument|(DIScope * Scope, StringRef Name, StringRef LinkageName,                      DIFile *File, unsigned Line, DITypeRef Type,                      bool IsLocalToUnit, bool IsDefinition,                      DIDerivedType *StaticDataMemberDeclaration,                      uint32_t AlignInBits)
+argument_list|,
+argument|(Scope, Name, LinkageName, File, Line, Type, IsLocalToUnit,                      IsDefinition, StaticDataMemberDeclaration, AlignInBits)
+argument_list|)
+name|DEFINE_MDNODE_GET
+argument_list|(
+argument|DIGlobalVariable
+argument_list|,
+argument|(Metadata * Scope, MDString *Name, MDString *LinkageName,                      Metadata *File, unsigned Line, Metadata *Type,                      bool IsLocalToUnit, bool IsDefinition,                      Metadata *StaticDataMemberDeclaration,                      uint32_t AlignInBits)
+argument_list|,
+argument|(Scope, Name, LinkageName, File, Line, Type, IsLocalToUnit,                      IsDefinition, StaticDataMemberDeclaration, AlignInBits)
+argument_list|)
+name|TempDIGlobalVariable
+name|clone
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cloneImpl
+argument_list|()
+return|;
+block|}
+name|bool
+name|isLocalToUnit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsLocalToUnit
+return|;
+block|}
+name|bool
+name|isDefinition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsDefinition
+return|;
+block|}
+name|StringRef
+name|getDisplayName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringOperand
+argument_list|(
+literal|4
+argument_list|)
+return|;
+block|}
+name|StringRef
+name|getLinkageName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringOperand
+argument_list|(
+literal|5
+argument_list|)
+return|;
+block|}
+name|DIDerivedType
+operator|*
+name|getStaticDataMemberDeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|DIDerivedType
+operator|>
+operator|(
+name|getRawStaticDataMemberDeclaration
+argument_list|()
+operator|)
+return|;
+block|}
+name|MDString
+operator|*
+name|getRawLinkageName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperandAs
+operator|<
+name|MDString
+operator|>
+operator|(
+literal|5
+operator|)
+return|;
+block|}
+name|Metadata
+operator|*
+name|getRawStaticDataMemberDeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|6
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Metadata *MD
+argument_list|)
+block|{
+return|return
+name|MD
+operator|->
+name|getMetadataID
+argument_list|()
+operator|==
+name|DIGlobalVariableKind
+return|;
+block|}
+expr|}
+block|;
+comment|/// Local variable.
+comment|///
+comment|/// TODO: Split up flags.
+name|class
+name|DILocalVariable
+operator|:
+name|public
+name|DIVariable
+block|{
+name|friend
+name|class
+name|LLVMContextImpl
+block|;
+name|friend
+name|class
+name|MDNode
+block|;
+name|unsigned
+name|Arg
+operator|:
+literal|16
+block|;
+name|DIFlags
+name|Flags
+block|;
+name|DILocalVariable
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|StorageType Storage
+argument_list|,
+argument|unsigned Line
+argument_list|,
+argument|unsigned Arg
+argument_list|,
+argument|DIFlags Flags
+argument_list|,
+argument|uint32_t AlignInBits
+argument_list|,
+argument|ArrayRef<Metadata *> Ops
+argument_list|)
+operator|:
+name|DIVariable
+argument_list|(
+name|C
+argument_list|,
+name|DILocalVariableKind
+argument_list|,
+name|Storage
+argument_list|,
+name|Line
+argument_list|,
+name|Ops
+argument_list|,
+name|AlignInBits
+argument_list|)
+block|,
+name|Arg
+argument_list|(
+name|Arg
+argument_list|)
+block|,
+name|Flags
+argument_list|(
+argument|Flags
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Arg
+operator|<
+operator|(
+literal|1
+operator|<<
+literal|16
+operator|)
+operator|&&
+literal|"DILocalVariable: Arg out of range"
+argument_list|)
+block|;   }
+operator|~
+name|DILocalVariable
+argument_list|()
+operator|=
+expr|default
+block|;
+specifier|static
+name|DILocalVariable
+operator|*
+name|getImpl
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|DIScope *Scope
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|DIFile *File
+argument_list|,
+argument|unsigned Line
+argument_list|,
+argument|DITypeRef Type
+argument_list|,
+argument|unsigned Arg
+argument_list|,
+argument|DIFlags Flags
+argument_list|,
+argument|uint32_t AlignInBits
+argument_list|,
+argument|StorageType Storage
+argument_list|,
+argument|bool ShouldCreate = true
+argument_list|)
+block|{
+return|return
+name|getImpl
+argument_list|(
+name|Context
+argument_list|,
+name|Scope
+argument_list|,
+name|getCanonicalMDString
+argument_list|(
+name|Context
+argument_list|,
+name|Name
+argument_list|)
+argument_list|,
+name|File
+argument_list|,
+name|Line
+argument_list|,
+name|Type
+argument_list|,
+name|Arg
+argument_list|,
+name|Flags
+argument_list|,
+name|AlignInBits
+argument_list|,
+name|Storage
+argument_list|,
+name|ShouldCreate
+argument_list|)
+return|;
+block|}
+specifier|static
+name|DILocalVariable
+operator|*
+name|getImpl
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|Metadata *Scope
+argument_list|,
+argument|MDString *Name
+argument_list|,
+argument|Metadata *File
+argument_list|,
+argument|unsigned Line
+argument_list|,
+argument|Metadata *Type
+argument_list|,
+argument|unsigned Arg
+argument_list|,
+argument|DIFlags Flags
+argument_list|,
+argument|uint32_t AlignInBits
+argument_list|,
+argument|StorageType Storage
+argument_list|,
+argument|bool ShouldCreate = true
+argument_list|)
+block|;
+name|TempDILocalVariable
+name|cloneImpl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTemporary
+argument_list|(
+name|getContext
+argument_list|()
+argument_list|,
+name|getScope
+argument_list|()
+argument_list|,
+name|getName
+argument_list|()
+argument_list|,
+name|getFile
+argument_list|()
+argument_list|,
+name|getLine
+argument_list|()
+argument_list|,
+name|getType
+argument_list|()
+argument_list|,
+name|getArg
+argument_list|()
+argument_list|,
+name|getFlags
+argument_list|()
+argument_list|,
+name|getAlignInBits
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|public
+operator|:
+name|DEFINE_MDNODE_GET
+argument_list|(
+argument|DILocalVariable
+argument_list|,
+argument|(DILocalScope * Scope, StringRef Name, DIFile *File,                      unsigned Line, DITypeRef Type, unsigned Arg,                      DIFlags Flags, uint32_t AlignInBits)
+argument_list|,
+argument|(Scope, Name, File, Line, Type, Arg, Flags, AlignInBits)
+argument_list|)
+name|DEFINE_MDNODE_GET
+argument_list|(
+argument|DILocalVariable
+argument_list|,
+argument|(Metadata * Scope, MDString *Name, Metadata *File,                      unsigned Line, Metadata *Type, unsigned Arg,                      DIFlags Flags, uint32_t AlignInBits)
+argument_list|,
+argument|(Scope, Name, File, Line, Type, Arg, Flags, AlignInBits)
+argument_list|)
+name|TempDILocalVariable
+name|clone
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cloneImpl
+argument_list|()
+return|;
+block|}
+comment|/// Get the local scope for this variable.
+comment|///
+comment|/// Variables must be defined in a local scope.
+name|DILocalScope
+operator|*
+name|getScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|DILocalScope
+operator|>
+operator|(
+name|DIVariable
+operator|::
+name|getScope
+argument_list|()
+operator|)
+return|;
+block|}
+name|bool
+name|isParameter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Arg
+return|;
+block|}
+name|unsigned
+name|getArg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Arg
+return|;
+block|}
+name|DIFlags
+name|getFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+return|;
+block|}
+name|bool
+name|isArtificial
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlags
+argument_list|()
+operator|&
+name|FlagArtificial
+return|;
+block|}
+name|bool
+name|isObjectPointer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlags
+argument_list|()
+operator|&
+name|FlagObjectPointer
+return|;
+block|}
+comment|/// Check that a location is valid for this variable.
+comment|///
+comment|/// Check that \c DL exists, is in the same subprogram, and has the same
+comment|/// inlined-at location as \c this.  (Otherwise, it's not a valid attachment
+comment|/// to a \a DbgInfoIntrinsic.)
+name|bool
+name|isValidLocationForIntrinsic
+argument_list|(
+argument|const DILocation *DL
+argument_list|)
+specifier|const
+block|{
+return|return
+name|DL
+operator|&&
+name|getScope
+argument_list|()
+operator|->
+name|getSubprogram
+argument_list|()
+operator|==
+name|DL
+operator|->
+name|getScope
+argument_list|()
+operator|->
+name|getSubprogram
+argument_list|()
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Metadata *MD
+argument_list|)
+block|{
+return|return
+name|MD
+operator|->
+name|getMetadataID
+argument_list|()
+operator|==
+name|DILocalVariableKind
 return|;
 block|}
 expr|}
@@ -10463,7 +10980,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief An imported module (C++ using directive or similar).
+comment|/// An imported module (C++ using directive or similar).
 name|class
 name|DIImportedEntity
 operator|:
@@ -10757,7 +11274,181 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Macro Info DWARF-like metadata node.
+comment|/// A pair of DIGlobalVariable and DIExpression.
+name|class
+name|DIGlobalVariableExpression
+operator|:
+name|public
+name|MDNode
+block|{
+name|friend
+name|class
+name|LLVMContextImpl
+block|;
+name|friend
+name|class
+name|MDNode
+block|;
+name|DIGlobalVariableExpression
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|StorageType Storage
+argument_list|,
+argument|ArrayRef<Metadata *> Ops
+argument_list|)
+operator|:
+name|MDNode
+argument_list|(
+argument|C
+argument_list|,
+argument|DIGlobalVariableExpressionKind
+argument_list|,
+argument|Storage
+argument_list|,
+argument|Ops
+argument_list|)
+block|{}
+operator|~
+name|DIGlobalVariableExpression
+argument_list|()
+operator|=
+expr|default
+block|;
+specifier|static
+name|DIGlobalVariableExpression
+operator|*
+name|getImpl
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|Metadata *Variable
+argument_list|,
+argument|Metadata *Expression
+argument_list|,
+argument|StorageType Storage
+argument_list|,
+argument|bool ShouldCreate = true
+argument_list|)
+block|;
+name|TempDIGlobalVariableExpression
+name|cloneImpl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTemporary
+argument_list|(
+name|getContext
+argument_list|()
+argument_list|,
+name|getVariable
+argument_list|()
+argument_list|,
+name|getExpression
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|public
+operator|:
+name|DEFINE_MDNODE_GET
+argument_list|(
+argument|DIGlobalVariableExpression
+argument_list|,
+argument|(Metadata * Variable, Metadata *Expression)
+argument_list|,
+argument|(Variable, Expression)
+argument_list|)
+name|TempDIGlobalVariableExpression
+name|clone
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cloneImpl
+argument_list|()
+return|;
+block|}
+name|Metadata
+operator|*
+name|getRawVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+name|DIGlobalVariable
+operator|*
+name|getVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|DIGlobalVariable
+operator|>
+operator|(
+name|getRawVariable
+argument_list|()
+operator|)
+return|;
+block|}
+name|Metadata
+operator|*
+name|getRawExpression
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+return|;
+block|}
+name|DIExpression
+operator|*
+name|getExpression
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|DIExpression
+operator|>
+operator|(
+name|getRawExpression
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Metadata *MD
+argument_list|)
+block|{
+return|return
+name|MD
+operator|->
+name|getMetadataID
+argument_list|()
+operator|==
+name|DIGlobalVariableExpressionKind
+return|;
+block|}
+expr|}
+block|;
+comment|/// Macro Info DWARF-like metadata node.
 comment|///
 comment|/// A metadata node with a DWARF macro info (i.e., a constant named
 comment|/// \c DW_MACINFO_*, defined in llvm/Support/Dwarf.h).  Called \a DIMacroNode
@@ -11414,18 +12105,11 @@ argument_list|()
 control|)
 name|assert
 argument_list|(
-name|std
-operator|::
-name|find
+name|is_contained
 argument_list|(
 name|Elements
 operator|->
-name|op_begin
-argument_list|()
-argument_list|,
-name|Elements
-operator|->
-name|op_end
+name|operands
 argument_list|()
 argument_list|,
 name|Op
@@ -11560,6 +12244,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_DEBUGINFOMETADATA_H
+end_comment
 
 end_unit
 

@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/Options.h"
+file|"lldb/Core/ArchSpec.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ArchSpec.h"
+file|"lldb/Interpreter/Options.h"
 end_include
 
 begin_decl_stmt
@@ -94,14 +94,12 @@ name|OptionGroupArchitecture
 argument_list|()
 name|override
 block|;
-name|uint32_t
-name|GetNumDefinitions
-argument_list|()
-name|override
-block|;
-specifier|const
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
@@ -109,18 +107,18 @@ block|;
 name|Error
 name|SetOptionValue
 argument_list|(
-argument|CommandInterpreter&interpreter
-argument_list|,
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_value
+argument|llvm::StringRef option_value
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|(
-argument|CommandInterpreter&interpreter
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
@@ -149,26 +147,15 @@ name|empty
 argument_list|()
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetArchitectureName
 argument_list|()
+specifier|const
 block|{
 return|return
-operator|(
 name|m_arch_str
-operator|.
-name|empty
-argument_list|()
-operator|?
-name|nullptr
-operator|:
-name|m_arch_str
-operator|.
-name|c_str
-argument_list|()
-operator|)
 return|;
 block|}
 name|protected
@@ -178,7 +165,8 @@ operator|::
 name|string
 name|m_arch_str
 block|;
-comment|// Save the arch triple in case a platform is specified after the architecture
+comment|// Save the arch triple in case a platform is
+comment|// specified after the architecture
 block|}
 decl_stmt|;
 block|}

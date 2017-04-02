@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -191,6 +197,46 @@ argument_list|(
 argument|str
 argument_list|)
 block|{}
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+name|override
+block|;   }
+decl_stmt|;
+comment|/// PrettyStackTraceFormat - This object prints a string (which may use
+comment|/// printf-style formatting but should not contain newlines) to the stream
+comment|/// as the stack trace when a crash occurs.
+name|class
+name|PrettyStackTraceFormat
+range|:
+name|public
+name|PrettyStackTraceEntry
+block|{
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|char
+block|,
+literal|32
+operator|>
+name|Str
+block|;
+name|public
+operator|:
+name|PrettyStackTraceFormat
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Format
+argument_list|,
+operator|...
+argument_list|)
+block|;
 name|void
 name|print
 argument_list|(

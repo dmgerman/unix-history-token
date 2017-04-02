@@ -70,13 +70,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-forward.h"
+file|"lldb/Core/Communication.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Communication.h"
+file|"lldb/Host/MainLoop.h"
 end_include
 
 begin_include
@@ -88,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/MainLoop.h"
+file|"lldb/lldb-private-forward.h"
 end_include
 
 begin_comment

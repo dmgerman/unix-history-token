@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MICmnBase.h"
+file|"MICmdArgContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MICmdArgContext.h"
+file|"MICmnBase.h"
 end_include
 
 begin_comment
@@ -82,7 +82,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -90,7 +94,11 @@ comment|// Details: MI common code class. Command arguments container class.
 end_comment
 
 begin_comment
-comment|//          A command may have one or more arguments of which some may be optional.
+comment|//          A command may have one or more arguments of which some may be
+end_comment
+
+begin_comment
+comment|//          optional.
 end_comment
 
 begin_comment
@@ -98,7 +106,11 @@ comment|//          *this class contains a list of the command's arguments which
 end_comment
 
 begin_comment
-comment|//          validates against the commands argument options string (context string).
+comment|//          validates against the commands argument options string (context
+end_comment
+
+begin_comment
+comment|//          string).
 end_comment
 
 begin_comment
@@ -106,11 +118,19 @@ comment|//          Each argument tries to extract the value it is looking for.
 end_comment
 
 begin_comment
-comment|//          Argument objects added to *this container are owned by this container
+comment|//          Argument objects added to *this container are owned by this
 end_comment
 
 begin_comment
-comment|//          and are deleted when this container goes out of scope. Allocate argument
+comment|//          container
+end_comment
+
+begin_comment
+comment|//          and are deleted when this container goes out of scope. Allocate
+end_comment
+
+begin_comment
+comment|//          argument
 end_comment
 
 begin_comment
@@ -118,11 +138,19 @@ comment|//          objects on the heap.
 end_comment
 
 begin_comment
-comment|//          It is assumed the arguments to be parsed are read from left to right in
+comment|//          It is assumed the arguments to be parsed are read from left to right
 end_comment
 
 begin_comment
-comment|//          order. The order added to *this container is the order they will parsed.
+comment|//          in
+end_comment
+
+begin_comment
+comment|//          order. The order added to *this container is the order they will
+end_comment
+
+begin_comment
+comment|//          parsed.
 end_comment
 
 begin_comment
@@ -214,7 +242,7 @@ name|IArg
 argument_list|()
 operator|=
 expr|default
-block|;     }
+block|;   }
 block|;
 comment|// Typedefs:
 typedef|typedef
@@ -399,7 +427,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True = The driver's client presented the command with options recognised but not handled by
+comment|// True = The driver's client
+end_comment
+
+begin_comment
+comment|// presented the command with options
+end_comment
+
+begin_comment
+comment|// recognised but not handled by
 end_comment
 
 begin_comment
@@ -413,7 +449,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The set of arguments that are that the command is expecting to find in the options string
+comment|// The set of arguments that are that the command
+end_comment
+
+begin_comment
+comment|// is expecting to find in the options string
 end_comment
 
 begin_decl_stmt
@@ -423,7 +463,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The set of arguments that are required by the command but are missing
+comment|// The set of arguments that are
+end_comment
+
+begin_comment
+comment|// required by the command but are
+end_comment
+
+begin_comment
+comment|// missing
 end_comment
 
 begin_decl_stmt
@@ -433,7 +481,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The set of arguments found in the text but for some reason unable to extract a value
+comment|// The set of arguments found in the
+end_comment
+
+begin_comment
+comment|// text but for some reason unable to
+end_comment
+
+begin_comment
+comment|// extract a value
 end_comment
 
 begin_decl_stmt
@@ -443,7 +499,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The set of arguments specified by the command which were present to the command but not handled
+comment|// The set of arguments specified by
+end_comment
+
+begin_comment
+comment|// the command which were present to
+end_comment
+
+begin_comment
+comment|// the command but not handled
 end_comment
 
 begin_decl_stmt
@@ -453,7 +517,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The set of arguments that were present but were found to be missing additional information i.e.
+comment|// The set of arguments that were
+end_comment
+
+begin_comment
+comment|// present but were found to be missing
+end_comment
+
+begin_comment
+comment|// additional information i.e.
 end_comment
 
 begin_comment
@@ -467,7 +539,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Copy of the command's argument options text before validate takes place (empties it of content)
+comment|// Copy of the command's argument options
+end_comment
+
+begin_comment
+comment|// text before validate takes place (empties
+end_comment
+
+begin_comment
+comment|// it of content)
 end_comment
 
 begin_decl_stmt

@@ -594,7 +594,12 @@ argument_list|)
 operator|,
 name|IsBigEndian
 argument_list|(
-argument|IsBigEndian
+name|IsBigEndian
+argument_list|)
+operator|,
+name|WasDevirt
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|// The function stored in the vtable.
@@ -617,6 +622,10 @@ decl_stmt|;
 comment|// Whether the target is big endian.
 name|bool
 name|IsBigEndian
+decl_stmt|;
+comment|// Whether at least one call site to the target was devirtualized.
+name|bool
+name|WasDevirt
 decl_stmt|;
 comment|// The minimum byte offset before the address point. This covers the bytes in
 comment|// the vtable object before the address point (e.g. RTTI, access-to-top,

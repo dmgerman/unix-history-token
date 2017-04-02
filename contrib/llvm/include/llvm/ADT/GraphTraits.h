@@ -91,14 +91,10 @@ expr|struct
 name|GraphTraits
 block|{
 comment|// Elements to provide:
-comment|// NOTICE: We are in a transition from migration interfaces that require
-comment|// NodeType *, to NodeRef. NodeRef is required to be cheap to copy, but does
-comment|// not have to be a raw pointer. In the transition, user should define
-comment|// NodeType, and NodeRef = NodeType *.
-comment|//
-comment|// typedef NodeType          - Type of Node in the graph
-comment|// typedef NodeRef           - NodeType *
-comment|// typedef ChildIteratorType - Type used to iterate over children in graph
+comment|// typedef NodeRef           - Type of Node token in the graph, which should
+comment|//                             be cheap to copy.
+comment|// typedef ChildIteratorType - Type used to iterate over children in graph,
+comment|//                             dereference to a NodeRef.
 comment|// static NodeRef getEntryNode(const GraphType&)
 comment|//    Return the entry node of the graph
 comment|// static ChildIteratorType child_begin(NodeRef)
@@ -106,7 +102,7 @@ comment|// static ChildIteratorType child_end  (NodeRef)
 comment|//    Return iterators that point to the beginning and ending of the child
 comment|//    node list for the specified node.
 comment|//
-comment|// typedef  ...iterator nodes_iterator;
+comment|// typedef  ...iterator nodes_iterator; - dereference to a NodeRef
 comment|// static nodes_iterator nodes_begin(GraphType *G)
 comment|// static nodes_iterator nodes_end  (GraphType *G)
 comment|//    nodes_iterator/begin/end - Allow iteration over all nodes in the graph
@@ -186,113 +182,18 @@ operator|<
 name|Inverse
 operator|<
 name|T
-operator|>
-expr|>
-operator|>
-block|{
-typedef|typedef
-name|typename
+operator|>>>
+operator|:
 name|GraphTraits
 operator|<
 name|T
 operator|>
-operator|::
-name|NodeType
-name|NodeType
+block|{}
 expr_stmt|;
-typedef|typedef
-name|typename
-name|GraphTraits
-operator|<
-name|T
-operator|>
-operator|::
-name|ChildIteratorType
-name|ChildIteratorType
-expr_stmt|;
-specifier|static
-name|NodeType
-modifier|*
-name|getEntryNode
-argument_list|(
-name|Inverse
-operator|<
-name|Inverse
-operator|<
-name|T
-operator|>
-expr|>
-operator|*
-name|G
-argument_list|)
-block|{
-return|return
-name|GraphTraits
-operator|<
-name|T
-operator|>
-operator|::
-name|getEntryNode
-argument_list|(
-name|G
-operator|->
-name|Graph
-operator|.
-name|Graph
-argument_list|)
-return|;
-block|}
-specifier|static
-name|ChildIteratorType
-name|child_begin
-parameter_list|(
-name|NodeType
-modifier|*
-name|N
-parameter_list|)
-block|{
-return|return
-name|GraphTraits
-operator|<
-name|T
-operator|>
-operator|::
-name|child_begin
-argument_list|(
-name|N
-argument_list|)
-return|;
-block|}
-specifier|static
-name|ChildIteratorType
-name|child_end
-parameter_list|(
-name|NodeType
-modifier|*
-name|N
-parameter_list|)
-block|{
-return|return
-name|GraphTraits
-operator|<
-name|T
-operator|>
-operator|::
-name|child_end
-argument_list|(
-name|N
-argument_list|)
-return|;
-block|}
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

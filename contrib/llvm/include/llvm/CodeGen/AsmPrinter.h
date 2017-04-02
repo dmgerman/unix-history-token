@@ -274,12 +274,6 @@ name|MachineModuleInfo
 operator|*
 name|MMI
 block|;
-comment|/// Name-mangler for global names.
-comment|///
-name|Mangler
-operator|*
-name|Mang
-block|;
 comment|/// The symbol for the current function. This is recalculated at the beginning
 comment|/// of each call to runOnMachineFunction().
 comment|///
@@ -364,9 +358,21 @@ specifier|const
 name|char
 modifier|*
 name|TimerName
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|TimerDescription
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|TimerGroupName
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|TimerGroupDescription
 decl_stmt|;
 name|HandlerInfo
 argument_list|(
@@ -382,7 +388,17 @@ argument_list|,
 specifier|const
 name|char
 operator|*
+name|TimerDescription
+argument_list|,
+specifier|const
+name|char
+operator|*
 name|TimerGroupName
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|TimerGroupDescription
 argument_list|)
 operator|:
 name|Handler
@@ -395,9 +411,19 @@ argument_list|(
 name|TimerName
 argument_list|)
 operator|,
+name|TimerDescription
+argument_list|(
+name|TimerDescription
+argument_list|)
+operator|,
 name|TimerGroupName
 argument_list|(
-argument|TimerGroupName
+name|TimerGroupName
+argument_list|)
+operator|,
+name|TimerGroupDescription
+argument_list|(
+argument|TimerGroupDescription
 argument_list|)
 block|{}
 block|}
@@ -416,6 +442,10 @@ comment|/// If the target supports dwarf debug info, this pointer is non-null.
 name|DwarfDebug
 modifier|*
 name|DD
+decl_stmt|;
+comment|/// If the current module uses dwarf CFI annotations strictly for debugging.
+name|bool
+name|isCFIMoveForDebugging
 decl_stmt|;
 name|protected
 label|:
@@ -461,6 +491,18 @@ return|return
 name|DD
 return|;
 block|}
+name|uint16_t
+name|getDwarfVersion
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setDwarfVersion
+parameter_list|(
+name|uint16_t
+name|Version
+parameter_list|)
+function_decl|;
 name|bool
 name|isPositionIndependent
 argument_list|()
@@ -552,12 +594,6 @@ modifier|&
 name|Inst
 parameter_list|)
 function_decl|;
-comment|/// Return the target triple string.
-name|StringRef
-name|getTargetTriple
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// Return the current section we are emitting to.
 specifier|const
 name|MCSection
@@ -594,6 +630,106 @@ name|GV
 argument_list|)
 decl|const
 decl_stmt|;
+comment|//===------------------------------------------------------------------===//
+comment|// XRay instrumentation implementation.
+comment|//===------------------------------------------------------------------===//
+name|public
+label|:
+comment|// This describes the kind of sled we're storing in the XRay table.
+name|enum
+name|class
+name|SledKind
+range|:
+name|uint8_t
+block|{
+name|FUNCTION_ENTER
+operator|=
+literal|0
+block|,
+name|FUNCTION_EXIT
+operator|=
+literal|1
+block|,
+name|TAIL_CALL
+operator|=
+literal|2
+block|,   }
+decl_stmt|;
+comment|// The table will contain these structs that point to the sled, the function
+comment|// containing the sled, and what kind of sled (and whether they should always
+comment|// be instrumented).
+struct|struct
+name|XRayFunctionEntry
+block|{
+specifier|const
+name|MCSymbol
+modifier|*
+name|Sled
+decl_stmt|;
+specifier|const
+name|MCSymbol
+modifier|*
+name|Function
+decl_stmt|;
+name|SledKind
+name|Kind
+decl_stmt|;
+name|bool
+name|AlwaysInstrument
+decl_stmt|;
+specifier|const
+name|class
+name|Function
+modifier|*
+name|Fn
+decl_stmt|;
+name|void
+name|emit
+argument_list|(
+name|int
+argument_list|,
+name|MCStreamer
+operator|*
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+argument_list|)
+decl|const
+decl_stmt|;
+block|}
+struct|;
+comment|// All the sleds to be emitted.
+name|std
+operator|::
+name|vector
+operator|<
+name|XRayFunctionEntry
+operator|>
+name|Sleds
+expr_stmt|;
+comment|// Helper function to record a given XRay sled.
+name|void
+name|recordSled
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Sled
+parameter_list|,
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|,
+name|SledKind
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// Emit a table with all XRay instrumentation points.
+name|void
+name|emitXRayTable
+parameter_list|()
+function_decl|;
 comment|//===------------------------------------------------------------------===//
 comment|// MachineFunctionPass Implementation.
 comment|//===------------------------------------------------------------------===//
@@ -703,6 +839,17 @@ name|CFIMoveType
 name|needsCFIMoves
 parameter_list|()
 function_decl|;
+comment|/// Returns false if needsCFIMoves() == CFI_M_EH for any function
+comment|/// in the module.
+name|bool
+name|needsOnlyDebugCFIMoves
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isCFIMoveForDebugging
+return|;
+block|}
 name|bool
 name|needsSEHMoves
 parameter_list|()
@@ -1318,19 +1465,21 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// EmitDwarfRegOp - Emit a dwarf register operation.
+comment|/// Emit the directive and value for debug thread local expression
+comment|///
+comment|/// \p Value - The value to emit.
+comment|/// \p Size - The size of the integer (in bytes) to emit.
 name|virtual
 name|void
-name|EmitDwarfRegOp
+name|EmitDebugValue
 argument_list|(
-name|ByteStreamer
-operator|&
-name|BS
-argument_list|,
 specifier|const
-name|MachineLocation
-operator|&
-name|MLoc
+name|MCExpr
+operator|*
+name|Value
+argument_list|,
+name|unsigned
+name|Size
 argument_list|)
 decl|const
 decl_stmt|;

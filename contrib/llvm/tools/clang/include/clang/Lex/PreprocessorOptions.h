@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -140,15 +134,9 @@ comment|/// PreprocessorOptions - This class is used for passing the various opt
 comment|/// used in preprocessor initialization to InitializePreprocessor().
 name|class
 name|PreprocessorOptions
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|PreprocessorOptions
-operator|>
 block|{
 name|public
-operator|:
+label|:
 name|std
 operator|::
 name|vector
@@ -160,13 +148,13 @@ operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 name|bool
 comment|/*isUndef*/
 operator|>
 expr|>
 name|Macros
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -176,7 +164,7 @@ operator|::
 name|string
 operator|>
 name|Includes
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -186,27 +174,27 @@ operator|::
 name|string
 operator|>
 name|MacroIncludes
-block|;
+expr_stmt|;
 comment|/// \brief Initialize the preprocessor with the compiler and target specific
 comment|/// predefines.
 name|unsigned
 name|UsePredefines
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// \brief Whether we should maintain a detailed record of all macro
 comment|/// definitions and expansions.
 name|unsigned
 name|DetailedRecord
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// The implicit PCH included at the start of the translation unit, or empty.
 name|std
 operator|::
 name|string
 name|ImplicitPCHInclude
-block|;
+expr_stmt|;
 comment|/// \brief Headers that will be converted to chained PCHs in memory.
 name|std
 operator|::
@@ -217,20 +205,20 @@ operator|::
 name|string
 operator|>
 name|ChainedIncludes
-block|;
+expr_stmt|;
 comment|/// \brief When true, disables most of the normal validation performed on
 comment|/// precompiled headers.
 name|bool
 name|DisablePCHValidation
-block|;
+decl_stmt|;
 comment|/// \brief When true, a PCH with compiler errors will not be rejected.
 name|bool
 name|AllowPCHWithCompilerErrors
-block|;
+decl_stmt|;
 comment|/// \brief Dump declarations that are deserialized from PCH, for testing.
 name|bool
 name|DumpDeserializedPCHDecls
-block|;
+decl_stmt|;
 comment|/// \brief This is a set of names for decls that we do not want to be
 comment|/// deserialized, and we emit an error if they are; for testing purposes.
 name|std
@@ -242,7 +230,7 @@ operator|::
 name|string
 operator|>
 name|DeserializedPCHDeclsToErrorOn
-block|;
+expr_stmt|;
 comment|/// \brief If non-zero, the implicit PCH include is actually a precompiled
 comment|/// preamble that covers this number of bytes in the main source file.
 comment|///
@@ -253,29 +241,29 @@ operator|::
 name|pair
 operator|<
 name|unsigned
-block|,
+operator|,
 name|bool
 operator|>
 name|PrecompiledPreambleBytes
-block|;
+expr_stmt|;
 comment|/// The implicit PTH input included at the start of the translation unit, or
 comment|/// empty.
 name|std
 operator|::
 name|string
 name|ImplicitPTHInclude
-block|;
+expr_stmt|;
 comment|/// If given, a PTH cache file to use for speeding up header parsing.
 name|std
 operator|::
 name|string
 name|TokenCache
-block|;
+expr_stmt|;
 comment|/// \brief True if the SourceManager should report the original file name for
 comment|/// contents of files that were remapped to other files. Defaults to true.
 name|bool
 name|RemappedFilesKeepOriginalName
-block|;
+decl_stmt|;
 comment|/// \brief The set of file remappings, which take existing files on
 comment|/// the system (the first part of each pair) and gives them the
 comment|/// contents of other files on the system (the second part of each
@@ -291,13 +279,13 @@ operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 name|std
 operator|::
 name|string
 operator|>>
 name|RemappedFiles
-block|;
+expr_stmt|;
 comment|/// \brief The set of file-to-buffer remappings, which take existing files
 comment|/// on the system (the first part of each pair) and gives them the contents
 comment|/// of the specified memory buffer (the second part of each pair).
@@ -312,14 +300,14 @@ operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 name|llvm
 operator|::
 name|MemoryBuffer
 operator|*
 operator|>>
 name|RemappedFileBuffers
-block|;
+expr_stmt|;
 comment|/// \brief Whether the compiler instance should retain (i.e., not free)
 comment|/// the buffers associated with remapped files.
 comment|///
@@ -328,22 +316,16 @@ comment|/// manipulation of the compiler invocation object, in cases where the
 comment|/// compiler invocation and its buffers will be reused.
 name|bool
 name|RetainRemappedFileBuffers
-block|;
+decl_stmt|;
 comment|/// \brief The Objective-C++ ARC standard library that we should support,
 comment|/// by providing appropriate definitions to retrofit the standard library
 comment|/// with support for lifetime-qualified pointers.
 name|ObjCXXARCStandardLibraryKind
 name|ObjCXXARCStandardLibrary
-block|;
+decl_stmt|;
 comment|/// \brief Records the set of modules
 name|class
 name|FailedModulesSet
-operator|:
-name|public
-name|RefCountedBase
-operator|<
-name|FailedModulesSet
-operator|>
 block|{
 name|llvm
 operator|::
@@ -351,14 +333,15 @@ name|StringSet
 operator|<
 operator|>
 name|Failed
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 name|bool
 name|hasAlreadyFailed
-argument_list|(
-argument|StringRef module
-argument_list|)
+parameter_list|(
+name|StringRef
+name|module
+parameter_list|)
 block|{
 return|return
 name|Failed
@@ -373,9 +356,10 @@ return|;
 block|}
 name|void
 name|addFailed
-argument_list|(
-argument|StringRef module
-argument_list|)
+parameter_list|(
+name|StringRef
+name|module
+parameter_list|)
 block|{
 name|Failed
 operator|.
@@ -383,23 +367,26 @@ name|insert
 argument_list|(
 name|module
 argument_list|)
-block|;     }
-expr|}
-block|;
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief The set of modules that failed to build.
 comment|///
 comment|/// This pointer will be shared among all of the compiler instances created
 comment|/// to (re)build modules, so that once a module fails to build anywhere,
 comment|/// other instances will see that the module has failed and won't try to
 comment|/// build it again.
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|FailedModulesSet
 operator|>
 name|FailedModules
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 name|PreprocessorOptions
 argument_list|()
 operator|:
@@ -407,44 +394,44 @@ name|UsePredefines
 argument_list|(
 name|true
 argument_list|)
-block|,
+operator|,
 name|DetailedRecord
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|DisablePCHValidation
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|AllowPCHWithCompilerErrors
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|DumpDeserializedPCHDecls
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|PrecompiledPreambleBytes
 argument_list|(
 literal|0
 argument_list|,
 name|true
 argument_list|)
-block|,
+operator|,
 name|RemappedFilesKeepOriginalName
 argument_list|(
 name|true
 argument_list|)
-block|,
+operator|,
 name|RetainRemappedFileBuffers
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|ObjCXXARCStandardLibrary
 argument_list|(
 argument|ARCXX_nolib
@@ -585,7 +572,8 @@ operator|=
 literal|0
 block|;   }
 block|}
-block|;  }
+empty_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

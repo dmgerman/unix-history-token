@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/CallingConvLower.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetLowering.h"
 end_include
 
@@ -273,6 +279,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|EVT
+name|getSetCCResultType
+argument_list|(
+argument|const DataLayout&DL
+argument_list|,
+argument|LLVMContext&Context
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -339,6 +357,18 @@ argument_list|,
 argument|std::string&Constraint
 argument_list|,
 argument|std::vector<SDValue>&Ops
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|getRegisterByName
+argument_list|(
+argument|const char* RegName
+argument_list|,
+argument|EVT VT
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -445,6 +475,30 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|CCAssignFn
+operator|*
+name|CCAssignFnForReturn
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|CanLowerReturn
+argument_list|(
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|LLVMContext&Context
+argument_list|)
+specifier|const
+name|override
+block|;
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -522,7 +576,7 @@ name|MachineBasicBlock
 operator|*
 name|insertShift
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -532,7 +586,7 @@ name|MachineBasicBlock
 operator|*
 name|insertMul
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)

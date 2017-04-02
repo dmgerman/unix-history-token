@@ -193,9 +193,7 @@ argument_list|,
 name|false
 argument_list|)
 block|;   }
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getBufferIdentifier
 argument_list|()
 specifier|const
@@ -203,9 +201,6 @@ name|override
 block|{
 return|return
 name|BufferName
-operator|.
-name|c_str
-argument_list|()
 return|;
 block|}
 name|BufferKind

@@ -348,6 +348,42 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
+comment|/// Test if given that the input instruction is in the tail call position, if
+comment|/// there is an attribute mismatch between the caller and the callee that will
+comment|/// inhibit tail call optimizations.
+comment|/// \p AllowDifferingSizes is an output parameter which, if forming a tail call
+comment|/// is permitted, determines whether it's permitted only if the size of the
+comment|/// caller's and callee's return types match exactly.
+name|bool
+name|attributesPermitTailCall
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|ReturnInst
+modifier|*
+name|Ret
+parameter_list|,
+specifier|const
+name|TargetLoweringBase
+modifier|&
+name|TLI
+parameter_list|,
+name|bool
+modifier|*
+name|AllowDifferingSizes
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 comment|/// Test if given that the input instruction is in the tail call position if the
 comment|/// return type or any attributes of the function will inhibit tail call
 comment|/// optimization.

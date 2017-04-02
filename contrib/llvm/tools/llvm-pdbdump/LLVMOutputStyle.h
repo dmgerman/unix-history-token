@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeDumper.h"
+file|"llvm/DebugInfo/CodeView/TypeDatabase.h"
 end_include
 
 begin_include
@@ -65,6 +65,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|BitVector
+decl_stmt|;
 name|namespace
 name|pdb
 block|{
@@ -90,6 +93,10 @@ name|override
 block|;
 name|private
 operator|:
+name|void
+name|discoverStreamPurposes
+argument_list|()
+block|;
 name|Error
 name|dumpFileHeaders
 argument_list|()
@@ -99,19 +106,27 @@ name|dumpStreamSummary
 argument_list|()
 block|;
 name|Error
+name|dumpFreePageMap
+argument_list|()
+block|;
+name|Error
+name|dumpBlockRanges
+argument_list|()
+block|;
+name|Error
+name|dumpGlobalsStream
+argument_list|()
+block|;
+name|Error
+name|dumpStreamBytes
+argument_list|()
+block|;
+name|Error
 name|dumpStreamBlocks
 argument_list|()
 block|;
 name|Error
-name|dumpStreamData
-argument_list|()
-block|;
-name|Error
 name|dumpInfoStream
-argument_list|()
-block|;
-name|Error
-name|dumpNamedStream
 argument_list|()
 block|;
 name|Error
@@ -145,6 +160,14 @@ name|dumpFpoStream
 argument_list|()
 block|;
 name|void
+name|dumpBitVector
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|const BitVector&V
+argument_list|)
+block|;
+name|void
 name|flush
 argument_list|()
 block|;
@@ -157,8 +180,18 @@ name|P
 block|;
 name|codeview
 operator|::
-name|CVTypeDumper
-name|TD
+name|TypeDatabase
+name|TypeDB
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|StreamPurposes
 block|; }
 decl_stmt|;
 block|}

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -104,7 +110,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -116,7 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -140,13 +158,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstdarg>
+file|<cstddef>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<initializer_list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
 end_include
 
 begin_include
@@ -184,12 +214,10 @@ specifier|const
 modifier|*
 name|argv
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Overview
 init|=
-name|nullptr
+literal|""
 parameter_list|,
 name|bool
 name|IgnoreErrors
@@ -219,7 +247,7 @@ name|char
 modifier|*
 name|Overview
 init|=
-name|nullptr
+literal|""
 parameter_list|)
 function_decl|;
 comment|///===---------------------------------------------------------------------===//
@@ -282,9 +310,7 @@ name|Option
 modifier|&
 name|O
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Name
 parameter_list|)
 function_decl|;
@@ -434,15 +460,11 @@ name|OptionCategory
 block|{
 name|private
 label|:
-specifier|const
-name|char
-modifier|*
+name|StringRef
 specifier|const
 name|Name
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
+name|StringRef
 specifier|const
 name|Description
 decl_stmt|;
@@ -454,19 +476,15 @@ name|public
 label|:
 name|OptionCategory
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 specifier|const
 name|Name
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 specifier|const
 name|Description
 operator|=
-name|nullptr
+literal|""
 argument_list|)
 operator|:
 name|Name
@@ -482,9 +500,7 @@ block|{
 name|registerCategory
 argument_list|()
 block|;   }
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -493,9 +509,7 @@ return|return
 name|Name
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getDescription
 argument_list|()
 specifier|const
@@ -519,21 +533,11 @@ name|SubCommand
 block|{
 name|private
 label|:
-specifier|const
-name|char
-modifier|*
-specifier|const
+name|StringRef
 name|Name
-init|=
-name|nullptr
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-specifier|const
+name|StringRef
 name|Description
-init|=
-name|nullptr
 decl_stmt|;
 name|protected
 label|:
@@ -549,21 +553,12 @@ name|public
 label|:
 name|SubCommand
 argument_list|(
-specifier|const
-name|char
-operator|*
-specifier|const
-name|Name
+argument|StringRef Name
 argument_list|,
-specifier|const
-name|char
-operator|*
-specifier|const
-name|Description
-operator|=
-name|nullptr
+argument|StringRef Description =
+literal|""
 argument_list|)
-operator|:
+block|:
 name|Name
 argument_list|(
 name|Name
@@ -579,19 +574,20 @@ argument_list|()
 block|;   }
 name|SubCommand
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|reset
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
+name|explicit
 name|operator
 name|bool
 argument_list|()
 specifier|const
 expr_stmt|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -600,9 +596,7 @@ return|return
 name|Name
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getDescription
 argument_list|()
 specifier|const
@@ -652,9 +646,6 @@ extern|extern ManagedStatic<SubCommand> AllSubCommands;
 comment|//===----------------------------------------------------------------------===//
 comment|// Option Base class
 comment|//
-name|class
-name|alias
-decl_stmt|;
 name|class
 name|Option
 block|{
@@ -935,19 +926,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|std
-operator|::
 name|any_of
 argument_list|(
 name|Subs
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Subs
-operator|.
-name|end
-argument_list|()
 argument_list|,
 index|[]
 operator|(
@@ -1160,21 +1141,6 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|ArgStr
-argument_list|(
-literal|""
-argument_list|)
-operator|,
-name|HelpStr
-argument_list|(
-literal|""
-argument_list|)
-operator|,
-name|ValueStr
-argument_list|(
-literal|""
-argument_list|)
-operator|,
 name|Category
 argument_list|(
 operator|&
@@ -1185,7 +1151,7 @@ name|FullyInitialized
 argument_list|(
 argument|false
 argument_list|)
-block|{}
+block|{   }
 specifier|inline
 name|void
 name|setNumAdditionalVals
@@ -1199,12 +1165,19 @@ name|n
 block|; }
 name|public
 operator|:
+name|virtual
+operator|~
+name|Option
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 comment|// addArgument - Register this argument with the commandline system.
 comment|//
 name|void
 name|addArgument
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// Unregisters this option from the CommandLine system.
 comment|///
 comment|/// This option must have been the last option registered.
@@ -1298,8 +1271,6 @@ name|StringRef
 argument_list|()
 parameter_list|)
 function_decl|;
-name|public
-label|:
 specifier|inline
 name|int
 name|getNumOccurrences
@@ -1320,11 +1291,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|virtual
-operator|~
-name|Option
-argument_list|()
-block|{}
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -1335,19 +1301,14 @@ comment|// desc - Modifier to set the description shown in the -help output...
 struct|struct
 name|desc
 block|{
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Desc
 decl_stmt|;
 name|desc
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Str
+argument|StringRef Str
 argument_list|)
-operator|:
+block|:
 name|Desc
 argument_list|(
 argument|Str
@@ -1356,9 +1317,11 @@ block|{}
 name|void
 name|apply
 argument_list|(
-argument|Option&O
+name|Option
+operator|&
+name|O
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|O
 operator|.
@@ -1366,7 +1329,8 @@ name|setDescription
 argument_list|(
 name|Desc
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 block|}
 struct|;
 comment|// value_desc - Modifier to set the value description shown in the -help
@@ -1374,19 +1338,14 @@ comment|// output...
 struct|struct
 name|value_desc
 block|{
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Desc
 decl_stmt|;
 name|value_desc
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Str
+argument|StringRef Str
 argument_list|)
-operator|:
+block|:
 name|Desc
 argument_list|(
 argument|Str
@@ -1395,9 +1354,11 @@ block|{}
 name|void
 name|apply
 argument_list|(
-argument|Option&O
+name|Option
+operator|&
+name|O
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|O
 operator|.
@@ -1405,7 +1366,8 @@ name|setValueStr
 argument_list|(
 name|Desc
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 block|}
 struct|;
 comment|// init - Specify a default (initial) value for the command line argument, if
@@ -1662,12 +1624,6 @@ literal|0
 decl_stmt|;
 name|protected
 label|:
-operator|~
-name|GenericOptionValue
-argument_list|()
-operator|=
-expr|default
-expr_stmt|;
 name|GenericOptionValue
 argument_list|()
 operator|=
@@ -1679,6 +1635,12 @@ specifier|const
 name|GenericOptionValue
 operator|&
 argument_list|)
+operator|=
+expr|default
+expr_stmt|;
+operator|~
+name|GenericOptionValue
+argument_list|()
 operator|=
 expr|default
 expr_stmt|;
@@ -1823,21 +1785,23 @@ name|Value
 block|;
 name|bool
 name|Valid
+operator|=
+name|false
 block|;
 name|protected
 operator|:
-operator|~
-name|OptionValueCopy
-argument_list|()
-operator|=
-expr|default
-block|;
 name|OptionValueCopy
 argument_list|(
 specifier|const
 name|OptionValueCopy
 operator|&
 argument_list|)
+operator|=
+expr|default
+block|;
+operator|~
+name|OptionValueCopy
+argument_list|()
 operator|=
 expr|default
 block|;
@@ -1857,12 +1821,9 @@ name|public
 operator|:
 name|OptionValueCopy
 argument_list|()
-operator|:
-name|Valid
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|bool
 name|hasValue
 argument_list|()
@@ -2007,19 +1968,10 @@ name|WrapperType
 typedef|;
 name|protected
 operator|:
-operator|~
 name|OptionValueBase
 argument_list|()
 operator|=
 block|default
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|OptionValueBase
-argument_list|()
-operator|=
-expr|default
 expr_stmt|;
 end_expr_stmt
 
@@ -2030,6 +1982,15 @@ specifier|const
 name|OptionValueBase
 operator|&
 argument_list|)
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|~
+name|OptionValueBase
+argument_list|()
 operator|=
 expr|default
 expr_stmt|;
@@ -2176,11 +2137,19 @@ name|WrapperType
 expr_stmt|;
 name|OptionValue
 argument_list|()
-block|{}
+operator|=
+block|default
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|OptionValue
 argument_list|(
 argument|const cl::boolOrDefault&V
 argument_list|)
+end_macro
+
+begin_block
 block|{
 name|this
 operator|->
@@ -2188,7 +2157,11 @@ name|setValue
 argument_list|(
 name|V
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
 name|OptionValue
 operator|<
 name|cl
@@ -2259,11 +2232,19 @@ name|WrapperType
 typedef|;
 name|OptionValue
 argument_list|()
-block|{}
+operator|=
+block|default
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|OptionValue
 argument_list|(
 argument|const std::string&V
 argument_list|)
+end_macro
+
+begin_block
 block|{
 name|this
 operator|->
@@ -2271,7 +2252,11 @@ name|setValue
 argument_list|(
 name|V
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
 name|OptionValue
 operator|<
 name|std
@@ -2328,6 +2313,27 @@ begin_comment
 comment|//
 end_comment
 
+begin_comment
+comment|// This represents a single enum value, using "int" as the underlying type.
+end_comment
+
+begin_struct
+struct|struct
+name|OptionEnumValue
+block|{
+name|StringRef
+name|Name
+decl_stmt|;
+name|int
+name|Value
+decl_stmt|;
+name|StringRef
+name|Description
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -2337,7 +2343,8 @@ name|ENUMVAL
 parameter_list|,
 name|DESC
 parameter_list|)
-value|#ENUMVAL, int(ENUMVAL), DESC
+define|\
+value|llvm::cl::OptionEnumValue { #ENUMVAL, int(ENUMVAL), DESC }
 end_define
 
 begin_define
@@ -2351,14 +2358,8 @@ name|FLAGNAME
 parameter_list|,
 name|DESC
 parameter_list|)
-value|FLAGNAME, int(ENUMVAL), DESC
-end_define
-
-begin_define
-define|#
-directive|define
-name|clEnumValEnd
-value|(reinterpret_cast<void *>(0))
+define|\
+value|llvm::cl::OptionEnumValue { FLAGNAME, int(ENUMVAL), DESC }
 end_define
 
 begin_comment
@@ -2366,27 +2367,14 @@ comment|// values - For custom data types, allow specifying a group of values to
 end_comment
 
 begin_comment
-comment|// as the values that go into the mapping that the option handler uses.  Note
-end_comment
-
-begin_comment
-comment|// that the values list must always have a 0 at the end of the list to indicate
-end_comment
-
-begin_comment
-comment|// that the list has ended.
+comment|// as the values that go into the mapping that the option handler uses.
 end_comment
 
 begin_comment
 comment|//
 end_comment
 
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|DataType
-operator|>
+begin_decl_stmt
 name|class
 name|ValuesClass
 block|{
@@ -2395,142 +2383,30 @@ comment|// the overhead is less, and most importantly, it keeps them in the orde
 comment|// inserted so we can print our option out nicely.
 name|SmallVector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|char
-operator|*
-block|,
-name|std
-operator|::
-name|pair
-operator|<
-name|int
-block|,
-specifier|const
-name|char
-operator|*
-operator|>>
-block|,
+name|OptionEnumValue
+operator|,
 literal|4
 operator|>
 name|Values
-block|;
-name|void
-name|processValues
-argument_list|(
-argument|va_list Vals
-argument_list|)
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 name|ValuesClass
 argument_list|(
-argument|const char *EnumName
-argument_list|,
-argument|DataType Val
-argument_list|,
-argument|const char *Desc
-argument_list|,
-argument|va_list ValueArgs
-argument_list|)
-block|{
-comment|// Insert the first value, which is required.
-name|Values
-operator|.
-name|push_back
-argument_list|(
 name|std
 operator|::
-name|make_pair
-argument_list|(
-name|EnumName
-argument_list|,
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|Val
-argument_list|,
-name|Desc
-argument_list|)
-argument_list|)
-argument_list|)
-block|;
-comment|// Process the varargs portion of the values...
-while|while
-condition|(
-specifier|const
-name|char
-modifier|*
-name|enumName
-init|=
-name|va_arg
-argument_list|(
-name|ValueArgs
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-condition|)
-block|{
-name|DataType
-name|EnumVal
-init|=
-name|static_cast
+name|initializer_list
 operator|<
-name|DataType
+name|OptionEnumValue
 operator|>
-operator|(
-name|va_arg
-argument_list|(
-name|ValueArgs
-argument_list|,
-name|int
+name|Options
 argument_list|)
-operator|)
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|EnumDesc
-init|=
-name|va_arg
-argument_list|(
-name|ValueArgs
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-decl_stmt|;
+operator|:
 name|Values
-operator|.
-name|push_back
 argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|enumName
-argument_list|,
-comment|// Add value to value map
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|EnumVal
-argument_list|,
-name|EnumDesc
+argument|Options
 argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+block|{}
 name|template
 operator|<
 name|class
@@ -2545,24 +2421,10 @@ specifier|const
 block|{
 for|for
 control|(
-name|size_t
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
+name|auto
+name|Value
+range|:
 name|Values
-operator|.
-name|size
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
 control|)
 name|O
 operator|.
@@ -2571,90 +2433,56 @@ argument_list|()
 operator|.
 name|addLiteralOption
 argument_list|(
-name|Values
-index|[
-name|i
-index|]
+name|Value
 operator|.
-name|first
+name|Name
 argument_list|,
-name|Values
-index|[
-name|i
-index|]
+name|Value
 operator|.
-name|second
-operator|.
-name|first
+name|Value
 argument_list|,
-name|Values
-index|[
-name|i
-index|]
+name|Value
 operator|.
-name|second
-operator|.
-name|second
+name|Description
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// Helper to build a ValuesClass by forwarding a variable number of arguments
+end_comment
+
+begin_comment
+comment|/// as an initializer list to the ValuesClass constructor.
+end_comment
 
 begin_expr_stmt
-unit|};
 name|template
 operator|<
-name|class
-name|DataType
+name|typename
+operator|...
+name|OptsTy
 operator|>
 name|ValuesClass
-operator|<
-name|DataType
-operator|>
-name|LLVM_END_WITH_NULL
 name|values
 argument_list|(
-argument|const char *Arg
-argument_list|,
-argument|DataType Val
-argument_list|,
-argument|const char *Desc
-argument_list|,
-argument|...
+argument|OptsTy... Options
 argument_list|)
 block|{
-name|va_list
-name|ValueArgs
-block|;
-name|va_start
-argument_list|(
-name|ValueArgs
-argument_list|,
-name|Desc
-argument_list|)
-block|;
-name|ValuesClass
-operator|<
-name|DataType
-operator|>
-name|Vals
-argument_list|(
-name|Arg
-argument_list|,
-name|Val
-argument_list|,
-name|Desc
-argument_list|,
-name|ValueArgs
-argument_list|)
-block|;
-name|va_end
-argument_list|(
-name|ValueArgs
-argument_list|)
-block|;
 return|return
-name|Vals
+name|ValuesClass
+argument_list|(
+block|{
+name|Options
+operator|...
+block|}
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -2716,17 +2544,11 @@ name|public
 label|:
 name|GenericOptionInfo
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
+argument|StringRef name
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|helpStr
+argument|StringRef helpStr
 argument_list|)
-operator|:
+block|:
 name|Name
 argument_list|(
 name|name
@@ -2737,14 +2559,10 @@ argument_list|(
 argument|helpStr
 argument_list|)
 block|{}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Name
 expr_stmt|;
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|HelpStr
 decl_stmt|;
 block|}
@@ -2767,8 +2585,10 @@ name|virtual
 operator|~
 name|generic_parser_base
 argument_list|()
-block|{}
-comment|// Base class should have virtual-dtor
+operator|=
+expr|default
+expr_stmt|;
+comment|// Base class should have virtual-destructor
 comment|// getNumOptions - Virtual function implemented by generic subclass to
 comment|// indicate how many entries are in Values.
 comment|//
@@ -2782,9 +2602,7 @@ literal|0
 expr_stmt|;
 comment|// getOption - Return option name N.
 name|virtual
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getOption
 argument_list|(
 name|unsigned
@@ -2796,9 +2614,7 @@ literal|0
 decl_stmt|;
 comment|// getDescription - Return description N
 name|virtual
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getDescription
 argument_list|(
 name|unsigned
@@ -2995,9 +2811,7 @@ comment|//
 name|unsigned
 name|findOption
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Name
 parameter_list|)
 function_decl|;
@@ -3062,11 +2876,11 @@ name|public
 operator|:
 name|OptionInfo
 argument_list|(
-argument|const char *name
+argument|StringRef name
 argument_list|,
 argument|DataType v
 argument_list|,
-argument|const char *helpStr
+argument|StringRef helpStr
 argument_list|)
 operator|:
 name|GenericOptionInfo
@@ -3131,9 +2945,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getOption
 argument_list|(
 argument|unsigned N
@@ -3150,9 +2962,7 @@ operator|.
 name|Name
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getDescription
 argument_list|(
 argument|unsigned N
@@ -3308,11 +3118,11 @@ operator|>
 name|void
 name|addLiteralOption
 argument_list|(
-argument|const char *Name
+argument|StringRef Name
 argument_list|,
 argument|const DT&V
 argument_list|,
-argument|const char *HelpStr
+argument|StringRef HelpStr
 argument_list|)
 block|{
 name|assert
@@ -3365,7 +3175,7 @@ comment|///
 name|void
 name|removeLiteralOption
 argument_list|(
-argument|const char *Name
+argument|StringRef Name
 argument_list|)
 block|{
 name|unsigned
@@ -3495,9 +3305,7 @@ decl|const
 decl_stmt|;
 comment|// getValueName - Overload in subclass to provide a better default value.
 name|virtual
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getValueName
 argument_list|()
 specifier|const
@@ -3600,15 +3408,13 @@ name|protected
 label|:
 end_label
 
-begin_comment
-comment|// Workaround Clang PR22793
-end_comment
-
 begin_expr_stmt
 operator|~
 name|basic_parser
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -3683,16 +3489,15 @@ name|ValueOptional
 return|;
 block|}
 comment|// getValueName - Do not print =<value> at all.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getValueName
 argument_list|()
 specifier|const
 name|override
 block|{
 return|return
-name|nullptr
+name|StringRef
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -3798,16 +3603,15 @@ name|ValueOptional
 return|;
 block|}
 comment|// getValueName - Do not print =<value> at all.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getValueName
 argument_list|()
 specifier|const
 name|override
 block|{
 return|return
-name|nullptr
+name|StringRef
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -3908,9 +3712,7 @@ argument|int&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getValueName
 argument_list|()
 specifier|const
@@ -4009,9 +3811,7 @@ argument|unsigned&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getValueName
 argument_list|()
 specifier|const
@@ -4114,9 +3914,7 @@ argument|unsigned long long&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getValueName
 argument_list|()
 specifier|const
@@ -4215,9 +4013,7 @@ argument|double&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getValueName
 argument_list|()
 specifier|const
@@ -4316,9 +4112,7 @@ argument|float&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getValueName
 argument_list|()
 specifier|const
@@ -4432,9 +4226,7 @@ name|false
 return|;
 block|}
 comment|// getValueName - Overload in subclass to provide a better default value.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getValueName
 argument_list|()
 specifier|const
@@ -4555,9 +4347,7 @@ name|false
 return|;
 block|}
 comment|// getValueName - Overload in subclass to provide a better default value.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getValueName
 argument_list|()
 specifier|const
@@ -4903,7 +4693,7 @@ specifier|static
 name|void
 name|opt
 argument_list|(
-argument|const char *Str
+argument|StringRef Str
 argument_list|,
 argument|Opt&O
 argument_list|)
@@ -4944,7 +4734,7 @@ specifier|static
 name|void
 name|opt
 argument_list|(
-argument|const char *Str
+argument|StringRef Str
 argument_list|,
 argument|Opt&O
 argument_list|)
@@ -4967,9 +4757,7 @@ operator|>
 expr|struct
 name|applicator
 operator|<
-specifier|const
-name|char
-operator|*
+name|StringRef
 operator|>
 block|{
 name|template
@@ -4981,7 +4769,7 @@ specifier|static
 name|void
 name|opt
 argument_list|(
-argument|const char *Str
+argument|StringRef Str
 argument_list|,
 argument|Opt&O
 argument_list|)
@@ -5247,6 +5035,8 @@ block|{
 name|DataType
 operator|*
 name|Location
+operator|=
+name|nullptr
 block|;
 comment|// Where to store the object...
 name|OptionValue
@@ -5273,12 +5063,9 @@ name|public
 operator|:
 name|opt_storage
 argument_list|()
-operator|:
-name|Location
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|bool
 name|setLocation
 argument_list|(
@@ -5974,6 +5761,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_label
+name|public
+label|:
+end_label
+
 begin_comment
 comment|// Command line options should not be copyable
 end_comment
@@ -6004,11 +5796,6 @@ operator|=
 name|delete
 decl_stmt|;
 end_decl_stmt
-
-begin_label
-name|public
-label|:
-end_label
 
 begin_comment
 comment|// setInitialValue - Used by the cl::init modifier...
@@ -6183,18 +5970,17 @@ block|{
 name|StorageClass
 operator|*
 name|Location
+operator|=
+name|nullptr
 block|;
 comment|// Where to store the object...
 name|public
 operator|:
 name|list_storage
 argument_list|()
-operator|:
-name|Location
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|bool
 name|setLocation
 argument_list|(
@@ -7104,6 +6890,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_label
+name|public
+label|:
+end_label
+
 begin_comment
 comment|// Command line options should not be copyable
 end_comment
@@ -7134,11 +6925,6 @@ operator|=
 name|delete
 decl_stmt|;
 end_decl_stmt
-
-begin_label
-name|public
-label|:
-end_label
 
 begin_function
 name|ParserClass
@@ -7337,6 +7123,8 @@ block|{
 name|unsigned
 operator|*
 name|Location
+operator|=
+name|nullptr
 block|;
 comment|// Where to store the bits...
 name|template
@@ -7386,19 +7174,23 @@ name|public
 operator|:
 name|bits_storage
 argument_list|()
-operator|:
-name|Location
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
+
+begin_function
 name|bool
 name|setLocation
-argument_list|(
-argument|Option&O
-argument_list|,
-argument|unsigned&L
-argument_list|)
+parameter_list|(
+name|Option
+modifier|&
+name|O
+parameter_list|,
+name|unsigned
+modifier|&
+name|L
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7417,16 +7209,14 @@ operator|=
 operator|&
 name|L
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_function
 
 begin_expr_stmt
-unit|}    template
+name|template
 operator|<
 name|class
 name|T
@@ -7862,6 +7652,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_label
+name|public
+label|:
+end_label
+
 begin_comment
 comment|// Command line options should not be copyable
 end_comment
@@ -7892,11 +7687,6 @@ operator|=
 name|delete
 decl_stmt|;
 end_decl_stmt
-
-begin_label
-name|public
-label|:
-end_label
 
 begin_function
 name|ParserClass
@@ -8145,17 +7935,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|}
+unit|}  public:
 comment|// Command line options should not be copyable
 end_comment
 
 begin_expr_stmt
-unit|alias
-operator|(
+name|alias
+argument_list|(
 specifier|const
 name|alias
 operator|&
-operator|)
+argument_list|)
 operator|=
 name|delete
 expr_stmt|;
@@ -8175,11 +7965,6 @@ operator|=
 name|delete
 decl_stmt|;
 end_decl_stmt
-
-begin_label
-name|public
-label|:
-end_label
 
 begin_function
 name|void
@@ -8313,17 +8098,13 @@ begin_struct
 struct|struct
 name|extrahelp
 block|{
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|morehelp
 decl_stmt|;
 name|explicit
 name|extrahelp
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|help
 parameter_list|)
 function_decl|;
@@ -8492,7 +8273,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Hopefully this API can be depricated soon. Any situation where options need
+comment|/// Hopefully this API can be deprecated soon. Any situation where options need
 end_comment
 
 begin_comment
@@ -8519,6 +8300,101 @@ operator|=
 operator|*
 name|TopLevelSubCommand
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Use this to get all registered SubCommands from the provided parser.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \return A range of all SubCommand pointers registered with the parser.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Typical usage:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// main(int argc, char* argv[]) {
+end_comment
+
+begin_comment
+comment|///   llvm::cl::ParseCommandLineOptions(argc, argv);
+end_comment
+
+begin_comment
+comment|///   for (auto* S : llvm::cl::getRegisteredSubcommands()) {
+end_comment
+
+begin_comment
+comment|///     if (*S) {
+end_comment
+
+begin_comment
+comment|///       std::cout<< "Executing subcommand: "<< S->getName()<< std::endl;
+end_comment
+
+begin_comment
+comment|///       // Execute some function based on the name...
+end_comment
+
+begin_comment
+comment|///     }
+end_comment
+
+begin_comment
+comment|///   }
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This interface is useful for defining subcommands in libraries and
+end_comment
+
+begin_comment
+comment|/// the dispatch from a single point (like in the main function).
+end_comment
+
+begin_expr_stmt
+name|iterator_range
+operator|<
+name|typename
+name|SmallPtrSet
+operator|<
+name|SubCommand
+operator|*
+operator|,
+literal|4
+operator|>
+operator|::
+name|iterator
+operator|>
+name|getRegisteredSubcommands
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -8772,6 +8648,14 @@ comment|/// with nullptrs in the Argv vector.
 end_comment
 
 begin_comment
+comment|/// \param [in] RelativeNames true if names of nested response files must be
+end_comment
+
+begin_comment
+comment|/// resolved relative to including file.
+end_comment
+
+begin_comment
 comment|/// \return true if all @files were expanded successfully or there were none.
 end_comment
 
@@ -8797,6 +8681,11 @@ name|Argv
 argument_list|,
 name|bool
 name|MarkEOLs
+operator|=
+name|false
+argument_list|,
+name|bool
+name|RelativeNames
 operator|=
 name|false
 argument_list|)
@@ -8947,18 +8836,22 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// End namespace cl
+comment|// end namespace cl
 end_comment
 
 begin_comment
 unit|}
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_COMMANDLINE_H
+end_comment
 
 end_unit
 

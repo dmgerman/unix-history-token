@@ -212,6 +212,21 @@ name|__tsan_java_finalize
 argument_list|()
 name|INTERFACE_ATTRIBUTE
 expr_stmt|;
+comment|// Finds the first allocated memory block in the [*from_ptr, to) range, saves
+comment|// its address in *from_ptr and returns its size. Returns 0 if there are no
+comment|// allocated memory blocks in the range.
+name|jptr
+name|__tsan_java_find
+argument_list|(
+name|jptr
+operator|*
+name|from_ptr
+argument_list|,
+name|jptr
+name|to
+argument_list|)
+name|INTERFACE_ATTRIBUTE
+decl_stmt|;
 comment|// Mutex lock.
 comment|// Addr is any unique address associated with the mutex.
 comment|// Can be called on recursive reentry.

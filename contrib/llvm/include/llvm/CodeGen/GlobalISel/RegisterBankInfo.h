@@ -72,6 +72,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Hashing.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -243,19 +255,142 @@ block|}
 struct|;
 comment|/// Helper struct that represents how a value is mapped through
 comment|/// different register banks.
+comment|///
+comment|/// \note: So far we do not have any users of the complex mappings
+comment|/// (mappings with more than one partial mapping), but when we do,
+comment|/// we would have needed to duplicate partial mappings.
+comment|/// The alternative could be to use an array of pointers of partial
+comment|/// mapping (i.e., PartialMapping **BreakDown) and duplicate the
+comment|/// pointers instead.
+comment|///
+comment|/// E.g.,
+comment|/// Let say we have a 32-bit add and a<2 x 32-bit> vadd. We
+comment|/// can expand the
+comment|///<2 x 32-bit> add into 2 x 32-bit add.
+comment|///
+comment|/// Currently the TableGen-like file would look like:
+comment|/// \code
+comment|/// PartialMapping[] = {
+comment|/// /*32-bit add*/ {0, 32, GPR},
+comment|/// /*2x32-bit add*/ {0, 32, GPR}, {0, 32, GPR}, //<-- Same entry 3x
+comment|/// /*<2x32-bit> vadd {0, 64, VPR}
+comment|/// }; // PartialMapping duplicated.
+comment|///
+comment|/// ValueMapping[] {
+comment|///   /*plain 32-bit add*/ {&PartialMapping[0], 1},
+comment|///   /*expanded vadd on 2xadd*/ {&PartialMapping[1], 2},
+comment|///   /*plain<2x32-bit> vadd*/ {&PartialMapping[3], 1}
+comment|/// };
+comment|/// \endcode
+comment|///
+comment|/// With the array of pointer, we would have:
+comment|/// \code
+comment|/// PartialMapping[] = {
+comment|/// /*32-bit add*/ {0, 32, GPR},
+comment|/// /*<2x32-bit> vadd {0, 64, VPR}
+comment|/// }; // No more duplication.
+comment|///
+comment|/// BreakDowns[] = {
+comment|/// /*AddBreakDown*/&PartialMapping[0],
+comment|/// /*2xAddBreakDown*/&PartialMapping[0],&PartialMapping[0],
+comment|/// /*VAddBreakDown*/&PartialMapping[1]
+comment|/// }; // Addresses of PartialMapping duplicated (smaller).
+comment|///
+comment|/// ValueMapping[] {
+comment|///   /*plain 32-bit add*/ {&BreakDowns[0], 1},
+comment|///   /*expanded vadd on 2xadd*/ {&BreakDowns[1], 2},
+comment|///   /*plain<2x32-bit> vadd*/ {&BreakDowns[3], 1}
+comment|/// };
+comment|/// \endcode
+comment|///
+comment|/// Given that a PartialMapping is actually small, the code size
+comment|/// impact is actually a degradation. Moreover the compile time will
+comment|/// be hit by the additional indirection.
+comment|/// If PartialMapping gets bigger we may reconsider.
 struct|struct
 name|ValueMapping
 block|{
 comment|/// How the value is broken down between the different register banks.
-name|SmallVector
-operator|<
+specifier|const
 name|PartialMapping
-operator|,
-literal|2
-operator|>
+modifier|*
 name|BreakDown
-expr_stmt|;
-comment|/// Verify that this mapping makes sense for a value of \p ExpectedBitWidth.
+decl_stmt|;
+comment|/// Number of partial mapping to break down this value.
+name|unsigned
+name|NumBreakDowns
+decl_stmt|;
+comment|/// The default constructor creates an invalid (isValid() == false)
+comment|/// instance.
+name|ValueMapping
+argument_list|()
+operator|:
+name|ValueMapping
+argument_list|(
+argument|nullptr
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+comment|/// Initialize a ValueMapping with the given parameter.
+comment|/// \p BreakDown needs to have a life time at least as long
+comment|/// as this instance.
+name|ValueMapping
+argument_list|(
+argument|const PartialMapping *BreakDown
+argument_list|,
+argument|unsigned NumBreakDowns
+argument_list|)
+operator|:
+name|BreakDown
+argument_list|(
+name|BreakDown
+argument_list|)
+operator|,
+name|NumBreakDowns
+argument_list|(
+argument|NumBreakDowns
+argument_list|)
+block|{}
+comment|/// Iterators through the PartialMappings.
+specifier|const
+name|PartialMapping
+operator|*
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BreakDown
+return|;
+block|}
+specifier|const
+name|PartialMapping
+operator|*
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BreakDown
+operator|+
+name|NumBreakDowns
+return|;
+block|}
+comment|/// Check if this ValueMapping is valid.
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BreakDown
+operator|&&
+name|NumBreakDowns
+return|;
+block|}
+comment|/// Verify that this mapping makes sense for a value of
+comment|/// \p MeaningfulBitWidth.
 comment|/// \note This method does not check anything when assertions are disabled.
 comment|///
 comment|/// \return True is the check was successful.
@@ -263,7 +398,7 @@ name|bool
 name|verify
 argument_list|(
 name|unsigned
-name|ExpectedBitWidth
+name|MeaningfulBitWidth
 argument_list|)
 decl|const
 decl_stmt|;
@@ -301,19 +436,16 @@ name|unsigned
 name|Cost
 decl_stmt|;
 comment|/// Mapping of all the operands.
-name|std
-operator|::
-name|unique_ptr
-operator|<
+specifier|const
 name|ValueMapping
-index|[]
-operator|>
+modifier|*
 name|OperandsMapping
-expr_stmt|;
+decl_stmt|;
 comment|/// Number of operands.
 name|unsigned
 name|NumOperands
 decl_stmt|;
+specifier|const
 name|ValueMapping
 modifier|&
 name|getOperandMapping
@@ -355,6 +487,8 @@ argument|unsigned ID
 argument_list|,
 argument|unsigned Cost
 argument_list|,
+argument|const ValueMapping *OperandsMapping
+argument_list|,
 argument|unsigned NumOperands
 argument_list|)
 block|:
@@ -366,6 +500,11 @@ operator|,
 name|Cost
 argument_list|(
 name|Cost
+argument_list|)
+operator|,
+name|OperandsMapping
+argument_list|(
+name|OperandsMapping
 argument_list|)
 operator|,
 name|NumOperands
@@ -381,13 +520,6 @@ operator|!=
 name|InvalidMappingID
 operator|&&
 literal|"Use the default constructor for invalid mapping"
-argument_list|)
-block|;
-name|OperandsMapping
-operator|.
-name|reset
-argument_list|(
-argument|new ValueMapping[getNumOperands()]
 argument_list|)
 block|;     }
 comment|/// Default constructor.
@@ -441,6 +573,8 @@ name|NumOperands
 return|;
 block|}
 comment|/// Get the value mapping of the ith operand.
+comment|/// \pre The mapping for the ith operand has been set.
+comment|/// \pre The ith operand is a register.
 specifier|const
 name|ValueMapping
 modifier|&
@@ -451,7 +585,11 @@ name|i
 argument_list|)
 decl|const
 block|{
-return|return
+specifier|const
+name|ValueMapping
+modifier|&
+name|ValMapping
+init|=
 name|const_cast
 operator|<
 name|InstructionMapping
@@ -465,27 +603,26 @@ name|getOperandMapping
 argument_list|(
 name|i
 argument_list|)
+decl_stmt|;
+return|return
+name|ValMapping
 return|;
 block|}
-comment|/// Get the value mapping of the ith operand.
+comment|/// Set the mapping for all the operands.
+comment|/// In other words, OpdsMapping should hold at least getNumOperands
+comment|/// ValueMapping.
 name|void
-name|setOperandMapping
+name|setOperandsMapping
 parameter_list|(
-name|unsigned
-name|i
-parameter_list|,
 specifier|const
 name|ValueMapping
-modifier|&
-name|ValMapping
+modifier|*
+name|OpdsMapping
 parameter_list|)
 block|{
-name|getOperandMapping
-argument_list|(
-name|i
-argument_list|)
+name|OperandsMapping
 operator|=
-name|ValMapping
+name|OpdsMapping
 expr_stmt|;
 block|}
 comment|/// Check whether this object is valid.
@@ -500,27 +637,10 @@ name|getID
 argument_list|()
 operator|!=
 name|InvalidMappingID
+operator|&&
+name|OperandsMapping
 return|;
 block|}
-comment|/// Set the operand mapping for the \p OpIdx-th operand.
-comment|/// The mapping will consist of only one element in the break down list.
-comment|/// This element will map to \p RegBank and fully define a mask, whose
-comment|/// bitwidth matches the size of \p MaskSize.
-name|void
-name|setOperandMapping
-parameter_list|(
-name|unsigned
-name|OpIdx
-parameter_list|,
-name|unsigned
-name|MaskSize
-parameter_list|,
-specifier|const
-name|RegisterBank
-modifier|&
-name|RegBank
-parameter_list|)
-function_decl|;
 comment|/// Verifiy that this mapping makes sense for \p MI.
 comment|/// \pre \p MI must be connected to a MachineFunction.
 comment|///
@@ -567,19 +687,19 @@ literal|4
 operator|>
 name|InstructionMappings
 expr_stmt|;
-comment|/// Helper class use to get/create the virtual registers that will be used
+comment|/// Helper class used to get/create the virtual registers that will be used
 comment|/// to replace the MachineOperand when applying a mapping.
 name|class
 name|OperandsMapper
 block|{
 comment|/// The OpIdx-th cell contains the index in NewVRegs where the VRegs of the
 comment|/// OpIdx-th operand starts. -1 means we do not have such mapping yet.
-name|std
-operator|::
-name|unique_ptr
+comment|/// Note: We use a SmallVector to avoid heap allocation for most cases.
+name|SmallVector
 operator|<
 name|int
-index|[]
+operator|,
+literal|8
 operator|>
 name|OpToNewVRegIdx
 expr_stmt|;
@@ -806,39 +926,59 @@ empty_stmt|;
 name|protected
 label|:
 comment|/// Hold the set of supported register banks.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|RegisterBank
-index|[]
-operator|>
+modifier|*
+modifier|*
 name|RegBanks
-expr_stmt|;
+decl_stmt|;
 comment|/// Total number of register banks.
 name|unsigned
 name|NumRegBanks
 decl_stmt|;
-comment|/// Mapping from MVT::SimpleValueType to register banks.
-name|std
-operator|::
-name|unique_ptr
+comment|/// Keep dynamically allocated PartialMapping in a separate map.
+comment|/// This shouldn't be needed when everything gets TableGen'ed.
+name|mutable
+name|DenseMap
 operator|<
+name|unsigned
+operator|,
 specifier|const
-name|RegisterBank
+name|PartialMapping
 operator|*
-index|[]
 operator|>
-name|VTToRegBank
+name|MapOfPartialMappings
+expr_stmt|;
+comment|/// Keep dynamically allocated ValueMapping in a separate map.
+comment|/// This shouldn't be needed when everything gets TableGen'ed.
+name|mutable
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+specifier|const
+name|ValueMapping
+operator|*
+operator|>
+name|MapOfValueMappings
+expr_stmt|;
+comment|/// Keep dynamically allocated array of ValueMapping in a separate map.
+comment|/// This shouldn't be needed when everything gets TableGen'ed.
+name|mutable
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|ValueMapping
+operator|*
+operator|>
+name|MapOfOperandsMappings
 expr_stmt|;
 comment|/// Create a RegisterBankInfo that can accomodate up to \p NumRegBanks
 comment|/// RegisterBank instances.
-comment|///
-comment|/// \note For the verify method to succeed all the \p NumRegBanks
-comment|/// must be initialized by createRegisterBank and updated with
-comment|/// addRegBankCoverage RegisterBank.
 name|RegisterBankInfo
 argument_list|(
+argument|RegisterBank **RegBanks
+argument_list|,
 argument|unsigned NumRegBanks
 argument_list|)
 empty_stmt|;
@@ -857,66 +997,6 @@ literal|"This constructor should not be executed"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Create a new register bank with the given parameter and add it
-comment|/// to RegBanks.
-comment|/// \pre \p ID must not already be used.
-comment|/// \pre \p ID< NumRegBanks.
-name|void
-name|createRegisterBank
-parameter_list|(
-name|unsigned
-name|ID
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|)
-function_decl|;
-comment|/// Add \p RCId to the set of register class that the register bank,
-comment|/// identified \p ID, covers.
-comment|/// This method transitively adds all the sub classes and the subreg-classes
-comment|/// of \p RCId to the set of covered register classes.
-comment|/// It also adjusts the size of the register bank to reflect the maximal
-comment|/// size of a value that can be hold into that register bank.
-comment|///
-comment|/// If \p AddTypeMapping is true, this method also records what types can
-comment|/// be mapped to \p ID. Although this done by default, targets may want to
-comment|/// disable it, espicially if a given type may be mapped on different
-comment|/// register bank. Indeed, in such case, this method only records the
-comment|/// first register bank where the type matches.
-comment|/// This information is only used to provide default mapping
-comment|/// (see getInstrMappingImpl).
-comment|///
-comment|/// \note This method does *not* add the super classes of \p RCId.
-comment|/// The rationale is if \p ID covers the registers of \p RCId, that
-comment|/// does not necessarily mean that \p ID covers the set of registers
-comment|/// of RCId's superclasses.
-comment|/// This method does *not* add the superreg classes as well for consistents.
-comment|/// The expected use is to add the coverage top-down with respect to the
-comment|/// register hierarchy.
-comment|///
-comment|/// \todo TableGen should just generate the BitSet vector for us.
-name|void
-name|addRegBankCoverage
-parameter_list|(
-name|unsigned
-name|ID
-parameter_list|,
-name|unsigned
-name|RCId
-parameter_list|,
-specifier|const
-name|TargetRegisterInfo
-modifier|&
-name|TRI
-parameter_list|,
-name|bool
-name|AddTypeMapping
-init|=
-name|true
-parameter_list|)
-function_decl|;
 comment|/// Get the register bank identified by \p ID.
 name|RegisterBank
 modifier|&
@@ -937,165 +1017,12 @@ literal|"Accessing an unknown register bank"
 argument_list|)
 expr_stmt|;
 return|return
+operator|*
 name|RegBanks
 index|[
 name|ID
 index|]
 return|;
-block|}
-comment|/// Get the register bank that has been recorded to cover \p SVT.
-specifier|const
-name|RegisterBank
-modifier|*
-name|getRegBankForType
-argument_list|(
-name|MVT
-operator|::
-name|SimpleValueType
-name|SVT
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-operator|!
-name|VTToRegBank
-condition|)
-return|return
-name|nullptr
-return|;
-name|assert
-argument_list|(
-name|SVT
-operator|<
-name|MVT
-operator|::
-name|SimpleValueType
-operator|::
-name|LAST_VALUETYPE
-operator|&&
-literal|"Out-of-bound access"
-argument_list|)
-expr_stmt|;
-return|return
-name|VTToRegBank
-operator|.
-name|get
-argument_list|()
-index|[
-name|SVT
-index|]
-return|;
-block|}
-comment|/// Record \p RegBank as the register bank that covers \p SVT.
-comment|/// If a record was already set for \p SVT, the mapping is not
-comment|/// updated, unless \p Force == true
-comment|///
-comment|/// \post if getRegBankForType(SVT)\@pre == nullptr then
-comment|///                       getRegBankForType(SVT) ==&RegBank
-comment|/// \post if Force == true then getRegBankForType(SVT) ==&RegBank
-name|void
-name|recordRegBankForType
-argument_list|(
-specifier|const
-name|RegisterBank
-operator|&
-name|RegBank
-argument_list|,
-name|MVT
-operator|::
-name|SimpleValueType
-name|SVT
-argument_list|,
-name|bool
-name|Force
-operator|=
-name|false
-argument_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|VTToRegBank
-condition|)
-block|{
-name|VTToRegBank
-operator|.
-name|reset
-argument_list|(
-name|new
-specifier|const
-name|RegisterBank
-operator|*
-index|[
-name|MVT
-operator|::
-name|SimpleValueType
-operator|::
-name|LAST_VALUETYPE
-index|]
-argument_list|)
-expr_stmt|;
-name|std
-operator|::
-name|fill
-argument_list|(
-operator|&
-name|VTToRegBank
-index|[
-literal|0
-index|]
-argument_list|,
-operator|&
-name|VTToRegBank
-index|[
-name|MVT
-operator|::
-name|SimpleValueType
-operator|::
-name|LAST_VALUETYPE
-index|]
-argument_list|,
-name|nullptr
-argument_list|)
-expr_stmt|;
-block|}
-name|assert
-argument_list|(
-name|SVT
-operator|<
-name|MVT
-operator|::
-name|SimpleValueType
-operator|::
-name|LAST_VALUETYPE
-operator|&&
-literal|"Out-of-bound access"
-argument_list|)
-expr_stmt|;
-comment|// If we want to override the mapping or the mapping does not exits yet,
-comment|// set the register bank for SVT.
-if|if
-condition|(
-name|Force
-operator|||
-operator|!
-name|getRegBankForType
-argument_list|(
-name|SVT
-argument_list|)
-condition|)
-name|VTToRegBank
-operator|.
-name|get
-argument_list|()
-index|[
-name|SVT
-index|]
-operator|=
-operator|&
-name|RegBank
-expr_stmt|;
 block|}
 comment|/// Try to get the mapping of \p MI.
 comment|/// See getInstrMapping for more details on what a mapping represents.
@@ -1108,9 +1035,9 @@ comment|/// information for \p MI.
 comment|///
 comment|/// This implementation is able to get the mapping of:
 comment|/// - Target specific instructions by looking at the encoding constraints.
-comment|/// - Any instruction if all the register operands are already been assigned
+comment|/// - Any instruction if all the register operands have already been assigned
 comment|///   a register, a register class, or a register bank.
-comment|/// - Copies and phis if at least one of the operand has been assigned a
+comment|/// - Copies and phis if at least one of the operands has been assigned a
 comment|///   register, a register class, or a register bank.
 comment|/// In other words, this method will likely fail to find a mapping for
 comment|/// any generic opcode that has not been lowered by target specific code.
@@ -1124,6 +1051,138 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Get the uniquely generated PartialMapping for the
+comment|/// given arguments.
+specifier|const
+name|PartialMapping
+modifier|&
+name|getPartialMapping
+argument_list|(
+name|unsigned
+name|StartIdx
+argument_list|,
+name|unsigned
+name|Length
+argument_list|,
+specifier|const
+name|RegisterBank
+operator|&
+name|RegBank
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Methods to get a uniquely generated ValueMapping.
+comment|/// @{
+comment|/// The most common ValueMapping consists of a single PartialMapping.
+comment|/// Feature a method for that.
+specifier|const
+name|ValueMapping
+modifier|&
+name|getValueMapping
+argument_list|(
+name|unsigned
+name|StartIdx
+argument_list|,
+name|unsigned
+name|Length
+argument_list|,
+specifier|const
+name|RegisterBank
+operator|&
+name|RegBank
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Get the ValueMapping for the given arguments.
+specifier|const
+name|ValueMapping
+modifier|&
+name|getValueMapping
+argument_list|(
+specifier|const
+name|PartialMapping
+operator|*
+name|BreakDown
+argument_list|,
+name|unsigned
+name|NumBreakDowns
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
+comment|/// Methods to get a uniquely generated array of ValueMapping.
+comment|/// @{
+comment|/// Get the uniquely generated array of ValueMapping for the
+comment|/// elements of between \p Begin and \p End.
+comment|///
+comment|/// Elements that are nullptr will be replaced by
+comment|/// invalid ValueMapping (ValueMapping::isValid == false).
+comment|///
+comment|/// \pre The pointers on ValueMapping between \p Begin and \p End
+comment|/// must uniquely identify a ValueMapping. Otherwise, there is no
+comment|/// guarantee that the return instance will be unique, i.e., another
+comment|/// OperandsMapping could have the same content.
+name|template
+operator|<
+name|typename
+name|Iterator
+operator|>
+specifier|const
+name|ValueMapping
+operator|*
+name|getOperandsMapping
+argument_list|(
+argument|Iterator Begin
+argument_list|,
+argument|Iterator End
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// Get the uniquely generated array of ValueMapping for the
+comment|/// elements of \p OpdsMapping.
+comment|///
+comment|/// Elements of \p OpdsMapping that are nullptr will be replaced by
+comment|/// invalid ValueMapping (ValueMapping::isValid == false).
+specifier|const
+name|ValueMapping
+modifier|*
+name|getOperandsMapping
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|ValueMapping
+operator|*
+operator|>
+operator|&
+name|OpdsMapping
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Get the uniquely generated array of ValueMapping for the
+comment|/// given arguments.
+comment|///
+comment|/// Arguments that are nullptr will be replaced by invalid
+comment|/// ValueMapping (ValueMapping::isValid == false).
+specifier|const
+name|ValueMapping
+modifier|*
+name|getOperandsMapping
+argument_list|(
+name|std
+operator|::
+name|initializer_list
+operator|<
+specifier|const
+name|ValueMapping
+operator|*
+operator|>
+name|OpdsMapping
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
 comment|/// Get the register bank for the \p OpIdx-th operand of \p MI form
 comment|/// the encoding constraints, if any.
 comment|///
@@ -1198,16 +1257,17 @@ name|virtual
 operator|~
 name|RegisterBankInfo
 argument_list|()
-block|{}
+expr_stmt|;
 comment|/// Get the register bank identified by \p ID.
 specifier|const
 name|RegisterBank
-operator|&
+modifier|&
 name|getRegBank
 argument_list|(
-argument|unsigned ID
+name|unsigned
+name|ID
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|const_cast
@@ -1328,6 +1388,30 @@ operator|&
 name|B
 return|;
 block|}
+comment|/// Constrain the (possibly generic) virtual register \p Reg to \p RC.
+comment|///
+comment|/// \pre \p Reg is a virtual register that either has a bank or a class.
+comment|/// \returns The constrained register class, or nullptr if there is none.
+comment|/// \note This is a generic variant of MachineRegisterInfo::constrainRegClass
+specifier|static
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|constrainGenericRegister
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|&
+name|RC
+parameter_list|,
+name|MachineRegisterInfo
+modifier|&
+name|MRI
+parameter_list|)
+function_decl|;
 comment|/// Identifier used when the related instruction mapping instance
 comment|/// is generated by target independent code.
 comment|/// Make sure not to use that identifier to avoid possible collision.
@@ -1349,7 +1433,7 @@ comment|/// on the register bank.
 comment|/// This mapping should be the direct translation of \p MI.
 comment|/// In other words, when \p MI is mapped with the returned mapping,
 comment|/// only the register banks of the operands of \p MI need to be updated.
-comment|/// In particular, neither the opcode or the type of \p MI needs to be
+comment|/// In particular, neither the opcode nor the type of \p MI needs to be
 comment|/// updated for this direct mapping.
 comment|///
 comment|/// The target independent implementation gives a mapping based on
@@ -1623,6 +1707,19 @@ return|return
 name|OS
 return|;
 block|}
+comment|/// Hashing function for PartialMapping.
+comment|/// It is required for the hashing of ValueMapping.
+name|hash_code
+name|hash_value
+argument_list|(
+specifier|const
+name|RegisterBankInfo
+operator|::
+name|PartialMapping
+operator|&
+name|PartMapping
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

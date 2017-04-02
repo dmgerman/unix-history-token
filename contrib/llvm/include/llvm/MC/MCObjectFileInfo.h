@@ -148,16 +148,6 @@ name|MCSection
 modifier|*
 name|ReadOnlySection
 decl_stmt|;
-comment|/// This section contains the static constructor pointer list.
-name|MCSection
-modifier|*
-name|StaticCtorSection
-decl_stmt|;
-comment|/// This section contains the static destructor pointer list.
-name|MCSection
-modifier|*
-name|StaticDtorSection
-decl_stmt|;
 comment|/// If exception handling is supported by the target, this is the section the
 comment|/// Language Specific Data Area information is emitted to.
 name|MCSection

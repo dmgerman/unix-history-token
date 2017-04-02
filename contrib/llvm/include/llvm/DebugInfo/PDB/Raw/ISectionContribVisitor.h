@@ -65,19 +65,21 @@ name|virtual
 operator|~
 name|ISectionContribVisitor
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|visit
-argument_list|(
+parameter_list|(
 specifier|const
 name|SectionContrib
-operator|&
+modifier|&
 name|C
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|virtual
 name|void
 name|visit
@@ -93,12 +95,12 @@ function_decl|;
 block|}
 empty_stmt|;
 block|}
-comment|// namespace pdb
+comment|// end namespace pdb
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

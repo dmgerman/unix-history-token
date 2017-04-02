@@ -75,6 +75,9 @@ name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
+name|MCTargetOptions
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 name|class
@@ -89,10 +92,11 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-specifier|extern
 name|Target
-name|TheSystemZTarget
-decl_stmt|;
+modifier|&
+name|getTheSystemZTarget
+parameter_list|()
+function_decl|;
 name|namespace
 name|SystemZMC
 block|{
@@ -195,6 +199,14 @@ name|unsigned
 name|VR128Regs
 index|[
 literal|32
+index|]
+decl_stmt|;
+specifier|extern
+specifier|const
+name|unsigned
+name|AR32Regs
+index|[
+literal|16
 index|]
 decl_stmt|;
 comment|// Return the 0-based number of the first architectural register that
@@ -324,6 +336,11 @@ name|TT
 parameter_list|,
 name|StringRef
 name|CPU
+parameter_list|,
+specifier|const
+name|MCTargetOptions
+modifier|&
+name|Options
 parameter_list|)
 function_decl|;
 name|MCObjectWriter

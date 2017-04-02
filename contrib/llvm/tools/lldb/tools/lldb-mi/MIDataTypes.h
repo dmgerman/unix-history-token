@@ -151,7 +151,7 @@ name|MIunused
 parameter_list|(
 name|x
 parameter_list|)
-value|(void) x;
+value|(void)x;
 end_define
 
 begin_comment

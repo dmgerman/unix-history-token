@@ -192,36 +192,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* __rdtsc */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|__inline__
-name|unsigned
-name|long
-name|long
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
-name|__rdtsc
-argument_list|(
-name|void
-argument_list|)
-block|{
-return|return
-name|__builtin_ia32_rdtsc
-argument_list|()
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/* __rdtscp */
 end_comment
 

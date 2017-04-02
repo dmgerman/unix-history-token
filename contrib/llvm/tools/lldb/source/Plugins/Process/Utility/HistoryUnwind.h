@@ -68,13 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Target/Unwind.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Unwind.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -126,9 +126,9 @@ name|DoGetFrameInfoAtIndex
 argument_list|(
 argument|uint32_t frame_idx
 argument_list|,
-argument|lldb::addr_t& cfa
+argument|lldb::addr_t&cfa
 argument_list|,
-argument|lldb::addr_t& pc
+argument|lldb::addr_t&pc
 argument_list|)
 name|override
 block|;
