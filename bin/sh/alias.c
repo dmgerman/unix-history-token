@@ -92,10 +92,6 @@ directive|include
 file|"options.h"
 end_include
 
-begin_comment
-comment|/* XXX for argptr (should remove?) */
-end_comment
-
 begin_include
 include|#
 directive|include
