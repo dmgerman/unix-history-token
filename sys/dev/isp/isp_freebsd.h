@@ -1329,7 +1329,7 @@ name|ISP_LOCK
 parameter_list|(
 name|isp
 parameter_list|)
-value|mtx_lock(&(isp)->isp_osinfo.lock)
+value|mtx_lock(&(isp)->isp_lock)
 end_define
 
 begin_define
@@ -1339,7 +1339,7 @@ name|ISP_UNLOCK
 parameter_list|(
 name|isp
 parameter_list|)
-value|mtx_unlock(&(isp)->isp_osinfo.lock)
+value|mtx_unlock(&(isp)->isp_lock)
 end_define
 
 begin_define
@@ -1349,7 +1349,7 @@ name|ISP_ASSERT_LOCKED
 parameter_list|(
 name|isp
 parameter_list|)
-value|mtx_assert(&(isp)->isp_osinfo.lock, MA_OWNED)
+value|mtx_assert(&(isp)->isp_lock, MA_OWNED)
 end_define
 
 begin_comment
@@ -1408,7 +1408,7 @@ name|isp
 parameter_list|,
 name|x
 parameter_list|)
-value|msleep_sbt(&(isp)->isp_osinfo.is_exiting, \&(isp)->isp_osinfo.lock, 0, "isp_sleep", (x) * SBT_1US, 0, 0)
+value|msleep_sbt(&(isp)->isp_osinfo.is_exiting, \&(isp)->isp_lock, 0, "isp_sleep", (x) * SBT_1US, 0, 0)
 end_define
 
 begin_define
@@ -3029,74 +3029,6 @@ end_function_decl
 begin_comment
 comment|/*  * Platform Version specific defines  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|BUS_DMA_ROOTARG
-parameter_list|(
-name|x
-parameter_list|)
-value|bus_get_dma_tag(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isp_dma_tag_create
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
-parameter_list|,
-name|f
-parameter_list|,
-name|g
-parameter_list|,
-name|h
-parameter_list|,
-name|i
-parameter_list|,
-name|j
-parameter_list|,
-name|k
-parameter_list|,
-name|z
-parameter_list|)
-define|\
-value|bus_dma_tag_create(a, b, c, d, e, f, g, h, i, j, k, \ 	busdma_lock_mutex,&isp->isp_osinfo.lock, z)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isp_sim_alloc
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
-parameter_list|,
-name|f
-parameter_list|,
-name|g
-parameter_list|,
-name|h
-parameter_list|)
-define|\
-value|cam_sim_alloc(a, b, c, d, e,&(d)->isp_osinfo.lock, f, g, h)
-end_define
 
 begin_define
 define|#
