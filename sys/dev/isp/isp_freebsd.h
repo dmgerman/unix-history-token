@@ -2988,6 +2988,26 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|isp_platform_intr_resp
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_platform_intr_atio
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|isp_common_dmateardown
 parameter_list|(
 name|ispsoftc_t
@@ -3079,13 +3099,6 @@ name|z
 parameter_list|)
 define|\
 value|bus_dma_tag_create(a, b, c, d, e, f, g, h, i, j, k, \ 	busdma_lock_mutex,&isp->isp_osinfo.lock, z)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isp_setup_intr
-value|bus_setup_intr
 end_define
 
 begin_define
