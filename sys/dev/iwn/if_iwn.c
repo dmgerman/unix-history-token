@@ -18422,7 +18422,7 @@ name|desc
 operator|->
 name|qid
 operator|&
-literal|0xf
+name|IWN_RX_DESC_QID_MSK
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -18586,7 +18586,7 @@ name|desc
 operator|->
 name|qid
 operator|&
-literal|0xf
+name|IWN_RX_DESC_QID_MSK
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -18646,11 +18646,7 @@ name|iwn5000_reset_sched
 argument_list|(
 name|sc
 argument_list|,
-name|desc
-operator|->
 name|qid
-operator|&
-literal|0xf
 argument_list|,
 name|desc
 operator|->
@@ -18780,7 +18776,7 @@ name|desc
 operator|->
 name|qid
 operator|&
-literal|0xf
+name|IWN_RX_DESC_QID_MSK
 index|]
 decl_stmt|;
 name|struct
@@ -20126,7 +20122,7 @@ name|desc
 operator|->
 name|qid
 operator|&
-literal|0xf
+name|IWN_RX_DESC_QID_MSK
 argument_list|,
 name|desc
 operator|->
