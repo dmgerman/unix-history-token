@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_term.c,v 1.187 2016/01/08 17:48:09 schwarze Exp $ */
+comment|/*	$Id: man_term.c,v 1.188 2017/01/10 13:47:00 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -1757,7 +1757,7 @@ name|nn
 operator|->
 name|flags
 operator|&
-name|MAN_EOS
+name|NODE_EOS
 condition|)
 name|p
 operator|->
@@ -3258,7 +3258,7 @@ name|NULL
 operator|&&
 operator|!
 operator|(
-name|MAN_LINE
+name|NODE_LINE
 operator|&
 name|nn
 operator|->
@@ -3416,7 +3416,7 @@ operator|&&
 literal|0
 operator|==
 operator|(
-name|MAN_LINE
+name|NODE_LINE
 operator|&
 name|nn
 operator|->
@@ -4526,7 +4526,7 @@ name|n
 operator|->
 name|string
 operator|&&
-name|MAN_LINE
+name|NODE_LINE
 operator|&
 name|n
 operator|->
@@ -4560,7 +4560,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MAN_LINE
+name|NODE_LINE
 operator|)
 condition|)
 name|p
@@ -4594,7 +4594,7 @@ name|next
 operator|->
 name|flags
 operator|&
-name|MAN_LINE
+name|NODE_LINE
 operator|)
 condition|)
 name|p
@@ -4809,7 +4809,7 @@ name|next
 operator|->
 name|flags
 operator|&
-name|MAN_LINE
+name|NODE_LINE
 operator|)
 condition|)
 block|{
@@ -4911,7 +4911,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|MAN_EOS
+name|NODE_EOS
 operator|&
 name|n
 operator|->

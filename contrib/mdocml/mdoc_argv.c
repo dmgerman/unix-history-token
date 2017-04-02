@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_argv.c,v 1.107 2015/10/17 00:21:07 schwarze Exp $ */
+comment|/*	$Id: mdoc_argv.c,v 1.109 2016/08/28 16:15:12 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"libmandoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"roff_int.h"
 end_include
 
 begin_include
@@ -2292,6 +2298,10 @@ block|{
 comment|/* 			 * Words right before and right after 			 * tab characters are not parsed, 			 * unless there is a blank in between. 			 */
 if|if
 condition|(
+name|p
+operator|>
+name|buf
+operator|&&
 name|p
 index|[
 operator|-

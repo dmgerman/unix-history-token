@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.h,v 1.209 2016/01/08 02:53:13 schwarze Exp $ */
+comment|/*	$Id: mandoc.h,v 1.213 2017/01/09 01:37:03 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, 2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2016 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2010, 2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_define
@@ -139,7 +139,7 @@ block|,
 comment|/* first section is not NAME: Sh title */
 name|MANDOCERR_NAMESEC_NONM
 block|,
-comment|/* NAME section without name */
+comment|/* NAME section without Nm before Nd */
 name|MANDOCERR_NAMESEC_NOND
 block|,
 comment|/* NAME section without description */
@@ -149,6 +149,9 @@ comment|/* description not at the end of NAME */
 name|MANDOCERR_NAMESEC_BAD
 block|,
 comment|/* bad NAME section content: macro */
+name|MANDOCERR_NAMESEC_PUNCT
+block|,
+comment|/* missing comma before name: Nm name */
 name|MANDOCERR_ND_EMPTY
 block|,
 comment|/* missing description line, using "" */
@@ -228,7 +231,7 @@ block|,
 comment|/* list type is not the first argument: Bl arg */
 name|MANDOCERR_BL_NOWIDTH
 block|,
-comment|/* missing -width in -tag list, using 8n */
+comment|/* missing -width in -tag list, using 6n */
 name|MANDOCERR_EX_NONAME
 block|,
 comment|/* missing utility name, using "": Ex */
@@ -253,6 +256,9 @@ comment|/* nothing follows prefix: Pf arg */
 name|MANDOCERR_RS_EMPTY
 block|,
 comment|/* empty reference block: Rs */
+name|MANDOCERR_XR_NOSEC
+block|,
+comment|/* missing section argument: Xr arg */
 name|MANDOCERR_ARG_STD
 block|,
 comment|/* missing -std argument, adding it: macro */
@@ -1478,6 +1484,21 @@ name|mparse_strlevel
 parameter_list|(
 name|enum
 name|mandoclevel
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mparse_updaterc
+parameter_list|(
+name|struct
+name|mparse
+modifier|*
+parameter_list|,
+name|enum
+name|mandoclevel
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
