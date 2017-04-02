@@ -5111,7 +5111,7 @@ name|buf8
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|buf8
+name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
