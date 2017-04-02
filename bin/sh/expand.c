@@ -372,7 +372,9 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+specifier|const
+name|char
+modifier|*
 name|subevalvar_trim
 parameter_list|(
 specifier|const
@@ -382,6 +384,8 @@ parameter_list|,
 name|struct
 name|nodelist
 modifier|*
+modifier|*
+specifier|restrict
 parameter_list|,
 name|int
 parameter_list|,
@@ -2911,7 +2915,9 @@ end_function
 
 begin_function
 specifier|static
-name|void
+specifier|const
+name|char
+modifier|*
 name|subevalvar_trim
 parameter_list|(
 specifier|const
@@ -2922,6 +2928,8 @@ parameter_list|,
 name|struct
 name|nodelist
 modifier|*
+modifier|*
+specifier|restrict
 name|argbackq
 parameter_list|,
 name|int
@@ -2953,22 +2961,16 @@ name|c
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|nodelist
-modifier|*
-name|argbackqcopy
-init|=
-name|argbackq
-decl_stmt|;
 name|int
 name|amount
 decl_stmt|;
+name|p
+operator|=
 name|argstr
 argument_list|(
 name|p
 argument_list|,
-operator|&
-name|argbackqcopy
+name|argbackq
 argument_list|,
 name|EXP_CASE
 operator||
@@ -3052,7 +3054,9 @@ argument_list|,
 name|startp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|p
+return|;
 block|}
 operator|*
 name|loc
@@ -3112,7 +3116,9 @@ argument_list|,
 name|startp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|p
+return|;
 block|}
 operator|*
 name|loc
@@ -3164,7 +3170,9 @@ argument_list|,
 name|expdest
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|p
+return|;
 block|}
 name|loc
 operator|--
@@ -3213,7 +3221,9 @@ argument_list|,
 name|expdest
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|p
+return|;
 block|}
 block|}
 break|break;
@@ -3243,6 +3253,9 @@ argument_list|,
 name|expdest
 argument_list|)
 expr_stmt|;
+return|return
+name|p
+return|;
 block|}
 end_function
 
@@ -4042,11 +4055,12 @@ operator|-
 name|stackblock
 argument_list|()
 expr_stmt|;
+name|p
+operator|=
 name|subevalvar_trim
 argument_list|(
 name|p
 argument_list|,
-operator|*
 name|argbackq
 argument_list|,
 name|patloc
@@ -4092,7 +4106,9 @@ name|state
 operator|=
 name|WORD_QUOTEMARK
 expr_stmt|;
-break|break;
+return|return
+name|p
+return|;
 case|case
 name|VSASSIGN
 case|:
