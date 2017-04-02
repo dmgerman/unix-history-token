@@ -320,6 +320,13 @@ parameter_list|)
 value|(isp)->isp_maxluns
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISP_MAX_IRQS
+value|3
+end_define
+
 begin_comment
 comment|/*  * Macros to access ISP registers through bus specific layers-  * mostly wrappers to vector through the mdvec structure.  */
 end_comment
@@ -1875,6 +1882,10 @@ name|uint8_t
 name|isp_revision
 decl_stmt|;
 comment|/* HBA Chip H/W Revision */
+name|uint8_t
+name|isp_nirq
+decl_stmt|;
+comment|/* number of IRQs */
 name|uint16_t
 name|isp_nchan
 decl_stmt|;
