@@ -3960,7 +3960,9 @@ break|break;
 case|case
 name|VSNORMAL
 case|:
-break|break;
+return|return
+name|p
+return|;
 case|case
 name|VSPLUS
 case|:
@@ -3973,6 +3975,7 @@ operator|!
 name|set
 condition|)
 block|{
+return|return
 name|argstr
 argument_list|(
 name|p
@@ -4003,8 +4006,7 @@ operator|)
 argument_list|,
 name|dst
 argument_list|)
-expr_stmt|;
-break|break;
+return|;
 block|}
 break|break;
 case|case
@@ -4024,13 +4026,7 @@ condition|(
 operator|!
 name|set
 condition|)
-block|{
-name|set
-operator|=
-literal|1
-expr_stmt|;
 break|break;
-block|}
 comment|/* 		 * Terminate the string and start recording the pattern 		 * right after it 		 */
 name|STPUTC
 argument_list|(
@@ -4176,12 +4172,6 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|subtype
-operator|!=
-name|VSNORMAL
-condition|)
 block|{
 comment|/* skip to end of alternative */
 name|int
@@ -4225,11 +4215,6 @@ operator||
 name|CTLQUOTE
 operator|)
 condition|)
-block|{
-if|if
-condition|(
-name|set
-condition|)
 operator|*
 name|argbackq
 operator|=
@@ -4240,7 +4225,6 @@ operator|)
 operator|->
 name|next
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
