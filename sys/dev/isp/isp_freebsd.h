@@ -1767,7 +1767,8 @@ name|XS_TIME
 parameter_list|(
 name|ccb
 parameter_list|)
-value|(ccb)->ccb_h.timeout
+define|\
+value|(((ccb)->ccb_h.timeout> 0xffff * 1000 - 999) ? 0 : \ 	  (((ccb)->ccb_h.timeout + 999) / 1000))
 end_define
 
 begin_define
@@ -2934,15 +2935,6 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|isp_mstohz
-parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
