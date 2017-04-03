@@ -1004,6 +1004,9 @@ comment|/* arg1=id of external action handler */
 name|O_EXTERNAL_INSTANCE
 block|,
 comment|/* arg1=id of eaction handler instance */
+name|O_EXTERNAL_DATA
+block|,
+comment|/* variable length data */
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
