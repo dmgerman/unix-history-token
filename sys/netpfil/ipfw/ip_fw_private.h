@@ -1042,12 +1042,6 @@ argument_list|)
 name|spinlock_t
 name|rwmtx
 decl_stmt|;
-else|#
-directive|else
-name|struct
-name|rmlock
-name|rwmtx
-decl_stmt|;
 endif|#
 directive|endif
 name|int
@@ -1615,7 +1609,7 @@ name|IPFW_LOCK_INIT
 parameter_list|(
 name|_chain
 parameter_list|)
-value|do {			\ 	rm_init_flags(&(_chain)->rwmtx, "IPFW static rules", RM_RECURSE); \ 	rw_init(&(_chain)->uh_lock, "IPFW UH lock");	\ 	} while (0)
+value|do {			\ 	rw_init(&(_chain)->uh_lock, "IPFW UH lock");	\ 	} while (0)
 end_define
 
 begin_define
@@ -1625,7 +1619,7 @@ name|IPFW_LOCK_DESTROY
 parameter_list|(
 name|_chain
 parameter_list|)
-value|do {			\ 	rm_destroy(&(_chain)->rwmtx);			\ 	rw_destroy(&(_chain)->uh_lock);			\ 	} while (0)
+value|do {			\ 	rw_destroy(&(_chain)->uh_lock);			\ 	} while (0)
 end_define
 
 begin_define
@@ -1635,7 +1629,7 @@ name|IPFW_RLOCK_ASSERT
 parameter_list|(
 name|_chain
 parameter_list|)
-value|rm_assert(&(_chain)->rwmtx, RA_RLOCKED)
+value|rm_assert(&V_pfil_lock, RA_RLOCKED)
 end_define
 
 begin_define
@@ -1645,7 +1639,7 @@ name|IPFW_WLOCK_ASSERT
 parameter_list|(
 name|_chain
 parameter_list|)
-value|rm_assert(&(_chain)->rwmtx, RA_WLOCKED)
+value|rm_assert(&V_pfil_lock, RA_WLOCKED)
 end_define
 
 begin_define
@@ -1662,7 +1656,7 @@ name|IPFW_RLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|rm_rlock(&(p)->rwmtx,&_tracker)
+value|rm_rlock(&V_pfil_lock,&_tracker)
 end_define
 
 begin_define
@@ -1672,7 +1666,7 @@ name|IPFW_RUNLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|rm_runlock(&(p)->rwmtx,&_tracker)
+value|rm_runlock(&V_pfil_lock,&_tracker)
 end_define
 
 begin_define
@@ -1682,7 +1676,7 @@ name|IPFW_WLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|rm_wlock(&(p)->rwmtx)
+value|rm_wlock(&V_pfil_lock)
 end_define
 
 begin_define
@@ -1692,7 +1686,7 @@ name|IPFW_WUNLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|rm_wunlock(&(p)->rwmtx)
+value|rm_wunlock(&V_pfil_lock)
 end_define
 
 begin_define
@@ -1702,7 +1696,6 @@ name|IPFW_PF_RLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|IPFW_RLOCK(p)
 end_define
 
 begin_define
@@ -1712,7 +1705,6 @@ name|IPFW_PF_RUNLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|IPFW_RUNLOCK(p)
 end_define
 
 begin_endif

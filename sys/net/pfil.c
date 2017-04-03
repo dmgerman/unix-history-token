@@ -227,13 +227,6 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|V_pfil_lock
-value|VNET(pfil_lock)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PFIL_LOCK_INIT_REAL
 parameter_list|(
 name|l
