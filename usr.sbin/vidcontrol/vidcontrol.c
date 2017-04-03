@@ -5399,6 +5399,7 @@ block|{
 name|vid_info_t
 name|info
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|bg
