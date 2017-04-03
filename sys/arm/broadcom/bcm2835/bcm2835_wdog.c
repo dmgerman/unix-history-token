@@ -98,7 +98,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|BCM2835_PASWORD
+name|BCM2835_PASSWORD
 value|0x5a
 end_define
 
@@ -430,7 +430,7 @@ name|sc
 operator|->
 name|wdog_passwd
 operator|=
-name|BCM2835_PASWORD
+name|BCM2835_PASSWORD
 expr_stmt|;
 name|sc
 operator|->
@@ -663,7 +663,7 @@ argument_list|,
 name|BCM2835_RSTC_REG
 argument_list|,
 operator|(
-name|BCM2835_PASWORD
+name|BCM2835_PASSWORD
 operator|<<
 name|BCM2835_PASSWORD_SHIFT
 operator|)
@@ -694,7 +694,7 @@ expr_stmt|;
 name|reg
 operator|=
 operator|(
-name|BCM2835_PASWORD
+name|BCM2835_PASSWORD
 operator|<<
 name|BCM2835_PASSWORD_SHIFT
 operator|)
@@ -730,7 +730,7 @@ expr_stmt|;
 name|reg
 operator||=
 operator|(
-name|BCM2835_PASWORD
+name|BCM2835_PASSWORD
 operator|<<
 name|BCM2835_PASSWORD_SHIFT
 operator|)
@@ -758,7 +758,7 @@ argument_list|,
 name|BCM2835_RSTC_REG
 argument_list|,
 operator|(
-name|BCM2835_PASWORD
+name|BCM2835_PASSWORD
 operator|<<
 name|BCM2835_PASSWORD_SHIFT
 operator|)
@@ -798,7 +798,7 @@ argument_list|,
 name|BCM2835_WDOG_REG
 argument_list|,
 operator|(
-name|BCM2835_PASWORD
+name|BCM2835_PASSWORD
 operator|<<
 name|BCM2835_PASSWORD_SHIFT
 operator|)
@@ -824,7 +824,7 @@ name|BCM2835_RSTC_WRCFG_CLR
 operator|)
 operator||
 operator|(
-name|BCM2835_PASWORD
+name|BCM2835_PASSWORD
 operator|<<
 name|BCM2835_PASSWORD_SHIFT
 operator|)
