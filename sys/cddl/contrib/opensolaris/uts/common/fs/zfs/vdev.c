@@ -691,9 +691,17 @@ name|vdev_raidz_ops
 condition|)
 return|return
 operator|(
+operator|(
 name|pvd
 operator|->
 name|vdev_min_asize
+operator|+
+name|pvd
+operator|->
+name|vdev_children
+operator|-
+literal|1
+operator|)
 operator|/
 name|pvd
 operator|->
@@ -6338,7 +6346,7 @@ name|vdev_psize
 operator|=
 name|psize
 expr_stmt|;
-comment|/* 	 * Make sure the allocatable size hasn't shrunk. 	 */
+comment|/* 	 * Make sure the allocatable size hasn't shrunk too much. 	 */
 if|if
 condition|(
 name|asize
@@ -6504,7 +6512,7 @@ operator|=
 name|max_asize
 expr_stmt|;
 block|}
-comment|/* 	 * If all children are healthy and the asize has increased, 	 * then we've experienced dynamic LUN growth.  If automatic 	 * expansion is enabled then use the additional space. 	 */
+comment|/* 	 * If all children are healthy we update asize if either: 	 * The asize has increased, due to a device expansion caused by dynamic 	 * LUN growth or vdev replacement, and automatic expansion is enabled; 	 * making the additional space available. 	 * 	 * The asize has decreased, due to a device shrink usually caused by a 	 * vdev replace with a smaller device. This ensures that calculations 	 * based of max_asize and asize e.g. esize are always valid. It's safe 	 * to do this as we've already validated that asize is greater than 	 * vdev_min_asize. 	 */
 if|if
 condition|(
 name|vd
@@ -6513,6 +6521,8 @@ name|vdev_state
 operator|==
 name|VDEV_STATE_HEALTHY
 operator|&&
+operator|(
+operator|(
 name|asize
 operator|>
 name|vd
@@ -6527,6 +6537,16 @@ operator|||
 name|spa
 operator|->
 name|spa_autoexpand
+operator|)
+operator|)
+operator|||
+operator|(
+name|asize
+operator|<
+name|vd
+operator|->
+name|vdev_asize
+operator|)
 operator|)
 condition|)
 name|vd
