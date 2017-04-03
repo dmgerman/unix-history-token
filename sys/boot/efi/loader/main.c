@@ -848,6 +848,11 @@ argument_list|,
 name|env_nounset
 argument_list|)
 expr_stmt|;
+name|init_zfs_bootenv
+argument_list|(
+name|devname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
