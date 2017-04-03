@@ -1014,7 +1014,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|static struct tunable_ulong __CONCAT(__tunable_uint64_, __LINE__) = { \ 		(path),						\ 		(var),						\ 	};							\ 	SYSINIT(__CONCAT(__Tunable_init_, __LINE__),		\ 	    SI_SUB_TUNABLES, SI_ORDER_MIDDLE, tunable_uint64_init, \&__CONCAT(__tunable_uint64_, __LINE__))
+value|static struct tunable_uint64 __CONCAT(__tunable_uint64_, __LINE__) = { \ 		(path),						\ 		(var),						\ 	};							\ 	SYSINIT(__CONCAT(__Tunable_init_, __LINE__),		\ 	    SI_SUB_TUNABLES, SI_ORDER_MIDDLE, tunable_uint64_init, \&__CONCAT(__tunable_uint64_, __LINE__))
 end_define
 
 begin_define
