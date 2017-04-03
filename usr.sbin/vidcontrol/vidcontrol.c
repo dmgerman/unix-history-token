@@ -337,6 +337,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|video_mode_changed
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|vid_info
 name|info
@@ -380,11 +387,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"getting active vty"
 argument_list|)
@@ -419,11 +424,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"getting console information"
 argument_list|)
@@ -450,11 +453,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"getting screen map"
 argument_list|)
@@ -476,11 +477,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"getting video mode number"
 argument_list|)
@@ -512,11 +511,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"getting video mode parameters"
 argument_list|)
@@ -537,11 +534,17 @@ name|void
 parameter_list|)
 block|{
 name|int
+name|save_errno
+decl_stmt|,
 name|size
 index|[
 literal|3
 index|]
 decl_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 name|ioctl
 argument_list|(
 literal|0
@@ -614,6 +617,11 @@ operator|.
 name|screen_map
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|video_mode_changed
+condition|)
+block|{
 if|if
 condition|(
 name|cur_info
@@ -719,6 +727,7 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* Restore some colors last since mode setting forgets some. */
 name|fprintf
 argument_list|(
@@ -749,6 +758,10 @@ name|mv_norm
 operator|.
 name|back
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 block|}
 end_function
@@ -1307,11 +1320,6 @@ operator|)
 name|size
 condition|)
 block|{
-name|warnx
-argument_list|(
-literal|"bad screenmap file"
-argument_list|)
-expr_stmt|;
 name|fclose
 argument_list|(
 name|fd
@@ -1348,11 +1356,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"loading screenmap"
 argument_list|)
@@ -1430,11 +1436,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"loading default screenmap"
 argument_list|)
@@ -1484,11 +1488,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"getting screenmap"
 argument_list|)
@@ -1821,11 +1823,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"loading default vt font"
 argument_list|)
@@ -2787,13 +2787,6 @@ operator|)
 name|size
 condition|)
 block|{
-name|warnx
-argument_list|(
-literal|"%s: bad font file"
-argument_list|,
-name|filename
-argument_list|)
-expr_stmt|;
 name|fclose
 argument_list|(
 name|fd
@@ -2836,11 +2829,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"loading font"
 argument_list|)
@@ -2948,11 +2939,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"setting screensaver period"
 argument_list|)
@@ -3054,11 +3043,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"setting cursor type"
 argument_list|)
@@ -3363,7 +3350,7 @@ name|int
 name|cur_mode
 decl_stmt|;
 name|int
-name|ioerr
+name|save_errno
 decl_stmt|;
 name|int
 name|size
@@ -3547,23 +3534,21 @@ operator|<
 literal|0
 condition|)
 block|{
-name|ioerr
-operator|=
-name|errno
-expr_stmt|;
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|ioerr
 argument_list|,
 literal|"cannot set videomode"
 argument_list|)
 expr_stmt|;
 block|}
+name|video_mode_changed
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* 		 * Collect enough information about the new video mode... 		 */
 name|new_mode_info
@@ -3591,11 +3576,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"obtaining new video mode parameters"
 argument_list|)
@@ -3655,16 +3638,18 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"setting video mode"
 argument_list|)
 expr_stmt|;
 block|}
+name|video_mode_changed
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 		 * For raster modes it's not enough to just set the mode. 		 * We also need to explicitly set the raster mode. 		 */
 if|if
 condition|(
@@ -3794,7 +3779,7 @@ name|size
 argument_list|)
 condition|)
 block|{
-name|ioerr
+name|save_errno
 operator|=
 name|errno
 expr_stmt|;
@@ -3838,11 +3823,13 @@ expr_stmt|;
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|ioerr
 argument_list|,
 literal|"cannot activate raster display"
 argument_list|)
@@ -4248,11 +4235,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"switching vty"
 argument_list|)
@@ -4405,11 +4390,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"setting mouse character"
 argument_list|)
@@ -4505,11 +4488,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"%sing the mouse"
 argument_list|,
@@ -4606,11 +4587,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"turning %s vty switching"
 argument_list|,
@@ -4812,11 +4791,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"obtaining adapter information"
 argument_list|)
@@ -5584,11 +5561,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"obtaining current video mode parameters"
 argument_list|)
@@ -5694,11 +5669,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"dumping screen"
 argument_list|)
@@ -5985,11 +5958,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"setting history buffer size"
 argument_list|)
@@ -6026,11 +5997,9 @@ block|{
 name|revert
 argument_list|()
 expr_stmt|;
-name|errc
+name|err
 argument_list|(
 literal|1
-argument_list|,
-name|errno
 argument_list|,
 literal|"clearing history buffer"
 argument_list|)
