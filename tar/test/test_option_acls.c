@@ -1741,11 +1741,18 @@ operator|==
 name|ENOSYS
 operator|)
 condition|)
+block|{
+name|richacl_free
+argument_list|(
+name|richacl_a
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|failure
 argument_list|(
 literal|"richacl_get_file() error: %s (%s)"
