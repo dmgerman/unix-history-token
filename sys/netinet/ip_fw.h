@@ -513,6 +513,72 @@ begin_comment
 comment|/* Dump existing named objects */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_NPTV6_CREATE
+value|150
+end_define
+
+begin_comment
+comment|/* Create NPTv6 instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NPTV6_DESTROY
+value|151
+end_define
+
+begin_comment
+comment|/* Destroy NPTv6 instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NPTV6_CONFIG
+value|152
+end_define
+
+begin_comment
+comment|/* Modify NPTv6 instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NPTV6_LIST
+value|153
+end_define
+
+begin_comment
+comment|/* List NPTv6 instances */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NPTV6_STATS
+value|154
+end_define
+
+begin_comment
+comment|/* Get NPTv6 instance statistics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NPTV6_RESET_STATS
+value|155
+end_define
+
+begin_comment
+comment|/* Reset NPTv6 instance statistics */
+end_comment
+
 begin_comment
 comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metadata) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  * Note that the code is written so that individual instructions  * have a size which is a multiple of 32 bits. This means that, if  * such structures contain pointers or other 64-bit entities,  * (there is just one instance now) they may end up unaligned on  * 64-bit architectures, so the must be handled with care.  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes. When adding new opcodes, they should  * be appended to the end of the opcode list before O_LAST_OPCODE,  * this will prevent the ABI from being broken, otherwise users  * will have to recompile ipfw(8) when they update the kernel.  */
 end_comment
@@ -2597,6 +2663,13 @@ define|#
 directive|define
 name|IPFW_TLV_EACTION
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_COUNTERS
+value|11
 end_define
 
 begin_define

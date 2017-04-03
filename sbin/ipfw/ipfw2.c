@@ -977,6 +977,12 @@ index|[]
 init|=
 block|{
 block|{
+literal|"nptv6"
+block|,
+name|TOK_NPTV6
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
