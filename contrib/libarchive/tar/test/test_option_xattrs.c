@@ -52,7 +52,6 @@ name|testval
 init|=
 literal|"testval"
 decl_stmt|;
-specifier|const
 name|void
 modifier|*
 name|readval
@@ -194,6 +193,11 @@ argument_list|,
 name|testval
 argument_list|,
 name|size
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|readval
 argument_list|)
 expr_stmt|;
 comment|/* Extract xattrs without xattrs */

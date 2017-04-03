@@ -58,6 +58,10 @@ name|void
 modifier|*
 name|value
 decl_stmt|;
+name|void
+modifier|*
+name|rvalue
+decl_stmt|;
 name|size_t
 name|size
 decl_stmt|,
@@ -419,7 +423,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|value
+name|rvalue
 operator|=
 name|getXattr
 argument_list|(
@@ -449,11 +453,16 @@ literal|0
 condition|)
 name|assertEqualMem
 argument_list|(
-name|value
+name|rvalue
 argument_list|,
 name|writeval
 argument_list|,
 name|insize
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rvalue
 argument_list|)
 expr_stmt|;
 endif|#

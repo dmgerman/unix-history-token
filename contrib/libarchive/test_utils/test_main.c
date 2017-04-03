@@ -13309,11 +13309,10 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get extended attribute from a path */
+comment|/* Get extended attribute value from a path */
 end_comment
 
 begin_function
-specifier|const
 name|void
 modifier|*
 name|getXattr

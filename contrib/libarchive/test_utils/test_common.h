@@ -2354,7 +2354,6 @@ comment|/* Get extended attribute */
 end_comment
 
 begin_function_decl
-specifier|const
 name|void
 modifier|*
 name|getXattr
