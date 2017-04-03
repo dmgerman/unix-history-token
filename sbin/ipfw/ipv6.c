@@ -584,12 +584,12 @@ name|mb
 operator|<
 literal|0
 condition|)
-comment|/* XXX not really legal... */
+comment|/* mask not contiguous */
 name|bprintf
 argument_list|(
 name|bp
 argument_list|,
-literal|":%s"
+literal|"/%s"
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -1523,7 +1523,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * fill the addr and mask fields in the instruction as appropriate from av.  * Update length as appropriate.  * The following formats are allowed:  *     any     matches any IP6. Actually returns an empty instruction.  *     me      returns O_IP6_*_ME  *  *     03f1::234:123:0342		single IP6 address  *     03f1::234:123:0342/24	    address/mask  *     03f1::234:123:0342/24,03f1::234:123:0343/	       List of address  *  * Set of address (as in ipv6) not supported because ipv6 address  * are typically random past the initial prefix.  * Return 1 on success, 0 on failure.  */
+comment|/*  * fill the addr and mask fields in the instruction as appropriate from av.  * Update length as appropriate.  * The following formats are allowed:  *     any     matches any IP6. Actually returns an empty instruction.  *     me      returns O_IP6_*_ME  *  *     03f1::234:123:0342			single IP6 address  *     03f1::234:123:0342/24			address/masklen  *     03f1::234:123:0342/ffff::ffff:ffff	address/mask  *     03f1::234:123:0342/24,03f1::234:123:0343/	List of address  *  * Set of address (as in ipv6) not supported because ipv6 address  * are typically random past the initial prefix.  * Return 1 on success, 0 on failure.  */
 end_comment
 
 begin_function
@@ -1702,6 +1702,9 @@ comment|/* 		 * After the address we can have '/' indicating a mask, 		 * or ','
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|q
 decl_stmt|;
 name|int
 name|masklen
@@ -1731,13 +1734,36 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|p
+name|q
 operator|=
-name|strpbrk
+name|strchr
 argument_list|(
 name|av
 argument_list|,
-literal|"/,"
+literal|','
+argument_list|)
+operator|)
+condition|)
+block|{
+operator|*
+name|q
+operator|=
+literal|'\0'
+expr_stmt|;
+name|q
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|av
+argument_list|,
+literal|'/'
 argument_list|)
 operator|)
 condition|)
@@ -1785,6 +1811,67 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* next, look at the mask, if any */
+if|if
+condition|(
+name|md
+operator|==
+literal|'/'
+operator|&&
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|':'
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|inet_pton
+argument_list|(
+name|AF_INET6
+argument_list|,
+name|p
+argument_list|,
+operator|&
+name|d
+index|[
+literal|1
+index|]
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"bad mask \"%s\""
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|masklen
+operator|=
+name|contigmask
+argument_list|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
+operator|&
+operator|(
+name|d
+index|[
+literal|1
+index|]
+operator|)
+argument_list|,
+literal|128
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|masklen
 operator|=
 operator|(
@@ -1831,6 +1918,7 @@ argument_list|,
 name|masklen
 argument_list|)
 expr_stmt|;
+block|}
 name|APPLY_MASK
 argument_list|(
 argument|d
@@ -1840,37 +1928,9 @@ literal|1
 argument|]
 argument_list|)
 comment|/* mask base address with mask */
-comment|/* find next separator */
-if|if
-condition|(
-name|md
-operator|==
-literal|'/'
-condition|)
-block|{
-comment|/* find separator past the mask */
-name|p
-operator|=
-name|strpbrk
-argument_list|(
-name|p
-argument_list|,
-literal|","
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-name|p
-operator|++
-expr_stmt|;
-block|}
 name|av
 operator|=
-name|p
+name|q
 expr_stmt|;
 comment|/* Check this entry */
 if|if
