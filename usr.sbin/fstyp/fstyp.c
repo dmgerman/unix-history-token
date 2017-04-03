@@ -157,6 +157,15 @@ name|false
 block|}
 block|,
 block|{
+literal|"exfat"
+block|,
+operator|&
+name|fstyp_exfat
+block|,
+name|true
+block|}
+block|,
+block|{
 literal|"ext2fs"
 block|,
 operator|&
