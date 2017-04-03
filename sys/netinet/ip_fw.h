@@ -516,6 +516,149 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_NAT64STL_CREATE
+value|130
+end_define
+
+begin_comment
+comment|/* Create stateless NAT64 instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64STL_DESTROY
+value|131
+end_define
+
+begin_comment
+comment|/* Destroy stateless NAT64 instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64STL_CONFIG
+value|132
+end_define
+
+begin_comment
+comment|/* Modify stateless NAT64 instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64STL_LIST
+value|133
+end_define
+
+begin_comment
+comment|/* List stateless NAT64 instances */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64STL_STATS
+value|134
+end_define
+
+begin_comment
+comment|/* Get NAT64STL instance statistics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64STL_RESET_STATS
+value|135
+end_define
+
+begin_comment
+comment|/* Reset NAT64STL instance statistics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64LSN_CREATE
+value|140
+end_define
+
+begin_comment
+comment|/* Create stateful NAT64 instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64LSN_DESTROY
+value|141
+end_define
+
+begin_comment
+comment|/* Destroy stateful NAT64 instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64LSN_CONFIG
+value|142
+end_define
+
+begin_comment
+comment|/* Modify stateful NAT64 instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64LSN_LIST
+value|143
+end_define
+
+begin_comment
+comment|/* List stateful NAT64 instances */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64LSN_STATS
+value|144
+end_define
+
+begin_comment
+comment|/* Get NAT64LSN instance statistics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64LSN_LIST_STATES
+value|145
+end_define
+
+begin_comment
+comment|/* Get stateful NAT64 states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT64LSN_RESET_STATS
+value|146
+end_define
+
+begin_comment
+comment|/* Reset NAT64LSN instance statistics */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_NPTV6_CREATE
 value|150
 end_define
@@ -2675,6 +2818,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPFW_TLV_OBJDATA
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPFW_TLV_STATE_NAME
 value|14
 end_define
@@ -2695,6 +2845,26 @@ name|arg
 parameter_list|)
 value|(IPFW_TLV_EACTION_BASE + (arg))
 end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_obj_data
+block|{
+name|ipfw_obj_tlv
+name|head
+decl_stmt|;
+name|void
+modifier|*
+name|data
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|ipfw_obj_data
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Object name TLV */

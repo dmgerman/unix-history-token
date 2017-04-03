@@ -11896,6 +11896,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ipfw_bpf_init
+argument_list|(
+name|first
+argument_list|)
+expr_stmt|;
 comment|/* First set up some values that are compile time options */
 name|V_ipfw_vnet_ready
 operator|=
@@ -11907,12 +11912,6 @@ name|V_ip_fw_ctl_ptr
 operator|=
 name|ipfw_ctl3
 expr_stmt|;
-name|ipfw_log_bpf
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* init */
 name|error
 operator|=
 name|ipfw_attach_hooks
@@ -11980,12 +11979,6 @@ name|V_ip_fw_ctl_ptr
 operator|=
 name|NULL
 expr_stmt|;
-name|ipfw_log_bpf
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* uninit */
 name|last
 operator|=
 name|IS_DEFAULT_VNET
@@ -12134,6 +12127,11 @@ expr_stmt|;
 comment|/* free the remaining parts */
 name|ipfw_destroy_counters
 argument_list|()
+expr_stmt|;
+name|ipfw_bpf_uninit
+argument_list|(
+name|last
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
