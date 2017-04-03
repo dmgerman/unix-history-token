@@ -5399,6 +5399,13 @@ block|{
 name|vid_info_t
 name|info
 decl_stmt|;
+name|char
+modifier|*
+name|bg
+decl_stmt|,
+modifier|*
+name|sep
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -5439,6 +5446,35 @@ name|fore
 operator|=
 literal|15
 expr_stmt|;
+if|if
+condition|(
+name|info
+operator|.
+name|mv_csz
+operator|<
+literal|80
+condition|)
+block|{
+name|bg
+operator|=
+literal|"BG"
+expr_stmt|;
+name|sep
+operator|=
+literal|" "
+expr_stmt|;
+block|}
+else|else
+block|{
+name|bg
+operator|=
+literal|"BACKGROUND"
+expr_stmt|;
+name|sep
+operator|=
+literal|"    "
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|stdout
@@ -5464,9 +5500,10 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"\033[=%dF\033[=0G        %2d \033[=%dF%-16s"
-literal|"\033[=%dF\033[=0G        %2d \033[=%dF%-16s        "
-literal|"\033[=%dF %2d \033[=%dGBACKGROUND\033[=0G\n"
+literal|"\033[=%dF\033[=0G%2d \033[=%dF%-7s%s"
+literal|"\033[=%dF\033[=0G%2d \033[=%dF%-12s%s"
+literal|"\033[=%dF%2d \033[=%dG%s\033[=0G%s"
+literal|"\033[=%dF%2d \033[=%dG%s\033[=0G\n"
 argument_list|,
 name|fore
 argument_list|,
@@ -5479,6 +5516,8 @@ index|[
 name|i
 index|]
 argument_list|,
+name|sep
+argument_list|,
 name|fore
 argument_list|,
 name|i
@@ -5496,11 +5535,29 @@ operator|+
 literal|8
 index|]
 argument_list|,
+name|sep
+argument_list|,
 name|fore
 argument_list|,
 name|i
 argument_list|,
 name|i
+argument_list|,
+name|bg
+argument_list|,
+name|sep
+argument_list|,
+name|fore
+argument_list|,
+name|i
+operator|+
+literal|8
+argument_list|,
+name|i
+operator|+
+literal|8
+argument_list|,
+name|bg
 argument_list|)
 expr_stmt|;
 block|}
