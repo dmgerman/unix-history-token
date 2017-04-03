@@ -1970,10 +1970,7 @@ name|err
 operator|=
 name|zfs_bootenv
 argument_list|(
-name|getenv
-argument_list|(
-literal|"zfs_be_root"
-argument_list|)
+name|root
 argument_list|)
 expr_stmt|;
 block|}
