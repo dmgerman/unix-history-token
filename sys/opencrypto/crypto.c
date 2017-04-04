@@ -201,12 +201,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<machine/metadata.h>
-end_include
-
 begin_expr_stmt
 name|SDT_PROVIDER_DEFINE
 argument_list|(
