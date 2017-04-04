@@ -1277,6 +1277,17 @@ name|startm
 init|=
 literal|0
 decl_stmt|;
+comment|/* Initialize to avoid a false positive warning from GCC. */
+name|lastmatch
+operator|.
+name|rm_so
+operator|=
+name|lastmatch
+operator|.
+name|rm_eo
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Loop to process the whole line */
 while|while
 condition|(
