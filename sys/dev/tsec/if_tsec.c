@@ -4252,9 +4252,6 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-name|device_t
-name|dev
-decl_stmt|;
 name|int
 name|mask
 decl_stmt|,
@@ -4262,12 +4259,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|dev
-operator|=
-name|sc
-operator|->
-name|dev
-expr_stmt|;
 switch|switch
 condition|(
 name|command
@@ -5859,9 +5850,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|device_t
-name|dev
-decl_stmt|;
 name|uint32_t
 name|i
 decl_stmt|;
@@ -5889,12 +5877,6 @@ operator|=
 name|sc
 operator|->
 name|rx_data
-expr_stmt|;
-name|dev
-operator|=
-name|sc
-operator|->
-name|dev
 expr_stmt|;
 name|rx_npkts
 operator|=
