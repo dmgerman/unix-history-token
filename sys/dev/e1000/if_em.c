@@ -20842,26 +20842,6 @@ argument_list|,
 literal|"Queue MSI-X Transmit Interrupts"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
-argument_list|(
-name|ctx
-argument_list|,
-name|queue_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"no_desc_avail"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|txr
-operator|->
-name|no_desc_avail
-argument_list|,
-literal|"Queue No Descriptor Available"
-argument_list|)
-expr_stmt|;
 block|}
 for|for
 control|(

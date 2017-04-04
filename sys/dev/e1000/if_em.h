@@ -1221,10 +1221,6 @@ name|unsigned
 name|long
 name|tx_irq
 decl_stmt|;
-name|unsigned
-name|long
-name|no_desc_avail
-decl_stmt|;
 comment|/* Saved csum offloading context information */
 name|int
 name|csum_flags
