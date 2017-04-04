@@ -1999,15 +1999,6 @@ name|IF_BAD_DMA
 value|(bus_addr_t)-1
 end_define
 
-begin_decl_stmt
-specifier|static
-name|int
-name|enable_msix
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -28034,9 +28025,9 @@ expr_stmt|;
 comment|/* Override by tuneable */
 if|if
 condition|(
-name|enable_msix
-operator|==
-literal|0
+name|scctx
+operator|->
+name|isc_disable_msix
 condition|)
 goto|goto
 name|msi
@@ -29265,6 +29256,30 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"permit #txq != #rxq"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx_list
+argument_list|,
+name|oid_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"disable_msix"
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|ctx
+operator|->
+name|ifc_softc_ctx
+operator|.
+name|isc_disable_msix
+argument_list|,
+literal|0
+argument_list|,
+literal|"disable MSIX (default 0)"
 argument_list|)
 expr_stmt|;
 comment|/* XXX change for per-queue sizes */

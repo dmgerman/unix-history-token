@@ -760,6 +760,9 @@ name|pci_vendor_info_t
 name|isc_vendor_info
 decl_stmt|;
 comment|/* set by iflib prior to attach_pre */
+name|int
+name|isc_disable_msix
+decl_stmt|;
 name|if_txrx_t
 name|isc_txrx
 decl_stmt|;
