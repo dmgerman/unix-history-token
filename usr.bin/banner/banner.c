@@ -20183,19 +20183,23 @@ operator|++
 name|argv
 condition|)
 block|{
-name|strcat
+name|strlcat
 argument_list|(
 name|message
 argument_list|,
 literal|" "
+argument_list|,
+name|j
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strlcat
 argument_list|(
 name|message
 argument_list|,
 operator|*
 name|argv
+argument_list|,
+name|j
 argument_list|)
 expr_stmt|;
 block|}
