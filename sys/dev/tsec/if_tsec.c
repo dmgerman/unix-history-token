@@ -7111,8 +7111,6 @@ expr_stmt|;
 if|if
 condition|(
 name|timeout
-operator|==
-literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -7203,8 +7201,6 @@ expr_stmt|;
 if|if
 condition|(
 name|timeout
-operator|==
-literal|0
 condition|)
 name|device_printf
 argument_list|(
