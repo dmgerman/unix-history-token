@@ -35,6 +35,13 @@ name|TSEC_TX_NUM_DESC
 value|256
 end_define
 
+begin_define
+define|#
+directive|define
+name|TSEC_TX_MAX_DMA_SEGS
+value|8
+end_define
+
 begin_comment
 comment|/* Interrupt Coalescing types */
 end_comment
@@ -84,6 +91,25 @@ end_define
 
 begin_struct
 struct|struct
+name|tsec_bufmap
+block|{
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+name|int
+name|map_initialized
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mbuf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|tsec_softc
 block|{
 comment|/* XXX MII bus requires that struct ifnet is first!!! */
@@ -128,16 +154,35 @@ name|bus_dmamap_t
 name|tsec_tx_dmap
 decl_stmt|;
 comment|/* TX descriptors map */
+name|bus_dma_tag_t
+name|tsec_tx_mtag
+decl_stmt|;
+comment|/* TX mbufs tag */
+name|uint32_t
+name|tx_idx_head
+decl_stmt|;
+comment|/* TX head descriptor/bufmap index */
+name|uint32_t
+name|tx_idx_tail
+decl_stmt|;
+comment|/* TX tail descriptor/bufmap index */
 name|struct
 name|tsec_desc
 modifier|*
 name|tsec_tx_vaddr
 decl_stmt|;
-comment|/* vadress of TX descriptors */
-name|uint32_t
-name|tsec_tx_raddr
+comment|/* virtual address of TX descriptors */
+name|struct
+name|tsec_bufmap
+name|tx_bufmap
+index|[
+name|TSEC_TX_NUM_DESC
+index|]
 decl_stmt|;
-comment|/* real address of TX descriptors */
+name|bus_dma_tag_t
+name|tsec_rx_mtag
+decl_stmt|;
+comment|/* TX mbufs tag */
 name|bus_dma_tag_t
 name|tsec_rx_dtag
 decl_stmt|;
@@ -152,18 +197,6 @@ modifier|*
 name|tsec_rx_vaddr
 decl_stmt|;
 comment|/* vadress of RX descriptors */
-name|uint32_t
-name|tsec_rx_raddr
-decl_stmt|;
-comment|/* real address of RX descriptors */
-name|bus_dma_tag_t
-name|tsec_tx_mtag
-decl_stmt|;
-comment|/* TX mbufs tag */
-name|bus_dma_tag_t
-name|tsec_rx_mtag
-decl_stmt|;
-comment|/* TX mbufs tag */
 struct|struct
 name|rx_data_type
 block|{
@@ -186,12 +219,6 @@ index|[
 name|TSEC_RX_NUM_DESC
 index|]
 struct|;
-name|uint32_t
-name|tx_cur_desc_cnt
-decl_stmt|;
-name|uint32_t
-name|tx_dirty_desc_cnt
-decl_stmt|;
 name|uint32_t
 name|rx_cur_desc_cnt
 decl_stmt|;
@@ -266,56 +293,6 @@ decl_stmt|;
 name|int
 name|tsec_watchdog
 decl_stmt|;
-comment|/* TX maps */
-name|bus_dmamap_t
-name|tx_map_data
-index|[
-name|TSEC_TX_NUM_DESC
-index|]
-decl_stmt|;
-comment|/* unused TX maps data */
-name|uint32_t
-name|tx_map_unused_get_cnt
-decl_stmt|;
-name|uint32_t
-name|tx_map_unused_put_cnt
-decl_stmt|;
-name|bus_dmamap_t
-modifier|*
-name|tx_map_unused_data
-index|[
-name|TSEC_TX_NUM_DESC
-index|]
-decl_stmt|;
-comment|/* used TX maps data */
-name|uint32_t
-name|tx_map_used_get_cnt
-decl_stmt|;
-name|uint32_t
-name|tx_map_used_put_cnt
-decl_stmt|;
-name|bus_dmamap_t
-modifier|*
-name|tx_map_used_data
-index|[
-name|TSEC_TX_NUM_DESC
-index|]
-decl_stmt|;
-comment|/* mbufs in TX queue */
-name|uint32_t
-name|tx_mbuf_used_get_cnt
-decl_stmt|;
-name|uint32_t
-name|tx_mbuf_used_put_cnt
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|tx_mbuf_used_data
-index|[
-name|TSEC_TX_NUM_DESC
-index|]
-decl_stmt|;
 comment|/* interrupt coalescing */
 name|struct
 name|mtx
@@ -353,6 +330,14 @@ decl_stmt|;
 name|int
 name|phy_regoff
 decl_stmt|;
+name|uint32_t
+name|tsec_rx_raddr
+decl_stmt|;
+comment|/* real address of RX descriptors */
+name|uint32_t
+name|tsec_tx_raddr
+decl_stmt|;
+comment|/* real address of TX descriptors */
 block|}
 struct|;
 end_struct
@@ -435,183 +420,6 @@ parameter_list|)
 value|do {			\ 		if ((sc)->count> 0)				\ 			(sc)->count--;				\ 		else						\ 			(sc)->count = (wrap) - 1;		\ } while (0)
 end_define
 
-begin_comment
-comment|/* TX maps interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSEC_TX_MAP_CNT_INIT
-parameter_list|(
-name|sc
-parameter_list|)
-value|do {						\ 		TSEC_CNT_INIT((sc)->tx_map_unused_get_cnt, TSEC_TX_NUM_DESC);	\ 		TSEC_CNT_INIT((sc)->tx_map_unused_put_cnt, TSEC_TX_NUM_DESC);	\ 		TSEC_CNT_INIT((sc)->tx_map_used_get_cnt, TSEC_TX_NUM_DESC);	\ 		TSEC_CNT_INIT((sc)->tx_map_used_put_cnt, TSEC_TX_NUM_DESC);	\ } while (0)
-end_define
-
-begin_comment
-comment|/* interface to get/put unused TX maps */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSEC_ALLOC_TX_MAP
-parameter_list|(
-name|sc
-parameter_list|)
-define|\
-value|TSEC_GET_GENERIC(sc, tx_map_unused_data, tx_map_unused_get_cnt,	\ 		TSEC_TX_NUM_DESC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSEC_FREE_TX_MAP
-parameter_list|(
-name|sc
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|TSEC_PUT_GENERIC(sc, tx_map_unused_data, tx_map_unused_put_cnt,	\ 		TSEC_TX_NUM_DESC, val)
-end_define
-
-begin_comment
-comment|/* interface to get/put used TX maps */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSEC_GET_TX_MAP
-parameter_list|(
-name|sc
-parameter_list|)
-define|\
-value|TSEC_GET_GENERIC(sc, tx_map_used_data, tx_map_used_get_cnt,	\ 		TSEC_TX_NUM_DESC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSEC_PUT_TX_MAP
-parameter_list|(
-name|sc
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|TSEC_PUT_GENERIC(sc, tx_map_used_data, tx_map_used_put_cnt,	\ 		TSEC_TX_NUM_DESC, val)
-end_define
-
-begin_comment
-comment|/* interface to get/put TX mbufs in send queue */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSEC_TX_MBUF_CNT_INIT
-parameter_list|(
-name|sc
-parameter_list|)
-value|do {						\ 		TSEC_CNT_INIT((sc)->tx_mbuf_used_get_cnt, TSEC_TX_NUM_DESC);	\ 		TSEC_CNT_INIT((sc)->tx_mbuf_used_put_cnt, TSEC_TX_NUM_DESC);	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSEC_GET_TX_MBUF
-parameter_list|(
-name|sc
-parameter_list|)
-define|\
-value|TSEC_GET_GENERIC(sc, tx_mbuf_used_data, tx_mbuf_used_get_cnt,	\ 		TSEC_TX_NUM_DESC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSEC_PUT_TX_MBUF
-parameter_list|(
-name|sc
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|TSEC_PUT_GENERIC(sc, tx_mbuf_used_data, tx_mbuf_used_put_cnt,	\ 		TSEC_TX_NUM_DESC, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSEC_EMPTYQ_TX_MBUF
-parameter_list|(
-name|sc
-parameter_list|)
-define|\
-value|((sc)->tx_mbuf_used_get_cnt == (sc)->tx_mbuf_used_put_cnt)
-end_define
-
-begin_comment
-comment|/* interface for manage tx tsec_desc */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSEC_TX_DESC_CNT_INIT
-parameter_list|(
-name|sc
-parameter_list|)
-value|do {						\ 		TSEC_CNT_INIT((sc)->tx_cur_desc_cnt, TSEC_TX_NUM_DESC);		\ 		TSEC_CNT_INIT((sc)->tx_dirty_desc_cnt, TSEC_TX_NUM_DESC);	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSEC_GET_CUR_TX_DESC
-parameter_list|(
-name|sc
-parameter_list|)
-define|\
-value|&TSEC_GET_GENERIC(sc, tsec_tx_vaddr, tx_cur_desc_cnt,		\ 		TSEC_TX_NUM_DESC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSEC_GET_DIRTY_TX_DESC
-parameter_list|(
-name|sc
-parameter_list|)
-define|\
-value|&TSEC_GET_GENERIC(sc, tsec_tx_vaddr, tx_dirty_desc_cnt,		\ 		TSEC_TX_NUM_DESC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSEC_BACK_DIRTY_TX_DESC
-parameter_list|(
-name|sc
-parameter_list|)
-define|\
-value|TSEC_BACK_GENERIC(sc, tx_dirty_desc_cnt, TSEC_TX_NUM_DESC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSEC_CUR_DIFF_DIRTY_TX_DESC
-parameter_list|(
-name|sc
-parameter_list|)
-define|\
-value|((sc)->tx_cur_desc_cnt != (sc)->tx_dirty_desc_cnt)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -620,7 +428,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|(((sc)->tx_cur_desc_cnt< (sc)->tx_dirty_desc_cnt) ?	\ 		((sc)->tx_dirty_desc_cnt - (sc)->tx_cur_desc_cnt - 1)	\ 		:							\ 		(TSEC_TX_NUM_DESC - (sc)->tx_cur_desc_cnt		\ 		+ (sc)->tx_dirty_desc_cnt - 1))
+value|(((sc)->tx_idx_tail - (sc)->tx_idx_head - 1)& (TSEC_TX_NUM_DESC - 1))
 end_define
 
 begin_comment
@@ -681,7 +489,7 @@ name|TSEC_TX_RX_COUNTERS_INIT
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {	\ 		TSEC_TX_MAP_CNT_INIT(sc);	\ 		TSEC_TX_MBUF_CNT_INIT(sc);	\ 		TSEC_TX_DESC_CNT_INIT(sc);	\ 		TSEC_RX_DESC_CNT_INIT(sc);	\ } while (0)
+value|do {	\ 		sc->tx_idx_head = 0;		\ 		sc->tx_idx_tail = 0;		\ 		TSEC_RX_DESC_CNT_INIT(sc);	\ } while (0)
 end_define
 
 begin_comment
