@@ -6016,39 +6016,6 @@ operator|->
 name|badvaddr
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IC_REG
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"\tcause: %#jx\tpc: %#jx\tic: %#jx\n"
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|frame
-operator|->
-name|cause
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|frame
-operator|->
-name|pc
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|frame
-operator|->
-name|ic
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|log
 argument_list|(
 name|LOG_ERR
@@ -6070,8 +6037,6 @@ operator|->
 name|pc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -6473,37 +6438,6 @@ operator|->
 name|badvaddr
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IC_REG
-name|printf
-argument_list|(
-literal|"\tcause: %#jx\tpc: %#jx\tic: %#jx\n"
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|frame
-operator|->
-name|cause
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|frame
-operator|->
-name|pc
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|frame
-operator|->
-name|ic
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|printf
 argument_list|(
 literal|"\tcause: %#jx\tpc: %#jx\n"
@@ -6523,8 +6457,6 @@ operator|->
 name|pc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
