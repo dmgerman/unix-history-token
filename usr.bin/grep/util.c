@@ -2394,7 +2394,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"\33[%sm"
+literal|"\33[%sm\33[K"
 argument_list|,
 name|color
 argument_list|)
@@ -2439,7 +2439,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"\33[00m\33[K"
+literal|"\33[m\33[K"
 argument_list|)
 expr_stmt|;
 name|a
