@@ -45,12 +45,6 @@ directive|include
 file|<wchar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
-end_include
-
 begin_function
 name|int
 name|tre_convert_pattern
@@ -85,7 +79,7 @@ name|wlen
 decl_stmt|;
 name|wregex
 operator|=
-name|xmalloc
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -254,7 +248,7 @@ literal|1
 expr_stmt|;
 else|else
 block|{
-name|xfree
+name|free
 argument_list|(
 name|wregex
 argument_list|)
@@ -282,7 +276,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|wregex
 argument_list|)
@@ -386,7 +380,7 @@ block|{
 if|#
 directive|if
 name|TRE_WCHAR
-name|xfree
+name|free
 argument_list|(
 name|wregex
 argument_list|)

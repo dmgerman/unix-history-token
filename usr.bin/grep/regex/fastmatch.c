@@ -43,12 +43,6 @@ directive|include
 file|"tre-fastmatch.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
-end_include
-
 begin_function
 name|int
 name|tre_fixncomp
