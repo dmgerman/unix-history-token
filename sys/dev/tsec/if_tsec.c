@@ -6892,14 +6892,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Get data from RX buffers */
-name|tsec_receive_intr_locked
-argument_list|(
-name|sc
-argument_list|,
-name|count
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
