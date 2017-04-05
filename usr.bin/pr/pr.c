@@ -5343,11 +5343,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fclose
-argument_list|(
-name|inf
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
