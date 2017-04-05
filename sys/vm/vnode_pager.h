@@ -107,6 +107,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|vnode_pager_putpages_ioflags
+parameter_list|(
+name|int
+name|pager_flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vnode_pager_release_writecount
 parameter_list|(
