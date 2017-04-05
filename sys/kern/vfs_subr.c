@@ -6871,6 +6871,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|V_VMIO
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|BO_UNLOCK
 argument_list|(
 name|bo
@@ -6915,6 +6926,7 @@ name|bo
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 do|while
 condition|(
 name|bo
@@ -6947,6 +6959,8 @@ operator||
 name|V_NORMAL
 operator||
 name|V_CLEANONLY
+operator||
+name|V_VMIO
 operator|)
 operator|)
 operator|==
@@ -7008,6 +7022,8 @@ operator||
 name|V_NORMAL
 operator||
 name|V_CLEANONLY
+operator||
+name|V_VMIO
 operator|)
 operator|)
 operator|==
