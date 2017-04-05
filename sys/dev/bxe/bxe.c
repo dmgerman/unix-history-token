@@ -56332,6 +56332,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+name|if_setcapenable
+argument_list|(
+name|ifp
+argument_list|,
+name|if_getcapabilities
+argument_list|(
+name|ifp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|if_setbaudrate
 argument_list|(
 name|ifp
