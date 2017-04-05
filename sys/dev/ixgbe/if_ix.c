@@ -28066,7 +28066,7 @@ expr_stmt|;
 name|vf
 operator|->
 name|flags
-operator|=
+operator||=
 name|IXGBE_VF_ACTIVE
 expr_stmt|;
 name|ixgbe_init_vf
