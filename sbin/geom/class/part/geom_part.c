@@ -420,6 +420,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|_Noreturn
 name|void
 name|gpart_issue
 parameter_list|(
@@ -7948,6 +7949,11 @@ operator|&
 name|mesh
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|partcode
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -8040,6 +8046,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|_Noreturn
 name|void
 name|gpart_issue
 parameter_list|(
