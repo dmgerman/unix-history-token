@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ufs/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/extattr.h>
 end_include
 
@@ -7365,7 +7371,7 @@ name|sbp
 operator|->
 name|f_namemax
 operator|=
-name|NAME_MAX
+name|UFS_MAXNAMLEN
 expr_stmt|;
 return|return
 operator|(

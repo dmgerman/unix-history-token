@@ -11343,7 +11343,7 @@ name|ap
 operator|->
 name|a_retval
 operator|=
-name|NAME_MAX
+name|UFS_MAXNAMLEN
 expr_stmt|;
 break|break;
 case|case
