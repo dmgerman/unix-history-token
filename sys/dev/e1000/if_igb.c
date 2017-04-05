@@ -13509,10 +13509,9 @@ name|dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-name|PCIR_BAR
-argument_list|(
-name|IGB_MSIX_BAR
-argument_list|)
+name|adapter
+operator|->
+name|memrid
 argument_list|,
 name|adapter
 operator|->

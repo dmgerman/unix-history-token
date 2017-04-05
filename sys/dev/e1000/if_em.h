@@ -1169,6 +1169,9 @@ name|resource
 modifier|*
 name|msix_mem
 decl_stmt|;
+name|int
+name|memrid
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
