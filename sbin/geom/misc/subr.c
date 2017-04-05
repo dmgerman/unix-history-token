@@ -1405,7 +1405,7 @@ expr_stmt|;
 if|if
 condition|(
 name|sectorsize
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
@@ -1546,12 +1546,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|sector
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|sector
