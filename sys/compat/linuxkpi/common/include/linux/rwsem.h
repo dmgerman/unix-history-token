@@ -120,6 +120,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|down_write_killable
+parameter_list|(
+name|_rw
+parameter_list|)
+value|!!sx_xlock_sig(&(_rw)->sx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|downgrade_write
 parameter_list|(
 name|_rw
