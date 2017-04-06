@@ -2193,7 +2193,9 @@ init|;
 operator|*
 name|shift
 operator|<
-literal|27
+name|PAGE_SHIFT
+operator|+
+name|M_FW_RI_TPTE_PS
 condition|;
 operator|++
 operator|(
