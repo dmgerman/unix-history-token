@@ -8211,7 +8211,7 @@ name|p
 operator|->
 name|buflen
 expr_stmt|;
-comment|/* u_int */
+comment|/* size_t */
 operator|*
 name|n_args
 operator|=
@@ -24230,7 +24230,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int"
+literal|"size_t"
 expr_stmt|;
 break|break;
 default|default:

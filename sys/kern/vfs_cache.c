@@ -10779,10 +10779,10 @@ name|enum
 name|uio_seg
 name|bufseg
 parameter_list|,
-name|u_int
+name|size_t
 name|buflen
 parameter_list|,
-name|u_int
+name|size_t
 name|path_max
 parameter_list|)
 block|{

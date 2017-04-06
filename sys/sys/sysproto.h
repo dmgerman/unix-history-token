@@ -11184,11 +11184,11 @@ name|buflen_l_
 index|[
 name|PADL_
 argument_list|(
-name|u_int
+name|size_t
 argument_list|)
 index|]
 decl_stmt|;
-name|u_int
+name|size_t
 name|buflen
 decl_stmt|;
 name|char
@@ -11196,7 +11196,7 @@ name|buflen_r_
 index|[
 name|PADR_
 argument_list|(
-name|u_int
+name|size_t
 argument_list|)
 index|]
 decl_stmt|;
