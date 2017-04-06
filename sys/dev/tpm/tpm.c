@@ -2433,17 +2433,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|sc
-operator|->
-name|sc_suspend
-operator|=
-literal|0
-expr_stmt|;
-else|#
-directive|else
 name|sc
 operator|->
 name|sc_suspend
@@ -2461,8 +2450,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
