@@ -245,14 +245,14 @@ argument_list|(
 literal|8
 argument_list|)
 name|uint64_t
-name|iov_base
+name|buf
 decl_stmt|;
 alignas|_Alignas
 argument_list|(
 literal|8
 argument_list|)
 name|uint64_t
-name|iov_len
+name|buf_len
 decl_stmt|;
 block|}
 name|cloudabi64_ciovec_t
@@ -266,7 +266,7 @@ name|offsetof
 argument_list|(
 name|cloudabi64_ciovec_t
 argument_list|,
-name|iov_base
+name|buf
 argument_list|)
 operator|==
 literal|0
@@ -283,7 +283,7 @@ name|offsetof
 argument_list|(
 name|cloudabi64_ciovec_t
 argument_list|,
-name|iov_len
+name|buf_len
 argument_list|)
 operator|==
 literal|8
@@ -706,14 +706,14 @@ argument_list|(
 literal|8
 argument_list|)
 name|uint64_t
-name|iov_base
+name|buf
 decl_stmt|;
 alignas|_Alignas
 argument_list|(
 literal|8
 argument_list|)
 name|uint64_t
-name|iov_len
+name|buf_len
 decl_stmt|;
 block|}
 name|cloudabi64_iovec_t
@@ -727,7 +727,7 @@ name|offsetof
 argument_list|(
 name|cloudabi64_iovec_t
 argument_list|,
-name|iov_base
+name|buf
 argument_list|)
 operator|==
 literal|0
@@ -744,7 +744,7 @@ name|offsetof
 argument_list|(
 name|cloudabi64_iovec_t
 argument_list|,
-name|iov_len
+name|buf_len
 argument_list|)
 operator|==
 literal|8
@@ -811,7 +811,7 @@ argument_list|(
 literal|8
 argument_list|)
 name|uint64_t
-name|ri_datalen
+name|ri_data_len
 decl_stmt|;
 alignas|_Alignas
 argument_list|(
@@ -825,7 +825,7 @@ argument_list|(
 literal|8
 argument_list|)
 name|uint64_t
-name|ri_fdslen
+name|ri_fds_len
 decl_stmt|;
 alignas|_Alignas
 argument_list|(
@@ -863,7 +863,7 @@ name|offsetof
 argument_list|(
 name|cloudabi64_recv_in_t
 argument_list|,
-name|ri_datalen
+name|ri_data_len
 argument_list|)
 operator|==
 literal|8
@@ -897,7 +897,7 @@ name|offsetof
 argument_list|(
 name|cloudabi64_recv_in_t
 argument_list|,
-name|ri_fdslen
+name|ri_fds_len
 argument_list|)
 operator|==
 literal|24
@@ -970,7 +970,7 @@ argument_list|(
 literal|8
 argument_list|)
 name|uint64_t
-name|si_datalen
+name|si_data_len
 decl_stmt|;
 alignas|_Alignas
 argument_list|(
@@ -984,7 +984,7 @@ argument_list|(
 literal|8
 argument_list|)
 name|uint64_t
-name|si_fdslen
+name|si_fds_len
 decl_stmt|;
 alignas|_Alignas
 argument_list|(
@@ -1022,7 +1022,7 @@ name|offsetof
 argument_list|(
 name|cloudabi64_send_in_t
 argument_list|,
-name|si_datalen
+name|si_data_len
 argument_list|)
 operator|==
 literal|8
@@ -1056,7 +1056,7 @@ name|offsetof
 argument_list|(
 name|cloudabi64_send_in_t
 argument_list|,
-name|si_fdslen
+name|si_fds_len
 argument_list|)
 operator|==
 literal|24
@@ -1939,7 +1939,7 @@ argument_list|(
 literal|8
 argument_list|)
 name|uint64_t
-name|stack_size
+name|stack_len
 decl_stmt|;
 alignas|_Alignas
 argument_list|(
@@ -1994,7 +1994,7 @@ name|offsetof
 argument_list|(
 name|cloudabi64_threadattr_t
 argument_list|,
-name|stack_size
+name|stack_len
 argument_list|)
 operator|==
 literal|16

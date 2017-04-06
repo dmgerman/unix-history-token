@@ -684,7 +684,7 @@ name|ss_size
 operator|=
 name|attr
 operator|->
-name|stack_size
+name|stack_len
 operator|-
 sizeof|sizeof
 argument_list|(

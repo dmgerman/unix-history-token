@@ -453,7 +453,7 @@ name|path
 argument_list|,
 name|uap
 operator|->
-name|pathlen
+name|path_len
 argument_list|,
 operator|&
 name|path
@@ -575,7 +575,7 @@ name|path1
 argument_list|,
 name|uap
 operator|->
-name|path1len
+name|path1_len
 argument_list|,
 operator|&
 name|path1
@@ -602,7 +602,7 @@ name|path2
 argument_list|,
 name|uap
 operator|->
-name|path2len
+name|path2_len
 argument_list|,
 operator|&
 name|path2
@@ -1087,7 +1087,7 @@ name|path
 argument_list|,
 name|uap
 operator|->
-name|pathlen
+name|path_len
 argument_list|,
 operator|&
 name|path
@@ -1694,7 +1694,7 @@ name|iov_len
 operator|=
 name|uap
 operator|->
-name|nbyte
+name|buf_len
 block|}
 decl_stmt|;
 name|struct
@@ -2248,7 +2248,7 @@ index|]
 operator|=
 name|uap
 operator|->
-name|nbyte
+name|buf_len
 operator|-
 name|uio
 operator|.
@@ -2294,7 +2294,7 @@ name|path
 argument_list|,
 name|uap
 operator|->
-name|pathlen
+name|path_len
 argument_list|,
 operator|&
 name|path
@@ -2333,7 +2333,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|bufsize
+name|buf_len
 argument_list|)
 expr_stmt|;
 name|cloudabi_freestr
@@ -2380,11 +2380,11 @@ name|copyin_path
 argument_list|(
 name|uap
 operator|->
-name|old
+name|path1
 argument_list|,
 name|uap
 operator|->
-name|oldlen
+name|path1_len
 argument_list|,
 operator|&
 name|old
@@ -2407,11 +2407,11 @@ name|copyin_path
 argument_list|(
 name|uap
 operator|->
-name|new
+name|path2
 argument_list|,
 name|uap
 operator|->
-name|newlen
+name|path2_len
 argument_list|,
 operator|&
 name|new
@@ -2443,13 +2443,13 @@ name|td
 argument_list|,
 name|uap
 operator|->
-name|oldfd
+name|fd1
 argument_list|,
 name|old
 argument_list|,
 name|uap
 operator|->
-name|newfd
+name|fd2
 argument_list|,
 name|new
 argument_list|,
@@ -3132,7 +3132,7 @@ name|path
 argument_list|,
 name|uap
 operator|->
-name|pathlen
+name|path_len
 argument_list|,
 operator|&
 name|path
@@ -3452,7 +3452,7 @@ name|path
 argument_list|,
 name|uap
 operator|->
-name|pathlen
+name|path_len
 argument_list|,
 operator|&
 name|path
@@ -3564,7 +3564,7 @@ name|path1
 argument_list|,
 name|uap
 operator|->
-name|path1len
+name|path1_len
 argument_list|,
 operator|&
 name|path1
@@ -3591,7 +3591,7 @@ name|path2
 argument_list|,
 name|uap
 operator|->
-name|path2len
+name|path2_len
 argument_list|,
 operator|&
 name|path2
@@ -3682,7 +3682,7 @@ name|path
 argument_list|,
 name|uap
 operator|->
-name|pathlen
+name|path_len
 argument_list|,
 operator|&
 name|path

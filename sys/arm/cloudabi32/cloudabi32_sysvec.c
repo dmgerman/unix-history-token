@@ -596,7 +596,7 @@ name|ss_size
 operator|=
 name|attr
 operator|->
-name|stack_size
+name|stack_len
 expr_stmt|;
 name|cpu_set_upcall
 argument_list|(
