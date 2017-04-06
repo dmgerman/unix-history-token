@@ -41,8 +41,8 @@ decl_stmt|;
 name|daddr_t
 name|start
 decl_stmt|;
-name|int
-name|init
+name|uint64_t
+name|size
 decl_stmt|;
 block|}
 struct|;

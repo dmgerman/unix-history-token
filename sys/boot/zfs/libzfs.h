@@ -199,6 +199,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint64_t
+name|ldi_get_size
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|init_zfs_bootenv
 parameter_list|(
