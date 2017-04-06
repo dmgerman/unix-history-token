@@ -1603,6 +1603,13 @@ name|bi
 operator|->
 name|brand
 operator|||
+operator|(
+name|bi
+operator|->
+name|compat_3_brand
+operator|!=
+name|NULL
+operator|&&
 name|strcmp
 argument_list|(
 operator|(
@@ -1624,6 +1631,7 @@ name|compat_3_brand
 argument_list|)
 operator|==
 literal|0
+operator|)
 operator|)
 condition|)
 block|{
