@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -1032,6 +1038,15 @@ argument_list|,
 name|bp
 operator|->
 name|b_bcount
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|n
+argument_list|,
+literal|0
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 name|bp
