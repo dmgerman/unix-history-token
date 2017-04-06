@@ -105,7 +105,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s: " fmt "\n" , __func__ , ## args)
+value|printf("%s: " fmt "\n", __func__, ## args)
 end_define
 
 begin_else
@@ -1075,7 +1075,7 @@ name|gpt_hdr
 modifier|*
 name|hdr
 parameter_list|,
-name|u_char
+name|uint8_t
 modifier|*
 name|tbl
 parameter_list|,
@@ -1276,7 +1276,7 @@ name|gpt_ent
 modifier|*
 name|ent
 decl_stmt|;
-name|u_char
+name|uint8_t
 modifier|*
 name|buf
 decl_stmt|,
@@ -2608,7 +2608,7 @@ name|pentry
 modifier|*
 name|entry
 decl_stmt|;
-name|u_char
+name|uint8_t
 modifier|*
 name|buf
 decl_stmt|;
@@ -3073,7 +3073,7 @@ name|vtoc8
 modifier|*
 name|dl
 decl_stmt|;
-name|u_char
+name|uint8_t
 modifier|*
 name|buf
 decl_stmt|;
@@ -3518,7 +3518,7 @@ name|ptable
 modifier|*
 name|table
 decl_stmt|;
-name|u_char
+name|uint8_t
 modifier|*
 name|buf
 decl_stmt|;
@@ -4933,7 +4933,7 @@ argument_list|,
 literal|"%c"
 argument_list|,
 operator|(
-name|u_char
+name|uint8_t
 operator|)
 literal|'a'
 operator|+
@@ -4962,7 +4962,7 @@ argument_list|,
 literal|"%c"
 argument_list|,
 operator|(
-name|u_char
+name|uint8_t
 operator|)
 literal|'a'
 operator|+
