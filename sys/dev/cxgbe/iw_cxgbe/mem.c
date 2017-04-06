@@ -3173,9 +3173,6 @@ name|attr
 operator|.
 name|len
 operator|=
-operator|(
-name|u32
-operator|)
 name|total_size
 expr_stmt|;
 name|mhp
