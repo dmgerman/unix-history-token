@@ -212,8 +212,7 @@ name|task_pid_group_leader
 parameter_list|(
 name|task
 parameter_list|)
-define|\
-value|FIRST_THREAD_IN_PROC((task)->task_thread->td_proc)->td_tid
+value|(task)->task_thread->td_proc->p_pid
 end_define
 
 begin_define
