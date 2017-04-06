@@ -93,6 +93,27 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|VM_READ
+value|VM_PROT_READ
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_WRITE
+value|VM_PROT_WRITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_EXEC
+value|VM_PROT_EXECUTE
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_PFNINTERNAL
 value|(1<< 8)
 end_define
