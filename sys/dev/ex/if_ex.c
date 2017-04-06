@@ -3904,7 +3904,6 @@ specifier|static
 name|int
 name|ex_ioctl
 parameter_list|(
-specifier|register
 name|struct
 name|ifnet
 modifier|*
