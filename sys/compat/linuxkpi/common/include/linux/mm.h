@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/list.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<asm/pgtable.h>
 end_include
 
@@ -349,17 +355,64 @@ decl_stmt|;
 name|vm_offset_t
 name|vm_pgoff
 decl_stmt|;
+name|pgprot_t
+name|vm_page_prot
+decl_stmt|;
+name|unsigned
+name|long
+name|vm_flags
+decl_stmt|;
+name|struct
+name|mm_struct
+modifier|*
+name|vm_mm
+decl_stmt|;
+name|void
+modifier|*
+name|vm_private_data
+decl_stmt|;
+specifier|const
+name|struct
+name|vm_operations_struct
+modifier|*
+name|vm_ops
+decl_stmt|;
+name|struct
+name|linux_file
+modifier|*
+name|vm_file
+decl_stmt|;
+comment|/* internal operation */
 name|vm_paddr_t
 name|vm_pfn
 decl_stmt|;
-comment|/* PFN For mmap. */
+comment|/* PFN for memory map */
 name|vm_size_t
 name|vm_len
 decl_stmt|;
-comment|/* length for mmap. */
-name|vm_memattr_t
-name|vm_page_prot
+comment|/* length for memory map */
+name|vm_pindex_t
+name|vm_pfn_first
 decl_stmt|;
+name|int
+name|vm_pfn_count
+decl_stmt|;
+name|int
+modifier|*
+name|vm_pfn_pcount
+decl_stmt|;
+name|vm_object_t
+name|vm_obj
+decl_stmt|;
+name|vm_map_t
+name|vm_cached_map
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|vm_area_struct
+argument_list|)
+name|vm_entry
+expr_stmt|;
 block|}
 struct|;
 end_struct
