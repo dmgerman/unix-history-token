@@ -84,6 +84,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/bitmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<asm/atomic.h>
 end_include
 

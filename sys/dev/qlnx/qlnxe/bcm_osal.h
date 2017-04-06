@@ -44,7 +44,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<compat/linuxkpi/common/include/linux/bitops.h>
+file|<linux/bitmap.h>
 end_include
 
 begin_else
