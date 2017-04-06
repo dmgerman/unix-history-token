@@ -406,6 +406,14 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|need_resched
+parameter_list|()
+value|(curthread->td_flags& TDF_NEEDRESCHED)
+end_define
+
 begin_endif
 endif|#
 directive|endif
