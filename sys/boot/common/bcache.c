@@ -1141,6 +1141,21 @@ argument_list|)
 expr_stmt|;
 comment|/* read at least those blocks */
 comment|/*      * The read ahead size setup.      * While the read ahead can save us IO, it also can complicate things:      * 1. We do not want to read ahead by wrapping around the      * bcache end - this would complicate the cache management.      * 2. We are using bc->ra as dynamic hint for read ahead size,      * detected cache hits will increase the read-ahead block count, and      * misses will decrease, see the code above.      * 3. The bcache is sized by 512B blocks, however, the underlying device      * may have a larger sector size, and we should perform the IO by      * taking into account these larger sector sizes. We could solve this by      * passing the sector size to bcache_allocate(), or by using ioctl(), but      * in this version we are using the constant, 16 blocks, and are rounding      * read ahead block count down to multiple of 16.      * Using the constant has two reasons, we are not entirely sure if the      * BIOS disk interface is providing the correct value for sector size.      * And secondly, this way we get the most conservative setup for the ra.      *      * The selection of multiple of 16 blocks (8KB) is quite arbitrary, however,      * we want to cover CDs (2K) and 4K disks.      * bcache_allocate() will always fall back to a minimum of 32 blocks.      * Our choice of 16 read ahead blocks will always fit inside the bcache.      */
+if|if
+condition|(
+operator|(
+name|rw
+operator|&
+name|F_NORA
+operator|)
+operator|==
+name|F_NORA
+condition|)
+name|ra
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|ra
 operator|=
 name|bc
@@ -1228,6 +1243,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*      * with read-ahead, it may happen we are attempting to read past      * disk end, as bcache has no information about disk size.      * in such case we should get partial read if some blocks can be      * read or error, if no blocks can be read.      * in either case we should return the data in bcache and only      * return error if there is no data.      */
+name|rw
+operator|&=
+name|F_MASK
+expr_stmt|;
 name|result
 operator|=
 name|dd
@@ -1569,6 +1588,10 @@ expr_stmt|;
 name|bcache_bypasses
 operator|++
 expr_stmt|;
+name|rw
+operator|&=
+name|F_MASK
+expr_stmt|;
 return|return
 operator|(
 name|dd
@@ -1595,6 +1618,8 @@ block|}
 switch|switch
 condition|(
 name|rw
+operator|&
+name|F_MASK
 condition|)
 block|{
 case|case
@@ -1758,7 +1783,7 @@ name|write_strategy
 argument_list|(
 name|devdata
 argument_list|,
-name|rw
+name|F_WRITE
 argument_list|,
 name|blk
 argument_list|,

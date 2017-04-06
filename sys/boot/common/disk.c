@@ -303,6 +303,7 @@ name|dev
 operator|->
 name|d_opendata
 expr_stmt|;
+comment|/* 	 * As the GPT backup partition is located at the end of the disk, 	 * to avoid reading past disk end, flag bcache not to use RA. 	 */
 return|return
 operator|(
 name|dev
@@ -314,6 +315,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|F_READ
+operator||
+name|F_NORA
 argument_list|,
 name|offset
 argument_list|,

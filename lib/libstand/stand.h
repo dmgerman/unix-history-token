@@ -801,6 +801,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|F_MASK
+value|0xFFFF
+end_define
+
+begin_comment
+comment|/* Mode modifier for strategy() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_NORA
+value|(0x01<< 16)
+end_define
+
+begin_comment
+comment|/* Disable Read-Ahead */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|isascii
 parameter_list|(
 name|c
