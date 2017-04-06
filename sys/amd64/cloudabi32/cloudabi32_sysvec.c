@@ -924,6 +924,11 @@ name|sysvec
 operator|=
 operator|&
 name|cloudabi32_elf_sysvec
+block|,
+operator|.
+name|flags
+operator|=
+name|BI_BRAND_ONLY_STATIC
 block|, }
 decl_stmt|;
 end_decl_stmt
