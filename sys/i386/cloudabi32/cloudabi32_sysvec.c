@@ -845,11 +845,6 @@ name|sysvec
 operator|=
 operator|&
 name|cloudabi32_elf_sysvec
-block|,
-operator|.
-name|compat_3_brand
-operator|=
-literal|"CloudABI"
 block|, }
 decl_stmt|;
 end_decl_stmt

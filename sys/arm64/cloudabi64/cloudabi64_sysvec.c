@@ -744,11 +744,6 @@ operator|.
 name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
-block|,
-operator|.
-name|compat_3_brand
-operator|=
-literal|"CloudABI"
 block|, }
 decl_stmt|;
 end_decl_stmt
