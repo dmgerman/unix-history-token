@@ -9598,15 +9598,6 @@ name|d_flags
 operator||=
 name|DISKFLAG_UNMAPPED_BIO
 expr_stmt|;
-name|xpt_print
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"UNMAPPED\n"
-argument_list|)
-expr_stmt|;
 block|}
 name|cam_strvis
 argument_list|(
