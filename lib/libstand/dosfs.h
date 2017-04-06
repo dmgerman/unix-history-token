@@ -328,6 +328,15 @@ modifier|*
 name|fd
 decl_stmt|;
 comment|/* file descriptor */
+name|u_char
+modifier|*
+name|fatbuf
+decl_stmt|;
+comment|/* FAT cache buffer */
+name|u_int
+name|fatbuf_blknum
+decl_stmt|;
+comment|/* number of 128K block in FAT cache buffer */
 name|u_int
 name|links
 decl_stmt|;
