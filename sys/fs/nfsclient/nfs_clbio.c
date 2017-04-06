@@ -8504,14 +8504,6 @@ operator|)
 operator|)
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -8576,11 +8568,6 @@ operator|->
 name|b_flags
 operator||=
 name|B_EINTR
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 else|else

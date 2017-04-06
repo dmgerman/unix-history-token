@@ -2365,10 +2365,6 @@ condition|)
 name|nfs_convert_diskless
 argument_list|()
 expr_stmt|;
-comment|/* 	 * XXX splnet, so networks will receive... 	 */
-name|splnet
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Do enough of ifconfig(8) so that the critical net interface can 	 * talk to the server. 	 */
 name|error
 operator|=
@@ -3126,20 +3122,12 @@ name|td
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|adjsock
 decl_stmt|;
 name|char
 modifier|*
 name|p
 decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Set read-only flag if requested; otherwise, clear it if this is 	 * an update.  If this is not an update, then either the read-only 	 * flag is already clear, or this is a root mount and it was set 	 * intentionally at some previous point. 	 */
 if|if
 condition|(
@@ -3339,11 +3327,6 @@ operator||
 name|nmp
 operator|->
 name|nm_flag
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
