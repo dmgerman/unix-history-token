@@ -753,9 +753,6 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|fstype
-decl_stmt|,
-modifier|*
 name|gssname
 decl_stmt|;
 name|iov
@@ -781,34 +778,6 @@ expr_stmt|;
 name|gssname
 operator|=
 name|NULL
-expr_stmt|;
-name|fstype
-operator|=
-name|strrchr
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|'_'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fstype
-operator|==
-name|NULL
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"argv[0] must end in _fstype"
-argument_list|)
-expr_stmt|;
-operator|++
-name|fstype
 expr_stmt|;
 while|while
 condition|(
@@ -1470,10 +1439,6 @@ name|mountmode
 operator|=
 name|V4
 expr_stmt|;
-name|fstype
-operator|=
-literal|"nfs"
-expr_stmt|;
 name|nfsproto
 operator|=
 name|IPPROTO_TCP
@@ -1967,10 +1932,6 @@ name|mountmode
 operator|=
 name|V4
 expr_stmt|;
-name|fstype
-operator|=
-literal|"nfs"
-expr_stmt|;
 name|nfsproto
 operator|=
 name|IPPROTO_TCP
@@ -2340,19 +2301,6 @@ name|retrycnt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * If the fstye is "oldnfs", run the old NFS client unless the 	 * "nfsv4" option was specified. 	 */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|fstype
-argument_list|,
-literal|"nfs"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 name|modfind
@@ -2387,7 +2335,6 @@ argument_list|,
 literal|"nfscl is not available"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Add the fqdn to the gssname, as required. 	 */
 if|if
@@ -2506,7 +2453,7 @@ argument_list|,
 name|mntpath
 argument_list|)
 expr_stmt|;
-name|build_iovec
+name|build_iovec_argf
 argument_list|(
 operator|&
 name|iov
@@ -2516,19 +2463,7 @@ name|iovlen
 argument_list|,
 literal|"fstype"
 argument_list|,
-name|__DECONST
-argument_list|(
-name|void
-operator|*
-argument_list|,
-name|fstype
-argument_list|)
-argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|-
-literal|1
+literal|"nfs"
 argument_list|)
 expr_stmt|;
 name|build_iovec
