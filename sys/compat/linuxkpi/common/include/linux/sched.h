@@ -214,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|current
-value|((struct task_struct *)curthread->td_lkpi_task)
+value|({ \ 	struct thread *__td = curthread; \ 	linux_set_current(__td); \ 	((struct task_struct *)__td->td_lkpi_task); \ })
 end_define
 
 begin_define
