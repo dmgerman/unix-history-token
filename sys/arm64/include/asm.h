@@ -188,6 +188,17 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Alias for link register x30 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|lr
+value|x30
+end_define
+
+begin_comment
 comment|/*  * Sets the trap fault handler. The exception handler will return to the  * address in the handler register on a data abort or the xzr register to  * clear the handler. The tmp parameter should be a register able to hold  * the temporary data.  */
 end_comment
 
