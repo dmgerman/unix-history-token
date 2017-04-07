@@ -1641,9 +1641,7 @@ name|linux_msqid
 operator|.
 name|msg_qnum
 operator|=
-name|linux_msqid64
-operator|->
-name|msg_qnum
+name|USHRT_MAX
 expr_stmt|;
 else|else
 name|linux_msqid
@@ -1666,9 +1664,7 @@ name|linux_msqid
 operator|.
 name|msg_qbytes
 operator|=
-name|linux_msqid64
-operator|->
-name|msg_qbytes
+name|USHRT_MAX
 expr_stmt|;
 else|else
 name|linux_msqid
