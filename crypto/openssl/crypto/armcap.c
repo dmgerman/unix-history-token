@@ -41,6 +41,15 @@ directive|include
 file|"arm_arch.h"
 end_include
 
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(visibility(
+literal|"hidden"
+argument|))
+argument_list|)
+end_macro
+
 begin_decl_stmt
 name|unsigned
 name|int
