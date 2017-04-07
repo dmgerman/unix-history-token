@@ -633,7 +633,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|if (set>= endset) {						\ 		BITCMD *newset;						\ 		setlen += SET_LEN_INCR;					\ 		newset = realloc(saveset, sizeof(BITCMD) * setlen);	\ 		if (newset == NULL)					\ 			goto out;					\ 		set = newset + (set - saveset);				\ 		saveset = newset;					\ 		endset = newset + (setlen - 2);				\ 	}								\ 	set = addcmd(set, (mode_t)(a), (mode_t)(b), (mode_t)(c), (d))
+value|if (set>= endset) {						\ 		BITCMD *newset;						\ 		setlen += SET_LEN_INCR;					\ 		newset = reallocarray(saveset, setlen, sizeof(BITCMD));	\ 		if (newset == NULL)					\ 			goto out;					\ 		set = newset + (set - saveset);				\ 		saveset = newset;					\ 		endset = newset + (setlen - 2);				\ 	}								\ 	set = addcmd(set, (mode_t)(a), (mode_t)(b), (mode_t)(c), (d))
 end_define
 
 begin_define

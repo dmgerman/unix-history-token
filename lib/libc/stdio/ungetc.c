@@ -239,7 +239,7 @@ name|_size
 expr_stmt|;
 name|p
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|fp
 operator|->
@@ -247,14 +247,9 @@ name|_ub
 operator|.
 name|_base
 argument_list|,
-call|(
-name|size_t
-call|)
-argument_list|(
 name|i
-operator|<<
-literal|1
-argument_list|)
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
@@ -319,8 +314,8 @@ operator|.
 name|_size
 operator|=
 name|i
-operator|<<
-literal|1
+operator|*
+literal|2
 expr_stmt|;
 return|return
 operator|(

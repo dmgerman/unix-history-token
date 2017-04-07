@@ -1654,12 +1654,12 @@ expr_stmt|;
 comment|/* XXX: why reallocing the list space posteriorly? 	    shouldn't be done earlier? */
 name|q
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|list
 argument_list|,
 name|num
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char
