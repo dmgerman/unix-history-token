@@ -37,6 +37,10 @@ define|\
 value|ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, name);			\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	ret;							\ END(__sys_##name)
 end_define
 
+begin_comment
+comment|/*  * Conditional jumps can only go up to one megabyte in either  * direction, and cerror can be located anywhere, so we have  * to jump around to use more capable unconditional branch  * instruction.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -45,7 +49,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	b.cs	cerror;						\ 	ret;							\ END(__sys_##name)
+value|ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	b.cs	1f;						\ 	ret;							\ 1:	b	cerror;						\ END(__sys_##name)
 end_define
 
 begin_define
@@ -56,7 +60,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, name);			\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	b.cs	cerror;						\ 	ret;							\ END(__sys_##name)
+value|ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, name);			\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	b.cs	1f;						\ 	ret;							\ 1:	b	cerror;						\ END(__sys_##name)
 end_define
 
 end_unit
