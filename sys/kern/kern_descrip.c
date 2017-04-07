@@ -16609,6 +16609,12 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|COMPAT_FREEBSD7
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|KINFO_OFILE_SIZE
 end_ifdef
 
@@ -16630,12 +16636,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_FREEBSD7
-end_ifdef
 
 begin_function
 specifier|static
