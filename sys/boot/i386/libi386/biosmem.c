@@ -750,7 +750,7 @@ literal|0x100000
 operator|+
 name|bios_extmem
 expr_stmt|;
-comment|/*      * If we have extended memory and did not find a suitable heap      * region in the SMAP, use the last 3MB of 'extended' memory as a      * high heap candidate.      */
+comment|/*      * If we have extended memory and did not find a suitable heap      * region in the SMAP, use the last HEAP_MIN of 'extended' memory as a      * high heap candidate.      */
 if|if
 condition|(
 name|bios_extmem
