@@ -424,6 +424,23 @@ parameter_list|)
 value|((rss_hash_type>> 1)& 0x1F)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BNXT_NO_MORE_WOL_FILTERS
+value|0xFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|bnxt_wol_supported
+parameter_list|(
+name|softc
+parameter_list|)
+value|((softc)->flags& BNXT_FLAG_WOL_CAP)
+end_define
+
 begin_comment
 comment|/* Completion related defines */
 end_comment
@@ -1654,7 +1671,11 @@ decl_stmt|;
 define|#
 directive|define
 name|BNXT_FLAG_NPAR
-value|1
+value|0x1
+define|#
+directive|define
+name|BNXT_FLAG_WOL_CAP
+value|0x2
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -1814,6 +1835,12 @@ name|struct
 name|bnxt_nvram_info
 modifier|*
 name|nvm_info
+decl_stmt|;
+name|bool
+name|wol
+decl_stmt|;
+name|uint8_t
+name|wol_filter_id
 decl_stmt|;
 block|}
 struct|;
