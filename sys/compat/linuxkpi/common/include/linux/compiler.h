@@ -191,11 +191,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|___stringify
+parameter_list|(
+modifier|...
+parameter_list|)
+value|#__VA_ARGS__
+end_define
+
+begin_define
+define|#
+directive|define
 name|__stringify
 parameter_list|(
-name|x
+modifier|...
 parameter_list|)
-value|#x
+value|___stringify(__VA_ARGS__)
 end_define
 
 begin_define
