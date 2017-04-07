@@ -19371,6 +19371,19 @@ argument_list|,
 name|E1000_XOFFRXC
 argument_list|)
 expr_stmt|;
+comment|/* 	 ** For watchdog management we need to know if we have been 	 ** paused during the last interval, so capture that here. 	*/
+name|adapter
+operator|->
+name|shared
+operator|->
+name|isc_pause_frames
+operator|=
+name|adapter
+operator|->
+name|stats
+operator|.
+name|xoffrxc
+expr_stmt|;
 name|adapter
 operator|->
 name|stats

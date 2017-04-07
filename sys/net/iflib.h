@@ -756,6 +756,10 @@ name|uint16_t
 name|isc_max_frame_size
 decl_stmt|;
 comment|/* set at init time by driver */
+name|uint32_t
+name|isc_pause_frames
+decl_stmt|;
+comment|/* set by driver for iflib_timer to detect */
 name|pci_vendor_info_t
 name|isc_vendor_info
 decl_stmt|;
