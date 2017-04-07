@@ -2282,6 +2282,10 @@ decl_stmt|;
 name|BOOLEAN
 name|preferred
 decl_stmt|;
+name|preferred
+operator|=
+name|FALSE
+expr_stmt|;
 name|status
 operator|=
 name|probe_handle
