@@ -3664,9 +3664,6 @@ argument_list|(
 name|NULL
 argument_list|)
 decl_stmt|;
-name|int
-name|test
-decl_stmt|;
 name|u_char
 name|flag
 decl_stmt|;
@@ -3686,8 +3683,9 @@ argument_list|,
 name|ISO_FILENAME_MAXLENGTH_WITH_PADDING
 argument_list|)
 expr_stmt|;
-name|test
-operator|=
+operator|(
+name|void
+operator|)
 name|cd9660_convert_filename
 argument_list|(
 name|diskStructure
@@ -4810,7 +4808,12 @@ name|delete_chars
 expr_stmt|;
 comment|/* 8.3 rules - keep the extension, add before the dot */
 comment|/* 		 * This code makes a bunch of assumptions. 		 * See if you can spot them all :) 		 */
-comment|/* 		if (diskStructure->isoLevel == 1) { 			numbts = 8 - digits - delete_chars; 			if (dot< 0) {  			} else { 				if (dot< 8) { 					memmove(&tmp[numbts],&tmp[dot],4); 				} 			} 		} 		*/
+if|#
+directive|if
+literal|0
+block|if (diskStructure->isoLevel == 1) { 			numbts = 8 - digits - delete_chars; 			if (dot< 0) {  			} else { 				if (dot< 8) { 					memmove(&tmp[numbts],&tmp[dot],4); 				} 			} 		}
+endif|#
+directive|endif
 comment|/* (copying just the filename before the '.' */
 name|memcpy
 argument_list|(

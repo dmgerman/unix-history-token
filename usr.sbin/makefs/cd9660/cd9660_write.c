@@ -521,9 +521,6 @@ name|diskStructure
 operator|->
 name|firstVolumeDescriptor
 decl_stmt|;
-name|int
-name|pos
-decl_stmt|;
 while|while
 condition|(
 name|vd_temp
@@ -531,16 +528,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pos
-operator|=
-name|vd_temp
-operator|->
-name|sector
-operator|*
-name|diskStructure
-operator|->
-name|sectorSize
-expr_stmt|;
 name|cd9660_write_filedata
 argument_list|(
 name|diskStructure
@@ -980,9 +967,6 @@ decl_stmt|;
 name|int
 name|cur_sector_offset
 decl_stmt|;
-name|int
-name|written
-decl_stmt|;
 name|iso_directory_record_cd9660
 name|temp_record
 decl_stmt|;
@@ -1308,8 +1292,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Write out the basic ISO directory record */
-name|written
-operator|=
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 operator|&
