@@ -20901,11 +20901,9 @@ argument_list|,
 name|PFRES_MAXSTATES
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|PF_DROP
-operator|)
-return|;
+goto|goto
+name|csfailed
+goto|;
 block|}
 comment|/* src node for filter rule */
 if|if
