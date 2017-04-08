@@ -207,6 +207,8 @@ block|,
 name|OPT_NORMAL
 block|,
 name|OPT_HORIZON_LINES
+block|,
+name|OPT_SPEED_LARGE_FILES
 block|, }
 enum|;
 end_enum
@@ -507,6 +509,16 @@ block|,
 name|NULL
 block|,
 name|OPT_NORMAL
+block|}
+block|,
+block|{
+literal|"speed-large-files"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPT_SPEED_LARGE_FILES
 block|}
 block|,
 block|{
@@ -1207,6 +1219,11 @@ argument_list|()
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|OPT_SPEED_LARGE_FILES
+case|:
+break|break;
+comment|/* ignore but needed for compatibility with GNU diff */
 case|case
 name|OPT_STRIPCR
 case|:
