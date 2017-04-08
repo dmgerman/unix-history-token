@@ -1729,7 +1729,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * We get packets here from ether_output via if_handoff() 	 * and ned to put them into the input queue of the oifp 	 * and call oifp->if_input() via netisr/epair_sintr(). 	 */
+comment|/* 	 * We get packets here from ether_output via if_handoff() 	 * and need to put them into the input queue of the oifp 	 * and call oifp->if_input() via netisr/epair_sintr(). 	 */
 name|oifp
 operator|=
 name|sc
