@@ -1123,14 +1123,6 @@ name|int
 name|cursor_oldpos
 decl_stmt|;
 comment|/* cursor old buffer position */
-name|u_short
-name|cursor_saveunder_char
-decl_stmt|;
-comment|/* saved char under cursor */
-name|u_short
-name|cursor_saveunder_attr
-decl_stmt|;
-comment|/* saved attr under cursor */
 name|struct
 name|cursor_attr
 name|dflt_curs_attr
