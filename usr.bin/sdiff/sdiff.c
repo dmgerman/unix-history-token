@@ -1380,9 +1380,6 @@ case|case
 literal|'t'
 case|:
 case|case
-literal|'H'
-case|:
-case|case
 literal|'W'
 case|:
 for|for
@@ -1474,6 +1471,18 @@ index|]
 argument_list|,
 name|ch
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'H'
+case|:
+name|diffargv
+index|[
+name|diffargc
+operator|++
+index|]
+operator|=
+literal|"--speed-large-files"
 expr_stmt|;
 break|break;
 case|case
@@ -4956,7 +4965,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: sdiff [-abdilstW] [-I regexp] [-o outfile] [-w width] file1"
+literal|"usage: sdiff [-abdilstHW] [-I regexp] [-o outfile] [-w width] file1"
 literal|" file2\n"
 argument_list|)
 expr_stmt|;
