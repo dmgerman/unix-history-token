@@ -904,11 +904,11 @@ name|KNOTE
 parameter_list|(
 name|list
 parameter_list|,
-name|hist
+name|hint
 parameter_list|,
 name|flags
 parameter_list|)
-value|knote(list, hist, flags)
+value|knote(list, hint, flags)
 end_define
 
 begin_define
