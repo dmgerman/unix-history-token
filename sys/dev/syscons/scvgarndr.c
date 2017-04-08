@@ -7597,12 +7597,6 @@ decl_stmt|;
 name|int
 name|bpp
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|on
-condition|)
-return|return;
 name|bpp
 operator|=
 name|scp
@@ -7692,6 +7686,13 @@ operator|->
 name|ypixel
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|on
+condition|)
+goto|goto
+name|do_on
+goto|;
 name|p
 operator|=
 name|scp
@@ -7860,6 +7861,9 @@ operator|+=
 name|line_width
 expr_stmt|;
 block|}
+return|return;
+name|do_on
+label|:
 name|p
 operator|=
 name|scp
