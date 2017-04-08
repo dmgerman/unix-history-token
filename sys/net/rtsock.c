@@ -3419,7 +3419,7 @@ operator|==
 name|RTM_GET
 condition|)
 block|{
-comment|/* 			 * Provide logest prefix match for 			 * address lookup (no mask). 			 * 'route -n get addr' 			 */
+comment|/* 			 * Provide longest prefix match for 			 * address lookup (no mask). 			 * 'route -n get addr' 			 */
 name|rt
 operator|=
 operator|(
