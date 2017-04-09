@@ -347,7 +347,7 @@ modifier|*
 name|pte_fn_t
 function_decl|)
 parameter_list|(
-name|pte_t
+name|linux_pte_t
 modifier|*
 parameter_list|,
 name|pgtable_t

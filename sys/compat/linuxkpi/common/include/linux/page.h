@@ -55,7 +55,7 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|long
-name|pte_t
+name|linux_pte_t
 typedef|;
 end_typedef
 
@@ -63,7 +63,7 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|long
-name|pmd_t
+name|linux_pmd_t
 typedef|;
 end_typedef
 
@@ -71,7 +71,7 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|long
-name|pgd_t
+name|linux_pgd_t
 typedef|;
 end_typedef
 
