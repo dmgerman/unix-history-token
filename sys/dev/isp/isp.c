@@ -14663,7 +14663,7 @@ name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-name|ISP_LOGERR
+name|lev
 argument_list|,
 literal|"Chan %d PLOGX PortID 0x%06x to N-Port handle 0x%x: %s"
 argument_list|,
