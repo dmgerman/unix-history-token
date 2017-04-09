@@ -119,6 +119,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IMXSOC_6UL
+value|0x64000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|IMXSOC_FAMSHIFT
 value|28
 end_define
