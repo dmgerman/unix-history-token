@@ -362,6 +362,8 @@ operator|&
 name|linux_epoch
 argument_list|,
 name|record
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|DPCPU_ID_SET
@@ -411,6 +413,8 @@ operator|&
 name|record
 operator|->
 name|epoch_record
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -647,6 +651,8 @@ name|ck_epoch_recycle
 argument_list|(
 operator|&
 name|linux_epoch
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -721,6 +727,8 @@ operator|&
 name|record
 operator|->
 name|epoch_record
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
