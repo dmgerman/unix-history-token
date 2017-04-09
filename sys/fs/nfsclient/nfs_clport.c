@@ -6076,6 +6076,10 @@ condition|(
 name|error
 operator|<
 literal|10000
+operator|||
+name|error
+operator|>=
+name|NFSERR_STALEWRITEVERF
 condition|)
 return|return
 operator|(
