@@ -1104,6 +1104,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SIOCGIFNAME
+value|0x8910
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SIOCGIFCONF
 value|0x8912
 end_define
