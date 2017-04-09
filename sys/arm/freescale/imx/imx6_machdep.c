@@ -160,7 +160,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Fix FDT data related to interrupts.  *  * Driven by the needs of linux and its drivers (as always), the published FDT  * data for imx6 now sets the interrupt parent for most devices to the GPC  * interrupt controller, which is for use when the chip is in deep-sleep mode.  * We don't support deep sleep or have a GPC-PIC driver; we need all interrupts  * to be handled by the GIC.  *  * Luckily, the change to the FDT data was to assign the GPC as the interrupt  * parent for the soc node and letting that get inherited by all other devices  * (except a few that directly name GIC as their interrupt parent).  So we can  * set the world right by just changing the interrupt-parent property of the soc  * node to refer to GIC instead of GPC.  This will get us by until we write our  * own GPC driver (or until linux changes its mind and the FDT data again).  *  * We validate that we have data that looks like we expect before changing it:  *  - SOC node exists and has GPC as its interrupt parent.  *  - GPC node exists and has GIC as its interrupt parent.  *  - GIC node exists and is its own interrupt parent.  *  * This applies to all models of imx6.  Luckily all of them have the devices  * involved at the same addresses on the same buses, so we don't need any  * per-soc logic.  We handle this at platform attach time rather than via the  * fdt_fixup_table, because the latter requires matching on the FDT "model"  * property, and this applies to all boards including those not yet invented.  */
+comment|/*  * Fix FDT data related to interrupts.  *  * Driven by the needs of linux and its drivers (as always), the published FDT  * data for imx6 now sets the interrupt parent for most devices to the GPC  * interrupt controller, which is for use when the chip is in deep-sleep mode.  * We don't support deep sleep or have a GPC-PIC driver; we need all interrupts  * to be handled by the GIC.  *  * Luckily, the change to the FDT data was to assign the GPC as the interrupt  * parent for the soc node and letting that get inherited by all other devices  * (except a few that directly name GIC as their interrupt parent).  So we can  * set the world right by just changing the interrupt-parent property of the soc  * node to refer to GIC instead of GPC.  This will get us by until we write our  * own GPC driver (or until linux changes its mind and the FDT data again).  *  * We validate that we have data that looks like we expect before changing it:  *  - SOC node exists and has GPC as its interrupt parent.  *  - GPC node exists and has GIC as its interrupt parent.  *  - GIC node exists and is its own interrupt parent or has no parent.  *  * This applies to all models of imx6.  Luckily all of them have the devices  * involved at the same addresses on the same buses, so we don't need any  * per-soc logic.  We handle this at platform attach time rather than via the  * fdt_fixup_table, because the latter requires matching on the FDT "model"  * property, and this applies to all boards including those not yet invented.  */
 end_comment
 
 begin_function
@@ -232,6 +232,7 @@ operator|<=
 literal|0
 condition|)
 return|return;
+comment|/* GIC node may be child of soc node, or appear directly at root. */
 name|gicnode
 operator|=
 name|OF_finddevice
@@ -246,7 +247,31 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|gicnode
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"/interrupt-controller@00a01000"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gicnode
+operator|==
+operator|-
+literal|1
+condition|)
 return|return;
+block|}
+name|gicxref
+operator|=
+name|OF_xref_from_node
+argument_list|(
+name|gicnode
+argument_list|)
+expr_stmt|;
+comment|/* If gic node has no parent, pretend it is its own parent. */
 name|result
 operator|=
 name|OF_getencprop
@@ -270,13 +295,9 @@ name|result
 operator|<=
 literal|0
 condition|)
-return|return;
-name|gicxref
+name|gicipar
 operator|=
-name|OF_xref_from_node
-argument_list|(
-name|gicnode
-argument_list|)
+name|gicxref
 expr_stmt|;
 name|gpcnode
 operator|=
