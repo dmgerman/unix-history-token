@@ -405,6 +405,22 @@ literal|"Intel BayTrail USB 2.0 controller"
 operator|)
 return|;
 case|case
+literal|0x1c268086
+case|:
+return|return
+operator|(
+literal|"Intel Cougar Point USB 2.0 controller"
+operator|)
+return|;
+case|case
+literal|0x1c2d8086
+case|:
+return|return
+operator|(
+literal|"Intel Cougar Point USB 2.0 controller"
+operator|)
+return|;
+case|case
 literal|0x1d268086
 case|:
 return|return
