@@ -2358,11 +2358,11 @@ name|smp_rendezvous_cpus
 argument_list|(
 name|readcpus
 argument_list|,
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|rm_cleanIPI
 argument_list|,
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|rm
 argument_list|)

@@ -488,11 +488,11 @@ name|smp_rendezvous_cpus
 argument_list|(
 name|cpus
 argument_list|,
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|func
 argument_list|,
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|arg
 argument_list|)
@@ -1177,7 +1177,7 @@ name|NULL
 argument_list|,
 name|dtrace_gethrtime_init_cpu
 argument_list|,
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 operator|(
 name|void

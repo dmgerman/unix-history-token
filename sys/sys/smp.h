@@ -1000,7 +1000,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 parameter_list|(
 name|void
 modifier|*

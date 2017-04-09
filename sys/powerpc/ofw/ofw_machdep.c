@@ -2199,11 +2199,11 @@ literal|1
 expr_stmt|;
 name|smp_rendezvous
 argument_list|(
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|ofw_rendezvous_dispatch
 argument_list|,
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 operator|&
 name|rv_args

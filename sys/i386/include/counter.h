@@ -471,11 +471,11 @@ else|else
 block|{
 name|smp_rendezvous
 argument_list|(
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|counter_u64_zero_one_cpu
 argument_list|,
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|c
 argument_list|)

@@ -2037,11 +2037,11 @@ expr_stmt|;
 comment|/* XXX */
 name|smp_rendezvous
 argument_list|(
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|comp_smp_tsc
 argument_list|,
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|data
 argument_list|)
@@ -2061,11 +2061,11 @@ operator|++
 expr_stmt|;
 name|smp_rendezvous
 argument_list|(
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|adj_smp_tsc
 argument_list|,
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|data
 argument_list|)

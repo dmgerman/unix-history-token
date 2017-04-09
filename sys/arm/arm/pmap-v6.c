@@ -13123,7 +13123,7 @@ name|smp_rendezvous_cpus
 argument_list|(
 name|all_cpus
 argument_list|,
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|pmap_update_pte1_action
 argument_list|,

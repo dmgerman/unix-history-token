@@ -1548,7 +1548,7 @@ if|if
 condition|(
 name|local_setup_func
 operator|!=
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 condition|)
 block|{
 if|if
@@ -1601,7 +1601,7 @@ if|if
 condition|(
 name|local_teardown_func
 operator|!=
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 condition|)
 block|{
 comment|/* 		 * Signal that the main action has been completed.  If a 		 * full exit rendezvous is requested, then all CPUs will 		 * wait here until all CPUs have finished the main action. 		 */
@@ -3177,7 +3177,7 @@ end_comment
 
 begin_function
 name|void
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 parameter_list|(
 name|void
 modifier|*
@@ -3195,7 +3195,7 @@ name|smp_started
 operator|)
 argument_list|,
 operator|(
-literal|"smp_no_rendevous called and smp is started"
+literal|"smp_no_rendezvous called and smp is started"
 operator|)
 argument_list|)
 expr_stmt|;

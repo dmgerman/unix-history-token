@@ -5097,7 +5097,7 @@ name|smp_rendezvous_cpus
 argument_list|(
 name|active
 argument_list|,
-name|smp_no_rendevous_barrier
+name|smp_no_rendezvous_barrier
 argument_list|,
 name|pmap
 operator|==
