@@ -695,8 +695,10 @@ comment|/*  * 32-bit routines.  */
 end_comment
 
 begin_function
+specifier|static
+name|__inline
 name|uint32_t
-name|__sync_val_compare_and_swap_4
+name|do_compare_and_swap_4
 parameter_list|(
 name|uint32_t
 modifier|*
@@ -774,8 +776,68 @@ operator|)
 return|;
 end_return
 
+begin_macro
+unit|}  uint32_t
+name|__sync_val_compare_and_swap_4
+argument_list|(
+argument|uint32_t *mem
+argument_list|,
+argument|uint32_t expected
+argument_list|,
+argument|uint32_t desired
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+name|do_compare_and_swap_4
+argument_list|(
+name|mem
+argument_list|,
+name|expected
+argument_list|,
+name|desired
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_function
+name|bool
+name|__sync_bool_compare_and_swap_4
+parameter_list|(
+name|uint32_t
+modifier|*
+name|mem
+parameter_list|,
+name|uint32_t
+name|expected
+parameter_list|,
+name|uint32_t
+name|desired
+parameter_list|)
+block|{
+return|return
+operator|(
+name|do_compare_and_swap_4
+argument_list|(
+name|mem
+argument_list|,
+name|expected
+argument_list|,
+name|desired
+argument_list|)
+operator|==
+name|desired
+operator|)
+return|;
+block|}
+end_function
+
 begin_define
-unit|}
 define|#
 directive|define
 name|EMIT_FETCH_AND_OP_4
@@ -796,44 +858,65 @@ comment|/* Spin if failed. */
 value|\ 		: "=&r" (old), "=m" (*mem), "=&r" (temp)		\ 		: "r" (val), "m" (*mem));				\ 	return (old);							\ }
 end_define
 
-begin_expr_stmt
-unit|EMIT_FETCH_AND_OP_4
-operator|(
-name|lock_test_and_set
-operator|,
+begin_macro
+name|EMIT_FETCH_AND_OP_4
+argument_list|(
+argument|lock_test_and_set
+argument_list|,
 literal|"move %2, %3"
-operator|)
+argument_list|)
+end_macro
+
+begin_macro
 name|EMIT_FETCH_AND_OP_4
 argument_list|(
 argument|fetch_and_add
 argument_list|,
 literal|"addu %2, %0, %3"
 argument_list|)
+end_macro
+
+begin_macro
 name|EMIT_FETCH_AND_OP_4
 argument_list|(
 argument|fetch_and_and
 argument_list|,
 literal|"and %2, %0, %3"
 argument_list|)
+end_macro
+
+begin_macro
 name|EMIT_FETCH_AND_OP_4
 argument_list|(
 argument|fetch_and_or
 argument_list|,
 literal|"or %2, %0, %3"
 argument_list|)
+end_macro
+
+begin_macro
 name|EMIT_FETCH_AND_OP_4
 argument_list|(
 argument|fetch_and_sub
 argument_list|,
 literal|"subu %2, %0, %3"
 argument_list|)
+end_macro
+
+begin_macro
 name|EMIT_FETCH_AND_OP_4
 argument_list|(
 argument|fetch_and_xor
 argument_list|,
 literal|"xor %2, %0, %3"
 argument_list|)
+end_macro
+
+begin_comment
 comment|/*  * 64-bit routines.  *  * Note: All the 64-bit atomic operations are only atomic when running  * in 64-bit mode. It is assumed that code compiled for n32 and n64 fits  * into this definition and no further safeties are needed.  */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -845,24 +928,31 @@ name|defined
 argument_list|(
 name|__mips_n64
 argument_list|)
+end_if
+
+begin_function
 name|uint64_t
 name|__sync_val_compare_and_swap_8
-argument_list|(
-argument|uint64_t *mem
-argument_list|,
-argument|uint64_t expected
-argument_list|,
-argument|uint64_t desired
-argument_list|)
+parameter_list|(
+name|uint64_t
+modifier|*
+name|mem
+parameter_list|,
+name|uint64_t
+name|expected
+parameter_list|,
+name|uint64_t
+name|desired
+parameter_list|)
 block|{
 name|uint64_t
 name|old
-block|,
+decl_stmt|,
 name|temp
-block|;
+decl_stmt|;
 name|do_sync
 argument_list|()
-block|;
+expr_stmt|;
 asm|__asm volatile (
 literal|"1:"
 literal|"\tlld	%0, %5\n"
@@ -881,13 +971,13 @@ literal|"=&r"
 operator|(
 name|old
 operator|)
-block|,
+operator|,
 literal|"=m"
 operator|(
 operator|*
 name|mem
 operator|)
-block|,
+operator|,
 literal|"=&r"
 operator|(
 name|temp
@@ -897,20 +987,20 @@ literal|"r"
 operator|(
 name|expected
 operator|)
-block|,
+operator|,
 literal|"r"
 operator|(
 name|desired
 operator|)
-block|,
+operator|,
 literal|"m"
 operator|(
 operator|*
 name|mem
 operator|)
 block|)
-expr_stmt|;
-end_expr_stmt
+function|;
+end_function
 
 begin_return
 return|return
