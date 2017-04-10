@@ -842,7 +842,7 @@ literal|0
 argument_list|,
 literal|"fsl,imx6s"
 argument_list|,
-literal|0
+literal|80
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -860,7 +860,7 @@ literal|0
 argument_list|,
 literal|"fsl,imx6dl"
 argument_list|,
-literal|0
+literal|80
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -878,7 +878,7 @@ literal|0
 argument_list|,
 literal|"fsl,imx6q"
 argument_list|,
-literal|0
+literal|80
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -896,7 +896,7 @@ literal|0
 argument_list|,
 literal|"fsl,imx6ul"
 argument_list|,
-literal|0
+literal|67
 argument_list|)
 expr_stmt|;
 end_expr_stmt
