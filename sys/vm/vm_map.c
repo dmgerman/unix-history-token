@@ -6710,6 +6710,27 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|entry
+operator|->
+name|end
+operator|>
+name|start
+operator|&&
+name|entry
+operator|->
+name|start
+operator|<
+name|start
+argument_list|,
+operator|(
+literal|"_vm_map_clip_start: invalid clip of entry %p"
+operator|,
+name|entry
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Split off the front portion -- note that we must insert the new 	 * entry BEFORE this one, so that this entry has the specified 	 * starting address. 	 */
 name|vm_map_simplify_entry
 argument_list|(
@@ -7043,6 +7064,27 @@ decl_stmt|;
 name|VM_MAP_ASSERT_LOCKED
 argument_list|(
 name|map
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|entry
+operator|->
+name|start
+operator|<
+name|end
+operator|&&
+name|entry
+operator|->
+name|end
+operator|>
+name|end
+argument_list|,
+operator|(
+literal|"_vm_map_clip_end: invalid clip of entry %p"
+operator|,
+name|entry
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If there is no object backing this entry, we might as well create 	 * one now.  If we defer it, an object can get created after the map 	 * is clipped, and individual objects will be created for the split-up 	 * map.  This is a bit of a hack, but is also about the best place to 	 * put this improvement. 	 */
