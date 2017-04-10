@@ -32,6 +32,10 @@ name|sc
 parameter_list|,
 name|int
 name|mtu
+parameter_list|,
+name|int
+modifier|*
+name|init_done
 parameter_list|)
 function_decl|;
 end_function_decl
