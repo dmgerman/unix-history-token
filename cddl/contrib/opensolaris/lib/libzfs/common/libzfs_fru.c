@@ -1368,14 +1368,12 @@ operator|=
 name|calloc
 argument_list|(
 name|ZFS_FRU_HASH_SIZE
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|void
 operator|*
 argument_list|)
-argument_list|,
-literal|1
 argument_list|)
 operator|)
 operator|==
