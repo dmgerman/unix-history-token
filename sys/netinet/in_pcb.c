@@ -1704,6 +1704,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Reference from inpcbinfo */
+comment|/* 	 * Routes in inpcb's can cache L2 as well; they are guaranteed 	 * to be cleaned up. 	 */
+name|inp
+operator|->
+name|inp_route
+operator|.
+name|ro_flags
+operator|=
+name|RT_LLE_CACHE
+expr_stmt|;
 name|INP_LIST_WUNLOCK
 argument_list|(
 name|pcbinfo
