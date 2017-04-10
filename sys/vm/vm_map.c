@@ -8033,6 +8033,12 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Ensure that we are not concurrently wiring pages.  vm_map_wire() may 	 * need to fault pages into the map and will drop the map lock while 	 * doing so, and the VM object may end up in an inconsistent state if we 	 * update the protection on the map entry in between faults. 	 */
+name|vm_map_wait_busy
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
 name|VM_MAP_RANGE_CHECK
 argument_list|(
 name|map
