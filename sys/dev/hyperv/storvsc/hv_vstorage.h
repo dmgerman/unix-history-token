@@ -469,13 +469,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SRB_STATUS_ABORT_FAILED
-value|0x03
-end_define
-
-begin_define
-define|#
-directive|define
 name|SRB_STATUS_ERROR
 value|0x04
 end_define
@@ -483,8 +476,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SRB_STATUS_BUSY
-value|0x05
+name|SRB_STATUS_INVALID_LUN
+value|0x20
 end_define
 
 begin_comment
@@ -508,8 +501,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|SRB_STATUS_INVALID_LUN
-value|0X20
+name|SRB_STATUS
+parameter_list|(
+name|status
+parameter_list|)
+define|\
+value|((status)& ~(SRB_STATUS_AUTOSENSE_VALID | SRB_STATUS_QUEUE_FROZEN))
 end_define
 
 begin_comment
