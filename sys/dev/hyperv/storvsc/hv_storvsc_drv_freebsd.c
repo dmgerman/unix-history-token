@@ -9207,6 +9207,16 @@ operator|&=
 operator|~
 name|CAM_STATUS_MASK
 expr_stmt|;
+name|int
+name|srb_status
+init|=
+name|SRB_STATUS
+argument_list|(
+name|vm_srb
+operator|->
+name|srb_status
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|vm_srb
@@ -9256,8 +9266,6 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|vm_srb
-operator|->
 name|srb_status
 operator|!=
 name|SRB_STATUS_SUCCESS
@@ -9271,8 +9279,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|vm_srb
-operator|->
 name|srb_status
 operator|==
 name|SRB_STATUS_INVALID_LUN
@@ -9315,8 +9321,6 @@ name|path
 argument_list|,
 literal|"Unknown SRB flag: %d for op: %s\n"
 argument_list|,
-name|vm_srb
-operator|->
 name|srb_status
 argument_list|,
 name|scsi_op_desc
@@ -9380,8 +9384,6 @@ name|opcode
 operator|==
 name|INQUIRY
 operator|&&
-name|vm_srb
-operator|->
 name|srb_status
 operator|==
 name|SRB_STATUS_SUCCESS
