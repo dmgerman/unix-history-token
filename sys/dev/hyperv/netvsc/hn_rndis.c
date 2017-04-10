@@ -4764,11 +4764,20 @@ name|sc
 parameter_list|,
 name|int
 name|mtu
+parameter_list|,
+name|int
+modifier|*
+name|init_done
 parameter_list|)
 block|{
 name|int
 name|error
 decl_stmt|;
+operator|*
+name|init_done
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Initialize RNDIS. 	 */
 name|error
 operator|=
@@ -4786,6 +4795,11 @@ operator|(
 name|error
 operator|)
 return|;
+operator|*
+name|init_done
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Configure NDIS offload settings. 	 */
 name|hn_rndis_conf_offload
 argument_list|(
