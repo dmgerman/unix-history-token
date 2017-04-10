@@ -2127,11 +2127,6 @@ operator|*
 operator|)
 name|info
 expr_stmt|;
-name|SVC_ACQUIRE
-argument_list|(
-name|xprt
-argument_list|)
-expr_stmt|;
 name|xprt_register
 argument_list|(
 name|xprt
