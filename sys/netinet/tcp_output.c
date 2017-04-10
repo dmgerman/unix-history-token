@@ -3095,6 +3095,7 @@ name|to_flags
 operator||=
 name|TOF_TS
 expr_stmt|;
+block|}
 comment|/* Set receive buffer autosizing timestamp. */
 if|if
 condition|(
@@ -3121,7 +3122,6 @@ operator|=
 name|tcp_ts_getticks
 argument_list|()
 expr_stmt|;
-block|}
 comment|/* Selective ACK's. */
 if|if
 condition|(

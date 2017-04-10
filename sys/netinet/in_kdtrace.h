@@ -344,6 +344,16 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DECLARE
 argument_list|(
+name|tcp
+argument_list|, , ,
+name|receive__autoresize
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DECLARE
+argument_list|(
 name|udp
 argument_list|, , ,
 name|receive
