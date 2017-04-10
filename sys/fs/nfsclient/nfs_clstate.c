@@ -4131,9 +4131,28 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|igotlock
+operator|==
+literal|0
 condition|)
+block|{
+comment|/* 		 * Call nfsv4_lock() with "iwantlock == 0" so that it will 		 * wait for a pending exclusive lock request.  This gives the 		 * exclusive lock request priority over this shared lock 		 * request. 		 * An exclusive lock on nfsc_lock is used mainly for server 		 * crash recoveries. 		 */
+name|nfsv4_lock
+argument_list|(
+operator|&
+name|clp
+operator|->
+name|nfsc_lock
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NFSCLSTATEMUTEXPTR
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
 name|nfsv4_getref
 argument_list|(
 operator|&
@@ -4148,6 +4167,7 @@ argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|igotlock
