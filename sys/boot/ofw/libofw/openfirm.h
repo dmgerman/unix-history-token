@@ -383,6 +383,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|unsigned
+name|int
+name|OF_blocks
+parameter_list|(
+name|ihandle_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|OF_block_size
+parameter_list|(
+name|ihandle_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Memory functions */
 end_comment
