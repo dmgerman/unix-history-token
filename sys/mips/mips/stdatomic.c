@@ -29,6 +29,27 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_if
 if|#
 directive|if
