@@ -365,11 +365,11 @@ if|if
 condition|(
 name|d
 operator|->
-name|next
+name|first
 operator|>
 name|d
 operator|->
-name|first
+name|next
 condition|)
 block|{
 name|char
