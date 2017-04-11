@@ -5625,7 +5625,17 @@ operator|==
 name|c
 condition|)
 block|{
-comment|/* 		 * Succeed we to stop it or not, we must clear the 		 * active flag - this is what API users expect. 		 */
+comment|/* 		 * Succeed we to stop it or not, we must clear the 		 * active flag - this is what API users expect.  If we're 		 * draining and the callout is currently executing, first wait 		 * until it finishes. 		 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|CS_DRAIN
+operator|)
+operator|==
+literal|0
+condition|)
 name|c
 operator|->
 name|c_flags
@@ -5765,6 +5775,13 @@ name|cc
 argument_list|)
 expr_stmt|;
 block|}
+name|c
+operator|->
+name|c_flags
+operator|&=
+operator|~
+name|CALLOUT_ACTIVE
+expr_stmt|;
 block|}
 elseif|else
 if|if
