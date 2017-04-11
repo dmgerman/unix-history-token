@@ -70529,6 +70529,9 @@ literal|0
 operator|)
 return|;
 comment|/* get prefix entry of address */
+name|ND6_RLOCK
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pfx
@@ -70579,6 +70582,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|ND6_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_OUTPUT2
@@ -70752,6 +70758,9 @@ argument_list|,
 literal|"pfxrouter is installed\n"
 argument_list|)
 expr_stmt|;
+name|ND6_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -70759,6 +70768,9 @@ operator|)
 return|;
 block|}
 block|}
+name|ND6_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_OUTPUT2
