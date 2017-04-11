@@ -1223,7 +1223,7 @@ name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_ip
 argument_list|,
-name|IPCTL_INTRQMAXLEN
+name|IPCTL_INTRDQMAXLEN
 argument_list|,
 name|intr_direct_queue_maxlen
 argument_list|,
@@ -1331,7 +1331,7 @@ name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_ip
 argument_list|,
-name|IPCTL_INTRQDROPS
+name|IPCTL_INTRDQDROPS
 argument_list|,
 name|intr_direct_queue_drops
 argument_list|,
