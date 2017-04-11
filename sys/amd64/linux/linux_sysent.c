@@ -4532,7 +4532,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_create_module
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -4544,10 +4544,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 174 = linux_create_module */
+comment|/* 174 = create_module */
 block|{
 literal|0
 block|,
@@ -4601,7 +4601,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_get_kernel_syms
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -4613,10 +4613,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 177 = linux_get_kernel_syms */
+comment|/* 177 = get_kernel_syms */
 block|{
 literal|0
 block|,
@@ -4624,7 +4624,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_query_module
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -4636,10 +4636,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 178 = linux_query_module */
+comment|/* 178 = query_module */
 block|{
 literal|0
 block|,
@@ -4670,7 +4670,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_nfsservctl
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -4682,10 +4682,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 180 = linux_nfsservctl */
+comment|/* 180 = nfsservctl */
 block|{
 literal|0
 block|,
@@ -4693,53 +4693,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_getpmsg
-block|,
-name|AUE_GETPMSG
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|SY_THR_STATIC
-block|}
-block|,
-comment|/* 181 = linux_getpmsg */
-block|{
-literal|0
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|linux_putpmsg
-block|,
-name|AUE_PUTPMSG
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|SY_THR_STATIC
-block|}
-block|,
-comment|/* 182 = linux_putpmsg */
-block|{
-literal|0
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|linux_afs_syscall
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -4751,10 +4705,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 183 = linux_afs_syscall */
+comment|/* 181 = getpmsg */
 block|{
 literal|0
 block|,
@@ -4762,7 +4716,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_tuxcall
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -4774,10 +4728,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 184 = linux_tuxcall */
+comment|/* 182 = putpmsg */
 block|{
 literal|0
 block|,
@@ -4785,7 +4739,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_security
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -4797,10 +4751,56 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 185 = linux_security */
+comment|/* 183 = afs_syscall */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|,
+name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SY_THR_ABSENT
+block|}
+block|,
+comment|/* 184 = tuxcall */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|,
+name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SY_THR_ABSENT
+block|}
+block|,
+comment|/* 185 = security */
 block|{
 literal|0
 block|,
@@ -5260,7 +5260,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_set_thread_area
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -5272,10 +5272,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 205 = linux_set_thread_area */
+comment|/* 205 = set_thread_area */
 block|{
 literal|0
 block|,
@@ -5413,7 +5413,7 @@ block|,
 name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 211 = linux_get_thread_area */
+comment|/* 211 = get_thread_area */
 block|{
 literal|0
 block|,
@@ -5470,7 +5470,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_epoll_ctl_old
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -5482,10 +5482,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 214 = linux_epoll_ctl_old */
+comment|/* 214 = epoll_ctl_old */
 block|{
 literal|0
 block|,
@@ -5493,7 +5493,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_epoll_wait_old
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -5505,10 +5505,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 215 = linux_epoll_wait_old */
+comment|/* 215 = epoll_wait_old */
 block|{
 literal|0
 block|,

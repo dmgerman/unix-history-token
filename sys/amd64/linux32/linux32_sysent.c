@@ -3277,7 +3277,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_create_module
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -3289,10 +3289,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 127 = linux_create_module */
+comment|/* 127 = create_module */
 block|{
 literal|0
 block|,
@@ -3346,7 +3346,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_get_kernel_syms
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -3358,10 +3358,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 130 = linux_get_kernel_syms */
+comment|/* 130 = get_kernel_syms */
 block|{
 literal|0
 block|,
@@ -4287,7 +4287,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_query_module
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -4299,10 +4299,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 167 = linux_query_module */
+comment|/* 167 = query_module */
 block|{
 name|AS
 argument_list|(
@@ -4336,7 +4336,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_nfsservctl
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -4348,10 +4348,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
-comment|/* 169 = linux_nfsservctl */
+comment|/* 169 = nfsservctl */
 block|{
 name|AS
 argument_list|(

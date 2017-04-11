@@ -4230,18 +4230,6 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* linux_create_module */
-case|case
-literal|127
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
 comment|/* linux_init_module */
 case|case
 literal|128
@@ -4257,18 +4245,6 @@ block|}
 comment|/* linux_delete_module */
 case|case
 literal|129
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-comment|/* linux_get_kernel_syms */
-case|case
-literal|130
 case|:
 block|{
 operator|*
@@ -5606,18 +5582,6 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* linux_query_module */
-case|case
-literal|167
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
 comment|/* poll */
 case|case
 literal|168
@@ -5667,18 +5631,6 @@ operator|*
 name|n_args
 operator|=
 literal|3
-expr_stmt|;
-break|break;
-block|}
-comment|/* linux_nfsservctl */
-case|case
-literal|169
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 block|}
@@ -16843,11 +16795,6 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* linux_create_module */
-case|case
-literal|127
-case|:
-break|break;
 comment|/* linux_init_module */
 case|case
 literal|128
@@ -16856,11 +16803,6 @@ break|break;
 comment|/* linux_delete_module */
 case|case
 literal|129
-case|:
-break|break;
-comment|/* linux_get_kernel_syms */
-case|case
-literal|130
 case|:
 break|break;
 comment|/* linux_quotactl */
@@ -17823,11 +17765,6 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* linux_query_module */
-case|case
-literal|167
-case|:
-break|break;
 comment|/* poll */
 case|case
 literal|168
@@ -17865,11 +17802,6 @@ default|default:
 break|break;
 block|}
 empty_stmt|;
-break|break;
-comment|/* linux_nfsservctl */
-case|case
-literal|169
-case|:
 break|break;
 comment|/* linux_setresgid16 */
 case|case
@@ -25537,10 +25469,6 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* linux_create_module */
-case|case
-literal|127
-case|:
 comment|/* linux_init_module */
 case|case
 literal|128
@@ -25548,10 +25476,6 @@ case|:
 comment|/* linux_delete_module */
 case|case
 literal|129
-case|:
-comment|/* linux_get_kernel_syms */
-case|case
-literal|130
 case|:
 comment|/* linux_quotactl */
 case|case
@@ -26139,10 +26063,6 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* linux_query_module */
-case|case
-literal|167
-case|:
 comment|/* poll */
 case|case
 literal|168
@@ -26162,10 +26082,6 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* linux_nfsservctl */
-case|case
-literal|169
-case|:
 comment|/* linux_setresgid16 */
 case|case
 literal|170

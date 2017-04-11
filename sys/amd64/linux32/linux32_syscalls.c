@@ -396,18 +396,18 @@ comment|/* 125 = linux_mprotect */
 literal|"linux_sigprocmask"
 block|,
 comment|/* 126 = linux_sigprocmask */
-literal|"linux_create_module"
+literal|"#127"
 block|,
-comment|/* 127 = linux_create_module */
+comment|/* 127 = create_module */
 literal|"linux_init_module"
 block|,
 comment|/* 128 = linux_init_module */
 literal|"linux_delete_module"
 block|,
 comment|/* 129 = linux_delete_module */
-literal|"linux_get_kernel_syms"
+literal|"#130"
 block|,
-comment|/* 130 = linux_get_kernel_syms */
+comment|/* 130 = get_kernel_syms */
 literal|"linux_quotactl"
 block|,
 comment|/* 131 = linux_quotactl */
@@ -516,15 +516,15 @@ comment|/* 165 = linux_getresuid16 */
 literal|"#166"
 block|,
 comment|/* 166 = vm86 */
-literal|"linux_query_module"
+literal|"#167"
 block|,
-comment|/* 167 = linux_query_module */
+comment|/* 167 = query_module */
 literal|"poll"
 block|,
 comment|/* 168 = poll */
-literal|"linux_nfsservctl"
+literal|"#169"
 block|,
-comment|/* 169 = linux_nfsservctl */
+comment|/* 169 = nfsservctl */
 literal|"linux_setresgid16"
 block|,
 comment|/* 170 = linux_setresgid16 */

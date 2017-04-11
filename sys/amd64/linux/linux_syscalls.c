@@ -537,42 +537,42 @@ comment|/* 172 = linux_iopl */
 literal|"#173"
 block|,
 comment|/* 173 = ioperm */
-literal|"linux_create_module"
+literal|"#174"
 block|,
-comment|/* 174 = linux_create_module */
+comment|/* 174 = create_module */
 literal|"linux_init_module"
 block|,
 comment|/* 175 = linux_init_module */
 literal|"linux_delete_module"
 block|,
 comment|/* 176 = linux_delete_module */
-literal|"linux_get_kernel_syms"
+literal|"#177"
 block|,
-comment|/* 177 = linux_get_kernel_syms */
-literal|"linux_query_module"
+comment|/* 177 = get_kernel_syms */
+literal|"#178"
 block|,
-comment|/* 178 = linux_query_module */
+comment|/* 178 = query_module */
 literal|"linux_quotactl"
 block|,
 comment|/* 179 = linux_quotactl */
-literal|"linux_nfsservctl"
+literal|"#180"
 block|,
-comment|/* 180 = linux_nfsservctl */
-literal|"linux_getpmsg"
+comment|/* 180 = nfsservctl */
+literal|"#181"
 block|,
-comment|/* 181 = linux_getpmsg */
-literal|"linux_putpmsg"
+comment|/* 181 = getpmsg */
+literal|"#182"
 block|,
-comment|/* 182 = linux_putpmsg */
-literal|"linux_afs_syscall"
+comment|/* 182 = putpmsg */
+literal|"#183"
 block|,
-comment|/* 183 = linux_afs_syscall */
-literal|"linux_tuxcall"
+comment|/* 183 = afs_syscall */
+literal|"#184"
 block|,
-comment|/* 184 = linux_tuxcall */
-literal|"linux_security"
+comment|/* 184 = tuxcall */
+literal|"#185"
 block|,
-comment|/* 185 = linux_security */
+comment|/* 185 = security */
 literal|"linux_gettid"
 block|,
 comment|/* 186 = linux_gettid */
@@ -630,9 +630,9 @@ comment|/* 203 = linux_sched_setaffinity */
 literal|"linux_sched_getaffinity"
 block|,
 comment|/* 204 = linux_sched_getaffinity */
-literal|"linux_set_thread_area"
+literal|"#205"
 block|,
-comment|/* 205 = linux_set_thread_area */
+comment|/* 205 = set_thread_area */
 literal|"#206"
 block|,
 comment|/* 206 = linux_io_setup */
@@ -650,19 +650,19 @@ block|,
 comment|/* 210 = linux_io_cancel */
 literal|"#211"
 block|,
-comment|/* 211 = linux_get_thread_area */
+comment|/* 211 = get_thread_area */
 literal|"linux_lookup_dcookie"
 block|,
 comment|/* 212 = linux_lookup_dcookie */
 literal|"linux_epoll_create"
 block|,
 comment|/* 213 = linux_epoll_create */
-literal|"linux_epoll_ctl_old"
+literal|"#214"
 block|,
-comment|/* 214 = linux_epoll_ctl_old */
-literal|"linux_epoll_wait_old"
+comment|/* 214 = epoll_ctl_old */
+literal|"#215"
 block|,
-comment|/* 215 = linux_epoll_wait_old */
+comment|/* 215 = epoll_wait_old */
 literal|"linux_remap_file_pages"
 block|,
 comment|/* 216 = linux_remap_file_pages */
