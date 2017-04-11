@@ -1214,11 +1214,6 @@ name|outfile
 init|=
 name|NULL
 decl_stmt|;
-name|struct
-name|option
-modifier|*
-name|popt
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -1386,33 +1381,8 @@ case|case
 literal|'t'
 case|:
 case|case
-literal|'H'
-case|:
-case|case
 literal|'W'
 case|:
-for|for
-control|(
-name|popt
-operator|=
-name|longopts
-init|;
-name|ch
-operator|!=
-name|popt
-operator|->
-name|val
-operator|&&
-name|popt
-operator|->
-name|name
-operator|!=
-name|NULL
-condition|;
-name|popt
-operator|++
-control|)
-empty_stmt|;
 name|diffargv
 index|[
 literal|1
@@ -1480,6 +1450,18 @@ index|]
 argument_list|,
 name|ch
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'H'
+case|:
+name|diffargv
+index|[
+name|diffargc
+operator|++
+index|]
+operator|=
+literal|"--speed-large-files"
 expr_stmt|;
 break|break;
 case|case
@@ -4962,7 +4944,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: sdiff [-abdilstW] [-I regexp] [-o outfile] [-w width] file1"
+literal|"usage: sdiff [-abdilstHW] [-I regexp] [-o outfile] [-w width] file1"
 literal|" file2\n"
 argument_list|)
 expr_stmt|;
