@@ -2839,10 +2839,6 @@ name|normal_return
 goto|;
 block|}
 block|}
-name|instring
-operator|=
-name|FALSE
-expr_stmt|;
 if|if
 condition|(
 name|FOLLBY_STRING

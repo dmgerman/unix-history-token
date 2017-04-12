@@ -1252,6 +1252,12 @@ begin_comment
 comment|/* !SIM&& !SYS_WINNT */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WORK_FORK
+end_ifndef
+
 begin_decl_stmt
 name|int
 name|saved_argc
@@ -1265,6 +1271,11 @@ modifier|*
 name|saved_argv
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

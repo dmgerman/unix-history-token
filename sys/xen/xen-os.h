@@ -125,6 +125,13 @@ name|xen_disable_pv_nics
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|bool
+name|xen_suspend_cancelled
+decl_stmt|;
+end_decl_stmt
+
 begin_enum
 enum|enum
 name|xen_domain_type

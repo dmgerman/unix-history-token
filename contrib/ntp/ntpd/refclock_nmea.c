@@ -2881,21 +2881,6 @@ argument_list|(
 name|gpsw
 argument_list|)
 expr_stmt|;
-name|sentence
-operator|=
-literal|0
-expr_stmt|;
-comment|// Should never be needed.
-name|rc_date
-operator|=
-literal|0
-expr_stmt|;
-comment|// Should never be needed.
-name|rc_time
-operator|=
-literal|0
-expr_stmt|;
-comment|// Should never be needed.
 comment|/*  	 * Read the timecode and timestamp, then initialise field 	 * processing. The<CR><LF> at the NMEA line end is translated 	 * to<LF><LF> by the terminal input routines on most systems, 	 * and this gives us one spurious empty read per record which we 	 * better ignore silently. 	 */
 name|rd_lencode
 operator|=

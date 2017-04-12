@@ -875,7 +875,7 @@ begin_function_decl
 specifier|extern
 name|void
 modifier|*
-name|oreallocarray
+name|oreallocarrayxz
 parameter_list|(
 name|void
 modifier|*
@@ -886,6 +886,9 @@ name|nmemb
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|size_t
+name|extra
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -967,7 +970,7 @@ name|n
 parameter_list|,
 name|s
 parameter_list|)
-value|oreallocarray((p), (n), (s))
+value|oreallocarrayxz((p), (n), (s), 0)
 end_define
 
 begin_define
@@ -979,7 +982,37 @@ name|n
 parameter_list|,
 name|s
 parameter_list|)
-value|oreallocarray(NULL, (n), (s))
+value|oreallocarrayxz(NULL, (n), (s), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ereallocarrayxz
+parameter_list|(
+name|p
+parameter_list|,
+name|n
+parameter_list|,
+name|s
+parameter_list|,
+name|x
+parameter_list|)
+value|oreallocarrayxz((p), (n), (s), (x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|eallocarrayxz
+parameter_list|(
+name|n
+parameter_list|,
+name|s
+parameter_list|,
+name|x
+parameter_list|)
+value|oreallocarrayxz(NULL, (n), (s), (x))
 end_define
 
 begin_function_decl
@@ -1038,7 +1071,7 @@ begin_function_decl
 specifier|extern
 name|void
 modifier|*
-name|oreallocarray
+name|oreallocarrayxz
 parameter_list|(
 name|void
 modifier|*
@@ -1049,6 +1082,9 @@ name|nmemb
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|size_t
+name|extra
 parameter_list|,
 specifier|const
 name|char
@@ -1123,7 +1159,7 @@ name|n
 parameter_list|,
 name|s
 parameter_list|)
-value|oreallocarray((p), (n), (s), \ 					  __FILE__, __LINE__)
+value|oreallocarrayxz((p), (n), (s), 0, \ 					  __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -1135,7 +1171,37 @@ name|n
 parameter_list|,
 name|s
 parameter_list|)
-value|oreallocarray(NULL, (n), (s), \ 					  __FILE__, __LINE__)
+value|oreallocarrayxz(NULL, (n), (s), 0, \ 					  __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ereallocarrayxz
+parameter_list|(
+name|p
+parameter_list|,
+name|n
+parameter_list|,
+name|s
+parameter_list|,
+name|x
+parameter_list|)
+value|oreallocarrayxz((p), (n), (s), (x), \ 					  __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|eallocarrayxz
+parameter_list|(
+name|n
+parameter_list|,
+name|s
+parameter_list|,
+name|x
+parameter_list|)
+value|oreallocarrayxz(NULL, (n), (s), (x), \ 					  __FILE__, __LINE__)
 end_define
 
 begin_function_decl
