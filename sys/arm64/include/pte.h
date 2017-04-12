@@ -98,6 +98,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATTR_UXN
+value|(1UL<< 54)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_PXN
+value|(1UL<< 53)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_XN
+value|(ATTR_PXN | ATTR_UXN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_CONTIGUOUS
+value|(1UL<< 52)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_DBM
+value|(1UL<< 51)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATTR_nG
 value|(1<< 11)
 end_define
