@@ -753,11 +753,28 @@ parameter_list|)
 value|le16toh(val)
 end_define
 
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|qlnx_get_cache_line_size
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|CACHE_LINE_SIZE
+operator|)
+return|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
 name|OSAL_CACHE_LINE_SIZE
-value|CACHE_LINE_SIZE
+value|qlnx_get_cache_line_size()
 end_define
 
 begin_define
