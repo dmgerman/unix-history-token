@@ -166,6 +166,9 @@ endif|#
 directive|endif
 include|#
 directive|include
+file|"openssl/bn.h"
+include|#
+directive|include
 file|"openssl/evp.h"
 include|#
 directive|include

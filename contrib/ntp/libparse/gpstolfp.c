@@ -31,10 +31,10 @@ begin_function
 name|void
 name|gpstolfp
 parameter_list|(
-name|int
+name|u_int
 name|weeks
 parameter_list|,
-name|int
+name|u_int
 name|days
 parameter_list|,
 name|unsigned

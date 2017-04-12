@@ -750,7 +750,7 @@ comment|/* manycast beacon interval */
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int
 name|sys_ttlmax
 decl_stmt|;
 end_decl_stmt
@@ -1765,9 +1765,6 @@ name|peer
 operator|->
 name|ttl
 operator|<
-operator|(
-name|u_int32
-operator|)
 name|sys_ttlmax
 condition|)
 name|peer
@@ -5715,10 +5712,21 @@ name|p_org
 argument_list|)
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|action
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BUG3361
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"receive: BUG 3361: Clearing peer->aorg "
+argument_list|)
+expr_stmt|;
 name|L_CLR
 argument_list|(
 operator|&
@@ -5727,6 +5735,8 @@ operator|->
 name|aorg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/**/
 switch|switch
 condition|(
@@ -5779,6 +5789,11 @@ expr_stmt|;
 comment|/* bogus */
 break|break;
 default|default:
+name|action
+operator|=
+literal|""
+expr_stmt|;
+comment|/* for cranky compilers / MSVC */
 name|INSIST
 argument_list|(
 operator|!
@@ -13275,6 +13290,16 @@ name|dstadr
 argument_list|,
 name|sys_ttl
 index|[
+operator|(
+name|peer
+operator|->
+name|ttl
+operator|>=
+name|sys_ttlmax
+operator|)
+condition|?
+name|sys_ttlmax
+else|:
 name|peer
 operator|->
 name|ttl
@@ -14421,6 +14446,16 @@ name|dstadr
 argument_list|,
 name|sys_ttl
 index|[
+operator|(
+name|peer
+operator|->
+name|ttl
+operator|>=
+name|sys_ttlmax
+operator|)
+condition|?
+name|sys_ttlmax
+else|:
 name|peer
 operator|->
 name|ttl
@@ -14567,7 +14602,7 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"peer_xmit: at %ld %s->%s mode %d keyid %08x len %d\n"
+literal|"peer_xmit: at %ld %s->%s mode %d keyid %08x len %zu\n"
 operator|,
 name|current_time
 operator|,
@@ -15895,6 +15930,16 @@ name|lcladr
 argument_list|,
 name|sys_ttl
 index|[
+operator|(
+name|pool
+operator|->
+name|ttl
+operator|>=
+name|sys_ttlmax
+operator|)
+condition|?
+name|sys_ttlmax
+else|:
 name|pool
 operator|->
 name|ttl
@@ -17129,10 +17174,9 @@ name|i
 operator|<
 name|MAX_TTL
 condition|;
-name|i
 operator|++
+name|i
 control|)
-block|{
 name|sys_ttl
 index|[
 name|i
@@ -17153,9 +17197,12 @@ argument_list|)
 expr_stmt|;
 name|sys_ttlmax
 operator|=
-name|i
+operator|(
+name|MAX_TTL
+operator|-
+literal|1
+operator|)
 expr_stmt|;
-block|}
 name|hardpps_enable
 operator|=
 literal|0

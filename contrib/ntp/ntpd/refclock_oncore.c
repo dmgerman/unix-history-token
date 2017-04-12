@@ -7783,18 +7783,17 @@ name|recv_length
 expr_stmt|;
 if|if
 condition|(
-name|rcvbuf
-operator|+
+operator|(
+name|size_t
+operator|)
 name|rcvptr
 operator|+
 name|i
-operator|>
-operator|&
-name|rcvbuf
-index|[
+operator|>=
 sizeof|sizeof
+argument_list|(
 name|rcvbuf
-index|]
+argument_list|)
 condition|)
 name|i
 operator|=
@@ -12428,17 +12427,6 @@ name|WARN_MINUS
 block|}
 name|warn
 enum|;
-name|day_now
-operator|=
-name|day_lsf
-operator|=
-literal|0
-expr_stmt|;
-name|cp
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* keep gcc happy */
 name|subframe
 operator|=
 name|buf
@@ -12932,6 +12920,12 @@ expr_stmt|;
 name|cp
 operator|=
 literal|"Set peer.leap to LEAP_ADDSECOND"
+expr_stmt|;
+break|break;
+default|default:
+name|cp
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 block|}
@@ -16601,12 +16595,6 @@ name|antenna_state
 name|antenna
 decl_stmt|;
 comment|/* antenna state */
-name|antenna
-operator|=
-name|instance
-operator|->
-name|ant_state
-expr_stmt|;
 if|if
 condition|(
 name|instance

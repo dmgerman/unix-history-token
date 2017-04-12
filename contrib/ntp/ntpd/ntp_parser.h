@@ -2274,7 +2274,7 @@ block|{
 line|#
 directive|line
 number|51
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1909  */
 name|char
 modifier|*

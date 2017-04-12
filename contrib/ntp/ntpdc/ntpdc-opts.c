@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpdc-opts.c)  *  *  It has been AutoGen-ed  November 21, 2016 at 08:02:18 AM by AutoGen 5.18.5  *  From the definitions    ntpdc-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpdc author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpdc program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
+comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpdc-opts.c)  *  *  It has been AutoGen-ed  March 21, 2017 at 10:44:44 AM by AutoGen 5.18.5  *  From the definitions    ntpdc-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpdc author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpdc program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2017 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -70,7 +70,7 @@ value|(ntpdc_opt_strs+0)
 define|#
 directive|define
 name|zLicenseDescrip
-value|(ntpdc_opt_strs+341)
+value|(ntpdc_opt_strs+342)
 comment|/*  *  global included definitions  */
 ifdef|#
 directive|ifdef
@@ -106,18 +106,18 @@ name|char
 specifier|const
 name|ntpdc_opt_strs
 index|[
-literal|1911
+literal|1914
 index|]
 init|=
 comment|/*     0 */
-literal|"ntpdc 4.2.8p9\n"
-literal|"Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.\n"
+literal|"ntpdc 4.2.8p10\n"
+literal|"Copyright (C) 1992-2017 The University of Delaware and Network Time Foundation, all rights reserved.\n"
 literal|"This is free software. It is licensed for use, modification and\n"
 literal|"redistribution under the terms of the NTP License, copies of which\n"
 literal|"can be seen at:\n"
 literal|"<http://ntp.org/license>\n"
 literal|"<http://opensource.org/licenses/ntp-license.php>\n\0"
-comment|/*   341 */
+comment|/*   342 */
 literal|"Permission to use, copy, modify, and distribute this software and its\n"
 literal|"documentation for any purpose with or without fee is hereby granted,\n"
 literal|"provided that the above copyright notice appears in all copies and that\n"
@@ -128,122 +128,122 @@ literal|"specific, written prior permission.  The University of Delaware and Net
 literal|"Time Foundation makes no representations about the suitability this\n"
 literal|"software for any purpose.  It is provided \"as is\" without express or\n"
 literal|"implied warranty.\n\0"
-comment|/*  1009 */
+comment|/*  1010 */
 literal|"Force IPv4 DNS name resolution\0"
-comment|/*  1040 */
+comment|/*  1041 */
 literal|"IPV4\0"
-comment|/*  1045 */
+comment|/*  1046 */
 literal|"ipv4\0"
-comment|/*  1050 */
+comment|/*  1051 */
 literal|"Force IPv6 DNS name resolution\0"
-comment|/*  1081 */
+comment|/*  1082 */
 literal|"IPV6\0"
-comment|/*  1086 */
+comment|/*  1087 */
 literal|"ipv6\0"
-comment|/*  1091 */
+comment|/*  1092 */
 literal|"run a command and exit\0"
-comment|/*  1114 */
+comment|/*  1115 */
 literal|"COMMAND\0"
-comment|/*  1122 */
+comment|/*  1123 */
 literal|"command\0"
-comment|/*  1130 */
+comment|/*  1131 */
 literal|"Increase debug verbosity level\0"
-comment|/*  1161 */
+comment|/*  1162 */
 literal|"DEBUG_LEVEL\0"
-comment|/*  1173 */
+comment|/*  1174 */
 literal|"debug-level\0"
-comment|/*  1185 */
+comment|/*  1186 */
 literal|"Set the debug verbosity level\0"
-comment|/*  1215 */
+comment|/*  1216 */
 literal|"SET_DEBUG_LEVEL\0"
-comment|/*  1231 */
+comment|/*  1232 */
 literal|"set-debug-level\0"
-comment|/*  1247 */
+comment|/*  1248 */
 literal|"Force ntpq to operate in interactive mode\0"
-comment|/*  1289 */
+comment|/*  1290 */
 literal|"INTERACTIVE\0"
-comment|/*  1301 */
+comment|/*  1302 */
 literal|"interactive\0"
-comment|/*  1313 */
+comment|/*  1314 */
 literal|"Print a list of the peers\0"
-comment|/*  1339 */
+comment|/*  1340 */
 literal|"LISTPEERS\0"
-comment|/*  1349 */
+comment|/*  1350 */
 literal|"listpeers\0"
-comment|/*  1359 */
+comment|/*  1360 */
 literal|"numeric host addresses\0"
-comment|/*  1382 */
+comment|/*  1383 */
 literal|"NUMERIC\0"
-comment|/*  1390 */
+comment|/*  1391 */
 literal|"numeric\0"
-comment|/*  1398 */
+comment|/*  1399 */
 literal|"PEERS\0"
-comment|/*  1404 */
+comment|/*  1405 */
 literal|"peers\0"
-comment|/*  1410 */
+comment|/*  1411 */
 literal|"Show a list of the peers\0"
-comment|/*  1435 */
+comment|/*  1436 */
 literal|"SHOWPEERS\0"
-comment|/*  1445 */
+comment|/*  1446 */
 literal|"showpeers\0"
-comment|/*  1455 */
+comment|/*  1456 */
 literal|"display extended usage information and exit\0"
-comment|/*  1499 */
+comment|/*  1500 */
 literal|"help\0"
-comment|/*  1504 */
+comment|/*  1505 */
 literal|"extended usage information passed thru pager\0"
-comment|/*  1549 */
+comment|/*  1550 */
 literal|"more-help\0"
-comment|/*  1559 */
+comment|/*  1560 */
 literal|"output version information and exit\0"
-comment|/*  1595 */
+comment|/*  1596 */
 literal|"version\0"
-comment|/*  1603 */
+comment|/*  1604 */
 literal|"save the option state to a config file\0"
-comment|/*  1642 */
+comment|/*  1643 */
 literal|"save-opts\0"
-comment|/*  1652 */
+comment|/*  1653 */
 literal|"load options from a config file\0"
-comment|/*  1684 */
+comment|/*  1685 */
 literal|"LOAD_OPTS\0"
-comment|/*  1694 */
+comment|/*  1695 */
 literal|"no-load-opts\0"
-comment|/*  1707 */
+comment|/*  1708 */
 literal|"no\0"
-comment|/*  1710 */
+comment|/*  1711 */
 literal|"NTPDC\0"
-comment|/*  1716 */
-literal|"ntpdc - vendor-specific NTPD control program - Ver. 4.2.8p9\n"
+comment|/*  1717 */
+literal|"ntpdc - vendor-specific NTPD control program - Ver. 4.2.8p10\n"
 literal|"Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n\0"
-comment|/*  1846 */
+comment|/*  1848 */
 literal|"$HOME\0"
-comment|/*  1852 */
-literal|".\0"
 comment|/*  1854 */
+literal|".\0"
+comment|/*  1856 */
 literal|".ntprc\0"
-comment|/*  1861 */
+comment|/*  1863 */
 literal|"http://bugs.ntp.org, bugs@ntp.org\0"
-comment|/*  1895 */
-literal|"\n\0"
 comment|/*  1897 */
-literal|"ntpdc 4.2.8p9"
+literal|"\n\0"
+comment|/*  1899 */
+literal|"ntpdc 4.2.8p10"
 decl_stmt|;
 comment|/**  *  ipv4 option description with  *  "Must also have options" and "Incompatible options":  */
 comment|/** Descriptive text for the ipv4 option */
 define|#
 directive|define
 name|IPV4_DESC
-value|(ntpdc_opt_strs+1009)
+value|(ntpdc_opt_strs+1010)
 comment|/** Upper-cased name for the ipv4 option */
 define|#
 directive|define
 name|IPV4_NAME
-value|(ntpdc_opt_strs+1040)
+value|(ntpdc_opt_strs+1041)
 comment|/** Name string for the ipv4 option */
 define|#
 directive|define
 name|IPV4_name
-value|(ntpdc_opt_strs+1045)
+value|(ntpdc_opt_strs+1046)
 comment|/** Other options that appear in conjunction with the ipv4 option */
 specifier|static
 name|int
@@ -267,17 +267,17 @@ comment|/** Descriptive text for the ipv6 option */
 define|#
 directive|define
 name|IPV6_DESC
-value|(ntpdc_opt_strs+1050)
+value|(ntpdc_opt_strs+1051)
 comment|/** Upper-cased name for the ipv6 option */
 define|#
 directive|define
 name|IPV6_NAME
-value|(ntpdc_opt_strs+1081)
+value|(ntpdc_opt_strs+1082)
 comment|/** Name string for the ipv6 option */
 define|#
 directive|define
 name|IPV6_name
-value|(ntpdc_opt_strs+1086)
+value|(ntpdc_opt_strs+1087)
 comment|/** Other options that appear in conjunction with the ipv6 option */
 specifier|static
 name|int
@@ -301,17 +301,17 @@ comment|/** Descriptive text for the command option */
 define|#
 directive|define
 name|COMMAND_DESC
-value|(ntpdc_opt_strs+1091)
+value|(ntpdc_opt_strs+1092)
 comment|/** Upper-cased name for the command option */
 define|#
 directive|define
 name|COMMAND_NAME
-value|(ntpdc_opt_strs+1114)
+value|(ntpdc_opt_strs+1115)
 comment|/** Name string for the command option */
 define|#
 directive|define
 name|COMMAND_name
-value|(ntpdc_opt_strs+1122)
+value|(ntpdc_opt_strs+1123)
 comment|/** Compiled in flag settings for the command option */
 define|#
 directive|define
@@ -322,17 +322,17 @@ comment|/** Descriptive text for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_DESC
-value|(ntpdc_opt_strs+1130)
+value|(ntpdc_opt_strs+1131)
 comment|/** Upper-cased name for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_NAME
-value|(ntpdc_opt_strs+1161)
+value|(ntpdc_opt_strs+1162)
 comment|/** Name string for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_name
-value|(ntpdc_opt_strs+1173)
+value|(ntpdc_opt_strs+1174)
 comment|/** Compiled in flag settings for the debug-level option */
 define|#
 directive|define
@@ -343,17 +343,17 @@ comment|/** Descriptive text for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_DESC
-value|(ntpdc_opt_strs+1185)
+value|(ntpdc_opt_strs+1186)
 comment|/** Upper-cased name for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_NAME
-value|(ntpdc_opt_strs+1215)
+value|(ntpdc_opt_strs+1216)
 comment|/** Name string for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_name
-value|(ntpdc_opt_strs+1231)
+value|(ntpdc_opt_strs+1232)
 comment|/** Compiled in flag settings for the set-debug-level option */
 define|#
 directive|define
@@ -364,17 +364,17 @@ comment|/** Descriptive text for the interactive option */
 define|#
 directive|define
 name|INTERACTIVE_DESC
-value|(ntpdc_opt_strs+1247)
+value|(ntpdc_opt_strs+1248)
 comment|/** Upper-cased name for the interactive option */
 define|#
 directive|define
 name|INTERACTIVE_NAME
-value|(ntpdc_opt_strs+1289)
+value|(ntpdc_opt_strs+1290)
 comment|/** Name string for the interactive option */
 define|#
 directive|define
 name|INTERACTIVE_name
-value|(ntpdc_opt_strs+1301)
+value|(ntpdc_opt_strs+1302)
 comment|/** Other options that appear in conjunction with the interactive option */
 specifier|static
 name|int
@@ -404,17 +404,17 @@ comment|/** Descriptive text for the listpeers option */
 define|#
 directive|define
 name|LISTPEERS_DESC
-value|(ntpdc_opt_strs+1313)
+value|(ntpdc_opt_strs+1314)
 comment|/** Upper-cased name for the listpeers option */
 define|#
 directive|define
 name|LISTPEERS_NAME
-value|(ntpdc_opt_strs+1339)
+value|(ntpdc_opt_strs+1340)
 comment|/** Name string for the listpeers option */
 define|#
 directive|define
 name|LISTPEERS_name
-value|(ntpdc_opt_strs+1349)
+value|(ntpdc_opt_strs+1350)
 comment|/** Other options that appear in conjunction with the listpeers option */
 specifier|static
 name|int
@@ -438,17 +438,17 @@ comment|/** Descriptive text for the numeric option */
 define|#
 directive|define
 name|NUMERIC_DESC
-value|(ntpdc_opt_strs+1359)
+value|(ntpdc_opt_strs+1360)
 comment|/** Upper-cased name for the numeric option */
 define|#
 directive|define
 name|NUMERIC_NAME
-value|(ntpdc_opt_strs+1382)
+value|(ntpdc_opt_strs+1383)
 comment|/** Name string for the numeric option */
 define|#
 directive|define
 name|NUMERIC_name
-value|(ntpdc_opt_strs+1390)
+value|(ntpdc_opt_strs+1391)
 comment|/** Compiled in flag settings for the numeric option */
 define|#
 directive|define
@@ -459,17 +459,17 @@ comment|/** Descriptive text for the peers option */
 define|#
 directive|define
 name|PEERS_DESC
-value|(ntpdc_opt_strs+1313)
+value|(ntpdc_opt_strs+1314)
 comment|/** Upper-cased name for the peers option */
 define|#
 directive|define
 name|PEERS_NAME
-value|(ntpdc_opt_strs+1398)
+value|(ntpdc_opt_strs+1399)
 comment|/** Name string for the peers option */
 define|#
 directive|define
 name|PEERS_name
-value|(ntpdc_opt_strs+1404)
+value|(ntpdc_opt_strs+1405)
 comment|/** Other options that appear in conjunction with the peers option */
 specifier|static
 name|int
@@ -493,17 +493,17 @@ comment|/** Descriptive text for the showpeers option */
 define|#
 directive|define
 name|SHOWPEERS_DESC
-value|(ntpdc_opt_strs+1410)
+value|(ntpdc_opt_strs+1411)
 comment|/** Upper-cased name for the showpeers option */
 define|#
 directive|define
 name|SHOWPEERS_NAME
-value|(ntpdc_opt_strs+1435)
+value|(ntpdc_opt_strs+1436)
 comment|/** Name string for the showpeers option */
 define|#
 directive|define
 name|SHOWPEERS_name
-value|(ntpdc_opt_strs+1445)
+value|(ntpdc_opt_strs+1446)
 comment|/** Other options that appear in conjunction with the showpeers option */
 specifier|static
 name|int
@@ -526,22 +526,22 @@ comment|/*  *  Help/More_Help/Version option descriptions:  */
 define|#
 directive|define
 name|HELP_DESC
-value|(ntpdc_opt_strs+1455)
+value|(ntpdc_opt_strs+1456)
 define|#
 directive|define
 name|HELP_name
-value|(ntpdc_opt_strs+1499)
+value|(ntpdc_opt_strs+1500)
 ifdef|#
 directive|ifdef
 name|HAVE_WORKING_FORK
 define|#
 directive|define
 name|MORE_HELP_DESC
-value|(ntpdc_opt_strs+1504)
+value|(ntpdc_opt_strs+1505)
 define|#
 directive|define
 name|MORE_HELP_name
-value|(ntpdc_opt_strs+1549)
+value|(ntpdc_opt_strs+1550)
 define|#
 directive|define
 name|MORE_HELP_FLAGS
@@ -580,35 +580,35 @@ directive|endif
 define|#
 directive|define
 name|VER_DESC
-value|(ntpdc_opt_strs+1559)
+value|(ntpdc_opt_strs+1560)
 define|#
 directive|define
 name|VER_name
-value|(ntpdc_opt_strs+1595)
+value|(ntpdc_opt_strs+1596)
 define|#
 directive|define
 name|SAVE_OPTS_DESC
-value|(ntpdc_opt_strs+1603)
+value|(ntpdc_opt_strs+1604)
 define|#
 directive|define
 name|SAVE_OPTS_name
-value|(ntpdc_opt_strs+1642)
+value|(ntpdc_opt_strs+1643)
 define|#
 directive|define
 name|LOAD_OPTS_DESC
-value|(ntpdc_opt_strs+1652)
+value|(ntpdc_opt_strs+1653)
 define|#
 directive|define
 name|LOAD_OPTS_NAME
-value|(ntpdc_opt_strs+1684)
+value|(ntpdc_opt_strs+1685)
 define|#
 directive|define
 name|NO_LOAD_OPTS_name
-value|(ntpdc_opt_strs+1694)
+value|(ntpdc_opt_strs+1695)
 define|#
 directive|define
 name|LOAD_OPTS_pfx
-value|(ntpdc_opt_strs+1707)
+value|(ntpdc_opt_strs+1708)
 define|#
 directive|define
 name|LOAD_OPTS_name
@@ -1513,17 +1513,17 @@ comment|/** Reference to the upper cased version of ntpdc. */
 define|#
 directive|define
 name|zPROGNAME
-value|(ntpdc_opt_strs+1710)
+value|(ntpdc_opt_strs+1711)
 comment|/** Reference to the title line for ntpdc usage. */
 define|#
 directive|define
 name|zUsageTitle
-value|(ntpdc_opt_strs+1716)
+value|(ntpdc_opt_strs+1717)
 comment|/** ntpdc configuration file name. */
 define|#
 directive|define
 name|zRcName
-value|(ntpdc_opt_strs+1854)
+value|(ntpdc_opt_strs+1856)
 comment|/** Directories to search for ntpdc config files. */
 specifier|static
 name|char
@@ -1538,11 +1538,11 @@ init|=
 block|{
 name|ntpdc_opt_strs
 operator|+
-literal|1846
+literal|1848
 block|,
 name|ntpdc_opt_strs
 operator|+
-literal|1852
+literal|1854
 block|,
 name|NULL
 block|}
@@ -1551,12 +1551,12 @@ comment|/** The ntpdc program bug email address. */
 define|#
 directive|define
 name|zBugsAddr
-value|(ntpdc_opt_strs+1861)
+value|(ntpdc_opt_strs+1863)
 comment|/** Clarification/explanation of what ntpdc does. */
 define|#
 directive|define
 name|zExplain
-value|(ntpdc_opt_strs+1895)
+value|(ntpdc_opt_strs+1897)
 comment|/** Extra detail explaining what ntpdc does. */
 define|#
 directive|define
@@ -1566,7 +1566,7 @@ comment|/** The full version string for ntpdc. */
 define|#
 directive|define
 name|zFullVersion
-value|(ntpdc_opt_strs+1897)
+value|(ntpdc_opt_strs+1899)
 comment|/* extracted from optcode.tlib near line 364 */
 if|#
 directive|if
@@ -2281,7 +2281,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpdc 4.2.8p9\n\ Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
+literal|"ntpdc 4.2.8p10\n\ Copyright (C) 1992-2017 The University of Delaware and Network Time Foundation, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2442,7 +2442,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpdc - vendor-specific NTPD control program - Ver. 4.2.8p9\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n"
+literal|"ntpdc - vendor-specific NTPD control program - Ver. 4.2.8p10\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2460,7 +2460,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpdc 4.2.8p9"
+literal|"ntpdc 4.2.8p10"
 argument_list|)
 argument_list|)
 expr_stmt|;

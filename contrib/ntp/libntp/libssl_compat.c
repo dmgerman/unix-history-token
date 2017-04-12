@@ -12,6 +12,22 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ntp_types.h"
+end_include
+
+begin_comment
+comment|/* ----------------------------------------------------------------- */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -27,11 +43,14 @@ directive|include
 file|<openssl/evp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ntp_types.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ----------------------------------------------------------------- */
+end_comment
 
 begin_comment
 comment|/* ----------------------------------------------------------------- */
@@ -40,6 +59,11 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|OPENSSL
+argument_list|)
+operator|&&
 name|OPENSSL_VERSION_NUMBER
 operator|<
 literal|0x10100000L
@@ -1137,7 +1161,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* OPENSSL_VERSION_NUMBER>= v1.1.0 */
+comment|/* OPENSSL&& OPENSSL_VERSION_NUMBER>= v1.1.0 */
 end_comment
 
 begin_comment

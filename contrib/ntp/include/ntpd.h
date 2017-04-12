@@ -2521,6 +2521,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|saved_argc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|saved_argv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|sys_phone
@@ -3853,6 +3869,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|sys_maxclock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum survivors */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|sys_minclock
 decl_stmt|;
 end_decl_stmt
@@ -3910,7 +3937,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|sys_ttlmax
 decl_stmt|;
 end_decl_stmt

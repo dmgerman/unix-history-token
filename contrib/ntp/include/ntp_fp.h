@@ -1127,9 +1127,9 @@ specifier|extern
 name|void
 name|gpstolfp
 parameter_list|(
-name|int
+name|u_int
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 name|unsigned
 name|long
