@@ -72,8 +72,8 @@ parameter_list|,
 name|int
 name|count
 parameter_list|,
-name|boolean_t
-name|sync
+name|int
+name|flags
 parameter_list|,
 name|int
 modifier|*
