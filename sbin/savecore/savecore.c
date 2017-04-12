@@ -2457,7 +2457,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mediasize = %lld\n"
+literal|"mediasize = %lld bytes\n"
 argument_list|,
 operator|(
 name|long
@@ -2468,7 +2468,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sectorsize = %u\n"
+literal|"sectorsize = %u bytes\n"
 argument_list|,
 name|sectorsize
 argument_list|)
