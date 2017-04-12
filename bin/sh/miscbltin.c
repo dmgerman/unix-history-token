@@ -1457,7 +1457,7 @@ decl_stmt|;
 name|int
 name|cmd
 decl_stmt|;
-name|int
+name|short
 name|factor
 decl_stmt|;
 comment|/* multiply by to get rlim_{cur,max} values */
