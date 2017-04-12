@@ -1498,8 +1498,23 @@ name|RTWN_DEBUG_TXPWR
 condition|)
 block|{
 name|int
+name|max_mcs
+decl_stmt|,
 name|ridx
 decl_stmt|;
+name|max_mcs
+operator|=
+name|RTWN_RIDX_MCS
+argument_list|(
+name|sc
+operator|->
+name|ntxchains
+operator|*
+literal|8
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* Dump per-rate Tx power values. */
 name|printf
 argument_list|(
@@ -1515,8 +1530,8 @@ operator|=
 name|RTWN_RIDX_CCK1
 init|;
 name|ridx
-operator|<
-name|RTWN_RIDX_COUNT
+operator|<=
+name|max_mcs
 condition|;
 name|ridx
 operator|++

@@ -524,8 +524,8 @@ operator|=
 name|RTWN_RIDX_OFDM6
 init|;
 name|ridx
-operator|<
-name|RTWN_RIDX_COUNT
+operator|<=
+name|max_mcs
 condition|;
 name|ridx
 operator|++

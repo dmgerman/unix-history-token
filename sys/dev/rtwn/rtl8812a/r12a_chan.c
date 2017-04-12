@@ -1492,8 +1492,8 @@ operator|=
 name|RTWN_RIDX_CCK1
 init|;
 name|ridx
-operator|<
-name|RTWN_RIDX_COUNT
+operator|<=
+name|max_mcs
 condition|;
 name|ridx
 operator|++
