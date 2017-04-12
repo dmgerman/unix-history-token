@@ -3438,6 +3438,12 @@ block|{
 name|vm_offset_t
 name|dtbp
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FDT_DTB_STATIC
+argument_list|)
 name|dtbp
 operator|=
 operator|(
@@ -3446,6 +3452,18 @@ operator|)
 operator|&
 name|fdt_static_dtb
 expr_stmt|;
+else|#
+directive|else
+comment|/* TODO */
+name|dtbp
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dtbp
