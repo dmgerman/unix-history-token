@@ -75,7 +75,7 @@ specifier|const
 name|int
 name|maxscale
 init|=
-literal|7
+literal|6
 decl_stmt|;
 end_decl_stmt
 
@@ -184,7 +184,7 @@ elseif|else
 if|if
 condition|(
 name|scale
-operator|>=
+operator|>
 name|maxscale
 operator|&&
 operator|(
