@@ -4033,6 +4033,8 @@ operator||
 name|X86_PG_M
 operator||
 name|X86_PG_A
+operator||
+name|pg_nx
 expr_stmt|;
 block|}
 name|pdp_p
@@ -4086,6 +4088,8 @@ operator||
 name|X86_PG_M
 operator||
 name|X86_PG_A
+operator||
+name|pg_nx
 expr_stmt|;
 block|}
 for|for
