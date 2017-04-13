@@ -222,8 +222,15 @@ begin_comment
 comment|/* Don't Connect the socket */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFSMNT_ONEOPENOWN
+value|0x00000100
+end_define
+
 begin_comment
-comment|/* 0x100 free, was NFSMNT_NQNFS */
+comment|/* Use one OpenOwner for NFSv4.1 */
 end_comment
 
 begin_define

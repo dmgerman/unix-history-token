@@ -1888,6 +1888,8 @@ operator|++
 expr_stmt|;
 name|nfscl_openrelease
 argument_list|(
+name|nmp
+argument_list|,
 name|op
 argument_list|,
 name|error
@@ -11777,6 +11779,8 @@ argument_list|)
 expr_stmt|;
 name|nfscl_ownerrelease
 argument_list|(
+name|nmp
+argument_list|,
 name|owp
 argument_list|,
 name|error
@@ -13845,6 +13849,8 @@ block|}
 block|}
 name|nfscl_openrelease
 argument_list|(
+name|nmp
+argument_list|,
 name|op
 argument_list|,
 name|error
