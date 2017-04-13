@@ -522,9 +522,14 @@ modifier|*
 name|d
 decl_stmt|;
 comment|/* page the help text from our load path */
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s/boot/loader.help"
 argument_list|,
