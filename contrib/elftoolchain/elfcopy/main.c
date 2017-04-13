@@ -3291,6 +3291,24 @@ argument_list|(
 name|efd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|unlink
+argument_list|(
+name|elftemp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"unlink %s failed"
+argument_list|,
+name|elftemp
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|elftemp
