@@ -747,13 +747,9 @@ block|{
 comment|/* The top bit tells us which range to use */
 if|if
 condition|(
-operator|(
 name|far
-operator|>>
-literal|63
-operator|)
-operator|==
-literal|1
+operator|>=
+name|VM_MAXUSER_ADDRESS
 condition|)
 block|{
 name|map

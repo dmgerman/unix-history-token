@@ -12294,13 +12294,9 @@ name|ATTR_SW_WIRED
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|va
-operator|>>
-literal|63
-operator|)
-operator|==
-literal|0
+operator|<
+name|VM_MAXUSER_ADDRESS
 condition|)
 name|new_l3
 operator||=
