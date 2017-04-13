@@ -308,6 +308,10 @@ name|cq
 decl_stmt|;
 name|struct
 name|t4_range
+name|srq
+decl_stmt|;
+name|struct
+name|t4_range
 name|ocq
 decl_stmt|;
 name|struct

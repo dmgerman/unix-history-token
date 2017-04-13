@@ -1231,6 +1231,14 @@ name|unsigned
 name|int
 name|eo_wr_cred
 decl_stmt|;
+name|unsigned
+name|int
+name|max_ordird_qp
+decl_stmt|;
+name|unsigned
+name|int
+name|max_ird_adapter
+decl_stmt|;
 block|}
 struct|;
 end_struct
