@@ -199,6 +199,18 @@ block|{
 name|size_t
 name|used
 decl_stmt|;
+comment|/* Don't write off the end of a zero-length buffer. */
+if|if
+condition|(
+name|len
+operator|<
+literal|1
+condition|)
+return|return
+operator|(
+name|ERANGE
+operator|)
+return|;
 operator|*
 name|buf
 operator|=
