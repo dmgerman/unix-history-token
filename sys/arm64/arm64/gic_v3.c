@@ -1995,7 +1995,7 @@ if|if
 condition|(
 name|gi
 operator|->
-name|gi_pol
+name|gi_trig
 operator|==
 name|INTR_TRIGGER_EDGE
 condition|)
@@ -2027,7 +2027,7 @@ if|if
 condition|(
 name|gi
 operator|->
-name|gi_pol
+name|gi_trig
 operator|!=
 name|INTR_TRIGGER_EDGE
 condition|)
@@ -3547,7 +3547,7 @@ if|if
 condition|(
 name|gi
 operator|->
-name|gi_pol
+name|gi_trig
 operator|==
 name|INTR_TRIGGER_EDGE
 condition|)
