@@ -861,7 +861,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|sprintf((fn), "%s/.%08ld.%03d", (qd), (long)getpid(), (p))
+value|snprintf((fn), sizeof(fn), "%s/.%08ld.%03d", (qd), (long)getpid(), (p))
 end_define
 
 begin_comment
@@ -884,7 +884,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|sprintf((fn), "%s/%s+%03d-%03d", (qd), (d), (p), (n))
+value|snprintf((fn), sizeof(fn), "%s/%s+%03d-%03d", (qd), (d), (p), (n))
 end_define
 
 begin_comment

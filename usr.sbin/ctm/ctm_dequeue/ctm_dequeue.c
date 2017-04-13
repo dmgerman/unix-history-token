@@ -387,9 +387,14 @@ operator|==
 literal|'.'
 condition|)
 continue|continue;
-name|sprintf
+name|snprintf
 argument_list|(
 name|filename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|filename
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
