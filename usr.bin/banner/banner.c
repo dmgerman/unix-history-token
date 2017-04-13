@@ -20168,12 +20168,14 @@ argument_list|,
 literal|"malloc"
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|message
 argument_list|,
 operator|*
 name|argv
+argument_list|,
+name|j
 argument_list|)
 expr_stmt|;
 while|while
