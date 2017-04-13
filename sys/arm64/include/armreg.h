@@ -1956,6 +1956,13 @@ name|ID_AA64MMFR1_PAN_IMPL
 value|(0x1<< ID_AA64MMFR1_PAN_SHIFT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_PAN_ATS1E1
+value|(0x2<< ID_AA64MMFR1_PAN_SHIFT)
+end_define
+
 begin_comment
 comment|/* ID_AA64PFR0_EL1 */
 end_comment
