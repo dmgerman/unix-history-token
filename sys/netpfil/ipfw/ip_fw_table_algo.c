@@ -11483,12 +11483,6 @@ name|ta_state
 expr_stmt|;
 name|ife
 operator|=
-name|tb
-operator|->
-name|ife
-expr_stmt|;
-name|ife
-operator|=
 operator|(
 expr|struct
 name|ifentry

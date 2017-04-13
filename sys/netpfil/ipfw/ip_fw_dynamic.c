@@ -4570,10 +4570,6 @@ operator|!=
 name|time_uptime
 condition|)
 block|{
-name|last_log
-operator|=
-name|time_uptime
-expr_stmt|;
 name|char
 name|sbuf
 index|[
