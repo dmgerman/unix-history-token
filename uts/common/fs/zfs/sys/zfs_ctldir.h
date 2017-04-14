@@ -240,10 +240,6 @@ define|#
 directive|define
 name|ZFSCTL_INO_SNAPDIR
 value|0x2
-define|#
-directive|define
-name|ZFSCTL_INO_SHARES
-value|0x3
 ifdef|#
 directive|ifdef
 name|__cplusplus
