@@ -896,6 +896,11 @@ name|names
 operator|=
 name|ne
 expr_stmt|;
+name|nvlist_free
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
