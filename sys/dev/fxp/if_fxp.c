@@ -10727,13 +10727,6 @@ name|fxp_desc
 operator|.
 name|tx_list
 expr_stmt|;
-if|if
-condition|(
-name|txp
-operator|!=
-name|NULL
-condition|)
-block|{
 for|for
 control|(
 name|i
@@ -10826,7 +10819,6 @@ name|tb_addr
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 block|}
 name|bus_dmamap_sync
