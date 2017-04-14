@@ -13544,16 +13544,8 @@ block|}
 comment|/* 	 * If the rule has "keep frag" and the packet is actually a fragment, 	 * then create a fragment state entry. 	 */
 if|if
 condition|(
-operator|(
 name|pass
 operator|&
-operator|(
-name|FR_KEEPFRAG
-operator||
-name|FR_KEEPSTATE
-operator|)
-operator|)
-operator|==
 name|FR_KEEPFRAG
 condition|)
 block|{

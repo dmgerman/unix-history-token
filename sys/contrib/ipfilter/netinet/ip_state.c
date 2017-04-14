@@ -17329,6 +17329,7 @@ comment|/* 	 * If this packet is a fragment and the rule says to track fragments
 if|if
 condition|(
 operator|(
+operator|(
 name|fin
 operator|->
 name|fin_flx
@@ -17342,6 +17343,17 @@ name|is
 operator|->
 name|is_pass
 argument_list|)
+operator|)
+operator|&&
+operator|(
+operator|(
+name|is
+operator|->
+name|is_pass
+operator|&
+name|FR_KEEPFRAG
+operator|)
+operator|)
 condition|)
 operator|(
 name|void
