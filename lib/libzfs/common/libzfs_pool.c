@@ -3840,7 +3840,7 @@ name|ASSERT
 argument_list|(
 name|supported
 operator|||
-name|zfs_prop_unsupported
+name|zpool_prop_unsupported
 argument_list|(
 name|propname
 argument_list|)
