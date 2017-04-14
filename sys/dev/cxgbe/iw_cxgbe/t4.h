@@ -202,7 +202,7 @@ begin_define
 define|#
 directive|define
 name|T4_MAX_NUM_PD
-value|(1<<15)
+value|65536
 end_define
 
 begin_define
