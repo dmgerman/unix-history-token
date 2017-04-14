@@ -2183,7 +2183,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|uint64_t
-name|spa_get_asize
+name|spa_get_worst_case_asize
 parameter_list|(
 name|spa_t
 modifier|*
