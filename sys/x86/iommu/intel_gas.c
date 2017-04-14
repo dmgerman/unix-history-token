@@ -1127,9 +1127,7 @@ name|v
 operator|=
 name|MAX
 argument_list|(
-name|entry
-operator|->
-name|free_down
+name|v
 argument_list|,
 name|r
 operator|->
