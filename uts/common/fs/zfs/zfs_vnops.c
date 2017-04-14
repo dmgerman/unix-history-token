@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2015 Joyent, Inc.  */
 end_comment
 
 begin_comment
@@ -14868,6 +14868,10 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|,
+name|rm_err
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|zflg
@@ -15612,7 +15616,7 @@ name|out
 goto|;
 block|}
 block|}
-name|vnevent_rename_src
+name|vnevent_pre_rename_src
 argument_list|(
 name|ZTOV
 argument_list|(
@@ -15630,7 +15634,7 @@ if|if
 condition|(
 name|tzp
 condition|)
-name|vnevent_rename_dest
+name|vnevent_pre_rename_dest
 argument_list|(
 name|ZTOV
 argument_list|(
@@ -15652,9 +15656,16 @@ operator|!=
 name|sdvp
 condition|)
 block|{
-name|vnevent_rename_dest_dir
+name|vnevent_pre_rename_dest_dir
 argument_list|(
 name|tdvp
+argument_list|,
+name|ZTOV
+argument_list|(
+name|szp
+argument_list|)
+argument_list|,
+name|tnm
 argument_list|,
 name|ct
 argument_list|)
@@ -15909,6 +15920,8 @@ condition|)
 comment|/* Attempt to remove the existing target */
 name|error
 operator|=
+name|rm_err
+operator|=
 name|zfs_link_destroy
 argument_list|(
 name|tdl
@@ -16095,6 +16108,64 @@ argument_list|(
 name|tx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tzp
+operator|&&
+name|rm_err
+operator|==
+literal|0
+condition|)
+name|vnevent_rename_dest
+argument_list|(
+name|ZTOV
+argument_list|(
+name|tzp
+argument_list|)
+argument_list|,
+name|tdvp
+argument_list|,
+name|tnm
+argument_list|,
+name|ct
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+name|vnevent_rename_src
+argument_list|(
+name|ZTOV
+argument_list|(
+name|szp
+argument_list|)
+argument_list|,
+name|sdvp
+argument_list|,
+name|snm
+argument_list|,
+name|ct
+argument_list|)
+expr_stmt|;
+comment|/* notify the target dir if it is not the same as source dir */
+if|if
+condition|(
+name|tdvp
+operator|!=
+name|sdvp
+condition|)
+name|vnevent_rename_dest_dir
+argument_list|(
+name|tdvp
+argument_list|,
+name|ct
+argument_list|)
+expr_stmt|;
+block|}
 name|out
 label|:
 if|if

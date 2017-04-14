@@ -1553,7 +1553,7 @@ name|enum
 name|create
 name|create_t
 typedef|;
-comment|/* Vnode Events - Used by VOP_VNEVENT */
+comment|/*  * Vnode Events - Used by VOP_VNEVENT  * The VE_PRE_RENAME_* events fire before the rename operation and are  * primarily used for specialized applications, such as NFSv4 delegation, which  * need to know about rename before it occurs.  */
 typedef|typedef
 enum|enum
 name|vnevent
@@ -1606,7 +1606,22 @@ comment|/* File or Filesystem got mounted over vnode */
 name|VE_TRUNCATE
 init|=
 literal|9
+block|,
 comment|/* Truncate */
+name|VE_PRE_RENAME_SRC
+init|=
+literal|10
+block|,
+comment|/* Pre-rename, with vnode as source */
+name|VE_PRE_RENAME_DEST
+init|=
+literal|11
+block|,
+comment|/* Pre-rename, with vnode as target/dest. */
+name|VE_PRE_RENAME_DEST_DIR
+init|=
+literal|12
+comment|/* Pre-rename with vnode as target dir */
 block|}
 name|vnevent_t
 typedef|;
@@ -4713,6 +4728,54 @@ name|int
 name|vnevent_support
 parameter_list|(
 name|vnode_t
+modifier|*
+parameter_list|,
+name|caller_context_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|vnevent_pre_rename_src
+parameter_list|(
+name|vnode_t
+modifier|*
+parameter_list|,
+name|vnode_t
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|caller_context_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|vnevent_pre_rename_dest
+parameter_list|(
+name|vnode_t
+modifier|*
+parameter_list|,
+name|vnode_t
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|caller_context_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|vnevent_pre_rename_dest_dir
+parameter_list|(
+name|vnode_t
+modifier|*
+parameter_list|,
+name|vnode_t
+modifier|*
+parameter_list|,
+name|char
 modifier|*
 parameter_list|,
 name|caller_context_t
