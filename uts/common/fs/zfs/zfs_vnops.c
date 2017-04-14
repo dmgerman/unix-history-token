@@ -4535,9 +4535,7 @@ name|lr
 operator|->
 name|lr_length
 operator|<=
-name|zp
-operator|->
-name|z_blksz
+name|size
 argument_list|)
 expr_stmt|;
 comment|/* 			 * On success, we need to wait for the write I/O 			 * initiated by dmu_sync() to complete before we can 			 * release this dbuf.  We will finish everything up 			 * in the zfs_get_done() callback. 			 */
