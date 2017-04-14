@@ -2875,7 +2875,7 @@ name|fopen
 argument_list|(
 name|MNTTAB
 argument_list|,
-literal|"r"
+literal|"rF"
 argument_list|)
 operator|)
 operator|==
@@ -2911,7 +2911,7 @@ name|fopen
 argument_list|(
 literal|"/etc/dfs/sharetab"
 argument_list|,
-literal|"r"
+literal|"rF"
 argument_list|)
 expr_stmt|;
 if|if
