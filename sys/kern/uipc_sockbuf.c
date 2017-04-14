@@ -3355,6 +3355,8 @@ expr_stmt|;
 name|m_tag_delete_chain
 argument_list|(
 name|m0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Clear some persistent info from pkthdr. 		 * We don't use m_demote(), because some netgraph consumers 		 * expect M_PKTHDR presence. 		 */
