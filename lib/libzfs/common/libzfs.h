@@ -3572,6 +3572,29 @@ name|uint64_t
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Allow consumers to initialize libshare externally for optimal performance */
+specifier|extern
+name|int
+name|zfs_init_libshare_arg
+parameter_list|(
+name|libzfs_handle_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/*  * For most consumers, zfs_init_libshare_arg is sufficient on its own, and  * zfs_uninit_libshare is unnecessary. zfs_uninit_libshare should only be called  * if the caller has already initialized libshare for one set of zfs handles,  * and wishes to share or unshare filesystems outside of that set. In that case,  * the caller should uninitialize libshare, and then re-initialize it with the  * new handles being shared or unshared.  */
+specifier|extern
+name|void
+name|zfs_uninit_libshare
+parameter_list|(
+name|libzfs_handle_t
+modifier|*
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

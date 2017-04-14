@@ -883,14 +883,6 @@ name|int
 parameter_list|)
 function_decl|;
 specifier|extern
-name|void
-name|zfs_uninit_libshare
-parameter_list|(
-name|libzfs_handle_t
-modifier|*
-parameter_list|)
-function_decl|;
-specifier|extern
 name|int
 name|zfs_parse_options
 parameter_list|(
