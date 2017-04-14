@@ -159,6 +159,18 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Backfill lower metadnode objects after this many have been freed.  * Backfilling negatively impacts object creation rates, so only do it  * if there are enough holes to fill.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dmu_rescan_dnode_threshold
+init|=
+literal|131072
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -5563,6 +5575,29 @@ name|dr
 operator|->
 name|dr_zio
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* Enable dnode backfill if enough objects have been freed. */
+if|if
+condition|(
+name|os
+operator|->
+name|os_freed_dnodes
+operator|>=
+name|dmu_rescan_dnode_threshold
+condition|)
+block|{
+name|os
+operator|->
+name|os_rescan_dnodes
+operator|=
+name|B_TRUE
+expr_stmt|;
+name|os
+operator|->
+name|os_freed_dnodes
+operator|=
+literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Free intent log blocks up to this tx. 	 */
