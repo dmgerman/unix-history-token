@@ -6518,7 +6518,7 @@ decl_stmt|;
 name|int
 name|ymax
 decl_stmt|;
-name|u_short
+name|uint32_t
 name|m
 decl_stmt|;
 name|int
