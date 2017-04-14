@@ -478,11 +478,11 @@ begin_define
 define|#
 directive|define
 name|T4_PAGESIZE_MASK
-value|0xffff000
+value|0xffffffff000
 end_define
 
 begin_comment
-comment|/* 4KB-128MB */
+comment|/* 4KB-8TB */
 end_comment
 
 begin_define
