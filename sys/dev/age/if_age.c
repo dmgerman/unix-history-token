@@ -11450,12 +11450,6 @@ operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("INTR: 0x%08x\n", status); 	status&= ~INTR_DIS_DMA; 	CSR_WRITE_4(sc, AGE_INTR_STATUS, status | INTR_DIS_INT);
-endif|#
-directive|endif
 name|ifp
 operator|=
 name|sc
