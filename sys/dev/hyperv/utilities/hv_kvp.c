@@ -2422,17 +2422,9 @@ name|HV_REG_SZ
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|hkey_len
-operator|<
-literal|0
-operator|)
-operator|||
-operator|(
 name|hvalue_len
 operator|<
 literal|0
-operator|)
 condition|)
 return|return
 operator|(
