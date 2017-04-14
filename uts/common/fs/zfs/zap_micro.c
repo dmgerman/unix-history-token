@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_include
@@ -533,6 +533,9 @@ parameter_list|,
 name|char
 modifier|*
 name|namenorm
+parameter_list|,
+name|int
+name|normflags
 parameter_list|)
 block|{
 name|size_t
@@ -592,9 +595,7 @@ argument_list|,
 operator|&
 name|outlen
 argument_list|,
-name|zap
-operator|->
-name|zap_normflags
+name|normflags
 operator||
 name|U8_TEXTPREP_IGNORE_NULL
 operator||
@@ -648,8 +649,8 @@ condition|(
 name|zn
 operator|->
 name|zn_matchtype
-operator|==
-name|MT_FIRST
+operator|&
+name|MT_NORMALIZE
 condition|)
 block|{
 name|char
@@ -669,6 +670,10 @@ argument_list|,
 name|matchname
 argument_list|,
 name|norm
+argument_list|,
+name|zn
+operator|->
+name|zn_normflags
 argument_list|)
 operator|!=
 literal|0
@@ -695,7 +700,6 @@ return|;
 block|}
 else|else
 block|{
-comment|/* MT_BEST or MT_EXACT */
 return|return
 operator|(
 name|strcmp
@@ -809,6 +813,28 @@ name|zn_matchtype
 operator|=
 name|mt
 expr_stmt|;
+name|zn
+operator|->
+name|zn_normflags
+operator|=
+name|zap
+operator|->
+name|zap_normflags
+expr_stmt|;
+comment|/* 	 * If we're dealing with a case sensitive lookup on a mixed or 	 * insensitive fs, remove U8_TEXTPREP_TOUPPER or the lookup 	 * will fold case to all caps overriding the lookup request. 	 */
+if|if
+condition|(
+name|mt
+operator|&
+name|MT_MATCH_CASE
+condition|)
+name|zn
+operator|->
+name|zn_normflags
+operator|&=
+operator|~
+name|U8_TEXTPREP_TOUPPER
+expr_stmt|;
 if|if
 condition|(
 name|zap
@@ -816,6 +842,7 @@ operator|->
 name|zap_normflags
 condition|)
 block|{
+comment|/* 		 * We *must* use zap_normflags because this normalization is 		 * what the hash is computed from. 		 */
 if|if
 condition|(
 name|zap_normalize
@@ -827,6 +854,10 @@ argument_list|,
 name|zn
 operator|->
 name|zn_normbuf
+argument_list|,
+name|zap
+operator|->
+name|zap_normflags
 argument_list|)
 operator|!=
 literal|0
@@ -871,7 +902,7 @@ if|if
 condition|(
 name|mt
 operator|!=
-name|MT_EXACT
+literal|0
 condition|)
 block|{
 name|zap_name_free
@@ -911,6 +942,63 @@ argument_list|(
 name|zn
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|zap
+operator|->
+name|zap_normflags
+operator|!=
+name|zn
+operator|->
+name|zn_normflags
+condition|)
+block|{
+comment|/* 		 * We *must* use zn_normflags because this normalization is 		 * what the matching is based on.  (Not the hash!) 		 */
+if|if
+condition|(
+name|zap_normalize
+argument_list|(
+name|zap
+argument_list|,
+name|key
+argument_list|,
+name|zn
+operator|->
+name|zn_normbuf
+argument_list|,
+name|zn
+operator|->
+name|zn_normflags
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|zap_name_free
+argument_list|(
+name|zn
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+name|zn
+operator|->
+name|zn_key_norm_numints
+operator|=
+name|strlen
+argument_list|(
+name|zn
+operator|->
+name|zn_key_norm
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|zn
@@ -1000,7 +1088,7 @@ name|zn
 operator|->
 name|zn_matchtype
 operator|=
-name|MT_EXACT
+literal|0
 expr_stmt|;
 name|zn
 operator|->
@@ -1479,8 +1567,6 @@ name|mze_cd
 operator|=
 literal|0
 expr_stmt|;
-name|again
-label|:
 name|mze
 operator|=
 name|avl_find
@@ -1577,25 +1663,6 @@ operator|(
 name|mze
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|zn
-operator|->
-name|zn_matchtype
-operator|==
-name|MT_BEST
-condition|)
-block|{
-name|zn
-operator|->
-name|zn_matchtype
-operator|=
-name|MT_FIRST
-expr_stmt|;
-goto|goto
-name|again
-goto|;
 block|}
 return|return
 operator|(
@@ -2208,7 +2275,7 @@ name|mze
 operator|->
 name|mze_name
 argument_list|,
-name|MT_EXACT
+literal|0
 argument_list|)
 expr_stmt|;
 name|mze_insert
@@ -3288,7 +3355,7 @@ name|mze
 operator|->
 name|mze_name
 argument_list|,
-name|MT_EXACT
+literal|0
 argument_list|)
 expr_stmt|;
 name|err
@@ -3352,6 +3419,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * The "normflags" determine the behavior of the matchtype_t which is  * passed to zap_lookup_norm().  Names which have the same normalized  * version will be stored with the same hash value, and therefore we can  * perform normalization-insensitive lookups.  We can be Unicode form-  * insensitive and/or case-insensitive.  The following flags are valid for  * "normflags":  *  * U8_TEXTPREP_NFC  * U8_TEXTPREP_NFD  * U8_TEXTPREP_NFKC  * U8_TEXTPREP_NFKD  * U8_TEXTPREP_TOUPPER  *  * The *_NF* (Normalization Form) flags are mutually exclusive; at most one  * of them may be supplied.  */
+end_comment
 
 begin_function
 name|void
@@ -4215,7 +4286,7 @@ argument_list|)
 operator|->
 name|mze_name
 argument_list|,
-name|MT_FIRST
+name|MT_NORMALIZE
 argument_list|)
 expr_stmt|;
 name|allocdzn
@@ -4335,7 +4406,7 @@ name|num_integers
 argument_list|,
 name|buf
 argument_list|,
-name|MT_EXACT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -4738,7 +4809,7 @@ name|num_integers
 argument_list|,
 name|buf
 argument_list|,
-name|MT_EXACT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -5165,7 +5236,7 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-name|MT_EXACT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -5276,7 +5347,7 @@ name|zap
 argument_list|,
 name|name
 argument_list|,
-name|MT_EXACT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5890,7 +5961,7 @@ name|zap
 argument_list|,
 name|key
 argument_list|,
-name|MT_EXACT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6382,7 +6453,7 @@ name|zap
 argument_list|,
 name|name
 argument_list|,
-name|MT_EXACT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6808,7 +6879,7 @@ name|zapobj
 argument_list|,
 name|name
 argument_list|,
-name|MT_EXACT
+literal|0
 argument_list|,
 name|tx
 argument_list|)
@@ -8114,7 +8185,7 @@ name|zap
 argument_list|,
 name|name
 argument_list|,
-name|MT_EXACT
+literal|0
 argument_list|)
 decl_stmt|;
 if|if

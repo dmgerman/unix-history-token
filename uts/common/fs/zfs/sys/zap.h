@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_ifndef
@@ -51,20 +51,23 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/*  * Specifies matching criteria for ZAP lookups.  */
+comment|/*  * Specifies matching criteria for ZAP lookups.  * MT_NORMALIZE		Use ZAP normalization flags, which can include both  *			unicode normalization and case-insensitivity.  * MT_MATCH_CASE	Do case-sensitive lookups even if MT_NORMALIZE is  *			specified and ZAP normalization flags include  *			U8_TEXTPREP_TOUPPER.  */
 typedef|typedef
 enum|enum
 name|matchtype
 block|{
-comment|/* Only find an exact match (non-normalized) */
-name|MT_EXACT
+name|MT_NORMALIZE
+init|=
+literal|1
+operator|<<
+literal|0
 block|,
-comment|/* 	 * If there is an exact match, find that, otherwise find the 	 * first normalized match. 	 */
-name|MT_BEST
-block|,
-comment|/* 	 * Find the "first" normalized (case and Unicode form) match; 	 * the designated "first" match will not change as long as the 	 * set of entries with this normalization doesn't change. 	 */
-name|MT_FIRST
-block|}
+name|MT_MATCH_CASE
+init|=
+literal|1
+operator|<<
+literal|1
+block|, }
 name|matchtype_t
 typedef|;
 typedef|typedef
@@ -94,7 +97,7 @@ literal|2
 block|, }
 name|zap_flags_t
 typedef|;
-comment|/*  * Create a new zapobj with no attributes and return its object number.  * MT_EXACT will cause the zap object to only support MT_EXACT lookups,  * otherwise any matchtype can be used for lookups.  *  * normflags specifies what normalization will be done.  values are:  * 0: no normalization (legacy on-disk format, supports MT_EXACT matching  *     only)  * U8_TEXTPREP_TOLOWER: case normalization will be performed.  *     MT_FIRST/MT_BEST matching will find entries that match without  *     regard to case (eg. looking for "foo" can find an entry "Foo").  * Eventually, other flags will permit unicode normalization as well.  */
+comment|/*  * Create a new zapobj with no attributes and return its object number.  */
 name|uint64_t
 name|zap_create
 parameter_list|(

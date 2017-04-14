@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_comment
@@ -2014,8 +2014,8 @@ condition|(
 name|zn
 operator|->
 name|zn_matchtype
-operator|==
-name|MT_FIRST
+operator|&
+name|MT_NORMALIZE
 condition|)
 block|{
 name|char
@@ -2226,8 +2226,6 @@ argument_list|,
 name|ZAP_LEAF_MAGIC
 argument_list|)
 expr_stmt|;
-name|again
-label|:
 for|for
 control|(
 name|chunkp
@@ -2303,14 +2301,16 @@ operator|->
 name|zn_hash
 condition|)
 continue|continue;
-comment|/* 		 * NB: the entry chain is always sorted by cd on 		 * normalized zap objects, so this will find the 		 * lowest-cd match for MT_FIRST. 		 */
+comment|/* 		 * NB: the entry chain is always sorted by cd on 		 * normalized zap objects, so this will find the 		 * lowest-cd match for MT_NORMALIZE. 		 */
 name|ASSERT
 argument_list|(
+operator|(
 name|zn
 operator|->
 name|zn_matchtype
 operator|==
-name|MT_EXACT
+literal|0
+operator|)
 operator|||
 operator|(
 name|zap_leaf_phys
@@ -2394,26 +2394,6 @@ literal|0
 operator|)
 return|;
 block|}
-block|}
-comment|/* 	 * NB: we could of course do this in one pass, but that would be 	 * a pain.  We'll see if MT_BEST is even used much. 	 */
-if|if
-condition|(
-name|zn
-operator|->
-name|zn_matchtype
-operator|==
-name|MT_BEST
-condition|)
-block|{
-name|zn
-operator|->
-name|zn_matchtype
-operator|=
-name|MT_FIRST
-expr_stmt|;
-goto|goto
-name|again
-goto|;
 block|}
 return|return
 operator|(
@@ -3807,7 +3787,7 @@ name|zap
 argument_list|,
 name|name
 argument_list|,
-name|MT_FIRST
+name|MT_NORMALIZE
 argument_list|)
 expr_stmt|;
 name|allocdzn

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2015 Joyent, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2015 Joyent, Inc.  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_comment
@@ -4867,7 +4867,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* fast path */
+comment|/* 	 * Fast path lookup, however we must skip DNLC lookup 	 * for case folding or normalizing lookups because the 	 * DNLC code only stores the passed in name.  This means 	 * creating 'a' and removing 'A' on a case insensitive 	 * file system would work, but DNLC still thinks 'a' 	 * exists and won't let you create it again on the next 	 * pass through fast path. 	 */
 if|if
 condition|(
 operator|!
@@ -4983,7 +4983,26 @@ name|error
 operator|)
 return|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|zdp
+operator|->
+name|z_zfsvfs
+operator|->
+name|z_norm
+operator|&&
+operator|(
+name|zdp
+operator|->
+name|z_zfsvfs
+operator|->
+name|z_case
+operator|==
+name|ZFS_CASE_SENSITIVE
+operator|)
+condition|)
 block|{
 name|vnode_t
 modifier|*

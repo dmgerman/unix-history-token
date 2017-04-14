@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 RackTop Systems.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016, OmniTI Computer Consulting, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 RackTop Systems.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_include
@@ -1728,6 +1728,8 @@ name|ds_snapnames_zapobj
 decl_stmt|;
 name|matchtype_t
 name|mt
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|err
@@ -1745,12 +1747,7 @@ name|DS_FLAG_CI_DATASET
 condition|)
 name|mt
 operator|=
-name|MT_FIRST
-expr_stmt|;
-else|else
-name|mt
-operator|=
-name|MT_EXACT
+name|MT_NORMALIZE
 expr_stmt|;
 name|err
 operator|=
@@ -1783,9 +1780,11 @@ name|err
 operator|==
 name|ENOTSUP
 operator|&&
+operator|(
 name|mt
-operator|==
-name|MT_FIRST
+operator|&
+name|MT_NORMALIZE
+operator|)
 condition|)
 name|err
 operator|=
@@ -1857,6 +1856,8 @@ name|ds_snapnames_zapobj
 decl_stmt|;
 name|matchtype_t
 name|mt
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|err
@@ -1881,12 +1882,7 @@ name|DS_FLAG_CI_DATASET
 condition|)
 name|mt
 operator|=
-name|MT_FIRST
-expr_stmt|;
-else|else
-name|mt
-operator|=
-name|MT_EXACT
+name|MT_NORMALIZE
 expr_stmt|;
 name|err
 operator|=
@@ -1909,9 +1905,11 @@ name|err
 operator|==
 name|ENOTSUP
 operator|&&
+operator|(
 name|mt
-operator|==
-name|MT_FIRST
+operator|&
+name|MT_NORMALIZE
+operator|)
 condition|)
 name|err
 operator|=
