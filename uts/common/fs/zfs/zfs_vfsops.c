@@ -507,30 +507,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|fs_operation_def_t
-name|zfs_vfsops_eio_template
-index|[]
-init|=
-block|{
-name|VFSNAME_FREEVFS
-block|,
-block|{
-operator|.
-name|vfs_freevfs
-operator|=
-name|zfs_freevfs
-block|}
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * We need to keep a count of active fs's.  * This is necessary to prevent our module  * from being unloaded after a umount -f  */
 end_comment
