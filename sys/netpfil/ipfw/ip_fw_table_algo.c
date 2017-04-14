@@ -1609,6 +1609,8 @@ operator|&
 name|tent
 operator|->
 name|k
+operator|.
+name|addr6
 argument_list|,
 operator|&
 name|xn
@@ -6587,6 +6589,8 @@ operator|&
 name|tent
 operator|->
 name|k
+operator|.
+name|addr6
 argument_list|,
 operator|&
 name|ent
@@ -20255,6 +20259,8 @@ operator|&
 name|tent
 operator|->
 name|k
+operator|.
+name|addr6
 argument_list|,
 operator|&
 name|addr6
