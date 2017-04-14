@@ -3084,7 +3084,7 @@ argument_list|(
 name|N_INTR_TXQ0_COMP
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|2
@@ -3235,7 +3235,7 @@ argument_list|(
 name|N_INTR_RXQ0_COMP
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3250,7 +3250,7 @@ argument_list|(
 name|N_INTR_RXQ1_COMP
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3265,7 +3265,7 @@ argument_list|(
 name|N_INTR_RXQ2_COMP
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3280,7 +3280,7 @@ argument_list|(
 name|N_INTR_RXQ3_COMP
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3295,7 +3295,7 @@ argument_list|(
 name|N_INTR_RXQ0_DESC_EMPTY
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3310,7 +3310,7 @@ argument_list|(
 name|N_INTR_RXQ1_DESC_EMPTY
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3325,7 +3325,7 @@ argument_list|(
 name|N_INTR_RXQ2_DESC_EMPTY
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3340,7 +3340,7 @@ argument_list|(
 name|N_INTR_RXQ3_DESC_EMPTY
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3355,7 +3355,7 @@ argument_list|(
 name|N_INTR_RXQ0_COAL
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3370,7 +3370,7 @@ argument_list|(
 name|N_INTR_RXQ1_COAL
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3385,7 +3385,7 @@ argument_list|(
 name|N_INTR_RXQ2_COAL
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3400,7 +3400,7 @@ argument_list|(
 name|N_INTR_RXQ3_COAL
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3415,7 +3415,7 @@ argument_list|(
 name|N_INTR_RXQ0_COAL_TO
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3430,7 +3430,7 @@ argument_list|(
 name|N_INTR_RXQ1_COAL_TO
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3445,7 +3445,7 @@ argument_list|(
 name|N_INTR_RXQ2_COAL_TO
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
@@ -3460,7 +3460,7 @@ argument_list|(
 name|N_INTR_RXQ3_COAL_TO
 argument_list|)
 index|]
-operator|=
+operator||=
 name|MSINUM_INTR_SOURCE
 argument_list|(
 literal|1
