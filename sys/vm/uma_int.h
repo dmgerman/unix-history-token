@@ -393,10 +393,6 @@ name|uk_slabzone
 decl_stmt|;
 comment|/* Slab zone backing us, if OFFPAGE */
 name|uint16_t
-name|uk_slabsize
-decl_stmt|;
-comment|/* Slab size for this keg */
-name|uint16_t
 name|uk_pgoff
 decl_stmt|;
 comment|/* Offset to uma_slab struct */
