@@ -187,20 +187,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|T4_MAX_NUM_QP
-value|(1<<16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|T4_MAX_NUM_CQ
-value|(1<<15)
-end_define
-
-begin_define
-define|#
-directive|define
 name|T4_MAX_NUM_PD
 value|65536
 end_define
@@ -208,50 +194,52 @@ end_define
 begin_define
 define|#
 directive|define
-name|T4_EQ_STATUS_ENTRIES
-value|(L1_CACHE_BYTES> 64 ? 2 : 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|T4_MAX_EQ_SIZE
-value|(65520 - T4_EQ_STATUS_ENTRIES)
+value|65520
 end_define
 
 begin_define
 define|#
 directive|define
 name|T4_MAX_IQ_SIZE
-value|(65520 - 1)
+value|65520
 end_define
 
 begin_define
 define|#
 directive|define
 name|T4_MAX_RQ_SIZE
-value|(8192 - T4_EQ_STATUS_ENTRIES)
+parameter_list|(
+name|n
+parameter_list|)
+value|(8192 - (n) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|T4_MAX_SQ_SIZE
-value|(T4_MAX_EQ_SIZE - 1)
+parameter_list|(
+name|n
+parameter_list|)
+value|(T4_MAX_EQ_SIZE - (n) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|T4_MAX_QP_DEPTH
-value|(T4_MAX_RQ_SIZE - 1)
+parameter_list|(
+name|n
+parameter_list|)
+value|(T4_MAX_RQ_SIZE(n))
 end_define
 
 begin_define
 define|#
 directive|define
 name|T4_MAX_CQ_DEPTH
-value|(T4_MAX_IQ_SIZE - 1)
+value|(T4_MAX_IQ_SIZE - 2)
 end_define
 
 begin_define
@@ -284,13 +272,6 @@ define|#
 directive|define
 name|T4_FW_MAJ
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|T4_EQ_STATUS_ENTRIES
-value|(L1_CACHE_BYTES> 64 ? 2 : 1)
 end_define
 
 begin_define
