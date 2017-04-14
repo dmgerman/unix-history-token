@@ -9069,6 +9069,23 @@ operator|&
 name|BIO_ERROR
 operator|)
 operator|&&
+operator|(
+name|bp
+operator|->
+name|b_error
+operator|!=
+name|ENXIO
+operator|||
+operator|!
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|bp
+operator|->
+name|b_dep
+argument_list|)
+operator|)
+operator|&&
 operator|!
 operator|(
 name|bp
@@ -9079,7 +9096,7 @@ name|B_INVAL
 operator|)
 condition|)
 block|{
-comment|/* 		 * Failed write, redirty.  Must clear BIO_ERROR to prevent 		 * pages from being scrapped. 		 */
+comment|/* 		 * Failed write, redirty.  All errors except ENXIO (which 		 * means the device is gone) are expected to be potentially 		 * transient - underlying media might work if tried again 		 * after EIO, and memory might be available after an ENOMEM. 		 * 		 * Do this also for buffers that failed with ENXIO, but have 		 * non-empty dependencies - the soft updates code might need 		 * to access the buffer to untangle them. 		 * 		 * Must clear BIO_ERROR to prevent pages from being scrapped. 		 */
 name|bp
 operator|->
 name|b_ioflags
@@ -9125,7 +9142,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * Either a failed read I/O or we were asked to free or not 		 * cache the buffer. 		 */
+comment|/* 		 * Either a failed read I/O, or we were asked to free or not 		 * cache the buffer, or we failed to write to a device that's 		 * no longer present. 		 */
 name|bp
 operator|->
 name|b_flags
