@@ -3436,6 +3436,13 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|LIST_REMOVE
+argument_list|(
+name|nb
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|nb
