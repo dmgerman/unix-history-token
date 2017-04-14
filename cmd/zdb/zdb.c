@@ -8859,7 +8859,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"mintxg %llu -> "
+literal|"mintxg %llu -> obj %llu"
 argument_list|,
 operator|(
 name|longlong_t
