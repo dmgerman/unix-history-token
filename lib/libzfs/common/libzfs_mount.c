@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2015 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
 end_comment
 
 begin_comment
@@ -27,6 +27,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -495,24 +501,61 @@ name|dirent64
 modifier|*
 name|dp
 decl_stmt|;
+name|int
+name|dirfd
+decl_stmt|;
 if|if
 condition|(
 operator|(
-name|dirp
+name|dirfd
 operator|=
-name|opendir
+name|openat
 argument_list|(
+name|AT_FDCWD
+argument_list|,
 name|dirname
+argument_list|,
+name|O_RDONLY
+operator||
+name|O_NDELAY
+operator||
+name|O_LARGEFILE
+operator||
+name|O_CLOEXEC
+argument_list|,
+literal|0
 argument_list|)
 operator|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
+block|{
 return|return
 operator|(
 name|B_TRUE
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|(
+name|dirp
+operator|=
+name|fdopendir
+argument_list|(
+name|dirfd
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+operator|(
+name|B_TRUE
+operator|)
+return|;
+block|}
 while|while
 condition|(
 operator|(
