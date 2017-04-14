@@ -1262,15 +1262,6 @@ operator|*
 operator|)
 name|context
 decl_stmt|;
-name|channel
-operator|=
-name|vmbus_get_channel
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|)
-expr_stmt|;
 name|buf
 operator|=
 name|sc
