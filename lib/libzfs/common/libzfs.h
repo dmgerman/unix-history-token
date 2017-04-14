@@ -2634,6 +2634,10 @@ comment|/* WRITE_EMBEDDED records of type DATA are permitted */
 name|boolean_t
 name|embed_data
 decl_stmt|;
+comment|/* compressed WRITE records are permitted */
+name|boolean_t
+name|compress
+decl_stmt|;
 block|}
 name|sendflags_t
 typedef|;
