@@ -203,7 +203,7 @@ operator|==
 literal|'/'
 condition|)
 block|{
-name|strcpy
+name|strlcpy
 argument_list|(
 name|path
 argument_list|,
@@ -211,6 +211,11 @@ name|argv
 index|[
 literal|0
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|argv
@@ -233,9 +238,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
