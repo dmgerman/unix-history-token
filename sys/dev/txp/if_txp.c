@@ -2265,12 +2265,6 @@ name|p2
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|rsp
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|rsp
