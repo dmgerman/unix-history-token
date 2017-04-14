@@ -955,6 +955,16 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/* AMD ELVT */
+name|int
+function_decl|(
+modifier|*
+name|enable_mca_elvt
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/* IPI */
 name|void
 function_decl|(
@@ -1548,6 +1558,26 @@ operator|.
 name|enable_cmc
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|lapic_enable_mca_elvt
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|apic_ops
+operator|.
+name|enable_mca_elvt
+argument_list|()
+operator|)
+return|;
 block|}
 end_function
 

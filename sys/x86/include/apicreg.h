@@ -552,26 +552,101 @@ init|=
 literal|0x3f
 block|,
 comment|/* Only in x2APIC */
+name|LAPIC_EXT_FEATURES
+init|=
+literal|0x40
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_CTRL
+init|=
+literal|0x41
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_SEOI
+init|=
+literal|0x42
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_IER0
+init|=
+literal|0x48
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_IER1
+init|=
+literal|0x49
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_IER2
+init|=
+literal|0x4a
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_IER3
+init|=
+literal|0x4b
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_IER4
+init|=
+literal|0x4c
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_IER5
+init|=
+literal|0x4d
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_IER6
+init|=
+literal|0x4e
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_IER7
+init|=
+literal|0x4f
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_LVT0
+init|=
+literal|0x50
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_LVT1
+init|=
+literal|0x51
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_LVT2
+init|=
+literal|0x52
+block|,
+comment|/* AMD */
+name|LAPIC_EXT_LVT3
+init|=
+literal|0x53
+block|,
+comment|/* AMD */
 block|}
 enum|;
 end_enum
-
-begin_comment
-comment|/*  * The LAPIC_SELF_IPI register only exists in x2APIC mode.  The  * formula below is applicable only to reserve the memory region,  * i.e. for xAPIC mode, where LAPIC_SELF_IPI finely serves as the  * address past end of the region.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LAPIC_MEM_REGION
-value|(LAPIC_SELF_IPI * 0x10)
-end_define
 
 begin_define
 define|#
 directive|define
 name|LAPIC_MEM_MUL
 value|0x10
+end_define
+
+begin_comment
+comment|/*  * Although some registers are available on AMD processors only,  * it's not a big waste to reserve them on all platforms.  * However, we need to watch out for this space being assigned for  * non-APIC purposes in the future processor models.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LAPIC_MEM_REGION
+value|((LAPIC_EXT_LVT3 + 1) * LAPIC_MEM_MUL)
 end_define
 
 begin_comment
@@ -727,6 +802,13 @@ define|#
 directive|define
 name|APIC_VER_EOI_SUPPRESSION
 value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_VER_AMD_EXT_SPACE
+value|0x80000000
 end_define
 
 begin_comment
@@ -1407,6 +1489,45 @@ value|0x0b
 end_define
 
 begin_comment
+comment|/* Constants related to AMD Extended APIC Features Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_EXTF_ELVT_MASK
+value|0x00ff0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_EXTF_ELVT_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_EXTF_EXTID_CAP
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_EXTF_SEIO_CAP
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_EXTF_IER_CAP
+value|0x00000001
+end_define
+
+begin_comment
 comment|/* LVT table indices */
 end_comment
 
@@ -1464,6 +1585,61 @@ define|#
 directive|define
 name|APIC_LVT_MAX
 value|APIC_LVT_CMCI
+end_define
+
+begin_comment
+comment|/* AMD extended LVT constants, seem to be assigned by fiat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_ELVT_IBS
+value|0
+end_define
+
+begin_comment
+comment|/* Instruction based sampling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_ELVT_MCA
+value|1
+end_define
+
+begin_comment
+comment|/* MCE thresholding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_ELVT_DEI
+value|2
+end_define
+
+begin_comment
+comment|/* Deferred error interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_ELVT_SBI
+value|3
+end_define
+
+begin_comment
+comment|/* Sideband interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_ELVT_MAX
+value|APIC_ELVT_SBI
 end_define
 
 begin_comment
