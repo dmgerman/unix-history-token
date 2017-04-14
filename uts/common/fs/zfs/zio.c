@@ -8052,7 +8052,7 @@ name|cio
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Now that all children have been reexecuted, execute the parent. 	 * We don't reexecute "The Godfather" I/O here as it's the 	 * responsibility of the caller to wait on him. 	 */
+comment|/* 	 * Now that all children have been reexecuted, execute the parent. 	 * We don't reexecute "The Godfather" I/O here as it's the 	 * responsibility of the caller to wait on it. 	 */
 if|if
 condition|(
 operator|!

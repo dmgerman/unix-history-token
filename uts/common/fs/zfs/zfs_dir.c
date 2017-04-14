@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2016 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_include
@@ -971,7 +971,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * We're the second shared reference to dl.  Make a copy of 		 * dl_name in case the first thread goes away before we do. 		 * Note that we initialize the new name before storing its 		 * pointer into dl_name, because the first thread may load 		 * dl->dl_name at any time.  He'll either see the old value, 		 * which is his, or the new shared copy; either is OK. 		 */
+comment|/* 		 * We're the second shared reference to dl.  Make a copy of 		 * dl_name in case the first thread goes away before we do. 		 * Note that we initialize the new name before storing its 		 * pointer into dl_name, because the first thread may load 		 * dl->dl_name at any time.  It'll either see the old value, 		 * which belongs to it, or the new shared copy; either is OK. 		 */
 name|dl
 operator|->
 name|dl_namesize

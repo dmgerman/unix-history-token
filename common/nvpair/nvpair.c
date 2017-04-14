@@ -10791,7 +10791,7 @@ name|NVS_OP_ENCODE
 argument_list|)
 operator|)
 return|;
-comment|/* 	 * Here is a difficult situation: 	 * 1. The nvlist has fixed allocator properties. 	 *    All other nvlist routines (like nvlist_add_*, ...) use 	 *    these properties. 	 * 2. When using nvlist_pack() the user can specify his own 	 *    allocator properties (e.g. by using KM_NOSLEEP). 	 * 	 * We use the user specified properties (2). A clearer solution 	 * will be to remove the kmflag from nvlist_pack(), but we will 	 * not change the interface. 	 */
+comment|/* 	 * Here is a difficult situation: 	 * 1. The nvlist has fixed allocator properties. 	 *    All other nvlist routines (like nvlist_add_*, ...) use 	 *    these properties. 	 * 2. When using nvlist_pack() the user can specify their own 	 *    allocator properties (e.g. by using KM_NOSLEEP). 	 * 	 * We use the user specified properties (2). A clearer solution 	 * will be to remove the kmflag from nvlist_pack(), but we will 	 * not change the interface. 	 */
 name|nv_priv_init
 argument_list|(
 operator|&
