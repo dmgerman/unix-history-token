@@ -2261,6 +2261,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|KTDSTATE
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|(((td)->td_inhibitors& TDI_SLEEPING) != 0 ? "sleep"  :		\ 	((td)->td_inhibitors& TDI_SUSPENDED) != 0 ? "suspended" :	\ 	((td)->td_inhibitors& TDI_SWAPPED) != 0 ? "swapped" :		\ 	((td)->td_inhibitors& TDI_LOCK) != 0 ? "blocked" :		\ 	((td)->td_inhibitors& TDI_IWAIT) != 0 ? "iwait" : "yielding")
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_SET_INHIB
 parameter_list|(
 name|td
