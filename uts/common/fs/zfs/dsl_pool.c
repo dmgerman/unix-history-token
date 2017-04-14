@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -212,6 +212,18 @@ operator|*
 literal|1000
 operator|/
 literal|2000
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * This determines the number of threads used by the dp_sync_taskq.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|zfs_sync_taskq_batch_pct
+init|=
+literal|75
 decl_stmt|;
 end_decl_stmt
 
@@ -447,6 +459,25 @@ name|dsl_sync_task_t
 argument_list|,
 name|dst_node
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|dp_sync_taskq
+operator|=
+name|taskq_create
+argument_list|(
+literal|"dp_sync_taskq"
+argument_list|,
+name|zfs_sync_taskq_batch_pct
+argument_list|,
+name|minclsyspri
+argument_list|,
+literal|1
+argument_list|,
+name|INT_MAX
+argument_list|,
+name|TASKQ_THREADS_CPU_PCT
 argument_list|)
 expr_stmt|;
 name|mutex_init
@@ -1198,6 +1229,13 @@ operator|&
 name|dp
 operator|->
 name|dp_dirty_dirs
+argument_list|)
+expr_stmt|;
+name|taskq_destroy
+argument_list|(
+name|dp
+operator|->
+name|dp_sync_taskq
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We can't set retry to TRUE since we're explicitly specifying 	 * a spa to flush. This is good enough; any missed buffers for 	 * this spa won't cause trouble, and they'll eventually fall 	 * out of the ARC just like any other unused buffer. 	 */
@@ -2128,7 +2166,7 @@ operator|->
 name|dp_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * After the data blocks have been written (ensured by the zio_wait() 	 * above), update the user/group space accounting. 	 */
+comment|/* 	 * After the data blocks have been written (ensured by the zio_wait() 	 * above), update the user/group space accounting.  This happens 	 * in tasks dispatched to dp_sync_taskq, so wait for them before 	 * continuing. 	 */
 for|for
 control|(
 name|ds
@@ -2164,6 +2202,13 @@ name|tx
 argument_list|)
 expr_stmt|;
 block|}
+name|taskq_wait
+argument_list|(
+name|dp
+operator|->
+name|dp_sync_taskq
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Sync the datasets again to push out the changes due to 	 * userspace updates.  This must be done before we process the 	 * sync tasks, so that any snapshots will have the correct 	 * user accounting information (and we won't get confused 	 * about which blocks are part of the snapshot). 	 */
 name|zio
 operator|=
@@ -2354,9 +2399,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|list_head
+operator|!
+name|multilist_is_empty
 argument_list|(
-operator|&
 name|mos
 operator|->
 name|os_dirty_dnodes
@@ -2366,23 +2411,6 @@ operator|&
 name|TXG_MASK
 index|]
 argument_list|)
-operator|!=
-name|NULL
-operator|||
-name|list_head
-argument_list|(
-operator|&
-name|mos
-operator|->
-name|os_free_dnodes
-index|[
-name|txg
-operator|&
-name|TXG_MASK
-index|]
-argument_list|)
-operator|!=
-name|NULL
 condition|)
 block|{
 name|dsl_pool_sync_mos
@@ -2608,6 +2636,15 @@ argument_list|(
 name|dp
 operator|->
 name|dp_spa
+argument_list|)
+operator|||
+name|taskq_member
+argument_list|(
+name|dp
+operator|->
+name|dp_sync_taskq
+argument_list|,
+name|curthread
 argument_list|)
 operator|)
 return|;

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -254,6 +254,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|multilist_t
+modifier|*
 name|dbuf_cache
 decl_stmt|;
 end_decl_stmt
@@ -1836,7 +1837,6 @@ name|idx
 init|=
 name|multilist_get_random_index
 argument_list|(
-operator|&
 name|dbuf_cache
 argument_list|)
 decl_stmt|;
@@ -1846,7 +1846,6 @@ name|mls
 init|=
 name|multilist_sublist_lock
 argument_list|(
-operator|&
 name|dbuf_cache
 argument_list|,
 name|idx
@@ -2412,11 +2411,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|dbuf_cache
+operator|=
 name|multilist_create
 argument_list|(
-operator|&
-name|dbuf_cache
-argument_list|,
 sizeof|sizeof
 argument_list|(
 name|dmu_buf_impl_t
@@ -2634,7 +2632,6 @@ argument_list|)
 expr_stmt|;
 name|multilist_destroy
 argument_list|(
-operator|&
 name|dbuf_cache
 argument_list|)
 expr_stmt|;
@@ -10099,7 +10096,6 @@ condition|)
 block|{
 name|multilist_remove
 argument_list|(
-operator|&
 name|dbuf_cache
 argument_list|,
 name|db
@@ -12976,7 +12972,6 @@ argument_list|)
 expr_stmt|;
 name|multilist_remove
 argument_list|(
-operator|&
 name|dbuf_cache
 argument_list|,
 name|db
@@ -13978,7 +13973,6 @@ condition|)
 block|{
 name|multilist_insert
 argument_list|(
-operator|&
 name|dbuf_cache
 argument_list|,
 name|db
