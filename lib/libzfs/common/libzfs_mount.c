@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2015 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2016 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
 end_comment
 
 begin_comment
@@ -2723,42 +2723,18 @@ name|int
 name|service
 parameter_list|)
 block|{
-name|int
-name|ret
-init|=
-name|SA_OK
-decl_stmt|;
 if|if
 condition|(
 name|_sa_init
 operator|==
 name|NULL
 condition|)
-name|ret
-operator|=
+return|return
+operator|(
 name|SA_CONFIG_ERR
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
-name|SA_OK
-operator|&&
-name|zhandle
-operator|->
-name|libzfs_shareflags
-operator|&
-name|ZFSSHARE_MISS
-condition|)
-block|{
-comment|/* 		 * We had a cache miss. Most likely it is a new ZFS 		 * dataset that was just created. We want to make sure 		 * so check timestamps to see if a different process 		 * has updated any of the configuration. If there was 		 * some non-ZFS change, we need to re-initialize the 		 * internal cache. 		 */
-name|zhandle
-operator|->
-name|libzfs_shareflags
-operator|&=
-operator|~
-name|ZFSSHARE_MISS
-expr_stmt|;
+operator|)
+return|;
+comment|/* 	 * Attempt to refresh libshare. This is necessary if there was a cache 	 * miss for a new ZFS dataset that was just created, or if state of the 	 * sharetab file has changed since libshare was last initialized. We 	 * want to make sure so check timestamps to see if a different process 	 * has updated any of the configuration. If there was some non-ZFS 	 * change, we need to re-initialize the internal cache. 	 */
 if|if
 condition|(
 name|_sa_needs_refresh
@@ -2788,13 +2764,8 @@ name|service
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
-name|ret
-operator|==
-name|SA_OK
-operator|&&
 name|zhandle
 operator|&&
 name|zhandle
@@ -2814,23 +2785,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|==
-name|SA_OK
-operator|&&
 name|zhandle
 operator|->
 name|libzfs_sharehdl
 operator|==
 name|NULL
 condition|)
-name|ret
-operator|=
-name|SA_NO_MEMORY
-expr_stmt|;
 return|return
 operator|(
-name|ret
+name|SA_NO_MEMORY
+operator|)
+return|;
+return|return
+operator|(
+name|SA_OK
 operator|)
 return|;
 block|}
@@ -3352,12 +3320,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|hdl
-operator|->
-name|libzfs_shareflags
-operator||=
-name|ZFSSHARE_MISS
-expr_stmt|;
 name|share
 operator|=
 name|zfs_sa_find_share

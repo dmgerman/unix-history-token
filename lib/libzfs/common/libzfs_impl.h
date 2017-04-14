@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER SART  *  * The contents of this file are subject to th
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -187,9 +187,6 @@ modifier|*
 name|libzfs_sharehdl
 decl_stmt|;
 comment|/* libshare handle */
-name|uint_t
-name|libzfs_shareflags
-decl_stmt|;
 name|boolean_t
 name|libzfs_mnttab_enable
 decl_stmt|;
@@ -220,11 +217,6 @@ index|]
 decl_stmt|;
 block|}
 struct|;
-define|#
-directive|define
-name|ZFSSHARE_MISS
-value|0x01
-comment|/* Didn't find entry in cache */
 struct|struct
 name|zfs_handle
 block|{
