@@ -36,6 +36,12 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PROCESSOR_DEFAULT
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|TARGET_SPE_ABI
 end_undef
 
@@ -74,6 +80,13 @@ undef|#
 directive|undef
 name|TARGET_E500_DOUBLE
 end_undef
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_DEFAULT
+value|PROCESSOR_PPC8540
+end_define
 
 begin_define
 define|#
