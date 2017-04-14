@@ -13026,7 +13026,7 @@ decl_stmt|;
 name|vm_offset_t
 name|kva
 decl_stmt|;
-name|int
+name|u_int
 name|pages
 decl_stmt|;
 name|keg
@@ -13093,6 +13093,9 @@ name|kva
 operator|=
 name|kva_alloc
 argument_list|(
+operator|(
+name|vm_size_t
+operator|)
 name|pages
 operator|*
 name|UMA_SLAB_SIZE
