@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * This file and its contents are supplied un
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, 2017 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -28,6 +28,18 @@ include|#
 directive|include
 file|<sys/spa.h>
 end_include
+
+begin_comment
+comment|/*  * This overrides the number of sublists in each multilist_t, which defaults  * to the number of CPUs in the system (see multilist_create()).  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|zfs_multilist_num_sublists
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Given the object contained on the list, return a pointer to the  * object's multilist_node_t structure it contains.  */
@@ -75,8 +87,9 @@ comment|/*  * Initialize a new mutlilist using the parameters specified.  *  *  
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|multilist_create
+name|multilist_create_impl
 parameter_list|(
 name|multilist_t
 modifier|*
@@ -250,6 +263,72 @@ name|offset
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Initialize a new sublist, using the default number of sublists  * (the number of CPUs, or at least 4, or the tunable  * zfs_multilist_num_sublists).  */
+end_comment
+
+begin_function
+name|void
+name|multilist_create
+parameter_list|(
+name|multilist_t
+modifier|*
+name|ml
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|size_t
+name|offset
+parameter_list|,
+name|multilist_sublist_index_func_t
+modifier|*
+name|index_func
+parameter_list|)
+block|{
+name|int
+name|num_sublists
+decl_stmt|;
+if|if
+condition|(
+name|zfs_multilist_num_sublists
+operator|>
+literal|0
+condition|)
+block|{
+name|num_sublists
+operator|=
+name|zfs_multilist_num_sublists
+expr_stmt|;
+block|}
+else|else
+block|{
+name|num_sublists
+operator|=
+name|MAX
+argument_list|(
+name|boot_ncpus
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+name|multilist_create_impl
+argument_list|(
+name|ml
+argument_list|,
+name|size
+argument_list|,
+name|offset
+argument_list|,
+name|num_sublists
+argument_list|,
+name|index_func
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
