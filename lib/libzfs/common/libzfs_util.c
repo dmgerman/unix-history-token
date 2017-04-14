@@ -3136,7 +3136,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a name, determine whether or not it's a valid path  * (starts with '/' or "./").  If so, walk the mnttab trying  * to match the device number.  If not, treat the path as an  * fs/vol/snap name.  */
+comment|/*  * Given a name, determine whether or not it's a valid path  * (starts with '/' or "./").  If so, walk the mnttab trying  * to match the device number.  If not, treat the path as an  * fs/vol/snap/bkmark name.  */
 end_comment
 
 begin_function

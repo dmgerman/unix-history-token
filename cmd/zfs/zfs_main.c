@@ -1174,7 +1174,7 @@ literal|"\tget [-rHp] [-d max] "
 literal|"[-o \"all\" | field[,...]]\n"
 literal|"\t    [-t type[,...]] [-s source[,...]]\n"
 literal|"\t<\"all\" | property[,...]> "
-literal|"[filesystem|volume|snapshot] ...\n"
+literal|"[filesystem|volume|snapshot|bookmark] ...\n"
 argument_list|)
 operator|)
 return|;
@@ -7296,6 +7296,8 @@ name|int
 name|types
 init|=
 name|ZFS_TYPE_DATASET
+operator||
+name|ZFS_TYPE_BOOKMARK
 decl_stmt|;
 name|char
 modifier|*
