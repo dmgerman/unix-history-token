@@ -2628,6 +2628,11 @@ name|snapnamelen
 argument_list|)
 expr_stmt|;
 block|}
+name|nvlist_free
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
