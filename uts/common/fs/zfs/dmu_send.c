@@ -2691,6 +2691,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|thread_exit
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -14360,6 +14363,9 @@ name|rwa
 operator|->
 name|mutex
 argument_list|)
+expr_stmt|;
+name|thread_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function
