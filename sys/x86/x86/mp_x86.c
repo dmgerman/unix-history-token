@@ -1048,7 +1048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine topology of processing units and caches for AMD CPUs.  * See:  *  - AMD CPUID Specification (Publication # 25481)  *  - BKDG For AMD Family 10h Processors (Publication # 31116), section 2.15  *  - BKDG for AMD NPT Family 0Fh Processors (Publication # 32559)  * XXX At the moment the code does not recognize grouping of AMD CMT threads,  * if supported, into cores, so each thread is treated as being in its own  * core.  In other words, each logical CPU is considered to be a core.  */
+comment|/*  * Determine topology of processing units and caches for AMD CPUs.  * See:  *  - AMD CPUID Specification (Publication # 25481)  *  - BKDG for AMD NPT Family 0Fh Processors (Publication # 32559)  *  - BKDG For AMD Family 10h Processors (Publication # 31116)  *  - BKDG For AMD Family 15h Models 00h-0Fh Processors (Publication # 42301)  *  - BKDG For AMD Family 16h Models 00h-0Fh Processors (Publication # 48751)  */
 end_comment
 
 begin_function
@@ -1120,6 +1120,59 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Families prior to 16h define the following value as 	 * cores per compute unit and we don't really care about the AMD 	 * compute units at the moment.  Perhaps we should treat them as 	 * cores and cores within the compute units as hardware threads, 	 * but that's up for debate. 	 * Later families define the value as threads per compute unit, 	 * so we are following AMD's nomenclature here. 	 */
+if|if
+condition|(
+operator|(
+name|amd_feature2
+operator|&
+name|AMDID2_TOPOLOGY
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|>=
+literal|0x16
+condition|)
+block|{
+name|cpuid_count
+argument_list|(
+literal|0x8000001e
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|share_count
+operator|=
+operator|(
+operator|(
+name|p
+index|[
+literal|1
+index|]
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+name|core_id_shift
+operator|=
+name|mask_width
+argument_list|(
+name|share_count
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
