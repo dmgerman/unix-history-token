@@ -1887,6 +1887,15 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
+modifier|*
+name|zio_buf_alloc_nowait
+parameter_list|(
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
 name|zio_buf_free
 parameter_list|(
 name|void
