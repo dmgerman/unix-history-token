@@ -24139,8 +24139,6 @@ argument_list|)
 expr_stmt|;
 name|schild
 operator|=
-name|child
-operator|=
 name|SYSCTL_CHILDREN
 argument_list|(
 name|tree
