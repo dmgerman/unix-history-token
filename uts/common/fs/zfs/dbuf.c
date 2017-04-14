@@ -16534,11 +16534,11 @@ name|blkptr_t
 modifier|*
 name|bp
 decl_stmt|;
-name|uint64_t
-name|i
-decl_stmt|;
+name|unsigned
 name|int
 name|epbs
+decl_stmt|,
+name|i
 decl_stmt|;
 name|ASSERT3U
 argument_list|(
@@ -16572,6 +16572,15 @@ operator|->
 name|dn_indblkshift
 operator|-
 name|SPA_BLKPTRSHIFT
+expr_stmt|;
+name|ASSERT3U
+argument_list|(
+name|epbs
+argument_list|,
+operator|<
+argument_list|,
+literal|31
+argument_list|)
 expr_stmt|;
 comment|/* Determine if all our children are holes */
 for|for
@@ -16621,7 +16630,17 @@ operator|<<
 name|epbs
 condition|)
 block|{
-comment|/* didn't find any non-holes */
+comment|/* 		 * We only found holes. Grab the rwlock to prevent 		 * anybody from reading the blocks we're about to 		 * zero out. 		 */
+name|rw_enter
+argument_list|(
+operator|&
+name|dn
+operator|->
+name|dn_struct_rwlock
+argument_list|,
+name|RW_WRITER
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 name|db
@@ -16635,6 +16654,14 @@ operator|->
 name|db
 operator|.
 name|db_size
+argument_list|)
+expr_stmt|;
+name|rw_exit
+argument_list|(
+operator|&
+name|dn
+operator|->
+name|dn_struct_rwlock
 argument_list|)
 expr_stmt|;
 block|}
