@@ -513,7 +513,7 @@ name|_vfs_zfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|debug_flags
+name|debugflags
 argument_list|,
 name|CTLTYPE_UINT
 operator||
