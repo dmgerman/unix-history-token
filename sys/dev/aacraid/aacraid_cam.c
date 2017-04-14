@@ -1220,11 +1220,6 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|aac_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
 name|aac_cam
 modifier|*
 name|camsc
@@ -6230,11 +6225,6 @@ modifier|*
 name|cm
 parameter_list|)
 block|{
-name|struct
-name|aac_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|union
 name|ccb
 modifier|*
