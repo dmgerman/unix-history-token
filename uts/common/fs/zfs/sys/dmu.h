@@ -1591,35 +1591,7 @@ block|}
 name|dmu_buf_user_t
 typedef|;
 comment|/*  * Initialize the given dmu_buf_user_t instance with the eviction function  * evict_func, to be called when the user is evicted.  *  * NOTE: This function should only be called once on a given dmu_buf_user_t.  *       To allow enforcement of this, dbu must already be zeroed on entry.  */
-ifdef|#
-directive|ifdef
-name|__lint
-comment|/* Very ugly, but it beats issuing suppression directives in many Makefiles. */
-specifier|extern
-name|void
-name|dmu_buf_init_user
-parameter_list|(
-name|dmu_buf_user_t
-modifier|*
-name|dbu
-parameter_list|,
-name|dmu_buf_evict_func_t
-modifier|*
-name|evict_func
-parameter_list|,
-name|dmu_buf_evict_func_t
-modifier|*
-name|evict_func_async
-parameter_list|,
-name|dmu_buf_t
-modifier|*
-modifier|*
-name|clear_on_evict_dbufp
-parameter_list|)
-function_decl|;
-else|#
-directive|else
-comment|/* __lint */
+comment|/*ARGSUSED*/
 specifier|inline
 name|void
 name|dmu_buf_init_user
@@ -1696,9 +1668,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-endif|#
-directive|endif
-comment|/* __lint */
 comment|/*  * Attach user data to a dbuf and mark it for normal (when the dbuf's  * data is cleared or its reference count goes to zero) eviction processing.  *  * Returns NULL on success, or the existing user if another user currently  * owns the buffer.  */
 name|void
 modifier|*
