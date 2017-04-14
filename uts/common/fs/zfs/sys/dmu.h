@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/zio_compress.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/zio_priority.h>
 end_include
 
@@ -1257,6 +1263,10 @@ name|level
 parameter_list|,
 name|int
 name|wp
+parameter_list|,
+name|enum
+name|zio_compress
+name|compress_override
 parameter_list|,
 name|struct
 name|zio_prop

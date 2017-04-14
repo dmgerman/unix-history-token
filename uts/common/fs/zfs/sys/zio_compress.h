@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -23,12 +23,6 @@ directive|define
 name|_SYS_ZIO_COMPRESS_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/zio.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -41,6 +35,46 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+enum|enum
+name|zio_compress
+block|{
+name|ZIO_COMPRESS_INHERIT
+init|=
+literal|0
+block|,
+name|ZIO_COMPRESS_ON
+block|,
+name|ZIO_COMPRESS_OFF
+block|,
+name|ZIO_COMPRESS_LZJB
+block|,
+name|ZIO_COMPRESS_EMPTY
+block|,
+name|ZIO_COMPRESS_GZIP_1
+block|,
+name|ZIO_COMPRESS_GZIP_2
+block|,
+name|ZIO_COMPRESS_GZIP_3
+block|,
+name|ZIO_COMPRESS_GZIP_4
+block|,
+name|ZIO_COMPRESS_GZIP_5
+block|,
+name|ZIO_COMPRESS_GZIP_6
+block|,
+name|ZIO_COMPRESS_GZIP_7
+block|,
+name|ZIO_COMPRESS_GZIP_8
+block|,
+name|ZIO_COMPRESS_GZIP_9
+block|,
+name|ZIO_COMPRESS_ZLE
+block|,
+name|ZIO_COMPRESS_LZ4
+block|,
+name|ZIO_COMPRESS_FUNCTIONS
+block|}
+enum|;
 comment|/* Common signature for all zio compress functions. */
 typedef|typedef
 name|size_t

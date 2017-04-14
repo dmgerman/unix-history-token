@@ -166,7 +166,7 @@ name|DMU_BACKUP_FEATURE_EMBED_DATA
 value|(1<< 16)
 define|#
 directive|define
-name|DMU_BACKUP_FEATURE_EMBED_DATA_LZ4
+name|DMU_BACKUP_FEATURE_LZ4
 value|(1<< 17)
 comment|/* flag #18 is reserved for a Delphix feature */
 define|#
@@ -177,11 +177,16 @@ define|#
 directive|define
 name|DMU_BACKUP_FEATURE_RESUMING
 value|(1<< 20)
+comment|/* flag #21 is reserved for a Delphix feature */
+define|#
+directive|define
+name|DMU_BACKUP_FEATURE_COMPRESSED
+value|(1<< 22)
 comment|/*  * Mask of all supported backup features  */
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_MASK
-value|(DMU_BACKUP_FEATURE_DEDUP | \     DMU_BACKUP_FEATURE_DEDUPPROPS | DMU_BACKUP_FEATURE_SA_SPILL | \     DMU_BACKUP_FEATURE_EMBED_DATA | DMU_BACKUP_FEATURE_EMBED_DATA_LZ4 | \     DMU_BACKUP_FEATURE_RESUMING | \     DMU_BACKUP_FEATURE_LARGE_BLOCKS)
+value|(DMU_BACKUP_FEATURE_DEDUP | \     DMU_BACKUP_FEATURE_DEDUPPROPS | DMU_BACKUP_FEATURE_SA_SPILL | \     DMU_BACKUP_FEATURE_EMBED_DATA | DMU_BACKUP_FEATURE_LZ4 | \     DMU_BACKUP_FEATURE_RESUMING | \     DMU_BACKUP_FEATURE_LARGE_BLOCKS | \     DMU_BACKUP_FEATURE_COMPRESSED)
 comment|/* Are all features in the given flag word currently supported? */
 define|#
 directive|define
@@ -231,6 +236,22 @@ parameter_list|(
 name|flags
 parameter_list|)
 value|((flags)& DRR_CHECKSUM_DEDUP)
+comment|/* deal with compressed drr_write replay records */
+define|#
+directive|define
+name|DRR_WRITE_COMPRESSED
+parameter_list|(
+name|drrw
+parameter_list|)
+value|((drrw)->drr_compressiontype != 0)
+define|#
+directive|define
+name|DRR_WRITE_PAYLOAD_SIZE
+parameter_list|(
+name|drrw
+parameter_list|)
+define|\
+value|(DRR_WRITE_COMPRESSED(drrw) ? (drrw)->drr_compressed_size : \ 	(drrw)->drr_logical_size)
 comment|/*  * zfs ioctl command structure  */
 typedef|typedef
 struct|struct
@@ -379,7 +400,7 @@ name|uint64_t
 name|drr_offset
 decl_stmt|;
 name|uint64_t
-name|drr_length
+name|drr_logical_size
 decl_stmt|;
 name|uint64_t
 name|drr_toguid
@@ -391,15 +412,22 @@ name|uint8_t
 name|drr_checksumflags
 decl_stmt|;
 name|uint8_t
+name|drr_compressiontype
+decl_stmt|;
+name|uint8_t
 name|drr_pad2
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
+comment|/* deduplication key */
 name|ddt_key_t
 name|drr_key
 decl_stmt|;
-comment|/* deduplication key */
+comment|/* only nonzero if drr_compressiontype is not 0 */
+name|uint64_t
+name|drr_compressed_size
+decl_stmt|;
 comment|/* content follows */
 block|}
 name|drr_write
