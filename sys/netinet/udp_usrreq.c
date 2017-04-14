@@ -1629,20 +1629,6 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
-comment|/* Clear any h/w csum flags as they are no longer valid. */
-name|n
-operator|->
-name|m_pkthdr
-operator|.
-name|csum_flags
-operator|&=
-operator|~
-operator|(
-name|CSUM_DATA_VALID
-operator||
-name|CSUM_IP_VALID
-operator|)
-expr_stmt|;
 name|so
 operator|=
 name|inp
