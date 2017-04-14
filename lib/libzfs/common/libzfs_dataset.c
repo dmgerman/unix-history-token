@@ -9388,10 +9388,16 @@ argument_list|,
 name|source
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If we tried to use a default value for a 			 * readonly property, it means that it was not 			 * present. 			 */
+comment|/* 			 * If we tried to use a default value for a 			 * readonly property, it means that it was not 			 * present.  Note this only applies to "truly" 			 * readonly properties, not set-once properties 			 * like volblocksize. 			 */
 if|if
 condition|(
 name|zfs_prop_readonly
+argument_list|(
+name|prop
+argument_list|)
+operator|&&
+operator|!
+name|zfs_prop_setonce
 argument_list|(
 name|prop
 argument_list|)
