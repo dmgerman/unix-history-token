@@ -295,7 +295,9 @@ name|AVZ_ACTION_DESTROY
 block|,
 comment|/* Destroy all per-vdev ZAPs and the AVZ. */
 name|AVZ_ACTION_REBUILD
+block|,
 comment|/* Populate the new AVZ, see spa_avz_rebuild */
+name|AVZ_ACTION_INITIALIZE
 block|}
 name|spa_avz_action_t
 typedef|;
