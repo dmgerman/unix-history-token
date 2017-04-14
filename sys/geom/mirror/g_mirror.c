@@ -9267,7 +9267,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|G_MIRROR_DEVICE_FLAG_WAIT
+name|G_MIRROR_DEVICE_FLAG_DRAIN
 operator|)
 operator|!=
 literal|0
@@ -14326,13 +14326,13 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|G_MIRROR_DEVICE_FLAG_DESTROYING
+name|G_MIRROR_DEVICE_FLAG_CLOSEWAIT
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"DESTROYING flag not set on %s."
+literal|"CLOSEWAIT flag not set on %s."
 operator|,
 name|sc
 operator|->
@@ -14494,7 +14494,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|G_MIRROR_DEVICE_FLAG_DESTROYING
+name|G_MIRROR_DEVICE_FLAG_CLOSEWAIT
 operator|)
 operator|!=
 literal|0
@@ -14564,7 +14564,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|G_MIRROR_DEVICE_FLAG_DESTROYING
+name|G_MIRROR_DEVICE_FLAG_CLOSEWAIT
 operator|)
 operator|!=
 literal|0
@@ -15258,7 +15258,7 @@ name|sc
 operator|->
 name|sc_flags
 operator||=
-name|G_MIRROR_DEVICE_FLAG_DESTROYING
+name|G_MIRROR_DEVICE_FLAG_CLOSEWAIT
 expr_stmt|;
 return|return
 operator|(
@@ -15309,7 +15309,7 @@ name|sc
 operator|->
 name|sc_flags
 operator||=
-name|G_MIRROR_DEVICE_FLAG_WAIT
+name|G_MIRROR_DEVICE_FLAG_DRAIN
 expr_stmt|;
 name|G_MIRROR_DEBUG
 argument_list|(

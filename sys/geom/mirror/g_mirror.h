@@ -475,14 +475,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|G_MIRROR_DEVICE_FLAG_WAIT
+name|G_MIRROR_DEVICE_FLAG_DRAIN
 value|0x0200000000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|G_MIRROR_DEVICE_FLAG_DESTROYING
+name|G_MIRROR_DEVICE_FLAG_CLOSEWAIT
 value|0x0400000000000000ULL
 end_define
 
