@@ -6068,9 +6068,17 @@ name|ms_group
 operator|->
 name|mg_vd
 decl_stmt|;
+comment|/* 		 * If we've reached the final dirty txg, then we must 		 * be shutting down the pool. We don't want to dirty 		 * any data past this point so skip setting the condense 		 * flag. We can retry this action the next time the pool 		 * is imported. 		 */
 if|if
 condition|(
 name|spa_writeable
+argument_list|(
+name|spa
+argument_list|)
+operator|&&
+name|txg
+operator|<
+name|spa_final_dirty_txg
 argument_list|(
 name|spa
 argument_list|)
@@ -6100,13 +6108,17 @@ argument_list|(
 name|spa
 argument_list|,
 literal|"txg %llu, requesting force condense: "
-literal|"msp %p, vd %p"
+literal|"ms_id %llu, vdev_id %llu"
 argument_list|,
 name|txg
 argument_list|,
 name|msp
+operator|->
+name|ms_id
 argument_list|,
 name|vd
+operator|->
+name|vdev_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -8363,7 +8375,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Normally, we don't want to process a metaslab if there 	 * are no allocations or frees to perform. However, if the metaslab 	 * is being forced to condense we need to let it through. 	 */
+comment|/* 	 * Normally, we don't want to process a metaslab if there 	 * are no allocations or frees to perform. However, if the metaslab 	 * is being forced to condense and it's loaded, we need to let it 	 * through. 	 */
 if|if
 condition|(
 name|range_tree_space
@@ -8383,11 +8395,27 @@ operator|==
 literal|0
 operator|&&
 operator|!
+operator|(
+name|msp
+operator|->
+name|ms_loaded
+operator|&&
 name|msp
 operator|->
 name|ms_condense_wanted
+operator|)
 condition|)
 return|return;
+name|VERIFY
+argument_list|(
+name|txg
+operator|<=
+name|spa_final_dirty_txg
+argument_list|(
+name|spa
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The only state that can actually be changing concurrently with 	 * metaslab_sync() is the metaslab's ms_tree.  No other thread can 	 * be modifying this txg's alloctree, freeingtree, freedtree, or 	 * space_map_phys_t. Therefore, we only hold ms_lock to satify 	 * space map ASSERTs. We drop it whenever we call into the DMU, 	 * because the DMU can call down to us (e.g. via zio_free()) at 	 * any time. 	 */
 name|tx
 operator|=
