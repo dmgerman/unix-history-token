@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2015 RackTop Systems.  * Copyright 2016 Nexenta Systems, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright 2015 RackTop Systems.  * Copyright 2016 Nexenta Systems, Inc.  */
 end_comment
 
 begin_comment
@@ -1476,6 +1476,8 @@ block|}
 decl_stmt|;
 name|int
 name|err
+decl_stmt|,
+name|dstbuf_size
 decl_stmt|;
 if|if
 condition|(
@@ -1496,6 +1498,19 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|dstbuf_size
+operator|=
+name|MAX
+argument_list|(
+name|CONFIG_BUF_MINSIZE
+argument_list|,
+name|zc
+operator|.
+name|zc_nvlist_conf_size
+operator|*
+literal|4
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|zcmd_alloc_dst_nvlist
@@ -1505,11 +1520,7 @@ argument_list|,
 operator|&
 name|zc
 argument_list|,
-name|zc
-operator|.
-name|zc_nvlist_conf_size
-operator|*
-literal|2
+name|dstbuf_size
 argument_list|)
 operator|!=
 literal|0
