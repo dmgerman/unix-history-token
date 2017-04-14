@@ -26039,7 +26039,7 @@ name|sprintf
 argument_list|(
 name|bin
 argument_list|,
-literal|"/usr/sbin%.*s/zdb -bcc%s%s -d -U %s %s"
+literal|"/usr/sbin%.*s/zdb -bcc%s%s -G -d -U %s %s"
 argument_list|,
 name|isalen
 argument_list|,
