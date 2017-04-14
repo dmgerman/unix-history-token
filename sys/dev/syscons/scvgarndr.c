@@ -6666,6 +6666,8 @@ index|[
 name|j
 index|]
 operator|)
+operator|<<
+literal|8
 operator|>>
 name|xoff
 operator|)
@@ -6678,7 +6680,7 @@ literal|0
 init|;
 name|k
 operator|<
-literal|2
+literal|3
 condition|;
 operator|++
 name|k
@@ -6692,7 +6694,7 @@ operator|(
 literal|8
 operator|*
 operator|(
-literal|1
+literal|2
 operator|-
 name|k
 operator|)
@@ -6791,6 +6793,8 @@ name|mouse_or_mask
 index|[
 name|j
 index|]
+operator|<<
+literal|8
 operator|>>
 name|xoff
 expr_stmt|;
@@ -6802,7 +6806,7 @@ literal|0
 init|;
 name|k
 operator|<
-literal|2
+literal|3
 condition|;
 operator|++
 name|k
@@ -6816,7 +6820,7 @@ operator|(
 literal|8
 operator|*
 operator|(
-literal|1
+literal|2
 operator|-
 name|k
 operator|)
