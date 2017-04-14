@@ -272,13 +272,15 @@ argument_list|(
 name|kidx
 argument_list|)
 expr_stmt|;
+name|pktid
+operator|++
+expr_stmt|;
 name|plog
 operator|->
 name|subrulenr
 operator|=
 name|htonl
 argument_list|(
-operator|++
 name|pktid
 argument_list|)
 expr_stmt|;
