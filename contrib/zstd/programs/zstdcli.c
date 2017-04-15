@@ -272,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_DISPLAY_LEVEL
-value|2
+value|1
 end_define
 
 begin_decl_stmt
