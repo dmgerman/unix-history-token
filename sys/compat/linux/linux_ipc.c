@@ -596,20 +596,6 @@ name|msg_lrpid
 decl_stmt|;
 comment|/* last receive pid */
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|COMPAT_LINUX32
-argument_list|)
-name|__packed
-endif|#
-directive|endif
 struct|;
 end_struct
 
@@ -643,20 +629,6 @@ name|l_ushort
 name|sem_nsems
 decl_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|COMPAT_LINUX32
-argument_list|)
-name|__packed
-endif|#
-directive|endif
 struct|;
 end_struct
 
