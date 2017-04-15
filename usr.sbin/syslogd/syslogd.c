@@ -15270,7 +15270,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+name|res
+operator|->
+name|ai_socktype
+operator|!=
+name|SOCK_DGRAM
+condition|)
+block|{
 name|listen
 argument_list|(
 name|s
@@ -15278,7 +15287,8 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_if
 
 begin_expr_stmt
 name|sl_recv
@@ -15287,26 +15297,45 @@ name|socklist_recv_sock
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|dprintf
+begin_if
+if|#
+directive|if
+name|defined
 argument_list|(
-literal|"shutdown\n"
+name|INET
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
 
 begin_if
 if|if
 condition|(
 name|SecureMode
+operator|&&
+operator|(
+name|res
+operator|->
+name|ai_family
+operator|==
+name|AF_INET
 operator|||
 name|res
 operator|->
 name|ai_family
 operator|==
-name|AF_LOCAL
+name|AF_INET6
+operator|)
 condition|)
 block|{
+name|dprintf
+argument_list|(
+literal|"shutdown\n"
+argument_list|)
+expr_stmt|;
 comment|/* Forbid communication in secure mode. */
 if|if
 condition|(
@@ -15340,23 +15369,28 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|dprintf
-argument_list|(
-literal|"listening on socket\n"
-argument_list|)
-expr_stmt|;
 name|sl_recv
 operator|=
 name|NULL
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
+name|dprintf
+argument_list|(
+literal|"listening on socket\n"
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|dprintf
 argument_list|(
 literal|"sending on socket\n"
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_expr_stmt
 name|addsock
