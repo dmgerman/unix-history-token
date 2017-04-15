@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /p/tcsh/cvsroot/tcsh/config_f.h,v 3.47 2011/02/05 20:34:55 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/config_f.h,v 3.52 2016/04/16 15:44:18 christos Exp $ */
 end_comment
 
 begin_comment
@@ -22,6 +22,27 @@ define|#
 directive|define
 name|_h_config_f
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FEATURES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<features.h>
+end_include
+
+begin_comment
+comment|/* for __GLIBC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * SHORT_STRINGS Use at least 16 bit characters instead of 8 bit chars  * 	         This fixes up quoting problems and eases implementation  *	         of nls...  *  */
@@ -61,6 +82,10 @@ name|defined
 argument_list|(
 name|_OSD_POSIX
 argument_list|)
+operator|&&
+name|SIZEOF_WCHAR_T
+operator|>
+literal|1
 end_if
 
 begin_define
@@ -273,6 +298,21 @@ operator|||
 name|defined
 argument_list|(
 name|__GLIBC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ANDROID__
 argument_list|)
 end_if
 
