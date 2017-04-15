@@ -456,6 +456,12 @@ literal|1
 block|}
 block|,
 block|{
+literal|"fsl,imx6ul-gpt"
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"fsl,imx53-gpt"
 block|,
 literal|1
@@ -510,6 +516,21 @@ name|ofw_bus_status_okay
 argument_list|(
 name|dev
 argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* 	 *  We only support a single unit, because the only thing this driver 	 *  does with the complex timer hardware is supply the system 	 *  timecounter and eventtimer.  There is nothing useful we can do with 	 *  the additional device instances that exist in some chips. 	 */
+if|if
+condition|(
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|>
+literal|0
 condition|)
 return|return
 operator|(
