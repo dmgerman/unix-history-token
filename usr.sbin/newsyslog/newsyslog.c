@@ -237,6 +237,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPRESS_SUFFIX_ZST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|COMPRESS_SUFFIX_ZST
+value|".zst"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -252,7 +270,7 @@ begin_define
 define|#
 directive|define
 name|COMPRESS_TYPES
-value|4
+value|5
 end_define
 
 begin_comment
@@ -285,6 +303,13 @@ define|#
 directive|define
 name|COMPRESS_XZ
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMPRESS_ZSTD
+value|4
 end_define
 
 begin_comment
@@ -533,7 +558,16 @@ name|COMPRESS_SUFFIX_XZ
 block|,
 name|_PATH_XZ
 block|}
+block|,
 comment|/* xz compression */
+block|{
+literal|"Y"
+block|,
+name|COMPRESS_SUFFIX_ZST
+block|,
+name|_PATH_ZSTD
+block|}
+comment|/* zst compression */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6235,6 +6269,16 @@ operator|->
 name|compress
 operator|=
 name|COMPRESS_XZ
+expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+name|working
+operator|->
+name|compress
+operator|=
+name|COMPRESS_ZSTD
 expr_stmt|;
 break|break;
 case|case

@@ -42,5 +42,12 @@ name|_PATH_XZ
 value|"/usr/bin/xz"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_ZSTD
+value|"/usr/bin/zstd"
+end_define
+
 end_unit
 
