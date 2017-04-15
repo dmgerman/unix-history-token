@@ -86,6 +86,35 @@ directive|include
 file|"glob.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_MBLEN
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|mblen
+end_undef
+
+begin_define
+define|#
+directive|define
+name|mblen
+parameter_list|(
+name|_s
+parameter_list|,
+name|_n
+parameter_list|)
+value|mbrlen((_s),(_n),NULL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_undef
 undef|#
 directive|undef
@@ -2255,6 +2284,7 @@ operator|!=
 name|EOS
 condition|)
 block|{
+comment|/* Don't interpret quotes. The spec does not say we should do */
 if|if
 condition|(
 operator|*
