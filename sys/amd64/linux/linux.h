@@ -1846,7 +1846,7 @@ literal|1
 index|]
 decl_stmt|;
 name|l_int
-name|ifru_metric
+name|ifru_ivalue
 decl_stmt|;
 name|l_int
 name|ifru_mtu
@@ -1892,6 +1892,17 @@ end_define
 
 begin_comment
 comment|/* MAC address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ifr_ifindex
+value|ifr_ifru.ifru_ivalue
+end_define
+
+begin_comment
+comment|/* Interface index */
 end_comment
 
 begin_struct
