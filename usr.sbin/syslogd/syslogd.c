@@ -3687,6 +3687,12 @@ name|sl_socket
 operator|!=
 operator|-
 literal|1
+operator|&&
+name|sl
+operator|->
+name|sl_recv
+operator|!=
+name|NULL
 condition|)
 name|FD_SET
 argument_list|(
@@ -14584,6 +14590,17 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|sl_recv
+function_decl|)
+parameter_list|(
+name|struct
+name|socklist
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* 	 * We have to handle this case for backwards compatibility: 	 * If there are two (or more) colons but no '[' and ']', 	 * assume this is an inet6 address without a service. 	 */
 if|if
 condition|(
@@ -15264,6 +15281,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|sl_recv
+operator|=
+name|socklist_recv_sock
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|dprintf
 argument_list|(
 literal|"shutdown\n"
@@ -15321,6 +15345,10 @@ argument_list|(
 literal|"listening on socket\n"
 argument_list|)
 expr_stmt|;
+name|sl_recv
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 name|dprintf
@@ -15360,7 +15388,7 @@ block|,
 operator|.
 name|sl_recv
 operator|=
-name|socklist_recv_sock
+name|sl_recv
 block|}
 argument_list|)
 expr_stmt|;
