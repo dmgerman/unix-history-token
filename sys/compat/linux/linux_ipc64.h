@@ -6,17 +6,17 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_AMD64_LINUX_LINUX_IPC64_H_
+name|_LINUX_IPC64_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_AMD64_LINUX_LINUX_IPC64_H_
+name|_LINUX_IPC64_H_
 end_define
 
 begin_comment
-comment|/*  * The ipc64_perm structure for i386 architecture.  * Note extra padding because this structure is passed back and forth  * between kernel and user space.  *  * Pad space is left for:  * - 32-bit mode_t and seq  * - 2 miscellaneous 32-bit values  */
+comment|/*  * The generic ipc64_perm structure.  * Note extra padding because this structure is passed back and forth  * between kernel and user space.  *  * Pad space is left for:  * - 32-bit mode_t on architectures that only had 16 bit  * - 32-bit seq  * - 2 miscellaneous 32-bit values  */
 end_comment
 
 begin_struct
@@ -41,8 +41,21 @@ decl_stmt|;
 name|l_mode_t
 name|mode
 decl_stmt|;
-name|l_ushort
+comment|/* pad if mode_t is ushort: */
+name|unsigned
+name|char
 name|__pad1
+index|[
+sizeof|sizeof
+argument_list|(
+name|l_int
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+name|l_mode_t
+argument_list|)
+index|]
 decl_stmt|;
 name|l_ushort
 name|seq
@@ -61,7 +74,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The msqid64_ds structure for i386 architecture.  * Note extra padding because this structure is passed back and forth  * between kernel and user space.  *  * Pad space is left for:  * - 64-bit time_t to solve y2038 problem  * - 2 miscellaneous 32-bit values  */
+comment|/*  * The generic msqid64_ds structure fro x86 architecture.  * Note extra padding because this structure is passed back and forth  * between kernel and user space.  *  * Pad space is left for:  * - 64-bit time_t to solve y2038 problem  * - 2 miscellaneous 32-bit values  */
 end_comment
 
 begin_struct
@@ -76,23 +89,65 @@ name|l_time_t
 name|msg_stime
 decl_stmt|;
 comment|/* last msgsnd time */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
 name|l_ulong
 name|__unused1
 decl_stmt|;
+endif|#
+directive|endif
 name|l_time_t
 name|msg_rtime
 decl_stmt|;
 comment|/* last msgrcv time */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
 name|l_ulong
 name|__unused2
 decl_stmt|;
+endif|#
+directive|endif
 name|l_time_t
 name|msg_ctime
 decl_stmt|;
 comment|/* last change time */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
 name|l_ulong
 name|__unused3
 decl_stmt|;
+endif|#
+directive|endif
 name|l_ulong
 name|msg_cbytes
 decl_stmt|;
@@ -124,7 +179,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The semid64_ds structure for i386 architecture.  * Note extra padding because this structure is passed back and forth  * between kernel and user space.  *  * Pad space is left for:  * - 64-bit time_t to solve y2038 problem  * - 2 miscellaneous 32-bit values  */
+comment|/*  * The generic semid64_ds structure for x86 architecture.  * Note extra padding because this structure is passed back and forth  * between kernel and user space.  *  * Pad space is left for:  * - 64-bit time_t to solve y2038 problem  * - 2 miscellaneous 32-bit values  */
 end_comment
 
 begin_struct
@@ -165,7 +220,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The shmid64_ds structure for i386 architecture.  * Note extra padding because this structure is passed back and forth  * between kernel and user space.  *  * Pad space is left for:  * - 64-bit time_t to solve y2038 problem  * - 2 miscellaneous 32-bit values  */
+comment|/*  * The generic shmid64_ds structure for x86 architecture.  * Note extra padding because this structure is passed back and forth  * between kernel and user space.  *  * Pad space is left for:  * - 64-bit time_t to solve y2038 problem  * - 2 miscellaneous 32-bit values  */
 end_comment
 
 begin_struct
@@ -185,14 +240,65 @@ name|l_time_t
 name|shm_atime
 decl_stmt|;
 comment|/* last attach time */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+name|l_ulong
+name|__unused1
+decl_stmt|;
+endif|#
+directive|endif
 name|l_time_t
 name|shm_dtime
 decl_stmt|;
 comment|/* last detach time */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+name|l_ulong
+name|__unused2
+decl_stmt|;
+endif|#
+directive|endif
 name|l_time_t
 name|shm_ctime
 decl_stmt|;
 comment|/* last change time */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+name|l_ulong
+name|__unused3
+decl_stmt|;
+endif|#
+directive|endif
 name|l_pid_t
 name|shm_cpid
 decl_stmt|;
@@ -256,7 +362,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_AMD64_LINUX_LINUX_IPC64_H_ */
+comment|/* !LINUX_IPC64_H_ */
 end_comment
 
 end_unit

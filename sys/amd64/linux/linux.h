@@ -226,8 +226,22 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|l_ushort
+name|l_gid16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|l_uint
 name|l_uid_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|l_ushort
+name|l_uid16_t
 typedef|;
 end_typedef
 
@@ -1458,35 +1472,6 @@ decl_stmt|;
 block|}
 union|;
 end_union
-
-begin_struct
-struct|struct
-name|l_ipc_perm
-block|{
-name|l_key_t
-name|key
-decl_stmt|;
-name|l_uid_t
-name|uid
-decl_stmt|;
-name|l_gid_t
-name|gid
-decl_stmt|;
-name|l_uid_t
-name|cuid
-decl_stmt|;
-name|l_gid_t
-name|cgid
-decl_stmt|;
-name|l_ushort
-name|mode
-decl_stmt|;
-name|l_ushort
-name|seq
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Socket defines  */
