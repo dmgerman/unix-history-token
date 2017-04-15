@@ -1369,13 +1369,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|MALLOC_OPTIONS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MALLOC_OPTIONS
+value|"A"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|const
 name|char
 modifier|*
 name|malloc_options
 init|=
-literal|"A"
+name|MALLOC_OPTIONS
 decl_stmt|;
 end_decl_stmt
 

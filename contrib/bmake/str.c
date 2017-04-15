@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: str.c,v 1.36 2016/04/06 09:57:00 gson Exp $	*/
+comment|/*	$NetBSD: str.c,v 1.37 2017/04/11 17:30:13 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: str.c,v 1.36 2016/04/06 09:57:00 gson Exp $"
+literal|"$NetBSD: str.c,v 1.37 2017/04/11 17:30:13 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: str.c,v 1.36 2016/04/06 09:57:00 gson Exp $"
+literal|"$NetBSD: str.c,v 1.37 2017/04/11 17:30:13 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1024,8 +1024,32 @@ operator|==
 literal|'['
 condition|)
 block|{
+name|int
+name|nomatch
+decl_stmt|;
 operator|++
 name|pattern
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|pattern
+operator|==
+literal|'^'
+condition|)
+block|{
+operator|++
+name|pattern
+expr_stmt|;
+name|nomatch
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|nomatch
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -1051,7 +1075,7 @@ operator|)
 condition|)
 return|return
 operator|(
-literal|0
+name|nomatch
 operator|)
 return|;
 if|if
@@ -1088,7 +1112,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|nomatch
 operator|)
 return|;
 if|if
@@ -1136,6 +1160,13 @@ operator|++
 name|pattern
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|nomatch
+condition|)
+return|return
+literal|0
+return|;
 while|while
 condition|(
 operator|(
