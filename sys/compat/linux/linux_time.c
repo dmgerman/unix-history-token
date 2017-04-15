@@ -876,13 +876,13 @@ name|tv_sec
 operator|<
 literal|0
 operator|||
+operator|(
+name|l_ulong
+operator|)
 name|ltp
 operator|->
 name|tv_nsec
 operator|>
-operator|(
-name|l_long
-operator|)
 literal|999999999L
 condition|)
 block|{
