@@ -839,7 +839,7 @@ specifier|static
 name|U32
 name|g_removeSrcFile
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
