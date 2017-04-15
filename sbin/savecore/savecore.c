@@ -1529,7 +1529,7 @@ argument_list|(
 name|LOG_WARNING
 argument_list|,
 literal|"no dump: not enough free space on device (need at least "
-literal|"%jdKiB for dump; %jdKiB available; %jdKiB reserved)"
+literal|"%jdkB for dump; %jdkB available; %jdkB reserved)"
 argument_list|,
 operator|(
 name|intmax_t
