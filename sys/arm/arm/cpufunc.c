@@ -575,107 +575,83 @@ name|cpu_functions
 name|pj4bv7_cpufuncs
 init|=
 block|{
-comment|/* CPU functions */
-name|armv7_drain_writebuf
-block|,
-comment|/* cpwait		*/
 comment|/* MMU functions */
+operator|.
+name|cf_control
+operator|=
 name|cpufunc_control
 block|,
-comment|/* control		*/
+operator|.
+name|cf_setttb
+operator|=
 name|armv7_setttb
 block|,
-comment|/* Setttb		*/
-comment|/* TLB functions */
-name|armv7_tlb_flushID
-block|,
-comment|/* tlb_flushID		*/
-name|armv7_tlb_flushID_SE
-block|,
-comment|/* tlb_flushID_SE	*/
-name|armv7_tlb_flushID
-block|,
-comment|/* tlb_flushD		*/
-name|armv7_tlb_flushID_SE
-block|,
-comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|armv7_icache_sync_range
-block|,
-comment|/* icache_sync_range	*/
-name|armv7_dcache_wbinv_all
-block|,
-comment|/* dcache_wbinv_all	*/
-name|armv7_dcache_wbinv_range
-block|,
-comment|/* dcache_wbinv_range	*/
-name|armv7_dcache_inv_range
-block|,
-comment|/* dcache_inv_range	*/
-name|armv7_dcache_wb_range
-block|,
-comment|/* dcache_wb_range	*/
-name|armv7_idcache_inv_all
-block|,
-comment|/* idcache_inv_all	*/
-name|armv7_idcache_wbinv_all
-block|,
-comment|/* idcache_wbinv_all	*/
-name|armv7_idcache_wbinv_range
-block|,
-comment|/* idcache_wbinv_all	*/
+operator|.
+name|cf_l2cache_wbinv_all
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_wbinv_all	*/
+operator|.
+name|cf_l2cache_wbinv_range
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_wbinv_range	*/
+operator|.
+name|cf_l2cache_inv_range
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_inv_range	*/
+operator|.
+name|cf_l2cache_wb_range
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_wb_range	*/
+operator|.
+name|cf_l2cache_drain_writebuf
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
+operator|.
+name|cf_drain_writebuf
+operator|=
 name|armv7_drain_writebuf
 block|,
-comment|/* drain_writebuf	*/
+operator|.
+name|cf_sleep
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* sleep		*/
 comment|/* Soft functions */
-name|armv7_context_switch
-block|,
-comment|/* context_switch	*/
+operator|.
+name|cf_setup
+operator|=
 name|pj4bv7_setup
-comment|/* cpu setup		*/
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1057,103 +1033,79 @@ name|cpu_functions
 name|arm1176_cpufuncs
 init|=
 block|{
-comment|/* CPU functions */
-name|cpufunc_nullop
-block|,
-comment|/* cpwait               */
 comment|/* MMU functions */
+operator|.
+name|cf_control
+operator|=
 name|cpufunc_control
 block|,
-comment|/* control              */
+operator|.
+name|cf_setttb
+operator|=
 name|arm11x6_setttb
 block|,
-comment|/* Setttb               */
-comment|/* TLB functions */
-name|arm11_tlb_flushID
-block|,
-comment|/* tlb_flushID          */
-name|arm11_tlb_flushID_SE
-block|,
-comment|/* tlb_flushID_SE       */
-name|arm11_tlb_flushD
-block|,
-comment|/* tlb_flushD           */
-name|arm11_tlb_flushD_SE
-block|,
-comment|/* tlb_flushD_SE        */
 comment|/* Cache operations */
-name|arm11x6_icache_sync_range
-block|,
-comment|/* icache_sync_range    */
-name|arm11x6_dcache_wbinv_all
-block|,
-comment|/* dcache_wbinv_all     */
-name|armv6_dcache_wbinv_range
-block|,
-comment|/* dcache_wbinv_range   */
-name|armv6_dcache_inv_range
-block|,
-comment|/* dcache_inv_range     */
-name|armv6_dcache_wb_range
-block|,
-comment|/* dcache_wb_range      */
-name|armv6_idcache_inv_all
-block|,
-comment|/* idcache_inv_all	*/
-name|arm11x6_idcache_wbinv_all
-block|,
-comment|/* idcache_wbinv_all    */
-name|arm11x6_idcache_wbinv_range
-block|,
-comment|/* idcache_wbinv_range  */
+operator|.
+name|cf_l2cache_wbinv_all
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_wbinv_all    */
+operator|.
+name|cf_l2cache_wbinv_range
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_wbinv_range  */
+operator|.
+name|cf_l2cache_inv_range
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_inv_range    */
+operator|.
+name|cf_l2cache_wb_range
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_wb_range     */
+operator|.
+name|cf_l2cache_drain_writebuf
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
+operator|.
+name|cf_drain_writebuf
+operator|=
 name|arm11_drain_writebuf
 block|,
-comment|/* drain_writebuf       */
+operator|.
+name|cf_sleep
+operator|=
 name|arm11x6_sleep
 block|,
-comment|/* sleep                */
 comment|/* Soft functions */
-name|arm11_context_switch
-block|,
-comment|/* context_switch       */
+operator|.
+name|cf_setup
+operator|=
 name|arm11x6_setup
-comment|/* cpu setup            */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1187,100 +1139,76 @@ name|cpu_functions
 name|cortexa_cpufuncs
 init|=
 block|{
-comment|/* CPU functions */
-name|cpufunc_nullop
-block|,
-comment|/* cpwait               */
 comment|/* MMU functions */
+operator|.
+name|cf_control
+operator|=
 name|cpufunc_control
 block|,
-comment|/* control              */
+operator|.
+name|cf_setttb
+operator|=
 name|armv7_setttb
 block|,
-comment|/* Setttb               */
-comment|/* 	 * TLB functions.  ARMv7 does all TLB ops based on a unified TLB model 	 * whether the hardware implements separate I+D or not, so we use the 	 * same 'ID' functions for all 3 variations. 	 */
-name|armv7_tlb_flushID
-block|,
-comment|/* tlb_flushID          */
-name|armv7_tlb_flushID_SE
-block|,
-comment|/* tlb_flushID_SE       */
-name|armv7_tlb_flushID
-block|,
-comment|/* tlb_flushD           */
-name|armv7_tlb_flushID_SE
-block|,
-comment|/* tlb_flushD_SE        */
 comment|/* Cache operations */
-name|armv7_icache_sync_range
-block|,
-comment|/* icache_sync_range    */
-name|armv7_dcache_wbinv_all
-block|,
-comment|/* dcache_wbinv_all     */
-name|armv7_dcache_wbinv_range
-block|,
-comment|/* dcache_wbinv_range   */
-name|armv7_dcache_inv_range
-block|,
-comment|/* dcache_inv_range     */
-name|armv7_dcache_wb_range
-block|,
-comment|/* dcache_wb_range      */
-name|armv7_idcache_inv_all
-block|,
-comment|/* idcache_inv_all	*/
-name|armv7_idcache_wbinv_all
-block|,
-comment|/* idcache_wbinv_all    */
-name|armv7_idcache_wbinv_range
-block|,
-comment|/* idcache_wbinv_range  */
 comment|/* 	 * Note: For CPUs using the PL310 the L2 ops are filled in when the 	 * L2 cache controller is actually enabled. 	 */
+operator|.
+name|cf_l2cache_wbinv_all
+operator|=
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_wbinv_all    */
+operator|.
+name|cf_l2cache_wbinv_range
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_wbinv_range  */
+operator|.
+name|cf_l2cache_inv_range
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_inv_range    */
+operator|.
+name|cf_l2cache_wb_range
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_wb_range     */
+operator|.
+name|cf_l2cache_drain_writebuf
+operator|=
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
+operator|.
+name|cf_drain_writebuf
+operator|=
 name|armv7_drain_writebuf
 block|,
-comment|/* drain_writebuf       */
+operator|.
+name|cf_sleep
+operator|=
 name|armv7_cpu_sleep
 block|,
-comment|/* sleep                */
 comment|/* Soft functions */
-name|armv7_context_switch
-block|,
-comment|/* context_switch       */
+operator|.
+name|cf_setup
+operator|=
 name|cortexa_setup
-comment|/* cpu setup            */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2316,6 +2244,15 @@ name|CPU_ID_CORTEXA12
 case|:
 case|case
 name|CPU_ID_CORTEXA15
+case|:
+case|case
+name|CPU_ID_CORTEXA53
+case|:
+case|case
+name|CPU_ID_CORTEXA57
+case|:
+case|case
+name|CPU_ID_CORTEXA72
 case|:
 case|case
 name|CPU_ID_KRAIT300

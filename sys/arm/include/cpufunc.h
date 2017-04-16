@@ -55,6 +55,11 @@ struct|struct
 name|cpu_functions
 block|{
 comment|/* CPU functions */
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
 name|void
 function_decl|(
 modifier|*
@@ -64,6 +69,8 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 comment|/* MMU functions */
 name|u_int
 function_decl|(
@@ -88,6 +95,11 @@ name|u_int
 name|ttb
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
 comment|/* TLB functions */
 name|void
 function_decl|(
@@ -210,6 +222,8 @@ parameter_list|,
 name|vm_size_t
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|void
 function_decl|(
 modifier|*
@@ -281,6 +295,11 @@ name|int
 name|mode
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
 comment|/* Soft functions */
 name|void
 function_decl|(
@@ -291,6 +310,8 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|void
 function_decl|(
 modifier|*

@@ -819,6 +819,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_CORTEXA53
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xd030)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA57
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xd070)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA72
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xd080)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_KRAIT300
 value|(CPU_ID_QUALCOM | CPU_ID_CPUID_SCHEME | 0x06f0)
 end_define
