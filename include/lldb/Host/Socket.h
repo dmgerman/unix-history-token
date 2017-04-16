@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/IOObject.h"
 end_include
 
@@ -83,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/SocketAddress.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_ifdef
@@ -305,12 +305,7 @@ argument_list|,
 name|Socket
 operator|*
 operator|&
-name|send_socket
-argument_list|,
-name|Socket
-operator|*
-operator|&
-name|recv_socket
+name|socket
 argument_list|)
 block|;
 specifier|static

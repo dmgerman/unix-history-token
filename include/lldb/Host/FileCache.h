@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -64,13 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_decl_stmt

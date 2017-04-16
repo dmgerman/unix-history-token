@@ -74,7 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Utility/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FileSystem.h"
 end_include
 
 begin_decl_stmt
@@ -422,7 +428,7 @@ name|GetContainedFilesIntoVectorOfStringsCallback
 argument_list|(
 argument|void *baton
 argument_list|,
-argument|lldb_private::FileSpec::FileType file_type
+argument|llvm::sys::fs::file_type ft
 argument_list|,
 argument|const lldb_private::FileSpec&file_spec
 argument_list|)

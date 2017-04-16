@@ -64,25 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataExtractor.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Flags.h"
+file|"lldb/Utility/Flags.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/Core/RangeMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/VMRange.h"
 end_include
 
 begin_include
@@ -101,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/UnwindPlan.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/VMRange.h"
 end_include
 
 begin_include

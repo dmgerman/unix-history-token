@@ -43,19 +43,45 @@ directive|define
 name|liblldb_UserSettingsController_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
+comment|// for Error
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|"lldb/lldb-forward.h"
 end_include
+
+begin_comment
+comment|// for OptionValuePropertiesSP
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-enumerations.h"
+end_include
+
+begin_comment
+comment|// for VarSetOperationType
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_comment
+comment|// for StringRef
+end_comment
 
 begin_include
 include|#
@@ -63,49 +89,75 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_comment
-comment|// Other libraries and framework includes
+comment|// for size_t
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_comment
-comment|// Project includes
+comment|// for uint32_t
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/ConstString.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|CommandInterpreter
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Stream.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ConstString
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StreamString.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ExecutionContext
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StringList.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Property
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Interpreter/OptionValue.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace

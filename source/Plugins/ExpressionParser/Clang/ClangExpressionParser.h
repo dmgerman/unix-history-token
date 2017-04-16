@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Expression/DiagnosticManager.h"
 end_include
 
@@ -71,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Expression/ExpressionParser.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include

@@ -70,51 +70,5 @@ begin_comment
 comment|// units.  Be very leary about putting anything in this file.
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|&&
-operator|(
-name|_HAS_EXCEPTIONS
-operator|==
-literal|0
-operator|)
-end_if
-
-begin_comment
-comment|// Due to a bug in<thread>, when _HAS_EXCEPTIONS == 0 the header will try to
-end_comment
-
-begin_comment
-comment|// call
-end_comment
-
-begin_comment
-comment|// uncaught_exception() without having a declaration for it.  The fix for this
-end_comment
-
-begin_comment
-comment|// is
-end_comment
-
-begin_comment
-comment|// to manually #include<eh.h>, which contains this declaration.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<eh.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 end_unit
 

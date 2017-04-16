@@ -46,19 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Stream.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Utility/StringExtractor.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
 end_include
 
 begin_include
@@ -76,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<type_traits>
 end_include
 
 begin_include
@@ -94,8 +82,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|<stdint.h>
 end_include
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace

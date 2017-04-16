@@ -43,22 +43,6 @@ directive|define
 name|liblldb_PlatformLinux_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -89,15 +73,6 @@ operator|~
 name|PlatformLinux
 argument_list|()
 name|override
-block|;
-specifier|static
-name|void
-name|DebuggerInitialize
-argument_list|(
-name|Debugger
-operator|&
-name|debugger
-argument_list|)
 block|;
 specifier|static
 name|void
@@ -156,17 +131,6 @@ block|}
 comment|//------------------------------------------------------------
 comment|// lldb_private::Platform functions
 comment|//------------------------------------------------------------
-name|Error
-name|ResolveExecutable
-argument_list|(
-argument|const ModuleSpec&module_spec
-argument_list|,
-argument|lldb::ModuleSP&module_sp
-argument_list|,
-argument|const FileSpecList *module_search_paths_ptr
-argument_list|)
-name|override
-block|;
 specifier|const
 name|char
 operator|*
@@ -186,35 +150,6 @@ name|void
 name|GetStatus
 argument_list|(
 argument|Stream&strm
-argument_list|)
-name|override
-block|;
-name|Error
-name|GetFileWithUUID
-argument_list|(
-argument|const FileSpec&platform_file
-argument_list|,
-argument|const UUID *uuid
-argument_list|,
-argument|FileSpec&local_file
-argument_list|)
-name|override
-block|;
-name|bool
-name|GetProcessInfo
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|,
-argument|ProcessInstanceInfo&proc_info
-argument_list|)
-name|override
-block|;
-name|uint32_t
-name|FindProcesses
-argument_list|(
-argument|const ProcessInstanceInfoMatch&match_info
-argument_list|,
-argument|ProcessInstanceInfoList&process_infos
 argument_list|)
 name|override
 block|;
@@ -265,13 +200,6 @@ argument_list|(
 argument|const ArchSpec&arch
 argument_list|,
 argument|unsigned flags
-argument_list|)
-name|override
-block|;
-name|ConstString
-name|GetFullNameForDylib
-argument_list|(
-argument|ConstString basename
 argument_list|)
 name|override
 block|;

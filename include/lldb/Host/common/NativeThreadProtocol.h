@@ -223,6 +223,29 @@ argument_list|)
 operator|=
 literal|0
 block|;
+comment|// ---------------------------------------------------------------------
+comment|// Thread-specific Hardware Breakpoint routines
+comment|// ---------------------------------------------------------------------
+name|virtual
+name|Error
+name|SetHardwareBreakpoint
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|,
+argument|size_t size
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|Error
+name|RemoveHardwareBreakpoint
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|)
+operator|=
+literal|0
+block|;
 name|protected
 operator|:
 name|NativeProcessProtocolWP

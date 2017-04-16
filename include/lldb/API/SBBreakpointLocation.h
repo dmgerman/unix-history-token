@@ -281,10 +281,15 @@ operator|&
 name|break_loc_sp
 argument_list|)
 decl_stmt|;
+name|BreakpointLocationSP
+name|GetSP
+argument_list|()
+specifier|const
+expr_stmt|;
 name|lldb
 operator|::
-name|BreakpointLocationSP
-name|m_opaque_sp
+name|BreakpointLocationWP
+name|m_opaque_wp
 expr_stmt|;
 block|}
 empty_stmt|;

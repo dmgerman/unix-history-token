@@ -399,9 +399,6 @@ name|class
 name|Log
 decl_stmt|;
 name|class
-name|LogChannel
-decl_stmt|;
-name|class
 name|Mangled
 decl_stmt|;
 name|class
@@ -1519,17 +1516,6 @@ operator|::
 name|Listener
 operator|>
 name|ListenerWP
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|shared_ptr
-operator|<
-name|lldb_private
-operator|::
-name|LogChannel
-operator|>
-name|LogChannelSP
 expr_stmt|;
 typedef|typedef
 name|std

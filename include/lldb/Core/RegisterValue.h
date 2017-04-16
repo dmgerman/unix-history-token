@@ -43,34 +43,6 @@ directive|define
 name|lldb_RegisterValue_h
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/APInt.h"
-end_include
-
-begin_comment
-comment|// Project includes
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -80,20 +52,100 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Endian.h"
+file|"lldb/Utility/Endian.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Utility/Error.h"
+end_include
+
+begin_comment
+comment|// for Error
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_comment
+comment|// for ByteOrder, Format
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
+
+begin_comment
+comment|// for offset_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/APInt.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"llvm/ADT/StringRef.h"
 end_include
+
+begin_comment
+comment|// for StringRef
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t, uint8_t, uint64_t, uin...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|DataExtractor
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+struct_decl|struct
+name|RegisterInfo
+struct_decl|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace

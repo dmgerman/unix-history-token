@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"SingleStepCheck.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/common/NativeThreadProtocol.h"
 end_include
 
@@ -53,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-private-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sched.h>
 end_include
 
 begin_include
@@ -154,6 +154,22 @@ name|override
 block|;
 name|Error
 name|RemoveWatchpoint
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|)
+name|override
+block|;
+name|Error
+name|SetHardwareBreakpoint
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|,
+argument|size_t size
+argument_list|)
+name|override
+block|;
+name|Error
+name|RemoveHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
 argument_list|)
@@ -255,16 +271,6 @@ name|void
 name|SetStopped
 argument_list|()
 block|;
-specifier|inline
-name|void
-name|MaybePrepareSingleStepWorkaround
-argument_list|()
-block|;
-specifier|inline
-name|void
-name|MaybeCleanupSingleStepWorkaround
-argument_list|()
-block|;
 comment|// ---------------------------------------------------------------------
 comment|// Member Variables
 comment|// ---------------------------------------------------------------------
@@ -301,11 +307,17 @@ block|;
 name|WatchpointIndexMap
 name|m_watchpoint_index_map
 block|;
-name|cpu_set_t
-name|m_original_cpu_set
+name|WatchpointIndexMap
+name|m_hw_break_index_map
 block|;
-comment|// For single-step workaround.
-block|}
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SingleStepWorkaround
+operator|>
+name|m_step_workaround
+block|; }
 decl_stmt|;
 typedef|typedef
 name|std

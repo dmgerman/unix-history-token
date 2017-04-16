@@ -43,38 +43,22 @@ directive|define
 name|liblldb_POSIXStopInfo_H_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"FreeBSDThread.h"
+end_include
 
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"Plugins/Process/POSIX/CrashReason.h"
+end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/Target/StopInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"CrashReason.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"FreeBSDThread.h"
 end_include
 
 begin_include

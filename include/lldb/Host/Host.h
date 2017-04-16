@@ -73,25 +73,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StringList.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/File.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Host/HostThread.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/HostThread.h"
+file|"lldb/Utility/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StringList.h"
 end_include
 
 begin_include
@@ -306,40 +306,6 @@ name|signo
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|/// Get the thread ID for the calling thread in the current process.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @return
-end_comment
-
-begin_comment
-comment|///     The thread ID for the calling thread in the current process.
-end_comment
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|tid_t
-name|GetCurrentThreadID
-argument_list|()
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -801,6 +767,11 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 operator|)
 operator|&&
 expr|\
@@ -1038,34 +1009,6 @@ name|true
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|DataBufferSP
-name|GetAuxvData
-argument_list|(
-name|lldb_private
-operator|::
-name|Process
-operator|*
-name|process
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|DataBufferSP
-name|GetAuxvData
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function_decl
 specifier|static

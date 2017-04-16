@@ -72,19 +72,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/HostThread.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"lldb/Host/linux/Support.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/MemoryRegionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include
@@ -305,6 +311,15 @@ argument|bool hardware
 argument_list|)
 name|override
 block|;
+name|Error
+name|RemoveBreakpoint
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|,
+argument|bool hardware = false
+argument_list|)
+name|override
+block|;
 name|void
 name|DoStopIDBumped
 argument_list|(
@@ -336,6 +351,33 @@ argument_list|(
 argument|lldb::tid_t id
 argument_list|)
 block|;
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|>>
+name|GetAuxvData
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|getProcFile
+argument_list|(
+name|GetID
+argument_list|()
+argument_list|,
+literal|"auxv"
+argument_list|)
+return|;
+block|}
 comment|// ---------------------------------------------------------------------
 comment|// Interface used by NativeRegisterContext-derived classes.
 comment|// ---------------------------------------------------------------------

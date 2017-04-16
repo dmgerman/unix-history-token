@@ -62,6 +62,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/Host/OptionParser.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/CommandObject.h"
 end_include
 

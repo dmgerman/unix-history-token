@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Symbol/ObjectContainer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ObjectContainer.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include

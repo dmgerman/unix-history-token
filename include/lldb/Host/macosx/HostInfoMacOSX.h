@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Host/posix/HostInfoPosix.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/posix/HostInfoPosix.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_decl_stmt
@@ -126,11 +126,6 @@ block|;
 specifier|static
 name|FileSpec
 name|GetProgramFileSpec
-argument_list|()
-block|;
-specifier|static
-name|uint32_t
-name|GetMaxThreadNameLength
 argument_list|()
 block|;
 name|protected

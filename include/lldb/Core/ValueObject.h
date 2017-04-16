@@ -43,12 +43,150 @@ directive|define
 name|liblldb_ValueObject_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/DataFormatters/DumpValueObjectOptions.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
+comment|// for DumpValueObj...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/Type.h"
+end_include
+
+begin_comment
+comment|// for TypeImpl
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/ExecutionContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/Process.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/DataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/SharedCluster.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UserID.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_comment
+comment|// for LLDB_INVALID...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_comment
+comment|// for DynamicValue...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_comment
+comment|// for ValueObjectSP
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-enumerations.h"
+end_include
+
+begin_comment
+comment|// for AddressType
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
+
+begin_comment
+comment|// for addr_t, offs...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_comment
+comment|// for StringRef
 end_comment
 
 begin_include
@@ -72,106 +210,158 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_comment
+comment|// for recursive_mutex
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_comment
+comment|// for string
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_comment
+comment|// for pair
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_comment
-comment|// Other libraries and framework includes
+comment|// for size_t
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
+file|<stdint.h>
 end_include
 
 begin_comment
-comment|// Project includes
+comment|// for uint32_t
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/ConstString.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Declaration
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/DataExtractor.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|EvaluateExpressionOptions
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Error.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ExecutionContextScope
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Flags.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Log
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UserID.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Scalar
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Value.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/CompilerType.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|SymbolContextScope
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Target/ExecutionContext.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|TypeFormatImpl
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Target/ExecutionContextScope.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|TypeSummaryImpl
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Target/Process.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/StackID.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Utility/SharedCluster.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|TypeSummaryOptions
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -1704,6 +1894,9 @@ name|this
 argument_list|)
 return|;
 block|}
+comment|// Change the name of the current ValueObject. Should *not* be used from a
+comment|// synthetic child provider as it would change the name of the non synthetic
+comment|// child as well.
 name|void
 name|SetName
 argument_list|(
@@ -1889,6 +2082,22 @@ argument_list|(
 name|Error
 operator|&
 name|error
+argument_list|)
+block|;
+comment|// Creates a copy of the ValueObject with a new name and setting the current
+comment|// ValueObject as its parent. It should be used when we want to change the
+comment|// name of a ValueObject without modifying the actual ValueObject itself
+comment|// (e.g. sythetic child provider).
+name|virtual
+name|lldb
+operator|::
+name|ValueObjectSP
+name|Clone
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|new_name
 argument_list|)
 block|;
 name|virtual

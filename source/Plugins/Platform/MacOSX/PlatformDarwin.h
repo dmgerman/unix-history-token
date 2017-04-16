@@ -68,13 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FileSystem.h"
 end_include
 
 begin_include
@@ -111,19 +117,6 @@ block|;
 comment|//------------------------------------------------------------
 comment|// lldb_private::Platform functions
 comment|//------------------------------------------------------------
-name|lldb_private
-operator|::
-name|Error
-name|ResolveExecutable
-argument_list|(
-argument|const lldb_private::ModuleSpec&module_spec
-argument_list|,
-argument|lldb::ModuleSP&module_sp
-argument_list|,
-argument|const lldb_private::FileSpecList *module_search_paths_ptr
-argument_list|)
-name|override
-block|;
 name|lldb_private
 operator|::
 name|Error
@@ -178,30 +171,12 @@ argument|lldb_private::BreakpointSite *bp_site
 argument_list|)
 name|override
 block|;
-name|bool
-name|GetProcessInfo
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|,
-argument|lldb_private::ProcessInstanceInfo&proc_info
-argument_list|)
-name|override
-block|;
 name|lldb
 operator|::
 name|BreakpointSP
 name|SetThreadCreationBreakpoint
 argument_list|(
 argument|lldb_private::Target&target
-argument_list|)
-name|override
-block|;
-name|uint32_t
-name|FindProcesses
-argument_list|(
-argument|const lldb_private::ProcessInstanceInfoMatch&match_info
-argument_list|,
-argument|lldb_private::ProcessInstanceInfoList&process_infos
 argument_list|)
 name|override
 block|;
@@ -425,7 +400,7 @@ name|DirectoryEnumerator
 argument_list|(
 argument|void *baton
 argument_list|,
-argument|lldb_private::FileSpec::FileType file_type
+argument|llvm::sys::fs::file_type file_type
 argument_list|,
 argument|const lldb_private::FileSpec&spec
 argument_list|)

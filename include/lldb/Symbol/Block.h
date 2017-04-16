@@ -80,18 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Stream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UserID.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Symbol/CompilerType.h"
 end_include
 
@@ -105,6 +93,24 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/SymbolContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/SymbolContextScope.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Stream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_include

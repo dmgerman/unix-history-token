@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataBufferHeap.h"
+file|"lldb/Utility/DataBufferHeap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UserID.h"
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_include

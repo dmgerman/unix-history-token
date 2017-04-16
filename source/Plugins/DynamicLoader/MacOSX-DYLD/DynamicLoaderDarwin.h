@@ -86,18 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UUID.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/DynamicLoader.h"
 end_include
 
@@ -110,7 +98,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Utility/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Utility/SafeMachO.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UUID.h"
 end_include
 
 begin_include

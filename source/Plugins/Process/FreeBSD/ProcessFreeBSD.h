@@ -47,13 +47,23 @@ directive|define
 name|liblldb_ProcessFreeBSD_H_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"Plugins/Process/POSIX/ProcessMessage.h"
+end_include
 
-begin_comment
-comment|// C++ Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Target/Process.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/ThreadList.h"
+end_include
 
 begin_include
 include|#
@@ -71,34 +81,6 @@ begin_include
 include|#
 directive|include
 file|<set>
-end_include
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"ProcessFreeBSD.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ProcessMessage.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/Process.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/ThreadList.h"
 end_include
 
 begin_decl_stmt
@@ -564,32 +546,128 @@ argument_list|,
 argument|lldb::tid_t tid
 argument_list|)
 block|;
+specifier|static
+name|bool
+name|SingleStepBreakpointHit
+argument_list|(
+argument|void *baton
+argument_list|,
+argument|lldb_private::StoppointCallbackContext *context
+argument_list|,
+argument|lldb::user_id_t break_id
+argument_list|,
+argument|lldb::user_id_t break_loc_id
+argument_list|)
+block|;
+name|lldb_private
+operator|::
+name|Error
+name|SetupSoftwareSingleStepping
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|)
+block|;
+name|lldb_private
+operator|::
+name|Error
+name|SetSoftwareSingleStepBreakpoint
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|,
+argument|lldb::addr_t addr
+argument_list|)
+block|;
+name|bool
+name|IsSoftwareStepBreakpoint
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|)
+block|;
+name|bool
+name|SupportHardwareSingleStepping
+argument_list|()
+specifier|const
+block|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|tid_t
+operator|>
+name|tid_collection
+expr_stmt|;
+name|tid_collection
+operator|&
+name|GetStepTids
+argument_list|()
+block|{
+return|return
+name|m_step_tids
+return|;
+block|}
 name|protected
 operator|:
+specifier|static
+specifier|const
+name|size_t
+name|MAX_TRAP_OPCODE_SIZE
+operator|=
+literal|8
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Target byte order.
+end_comment
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|ByteOrder
 name|m_byte_order
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Process monitor;
+end_comment
+
+begin_decl_stmt
 name|ProcessMonitor
-operator|*
+modifier|*
 name|m_monitor
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// The module we are executing.
+end_comment
+
+begin_expr_stmt
 name|lldb_private
 operator|::
 name|Module
 operator|*
 name|m_module
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Message queue notifying this instance of inferior process state changes.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|recursive_mutex
 name|m_message_mutex
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|queue
@@ -597,26 +675,53 @@ operator|<
 name|ProcessMessage
 operator|>
 name|m_message_queue
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Drive any exit events to completion.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|m_exit_now
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Returns true if the process has exited.
+end_comment
+
+begin_function_decl
 name|bool
 name|HasExited
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Returns true if the process is stopped.
+end_comment
+
+begin_function_decl
 name|bool
 name|IsStopped
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Returns true if at least one running is currently running
+end_comment
+
+begin_function_decl
 name|bool
 name|IsAThreadRunning
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -632,6 +737,9 @@ name|addr_t
 operator|>
 name|MMapMap
 expr_stmt|;
+end_typedef
+
+begin_decl_stmt
 name|MMapMap
 name|m_addr_to_mmap_size
 decl_stmt|;
@@ -672,20 +780,6 @@ name|FreeBSDThread
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb
-operator|::
-name|tid_t
-operator|>
-name|tid_collection
-expr_stmt|;
-end_typedef
-
 begin_decl_stmt
 name|tid_collection
 name|m_suspend_tids
@@ -703,6 +797,23 @@ name|tid_collection
 name|m_step_tids
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|map
+operator|<
+name|lldb
+operator|::
+name|tid_t
+operator|,
+name|lldb
+operator|::
+name|break_id_t
+operator|>
+name|m_threads_stepping_with_breakpoint
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int

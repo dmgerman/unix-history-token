@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataBufferHeap.h"
+file|"lldb/Utility/DataBufferHeap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataExtractor.h"
+file|"lldb/Utility/DataExtractor.h"
 end_include
 
 begin_decl_stmt
@@ -188,10 +188,20 @@ operator|::
 name|DataBufferSP
 name|m_gpr_buffer
 block|;
+name|lldb
+operator|::
+name|DataBufferSP
+name|m_fpr_buffer
+block|;
 name|lldb_private
 operator|::
 name|DataExtractor
 name|m_gpr
+block|;
+name|lldb_private
+operator|::
+name|DataExtractor
+name|m_fpr
 block|; }
 decl_stmt|;
 end_decl_stmt

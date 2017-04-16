@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_if
@@ -81,7 +81,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Utility/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FileSystem.h"
 end_include
 
 begin_comment
@@ -395,7 +401,7 @@ name|FindKDKandSDKDirectoriesInDirectory
 argument_list|(
 argument|void *baton
 argument_list|,
-argument|lldb_private::FileSpec::FileType file_type
+argument|llvm::sys::fs::file_type ft
 argument_list|,
 argument|const lldb_private::FileSpec&file_spec
 argument_list|)
@@ -420,7 +426,7 @@ name|GetKernelsAndKextsInDirectoryWithRecursion
 argument_list|(
 argument|void *baton
 argument_list|,
-argument|lldb_private::FileSpec::FileType file_type
+argument|llvm::sys::fs::file_type ft
 argument_list|,
 argument|const lldb_private::FileSpec&file_spec
 argument_list|)
@@ -438,7 +444,7 @@ name|GetKernelsAndKextsInDirectoryNoRecursion
 argument_list|(
 argument|void *baton
 argument_list|,
-argument|lldb_private::FileSpec::FileType file_type
+argument|llvm::sys::fs::file_type ft
 argument_list|,
 argument|const lldb_private::FileSpec&file_spec
 argument_list|)
@@ -456,7 +462,7 @@ name|GetKernelsAndKextsInDirectoryHelper
 argument_list|(
 argument|void *baton
 argument_list|,
-argument|lldb_private::FileSpec::FileType file_type
+argument|llvm::sys::fs::file_type ft
 argument_list|,
 argument|const lldb_private::FileSpec&file_spec
 argument_list|,

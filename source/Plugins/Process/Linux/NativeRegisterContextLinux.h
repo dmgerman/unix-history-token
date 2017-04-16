@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Host/common/NativeRegisterContextRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/common/NativeThreadProtocol.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"Plugins/Process/Linux/NativeProcessLinux.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"Plugins/Process/Utility/NativeRegisterContextRegisterInfo.h"
 end_include
 
 begin_decl_stmt

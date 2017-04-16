@@ -43,6 +43,24 @@ directive|define
 name|liblldb_SingleStepCheck_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -50,46 +68,120 @@ block|{
 name|namespace
 name|process_linux
 block|{
-name|namespace
-name|impl
-block|{
-specifier|extern
-name|bool
-name|SingleStepWorkaroundNeeded
-parameter_list|()
-function_decl|;
-block|}
 comment|// arm64 linux had a bug which prevented single-stepping and watchpoints from
-comment|// working on non-boot
-comment|// cpus, due to them being incorrectly initialized after coming out of suspend.
-comment|// This issue is
-comment|// particularly affecting android M, which uses suspend ("doze mode") quite
-comment|// aggressively. This
-comment|// code detects that situation and makes single-stepping work by doing all the
-comment|// step operations on
+comment|// working on non-boot cpus, due to them being incorrectly initialized after
+comment|// coming out of suspend.  This issue is particularly affecting android M, which
+comment|// uses suspend ("doze mode") quite aggressively. This code detects that
+comment|// situation and makes single-stepping work by doing all the step operations on
 comment|// the boot cpu.
 comment|//
 comment|// The underlying issue has been fixed in android N and linux 4.4. This code can
-comment|// be removed once
-comment|// these systems become obsolete.
-specifier|inline
-name|bool
-name|SingleStepWorkaroundNeeded
-parameter_list|()
+comment|// be removed once these systems become obsolete.
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+name|class
+name|SingleStepWorkaround
 block|{
-specifier|static
-name|bool
-name|value
-init|=
-name|impl
 operator|::
-name|SingleStepWorkaroundNeeded
-argument_list|()
+name|pid_t
+name|m_tid
+expr_stmt|;
+name|cpu_set_t
+name|m_original_set
 decl_stmt|;
+name|SingleStepWorkaround
+argument_list|(
+specifier|const
+name|SingleStepWorkaround
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|SingleStepWorkaround
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|public
+label|:
+name|SingleStepWorkaround
+argument_list|(
+argument|::pid_t tid
+argument_list|,
+argument|cpu_set_t original_set
+argument_list|)
+block|:
+name|m_tid
+argument_list|(
+name|tid
+argument_list|)
+operator|,
+name|m_original_set
+argument_list|(
+argument|original_set
+argument_list|)
+block|{}
+operator|~
+name|SingleStepWorkaround
+argument_list|()
+expr_stmt|;
+specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SingleStepWorkaround
+operator|>
+name|Get
+argument_list|(
+argument|::pid_t tid
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+else|#
+directive|else
+name|class
+name|SingleStepWorkaround
+block|{
+name|public
+label|:
+specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SingleStepWorkaround
+operator|>
+name|Get
+argument_list|(
+argument|::pid_t tid
+argument_list|)
+block|{
 return|return
-name|value
+name|nullptr
 return|;
 block|}
+block|}
+empty_stmt|;
+endif|#
+directive|endif
 block|}
 comment|// end namespace process_linux
 block|}

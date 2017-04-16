@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Expression/UtilityFunction.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include

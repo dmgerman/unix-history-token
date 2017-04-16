@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/PluginInterface.h"
 end_include
 
@@ -98,7 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/PseudoTerminal.h"
+file|"lldb/Utility/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/PseudoTerminal.h"
 end_include
 
 begin_decl_stmt

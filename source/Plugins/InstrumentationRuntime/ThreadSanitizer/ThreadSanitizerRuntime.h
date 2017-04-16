@@ -291,6 +291,8 @@ name|addr_t
 name|GetFirstNonInternalFramePc
 argument_list|(
 argument|StructuredData::ObjectSP trace
+argument_list|,
+argument|bool skip_one_frame = false
 argument_list|)
 block|; }
 decl_stmt|;

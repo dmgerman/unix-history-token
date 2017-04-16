@@ -50,13 +50,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataExtractor.h"
+file|"lldb/Core/dwarf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/dwarf.h"
+file|"lldb/Utility/DataExtractor.h"
 end_include
 
 begin_decl_stmt
@@ -67,8 +67,6 @@ name|class
 name|DWARFDataExtractor
 range|:
 name|public
-name|lldb_private
-operator|::
 name|DataExtractor
 block|{
 name|public

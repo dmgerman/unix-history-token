@@ -346,6 +346,50 @@ comment|// Timeout in seconds to wait for shell program to finish
 name|lldb_private
 operator|::
 name|Error
+name|ResolveExecutable
+argument_list|(
+argument|const lldb_private::ModuleSpec&module_spec
+argument_list|,
+argument|lldb::ModuleSP&module_sp
+argument_list|,
+argument|const lldb_private::FileSpecList *module_search_paths_ptr
+argument_list|)
+name|override
+block|;
+name|lldb_private
+operator|::
+name|Error
+name|GetFileWithUUID
+argument_list|(
+argument|const lldb_private::FileSpec&platform_file
+argument_list|,
+argument|const lldb_private::UUID *uuid
+argument_list|,
+argument|lldb_private::FileSpec&local_file
+argument_list|)
+name|override
+block|;
+name|bool
+name|GetProcessInfo
+argument_list|(
+argument|lldb::pid_t pid
+argument_list|,
+argument|lldb_private::ProcessInstanceInfo&proc_info
+argument_list|)
+name|override
+block|;
+name|uint32_t
+name|FindProcesses
+argument_list|(
+argument|const lldb_private::ProcessInstanceInfoMatch&match_info
+argument_list|,
+argument|lldb_private::ProcessInstanceInfoList&process_infos
+argument_list|)
+name|override
+block|;
+name|lldb_private
+operator|::
+name|Error
 name|MakeDirectory
 argument_list|(
 argument|const lldb_private::FileSpec&file_spec
@@ -533,6 +577,15 @@ argument_list|(
 argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Error&error
+argument_list|)
+name|override
+block|;
+name|lldb_private
+operator|::
+name|ConstString
+name|GetFullNameForDylib
+argument_list|(
+argument|lldb_private::ConstString basename
 argument_list|)
 name|override
 block|;

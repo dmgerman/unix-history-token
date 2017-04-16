@@ -356,7 +356,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|m_addr
+name|m_range
+operator|.
+name|GetRangeBase
+argument_list|()
 return|;
 block|}
 name|uint32_t
@@ -365,7 +368,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|m_byte_size
+name|m_range
+operator|.
+name|GetByteSize
+argument_list|()
 return|;
 block|}
 name|uint32_t
@@ -397,21 +403,12 @@ argument_list|)
 decl|const
 block|{
 return|return
-operator|(
-operator|(
+name|m_range
+operator|.
+name|Contains
+argument_list|(
 name|addr
-operator|>=
-name|m_addr
-operator|)
-operator|&&
-name|addr
-operator|<
-operator|(
-name|m_addr
-operator|+
-name|m_byte_size
-operator|)
-operator|)
+argument_list|)
 return|;
 block|}
 name|protected
@@ -422,9 +419,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|m_byte_size
+name|GetByteSize
+argument_list|()
 operator|/
-name|m_chunk_size
+name|GetChunkSize
+argument_list|()
 return|;
 block|}
 name|uint32_t
@@ -447,44 +446,49 @@ operator|/
 name|m_chunk_size
 return|;
 block|}
-specifier|const
+comment|// Base address of this block of memory 4GB of chunk should be enough.
+name|Range
+operator|<
 name|lldb
 operator|::
 name|addr_t
-name|m_addr
-expr_stmt|;
-comment|// Base address of this block of memory
-specifier|const
+operator|,
 name|uint32_t
-name|m_byte_size
-decl_stmt|;
-comment|// 4GB of chunk should be enough...
+operator|>
+name|m_range
+expr_stmt|;
+comment|// Permissions for this memory (logical OR of lldb::Permissions bits)
 specifier|const
 name|uint32_t
 name|m_permissions
 decl_stmt|;
-comment|// Permissions for this memory (logical OR of
-comment|// lldb::Permissions bits)
+comment|// The size of chunks that the memory at m_addr is divied up into.
 specifier|const
 name|uint32_t
 name|m_chunk_size
 decl_stmt|;
-comment|// The size of chunks that the memory at m_addr
-comment|// is divied up into
-typedef|typedef
-name|std
-operator|::
-name|map
+comment|// A sorted list of free address ranges.
+name|RangeVector
 operator|<
-name|uint32_t
+name|lldb
+operator|::
+name|addr_t
 operator|,
 name|uint32_t
 operator|>
-name|OffsetToChunkSize
+name|m_free_blocks
 expr_stmt|;
-name|OffsetToChunkSize
-name|m_offset_to_chunk_size
-decl_stmt|;
+comment|// A sorted list of reserved address.
+name|RangeVector
+operator|<
+name|lldb
+operator|::
+name|addr_t
+operator|,
+name|uint32_t
+operator|>
+name|m_reserved_blocks
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|//----------------------------------------------------------------------

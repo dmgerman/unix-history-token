@@ -98,13 +98,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/OptionParser.h"
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include
@@ -123,6 +117,9 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+struct_decl|struct
+name|Option
+struct_decl|;
 typedef|typedef
 name|std
 operator|::
@@ -589,6 +586,35 @@ name|GetConstArgumentVector
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Gets the argument as an ArrayRef. Note that the return value does *not*
+comment|/// have a nullptr const char * at the end, as the size of the list is
+comment|/// embedded in the ArrayRef object.
+comment|//------------------------------------------------------------------
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|GetArgumentArrayRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|m_argv
+argument_list|)
+operator|.
+name|drop_back
+argument_list|()
+return|;
+block|}
 comment|//------------------------------------------------------------------
 comment|/// Appends a new argument to the end of the list argument list.
 comment|///

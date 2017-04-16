@@ -43,13 +43,29 @@ directive|define
 name|liblldb_File_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Host/IOObject.h"
+end_include
 
-begin_comment
-comment|// C++ Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Host/PosixApi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
 
 begin_include
 include|#
@@ -67,32 +83,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/IOObject.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/PosixApi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt

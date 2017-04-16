@@ -84,13 +84,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/CompilerType.h"
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include

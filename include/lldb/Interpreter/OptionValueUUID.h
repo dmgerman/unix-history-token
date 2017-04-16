@@ -62,7 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UUID.h"
+file|"lldb/Utility/UUID.h"
 end_include
 
 begin_include

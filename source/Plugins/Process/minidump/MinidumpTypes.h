@@ -54,7 +54,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include

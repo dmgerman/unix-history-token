@@ -264,6 +264,20 @@ argument|uint32_t hw_idx
 argument_list|)
 block|;
 name|virtual
+name|Error
+name|ClearAllHardwareBreakpoints
+argument_list|()
+block|;
+name|virtual
+name|Error
+name|GetHardwareBreakHitIndex
+argument_list|(
+argument|uint32_t&bp_index
+argument_list|,
+argument|lldb::addr_t trap_addr
+argument_list|)
+block|;
+name|virtual
 name|uint32_t
 name|NumSupportedHardwareWatchpoints
 argument_list|()

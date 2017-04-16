@@ -76,12 +76,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|"../HasAVX.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"DNBArch.h"
 end_include
 

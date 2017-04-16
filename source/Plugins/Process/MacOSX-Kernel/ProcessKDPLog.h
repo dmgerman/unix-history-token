@@ -43,34 +43,11 @@ directive|define
 name|liblldb_ProcessKDPLog_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Log.h"
+file|"lldb/Utility/Log.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|KDP_LOG_VERBOSE
-value|(1u<< 0)
-end_define
 
 begin_define
 define|#
@@ -177,87 +154,47 @@ value|KDP_LOG_PACKETS
 end_define
 
 begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
 name|class
 name|ProcessKDPLog
 block|{
+specifier|static
+name|Log
+operator|::
+name|Channel
+name|g_channel
+expr_stmt|;
 name|public
 label|:
 specifier|static
-name|lldb_private
-operator|::
+name|void
+name|Initialize
+parameter_list|()
+function_decl|;
+specifier|static
 name|Log
-operator|*
+modifier|*
 name|GetLogIfAllCategoriesSet
-argument_list|(
-argument|uint32_t mask =
-literal|0
-argument_list|)
-expr_stmt|;
-specifier|static
-name|void
-name|DisableLog
-argument_list|(
-specifier|const
-name|char
-operator|*
-operator|*
-name|categories
-argument_list|,
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|feedback_strm
-argument_list|)
-decl_stmt|;
-specifier|static
-name|lldb_private
-operator|::
-name|Log
-operator|*
-name|EnableLog
-argument_list|(
-argument|lldb::StreamSP&log_stream_sp
-argument_list|,
-argument|uint32_t log_options
-argument_list|,
-argument|const char **categories
-argument_list|,
-argument|lldb_private::Stream *feedback_strm
-argument_list|)
-expr_stmt|;
-specifier|static
-name|void
-name|ListLogCategories
-argument_list|(
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|strm
-argument_list|)
-decl_stmt|;
-specifier|static
-name|void
-name|LogIf
 parameter_list|(
 name|uint32_t
 name|mask
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|format
-parameter_list|,
-modifier|...
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|g_channel
+operator|.
+name|GetLogIfAll
+argument_list|(
+name|mask
+argument_list|)
+return|;
+block|}
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_endif
 endif|#

@@ -73,6 +73,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/lldb-private-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
 end_include
 
@@ -325,15 +331,6 @@ operator|&
 name|error
 argument_list|)
 expr_stmt|;
-typedef|typedef
-name|LogChannel
-modifier|*
-function_decl|(
-modifier|*
-name|LogChannelCreateInstance
-function_decl|)
-parameter_list|()
-function_decl|;
 typedef|typedef
 name|EmulateInstruction
 modifier|*

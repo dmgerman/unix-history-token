@@ -43,12 +43,70 @@ directive|define
 name|liblldb_FormatEntity_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
+comment|// for FileSpec
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_comment
+comment|// for Format::eFormatDefault, Format
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
+
+begin_comment
+comment|// for addr_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_comment
+comment|// for min
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t, uint64_t
 end_comment
 
 begin_include
@@ -63,25 +121,65 @@ directive|include
 file|<vector>
 end_include
 
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Address
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_comment
-comment|// Project includes
-end_comment
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ExecutionContext
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Error.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|StringList
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|SymbolContext
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ValueObject
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -92,10 +190,6 @@ name|StringRef
 decl_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_decl_stmt
 name|namespace

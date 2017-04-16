@@ -63,6 +63,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -74,13 +80,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
 end_include
 
 begin_decl_stmt
@@ -341,6 +353,51 @@ name|int
 name|signo
 parameter_list|)
 function_decl|;
+comment|// Returns a current version of the data stored in this class.
+comment|// Version gets incremented each time Set... method is called.
+name|uint64_t
+name|GetVersion
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// Returns a vector of signals that meet criteria provided in arguments.
+comment|// Each should_[suppress|stop|notify] flag can be
+comment|// None  - no filtering by this flag
+comment|// true  - only signals that have it set to true are returned
+comment|// false - only signals that have it set to true are returned
+name|std
+operator|::
+name|vector
+operator|<
+name|int32_t
+operator|>
+name|GetFilteredSignals
+argument_list|(
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|bool
+operator|>
+name|should_suppress
+argument_list|,
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|bool
+operator|>
+name|should_stop
+argument_list|,
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|bool
+operator|>
+name|should_notify
+argument_list|)
+expr_stmt|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------
@@ -412,6 +469,15 @@ name|collection
 expr_stmt|;
 name|collection
 name|m_signals
+decl_stmt|;
+comment|// This version gets incremented every time something is changing in
+comment|// this class, including when we call AddSignal from the constructor.
+comment|// So after the object is constructed m_version is going to be> 0
+comment|// if it has at least one signal registered in it.
+name|uint64_t
+name|m_version
+init|=
+literal|0
 decl_stmt|;
 comment|// GDBRemote signals need to be copyable.
 name|UnixSignals

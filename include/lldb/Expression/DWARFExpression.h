@@ -52,25 +52,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataExtractor.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Disassembler.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Core/Scalar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Scalar.h"
+file|"lldb/Utility/DataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include

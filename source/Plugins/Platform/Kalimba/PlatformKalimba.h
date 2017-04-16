@@ -148,17 +148,6 @@ block|}
 comment|//------------------------------------------------------------
 comment|// lldb_private::Platform functions
 comment|//------------------------------------------------------------
-name|Error
-name|ResolveExecutable
-argument_list|(
-argument|const lldb_private::ModuleSpec&module_spec
-argument_list|,
-argument|lldb::ModuleSP&module_sp
-argument_list|,
-argument|const FileSpecList *module_search_paths_ptr
-argument_list|)
-name|override
-block|;
 specifier|const
 name|char
 operator|*
@@ -178,26 +167,6 @@ name|void
 name|GetStatus
 argument_list|(
 argument|Stream&strm
-argument_list|)
-name|override
-block|;
-name|Error
-name|GetFileWithUUID
-argument_list|(
-argument|const FileSpec&platform_file
-argument_list|,
-argument|const UUID *uuid
-argument_list|,
-argument|FileSpec&local_file
-argument_list|)
-name|override
-block|;
-name|bool
-name|GetProcessInfo
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|,
-argument|ProcessInstanceInfo&proc_info
 argument_list|)
 name|override
 block|;

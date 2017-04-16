@@ -56,13 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Interpreter/Args.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/Args.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_decl_stmt

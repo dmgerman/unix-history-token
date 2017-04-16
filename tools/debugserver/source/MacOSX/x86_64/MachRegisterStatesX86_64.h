@@ -359,7 +359,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|int32_t
+name|uint32_t
 name|__fpu_reserved
 index|[
 literal|2
@@ -484,7 +484,7 @@ operator|*
 literal|16
 index|]
 decl_stmt|;
-name|int32_t
+name|uint32_t
 name|__fpu_reserved1
 decl_stmt|;
 block|}

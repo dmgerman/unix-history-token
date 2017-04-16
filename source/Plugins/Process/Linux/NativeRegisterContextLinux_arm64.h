@@ -154,6 +154,11 @@ comment|//------------------------------------------------------------------
 comment|// Hardware breakpoints/watchpoint mangement functions
 comment|//------------------------------------------------------------------
 name|uint32_t
+name|NumSupportedHardwareBreakpoints
+argument_list|()
+name|override
+block|;
+name|uint32_t
 name|SetHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -166,6 +171,20 @@ name|bool
 name|ClearHardwareBreakpoint
 argument_list|(
 argument|uint32_t hw_idx
+argument_list|)
+name|override
+block|;
+name|Error
+name|ClearAllHardwareBreakpoints
+argument_list|()
+name|override
+block|;
+name|Error
+name|GetHardwareBreakHitIndex
+argument_list|(
+argument|uint32_t&bp_index
+argument_list|,
+argument|lldb::addr_t trap_addr
 argument_list|)
 name|override
 block|;

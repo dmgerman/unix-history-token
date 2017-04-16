@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ModuleList.h"
 end_include
 
@@ -93,18 +87,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/StructuredData.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UUID.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
@@ -123,6 +105,24 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/SystemRuntime.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UUID.h"
 end_include
 
 begin_include

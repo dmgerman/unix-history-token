@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Event.h"
 end_include
 
@@ -243,6 +237,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/ThreadList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/NameMatches.h"
 end_include
 
 begin_include
@@ -1322,7 +1328,9 @@ argument_list|()
 operator|,
 name|m_name_match_type
 argument_list|(
-name|eNameMatchIgnore
+name|NameMatch
+operator|::
+name|Ignore
 argument_list|)
 operator|,
 name|m_match_all_users
@@ -1334,7 +1342,7 @@ name|ProcessInstanceInfoMatch
 argument_list|(
 argument|const char *process_name
 argument_list|,
-argument|NameMatchType process_name_match_type
+argument|NameMatch process_name_match_type
 argument_list|)
 operator|:
 name|m_match_info
@@ -1403,7 +1411,7 @@ operator|=
 name|b
 expr_stmt|;
 block|}
-name|NameMatchType
+name|NameMatch
 name|GetNameMatchType
 argument_list|()
 specifier|const
@@ -1415,7 +1423,7 @@ block|}
 name|void
 name|SetNameMatchType
 parameter_list|(
-name|NameMatchType
+name|NameMatch
 name|name_match_type
 parameter_list|)
 block|{
@@ -1458,7 +1466,7 @@ label|:
 name|ProcessInstanceInfo
 name|m_match_info
 decl_stmt|;
-name|NameMatchType
+name|NameMatch
 name|m_name_match_type
 decl_stmt|;
 name|bool
@@ -2259,6 +2267,11 @@ name|class
 name|Debugger
 decl_stmt|;
 comment|// For PopProcessIOHandler and ProcessIOHandlerIsActive
+name|friend
+name|class
+name|DynamicLoader
+decl_stmt|;
+comment|// For LoadOperatingSystemPlugin
 name|friend
 name|class
 name|ProcessEventData
@@ -8951,6 +8964,14 @@ name|exit_event_sp
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|virtual
+name|Error
+name|UpdateAutomaticSignalFiltering
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|bool

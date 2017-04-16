@@ -50,13 +50,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Target/Process.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Process.h"
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include

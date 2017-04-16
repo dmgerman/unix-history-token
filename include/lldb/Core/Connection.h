@@ -43,32 +43,54 @@ directive|define
 name|liblldb_Connection_h_
 end_define
 
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
 
 begin_comment
-comment|// Project includes
+comment|// for DISALLOW_COPY_AND_ASSIGN
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Timeout.h"
+file|"lldb/lldb-enumerations.h"
 end_include
+
+begin_comment
+comment|// for ConnectionStatus
+end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_comment
-comment|// C Includes
+comment|// for IOObjectSP
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_comment
-comment|// C++ Includes
+comment|// for StringRef
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<ratio>
+end_include
+
+begin_comment
+comment|// for micro
 end_comment
 
 begin_include
@@ -76,6 +98,41 @@ include|#
 directive|include
 file|<string>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Error
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|template
+operator|<
+name|typename
+name|Ratio
+operator|>
+name|class
+name|Timeout
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
