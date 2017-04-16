@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- xray_emulate_tsc.h --------------------------------------*- C++ -*-===//
+comment|//===-- xray_tsc.h ----------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -59,6 +59,113 @@ directive|define
 name|XRAY_EMULATE_TSC_H
 end_define
 
+begin_decl_stmt
+name|namespace
+name|__xray
+block|{
+specifier|static
+name|constexpr
+name|uint64_t
+name|NanosecondsPerSecond
+init|=
+literal|1000ULL
+operator|*
+literal|1000
+operator|*
+literal|1000
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"xray_x86_64.inc"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"xray_powerpc64.inc"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+end_elif
+
+begin_comment
+comment|// Emulated TSC.
+end_comment
+
+begin_comment
+comment|// There is no instruction like RDTSCP in user mode on ARM. ARM's CP15 does
+end_comment
+
+begin_comment
+comment|//   not have a constant frequency like TSC on x86(_64), it may go faster
+end_comment
+
+begin_comment
+comment|//   or slower depending on CPU turbo or power saving mode. Furthermore,
+end_comment
+
+begin_comment
+comment|//   to read from CP15 on ARM a kernel modification or a driver is needed.
+end_comment
+
+begin_comment
+comment|//   We can not require this from users of compiler-rt.
+end_comment
+
+begin_comment
+comment|// So on ARM we use clock_gettime() which gives the result in nanoseconds.
+end_comment
+
+begin_comment
+comment|//   To get the measurements per second, we scale this by the number of
+end_comment
+
+begin_comment
+comment|//   nanoseconds per second, pretending that the TSC frequency is 1GHz and
+end_comment
+
+begin_comment
+comment|//   one TSC tick is 1 nanosecond.
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -99,17 +206,16 @@ begin_decl_stmt
 name|namespace
 name|__xray
 block|{
-specifier|static
-name|constexpr
-name|uint64_t
-name|NanosecondsPerSecond
-init|=
-literal|1000ULL
-operator|*
-literal|1000
-operator|*
-literal|1000
-decl_stmt|;
+specifier|inline
+name|bool
+name|probeRequiredCPUFeatures
+parameter_list|()
+function|XRAY_NEVER_INSTRUMENT
+block|{
+return|return
+name|true
+return|;
+block|}
 name|ALWAYS_INLINE
 name|uint64_t
 name|readTSC
@@ -182,8 +288,42 @@ operator|.
 name|tv_nsec
 return|;
 block|}
+specifier|inline
+name|uint64_t
+name|getTSCFrequency
+parameter_list|()
+function|XRAY_NEVER_INSTRUMENT
+block|{
+return|return
+name|NanosecondsPerSecond
+return|;
+block|}
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace __xray
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|Target architecture is not supported.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// CPU architecture
+end_comment
 
 begin_endif
 endif|#

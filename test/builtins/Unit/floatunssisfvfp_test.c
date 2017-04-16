@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// RUN: %clang_builtins %s %librt -o %t&& %run %t
+end_comment
+
+begin_comment
 comment|//===-- floatunssisfvfp_test.c - Test __floatunssisfvfp -------------------===//
 end_comment
 
@@ -88,6 +92,8 @@ begin_if
 if|#
 directive|if
 name|__arm__
+operator|&&
+name|__VFP_FP__
 end_if
 
 begin_function
@@ -150,6 +156,8 @@ block|{
 if|#
 directive|if
 name|__arm__
+operator|&&
+name|__VFP_FP__
 if|if
 condition|(
 name|test__floatunssisfvfp

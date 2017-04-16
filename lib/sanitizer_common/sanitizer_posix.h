@@ -504,6 +504,13 @@ name|envp
 index|[]
 parameter_list|)
 function_decl|;
+name|bool
+name|IsStateDetached
+parameter_list|(
+name|int
+name|state
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

@@ -102,6 +102,14 @@ name|void
 name|InitializeInterceptors
 parameter_list|()
 function_decl|;
+name|void
+name|ReplaceSystemMalloc
+parameter_list|()
+function_decl|;
+define|#
+directive|define
+name|ENSURE_LSAN_INITED
+value|do {   \   CHECK(!lsan_init_is_running);   \   if (!lsan_inited)               \     __lsan_init();                \ } while (0)
 block|}
 end_decl_stmt
 

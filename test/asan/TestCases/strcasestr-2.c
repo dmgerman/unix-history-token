@@ -115,7 +115,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK:'s2'<== Memory access at offset {{[0-9]+}} partially overflows this variable
+comment|// CHECK:'s2'{{.*}}<== Memory access at offset {{[0-9]+}} partially overflows this variable
 return|return
 literal|0
 return|;

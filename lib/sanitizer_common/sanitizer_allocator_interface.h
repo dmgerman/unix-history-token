@@ -156,7 +156,6 @@ parameter_list|)
 function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|SANITIZER_WEAK_ATTRIBUTE
-comment|/* OPTIONAL */
 name|void
 name|__sanitizer_malloc_hook
 parameter_list|(
@@ -170,7 +169,6 @@ parameter_list|)
 function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|SANITIZER_WEAK_ATTRIBUTE
-comment|/* OPTIONAL */
 name|void
 name|__sanitizer_free_hook
 parameter_list|(
@@ -184,8 +182,11 @@ name|SANITIZER_WEAK_ATTRIBUTE
 name|void
 name|__sanitizer_print_memory_profile
 parameter_list|(
-name|int
+name|uptr
 name|top_percent
+parameter_list|,
+name|uptr
+name|max_number_of_contexts
 parameter_list|)
 function_decl|;
 block|}

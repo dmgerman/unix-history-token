@@ -239,7 +239,18 @@ index|]
 decl_stmt|;
 block|}
 struct|;
-comment|// Software CRC32 functions, to be used when hardware support is not detected.
+enum_decl|enum :
+name|u8
+block|{
+name|CRC32Software
+init|=
+literal|0
+block|,
+name|CRC32Hardware
+init|=
+literal|1
+block|, }
+enum_decl|;
 name|u32
 name|computeSoftwareCRC32
 parameter_list|(

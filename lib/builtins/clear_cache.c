@@ -236,31 +236,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__arm__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<asm/unistd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * The compiler generates calls to __clear_cache() when creating   * trampoline functions on the stack for use with nested functions.  * It is expected to invalidate the instruction cache for the   * specified range.  */
 end_comment
@@ -283,6 +258,16 @@ directive|if
 name|__i386__
 operator|||
 name|__x86_64__
+operator|||
+name|defined
+argument_list|(
+name|_M_IX86
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_M_X64
+argument_list|)
 comment|/*  * Intel processors have a unified instruction and data cache  * so there is nothing to do  */
 elif|#
 directive|elif
@@ -353,6 +338,11 @@ name|defined
 argument_list|(
 name|__linux__
 argument_list|)
+comment|/*      * We used to include asm/unistd.h for the __ARM_NR_cacheflush define, but      * it also brought many other unused defines, as well as a dependency on      * kernel headers to be installed.      *      * This value is stable at least since Linux 3.13 and should remain so for      * compatibility reasons, warranting it's re-definition here.      */
+define|#
+directive|define
+name|__ARM_NR_cacheflush
+value|0x0f0002
 specifier|register
 name|int
 name|start_reg

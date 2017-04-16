@@ -105,6 +105,92 @@ begin_decl_stmt
 name|namespace
 name|__tsan
 block|{
+comment|// These need to match __tsan_mutex_* flags defined in tsan_interface.h.
+comment|// See documentation there as well.
+enum|enum
+name|MutexFlags
+block|{
+name|MutexFlagLinkerInit
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+comment|// __tsan_mutex_linker_init
+name|MutexFlagWriteReentrant
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+comment|// __tsan_mutex_write_reentrant
+name|MutexFlagReadReentrant
+init|=
+literal|1
+operator|<<
+literal|2
+block|,
+comment|// __tsan_mutex_read_reentrant
+name|MutexFlagReadLock
+init|=
+literal|1
+operator|<<
+literal|3
+block|,
+comment|// __tsan_mutex_read_lock
+name|MutexFlagTryLock
+init|=
+literal|1
+operator|<<
+literal|4
+block|,
+comment|// __tsan_mutex_try_lock
+name|MutexFlagTryLockFailed
+init|=
+literal|1
+operator|<<
+literal|5
+block|,
+comment|// __tsan_mutex_try_lock_failed
+name|MutexFlagRecursiveLock
+init|=
+literal|1
+operator|<<
+literal|6
+block|,
+comment|// __tsan_mutex_recursive_lock
+name|MutexFlagRecursiveUnlock
+init|=
+literal|1
+operator|<<
+literal|7
+block|,
+comment|// __tsan_mutex_recursive_unlock
+comment|// The following flags are runtime private.
+comment|// Mutex API misuse was detected, so don't report any more.
+name|MutexFlagBroken
+init|=
+literal|1
+operator|<<
+literal|30
+block|,
+comment|// We did not intercept pre lock event, so handle it on post lock.
+name|MutexFlagDoPreLockOnPostLock
+init|=
+literal|1
+operator|<<
+literal|29
+block|,
+comment|// Must list all mutex creation flags.
+name|MutexCreationFlagMask
+init|=
+name|MutexFlagLinkerInit
+operator||
+name|MutexFlagWriteReentrant
+operator||
+name|MutexFlagReadReentrant
+block|, }
+enum|;
 struct|struct
 name|SyncVar
 block|{
@@ -143,17 +229,8 @@ decl_stmt|;
 name|int
 name|recursion
 decl_stmt|;
-name|bool
-name|is_rw
-decl_stmt|;
-name|bool
-name|is_recursive
-decl_stmt|;
-name|bool
-name|is_broken
-decl_stmt|;
-name|bool
-name|is_linker_init
+name|atomic_uint32_t
+name|flags
 decl_stmt|;
 name|u32
 name|next
@@ -283,6 +360,95 @@ argument_list|,
 literal|48
 argument_list|)
 return|;
+block|}
+name|bool
+name|IsFlagSet
+argument_list|(
+name|u32
+name|f
+argument_list|)
+decl|const
+block|{
+return|return
+name|atomic_load_relaxed
+argument_list|(
+operator|&
+name|flags
+argument_list|)
+return|;
+block|}
+name|void
+name|SetFlags
+parameter_list|(
+name|u32
+name|f
+parameter_list|)
+block|{
+name|atomic_store_relaxed
+argument_list|(
+operator|&
+name|flags
+argument_list|,
+name|atomic_load_relaxed
+argument_list|(
+operator|&
+name|flags
+argument_list|)
+operator||
+name|f
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|UpdateFlags
+parameter_list|(
+name|u32
+name|flagz
+parameter_list|)
+block|{
+comment|// Filter out operation flags.
+if|if
+condition|(
+operator|!
+operator|(
+name|flagz
+operator|&
+name|MutexCreationFlagMask
+operator|)
+condition|)
+return|return;
+name|u32
+name|current
+init|=
+name|atomic_load_relaxed
+argument_list|(
+operator|&
+name|flags
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|current
+operator|&
+name|MutexCreationFlagMask
+condition|)
+return|return;
+comment|// Note: this can be called from MutexPostReadLock which holds only read
+comment|// lock on the SyncVar.
+name|atomic_store_relaxed
+argument_list|(
+operator|&
+name|flags
+argument_list|,
+name|current
+operator||
+operator|(
+name|flagz
+operator|&
+name|MutexCreationFlagMask
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 struct|;

@@ -1,5 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: native-run
+end_comment
+
+begin_comment
+comment|// UNSUPPORTED: arm, aarch64
+end_comment
+
+begin_comment
+comment|// RUN: %clang_builtins %s %librt -o %t&& %run %t
+end_comment
+
+begin_comment
 comment|//===-- clear_cache_test.c - Test clear_cache -----------------------------===//
 end_comment
 
@@ -65,42 +77,6 @@ file|<windows.h>
 end_include
 
 begin_function
-name|void
-name|__clear_cache
-parameter_list|(
-name|void
-modifier|*
-name|start
-parameter_list|,
-name|void
-modifier|*
-name|end
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|FlushInstructionCache
-argument_list|(
-name|GetCurrentProcess
-argument_list|()
-argument_list|,
-name|start
-argument_list|,
-name|end
-operator|-
-name|start
-argument_list|)
-condition|)
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|uintptr_t
 name|get_page_size
@@ -140,22 +116,6 @@ directive|include
 file|<sys/mman.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|void
-name|__clear_cache
-parameter_list|(
-name|void
-modifier|*
-name|start
-parameter_list|,
-name|void
-modifier|*
-name|end
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|uintptr_t
@@ -176,6 +136,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|extern
+name|void
+name|__clear_cache
+parameter_list|(
+name|void
+modifier|*
+name|start
+parameter_list|,
+name|void
+modifier|*
+name|end
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -189,7 +165,12 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|// Make these static to avoid ILT jumps for incremental linking on Windows.
+end_comment
+
 begin_function
+specifier|static
 name|int
 name|func1
 parameter_list|()
@@ -201,6 +182,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|func2
 parameter_list|()

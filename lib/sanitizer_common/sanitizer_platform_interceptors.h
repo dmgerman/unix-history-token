@@ -79,6 +79,13 @@ end_if
 begin_define
 define|#
 directive|define
+name|SI_WINDOWS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|SI_NOT_WINDOWS
 value|1
 end_define
@@ -93,6 +100,13 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|SI_WINDOWS
+value|1
+end_define
 
 begin_define
 define|#
@@ -375,6 +389,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SANITIZER_INTERCEPT_STRTOK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|SANITIZER_INTERCEPT_STRCHR
 value|1
 end_define
@@ -449,6 +470,48 @@ name|SANITIZER_INTERCEPT_MEMCMP
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
+argument_list|)
+operator|&&
+expr|\
+name|__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
+operator|<
+literal|1070
+end_if
+
+begin_define
+define|#
+directive|define
+name|SI_MAC_DEPLOYMENT_BELOW_10_7
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SI_MAC_DEPLOYMENT_BELOW_10_7
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// memmem on Darwin doesn't exist on 10.6
+end_comment
+
 begin_comment
 comment|// FIXME: enable memmem on Windows.
 end_comment
@@ -457,7 +520,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_MEMMEM
-value|SI_NOT_WINDOWS
+define|\
+value|SI_NOT_WINDOWS&& !SI_MAC_DEPLOYMENT_BELOW_10_7
 end_define
 
 begin_define
@@ -499,6 +563,20 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_PWRITE
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_FREAD
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_FWRITE
 value|SI_NOT_WINDOWS
 end_define
 
@@ -1735,7 +1813,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPTOR_HOOKS
-value|SI_LINUX
+value|SI_LINUX || SI_MAC || SI_WINDOWS
 end_define
 
 begin_define
@@ -1811,6 +1889,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|SANITIZER_INTERCEPT_GETLOADAVG
+define|\
+value|SI_LINUX_NOT_ANDROID || SI_MAC || SI_FREEBSD
+end_define
+
+begin_define
+define|#
+directive|define
 name|SANITIZER_INTERCEPT_MALLOPT_AND_MALLINFO
 value|(!SI_FREEBSD&& !SI_MAC)
 end_define
@@ -1834,6 +1920,20 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_CFREE
 value|(!SI_FREEBSD&& !SI_MAC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_ALIGNED_ALLOC
+value|(!SI_MAC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_MALLOC_USABLE_SIZE
+value|(!SI_MAC)
 end_define
 
 begin_endif

@@ -157,6 +157,9 @@ decl_stmt|;
 name|bool
 name|detached
 decl_stmt|;
+name|bool
+name|workerthread
+decl_stmt|;
 name|u32
 name|parent_tid
 decl_stmt|;
@@ -195,6 +198,9 @@ name|SetStarted
 parameter_list|(
 name|uptr
 name|_os_id
+parameter_list|,
+name|bool
+name|_workerthread
 parameter_list|,
 name|void
 modifier|*
@@ -552,6 +558,9 @@ name|tid
 parameter_list|,
 name|uptr
 name|os_id
+parameter_list|,
+name|bool
+name|workerthread
 parameter_list|,
 name|void
 modifier|*

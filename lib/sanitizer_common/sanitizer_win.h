@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- xray_x86_64.h -------------------------------------------*- C++ -*-===//
+comment|//===-- sanitizer_win.h -----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file is a part of XRay, a dynamic runtime instrumentation system.
+comment|// Windows-specific declarations.
 end_comment
 
 begin_comment
@@ -50,75 +50,51 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|XRAY_X86_64_H
+name|SANITIZER_WIN_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|XRAY_X86_64_H
+name|SANITIZER_WIN_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|<cstdint>
+file|"sanitizer_platform.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|SANITIZER_WINDOWS
+end_if
 
 begin_include
 include|#
 directive|include
-file|<x86intrin.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sanitizer_common/sanitizer_internal_defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xray_defs.h"
+file|"sanitizer_internal_defs.h"
 end_include
 
 begin_decl_stmt
 name|namespace
-name|__xray
+name|__sanitizer
 block|{
-name|ALWAYS_INLINE
-name|uint64_t
-name|readTSC
+comment|// Check based on flags if we should handle the exception.
+name|bool
+name|IsHandledDeadlyException
 parameter_list|(
-name|uint8_t
-modifier|&
-name|CPU
+name|DWORD
+name|exceptionCode
 parameter_list|)
-function|XRAY_NEVER_INSTRUMENT
-block|{
-name|unsigned
-name|LongCPU
-decl_stmt|;
-name|uint64_t
-name|TSC
-init|=
-name|__rdtscp
-argument_list|(
-operator|&
-name|LongCPU
-argument_list|)
-decl_stmt|;
-name|CPU
-operator|=
-name|LongCPU
-expr_stmt|;
-return|return
-name|TSC
-return|;
-block|}
+function_decl|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace __sanitizer
+end_comment
 
 begin_endif
 endif|#
@@ -126,7 +102,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// XRAY_X86_64_H
+comment|// SANITIZER_WINDOWS
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// SANITIZER_WIN_H
 end_comment
 
 end_unit

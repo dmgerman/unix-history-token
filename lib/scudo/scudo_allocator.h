@@ -71,11 +71,23 @@ directive|include
 file|"sanitizer_common/sanitizer_allocator.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<atomic>
-end_include
+begin_if
+if|#
+directive|if
+operator|!
+name|SANITIZER_LINUX
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"The Scudo hardened allocator is currently only supported on Linux."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|namespace
@@ -179,14 +191,9 @@ decl_stmt|;
 block|}
 struct|;
 typedef|typedef
-name|std
-operator|::
-name|atomic
-operator|<
-name|PackedHeader
-operator|>
+name|atomic_uint64_t
 name|AtomicPackedHeader
-expr_stmt|;
+typedef|;
 name|COMPILER_CHECK
 argument_list|(
 sizeof|sizeof

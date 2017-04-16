@@ -16,7 +16,11 @@ comment|// RUN: %clang_asan -dead_strip -O2 %s -o %t.exe
 end_comment
 
 begin_comment
-comment|// RUN: rm -f %t.symbols %t.interface
+comment|//
+end_comment
+
+begin_comment
+comment|// note: we can not use -D on Darwin.
 end_comment
 
 begin_comment
@@ -24,207 +28,99 @@ comment|// RUN: nm -g `%clang_asan %s -fsanitize=address -### 2>&1 | grep "libcl
 end_comment
 
 begin_comment
-comment|// RUN:   | grep " T " | sed "s/.* T //" \
+comment|// RUN:  | grep " [TU] "                                                       \
 end_comment
 
 begin_comment
-comment|// RUN:   | grep "__asan_" | sed "s/___asan_/__asan_/" \
+comment|// RUN:  | grep -o "\(__asan_\|__ubsan_\|__sancov_\|__sanitizer_\)[^ ]*"       \
 end_comment
 
 begin_comment
-comment|// RUN:   | sed -E "s/__asan_version_mismatch_check_v[0-9]+/__asan_version_mismatch_check/" \
+comment|// RUN:  | grep -v "__sanitizer_syscall"                                       \
 end_comment
 
 begin_comment
-comment|// RUN:   | grep -v "__asan_default_options" \
+comment|// RUN:  | grep -v "__sanitizer_weak_hook"                                     \
 end_comment
 
 begin_comment
-comment|// RUN:   | grep -v "__asan_on_error"> %t.symbols
+comment|// RUN:  | grep -v "__sanitizer_mz"                                            \
 end_comment
 
 begin_comment
-comment|// RUN: cat %p/../../../../lib/asan/asan_interface_internal.h \
+comment|// RUN:  | grep -v "__ubsan_handle_dynamic_type_cache_miss"                    \
 end_comment
 
 begin_comment
-comment|// RUN:    | sed "s/\/\/.*//" | sed "s/typedef.*//" \
+comment|// RUN:  | sed -e "s/__asan_version_mismatch_check_v[0-9]+/__asan_version_mismatch_check/" \
 end_comment
 
 begin_comment
-comment|// RUN:    | grep -v "OPTIONAL" \
+comment|// RUN:> %t.exports
 end_comment
 
 begin_comment
-comment|// RUN:    | grep "__asan_.*(" | sed "s/.* __asan_/__asan_/;s/(.*//" \
+comment|//
 end_comment
 
 begin_comment
-comment|// RUN:> %t.interface
+comment|// RUN: grep -e "INTERFACE_\(WEAK_\)\?FUNCTION"                                \
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_load1>> %t.interface
+comment|// RUN:  %p/../../../../lib/asan/asan_interface.inc                            \
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_load2>> %t.interface
+comment|// RUN:  %p/../../../../lib/ubsan/ubsan_interface.inc                          \
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_load4>> %t.interface
+comment|// RUN:  %p/../../../../lib/sanitizer_common/sanitizer_common_interface.inc    \
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_load8>> %t.interface
+comment|// RUN:  %p/../../../../lib/sanitizer_common/sanitizer_common_interface_posix.inc \
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_load16>> %t.interface
+comment|// RUN:  %p/../../../../lib/sanitizer_common/sanitizer_coverage_interface.inc  \
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_store1>> %t.interface
+comment|// RUN:  | grep -v "__sanitizer_weak_hook"                                     \
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_store2>> %t.interface
+comment|// RUN:  | sed -e "s/.*(//" -e "s/).*//"> %t.imports
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_store4>> %t.interface
+comment|//
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_store8>> %t.interface
+comment|// RUN: cat %t.imports | sort | uniq> %t.imports-sorted
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_store16>> %t.interface
+comment|// RUN: cat %t.exports | sort | uniq> %t.exports-sorted
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_load_n>> %t.interface
+comment|//
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_store_n>> %t.interface
+comment|// RUN: echo
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_load1_noabort>> %t.interface
+comment|// RUN: echo "=== NOTE === If you see a mismatch below, please update sanitizer_interface.inc files."
 end_comment
 
 begin_comment
-comment|// RUN: echo __asan_report_load2_noabort>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_load4_noabort>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_load8_noabort>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_load16_noabort>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_store1_noabort>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_store2_noabort>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_store4_noabort>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_store8_noabort>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_store16_noabort>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_load_n_noabort>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_store_n_noabort>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_load1>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_load2>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_load4>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_load8>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_load16>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_store1>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_store2>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_store4>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_store8>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_store16>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_load_n>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_report_exp_store_n>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_get_current_fake_stack>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: echo __asan_addr_is_in_fake_stack>> %t.interface
-end_comment
-
-begin_comment
-comment|// RUN: for i in `jot - 0 10`; do echo __asan_stack_malloc_$i>> %t.interface; done
-end_comment
-
-begin_comment
-comment|// RUN: for i in `jot - 0 10`; do echo __asan_stack_free_$i>> %t.interface; done
-end_comment
-
-begin_comment
-comment|// RUN: cat %t.interface | sort -u | diff %t.symbols -
+comment|// RUN: diff %t.imports-sorted %t.exports-sorted
 end_comment
 
 begin_function

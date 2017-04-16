@@ -108,7 +108,7 @@ argument_list|,
 name|s2
 argument_list|)
 expr_stmt|;
-comment|// CHECK:'s1'<== Memory access at offset {{[0-9]+}} partially overflows this variable
+comment|// CHECK:'s1'{{.*}}<== Memory access at offset {{[0-9]+}} partially overflows this variable
 name|assert
 argument_list|(
 name|r

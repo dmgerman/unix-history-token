@@ -99,6 +99,38 @@ directive|include
 file|"sanitizer_common/sanitizer_symbolizer.h"
 end_include
 
+begin_comment
+comment|// LeakSanitizer relies on some Glibc's internals (e.g. TLS machinery) thus
+end_comment
+
+begin_comment
+comment|// supported for Linux only. Also, LSan doesn't like 32 bit architectures
+end_comment
+
+begin_comment
+comment|// because of "small" (4 bytes) pointer size that leads to high false negative
+end_comment
+
+begin_comment
+comment|// ratio on large leaks. But we still want to have it for some 32 bit arches
+end_comment
+
+begin_comment
+comment|// (e.g. x86), see https://github.com/google/sanitizers/issues/403.
+end_comment
+
+begin_comment
+comment|// To enable LeakSanitizer on new architecture, one need to implement
+end_comment
+
+begin_comment
+comment|// internal_clone function as well as (probably) adjust TLS machinery for
+end_comment
+
+begin_comment
+comment|// new architecture inside sanitizer library.
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -107,15 +139,18 @@ name|SANITIZER_LINUX
 operator|&&
 operator|!
 name|SANITIZER_ANDROID
+operator|||
+name|SANITIZER_MAC
 operator|)
 operator|&&
+expr|\
 operator|(
 name|SANITIZER_WORDSIZE
 operator|==
 literal|64
 operator|)
-expr|\
 operator|&&
+expr|\
 operator|(
 name|defined
 argument_list|(
@@ -133,6 +168,54 @@ name|__aarch64__
 argument_list|)
 operator|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|CAN_SANITIZE_LEAKS
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+expr|\
+operator|(
+name|SANITIZER_LINUX
+operator|&&
+operator|!
+name|SANITIZER_ANDROID
+operator|||
+name|SANITIZER_MAC
+operator|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|CAN_SANITIZE_LEAKS
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|&&
+expr|\
+name|SANITIZER_LINUX
+operator|&&
+operator|!
+name|SANITIZER_ANDROID
+end_elif
 
 begin_define
 define|#
@@ -197,6 +280,16 @@ init|=
 literal|3
 block|}
 enum|;
+specifier|const
+name|u32
+name|kInvalidTid
+init|=
+operator|(
+name|u32
+operator|)
+operator|-
+literal|1
+decl_stmt|;
 struct|struct
 name|Flags
 block|{
@@ -455,6 +548,20 @@ name|ChunkTag
 name|tag
 parameter_list|)
 function_decl|;
+name|void
+name|ScanGlobalRange
+parameter_list|(
+name|uptr
+name|begin
+parameter_list|,
+name|uptr
+name|end
+parameter_list|,
+name|Frontier
+modifier|*
+name|frontier
+parameter_list|)
+function_decl|;
 enum|enum
 name|IgnoreObjectResult
 block|{
@@ -472,6 +579,10 @@ parameter_list|()
 function_decl|;
 name|void
 name|DoLeakCheck
+parameter_list|()
+function_decl|;
+name|void
+name|DisableCounterUnderflow
 parameter_list|()
 function_decl|;
 name|bool
@@ -508,12 +619,12 @@ argument_list|()
 block|; }
 block|}
 struct|;
-comment|// Special case for "new T[0]" where T is a type with DTOR.
-comment|// new T[0] will allocate one word for the array size (0) and store a pointer
-comment|// to the end of allocated chunk.
+comment|// According to Itanium C++ ABI array cookie is a one word containing
+comment|// size of allocated array.
+specifier|static
 specifier|inline
 name|bool
-name|IsSpecialCaseOfOperatorNew0
+name|IsItaniumABIArrayCookie
 parameter_list|(
 name|uptr
 name|chunk_beg
@@ -551,6 +662,109 @@ operator|)
 operator|==
 literal|0
 return|;
+block|}
+comment|// According to ARM C++ ABI array cookie consists of two words:
+comment|// struct array_cookie {
+comment|//   std::size_t element_size; // element_size != 0
+comment|//   std::size_t element_count;
+comment|// };
+specifier|static
+specifier|inline
+name|bool
+name|IsARMABIArrayCookie
+parameter_list|(
+name|uptr
+name|chunk_beg
+parameter_list|,
+name|uptr
+name|chunk_size
+parameter_list|,
+name|uptr
+name|addr
+parameter_list|)
+block|{
+return|return
+name|chunk_size
+operator|==
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uptr
+argument_list|)
+operator|&&
+name|chunk_beg
+operator|+
+name|chunk_size
+operator|==
+name|addr
+operator|&&
+operator|*
+name|reinterpret_cast
+operator|<
+name|uptr
+operator|*
+operator|>
+operator|(
+name|chunk_beg
+operator|+
+sizeof|sizeof
+argument_list|(
+name|uptr
+argument_list|)
+operator|)
+operator|==
+literal|0
+return|;
+block|}
+comment|// Special case for "new T[0]" where T is a type with DTOR.
+comment|// new T[0] will allocate a cookie (one or two words) for the array size (0)
+comment|// and store a pointer to the end of allocated chunk. The actual cookie layout
+comment|// varies between platforms according to their C++ ABI implementation.
+specifier|inline
+name|bool
+name|IsSpecialCaseOfOperatorNew0
+parameter_list|(
+name|uptr
+name|chunk_beg
+parameter_list|,
+name|uptr
+name|chunk_size
+parameter_list|,
+name|uptr
+name|addr
+parameter_list|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+return|return
+name|IsARMABIArrayCookie
+argument_list|(
+name|chunk_beg
+argument_list|,
+name|chunk_size
+argument_list|,
+name|addr
+argument_list|)
+return|;
+else|#
+directive|else
+return|return
+name|IsItaniumABIArrayCookie
+argument_list|(
+name|chunk_beg
+argument_list|,
+name|chunk_size
+argument_list|,
+name|addr
+argument_list|)
+return|;
+endif|#
+directive|endif
 block|}
 comment|// The following must be implemented in the parent tool.
 name|void

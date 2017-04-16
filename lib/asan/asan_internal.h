@@ -202,13 +202,12 @@ name|void
 name|InitializePlatformExceptionHandlers
 argument_list|()
 block|;
-comment|// asan_win.cc / asan_posix.cc
-specifier|const
-name|char
-operator|*
-name|DescribeSignalOrException
+comment|// Returns whether an address is a valid allocated system heap block.
+comment|// 'addr' must point to the beginning of the block.
+name|bool
+name|IsSystemHeapAddress
 argument_list|(
-argument|int signo
+argument|uptr addr
 argument_list|)
 block|;
 comment|// asan_rtl.cc

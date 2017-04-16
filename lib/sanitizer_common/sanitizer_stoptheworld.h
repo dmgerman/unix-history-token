@@ -83,6 +83,23 @@ typedef|typedef
 name|int
 name|SuspendedThreadID
 typedef|;
+enum|enum
+name|PtraceRegistersStatus
+block|{
+name|REGISTERS_UNAVAILABLE_FATAL
+init|=
+operator|-
+literal|1
+block|,
+name|REGISTERS_UNAVAILABLE
+init|=
+literal|0
+block|,
+name|REGISTERS_AVAILABLE
+init|=
+literal|1
+block|}
+enum|;
 comment|// Holds the list of suspended threads and provides an interface to dump their
 comment|// register contexts.
 name|class
@@ -122,7 +139,7 @@ name|index
 index|]
 return|;
 block|}
-name|int
+name|PtraceRegistersStatus
 name|GetRegistersAndSP
 argument_list|(
 name|uptr

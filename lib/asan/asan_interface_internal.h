@@ -596,7 +596,6 @@ parameter_list|)
 function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|SANITIZER_WEAK_ATTRIBUTE
-comment|/* OPTIONAL */
 name|void
 name|__asan_on_error
 parameter_list|()
@@ -608,7 +607,6 @@ parameter_list|()
 function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|SANITIZER_WEAK_ATTRIBUTE
-comment|/* OPTIONAL */
 specifier|const
 name|char
 modifier|*
@@ -1086,6 +1084,14 @@ parameter_list|,
 name|uptr
 name|bottom
 parameter_list|)
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|SANITIZER_WEAK_ATTRIBUTE
+specifier|const
+name|char
+modifier|*
+name|__asan_default_suppressions
+parameter_list|()
 function_decl|;
 block|}
 end_extern

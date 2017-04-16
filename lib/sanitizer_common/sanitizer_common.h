@@ -1903,6 +1903,15 @@ name|SignalHandlerType
 name|handler
 parameter_list|)
 function_decl|;
+specifier|const
+name|char
+modifier|*
+name|DescribeSignalOrException
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
+function_decl|;
 comment|// Alternative signal stack (POSIX-only).
 name|void
 name|SetAlternateSignalStack
@@ -1922,6 +1931,7 @@ decl_stmt|;
 comment|// Construct a one-line string:
 comment|//   SUMMARY: SanitizerToolName: error_message
 comment|// and pass it to __sanitizer_report_error_summary.
+comment|// If alt_tool_name is provided, it's used in place of SanitizerToolName.
 name|void
 name|ReportErrorSummary
 parameter_list|(
@@ -1929,6 +1939,13 @@ specifier|const
 name|char
 modifier|*
 name|error_message
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alt_tool_name
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|// Same as above, but construct error_message as:
@@ -1945,6 +1962,13 @@ specifier|const
 name|AddressInfo
 modifier|&
 name|info
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alt_tool_name
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|// Same as above, but obtains AddressInfo by symbolizing top stack trace frame.
@@ -1960,6 +1984,13 @@ specifier|const
 name|StackTrace
 modifier|*
 name|trace
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alt_tool_name
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|// Math
@@ -4760,6 +4791,21 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|CheckNoDeepBind
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|}

@@ -94,12 +94,34 @@ define|\
 value|void __aeabi_##aeabi_name() __attribute__((alias("__" #name)));
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPILER_RT_ARMHF_TARGET
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|COMPILER_RT_ABI
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|COMPILER_RT_ABI
 value|__attribute__((pcs("aapcs")))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

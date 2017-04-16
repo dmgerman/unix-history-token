@@ -92,6 +92,8 @@ name|ReportTypeUseAfterFree
 block|,
 name|ReportTypeVptrUseAfterFree
 block|,
+name|ReportTypeExternalRace
+block|,
 name|ReportTypeThreadLeak
 block|,
 name|ReportTypeMutexDestroyLocked
@@ -165,6 +167,9 @@ decl_stmt|;
 name|bool
 name|atomic
 decl_stmt|;
+name|uptr
+name|external_tag
+decl_stmt|;
 name|Vector
 operator|<
 name|ReportMopMutex
@@ -208,6 +213,9 @@ name|heap_chunk_start
 decl_stmt|;
 name|uptr
 name|heap_chunk_size
+decl_stmt|;
+name|uptr
+name|external_tag
 decl_stmt|;
 name|int
 name|tid
@@ -254,11 +262,14 @@ decl_stmt|;
 name|bool
 name|running
 decl_stmt|;
+name|bool
+name|workerthread
+decl_stmt|;
 name|char
 modifier|*
 name|name
 decl_stmt|;
-name|int
+name|u32
 name|parent_tid
 decl_stmt|;
 name|ReportStack

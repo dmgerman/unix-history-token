@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// RUN: %clang_builtins %s %librt -lm -o %t&& %run %t
+end_comment
+
+begin_comment
 comment|//===-- muldc3_test.c - Test __muldc3 -------------------------------------===//
 end_comment
 
@@ -70,6 +74,10 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_comment
+comment|// REQUIRES: c99-complex
+end_comment
 
 begin_comment
 comment|// Returns: the product of a + ib and c + id

@@ -83,19 +83,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
 end_include
 
 begin_expr_stmt
@@ -103,22 +91,6 @@ name|using
 name|std
 operator|::
 name|string
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|vector
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|map
 expr_stmt|;
 end_expr_stmt
 

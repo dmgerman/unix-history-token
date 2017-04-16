@@ -1,5 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES-ANY: arm-target-arch,armv6m-target-arch
+end_comment
+
+begin_comment
+comment|// RUN: %arm_call_apsr -o %t.aspr.o
+end_comment
+
+begin_comment
+comment|// RUN: %clang_builtins %s  %t.aspr.o %librt -o %t&& %run %t
+end_comment
+
+begin_comment
 comment|//===-- aeabi_cfcmpeq.c - Test __aeabi_cfcmpeq ----------------------------===//
 end_comment
 

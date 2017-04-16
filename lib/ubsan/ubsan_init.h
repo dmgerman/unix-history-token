@@ -63,6 +63,13 @@ begin_decl_stmt
 name|namespace
 name|__ubsan
 block|{
+comment|// Get the full tool name for UBSan.
+specifier|const
+name|char
+modifier|*
+name|GetSanititizerToolName
+parameter_list|()
+function_decl|;
 comment|// Initialize UBSan as a standalone tool. Typically should be called early
 comment|// during initialization.
 name|void

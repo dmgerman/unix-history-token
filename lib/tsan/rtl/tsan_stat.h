@@ -320,6 +320,26 @@ name|StatAnnotateUnpublishMemoryRange
 block|,
 name|StatAnnotateThreadName
 block|,
+name|Stat__tsan_mutex_create
+block|,
+name|Stat__tsan_mutex_destroy
+block|,
+name|Stat__tsan_mutex_pre_lock
+block|,
+name|Stat__tsan_mutex_post_lock
+block|,
+name|Stat__tsan_mutex_pre_unlock
+block|,
+name|Stat__tsan_mutex_post_unlock
+block|,
+name|Stat__tsan_mutex_pre_signal
+block|,
+name|Stat__tsan_mutex_post_signal
+block|,
+name|Stat__tsan_mutex_pre_divert
+block|,
+name|Stat__tsan_mutex_post_divert
+block|,
 comment|// Internal mutex contentionz.
 name|StatMtxTotal
 block|,

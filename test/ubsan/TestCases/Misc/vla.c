@@ -28,8 +28,8 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-comment|// CHECK-MINUS-ONE: vla.c:9:11: runtime error: variable length array bound evaluates to non-positive value -1
-comment|// CHECK-ZERO: vla.c:9:11: runtime error: variable length array bound evaluates to non-positive value 0
+comment|// CHECK-MINUS-ONE: vla.c:[[@LINE+2]]:11: runtime error: variable length array bound evaluates to non-positive value -1
+comment|// CHECK-ZERO: vla.c:[[@LINE+1]]:11: runtime error: variable length array bound evaluates to non-positive value 0
 name|int
 name|arr
 index|[
