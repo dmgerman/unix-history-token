@@ -59,14 +59,9 @@ block|{
 name|class
 name|SymbolBody
 decl_stmt|;
-name|template
-operator|<
 name|class
-name|ELFT
-operator|>
-name|class
-name|InputSection
-expr_stmt|;
+name|ThunkSection
+decl_stmt|;
 comment|// Class to describe an instance of a Thunk.
 comment|// A Thunk is a code-sequence inserted by the linker in between a caller and
 comment|// the callee. The relocation to the callee is redirected to the Thunk, which
@@ -74,40 +69,19 @@ comment|// after executing transfers control to the callee. Typical uses of Thun
 comment|// include transferring control from non-pi to pi and changing state on
 comment|// targets like ARM.
 comment|//
-comment|// Thunks can be created for DefinedRegular and Shared Symbols. The Thunk
-comment|// is stored in a field of the Symbol Destination.
-comment|// Thunks to be written to an InputSection are recorded by the InputSection.
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
+comment|// Thunks can be created for DefinedRegular, Shared and Undefined Symbols.
+comment|// Thunks are assigned to synthetic ThunkSections
 name|class
 name|Thunk
 block|{
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|uint
-name|uintX_t
-expr_stmt|;
 name|public
-operator|:
+label|:
 name|Thunk
 argument_list|(
 specifier|const
 name|SymbolBody
 operator|&
 name|Destination
-argument_list|,
-specifier|const
-name|InputSection
-operator|<
-name|ELFT
-operator|>
-operator|&
-name|Owner
 argument_list|)
 expr_stmt|;
 name|virtual
@@ -132,61 +106,80 @@ argument_list|(
 name|uint8_t
 operator|*
 name|Buf
+argument_list|,
+name|ThunkSection
+operator|&
+name|IS
 argument_list|)
 decl|const
 block|{}
-name|uintX_t
-name|getVA
+comment|// All Thunks must define at least one symbol ThunkSym so that we can
+comment|// redirect relocations to it.
+name|virtual
+name|void
+name|addSymbols
+parameter_list|(
+name|ThunkSection
+modifier|&
+name|IS
+parameter_list|)
+block|{}
+comment|// Some Thunks must be placed immediately before their Target as they elide
+comment|// a branch and fall through to the first Symbol in the Target.
+name|virtual
+name|InputSection
+operator|*
+name|getTargetInputSection
 argument_list|()
 specifier|const
-expr_stmt|;
-name|protected
-label|:
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+comment|// The alignment requirement for this Thunk, defaults to the size of the
+comment|// typical code section alignment.
 specifier|const
 name|SymbolBody
 modifier|&
 name|Destination
 decl_stmt|;
-specifier|const
-name|InputSection
-operator|<
-name|ELFT
-operator|>
-operator|&
-name|Owner
-expr_stmt|;
+name|SymbolBody
+modifier|*
+name|ThunkSym
+decl_stmt|;
 name|uint64_t
 name|Offset
 decl_stmt|;
+name|uint32_t
+name|alignment
+init|=
+literal|4
+decl_stmt|;
 block|}
 empty_stmt|;
-comment|// For a Relocation to symbol S from InputSection Src, create a Thunk and
-comment|// update the fields of S and the InputSection that the Thunk body will be
-comment|// written to. At present there are implementations for ARM and Mips Thunks.
+comment|// For a Relocation to symbol S create a Thunk to be added to a synthetic
+comment|// ThunkSection. At present there are implementations for ARM and Mips Thunks.
 name|template
 operator|<
 name|class
 name|ELFT
 operator|>
-name|void
+name|Thunk
+operator|*
 name|addThunk
 argument_list|(
 argument|uint32_t RelocType
 argument_list|,
 argument|SymbolBody&S
-argument_list|,
-argument|InputSection<ELFT>&Src
 argument_list|)
 expr_stmt|;
+block|}
+comment|// namespace elf
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace elf
-end_comment
-
-begin_comment
-unit|}
 comment|// namespace lld
 end_comment
 

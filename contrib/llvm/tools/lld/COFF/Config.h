@@ -358,6 +358,9 @@ name|string
 name|OutputFile
 expr_stmt|;
 name|bool
+name|ColorDiagnostics
+decl_stmt|;
+name|bool
 name|DoGC
 init|=
 name|true
@@ -366,6 +369,11 @@ name|bool
 name|DoICF
 init|=
 name|true
+decl_stmt|;
+name|uint64_t
+name|ErrorLimit
+init|=
+literal|20
 decl_stmt|;
 name|bool
 name|Relocatable
@@ -400,9 +408,14 @@ operator|::
 name|None
 operator|)
 decl_stmt|;
-name|StringRef
+name|llvm
+operator|::
+name|SmallString
+operator|<
+literal|128
+operator|>
 name|PDBPath
-decl_stmt|;
+expr_stmt|;
 comment|// Symbols in this set are considered as live by the garbage collector.
 name|std
 operator|::
@@ -471,6 +484,11 @@ name|DelayLoadHelper
 init|=
 name|nullptr
 decl_stmt|;
+name|bool
+name|SaveTemps
+init|=
+name|false
+decl_stmt|;
 comment|// Used for SafeSEH.
 name|Symbol
 modifier|*
@@ -493,6 +511,12 @@ decl_stmt|;
 comment|// Used for /opt:lldltojobs=N
 name|unsigned
 name|LTOJobs
+init|=
+literal|0
+decl_stmt|;
+comment|// Used for /opt:lldltopartitions=N
+name|unsigned
+name|LTOPartitions
 init|=
 literal|1
 decl_stmt|;
@@ -582,6 +606,12 @@ name|StringRef
 operator|>
 name|AlternateNames
 expr_stmt|;
+comment|// Used for /lldmap.
+name|std
+operator|::
+name|string
+name|MapFile
+expr_stmt|;
 name|uint64_t
 name|ImageBase
 init|=
@@ -664,6 +694,11 @@ name|false
 decl_stmt|;
 name|bool
 name|HighEntropyVA
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|AppContainer
 init|=
 name|false
 decl_stmt|;

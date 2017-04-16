@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file provides a way to combine bitcode files into one ELF
+comment|// This file provides a way to combine bitcode files into one COFF
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// If LTO is in use, your input files are not in regular ELF files
+comment|// If LTO is in use, your input files are not in regular COFF files
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// convert bitcode files into the native format so that we can create
 end_comment
 
 begin_comment
-comment|// an ELF file that contains native code. This file provides that
+comment|// a COFF file that contains native code. This file provides that
 end_comment
 
 begin_comment
@@ -78,13 +78,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLD_ELF_LTO_H
+name|LLD_COFF_LTO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLD_ELF_LTO_H
+name|LLD_COFF_LTO_H
 end_define
 
 begin_include
@@ -130,7 +130,7 @@ name|namespace
 name|lld
 block|{
 name|namespace
-name|elf
+name|coff
 block|{
 name|class
 name|BitcodeFile
@@ -162,8 +162,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|InputFile
-operator|*
+name|StringRef
 operator|>
 name|compile
 argument_list|()
@@ -191,18 +190,6 @@ operator|<
 literal|0
 operator|>>
 name|Buff
-expr_stmt|;
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MemoryBuffer
-operator|>>
-name|Files
 expr_stmt|;
 block|}
 empty_stmt|;

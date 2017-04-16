@@ -62,6 +62,48 @@ block|{
 name|namespace
 name|coff
 block|{
+specifier|extern
+name|uint64_t
+name|ErrorCount
+decl_stmt|;
+extern|extern llvm::raw_ostream *ErrorOS;
+extern|extern llvm::StringRef Argv0;
+name|void
+name|log
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+function_decl|;
+name|void
+name|message
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+function_decl|;
+name|void
+name|warn
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+function_decl|;
+name|void
+name|error
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+function_decl|;
 name|LLVM_ATTRIBUTE_NORETURN
 name|void
 name|fatal
@@ -111,7 +153,7 @@ operator|>
 name|T
 name|check
 argument_list|(
-argument|ErrorOr<T>&&V
+argument|ErrorOr<T> V
 argument_list|,
 argument|const Twine&Prefix
 argument_list|)

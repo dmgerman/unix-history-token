@@ -760,13 +760,13 @@ name|coff_section
 operator|*
 name|Header
 block|;
-name|private
-operator|:
-comment|// A file this chunk was created from.
+comment|// The file that this chunk was created from.
 name|ObjectFile
 operator|*
 name|File
 block|;
+name|private
+operator|:
 name|StringRef
 name|SectionName
 block|;

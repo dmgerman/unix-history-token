@@ -68,7 +68,7 @@ comment|// not exit, so it is safe for a lld-as-a-library use case. It is genera
 end_comment
 
 begin_comment
-comment|// useful because it can report more than one errors in a single run.
+comment|// useful because it can report more than one error in a single run.
 end_comment
 
 begin_comment
@@ -77,6 +77,22 @@ end_comment
 
 begin_comment
 comment|// Warn doesn't do anything but printing out a given message.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// It is not recommended to use llvm::outs() or llvm::errs() directly
+end_comment
+
+begin_comment
+comment|// in LLD because they are not thread-safe. The functions declared in
+end_comment
+
+begin_comment
+comment|// this file are mutually excluded, so you want to use them instead.
 end_comment
 
 begin_comment
@@ -134,6 +150,15 @@ name|Msg
 parameter_list|)
 function_decl|;
 name|void
+name|message
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+function_decl|;
+name|void
 name|warn
 parameter_list|(
 specifier|const
@@ -151,28 +176,6 @@ modifier|&
 name|Msg
 parameter_list|)
 function_decl|;
-name|void
-name|error
-argument_list|(
-name|std
-operator|::
-name|error_code
-name|EC
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|Prefix
-argument_list|)
-decl_stmt|;
-name|LLVM_ATTRIBUTE_NORETURN
-name|void
-name|exitLld
-parameter_list|(
-name|int
-name|Val
-parameter_list|)
-function_decl|;
 name|LLVM_ATTRIBUTE_NORETURN
 name|void
 name|fatal
@@ -185,31 +188,10 @@ parameter_list|)
 function_decl|;
 name|LLVM_ATTRIBUTE_NORETURN
 name|void
-name|fatal
-argument_list|(
-name|std
-operator|::
-name|error_code
-name|EC
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|Prefix
-argument_list|)
-decl_stmt|;
-name|LLVM_ATTRIBUTE_NORETURN
-name|void
-name|fatal
+name|exitLld
 parameter_list|(
-name|Error
-modifier|&
-name|E
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Prefix
+name|int
+name|Val
 parameter_list|)
 function_decl|;
 comment|// check() functions are convenient functions to strip errors
@@ -369,16 +351,13 @@ name|Prefix
 operator|+
 literal|": "
 operator|+
-name|errorToErrorCode
+name|toString
 argument_list|(
 name|E
 operator|.
 name|takeError
 argument_list|()
 argument_list|)
-operator|.
-name|message
-argument_list|()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
