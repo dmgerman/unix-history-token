@@ -1403,6 +1403,21 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|// Replace the ref-to-reg-0 bit values with the given register.
+end_comment
+
+begin_function_decl
+name|RegisterCell
+modifier|&
+name|regify
+parameter_list|(
+name|unsigned
+name|R
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Generate a "ref" cell for the corresponding register. In the resulting
 end_comment
 

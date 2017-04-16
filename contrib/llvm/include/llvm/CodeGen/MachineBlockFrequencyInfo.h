@@ -93,6 +93,9 @@ decl_stmt|;
 name|class
 name|MachineBranchProbabilityInfo
 decl_stmt|;
+name|class
+name|MachineLoopInfo
+decl_stmt|;
 name|template
 operator|<
 name|class
@@ -157,6 +160,26 @@ name|F
 argument_list|)
 name|override
 decl_stmt|;
+comment|/// calculate - compute block frequency info for the given function.
+name|void
+name|calculate
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|&
+name|F
+parameter_list|,
+specifier|const
+name|MachineBranchProbabilityInfo
+modifier|&
+name|MBPI
+parameter_list|,
+specifier|const
+name|MachineLoopInfo
+modifier|&
+name|MLI
+parameter_list|)
+function_decl|;
 name|void
 name|releaseMemory
 argument_list|()
@@ -213,9 +236,19 @@ specifier|const
 expr_stmt|;
 name|void
 name|view
-argument_list|()
+argument_list|(
 specifier|const
-expr_stmt|;
+name|Twine
+operator|&
+name|Name
+argument_list|,
+name|bool
+name|isSimple
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Print the block frequency Freq to OS using the current functions entry
 comment|// frequency to convert freq into a relative decimal form.
 name|raw_ostream

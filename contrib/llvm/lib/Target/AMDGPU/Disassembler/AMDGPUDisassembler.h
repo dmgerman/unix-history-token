@@ -277,6 +277,13 @@ argument_list|)
 specifier|const
 block|;
 name|MCOperand
+name|decodeOperand_VSrcV216
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
 name|decodeOperand_VReg_64
 argument_list|(
 argument|unsigned Val
@@ -355,6 +362,8 @@ block|,
 name|OPW128
 block|,
 name|OPW16
+block|,
+name|OPWV216
 block|,
 name|OPW_LAST_
 block|,

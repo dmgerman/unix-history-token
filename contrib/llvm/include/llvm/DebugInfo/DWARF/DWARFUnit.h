@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFUnit.h ---------------------------------------------*- C++ -*-===//
+comment|//===- DWARFUnit.h ----------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,14 +34,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFUNIT_H
+name|LLVM_DEBUGINFO_DWARF_DWARFUNIT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFUNIT_H
+name|LLVM_DEBUGINFO_DWARF_DWARFUNIT_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
 
 begin_include
 include|#
@@ -52,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -64,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/DWARF/DWARFDebugAbbrev.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -106,6 +112,60 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Object/Binary.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/ObjectFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -113,13 +173,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|namespace
-name|object
-block|{
 name|class
-name|ObjectFile
+name|DWARFAbbreviationDeclarationSet
 decl_stmt|;
-block|}
 name|class
 name|DWARFContext
 decl_stmt|;
@@ -128,12 +184,6 @@ name|DWARFDebugAbbrev
 decl_stmt|;
 name|class
 name|DWARFUnit
-decl_stmt|;
-name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 comment|/// Base class for all DWARFUnitSection classes. This provides the
 comment|/// functionality common to all unit types.
@@ -190,6 +240,12 @@ parameter_list|)
 function_decl|;
 name|protected
 label|:
+operator|~
+name|DWARFUnitSectionBase
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|parseImpl
@@ -232,12 +288,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-operator|~
-name|DWARFUnitSectionBase
-argument_list|()
-operator|=
-expr|default
-expr_stmt|;
 block|}
 empty_stmt|;
 specifier|const
@@ -287,8 +337,6 @@ block|;
 name|public
 operator|:
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|std
@@ -631,13 +679,16 @@ decl_stmt|;
 name|uint32_t
 name|Length
 decl_stmt|;
-name|uint16_t
-name|Version
-decl_stmt|;
 specifier|const
 name|DWARFAbbreviationDeclarationSet
 modifier|*
 name|Abbrevs
+decl_stmt|;
+name|uint16_t
+name|Version
+decl_stmt|;
+name|uint8_t
+name|UnitType
 decl_stmt|;
 name|uint8_t
 name|AddrSize
@@ -692,6 +743,8 @@ expr_stmt|;
 name|DWARFUnit
 modifier|*
 name|DWOU
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
@@ -788,7 +841,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|Version
+operator|<=
+literal|4
+operator|?
 literal|11
+operator|:
+literal|12
 return|;
 block|}
 name|public
@@ -1071,6 +1130,15 @@ name|Abbrevs
 return|;
 block|}
 name|uint8_t
+name|getUnitType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UnitType
+return|;
+block|}
+name|uint8_t
 name|getAddressByteSize
 argument_list|()
 specifier|const
@@ -1129,7 +1197,7 @@ return|;
 end_return
 
 begin_macro
-unit|}   uint64_t
+unit|}    uint64_t
 name|getBaseAddress
 argument_list|()
 end_macro
@@ -1712,11 +1780,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
+begin_comment
 unit|};  }
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARF_DWARFUNIT_H
+end_comment
 
 end_unit
 

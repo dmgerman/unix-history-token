@@ -171,6 +171,25 @@ modifier|*
 name|FuncOrBitcast
 parameter_list|)
 function_decl|;
+name|Function
+modifier|*
+name|declareSanitizerInitFunction
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|,
+name|StringRef
+name|InitName
+argument_list|,
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+name|InitArgTypes
+argument_list|)
+decl_stmt|;
 comment|/// \brief Creates sanitizer constructor function, and calls sanitizer's init
 comment|/// function from it.
 comment|/// \return Returns pair of pointers to constructor, and init functions

@@ -447,7 +447,7 @@ return|return
 name|BB
 return|;
 block|}
-comment|/// Return the name of the corresponding LLVM basic block, or "(null)".
+comment|/// Return the name of the corresponding LLVM basic block, or an empty string.
 name|StringRef
 name|getName
 argument_list|()
@@ -1958,10 +1958,21 @@ name|MBB
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Return true if the block can implicitly transfer control to the block
-comment|/// after it by falling off the end of it.  This should return false if it can
-comment|/// reach the block after it, but it uses an explicit branch to do so (e.g., a
-comment|/// table jump).  True is a conservative answer.
+comment|/// Return the fallthrough block if the block can implicitly
+comment|/// transfer control to the block after it by falling off the end of
+comment|/// it.  This should return null if it can reach the block after
+comment|/// it, but it uses an explicit branch to do so (e.g., a table
+comment|/// jump).  Non-null return  is a conservative answer.
+name|MachineBasicBlock
+modifier|*
+name|getFallThrough
+parameter_list|()
+function_decl|;
+comment|/// Return true if the block can implicitly transfer control to the
+comment|/// block after it by falling off the end of it.  This should return
+comment|/// false if it can reach the block after it, but it uses an
+comment|/// explicit branch to do so (e.g., a table jump).  True is a
+comment|/// conservative answer.
 name|bool
 name|canFallThrough
 parameter_list|()
@@ -2680,6 +2691,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// Find and return the merged DebugLoc of the branch instructions of the
+comment|/// block. Return UnknownLoc if there is none.
+name|DebugLoc
+name|findBranchDebugLoc
+parameter_list|()
+function_decl|;
 comment|/// Possible outcome of a register liveness query to computeRegisterLiveness()
 enum|enum
 name|LivenessQueryResult

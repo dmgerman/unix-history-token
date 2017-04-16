@@ -140,13 +140,20 @@ name|Slots
 operator|=
 name|s
 operator|&
-operator|~
 operator|(
-operator|~
-literal|0U
+operator|(
+literal|1u
 operator|<<
 name|HEXAGON_PACKET_SIZE
 operator|)
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+name|setWeight
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -408,9 +415,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
 name|Valid
-operator|)
 return|;
 block|}
 empty_stmt|;
@@ -420,9 +425,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
 name|Lanes
-operator|)
 return|;
 block|}
 empty_stmt|;
@@ -432,9 +435,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
 name|Load
-operator|)
 return|;
 block|}
 empty_stmt|;
@@ -444,9 +445,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
 name|Store
-operator|)
 return|;
 block|}
 empty_stmt|;
@@ -485,9 +484,6 @@ decl_stmt|;
 name|HexagonCVIResource
 name|CVI
 decl_stmt|;
-name|bool
-name|SoloException
-decl_stmt|;
 name|public
 label|:
 name|HexagonInstr
@@ -501,8 +497,6 @@ argument_list|,
 argument|MCInst const *Extender
 argument_list|,
 argument|unsigned s
-argument_list|,
-argument|bool x = false
 argument_list|)
 block|:
 name|ID
@@ -522,32 +516,25 @@ argument_list|)
 operator|,
 name|CVI
 argument_list|(
-name|T
+argument|T
 argument_list|,
-name|MCII
+argument|MCII
 argument_list|,
-name|s
+argument|s
 argument_list|,
-name|id
-argument_list|)
-operator|,
-name|SoloException
-argument_list|(
-argument|x
+argument|id
 argument_list|)
 block|{}
-expr_stmt|;
 name|MCInst
 specifier|const
-operator|*
+operator|&
 name|getDesc
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
+operator|*
 name|ID
-operator|)
 return|;
 block|}
 empty_stmt|;
@@ -562,18 +549,6 @@ return|return
 name|Extender
 return|;
 block|}
-name|unsigned
-name|isSoloException
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|SoloException
-operator|)
-return|;
-block|}
-empty_stmt|;
 comment|// Check if the handles are in ascending order for shuffling purposes.
 name|bool
 name|operator
@@ -697,6 +672,9 @@ expr_stmt|;
 comment|// Insn handles in a bundle.
 name|HexagonPacket
 name|Packet
+decl_stmt|;
+name|HexagonPacket
+name|PacketSave
 decl_stmt|;
 comment|// Shuffling error code.
 name|unsigned
@@ -843,7 +821,7 @@ name|append
 parameter_list|(
 name|MCInst
 specifier|const
-modifier|*
+modifier|&
 name|ID
 parameter_list|,
 name|MCInst
@@ -853,11 +831,6 @@ name|Extender
 parameter_list|,
 name|unsigned
 name|S
-parameter_list|,
-name|bool
-name|X
-init|=
-name|false
 parameter_list|)
 function_decl|;
 comment|// Return the error code for the last check or shuffling of the bundle.

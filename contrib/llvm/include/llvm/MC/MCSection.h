@@ -62,19 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ilist.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist_node.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -92,7 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -103,25 +103,19 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
-name|MCAssembler
-decl_stmt|;
-name|class
 name|MCContext
 decl_stmt|;
 name|class
 name|MCExpr
 decl_stmt|;
 name|class
-name|MCFragment
-decl_stmt|;
-name|class
-name|MCSection
-decl_stmt|;
-name|class
 name|MCSymbol
 decl_stmt|;
 name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|Triple
 decl_stmt|;
 name|template
 operator|<
@@ -159,6 +153,8 @@ block|,
 name|SV_ELF
 block|,
 name|SV_MachO
+block|,
+name|SV_Wasm
 block|}
 enum|;
 comment|/// \brief Express the state of bundle locked groups while emitting code.
@@ -205,26 +201,6 @@ name|reverse_iterator
 expr_stmt|;
 name|private
 label|:
-name|MCSection
-argument_list|(
-specifier|const
-name|MCSection
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCSection
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|MCSymbol
 modifier|*
 name|Begin
@@ -265,18 +241,18 @@ literal|0
 decl_stmt|;
 comment|/// \brief We've seen a bundle_lock directive but not its first instruction
 comment|/// yet.
-name|unsigned
+name|bool
 name|BundleGroupBeforeFirstInst
 range|:
 literal|1
 decl_stmt|;
 comment|/// Whether this section has had instructions emitted into it.
-name|unsigned
+name|bool
 name|HasInstructions
 range|:
 literal|1
 decl_stmt|;
-name|unsigned
+name|bool
 name|IsRegistered
 range|:
 literal|1
@@ -307,6 +283,12 @@ name|SubsectionFragmentMap
 expr_stmt|;
 name|protected
 label|:
+name|SectionVariant
+name|Variant
+decl_stmt|;
+name|SectionKind
+name|Kind
+decl_stmt|;
 name|MCSection
 argument_list|(
 argument|SectionVariant V
@@ -316,18 +298,33 @@ argument_list|,
 argument|MCSymbol *Begin
 argument_list|)
 empty_stmt|;
-name|SectionVariant
-name|Variant
-decl_stmt|;
-name|SectionKind
-name|Kind
-decl_stmt|;
 operator|~
 name|MCSection
 argument_list|()
 expr_stmt|;
 name|public
 label|:
+name|MCSection
+argument_list|(
+specifier|const
+name|MCSection
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MCSection
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCSection
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|SectionKind
 name|getKind
 argument_list|()
@@ -747,6 +744,11 @@ name|MCAsmInfo
 operator|&
 name|MAI
 argument_list|,
+specifier|const
+name|Triple
+operator|&
+name|T
+argument_list|,
 name|raw_ostream
 operator|&
 name|OS
@@ -793,6 +795,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCSECTION_H
+end_comment
 
 end_unit
 

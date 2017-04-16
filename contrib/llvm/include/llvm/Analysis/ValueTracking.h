@@ -127,6 +127,9 @@ name|class
 name|LoopInfo
 decl_stmt|;
 name|class
+name|OptimizationRemarkEmitter
+decl_stmt|;
+name|class
 name|MDNode
 decl_stmt|;
 name|class
@@ -198,6 +201,12 @@ specifier|const
 name|DominatorTree
 modifier|*
 name|DT
+init|=
+name|nullptr
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
 init|=
 name|nullptr
 parameter_list|)
@@ -362,8 +371,10 @@ parameter_list|)
 function_decl|;
 comment|/// Return true if the given value is known to be non-zero when defined. For
 comment|/// vectors, return true if every element is known to be non-zero when
-comment|/// defined. Supports values with integer or pointer type and vectors of
-comment|/// integers.
+comment|/// defined. For pointers, if the context instruction and dominator tree are
+comment|/// specified, perform context-sensitive analysis and return true if the
+comment|/// pointer couldn't possibly be null at the specified instruction.
+comment|/// Supports values with integer or pointer type and vectors of integers.
 name|bool
 name|isKnownNonZero
 parameter_list|(
@@ -729,9 +740,15 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// Return true if we can prove that the specified FP value is either a NaN or
-comment|/// never less than 0.0.
-comment|/// If \p IncludeNeg0 is false, -0.0 is considered less than 0.0.
+comment|/// Return true if we can prove that the specified FP value is either NaN or
+comment|/// never less than -0.0.
+comment|///
+comment|///      NaN --> true
+comment|///       +0 --> true
+comment|///       -0 --> true
+comment|///   x> +0 --> true
+comment|///   x< -0 --> false
+comment|///
 name|bool
 name|CannotBeOrderedLessThanZero
 parameter_list|(
@@ -746,8 +763,14 @@ modifier|*
 name|TLI
 parameter_list|)
 function_decl|;
-comment|/// \returns true if we can prove that the specified FP value has a 0 sign
-comment|/// bit.
+comment|/// Return true if we can prove that the specified FP value's sign bit is 0.
+comment|///
+comment|///      NaN --> true/false (depending on the NaN's sign bit)
+comment|///       +0 --> true
+comment|///       -0 --> false
+comment|///   x> +0 --> true
+comment|///   x< -0 --> false
+comment|///
 name|bool
 name|SignBitMustBeZero
 parameter_list|(

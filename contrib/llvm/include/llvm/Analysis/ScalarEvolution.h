@@ -1751,6 +1751,27 @@ comment|/// predicate by splitting it into a set of independent predicates.
 name|bool
 name|ProvingSplitPredicate
 block|;
+comment|/// Memoized values for the GetMinTrailingZeros
+name|DenseMap
+operator|<
+specifier|const
+name|SCEV
+operator|*
+block|,
+name|uint32_t
+operator|>
+name|MinTrailingZerosCache
+block|;
+comment|/// Private helper method for the GetMinTrailingZeros method
+name|uint32_t
+name|GetMinTrailingZerosImpl
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|S
+argument_list|)
+block|;
 comment|/// Information about the number of loop iterations for which a loop exit's
 comment|/// branch condition evaluates to the not-taken path.  This is a temporary
 comment|/// pair of exact and max expressions that are eventually summarized in
@@ -2004,7 +2025,7 @@ comment|/// reached before exiting the loop.
 block|struct
 name|ExitNotTakenInfo
 block|{
-name|AssertingVH
+name|PoisoningVH
 operator|<
 name|BasicBlock
 operator|>
@@ -2041,7 +2062,7 @@ block|}
 name|explicit
 name|ExitNotTakenInfo
 argument_list|(
-name|AssertingVH
+name|PoisoningVH
 operator|<
 name|BasicBlock
 operator|>
@@ -3276,6 +3297,65 @@ argument_list|)
 decl_stmt|;
 comment|/// Test whether the condition described by Pred, LHS, and RHS is true
 comment|/// whenever the condition described by Pred, FoundLHS, and FoundRHS is
+comment|/// true. Here LHS is an operation that includes FoundLHS as one of its
+comment|/// arguments.
+name|bool
+name|isImpliedViaOperations
+argument_list|(
+name|ICmpInst
+operator|::
+name|Predicate
+name|Pred
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|LHS
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|RHS
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|FoundLHS
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|FoundRHS
+argument_list|,
+name|unsigned
+name|Depth
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+comment|/// Test whether the condition described by Pred, LHS, and RHS is true.
+comment|/// Use only simple non-recursive types of checks, such as range analysis etc.
+name|bool
+name|isKnownViaSimpleReasoning
+argument_list|(
+name|ICmpInst
+operator|::
+name|Predicate
+name|Pred
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|LHS
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|RHS
+argument_list|)
+decl_stmt|;
+comment|/// Test whether the condition described by Pred, LHS, and RHS is true
+comment|/// whenever the condition described by Pred, FoundLHS, and FoundRHS is
 comment|/// true.
 name|bool
 name|isImpliedCondOperandsHelper
@@ -3633,33 +3713,6 @@ operator|&
 name|Increasing
 argument_list|)
 decl_stmt|;
-comment|/// Return true if, for all loop invariant X, the predicate "LHS `Pred` X"
-comment|/// is monotonically increasing or decreasing.  In the former case set
-comment|/// `Increasing` to true and in the latter case set `Increasing` to false.
-comment|///
-comment|/// A predicate is said to be monotonically increasing if may go from being
-comment|/// false to being true as the loop iterates, but never the other way
-comment|/// around.  A predicate is said to be monotonically decreasing if may go
-comment|/// from being true to being false as the loop iterates, but never the other
-comment|/// way around.
-name|bool
-name|isMonotonicPredicate
-argument_list|(
-specifier|const
-name|SCEVAddRecExpr
-operator|*
-name|LHS
-argument_list|,
-name|ICmpInst
-operator|::
-name|Predicate
-name|Pred
-argument_list|,
-name|bool
-operator|&
-name|Increasing
-argument_list|)
-decl_stmt|;
 comment|/// Return SCEV no-wrap flags that can be proven based on reasoning about
 comment|/// how poison produced from no-wrap flags on this value (e.g. a nuw add)
 comment|/// would trigger undefined behavior on overflow.
@@ -3800,6 +3853,21 @@ argument_list|(
 name|Type
 operator|*
 name|Ty
+argument_list|)
+decl|const
+decl_stmt|;
+comment|// Returns a wider type among {Ty1, Ty2}.
+name|Type
+modifier|*
+name|getWiderType
+argument_list|(
+name|Type
+operator|*
+name|Ty1
+argument_list|,
+name|Type
+operator|*
+name|Ty2
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3971,6 +4039,11 @@ operator|=
 name|SCEV
 operator|::
 name|FlagAnyWrap
+argument_list|,
+name|unsigned
+name|Depth
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -4882,6 +4955,7 @@ comment|/// the single exiting block passed to it. See that routine for details.
 name|unsigned
 name|getSmallConstantTripCount
 parameter_list|(
+specifier|const
 name|Loop
 modifier|*
 name|L
@@ -4897,6 +4971,7 @@ comment|/// prematurely via another branch.
 name|unsigned
 name|getSmallConstantTripCount
 parameter_list|(
+specifier|const
 name|Loop
 modifier|*
 name|L
@@ -4912,6 +4987,7 @@ comment|/// Returns 0 if the trip count is unknown or not constant.
 name|unsigned
 name|getSmallConstantMaxTripCount
 parameter_list|(
+specifier|const
 name|Loop
 modifier|*
 name|L
@@ -4926,6 +5002,7 @@ comment|/// the single exiting block passed to it. See that routine for details.
 name|unsigned
 name|getSmallConstantTripMultiple
 parameter_list|(
+specifier|const
 name|Loop
 modifier|*
 name|L
@@ -4940,6 +5017,7 @@ comment|/// via ExitingBlock.
 name|unsigned
 name|getSmallConstantTripMultiple
 parameter_list|(
+specifier|const
 name|Loop
 modifier|*
 name|L
@@ -4957,6 +5035,7 @@ name|SCEV
 modifier|*
 name|getExitCount
 parameter_list|(
+specifier|const
 name|Loop
 modifier|*
 name|L
@@ -5214,6 +5293,33 @@ specifier|const
 name|SCEV
 operator|*
 name|RHS
+argument_list|)
+decl_stmt|;
+comment|/// Return true if, for all loop invariant X, the predicate "LHS `Pred` X"
+comment|/// is monotonically increasing or decreasing.  In the former case set
+comment|/// `Increasing` to true and in the latter case set `Increasing` to false.
+comment|///
+comment|/// A predicate is said to be monotonically increasing if may go from being
+comment|/// false to being true as the loop iterates, but never the other way
+comment|/// around.  A predicate is said to be monotonically decreasing if may go
+comment|/// from being true to being false as the loop iterates, but never the other
+comment|/// way around.
+name|bool
+name|isMonotonicPredicate
+argument_list|(
+specifier|const
+name|SCEVAddRecExpr
+operator|*
+name|LHS
+argument_list|,
+name|ICmpInst
+operator|::
+name|Predicate
+name|Pred
+argument_list|,
+name|bool
+operator|&
+name|Increasing
 argument_list|)
 decl_stmt|;
 comment|/// Return true if the result of the predicate LHS `Pred` RHS is loop
@@ -5796,6 +5902,27 @@ name|bool
 name|NoWrap
 parameter_list|)
 function_decl|;
+comment|/// Get add expr already created or create a new one
+specifier|const
+name|SCEV
+modifier|*
+name|getOrCreateAddExpr
+argument_list|(
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Ops
+argument_list|,
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|Flags
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 name|FoldingSet

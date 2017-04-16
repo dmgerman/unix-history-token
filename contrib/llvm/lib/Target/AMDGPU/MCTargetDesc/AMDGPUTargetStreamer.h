@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"AMDGPUCodeObjectMetadataStreamer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"AMDKernelCodeT.h"
 end_include
 
@@ -91,6 +97,13 @@ name|MCTargetStreamer
 block|{
 name|protected
 operator|:
+name|AMDGPU
+operator|::
+name|CodeObject
+operator|::
+name|MetadataStreamer
+name|CodeObjectMetadataStreamer
+block|;
 name|MCContext
 operator|&
 name|getContext
@@ -184,20 +197,40 @@ literal|0
 block|;
 name|virtual
 name|void
-name|EmitRuntimeMetadata
+name|EmitStartOfCodeObjectMetadata
 argument_list|(
+specifier|const
 name|Module
 operator|&
-name|M
+name|Mod
 argument_list|)
-operator|=
-literal|0
 block|;
 name|virtual
 name|void
-name|EmitRuntimeMetadata
+name|EmitKernelCodeObjectMetadata
 argument_list|(
-argument|StringRef Metadata
+specifier|const
+name|Function
+operator|&
+name|Func
+argument_list|,
+specifier|const
+name|amd_kernel_code_t
+operator|&
+name|KernelCode
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitEndOfCodeObjectMetadata
+argument_list|()
+block|;
+comment|/// \returns True on success, false on failure.
+name|virtual
+name|bool
+name|EmitCodeObjectMetadata
+argument_list|(
+argument|StringRef YamlString
 argument_list|)
 operator|=
 literal|0
@@ -205,6 +238,7 @@ block|; }
 decl_stmt|;
 name|class
 name|AMDGPUTargetAsmStreamer
+name|final
 range|:
 name|public
 name|AMDGPUTargetStreamer
@@ -280,23 +314,18 @@ argument|StringRef GlobalName
 argument_list|)
 name|override
 block|;
-name|void
-name|EmitRuntimeMetadata
+comment|/// \returns True on success, false on failure.
+name|bool
+name|EmitCodeObjectMetadata
 argument_list|(
-argument|Module&M
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitRuntimeMetadata
-argument_list|(
-argument|StringRef Metadata
+argument|StringRef YamlString
 argument_list|)
 name|override
 block|; }
 decl_stmt|;
 name|class
 name|AMDGPUTargetELFStreamer
+name|final
 range|:
 name|public
 name|AMDGPUTargetStreamer
@@ -308,11 +337,11 @@ block|;
 name|void
 name|EmitAMDGPUNote
 argument_list|(
-argument|const MCExpr* DescSize
+argument|const MCExpr *DescSize
 argument_list|,
-argument|AMDGPU::PT_NOTE::NoteType Type
+argument|AMDGPU::ElfNote::NoteType Type
 argument_list|,
-argument|std::function<void(MCELFStreamer&)> EmitDesc
+argument|function_ref<void(MCELFStreamer&)> EmitDesc
 argument_list|)
 block|;
 name|public
@@ -383,17 +412,11 @@ argument|StringRef GlobalName
 argument_list|)
 name|override
 block|;
-name|void
-name|EmitRuntimeMetadata
+comment|/// \returns True on success, false on failure.
+name|bool
+name|EmitCodeObjectMetadata
 argument_list|(
-argument|Module&M
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitRuntimeMetadata
-argument_list|(
-argument|StringRef Metadata
+argument|StringRef YamlString
 argument_list|)
 name|override
 block|; }

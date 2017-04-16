@@ -138,22 +138,6 @@ name|ARMTargetLowering
 modifier|*
 name|TLI
 decl_stmt|;
-comment|/// Estimate the overhead of scalarizing an instruction. Insert and Extract
-comment|/// are set if the result needs to be inserted and/or extracted from vectors.
-name|unsigned
-name|getScalarizationOverhead
-parameter_list|(
-name|Type
-modifier|*
-name|Ty
-parameter_list|,
-name|bool
-name|Insert
-parameter_list|,
-name|bool
-name|Extract
-parameter_list|)
-function_decl|;
 specifier|const
 name|ARMSubtarget
 operator|*
@@ -421,6 +405,13 @@ parameter_list|,
 name|Type
 modifier|*
 name|Src
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|I
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 name|int
@@ -436,6 +427,13 @@ parameter_list|,
 name|Type
 modifier|*
 name|CondTy
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|I
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 name|int
@@ -556,6 +554,13 @@ name|Alignment
 parameter_list|,
 name|unsigned
 name|AddressSpace
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|I
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 name|int

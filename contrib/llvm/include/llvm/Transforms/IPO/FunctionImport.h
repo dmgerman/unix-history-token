@@ -196,20 +196,20 @@ argument|std::move(ModuleLoader)
 argument_list|)
 block|{}
 comment|/// Import functions in Module \p M based on the supplied import list.
-comment|/// \p ForceImportReferencedDiscardableSymbols will set the ModuleLinker in
-comment|/// a mode where referenced discarable symbols in the source modules will be
-comment|/// imported as well even if they are not present in the ImportList.
 name|Expected
 operator|<
 name|bool
 operator|>
 name|importFunctions
 argument_list|(
-argument|Module&M
+name|Module
+operator|&
+name|M
 argument_list|,
-argument|const ImportMapTy&ImportList
-argument_list|,
-argument|bool ForceImportReferencedDiscardableSymbols = false
+specifier|const
+name|ImportMapTy
+operator|&
+name|ImportList
 argument_list|)
 expr_stmt|;
 name|private

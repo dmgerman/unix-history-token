@@ -107,21 +107,6 @@ argument_list|)
 block|{}
 name|T
 name|Item
-block|;
-name|static_assert
-argument_list|(
-operator|!
-name|detail
-operator|::
-name|uses_missing_provider
-operator|<
-name|T
-operator|>
-operator|::
-name|value
-argument_list|,
-literal|"Item does not have a format provider!"
-argument_list|)
 block|; }
 expr_stmt|;
 name|namespace

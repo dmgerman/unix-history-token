@@ -88,7 +88,7 @@ block|{
 name|class
 name|Type
 decl_stmt|;
-comment|/// MVT - Machine Value Type. Every type that is supported natively by some
+comment|/// Machine Value Type. Every type that is supported natively by some
 comment|/// processor targeted by LLVM occurs here. This means that any legal value
 comment|/// type can be represented by an MVT.
 name|class
@@ -101,8 +101,7 @@ name|SimpleValueType
 enum|:
 name|int8_t
 block|{
-comment|// INVALID_SIMPLE_VALUE_TYPE - Simple value types less than zero are
-comment|// considered extended value types.
+comment|// Simple value types less than zero are considered extended value types.
 name|INVALID_SIMPLE_VALUE_TYPE
 init|=
 operator|-
@@ -509,51 +508,51 @@ name|MAX_ALLOWED_VALUETYPE
 init|=
 literal|96
 block|,
-comment|// Token - A value of type llvm::TokenTy
+comment|// A value of type llvm::TokenTy
 name|token
 init|=
 literal|120
 block|,
-comment|// Metadata - This is MDNode or MDString.
+comment|// This is MDNode or MDString.
 name|Metadata
 init|=
 literal|121
 block|,
-comment|// iPTRAny - An int value the size of the pointer of the current
+comment|// An int value the size of the pointer of the current
 comment|// target to any address space. This must only be used internal to
 comment|// tblgen. Other than for overloading, we treat iPTRAny the same as iPTR.
 name|iPTRAny
 init|=
 literal|122
 block|,
-comment|// vAny - A vector with any length and element size. This is used
+comment|// A vector with any length and element size. This is used
 comment|// for intrinsics that have overloadings based on vector types.
 comment|// This is only for tblgen's consumption!
 name|vAny
 init|=
 literal|123
 block|,
-comment|// fAny - Any floating-point or vector floating-point value. This is used
+comment|// Any floating-point or vector floating-point value. This is used
 comment|// for intrinsics that have overloadings based on floating-point types.
 comment|// This is only for tblgen's consumption!
 name|fAny
 init|=
 literal|124
 block|,
-comment|// iAny - An integer or vector integer value of any bit width. This is
+comment|// An integer or vector integer value of any bit width. This is
 comment|// used for intrinsics that have overloadings based on integer bit widths.
 comment|// This is only for tblgen's consumption!
 name|iAny
 init|=
 literal|125
 block|,
-comment|// iPTR - An int value the size of the pointer of the current
+comment|// An int value the size of the pointer of the current
 comment|// target.  This should only be used internal to tblgen!
 name|iPTR
 init|=
 literal|126
 block|,
-comment|// Any - Any type. This is used for intrinsics that have overloadings.
+comment|// Any type. This is used for intrinsics that have overloadings.
 comment|// This is only for tblgen's consumption!
 name|Any
 init|=
@@ -697,7 +696,7 @@ operator|.
 name|SimpleTy
 return|;
 block|}
-comment|/// isValid - Return true if this is a valid simple valuetype.
+comment|/// Return true if this is a valid simple valuetype.
 name|bool
 name|isValid
 argument_list|()
@@ -719,7 +718,7 @@ name|LAST_VALUETYPE
 operator|)
 return|;
 block|}
-comment|/// isFloatingPoint - Return true if this is a FP, or a vector FP type.
+comment|/// Return true if this is a FP or a vector FP type.
 name|bool
 name|isFloatingPoint
 argument_list|()
@@ -757,7 +756,7 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// isInteger - Return true if this is an integer, or a vector integer type.
+comment|/// Return true if this is an integer or a vector integer type.
 name|bool
 name|isInteger
 argument_list|()
@@ -795,8 +794,7 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// isScalarInteger - Return true if this is an integer, not including
-comment|/// vectors.
+comment|/// Return true if this is an integer, not including vectors.
 name|bool
 name|isScalarInteger
 argument_list|()
@@ -818,7 +816,7 @@ name|LAST_INTEGER_VALUETYPE
 operator|)
 return|;
 block|}
-comment|/// isVector - Return true if this is a vector value type.
+comment|/// Return true if this is a vector value type.
 name|bool
 name|isVector
 argument_list|()
@@ -840,7 +838,7 @@ name|LAST_VECTOR_VALUETYPE
 operator|)
 return|;
 block|}
-comment|/// is16BitVector - Return true if this is a 16-bit vector type.
+comment|/// Return true if this is a 16-bit vector type.
 name|bool
 name|is16BitVector
 argument_list|()
@@ -868,7 +866,7 @@ name|v16i1
 operator|)
 return|;
 block|}
-comment|/// is32BitVector - Return true if this is a 32-bit vector type.
+comment|/// Return true if this is a 32-bit vector type.
 name|bool
 name|is32BitVector
 argument_list|()
@@ -876,6 +874,12 @@ specifier|const
 block|{
 return|return
 operator|(
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v32i1
+operator|||
 name|SimpleTy
 operator|==
 name|MVT
@@ -908,7 +912,7 @@ name|v1f32
 operator|)
 return|;
 block|}
-comment|/// is64BitVector - Return true if this is a 64-bit vector type.
+comment|/// Return true if this is a 64-bit vector type.
 name|bool
 name|is64BitVector
 argument_list|()
@@ -916,6 +920,12 @@ specifier|const
 block|{
 return|return
 operator|(
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v64i1
+operator|||
 name|SimpleTy
 operator|==
 name|MVT
@@ -960,7 +970,7 @@ name|v1f64
 operator|)
 return|;
 block|}
-comment|/// is128BitVector - Return true if this is a 128-bit vector type.
+comment|/// Return true if this is a 128-bit vector type.
 name|bool
 name|is128BitVector
 argument_list|()
@@ -1018,7 +1028,7 @@ name|v2f64
 operator|)
 return|;
 block|}
-comment|/// is256BitVector - Return true if this is a 256-bit vector type.
+comment|/// Return true if this is a 256-bit vector type.
 name|bool
 name|is256BitVector
 argument_list|()
@@ -1064,7 +1074,7 @@ name|v4i64
 operator|)
 return|;
 block|}
-comment|/// is512BitVector - Return true if this is a 512-bit vector type.
+comment|/// Return true if this is a 512-bit vector type.
 name|bool
 name|is512BitVector
 argument_list|()
@@ -1116,7 +1126,7 @@ name|v8i64
 operator|)
 return|;
 block|}
-comment|/// is1024BitVector - Return true if this is a 1024-bit vector type.
+comment|/// Return true if this is a 1024-bit vector type.
 name|bool
 name|is1024BitVector
 argument_list|()
@@ -1156,7 +1166,7 @@ name|v16i64
 operator|)
 return|;
 block|}
-comment|/// is2048BitVector - Return true if this is a 1024-bit vector type.
+comment|/// Return true if this is a 1024-bit vector type.
 name|bool
 name|is2048BitVector
 argument_list|()
@@ -1190,7 +1200,7 @@ name|v32i64
 operator|)
 return|;
 block|}
-comment|/// isOverloaded - Return true if this is an overloaded type for TableGen.
+comment|/// Return true if this is an overloaded type for TableGen.
 name|bool
 name|isOverloaded
 argument_list|()
@@ -1230,7 +1240,7 @@ name|iPTRAny
 operator|)
 return|;
 block|}
-comment|/// isPow2VectorType - Returns true if the given vector is a power of 2.
+comment|/// Returns true if the given vector is a power of 2.
 name|bool
 name|isPow2VectorType
 argument_list|()
@@ -1255,8 +1265,8 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// getPow2VectorType - Widens the length of the given vector MVT up to
-comment|/// the nearest power of 2 and returns that type.
+comment|/// Widens the length of the given vector MVT up to the nearest power of 2
+comment|/// and returns that type.
 name|MVT
 name|getPow2VectorType
 argument_list|()
@@ -1299,8 +1309,7 @@ name|Pow2NElts
 argument_list|)
 return|;
 block|}
-comment|/// getScalarType - If this is a vector type, return the element type,
-comment|/// otherwise return this.
+comment|/// If this is a vector, return the element type, otherwise return this.
 name|MVT
 name|getScalarType
 argument_list|()
@@ -2034,8 +2043,8 @@ name|getSizeInBits
 argument_list|()
 return|;
 block|}
-comment|/// getStoreSize - Return the number of bytes overwritten by a store
-comment|/// of the specified value type.
+comment|/// Return the number of bytes overwritten by a store of the specified value
+comment|/// type.
 name|unsigned
 name|getStoreSize
 argument_list|()
@@ -2052,8 +2061,8 @@ operator|/
 literal|8
 return|;
 block|}
-comment|/// getStoreSizeInBits - Return the number of bits overwritten by a store
-comment|/// of the specified value type.
+comment|/// Return the number of bits overwritten by a store of the specified value
+comment|/// type.
 name|unsigned
 name|getStoreSizeInBits
 argument_list|()

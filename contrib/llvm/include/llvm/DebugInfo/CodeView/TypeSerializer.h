@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/ByteStream.h"
+file|"llvm/Support/BinaryByteStream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamWriter.h"
+file|"llvm/Support/BinaryStreamWriter.h"
 end_include
 
 begin_include
@@ -242,14 +242,10 @@ name|uint8_t
 operator|>
 name|RecordBuffer
 block|;
-name|msf
-operator|::
-name|MutableByteStream
+name|MutableBinaryByteStream
 name|Stream
 block|;
-name|msf
-operator|::
-name|StreamWriter
+name|BinaryStreamWriter
 name|Writer
 block|;
 name|TypeRecordMapping

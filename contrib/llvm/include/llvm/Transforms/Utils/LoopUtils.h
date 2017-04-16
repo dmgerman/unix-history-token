@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/Transforms/Utils/LoopUtils.h - Loop utilities -*- C++ -*-=========//
+comment|//===- llvm/Transforms/Utils/LoopUtils.h - Loop utilities -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,7 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -89,6 +113,30 @@ directive|include
 file|"llvm/IR/IRBuilder.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InstrTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Operator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -100,16 +148,10 @@ name|class
 name|AliasSetTracker
 decl_stmt|;
 name|class
-name|AssumptionCache
-decl_stmt|;
-name|class
 name|BasicBlock
 decl_stmt|;
 name|class
 name|DataLayout
-decl_stmt|;
-name|class
-name|DominatorTree
 decl_stmt|;
 name|class
 name|Loop
@@ -119,9 +161,6 @@ name|LoopInfo
 decl_stmt|;
 name|class
 name|OptimizationRemarkEmitter
-decl_stmt|;
-name|class
-name|Pass
 decl_stmt|;
 name|class
 name|PredicatedScalarEvolution
@@ -145,11 +184,15 @@ name|LoopSafetyInfo
 block|{
 name|bool
 name|MayThrow
+init|=
+name|false
 decl_stmt|;
 comment|// The current loop contains an instruction which
 comment|// may throw.
 name|bool
 name|HeaderMayThrow
+init|=
+name|false
 decl_stmt|;
 comment|// Same as previous, but specific to loop header
 comment|// Used to update funclet bundle operands.
@@ -164,17 +207,9 @@ name|BlockColors
 expr_stmt|;
 name|LoopSafetyInfo
 argument_list|()
-operator|:
-name|MayThrow
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|HeaderMayThrow
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 block|}
 struct|;
 comment|/// The RecurrenceDescriptor is used to identify recurrences variables in a
@@ -249,42 +284,9 @@ block|}
 enum|;
 name|RecurrenceDescriptor
 argument_list|()
-operator|:
-name|StartValue
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|LoopExitInstr
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Kind
-argument_list|(
-name|RK_NoRecurrence
-argument_list|)
-operator|,
-name|MinMaxKind
-argument_list|(
-name|MRK_Invalid
-argument_list|)
-operator|,
-name|UnsafeAlgebraInst
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|RecurrenceType
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|IsSigned
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|RecurrenceDescriptor
 argument_list|(
 argument|Value *Start
@@ -303,7 +305,7 @@ argument|bool Signed
 argument_list|,
 argument|SmallPtrSetImpl<Instruction *>&CI
 argument_list|)
-operator|:
+block|:
 name|StartValue
 argument_list|(
 name|Start
@@ -886,28 +888,40 @@ comment|// The instruction who's value is used outside the loop.
 name|Instruction
 modifier|*
 name|LoopExitInstr
+init|=
+name|nullptr
 decl_stmt|;
 comment|// The kind of the recurrence.
 name|RecurrenceKind
 name|Kind
+init|=
+name|RK_NoRecurrence
 decl_stmt|;
 comment|// If this a min/max recurrence the kind of recurrence.
 name|MinMaxRecurrenceKind
 name|MinMaxKind
+init|=
+name|MRK_Invalid
 decl_stmt|;
 comment|// First occurrence of unasfe algebra in the PHI's use-chain.
 name|Instruction
 modifier|*
 name|UnsafeAlgebraInst
+init|=
+name|nullptr
 decl_stmt|;
 comment|// The type of the recurrence.
 name|Type
 modifier|*
 name|RecurrenceType
+init|=
+name|nullptr
 decl_stmt|;
 comment|// True if all source operands of the recurrence are SExtInsts.
 name|bool
 name|IsSigned
+init|=
+name|false
 decl_stmt|;
 comment|// Instructions used for type-promoting the recurrence.
 name|SmallPtrSet
@@ -949,27 +963,9 @@ label|:
 comment|/// Default constructor - creates an invalid induction.
 name|InductionDescriptor
 argument_list|()
-operator|:
-name|StartValue
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|IK
-argument_list|(
-name|IK_NoInduction
-argument_list|)
-operator|,
-name|Step
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|InductionBinOp
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Get the consecutive direction. Returns:
 comment|///   0 - unknown or non-consecutive.
 comment|///   1 - consecutive and increasing.
@@ -1236,17 +1232,23 @@ expr_stmt|;
 comment|/// Induction kind.
 name|InductionKind
 name|IK
+init|=
+name|IK_NoInduction
 decl_stmt|;
 comment|/// Step value.
 specifier|const
 name|SCEV
 modifier|*
 name|Step
+init|=
+name|nullptr
 decl_stmt|;
 comment|// Instruction that advances induction variable.
 name|BinaryOperator
 modifier|*
 name|InductionBinOp
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1658,10 +1660,18 @@ function_decl|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_UTILS_LOOPUTILS_H
+end_comment
 
 end_unit
 

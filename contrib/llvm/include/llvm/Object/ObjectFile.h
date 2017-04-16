@@ -111,6 +111,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|ARMAttributeParser
+decl_stmt|;
 name|namespace
 name|object
 block|{
@@ -1179,6 +1182,16 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+name|virtual
+name|void
+name|setARMSubArch
+argument_list|(
+name|Triple
+operator|&
+name|TheTriple
+argument_list|)
+decl|const
+block|{ }
 comment|/// Returns platform-specific object flags, if any.
 name|virtual
 name|std
@@ -1198,6 +1211,23 @@ return|return
 name|object_error
 operator|::
 name|invalid_file_type
+return|;
+block|}
+name|virtual
+name|std
+operator|::
+name|error_code
+name|getBuildAttributes
+argument_list|(
+argument|ARMAttributeParser&Attributes
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|error_code
+argument_list|()
 return|;
 block|}
 comment|/// True if this is a relocatable object (.o/.obj).

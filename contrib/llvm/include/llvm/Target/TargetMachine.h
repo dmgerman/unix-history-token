@@ -136,6 +136,9 @@ name|class
 name|raw_pwrite_stream
 decl_stmt|;
 name|class
+name|PassManagerBuilder
+decl_stmt|;
+name|class
 name|Target
 decl_stmt|;
 name|class
@@ -716,14 +719,13 @@ name|TargetIRAnalysis
 name|getTargetIRAnalysis
 parameter_list|()
 function_decl|;
-comment|/// Add target-specific function passes that should be run as early as
-comment|/// possible in the optimization pipeline.  Most TargetMachines have no such
-comment|/// passes.
+comment|/// Allow the target to modify the pass manager, e.g. by calling
+comment|/// PassManagerBuilder::addExtension.
 name|virtual
 name|void
-name|addEarlyAsPossiblePasses
+name|adjustPassManager
 parameter_list|(
-name|PassManagerBase
+name|PassManagerBuilder
 modifier|&
 parameter_list|)
 block|{}
@@ -915,7 +917,7 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
-argument|TargetOptions Options
+argument|const TargetOptions&Options
 argument_list|,
 argument|Reloc::Model RM
 argument_list|,

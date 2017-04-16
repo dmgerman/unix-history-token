@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/MD5.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -379,6 +385,16 @@ block|,
 name|sticky_bit
 init|=
 literal|01000
+block|,
+name|all_perms
+init|=
+name|all_all
+operator||
+name|set_uid_on_exe
+operator||
+name|set_gid_on_exe
+operator||
+name|sticky_bit
 block|,
 name|perms_not_known
 init|=
@@ -675,68 +691,6 @@ comment|///               a platform-specific member to store the result.
 name|class
 name|file_status
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LLVM_ON_UNIX
-argument_list|)
-name|dev_t
-name|fs_st_dev
-decl_stmt|;
-name|ino_t
-name|fs_st_ino
-decl_stmt|;
-name|time_t
-name|fs_st_atime
-decl_stmt|;
-name|time_t
-name|fs_st_mtime
-decl_stmt|;
-name|uid_t
-name|fs_st_uid
-decl_stmt|;
-name|gid_t
-name|fs_st_gid
-decl_stmt|;
-name|off_t
-name|fs_st_size
-decl_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|LLVM_ON_WIN32
-argument_list|)
-name|uint32_t
-name|LastAccessedTimeHigh
-decl_stmt|;
-name|uint32_t
-name|LastAccessedTimeLow
-decl_stmt|;
-name|uint32_t
-name|LastWriteTimeHigh
-decl_stmt|;
-name|uint32_t
-name|LastWriteTimeLow
-decl_stmt|;
-name|uint32_t
-name|VolumeSerialNumber
-decl_stmt|;
-name|uint32_t
-name|FileSizeHigh
-decl_stmt|;
-name|uint32_t
-name|FileSizeLow
-decl_stmt|;
-name|uint32_t
-name|FileIndexHigh
-decl_stmt|;
-name|uint32_t
-name|FileIndexLow
-decl_stmt|;
-endif|#
-directive|endif
 name|friend
 name|bool
 name|equivalent
@@ -748,11 +702,121 @@ name|file_status
 name|B
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LLVM_ON_UNIX
+argument_list|)
+name|dev_t
+name|fs_st_dev
+init|=
+literal|0
+decl_stmt|;
+name|nlink_t
+name|fs_st_nlinks
+init|=
+literal|0
+decl_stmt|;
+name|ino_t
+name|fs_st_ino
+init|=
+literal|0
+decl_stmt|;
+name|time_t
+name|fs_st_atime
+init|=
+literal|0
+decl_stmt|;
+name|time_t
+name|fs_st_mtime
+init|=
+literal|0
+decl_stmt|;
+name|uid_t
+name|fs_st_uid
+init|=
+literal|0
+decl_stmt|;
+name|gid_t
+name|fs_st_gid
+init|=
+literal|0
+decl_stmt|;
+name|off_t
+name|fs_st_size
+init|=
+literal|0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|LLVM_ON_WIN32
+argument_list|)
+name|uint32_t
+name|NumLinks
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|LastAccessedTimeHigh
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|LastAccessedTimeLow
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|LastWriteTimeHigh
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|LastWriteTimeLow
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|VolumeSerialNumber
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|FileSizeHigh
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|FileSizeLow
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|FileIndexHigh
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|FileIndexLow
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 name|file_type
 name|Type
+init|=
+name|file_type
+operator|::
+name|status_error
 decl_stmt|;
 name|perms
 name|Perms
+init|=
+name|perms_not_known
 decl_stmt|;
 name|public
 label|:
@@ -764,102 +828,17 @@ name|LLVM_ON_UNIX
 argument_list|)
 name|file_status
 argument_list|()
-operator|:
-name|fs_st_dev
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_ino
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_atime
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_mtime
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_uid
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_gid
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_size
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Type
-argument_list|(
-name|file_type
-operator|::
-name|status_error
-argument_list|)
-operator|,
-name|Perms
-argument_list|(
-argument|perms_not_known
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|file_status
 argument_list|(
 argument|file_type Type
 argument_list|)
-operator|:
-name|fs_st_dev
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_ino
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_atime
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_mtime
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_uid
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_gid
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|fs_st_size
-argument_list|(
-literal|0
-argument_list|)
-operator|,
+block|:
 name|Type
 argument_list|(
-name|Type
-argument_list|)
-operator|,
-name|Perms
-argument_list|(
-argument|perms_not_known
+argument|Type
 argument_list|)
 block|{}
 name|file_status
@@ -869,6 +848,8 @@ argument_list|,
 argument|perms Perms
 argument_list|,
 argument|dev_t Dev
+argument_list|,
+argument|nlink_t Links
 argument_list|,
 argument|ino_t Ino
 argument_list|,
@@ -882,10 +863,15 @@ argument|gid_t GID
 argument_list|,
 argument|off_t Size
 argument_list|)
-operator|:
+block|:
 name|fs_st_dev
 argument_list|(
 name|Dev
+argument_list|)
+operator|,
+name|fs_st_nlinks
+argument_list|(
+name|Links
 argument_list|)
 operator|,
 name|fs_st_ino
@@ -936,127 +922,26 @@ name|LLVM_ON_WIN32
 argument_list|)
 name|file_status
 argument_list|()
-operator|:
-name|LastAccessedTimeHigh
+operator|=
+expr|default
+expr_stmt|;
+name|file_status
 argument_list|(
-literal|0
+argument|file_type Type
 argument_list|)
-operator|,
-name|LastAccessedTimeLow
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LastWriteTimeHigh
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LastWriteTimeLow
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|VolumeSerialNumber
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|FileSizeHigh
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|FileSizeLow
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|FileIndexHigh
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|FileIndexLow
-argument_list|(
-literal|0
-argument_list|)
-operator|,
+block|:
 name|Type
 argument_list|(
-name|file_type
-operator|::
-name|status_error
-argument_list|)
-operator|,
-name|Perms
-argument_list|(
-argument|perms_not_known
+argument|Type
 argument_list|)
 block|{}
 name|file_status
 argument_list|(
 argument|file_type Type
-argument_list|)
-operator|:
-name|LastAccessedTimeHigh
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LastAccessedTimeLow
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LastWriteTimeHigh
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LastWriteTimeLow
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|VolumeSerialNumber
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|FileSizeHigh
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|FileSizeLow
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|FileIndexHigh
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|FileIndexLow
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Type
-argument_list|(
-name|Type
-argument_list|)
-operator|,
-name|Perms
-argument_list|(
-argument|perms_not_known
-argument_list|)
-block|{}
-name|file_status
-argument_list|(
-argument|file_type Type
+argument_list|,
+argument|perms Perms
+argument_list|,
+argument|uint32_t LinkCount
 argument_list|,
 argument|uint32_t LastAccessTimeHigh
 argument_list|,
@@ -1076,7 +961,12 @@ argument|uint32_t FileIndexHigh
 argument_list|,
 argument|uint32_t FileIndexLow
 argument_list|)
-operator|:
+block|:
+name|NumLinks
+argument_list|(
+name|LinkCount
+argument_list|)
+operator|,
 name|LastAccessedTimeHigh
 argument_list|(
 name|LastAccessTimeHigh
@@ -1129,7 +1019,7 @@ argument_list|)
 operator|,
 name|Perms
 argument_list|(
-argument|perms_not_known
+argument|Perms
 argument_list|)
 block|{}
 endif|#
@@ -1169,6 +1059,11 @@ specifier|const
 expr_stmt|;
 name|UniqueID
 name|getUniqueID
+argument_list|()
+specifier|const
+expr_stmt|;
+name|uint32_t
+name|getLinkCount
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1380,17 +1275,14 @@ return|;
 block|}
 name|file_magic
 argument_list|()
-operator|:
-name|V
-argument_list|(
-argument|unknown
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|file_magic
 argument_list|(
 argument|Impl V
 argument_list|)
-operator|:
+block|:
 name|V
 argument_list|(
 argument|V
@@ -1409,6 +1301,8 @@ name|private
 label|:
 name|Impl
 name|V
+init|=
+name|unknown
 decl_stmt|;
 block|}
 struct|;
@@ -1553,6 +1447,25 @@ operator|&
 name|from
 argument_list|)
 expr_stmt|;
+comment|/// @brief Collapse all . and .. patterns, resolve all symlinks, and optionally
+comment|///        expand ~ expressions to the user's home directory.
+comment|///
+comment|/// @param path The path to resolve.
+comment|/// @param output The location to store the resolved path.
+comment|/// @param expand_tilde If true, resolves ~ expressions to the user's home
+comment|///                     directory.
+name|std
+operator|::
+name|error_code
+name|real_path
+argument_list|(
+argument|const Twine&path
+argument_list|,
+argument|SmallVectorImpl<char>&output
+argument_list|,
+argument|bool expand_tilde = false
+argument_list|)
+expr_stmt|;
 comment|/// @brief Get the current path.
 comment|///
 comment|/// @param result Holds the current path on return.
@@ -1571,6 +1484,22 @@ operator|&
 name|result
 argument_list|)
 expr_stmt|;
+comment|/// @brief Set the current path.
+comment|///
+comment|/// @param path The path to set.
+comment|/// @returns errc::success if the current path was successfully set,
+comment|///          otherwise a platform-specific error_code.
+name|std
+operator|::
+name|error_code
+name|set_current_path
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|path
+argument_list|)
+expr_stmt|;
 comment|/// @brief Remove path. Equivalent to POSIX remove().
 comment|///
 comment|/// @param path Input path.
@@ -1585,6 +1514,21 @@ argument_list|(
 argument|const Twine&path
 argument_list|,
 argument|bool IgnoreNonExisting = true
+argument_list|)
+expr_stmt|;
+comment|/// @brief Recursively delete a directory.
+comment|///
+comment|/// @param path Input path.
+comment|/// @returns errc::success if path has been removed or didn't exist, otherwise a
+comment|///          platform-specific error code.
+name|std
+operator|::
+name|error_code
+name|remove_directories
+argument_list|(
+argument|const Twine&path
+argument_list|,
+argument|bool IgnoreErrors = true
 argument_list|)
 expr_stmt|;
 comment|/// @brief Rename \a from to \a to. Files are renamed as if by POSIX rename().
@@ -1641,6 +1585,37 @@ argument_list|(
 argument|int FD
 argument_list|,
 argument|uint64_t Size
+argument_list|)
+expr_stmt|;
+comment|/// @brief Compute an MD5 hash of a file's contents.
+comment|///
+comment|/// @param FD Input file descriptor.
+comment|/// @returns An MD5Result with the hash computed, if successful, otherwise a
+comment|///          std::error_code.
+name|ErrorOr
+operator|<
+name|MD5
+operator|::
+name|MD5Result
+operator|>
+name|md5_contents
+argument_list|(
+argument|int FD
+argument_list|)
+expr_stmt|;
+comment|/// @brief Version of compute_md5 that doesn't require an open file descriptor.
+name|ErrorOr
+operator|<
+name|MD5
+operator|::
+name|MD5Result
+operator|>
+name|md5_contents
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|Path
 argument_list|)
 expr_stmt|;
 comment|/// @}
@@ -1832,6 +1807,111 @@ operator|&&
 name|result
 return|;
 block|}
+comment|/// @brief Is the file mounted on a local filesystem?
+comment|///
+comment|/// @param path Input path.
+comment|/// @param result Set to true if \a path is on fixed media such as a hard disk,
+comment|///               false if it is not.
+comment|/// @returns errc::success if result has been successfully set, otherwise a
+comment|///          platform specific error_code.
+name|std
+operator|::
+name|error_code
+name|is_local
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|path
+argument_list|,
+name|bool
+operator|&
+name|result
+argument_list|)
+expr_stmt|;
+comment|/// @brief Version of is_local accepting an open file descriptor.
+name|std
+operator|::
+name|error_code
+name|is_local
+argument_list|(
+argument|int FD
+argument_list|,
+argument|bool&result
+argument_list|)
+expr_stmt|;
+comment|/// @brief Simpler version of is_local for clients that don't need to
+comment|///        differentiate between an error and false.
+specifier|inline
+name|bool
+name|is_local
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Path
+parameter_list|)
+block|{
+name|bool
+name|Result
+decl_stmt|;
+return|return
+operator|!
+name|is_local
+argument_list|(
+name|Path
+argument_list|,
+name|Result
+argument_list|)
+operator|&&
+name|Result
+return|;
+block|}
+comment|/// @brief Simpler version of is_local accepting an open file descriptor for
+comment|///        clients that don't need to differentiate between an error and false.
+specifier|inline
+name|bool
+name|is_local
+parameter_list|(
+name|int
+name|FD
+parameter_list|)
+block|{
+name|bool
+name|Result
+decl_stmt|;
+return|return
+operator|!
+name|is_local
+argument_list|(
+name|FD
+argument_list|,
+name|Result
+argument_list|)
+operator|&&
+name|Result
+return|;
+block|}
+comment|/// @brief Does status represent a directory?
+comment|///
+comment|/// @param Path The path to get the type of.
+comment|/// @param Follow For symbolic links, indicates whether to return the file type
+comment|///               of the link itself, or of the target.
+comment|/// @returns A value from the file_type enumeration indicating the type of file.
+name|file_type
+name|get_file_type
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Path
+parameter_list|,
+name|bool
+name|Follow
+init|=
+name|true
+parameter_list|)
+function_decl|;
 comment|/// @brief Does status represent a directory?
 comment|///
 comment|/// @param status A file_status previously returned from status.
@@ -1846,8 +1926,8 @@ function_decl|;
 comment|/// @brief Is path a directory?
 comment|///
 comment|/// @param path Input path.
-comment|/// @param result Set to true if \a path is a directory, false if it is not.
-comment|///               Undefined otherwise.
+comment|/// @param result Set to true if \a path is a directory (after following
+comment|///               symlinks, false if it is not. Undefined otherwise.
 comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform-specific error_code.
 name|std
@@ -1906,8 +1986,8 @@ function_decl|;
 comment|/// @brief Is path a regular file?
 comment|///
 comment|/// @param path Input path.
-comment|/// @param result Set to true if \a path is a regular file, false if it is not.
-comment|///               Undefined otherwise.
+comment|/// @param result Set to true if \a path is a regular file (after following
+comment|///               symlinks), false if it is not. Undefined otherwise.
 comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform-specific error_code.
 name|std
@@ -1956,8 +2036,72 @@ return|return
 name|Result
 return|;
 block|}
+comment|/// @brief Does status represent a symlink file?
+comment|///
+comment|/// @param status A file_status previously returned from status.
+comment|/// @returns status_known(status)&& status.type() == file_type::symlink_file.
+name|bool
+name|is_symlink_file
+parameter_list|(
+name|file_status
+name|status
+parameter_list|)
+function_decl|;
+comment|/// @brief Is path a symlink file?
+comment|///
+comment|/// @param path Input path.
+comment|/// @param result Set to true if \a path is a symlink file, false if it is not.
+comment|///               Undefined otherwise.
+comment|/// @returns errc::success if result has been successfully set, otherwise a
+comment|///          platform-specific error_code.
+name|std
+operator|::
+name|error_code
+name|is_symlink_file
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|path
+argument_list|,
+name|bool
+operator|&
+name|result
+argument_list|)
+expr_stmt|;
+comment|/// @brief Simpler version of is_symlink_file for clients that don't need to
+comment|///        differentiate between an error and false.
+specifier|inline
+name|bool
+name|is_symlink_file
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Path
+parameter_list|)
+block|{
+name|bool
+name|Result
+decl_stmt|;
+if|if
+condition|(
+name|is_symlink_file
+argument_list|(
+name|Path
+argument_list|,
+name|Result
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|Result
+return|;
+block|}
 comment|/// @brief Does this status represent something that exists but is not a
-comment|///        directory, regular file, or symlink?
+comment|///        directory or regular file?
 comment|///
 comment|/// @param status A file_status previously returned from status.
 comment|/// @returns exists(s)&& !is_regular_file(s)&& !is_directory(s)
@@ -1995,6 +2139,8 @@ comment|/// @brief Get file status as if by POSIX stat().
 comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to the file status.
+comment|/// @param follow When true, follows symlinks.  Otherwise, the symlink itself is
+comment|///               statted.
 comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform-specific error_code.
 name|std
@@ -2002,14 +2148,11 @@ operator|::
 name|error_code
 name|status
 argument_list|(
-specifier|const
-name|Twine
-operator|&
-name|path
+argument|const Twine&path
 argument_list|,
-name|file_status
-operator|&
-name|result
+argument|file_status&result
+argument_list|,
+argument|bool follow = true
 argument_list|)
 expr_stmt|;
 comment|/// @brief A version for when a file descriptor is already available.
@@ -2021,6 +2164,45 @@ argument_list|(
 argument|int FD
 argument_list|,
 argument|file_status&Result
+argument_list|)
+expr_stmt|;
+comment|/// @brief Set file permissions.
+comment|///
+comment|/// @param Path File to set permissions on.
+comment|/// @param Permissions New file permissions.
+comment|/// @returns errc::success if the permissions were successfully set, otherwise
+comment|///          a platform-specific error_code.
+comment|/// @note On Windows, all permissions except *_write are ignored. Using any of
+comment|///       owner_write, group_write, or all_write will make the file writable.
+comment|///       Otherwise, the file will be marked as read-only.
+name|std
+operator|::
+name|error_code
+name|setPermissions
+argument_list|(
+argument|const Twine&Path
+argument_list|,
+argument|perms Permissions
+argument_list|)
+expr_stmt|;
+comment|/// @brief Get file permissions.
+comment|///
+comment|/// @param Path File to get permissions from.
+comment|/// @returns the permissions if they were successfully retrieved, otherwise a
+comment|///          platform-specific error_code.
+comment|/// @note On Windows, if the file does not have the FILE_ATTRIBUTE_READONLY
+comment|///       attribute, all_all will be returned. Otherwise, all_read | all_exe
+comment|///       will be returned.
+name|ErrorOr
+operator|<
+name|perms
+operator|>
+name|getPermissions
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|Path
 argument_list|)
 expr_stmt|;
 comment|/// @brief Get file size.
@@ -2576,6 +2758,9 @@ operator|::
 name|string
 name|Path
 expr_stmt|;
+name|bool
+name|FollowSymlinks
+decl_stmt|;
 name|mutable
 name|file_status
 name|Status
@@ -2587,6 +2772,8 @@ name|directory_entry
 argument_list|(
 argument|const Twine&path
 argument_list|,
+argument|bool follow_symlinks = true
+argument_list|,
 argument|file_status st = file_status()
 argument_list|)
 block|:
@@ -2596,6 +2783,11 @@ name|path
 operator|.
 name|str
 argument_list|()
+argument_list|)
+operator|,
+name|FollowSymlinks
+argument_list|(
+name|follow_symlinks
 argument_list|)
 operator|,
 name|Status
@@ -2773,6 +2965,8 @@ name|DirIterState
 operator|&
 argument_list|,
 name|StringRef
+argument_list|,
+name|bool
 argument_list|)
 expr_stmt|;
 name|std
@@ -2835,6 +3029,11 @@ name|DirIterState
 operator|>
 name|State
 expr_stmt|;
+name|bool
+name|FollowSymlinks
+init|=
+name|true
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -2850,6 +3049,16 @@ operator|::
 name|error_code
 operator|&
 name|ec
+argument_list|,
+name|bool
+name|follow_symlinks
+operator|=
+name|true
+argument_list|)
+range|:
+name|FollowSymlinks
+argument_list|(
+argument|follow_symlinks
 argument_list|)
 block|{
 name|State
@@ -2864,13 +3073,13 @@ name|DirIterState
 operator|>
 operator|(
 operator|)
-expr_stmt|;
+block|;
 name|SmallString
 operator|<
 literal|128
 operator|>
 name|path_storage
-expr_stmt|;
+block|;
 name|ec
 operator|=
 name|detail
@@ -2886,22 +3095,23 @@ name|toStringRef
 argument_list|(
 name|path_storage
 argument_list|)
+argument_list|,
+name|FollowSymlinks
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|explicit
 name|directory_iterator
 argument_list|(
-specifier|const
-name|directory_entry
-operator|&
-name|de
+argument|const directory_entry&de
 argument_list|,
-name|std
-operator|::
-name|error_code
-operator|&
-name|ec
+argument|std::error_code&ec
+argument_list|,
+argument|bool follow_symlinks = true
+argument_list|)
+operator|:
+name|FollowSymlinks
+argument_list|(
+argument|follow_symlinks
 argument_list|)
 block|{
 name|State
@@ -2916,7 +3126,7 @@ name|DirIterState
 operator|>
 operator|(
 operator|)
-expr_stmt|;
+block|;
 name|ec
 operator|=
 name|detail
@@ -2930,15 +3140,16 @@ name|de
 operator|.
 name|path
 argument_list|()
+argument_list|,
+name|FollowSymlinks
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Construct end iterator.
 name|directory_iterator
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+decl_stmt|;
 comment|// No operator++ because we need error_code.
 name|directory_iterator
 modifier|&
@@ -3157,6 +3368,9 @@ name|RecDirIterState
 operator|>
 name|State
 expr_stmt|;
+name|bool
+name|Follow
+decl_stmt|;
 name|public
 label|:
 name|recursive_directory_iterator
@@ -3177,11 +3391,30 @@ operator|::
 name|error_code
 operator|&
 name|ec
+argument_list|,
+name|bool
+name|follow_symlinks
+operator|=
+name|true
 argument_list|)
 range|:
 name|State
 argument_list|(
-argument|std::make_shared<detail::RecDirIterState>()
+name|std
+operator|::
+name|make_shared
+operator|<
+name|detail
+operator|::
+name|RecDirIterState
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl_stmt|,
+name|Follow
+argument_list|(
+name|follow_symlinks
 argument_list|)
 block|{
 name|State
@@ -3195,9 +3428,11 @@ argument_list|(
 name|path
 argument_list|,
 name|ec
+argument_list|,
+name|Follow
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|State
@@ -3298,6 +3533,8 @@ name|top
 argument_list|()
 argument_list|,
 name|ec
+argument_list|,
+name|Follow
 argument_list|)
 argument_list|)
 expr_stmt|;

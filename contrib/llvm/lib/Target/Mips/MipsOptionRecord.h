@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MipsOptionRecord.h - Abstraction for storing information ----------===//
+comment|//===- MipsOptionRecord.h - Abstraction for storing information -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -101,15 +101,18 @@ directive|include
 file|"llvm/MC/MCRegisterInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|MipsELFStreamer
-decl_stmt|;
-name|class
-name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|MipsOptionRecord
@@ -120,7 +123,8 @@ name|virtual
 operator|~
 name|MipsOptionRecord
 argument_list|()
-block|{}
+operator|=
+expr|default
 expr_stmt|;
 name|virtual
 name|void
@@ -330,7 +334,9 @@ operator|~
 name|MipsRegInfoRecord
 argument_list|()
 name|override
-block|{}
+operator|=
+expr|default
+block|;
 name|void
 name|EmitMipsOptionRecord
 argument_list|()
@@ -416,13 +422,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_MIPS_MIPSOPTIONRECORD_H
+end_comment
 
 end_unit
 

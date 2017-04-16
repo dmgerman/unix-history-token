@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/SymbolTableListTraits.h - Traits for iplist --------*- C++ -*-===//
+comment|//===- llvm/SymbolTableListTraits.h - Traits for iplist ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -109,10 +109,46 @@ directive|include
 file|"llvm/ADT/ilist.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/simple_ilist.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Argument
+decl_stmt|;
+name|class
+name|BasicBlock
+decl_stmt|;
+name|class
+name|Function
+decl_stmt|;
+name|class
+name|GlobalAlias
+decl_stmt|;
+name|class
+name|GlobalIFunc
+decl_stmt|;
+name|class
+name|GlobalVariable
+decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
 name|class
 name|ValueSymbolTable
 decl_stmt|;
@@ -129,30 +165,6 @@ expr|struct
 name|SymbolTableListParentType
 block|{}
 expr_stmt|;
-name|class
-name|Argument
-decl_stmt|;
-name|class
-name|BasicBlock
-decl_stmt|;
-name|class
-name|Function
-decl_stmt|;
-name|class
-name|Instruction
-decl_stmt|;
-name|class
-name|GlobalVariable
-decl_stmt|;
-name|class
-name|GlobalAlias
-decl_stmt|;
-name|class
-name|GlobalIFunc
-decl_stmt|;
-name|class
-name|Module
-decl_stmt|;
 define|#
 directive|define
 name|DEFINE_SYMBOL_TABLE_PARENT_TYPE
@@ -264,7 +276,9 @@ name|public
 label|:
 name|SymbolTableListTraits
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|private
 label|:
 comment|/// getListOwner - Return the object that owns this list.  If this is a list
@@ -519,13 +533,17 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_SYMBOLTABLELISTTRAITS_H
+end_comment
 
 end_unit
 

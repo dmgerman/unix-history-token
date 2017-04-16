@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -88,6 +94,17 @@ include|#
 directive|include
 file|<memory>
 end_include
+
+begin_define
+define|#
+directive|define
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+parameter_list|(
+name|METHOD_CALL
+parameter_list|)
+define|\
+value|do {                                                                         \     if (usesLayout<IEEEFloat>(getSemantics()))                                 \       return U.IEEE.METHOD_CALL;                                               \     if (usesLayout<DoubleAPFloat>(getSemantics()))                             \       return U.Double.METHOD_CALL;                                             \     llvm_unreachable("Unexpected semantics");                                  \   } while (false)
+end_define
 
 begin_decl_stmt
 name|namespace
@@ -137,7 +154,7 @@ name|lfMoreThanHalf
 comment|// 1xxxxx  x's not all zero
 block|}
 enum|;
-comment|/// \brief A self-contained host- and target-independent arbitrary-precision
+comment|/// A self-contained host- and target-independent arbitrary-precision
 comment|/// floating-point software implementation.
 comment|///
 comment|/// APFloat uses bignum integer arithmetic as provided by static functions in
@@ -226,6 +243,13 @@ comment|// members.
 struct|struct
 name|APFloatBase
 block|{
+comment|// TODO remove this and use APInt typedef directly.
+typedef|typedef
+name|APInt
+operator|::
+name|WordType
+name|integerPart
+expr_stmt|;
 comment|/// A signed type to represent a floating point numbers unbiased exponent.
 typedef|typedef
 name|signed
@@ -237,54 +261,61 @@ comment|/// @{
 specifier|static
 specifier|const
 name|fltSemantics
-modifier|&
+operator|&
 name|IEEEhalf
-parameter_list|()
-function_decl|;
+argument_list|()
+name|LLVM_READNONE
+expr_stmt|;
 specifier|static
 specifier|const
 name|fltSemantics
-modifier|&
+operator|&
 name|IEEEsingle
-parameter_list|()
-function_decl|;
+argument_list|()
+name|LLVM_READNONE
+expr_stmt|;
 specifier|static
 specifier|const
 name|fltSemantics
-modifier|&
+operator|&
 name|IEEEdouble
-parameter_list|()
-function_decl|;
+argument_list|()
+name|LLVM_READNONE
+expr_stmt|;
 specifier|static
 specifier|const
 name|fltSemantics
-modifier|&
+operator|&
 name|IEEEquad
-parameter_list|()
-function_decl|;
+argument_list|()
+name|LLVM_READNONE
+expr_stmt|;
 specifier|static
 specifier|const
 name|fltSemantics
-modifier|&
+operator|&
 name|PPCDoubleDouble
-parameter_list|()
-function_decl|;
+argument_list|()
+name|LLVM_READNONE
+expr_stmt|;
 specifier|static
 specifier|const
 name|fltSemantics
-modifier|&
+operator|&
 name|x87DoubleExtended
-parameter_list|()
-function_decl|;
+argument_list|()
+name|LLVM_READNONE
+expr_stmt|;
 comment|/// A Pseudo fltsemantic used to construct APFloats that cannot conflict with
 comment|/// anything real.
 specifier|static
 specifier|const
 name|fltSemantics
-modifier|&
+operator|&
 name|Bogus
-parameter_list|()
-function_decl|;
+argument_list|()
+name|LLVM_READNONE
+expr_stmt|;
 comment|/// @}
 comment|/// IEEE-754R 5.11: Floating Point Comparison Relations.
 enum|enum
@@ -365,7 +396,7 @@ block|{
 name|uninitialized
 block|}
 enum|;
-comment|/// \brief Enumeration of \c ilogb error results.
+comment|/// Enumeration of \c ilogb error results.
 enum|enum
 name|IlogbErrorKinds
 block|{
@@ -517,7 +548,7 @@ name|IEEEFloat
 argument_list|()
 block|;
 comment|/// @}
-comment|/// \brief Returns whether this instance allocated memory.
+comment|/// Returns whether this instance allocated memory.
 name|bool
 name|needsCleanup
 argument_list|()
@@ -533,15 +564,6 @@ block|}
 comment|/// \name Convenience "constructors"
 comment|/// @{
 comment|/// @}
-comment|/// Used to insert APFloat objects, or objects that contain APFloat objects,
-comment|/// into FoldingSets.
-name|void
-name|Profile
-argument_list|(
-argument|FoldingSetNodeID&NID
-argument_list|)
-specifier|const
-block|;
 comment|/// \name Arithmetic
 comment|/// @{
 name|opStatus
@@ -629,134 +651,6 @@ argument_list|(
 argument|bool nextDown
 argument_list|)
 block|;
-comment|/// \brief Operator+ overload which provides the default
-comment|/// \c nmNearestTiesToEven rounding mode and *no* error checking.
-name|IEEEFloat
-name|operator
-operator|+
-operator|(
-specifier|const
-name|IEEEFloat
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-name|IEEEFloat
-name|Result
-operator|=
-operator|*
-name|this
-block|;
-name|Result
-operator|.
-name|add
-argument_list|(
-name|RHS
-argument_list|,
-name|rmNearestTiesToEven
-argument_list|)
-block|;
-return|return
-name|Result
-return|;
-block|}
-comment|/// \brief Operator- overload which provides the default
-comment|/// \c nmNearestTiesToEven rounding mode and *no* error checking.
-name|IEEEFloat
-name|operator
-operator|-
-operator|(
-specifier|const
-name|IEEEFloat
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-name|IEEEFloat
-name|Result
-operator|=
-operator|*
-name|this
-block|;
-name|Result
-operator|.
-name|subtract
-argument_list|(
-name|RHS
-argument_list|,
-name|rmNearestTiesToEven
-argument_list|)
-block|;
-return|return
-name|Result
-return|;
-block|}
-comment|/// \brief Operator* overload which provides the default
-comment|/// \c nmNearestTiesToEven rounding mode and *no* error checking.
-name|IEEEFloat
-name|operator
-operator|*
-operator|(
-specifier|const
-name|IEEEFloat
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-name|IEEEFloat
-name|Result
-operator|=
-operator|*
-name|this
-block|;
-name|Result
-operator|.
-name|multiply
-argument_list|(
-name|RHS
-argument_list|,
-name|rmNearestTiesToEven
-argument_list|)
-block|;
-return|return
-name|Result
-return|;
-block|}
-comment|/// \brief Operator/ overload which provides the default
-comment|/// \c nmNearestTiesToEven rounding mode and *no* error checking.
-name|IEEEFloat
-name|operator
-operator|/
-operator|(
-specifier|const
-name|IEEEFloat
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-name|IEEEFloat
-name|Result
-operator|=
-operator|*
-name|this
-block|;
-name|Result
-operator|.
-name|divide
-argument_list|(
-name|RHS
-argument_list|,
-name|rmNearestTiesToEven
-argument_list|)
-block|;
-return|return
-name|Result
-return|;
-block|}
 comment|/// @}
 comment|/// \name Sign operations.
 comment|/// @{
@@ -764,40 +658,6 @@ name|void
 name|changeSign
 argument_list|()
 block|;
-name|void
-name|clearSign
-argument_list|()
-block|;
-name|void
-name|copySign
-argument_list|(
-specifier|const
-name|IEEEFloat
-operator|&
-argument_list|)
-block|;
-comment|/// \brief A static helper to produce a copy of an APFloat value with its sign
-comment|/// copied from some other APFloat.
-specifier|static
-name|IEEEFloat
-name|copySign
-argument_list|(
-argument|IEEEFloat Value
-argument_list|,
-argument|const IEEEFloat&Sign
-argument_list|)
-block|{
-name|Value
-operator|.
-name|copySign
-argument_list|(
-name|Sign
-argument_list|)
-block|;
-return|return
-name|Value
-return|;
-block|}
 comment|/// @}
 comment|/// \name Conversions
 comment|/// @{
@@ -817,22 +677,11 @@ block|;
 name|opStatus
 name|convertToInteger
 argument_list|(
-argument|integerPart *
+argument|MutableArrayRef<integerPart>
 argument_list|,
 argument|unsigned int
 argument_list|,
 argument|bool
-argument_list|,
-argument|roundingMode
-argument_list|,
-argument|bool *
-argument_list|)
-specifier|const
-block|;
-name|opStatus
-name|convertToInteger
-argument_list|(
-argument|APSInt&
 argument_list|,
 argument|roundingMode
 argument_list|,
@@ -1166,7 +1015,7 @@ name|IEEEFloat
 operator|&&
 operator|)
 block|;
-comment|/// \brief Overload to compute a hash code for an APFloat value.
+comment|/// Overload to compute a hash code for an APFloat value.
 comment|///
 comment|/// Note that the use of hash codes for floating point values is in general
 comment|/// frought with peril. Equality is hard to define for these values. For
@@ -1223,11 +1072,11 @@ comment|/// return true.
 name|bool
 name|getExactInverse
 argument_list|(
-argument|IEEEFloat *inv
+argument|APFloat *inv
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Returns the exponent of the internal representation of the APFloat.
+comment|/// Returns the exponent of the internal representation of the APFloat.
 comment|///
 comment|/// Because the radix of APFloat is 2, this is equivalent to floor(log2(x)).
 comment|/// For special APFloat values, this returns special error codes:
@@ -1246,7 +1095,7 @@ operator|&
 name|Arg
 argument_list|)
 block|;
-comment|/// \brief Returns: X * 2^Exp for integral exponents.
+comment|/// Returns: X * 2^Exp for integral exponents.
 name|friend
 name|IEEEFloat
 name|scalbn
@@ -1537,7 +1386,7 @@ block|;
 name|opStatus
 name|convertToSignExtendedInteger
 argument_list|(
-argument|integerPart *
+argument|MutableArrayRef<integerPart>
 argument_list|,
 argument|unsigned int
 argument_list|,
@@ -2073,6 +1922,56 @@ argument_list|,
 argument|roundingMode RM
 argument_list|)
 block|;
+name|opStatus
+name|multiply
+argument_list|(
+argument|const DoubleAPFloat&RHS
+argument_list|,
+argument|roundingMode RM
+argument_list|)
+block|;
+name|opStatus
+name|divide
+argument_list|(
+argument|const DoubleAPFloat&RHS
+argument_list|,
+argument|roundingMode RM
+argument_list|)
+block|;
+name|opStatus
+name|remainder
+argument_list|(
+specifier|const
+name|DoubleAPFloat
+operator|&
+name|RHS
+argument_list|)
+block|;
+name|opStatus
+name|mod
+argument_list|(
+specifier|const
+name|DoubleAPFloat
+operator|&
+name|RHS
+argument_list|)
+block|;
+name|opStatus
+name|fusedMultiplyAdd
+argument_list|(
+argument|const DoubleAPFloat&Multiplicand
+argument_list|,
+argument|const DoubleAPFloat&Addend
+argument_list|,
+argument|roundingMode RM
+argument_list|)
+block|;
+name|opStatus
+name|roundToIntegral
+argument_list|(
+argument|roundingMode RM
+argument_list|)
+block|;
 name|void
 name|changeSign
 argument_list|()
@@ -2101,6 +2000,30 @@ argument|bool Neg
 argument_list|)
 block|;
 name|void
+name|makeZero
+argument_list|(
+argument|bool Neg
+argument_list|)
+block|;
+name|void
+name|makeLargest
+argument_list|(
+argument|bool Neg
+argument_list|)
+block|;
+name|void
+name|makeSmallest
+argument_list|(
+argument|bool Neg
+argument_list|)
+block|;
+name|void
+name|makeSmallestNormalized
+argument_list|(
+argument|bool Neg
+argument_list|)
+block|;
+name|void
 name|makeNaN
 argument_list|(
 argument|bool SNaN
@@ -2109,8 +2032,198 @@ argument|bool Neg
 argument_list|,
 argument|const APInt *fill
 argument_list|)
+block|;
+name|cmpResult
+name|compare
+argument_list|(
+argument|const DoubleAPFloat&RHS
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|bitwiseIsEqual
+argument_list|(
+argument|const DoubleAPFloat&RHS
+argument_list|)
+specifier|const
+block|;
+name|APInt
+name|bitcastToAPInt
+argument_list|()
+specifier|const
+block|;
+name|opStatus
+name|convertFromString
+argument_list|(
+name|StringRef
+argument_list|,
+name|roundingMode
+argument_list|)
+block|;
+name|opStatus
+name|next
+argument_list|(
+argument|bool nextDown
+argument_list|)
+block|;
+name|opStatus
+name|convertToInteger
+argument_list|(
+argument|MutableArrayRef<integerPart> Input
+argument_list|,
+argument|unsigned int Width
+argument_list|,
+argument|bool IsSigned
+argument_list|,
+argument|roundingMode RM
+argument_list|,
+argument|bool *IsExact
+argument_list|)
+specifier|const
+block|;
+name|opStatus
+name|convertFromAPInt
+argument_list|(
+argument|const APInt&Input
+argument_list|,
+argument|bool IsSigned
+argument_list|,
+argument|roundingMode RM
+argument_list|)
+block|;
+name|opStatus
+name|convertFromSignExtendedInteger
+argument_list|(
+argument|const integerPart *Input
+argument_list|,
+argument|unsigned int InputSize
+argument_list|,
+argument|bool IsSigned
+argument_list|,
+argument|roundingMode RM
+argument_list|)
+block|;
+name|opStatus
+name|convertFromZeroExtendedInteger
+argument_list|(
+argument|const integerPart *Input
+argument_list|,
+argument|unsigned int InputSize
+argument_list|,
+argument|bool IsSigned
+argument_list|,
+argument|roundingMode RM
+argument_list|)
+block|;
+name|unsigned
+name|int
+name|convertToHexString
+argument_list|(
+argument|char *DST
+argument_list|,
+argument|unsigned int HexDigits
+argument_list|,
+argument|bool UpperCase
+argument_list|,
+argument|roundingMode RM
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isDenormal
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isSmallest
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isLargest
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isInteger
+argument_list|()
+specifier|const
+block|;
+name|void
+name|toString
+argument_list|(
+argument|SmallVectorImpl<char>&Str
+argument_list|,
+argument|unsigned FormatPrecision
+argument_list|,
+argument|unsigned FormatMaxPadding
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|getExactInverse
+argument_list|(
+argument|APFloat *inv
+argument_list|)
+specifier|const
+block|;
+name|friend
+name|int
+name|ilogb
+argument_list|(
+specifier|const
+name|DoubleAPFloat
+operator|&
+name|Arg
+argument_list|)
+block|;
+name|friend
+name|DoubleAPFloat
+name|scalbn
+argument_list|(
+argument|DoubleAPFloat X
+argument_list|,
+argument|int Exp
+argument_list|,
+argument|roundingMode
+argument_list|)
+block|;
+name|friend
+name|DoubleAPFloat
+name|frexp
+argument_list|(
+specifier|const
+name|DoubleAPFloat
+operator|&
+name|X
+argument_list|,
+name|int
+operator|&
+name|Exp
+argument_list|,
+name|roundingMode
+argument_list|)
+block|;
+name|friend
+name|hash_code
+name|hash_value
+argument_list|(
+specifier|const
+name|DoubleAPFloat
+operator|&
+name|Arg
+argument_list|)
 block|; }
 decl_stmt|;
+name|hash_code
+name|hash_value
+parameter_list|(
+specifier|const
+name|DoubleAPFloat
+modifier|&
+name|Arg
+parameter_list|)
+function_decl|;
 block|}
 comment|// End detail namespace
 comment|// This is a interface class that is currently forwarding functionalities from
@@ -2884,12 +2997,12 @@ name|bool
 name|Neg
 parameter_list|)
 block|{
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|makeZero
 argument_list|(
 name|Neg
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2903,55 +3016,12 @@ name|bool
 name|Neg
 parameter_list|)
 block|{
-if|if
-condition|(
-name|usesLayout
-operator|<
-name|IEEEFloat
-operator|>
-operator|(
-operator|*
-name|U
-operator|.
-name|semantics
-operator|)
-condition|)
-return|return
-name|U
-operator|.
-name|IEEE
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|makeInf
 argument_list|(
 name|Neg
 argument_list|)
-return|;
-if|if
-condition|(
-name|usesLayout
-operator|<
-name|DoubleAPFloat
-operator|>
-operator|(
-operator|*
-name|U
-operator|.
-name|semantics
-operator|)
-condition|)
-return|return
-name|U
-operator|.
-name|Double
-operator|.
-name|makeInf
-argument_list|(
-name|Neg
-argument_list|)
-return|;
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected semantics"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2973,9 +3043,8 @@ modifier|*
 name|fill
 parameter_list|)
 block|{
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|makeNaN
 argument_list|(
 name|SNaN
@@ -2984,6 +3053,7 @@ name|Neg
 argument_list|,
 name|fill
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2996,12 +3066,12 @@ name|bool
 name|Neg
 parameter_list|)
 block|{
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|makeLargest
 argument_list|(
 name|Neg
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3015,12 +3085,12 @@ name|bool
 name|Neg
 parameter_list|)
 block|{
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|makeSmallest
 argument_list|(
 name|Neg
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3034,12 +3104,12 @@ name|bool
 name|Neg
 parameter_list|)
 block|{
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|makeSmallestNormalized
 argument_list|(
 name|Neg
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3119,6 +3189,8 @@ name|RHS
 operator|.
 name|getSemantics
 argument_list|()
+operator|&&
+literal|"Should only compare APFloats with the same semantics"
 argument_list|)
 block|;
 if|if
@@ -3338,85 +3410,23 @@ name|needsCleanup
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-name|usesLayout
-operator|<
-name|IEEEFloat
-operator|>
-operator|(
-name|getSemantics
-argument_list|()
-operator|)
-condition|)
-return|return
-name|U
-operator|.
-name|IEEE
-operator|.
-name|needsCleanup
-argument_list|()
-return|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|usesLayout
-operator|<
-name|DoubleAPFloat
-operator|>
-operator|(
-name|getSemantics
-argument_list|()
-operator|)
-condition|)
-return|return
-name|U
-operator|.
-name|Double
-operator|.
-name|needsCleanup
-argument_list|()
-return|;
-end_if
-
-begin_expr_stmt
-name|llvm_unreachable
+name|APFLOAT_DISPATCH_ON_SEMANTICS
 argument_list|(
-literal|"Unexpected semantics"
+name|needsCleanup
+argument_list|()
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
+block|; }
 comment|/// Factory for Positive and Negative Zero.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Negative True iff the number should be negative.
-end_comment
-
-begin_function
-unit|static
+specifier|static
 name|APFloat
 name|getZero
-parameter_list|(
-specifier|const
-name|fltSemantics
-modifier|&
-name|Sem
-parameter_list|,
-name|bool
-name|Negative
-init|=
-name|false
-parameter_list|)
+argument_list|(
+argument|const fltSemantics&Sem
+argument_list|,
+argument|bool Negative = false
+argument_list|)
 block|{
 name|APFloat
 name|Val
@@ -3425,19 +3435,19 @@ name|Sem
 argument_list|,
 name|uninitialized
 argument_list|)
-decl_stmt|;
+block|;
 name|Val
 operator|.
 name|makeZero
 argument_list|(
 name|Negative
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Val
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_comment
 comment|/// Factory for Positive and Negative Infinity.
@@ -3861,6 +3871,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// Used to insert APFloat objects, or objects that contain APFloat objects,
+end_comment
+
+begin_comment
+comment|/// into FoldingSets.
+end_comment
+
 begin_decl_stmt
 name|void
 name|Profile
@@ -3870,16 +3888,7 @@ operator|&
 name|NID
 argument_list|)
 decl|const
-block|{
-name|getIEEE
-argument_list|()
-operator|.
-name|Profile
-argument_list|(
-name|NID
-argument_list|)
-expr_stmt|;
-block|}
+decl_stmt|;
 end_decl_stmt
 
 begin_function
@@ -3895,6 +3904,21 @@ name|roundingMode
 name|RM
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|&
+name|getSemantics
+argument_list|()
+operator|==
+operator|&
+name|RHS
+operator|.
+name|getSemantics
+argument_list|()
+operator|&&
+literal|"Should only call on two APFloats with the same semantics"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|usesLayout
@@ -3970,6 +3994,21 @@ name|roundingMode
 name|RM
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|&
+name|getSemantics
+argument_list|()
+operator|==
+operator|&
+name|RHS
+operator|.
+name|getSemantics
+argument_list|()
+operator|&&
+literal|"Should only call on two APFloats with the same semantics"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|usesLayout
@@ -4045,20 +4084,80 @@ name|roundingMode
 name|RM
 parameter_list|)
 block|{
-return|return
-name|getIEEE
+name|assert
+argument_list|(
+operator|&
+name|getSemantics
 argument_list|()
+operator|==
+operator|&
+name|RHS
+operator|.
+name|getSemantics
+argument_list|()
+operator|&&
+literal|"Should only call on two APFloats with the same semantics"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|IEEEFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|IEEE
 operator|.
 name|multiply
 argument_list|(
 name|RHS
 operator|.
-name|getIEEE
-argument_list|()
+name|U
+operator|.
+name|IEEE
 argument_list|,
 name|RM
 argument_list|)
 return|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|DoubleAPFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|Double
+operator|.
+name|multiply
+argument_list|(
+name|RHS
+operator|.
+name|U
+operator|.
+name|Double
+argument_list|,
+name|RM
+argument_list|)
+return|;
+name|llvm_unreachable
+argument_list|(
+literal|"Unexpected semantics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4075,20 +4174,80 @@ name|roundingMode
 name|RM
 parameter_list|)
 block|{
-return|return
-name|getIEEE
+name|assert
+argument_list|(
+operator|&
+name|getSemantics
 argument_list|()
+operator|==
+operator|&
+name|RHS
+operator|.
+name|getSemantics
+argument_list|()
+operator|&&
+literal|"Should only call on two APFloats with the same semantics"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|IEEEFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|IEEE
 operator|.
 name|divide
 argument_list|(
 name|RHS
 operator|.
-name|getIEEE
-argument_list|()
+name|U
+operator|.
+name|IEEE
 argument_list|,
 name|RM
 argument_list|)
 return|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|DoubleAPFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|Double
+operator|.
+name|divide
+argument_list|(
+name|RHS
+operator|.
+name|U
+operator|.
+name|Double
+argument_list|,
+name|RM
+argument_list|)
+return|;
+name|llvm_unreachable
+argument_list|(
+literal|"Unexpected semantics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4102,18 +4261,76 @@ modifier|&
 name|RHS
 parameter_list|)
 block|{
-return|return
-name|getIEEE
+name|assert
+argument_list|(
+operator|&
+name|getSemantics
 argument_list|()
+operator|==
+operator|&
+name|RHS
+operator|.
+name|getSemantics
+argument_list|()
+operator|&&
+literal|"Should only call on two APFloats with the same semantics"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|IEEEFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|IEEE
 operator|.
 name|remainder
 argument_list|(
 name|RHS
 operator|.
-name|getIEEE
-argument_list|()
+name|U
+operator|.
+name|IEEE
 argument_list|)
 return|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|DoubleAPFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|Double
+operator|.
+name|remainder
+argument_list|(
+name|RHS
+operator|.
+name|U
+operator|.
+name|Double
+argument_list|)
+return|;
+name|llvm_unreachable
+argument_list|(
+literal|"Unexpected semantics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4127,18 +4344,76 @@ modifier|&
 name|RHS
 parameter_list|)
 block|{
-return|return
-name|getIEEE
+name|assert
+argument_list|(
+operator|&
+name|getSemantics
 argument_list|()
+operator|==
+operator|&
+name|RHS
+operator|.
+name|getSemantics
+argument_list|()
+operator|&&
+literal|"Should only call on two APFloats with the same semantics"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|IEEEFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|IEEE
 operator|.
 name|mod
 argument_list|(
 name|RHS
 operator|.
-name|getIEEE
-argument_list|()
+name|U
+operator|.
+name|IEEE
 argument_list|)
 return|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|DoubleAPFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|Double
+operator|.
+name|mod
+argument_list|(
+name|RHS
+operator|.
+name|U
+operator|.
+name|Double
+argument_list|)
+return|;
+name|llvm_unreachable
+argument_list|(
+literal|"Unexpected semantics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4160,25 +4435,107 @@ name|roundingMode
 name|RM
 parameter_list|)
 block|{
-return|return
-name|getIEEE
+name|assert
+argument_list|(
+operator|&
+name|getSemantics
 argument_list|()
+operator|==
+operator|&
+name|Multiplicand
+operator|.
+name|getSemantics
+argument_list|()
+operator|&&
+literal|"Should only call on APFloats with the same semantics"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|&
+name|getSemantics
+argument_list|()
+operator|==
+operator|&
+name|Addend
+operator|.
+name|getSemantics
+argument_list|()
+operator|&&
+literal|"Should only call on APFloats with the same semantics"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|IEEEFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|IEEE
 operator|.
 name|fusedMultiplyAdd
 argument_list|(
 name|Multiplicand
 operator|.
-name|getIEEE
-argument_list|()
+name|U
+operator|.
+name|IEEE
 argument_list|,
 name|Addend
 operator|.
-name|getIEEE
-argument_list|()
+name|U
+operator|.
+name|IEEE
 argument_list|,
 name|RM
 argument_list|)
 return|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|DoubleAPFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|Double
+operator|.
+name|fusedMultiplyAdd
+argument_list|(
+name|Multiplicand
+operator|.
+name|U
+operator|.
+name|Double
+argument_list|,
+name|Addend
+operator|.
+name|U
+operator|.
+name|Double
+argument_list|,
+name|RM
+argument_list|)
+return|;
+name|llvm_unreachable
+argument_list|(
+literal|"Unexpected semantics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4190,17 +4547,24 @@ name|roundingMode
 name|RM
 parameter_list|)
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|roundToIntegral
 argument_list|(
 name|RM
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// TODO: bool parameters are not readable and a source of bugs.
+end_comment
+
+begin_comment
+comment|// Do something.
+end_comment
 
 begin_function
 name|opStatus
@@ -4210,18 +4574,25 @@ name|bool
 name|nextDown
 parameter_list|)
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|next
 argument_list|(
 name|nextDown
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// Add two APFloats, rounding ties to the nearest even.
+end_comment
+
+begin_comment
+comment|/// No error checking.
+end_comment
+
 begin_expr_stmt
 name|APFloat
 name|operator
@@ -4234,23 +4605,38 @@ name|RHS
 operator|)
 specifier|const
 block|{
-return|return
 name|APFloat
+name|Result
 argument_list|(
-name|getIEEE
-argument_list|()
-operator|+
-name|RHS
-operator|.
-name|getIEEE
-argument_list|()
-argument_list|,
-name|getSemantics
-argument_list|()
+operator|*
+name|this
 argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|Result
+operator|.
+name|add
+argument_list|(
+name|RHS
+argument_list|,
+name|rmNearestTiesToEven
+argument_list|)
+block|;
+return|return
+name|Result
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Subtract two APFloats, rounding ties to the nearest even.
+end_comment
+
+begin_comment
+comment|/// No error checking.
+end_comment
 
 begin_expr_stmt
 name|APFloat
@@ -4264,23 +4650,38 @@ name|RHS
 operator|)
 specifier|const
 block|{
-return|return
 name|APFloat
+name|Result
 argument_list|(
-name|getIEEE
-argument_list|()
-operator|-
-name|RHS
-operator|.
-name|getIEEE
-argument_list|()
-argument_list|,
-name|getSemantics
-argument_list|()
+operator|*
+name|this
 argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|Result
+operator|.
+name|subtract
+argument_list|(
+name|RHS
+argument_list|,
+name|rmNearestTiesToEven
+argument_list|)
+block|;
+return|return
+name|Result
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Multiply two APFloats, rounding ties to the nearest even.
+end_comment
+
+begin_comment
+comment|/// No error checking.
+end_comment
 
 begin_decl_stmt
 name|APFloat
@@ -4294,23 +4695,38 @@ name|RHS
 argument_list|)
 decl|const
 block|{
-return|return
 name|APFloat
+name|Result
 argument_list|(
-name|getIEEE
-argument_list|()
 operator|*
-name|RHS
-operator|.
-name|getIEEE
-argument_list|()
-argument_list|,
-name|getSemantics
-argument_list|()
+name|this
 argument_list|)
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|Result
+operator|.
+name|multiply
+argument_list|(
+name|RHS
+argument_list|,
+name|rmNearestTiesToEven
+argument_list|)
+expr_stmt|;
+return|return
+name|Result
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Divide the first APFloat by the second, rounding ties to the nearest even.
+end_comment
+
+begin_comment
+comment|/// No error checking.
+end_comment
 
 begin_expr_stmt
 name|APFloat
@@ -4324,20 +4740,27 @@ name|RHS
 operator|)
 specifier|const
 block|{
-return|return
 name|APFloat
+name|Result
 argument_list|(
-name|getIEEE
-argument_list|()
-operator|/
-name|RHS
-operator|.
-name|getIEEE
-argument_list|()
-argument_list|,
-name|getSemantics
-argument_list|()
+operator|*
+name|this
 argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|Result
+operator|.
+name|divide
+argument_list|(
+name|RHS
+argument_list|,
+name|rmNearestTiesToEven
+argument_list|)
+block|;
+return|return
+name|Result
 return|;
 block|}
 end_expr_stmt
@@ -4347,11 +4770,11 @@ name|void
 name|changeSign
 parameter_list|()
 block|{
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|changeSign
 argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -4361,10 +4784,12 @@ name|void
 name|clearSign
 parameter_list|()
 block|{
-name|getIEEE
+if|if
+condition|(
+name|isNegative
 argument_list|()
-operator|.
-name|clearSign
+condition|)
+name|changeSign
 argument_list|()
 expr_stmt|;
 block|}
@@ -4380,19 +4805,29 @@ modifier|&
 name|RHS
 parameter_list|)
 block|{
-name|getIEEE
+if|if
+condition|(
+name|isNegative
 argument_list|()
-operator|.
-name|copySign
-argument_list|(
+operator|!=
 name|RHS
 operator|.
-name|getIEEE
+name|isNegative
 argument_list|()
-argument_list|)
+condition|)
+name|changeSign
+argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// A static helper to produce a copy of an APFloat value with its sign
+end_comment
+
+begin_comment
+comment|/// copied from some other APFloat.
+end_comment
 
 begin_function
 specifier|static
@@ -4408,29 +4843,15 @@ modifier|&
 name|Sign
 parameter_list|)
 block|{
-return|return
-name|APFloat
-argument_list|(
-name|IEEEFloat
-operator|::
+name|Value
+operator|.
 name|copySign
 argument_list|(
-name|Value
-operator|.
-name|getIEEE
-argument_list|()
-argument_list|,
 name|Sign
-operator|.
-name|getIEEE
-argument_list|()
 argument_list|)
-argument_list|,
+expr_stmt|;
+return|return
 name|Value
-operator|.
-name|getSemantics
-argument_list|()
-argument_list|)
 return|;
 block|}
 end_function
@@ -4458,8 +4879,10 @@ begin_decl_stmt
 name|opStatus
 name|convertToInteger
 argument_list|(
+name|MutableArrayRef
+operator|<
 name|integerPart
-operator|*
+operator|>
 name|Input
 argument_list|,
 name|unsigned
@@ -4478,10 +4901,8 @@ name|IsExact
 argument_list|)
 decl|const
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|convertToInteger
 argument_list|(
 name|Input
@@ -4494,7 +4915,8 @@ name|RM
 argument_list|,
 name|IsExact
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -4514,21 +4936,7 @@ operator|*
 name|IsExact
 argument_list|)
 decl|const
-block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
-name|convertToInteger
-argument_list|(
-name|Result
-argument_list|,
-name|RM
-argument_list|,
-name|IsExact
-argument_list|)
-return|;
-block|}
+decl_stmt|;
 end_decl_stmt
 
 begin_function
@@ -4547,10 +4955,8 @@ name|roundingMode
 name|RM
 parameter_list|)
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|convertFromAPInt
 argument_list|(
 name|Input
@@ -4559,7 +4965,8 @@ name|IsSigned
 argument_list|,
 name|RM
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4583,10 +4990,8 @@ name|roundingMode
 name|RM
 parameter_list|)
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|convertFromSignExtendedInteger
 argument_list|(
 name|Input
@@ -4597,7 +5002,8 @@ name|IsSigned
 argument_list|,
 name|RM
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4621,10 +5027,8 @@ name|roundingMode
 name|RM
 parameter_list|)
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|convertFromZeroExtendedInteger
 argument_list|(
 name|Input
@@ -4635,7 +5039,8 @@ name|IsSigned
 argument_list|,
 name|RM
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4656,17 +5061,12 @@ name|bitcastToAPInt
 argument_list|()
 specifier|const
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|bitcastToAPInt
 argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
+argument_list|)
+block|;   }
 name|double
 name|convertToDouble
 argument_list|()
@@ -4724,18 +5124,76 @@ name|RHS
 argument_list|)
 decl|const
 block|{
-return|return
-name|getIEEE
+name|assert
+argument_list|(
+operator|&
+name|getSemantics
 argument_list|()
+operator|==
+operator|&
+name|RHS
+operator|.
+name|getSemantics
+argument_list|()
+operator|&&
+literal|"Should only compare APFloats with the same semantics"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|IEEEFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|IEEE
 operator|.
 name|compare
 argument_list|(
 name|RHS
 operator|.
-name|getIEEE
-argument_list|()
+name|U
+operator|.
+name|IEEE
 argument_list|)
 return|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|DoubleAPFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|Double
+operator|.
+name|compare
+argument_list|(
+name|RHS
+operator|.
+name|U
+operator|.
+name|Double
+argument_list|)
+return|;
+name|llvm_unreachable
+argument_list|(
+literal|"Unexpected semantics"
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -4750,18 +5208,76 @@ name|RHS
 argument_list|)
 decl|const
 block|{
-return|return
-name|getIEEE
+if|if
+condition|(
+operator|&
+name|getSemantics
 argument_list|()
+operator|!=
+operator|&
+name|RHS
+operator|.
+name|getSemantics
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|IEEEFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|IEEE
 operator|.
 name|bitwiseIsEqual
 argument_list|(
 name|RHS
 operator|.
-name|getIEEE
-argument_list|()
+name|U
+operator|.
+name|IEEE
 argument_list|)
 return|;
+if|if
+condition|(
+name|usesLayout
+operator|<
+name|DoubleAPFloat
+operator|>
+operator|(
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|U
+operator|.
+name|Double
+operator|.
+name|bitwiseIsEqual
+argument_list|(
+name|RHS
+operator|.
+name|U
+operator|.
+name|Double
+argument_list|)
+return|;
+name|llvm_unreachable
+argument_list|(
+literal|"Unexpected semantics"
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -4786,10 +5302,8 @@ name|RM
 argument_list|)
 decl|const
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|convertToHexString
 argument_list|(
 name|DST
@@ -4800,7 +5314,8 @@ name|UpperCase
 argument_list|,
 name|RM
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -4871,17 +5386,12 @@ name|isDenormal
 argument_list|()
 specifier|const
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|isDenormal
 argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
+argument_list|)
+block|; }
 name|bool
 name|isSignaling
 argument_list|()
@@ -5035,53 +5545,38 @@ name|isSmallest
 argument_list|()
 specifier|const
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|isSmallest
 argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
+argument_list|)
+block|; }
 name|bool
 name|isLargest
 argument_list|()
 specifier|const
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|isLargest
 argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
+argument_list|)
+block|; }
 name|bool
 name|isInteger
 argument_list|()
 specifier|const
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|isInteger
 argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_decl_stmt
+argument_list|)
+block|; }
 name|APFloat
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|APFloat
@@ -5090,8 +5585,8 @@ name|RHS
 operator|)
 operator|=
 expr|default
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|APFloat
@@ -5131,10 +5626,8 @@ literal|3
 argument_list|)
 decl|const
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|toString
 argument_list|(
 name|Str
@@ -5143,7 +5636,8 @@ name|FormatPrecision
 argument_list|,
 name|FormatMaxPadding
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -5176,63 +5670,16 @@ name|inv
 argument_list|)
 decl|const
 block|{
-return|return
-name|getIEEE
-argument_list|()
-operator|.
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+argument_list|(
 name|getExactInverse
 argument_list|(
 name|inv
-condition|?
-operator|&
-name|inv
-operator|->
-name|getIEEE
-argument_list|()
-else|:
-name|nullptr
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// This is for internal test only.
-end_comment
-
-begin_comment
-comment|// TODO: Remove it after the PPCDoubleDouble transition.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|APFloat
-operator|&
-name|getSecondFloat
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|&
-name|getSemantics
-argument_list|()
-operator|==
-operator|&
-name|PPCDoubleDouble
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|U
-operator|.
-name|Double
-operator|.
-name|getSecond
-argument_list|()
-return|;
-block|}
-end_expr_stmt
 
 begin_function_decl
 name|friend
@@ -5365,6 +5812,23 @@ name|roundingMode
 name|RM
 argument_list|)
 block|{
+if|if
+condition|(
+name|APFloat
+operator|::
+name|usesLayout
+operator|<
+name|detail
+operator|::
+name|IEEEFloat
+operator|>
+operator|(
+name|X
+operator|.
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
 return|return
 name|APFloat
 argument_list|(
@@ -5372,8 +5836,9 @@ name|scalbn
 argument_list|(
 name|X
 operator|.
-name|getIEEE
-argument_list|()
+name|U
+operator|.
+name|IEEE
 argument_list|,
 name|Exp
 argument_list|,
@@ -5386,11 +5851,55 @@ name|getSemantics
 argument_list|()
 argument_list|)
 return|;
+if|if
+condition|(
+name|APFloat
+operator|::
+name|usesLayout
+operator|<
+name|detail
+operator|::
+name|DoubleAPFloat
+operator|>
+operator|(
+name|X
+operator|.
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|APFloat
+argument_list|(
+name|scalbn
+argument_list|(
+name|X
+operator|.
+name|U
+operator|.
+name|Double
+argument_list|,
+name|Exp
+argument_list|,
+name|RM
+argument_list|)
+argument_list|,
+name|X
+operator|.
+name|getSemantics
+argument_list|()
+argument_list|)
+return|;
+name|llvm_unreachable
+argument_list|(
+literal|"Unexpected semantics"
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Equivalent of C standard library function.
+comment|/// Equivalent of C standard library function.
 end_comment
 
 begin_comment
@@ -5425,6 +5934,23 @@ name|roundingMode
 name|RM
 argument_list|)
 block|{
+if|if
+condition|(
+name|APFloat
+operator|::
+name|usesLayout
+operator|<
+name|detail
+operator|::
+name|IEEEFloat
+operator|>
+operator|(
+name|X
+operator|.
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
 return|return
 name|APFloat
 argument_list|(
@@ -5432,8 +5958,9 @@ name|frexp
 argument_list|(
 name|X
 operator|.
-name|getIEEE
-argument_list|()
+name|U
+operator|.
+name|IEEE
 argument_list|,
 name|Exp
 argument_list|,
@@ -5446,11 +5973,55 @@ name|getSemantics
 argument_list|()
 argument_list|)
 return|;
+if|if
+condition|(
+name|APFloat
+operator|::
+name|usesLayout
+operator|<
+name|detail
+operator|::
+name|DoubleAPFloat
+operator|>
+operator|(
+name|X
+operator|.
+name|getSemantics
+argument_list|()
+operator|)
+condition|)
+return|return
+name|APFloat
+argument_list|(
+name|frexp
+argument_list|(
+name|X
+operator|.
+name|U
+operator|.
+name|Double
+argument_list|,
+name|Exp
+argument_list|,
+name|RM
+argument_list|)
+argument_list|,
+name|X
+operator|.
+name|getSemantics
+argument_list|()
+argument_list|)
+return|;
+name|llvm_unreachable
+argument_list|(
+literal|"Unexpected semantics"
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Returns the absolute value of the argument.
+comment|/// Returns the absolute value of the argument.
 end_comment
 
 begin_function
@@ -5465,6 +6036,30 @@ block|{
 name|X
 operator|.
 name|clearSign
+argument_list|()
+expr_stmt|;
+return|return
+name|X
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Returns the negated value of the argument.
+end_comment
+
+begin_function
+specifier|inline
+name|APFloat
+name|neg
+parameter_list|(
+name|APFloat
+name|X
+parameter_list|)
+block|{
+name|X
+operator|.
+name|changeSign
 argument_list|()
 expr_stmt|;
 return|return
@@ -5609,6 +6204,12 @@ begin_comment
 unit|}
 comment|// namespace llvm
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|APFLOAT_DISPATCH_ON_SEMANTICS
+end_undef
 
 begin_endif
 endif|#

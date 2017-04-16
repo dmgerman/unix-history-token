@@ -84,18 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DataLayout.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/DerivedTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Instruction.h"
 end_include
 
@@ -826,6 +814,8 @@ argument_list|)
 block|{ }
 name|public
 operator|:
+comment|/// This is how the bits are used in Value::SubclassOptionalData so they
+comment|/// should fit there too.
 expr|enum
 block|{
 name|UnsafeAlgebra
@@ -866,6 +856,14 @@ operator|(
 literal|1
 operator|<<
 literal|4
+operator|)
+block|,
+name|AllowContract
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|5
 operator|)
 block|}
 block|;
@@ -957,6 +955,21 @@ operator|)
 return|;
 block|}
 name|bool
+name|allowContract
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+operator|!=
+operator|(
+name|Flags
+operator|&
+name|AllowContract
+operator|)
+return|;
+block|}
+name|bool
 name|unsafeAlgebra
 argument_list|()
 specifier|const
@@ -1005,6 +1018,25 @@ operator||=
 name|AllowReciprocal
 block|; }
 name|void
+name|setAllowContract
+argument_list|(
+argument|bool B
+argument_list|)
+block|{
+name|Flags
+operator|=
+operator|(
+name|Flags
+operator|&
+operator|~
+name|AllowContract
+operator|)
+operator||
+name|B
+operator|*
+name|AllowContract
+block|;   }
+name|void
 name|setUnsafeAlgebra
 argument_list|()
 block|{
@@ -1023,6 +1055,11 @@ argument_list|()
 block|;
 name|setAllowReciprocal
 argument_list|()
+block|;
+name|setAllowContract
+argument_list|(
+name|true
+argument_list|)
 block|;   }
 name|void
 name|operator
@@ -1209,6 +1246,31 @@ operator|::
 name|AllowReciprocal
 operator|)
 block|;   }
+name|void
+name|setHasAllowContract
+argument_list|(
+argument|bool B
+argument_list|)
+block|{
+name|SubclassOptionalData
+operator|=
+operator|(
+name|SubclassOptionalData
+operator|&
+operator|~
+name|FastMathFlags
+operator|::
+name|AllowContract
+operator|)
+operator||
+operator|(
+name|B
+operator|*
+name|FastMathFlags
+operator|::
+name|AllowContract
+operator|)
+block|;   }
 comment|/// Convenience function for setting multiple fast-math flags.
 comment|/// FMF is a mask of the bits to set.
 name|void
@@ -1329,6 +1391,25 @@ operator|&
 name|FastMathFlags
 operator|::
 name|AllowReciprocal
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// Test whether this operation is permitted to
+comment|/// be floating-point contracted.
+name|bool
+name|hasAllowContract
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|SubclassOptionalData
+operator|&
+name|FastMathFlags
+operator|::
+name|AllowContract
 operator|)
 operator|!=
 literal|0

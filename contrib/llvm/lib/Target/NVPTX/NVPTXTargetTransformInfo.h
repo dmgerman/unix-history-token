@@ -221,6 +221,17 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
+name|unsigned
+name|getFlatAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AddressSpace
+operator|::
+name|ADDRESS_SPACE_GENERIC
+return|;
+block|}
 comment|// Increase the inlining cost threshold by a factor of 5, reflecting that
 comment|// calls are particularly expensive in NVPTX.
 name|unsigned

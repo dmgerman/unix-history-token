@@ -175,6 +175,29 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
+comment|/// Registers an externally loaded library. The library will be unloaded
+comment|/// when the program terminates.
+comment|///
+comment|/// It is safe to call this function multiple times for the same library.
+comment|///
+comment|/// \returns An empty \p DynamicLibrary if the library was already loaded.
+specifier|static
+name|DynamicLibrary
+name|addPermanentLibrary
+argument_list|(
+name|void
+operator|*
+name|handle
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|errMsg
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 comment|/// This function permanently loads the dynamic library at the given path.
 comment|/// Use this instead of getPermanentLibrary() when you won't need to get
 comment|/// symbols from the library itself.

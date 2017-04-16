@@ -59,12 +59,6 @@ directive|define
 name|LLVM_LIB_TARGET_XCORE_MCTARGETDESC_XCOREMCTARGETDESC_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -81,7 +75,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_comment
@@ -144,6 +138,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_XCORE_MCTARGETDESC_XCOREMCTARGETDESC_H
+end_comment
 
 end_unit
 

@@ -366,6 +366,20 @@ name|FDIV
 block|,
 name|FREM
 block|,
+comment|/// Constrained versions of the binary floating point operators.
+comment|/// These will be lowered to the simple operators before final selection.
+comment|/// They are used to limit optimizations while the DAG is being
+comment|/// optimized.
+name|STRICT_FADD
+block|,
+name|STRICT_FSUB
+block|,
+name|STRICT_FMUL
+block|,
+name|STRICT_FDIV
+block|,
+name|STRICT_FREM
+block|,
 comment|/// FMA - Perform a * b + c with no intermediate rounding step.
 name|FMA
 block|,
@@ -402,7 +416,8 @@ block|,
 comment|/// EXTRACT_VECTOR_ELT(VECTOR, IDX) - Returns a single element from VECTOR
 comment|/// identified by the (potentially variable) element number IDX.  If the
 comment|/// return type is an integer type larger than the element type of the
-comment|/// vector, the result is extended to the width of the return type.
+comment|/// vector, the result is extended to the width of the return type. In
+comment|/// that case, the high bits are undefined.
 name|EXTRACT_VECTOR_ELT
 block|,
 comment|/// CONCAT_VECTORS(VECTOR0, VECTOR1, ...) - Given a number of values of
@@ -464,6 +479,12 @@ block|,
 name|OR
 block|,
 name|XOR
+block|,
+comment|/// ABS - Determine the unsigned absolute value of a signed integer value of
+comment|/// the same bitwidth.
+comment|/// Note: A value of INT_MIN will return INT_MIN, no saturation or overflow
+comment|/// is performed.
+name|ABS
 block|,
 comment|/// Shift and rotation operations.  After legalization, the type of the
 comment|/// shift amount is known to be TLI.getShiftAmountTy().  Before legalization
@@ -1036,10 +1057,17 @@ block|,
 name|POST_INC
 block|,
 name|POST_DEC
-block|,
-name|LAST_INDEXED_MODE
 block|}
 enum|;
+specifier|static
+specifier|const
+name|int
+name|LAST_INDEXED_MODE
+init|=
+name|POST_DEC
+operator|+
+literal|1
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// LoadExtType enum - This enum defines the three variants of LOADEXT
 comment|/// (load with extension).
@@ -1062,10 +1090,17 @@ block|,
 name|SEXTLOAD
 block|,
 name|ZEXTLOAD
-block|,
-name|LAST_LOADEXT_TYPE
 block|}
 enum|;
+specifier|static
+specifier|const
+name|int
+name|LAST_LOADEXT_TYPE
+init|=
+name|ZEXTLOAD
+operator|+
+literal|1
+decl_stmt|;
 name|NodeType
 name|getExtForLoadExtType
 parameter_list|(

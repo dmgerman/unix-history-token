@@ -2620,6 +2620,18 @@ comment|/// stripped from debug builds.
 end_comment
 
 begin_comment
+comment|/// Note that you should also surround dump() functions with
+end_comment
+
+begin_comment
+comment|/// `#if !defined(NDEBUG) || defined(LLVM_ENABLE_DUMP)` so they do always
+end_comment
+
+begin_comment
+comment|/// get stripped in release builds.
+end_comment
+
+begin_comment
 comment|// FIXME: Move this to a private config.h as it's not usable in public headers.
 end_comment
 

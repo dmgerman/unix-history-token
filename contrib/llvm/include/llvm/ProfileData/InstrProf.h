@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- InstrProf.h - Instrumented profiling format support -----*- C++ -*-===//
+comment|//===- InstrProf.h - Instrumented profiling format support ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/STLExtras.h"
 end_include
 
@@ -88,13 +94,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/GlobalValue.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Metadata.h"
+file|"llvm/IR/ProfileSummary.h"
 end_include
 
 begin_include
@@ -106,7 +118,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ProfileData/ProfileCommon.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -118,7 +130,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Host.h"
 end_include
 
 begin_include
@@ -136,7 +160,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstring>
 end_include
 
 begin_include
@@ -148,7 +202,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<system_error>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -167,104 +239,59 @@ decl_stmt|;
 name|class
 name|GlobalVariable
 decl_stmt|;
+struct_decl|struct
+name|InstrProfRecord
+struct_decl|;
+name|class
+name|InstrProfSymtab
+decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
+name|class
+name|MDNode
+decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
-comment|/// Return the name of data section containing profile counter variables.
-specifier|inline
-name|StringRef
-name|getInstrProfCountersSectionName
-parameter_list|(
-name|bool
-name|AddSegment
-parameter_list|)
+enum|enum
+name|InstrProfSectKind
 block|{
-return|return
-name|AddSegment
-condition|?
-literal|"__DATA,"
-name|INSTR_PROF_CNTS_SECT_NAME_STR
-else|:
-name|INSTR_PROF_CNTS_SECT_NAME_STR
-return|;
-block|}
-comment|/// Return the name of data section containing names of instrumented
-comment|/// functions.
-specifier|inline
-name|StringRef
-name|getInstrProfNameSectionName
+define|#
+directive|define
+name|INSTR_PROF_SECT_ENTRY
 parameter_list|(
-name|bool
-name|AddSegment
+name|Kind
+parameter_list|,
+name|SectNameCommon
+parameter_list|,
+name|SectNameCoff
+parameter_list|,
+name|Prefix
 parameter_list|)
-block|{
-return|return
-name|AddSegment
-condition|?
-literal|"__DATA,"
-name|INSTR_PROF_NAME_SECT_NAME_STR
-else|:
-name|INSTR_PROF_NAME_SECT_NAME_STR
-return|;
+value|Kind,
+include|#
+directive|include
+file|"llvm/ProfileData/InstrProfData.inc"
 block|}
-comment|/// Return the name of the data section containing per-function control
-comment|/// data.
-specifier|inline
-name|StringRef
-name|getInstrProfDataSectionName
-parameter_list|(
-name|bool
-name|AddSegment
-parameter_list|)
-block|{
-return|return
-name|AddSegment
-condition|?
-literal|"__DATA,"
-name|INSTR_PROF_DATA_SECT_NAME_STR
-literal|",regular,live_support"
-else|:
-name|INSTR_PROF_DATA_SECT_NAME_STR
-return|;
-block|}
-comment|/// Return the name of data section containing pointers to value profile
-comment|/// counters/nodes.
-specifier|inline
-name|StringRef
-name|getInstrProfValuesSectionName
-parameter_list|(
-name|bool
-name|AddSegment
-parameter_list|)
-block|{
-return|return
-name|AddSegment
-condition|?
-literal|"__DATA,"
-name|INSTR_PROF_VALS_SECT_NAME_STR
-else|:
-name|INSTR_PROF_VALS_SECT_NAME_STR
-return|;
-block|}
-comment|/// Return the name of data section containing nodes holdling value
-comment|/// profiling data.
-specifier|inline
-name|StringRef
-name|getInstrProfVNodesSectionName
-parameter_list|(
-name|bool
-name|AddSegment
-parameter_list|)
-block|{
-return|return
-name|AddSegment
-condition|?
-literal|"__DATA,"
-name|INSTR_PROF_VNODES_SECT_NAME_STR
-else|:
-name|INSTR_PROF_VNODES_SECT_NAME_STR
-return|;
-block|}
+enum|;
+comment|/// Return the name of the profile section corresponding to \p IPSK.
+comment|///
+comment|/// The name of the section depends on the object format type \p OF. If
+comment|/// \p AddSegmentInfo is true, a segment prefix and additional linker hints may
+comment|/// be added to the section name (this is the default).
+name|std
+operator|::
+name|string
+name|getInstrProfSectionName
+argument_list|(
+argument|InstrProfSectKind IPSK
+argument_list|,
+argument|Triple::ObjectFormatType OF
+argument_list|,
+argument|bool AddSegmentInfo = true
+argument_list|)
+expr_stmt|;
 comment|/// Return the name profile runtime entry point to do value profiling
 comment|/// for a given site.
 specifier|inline
@@ -276,25 +303,42 @@ return|return
 name|INSTR_PROF_VALUE_PROF_FUNC_STR
 return|;
 block|}
-comment|/// Return the name of the section containing function coverage mapping
-comment|/// data.
+comment|/// Return the name profile runtime entry point to do value range profiling.
 specifier|inline
 name|StringRef
-name|getInstrProfCoverageSectionName
-parameter_list|(
-name|bool
-name|AddSegment
-parameter_list|)
+name|getInstrProfValueRangeProfFuncName
+parameter_list|()
 block|{
 return|return
-name|AddSegment
-condition|?
-literal|"__LLVM_COV,"
-name|INSTR_PROF_COVMAP_SECT_NAME_STR
-else|:
-name|INSTR_PROF_COVMAP_SECT_NAME_STR
+name|INSTR_PROF_VALUE_RANGE_PROF_FUNC_STR
 return|;
 block|}
+comment|/// Return the name of the section containing function coverage mapping
+comment|/// data.
+name|std
+operator|::
+name|string
+name|getInstrProfCoverageSectionName
+argument_list|(
+specifier|const
+name|Module
+operator|*
+name|M
+operator|=
+name|nullptr
+argument_list|)
+expr_stmt|;
+comment|/// Similar to the above, but used by host tool (e.g, coverage) which has
+comment|/// object format information. The section name returned is not prefixed
+comment|/// with segment name.
+name|std
+operator|::
+name|string
+name|getInstrProfCoverageSectionNameInObject
+argument_list|(
+argument|bool isCoff
+argument_list|)
+expr_stmt|;
 comment|/// Return the name prefix of variables containing instrumented function names.
 specifier|inline
 name|StringRef
@@ -643,9 +687,6 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
-name|class
-name|InstrProfSymtab
-decl_stmt|;
 comment|/// \c NameStrings is a string composed of one of more sub-strings encoded in
 comment|/// the format described above. The substrings are separated by 0 or more zero
 comment|/// bytes. This method decodes the string and populates the \c Symtab.
@@ -707,9 +748,6 @@ directive|include
 file|"llvm/ProfileData/InstrProfData.inc"
 block|}
 enum|;
-struct_decl|struct
-name|InstrProfRecord
-struct_decl|;
 comment|/// Get the value profile data for value site \p SiteIdx from \p InstrProfR
 comment|/// and annotate the instruction \p Inst with the value profile meta data.
 comment|/// Annotate up to \p MaxMDCount (default 3) number of records per value site.
@@ -1082,55 +1120,42 @@ comment|/// the first such error for reporting purposes.
 comment|/// The first soft error encountered.
 name|instrprof_error
 name|FirstError
+init|=
+name|instrprof_error
+operator|::
+name|success
 decl_stmt|;
 comment|/// The number of hash mismatches.
 name|unsigned
 name|NumHashMismatches
+init|=
+literal|0
 decl_stmt|;
 comment|/// The number of count mismatches.
 name|unsigned
 name|NumCountMismatches
+init|=
+literal|0
 decl_stmt|;
 comment|/// The number of counter overflows.
 name|unsigned
 name|NumCounterOverflows
+init|=
+literal|0
 decl_stmt|;
 comment|/// The number of value site count mismatches.
 name|unsigned
 name|NumValueSiteCountMismatches
+init|=
+literal|0
 decl_stmt|;
 name|public
 label|:
 name|SoftInstrProfErrors
 argument_list|()
-operator|:
-name|FirstError
-argument_list|(
-name|instrprof_error
-operator|::
-name|success
-argument_list|)
-operator|,
-name|NumHashMismatches
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumCountMismatches
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumCounterOverflows
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumValueSiteCountMismatches
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 operator|~
 name|SoftInstrProfErrors
 argument_list|()
@@ -1243,6 +1268,7 @@ name|class
 name|SectionRef
 decl_stmt|;
 block|}
+comment|// end namespace object
 name|namespace
 name|IndexedInstrProf
 block|{
@@ -1254,6 +1280,7 @@ name|K
 parameter_list|)
 function_decl|;
 block|}
+comment|// end namespace IndexedInstrProf
 comment|/// A symbol table used for function PGO name look-up with keys
 comment|/// (such as pointers, md5hash values) to the function. A function's
 comment|/// PGO name or name's md5hash are used in retrieving the profile
@@ -1286,6 +1313,8 @@ name|Data
 decl_stmt|;
 name|uint64_t
 name|Address
+init|=
+literal|0
 decl_stmt|;
 comment|// Unique name strings.
 name|StringSet
@@ -1334,27 +1363,9 @@ name|public
 label|:
 name|InstrProfSymtab
 argument_list|()
-operator|:
-name|Data
-argument_list|()
-operator|,
-name|Address
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NameTab
-argument_list|()
-operator|,
-name|MD5NameMap
-argument_list|()
-operator|,
-name|MD5FuncMap
-argument_list|()
-operator|,
-name|AddrToMD5Map
-argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Create InstrProfSymtab from an object file section which
 comment|/// contains function PGO names. When section may contain raw
 comment|/// string data or string data in compressed form. This method
@@ -1370,7 +1381,7 @@ name|SectionRef
 operator|&
 name|Section
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/// This interface is used by reader of CoverageMapping test
 comment|/// format.
 specifier|inline
@@ -2137,47 +2148,9 @@ begin_struct
 struct|struct
 name|InstrProfRecord
 block|{
-name|InstrProfRecord
-argument_list|()
-operator|:
-name|SIPE
-argument_list|()
-block|{}
-name|InstrProfRecord
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|uint64_t Hash
-argument_list|,
-argument|std::vector<uint64_t> Counts
-argument_list|)
-operator|:
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-operator|,
-name|Hash
-argument_list|(
-name|Hash
-argument_list|)
-operator|,
-name|Counts
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Counts
-argument_list|)
-argument_list|)
-operator|,
-name|SIPE
-argument_list|()
-block|{}
 name|StringRef
 name|Name
-expr_stmt|;
+decl_stmt|;
 name|uint64_t
 name|Hash
 decl_stmt|;
@@ -2192,6 +2165,35 @@ expr_stmt|;
 name|SoftInstrProfErrors
 name|SIPE
 decl_stmt|;
+name|InstrProfRecord
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|InstrProfRecord
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|uint64_t Hash
+argument_list|,
+argument|std::vector<uint64_t> Counts
+argument_list|)
+block|:
+name|Name
+argument_list|(
+name|Name
+argument_list|)
+operator|,
+name|Hash
+argument_list|(
+name|Hash
+argument_list|)
+operator|,
+name|Counts
+argument_list|(
+argument|std::move(Counts)
+argument_list|)
+block|{}
 typedef|typedef
 name|std
 operator|::
@@ -2266,8 +2268,7 @@ argument|uint32_t ValueKind
 argument_list|,
 argument|uint32_t Site
 argument_list|,
-argument|uint64_t *TotalC =
-literal|0
+argument|uint64_t *TotalC = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -2397,6 +2398,20 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+comment|/// Clear value data entries and edge counters.
+name|void
+name|Clear
+parameter_list|()
+block|{
+name|Counts
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|clearValueData
+argument_list|()
+expr_stmt|;
+block|}
 comment|/// Clear value data entries
 name|void
 name|clearValueData
@@ -2447,6 +2462,14 @@ name|InstrProfValueSiteRecord
 operator|>
 name|IndirectCallSites
 expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|InstrProfValueSiteRecord
+operator|>
+name|MemOPSizes
+expr_stmt|;
 specifier|const
 name|std
 operator|::
@@ -2471,6 +2494,12 @@ name|IPVK_IndirectCallTarget
 case|:
 return|return
 name|IndirectCallSites
+return|;
+case|case
+name|IPVK_MemOPSize
+case|:
+return|return
+name|MemOPSizes
 return|;
 default|default:
 name|llvm_unreachable
@@ -2771,7 +2800,7 @@ operator|=
 operator|(
 name|TotalC
 operator|==
-literal|0
+name|nullptr
 condition|?
 name|Dummy
 else|:
@@ -3726,6 +3755,30 @@ end_decl_stmt
 begin_comment
 comment|// end namespace RawInstrProf
 end_comment
+
+begin_comment
+comment|// Parse MemOP Size range option.
+end_comment
+
+begin_decl_stmt
+name|void
+name|getMemOPSizeRangeFromOption
+argument_list|(
+name|std
+operator|::
+name|string
+name|Str
+argument_list|,
+name|int64_t
+operator|&
+name|RangeStart
+argument_list|,
+name|int64_t
+operator|&
+name|RangeLast
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|}

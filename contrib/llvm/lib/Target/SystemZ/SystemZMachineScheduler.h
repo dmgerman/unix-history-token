@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- SystemZMachineScheduler.h - SystemZ Scheduler Interface -*- C++ -*---==//
+comment|//==- SystemZMachineScheduler.h - SystemZ Scheduler Interface ----*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -62,12 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"SystemZInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"SystemZHazardRecognizer.h"
 end_include
 
@@ -80,7 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Debug.h"
+file|"llvm/CodeGen/ScheduleDAG.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<set>
 end_include
 
 begin_ifndef
@@ -124,33 +124,26 @@ block|{
 name|SUnit
 operator|*
 name|SU
+operator|=
+name|nullptr
 block|;
 comment|/// The decoding cost.
 name|int
 name|GroupingCost
+operator|=
+literal|0
 block|;
 comment|/// The processor resources cost.
 name|int
 name|ResourcesCost
+operator|=
+literal|0
 block|;
 name|Candidate
 argument_list|()
-operator|:
-name|SU
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|GroupingCost
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ResourcesCost
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|Candidate
 argument_list|(
 name|SUnit
@@ -175,9 +168,9 @@ operator|)
 block|;
 comment|// Check if this node is free of cost ("as good as any").
 name|bool
-specifier|inline
 name|noCost
 argument_list|()
+specifier|const
 block|{
 return|return
 operator|(
@@ -482,7 +475,7 @@ end_empty_stmt
 
 begin_comment
 unit|};  }
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
@@ -491,7 +484,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LLVM_LIB_TARGET_SYSTEMZ_SYSTEMZMACHINESCHEDULER_H */
+comment|// LLVM_LIB_TARGET_SYSTEMZ_SYSTEMZMACHINESCHEDULER_H
 end_comment
 
 end_unit

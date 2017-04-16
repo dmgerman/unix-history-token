@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Attributes.h - Container for Attributes ------------*- C++ -*-===//
+comment|//===- llvm/Attributes.h - Container for Attributes -------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -82,13 +82,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -118,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -125,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -138,13 +156,10 @@ name|class
 name|AttributeImpl
 decl_stmt|;
 name|class
-name|AttributeSetImpl
+name|AttributeListImpl
 decl_stmt|;
 name|class
 name|AttributeSetNode
-decl_stmt|;
-name|class
-name|Constant
 decl_stmt|;
 name|template
 operator|<
@@ -212,6 +227,8 @@ label|:
 name|AttributeImpl
 modifier|*
 name|pImpl
+init|=
+name|nullptr
 decl_stmt|;
 name|Attribute
 argument_list|(
@@ -229,12 +246,9 @@ name|public
 operator|:
 name|Attribute
 argument_list|()
-operator|:
-name|pImpl
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Attribute Construction
 comment|//===--------------------------------------------------------------------===//
@@ -242,15 +256,20 @@ comment|/// \brief Return a uniquified Attribute object.
 specifier|static
 name|Attribute
 name|get
-argument_list|(
-argument|LLVMContext&Context
-argument_list|,
-argument|AttrKind Kind
-argument_list|,
-argument|uint64_t Val =
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|Context
+parameter_list|,
+name|AttrKind
+name|Kind
+parameter_list|,
+name|uint64_t
+name|Val
+init|=
 literal|0
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 specifier|static
 name|Attribute
 name|get
@@ -605,45 +624,25 @@ return|;
 block|}
 comment|//===----------------------------------------------------------------------===//
 comment|/// \class
-comment|/// \brief This class holds the attributes for a function, its return value, and
-comment|/// its parameters. You access the attributes for each of them via an index into
-comment|/// the AttributeSet object. The function attributes are at index
-comment|/// `AttributeSet::FunctionIndex', the return value is at index
-comment|/// `AttributeSet::ReturnIndex', and the attributes for the parameters start at
-comment|/// index `1'.
+comment|/// This class holds the attributes for a particular argument, parameter,
+comment|/// function, or return value. It is an immutable value type that is cheap to
+comment|/// copy. Adding and removing enum attributes is intended to be fast, but adding
+comment|/// and removing string or integer attributes involves a FoldingSet lookup.
 name|class
 name|AttributeSet
 block|{
-name|public
-label|:
-enum|enum
-name|AttrIndex
-enum|:
-name|unsigned
-block|{
-name|ReturnIndex
-init|=
-literal|0U
-block|,
-name|FunctionIndex
-init|=
-operator|~
-literal|0U
-block|}
-enum|;
-name|private
-label|:
-name|friend
-name|class
-name|AttrBuilder
-decl_stmt|;
-name|friend
-name|class
-name|AttributeSetImpl
-decl_stmt|;
-name|friend
-name|class
+comment|// TODO: Extract AvailableAttrs from AttributeSetNode and store them here.
+comment|// This will allow an efficient implementation of addAttribute and
+comment|// removeAttribute for enum attrs.
+comment|/// Private implementation pointer.
 name|AttributeSetNode
+modifier|*
+name|SetNode
+init|=
+name|nullptr
+decl_stmt|;
+name|friend
+name|AttributeListImpl
 decl_stmt|;
 name|template
 operator|<
@@ -654,171 +653,44 @@ name|friend
 expr|struct
 name|DenseMapInfo
 expr_stmt|;
-comment|/// \brief The attributes that we are managing. This can be null to represent
-comment|/// the empty attributes list.
-name|AttributeSetImpl
-modifier|*
-name|pImpl
-decl_stmt|;
-comment|/// \brief The attributes for the specified index are returned.
-name|AttributeSetNode
-modifier|*
-name|getAttributes
-argument_list|(
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Create an AttributeSet with the specified parameters in it.
-specifier|static
-name|AttributeSet
-name|get
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|ArrayRef
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-argument_list|,
-name|Attribute
-operator|>
-expr|>
-name|Attrs
-argument_list|)
-decl_stmt|;
-specifier|static
-name|AttributeSet
-name|get
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|ArrayRef
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-argument_list|,
-name|AttributeSetNode
-operator|*
-operator|>
-expr|>
-name|Attrs
-argument_list|)
-decl_stmt|;
-specifier|static
-name|AttributeSet
-name|getImpl
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|ArrayRef
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-argument_list|,
-name|AttributeSetNode
-operator|*
-operator|>
-expr|>
-name|Attrs
-argument_list|)
-decl_stmt|;
+name|private
+label|:
 name|explicit
 name|AttributeSet
 argument_list|(
-name|AttributeSetImpl
+name|AttributeSetNode
 operator|*
-name|LI
+name|ASN
 argument_list|)
 operator|:
-name|pImpl
+name|SetNode
 argument_list|(
-argument|LI
+argument|ASN
 argument_list|)
 block|{}
 name|public
 operator|:
+comment|/// AttributeSet is a trivially copyable value type.
 name|AttributeSet
 argument_list|()
-operator|:
-name|pImpl
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
-comment|//===--------------------------------------------------------------------===//
-comment|// AttributeSet Construction and Mutation
-comment|//===--------------------------------------------------------------------===//
-comment|/// \brief Return an AttributeSet with the specified parameters in it.
-specifier|static
-name|AttributeSet
-name|get
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|ArrayRef
-operator|<
-name|AttributeSet
-operator|>
-name|Attrs
-argument_list|)
+operator|=
+expr|default
 expr_stmt|;
-specifier|static
 name|AttributeSet
-name|get
 argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|ArrayRef
-operator|<
-name|Attribute
-operator|::
-name|AttrKind
-operator|>
-name|Kinds
-argument_list|)
-decl_stmt|;
-specifier|static
+specifier|const
 name|AttributeSet
-name|get
-argument_list|(
-name|LLVMContext
 operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|ArrayRef
-operator|<
-name|StringRef
-operator|>
-name|Kind
 argument_list|)
-decl_stmt|;
+operator|=
+expr|default
+expr_stmt|;
+operator|~
+name|AttributeSet
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 specifier|static
 name|AttributeSet
 name|get
@@ -827,61 +699,15 @@ name|LLVMContext
 modifier|&
 name|C
 parameter_list|,
-name|unsigned
-name|Index
-parameter_list|,
 specifier|const
 name|AttrBuilder
 modifier|&
 name|B
 parameter_list|)
 function_decl|;
-comment|/// \brief Add an attribute to the attribute set at the given index. Because
-comment|/// attribute sets are immutable, this returns a new set.
+specifier|static
 name|AttributeSet
-name|addAttribute
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Add an attribute to the attribute set at the given index. Because
-comment|/// attribute sets are immutable, this returns a new set.
-name|AttributeSet
-name|addAttribute
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|StringRef
-name|Kind
-argument_list|,
-name|StringRef
-name|Value
-operator|=
-name|StringRef
-argument_list|()
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// Add an attribute to the attribute set at the given indices. Because
-comment|/// attribute sets are immutable, this returns a new set.
-name|AttributeSet
-name|addAttribute
+name|get
 argument_list|(
 name|LLVMContext
 operator|&
@@ -889,281 +715,68 @@ name|C
 argument_list|,
 name|ArrayRef
 operator|<
-name|unsigned
+name|Attribute
 operator|>
-name|Indices
-argument_list|,
-name|Attribute
-name|A
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Add attributes to the attribute set at the given index. Because
-comment|/// attribute sets are immutable, this returns a new set.
-name|AttributeSet
-name|addAttributes
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|AttributeSet
 name|Attrs
 argument_list|)
-decl|const
 decl_stmt|;
-comment|/// \brief Remove the specified attribute at the specified index from this
-comment|/// attribute list. Because attribute lists are immutable, this returns the
-comment|/// new list.
-name|AttributeSet
-name|removeAttribute
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Remove the specified attribute at the specified index from this
-comment|/// attribute list. Because attribute lists are immutable, this returns the
-comment|/// new list.
-name|AttributeSet
-name|removeAttribute
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|StringRef
-name|Kind
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Remove the specified attributes at the specified index from this
-comment|/// attribute list. Because attribute lists are immutable, this returns the
-comment|/// new list.
-name|AttributeSet
-name|removeAttributes
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|AttributeSet
-name|Attrs
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Remove the specified attributes at the specified index from this
-comment|/// attribute list. Because attribute lists are immutable, this returns the
-comment|/// new list.
-name|AttributeSet
-name|removeAttributes
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-specifier|const
-name|AttrBuilder
-operator|&
-name|Attrs
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Add the dereferenceable attribute to the attribute set at the given
-comment|/// index. Because attribute sets are immutable, this returns a new set.
-name|AttributeSet
-name|addDereferenceableAttr
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|uint64_t
-name|Bytes
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Add the dereferenceable_or_null attribute to the attribute set at
-comment|/// the given index. Because attribute sets are immutable, this returns a new
-comment|/// set.
-name|AttributeSet
-name|addDereferenceableOrNullAttr
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|uint64_t
-name|Bytes
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// Add the allocsize attribute to the attribute set at the given index.
-comment|/// Because attribute sets are immutable, this returns a new set.
-name|AttributeSet
-name|addAllocSizeAttr
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|unsigned
-name|ElemSizeArg
-argument_list|,
-specifier|const
-name|Optional
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|NumElemsArg
-argument_list|)
-decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
-comment|// AttributeSet Accessors
-comment|//===--------------------------------------------------------------------===//
-comment|/// \brief Retrieve the LLVM context.
-name|LLVMContext
-operator|&
-name|getContext
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// \brief The attributes for the specified index are returned.
-name|AttributeSet
-name|getParamAttributes
-argument_list|(
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief The attributes for the ret value are returned.
-name|AttributeSet
-name|getRetAttributes
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// \brief The function attributes are returned.
-name|AttributeSet
-name|getFnAttributes
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// \brief Return true if the attribute exists at the given index.
 name|bool
-name|hasAttribute
-argument_list|(
-name|unsigned
-name|Index
-argument_list|,
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Return true if the attribute exists at the given index.
+name|operator
+operator|==
+operator|(
+specifier|const
+name|AttributeSet
+operator|&
+name|O
+operator|)
+block|{
+return|return
+name|SetNode
+operator|==
+name|O
+operator|.
+name|SetNode
+return|;
+block|}
 name|bool
-name|hasAttribute
-argument_list|(
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|AttributeSet
+operator|&
+name|O
+operator|)
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|O
+operator|)
+return|;
+block|}
 name|unsigned
-name|Index
-argument_list|,
-name|StringRef
-name|Kind
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Return true if attribute exists at the given index.
+name|getNumAttributes
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|hasAttributes
-argument_list|(
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Equivalent to hasAttribute(AttributeSet::FunctionIndex, Kind) but
-comment|/// may be faster.
-name|bool
-name|hasFnAttribute
-argument_list|(
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Equivalent to hasAttribute(AttributeSet::FunctionIndex, Kind) but
-comment|/// may be faster.
-name|bool
-name|hasFnAttribute
-argument_list|(
-name|StringRef
-name|Kind
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Return true if the specified attribute is set for at least one
-comment|/// parameter or for the return value. If Index is not nullptr, the index
-comment|/// of a parameter with the specified attribute is provided.
-name|bool
-name|hasAttrSomewhere
-argument_list|(
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
-argument_list|,
-name|unsigned
-operator|*
-name|Index
-operator|=
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SetNode
+operator|!=
 name|nullptr
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Return the attribute object that exists at the given index.
-name|Attribute
-name|getAttribute
+return|;
+block|}
+name|bool
+name|hasAttribute
 argument_list|(
-name|unsigned
-name|Index
-argument_list|,
 name|Attribute
 operator|::
 name|AttrKind
@@ -1171,56 +784,52 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Return the attribute object that exists at the given index.
-name|Attribute
-name|getAttribute
+name|bool
+name|hasAttribute
 argument_list|(
-name|unsigned
-name|Index
-argument_list|,
 name|StringRef
 name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Return the alignment for the specified function parameter.
-name|unsigned
-name|getParamAlignment
+name|Attribute
+name|getAttribute
 argument_list|(
-name|unsigned
-name|Index
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Get the stack alignment.
+name|Attribute
+name|getAttribute
+argument_list|(
+name|StringRef
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|getAlignment
+argument_list|()
+specifier|const
+expr_stmt|;
 name|unsigned
 name|getStackAlignment
-argument_list|(
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Get the number of dereferenceable bytes (or zero if unknown).
+argument_list|()
+specifier|const
+expr_stmt|;
 name|uint64_t
 name|getDereferenceableBytes
-argument_list|(
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Get the number of dereferenceable_or_null bytes (or zero if
-comment|/// unknown).
+argument_list|()
+specifier|const
+expr_stmt|;
 name|uint64_t
 name|getDereferenceableOrNullBytes
-argument_list|(
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// Get the allocsize argument numbers (or pair(0, 0) if unknown).
+argument_list|()
+specifier|const
+expr_stmt|;
 name|std
 operator|::
 name|pair
@@ -1232,142 +841,31 @@ operator|<
 name|unsigned
 operator|>>
 name|getAllocSizeArgs
-argument_list|(
-argument|unsigned Index
-argument_list|)
+argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Return the attributes at the index as a string.
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|(
-argument|unsigned Index
-argument_list|,
 argument|bool InAttrGrp = false
 argument_list|)
 specifier|const
 expr_stmt|;
 typedef|typedef
-name|ArrayRef
-operator|<
+specifier|const
 name|Attribute
-operator|>
-operator|::
+modifier|*
 name|iterator
-name|iterator
-expr_stmt|;
+typedef|;
 name|iterator
 name|begin
-argument_list|(
-name|unsigned
-name|Slot
-argument_list|)
-decl|const
-decl_stmt|;
-name|iterator
-name|end
-argument_list|(
-name|unsigned
-name|Slot
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// operator==/!= - Provide equality predicates.
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|AttributeSet
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-return|return
-name|pImpl
-operator|==
-name|RHS
-operator|.
-name|pImpl
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|AttributeSet
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-return|return
-name|pImpl
-operator|!=
-name|RHS
-operator|.
-name|pImpl
-return|;
-block|}
-comment|//===--------------------------------------------------------------------===//
-comment|// AttributeSet Introspection
-comment|//===--------------------------------------------------------------------===//
-comment|/// \brief Return a raw pointer that uniquely identifies this attribute list.
-name|void
-operator|*
-name|getRawPointer
-argument_list|()
-specifier|const
-block|{
-return|return
-name|pImpl
-return|;
-block|}
-comment|/// \brief Return true if there are no attributes.
-name|bool
-name|isEmpty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getNumSlots
-argument_list|()
-operator|==
-literal|0
-return|;
-block|}
-comment|/// \brief Return the number of slots used in this attribute list.  This is
-comment|/// the number of arguments that have an attribute set on them (including the
-comment|/// function itself).
-name|unsigned
-name|getNumSlots
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Return the index for the given slot.
-name|unsigned
-name|getSlotIndex
-argument_list|(
-name|unsigned
-name|Slot
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Return the attributes at the given slot.
-name|AttributeSet
-name|getSlotAttributes
-argument_list|(
-name|unsigned
-name|Slot
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|dump
+name|iterator
+name|end
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1418,7 +916,7 @@ name|AttributeSet
 argument_list|(
 name|reinterpret_cast
 operator|<
-name|AttributeSetImpl
+name|AttributeSetNode
 operator|*
 operator|>
 operator|(
@@ -1460,7 +958,7 @@ name|AttributeSet
 argument_list|(
 name|reinterpret_cast
 operator|<
-name|AttributeSetImpl
+name|AttributeSetNode
 operator|*
 operator|>
 operator|(
@@ -1474,6 +972,867 @@ name|unsigned
 name|getHashValue
 argument_list|(
 argument|AttributeSet AS
+argument_list|)
+block|{
+return|return
+operator|(
+name|unsigned
+argument_list|(
+operator|(
+name|uintptr_t
+operator|)
+name|AS
+operator|.
+name|SetNode
+argument_list|)
+operator|>>
+literal|4
+operator|)
+operator|^
+operator|(
+name|unsigned
+argument_list|(
+operator|(
+name|uintptr_t
+operator|)
+name|AS
+operator|.
+name|SetNode
+argument_list|)
+operator|>>
+literal|9
+operator|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isEqual
+argument_list|(
+argument|AttributeSet LHS
+argument_list|,
+argument|AttributeSet RHS
+argument_list|)
+block|{
+return|return
+name|LHS
+operator|==
+name|RHS
+return|;
+block|}
+expr|}
+block|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// \class
+comment|/// \brief This class holds the attributes for a function, its return value, and
+comment|/// its parameters. You access the attributes for each of them via an index into
+comment|/// the AttributeList object. The function attributes are at index
+comment|/// `AttributeList::FunctionIndex', the return value is at index
+comment|/// `AttributeList::ReturnIndex', and the attributes for the parameters start at
+comment|/// index `1'.
+name|class
+name|AttributeList
+block|{
+name|public
+operator|:
+expr|enum
+name|AttrIndex
+operator|:
+name|unsigned
+block|{
+name|ReturnIndex
+operator|=
+literal|0U
+block|,
+name|FunctionIndex
+operator|=
+operator|~
+literal|0U
+block|}
+block|;
+name|private
+operator|:
+name|friend
+name|class
+name|AttrBuilder
+block|;
+name|friend
+name|class
+name|AttributeListImpl
+block|;
+name|friend
+name|class
+name|AttributeSet
+block|;
+name|friend
+name|class
+name|AttributeSetNode
+block|;
+name|template
+operator|<
+name|typename
+name|Ty
+operator|>
+name|friend
+expr|struct
+name|DenseMapInfo
+block|;
+comment|/// \brief The attributes that we are managing. This can be null to represent
+comment|/// the empty attributes list.
+name|AttributeListImpl
+operator|*
+name|pImpl
+operator|=
+name|nullptr
+block|;
+name|public
+operator|:
+comment|/// \brief Create an AttributeList with the specified parameters in it.
+specifier|static
+name|AttributeList
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+argument_list|,
+name|Attribute
+operator|>>
+name|Attrs
+argument_list|)
+block|;
+specifier|static
+name|AttributeList
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+argument_list|,
+name|AttributeSet
+operator|>>
+name|Attrs
+argument_list|)
+block|;
+comment|/// \brief Create an AttributeList from attribute sets for a function, its
+comment|/// return value, and all of its arguments.
+specifier|static
+name|AttributeList
+name|get
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|AttributeSet FnAttrs
+argument_list|,
+argument|AttributeSet RetAttrs
+argument_list|,
+argument|ArrayRef<AttributeSet> ArgAttrs
+argument_list|)
+block|;
+specifier|static
+name|AttributeList
+name|getImpl
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+argument_list|,
+name|AttributeSet
+operator|>>
+name|Attrs
+argument_list|)
+block|;
+name|private
+operator|:
+name|explicit
+name|AttributeList
+argument_list|(
+name|AttributeListImpl
+operator|*
+name|LI
+argument_list|)
+operator|:
+name|pImpl
+argument_list|(
+argument|LI
+argument_list|)
+block|{}
+name|public
+operator|:
+name|AttributeList
+argument_list|()
+operator|=
+expr|default
+block|;
+comment|//===--------------------------------------------------------------------===//
+comment|// AttributeList Construction and Mutation
+comment|//===--------------------------------------------------------------------===//
+comment|/// \brief Return an AttributeList with the specified parameters in it.
+specifier|static
+name|AttributeList
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|ArrayRef
+operator|<
+name|AttributeList
+operator|>
+name|Attrs
+argument_list|)
+block|;
+specifier|static
+name|AttributeList
+name|get
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|ArrayRef<Attribute::AttrKind> Kinds
+argument_list|)
+block|;
+specifier|static
+name|AttributeList
+name|get
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|ArrayRef<StringRef> Kind
+argument_list|)
+block|;
+specifier|static
+name|AttributeList
+name|get
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|const AttrBuilder&B
+argument_list|)
+block|;
+comment|/// \brief Add an attribute to the attribute set at the given index. Because
+comment|/// attribute sets are immutable, this returns a new set.
+name|AttributeList
+name|addAttribute
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Add an attribute to the attribute set at the given index. Because
+comment|/// attribute sets are immutable, this returns a new set.
+name|AttributeList
+name|addAttribute
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|StringRef Kind
+argument_list|,
+argument|StringRef Value = StringRef()
+argument_list|)
+specifier|const
+block|;
+comment|/// Add an attribute to the attribute set at the given indices. Because
+comment|/// attribute sets are immutable, this returns a new set.
+name|AttributeList
+name|addAttribute
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|ArrayRef<unsigned> Indices
+argument_list|,
+argument|Attribute A
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Add attributes to the attribute set at the given index. Because
+comment|/// attribute sets are immutable, this returns a new set.
+name|AttributeList
+name|addAttributes
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|AttributeList Attrs
+argument_list|)
+specifier|const
+block|;
+name|AttributeList
+name|addAttributes
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|AttributeSet AS
+argument_list|)
+specifier|const
+block|;
+name|AttributeList
+name|addAttributes
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|const AttrBuilder&B
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Remove the specified attribute at the specified index from this
+comment|/// attribute list. Because attribute lists are immutable, this returns the
+comment|/// new list.
+name|AttributeList
+name|removeAttribute
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Remove the specified attribute at the specified index from this
+comment|/// attribute list. Because attribute lists are immutable, this returns the
+comment|/// new list.
+name|AttributeList
+name|removeAttribute
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Remove the specified attributes at the specified index from this
+comment|/// attribute list. Because attribute lists are immutable, this returns the
+comment|/// new list.
+name|AttributeList
+name|removeAttributes
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|AttributeList Attrs
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Remove the specified attributes at the specified index from this
+comment|/// attribute list. Because attribute lists are immutable, this returns the
+comment|/// new list.
+name|AttributeList
+name|removeAttributes
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|const AttrBuilder&Attrs
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Remove all attributes at the specified index from this
+comment|/// attribute list. Because attribute lists are immutable, this returns the
+comment|/// new list.
+name|AttributeList
+name|removeAttributes
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Add the dereferenceable attribute to the attribute set at the given
+comment|/// index. Because attribute sets are immutable, this returns a new set.
+name|AttributeList
+name|addDereferenceableAttr
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|uint64_t Bytes
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Add the dereferenceable_or_null attribute to the attribute set at
+comment|/// the given index. Because attribute sets are immutable, this returns a new
+comment|/// set.
+name|AttributeList
+name|addDereferenceableOrNullAttr
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|uint64_t Bytes
+argument_list|)
+specifier|const
+block|;
+comment|/// Add the allocsize attribute to the attribute set at the given index.
+comment|/// Because attribute sets are immutable, this returns a new set.
+name|AttributeList
+name|addAllocSizeAttr
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|unsigned ElemSizeArg
+argument_list|,
+argument|const Optional<unsigned>&NumElemsArg
+argument_list|)
+block|;
+comment|//===--------------------------------------------------------------------===//
+comment|// AttributeList Accessors
+comment|//===--------------------------------------------------------------------===//
+comment|/// \brief Retrieve the LLVM context.
+name|LLVMContext
+operator|&
+name|getContext
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief The attributes for the specified index are returned.
+name|AttributeSet
+name|getAttributes
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief The attributes for the argument or parameter at the given index are
+comment|/// returned.
+name|AttributeSet
+name|getParamAttributes
+argument_list|(
+argument|unsigned ArgNo
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief The attributes for the ret value are returned.
+name|AttributeSet
+name|getRetAttributes
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief The function attributes are returned.
+name|AttributeSet
+name|getFnAttributes
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Return true if the attribute exists at the given index.
+name|bool
+name|hasAttribute
+argument_list|(
+argument|unsigned Index
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return true if the attribute exists at the given index.
+name|bool
+name|hasAttribute
+argument_list|(
+argument|unsigned Index
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return true if attribute exists at the given index.
+name|bool
+name|hasAttributes
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Equivalent to hasAttribute(AttributeList::FunctionIndex, Kind) but
+comment|/// may be faster.
+name|bool
+name|hasFnAttribute
+argument_list|(
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Equivalent to hasAttribute(AttributeList::FunctionIndex, Kind) but
+comment|/// may be faster.
+name|bool
+name|hasFnAttribute
+argument_list|(
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Equivalent to hasAttribute(ArgNo + 1, Kind).
+name|bool
+name|hasParamAttribute
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return true if the specified attribute is set for at least one
+comment|/// parameter or for the return value. If Index is not nullptr, the index
+comment|/// of a parameter with the specified attribute is provided.
+name|bool
+name|hasAttrSomewhere
+argument_list|(
+argument|Attribute::AttrKind Kind
+argument_list|,
+argument|unsigned *Index = nullptr
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return the attribute object that exists at the given index.
+name|Attribute
+name|getAttribute
+argument_list|(
+argument|unsigned Index
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return the attribute object that exists at the given index.
+name|Attribute
+name|getAttribute
+argument_list|(
+argument|unsigned Index
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return the alignment for the specified function parameter.
+name|unsigned
+name|getParamAlignment
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Get the stack alignment.
+name|unsigned
+name|getStackAlignment
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Get the number of dereferenceable bytes (or zero if unknown).
+name|uint64_t
+name|getDereferenceableBytes
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Get the number of dereferenceable_or_null bytes (or zero if
+comment|/// unknown).
+name|uint64_t
+name|getDereferenceableOrNullBytes
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+comment|/// Get the allocsize argument numbers (or pair(0, 0) if unknown).
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|Optional
+operator|<
+name|unsigned
+operator|>>
+name|getAllocSizeArgs
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return the attributes at the index as a string.
+name|std
+operator|::
+name|string
+name|getAsString
+argument_list|(
+argument|unsigned Index
+argument_list|,
+argument|bool InAttrGrp = false
+argument_list|)
+specifier|const
+block|;
+typedef|typedef
+name|ArrayRef
+operator|<
+name|Attribute
+operator|>
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+name|iterator
+name|begin
+argument_list|(
+argument|unsigned Slot
+argument_list|)
+specifier|const
+block|;
+name|iterator
+name|end
+argument_list|(
+argument|unsigned Slot
+argument_list|)
+specifier|const
+block|;
+comment|/// operator==/!= - Provide equality predicates.
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|AttributeList
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|pImpl
+operator|==
+name|RHS
+operator|.
+name|pImpl
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|AttributeList
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|pImpl
+operator|!=
+name|RHS
+operator|.
+name|pImpl
+return|;
+block|}
+comment|//===--------------------------------------------------------------------===//
+comment|// AttributeList Introspection
+comment|//===--------------------------------------------------------------------===//
+comment|/// \brief Return a raw pointer that uniquely identifies this attribute list.
+name|void
+operator|*
+name|getRawPointer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|pImpl
+return|;
+block|}
+comment|/// \brief Return true if there are no attributes.
+name|bool
+name|isEmpty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumSlots
+argument_list|()
+operator|==
+literal|0
+return|;
+block|}
+comment|/// \brief Return the number of slots used in this attribute list.  This is
+comment|/// the number of arguments that have an attribute set on them (including the
+comment|/// function itself).
+name|unsigned
+name|getNumSlots
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Return the index for the given slot.
+name|unsigned
+name|getSlotIndex
+argument_list|(
+argument|unsigned Slot
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return the attributes at the given slot.
+name|AttributeList
+name|getSlotAttributes
+argument_list|(
+argument|unsigned Slot
+argument_list|)
+specifier|const
+block|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+block|; }
+expr_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// \class
+comment|/// \brief Provide DenseMapInfo for AttributeList.
+name|template
+operator|<
+operator|>
+expr|struct
+name|DenseMapInfo
+operator|<
+name|AttributeList
+operator|>
+block|{
+specifier|static
+specifier|inline
+name|AttributeList
+name|getEmptyKey
+argument_list|()
+block|{
+name|uintptr_t
+name|Val
+operator|=
+name|static_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+operator|-
+literal|1
+operator|)
+block|;
+name|Val
+operator|<<=
+name|PointerLikeTypeTraits
+operator|<
+name|void
+operator|*
+operator|>
+operator|::
+name|NumLowBitsAvailable
+block|;
+return|return
+name|AttributeList
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|AttributeListImpl
+operator|*
+operator|>
+operator|(
+name|Val
+operator|)
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|inline
+name|AttributeList
+name|getTombstoneKey
+argument_list|()
+block|{
+name|uintptr_t
+name|Val
+operator|=
+name|static_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+operator|-
+literal|2
+operator|)
+block|;
+name|Val
+operator|<<=
+name|PointerLikeTypeTraits
+operator|<
+name|void
+operator|*
+operator|>
+operator|::
+name|NumLowBitsAvailable
+block|;
+return|return
+name|AttributeList
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|AttributeListImpl
+operator|*
+operator|>
+operator|(
+name|Val
+operator|)
+argument_list|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getHashValue
+argument_list|(
+argument|AttributeList AS
 argument_list|)
 block|{
 return|return
@@ -1510,9 +1869,9 @@ specifier|static
 name|bool
 name|isEqual
 argument_list|(
-argument|AttributeSet LHS
+argument|AttributeList LHS
 argument_list|,
-argument|AttributeSet RHS
+argument|AttributeList RHS
 argument_list|)
 block|{
 return|return
@@ -1558,90 +1917,39 @@ name|TargetDepAttrs
 block|;
 name|uint64_t
 name|Alignment
+operator|=
+literal|0
 block|;
 name|uint64_t
 name|StackAlignment
+operator|=
+literal|0
 block|;
 name|uint64_t
 name|DerefBytes
+operator|=
+literal|0
 block|;
 name|uint64_t
 name|DerefOrNullBytes
+operator|=
+literal|0
 block|;
 name|uint64_t
 name|AllocSizeArgs
+operator|=
+literal|0
 block|;
 name|public
 operator|:
 name|AttrBuilder
 argument_list|()
-operator|:
-name|Attrs
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Alignment
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|StackAlignment
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|DerefBytes
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|DerefOrNullBytes
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|AllocSizeArgs
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|AttrBuilder
 argument_list|(
-specifier|const
-name|Attribute
-operator|&
-name|A
-argument_list|)
-operator|:
-name|Attrs
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Alignment
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|StackAlignment
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|DerefBytes
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|DerefOrNullBytes
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|AllocSizeArgs
-argument_list|(
-literal|0
+argument|const Attribute&A
 argument_list|)
 block|{
 name|addAttribute
@@ -1651,9 +1959,14 @@ argument_list|)
 block|;   }
 name|AttrBuilder
 argument_list|(
-argument|AttributeSet AS
+argument|AttributeList AS
 argument_list|,
 argument|unsigned Idx
+argument_list|)
+block|;
+name|AttrBuilder
+argument_list|(
+argument|AttributeSet AS
 argument_list|)
 block|;
 name|void
@@ -1699,9 +2012,9 @@ name|AttrBuilder
 operator|&
 name|removeAttributes
 argument_list|(
-argument|AttributeSet A
+argument|AttributeList A
 argument_list|,
-argument|uint64_t Index
+argument|uint64_t WithoutIndex
 argument_list|)
 block|;
 comment|/// \brief Remove the target-dependent attribute to the builder.
@@ -1792,7 +2105,7 @@ comment|/// specified attribute.
 name|bool
 name|hasAttributes
 argument_list|(
-argument|AttributeSet A
+argument|AttributeList A
 argument_list|,
 argument|uint64_t Index
 argument_list|)
@@ -1982,8 +2295,6 @@ name|const_iterator
 name|td_const_iterator
 expr_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|iterator_range
 operator|<
 name|td_iterator
@@ -1991,8 +2302,6 @@ operator|>
 name|td_range
 expr_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|iterator_range
 operator|<
 name|td_const_iterator
@@ -2184,6 +2493,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_ATTRIBUTES_H
+end_comment
 
 end_unit
 

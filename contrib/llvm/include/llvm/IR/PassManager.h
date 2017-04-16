@@ -273,6 +273,92 @@ argument_list|)
 name|AnalysisSetKey
 block|{}
 struct|;
+comment|/// This templated class represents "all analyses that operate over \<a
+comment|/// particular IR unit\>" (e.g. a Function or a Module) in instances of
+comment|/// PreservedAnalysis.
+comment|///
+comment|/// This lets a transformation say e.g. "I preserved all function analyses".
+comment|///
+comment|/// Note that you must provide an explicit instantiation declaration and
+comment|/// definition for this template in order to get the correct behavior on
+comment|/// Windows. Otherwise, the address of SetKey will not be stable.
+name|template
+operator|<
+name|typename
+name|IRUnitT
+operator|>
+name|class
+name|AllAnalysesOn
+block|{
+name|public
+operator|:
+specifier|static
+name|AnalysisSetKey
+operator|*
+name|ID
+argument_list|()
+block|{
+return|return
+operator|&
+name|SetKey
+return|;
+block|}
+name|private
+operator|:
+specifier|static
+name|AnalysisSetKey
+name|SetKey
+block|; }
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|IRUnitT
+operator|>
+name|AnalysisSetKey
+name|AllAnalysesOn
+operator|<
+name|IRUnitT
+operator|>
+operator|::
+name|SetKey
+expr_stmt|;
+extern|extern template class AllAnalysesOn<Module>;
+extern|extern template class AllAnalysesOn<Function>;
+comment|/// Represents analyses that only rely on functions' control flow.
+comment|///
+comment|/// This can be used with \c PreservedAnalyses to mark the CFG as preserved and
+comment|/// to query whether it has been preserved.
+comment|///
+comment|/// The CFG of a function is defined as the set of basic blocks and the edges
+comment|/// between them. Changing the set of basic blocks in a function is enough to
+comment|/// mutate the CFG. Mutating the condition of a branch or argument of an
+comment|/// invoked function does not mutate the CFG, but changing the successor labels
+comment|/// of those instructions does.
+name|class
+name|CFGAnalyses
+block|{
+name|public
+label|:
+specifier|static
+name|AnalysisSetKey
+modifier|*
+name|ID
+parameter_list|()
+block|{
+return|return
+operator|&
+name|SetKey
+return|;
+block|}
+name|private
+label|:
+specifier|static
+name|AnalysisSetKey
+name|SetKey
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|/// A set of analyses that are preserved following a run of a transformation
 comment|/// pass.
 comment|///
@@ -1155,97 +1241,6 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// This templated class represents "all analyses that operate over \<a
-end_comment
-
-begin_comment
-comment|/// particular IR unit\>" (e.g. a Function or a Module) in instances of
-end_comment
-
-begin_comment
-comment|/// PreservedAnalysis.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This lets a transformation say e.g. "I preserved all function analyses".
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Note that you must provide an explicit instantiation declaration and
-end_comment
-
-begin_comment
-comment|/// definition for this template in order to get the correct behavior on
-end_comment
-
-begin_comment
-comment|/// Windows. Otherwise, the address of SetKey will not be stable.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|IRUnitT
-operator|>
-name|class
-name|AllAnalysesOn
-block|{
-name|public
-operator|:
-specifier|static
-name|AnalysisSetKey
-operator|*
-name|ID
-argument_list|()
-block|{
-return|return
-operator|&
-name|SetKey
-return|;
-block|}
-name|private
-operator|:
-specifier|static
-name|AnalysisSetKey
-name|SetKey
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
-name|template
-operator|<
-name|typename
-name|IRUnitT
-operator|>
-name|AnalysisSetKey
-name|AllAnalysesOn
-operator|<
-name|IRUnitT
-operator|>
-operator|::
-name|SetKey
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
-extern|extern template class AllAnalysesOn<Module>;
-end_extern
-
-begin_extern
-extern|extern template class AllAnalysesOn<Function>;
-end_extern
-
-begin_comment
 comment|/// \brief Manages a sequence of passes over a particular unit of IR.
 end_comment
 
@@ -3253,6 +3248,13 @@ operator|.
 name|name
 argument_list|()
 operator|<<
+literal|" on "
+operator|<<
+name|IR
+operator|.
+name|getName
+argument_list|()
+operator|<<
 literal|"\n"
 expr_stmt|;
 name|I
@@ -3483,6 +3485,13 @@ operator|.
 name|name
 argument_list|()
 operator|<<
+literal|" on "
+operator|<<
+name|IR
+operator|.
+name|getName
+argument_list|()
+operator|<<
 literal|"\n"
 expr_stmt|;
 name|AnalysisResultListT
@@ -3689,6 +3698,13 @@ name|ID
 argument_list|)
 operator|.
 name|name
+argument_list|()
+operator|<<
+literal|" on "
+operator|<<
+name|IR
+operator|.
+name|getName
 argument_list|()
 operator|<<
 literal|"\n"

@@ -95,6 +95,17 @@ block|{
 name|namespace
 name|path
 block|{
+name|enum
+name|class
+name|Style
+block|{
+name|windows
+operator|,
+name|posix
+operator|,
+name|native
+block|}
+empty_stmt|;
 comment|/// @name Lexical Component Iterator
 comment|/// @{
 comment|/// @brief Path iterator.
@@ -143,6 +154,10 @@ name|size_t
 name|Position
 decl_stmt|;
 comment|///< The iterators current position within Path.
+name|Style
+name|S
+decl_stmt|;
+comment|///< The path style to use.
 comment|// An end iterator has Position = Path.size() + 1.
 name|friend
 name|const_iterator
@@ -150,6 +165,9 @@ name|begin
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
 parameter_list|)
 function_decl|;
 name|friend
@@ -271,12 +289,19 @@ name|size_t
 name|Position
 decl_stmt|;
 comment|///< The iterators current position within Path.
+name|Style
+name|S
+decl_stmt|;
+comment|///< The path style to use.
 name|friend
 name|reverse_iterator
 name|rbegin
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
 parameter_list|)
 function_decl|;
 name|friend
@@ -374,6 +399,13 @@ name|begin
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Get end iterator over \a path.
@@ -394,6 +426,13 @@ name|rbegin
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Get reverse end iterator over \a path.
@@ -428,6 +467,13 @@ name|char
 operator|>
 operator|&
 name|path
+argument_list|,
+name|Style
+name|style
+operator|=
+name|Style
+operator|::
+name|native
 argument_list|)
 decl_stmt|;
 comment|/// @brief Replace the file extension of \a path with \a extension.
@@ -456,6 +502,13 @@ specifier|const
 name|Twine
 operator|&
 name|extension
+argument_list|,
+name|Style
+name|style
+operator|=
+name|Style
+operator|::
+name|native
 argument_list|)
 decl_stmt|;
 comment|/// @brief Replace matching path prefix with another path.
@@ -490,6 +543,13 @@ specifier|const
 name|StringRef
 operator|&
 name|NewPrefix
+argument_list|,
+name|Style
+name|style
+operator|=
+name|Style
+operator|::
+name|native
 argument_list|)
 decl_stmt|;
 comment|/// @brief Append to path.
@@ -511,6 +571,46 @@ name|char
 operator|>
 operator|&
 name|path
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|a
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|b
+operator|=
+literal|""
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|c
+operator|=
+literal|""
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|d
+operator|=
+literal|""
+argument_list|)
+decl_stmt|;
+name|void
+name|append
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|path
+argument_list|,
+name|Style
+name|style
 argument_list|,
 specifier|const
 name|Twine
@@ -565,6 +665,13 @@ name|begin
 argument_list|,
 name|const_iterator
 name|end
+argument_list|,
+name|Style
+name|style
+operator|=
+name|Style
+operator|::
+name|native
 argument_list|)
 decl_stmt|;
 comment|/// @}
@@ -590,6 +697,13 @@ name|char
 operator|>
 operator|&
 name|result
+argument_list|,
+name|Style
+name|style
+operator|=
+name|Style
+operator|::
+name|native
 argument_list|)
 decl_stmt|;
 comment|/// Convert path to the native form in place. This is used to give paths to
@@ -606,6 +720,13 @@ name|char
 operator|>
 operator|&
 name|path
+argument_list|,
+name|Style
+name|style
+operator|=
+name|Style
+operator|::
+name|native
 argument_list|)
 decl_stmt|;
 comment|/// @brief Replaces backslashes with slashes if Windows.
@@ -620,6 +741,8 @@ name|string
 name|convert_to_slash
 argument_list|(
 argument|StringRef path
+argument_list|,
+argument|Style style = Style::native
 argument_list|)
 expr_stmt|;
 comment|/// @}
@@ -640,6 +763,13 @@ name|root_name
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Get root directory.
@@ -658,6 +788,13 @@ name|root_directory
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Get root path.
@@ -671,6 +808,13 @@ name|root_path
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Get relative path.
@@ -688,6 +832,13 @@ name|relative_path
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Get parent path.
@@ -705,6 +856,13 @@ name|parent_path
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Get filename.
@@ -724,6 +882,13 @@ name|filename
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Get stem.
@@ -747,6 +912,13 @@ name|stem
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Get extension.
@@ -768,6 +940,13 @@ name|extension
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Check whether the given char is a path separator on the host OS.
@@ -779,6 +958,13 @@ name|is_separator
 parameter_list|(
 name|char
 name|value
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Return the preferred separator for this platform.
@@ -786,7 +972,14 @@ comment|///
 comment|/// @result StringRef of the preferred separator, null-terminated.
 name|StringRef
 name|get_separator
-parameter_list|()
+parameter_list|(
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
+parameter_list|)
 function_decl|;
 comment|/// @brief Get the typical temporary directory for the system, e.g.,
 comment|/// "/var/tmp" or "C:/TEMP"
@@ -882,6 +1075,13 @@ specifier|const
 name|Twine
 modifier|&
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Has root directory?
@@ -897,6 +1097,13 @@ specifier|const
 name|Twine
 modifier|&
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Has root path?
@@ -912,6 +1119,13 @@ specifier|const
 name|Twine
 modifier|&
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Has relative path?
@@ -927,6 +1141,13 @@ specifier|const
 name|Twine
 modifier|&
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Has parent path?
@@ -942,6 +1163,13 @@ specifier|const
 name|Twine
 modifier|&
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Has filename?
@@ -957,6 +1185,13 @@ specifier|const
 name|Twine
 modifier|&
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Has stem?
@@ -972,6 +1207,13 @@ specifier|const
 name|Twine
 modifier|&
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Has extension?
@@ -987,6 +1229,13 @@ specifier|const
 name|Twine
 modifier|&
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Is path absolute?
@@ -1000,6 +1249,13 @@ specifier|const
 name|Twine
 modifier|&
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Is path relative?
@@ -1013,6 +1269,13 @@ specifier|const
 name|Twine
 modifier|&
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief Remove redundant leading "./" pieces and consecutive separators.
@@ -1024,6 +1287,13 @@ name|remove_leading_dotslash
 parameter_list|(
 name|StringRef
 name|path
+parameter_list|,
+name|Style
+name|style
+init|=
+name|Style
+operator|::
+name|native
 parameter_list|)
 function_decl|;
 comment|/// @brief In-place remove any './' and optionally '../' components from a path.
@@ -1046,6 +1316,13 @@ name|bool
 name|remove_dot_dot
 operator|=
 name|false
+argument_list|,
+name|Style
+name|style
+operator|=
+name|Style
+operator|::
+name|native
 argument_list|)
 decl_stmt|;
 block|}

@@ -102,13 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/ValueHandle.h"
+file|"llvm/IR/CallSite.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/ValueMap.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
@@ -123,12 +123,39 @@ directive|include
 file|<functional>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|Module
+name|AllocaInst
+decl_stmt|;
+name|class
+name|BasicBlock
+decl_stmt|;
+name|class
+name|BlockFrequencyInfo
+decl_stmt|;
+name|class
+name|CallInst
+decl_stmt|;
+name|class
+name|CallGraph
+decl_stmt|;
+name|class
+name|DominatorTree
 decl_stmt|;
 name|class
 name|Function
@@ -137,37 +164,7 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
-name|Pass
-decl_stmt|;
-name|class
-name|LPPassManager
-decl_stmt|;
-name|class
-name|BasicBlock
-decl_stmt|;
-name|class
-name|Value
-decl_stmt|;
-name|class
-name|CallInst
-decl_stmt|;
-name|class
 name|InvokeInst
-decl_stmt|;
-name|class
-name|ReturnInst
-decl_stmt|;
-name|class
-name|CallSite
-decl_stmt|;
-name|class
-name|Trace
-decl_stmt|;
-name|class
-name|CallGraph
-decl_stmt|;
-name|class
-name|DataLayout
 decl_stmt|;
 name|class
 name|Loop
@@ -176,13 +173,10 @@ name|class
 name|LoopInfo
 decl_stmt|;
 name|class
-name|AllocaInst
+name|Module
 decl_stmt|;
 name|class
-name|AssumptionCacheTracker
-decl_stmt|;
-name|class
-name|DominatorTree
+name|ReturnInst
 decl_stmt|;
 comment|/// Return an exact copy of the specified module
 comment|///
@@ -260,6 +254,8 @@ comment|/// ContainsCalls - This is set to true if the cloned code contains a no
 comment|/// call instruction.
 name|bool
 name|ContainsCalls
+init|=
+name|false
 decl_stmt|;
 comment|/// ContainsDynamicAllocas - This is set to true if the cloned code contains
 comment|/// a 'dynamic' alloca.  Dynamic allocas are allocas that are either not in
@@ -267,6 +263,8 @@ comment|/// the entry block or they are in the entry block but are not a constan
 comment|/// size.
 name|bool
 name|ContainsDynamicAllocas
+init|=
+name|false
 decl_stmt|;
 comment|/// All cloned call sites that have operand bundles attached are appended to
 comment|/// this vector.  This vector may contain nulls or undefs if some of the
@@ -281,17 +279,9 @@ name|OperandBundleCallSites
 expr_stmt|;
 name|ClonedCodeInfo
 argument_list|()
-operator|:
-name|ContainsCalls
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ContainsDynamicAllocas
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 block|}
 struct|;
 comment|/// CloneBasicBlock - Return a copy of the specified basic block, but without
@@ -583,6 +573,18 @@ operator|*
 name|GetAssumptionCache
 operator|=
 name|nullptr
+argument_list|,
+name|BlockFrequencyInfo
+operator|*
+name|CallerBFI
+operator|=
+name|nullptr
+argument_list|,
+name|BlockFrequencyInfo
+operator|*
+name|CalleeBFI
+operator|=
+name|nullptr
 argument_list|)
 range|:
 name|CG
@@ -593,6 +595,16 @@ decl_stmt|,
 name|GetAssumptionCache
 argument_list|(
 name|GetAssumptionCache
+argument_list|)
+decl_stmt|,
+name|CallerBFI
+argument_list|(
+name|CallerBFI
+argument_list|)
+decl_stmt|,
+name|CalleeBFI
+argument_list|(
+name|CalleeBFI
 argument_list|)
 block|{}
 comment|/// CG - If non-null, InlineFunction will update the callgraph to reflect the
@@ -615,6 +627,13 @@ operator|>
 operator|*
 name|GetAssumptionCache
 expr_stmt|;
+name|BlockFrequencyInfo
+modifier|*
+name|CallerBFI
+decl_stmt|,
+modifier|*
+name|CalleeBFI
+decl_stmt|;
 comment|/// StaticAllocas - InlineFunction fills this in with all static allocas that
 comment|/// get copied into the caller.
 name|SmallVector
@@ -819,17 +838,48 @@ operator|&
 name|VMap
 argument_list|)
 decl_stmt|;
+comment|/// Split edge between BB and PredBB and duplicate all non-Phi instructions
+comment|/// from BB between its beginning and the StopAt instruction into the split
+comment|/// block. Phi nodes are not duplicated, but their uses are handled correctly:
+comment|/// we replace them with the uses of corresponding Phi inputs. ValueMapping
+comment|/// is used to map the original instructions from BB to their newly-created
+comment|/// copies. Returns the split block.
+name|BasicBlock
+modifier|*
+name|DuplicateInstructionsInSplitBetween
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|PredBB
+parameter_list|,
+name|Instruction
+modifier|*
+name|StopAt
+parameter_list|,
+name|ValueToValueMapTy
+modifier|&
+name|ValueMapping
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_UTILS_CLONING_H
+end_comment
 
 end_unit
 

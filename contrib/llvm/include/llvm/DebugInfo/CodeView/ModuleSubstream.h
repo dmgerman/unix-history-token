@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamArray.h"
+file|"llvm/Support/BinaryStreamArray.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamRef.h"
+file|"llvm/Support/BinaryStreamRef.h"
 end_include
 
 begin_include
@@ -202,23 +202,21 @@ name|ModuleSubstream
 argument_list|(
 argument|ModuleSubstreamKind Kind
 argument_list|,
-argument|msf::ReadableStreamRef Data
+argument|BinaryStreamRef Data
 argument_list|)
 empty_stmt|;
 specifier|static
 name|Error
 name|initialize
-argument_list|(
-name|msf
-operator|::
-name|ReadableStreamRef
+parameter_list|(
+name|BinaryStreamRef
 name|Stream
-argument_list|,
+parameter_list|,
 name|ModuleSubstream
-operator|&
+modifier|&
 name|Info
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|uint32_t
 name|getRecordLength
 argument_list|()
@@ -229,9 +227,7 @@ name|getSubstreamKind
 argument_list|()
 specifier|const
 expr_stmt|;
-name|msf
-operator|::
-name|ReadableStreamRef
+name|BinaryStreamRef
 name|getRecordData
 argument_list|()
 specifier|const
@@ -241,16 +237,12 @@ label|:
 name|ModuleSubstreamKind
 name|Kind
 decl_stmt|;
-name|msf
-operator|::
-name|ReadableStreamRef
+name|BinaryStreamRef
 name|Data
-expr_stmt|;
+decl_stmt|;
 block|}
 empty_stmt|;
 typedef|typedef
-name|msf
-operator|::
 name|VarStreamArray
 operator|<
 name|ModuleSubstream
@@ -259,9 +251,6 @@ name|ModuleSubstreamArray
 expr_stmt|;
 block|}
 comment|// namespace codeview
-name|namespace
-name|msf
-block|{
 name|template
 operator|<
 operator|>
@@ -277,7 +266,7 @@ name|Error
 name|operator
 argument_list|()
 operator|(
-name|ReadableStreamRef
+name|BinaryStreamRef
 name|Stream
 operator|,
 name|uint32_t
@@ -326,13 +315,11 @@ argument_list|()
 return|;
 block|}
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
-begin_comment
-comment|// namespace msf
-end_comment
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 unit|}

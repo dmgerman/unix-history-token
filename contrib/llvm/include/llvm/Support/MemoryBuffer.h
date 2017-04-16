@@ -256,9 +256,9 @@ comment|/// if successful, otherwise returning null. If FileSize is specified, t
 comment|/// means that the client knows that the file exists and that it has the
 comment|/// specified size.
 comment|///
-comment|/// \param IsVolatileSize Set to true to indicate that the file size may be
-comment|/// changing, e.g. when libclang tries to parse while the user is
-comment|/// editing/updating the file.
+comment|/// \param IsVolatile Set to true to indicate that the contents of the file
+comment|/// can change outside the user's control, e.g. when libclang tries to parse
+comment|/// while the user is editing/updating the file or if the file is on an NFS.
 specifier|static
 name|ErrorOr
 operator|<
@@ -277,7 +277,7 @@ literal|1
 argument_list|,
 argument|bool RequiresNullTerminator = true
 argument_list|,
-argument|bool IsVolatileSize = false
+argument|bool IsVolatile = false
 argument_list|)
 expr_stmt|;
 comment|/// Read all of the specified file into a MemoryBuffer as a stream
@@ -321,14 +321,16 @@ argument_list|,
 argument|uint64_t MapSize
 argument_list|,
 argument|int64_t Offset
+argument_list|,
+argument|bool IsVolatile = false
 argument_list|)
 expr_stmt|;
 comment|/// Given an already-open file descriptor, read the file and return a
 comment|/// MemoryBuffer.
 comment|///
-comment|/// \param IsVolatileSize Set to true to indicate that the file size may be
-comment|/// changing, e.g. when libclang tries to parse while the user is
-comment|/// editing/updating the file.
+comment|/// \param IsVolatile Set to true to indicate that the contents of the file
+comment|/// can change outside the user's control, e.g. when libclang tries to parse
+comment|/// while the user is editing/updating the file or if the file is on an NFS.
 specifier|static
 name|ErrorOr
 operator|<
@@ -348,7 +350,7 @@ argument|uint64_t FileSize
 argument_list|,
 argument|bool RequiresNullTerminator = true
 argument_list|,
-argument|bool IsVolatileSize = false
+argument|bool IsVolatile = false
 argument_list|)
 expr_stmt|;
 comment|/// Open the specified memory range as a MemoryBuffer. Note that InputData
@@ -488,6 +490,8 @@ argument_list|,
 argument|uint64_t MapSize
 argument_list|,
 argument|uint64_t Offset
+argument_list|,
+argument|bool IsVolatile = false
 argument_list|)
 expr_stmt|;
 comment|//===--------------------------------------------------------------------===//

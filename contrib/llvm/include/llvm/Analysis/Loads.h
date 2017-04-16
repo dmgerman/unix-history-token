@@ -251,6 +251,76 @@ operator|*
 name|IsLoadCSE
 operator|=
 name|nullptr
+argument_list|,
+name|unsigned
+operator|*
+name|NumScanedInst
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+comment|/// Scan backwards to see if we have the value of the given pointer available
+comment|/// locally within a small number of instructions.
+comment|///
+comment|/// You can use this function to scan across multiple blocks: after you call
+comment|/// this function, if ScanFrom points at the beginning of the block, it's safe
+comment|/// to continue scanning the predecessors.
+comment|///
+comment|/// \param Ptr The pointer we want the load and store to originate from.
+comment|/// \param AccessTy The access type of the pointer.
+comment|/// \param AtLeastAtomic Are we looking for at-least an atomic load/store ? In
+comment|/// case it is false, we can return an atomic or non-atomic load or store. In
+comment|/// case it is true, we need to return an atomic load or store.
+comment|/// \param ScanBB The basic block to scan.
+comment|/// \param [in,out] ScanFrom The location to start scanning from. When this
+comment|/// function returns, it points at the last instruction scanned.
+comment|/// \param MaxInstsToScan The maximum number of instructions to scan. If this
+comment|/// is zero, the whole block will be scanned.
+comment|/// \param AA Optional pointer to alias analysis, to make the scan more
+comment|/// precise.
+comment|/// \param [out] IsLoad Whether the returned value is a load from the same
+comment|/// location in memory, as opposed to the value operand of a store.
+comment|///
+comment|/// \returns The found value, or nullptr if no value is found.
+name|Value
+modifier|*
+name|FindAvailablePtrLoadStore
+argument_list|(
+name|Value
+operator|*
+name|Ptr
+argument_list|,
+name|Type
+operator|*
+name|AccessTy
+argument_list|,
+name|bool
+name|AtLeastAtomic
+argument_list|,
+name|BasicBlock
+operator|*
+name|ScanBB
+argument_list|,
+name|BasicBlock
+operator|::
+name|iterator
+operator|&
+name|ScanFrom
+argument_list|,
+name|unsigned
+name|MaxInstsToScan
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
+argument_list|,
+name|bool
+operator|*
+name|IsLoad
+argument_list|,
+name|unsigned
+operator|*
+name|NumScanedInst
 argument_list|)
 decl_stmt|;
 block|}

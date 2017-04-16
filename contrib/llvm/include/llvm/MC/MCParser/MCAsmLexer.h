@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCAsmLexer.h - Abstract Asm Lexer Interface -----*- C++ -*-===//
+comment|//===- llvm/MC/MCAsmLexer.h - Abstract Asm Lexer Interface ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,25 +70,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/SMLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -272,7 +284,9 @@ name|public
 label|:
 name|AsmToken
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|AsmToken
 argument_list|(
 argument|TokenKind Kind
@@ -520,7 +534,8 @@ name|virtual
 operator|~
 name|AsmCommentConsumer
 argument_list|()
-block|{}
+operator|=
+expr|default
 expr_stmt|;
 comment|/// Callback function for when a comment is lexed. Loc is the start of the
 comment|/// comment text (excluding the comment-start marker). CommentText is the text
@@ -576,26 +591,6 @@ operator|::
 name|string
 name|Err
 expr_stmt|;
-name|MCAsmLexer
-argument_list|(
-specifier|const
-name|MCAsmLexer
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCAsmLexer
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|protected
 label|:
 comment|// Can only create subclasses.
@@ -603,19 +598,27 @@ specifier|const
 name|char
 modifier|*
 name|TokStart
+init|=
+name|nullptr
 decl_stmt|;
 name|bool
 name|SkipSpace
+init|=
+name|true
 decl_stmt|;
 name|bool
 name|AllowAtInIdentifier
 decl_stmt|;
 name|bool
 name|IsAtStartOfStatement
+init|=
+name|true
 decl_stmt|;
 name|AsmCommentConsumer
 modifier|*
 name|CommentConsumer
+init|=
+name|nullptr
 decl_stmt|;
 name|MCAsmLexer
 argument_list|()
@@ -652,6 +655,27 @@ expr_stmt|;
 block|}
 name|public
 label|:
+name|MCAsmLexer
+argument_list|(
+specifier|const
+name|MCAsmLexer
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MCAsmLexer
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCAsmLexer
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|virtual
 operator|~
 name|MCAsmLexer
@@ -1004,13 +1028,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCPARSER_MCASMLEXER_H
+end_comment
 
 end_unit
 

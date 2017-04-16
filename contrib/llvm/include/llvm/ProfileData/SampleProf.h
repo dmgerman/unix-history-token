@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=-- SampleProf.h - Sampling profiling format support --------------------===//
+comment|//===- SampleProf.h - Sampling profiling format support ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -54,14 +54,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_PROFILEDATA_SAMPLEPROF_H_
+name|LLVM_PROFILEDATA_SAMPLEPROF_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_PROFILEDATA_SAMPLEPROF_H_
+name|LLVM_PROFILEDATA_SAMPLEPROF_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
 
 begin_include
 include|#
@@ -73,6 +79,30 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/GlobalValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Module.h"
 end_include
 
 begin_include
@@ -90,7 +120,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -102,13 +144,28 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<system_error>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 specifier|const
 name|std
 operator|::
@@ -238,6 +295,10 @@ block|{}
 expr_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace std
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -467,15 +528,9 @@ name|CallTargetMap
 expr_stmt|;
 name|SampleRecord
 argument_list|()
-operator|:
-name|NumSamples
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|CallTargets
-argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Increment the number of samples for this record by \p S.
 comment|/// Optionally scale sample count \p S by \p Weight.
 comment|///
@@ -483,16 +538,19 @@ comment|/// Sample counts accumulate using saturating arithmetic, to avoid wrapp
 comment|/// around unsigned integers.
 name|sampleprof_error
 name|addSamples
-argument_list|(
-argument|uint64_t S
-argument_list|,
-argument|uint64_t Weight =
+parameter_list|(
+name|uint64_t
+name|S
+parameter_list|,
+name|uint64_t
+name|Weight
+init|=
 literal|1
-argument_list|)
+parameter_list|)
 block|{
 name|bool
 name|Overflowed
-block|;
+decl_stmt|;
 name|NumSamples
 operator|=
 name|SaturatingMultiplyAdd
@@ -506,7 +564,7 @@ argument_list|,
 operator|&
 name|Overflowed
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|Overflowed
 condition|?
@@ -584,12 +642,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
 name|CallTargets
 operator|.
-name|size
+name|empty
 argument_list|()
-operator|>
-literal|0
 return|;
 block|}
 name|uint64_t
@@ -699,6 +756,8 @@ name|private
 label|:
 name|uint64_t
 name|NumSamples
+init|=
+literal|0
 decl_stmt|;
 name|CallTargetMap
 name|CallTargets
@@ -735,13 +794,20 @@ name|class
 name|FunctionSamples
 decl_stmt|;
 typedef|typedef
+name|StringMap
+operator|<
+name|FunctionSamples
+operator|>
+name|FunctionSamplesMap
+expr_stmt|;
+typedef|typedef
 name|std
 operator|::
 name|map
 operator|<
 name|LineLocation
 operator|,
-name|FunctionSamples
+name|FunctionSamplesMap
 operator|>
 name|CallsiteSampleMap
 expr_stmt|;
@@ -757,30 +823,26 @@ name|public
 label|:
 name|FunctionSamples
 argument_list|()
-operator|:
-name|Name
-argument_list|()
-operator|,
-name|TotalSamples
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TotalHeadSamples
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|print
 argument_list|(
-argument|raw_ostream&OS = dbgs()
+name|raw_ostream
+operator|&
+name|OS
+operator|=
+name|dbgs
+argument_list|()
 argument_list|,
-argument|unsigned Indent =
+name|unsigned
+name|Indent
+operator|=
 literal|0
 argument_list|)
-specifier|const
-expr_stmt|;
+decl|const
+decl_stmt|;
 name|void
 name|dump
 argument_list|()
@@ -1008,14 +1070,16 @@ name|getSamples
 argument_list|()
 return|;
 block|}
-comment|/// Return the total number of call target samples collected at a given
-comment|/// location. Each location is specified by \p LineOffset and
-comment|/// \p Discriminator. If the location is not found in profile, return error.
+comment|/// Returns the call target map collected at a given location.
+comment|/// Each location is specified by \p LineOffset and \p Discriminator.
+comment|/// If the location is not found in profile, return error.
 name|ErrorOr
 operator|<
-name|uint64_t
+name|SampleRecord
+operator|::
+name|CallTargetMap
 operator|>
-name|findCallSamplesAt
+name|findCallTargetMapAt
 argument_list|(
 argument|uint32_t LineOffset
 argument_list|,
@@ -1055,39 +1119,17 @@ operator|::
 name|error_code
 argument_list|()
 return|;
-name|uint64_t
-name|T
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-specifier|const
-specifier|auto
-modifier|&
-name|t_c
-range|:
+return|return
 name|ret
 operator|->
 name|second
 operator|.
 name|getCallTargets
 argument_list|()
-control|)
-block|{
-name|T
-operator|+=
-name|t_c
-operator|.
-name|second
-expr_stmt|;
-block|}
-return|return
-name|T
 return|;
 block|}
 comment|/// Return the function samples at the given callsite location.
-name|FunctionSamples
+name|FunctionSamplesMap
 modifier|&
 name|functionSamplesAt
 parameter_list|(
@@ -1104,11 +1146,11 @@ name|Loc
 index|]
 return|;
 block|}
-comment|/// Return a pointer to function samples at the given callsite location.
+comment|/// Returns the FunctionSamplesMap at the given \p Loc.
 specifier|const
-name|FunctionSamples
+name|FunctionSamplesMap
 modifier|*
-name|findFunctionSamplesAt
+name|findFunctionSamplesMapAt
 argument_list|(
 specifier|const
 name|LineLocation
@@ -1136,13 +1178,9 @@ operator|.
 name|end
 argument_list|()
 condition|)
-block|{
 return|return
 name|nullptr
 return|;
-block|}
-else|else
-block|{
 return|return
 operator|&
 name|iter
@@ -1150,6 +1188,134 @@ operator|->
 name|second
 return|;
 block|}
+comment|/// Returns a pointer to FunctionSamples at the given callsite location \p Loc
+comment|/// with callee \p CalleeName. If no callsite can be found, relax the
+comment|/// restriction to return the FunctionSamples at callsite location \p Loc
+comment|/// with the maximum total sample count.
+specifier|const
+name|FunctionSamples
+modifier|*
+name|findFunctionSamplesAt
+argument_list|(
+specifier|const
+name|LineLocation
+operator|&
+name|Loc
+argument_list|,
+name|StringRef
+name|CalleeName
+argument_list|)
+decl|const
+block|{
+name|auto
+name|iter
+init|=
+name|CallsiteSamples
+operator|.
+name|find
+argument_list|(
+name|Loc
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|iter
+operator|==
+name|CallsiteSamples
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+name|auto
+name|FS
+init|=
+name|iter
+operator|->
+name|second
+operator|.
+name|find
+argument_list|(
+name|CalleeName
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|FS
+operator|!=
+name|iter
+operator|->
+name|second
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+operator|&
+name|FS
+operator|->
+name|getValue
+argument_list|()
+return|;
+comment|// If we cannot find exact match of the callee name, return the FS with
+comment|// the max total count.
+name|uint64_t
+name|MaxTotalSamples
+init|=
+literal|0
+decl_stmt|;
+specifier|const
+name|FunctionSamples
+modifier|*
+name|R
+init|=
+name|nullptr
+decl_stmt|;
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|NameFS
+range|:
+name|iter
+operator|->
+name|second
+control|)
+if|if
+condition|(
+name|NameFS
+operator|.
+name|second
+operator|.
+name|getTotalSamples
+argument_list|()
+operator|>=
+name|MaxTotalSamples
+condition|)
+block|{
+name|MaxTotalSamples
+operator|=
+name|NameFS
+operator|.
+name|second
+operator|.
+name|getTotalSamples
+argument_list|()
+expr_stmt|;
+name|R
+operator|=
+operator|&
+name|NameFS
+operator|.
+name|second
+expr_stmt|;
+block|}
+return|return
+name|R
+return|;
 block|}
 name|bool
 name|empty
@@ -1338,27 +1504,43 @@ name|I
 operator|.
 name|first
 decl_stmt|;
-specifier|const
-name|FunctionSamples
+name|FunctionSamplesMap
 modifier|&
-name|Rec
+name|FSMap
 init|=
-name|I
-operator|.
-name|second
-decl_stmt|;
-name|MergeResult
-argument_list|(
-name|Result
-argument_list|,
 name|functionSamplesAt
 argument_list|(
 name|Loc
 argument_list|)
+decl_stmt|;
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|Rec
+range|:
+name|I
+operator|.
+name|second
+control|)
+name|MergeResult
+argument_list|(
+name|Result
+argument_list|,
+name|FSMap
+index|[
+name|Rec
+operator|.
+name|first
+argument_list|()
+index|]
 operator|.
 name|merge
 argument_list|(
 name|Rec
+operator|.
+name|second
 argument_list|,
 name|Weight
 argument_list|)
@@ -1368,6 +1550,104 @@ block|}
 return|return
 name|Result
 return|;
+block|}
+comment|/// Recursively traverses all children, if the corresponding function is
+comment|/// not defined in module \p M, and its total sample is no less than
+comment|/// \p Threshold, add its corresponding GUID to \p S.
+name|void
+name|findImportedFunctions
+argument_list|(
+name|DenseSet
+operator|<
+name|GlobalValue
+operator|::
+name|GUID
+operator|>
+operator|&
+name|S
+argument_list|,
+specifier|const
+name|Module
+operator|*
+name|M
+argument_list|,
+name|uint64_t
+name|Threshold
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|TotalSamples
+operator|<=
+name|Threshold
+condition|)
+return|return;
+name|Function
+modifier|*
+name|F
+init|=
+name|M
+operator|->
+name|getFunction
+argument_list|(
+name|Name
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|F
+operator|||
+operator|!
+name|F
+operator|->
+name|getSubprogram
+argument_list|()
+condition|)
+name|S
+operator|.
+name|insert
+argument_list|(
+name|Function
+operator|::
+name|getGUID
+argument_list|(
+name|Name
+argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|auto
+name|CS
+range|:
+name|CallsiteSamples
+control|)
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|NameFS
+range|:
+name|CS
+operator|.
+name|second
+control|)
+name|NameFS
+operator|.
+name|second
+operator|.
+name|findImportedFunctions
+argument_list|(
+name|S
+argument_list|,
+name|M
+argument_list|,
+name|Threshold
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// Set the name of the function.
 name|void
@@ -1406,12 +1686,16 @@ comment|/// Samples are cumulative, they include all the samples collected
 comment|/// inside this function and all its inlined callees.
 name|uint64_t
 name|TotalSamples
+init|=
+literal|0
 decl_stmt|;
 comment|/// Total number of samples collected at the head of the function.
 comment|/// This is an approximation of the number of calls made to this function
 comment|/// at runtime.
 name|uint64_t
 name|TotalHeadSamples
+init|=
+literal|0
 decl_stmt|;
 comment|/// Map instruction locations to collected samples.
 comment|///
@@ -1604,7 +1888,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_PROFILEDATA_SAMPLEPROF_H_
+comment|// LLVM_PROFILEDATA_SAMPLEPROF_H
 end_comment
 
 end_unit

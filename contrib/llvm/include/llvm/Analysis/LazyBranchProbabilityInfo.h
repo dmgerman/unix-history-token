@@ -338,7 +338,57 @@ modifier|&
 name|Registry
 parameter_list|)
 function_decl|;
+comment|/// \brief Simple trait class that provides a mapping between BPI passes and the
+comment|/// corresponding BPInfo.
+name|template
+operator|<
+name|typename
+name|PassT
+operator|>
+expr|struct
+name|BPIPassTrait
+block|{
+specifier|static
+name|PassT
+operator|&
+name|getBPI
+argument_list|(
+argument|PassT *P
+argument_list|)
+block|{
+return|return
+operator|*
+name|P
+return|;
 block|}
+expr|}
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|BPIPassTrait
+operator|<
+name|LazyBranchProbabilityInfoPass
+operator|>
+block|{
+specifier|static
+name|BranchProbabilityInfo
+operator|&
+name|getBPI
+argument_list|(
+argument|LazyBranchProbabilityInfoPass *P
+argument_list|)
+block|{
+return|return
+name|P
+operator|->
+name|getBPI
+argument_list|()
+return|;
+block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_endif

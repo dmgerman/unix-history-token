@@ -76,6 +76,9 @@ name|class
 name|MCCFIInstruction
 decl_stmt|;
 name|class
+name|X86InstrInfo
+decl_stmt|;
+name|class
 name|X86Subtarget
 decl_stmt|;
 name|class
@@ -103,7 +106,7 @@ operator|&
 name|STI
 block|;
 specifier|const
-name|TargetInstrInfo
+name|X86InstrInfo
 operator|&
 name|TII
 block|;

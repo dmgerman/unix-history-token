@@ -105,6 +105,25 @@ operator|(
 name|true
 operator|)
 block|{}
+comment|/// Handle invalidation explicitly.
+name|bool
+name|invalidate
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

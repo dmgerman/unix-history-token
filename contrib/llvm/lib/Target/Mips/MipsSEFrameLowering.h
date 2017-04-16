@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MipsSEFrameLowering.h - Mips32/64 frame lowering --------*- C++ -*-===//
+comment|//===- MipsSEFrameLowering.h - Mips32/64 frame lowering ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -63,6 +63,18 @@ begin_include
 include|#
 directive|include
 file|"MipsFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -186,13 +198,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_MIPS_MIPSSEFRAMELOWERING_H
+end_comment
 
 end_unit
 

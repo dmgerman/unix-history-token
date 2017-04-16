@@ -511,23 +511,36 @@ name|addGlobalName
 argument_list|(
 argument|StringRef Name
 argument_list|,
-argument|DIE&Die
+argument|const DIE&Die
 argument_list|,
 argument|const DIScope *Context
 argument_list|)
-block|{   }
+operator|=
+literal|0
+block|;
 comment|/// Add a new global type to the compile unit.
 name|virtual
 name|void
 name|addGlobalType
 argument_list|(
-argument|const DIType *Ty
+specifier|const
+name|DIType
+operator|*
+name|Ty
 argument_list|,
-argument|const DIE&Die
+specifier|const
+name|DIE
+operator|&
+name|Die
 argument_list|,
-argument|const DIScope *Context
+specifier|const
+name|DIScope
+operator|*
+name|Context
 argument_list|)
-block|{}
+operator|=
+literal|0
+block|;
 comment|/// Returns the DIE map slot for the specified debug variable.
 comment|///
 comment|/// We delegate the request to DwarfDebug when the MDNode can be part of the
@@ -737,17 +750,6 @@ argument_list|(
 argument|DIE&Die
 argument_list|,
 argument|uint64_t Signature
-argument_list|)
-block|;
-comment|/// Add an attribute containing the type signature for a unique identifier.
-name|void
-name|addDIETypeSignature
-argument_list|(
-argument|DIE&Die
-argument_list|,
-argument|dwarf::Attribute Attribute
-argument_list|,
-argument|StringRef Identifier
 argument_list|)
 block|;
 comment|/// Add block data.
@@ -1050,7 +1052,7 @@ argument|const DISubprogram *SP
 argument_list|,
 argument|DIE&SPDie
 argument_list|,
-argument|bool Minimal = false
+argument|bool SkipSPAttributes = false
 argument_list|)
 block|;
 comment|/// Find existing DIE or create new DIE for the given type.
@@ -1062,17 +1064,6 @@ specifier|const
 name|MDNode
 operator|*
 name|N
-argument_list|)
-block|;
-comment|/// Get context owner's DIE.
-name|DIE
-operator|*
-name|createTypeDIE
-argument_list|(
-specifier|const
-name|DICompositeType
-operator|*
-name|Ty
 argument_list|)
 block|;
 comment|/// Get context owner's DIE.
@@ -1138,8 +1129,25 @@ sizeof|sizeof
 argument_list|(
 name|int8_t
 argument_list|)
-return|;
+operator|+
 comment|// Pointer Size (in bytes)
+operator|(
+name|DD
+operator|->
+name|getDwarfVersion
+argument_list|()
+operator|>=
+literal|5
+operator|?
+sizeof|sizeof
+argument_list|(
+name|int8_t
+argument_list|)
+operator|:
+literal|0
+operator|)
+return|;
+comment|// DWARF v5 unit type
 block|}
 comment|/// Emit the header for this unit, not including the initial length field.
 name|virtual
@@ -1148,6 +1156,8 @@ name|emitHeader
 argument_list|(
 argument|bool UseOffsets
 argument_list|)
+operator|=
+literal|0
 block|;
 name|virtual
 name|DwarfCompileUnit
@@ -1218,6 +1228,36 @@ name|resolve
 argument_list|()
 return|;
 block|}
+comment|/// If this is a named finished type then include it in the list of types for
+comment|/// the accelerator tables.
+name|void
+name|updateAcceleratorTables
+argument_list|(
+specifier|const
+name|DIScope
+operator|*
+name|Context
+argument_list|,
+specifier|const
+name|DIType
+operator|*
+name|Ty
+argument_list|,
+specifier|const
+name|DIE
+operator|&
+name|TyDIE
+argument_list|)
+block|;
+comment|/// Emit the common part of the header for this unit.
+name|void
+name|emitCommonHeader
+argument_list|(
+argument|bool UseOffsets
+argument_list|,
+argument|dwarf::UnitType UT
+argument_list|)
+block|;
 name|private
 operator|:
 name|void
@@ -1366,27 +1406,6 @@ name|IndexTyDie
 operator|=
 name|D
 block|; }
-comment|/// If this is a named finished type then include it in the list of types for
-comment|/// the accelerator tables.
-name|void
-name|updateAcceleratorTables
-argument_list|(
-specifier|const
-name|DIScope
-operator|*
-name|Context
-argument_list|,
-specifier|const
-name|DIType
-operator|*
-name|Ty
-argument_list|,
-specifier|const
-name|DIE
-operator|&
-name|TyDIE
-argument_list|)
-block|;
 name|virtual
 name|bool
 name|isDwoUnit
@@ -1482,6 +1501,17 @@ name|Ty
 operator|=
 name|Ty
 block|; }
+comment|/// Get context owner's DIE.
+name|DIE
+operator|*
+name|createTypeDIE
+argument_list|(
+specifier|const
+name|DICompositeType
+operator|*
+name|Ty
+argument_list|)
+block|;
 comment|/// Emit the header for this unit, not including the initial length field.
 name|void
 name|emitHeader
@@ -1515,6 +1545,28 @@ argument_list|)
 return|;
 comment|// Type DIE Offset
 block|}
+name|void
+name|addGlobalName
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|const DIE&Die
+argument_list|,
+argument|const DIScope *Context
+argument_list|)
+name|override
+block|;
+name|void
+name|addGlobalType
+argument_list|(
+argument|const DIType *Ty
+argument_list|,
+argument|const DIE&Die
+argument_list|,
+argument|const DIScope *Context
+argument_list|)
+name|override
+block|;
 name|DwarfCompileUnit
 operator|&
 name|getCU

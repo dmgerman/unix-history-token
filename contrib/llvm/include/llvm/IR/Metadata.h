@@ -324,7 +324,7 @@ argument_list|)
 operator|==
 literal|8
 argument_list|,
-literal|"Metdata fields poorly packed"
+literal|"Metadata fields poorly packed"
 argument_list|)
 block|;   }
 operator|~
@@ -946,6 +946,8 @@ name|Context
 decl_stmt|;
 name|uint64_t
 name|NextIndex
+init|=
+literal|0
 decl_stmt|;
 name|SmallDenseMap
 operator|<
@@ -976,12 +978,7 @@ argument_list|)
 operator|:
 name|Context
 argument_list|(
-name|Context
-argument_list|)
-operator|,
-name|NextIndex
-argument_list|(
-literal|0
+argument|Context
 argument_list|)
 block|{}
 operator|~
@@ -2381,20 +2378,17 @@ name|MDString
 operator|>
 operator|*
 name|Entry
+operator|=
+name|nullptr
 block|;
 name|MDString
 argument_list|()
 operator|:
 name|Metadata
 argument_list|(
-name|MDStringKind
+argument|MDStringKind
 argument_list|,
-name|Uniqued
-argument_list|)
-block|,
-name|Entry
-argument_list|(
-argument|nullptr
+argument|Uniqued
 argument_list|)
 block|{}
 name|public
@@ -6019,6 +6013,8 @@ block|;
 name|Module
 operator|*
 name|Parent
+operator|=
+name|nullptr
 block|;
 name|void
 operator|*

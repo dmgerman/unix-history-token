@@ -2836,6 +2836,16 @@ comment|// another sub-register with the same or larger lane mask.
 name|LaneBitmask
 name|CoveringLanes
 decl_stmt|;
+comment|// Helper function for printing debug information. Handles artificial
+comment|// (non-native) reg units.
+name|void
+name|printRegUnitName
+argument_list|(
+name|unsigned
+name|Unit
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 

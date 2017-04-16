@@ -141,6 +141,24 @@ directive|include
 file|"llvm/Transforms/InstCombine/InstCombineWorklist.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Utils/Local.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DIBuilder.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -173,15 +191,23 @@ decl_stmt|;
 name|class
 name|MemSetInst
 decl_stmt|;
-comment|/// \brief Assign a complexity or rank value to LLVM Values.
+comment|/// Assign a complexity or rank value to LLVM Values. This is used to reduce
+comment|/// the amount of pattern matching needed for compares and commutative
+comment|/// instructions. For example, if we have:
+comment|///   icmp ugt X, Constant
+comment|/// or
+comment|///   xor (add X, Constant), cast Z
+comment|///
+comment|/// We do not have to consider the commuted variants of these patterns because
+comment|/// canonicalization based on complexity guarantees the above ordering.
 comment|///
 comment|/// This routine maps IR values to various complexity ranks:
 comment|///   0 -> undef
 comment|///   1 -> Constants
 comment|///   2 -> Other non-instructions
 comment|///   3 -> Arguments
-comment|///   3 -> Unary operations
-comment|///   4 -> Other instructions
+comment|///   4 -> Cast and (f)neg/not instructions
+comment|///   5 -> Other instructions
 specifier|static
 specifier|inline
 name|unsigned
@@ -205,6 +231,14 @@ condition|)
 block|{
 if|if
 condition|(
+name|isa
+operator|<
+name|CastInst
+operator|>
+operator|(
+name|V
+operator|)
+operator|||
 name|BinaryOperator
 operator|::
 name|isNeg
@@ -227,10 +261,10 @@ name|V
 argument_list|)
 condition|)
 return|return
-literal|3
+literal|4
 return|;
 return|return
-literal|4
+literal|5
 return|;
 block|}
 if|if
@@ -1549,6 +1583,15 @@ parameter_list|)
 function_decl|;
 name|Instruction
 modifier|*
+name|visitFenceInst
+parameter_list|(
+name|FenceInst
+modifier|&
+name|FI
+parameter_list|)
+function_decl|;
+name|Instruction
+modifier|*
 name|visitSwitchInst
 parameter_list|(
 name|SwitchInst
@@ -1692,10 +1735,25 @@ name|unsigned
 name|SIOpd
 parameter_list|)
 function_decl|;
+comment|/// Try to replace instruction \p I with value \p V which are pointers
+comment|/// in different address space.
+comment|/// \return true if successful.
+name|bool
+name|replacePointer
+parameter_list|(
+name|Instruction
+modifier|&
+name|I
+parameter_list|,
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|bool
-name|ShouldChangeType
+name|shouldChangeType
 argument_list|(
 name|unsigned
 name|FromBitWidth
@@ -1706,7 +1764,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|ShouldChangeType
+name|shouldChangeType
 argument_list|(
 name|Type
 operator|*
@@ -2365,6 +2423,11 @@ operator|&&
 literal|"Cannot erase instruction that is used!"
 argument_list|)
 expr_stmt|;
+name|salvageDebugInfo
+argument_list|(
+name|I
+argument_list|)
+expr_stmt|;
 comment|// Make sure that we reprocess all operands now that we reduced their
 comment|// use counts.
 if|if
@@ -2699,6 +2762,10 @@ name|DT
 argument_list|)
 return|;
 block|}
+comment|/// Maximum size of array considered when transforming.
+name|uint64_t
+name|MaxArraySizeForCombine
+decl_stmt|;
 name|private
 label|:
 comment|/// \brief Performs a few simplifications for operators which are associative
@@ -2759,9 +2826,12 @@ function_decl|;
 name|bool
 name|SimplifyDemandedBits
 parameter_list|(
-name|Use
-modifier|&
-name|U
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|unsigned
+name|Op
 parameter_list|,
 specifier|const
 name|APInt
@@ -2780,6 +2850,38 @@ name|unsigned
 name|Depth
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+comment|/// Helper routine of SimplifyDemandedUseBits. It computes KnownZero/KnownOne
+comment|/// bits. It also tries to handle simplifications that can be done based on
+comment|/// DemandedMask, but without modifying the Instruction.
+name|Value
+modifier|*
+name|SimplifyMultipleUseDemandedBits
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|APInt
+modifier|&
+name|DemandedMask
+parameter_list|,
+name|APInt
+modifier|&
+name|KnownZero
+parameter_list|,
+name|APInt
+modifier|&
+name|KnownOne
+parameter_list|,
+name|unsigned
+name|Depth
+parameter_list|,
+name|Instruction
+modifier|*
+name|CxtI
 parameter_list|)
 function_decl|;
 comment|/// Helper routine of SimplifyDemandedUseBits. It tries to simplify demanded
@@ -2864,11 +2966,15 @@ comment|/// as operand #0, see if we can fold the instruction into the PHI (whic
 comment|/// only possible if all operands to the PHI are constants).
 name|Instruction
 modifier|*
-name|FoldOpIntoPhi
+name|foldOpIntoPhi
 parameter_list|(
 name|Instruction
 modifier|&
 name|I
+parameter_list|,
+name|PHINode
+modifier|*
+name|PN
 parameter_list|)
 function_decl|;
 comment|/// Given an instruction with a select as one operand and a constant as the
@@ -2893,7 +2999,7 @@ name|Instruction
 modifier|*
 name|foldOpWithConstantIntoOperand
 parameter_list|(
-name|Instruction
+name|BinaryOperator
 modifier|&
 name|I
 parameter_list|)
@@ -3528,7 +3634,7 @@ name|Instruction
 modifier|*
 name|OptAndOp
 parameter_list|(
-name|Instruction
+name|BinaryOperator
 modifier|*
 name|Op
 parameter_list|,
@@ -3543,30 +3649,6 @@ parameter_list|,
 name|BinaryOperator
 modifier|&
 name|TheAnd
-parameter_list|)
-function_decl|;
-name|Value
-modifier|*
-name|FoldLogicalPlusAnd
-parameter_list|(
-name|Value
-modifier|*
-name|LHS
-parameter_list|,
-name|Value
-modifier|*
-name|RHS
-parameter_list|,
-name|ConstantInt
-modifier|*
-name|Mask
-parameter_list|,
-name|bool
-name|isSub
-parameter_list|,
-name|Instruction
-modifier|&
-name|I
 parameter_list|)
 function_decl|;
 name|Value
@@ -3622,6 +3704,15 @@ parameter_list|(
 name|StoreInst
 modifier|&
 name|SI
+parameter_list|)
+function_decl|;
+name|Instruction
+modifier|*
+name|SimplifyElementAtomicMemCpy
+parameter_list|(
+name|ElementAtomicMemCpyInst
+modifier|*
+name|AMI
 parameter_list|)
 function_decl|;
 name|Instruction

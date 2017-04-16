@@ -61,6 +61,12 @@ directive|include
 file|"llvm/DebugInfo/CodeView/TypeTableBuilder.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -68,13 +74,24 @@ block|{
 name|namespace
 name|codeview
 block|{
+name|class
+name|TypeServerHandler
+decl_stmt|;
 comment|/// Merges one type stream into another. Returns true on success.
-name|bool
+name|Error
 name|mergeTypeStreams
 parameter_list|(
 name|TypeTableBuilder
 modifier|&
-name|DestStream
+name|DestIdStream
+parameter_list|,
+name|TypeTableBuilder
+modifier|&
+name|DestTypeStream
+parameter_list|,
+name|TypeServerHandler
+modifier|*
+name|Handler
 parameter_list|,
 specifier|const
 name|CVTypeArray

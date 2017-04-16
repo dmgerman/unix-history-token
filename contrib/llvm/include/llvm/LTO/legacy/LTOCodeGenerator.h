@@ -182,6 +182,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ToolOutputFile.h"
 end_include
 
@@ -586,6 +592,20 @@ operator|>
 name|Out
 argument_list|)
 decl_stmt|;
+comment|/// Enable the Freestanding mode: indicate that the optimizer should not
+comment|/// assume builtins are present on the target.
+name|void
+name|setFreestanding
+parameter_list|(
+name|bool
+name|Enabled
+parameter_list|)
+block|{
+name|Freestanding
+operator|=
+name|Enabled
+expr_stmt|;
+block|}
 name|void
 name|setDiagnosticHandler
 parameter_list|(
@@ -725,10 +745,6 @@ operator|&
 name|ErrMsg
 argument_list|)
 decl_stmt|;
-name|bool
-name|setupOptimizationRemarks
-parameter_list|()
-function_decl|;
 name|void
 name|finishOptimizationRemarks
 parameter_list|()
@@ -904,6 +920,11 @@ name|tool_output_file
 operator|>
 name|DiagnosticOutputFile
 expr_stmt|;
+name|bool
+name|Freestanding
+init|=
+name|false
+decl_stmt|;
 block|}
 struct|;
 block|}

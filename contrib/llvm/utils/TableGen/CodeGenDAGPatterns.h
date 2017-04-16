@@ -552,10 +552,11 @@ operator|&
 name|TP
 argument_list|)
 decl_stmt|;
-comment|/// EnforceVectorSameNumElts - 'this' is now constrained to
-comment|/// be a vector with same num elements as VT.
+comment|/// EnforceSameNumElts - If VTOperand is a scalar, then 'this' is a scalar.
+comment|/// If VTOperand is a vector, then 'this' must have the same number of
+comment|/// elements.
 name|bool
-name|EnforceVectorSameNumElts
+name|EnforceSameNumElts
 argument_list|(
 name|EEVT
 operator|::

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MipsTargetMachine.h - Define TargetMachine for Mips -----*- C++ -*-===//
+comment|//===- MipsTargetMachine.h - Define TargetMachine for Mips ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -74,25 +74,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/BasicTTIImpl.h"
+file|"llvm/ADT/Optional.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/Passes.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAGISel.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetFrameLowering.h"
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_include
@@ -101,16 +101,16 @@ directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|formatted_raw_ostream
-decl_stmt|;
-name|class
-name|MipsRegisterInfo
-decl_stmt|;
 name|class
 name|MipsTargetMachine
 range|:
@@ -372,13 +372,17 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_MIPS_MIPSTARGETMACHINE_H
+end_comment
 
 end_unit
 

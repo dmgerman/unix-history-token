@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=-- CoverageMapping.h - Code coverage mapping support ---------*- C++ -*-=//
+comment|//===- CoverageMapping.h - Code coverage mapping support --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_PROFILEDATA_COVERAGEMAPPING_H_
+name|LLVM_PROFILEDATA_COVERAGE_COVERAGEMAPPING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_PROFILEDATA_COVERAGEMAPPING_H_
+name|LLVM_PROFILEDATA_COVERAGE_COVERAGEMAPPING_H
 end_define
 
 begin_include
@@ -84,25 +84,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/Triple.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/iterator.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ProfileData/InstrProf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -120,7 +138,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
@@ -135,13 +189,34 @@ directive|include
 file|<tuple>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|IndexedInstrProfReader
+decl_stmt|;
 name|namespace
 name|coverage
 block|{
+name|class
+name|CoverageMappingReader
+decl_stmt|;
+struct_decl|struct
+name|CoverageMappingRecord
+struct_decl|;
 name|enum
 name|class
 name|coveragemap_error
@@ -283,37 +358,6 @@ name|coveragemap_error
 name|Err
 block|; }
 decl_stmt|;
-block|}
-comment|// end of coverage namespace.
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// end of llvm namespace
-end_comment
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|IndexedInstrProfReader
-decl_stmt|;
-name|namespace
-name|coverage
-block|{
-name|class
-name|CoverageMappingReader
-decl_stmt|;
-struct_decl|struct
-name|CoverageMappingRecord
-struct_decl|;
-name|class
-name|CoverageMapping
-decl_stmt|;
-struct_decl|struct
-name|CounterExpressions
-struct_decl|;
 comment|/// \brief A Counter is an abstract value that describes how to compute the
 comment|/// execution count for a region of code using the collected profile count data.
 struct|struct
@@ -356,9 +400,13 @@ name|private
 label|:
 name|CounterKind
 name|Kind
+init|=
+name|Zero
 decl_stmt|;
 name|unsigned
 name|ID
+init|=
+literal|0
 decl_stmt|;
 name|Counter
 argument_list|(
@@ -381,17 +429,9 @@ name|public
 operator|:
 name|Counter
 argument_list|()
-operator|:
-name|Kind
-argument_list|(
-name|Zero
-argument_list|)
-operator|,
-name|ID
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|CounterKind
 name|getKind
 argument_list|()
@@ -657,8 +697,6 @@ operator|>
 name|Expressions
 expr_stmt|;
 comment|/// \brief A lookup table for the index of a given expression.
-name|llvm
-operator|::
 name|DenseMap
 operator|<
 name|CounterExpression
@@ -1133,7 +1171,7 @@ name|dump
 argument_list|(
 argument|const Counter&C
 argument_list|,
-argument|llvm::raw_ostream&OS
+argument|raw_ostream&OS
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1655,6 +1693,10 @@ comment|/// list of expansions that can be further processed.
 name|class
 name|CoverageData
 block|{
+name|friend
+name|class
+name|CoverageMapping
+decl_stmt|;
 name|std
 operator|::
 name|string
@@ -1676,15 +1718,13 @@ name|ExpansionRecord
 operator|>
 name|Expansions
 expr_stmt|;
-name|friend
-name|class
-name|CoverageMapping
-decl_stmt|;
 name|public
 label|:
 name|CoverageData
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|CoverageData
 argument_list|(
 argument|StringRef Filename
@@ -1792,37 +1832,14 @@ name|Functions
 expr_stmt|;
 name|unsigned
 name|MismatchedFunctionCount
+init|=
+literal|0
 decl_stmt|;
 name|CoverageMapping
 argument_list|()
-operator|:
-name|MismatchedFunctionCount
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|CoverageMapping
-argument_list|(
-specifier|const
-name|CoverageMapping
-operator|&
-argument_list|)
 operator|=
-name|delete
+expr|default
 expr_stmt|;
-specifier|const
-name|CoverageMapping
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|CoverageMapping
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 comment|/// \brief Add a function record corresponding to \p Record.
 name|Error
 name|loadFunctionRecord
@@ -1839,6 +1856,27 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+name|CoverageMapping
+argument_list|(
+specifier|const
+name|CoverageMapping
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|CoverageMapping
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|CoverageMapping
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 comment|/// \brief Load the coverage mapping using the given readers.
 specifier|static
 name|Expected
@@ -2860,7 +2898,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_PROFILEDATA_COVERAGEMAPPING_H_
+comment|// LLVM_PROFILEDATA_COVERAGE_COVERAGEMAPPING_H
 end_comment
 
 end_unit

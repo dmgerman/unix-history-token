@@ -81,6 +81,40 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|AAResults
+decl_stmt|;
+comment|/// The three kinds of memory access relevant to 'readonly' and
+comment|/// 'readnone' attributes.
+enum|enum
+name|MemoryAccessKind
+block|{
+name|MAK_ReadNone
+init|=
+literal|0
+block|,
+name|MAK_ReadOnly
+init|=
+literal|1
+block|,
+name|MAK_MayWrite
+init|=
+literal|2
+block|}
+enum|;
+comment|/// Returns the memory access properties of this copy of the function.
+name|MemoryAccessKind
+name|computeFunctionBodyMemoryAccess
+parameter_list|(
+name|Function
+modifier|&
+name|F
+parameter_list|,
+name|AAResults
+modifier|&
+name|AAR
+parameter_list|)
+function_decl|;
 comment|/// Computes function attributes in post-order over the call graph.
 comment|///
 comment|/// By operating in post-order, this pass computes precise attributes for
@@ -133,7 +167,7 @@ comment|///
 comment|/// This pass provides a general RPO or "top down" propagation of
 comment|/// function attributes. For a few (rare) cases, we can deduce significantly
 comment|/// more about function attributes by working in RPO, so this pass
-comment|/// provides the compliment to the post-order pass above where the majority of
+comment|/// provides the complement to the post-order pass above where the majority of
 comment|/// deduction is performed.
 comment|// FIXME: Currently there is no RPO CGSCC pass structure to slide into and so
 comment|// this is a boring module pass, but eventually it should be an RPO CGSCC pass

@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Config/llvm-config.h"
 end_include
 
@@ -95,26 +101,39 @@ directive|include
 file|<functional>
 end_include
 
-begin_comment
-comment|// std::call_once from libc++ is used on all Unix platforms. Other
-end_comment
-
-begin_comment
-comment|// implementations like libstdc++ are known to have problems on NetBSD,
-end_comment
-
-begin_comment
-comment|// OpenBSD and PowerPC.
-end_comment
-
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
+
+begin_comment
+comment|// MSVC's call_once implementation worked since VS 2015, which is the minimum
+end_comment
+
+begin_comment
+comment|// supported version as of this writing.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_THREADING_USE_STD_CALL_ONCE
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|LLVM_ON_UNIX
 argument_list|)
 operator|&&
+expr|\
 operator|(
 name|defined
 argument_list|(
@@ -140,7 +159,19 @@ name|__ppc__
 argument_list|)
 operator|)
 operator|)
-end_if
+end_elif
+
+begin_comment
+comment|// std::call_once from libc++ is used on all Unix platforms. Other
+end_comment
+
+begin_comment
+comment|// implementations like libstdc++ are known to have problems on NetBSD,
+end_comment
+
+begin_comment
+comment|// OpenBSD and PowerPC.
+end_comment
 
 begin_define
 define|#
@@ -198,6 +229,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Twine
+decl_stmt|;
 comment|/// Returns true if LLVM is compiled with support for multi-threading, and
 comment|/// false otherwise.
 name|bool
@@ -248,15 +282,6 @@ operator|::
 name|once_flag
 name|once_flag
 expr_stmt|;
-comment|/// This macro is the only way you should define your once flag for LLVM's
-comment|/// call_once.
-define|#
-directive|define
-name|LLVM_DEFINE_ONCE_FLAG
-parameter_list|(
-name|flag
-parameter_list|)
-value|static once_flag flag
 else|#
 directive|else
 enum|enum
@@ -275,22 +300,24 @@ init|=
 literal|2
 block|}
 enum|;
-typedef|typedef
+comment|/// \brief The llvm::once_flag structure
+comment|///
+comment|/// This type is modeled after std::once_flag to use with llvm::call_once.
+comment|/// This structure must be used as an opaque object. It is a struct to force
+comment|/// autoinitialization and behave like std::once_flag.
+struct|struct
+name|once_flag
+block|{
 specifier|volatile
 name|sys
 operator|::
 name|cas_flag
-name|once_flag
+name|status
+operator|=
+name|Uninitialized
 expr_stmt|;
-comment|/// This macro is the only way you should define your once flag for LLVM's
-comment|/// call_once.
-define|#
-directive|define
-name|LLVM_DEFINE_ONCE_FLAG
-parameter_list|(
-name|flag
-parameter_list|)
-value|static once_flag flag = Uninitialized
+block|}
+struct|;
 endif|#
 directive|endif
 comment|/// \brief Execute the function specified as a parameter once.
@@ -299,7 +326,7 @@ comment|/// Typical usage:
 comment|/// \code
 comment|///   void foo() {...};
 comment|///   ...
-comment|///   LLVM_DEFINE_ONCE_FLAG(flag);
+comment|///   static once_flag flag;
 comment|///   call_once(flag, foo);
 comment|/// \endcode
 comment|///
@@ -370,6 +397,8 @@ name|CompareAndSwap
 argument_list|(
 operator|&
 name|flag
+operator|.
+name|status
 argument_list|,
 name|Wait
 argument_list|,
@@ -417,9 +446,13 @@ name|TsanHappensBefore
 argument_list|(
 operator|&
 name|flag
+operator|.
+name|status
 argument_list|)
 expr_stmt|;
 name|flag
+operator|.
+name|status
 operator|=
 name|Done
 expr_stmt|;
@@ -436,6 +469,8 @@ name|cas_flag
 name|tmp
 operator|=
 name|flag
+operator|.
+name|status
 expr_stmt|;
 name|sys
 operator|::
@@ -452,6 +487,8 @@ block|{
 name|tmp
 operator|=
 name|flag
+operator|.
+name|status
 expr_stmt|;
 name|sys
 operator|::
@@ -464,6 +501,8 @@ name|TsanHappensAfter
 argument_list|(
 operator|&
 name|flag
+operator|.
+name|status
 argument_list|)
 expr_stmt|;
 endif|#
@@ -478,6 +517,52 @@ name|unsigned
 name|heavyweight_hardware_concurrency
 parameter_list|()
 function_decl|;
+comment|/// \brief Return the current thread id, as used in various OS system calls.
+comment|/// Note that not all platforms guarantee that the value returned will be
+comment|/// unique across the entire system, so portable code should not assume
+comment|/// this.
+name|uint64_t
+name|get_threadid
+parameter_list|()
+function_decl|;
+comment|/// \brief Get the maximum length of a thread name on this platform.
+comment|/// A value of 0 means there is no limit.
+name|uint32_t
+name|get_max_thread_name_length
+parameter_list|()
+function_decl|;
+comment|/// \brief Set the name of the current thread.  Setting a thread's name can
+comment|/// be helpful for enabling useful diagnostics under a debugger or when
+comment|/// logging.  The level of support for setting a thread's name varies
+comment|/// wildly across operating systems, and we only make a best effort to
+comment|/// perform the operation on supported platforms.  No indication of success
+comment|/// or failure is returned.
+name|void
+name|set_thread_name
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|)
+function_decl|;
+comment|/// \brief Get the name of the current thread.  The level of support for
+comment|/// getting a thread's name varies wildly across operating systems, and it
+comment|/// is not even guaranteed that if you can successfully set a thread's name
+comment|/// that you can later get it back.  This function is intended for diagnostic
+comment|/// purposes, and as with setting a thread's name no indication of whether
+comment|/// the operation succeeded or failed is returned.
+name|void
+name|get_thread_name
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Name
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

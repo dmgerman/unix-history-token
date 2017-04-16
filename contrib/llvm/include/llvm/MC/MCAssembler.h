@@ -46,7 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -58,19 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist_node.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -100,19 +106,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCInst.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCLinkerOptimizationHint.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCSubtargetInfo.h"
 end_include
 
 begin_include
@@ -121,27 +115,57 @@ directive|include
 file|"llvm/MC/MCSymbol.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|raw_ostream
+name|MCAsmBackend
 decl_stmt|;
 name|class
 name|MCAsmLayout
-decl_stmt|;
-name|class
-name|MCAssembler
 decl_stmt|;
 name|class
 name|MCContext
 decl_stmt|;
 name|class
 name|MCCodeEmitter
-decl_stmt|;
-name|class
-name|MCExpr
 decl_stmt|;
 name|class
 name|MCFragment
@@ -153,13 +177,7 @@ name|class
 name|MCSection
 decl_stmt|;
 name|class
-name|MCSubtargetInfo
-decl_stmt|;
-name|class
 name|MCValue
-decl_stmt|;
-name|class
-name|MCAsmBackend
 decl_stmt|;
 comment|// FIXME: This really doesn't belong here. See comments below.
 struct|struct
@@ -354,26 +372,6 @@ name|VersionMinInfoType
 typedef|;
 name|private
 label|:
-name|MCAssembler
-argument_list|(
-specifier|const
-name|MCAssembler
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCAssembler
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|MCContext
 modifier|&
 name|Context
@@ -465,17 +463,17 @@ comment|/// By default it's 0, which means bundling is disabled.
 name|unsigned
 name|BundleAlignSize
 decl_stmt|;
-name|unsigned
+name|bool
 name|RelaxAll
 range|:
 literal|1
 decl_stmt|;
-name|unsigned
+name|bool
 name|SubsectionsViaSymbols
 range|:
 literal|1
 decl_stmt|;
-name|unsigned
+name|bool
 name|IncrementalLinkerCompatible
 range|:
 literal|1
@@ -496,8 +494,6 @@ decl_stmt|;
 name|VersionMinInfoType
 name|VersionMinInfo
 decl_stmt|;
-name|private
-label|:
 comment|/// Evaluate a fixup to a relocatable expression and the value which should be
 comment|/// placed into the fixup.
 comment|///
@@ -709,6 +705,56 @@ argument_list|)
 expr_stmt|;
 name|public
 label|:
+comment|/// Construct a new assembler instance.
+comment|//
+comment|// FIXME: How are we going to parameterize this? Two obvious options are stay
+comment|// concrete and require clients to pass in a target like object. The other
+comment|// option is to make this abstract, and have targets provide concrete
+comment|// implementations as we do with AsmParser.
+name|MCAssembler
+argument_list|(
+name|MCContext
+operator|&
+name|Context
+argument_list|,
+name|MCAsmBackend
+operator|&
+name|Backend
+argument_list|,
+name|MCCodeEmitter
+operator|&
+name|Emitter
+argument_list|,
+name|MCObjectWriter
+operator|&
+name|Writer
+argument_list|)
+expr_stmt|;
+name|MCAssembler
+argument_list|(
+specifier|const
+name|MCAssembler
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MCAssembler
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCAssembler
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+operator|~
+name|MCAssembler
+argument_list|()
+expr_stmt|;
 comment|/// Compute the effective fragment size assuming it is laid out at the given
 comment|/// \p SectionAddress and \p FragmentOffset.
 name|uint64_t
@@ -874,37 +920,6 @@ operator|=
 name|Update
 expr_stmt|;
 block|}
-name|public
-label|:
-comment|/// Construct a new assembler instance.
-comment|//
-comment|// FIXME: How are we going to parameterize this? Two obvious options are stay
-comment|// concrete and require clients to pass in a target like object. The other
-comment|// option is to make this abstract, and have targets provide concrete
-comment|// implementations as we do with AsmParser.
-name|MCAssembler
-argument_list|(
-name|MCContext
-operator|&
-name|Context
-argument_list|,
-name|MCAsmBackend
-operator|&
-name|Backend
-argument_list|,
-name|MCCodeEmitter
-operator|&
-name|Emitter
-argument_list|,
-name|MCObjectWriter
-operator|&
-name|Writer
-argument_list|)
-expr_stmt|;
-operator|~
-name|MCAssembler
-argument_list|()
-expr_stmt|;
 comment|/// Reuse an assembler instance
 comment|///
 name|void
@@ -1597,6 +1612,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCASSEMBLER_H
+end_comment
 
 end_unit
 

@@ -275,6 +275,7 @@ operator|*
 name|getUser
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 specifier|inline
 name|void
@@ -435,6 +436,7 @@ operator|*
 name|getImpliedUser
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 end_expr_stmt
 

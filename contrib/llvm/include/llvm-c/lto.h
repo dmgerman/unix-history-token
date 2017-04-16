@@ -927,7 +927,7 @@ name|lto_bool_t
 name|ShouldEmbedUselists
 parameter_list|)
 function_decl|;
-comment|/**  * @}  * @defgroup LLVMCTLTO ThinLTO  * @ingroup LLVMC  *  * @{  */
+comment|/**  * @} // endgoup LLVMCLTO  * @defgroup LLVMCTLTO ThinLTO  * @ingroup LLVMC  *  * @{  */
 comment|/**  * Type to wrap a single object returned by ThinLTO.  *  * \since LTO_API_VERSION=18  */
 typedef|typedef
 struct|struct
@@ -1048,58 +1048,6 @@ parameter_list|,
 name|lto_codegen_model
 parameter_list|)
 function_decl|;
-comment|/**  * @}  * @defgroup LLVMCTLTO_CACHING ThinLTO Cache Control  * @ingroup LLVMCTLTO  *  * These entry points control the ThinLTO cache. The cache is intended to  * support incremental build, and thus needs to be persistent accross build.  * The client enabled the cache by supplying a path to an existing directory.  * The code generator will use this to store objects files that may be reused  * during a subsequent build.  * To avoid filling the disk space, a few knobs are provided:  *  - The pruning interval limit the frequency at which the garbage collector  *    will try to scan the cache directory to prune it from expired entries.  *    Setting to -1 disable the pruning (default).  *  - The pruning expiration time indicates to the garbage collector how old an  *    entry needs to be to be removed.  *  - Finally, the garbage collector can be instructed to prune the cache till  *    the occupied space goes below a threshold.  * @{  */
-comment|/**  * Sets the path to a directory to use as a cache storage for incremental build.  * Setting this activates caching.  *  * \since LTO_API_VERSION=18  */
-specifier|extern
-name|void
-name|thinlto_codegen_set_cache_dir
-parameter_list|(
-name|thinlto_code_gen_t
-name|cg
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|cache_dir
-parameter_list|)
-function_decl|;
-comment|/**  * Sets the cache pruning interval (in seconds). A negative value disable the  * pruning. An unspecified default value will be applied, and a value of 0 will  * be ignored.  *  * \since LTO_API_VERSION=18  */
-specifier|extern
-name|void
-name|thinlto_codegen_set_cache_pruning_interval
-parameter_list|(
-name|thinlto_code_gen_t
-name|cg
-parameter_list|,
-name|int
-name|interval
-parameter_list|)
-function_decl|;
-comment|/**  * Sets the maximum cache size that can be persistent across build, in terms of  * percentage of the available space on the the disk. Set to 100 to indicate  * no limit, 50 to indicate that the cache size will not be left over half the  * available space. A value over 100 will be reduced to 100, a value of 0 will  * be ignored. An unspecified default value will be applied.  *  * The formula looks like:  *  AvailableSpace = FreeSpace + ExistingCacheSize  *  NewCacheSize = AvailableSpace * P/100  *  * \since LTO_API_VERSION=18  */
-specifier|extern
-name|void
-name|thinlto_codegen_set_final_cache_size_relative_to_available_space
-parameter_list|(
-name|thinlto_code_gen_t
-name|cg
-parameter_list|,
-name|unsigned
-name|percentage
-parameter_list|)
-function_decl|;
-comment|/**  * Sets the expiration (in seconds) for an entry in the cache. An unspecified  * default value will be applied. A value of 0 will be ignored.  *  * \since LTO_API_VERSION=18  */
-specifier|extern
-name|void
-name|thinlto_codegen_set_cache_entry_expiration
-parameter_list|(
-name|thinlto_code_gen_t
-name|cg
-parameter_list|,
-name|unsigned
-name|expiration
-parameter_list|)
-function_decl|;
-comment|/**  * @}  */
 comment|/**  * Sets the path to a directory to use as a storage for temporary bitcode files.  * The intention is to make the bitcode files available for debugging at various  * stage of the pipeline.  *  * \since LTO_API_VERSION=18  */
 specifier|extern
 name|void
@@ -1224,6 +1172,58 @@ name|int
 name|length
 parameter_list|)
 function_decl|;
+comment|/**  * @} // endgoup LLVMCTLTO  * @defgroup LLVMCTLTO_CACHING ThinLTO Cache Control  * @ingroup LLVMCTLTO  *  * These entry points control the ThinLTO cache. The cache is intended to  * support incremental build, and thus needs to be persistent accross build.  * The client enabled the cache by supplying a path to an existing directory.  * The code generator will use this to store objects files that may be reused  * during a subsequent build.  * To avoid filling the disk space, a few knobs are provided:  *  - The pruning interval limit the frequency at which the garbage collector  *    will try to scan the cache directory to prune it from expired entries.  *    Setting to -1 disable the pruning (default).  *  - The pruning expiration time indicates to the garbage collector how old an  *    entry needs to be to be removed.  *  - Finally, the garbage collector can be instructed to prune the cache till  *    the occupied space goes below a threshold.  * @{  */
+comment|/**  * Sets the path to a directory to use as a cache storage for incremental build.  * Setting this activates caching.  *  * \since LTO_API_VERSION=18  */
+specifier|extern
+name|void
+name|thinlto_codegen_set_cache_dir
+parameter_list|(
+name|thinlto_code_gen_t
+name|cg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cache_dir
+parameter_list|)
+function_decl|;
+comment|/**  * Sets the cache pruning interval (in seconds). A negative value disable the  * pruning. An unspecified default value will be applied, and a value of 0 will  * be ignored.  *  * \since LTO_API_VERSION=18  */
+specifier|extern
+name|void
+name|thinlto_codegen_set_cache_pruning_interval
+parameter_list|(
+name|thinlto_code_gen_t
+name|cg
+parameter_list|,
+name|int
+name|interval
+parameter_list|)
+function_decl|;
+comment|/**  * Sets the maximum cache size that can be persistent across build, in terms of  * percentage of the available space on the the disk. Set to 100 to indicate  * no limit, 50 to indicate that the cache size will not be left over half the  * available space. A value over 100 will be reduced to 100, a value of 0 will  * be ignored. An unspecified default value will be applied.  *  * The formula looks like:  *  AvailableSpace = FreeSpace + ExistingCacheSize  *  NewCacheSize = AvailableSpace * P/100  *  * \since LTO_API_VERSION=18  */
+specifier|extern
+name|void
+name|thinlto_codegen_set_final_cache_size_relative_to_available_space
+parameter_list|(
+name|thinlto_code_gen_t
+name|cg
+parameter_list|,
+name|unsigned
+name|percentage
+parameter_list|)
+function_decl|;
+comment|/**  * Sets the expiration (in seconds) for an entry in the cache. An unspecified  * default value will be applied. A value of 0 will be ignored.  *  * \since LTO_API_VERSION=18  */
+specifier|extern
+name|void
+name|thinlto_codegen_set_cache_entry_expiration
+parameter_list|(
+name|thinlto_code_gen_t
+name|cg
+parameter_list|,
+name|unsigned
+name|expiration
+parameter_list|)
+function_decl|;
+comment|/**  * @} // endgroup LLVMCTLTO_CACHING  */
 ifdef|#
 directive|ifdef
 name|__cplusplus
@@ -1234,10 +1234,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/**  * @}  */
-end_comment
 
 begin_endif
 endif|#

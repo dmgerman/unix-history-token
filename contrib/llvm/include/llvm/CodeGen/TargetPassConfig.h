@@ -343,6 +343,11 @@ comment|/// Default setting for -enable-tail-merge on this target.
 name|bool
 name|EnableTailMerge
 block|;
+comment|/// Require processing of functions such that callees are generated before
+comment|/// callers.
+name|bool
+name|RequireCodeGenSCCOrder
+block|;
 name|public
 operator|:
 name|TargetPassConfig
@@ -528,6 +533,28 @@ argument_list|,
 name|Enable
 argument_list|)
 block|; }
+name|bool
+name|requiresCodeGenSCCOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RequireCodeGenSCCOrder
+return|;
+block|}
+name|void
+name|setRequiresCodeGenSCCOrder
+argument_list|(
+argument|bool Enable = true
+argument_list|)
+block|{
+name|setOpt
+argument_list|(
+name|RequireCodeGenSCCOrder
+argument_list|,
+name|Enable
+argument_list|)
+block|;   }
 comment|/// Allow the target to override a specific pass without overriding the pass
 comment|/// pipeline. When passes are added to the standard pipeline at the
 comment|/// point where StandardID is expected, add TargetID in its place.
@@ -805,6 +832,14 @@ name|string
 operator|&
 name|Banner
 argument_list|)
+block|;
+comment|/// Check whether or not GlobalISel should be enabled by default.
+comment|/// Fallback/abort behavior is controlled via other methods.
+name|virtual
+name|bool
+name|isGlobalISelEnabled
+argument_list|()
+specifier|const
 block|;
 comment|/// Check whether or not GlobalISel should abort on error.
 comment|/// When this is disable, GlobalISel will fall back on SDISel instead of

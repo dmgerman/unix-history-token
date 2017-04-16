@@ -273,6 +273,12 @@ directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineOptimizationRemarkEmitter.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -1691,6 +1697,21 @@ modifier|*
 name|MBPI
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// Current optimization remark emitter. Used to report failures.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MachineOptimizationRemarkEmitter
+operator|>
+name|MORE
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Helper class used for every code morphing.

@@ -164,6 +164,8 @@ name|MUL_WIDE_UNSIGNED
 block|,
 name|IMAD
 block|,
+name|SETP_F16X2
+block|,
 name|Dummy
 block|,
 name|LoadV2
@@ -1279,6 +1281,73 @@ argument_list|)
 specifier|const
 name|override
 expr_stmt|;
+comment|// Get the degree of precision we want from 32-bit floating point division
+comment|// operations.
+comment|//
+comment|//  0 - Use ptx div.approx
+comment|//  1 - Use ptx.div.full (approximate, but less so than div.approx)
+comment|//  2 - Use IEEE-compliant div instructions, if available.
+name|int
+name|getDivF32Level
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// Get whether we should use a precise or approximate 32-bit floating point
+comment|// sqrt instruction.
+name|bool
+name|usePrecSqrtF32
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// Get whether we should use instructions that flush floating-point denormals
+comment|// to sign-preserving zero.
+name|bool
+name|useF32FTZ
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|getSqrtEstimate
+argument_list|(
+name|SDValue
+name|Operand
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|int
+name|Enabled
+argument_list|,
+name|int
+operator|&
+name|ExtraSteps
+argument_list|,
+name|bool
+operator|&
+name|UseOneConst
+argument_list|,
+name|bool
+name|Reciprocal
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|unsigned
+name|combineRepeatedFPDivisors
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|2
+return|;
+block|}
 name|bool
 name|allowFMA
 argument_list|(
@@ -1290,6 +1359,15 @@ name|CodeGenOpt
 operator|::
 name|Level
 name|OptLevel
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|allowUnsafeFPMath
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1312,6 +1390,20 @@ name|EVT
 name|VT
 argument_list|)
 decl|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// The default is to transform llvm.ctlz(x, false) (where false indicates that
+comment|// x == 0 is not undefined behavior) into a branch that checks whether x is 0
+comment|// and avoids calling ctlz in that case.  We have a dedicated ctlz
+comment|// instruction, so we say that ctlz is cheap to speculate.
+name|bool
+name|isCheapToSpeculateCtlz
+argument_list|()
+specifier|const
 name|override
 block|{
 return|return
@@ -1341,7 +1433,31 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
+name|LowerBUILD_VECTOR
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
 name|LowerCONCAT_VECTORS
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerEXTRACT_VECTOR_ELT
 argument_list|(
 name|SDValue
 name|Op

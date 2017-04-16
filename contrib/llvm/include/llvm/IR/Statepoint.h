@@ -2124,7 +2124,7 @@ begin_function_decl
 name|StatepointDirectives
 name|parseStatepointDirectivesFromAttrs
 parameter_list|(
-name|AttributeSet
+name|AttributeList
 name|AS
 parameter_list|)
 function_decl|;

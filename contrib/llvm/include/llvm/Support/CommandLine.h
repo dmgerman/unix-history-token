@@ -201,6 +201,9 @@ block|{
 comment|//===----------------------------------------------------------------------===//
 comment|// ParseCommandLineOptions - Command line option processing entry point.
 comment|//
+comment|// Returns true on success. Otherwise, this will print the error message to
+comment|// stderr and exit if \p Errs is not set (nullptr by default), or print the
+comment|// error message to \p Errs and return false if \p Errs is provided.
 name|bool
 name|ParseCommandLineOptions
 parameter_list|(
@@ -219,10 +222,11 @@ name|Overview
 init|=
 literal|""
 parameter_list|,
-name|bool
-name|IgnoreErrors
+name|raw_ostream
+modifier|*
+name|Errs
 init|=
-name|false
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -1223,6 +1227,20 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+specifier|static
+name|void
+name|printHelpStr
+parameter_list|(
+name|StringRef
+name|HelpStr
+parameter_list|,
+name|size_t
+name|Indent
+parameter_list|,
+name|size_t
+name|FirstLineIndentedBy
+parameter_list|)
+function_decl|;
 name|virtual
 name|void
 name|getExtraOptionNames

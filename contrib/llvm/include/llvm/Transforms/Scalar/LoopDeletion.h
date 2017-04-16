@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- LoopDeletion.h - Loop Deletion -------------------------------------===//
+comment|//===- LoopDeletion.h - Loop Deletion ---------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/LoopAnalysisManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/LoopInfo.h"
 end_include
 
@@ -100,7 +106,9 @@ name|public
 operator|:
 name|LoopDeletionPass
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|PreservedAnalyses
 name|run
 argument_list|(
@@ -120,68 +128,14 @@ name|LPMUpdater
 operator|&
 name|U
 argument_list|)
-block|;
-name|bool
-name|runImpl
-argument_list|(
-name|Loop
-operator|*
-name|L
-argument_list|,
-name|DominatorTree
-operator|&
-name|DT
-argument_list|,
-name|ScalarEvolution
-operator|&
-name|SE
-argument_list|,
-name|LoopInfo
-operator|&
-name|loopInfo
-argument_list|)
-block|;
-name|private
-operator|:
-name|bool
-name|isLoopDead
-argument_list|(
-name|Loop
-operator|*
-name|L
-argument_list|,
-name|ScalarEvolution
-operator|&
-name|SE
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|BasicBlock
-operator|*
-operator|>
-operator|&
-name|exitingBlocks
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|BasicBlock
-operator|*
-operator|>
-operator|&
-name|exitBlocks
-argument_list|,
-name|bool
-operator|&
-name|Changed
-argument_list|,
-name|BasicBlock
-operator|*
-name|Preheader
-argument_list|)
 block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

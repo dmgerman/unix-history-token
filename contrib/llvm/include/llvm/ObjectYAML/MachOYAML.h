@@ -247,6 +247,16 @@ name|std
 operator|::
 name|vector
 operator|<
+name|MachO
+operator|::
+name|build_tool_version
+operator|>
+name|Tools
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
 name|llvm
 operator|::
 name|yaml
@@ -643,7 +653,7 @@ argument_list|)
 end_macro
 
 begin_macro
-name|LLVM_YAML_IS_SEQUENCE_VECTOR
+name|LLVM_YAML_IS_FLOW_SEQUENCE_VECTOR
 argument_list|(
 argument|int64_t
 argument_list|)
@@ -688,6 +698,13 @@ begin_macro
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 argument_list|(
 argument|llvm::MachOYAML::FatArch
+argument_list|)
+end_macro
+
+begin_macro
+name|LLVM_YAML_IS_SEQUENCE_VECTOR
+argument_list|(
+argument|llvm::MachO::build_tool_version
 argument_list|)
 end_macro
 
@@ -1019,6 +1036,33 @@ operator|::
 name|NListEntry
 operator|&
 name|NListEntry
+argument_list|)
+block|; }
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|MappingTraits
+operator|<
+name|MachO
+operator|::
+name|build_tool_version
+operator|>
+block|{
+specifier|static
+name|void
+name|mapping
+argument_list|(
+name|IO
+operator|&
+name|IO
+argument_list|,
+name|MachO
+operator|::
+name|build_tool_version
+operator|&
+name|tool
 argument_list|)
 block|; }
 expr_stmt|;

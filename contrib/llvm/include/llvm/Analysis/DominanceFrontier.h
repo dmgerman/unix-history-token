@@ -706,6 +706,31 @@ name|const_iterator
 expr_stmt|;
 end_typedef
 
+begin_comment
+comment|/// Handle invalidation explicitly.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|invalidate
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 unit|};
 name|class

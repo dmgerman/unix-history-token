@@ -191,6 +191,12 @@ modifier|*
 name|MC
 decl_stmt|;
 specifier|const
+name|uint16_t
+name|SpillSize
+decl_stmt|,
+name|SpillAlignment
+decl_stmt|;
+specifier|const
 name|vt_iterator
 name|VTs
 decl_stmt|;
@@ -391,10 +397,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MC
-operator|->
-name|getSize
-argument_list|()
+name|SpillSize
 return|;
 block|}
 comment|/// Return the minimum required alignment for a register of this class.
@@ -404,10 +407,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MC
-operator|->
-name|getAlignment
-argument_list|()
+name|SpillAlignment
 return|;
 block|}
 comment|/// Return the cost of copying a value between two registers in this class.
@@ -1762,7 +1762,15 @@ comment|/// pointer if stack grows down, and vice versa.
 end_comment
 
 begin_comment
-comment|///
+comment|/// Notice: This function does not take into account disabled CSRs.
+end_comment
+
+begin_comment
+comment|///         In most cases you will want to use instead the function
+end_comment
+
+begin_comment
+comment|///         getCalleeSavedRegs that is implemented in MachineRegisterInfo.
 end_comment
 
 begin_decl_stmt
@@ -2724,6 +2732,28 @@ specifier|const
 block|{
 return|return
 name|RegClassEnd
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|iterator_range
+operator|<
+name|regclass_iterator
+operator|>
+name|regclasses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|regclass_begin
+argument_list|()
+argument_list|,
+name|regclass_end
+argument_list|()
+argument_list|)
 return|;
 block|}
 end_expr_stmt

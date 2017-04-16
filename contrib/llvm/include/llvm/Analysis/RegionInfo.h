@@ -4488,6 +4488,25 @@ operator|*
 name|this
 return|;
 block|}
+comment|/// Handle invalidation explicitly.
+name|bool
+name|invalidate
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+argument_list|)
+block|;
 comment|// updateStatistics - Update statistic about created regions.
 name|void
 name|updateStatistics

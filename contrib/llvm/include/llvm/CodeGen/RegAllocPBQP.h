@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegAllocPBQP.h ------------------------------------------*- C++ -*-===//
+comment|//===- RegAllocPBQP.h -------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,7 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunctionPass.h"
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Hashing.h"
 end_include
 
 begin_include
@@ -82,13 +88,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/PBQP/Graph.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/PBQP/Math.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/PBQP/ReductionRules.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/PBQPRAConstraint.h"
+file|"llvm/CodeGen/PBQP/Solution.h"
 end_include
 
 begin_include
@@ -100,13 +118,61 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|FunctionPass
+decl_stmt|;
+name|class
+name|LiveIntervals
+decl_stmt|;
+name|class
+name|MachineBlockFrequencyInfo
+decl_stmt|;
+name|class
+name|MachineFunction
+decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
@@ -132,24 +198,6 @@ comment|/// Keeps track of the number of infinities in each row and column.
 name|class
 name|MatrixMetadata
 block|{
-name|private
-label|:
-name|MatrixMetadata
-argument_list|(
-specifier|const
-name|MatrixMetadata
-operator|&
-argument_list|)
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MatrixMetadata
-operator|&
-operator|)
-decl_stmt|;
 name|public
 label|:
 name|MatrixMetadata
@@ -160,16 +208,6 @@ operator|&
 name|M
 argument_list|)
 operator|:
-name|WorstRow
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|WorstCol
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|UnsafeRows
 argument_list|(
 argument|new bool[M.getRows() -
@@ -342,6 +380,27 @@ index|[]
 name|ColCounts
 decl_stmt|;
 block|}
+name|MatrixMetadata
+argument_list|(
+specifier|const
+name|MatrixMetadata
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MatrixMetadata
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MatrixMetadata
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|unsigned
 name|getWorstRow
 argument_list|()
@@ -392,8 +451,13 @@ name|private
 label|:
 name|unsigned
 name|WorstRow
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
 name|WorstCol
+init|=
+literal|0
 decl_stmt|;
 name|std
 operator|::
@@ -432,17 +496,17 @@ name|public
 label|:
 name|AllowedRegVector
 argument_list|()
-operator|:
-name|NumOpts
+operator|=
+expr|default
+expr_stmt|;
+name|AllowedRegVector
 argument_list|(
-literal|0
+name|AllowedRegVector
+operator|&&
 argument_list|)
-operator|,
-name|Opts
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|AllowedRegVector
 argument_list|(
 specifier|const
@@ -489,14 +553,6 @@ name|get
 argument_list|()
 argument_list|)
 block|;   }
-name|AllowedRegVector
-argument_list|(
-name|AllowedRegVector
-operator|&&
-argument_list|)
-operator|=
-expr|default
-expr_stmt|;
 name|unsigned
 name|size
 argument_list|()
@@ -595,6 +651,8 @@ name|private
 label|:
 name|unsigned
 name|NumOpts
+init|=
+literal|0
 decl_stmt|;
 name|std
 operator|::
@@ -859,42 +917,9 @@ name|ReductionState
 typedef|;
 name|NodeMetadata
 argument_list|()
-operator|:
-name|RS
-argument_list|(
-name|Unprocessed
-argument_list|)
-operator|,
-name|NumOpts
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|DeniedOpts
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|OptUnsafeEdges
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|VReg
-argument_list|(
-literal|0
-argument_list|)
-ifndef|#
-directive|ifndef
-name|NDEBUG
-operator|,
-name|everConservativelyAllocatable
-argument_list|(
-argument|false
-argument_list|)
-endif|#
-directive|endif
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|NodeMetadata
 argument_list|(
 specifier|const
@@ -993,7 +1018,6 @@ name|NodeMetadata
 argument_list|(
 name|NodeMetadata
 operator|&&
-name|Other
 argument_list|)
 operator|=
 expr|default
@@ -1005,7 +1029,6 @@ init|=
 operator|(
 name|NodeMetadata
 operator|&&
-name|Other
 operator|)
 operator|=
 expr|default
@@ -1349,12 +1372,18 @@ name|private
 label|:
 name|ReductionState
 name|RS
+init|=
+name|Unprocessed
 decl_stmt|;
 name|unsigned
 name|NumOpts
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|DeniedOpts
+init|=
+literal|0
 decl_stmt|;
 name|std
 operator|::
@@ -1367,6 +1396,8 @@ name|OptUnsafeEdges
 expr_stmt|;
 name|unsigned
 name|VReg
+init|=
+literal|0
 decl_stmt|;
 name|GraphMetadata
 operator|::
@@ -1378,6 +1409,8 @@ directive|ifndef
 name|NDEBUG
 name|bool
 name|everConservativelyAllocatable
+init|=
+name|false
 decl_stmt|;
 endif|#
 directive|endif
@@ -2639,7 +2672,7 @@ argument_list|)
 operator|:
 name|BaseT
 argument_list|(
-argument|Metadata
+argument|std::move(Metadata)
 argument_list|)
 block|{}
 comment|/// @brief Dump this graph to dbgs().
@@ -2729,12 +2762,12 @@ end_function
 
 begin_comment
 unit|}
-comment|// namespace RegAlloc
+comment|// end namespace RegAlloc
 end_comment
 
 begin_comment
 unit|}
-comment|// namespace PBQP
+comment|// end namespace PBQP
 end_comment
 
 begin_comment
@@ -2757,7 +2790,7 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
@@ -2766,7 +2799,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LLVM_CODEGEN_REGALLOCPBQP_H */
+comment|// LLVM_CODEGEN_REGALLOCPBQP_H
 end_comment
 
 end_unit

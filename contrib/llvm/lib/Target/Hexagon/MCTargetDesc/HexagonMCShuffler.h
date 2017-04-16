@@ -93,19 +93,13 @@ name|public
 operator|:
 name|HexagonMCShuffler
 argument_list|(
-name|MCInstrInfo
-specifier|const
-operator|&
-name|MCII
+argument|bool Fatal
 argument_list|,
-name|MCSubtargetInfo
-specifier|const
-operator|&
-name|STI
+argument|MCInstrInfo const&MCII
 argument_list|,
-name|MCInst
-operator|&
-name|MCB
+argument|MCSubtargetInfo const&STI
+argument_list|,
+argument|MCInst&MCB
 argument_list|)
 operator|:
 name|HexagonShuffler
@@ -129,9 +123,9 @@ argument|MCSubtargetInfo const&STI
 argument_list|,
 argument|MCInst&MCB
 argument_list|,
-argument|const MCInst *AddMI
+argument|MCInst const&AddMI
 argument_list|,
-argument|bool bInsertAtFront = false
+argument|bool InsertAtFront
 argument_list|)
 operator|:
 name|HexagonShuffler
@@ -147,7 +141,7 @@ name|MCB
 argument_list|,
 name|AddMI
 argument_list|,
-name|bInsertAtFront
+name|InsertAtFront
 argument_list|)
 block|;   }
 block|;
@@ -204,9 +198,9 @@ name|init
 argument_list|(
 argument|MCInst&MCB
 argument_list|,
-argument|const MCInst *AddMI
+argument|MCInst const&AddMI
 argument_list|,
-argument|bool bInsertAtFront = false
+argument|bool InsertAtFront
 argument_list|)
 block|; }
 decl_stmt|;
@@ -214,6 +208,9 @@ comment|// Invocation of the shuffler.
 name|bool
 name|HexagonMCShuffle
 parameter_list|(
+name|bool
+name|Fatal
+parameter_list|,
 name|MCInstrInfo
 specifier|const
 modifier|&
@@ -244,9 +241,9 @@ parameter_list|,
 name|MCInst
 modifier|&
 parameter_list|,
-specifier|const
 name|MCInst
-modifier|*
+specifier|const
+modifier|&
 parameter_list|,
 name|int
 parameter_list|)

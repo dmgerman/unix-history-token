@@ -663,6 +663,8 @@ argument|APInt&KnownZero
 argument_list|,
 argument|APInt&KnownOne
 argument_list|,
+argument|const APInt&DemandedElts
+argument_list|,
 argument|const SelectionDAG&DAG
 argument_list|,
 argument|unsigned Depth =

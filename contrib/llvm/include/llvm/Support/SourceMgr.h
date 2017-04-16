@@ -76,6 +76,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -100,7 +112,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -108,19 +150,13 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|SourceMgr
+name|raw_ostream
 decl_stmt|;
 name|class
 name|SMDiagnostic
 decl_stmt|;
 name|class
 name|SMFixIt
-decl_stmt|;
-name|class
-name|Twine
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 comment|/// This owns the files read by a parser, handles include stacks,
 comment|/// and handles diagnostic wrangling.
@@ -204,13 +240,19 @@ name|mutable
 name|void
 modifier|*
 name|LineNoCache
+init|=
+name|nullptr
 decl_stmt|;
 name|DiagHandlerTy
 name|DiagHandler
+init|=
+name|nullptr
 decl_stmt|;
 name|void
 modifier|*
 name|DiagContext
+init|=
+name|nullptr
 decl_stmt|;
 name|bool
 name|isValidBufferID
@@ -231,6 +273,13 @@ name|size
 argument_list|()
 return|;
 block|}
+name|public
+label|:
+name|SourceMgr
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|SourceMgr
 argument_list|(
 specifier|const
@@ -240,7 +289,8 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-name|void
+name|SourceMgr
+modifier|&
 name|operator
 init|=
 operator|(
@@ -251,26 +301,6 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|public
-label|:
-name|SourceMgr
-argument_list|()
-operator|:
-name|LineNoCache
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|DiagHandler
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|DiagContext
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
 operator|~
 name|SourceMgr
 argument_list|()
@@ -951,6 +981,8 @@ specifier|const
 name|SourceMgr
 modifier|*
 name|SM
+init|=
+name|nullptr
 decl_stmt|;
 name|SMLoc
 name|Loc
@@ -962,13 +994,22 @@ name|Filename
 expr_stmt|;
 name|int
 name|LineNo
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|ColumnNo
+init|=
+literal|0
 decl_stmt|;
 name|SourceMgr
 operator|::
 name|DiagKind
 name|Kind
+operator|=
+name|SourceMgr
+operator|::
+name|DK_Error
 expr_stmt|;
 name|std
 operator|::
@@ -988,8 +1029,7 @@ operator|<
 name|unsigned
 operator|,
 name|unsigned
-operator|>
-expr|>
+operator|>>
 name|Ranges
 expr_stmt|;
 name|SmallVector
@@ -1005,27 +1045,9 @@ label|:
 comment|// Null diagnostic.
 name|SMDiagnostic
 argument_list|()
-operator|:
-name|SM
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|LineNo
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ColumnNo
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Kind
-argument_list|(
-argument|SourceMgr::DK_Error
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|// Diagnostic with no location (e.g. file not found, command line arg error).
 name|SMDiagnostic
 argument_list|(
@@ -1035,12 +1057,7 @@ argument|SourceMgr::DiagKind Knd
 argument_list|,
 argument|StringRef Msg
 argument_list|)
-operator|:
-name|SM
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
+block|:
 name|Filename
 argument_list|(
 name|filename
@@ -1179,8 +1196,7 @@ operator|<
 name|unsigned
 operator|,
 name|unsigned
-operator|>
-expr|>
+operator|>>
 name|getRanges
 argument_list|()
 specifier|const
@@ -1251,13 +1267,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_SOURCEMGR_H
+end_comment
 
 end_unit
 

@@ -381,39 +381,91 @@ name|Module
 modifier|*
 name|getModule
 parameter_list|()
-function_decl|;
-comment|/// \brief Returns the terminator instruction if the block is well formed or
-comment|/// null if the block is not well formed.
-name|TerminatorInst
-modifier|*
-name|getTerminator
-parameter_list|()
-function_decl|;
-specifier|const
-name|TerminatorInst
-operator|*
-name|getTerminator
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// \brief Returns the call instruction calling @llvm.experimental.deoptimize
-comment|/// prior to the terminating return instruction of this basic block, if such a
-comment|/// call is present.  Otherwise, returns null.
-name|CallInst
-modifier|*
-name|getTerminatingDeoptimizeCall
-parameter_list|()
-function_decl|;
-specifier|const
-name|CallInst
-operator|*
-name|getTerminatingDeoptimizeCall
-argument_list|()
-specifier|const
 block|{
 return|return
 name|const_cast
 operator|<
+name|Module
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getModule
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Returns the terminator instruction if the block is well formed or
+comment|/// null if the block is not well formed.
+specifier|const
+name|TerminatorInst
+operator|*
+name|getTerminator
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+expr_stmt|;
+name|TerminatorInst
+modifier|*
+name|getTerminator
+parameter_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|TerminatorInst
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getTerminator
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Returns the call instruction calling @llvm.experimental.deoptimize
+comment|/// prior to the terminating return instruction of this basic block, if such a
+comment|/// call is present.  Otherwise, returns null.
+specifier|const
+name|CallInst
+operator|*
+name|getTerminatingDeoptimizeCall
+argument_list|()
+specifier|const
+expr_stmt|;
+name|CallInst
+modifier|*
+name|getTerminatingDeoptimizeCall
+parameter_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|CallInst
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -423,26 +475,34 @@ operator|)
 operator|->
 name|getTerminatingDeoptimizeCall
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns the call instruction marked 'musttail' prior to the
 comment|/// terminating return instruction of this basic block, if such a call is
 comment|/// present.  Otherwise, returns null.
-name|CallInst
-modifier|*
-name|getTerminatingMustTailCall
-parameter_list|()
-function_decl|;
 specifier|const
 name|CallInst
 operator|*
 name|getTerminatingMustTailCall
 argument_list|()
 specifier|const
+expr_stmt|;
+name|CallInst
+modifier|*
+name|getTerminatingMustTailCall
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|CallInst
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -452,6 +512,7 @@ operator|)
 operator|->
 name|getTerminatingMustTailCall
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns a pointer to the first instruction in this block that is
@@ -460,21 +521,28 @@ comment|///
 comment|/// When adding instructions to the beginning of the basic block, they should
 comment|/// be added before the returned value, not before the first instruction,
 comment|/// which might be PHI. Returns 0 is there's no non-PHI instruction.
-name|Instruction
-modifier|*
-name|getFirstNonPHI
-parameter_list|()
-function_decl|;
 specifier|const
 name|Instruction
 operator|*
 name|getFirstNonPHI
 argument_list|()
 specifier|const
+expr_stmt|;
+name|Instruction
+modifier|*
+name|getFirstNonPHI
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|Instruction
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -484,25 +552,33 @@ operator|)
 operator|->
 name|getFirstNonPHI
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns a pointer to the first instruction in this block that is not
 comment|/// a PHINode or a debug intrinsic.
-name|Instruction
-modifier|*
-name|getFirstNonPHIOrDbg
-parameter_list|()
-function_decl|;
 specifier|const
 name|Instruction
 operator|*
 name|getFirstNonPHIOrDbg
 argument_list|()
 specifier|const
+expr_stmt|;
+name|Instruction
+modifier|*
+name|getFirstNonPHIOrDbg
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|Instruction
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -512,25 +588,33 @@ operator|)
 operator|->
 name|getFirstNonPHIOrDbg
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns a pointer to the first instruction in this block that is not
 comment|/// a PHINode, a debug intrinsic, or a lifetime intrinsic.
-name|Instruction
-modifier|*
-name|getFirstNonPHIOrDbgOrLifetime
-parameter_list|()
-function_decl|;
 specifier|const
 name|Instruction
 operator|*
 name|getFirstNonPHIOrDbgOrLifetime
 argument_list|()
 specifier|const
+expr_stmt|;
+name|Instruction
+modifier|*
+name|getFirstNonPHIOrDbgOrLifetime
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|Instruction
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -540,24 +624,26 @@ operator|)
 operator|->
 name|getFirstNonPHIOrDbgOrLifetime
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns an iterator to the first instruction in this block that is
 comment|/// suitable for inserting a non-PHI instruction.
 comment|///
 comment|/// In particular, it skips all PHIs and LandingPad instructions.
-name|iterator
-name|getFirstInsertionPt
-parameter_list|()
-function_decl|;
 name|const_iterator
 name|getFirstInsertionPt
 argument_list|()
 specifier|const
+expr_stmt|;
+name|iterator
+name|getFirstInsertionPt
+parameter_list|()
 block|{
 return|return
-name|const_cast
+name|static_cast
 operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -566,6 +652,9 @@ name|this
 operator|)
 operator|->
 name|getFirstInsertionPt
+argument_list|()
+operator|.
+name|getNonConst
 argument_list|()
 return|;
 block|}
@@ -628,21 +717,28 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Return the predecessor of this block if it has a single predecessor
 comment|/// block. Otherwise return a null pointer.
-name|BasicBlock
-modifier|*
-name|getSinglePredecessor
-parameter_list|()
-function_decl|;
 specifier|const
 name|BasicBlock
 operator|*
 name|getSinglePredecessor
 argument_list|()
 specifier|const
+expr_stmt|;
+name|BasicBlock
+modifier|*
+name|getSinglePredecessor
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -652,6 +748,7 @@ operator|)
 operator|->
 name|getSinglePredecessor
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Return the predecessor of this block if it has a unique predecessor
@@ -660,21 +757,28 @@ comment|///
 comment|/// Note that unique predecessor doesn't mean single edge, there can be
 comment|/// multiple edges from the unique predecessor to this block (for example a
 comment|/// switch statement with multiple cases having the same destination).
-name|BasicBlock
-modifier|*
-name|getUniquePredecessor
-parameter_list|()
-function_decl|;
 specifier|const
 name|BasicBlock
 operator|*
 name|getUniquePredecessor
 argument_list|()
 specifier|const
+expr_stmt|;
+name|BasicBlock
+modifier|*
+name|getUniquePredecessor
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -684,27 +788,35 @@ operator|)
 operator|->
 name|getUniquePredecessor
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Return the successor of this block if it has a single successor.
 comment|/// Otherwise return a null pointer.
 comment|///
 comment|/// This method is analogous to getSinglePredecessor above.
-name|BasicBlock
-modifier|*
-name|getSingleSuccessor
-parameter_list|()
-function_decl|;
 specifier|const
 name|BasicBlock
 operator|*
 name|getSingleSuccessor
 argument_list|()
 specifier|const
+expr_stmt|;
+name|BasicBlock
+modifier|*
+name|getSingleSuccessor
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -714,27 +826,35 @@ operator|)
 operator|->
 name|getSingleSuccessor
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Return the successor of this block if it has a unique successor.
 comment|/// Otherwise return a null pointer.
 comment|///
 comment|/// This method is analogous to getUniquePredecessor above.
-name|BasicBlock
-modifier|*
-name|getUniqueSuccessor
-parameter_list|()
-function_decl|;
 specifier|const
 name|BasicBlock
 operator|*
 name|getUniqueSuccessor
 argument_list|()
 specifier|const
+expr_stmt|;
+name|BasicBlock
+modifier|*
+name|getUniqueSuccessor
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -744,6 +864,7 @@ operator|)
 operator|->
 name|getUniqueSuccessor
 argument_list|()
+operator|)
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -1145,11 +1266,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Return the landingpad instruction associated with the landing pad.
-name|LandingPadInst
-modifier|*
-name|getLandingPadInst
-parameter_list|()
-function_decl|;
 specifier|const
 name|LandingPadInst
 operator|*
@@ -1157,6 +1273,33 @@ name|getLandingPadInst
 argument_list|()
 specifier|const
 expr_stmt|;
+name|LandingPadInst
+modifier|*
+name|getLandingPadInst
+parameter_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|LandingPadInst
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getLandingPadInst
+argument_list|()
+operator|)
+return|;
+block|}
 name|private
 label|:
 comment|/// \brief Increment the internal refcount of the number of BlockAddresses

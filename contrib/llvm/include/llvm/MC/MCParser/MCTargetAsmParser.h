@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCTargetAsmParser.h - Target Assembly Parser ----*- C++ -*-===//
+comment|//===- llvm/MC/MCTargetAsmParser.h - Target Assembly Parser -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,7 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCExpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCParser/MCAsmLexer.h"
 end_include
 
 begin_include
@@ -64,6 +76,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/SMLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -71,9 +95,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|AsmToken
-decl_stmt|;
 name|class
 name|MCInst
 decl_stmt|;
@@ -85,12 +106,6 @@ name|MCStreamer
 decl_stmt|;
 name|class
 name|MCSubtargetInfo
-decl_stmt|;
-name|class
-name|SMLoc
-decl_stmt|;
-name|class
-name|StringRef
 decl_stmt|;
 name|template
 operator|<
@@ -303,15 +318,14 @@ name|AsmRewrite
 operator|>
 operator|*
 name|AsmRewrites
+operator|=
+name|nullptr
 expr_stmt|;
 name|ParseInstructionInfo
 argument_list|()
-operator|:
-name|AsmRewrites
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|ParseInstructionInfo
 argument_list|(
 name|SmallVectorImpl
@@ -365,28 +379,6 @@ block|,
 name|FIRST_TARGET_MATCH_RESULT_TY
 block|}
 block|;
-name|private
-operator|:
-name|MCTargetAsmParser
-argument_list|(
-specifier|const
-name|MCTargetAsmParser
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|MCTargetAsmParser
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
 name|protected
 operator|:
 comment|// Can only create subclasses.
@@ -411,10 +403,14 @@ block|;
 comment|/// AvailableFeatures - The current set of available features.
 name|uint64_t
 name|AvailableFeatures
+operator|=
+literal|0
 block|;
 comment|/// ParsingInlineAsm - Are we parsing ms-style inline assembly?
 name|bool
 name|ParsingInlineAsm
+operator|=
+name|false
 block|;
 comment|/// SemaCallback - The Sema callback implementation.  Must be set when parsing
 comment|/// ms-style inline assembly.
@@ -434,6 +430,27 @@ name|STI
 block|;
 name|public
 operator|:
+name|MCTargetAsmParser
+argument_list|(
+specifier|const
+name|MCTargetAsmParser
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|MCTargetAsmParser
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|MCTargetAsmParser
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 operator|~
 name|MCTargetAsmParser
 argument_list|()
@@ -745,7 +762,7 @@ name|onLabelParsed
 argument_list|(
 argument|MCSymbol *Symbol
 argument_list|)
-block|{ }
+block|{}
 comment|/// Ensure that all previously parsed instructions have been emitted to the
 comment|/// output streamer, if the target does not emit them immediately.
 name|virtual
@@ -754,7 +771,7 @@ name|flushPendingInstructions
 argument_list|(
 argument|MCStreamer&Out
 argument_list|)
-block|{ }
+block|{}
 name|virtual
 specifier|const
 name|MCExpr
@@ -777,13 +794,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCPARSER_MCTARGETASMPARSER_H
+end_comment
 
 end_unit
 

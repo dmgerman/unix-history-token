@@ -112,7 +112,9 @@ parameter_list|(
 name|StringRef
 name|Name
 parameter_list|,
+specifier|const
 name|CVType
+modifier|&
 name|Data
 parameter_list|)
 function_decl|;
@@ -126,6 +128,16 @@ parameter_list|)
 function_decl|;
 name|StringRef
 name|getTypeName
+argument_list|(
+name|TypeIndex
+name|Index
+argument_list|)
+decl|const
+decl_stmt|;
+specifier|const
+name|CVType
+modifier|&
+name|getTypeRecord
 argument_list|(
 name|TypeIndex
 name|Index

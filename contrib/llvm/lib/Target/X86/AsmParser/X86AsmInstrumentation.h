@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- X86AsmInstrumentation.h - Instrument X86 inline assembly *- C++ -*-===//
+comment|//===- X86AsmInstrumentation.h - Instrument X86 inline assembly -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -144,8 +144,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|MCParsedAsmOperand
-operator|>
-expr|>
+operator|>>
 operator|&
 name|Operands
 argument_list|,
@@ -230,6 +229,8 @@ name|STI
 decl_stmt|;
 name|unsigned
 name|InitialFrameReg
+init|=
+literal|0
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -237,13 +238,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_X86_ASMPARSER_X86ASMINSTRUMENTATION_H
+end_comment
 
 end_unit
 

@@ -310,6 +310,9 @@ name|class
 name|Node
 decl_stmt|;
 name|class
+name|EdgeSequence
+decl_stmt|;
+name|class
 name|SCC
 decl_stmt|;
 name|class
@@ -330,16 +333,6 @@ comment|/// along side these, and exist whenever any instruction (transitively
 comment|/// through its operands) references a function. All call edges are
 comment|/// inherently reference edges, and so the reference graph forms a superset
 comment|/// of the formal call graph.
-comment|///
-comment|/// Furthermore, edges also may point to raw \c Function objects when those
-comment|/// functions have not been scanned and incorporated into the graph (yet).
-comment|/// This is one of the primary ways in which the graph can be lazy. When
-comment|/// functions are scanned and fully incorporated into the graph, all of the
-comment|/// edges referencing them are updated to point to the graph \c Node objects
-comment|/// instead of to the raw \c Function objects. This class even provides
-comment|/// methods to trigger this scan on-demand by attempting to get the target
-comment|/// node of the graph and providing a reference back to the graph in order to
-comment|/// lazily build it if necessary.
 comment|///
 comment|/// All of these forms of edges are fundamentally represented as outgoing
 comment|/// edges. The edges are stored in the source node and point at the target
@@ -368,17 +361,6 @@ enum|;
 name|Edge
 argument_list|()
 expr_stmt|;
-name|explicit
-name|Edge
-parameter_list|(
-name|Function
-modifier|&
-name|F
-parameter_list|,
-name|Kind
-name|K
-parameter_list|)
-function_decl|;
 name|explicit
 name|Edge
 parameter_list|(
@@ -414,49 +396,31 @@ name|isCall
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Get the call graph node referenced by this edge.
+comment|///
+comment|/// This requires that the edge is not null.
+name|Node
+operator|&
+name|getNode
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Get the function referenced by this edge.
 comment|///
-comment|/// This requires that the edge is not null, but will succeed whether we
-comment|/// have built a graph node for the function yet or not.
+comment|/// This requires that the edge is not null.
 name|Function
 operator|&
 name|getFunction
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Get the call graph node referenced by this edge if one exists.
-comment|///
-comment|/// This requires that the edge is not null. If we have built a graph node
-comment|/// for the function this edge points to, this will return that node,
-comment|/// otherwise it will return null.
-name|Node
-operator|*
-name|getNode
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// Get the call graph node for this edge, building it if necessary.
-comment|///
-comment|/// This requires that the edge is not null. If we have not yet built
-comment|/// a graph node for the function this edge points to, this will first ask
-comment|/// the graph to build that node, inserting it into all the relevant
-comment|/// structures.
-name|Node
-modifier|&
-name|getNode
-parameter_list|(
-name|LazyCallGraph
-modifier|&
-name|G
-parameter_list|)
-function_decl|;
 name|private
 label|:
 name|friend
 name|class
 name|LazyCallGraph
 operator|::
-name|Node
+name|EdgeSequence
 expr_stmt|;
 name|friend
 name|class
@@ -466,14 +430,8 @@ name|RefSCC
 expr_stmt|;
 name|PointerIntPair
 operator|<
-name|PointerUnion
-operator|<
-name|Function
-operator|*
-operator|,
 name|Node
 operator|*
-operator|>
 operator|,
 literal|1
 operator|,
@@ -498,29 +456,18 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-typedef|typedef
-name|SmallVector
-operator|<
-name|Edge
-operator|,
-literal|4
-operator|>
-name|EdgeVectorT
-expr_stmt|;
-typedef|typedef
-name|SmallVectorImpl
-operator|<
-name|Edge
-operator|>
-name|EdgeVectorImplT
-expr_stmt|;
-comment|/// A node in the call graph.
+comment|/// The edge sequence object.
 comment|///
-comment|/// This represents a single node. It's primary roles are to cache the list of
-comment|/// callees, de-duplicate and provide fast testing of whether a function is
-comment|/// a callee, and facilitate iteration of child nodes in the graph.
+comment|/// This typically exists entirely within the node but is exposed as
+comment|/// a separate type because a node doesn't initially have edges. An explicit
+comment|/// population step is required to produce this sequence at first and it is
+comment|/// then cached in the node. It is also used to represent edges entering the
+comment|/// graph from outside the module to model the graph's roots.
+comment|///
+comment|/// The sequence itself both iterable and indexable. The indexes remain
+comment|/// stable even as the sequence mutates (including removal).
 name|class
-name|Node
+name|EdgeSequence
 block|{
 name|friend
 name|class
@@ -530,7 +477,7 @@ name|friend
 name|class
 name|LazyCallGraph
 operator|::
-name|SCC
+name|Node
 expr_stmt|;
 name|friend
 name|class
@@ -538,179 +485,235 @@ name|LazyCallGraph
 operator|::
 name|RefSCC
 expr_stmt|;
-name|LazyCallGraph
-modifier|*
-name|G
-decl_stmt|;
-name|Function
-modifier|&
-name|F
-decl_stmt|;
-comment|// We provide for the DFS numbering and Tarjan walk lowlink numbers to be
-comment|// stored directly within the node. These are both '-1' when nodes are part
-comment|// of an SCC (or RefSCC), or '0' when not yet reached in a DFS walk.
-name|int
-name|DFSNumber
-decl_stmt|;
-name|int
-name|LowLink
-decl_stmt|;
-name|mutable
-name|EdgeVectorT
-name|Edges
-decl_stmt|;
-name|DenseMap
+typedef|typedef
+name|SmallVector
 operator|<
-name|Function
-operator|*
+name|Edge
 operator|,
-name|int
+literal|4
 operator|>
-name|EdgeIndexMap
+name|VectorT
 expr_stmt|;
-comment|/// Basic constructor implements the scanning of F into Edges and
-comment|/// EdgeIndexMap.
-name|Node
-argument_list|(
-name|LazyCallGraph
-operator|&
-name|G
-argument_list|,
-name|Function
-operator|&
-name|F
-argument_list|)
-expr_stmt|;
-comment|/// Internal helper to insert an edge to a function.
-name|void
-name|insertEdgeInternal
-argument_list|(
-name|Function
-operator|&
-name|ChildF
-argument_list|,
+typedef|typedef
+name|SmallVectorImpl
+operator|<
 name|Edge
-operator|::
-name|Kind
-name|EK
-argument_list|)
-decl_stmt|;
-comment|/// Internal helper to insert an edge to a node.
-name|void
-name|insertEdgeInternal
-argument_list|(
-name|Node
-operator|&
-name|ChildN
-argument_list|,
-name|Edge
-operator|::
-name|Kind
-name|EK
-argument_list|)
-decl_stmt|;
-comment|/// Internal helper to change an edge kind.
-name|void
-name|setEdgeKind
-argument_list|(
-name|Function
-operator|&
-name|ChildF
-argument_list|,
-name|Edge
-operator|::
-name|Kind
-name|EK
-argument_list|)
-decl_stmt|;
-comment|/// Internal helper to remove the edge to the given function.
-name|void
-name|removeEdgeInternal
-parameter_list|(
-name|Function
-modifier|&
-name|ChildF
-parameter_list|)
-function_decl|;
-name|void
-name|clear
-parameter_list|()
-block|{
-name|Edges
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|EdgeIndexMap
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-block|}
-comment|/// Print the name of this node's function.
-name|friend
-name|raw_ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|raw_ostream
-operator|&
-name|OS
-operator|,
-specifier|const
-name|Node
-operator|&
-name|N
-operator|)
-block|{
-return|return
-name|OS
-operator|<<
-name|N
-operator|.
-name|F
-operator|.
-name|getName
-argument_list|()
-return|;
-block|}
-comment|/// Dump the name of this node's function to stderr.
-name|void
-name|dump
-argument_list|()
-specifier|const
+operator|>
+name|VectorImplT
 expr_stmt|;
 name|public
 label|:
-name|LazyCallGraph
-operator|&
-name|getGraph
-argument_list|()
-specifier|const
+comment|/// An iterator used for the edges to both entry nodes and child nodes.
+name|class
+name|iterator
+range|:
+name|public
+name|iterator_adaptor_base
+operator|<
+name|iterator
+decl_stmt|,
+name|VectorImplT
+decl|::
+name|iterator
+decl_stmt|,
+name|std
+decl|::
+name|forward_iterator_tag
+decl|>
 block|{
+name|friend
+name|class
+name|LazyCallGraph
+decl_stmt|;
+name|friend
+name|class
+name|LazyCallGraph
+operator|::
+name|Node
+expr_stmt|;
+name|VectorImplT
+operator|::
+name|iterator
+name|E
+expr_stmt|;
+comment|// Build the iterator for a specific position in the edge list.
+name|iterator
+argument_list|(
+argument|VectorImplT::iterator BaseI
+argument_list|,
+argument|VectorImplT::iterator E
+argument_list|)
+block|:
+name|iterator_adaptor_base
+argument_list|(
+name|BaseI
+argument_list|)
+operator|,
+name|E
+argument_list|(
+argument|E
+argument_list|)
+block|{
+while|while
+condition|(
+name|I
+operator|!=
+name|E
+operator|&&
+operator|!
+operator|*
+name|I
+condition|)
+operator|++
+name|I
+expr_stmt|;
+block|}
+name|public
+label|:
+name|iterator
+argument_list|()
+block|{}
+name|using
+name|iterator_adaptor_base
+operator|::
+name|operator
+operator|++
+expr_stmt|;
+name|iterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+do|do
+block|{
+operator|++
+name|I
+expr_stmt|;
+block|}
+while|while
+condition|(
+name|I
+operator|!=
+name|E
+operator|&&
+operator|!
+operator|*
+name|I
+condition|)
+empty_stmt|;
+do|return *this;       }     };
+comment|/// An iterator over specifically call edges.
+comment|///
+comment|/// This has the same iteration properties as the \c iterator, but
+comment|/// restricts itself to edges which represent actual calls.
+do|class call_iterator         : public iterator_adaptor_base<call_iterator
+operator|,
+do|VectorImplT::iterator
+operator|,
+do|std::forward_iterator_tag>
+block|{
+name|friend
+name|class
+name|LazyCallGraph
+decl_stmt|;
+name|friend
+name|class
+name|LazyCallGraph
+operator|::
+name|Node
+expr_stmt|;
+name|VectorImplT
+operator|::
+name|iterator
+name|E
+expr_stmt|;
+comment|/// Advance the iterator to the next valid, call edge.
+name|void
+name|advanceToNextEdge
+parameter_list|()
+block|{
+while|while
+condition|(
+name|I
+operator|!=
+name|E
+operator|&&
+operator|(
+operator|!
+operator|*
+name|I
+operator|||
+operator|!
+name|I
+operator|->
+name|isCall
+argument_list|()
+operator|)
+condition|)
+operator|++
+name|I
+expr_stmt|;
+block|}
+comment|// Build the iterator for a specific position in the edge list.
+function|call_iterator
+parameter_list|(
+function|VectorImplT::
+name|iterator
+name|BaseI
+decl_stmt|,
+name|VectorImplT
+decl_stmt|::iterator E
+block|)
+do|: iterator_adaptor_base(BaseI
+block|)
+operator|,
+name|E
+argument_list|(
+argument|E
+argument_list|)
+block|{
+name|advanceToNextEdge
+argument_list|()
+block|;       }
+name|public
+operator|:
+name|call_iterator
+argument_list|()
+block|{}
+name|using
+name|iterator_adaptor_base
+operator|::
+name|operator
+operator|++
+expr_stmt|;
+name|call_iterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+operator|++
+name|I
+block|;
+name|advanceToNextEdge
+argument_list|()
+block|;
 return|return
 operator|*
-name|G
+name|this
 return|;
 block|}
-name|Function
-operator|&
-name|getFunction
-argument_list|()
-specifier|const
-block|{
-return|return
-name|F
-return|;
 block|}
-name|edge_iterator
+empty_stmt|;
+name|iterator
 name|begin
-argument_list|()
-specifier|const
+parameter_list|()
 block|{
 return|return
-name|edge_iterator
+name|iterator
 argument_list|(
 name|Edges
 operator|.
@@ -724,13 +727,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|edge_iterator
+name|iterator
 name|end
-argument_list|()
-specifier|const
+parameter_list|()
 block|{
 return|return
-name|edge_iterator
+name|iterator
 argument_list|(
 name|Edges
 operator|.
@@ -744,16 +746,14 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-specifier|const
 name|Edge
 modifier|&
 name|operator
-index|[]
-argument_list|(
+function|[]
+parameter_list|(
 name|int
 name|i
-argument_list|)
-decl|const
+parameter_list|)
 block|{
 return|return
 name|Edges
@@ -762,17 +762,15 @@ name|i
 index|]
 return|;
 block|}
-specifier|const
 name|Edge
 modifier|&
 name|operator
-index|[]
-argument_list|(
-name|Function
-operator|&
-name|F
-argument_list|)
-decl|const
+function|[]
+parameter_list|(
+name|Node
+modifier|&
+name|N
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -781,7 +779,7 @@ operator|.
 name|find
 argument_list|(
 operator|&
-name|F
+name|N
 argument_list|)
 operator|!=
 name|EdgeIndexMap
@@ -800,48 +798,21 @@ operator|.
 name|find
 argument_list|(
 operator|&
-name|F
+name|N
 argument_list|)
 operator|->
 name|second
 index|]
 return|;
 block|}
-specifier|const
-name|Edge
-modifier|&
-name|operator
-index|[]
-argument_list|(
-name|Node
-operator|&
-name|N
-argument_list|)
-decl|const
-block|{
-return|return
-operator|(
-operator|*
-name|this
-operator|)
-index|[
-name|N
-operator|.
-name|getFunction
-argument_list|()
-index|]
-return|;
-block|}
-specifier|const
 name|Edge
 modifier|*
 name|lookup
-argument_list|(
-name|Function
-operator|&
-name|F
-argument_list|)
-decl|const
+parameter_list|(
+name|Node
+modifier|&
+name|N
+parameter_list|)
 block|{
 name|auto
 name|EI
@@ -851,7 +822,7 @@ operator|.
 name|find
 argument_list|(
 operator|&
-name|F
+name|N
 argument_list|)
 decl_stmt|;
 return|return
@@ -873,13 +844,12 @@ else|:
 name|nullptr
 return|;
 block|}
-name|call_edge_iterator
+name|call_iterator
 name|call_begin
-argument_list|()
-specifier|const
+parameter_list|()
 block|{
 return|return
-name|call_edge_iterator
+name|call_iterator
 argument_list|(
 name|Edges
 operator|.
@@ -893,13 +863,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|call_edge_iterator
+name|call_iterator
 name|call_end
-argument_list|()
-specifier|const
+parameter_list|()
 block|{
 return|return
-name|call_edge_iterator
+name|call_iterator
 argument_list|(
 name|Edges
 operator|.
@@ -915,11 +884,10 @@ return|;
 block|}
 name|iterator_range
 operator|<
-name|call_edge_iterator
+name|call_iterator
 operator|>
 name|calls
 argument_list|()
-specifier|const
 block|{
 return|return
 name|make_range
@@ -930,6 +898,163 @@ argument_list|,
 name|call_end
 argument_list|()
 argument_list|)
+return|;
+block|}
+name|bool
+name|empty
+parameter_list|()
+block|{
+for|for
+control|(
+name|auto
+operator|&
+name|E
+operator|:
+name|Edges
+control|)
+if|if
+condition|(
+name|E
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|true
+return|;
+block|}
+name|private
+label|:
+name|VectorT
+name|Edges
+decl_stmt|;
+name|DenseMap
+operator|<
+name|Node
+operator|*
+operator|,
+name|int
+operator|>
+name|EdgeIndexMap
+expr_stmt|;
+name|EdgeSequence
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+comment|/// Internal helper to insert an edge to a node.
+name|void
+name|insertEdgeInternal
+argument_list|(
+name|Node
+operator|&
+name|ChildN
+argument_list|,
+name|Edge
+operator|::
+name|Kind
+name|EK
+argument_list|)
+decl_stmt|;
+comment|/// Internal helper to change an edge kind.
+name|void
+name|setEdgeKind
+argument_list|(
+name|Node
+operator|&
+name|ChildN
+argument_list|,
+name|Edge
+operator|::
+name|Kind
+name|EK
+argument_list|)
+decl_stmt|;
+comment|/// Internal helper to remove the edge to the given function.
+name|bool
+name|removeEdgeInternal
+parameter_list|(
+name|Node
+modifier|&
+name|ChildN
+parameter_list|)
+function_decl|;
+comment|/// Internal helper to replace an edge key with a new one.
+comment|///
+comment|/// This should be used when the function for a particular node in the
+comment|/// graph gets replaced and we are updating all of the edges to that node
+comment|/// to use the new function as the key.
+name|void
+name|replaceEdgeKey
+parameter_list|(
+name|Function
+modifier|&
+name|OldTarget
+parameter_list|,
+name|Function
+modifier|&
+name|NewTarget
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+comment|/// A node in the call graph.
+comment|///
+comment|/// This represents a single node. It's primary roles are to cache the list of
+comment|/// callees, de-duplicate and provide fast testing of whether a function is
+comment|/// a callee, and facilitate iteration of child nodes in the graph.
+comment|///
+comment|/// The node works much like an optional in order to lazily populate the
+comment|/// edges of each node. Until populated, there are no edges. Once populated,
+comment|/// you can access the edges by dereferencing the node or using the `->`
+comment|/// operator as if the node was an `Optional<EdgeSequence>`.
+name|class
+name|Node
+block|{
+name|friend
+name|class
+name|LazyCallGraph
+decl_stmt|;
+name|friend
+name|class
+name|LazyCallGraph
+operator|::
+name|RefSCC
+expr_stmt|;
+name|public
+label|:
+name|LazyCallGraph
+operator|&
+name|getGraph
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|G
+return|;
+block|}
+name|Function
+operator|&
+name|getFunction
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|F
+return|;
+block|}
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|F
+operator|->
+name|getName
+argument_list|()
 return|;
 block|}
 comment|/// Equality is defined as address equality.
@@ -971,216 +1096,210 @@ name|N
 operator|)
 return|;
 block|}
-block|}
-empty_stmt|;
-comment|/// A lazy iterator used for both the entry nodes and child nodes.
-comment|///
-comment|/// When this iterator is dereferenced, if not yet available, a function will
-comment|/// be scanned for "calls" or uses of functions and its child information
-comment|/// will be constructed. All of these results are accumulated and cached in
-comment|/// the graph.
-name|class
-name|edge_iterator
-range|:
-name|public
-name|iterator_adaptor_base
-operator|<
-name|edge_iterator
-decl_stmt|,
-name|EdgeVectorImplT
-decl|::
-name|iterator
-decl_stmt|,
-name|std
-decl|::
-name|forward_iterator_tag
-decl|>
-block|{
-name|friend
-name|class
-name|LazyCallGraph
-decl_stmt|;
-name|friend
-name|class
-name|LazyCallGraph
-operator|::
-name|Node
-expr_stmt|;
-name|EdgeVectorImplT
-operator|::
-name|iterator
-name|E
-expr_stmt|;
-comment|// Build the iterator for a specific position in the edge list.
-name|edge_iterator
-argument_list|(
-argument|EdgeVectorImplT::iterator BaseI
-argument_list|,
-argument|EdgeVectorImplT::iterator E
-argument_list|)
-block|:
-name|iterator_adaptor_base
-argument_list|(
-name|BaseI
-argument_list|)
-operator|,
-name|E
-argument_list|(
-argument|E
-argument_list|)
-block|{
-while|while
-condition|(
-name|I
-operator|!=
-name|E
-operator|&&
-operator|!
-operator|*
-name|I
-condition|)
-operator|++
-name|I
-expr_stmt|;
-block|}
-name|public
-label|:
-name|edge_iterator
-argument_list|()
-block|{}
-name|using
-name|iterator_adaptor_base
-operator|::
+comment|/// Tests whether the node has been populated with edges.
 name|operator
-operator|++
-expr_stmt|;
-name|edge_iterator
-operator|&
-name|operator
-operator|++
-operator|(
-operator|)
-block|{
-do|do
-block|{
-operator|++
-name|I
-expr_stmt|;
-block|}
-while|while
-condition|(
-name|I
-operator|!=
-name|E
-operator|&&
-operator|!
-operator|*
-name|I
-condition|)
-empty_stmt|;
-do|return *this;     }   };
-comment|/// A lazy iterator over specifically call edges.
-comment|///
-comment|/// This has the same iteration properties as the \c edge_iterator, but
-comment|/// restricts itself to edges which represent actual calls.
-do|class call_edge_iterator       : public iterator_adaptor_base<call_edge_iterator
-operator|,
-do|EdgeVectorImplT::iterator
-operator|,
-do|std::forward_iterator_tag>
-block|{
-name|friend
-name|class
-name|LazyCallGraph
-decl_stmt|;
-name|friend
-name|class
-name|LazyCallGraph
-operator|::
-name|Node
-expr_stmt|;
-name|EdgeVectorImplT
-operator|::
-name|iterator
-name|E
-expr_stmt|;
-comment|/// Advance the iterator to the next valid, call edge.
-name|void
-name|advanceToNextEdge
-parameter_list|()
-block|{
-while|while
-condition|(
-name|I
-operator|!=
-name|E
-operator|&&
-operator|(
-operator|!
-operator|*
-name|I
-operator|||
-operator|!
-name|I
-operator|->
-name|isCall
+name|bool
 argument_list|()
-operator|)
-condition|)
-operator|++
-name|I
-expr_stmt|;
-block|}
-comment|// Build the iterator for a specific position in the edge list.
-function|call_edge_iterator
-parameter_list|(
-function|EdgeVectorImplT::
-name|iterator
-name|BaseI
-decl_stmt|,
-name|EdgeVectorImplT
-decl_stmt|::iterator E
-block|)
-do|: iterator_adaptor_base(BaseI
-block|)
-operator|,
-name|E
-argument_list|(
-argument|E
-argument_list|)
+specifier|const
 block|{
-name|advanceToNextEdge
-argument_list|()
-block|;     }
-name|public
-operator|:
-name|call_edge_iterator
-argument_list|()
-block|{}
-name|using
-name|iterator_adaptor_base
-operator|::
-name|operator
-operator|++
-expr_stmt|;
-name|call_edge_iterator
-operator|&
-name|operator
-operator|++
-operator|(
-operator|)
-block|{
-operator|++
-name|I
-block|;
-name|advanceToNextEdge
-argument_list|()
-block|;
 return|return
+name|Edges
+operator|.
+name|hasValue
+argument_list|()
+return|;
+block|}
+comment|// We allow accessing the edges by dereferencing or using the arrow
+comment|// operator, essentially wrapping the internal optional.
+name|EdgeSequence
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+comment|// Rip const off because the node itself isn't changing here.
+return|return
+name|const_cast
+operator|<
+name|EdgeSequence
+operator|&
+operator|>
+operator|(
+operator|*
+name|Edges
+operator|)
+return|;
+block|}
+name|EdgeSequence
+operator|*
+name|operator
+operator|->
+expr|(
+block|)
+decl|const
+block|{
+return|return
+operator|&
+operator|*
 operator|*
 name|this
 return|;
 block|}
+comment|/// Populate the edges of this node if necessary.
+comment|///
+comment|/// The first time this is called it will populate the edges for this node
+comment|/// in the graph. It does this by scanning the underlying function, so once
+comment|/// this is done, any changes to that function must be explicitly reflected
+comment|/// in updates to the graph.
+comment|///
+comment|/// \returns the populated \c EdgeSequence to simplify walking it.
+comment|///
+comment|/// This will not update or re-scan anything if called repeatedly. Instead,
+comment|/// the edge sequence is cached and returned immediately on subsequent
+comment|/// calls.
+name|EdgeSequence
+modifier|&
+name|populate
+parameter_list|()
+block|{
+if|if
+condition|(
+name|Edges
+condition|)
+return|return
+operator|*
+name|Edges
+return|;
+return|return
+name|populateSlow
+argument_list|()
+return|;
+block|}
+name|private
+label|:
+name|LazyCallGraph
+modifier|*
+name|G
+decl_stmt|;
+name|Function
+modifier|*
+name|F
+decl_stmt|;
+comment|// We provide for the DFS numbering and Tarjan walk lowlink numbers to be
+comment|// stored directly within the node. These are both '-1' when nodes are part
+comment|// of an SCC (or RefSCC), or '0' when not yet reached in a DFS walk.
+name|int
+name|DFSNumber
+decl_stmt|;
+name|int
+name|LowLink
+decl_stmt|;
+name|Optional
+operator|<
+name|EdgeSequence
+operator|>
+name|Edges
+expr_stmt|;
+comment|/// Basic constructor implements the scanning of F into Edges and
+comment|/// EdgeIndexMap.
+name|Node
+argument_list|(
+name|LazyCallGraph
+operator|&
+name|G
+argument_list|,
+name|Function
+operator|&
+name|F
+argument_list|)
+operator|:
+name|G
+argument_list|(
+operator|&
+name|G
+argument_list|)
+operator|,
+name|F
+argument_list|(
+operator|&
+name|F
+argument_list|)
+operator|,
+name|DFSNumber
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|LowLink
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|/// Implementation of the scan when populating.
+name|EdgeSequence
+operator|&
+name|populateSlow
+argument_list|()
+expr_stmt|;
+comment|/// Internal helper to directly replace the function with a new one.
+comment|///
+comment|/// This is used to facilitate tranfsormations which need to replace the
+comment|/// formal Function object but directly move the body and users from one to
+comment|/// the other.
+name|void
+name|replaceFunction
+parameter_list|(
+name|Function
+modifier|&
+name|NewF
+parameter_list|)
+function_decl|;
+name|void
+name|clear
+parameter_list|()
+block|{
+name|Edges
+operator|.
+name|reset
+argument_list|()
+expr_stmt|;
+block|}
+comment|/// Print the name of this node's function.
+name|friend
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|Node
+operator|&
+name|N
+operator|)
+block|{
+return|return
+name|OS
+operator|<<
+name|N
+operator|.
+name|F
+operator|->
+name|getName
+argument_list|()
+return|;
+block|}
+comment|/// Dump the name of this node's function to stderr.
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// An SCC of the call graph.
@@ -1549,20 +1668,65 @@ name|Name
 return|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// A RefSCC of the call graph.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This models a Strongly Connected Component of function reference edges in
+end_comment
+
+begin_comment
 comment|/// the call graph. As opposed to actual SCCs, these can be used to scope
+end_comment
+
+begin_comment
 comment|/// subgraphs of the module which are independent from other subgraphs of the
+end_comment
+
+begin_comment
 comment|/// module because they do not reference it in any way. This is also the unit
+end_comment
+
+begin_comment
 comment|/// where we do mutation of the graph in order to restrict mutations to those
+end_comment
+
+begin_comment
 comment|/// which don't violate this independence.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// A RefSCC contains a DAG of actual SCCs. All the nodes within the RefSCC
+end_comment
+
+begin_comment
 comment|/// are necessarily within some actual SCC that nests within it. Since
+end_comment
+
+begin_comment
 comment|/// a direct call *is* a reference, there will always be at least one RefSCC
+end_comment
+
+begin_comment
 comment|/// around any SCC.
+end_comment
+
+begin_decl_stmt
 name|class
 name|RefSCC
 block|{
@@ -1731,32 +1895,83 @@ return|return
 name|OS
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Dump a short description of this RefSCC to stderr.
+end_comment
+
+begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|NDEBUG
+end_ifndef
+
+begin_comment
 comment|/// Verify invariants about the RefSCC and all its SCCs.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This will attempt to validate all of the invariants *within* the
+end_comment
+
+begin_comment
 comment|/// RefSCC, but not that it is a strongly connected component of the larger
+end_comment
+
+begin_comment
 comment|/// graph. This makes it useful even when partially through an update.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Invariants checked:
+end_comment
+
+begin_comment
 comment|/// - SCCs and their indices match.
+end_comment
+
+begin_comment
 comment|/// - The SCCs list is in fact in post-order.
+end_comment
+
+begin_function_decl
 name|void
 name|verify
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/// Handle any necessary parent set updates after inserting a trivial ref
+end_comment
+
+begin_comment
 comment|/// or call edge.
+end_comment
+
+begin_function_decl
 name|void
 name|handleTrivialEdgeInsertion
 parameter_list|(
@@ -1769,8 +1984,14 @@ modifier|&
 name|TargetN
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_typedef
 typedef|typedef
 name|pointee_iterator
 operator|<
@@ -1784,6 +2005,9 @@ name|const_iterator
 operator|>
 name|iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|iterator_range
 operator|<
@@ -1791,6 +2015,9 @@ name|iterator
 operator|>
 name|range
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|pointee_iterator
 operator|<
@@ -1804,6 +2031,9 @@ name|const_iterator
 operator|>
 name|parent_iterator
 expr_stmt|;
+end_typedef
+
+begin_expr_stmt
 name|iterator
 name|begin
 argument_list|()
@@ -1816,6 +2046,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|iterator
 name|end
 argument_list|()
@@ -1828,6 +2061,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ssize_t
 name|size
 argument_list|()
@@ -1840,6 +2076,9 @@ name|size
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|SCC
 modifier|&
 name|operator
@@ -1857,6 +2096,9 @@ name|Idx
 index|]
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|iterator
 name|find
 argument_list|(
@@ -1883,6 +2125,9 @@ operator|->
 name|second
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|parent_iterator
 name|parent_begin
 argument_list|()
@@ -1895,6 +2140,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|parent_iterator
 name|parent_end
 argument_list|()
@@ -1907,6 +2155,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|iterator_range
 operator|<
 name|parent_iterator
@@ -1926,7 +2177,13 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Test if this RefSCC is a parent of \a C.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isParentOf
 argument_list|(
@@ -1947,7 +2204,13 @@ name|this
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Test if this RefSCC is an ancestor of \a C.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isAncestorOf
 argument_list|(
@@ -1968,7 +2231,13 @@ name|this
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Test if this RefSCC is a child of \a C.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isChildOf
 argument_list|(
@@ -1996,7 +2265,13 @@ operator|)
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Test if this RefSCC is a descendant of \a C.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isDescendantOf
 argument_list|(
@@ -2007,10 +2282,25 @@ name|C
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Provide a short name by printing this RefSCC to a std::string.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This copes with the fact that we don't have a name per-se for an RefSCC
+end_comment
+
+begin_comment
 comment|/// while still making the use of this in debugging and logging useful.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
@@ -2043,26 +2333,89 @@ return|return
 name|Name
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|///@{
+end_comment
+
+begin_comment
 comment|/// \name Mutation API
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// These methods provide the core API for updating the call graph in the
+end_comment
+
+begin_comment
 comment|/// presence of (potentially still in-flight) DFS-found RefSCCs and SCCs.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that these methods sometimes have complex runtimes, so be careful
+end_comment
+
+begin_comment
 comment|/// how you call them.
+end_comment
+
+begin_comment
 comment|/// Make an existing internal ref edge into a call edge.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This may form a larger cycle and thus collapse SCCs into TargetN's SCC.
+end_comment
+
+begin_comment
 comment|/// If that happens, the deleted SCC pointers are returned. These SCCs are
+end_comment
+
+begin_comment
 comment|/// not in a valid state any longer but the pointers will remain valid
+end_comment
+
+begin_comment
 comment|/// until destruction of the parent graph instance for the purpose of
+end_comment
+
+begin_comment
 comment|/// clearing cached information.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// After this operation, both SourceN's SCC and TargetN's SCC may move
+end_comment
+
+begin_comment
 comment|/// position within this RefSCC's postorder list. Any SCCs merged are
+end_comment
+
+begin_comment
 comment|/// merged into the TargetN's SCC in order to preserve reachability analyses
+end_comment
+
+begin_comment
 comment|/// which took place on that SCC.
+end_comment
+
+begin_expr_stmt
 name|SmallVector
 operator|<
 name|SCC
@@ -2081,12 +2434,33 @@ operator|&
 name|TargetN
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Make an existing internal call edge between separate SCCs into a ref
+end_comment
+
+begin_comment
 comment|/// edge.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If SourceN and TargetN in separate SCCs within this RefSCC, changing
+end_comment
+
+begin_comment
 comment|/// the call edge between them to a ref edge is a trivial operation that
+end_comment
+
+begin_comment
 comment|/// does not require any structural changes to the call graph.
+end_comment
+
+begin_function_decl
 name|void
 name|switchTrivialInternalEdgeToRef
 parameter_list|(
@@ -2099,24 +2473,81 @@ modifier|&
 name|TargetN
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Make an existing internal call edge within a single SCC into a ref
+end_comment
+
+begin_comment
 comment|/// edge.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Since SourceN and TargetN are part of a single SCC, this SCC may be
+end_comment
+
+begin_comment
 comment|/// split up due to breaking a cycle in the call edges that formed it. If
+end_comment
+
+begin_comment
 comment|/// that happens, then this routine will insert new SCCs into the postorder
+end_comment
+
+begin_comment
 comment|/// list *before* the SCC of TargetN (previously the SCC of both). This
+end_comment
+
+begin_comment
 comment|/// preserves postorder as the TargetN can reach all of the other nodes by
+end_comment
+
+begin_comment
 comment|/// definition of previously being in a single SCC formed by the cycle from
+end_comment
+
+begin_comment
 comment|/// SourceN to TargetN.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// The newly added SCCs are added *immediately* and contiguously
+end_comment
+
+begin_comment
 comment|/// prior to the TargetN SCC and return the range covering the new SCCs in
+end_comment
+
+begin_comment
 comment|/// the RefSCC's postorder sequence. You can directly iterate the returned
+end_comment
+
+begin_comment
 comment|/// range to observe all of the new SCCs in postorder.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that if SourceN and TargetN are in separate SCCs, the simpler
+end_comment
+
+begin_comment
 comment|/// routine `switchTrivialInternalEdgeToRef` should be used instead.
+end_comment
+
+begin_expr_stmt
 name|iterator_range
 operator|<
 name|iterator
@@ -2132,10 +2563,25 @@ operator|&
 name|TargetN
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Make an existing outgoing ref edge into a call edge.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that this is trivial as there are no cyclic impacts and there
+end_comment
+
+begin_comment
 comment|/// remains a reference edge.
+end_comment
+
+begin_function_decl
 name|void
 name|switchOutgoingEdgeToCall
 parameter_list|(
@@ -2148,10 +2594,25 @@ modifier|&
 name|TargetN
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Make an existing outgoing call edge into a ref edge.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This is trivial as there are no cyclic impacts and there remains
+end_comment
+
+begin_comment
 comment|/// a reference edge.
+end_comment
+
+begin_function_decl
 name|void
 name|switchOutgoingEdgeToRef
 parameter_list|(
@@ -2164,18 +2625,57 @@ modifier|&
 name|TargetN
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Insert a ref edge from one node in this RefSCC to another in this
+end_comment
+
+begin_comment
 comment|/// RefSCC.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This is always a trivial operation as it doesn't change any part of the
+end_comment
+
+begin_comment
 comment|/// graph structure besides connecting the two nodes.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that we don't support directly inserting internal *call* edges
+end_comment
+
+begin_comment
 comment|/// because that could change the graph structure and requires returning
+end_comment
+
+begin_comment
 comment|/// information about what became invalid. As a consequence, the pattern
+end_comment
+
+begin_comment
 comment|/// should be to first insert the necessary ref edge, and then to switch it
+end_comment
+
+begin_comment
 comment|/// to a call edge if needed and handle any invalidation that results. See
+end_comment
+
+begin_comment
 comment|/// the \c switchInternalEdgeToCall routine for details.
+end_comment
+
+begin_function_decl
 name|void
 name|insertInternalRefEdge
 parameter_list|(
@@ -2188,12 +2688,33 @@ modifier|&
 name|TargetN
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Insert an edge whose parent is in this RefSCC and child is in some
+end_comment
+
+begin_comment
 comment|/// child RefSCC.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// There must be an existing path from the \p SourceN to the \p TargetN.
+end_comment
+
+begin_comment
 comment|/// This operation is inexpensive and does not change the set of SCCs and
+end_comment
+
+begin_comment
 comment|/// RefSCCs in the graph.
+end_comment
+
+begin_decl_stmt
 name|void
 name|insertOutgoingEdge
 argument_list|(
@@ -2211,31 +2732,109 @@ name|Kind
 name|EK
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Insert an edge whose source is in a descendant RefSCC and target is in
+end_comment
+
+begin_comment
 comment|/// this RefSCC.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// There must be an existing path from the target to the source in this
+end_comment
+
+begin_comment
 comment|/// case.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// NB! This is has the potential to be a very expensive function. It
+end_comment
+
+begin_comment
 comment|/// inherently forms a cycle in the prior RefSCC DAG and we have to merge
+end_comment
+
+begin_comment
 comment|/// RefSCCs to resolve that cycle. But finding all of the RefSCCs which
+end_comment
+
+begin_comment
 comment|/// participate in the cycle can in the worst case require traversing every
+end_comment
+
+begin_comment
 comment|/// RefSCC in the graph. Every attempt is made to avoid that, but passes
+end_comment
+
+begin_comment
 comment|/// must still exercise caution calling this routine repeatedly.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Also note that this can only insert ref edges. In order to insert
+end_comment
+
+begin_comment
 comment|/// a call edge, first insert a ref edge and then switch it to a call edge.
+end_comment
+
+begin_comment
 comment|/// These are intentionally kept as separate interfaces because each step
+end_comment
+
+begin_comment
 comment|/// of the operation invalidates a different set of data structures.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This returns all the RefSCCs which were merged into the this RefSCC
+end_comment
+
+begin_comment
 comment|/// (the target's). This allows callers to invalidate any cached
+end_comment
+
+begin_comment
 comment|/// information.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// FIXME: We could possibly optimize this quite a bit for cases where the
+end_comment
+
+begin_comment
 comment|/// caller and callee are very nearby in the graph. See comments in the
+end_comment
+
+begin_comment
 comment|/// implementation for details, but that use case might impact users.
+end_comment
+
+begin_expr_stmt
 name|SmallVector
 operator|<
 name|RefSCC
@@ -2254,16 +2853,49 @@ operator|&
 name|TargetN
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Remove an edge whose source is in this RefSCC and target is *not*.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This removes an inter-RefSCC edge. All inter-RefSCC edges originating
+end_comment
+
+begin_comment
 comment|/// from this SCC have been fully explored by any in-flight DFS graph
+end_comment
+
+begin_comment
 comment|/// formation, so this is always safe to call once you have the source
+end_comment
+
+begin_comment
 comment|/// RefSCC.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This operation does not change the cyclic structure of the graph and so
+end_comment
+
+begin_comment
 comment|/// is very inexpensive. It may change the connectivity graph of the SCCs
+end_comment
+
+begin_comment
 comment|/// though, so be careful calling this while iterating over them.
+end_comment
+
+begin_function_decl
 name|void
 name|removeOutgoingEdge
 parameter_list|(
@@ -2276,47 +2908,173 @@ modifier|&
 name|TargetN
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Remove a ref edge which is entirely within this RefSCC.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Both the \a SourceN and the \a TargetN must be within this RefSCC.
+end_comment
+
+begin_comment
 comment|/// Removing such an edge may break cycles that form this RefSCC and thus
+end_comment
+
+begin_comment
 comment|/// this operation may change the RefSCC graph significantly. In
+end_comment
+
+begin_comment
 comment|/// particular, this operation will re-form new RefSCCs based on the
+end_comment
+
+begin_comment
 comment|/// remaining connectivity of the graph. The following invariants are
+end_comment
+
+begin_comment
 comment|/// guaranteed to hold after calling this method:
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// 1) This RefSCC is still a RefSCC in the graph.
+end_comment
+
+begin_comment
 comment|/// 2) This RefSCC will be the parent of any new RefSCCs. Thus, this RefSCC
+end_comment
+
+begin_comment
 comment|///    is preserved as the root of any new RefSCC DAG formed.
+end_comment
+
+begin_comment
 comment|/// 3) No RefSCC other than this RefSCC has its member set changed (this is
+end_comment
+
+begin_comment
 comment|///    inherent in the definition of removing such an edge).
+end_comment
+
+begin_comment
 comment|/// 4) All of the parent links of the RefSCC graph will be updated to
+end_comment
+
+begin_comment
 comment|///    reflect the new RefSCC structure.
+end_comment
+
+begin_comment
 comment|/// 5) All RefSCCs formed out of this RefSCC, excluding this RefSCC, will
+end_comment
+
+begin_comment
 comment|///    be returned in post-order.
+end_comment
+
+begin_comment
 comment|/// 6) The order of the RefSCCs in the vector will be a valid postorder
+end_comment
+
+begin_comment
 comment|///    traversal of the new RefSCCs.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// These invariants are very important to ensure that we can build
+end_comment
+
+begin_comment
 comment|/// optimization pipelines on top of the CGSCC pass manager which
+end_comment
+
+begin_comment
 comment|/// intelligently update the RefSCC graph without invalidating other parts
+end_comment
+
+begin_comment
 comment|/// of the RefSCC graph.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that we provide no routine to remove a *call* edge. Instead, you
+end_comment
+
+begin_comment
 comment|/// must first switch it to a ref edge using \c switchInternalEdgeToRef.
+end_comment
+
+begin_comment
 comment|/// This split API is intentional as each of these two steps can invalidate
+end_comment
+
+begin_comment
 comment|/// a different aspect of the graph structure and needs to have the
+end_comment
+
+begin_comment
 comment|/// invalidation handled independently.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// The runtime complexity of this method is, in the worst case, O(V+E)
+end_comment
+
+begin_comment
 comment|/// where V is the number of nodes in this RefSCC and E is the number of
+end_comment
+
+begin_comment
 comment|/// edges leaving the nodes in this RefSCC. Note that E includes both edges
+end_comment
+
+begin_comment
 comment|/// within this RefSCC and edges from this RefSCC to child RefSCCs. Some
+end_comment
+
+begin_comment
 comment|/// effort has been made to minimize the overhead of common cases such as
+end_comment
+
+begin_comment
 comment|/// self-edges and edge removals which result in a spanning tree with no
+end_comment
+
+begin_comment
 comment|/// more cycles. There are also detailed comments within the implementation
+end_comment
+
+begin_comment
 comment|/// on techniques which could substantially improve this routine's
+end_comment
+
+begin_comment
 comment|/// efficiency.
+end_comment
+
+begin_expr_stmt
 name|SmallVector
 operator|<
 name|RefSCC
@@ -2335,15 +3093,45 @@ operator|&
 name|TargetN
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// A convenience wrapper around the above to handle trivial cases of
+end_comment
+
+begin_comment
 comment|/// inserting a new call edge.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This is trivial whenever the target is in the same SCC as the source or
+end_comment
+
+begin_comment
 comment|/// the edge is an outgoing edge to some descendant SCC. In these cases
+end_comment
+
+begin_comment
 comment|/// there is no change to the cyclic structure of SCCs or RefSCCs.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// To further make calling this convenient, it also handles inserting
+end_comment
+
+begin_comment
 comment|/// already existing edges.
+end_comment
+
+begin_function_decl
 name|void
 name|insertTrivialCallEdge
 parameter_list|(
@@ -2356,15 +3144,45 @@ modifier|&
 name|TargetN
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// A convenience wrapper around the above to handle trivial cases of
+end_comment
+
+begin_comment
 comment|/// inserting a new ref edge.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This is trivial whenever the target is in the same RefSCC as the source
+end_comment
+
+begin_comment
 comment|/// or the edge is an outgoing edge to some descendant RefSCC. In these
+end_comment
+
+begin_comment
 comment|/// cases there is no change to the cyclic structure of the RefSCCs.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// To further make calling this convenient, it also handles inserting
+end_comment
+
+begin_comment
 comment|/// already existing edges.
+end_comment
+
+begin_function_decl
 name|void
 name|insertTrivialRefEdge
 parameter_list|(
@@ -2377,15 +3195,65 @@ modifier|&
 name|TargetN
 parameter_list|)
 function_decl|;
-comment|///@}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_comment
+comment|/// Directly replace a node's function with a new function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This should be used when moving the body and users of a function to
+end_comment
+
+begin_comment
+comment|/// a new formal function object but not otherwise changing the call graph
+end_comment
+
+begin_comment
+comment|/// structure in any way.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// It requires that the old function in the provided node have zero uses
+end_comment
+
+begin_comment
+comment|/// and the new function must have calls and references to it establishing
+end_comment
+
+begin_comment
+comment|/// an equivalent graph.
+end_comment
+
+begin_function_decl
+name|void
+name|replaceNodeFunction
+parameter_list|(
+name|Node
+modifier|&
+name|N
+parameter_list|,
+name|Function
+modifier|&
+name|NewF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|///@}
+end_comment
+
+begin_comment
+unit|};
 comment|/// A post-order depth-first RefSCC iterator over the call graph.
 end_comment
 
@@ -2394,35 +3262,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This iterator triggers the Tarjan DFS-based formation of the RefSCC (and
+comment|/// This iterator walks the cached post-order sequence of RefSCCs. However,
 end_comment
 
 begin_comment
-comment|/// SCC) DAG for the call graph, walking it lazily in depth-first post-order.
+comment|/// it trades stability for flexibility. It is restricted to a forward
 end_comment
 
 begin_comment
-comment|/// That is, it always visits RefSCCs for the target of a reference edge
+comment|/// iterator but will survive mutations which insert new RefSCCs and continue
 end_comment
 
 begin_comment
-comment|/// prior to visiting the RefSCC for a source of the edge (when they are in
-end_comment
-
-begin_comment
-comment|/// different RefSCCs).
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// When forming each RefSCC, the call edges within it are used to form SCCs
-end_comment
-
-begin_comment
-comment|/// within it, so iterating this also controls the lazy formation of SCCs.
+comment|/// to point to the same RefSCC even if it moves in the post-order sequence.
 end_comment
 
 begin_decl_stmt
@@ -2533,35 +3385,10 @@ operator|.
 name|size
 argument_list|()
 condition|)
-if|if
-condition|(
-operator|!
-name|G
-operator|.
-name|buildNextRefSCCInPostOrder
-argument_list|()
-condition|)
 comment|// We're at the end.
 return|return
 name|nullptr
 return|;
-name|assert
-argument_list|(
-name|Index
-operator|<
-operator|(
-name|int
-operator|)
-name|G
-operator|.
-name|PostOrderRefSCCs
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Built the next post-order RefSCC without growing list!"
-argument_list|)
-expr_stmt|;
 return|return
 name|G
 operator|.
@@ -2727,55 +3554,69 @@ operator|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|edge_iterator
+begin_expr_stmt
+name|EdgeSequence
+operator|::
+name|iterator
 name|begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
-name|edge_iterator
-argument_list|(
 name|EntryEdges
 operator|.
 name|begin
 argument_list|()
-argument_list|,
-name|EntryEdges
-operator|.
-name|end
-argument_list|()
-argument_list|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
-begin_function
-name|edge_iterator
+begin_expr_stmt
+name|EdgeSequence
+operator|::
+name|iterator
 name|end
-parameter_list|()
+argument_list|()
 block|{
 return|return
-name|edge_iterator
-argument_list|(
 name|EntryEdges
 operator|.
 name|end
 argument_list|()
-argument_list|,
-name|EntryEdges
-operator|.
-name|end
-argument_list|()
-argument_list|)
 return|;
 block|}
-end_function
+end_expr_stmt
+
+begin_function_decl
+name|void
+name|buildRefSCCs
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|postorder_ref_scc_iterator
 name|postorder_ref_scc_begin
 parameter_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|EntryEdges
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|assert
+argument_list|(
+operator|!
+name|PostOrderRefSCCs
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Must form RefSCCs before iterating them!"
+argument_list|)
+expr_stmt|;
 return|return
 name|postorder_ref_scc_iterator
 argument_list|(
@@ -2791,6 +3632,25 @@ name|postorder_ref_scc_iterator
 name|postorder_ref_scc_end
 parameter_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|EntryEdges
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|assert
+argument_list|(
+operator|!
+name|PostOrderRefSCCs
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Must form RefSCCs before iterating them!"
+argument_list|)
+expr_stmt|;
 return|return
 name|postorder_ref_scc_iterator
 argument_list|(
@@ -3043,11 +3903,11 @@ name|insertEdge
 argument_list|(
 name|Node
 operator|&
-name|Caller
+name|SourceN
 argument_list|,
-name|Function
+name|Node
 operator|&
-name|Callee
+name|TargetN
 argument_list|,
 name|Edge
 operator|::
@@ -3067,11 +3927,11 @@ name|insertEdge
 argument_list|(
 name|Function
 operator|&
-name|Caller
+name|Source
 argument_list|,
 name|Function
 operator|&
-name|Callee
+name|Target
 argument_list|,
 name|Edge
 operator|::
@@ -3084,10 +3944,13 @@ name|insertEdge
 argument_list|(
 name|get
 argument_list|(
-name|Caller
+name|Source
 argument_list|)
 argument_list|,
-name|Callee
+name|get
+argument_list|(
+name|Target
+argument_list|)
 argument_list|,
 name|EK
 argument_list|)
@@ -3105,11 +3968,11 @@ name|removeEdge
 parameter_list|(
 name|Node
 modifier|&
-name|Caller
+name|SourceN
 parameter_list|,
-name|Function
+name|Node
 modifier|&
-name|Callee
+name|TargetN
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3124,11 +3987,11 @@ name|removeEdge
 parameter_list|(
 name|Function
 modifier|&
-name|Caller
+name|Source
 parameter_list|,
 name|Function
 modifier|&
-name|Callee
+name|Target
 parameter_list|)
 block|{
 return|return
@@ -3136,10 +3999,13 @@ name|removeEdge
 argument_list|(
 name|get
 argument_list|(
-name|Caller
+name|Source
 argument_list|)
 argument_list|,
-name|Callee
+name|get
+argument_list|(
+name|Target
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -3508,7 +4374,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// The entry nodes to the graph.
+comment|/// The entry edges into the graph.
 end_comment
 
 begin_comment
@@ -3516,7 +4382,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// These nodes are reachable through "external" means. Put another way, they
+comment|/// These edges are from "external" sources. Put another way, they
 end_comment
 
 begin_comment
@@ -3524,26 +4390,10 @@ comment|/// escape at the module scope.
 end_comment
 
 begin_decl_stmt
-name|EdgeVectorT
+name|EdgeSequence
 name|EntryEdges
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/// Map of the entry nodes in the graph to their indices in \c EntryEdges.
-end_comment
-
-begin_expr_stmt
-name|DenseMap
-operator|<
-name|Function
-operator|*
-operator|,
-name|int
-operator|>
-name|EntryIndexMap
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/// Allocator that holds all the call graph SCCs.
@@ -3655,71 +4505,6 @@ operator|>
 name|LeafRefSCCs
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/// Stack of nodes in the DFS walk.
-end_comment
-
-begin_expr_stmt
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|Node
-operator|*
-operator|,
-name|edge_iterator
-operator|>
-operator|,
-literal|4
-operator|>
-name|DFSStack
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// Set of entry nodes not-yet-processed into RefSCCs.
-end_comment
-
-begin_expr_stmt
-name|SmallVector
-operator|<
-name|Function
-operator|*
-operator|,
-literal|4
-operator|>
-name|RefSCCEntryNodes
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// Stack of nodes the DFS has walked but not yet put into a RefSCC.
-end_comment
-
-begin_expr_stmt
-name|SmallVector
-operator|<
-name|Node
-operator|*
-operator|,
-literal|4
-operator|>
-name|PendingRefSCCStack
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// Counter for the next DFS number to assign.
-end_comment
-
-begin_decl_stmt
-name|int
-name|NextDFSNumber
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/// Helper to insert a new function, with an already looked-up entry in
@@ -3854,6 +4639,95 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// Common logic for building SCCs from a sequence of roots.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is a very generic implementation of the depth-first walk and SCC
+end_comment
+
+begin_comment
+comment|/// formation algorithm. It uses a generic sequence of roots and generic
+end_comment
+
+begin_comment
+comment|/// callbacks for each step. This is designed to be used to implement both
+end_comment
+
+begin_comment
+comment|/// the RefSCC formation and SCC formation with shared logic.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Currently this is a relatively naive implementation of Tarjan's DFS
+end_comment
+
+begin_comment
+comment|/// algorithm to form the SCCs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// FIXME: We should consider newer variants such as Nuutila.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|RootsT
+operator|,
+name|typename
+name|GetBeginT
+operator|,
+name|typename
+name|GetEndT
+operator|,
+name|typename
+name|GetNodeT
+operator|,
+name|typename
+name|FormSCCCallbackT
+operator|>
+specifier|static
+name|void
+name|buildGenericSCCs
+argument_list|(
+name|RootsT
+operator|&&
+name|Roots
+argument_list|,
+name|GetBeginT
+operator|&&
+name|GetBegin
+argument_list|,
+name|GetEndT
+operator|&&
+name|GetEnd
+argument_list|,
+name|GetNodeT
+operator|&&
+name|GetNode
+argument_list|,
+name|FormSCCCallbackT
+operator|&&
+name|FormSCC
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Build the SCCs for a RefSCC out of a list of nodes.
 end_comment
 
@@ -3969,33 +4843,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/// Builds the next node in the post-order RefSCC walk of the call graph and
-end_comment
-
-begin_comment
-comment|/// appends it to the \c PostOrderRefSCCs vector.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Returns true if a new RefSCC was successfully constructed, and false if
-end_comment
-
-begin_comment
-comment|/// there are no more RefSCCs to build in the graph.
-end_comment
-
-begin_function_decl
-name|bool
-name|buildNextRefSCCInPostOrder
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 unit|};
 specifier|inline
@@ -4008,25 +4855,6 @@ argument_list|()
 operator|:
 name|Value
 argument_list|()
-block|{}
-specifier|inline
-name|LazyCallGraph
-operator|::
-name|Edge
-operator|::
-name|Edge
-argument_list|(
-argument|Function&F
-argument_list|,
-argument|Kind K
-argument_list|)
-operator|:
-name|Value
-argument_list|(
-argument|&F
-argument_list|,
-argument|K
-argument_list|)
 block|{}
 specifier|inline
 name|LazyCallGraph
@@ -4058,13 +4886,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
 name|Value
 operator|.
 name|getPointer
-argument_list|()
-operator|.
-name|isNull
 argument_list|()
 return|;
 block|}
@@ -4132,6 +4956,38 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
+name|LazyCallGraph
+operator|::
+name|Node
+operator|&
+name|LazyCallGraph
+operator|::
+name|Edge
+operator|::
+name|getNode
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|*
+name|this
+operator|&&
+literal|"Queried a null edge!"
+argument_list|)
+block|;
+return|return
+operator|*
+name|Value
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
 name|Function
 operator|&
 name|LazyCallGraph
@@ -4150,207 +5006,22 @@ operator|&&
 literal|"Queried a null edge!"
 argument_list|)
 block|;
-name|auto
-name|P
-operator|=
-name|Value
-operator|.
-name|getPointer
+return|return
+name|getNode
 argument_list|()
-block|;
-if|if
-condition|(
-name|auto
-operator|*
-name|F
-operator|=
-name|P
 operator|.
-name|dyn_cast
-operator|<
-name|Function
-operator|*
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-operator|*
-name|F
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|P
-operator|.
-name|get
-operator|<
-name|Node
-operator|*
-operator|>
-operator|(
-operator|)
-operator|->
 name|getFunction
 argument_list|()
 return|;
-end_return
-
-begin_expr_stmt
-unit|}  inline
-name|LazyCallGraph
-operator|::
-name|Node
-operator|*
-name|LazyCallGraph
-operator|::
-name|Edge
-operator|::
-name|getNode
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|*
-name|this
-operator|&&
-literal|"Queried a null edge!"
-argument_list|)
-block|;
-name|auto
-name|P
-operator|=
-name|Value
-operator|.
-name|getPointer
-argument_list|()
-block|;
-if|if
-condition|(
-name|auto
-operator|*
-name|N
-operator|=
-name|P
-operator|.
-name|dyn_cast
-operator|<
-name|Node
-operator|*
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|N
-return|;
+block|}
 end_expr_stmt
-
-begin_return
-return|return
-name|nullptr
-return|;
-end_return
-
-begin_expr_stmt
-unit|}  inline
-name|LazyCallGraph
-operator|::
-name|Node
-operator|&
-name|LazyCallGraph
-operator|::
-name|Edge
-operator|::
-name|getNode
-argument_list|(
-argument|LazyCallGraph&G
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|*
-name|this
-operator|&&
-literal|"Queried a null edge!"
-argument_list|)
-block|;
-name|auto
-name|P
-operator|=
-name|Value
-operator|.
-name|getPointer
-argument_list|()
-block|;
-if|if
-condition|(
-name|auto
-operator|*
-name|N
-operator|=
-name|P
-operator|.
-name|dyn_cast
-operator|<
-name|Node
-operator|*
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-operator|*
-name|N
-return|;
-name|Node
-operator|&
-name|N
-operator|=
-name|G
-operator|.
-name|get
-argument_list|(
-operator|*
-name|P
-operator|.
-name|get
-operator|<
-name|Function
-operator|*
-operator|>
-operator|(
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|Value
-operator|.
-name|setPointer
-argument_list|(
-operator|&
-name|N
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-name|N
-return|;
-end_return
 
 begin_comment
-unit|}
 comment|// Provide GraphTraits specializations for call graphs.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 operator|>
 expr|struct
@@ -4375,7 +5046,9 @@ begin_typedef
 typedef|typedef
 name|LazyCallGraph
 operator|::
-name|edge_iterator
+name|EdgeSequence
+operator|::
+name|iterator
 name|ChildIteratorType
 expr_stmt|;
 end_typedef
@@ -4405,7 +5078,10 @@ name|N
 parameter_list|)
 block|{
 return|return
+operator|(
+operator|*
 name|N
+operator|)
 operator|->
 name|begin
 argument_list|()
@@ -4423,7 +5099,10 @@ name|N
 parameter_list|)
 block|{
 return|return
+operator|(
+operator|*
 name|N
+operator|)
 operator|->
 name|end
 argument_list|()
@@ -4456,7 +5135,9 @@ begin_typedef
 typedef|typedef
 name|LazyCallGraph
 operator|::
-name|edge_iterator
+name|EdgeSequence
+operator|::
+name|iterator
 name|ChildIteratorType
 expr_stmt|;
 end_typedef
@@ -4486,7 +5167,10 @@ name|N
 parameter_list|)
 block|{
 return|return
+operator|(
+operator|*
 name|N
+operator|)
 operator|->
 name|begin
 argument_list|()
@@ -4504,7 +5188,10 @@ name|N
 parameter_list|)
 block|{
 return|return
+operator|(
+operator|*
 name|N
+operator|)
 operator|->
 name|end
 argument_list|()

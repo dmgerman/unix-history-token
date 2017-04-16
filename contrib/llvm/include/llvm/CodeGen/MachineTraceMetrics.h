@@ -206,13 +206,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunctionPass.h"
+file|"llvm/ADT/None.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineInstr.h"
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
 begin_include
@@ -226,10 +232,13 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|InstrItineraryData
+name|AnalysisUsage
 decl_stmt|;
 name|class
 name|MachineBasicBlock
+decl_stmt|;
+name|class
+name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -243,14 +252,17 @@ decl_stmt|;
 name|class
 name|MachineRegisterInfo
 decl_stmt|;
+struct_decl|struct
+name|MCSchedClassDesc
+struct_decl|;
+name|class
+name|raw_ostream
+decl_stmt|;
 name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 name|class
 name|MachineTraceMetrics
@@ -262,37 +274,52 @@ specifier|const
 name|MachineFunction
 operator|*
 name|MF
+operator|=
+name|nullptr
 block|;
 specifier|const
 name|TargetInstrInfo
 operator|*
 name|TII
+operator|=
+name|nullptr
 block|;
 specifier|const
 name|TargetRegisterInfo
 operator|*
 name|TRI
+operator|=
+name|nullptr
 block|;
 specifier|const
 name|MachineRegisterInfo
 operator|*
 name|MRI
+operator|=
+name|nullptr
 block|;
 specifier|const
 name|MachineLoopInfo
 operator|*
 name|Loops
+operator|=
+name|nullptr
 block|;
 name|TargetSchedModel
 name|SchedModel
 block|;
 name|public
 operator|:
+name|friend
 name|class
 name|Ensemble
 block|;
+name|friend
 name|class
 name|Trace
+block|;
+name|class
+name|Ensemble
 block|;
 specifier|static
 name|char
@@ -327,14 +354,6 @@ argument_list|()
 specifier|const
 name|override
 block|;
-name|friend
-name|class
-name|Ensemble
-block|;
-name|friend
-name|class
-name|Trace
-block|;
 comment|/// Per-basic block information that doesn't depend on the trace through the
 comment|/// block.
 block|struct
@@ -344,25 +363,21 @@ comment|/// The number of non-trivial instructions in the block.
 comment|/// Doesn't count PHI and COPY instructions that are likely to be removed.
 name|unsigned
 name|InstrCount
+operator|=
+operator|~
+literal|0u
 block|;
 comment|/// True when the block contains calls.
 name|bool
 name|HasCalls
+operator|=
+name|false
 block|;
 name|FixedBlockInfo
 argument_list|()
-operator|:
-name|InstrCount
-argument_list|(
-operator|~
-literal|0u
-argument_list|)
-block|,
-name|HasCalls
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// Returns true when resource information for this block has been computed.
 name|bool
 name|hasResources
@@ -460,6 +475,8 @@ specifier|const
 name|MachineBasicBlock
 operator|*
 name|Pred
+operator|=
+name|nullptr
 block|;
 comment|/// Trace successor, or NULL for the last block in the trace.
 comment|/// Valid when hasValidHeight().
@@ -467,6 +484,8 @@ specifier|const
 name|MachineBasicBlock
 operator|*
 name|Succ
+operator|=
+name|nullptr
 block|;
 comment|/// The block number of the head of the trace. (When hasValidDepth()).
 name|unsigned
@@ -480,47 +499,23 @@ comment|/// Accumulated number of instructions in the trace above this block.
 comment|/// Does not include instructions in this block.
 name|unsigned
 name|InstrDepth
+operator|=
+operator|~
+literal|0u
 block|;
 comment|/// Accumulated number of instructions in the trace below this block.
 comment|/// Includes instructions in this block.
 name|unsigned
 name|InstrHeight
+operator|=
+operator|~
+literal|0u
 block|;
 name|TraceBlockInfo
 argument_list|()
-operator|:
-name|Pred
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|Succ
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|InstrDepth
-argument_list|(
-operator|~
-literal|0u
-argument_list|)
-block|,
-name|InstrHeight
-argument_list|(
-operator|~
-literal|0u
-argument_list|)
-block|,
-name|HasValidInstrDepths
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|HasValidInstrHeights
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// Returns true if the depth resources have been computed from the trace
 comment|/// above this block.
 name|bool
@@ -639,10 +634,14 @@ comment|// itinerary data.
 comment|/// Instruction depths have been computed. This implies hasValidDepth().
 name|bool
 name|HasValidInstrDepths
+operator|=
+name|false
 block|;
 comment|/// Instruction heights have been computed. This implies hasValidHeight().
 name|bool
 name|HasValidInstrHeights
+operator|=
+name|false
 block|;
 comment|/// Critical path length. This is the number of cycles in the longest data
 comment|/// dependency chain through the trace. This is only valid when both
@@ -912,6 +911,10 @@ comment|/// every block in the function.
 name|class
 name|Ensemble
 block|{
+name|friend
+name|class
+name|Trace
+decl_stmt|;
 name|SmallVector
 operator|<
 name|TraceBlockInfo
@@ -946,10 +949,6 @@ literal|0
 operator|>
 name|ProcResourceHeights
 expr_stmt|;
-name|friend
-name|class
-name|Trace
-decl_stmt|;
 name|void
 name|computeTrace
 parameter_list|(
@@ -1024,6 +1023,13 @@ name|MachineTraceMetrics
 modifier|&
 name|MTM
 decl_stmt|;
+name|explicit
+name|Ensemble
+parameter_list|(
+name|MachineTraceMetrics
+modifier|*
+parameter_list|)
+function_decl|;
 name|virtual
 specifier|const
 name|MachineBasicBlock
@@ -1049,13 +1055,6 @@ modifier|*
 parameter_list|)
 init|=
 literal|0
-function_decl|;
-name|explicit
-name|Ensemble
-parameter_list|(
-name|MachineTraceMetrics
-modifier|*
-parameter_list|)
 function_decl|;
 specifier|const
 name|MachineLoop
@@ -1340,6 +1339,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINETRACEMETRICS_H
+end_comment
 
 end_unit
 

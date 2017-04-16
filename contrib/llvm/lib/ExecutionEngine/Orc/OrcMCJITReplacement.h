@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/Orc/ObjectLinkingLayer.h"
+file|"llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h"
 end_include
 
 begin_include
@@ -1728,7 +1728,7 @@ name|void
 name|operator
 argument_list|()
 operator|(
-name|ObjectLinkingLayerBase
+name|RTDyldObjectLinkingLayerBase
 operator|::
 name|ObjSetHandleT
 name|H
@@ -1894,7 +1894,7 @@ name|void
 name|operator
 argument_list|()
 operator|(
-name|ObjectLinkingLayerBase
+name|RTDyldObjectLinkingLayerBase
 operator|::
 name|ObjSetHandleT
 name|H
@@ -1963,7 +1963,7 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|ObjectLinkingLayer
+name|RTDyldObjectLinkingLayer
 operator|<
 name|NotifyObjectLoadedT
 operator|>

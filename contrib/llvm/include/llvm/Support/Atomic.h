@@ -81,6 +81,27 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_comment
+comment|// Windows will at times define MemoryFence.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MemoryFence
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|MemoryFence
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|namespace
 name|llvm

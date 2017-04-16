@@ -655,6 +655,34 @@ return|return
 name|Index
 return|;
 block|}
+comment|/// Stop building the record.
+name|void
+name|reset
+parameter_list|()
+block|{
+if|if
+condition|(
+name|auto
+name|EC
+init|=
+name|TempSerializer
+operator|.
+name|visitTypeEnd
+argument_list|(
+name|Type
+argument_list|)
+condition|)
+name|consumeError
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|EC
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 

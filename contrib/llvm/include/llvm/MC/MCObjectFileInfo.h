@@ -303,7 +303,7 @@ name|MCSection
 modifier|*
 name|TLSExtraDataSection
 decl_stmt|;
-comment|/// Section directive for Thread Local data. ELF, MachO and COFF.
+comment|/// Section directive for Thread Local data. ELF, MachO, COFF, and Wasm.
 name|MCSection
 modifier|*
 name|TLSDataSection
@@ -1256,6 +1256,8 @@ block|,
 name|IsELF
 block|,
 name|IsCOFF
+block|,
+name|IsWasm
 block|}
 enum|;
 name|Environment
@@ -1316,6 +1318,15 @@ parameter_list|)
 function_decl|;
 name|void
 name|initCOFFMCObjectFileInfo
+parameter_list|(
+specifier|const
+name|Triple
+modifier|&
+name|T
+parameter_list|)
+function_decl|;
+name|void
+name|initWasmMCObjectFileInfo
 parameter_list|(
 specifier|const
 name|Triple

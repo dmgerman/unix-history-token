@@ -234,6 +234,8 @@ name|kw_nsz
 block|,
 name|kw_arcp
 block|,
+name|kw_contract
+block|,
 name|kw_fast
 block|,
 name|kw_nuw

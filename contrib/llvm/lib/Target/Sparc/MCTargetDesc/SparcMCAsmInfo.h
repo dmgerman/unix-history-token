@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SparcMCAsmInfo.h - Sparc asm properties ----------------*- C++ -*--===//
+comment|//===- SparcMCAsmInfo.h - Sparc asm properties -----------------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -127,13 +127,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_SPARC_MCTARGETDESC_SPARCMCASMINFO_H
+end_comment
 
 end_unit
 

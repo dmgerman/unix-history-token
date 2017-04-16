@@ -72,13 +72,13 @@ end_undef
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/MathExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MathExtras.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -104,9 +104,6 @@ name|class
 name|MCRegisterInfo
 decl_stmt|;
 name|class
-name|MCSubtargetInfo
-decl_stmt|;
-name|class
 name|MCTargetOptions
 decl_stmt|;
 name|class
@@ -120,9 +117,6 @@ name|StringRef
 decl_stmt|;
 name|class
 name|raw_pwrite_stream
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 name|Target
 modifier|&
@@ -343,7 +337,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_comment
@@ -420,6 +414,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_POWERPC_MCTARGETDESC_PPCMCTARGETDESC_H
+end_comment
 
 end_unit
 

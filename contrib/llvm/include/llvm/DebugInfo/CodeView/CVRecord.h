@@ -70,13 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamReader.h"
+file|"llvm/Support/BinaryStreamReader.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamRef.h"
+file|"llvm/Support/BinaryStreamRef.h"
 end_include
 
 begin_include
@@ -229,9 +229,6 @@ block|; }
 expr_stmt|;
 block|}
 comment|// end namespace codeview
-name|namespace
-name|msf
-block|{
 name|template
 operator|<
 name|typename
@@ -251,7 +248,7 @@ name|Error
 name|operator
 argument_list|()
 operator|(
-name|ReadableStreamRef
+name|BinaryStreamRef
 name|Stream
 operator|,
 name|uint32_t
@@ -280,7 +277,7 @@ name|Prefix
 operator|=
 name|nullptr
 block|;
-name|StreamReader
+name|BinaryStreamReader
 name|Reader
 argument_list|(
 name|Stream
@@ -409,20 +406,10 @@ name|success
 argument_list|()
 return|;
 block|}
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
-comment|// end namespace msf
-end_comment
-
-begin_comment
-unit|}
+unit|};  }
 comment|// end namespace llvm
 end_comment
 

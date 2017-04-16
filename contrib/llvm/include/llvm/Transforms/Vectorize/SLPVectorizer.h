@@ -417,6 +417,34 @@ operator|&
 name|R
 argument_list|)
 decl_stmt|;
+comment|/// Try to find horizontal reduction or otherwise vectorize a chain of binary
+comment|/// operators.
+name|bool
+name|vectorizeRootInstruction
+argument_list|(
+name|PHINode
+operator|*
+name|P
+argument_list|,
+name|Value
+operator|*
+name|V
+argument_list|,
+name|BasicBlock
+operator|*
+name|BB
+argument_list|,
+name|slpvectorizer
+operator|::
+name|BoUpSLP
+operator|&
+name|R
+argument_list|,
+name|TargetTransformInfo
+operator|*
+name|TTI
+argument_list|)
+decl_stmt|;
 comment|/// \brief Scan the basic block and look for patterns that are likely to start
 comment|/// a vectorization chain.
 name|bool

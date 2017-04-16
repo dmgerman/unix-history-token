@@ -88,6 +88,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AArch64RegisterBankInfo
+decl_stmt|;
+name|class
 name|AArch64TargetMachine
 range|:
 name|public

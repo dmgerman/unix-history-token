@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFAbbreviationDeclaration.h --------------------------*- C++ -*-===//
+comment|//===- DWARFAbbreviationDeclaration.h ---------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,14 +34,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFABBREVIATIONDECLARATION_H
+name|LLVM_DEBUGINFO_DWARFABBREVIATIONDECLARATION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFABBREVIATIONDECLARATION_H
+name|LLVM_DEBUGINFO_DWARFABBREVIATIONDECLARATION_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
 
 begin_include
 include|#
@@ -67,15 +73,33 @@ directive|include
 file|"llvm/Support/Dwarf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|DWARFUnit
+name|DWARFFormValue
 decl_stmt|;
 name|class
-name|DWARFFormValue
+name|DWARFUnit
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -191,6 +215,15 @@ return|return
 name|Code
 return|;
 block|}
+name|uint8_t
+name|getCodeByteSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeByteSize
+return|;
+block|}
 name|dwarf
 operator|::
 name|Tag
@@ -249,15 +282,16 @@ argument|uint32_t idx
 argument_list|)
 specifier|const
 block|{
-if|if
-condition|(
+name|assert
+argument_list|(
 name|idx
 operator|<
 name|AttributeSpecs
 operator|.
 name|size
 argument_list|()
-condition|)
+argument_list|)
+block|;
 return|return
 name|AttributeSpecs
 index|[
@@ -266,13 +300,45 @@ index|]
 operator|.
 name|Form
 return|;
+block|}
+name|size_t
+name|getNumAttributes
+argument_list|()
+specifier|const
+block|{
 return|return
+name|AttributeSpecs
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
 name|dwarf
 operator|::
-name|Form
+name|Attribute
+name|getAttrByIndex
 argument_list|(
-literal|0
+argument|uint32_t idx
 argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|idx
+operator|<
+name|AttributeSpecs
+operator|.
+name|size
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|AttributeSpecs
+index|[
+name|idx
+index|]
+operator|.
+name|Attr
 return|;
 block|}
 comment|/// Get the index of the specified attribute.
@@ -363,43 +429,32 @@ block|{
 comment|/// The fixed byte size for fixed size forms.
 name|uint16_t
 name|NumBytes
+init|=
+literal|0
 decl_stmt|;
 comment|/// Number of DW_FORM_address forms in this abbrevation declaration.
 name|uint8_t
 name|NumAddrs
+init|=
+literal|0
 decl_stmt|;
 comment|/// Number of DW_FORM_ref_addr forms in this abbrevation declaration.
 name|uint8_t
 name|NumRefAddrs
+init|=
+literal|0
 decl_stmt|;
 comment|/// Number of 4 byte in DWARF32 and 8 byte in DWARF64 forms.
 name|uint8_t
 name|NumDwarfOffsets
+init|=
+literal|0
 decl_stmt|;
-comment|/// Constructor
 name|FixedSizeInfo
 argument_list|()
-operator|:
-name|NumBytes
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumAddrs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumRefAddrs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumDwarfOffsets
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Calculate the fixed size in bytes given a DWARFUnit.
 comment|///
 comment|/// \param U the DWARFUnit to use when determing the byte size.
@@ -409,10 +464,13 @@ comment|/// code
 name|size_t
 name|getByteSize
 argument_list|(
-argument|const DWARFUnit&U
-argument_list|)
 specifier|const
-expr_stmt|;
+name|DWARFUnit
+operator|&
+name|U
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 struct|;
 name|uint32_t
@@ -441,17 +499,22 @@ operator|>
 name|FixedAttributeSize
 expr_stmt|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARFABBREVIATIONDECLARATION_H
+end_comment
 
 end_unit
 

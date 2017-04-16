@@ -131,6 +131,22 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|lowerCall
+argument_list|(
+argument|MachineIRBuilder&MIRBuilder
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|const MachineOperand&Callee
+argument_list|,
+argument|const ArgInfo&OrigRet
+argument_list|,
+argument|ArrayRef<ArgInfo> OrigArgs
+argument_list|)
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 name|bool
@@ -143,6 +159,21 @@ argument_list|,
 argument|unsigned VReg
 argument_list|,
 argument|MachineInstrBuilder&Ret
+argument_list|)
+specifier|const
+block|;
+comment|/// Split an argument into one or more arguments that the CC lowering can cope
+comment|/// with (e.g. replace pointers with integers).
+name|void
+name|splitToValueTypes
+argument_list|(
+argument|const ArgInfo&OrigArg
+argument_list|,
+argument|SmallVectorImpl<ArgInfo>&SplitArgs
+argument_list|,
+argument|const DataLayout&DL
+argument_list|,
+argument|MachineRegisterInfo&MRI
 argument_list|)
 specifier|const
 block|; }

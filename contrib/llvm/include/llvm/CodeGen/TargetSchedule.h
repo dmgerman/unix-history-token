@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/TargetSchedule.h - Sched Machine Model -----*- C++ -*-===//
+comment|//===- llvm/CodeGen/TargetSchedule.h - Sched Machine Model ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -96,16 +96,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|TargetRegisterInfo
-decl_stmt|;
-name|class
-name|TargetSubtargetInfo
+name|MachineInstr
 decl_stmt|;
 name|class
 name|TargetInstrInfo
-decl_stmt|;
-name|class
-name|MachineInstr
 decl_stmt|;
 comment|/// Provide an instruction scheduling machine model to CodeGen passes.
 name|class
@@ -123,11 +117,15 @@ specifier|const
 name|TargetSubtargetInfo
 modifier|*
 name|STI
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|TargetInstrInfo
 modifier|*
 name|TII
+init|=
+name|nullptr
 decl_stmt|;
 name|SmallVector
 operator|<
@@ -162,20 +160,7 @@ argument_list|()
 operator|:
 name|SchedModel
 argument_list|(
-name|MCSchedModel
-operator|::
-name|GetDefaultSchedModel
-argument_list|()
-argument_list|)
-operator|,
-name|STI
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|TII
-argument_list|(
-argument|nullptr
+argument|MCSchedModel::GetDefaultSchedModel()
 argument_list|)
 block|{}
 comment|/// \brief Initialize the machine model for instruction scheduling.
@@ -318,6 +303,42 @@ operator|.
 name|IssueWidth
 return|;
 block|}
+comment|/// \brief Return true if new group must begin.
+name|bool
+name|mustBeginGroup
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+specifier|const
+name|MCSchedClassDesc
+operator|*
+name|SC
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Return true if current group must end.
+name|bool
+name|mustEndGroup
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+specifier|const
+name|MCSchedClassDesc
+operator|*
+name|SC
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return the number of issue slots required for this MI.
 name|unsigned
 name|getNumMicroOps
@@ -603,6 +624,27 @@ name|DepMI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Compute the reciprocal throughput of the given instruction.
+name|Optional
+operator|<
+name|double
+operator|>
+name|computeInstrRThroughput
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+expr_stmt|;
+name|Optional
+operator|<
+name|double
+operator|>
+name|computeInstrRThroughput
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -612,13 +654,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_TARGETSCHEDULE_H
+end_comment
 
 end_unit
 

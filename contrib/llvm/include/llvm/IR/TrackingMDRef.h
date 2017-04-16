@@ -65,6 +65,18 @@ directive|include
 file|"llvm/IR/Metadata.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -78,17 +90,16 @@ block|{
 name|Metadata
 modifier|*
 name|MD
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|TrackingMDRef
 argument_list|()
-operator|:
-name|MD
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|TrackingMDRef
 argument_list|(
@@ -531,7 +542,9 @@ name|public
 operator|:
 name|TypedTrackingMDRef
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|explicit
 name|TypedTrackingMDRef
 argument_list|(
@@ -981,6 +994,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_TRACKINGMDREF_H
+end_comment
 
 end_unit
 

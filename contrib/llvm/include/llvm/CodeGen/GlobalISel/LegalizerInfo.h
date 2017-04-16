@@ -104,6 +104,9 @@ name|class
 name|MachineInstr
 decl_stmt|;
 name|class
+name|MachineIRBuilder
+decl_stmt|;
+name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
@@ -266,6 +269,13 @@ block|,   }
 expr_stmt|;
 name|LegalizerInfo
 argument_list|()
+expr_stmt|;
+name|virtual
+operator|~
+name|LegalizerInfo
+argument_list|()
+operator|=
+expr|default
 expr_stmt|;
 comment|/// Compute any ancillary tables needed to quickly decide how an operation
 comment|/// should be handled. This must be called after all "set*Action"methods but
@@ -447,9 +457,7 @@ name|InstrAspect
 operator|&
 name|Aspect
 argument_list|,
-name|std
-operator|::
-name|function
+name|function_ref
 operator|<
 name|LLT
 argument_list|(
@@ -708,6 +716,24 @@ specifier|const
 name|MachineRegisterInfo
 operator|&
 name|MRI
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|bool
+name|legalizeCustom
+argument_list|(
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
 argument_list|)
 decl|const
 decl_stmt|;

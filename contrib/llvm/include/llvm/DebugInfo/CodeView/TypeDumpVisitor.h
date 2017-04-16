@@ -122,8 +122,32 @@ argument_list|(
 argument|TypeDB
 argument_list|)
 block|{}
+comment|/// When dumping types from an IPI stream in a PDB, a type index may refer to
+comment|/// a type or an item ID. The dumper will lookup the "name" of the index in
+comment|/// the item database if appropriate. If ItemDB is null, it will use TypeDB,
+comment|/// which is correct when dumping types from an object file (/Z7).
+name|void
+name|setItemDB
+argument_list|(
+argument|TypeDatabase&DB
+argument_list|)
+block|{
+name|ItemDB
+operator|=
+operator|&
+name|DB
+block|; }
 name|void
 name|printTypeIndex
+argument_list|(
+argument|StringRef FieldName
+argument_list|,
+argument|TypeIndex TI
+argument_list|)
+specifier|const
+block|;
+name|void
+name|printItemIndex
 argument_list|(
 argument|StringRef FieldName
 argument_list|,
@@ -245,6 +269,24 @@ argument_list|,
 argument|MethodOptions Options
 argument_list|)
 block|;
+comment|/// Get the database of indices for the stream that we are dumping. If ItemDB
+comment|/// is set, then we must be dumping an item (IPI) stream. This will also
+comment|/// always get the appropriate DB for printing item names.
+name|TypeDatabase
+operator|&
+name|getSourceDB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ItemDB
+operator|?
+operator|*
+name|ItemDB
+operator|:
+name|TypeDB
+return|;
+block|}
 name|ScopedPrinter
 operator|*
 name|W
@@ -257,6 +299,12 @@ block|;
 name|TypeDatabase
 operator|&
 name|TypeDB
+block|;
+name|TypeDatabase
+operator|*
+name|ItemDB
+operator|=
+name|nullptr
 block|; }
 decl_stmt|;
 block|}

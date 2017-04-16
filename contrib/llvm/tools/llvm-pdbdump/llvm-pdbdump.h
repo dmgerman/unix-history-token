@@ -68,13 +68,40 @@ block|{
 name|namespace
 name|pretty
 block|{
+name|enum
+name|class
+name|ClassDefinitionFormat
+block|{
+name|None
+operator|,
+name|Layout
+operator|,
+name|Graphical
+operator|,
+name|Standard
+block|}
+empty_stmt|;
+name|enum
+name|class
+name|ClassSortMode
+block|{
+name|None
+operator|,
+name|Name
+operator|,
+name|Size
+operator|,
+name|Padding
+block|}
+empty_stmt|;
 extern|extern llvm::cl::opt<bool> Compilands;
 extern|extern llvm::cl::opt<bool> Symbols;
 extern|extern llvm::cl::opt<bool> Globals;
-extern|extern llvm::cl::opt<bool> Types;
+extern|extern llvm::cl::opt<bool> Classes;
+extern|extern llvm::cl::opt<bool> Enums;
+extern|extern llvm::cl::opt<bool> Typedefs;
 extern|extern llvm::cl::opt<bool> All;
 extern|extern llvm::cl::opt<bool> ExcludeCompilerGenerated;
-extern|extern llvm::cl::opt<bool> NoClassDefs;
 extern|extern llvm::cl::opt<bool> NoEnumDefs;
 extern|extern llvm::cl::list<std::string> ExcludeTypes;
 extern|extern llvm::cl::list<std::string> ExcludeSymbols;
@@ -82,6 +109,10 @@ extern|extern llvm::cl::list<std::string> ExcludeCompilands;
 extern|extern llvm::cl::list<std::string> IncludeTypes;
 extern|extern llvm::cl::list<std::string> IncludeSymbols;
 extern|extern llvm::cl::list<std::string> IncludeCompilands;
+extern|extern llvm::cl::opt<ClassSortMode> ClassOrder;
+extern|extern llvm::cl::opt<uint32_t> SizeThreshold;
+extern|extern llvm::cl::opt<uint32_t> PaddingThreshold;
+extern|extern llvm::cl::opt<ClassDefinitionFormat> ClassFormat;
 block|}
 name|namespace
 name|raw
@@ -104,6 +135,7 @@ block|}
 struct|;
 extern|extern llvm::Optional<BlockRange> DumpBlockRange;
 extern|extern llvm::cl::list<uint32_t> DumpStreamData;
+extern|extern llvm::cl::opt<bool> CompactRecords;
 extern|extern llvm::cl::opt<bool> DumpGlobals;
 extern|extern llvm::cl::opt<bool> DumpHeaders;
 extern|extern llvm::cl::opt<bool> DumpStreamBlocks;
@@ -124,13 +156,21 @@ extern|extern llvm::cl::opt<bool> DumpSectionMap;
 extern|extern llvm::cl::opt<bool> DumpSymRecordBytes;
 extern|extern llvm::cl::opt<bool> DumpSectionHeaders;
 extern|extern llvm::cl::opt<bool> DumpFpo;
+extern|extern llvm::cl::opt<bool> DumpStringTable;
+block|}
+name|namespace
+name|diff
+block|{
+extern|extern llvm::cl::opt<bool> Pedantic;
 block|}
 name|namespace
 name|pdb2yaml
 block|{
 extern|extern llvm::cl::opt<bool> NoFileHeaders;
+extern|extern llvm::cl::opt<bool> Minimal;
 extern|extern llvm::cl::opt<bool> StreamMetadata;
 extern|extern llvm::cl::opt<bool> StreamDirectory;
+extern|extern llvm::cl::opt<bool> StringTable;
 extern|extern llvm::cl::opt<bool> PdbStream;
 extern|extern llvm::cl::opt<bool> DbiStream;
 extern|extern llvm::cl::opt<bool> DbiModuleInfo;

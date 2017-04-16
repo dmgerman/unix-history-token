@@ -68,7 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -104,13 +116,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/SMLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/SMLoc.h"
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -119,10 +143,28 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|AssemblerConstantPools
+decl_stmt|;
+name|class
+name|formatted_raw_ostream
+decl_stmt|;
 name|class
 name|MCAsmBackend
 decl_stmt|;
@@ -148,28 +190,19 @@ name|class
 name|MCStreamer
 decl_stmt|;
 name|class
-name|MCSymbolELF
+name|MCSymbolRefExpr
 decl_stmt|;
 name|class
-name|MCSymbolRefExpr
+name|MCSymbolWasm
 decl_stmt|;
 name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|Twine
-decl_stmt|;
-name|class
 name|raw_ostream
 decl_stmt|;
 name|class
-name|formatted_raw_ostream
-decl_stmt|;
-name|class
-name|AssemblerConstantPools
+name|Twine
 decl_stmt|;
 typedef|typedef
 name|std
@@ -574,27 +607,6 @@ name|MCTargetStreamer
 operator|>
 name|TargetStreamer
 expr_stmt|;
-name|MCStreamer
-argument_list|(
-specifier|const
-name|MCStreamer
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|MCStreamer
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCStreamer
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -734,6 +746,27 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+name|MCStreamer
+argument_list|(
+specifier|const
+name|MCStreamer
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MCStreamer
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCStreamer
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|virtual
 operator|~
 name|MCStreamer
@@ -1495,6 +1528,12 @@ parameter_list|(
 name|MCSymbol
 modifier|*
 name|Symbol
+parameter_list|,
+name|SMLoc
+name|Loc
+init|=
+name|SMLoc
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1949,6 +1988,47 @@ specifier|const
 name|MCExpr
 modifier|*
 name|Value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit an ELF .symver directive.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This corresponds to an assembler statement such as:
+end_comment
+
+begin_comment
+comment|///  .symver _start, foo@@SOME_VERSION
+end_comment
+
+begin_comment
+comment|/// \param Alias - The versioned alias (i.e. "foo@@SOME_VERSION")
+end_comment
+
+begin_comment
+comment|/// \param Aliasee - The aliased symbol (i.e. "_start")
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|emitELFSymverDirective
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Alias
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|Aliasee
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3855,6 +3935,10 @@ begin_comment
 comment|/// \brief Emit the given \p Instruction into the current section.
 end_comment
 
+begin_comment
+comment|/// PrintSchedInfo == true then schedul comment should be added to output
+end_comment
+
 begin_function_decl
 name|virtual
 name|void
@@ -3869,6 +3953,11 @@ specifier|const
 name|MCSubtargetInfo
 modifier|&
 name|STI
+parameter_list|,
+name|bool
+name|PrintSchedInfo
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4134,6 +4223,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCSTREAMER_H
+end_comment
 
 end_unit
 

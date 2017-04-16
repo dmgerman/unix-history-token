@@ -193,6 +193,16 @@ modifier|*
 name|findLoopControlBlock
 parameter_list|()
 function_decl|;
+comment|/// Return the debug location of the start of this loop.
+comment|/// This looks for a BB terminating instruction with a known debug
+comment|/// location by looking at the preheader and header blocks. If it
+comment|/// cannot find a terminating instruction with location information,
+comment|/// it returns an unknown location.
+name|DebugLoc
+name|getStartLoc
+argument_list|()
+specifier|const
+expr_stmt|;
 name|void
 name|dump
 argument_list|()

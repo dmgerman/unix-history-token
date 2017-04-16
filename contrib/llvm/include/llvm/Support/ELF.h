@@ -2273,6 +2273,11 @@ init|=
 literal|0x00000060
 block|,
 comment|// Hexagon V60
+name|EF_HEXAGON_MACH_V62
+init|=
+literal|0x00000062
+block|,
+comment|// Hexagon V62
 comment|// Highest ISA version flags
 name|EF_HEXAGON_ISA_MACH
 init|=
@@ -2310,6 +2315,11 @@ init|=
 literal|0x00000060
 block|,
 comment|// Hexagon V60 ISA
+name|EF_HEXAGON_ISA_V62
+init|=
+literal|0x00000062
+block|,
+comment|// Hexagon V62 ISA
 block|}
 enum|;
 comment|// Hexagon-specific section indexes for common small data
@@ -2718,6 +2728,11 @@ init|=
 literal|0x7000000d
 block|,
 comment|// General options
+name|SHT_MIPS_DWARF
+init|=
+literal|0x7000001e
+block|,
+comment|// DWARF debugging section.
 name|SHT_MIPS_ABIFLAGS
 init|=
 literal|0x7000002a
@@ -2805,20 +2820,6 @@ init|=
 literal|0x80000000U
 block|,
 comment|// Start of target-specific flags.
-comment|/// XCORE_SHF_CP_SECTION - All sections with the "c" flag are grouped
-comment|/// together by the linker to form the constant pool and the cp register is
-comment|/// set to the start of the constant pool by the boot code.
-name|XCORE_SHF_CP_SECTION
-init|=
-literal|0x800U
-block|,
-comment|/// XCORE_SHF_DP_SECTION - All sections with the "d" flag are grouped
-comment|/// together by the linker to form the data section and the dp register is
-comment|/// set to the start of the section by the boot code.
-name|XCORE_SHF_DP_SECTION
-init|=
-literal|0x1000U
-block|,
 name|SHF_MASKOS
 init|=
 literal|0x0ff00000
@@ -2827,6 +2828,20 @@ comment|// Bits indicating processor-specific flags.
 name|SHF_MASKPROC
 init|=
 literal|0xf0000000
+block|,
+comment|/// All sections with the "d" flag are grouped together by the linker to form
+comment|/// the data section and the dp register is set to the start of the section by
+comment|/// the boot code.
+name|XCORE_SHF_DP_SECTION
+init|=
+literal|0x10000000
+block|,
+comment|/// All sections with the "c" flag are grouped together by the linker to form
+comment|/// the constant pool and the cp register is set to the start of the constant
+comment|/// pool by the boot code.
+name|XCORE_SHF_CP_SECTION
+init|=
+literal|0x20000000
 block|,
 comment|// If an object file section does not have this flag set, then it may not hold
 comment|// more than 2GB and can be freely referred to in objects using smaller code
@@ -4937,6 +4952,49 @@ literal|1
 block|}
 enum|;
 comment|// SHT_NOTE section types
+enum|enum
+block|{
+name|NT_FREEBSD_THRMISC
+init|=
+literal|7
+block|,
+name|NT_FREEBSD_PROCSTAT_PROC
+init|=
+literal|8
+block|,
+name|NT_FREEBSD_PROCSTAT_FILES
+init|=
+literal|9
+block|,
+name|NT_FREEBSD_PROCSTAT_VMMAP
+init|=
+literal|10
+block|,
+name|NT_FREEBSD_PROCSTAT_GROUPS
+init|=
+literal|11
+block|,
+name|NT_FREEBSD_PROCSTAT_UMASK
+init|=
+literal|12
+block|,
+name|NT_FREEBSD_PROCSTAT_RLIMIT
+init|=
+literal|13
+block|,
+name|NT_FREEBSD_PROCSTAT_OSREL
+init|=
+literal|14
+block|,
+name|NT_FREEBSD_PROCSTAT_PSSTRINGS
+init|=
+literal|15
+block|,
+name|NT_FREEBSD_PROCSTAT_AUXV
+init|=
+literal|16
+block|, }
+enum|;
 enum|enum
 block|{
 name|NT_GNU_ABI_TAG

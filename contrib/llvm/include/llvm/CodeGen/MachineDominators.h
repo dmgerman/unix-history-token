@@ -99,6 +99,12 @@ directive|include
 file|"llvm/Support/GenericDomTreeConstruction.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -200,11 +206,14 @@ operator|>
 name|NewBBs
 block|;
 comment|/// The DominatorTreeBase that is used to compute a normal dominator tree
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DominatorTreeBase
 operator|<
 name|MachineBasicBlock
-operator|>
-operator|*
+operator|>>
 name|DT
 block|;
 comment|/// \brief Apply all the recorded critical edges to the DT.
@@ -227,11 +236,6 @@ comment|// Pass ID, replacement for typeid
 name|MachineDominatorTree
 argument_list|()
 block|;
-operator|~
-name|MachineDominatorTree
-argument_list|()
-name|override
-block|;
 name|DominatorTreeBase
 operator|<
 name|MachineBasicBlock
@@ -240,6 +244,18 @@ operator|&
 name|getBase
 argument_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|DT
+condition|)
+name|DT
+operator|.
+name|reset
+argument_list|(
+argument|new DominatorTreeBase<MachineBasicBlock>(false)
+argument_list|)
+expr_stmt|;
 name|applySplitCriticalEdges
 argument_list|()
 block|;
@@ -251,11 +267,13 @@ block|}
 name|void
 name|getAnalysisUsage
 argument_list|(
-argument|AnalysisUsage&AU
+name|AnalysisUsage
+operator|&
+name|AU
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// getRoots -  Return the root blocks of the current CFG.  This may include
 comment|/// multiple blocks if we are computing post dominators.  For forward
 comment|/// dominators, this will always be a single block (the entry node).
@@ -321,23 +339,31 @@ block|}
 name|bool
 name|runOnMachineFunction
 argument_list|(
-argument|MachineFunction&F
+name|MachineFunction
+operator|&
+name|F
 argument_list|)
 name|override
-block|;
+decl_stmt|;
 specifier|inline
 name|bool
 name|dominates
 argument_list|(
-argument|const MachineDomTreeNode* A
-argument_list|,
-argument|const MachineDomTreeNode* B
-argument_list|)
 specifier|const
+name|MachineDomTreeNode
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|MachineDomTreeNode
+operator|*
+name|B
+argument_list|)
+decl|const
 block|{
 name|applySplitCriticalEdges
 argument_list|()
-block|;
+expr_stmt|;
 return|return
 name|DT
 operator|->
@@ -353,15 +379,21 @@ specifier|inline
 name|bool
 name|dominates
 argument_list|(
-argument|const MachineBasicBlock* A
-argument_list|,
-argument|const MachineBasicBlock* B
-argument_list|)
 specifier|const
+name|MachineBasicBlock
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|B
+argument_list|)
+decl|const
 block|{
 name|applySplitCriticalEdges
 argument_list|()
-block|;
+expr_stmt|;
 return|return
 name|DT
 operator|->
@@ -378,33 +410,39 @@ comment|// special checks necessary if A and B are in the same basic block.
 name|bool
 name|dominates
 argument_list|(
-argument|const MachineInstr *A
-argument_list|,
-argument|const MachineInstr *B
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|B
+argument_list|)
+decl|const
 block|{
 name|applySplitCriticalEdges
 argument_list|()
-block|;
+expr_stmt|;
 specifier|const
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|BBA
-operator|=
+init|=
 name|A
 operator|->
 name|getParent
 argument_list|()
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|BBB
-operator|=
+init|=
 name|B
 operator|->
 name|getParent
 argument_list|()
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|BBA
@@ -431,7 +469,7 @@ name|BBA
 operator|->
 name|begin
 argument_list|()
-block|;
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -466,9 +504,6 @@ comment|//  // A post-dominates B if B is found first in the basic block.
 comment|//  return&*I == B;
 comment|//}
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 specifier|inline
 name|bool
 name|properlyDominates
@@ -499,9 +534,6 @@ name|B
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 specifier|inline
 name|bool
 name|properlyDominates
@@ -532,17 +564,8 @@ name|B
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// findNearestCommonDominator - Find nearest common dominator basic block
-end_comment
-
-begin_comment
 comment|/// for basic block A and B. If there is no such block then return NULL.
-end_comment
-
-begin_function
 specifier|inline
 name|MachineBasicBlock
 modifier|*
@@ -571,9 +594,6 @@ name|B
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|inline
 name|MachineDomTreeNode
 modifier|*
@@ -598,21 +618,9 @@ name|BB
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getNode - return the (Post)DominatorTree node for the specified basic
-end_comment
-
-begin_comment
 comment|/// block.  This is the same as using operator[] on this class.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 specifier|inline
 name|MachineDomTreeNode
 modifier|*
@@ -636,21 +644,9 @@ name|BB
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// addNewBlock - Add a new node to the dominator tree information.  This
-end_comment
-
-begin_comment
 comment|/// creates a new node as a child of DomBB dominator node,linking it into
-end_comment
-
-begin_comment
 comment|/// the children list of the immediate dominator.
-end_comment
-
-begin_function
 specifier|inline
 name|MachineDomTreeNode
 modifier|*
@@ -679,21 +675,9 @@ name|DomBB
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// changeImmediateDominator - This method is used to update the dominator
-end_comment
-
-begin_comment
 comment|/// tree information when a node's immediate dominator changes.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function
 specifier|inline
 name|void
 name|changeImmediateDominator
@@ -720,9 +704,6 @@ name|NewIDom
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|inline
 name|void
 name|changeImmediateDominator
@@ -749,21 +730,9 @@ name|NewIDom
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// eraseNode - Removes a node from  the dominator tree. Block must not
-end_comment
-
-begin_comment
 comment|/// dominate any other blocks. Removes node from its immediate dominator's
-end_comment
-
-begin_comment
 comment|/// children list. Deletes dominator node associated with basic block BB.
-end_comment
-
-begin_function
 specifier|inline
 name|void
 name|eraseNode
@@ -784,17 +753,8 @@ name|BB
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// splitBlock - BB is split and now it has one successor. Update dominator
-end_comment
-
-begin_comment
 comment|/// tree to reflect this change.
-end_comment
-
-begin_function
 specifier|inline
 name|void
 name|splitBlock
@@ -815,17 +775,8 @@ name|NewBB
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// isReachableFromEntry - Return true if A is dominated by the entry
-end_comment
-
-begin_comment
 comment|/// block of the function containing it.
-end_comment
-
-begin_function
 name|bool
 name|isReachableFromEntry
 parameter_list|(
@@ -847,26 +798,17 @@ name|A
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|void
 name|releaseMemory
 argument_list|()
 name|override
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|void
 name|verifyAnalysis
 argument_list|()
 specifier|const
 name|override
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -881,57 +823,18 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Record that the critical edge (FromBB, ToBB) has been
-end_comment
-
-begin_comment
 comment|/// split with NewBB.
-end_comment
-
-begin_comment
 comment|/// This is best to use this method instead of directly update the
-end_comment
-
-begin_comment
 comment|/// underlying information, because this helps mitigating the
-end_comment
-
-begin_comment
 comment|/// number of time the DT information is invalidated.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \note Do not use this method with regular edges.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \note To benefit from the compile time improvement incurred by this
-end_comment
-
-begin_comment
 comment|/// method, the users of this method have to limit the queries to the DT
-end_comment
-
-begin_comment
 comment|/// interface between two edges splitting. In other words, they have to
-end_comment
-
-begin_comment
 comment|/// pack the splitting of critical edges as much as possible.
-end_comment
-
-begin_function
 name|void
 name|recordSplitCriticalEdge
 parameter_list|(
@@ -986,114 +889,23 @@ block|}
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/// \brief Returns *false* if the other dominator tree matches this dominator
-end_comment
-
-begin_comment
-comment|/// tree.
-end_comment
-
-begin_decl_stmt
-specifier|inline
-name|bool
-name|compare
-argument_list|(
-specifier|const
-name|MachineDominatorTree
-operator|&
-name|Other
-argument_list|)
-decl|const
-block|{
-specifier|const
-name|MachineDomTreeNode
-modifier|*
-name|R
-init|=
-name|getRootNode
-argument_list|()
-decl_stmt|;
-specifier|const
-name|MachineDomTreeNode
-modifier|*
-name|OtherR
-init|=
-name|Other
-operator|.
-name|getRootNode
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|R
-operator|||
-operator|!
-name|OtherR
-operator|||
-name|R
-operator|->
-name|getBlock
-argument_list|()
-operator|!=
-name|OtherR
-operator|->
-name|getBlock
-argument_list|()
-condition|)
-return|return
-name|true
-return|;
-if|if
-condition|(
-name|DT
-operator|->
-name|compare
-argument_list|(
-operator|*
-name|Other
-operator|.
-name|DT
-argument_list|)
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|false
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Verify the correctness of the domtree by re-computing it.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This should only be used for debugging as it aborts the program if the
-end_comment
-
-begin_comment
 comment|/// verification fails.
-end_comment
-
-begin_expr_stmt
 name|void
 name|verifyDomTree
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|//===-------------------------------------
 end_comment
 

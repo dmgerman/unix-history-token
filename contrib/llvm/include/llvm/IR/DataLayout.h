@@ -324,6 +324,9 @@ name|bool
 name|BigEndian
 decl_stmt|;
 name|unsigned
+name|AllocaAddrSpace
+decl_stmt|;
+name|unsigned
 name|StackNaturalAlign
 decl_stmt|;
 enum|enum
@@ -354,14 +357,58 @@ literal|8
 operator|>
 name|LegalIntWidths
 expr_stmt|;
-comment|/// \brief Primitive type alignment data.
+comment|/// \brief Primitive type alignment data. This is sorted by type and bit
+comment|/// width during construction.
+typedef|typedef
 name|SmallVector
 operator|<
 name|LayoutAlignElem
 operator|,
 literal|16
 operator|>
+name|AlignmentsTy
+expr_stmt|;
+name|AlignmentsTy
 name|Alignments
+decl_stmt|;
+name|AlignmentsTy
+operator|::
+name|const_iterator
+name|findAlignmentLowerBound
+argument_list|(
+argument|AlignTypeEnum AlignType
+argument_list|,
+argument|uint32_t BitWidth
+argument_list|)
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|DataLayout
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|findAlignmentLowerBound
+argument_list|(
+name|AlignType
+argument_list|,
+name|BitWidth
+argument_list|)
+return|;
+block|}
+name|AlignmentsTy
+operator|::
+name|iterator
+name|findAlignmentLowerBound
+argument_list|(
+argument|AlignTypeEnum AlignType
+argument_list|,
+argument|uint32_t BitWidth
+argument_list|)
 expr_stmt|;
 comment|/// \brief The string representation used to create this DataLayout
 name|std
@@ -414,20 +461,6 @@ argument_list|(
 argument|uint32_t AddressSpace
 argument_list|)
 expr_stmt|;
-comment|/// This member is a signal that a requested alignment type and bit width were
-comment|/// not found in the SmallVector.
-specifier|static
-specifier|const
-name|LayoutAlignElem
-name|InvalidAlignmentElem
-decl_stmt|;
-comment|/// This member is a signal that a requested pointer type and bit width were
-comment|/// not found in the DenseSet.
-specifier|static
-specifier|const
-name|PointerAlignElem
-name|InvalidPointerElem
-decl_stmt|;
 comment|// The StructType -> StructLayout map.
 name|mutable
 name|void
@@ -507,50 +540,6 @@ name|abi_or_pref
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Valid alignment predicate.
-comment|///
-comment|/// Predicate that tests a LayoutAlignElem reference returned by get() against
-comment|/// InvalidAlignmentElem.
-name|bool
-name|validAlignment
-argument_list|(
-specifier|const
-name|LayoutAlignElem
-operator|&
-name|align
-argument_list|)
-decl|const
-block|{
-return|return
-operator|&
-name|align
-operator|!=
-operator|&
-name|InvalidAlignmentElem
-return|;
-block|}
-comment|/// \brief Valid pointer predicate.
-comment|///
-comment|/// Predicate that tests a PointerAlignElem reference returned by get()
-comment|/// against \c InvalidPointerElem.
-name|bool
-name|validPointer
-argument_list|(
-specifier|const
-name|PointerAlignElem
-operator|&
-name|align
-argument_list|)
-decl|const
-block|{
-return|return
-operator|&
-name|align
-operator|!=
-operator|&
-name|InvalidPointerElem
-return|;
-block|}
 comment|/// Parses a target data specification string. Assert if the string is
 comment|/// malformed.
 name|void
@@ -648,6 +637,12 @@ name|DL
 operator|.
 name|isBigEndian
 argument_list|()
+block|;
+name|AllocaAddrSpace
+operator|=
+name|DL
+operator|.
+name|AllocaAddrSpace
 block|;
 name|StackNaturalAlign
 operator|=
@@ -867,6 +862,15 @@ specifier|const
 block|{
 return|return
 name|StackNaturalAlign
+return|;
+block|}
+name|unsigned
+name|getAllocaAddrSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AllocaAddrSpace
 return|;
 block|}
 name|bool

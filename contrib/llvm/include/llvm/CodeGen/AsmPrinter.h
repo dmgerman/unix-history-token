@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/AsmPrinter.h - AsmPrinter Framework --------*- C++ -*-===//
+comment|//===- llvm/CodeGen/AsmPrinter.h - AsmPrinter Framework ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -76,13 +76,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Twine.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunctionPass.h"
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
@@ -94,19 +100,55 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineFunctionPass.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/InlineAsm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/IR/LLVMContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SourceMgr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -120,22 +162,22 @@ name|class
 name|BlockAddress
 decl_stmt|;
 name|class
-name|ByteStreamer
-decl_stmt|;
-name|class
-name|GCStrategy
-decl_stmt|;
-name|class
 name|Constant
 decl_stmt|;
 name|class
 name|ConstantArray
 decl_stmt|;
 name|class
+name|DataLayout
+decl_stmt|;
+name|class
 name|DIE
 decl_stmt|;
 name|class
 name|DIEAbbrev
+decl_stmt|;
+name|class
+name|DwarfDebug
 decl_stmt|;
 name|class
 name|GCMetadataPrinter
@@ -150,7 +192,13 @@ name|class
 name|GlobalVariable
 decl_stmt|;
 name|class
+name|GCStrategy
+decl_stmt|;
+name|class
 name|MachineBasicBlock
+decl_stmt|;
+name|class
+name|MachineConstantPoolValue
 decl_stmt|;
 name|class
 name|MachineFunction
@@ -159,22 +207,16 @@ name|class
 name|MachineInstr
 decl_stmt|;
 name|class
-name|MachineLocation
+name|MachineJumpTableInfo
 decl_stmt|;
 name|class
 name|MachineLoopInfo
 decl_stmt|;
 name|class
-name|MachineLoop
-decl_stmt|;
-name|class
-name|MachineConstantPoolValue
-decl_stmt|;
-name|class
-name|MachineJumpTableInfo
-decl_stmt|;
-name|class
 name|MachineModuleInfo
+decl_stmt|;
+name|class
+name|MachineOptimizationRemarkEmitter
 decl_stmt|;
 name|class
 name|MCAsmInfo
@@ -210,16 +252,7 @@ name|class
 name|MDNode
 decl_stmt|;
 name|class
-name|DwarfDebug
-decl_stmt|;
-name|class
-name|Mangler
-decl_stmt|;
-name|class
 name|TargetLoweringObjectFile
-decl_stmt|;
-name|class
-name|DataLayout
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -268,11 +301,20 @@ specifier|const
 name|MachineFunction
 operator|*
 name|MF
+operator|=
+name|nullptr
 block|;
 comment|/// This is a pointer to the current MachineModuleInfo.
 name|MachineModuleInfo
 operator|*
 name|MMI
+operator|=
+name|nullptr
+block|;
+comment|/// Optimization remark emitter.
+name|MachineOptimizationRemarkEmitter
+operator|*
+name|ORE
 block|;
 comment|/// The symbol for the current function. This is recalculated at the beginning
 comment|/// of each call to runOnMachineFunction().
@@ -280,6 +322,8 @@ comment|///
 name|MCSymbol
 operator|*
 name|CurrentFnSym
+operator|=
+name|nullptr
 block|;
 comment|/// The symbol used to represent the start of the current function for the
 comment|/// purpose of calculating its size (e.g. using the .size directive). By
@@ -287,6 +331,8 @@ comment|/// default, this is equal to CurrentFnSym.
 name|MCSymbol
 operator|*
 name|CurrentFnSymForSize
+operator|=
+name|nullptr
 block|;
 comment|/// Map global GOT equivalent MCSymbols to GlobalVariables and keep track of
 comment|/// its number of uses by other globals.
@@ -313,24 +359,38 @@ name|GOTEquivUsePair
 operator|>
 name|GlobalGOTEquivs
 decl_stmt|;
+comment|/// Enable print [latency:throughput] in output
+name|bool
+name|EnablePrintSchedInfo
+init|=
+name|false
+decl_stmt|;
 name|private
 label|:
 name|MCSymbol
 modifier|*
 name|CurrentFnBegin
+init|=
+name|nullptr
 decl_stmt|;
 name|MCSymbol
 modifier|*
 name|CurrentFnEnd
+init|=
+name|nullptr
 decl_stmt|;
 name|MCSymbol
 modifier|*
 name|CurExceptionSym
+init|=
+name|nullptr
 decl_stmt|;
 comment|// The garbage collection metadata printer table.
 name|void
 modifier|*
 name|GCMetadataPrinters
+init|=
+name|nullptr
 decl_stmt|;
 comment|// Really a DenseMap.
 comment|/// Emit comments in assembly output if this is true.
@@ -346,6 +406,8 @@ comment|/// If VerboseAsm is set, a pointer to the loop info for this function.
 name|MachineLoopInfo
 modifier|*
 name|LI
+init|=
+name|nullptr
 decl_stmt|;
 struct|struct
 name|HandlerInfo
@@ -438,14 +500,60 @@ literal|1
 operator|>
 name|Handlers
 expr_stmt|;
+name|public
+label|:
+struct|struct
+name|SrcMgrDiagInfo
+block|{
+name|SourceMgr
+name|SrcMgr
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|>
+name|LocInfos
+expr_stmt|;
+name|LLVMContext
+operator|::
+name|InlineAsmDiagHandlerTy
+name|DiagHandler
+expr_stmt|;
+name|void
+modifier|*
+name|DiagContext
+decl_stmt|;
+block|}
+struct|;
+name|private
+label|:
+comment|/// Structure for generating diagnostics for inline assembly. Only initialised
+comment|/// when necessary.
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SrcMgrDiagInfo
+operator|>
+name|DiagInfo
+expr_stmt|;
 comment|/// If the target supports dwarf debug info, this pointer is non-null.
 name|DwarfDebug
 modifier|*
 name|DD
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// If the current module uses dwarf CFI annotations strictly for debugging.
 name|bool
 name|isCFIMoveForDebugging
+init|=
+name|false
 decl_stmt|;
 name|protected
 label|:
@@ -653,6 +761,10 @@ block|,
 name|TAIL_CALL
 operator|=
 literal|2
+block|,
+name|LOG_ARGS_ENTER
+operator|=
+literal|3
 block|,   }
 decl_stmt|;
 comment|// The table will contain these structs that point to the sled, the function
@@ -1126,8 +1238,6 @@ decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// Symbol Lowering Routines.
 comment|//===------------------------------------------------------------------===//
-name|public
-label|:
 name|MCSymbol
 modifier|*
 name|createTempSymbol
@@ -1221,8 +1331,6 @@ decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// Emission Helper Routines.
 comment|//===------------------------------------------------------------------===//
-name|public
-label|:
 comment|/// This is just convenient handler for printing offsets.
 name|void
 name|printOffset
@@ -1471,7 +1579,7 @@ comment|/// \p Value - The value to emit.
 comment|/// \p Size - The size of the integer (in bytes) to emit.
 name|virtual
 name|void
-name|EmitDebugValue
+name|EmitDebugThreadLocal
 argument_list|(
 specifier|const
 name|MCExpr
@@ -1578,11 +1686,6 @@ end_comment
 begin_comment
 comment|//===------------------------------------------------------------------===//
 end_comment
-
-begin_label
-name|public
-label|:
-end_label
 
 begin_comment
 comment|// These are hooks that targets can override to implement inline asm
@@ -1802,6 +1905,8 @@ specifier|const
 name|MachineInstr
 modifier|*
 name|LastMI
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -1809,6 +1914,8 @@ begin_decl_stmt
 name|mutable
 name|unsigned
 name|LastFn
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1816,6 +1923,9 @@ begin_decl_stmt
 name|mutable
 name|unsigned
 name|Counter
+init|=
+operator|~
+literal|0U
 decl_stmt|;
 end_decl_stmt
 
@@ -2050,11 +2160,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+unit|};  }
+comment|// end namespace llvm
+end_comment
+
 begin_endif
-unit|}; }
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_ASMPRINTER_H
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/IR/TypeFinder.h - Class to find used struct types --*- C++ -*-===//
+comment|//===- llvm/IR/TypeFinder.h - Class to find used struct types ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,13 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Metadata.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Type.h"
+file|<cstddef>
 end_include
 
 begin_include
@@ -95,6 +89,9 @@ name|Module
 decl_stmt|;
 name|class
 name|StructType
+decl_stmt|;
+name|class
+name|Type
 decl_stmt|;
 name|class
 name|Value
@@ -140,25 +137,28 @@ name|StructTypes
 expr_stmt|;
 name|bool
 name|OnlyNamed
+init|=
+name|false
 decl_stmt|;
 name|public
 label|:
 name|TypeFinder
 argument_list|()
-operator|:
-name|OnlyNamed
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|run
-argument_list|(
-argument|const Module&M
-argument_list|,
-argument|bool onlyNamed
-argument_list|)
-expr_stmt|;
+parameter_list|(
+specifier|const
+name|Module
+modifier|&
+name|M
+parameter_list|,
+name|bool
+name|onlyNamed
+parameter_list|)
+function_decl|;
 name|void
 name|clear
 parameter_list|()
@@ -351,13 +351,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_TYPEFINDER_H
+end_comment
 
 end_unit
 

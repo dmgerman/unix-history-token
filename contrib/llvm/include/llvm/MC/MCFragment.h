@@ -46,13 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ilist.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -64,7 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -79,6 +85,24 @@ directive|include
 file|"llvm/MC/MCInst.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SMLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -87,10 +111,10 @@ name|class
 name|MCSection
 decl_stmt|;
 name|class
-name|MCSymbol
+name|MCSubtargetInfo
 decl_stmt|;
 name|class
-name|MCSubtargetInfo
+name|MCSymbol
 decl_stmt|;
 name|class
 name|MCFragment
@@ -106,31 +130,6 @@ block|{
 name|friend
 name|class
 name|MCAsmLayout
-decl_stmt|;
-name|MCFragment
-argument_list|()
-operator|=
-name|delete
-expr_stmt|;
-name|MCFragment
-argument_list|(
-specifier|const
-name|MCFragment
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCFragment
-operator|&
-operator|)
-operator|=
-name|delete
 decl_stmt|;
 name|public
 label|:
@@ -230,6 +229,32 @@ argument_list|()
 expr_stmt|;
 name|public
 label|:
+name|MCFragment
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
+name|MCFragment
+argument_list|(
+specifier|const
+name|MCFragment
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MCFragment
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCFragment
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 comment|/// Destroys the current fragment.
 comment|///
 comment|/// This must be used instead of delete as MCFragment is non-virtual.
@@ -422,7 +447,6 @@ argument_list|,
 argument|Sec
 argument_list|)
 block|{}
-block|;
 specifier|static
 name|bool
 name|classof
@@ -2157,6 +2181,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCFRAGMENT_H
+end_comment
 
 end_unit
 

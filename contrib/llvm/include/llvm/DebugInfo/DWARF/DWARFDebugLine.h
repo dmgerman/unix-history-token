@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDebugLine.h ----------------------------------------*- C++ -*-===//
+comment|//===- DWARFDebugLine.h -----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGLINE_H
+name|LLVM_DEBUGINFO_DWARFDEBUGLINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGLINE_H
+name|LLVM_DEBUGINFO_DWARFDEBUGLINE_H
 end_define
 
 begin_include
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -109,40 +115,30 @@ name|FileNameEntry
 block|{
 name|FileNameEntry
 argument_list|()
-operator|:
-name|Name
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|DirIdx
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ModTime
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Length
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 specifier|const
 name|char
 operator|*
 name|Name
+operator|=
+name|nullptr
 block|;
 name|uint64_t
 name|DirIdx
+operator|=
+literal|0
 block|;
 name|uint64_t
 name|ModTime
+operator|=
+literal|0
 block|;
 name|uint64_t
 name|Length
+operator|=
+literal|0
 block|;   }
 expr_stmt|;
 struct|struct
@@ -459,6 +455,9 @@ comment|// guaranteed to be in the order of ascending instruction address.
 struct|struct
 name|Sequence
 block|{
+name|Sequence
+argument_list|()
+expr_stmt|;
 comment|// Sequence describes instructions at address range [LowPC, HighPC)
 comment|// and is described by line table rows [FirstRowIndex, LastRowIndex).
 name|uint64_t
@@ -476,9 +475,6 @@ decl_stmt|;
 name|bool
 name|Empty
 decl_stmt|;
-name|Sequence
-argument_list|()
-expr_stmt|;
 name|void
 name|reset
 parameter_list|()
@@ -883,10 +879,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARFDEBUGLINE_H
+end_comment
 
 end_unit
 

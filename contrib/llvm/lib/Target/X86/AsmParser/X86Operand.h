@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- X86Operand.h - Parsed X86 machine instruction --------------------===//
+comment|//===- X86Operand.h - Parsed X86 machine instruction ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -52,6 +52,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCExpr.h"
 end_include
 
@@ -76,13 +88,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MCTargetDesc/X86MCTargetDesc.h"
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SMLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -1406,6 +1436,30 @@ argument_list|,
 name|X86
 operator|::
 name|YMM31
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|isMem256_RC512
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isMem256
+argument_list|()
+operator|&&
+name|isMemIndexReg
+argument_list|(
+name|X86
+operator|::
+name|ZMM0
+argument_list|,
+name|X86
+operator|::
+name|ZMM31
 argument_list|)
 return|;
 block|}
@@ -3504,13 +3558,17 @@ end_expr_stmt
 
 begin_comment
 unit|};  }
-comment|// End of namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_X86_ASMPARSER_X86OPERAND_H
+end_comment
 
 end_unit
 

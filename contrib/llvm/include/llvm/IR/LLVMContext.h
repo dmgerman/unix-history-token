@@ -307,6 +307,11 @@ init|=
 literal|21
 block|,
 comment|// "absolute_symbol"
+name|MD_associated
+init|=
+literal|22
+block|,
+comment|// "associated"
 block|}
 enum|;
 comment|/// Known operand bundle tag IDs, which always have the same value.  All

@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"ARMBaseInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ARMBaseRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ARMFrameLowering.h"
 end_include
 
@@ -74,43 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ARMInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ARMSelectionDAGInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MCTargetDesc/ARMMCTargetDesc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"Thumb1FrameLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"Thumb1InstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"Thumb2InstrInfo.h"
 end_include
 
 begin_include
@@ -128,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DataLayout.h"
+file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
 begin_include
@@ -140,7 +116,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCSchedule.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetSubtargetInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -166,16 +160,13 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|ARMBaseTargetMachine
+decl_stmt|;
+name|class
 name|GlobalValue
 decl_stmt|;
 name|class
 name|StringRef
-decl_stmt|;
-name|class
-name|TargetOptions
-decl_stmt|;
-name|class
-name|ARMBaseTargetMachine
 decl_stmt|;
 name|class
 name|ARMSubtarget
@@ -190,19 +181,33 @@ name|ARMProcFamilyEnum
 block|{
 name|Others
 block|,
-name|CortexA5
-block|,
-name|CortexA7
-block|,
-name|CortexA8
-block|,
-name|CortexA9
-block|,
 name|CortexA12
 block|,
 name|CortexA15
 block|,
 name|CortexA17
+block|,
+name|CortexA32
+block|,
+name|CortexA35
+block|,
+name|CortexA5
+block|,
+name|CortexA53
+block|,
+name|CortexA57
+block|,
+name|CortexA7
+block|,
+name|CortexA72
+block|,
+name|CortexA73
+block|,
+name|CortexA8
+block|,
+name|CortexA9
+block|,
+name|CortexM3
 block|,
 name|CortexR4
 block|,
@@ -210,29 +215,17 @@ name|CortexR4F
 block|,
 name|CortexR5
 block|,
-name|CortexR7
-block|,
 name|CortexR52
 block|,
-name|CortexM3
+name|CortexR7
 block|,
-name|CortexA32
-block|,
-name|CortexA35
-block|,
-name|CortexA53
-block|,
-name|CortexA57
-block|,
-name|CortexA72
-block|,
-name|CortexA73
+name|ExynosM1
 block|,
 name|Krait
 block|,
-name|Swift
+name|Kryo
 block|,
-name|ExynosM1
+name|Swift
 block|}
 block|;   enum
 name|ARMProcClassEnum
@@ -241,9 +234,9 @@ name|None
 block|,
 name|AClass
 block|,
-name|RClass
-block|,
 name|MClass
+block|,
+name|RClass
 block|}
 block|;   enum
 name|ARMArchEnum
@@ -274,29 +267,31 @@ name|ARMv6k
 block|,
 name|ARMv6kz
 block|,
-name|ARMv6t2
-block|,
 name|ARMv6m
 block|,
 name|ARMv6sm
 block|,
+name|ARMv6t2
+block|,
 name|ARMv7a
-block|,
-name|ARMv7r
-block|,
-name|ARMv7m
 block|,
 name|ARMv7em
 block|,
-name|ARMv8a
+name|ARMv7m
+block|,
+name|ARMv7r
+block|,
+name|ARMv7ve
 block|,
 name|ARMv81a
 block|,
 name|ARMv82a
 block|,
-name|ARMv8mMainline
+name|ARMv8a
 block|,
 name|ARMv8mBaseline
+block|,
+name|ARMv8mMainline
 block|,
 name|ARMv8r
 block|}
@@ -545,13 +540,6 @@ block|;
 comment|/// HasHardwareDivideInARM - True if subtarget supports [su]div in ARM mode
 name|bool
 name|HasHardwareDivideInARM
-operator|=
-name|false
-block|;
-comment|/// HasT2ExtractPack - True if subtarget supports thumb2 extract/pack
-comment|/// instructions.
-name|bool
-name|HasT2ExtractPack
 operator|=
 name|false
 block|;
@@ -812,6 +800,13 @@ name|bool
 name|UseSjLjEH
 operator|=
 name|false
+block|;
+comment|/// Implicitly convert an instruction to a different one if its immediates
+comment|/// cannot be encoded. For example, ADD r0, r1, #FFFFFFFF -> SUB r0, r1, #1.
+name|bool
+name|NegativeImmediates
+operator|=
+name|true
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
@@ -1468,15 +1463,6 @@ specifier|const
 block|{
 return|return
 name|HasHardwareDivideInARM
-return|;
-block|}
-name|bool
-name|hasT2ExtractPack
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasT2ExtractPack
 return|;
 block|}
 name|bool
@@ -2242,7 +2228,6 @@ name|isAndroid
 argument_list|()
 return|;
 block|}
-name|virtual
 name|bool
 name|isXRaySupported
 argument_list|()
@@ -2607,7 +2592,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
@@ -2616,7 +2601,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// ARMSUBTARGET_H
+comment|// LLVM_LIB_TARGET_ARM_ARMSUBTARGET_H
 end_comment
 
 end_unit

@@ -110,13 +110,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -147,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/RuntimeLibcalls.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
 begin_include
@@ -543,6 +549,174 @@ comment|// Only expand when the resulting instructions are legal
 comment|// or custom.
 block|}
 empty_stmt|;
+name|class
+name|ArgListEntry
+block|{
+name|public
+label|:
+name|Value
+modifier|*
+name|Val
+init|=
+name|nullptr
+decl_stmt|;
+name|SDValue
+name|Node
+init|=
+name|SDValue
+argument_list|()
+decl_stmt|;
+name|Type
+modifier|*
+name|Ty
+init|=
+name|nullptr
+decl_stmt|;
+name|bool
+name|IsSExt
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsZExt
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsInReg
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsSRet
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsNest
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsByVal
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsInAlloca
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsReturned
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsSwiftSelf
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsSwiftError
+range|:
+literal|1
+decl_stmt|;
+name|uint16_t
+name|Alignment
+init|=
+literal|0
+decl_stmt|;
+name|ArgListEntry
+argument_list|()
+operator|:
+name|IsSExt
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsZExt
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsInReg
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSRet
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsNest
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsByVal
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsInAlloca
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsReturned
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSwiftSelf
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSwiftError
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|void
+name|setAttributes
+argument_list|(
+argument|ImmutableCallSite *CS
+argument_list|,
+argument|unsigned ArgIdx
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|ArgListEntry
+operator|>
+name|ArgListTy
+expr_stmt|;
+name|virtual
+name|void
+name|markLibCallAttributes
+argument_list|(
+name|MachineFunction
+operator|*
+name|MF
+argument_list|,
+name|unsigned
+name|CC
+argument_list|,
+name|ArgListTy
+operator|&
+name|Args
+argument_list|)
+decl|const
+block|{}
+empty_stmt|;
 specifier|static
 name|ISD
 operator|::
@@ -838,7 +1012,7 @@ argument_list|(
 name|EVT
 name|VT
 argument_list|,
-name|AttributeSet
+name|AttributeList
 name|Attr
 argument_list|)
 decl|const
@@ -1155,6 +1329,20 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Returns if it's reasonable to merge stores to MemVT size.
+name|virtual
+name|bool
+name|canMergeStoresTo
+argument_list|(
+name|EVT
+name|MemVT
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// \brief Return true if it is cheap to speculate a call to intrinsic cttz.
 name|virtual
 name|bool
@@ -1226,21 +1414,80 @@ block|}
 comment|/// \brief Return if the target supports combining a
 comment|/// chain like:
 comment|/// \code
-comment|///   %andResult = and %val1, #imm-with-one-bit-set;
+comment|///   %andResult = and %val1, #mask
 comment|///   %icmpResult = icmp %andResult, 0
-comment|///   br i1 %icmpResult, label %dest1, label %dest2
 comment|/// \endcode
 comment|/// into a single machine instruction of a form like:
 comment|/// \code
-comment|///   brOnBitSet %register, #bitNumber, dest
+comment|///   cc = test %register, #mask
 comment|/// \endcode
+name|virtual
 name|bool
-name|isMaskAndBranchFoldingLegal
-argument_list|()
+name|isMaskAndCmp0FoldingBeneficial
+argument_list|(
 specifier|const
+name|Instruction
+operator|&
+name|AndI
+argument_list|)
+decl|const
 block|{
 return|return
-name|MaskAndBranchFoldingIsLegal
+name|false
+return|;
+block|}
+comment|/// Use bitwise logic to make pairs of compares more efficient. For example:
+comment|/// and (seteq A, B), (seteq C, D) --> seteq (or (xor A, B), (xor C, D)), 0
+comment|/// This should be true when it takes more than one instruction to lower
+comment|/// setcc (cmp+set on x86 scalar), when bitwise ops are faster than logic on
+comment|/// condition bits (crand on PowerPC), and/or when reducing cmp+br is a win.
+name|virtual
+name|bool
+name|convertSetCCLogicToBitwiseLogic
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Return the preferred operand type if the target has a quick way to compare
+comment|/// integer values of the given size. Assume that any legal integer type can
+comment|/// be compared efficiently. Targets may override this to allow illegal wide
+comment|/// types to return a vector type if there is support to compare that type.
+name|virtual
+name|MVT
+name|hasFastEqualityCompare
+argument_list|(
+name|unsigned
+name|NumBits
+argument_list|)
+decl|const
+block|{
+name|MVT
+name|VT
+init|=
+name|MVT
+operator|::
+name|getIntegerVT
+argument_list|(
+name|NumBits
+argument_list|)
+decl_stmt|;
+return|return
+name|isTypeLegal
+argument_list|(
+name|VT
+argument_list|)
+condition|?
+name|VT
+else|:
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
 return|;
 block|}
 comment|/// Return true if the target should transform:
@@ -3837,6 +4084,28 @@ return|return
 name|GatherAllAliasesMaxDepth
 return|;
 block|}
+comment|/// Returns the size of the platform's va_list object.
+name|virtual
+name|unsigned
+name|getVaListSizeInBits
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+block|{
+return|return
+name|getPointerTy
+argument_list|(
+name|DL
+argument_list|)
+operator|.
+name|getSizeInBits
+argument_list|()
+return|;
+block|}
 comment|/// \brief Get maximum # of store operations permitted for llvm.memset
 comment|///
 comment|/// This function returns the maximum number of store operations permitted
@@ -4833,6 +5102,19 @@ operator|!=
 name|TypeSplitVector
 return|;
 block|}
+comment|/// Return true if a select of constants (select Cond, C1, C2) should be
+comment|/// transformed into simple math ops with the condition value. For example:
+comment|/// select Cond, C1, C1-1 --> add (zext Cond), C1-1
+name|virtual
+name|bool
+name|convertSelectOfConstantsToMath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// TargetLowering Configuration Methods - These methods should be invoked by
 comment|// the derived class constructor to configure this object for the target.
@@ -5124,7 +5406,8 @@ name|TRI
 parameter_list|)
 function_decl|;
 comment|/// Indicate that the specified operation does not work with the specified
-comment|/// type and indicate what to do about it.
+comment|/// type and indicate what to do about it. Note that VT may refer to either
+comment|/// the type of a result or that of an operand of Op.
 name|void
 name|setOperationAction
 parameter_list|(
@@ -5822,7 +6105,7 @@ comment|/// targets also pass back when this should be done on intrinsics which
 comment|/// load/store.
 name|virtual
 name|bool
-name|GetAddrModeArguments
+name|getAddrModeArguments
 argument_list|(
 name|IntrinsicInst
 operator|*
@@ -5840,11 +6123,6 @@ name|Type
 operator|*
 operator|&
 comment|/*AccessTy*/
-argument_list|,
-name|unsigned
-name|AddrSpace
-operator|=
-literal|0
 argument_list|)
 decl|const
 block|{
@@ -7185,11 +7463,6 @@ comment|/// the branch is usually predicted right.
 name|bool
 name|PredictableSelectIsExpensive
 decl_stmt|;
-comment|/// MaskAndBranchFoldingIsLegal - Indicates if the target supports folding
-comment|/// a mask of a single bit, a compare, and a branch into a single instruction.
-name|bool
-name|MaskAndBranchFoldingIsLegal
-decl_stmt|;
 comment|/// \see enableExtLdPromotion.
 name|bool
 name|EnableExtLdPromotion
@@ -7641,11 +7914,11 @@ comment|/// the original and new nodes in Old and New.  Otherwise, analyze the
 comment|/// expression and return a mask of KnownOne and KnownZero bits for the
 comment|/// expression (used to simplify the caller).  The KnownZero/One bits may only
 comment|/// be accurate for those bits in the DemandedMask.
-comment|/// \p AssumeSingleUse When this paramater is true, this function will
+comment|/// \p AssumeSingleUse When this parameter is true, this function will
 comment|///    attempt to simplify \p Op even if there are multiple uses.
 comment|///    Callers are responsible for correctly updating the DAG based on the
 comment|///    results of this function, because simply replacing replacing TLO.Old
-comment|///    with TLO.New will be incorrect when this paramater is true and TLO.Old
+comment|///    with TLO.New will be incorrect when this parameter is true and TLO.Old
 comment|///    has multiple uses.
 name|bool
 name|SimplifyDemandedBits
@@ -7667,8 +7940,22 @@ argument|bool AssumeSingleUse = false
 argument_list|)
 specifier|const
 block|;
+comment|/// Helper wrapper around SimplifyDemandedBits
+name|bool
+name|SimplifyDemandedBits
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|APInt&DemandedMask
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
 comment|/// Determine which of the bits specified in Mask are known to be either zero
-comment|/// or one and return them in the KnownZero/KnownOne bitsets.
+comment|/// or one and return them in the KnownZero/KnownOne bitsets. The DemandedElts
+comment|/// argument allows us to only collect the known bits that are shared by the
+comment|/// requested vector elements.
 name|virtual
 name|void
 name|computeKnownBitsForTargetNode
@@ -7679,6 +7966,8 @@ argument|APInt&KnownZero
 argument_list|,
 argument|APInt&KnownOne
 argument_list|,
+argument|const APInt&DemandedElts
+argument_list|,
 argument|const SelectionDAG&DAG
 argument_list|,
 argument|unsigned Depth =
@@ -7687,12 +7976,16 @@ argument_list|)
 specifier|const
 block|;
 comment|/// This method can be implemented by targets that want to expose additional
-comment|/// information about sign bits to the DAG Combiner.
+comment|/// information about sign bits to the DAG Combiner. The DemandedElts
+comment|/// argument allows us to only collect the minimum sign bits that are shared
+comment|/// by the requested vector elements.
 name|virtual
 name|unsigned
 name|ComputeNumSignBitsForTargetNode
 argument_list|(
 argument|SDValue Op
+argument_list|,
+argument|const APInt&DemandedElts
 argument_list|,
 argument|const SelectionDAG&DAG
 argument_list|,
@@ -8147,150 +8440,11 @@ argument_list|(
 literal|"Not Implemented"
 argument_list|)
 block|;   }
-expr|struct
-name|ArgListEntry
-block|{
-name|SDValue
-name|Node
-block|;
-name|Type
-operator|*
-name|Ty
-block|;
-name|bool
-name|isSExt
-operator|:
-literal|1
-block|;
-name|bool
-name|isZExt
-operator|:
-literal|1
-block|;
-name|bool
-name|isInReg
-operator|:
-literal|1
-block|;
-name|bool
-name|isSRet
-operator|:
-literal|1
-block|;
-name|bool
-name|isNest
-operator|:
-literal|1
-block|;
-name|bool
-name|isByVal
-operator|:
-literal|1
-block|;
-name|bool
-name|isInAlloca
-operator|:
-literal|1
-block|;
-name|bool
-name|isReturned
-operator|:
-literal|1
-block|;
-name|bool
-name|isSwiftSelf
-operator|:
-literal|1
-block|;
-name|bool
-name|isSwiftError
-operator|:
-literal|1
-block|;
-name|uint16_t
-name|Alignment
-block|;
-name|ArgListEntry
-argument_list|()
-operator|:
-name|isSExt
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isZExt
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isInReg
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isSRet
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isNest
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isByVal
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isInAlloca
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isReturned
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isSwiftSelf
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isSwiftError
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|Alignment
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|void
-name|setAttributes
-argument_list|(
-argument|ImmutableCallSite *CS
-argument_list|,
-argument|unsigned AttrIdx
-argument_list|)
-block|;   }
-block|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|ArgListEntry
-operator|>
-name|ArgListTy
-expr_stmt|;
 comment|/// This structure contains all information that is necessary for lowering
 comment|/// calls. It is passed to TLI::LowerCallTo when the SelectionDAG builder
 comment|/// needs to lower a call, and targets will see this struct in their LowerCall
 comment|/// implementation.
-block|struct
+expr|struct
 name|CallLoweringInfo
 block|{
 name|SDValue
@@ -8516,6 +8670,73 @@ operator|*
 name|this
 return|;
 block|}
+comment|// setCallee with target/module-specific attributes
+name|CallLoweringInfo
+operator|&
+name|setLibCallee
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|,
+argument|Type *ResultType
+argument_list|,
+argument|SDValue Target
+argument_list|,
+argument|ArgListTy&&ArgsList
+argument_list|)
+block|{
+name|RetTy
+operator|=
+name|ResultType
+block|;
+name|Callee
+operator|=
+name|Target
+block|;
+name|CallConv
+operator|=
+name|CC
+block|;
+name|NumFixedArgs
+operator|=
+name|Args
+operator|.
+name|size
+argument_list|()
+block|;
+name|Args
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|ArgsList
+argument_list|)
+block|;
+name|DAG
+operator|.
+name|getTargetLoweringInfo
+argument_list|()
+operator|.
+name|markLibCallAttributes
+argument_list|(
+operator|&
+operator|(
+name|DAG
+operator|.
+name|getMachineFunction
+argument_list|()
+operator|)
+argument_list|,
+name|CC
+argument_list|,
+name|Args
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 name|CallLoweringInfo
 operator|&
 name|setCallee
@@ -8585,10 +8806,8 @@ name|IsInReg
 operator|=
 name|Call
 operator|.
-name|paramHasAttr
+name|hasRetAttr
 argument_list|(
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|InReg
@@ -8645,10 +8864,8 @@ name|RetSExt
 operator|=
 name|Call
 operator|.
-name|paramHasAttr
+name|hasRetAttr
 argument_list|(
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|SExt
@@ -8658,10 +8875,8 @@ name|RetZExt
 operator|=
 name|Call
 operator|.
-name|paramHasAttr
+name|hasRetAttr
 argument_list|(
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|ZExt
@@ -9458,157 +9673,72 @@ argument_list|,
 argument|ImmutableCallSite CS
 argument_list|)
 specifier|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// Examine constraint type and operand type and determine a weight value.
-end_comment
-
-begin_comment
 comment|/// The operand object must already have been set up with the operand type.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|ConstraintWeight
 name|getMultipleConstraintMatchWeight
 argument_list|(
-name|AsmOperandInfo
-operator|&
-name|info
+argument|AsmOperandInfo&info
 argument_list|,
-name|int
-name|maIndex
+argument|int maIndex
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Examine constraint string and operand type and determine a weight value.
-end_comment
-
-begin_comment
 comment|/// The operand object must already have been set up with the operand type.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|ConstraintWeight
 name|getSingleConstraintMatchWeight
 argument_list|(
-name|AsmOperandInfo
-operator|&
-name|info
+argument|AsmOperandInfo&info
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|constraint
+argument|const char *constraint
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Determines the constraint code and constraint type to use for the specific
-end_comment
-
-begin_comment
 comment|/// AsmOperandInfo, setting OpInfo.ConstraintCode and OpInfo.ConstraintType.
-end_comment
-
-begin_comment
 comment|/// If the actual operand being passed in is available, it can be passed in as
-end_comment
-
-begin_comment
 comment|/// Op, otherwise an empty SDValue can be passed.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|ComputeConstraintToUse
 argument_list|(
-name|AsmOperandInfo
-operator|&
-name|OpInfo
+argument|AsmOperandInfo&OpInfo
 argument_list|,
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|*
-name|DAG
-operator|=
-name|nullptr
+argument|SelectionDAG *DAG = nullptr
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Given a constraint, return the type of constraint it is for this target.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-name|StringRef
-name|Constraint
+argument|StringRef Constraint
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Given a physical register constraint (e.g.  {edx}), return the register
-end_comment
-
-begin_comment
 comment|/// number and the register class for the register.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Given a register class constraint, like 'r', if this corresponds directly
-end_comment
-
-begin_comment
 comment|/// to an LLVM register class, return a register of 0 and the register class
-end_comment
-
-begin_comment
 comment|/// pointer.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This should only be used for C_Register constraints.  On error, this
-end_comment
-
-begin_comment
 comment|/// returns a register number of 0 and a null register class pointer.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|std
 operator|::
 name|pair
 operator|<
 name|unsigned
-operator|,
+block|,
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -9622,18 +9752,14 @@ argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 name|virtual
 name|unsigned
 name|getInlineAsmMemConstraint
 argument_list|(
-name|StringRef
-name|ConstraintCode
+argument|StringRef ConstraintCode
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -10728,7 +10854,7 @@ name|Type
 operator|*
 name|ReturnType
 argument_list|,
-name|AttributeSet
+name|AttributeList
 name|attr
 argument_list|,
 name|SmallVectorImpl

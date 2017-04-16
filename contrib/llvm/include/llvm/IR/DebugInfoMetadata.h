@@ -3058,18 +3058,6 @@ operator|&
 name|FlagRValueReference
 return|;
 block|}
-name|bool
-name|isExternalTypeRef
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getFlags
-argument_list|()
-operator|&
-name|FlagExternalTypeRef
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -3367,6 +3355,14 @@ name|friend
 name|class
 name|MDNode
 block|;
+comment|/// \brief The DWARF address space of the memory pointed to or referenced by a
+comment|/// pointer or reference type respectively.
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|DWARFAddressSpace
+block|;
 name|DIDerivedType
 argument_list|(
 argument|LLVMContext&C
@@ -3383,6 +3379,8 @@ argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
 argument_list|,
+argument|Optional<unsigned> DWARFAddressSpace
+argument_list|,
 argument|DIFlags Flags
 argument_list|,
 argument|ArrayRef<Metadata *> Ops
@@ -3390,25 +3388,30 @@ argument_list|)
 operator|:
 name|DIType
 argument_list|(
-argument|C
+name|C
 argument_list|,
-argument|DIDerivedTypeKind
+name|DIDerivedTypeKind
 argument_list|,
-argument|Storage
+name|Storage
 argument_list|,
-argument|Tag
+name|Tag
 argument_list|,
-argument|Line
+name|Line
 argument_list|,
-argument|SizeInBits
+name|SizeInBits
 argument_list|,
-argument|AlignInBits
+name|AlignInBits
 argument_list|,
-argument|OffsetInBits
+name|OffsetInBits
 argument_list|,
-argument|Flags
+name|Flags
 argument_list|,
-argument|Ops
+name|Ops
+argument_list|)
+block|,
+name|DWARFAddressSpace
+argument_list|(
+argument|DWARFAddressSpace
 argument_list|)
 block|{}
 operator|~
@@ -3441,6 +3444,8 @@ argument_list|,
 argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
+argument_list|,
+argument|Optional<unsigned> DWARFAddressSpace
 argument_list|,
 argument|DIFlags Flags
 argument_list|,
@@ -3479,6 +3484,8 @@ name|AlignInBits
 argument_list|,
 name|OffsetInBits
 argument_list|,
+name|DWARFAddressSpace
+argument_list|,
 name|Flags
 argument_list|,
 name|ExtraData
@@ -3513,6 +3520,8 @@ argument_list|,
 argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
+argument_list|,
+argument|Optional<unsigned> DWARFAddressSpace
 argument_list|,
 argument|DIFlags Flags
 argument_list|,
@@ -3561,6 +3570,9 @@ argument_list|,
 name|getOffsetInBits
 argument_list|()
 argument_list|,
+name|getDWARFAddressSpace
+argument_list|()
+argument_list|,
 name|getFlags
 argument_list|()
 argument_list|,
@@ -3575,17 +3587,17 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIDerivedType
 argument_list|,
-argument|(unsigned Tag, MDString *Name, Metadata *File,                      unsigned Line, Metadata *Scope, Metadata *BaseType,                      uint64_t SizeInBits, uint32_t AlignInBits,                      uint64_t OffsetInBits, DIFlags Flags,                      Metadata *ExtraData = nullptr)
+argument|(unsigned Tag, MDString *Name, Metadata *File,                      unsigned Line, Metadata *Scope, Metadata *BaseType,                      uint64_t SizeInBits, uint32_t AlignInBits,                      uint64_t OffsetInBits,                      Optional<unsigned> DWARFAddressSpace, DIFlags Flags,                      Metadata *ExtraData = nullptr)
 argument_list|,
-argument|(Tag, Name, File, Line, Scope, BaseType, SizeInBits,                      AlignInBits, OffsetInBits, Flags, ExtraData)
+argument|(Tag, Name, File, Line, Scope, BaseType, SizeInBits,                      AlignInBits, OffsetInBits, DWARFAddressSpace, Flags,                      ExtraData)
 argument_list|)
 name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIDerivedType
 argument_list|,
-argument|(unsigned Tag, StringRef Name, DIFile *File, unsigned Line,                      DIScopeRef Scope, DITypeRef BaseType, uint64_t SizeInBits,                      uint32_t AlignInBits, uint64_t OffsetInBits,                      DIFlags Flags, Metadata *ExtraData = nullptr)
+argument|(unsigned Tag, StringRef Name, DIFile *File, unsigned Line,                      DIScopeRef Scope, DITypeRef BaseType, uint64_t SizeInBits,                      uint32_t AlignInBits, uint64_t OffsetInBits,                      Optional<unsigned> DWARFAddressSpace, DIFlags Flags,                      Metadata *ExtraData = nullptr)
 argument_list|,
-argument|(Tag, Name, File, Line, Scope, BaseType, SizeInBits,                      AlignInBits, OffsetInBits, Flags, ExtraData)
+argument|(Tag, Name, File, Line, Scope, BaseType, SizeInBits,                      AlignInBits, OffsetInBits, DWARFAddressSpace, Flags,                      ExtraData)
 argument_list|)
 name|TempDIDerivedType
 name|clone
@@ -3597,7 +3609,7 @@ name|cloneImpl
 argument_list|()
 return|;
 block|}
-comment|//// Get the base type this is derived from.
+comment|/// Get the base type this is derived from.
 name|DITypeRef
 name|getBaseType
 argument_list|()
@@ -3622,6 +3634,20 @@ name|getOperand
 argument_list|(
 literal|3
 argument_list|)
+return|;
+block|}
+comment|/// \returns The DWARF address space of the memory pointed to or referenced by
+comment|/// a pointer or reference type respectively.
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|getDWARFAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DWARFAddressSpace
 return|;
 block|}
 comment|/// Get extra data associated with this derived type.
@@ -4828,6 +4854,9 @@ block|;
 name|bool
 name|SplitDebugInlining
 block|;
+name|bool
+name|DebugInfoForProfiling
+block|;
 name|DICompileUnit
 argument_list|(
 argument|LLVMContext&C
@@ -4845,6 +4874,8 @@ argument_list|,
 argument|uint64_t DWOId
 argument_list|,
 argument|bool SplitDebugInlining
+argument_list|,
+argument|bool DebugInfoForProfiling
 argument_list|,
 argument|ArrayRef<Metadata *> Ops
 argument_list|)
@@ -4891,7 +4922,12 @@ argument_list|)
 block|,
 name|SplitDebugInlining
 argument_list|(
-argument|SplitDebugInlining
+name|SplitDebugInlining
+argument_list|)
+block|,
+name|DebugInfoForProfiling
+argument_list|(
+argument|DebugInfoForProfiling
 argument_list|)
 block|{
 name|assert
@@ -4943,6 +4979,8 @@ argument_list|,
 argument|uint64_t DWOId
 argument_list|,
 argument|bool SplitDebugInlining
+argument_list|,
+argument|bool DebugInfoForProfiling
 argument_list|,
 argument|StorageType Storage
 argument_list|,
@@ -5014,6 +5052,8 @@ name|DWOId
 argument_list|,
 name|SplitDebugInlining
 argument_list|,
+name|DebugInfoForProfiling
+argument_list|,
 name|Storage
 argument_list|,
 name|ShouldCreate
@@ -5056,6 +5096,8 @@ argument_list|,
 argument|uint64_t DWOId
 argument_list|,
 argument|bool SplitDebugInlining
+argument_list|,
+argument|bool DebugInfoForProfiling
 argument_list|,
 argument|StorageType Storage
 argument_list|,
@@ -5116,6 +5158,9 @@ name|DWOId
 argument_list|,
 name|getSplitDebugInlining
 argument_list|()
+argument_list|,
+name|getDebugInfoForProfiling
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -5139,17 +5184,17 @@ name|DEFINE_MDNODE_GET_DISTINCT_TEMPORARY
 argument_list|(
 argument|DICompileUnit
 argument_list|,
-argument|(unsigned SourceLanguage, DIFile *File, StringRef Producer,        bool IsOptimized, StringRef Flags, unsigned RuntimeVersion,        StringRef SplitDebugFilename, DebugEmissionKind EmissionKind,        DICompositeTypeArray EnumTypes, DIScopeArray RetainedTypes,        DIGlobalVariableExpressionArray GlobalVariables,        DIImportedEntityArray ImportedEntities, DIMacroNodeArray Macros,        uint64_t DWOId, bool SplitDebugInlining)
+argument|(unsigned SourceLanguage, DIFile *File, StringRef Producer,        bool IsOptimized, StringRef Flags, unsigned RuntimeVersion,        StringRef SplitDebugFilename, DebugEmissionKind EmissionKind,        DICompositeTypeArray EnumTypes, DIScopeArray RetainedTypes,        DIGlobalVariableExpressionArray GlobalVariables,        DIImportedEntityArray ImportedEntities, DIMacroNodeArray Macros,        uint64_t DWOId, bool SplitDebugInlining, bool DebugInfoForProfiling)
 argument_list|,
-argument|(SourceLanguage, File, Producer, IsOptimized, Flags, RuntimeVersion,        SplitDebugFilename, EmissionKind, EnumTypes, RetainedTypes,        GlobalVariables, ImportedEntities, Macros, DWOId, SplitDebugInlining)
+argument|(SourceLanguage, File, Producer, IsOptimized, Flags, RuntimeVersion,        SplitDebugFilename, EmissionKind, EnumTypes, RetainedTypes,        GlobalVariables, ImportedEntities, Macros, DWOId, SplitDebugInlining,        DebugInfoForProfiling)
 argument_list|)
 name|DEFINE_MDNODE_GET_DISTINCT_TEMPORARY
 argument_list|(
 argument|DICompileUnit
 argument_list|,
-argument|(unsigned SourceLanguage, Metadata *File, MDString *Producer,        bool IsOptimized, MDString *Flags, unsigned RuntimeVersion,        MDString *SplitDebugFilename, unsigned EmissionKind, Metadata *EnumTypes,        Metadata *RetainedTypes, Metadata *GlobalVariables,        Metadata *ImportedEntities, Metadata *Macros, uint64_t DWOId,        bool SplitDebugInlining)
+argument|(unsigned SourceLanguage, Metadata *File, MDString *Producer,        bool IsOptimized, MDString *Flags, unsigned RuntimeVersion,        MDString *SplitDebugFilename, unsigned EmissionKind, Metadata *EnumTypes,        Metadata *RetainedTypes, Metadata *GlobalVariables,        Metadata *ImportedEntities, Metadata *Macros, uint64_t DWOId,        bool SplitDebugInlining, bool DebugInfoForProfiling)
 argument_list|,
-argument|(SourceLanguage, File, Producer, IsOptimized, Flags, RuntimeVersion,        SplitDebugFilename, EmissionKind, EnumTypes, RetainedTypes,        GlobalVariables, ImportedEntities, Macros, DWOId, SplitDebugInlining)
+argument|(SourceLanguage, File, Producer, IsOptimized, Flags, RuntimeVersion,        SplitDebugFilename, EmissionKind, EnumTypes, RetainedTypes,        GlobalVariables, ImportedEntities, Macros, DWOId, SplitDebugInlining,        DebugInfoForProfiling)
 argument_list|)
 name|TempDICompileUnit
 name|clone
@@ -5198,6 +5243,15 @@ operator|(
 name|DebugEmissionKind
 operator|)
 name|EmissionKind
+return|;
+block|}
+name|bool
+name|getDebugInfoForProfiling
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebugInfoForProfiling
 return|;
 block|}
 name|StringRef
@@ -5783,6 +5837,129 @@ name|ShouldCreate
 argument_list|)
 return|;
 block|}
+comment|/// With a given unsigned int \p U, use up to 13 bits to represent it.
+comment|/// old_bit 1~5  --> new_bit 1~5
+comment|/// old_bit 6~12 --> new_bit 7~13
+comment|/// new_bit_6 is 0 if higher bits (7~13) are all 0
+specifier|static
+name|unsigned
+name|getPrefixEncodingFromUnsigned
+argument_list|(
+argument|unsigned U
+argument_list|)
+block|{
+name|U
+operator|&=
+literal|0xfff
+block|;
+return|return
+name|U
+operator|>
+literal|0x1f
+condition|?
+operator|(
+operator|(
+operator|(
+name|U
+operator|&
+literal|0xfe0
+operator|)
+operator|<<
+literal|1
+operator|)
+operator||
+operator|(
+name|U
+operator|&
+literal|0x1f
+operator|)
+operator||
+literal|0x20
+operator|)
+else|:
+name|U
+return|;
+block|}
+comment|/// Reverse transformation as getPrefixEncodingFromUnsigned.
+specifier|static
+name|unsigned
+name|getUnsignedFromPrefixEncoding
+argument_list|(
+argument|unsigned U
+argument_list|)
+block|{
+return|return
+operator|(
+name|U
+operator|&
+literal|0x20
+operator|)
+condition|?
+operator|(
+operator|(
+operator|(
+name|U
+operator|>>
+literal|1
+operator|)
+operator|&
+literal|0xfe0
+operator|)
+operator||
+operator|(
+name|U
+operator|&
+literal|0x1f
+operator|)
+operator|)
+else|:
+operator|(
+name|U
+operator|&
+literal|0x1f
+operator|)
+return|;
+block|}
+comment|/// Returns the next component stored in discriminator.
+specifier|static
+name|unsigned
+name|getNextComponentInDiscriminator
+argument_list|(
+argument|unsigned D
+argument_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|D
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+name|D
+operator|>>
+operator|(
+operator|(
+name|D
+operator|&
+literal|0x40
+operator|)
+condition|?
+literal|14
+else|:
+literal|7
+operator|)
+return|;
+else|else
+return|return
+name|D
+operator|>>
+literal|1
+return|;
+block|}
 name|TempDILocation
 name|cloneImpl
 argument_list|()
@@ -6030,6 +6207,27 @@ comment|/// Get the DWARF discriminator.
 comment|///
 comment|/// DWARF discriminators distinguish identical file locations between
 comment|/// instructions that are on different basic blocks.
+comment|///
+comment|/// There are 3 components stored in discriminator, from lower bits:
+comment|///
+comment|/// Base discriminator: assigned by AddDiscriminators pass to identify IRs
+comment|///                     that are defined by the same source line, but
+comment|///                     different basic blocks.
+comment|/// Duplication factor: assigned by optimizations that will scale down
+comment|///                     the execution frequency of the original IR.
+comment|/// Copy Identifier: assigned by optimizations that clones the IR.
+comment|///                  Each copy of the IR will be assigned an identifier.
+comment|///
+comment|/// Encoding:
+comment|///
+comment|/// The above 3 components are encoded into a 32bit unsigned integer in
+comment|/// order. If the lowest bit is 1, the current component is empty, and the
+comment|/// next component will start in the next bit. Otherwise, the the current
+comment|/// component is non-empty, and its content starts in the next bit. The
+comment|/// length of each components is either 5 bit or 12 bit: if the 7th bit
+comment|/// is 0, the bit 2~6 (5 bits) are used to represent the component; if the
+comment|/// 7th bit is 1, the bit 2~6 (5 bits) and 8~14 (7 bits) are combined to
+comment|/// represent the component.
 specifier|inline
 name|unsigned
 name|getDiscriminator
@@ -6038,11 +6236,56 @@ specifier|const
 block|;
 comment|/// Returns a new DILocation with updated \p Discriminator.
 specifier|inline
+specifier|const
 name|DILocation
 operator|*
 name|cloneWithDiscriminator
 argument_list|(
 argument|unsigned Discriminator
+argument_list|)
+specifier|const
+block|;
+comment|/// Returns a new DILocation with updated base discriminator \p BD.
+specifier|inline
+specifier|const
+name|DILocation
+operator|*
+name|setBaseDiscriminator
+argument_list|(
+argument|unsigned BD
+argument_list|)
+specifier|const
+block|;
+comment|/// Returns the duplication factor stored in the discriminator.
+specifier|inline
+name|unsigned
+name|getDuplicationFactor
+argument_list|()
+specifier|const
+block|;
+comment|/// Returns the copy identifier stored in the discriminator.
+specifier|inline
+name|unsigned
+name|getCopyIdentifier
+argument_list|()
+specifier|const
+block|;
+comment|/// Returns the base discriminator stored in the discriminator.
+specifier|inline
+name|unsigned
+name|getBaseDiscriminator
+argument_list|()
+specifier|const
+block|;
+comment|/// Returns a new DILocation with duplication factor \p DF encoded in the
+comment|/// discriminator.
+specifier|inline
+specifier|const
+name|DILocation
+operator|*
+name|cloneWithDuplicationFactor
+argument_list|(
+argument|unsigned DF
 argument_list|)
 specifier|const
 block|;
@@ -6097,6 +6340,98 @@ name|LocA
 return|;
 return|return
 name|nullptr
+return|;
+block|}
+comment|/// Returns the base discriminator for a given encoded discriminator \p D.
+specifier|static
+name|unsigned
+name|getBaseDiscriminatorFromDiscriminator
+argument_list|(
+argument|unsigned D
+argument_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|D
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+name|getUnsignedFromPrefixEncoding
+argument_list|(
+name|D
+operator|>>
+literal|1
+argument_list|)
+return|;
+else|else
+return|return
+literal|0
+return|;
+block|}
+comment|/// Returns the duplication factor for a given encoded discriminator \p D.
+specifier|static
+name|unsigned
+name|getDuplicationFactorFromDiscriminator
+argument_list|(
+argument|unsigned D
+argument_list|)
+block|{
+name|D
+operator|=
+name|getNextComponentInDiscriminator
+argument_list|(
+name|D
+argument_list|)
+block|;
+if|if
+condition|(
+name|D
+operator|==
+literal|0
+operator|||
+operator|(
+name|D
+operator|&
+literal|1
+operator|)
+condition|)
+return|return
+literal|1
+return|;
+else|else
+return|return
+name|getUnsignedFromPrefixEncoding
+argument_list|(
+name|D
+operator|>>
+literal|1
+argument_list|)
+return|;
+block|}
+comment|/// Returns the copy identifier for a given encoded discriminator \p D.
+specifier|static
+name|unsigned
+name|getCopyIdentifierFromDiscriminator
+argument_list|(
+argument|unsigned D
+argument_list|)
+block|{
+return|return
+name|getUnsignedFromPrefixEncoding
+argument_list|(
+name|getNextComponentInDiscriminator
+argument_list|(
+name|getNextComponentInDiscriminator
+argument_list|(
+name|D
+argument_list|)
+argument_list|)
+argument_list|)
 return|;
 block|}
 name|Metadata
@@ -7702,6 +8037,7 @@ return|return
 literal|0
 return|;
 block|}
+specifier|const
 name|DILocation
 operator|*
 name|DILocation
@@ -7800,6 +8136,194 @@ name|NewScope
 argument_list|,
 name|getInlinedAt
 argument_list|()
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|DILocation
+operator|::
+name|getBaseDiscriminator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getBaseDiscriminatorFromDiscriminator
+argument_list|(
+name|getDiscriminator
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|DILocation
+operator|::
+name|getDuplicationFactor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getDuplicationFactorFromDiscriminator
+argument_list|(
+name|getDiscriminator
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|DILocation
+operator|::
+name|getCopyIdentifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCopyIdentifierFromDiscriminator
+argument_list|(
+name|getDiscriminator
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|const
+name|DILocation
+operator|*
+name|DILocation
+operator|::
+name|setBaseDiscriminator
+argument_list|(
+argument|unsigned D
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|D
+operator|==
+literal|0
+condition|)
+return|return
+name|this
+return|;
+else|else
+return|return
+name|cloneWithDiscriminator
+argument_list|(
+name|getPrefixEncodingFromUnsigned
+argument_list|(
+name|D
+argument_list|)
+operator|<<
+literal|1
+argument_list|)
+return|;
+block|}
+specifier|const
+name|DILocation
+operator|*
+name|DILocation
+operator|::
+name|cloneWithDuplicationFactor
+argument_list|(
+argument|unsigned DF
+argument_list|)
+specifier|const
+block|{
+name|DF
+operator|*=
+name|getDuplicationFactor
+argument_list|()
+block|;
+if|if
+condition|(
+name|DF
+operator|<=
+literal|1
+condition|)
+return|return
+name|this
+return|;
+name|unsigned
+name|BD
+operator|=
+name|getBaseDiscriminator
+argument_list|()
+block|;
+name|unsigned
+name|CI
+operator|=
+name|getCopyIdentifier
+argument_list|()
+operator|<<
+operator|(
+name|DF
+operator|>
+literal|0x1f
+condition|?
+literal|14
+else|:
+literal|7
+operator|)
+block|;
+name|unsigned
+name|D
+operator|=
+name|CI
+operator||
+operator|(
+name|getPrefixEncodingFromUnsigned
+argument_list|(
+name|DF
+argument_list|)
+operator|<<
+literal|1
+operator|)
+block|;
+if|if
+condition|(
+name|BD
+operator|==
+literal|0
+condition|)
+name|D
+operator|=
+operator|(
+name|D
+operator|<<
+literal|1
+operator|)
+operator||
+literal|1
+expr_stmt|;
+else|else
+name|D
+operator|=
+operator|(
+name|D
+operator|<<
+operator|(
+name|BD
+operator|>
+literal|0x1f
+condition|?
+literal|14
+else|:
+literal|7
+operator|)
+operator|)
+operator||
+operator|(
+name|getPrefixEncodingFromUnsigned
+argument_list|(
+name|BD
+argument_list|)
+operator|<<
+literal|1
+operator|)
+expr_stmt|;
+return|return
+name|cloneWithDiscriminator
+argument_list|(
+name|D
 argument_list|)
 return|;
 block|}

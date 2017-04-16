@@ -55,6 +55,18 @@ directive|include
 file|"PDBTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBSymbolTypeVTable.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBSymbolTypeVTableShape.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -105,9 +117,9 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|getAccess
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getClassParentId
+argument|getClassParent
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(
@@ -137,9 +149,9 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|getLength
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getLexicalParentId
+argument|getLexicalParent
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(
@@ -165,9 +177,9 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|isScoped
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getTypeId
+argument|getType
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(
@@ -190,9 +202,9 @@ argument_list|(
 argument|getVirtualBasePointerOffset
 argument_list|)
 comment|// FORWARD_SYMBOL_METHOD(getVirtualBaseTableType)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getVirtualTableShapeId
+argument|getVirtualTableShape
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(

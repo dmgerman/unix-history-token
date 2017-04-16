@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerUnion.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -86,7 +86,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -97,19 +121,13 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
+name|MCContext
+decl_stmt|;
+name|class
 name|MCExpr
 decl_stmt|;
 name|class
-name|MCSymbol
-decl_stmt|;
-name|class
-name|MCFragment
-decl_stmt|;
-name|class
 name|MCSection
-decl_stmt|;
-name|class
-name|MCContext
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -138,6 +156,8 @@ block|,
 name|SymbolKindELF
 block|,
 name|SymbolKindMachO
+block|,
+name|SymbolKindWasm
 block|,   }
 enum|;
 comment|/// A symbol can contain an Offset, or Value, or be Common, but never more
@@ -233,7 +253,7 @@ comment|/// unsigned to avoid sign extension and achieve better bitpacking with 
 name|unsigned
 name|Kind
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/// True if we have created a relocation that uses this symbol.
 name|mutable
@@ -308,8 +328,6 @@ name|Value
 decl_stmt|;
 block|}
 union|;
-name|protected
-label|:
 comment|// MCContext creates and uniques these.
 name|friend
 name|class
@@ -496,26 +514,6 @@ literal|"Constructor throws?"
 argument_list|)
 expr_stmt|;
 block|}
-name|MCSymbol
-argument_list|(
-specifier|const
-name|MCSymbol
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCSymbol
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|MCSection
 modifier|*
 name|getSectionPtr
@@ -631,6 +629,27 @@ return|;
 block|}
 name|public
 label|:
+name|MCSymbol
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MCSymbol
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCSymbol
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 comment|/// getName - Get the symbol name.
 name|StringRef
 name|getName
@@ -980,6 +999,17 @@ return|return
 name|Kind
 operator|==
 name|SymbolKindMachO
+return|;
+block|}
+name|bool
+name|isWasm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|SymbolKindWasm
 return|;
 block|}
 comment|/// @}
@@ -1547,6 +1577,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCSYMBOL_H
+end_comment
 
 end_unit
 

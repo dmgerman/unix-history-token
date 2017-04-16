@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/SelectionDAGNodes.h - SelectionDAG Nodes ---*- C++ -*-===//
+comment|//===- llvm/CodeGen/SelectionDAGNodes.h - SelectionDAG Nodes ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -437,34 +437,30 @@ expr_stmt|;
 name|SDNode
 modifier|*
 name|Node
+init|=
+name|nullptr
 decl_stmt|;
 comment|// The node defining the value we are using.
 name|unsigned
 name|ResNo
+init|=
+literal|0
 decl_stmt|;
 comment|// Which return value of the node we are using.
 name|public
 label|:
 name|SDValue
 argument_list|()
-operator|:
-name|Node
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|ResNo
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|SDValue
 argument_list|(
 argument|SDNode *node
 argument_list|,
 argument|unsigned resno
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|/// get the index which selects a specific result in the SDNode
 name|unsigned
 name|getResNo
@@ -1069,6 +1065,8 @@ comment|/// User - The user of this value.
 name|SDNode
 modifier|*
 name|User
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// Prev, Next - Pointers to the uses list of the SDNode referred by
 comment|/// this operand.
@@ -1076,10 +1074,22 @@ name|SDUse
 modifier|*
 modifier|*
 name|Prev
-decl_stmt|,
+init|=
+name|nullptr
+decl_stmt|;
+name|SDUse
 modifier|*
 name|Next
+init|=
+name|nullptr
 decl_stmt|;
+name|public
+label|:
+name|SDUse
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|SDUse
 argument_list|(
 specifier|const
@@ -1090,38 +1100,18 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-name|void
+name|SDUse
+modifier|&
 name|operator
 init|=
 operator|(
 specifier|const
 name|SDUse
 operator|&
-name|U
 operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|public
-label|:
-name|SDUse
-argument_list|()
-operator|:
-name|User
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Prev
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Next
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
 comment|/// Normally SDUse will just implicitly convert to an SDValue that it holds.
 name|operator
 specifier|const
@@ -1495,158 +1485,168 @@ name|VectorReduction
 range|:
 literal|1
 decl_stmt|;
+name|bool
+name|AllowContract
+range|:
+literal|1
+decl_stmt|;
 name|public
 label|:
 comment|/// Default constructor turns off all optimization flags.
 name|SDNodeFlags
 argument_list|()
-block|{
+operator|:
 name|NoUnsignedWrap
-operator|=
+argument_list|(
 name|false
-expr_stmt|;
+argument_list|)
+operator|,
 name|NoSignedWrap
-operator|=
+argument_list|(
 name|false
-expr_stmt|;
+argument_list|)
+operator|,
 name|Exact
-operator|=
+argument_list|(
 name|false
-expr_stmt|;
+argument_list|)
+operator|,
 name|UnsafeAlgebra
-operator|=
+argument_list|(
 name|false
-expr_stmt|;
+argument_list|)
+operator|,
 name|NoNaNs
-operator|=
+argument_list|(
 name|false
-expr_stmt|;
+argument_list|)
+operator|,
 name|NoInfs
-operator|=
+argument_list|(
 name|false
-expr_stmt|;
+argument_list|)
+operator|,
 name|NoSignedZeros
-operator|=
+argument_list|(
 name|false
-expr_stmt|;
+argument_list|)
+operator|,
 name|AllowReciprocal
-operator|=
+argument_list|(
 name|false
-expr_stmt|;
+argument_list|)
+operator|,
 name|VectorReduction
-operator|=
+argument_list|(
 name|false
-expr_stmt|;
-block|}
+argument_list|)
+operator|,
+name|AllowContract
+argument_list|(
+argument|false
+argument_list|)
+block|{}
 comment|// These are mutators for each flag.
 name|void
 name|setNoUnsignedWrap
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
+argument_list|(
+argument|bool b
+argument_list|)
 block|{
 name|NoUnsignedWrap
 operator|=
 name|b
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setNoSignedWrap
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
+argument_list|(
+argument|bool b
+argument_list|)
 block|{
 name|NoSignedWrap
 operator|=
 name|b
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setExact
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
+argument_list|(
+argument|bool b
+argument_list|)
 block|{
 name|Exact
 operator|=
 name|b
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setUnsafeAlgebra
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
+argument_list|(
+argument|bool b
+argument_list|)
 block|{
 name|UnsafeAlgebra
 operator|=
 name|b
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setNoNaNs
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
+argument_list|(
+argument|bool b
+argument_list|)
 block|{
 name|NoNaNs
 operator|=
 name|b
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setNoInfs
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
+argument_list|(
+argument|bool b
+argument_list|)
 block|{
 name|NoInfs
 operator|=
 name|b
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setNoSignedZeros
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
+argument_list|(
+argument|bool b
+argument_list|)
 block|{
 name|NoSignedZeros
 operator|=
 name|b
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setAllowReciprocal
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
+argument_list|(
+argument|bool b
+argument_list|)
 block|{
 name|AllowReciprocal
 operator|=
 name|b
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setVectorReduction
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
+argument_list|(
+argument|bool b
+argument_list|)
 block|{
 name|VectorReduction
 operator|=
 name|b
-expr_stmt|;
-block|}
+block|; }
+name|void
+name|setAllowContract
+argument_list|(
+argument|bool b
+argument_list|)
+block|{
+name|AllowContract
+operator|=
+name|b
+block|; }
 comment|// These are accessors for each flag.
 name|bool
 name|hasNoUnsignedWrap
@@ -1729,6 +1729,15 @@ return|return
 name|VectorReduction
 return|;
 block|}
+name|bool
+name|hasAllowContract
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AllowContract
+return|;
+block|}
 comment|/// Clear any flags in this flag set that aren't also set in Flags.
 name|void
 name|intersectWith
@@ -1786,6 +1795,18 @@ operator|&=
 name|Flags
 operator|->
 name|AllowReciprocal
+expr_stmt|;
+name|VectorReduction
+operator|&=
+name|Flags
+operator|->
+name|VectorReduction
+expr_stmt|;
+name|AllowContract
+operator|&=
+name|Flags
+operator|->
+name|AllowContract
 expr_stmt|;
 block|}
 block|}
@@ -2117,14 +2138,28 @@ argument_list|)
 expr_stmt|;
 name|private
 label|:
+name|friend
+name|class
+name|SelectionDAG
+decl_stmt|;
+comment|// TODO: unfriend HandleSDNode once we fix its operand handling.
+name|friend
+name|class
+name|HandleSDNode
+decl_stmt|;
 comment|/// Unique id per SDNode in the DAG.
 name|int
 name|NodeId
+init|=
+operator|-
+literal|1
 decl_stmt|;
 comment|/// The values that are used by this operation.
 name|SDUse
 modifier|*
 name|OperandList
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// The types of the values this node defines.  SDNode's may
 comment|/// define multiple values simultaneously.
@@ -2137,12 +2172,18 @@ comment|/// List of uses for this SDNode.
 name|SDUse
 modifier|*
 name|UseList
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// The number of entries in the Operand/Value list.
 name|unsigned
 name|short
 name|NumOperands
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
+name|short
 name|NumValues
 decl_stmt|;
 comment|// The ordering of the SDNodes. It roughly corresponds to the ordering of the
@@ -2168,15 +2209,6 @@ name|EVT
 name|VT
 parameter_list|)
 function_decl|;
-name|friend
-name|class
-name|SelectionDAG
-decl_stmt|;
-comment|// TODO: unfriend HandleSDNode once we fix its operand handling.
-name|friend
-name|class
-name|HandleSDNode
-decl_stmt|;
 name|public
 label|:
 comment|/// Unique and persistent id per SDNode in the DAG.
@@ -2489,13 +2521,15 @@ decl_stmt|,
 name|ptrdiff_t
 decl|>
 block|{
-name|SDUse
-modifier|*
-name|Op
-decl_stmt|;
 name|friend
 name|class
 name|SDNode
+decl_stmt|;
+name|SDUse
+modifier|*
+name|Op
+init|=
+name|nullptr
 decl_stmt|;
 name|explicit
 name|use_iterator
@@ -2547,6 +2581,11 @@ name|pointer
 name|pointer
 expr_stmt|;
 name|use_iterator
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|use_iterator
 argument_list|(
 specifier|const
 name|use_iterator
@@ -2557,14 +2596,6 @@ operator|:
 name|Op
 argument_list|(
 argument|I.Op
-argument_list|)
-block|{}
-name|use_iterator
-argument_list|()
-operator|:
-name|Op
-argument_list|(
-argument|nullptr
 argument_list|)
 block|{}
 name|bool
@@ -3125,6 +3156,35 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Return true if all the users of N are contained in Nodes.
+end_comment
+
+begin_comment
+comment|/// NOTE: Requires at least one match, but doesn't require them all.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|areOnlyUsersOf
+argument_list|(
+name|ArrayRef
+operator|<
+specifier|const
+name|SDNode
+operator|*
+operator|>
+name|Nodes
+argument_list|,
+specifier|const
+name|SDNode
+operator|*
+name|N
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return the number of values used by this operation.
 end_comment
 
@@ -3145,6 +3205,7 @@ comment|/// Helper method returns the integer value of a ConstantSDNode operand.
 end_comment
 
 begin_decl_stmt
+specifier|inline
 name|uint64_t
 name|getConstantOperandVal
 argument_list|(
@@ -4092,32 +4153,11 @@ argument_list|(
 name|Opc
 argument_list|)
 operator|,
-name|NodeId
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-operator|,
-name|OperandList
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|ValueList
 argument_list|(
 name|VTs
 operator|.
 name|VTs
-argument_list|)
-operator|,
-name|UseList
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|NumOperands
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|NumValues
@@ -6358,14 +6398,14 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 specifier|const
 name|ConstantInt
 operator|*
 name|Value
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 name|ConstantSDNode
 argument_list|(
@@ -6540,20 +6580,45 @@ return|;
 block|}
 expr|}
 block|;
+name|uint64_t
+name|SDNode
+operator|::
+name|getConstantOperandVal
+argument_list|(
+argument|unsigned Num
+argument_list|)
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|ConstantSDNode
+operator|>
+operator|(
+name|getOperand
+argument_list|(
+name|Num
+argument_list|)
+operator|)
+operator|->
+name|getZExtValue
+argument_list|()
+return|;
+block|}
 name|class
 name|ConstantFPSDNode
 operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 specifier|const
 name|ConstantFP
 operator|*
 name|Value
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 name|ConstantFPSDNode
 argument_list|(
@@ -6825,6 +6890,10 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 specifier|const
 name|GlobalValue
 operator|*
@@ -6836,10 +6905,6 @@ block|;
 name|unsigned
 name|char
 name|TargetFlags
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 name|GlobalAddressSDNode
 argument_list|(
@@ -6949,12 +7014,12 @@ operator|:
 name|public
 name|SDNode
 block|{
-name|int
-name|FI
-block|;
 name|friend
 name|class
 name|SelectionDAG
+block|;
+name|int
+name|FI
 block|;
 name|FrameIndexSDNode
 argument_list|(
@@ -7039,16 +7104,16 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 name|int
 name|JTI
 block|;
 name|unsigned
 name|char
 name|TargetFlags
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 name|JumpTableSDNode
 argument_list|(
@@ -7150,6 +7215,10 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 expr|union
 block|{
 specifier|const
@@ -7174,10 +7243,6 @@ comment|// Minimum alignment requirement of CP (not log2 value).
 name|unsigned
 name|char
 name|TargetFlags
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 name|ConstantPoolSDNode
 argument_list|(
@@ -7473,6 +7538,10 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 name|unsigned
 name|char
 name|TargetFlags
@@ -7482,10 +7551,6 @@ name|Index
 block|;
 name|int64_t
 name|Offset
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 name|public
 operator|:
@@ -7586,13 +7651,13 @@ operator|:
 name|public
 name|SDNode
 block|{
-name|MachineBasicBlock
-operator|*
-name|MBB
-block|;
 name|friend
 name|class
 name|SelectionDAG
+block|;
+name|MachineBasicBlock
+operator|*
+name|MBB
 block|;
 comment|/// Debug info is meaningful and potentially useful here, but we create
 comment|/// blocks out of order when they're jumped to, which makes it a bit
@@ -7668,6 +7733,8 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|public
+operator|:
 comment|// These are constructed as SDNodes and then cast to BuildVectorSDNodes.
 name|explicit
 name|BuildVectorSDNode
@@ -7675,8 +7742,6 @@ argument_list|()
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 comment|/// Check if this is a constant splat, and if so, find the
 comment|/// smallest element size that splats the vector.  If MinSplatBits is
 comment|/// nonzero, the element size must be at least that large.  Note that the
@@ -7791,14 +7856,14 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 specifier|const
 name|Value
 operator|*
 name|V
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 comment|/// Create a SrcValue for a general value.
 name|explicit
@@ -7874,14 +7939,14 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 specifier|const
 name|MDNode
 operator|*
 name|MD
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 name|explicit
 name|MDNodeSDNode
@@ -7955,12 +8020,12 @@ operator|:
 name|public
 name|SDNode
 block|{
-name|unsigned
-name|Reg
-block|;
 name|friend
 name|class
 name|SelectionDAG
+block|;
+name|unsigned
+name|Reg
 block|;
 name|RegisterSDNode
 argument_list|(
@@ -8028,15 +8093,15 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 comment|// The memory for RegMask is not owned by the node.
 specifier|const
 name|uint32_t
 operator|*
 name|RegMask
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 name|RegisterMaskSDNode
 argument_list|(
@@ -8109,6 +8174,10 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 specifier|const
 name|BlockAddress
 operator|*
@@ -8120,10 +8189,6 @@ block|;
 name|unsigned
 name|char
 name|TargetFlags
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 name|BlockAddressSDNode
 argument_list|(
@@ -8235,13 +8300,13 @@ operator|:
 name|public
 name|SDNode
 block|{
-name|MCSymbol
-operator|*
-name|Label
-block|;
 name|friend
 name|class
 name|SelectionDAG
+block|;
+name|MCSymbol
+operator|*
+name|Label
 block|;
 name|EHLabelSDNode
 argument_list|(
@@ -8313,6 +8378,10 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 specifier|const
 name|char
 operator|*
@@ -8321,10 +8390,6 @@ block|;
 name|unsigned
 name|char
 name|TargetFlags
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 name|ExternalSymbolSDNode
 argument_list|(
@@ -8428,13 +8493,13 @@ operator|:
 name|public
 name|SDNode
 block|{
-name|MCSymbol
-operator|*
-name|Symbol
-block|;
 name|friend
 name|class
 name|SelectionDAG
+block|;
+name|MCSymbol
+operator|*
+name|Symbol
 block|;
 name|MCSymbolSDNode
 argument_list|(
@@ -8503,14 +8568,14 @@ operator|:
 name|public
 name|SDNode
 block|{
+name|friend
+name|class
+name|SelectionDAG
+block|;
 name|ISD
 operator|::
 name|CondCode
 name|Condition
-block|;
-name|friend
-name|class
-name|SelectionDAG
 block|;
 name|explicit
 name|CondCodeSDNode
@@ -8583,12 +8648,12 @@ operator|:
 name|public
 name|SDNode
 block|{
-name|EVT
-name|ValueType
-block|;
 name|friend
 name|class
 name|SelectionDAG
+block|;
+name|EVT
+name|ValueType
 block|;
 name|explicit
 name|VTSDNode
@@ -9741,31 +9806,25 @@ argument_list|)
 operator|:
 name|SDNode
 argument_list|(
-name|Opc
+argument|Opc
 argument_list|,
-name|Order
+argument|Order
 argument_list|,
-name|DL
+argument|DL
 argument_list|,
-name|VTs
-argument_list|)
-block|,
-name|MemRefs
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|MemRefsEnd
-argument_list|(
-argument|nullptr
+argument|VTs
 argument_list|)
 block|{}
 comment|/// Memory reference descriptions for this instruction.
 name|mmo_iterator
 name|MemRefs
+operator|=
+name|nullptr
 block|;
 name|mmo_iterator
 name|MemRefsEnd
+operator|=
+name|nullptr
 block|;
 name|public
 operator|:

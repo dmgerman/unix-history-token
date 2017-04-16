@@ -2012,9 +2012,7 @@ name|Materializer
 init|=
 name|createLambdaMaterializer
 argument_list|(
-argument|[this
-argument_list|,
-argument|&LD
+argument|[&LD
 argument_list|,
 argument|&GVsM](Value *V) -> Value* {         if (auto *F = dyn_cast<Function>(V)) {
 comment|// Decls in the original module just get cloned.
@@ -2157,8 +2155,6 @@ name|this
 operator|,
 operator|&
 name|LD
-operator|,
-name|LMId
 index|]
 operator|(
 specifier|const
@@ -2620,15 +2616,11 @@ name|Materializer
 init|=
 name|createLambdaMaterializer
 argument_list|(
-argument|[this
-argument_list|,
-argument|&LD
+argument|[&LD
 argument_list|,
 argument|&LMId
 argument_list|,
-argument|&M
-argument_list|,
-argument|&VMap](Value *V) -> Value * {       if (auto *GV = dyn_cast<GlobalVariable>(V))         return cloneGlobalVariableDecl(*M, *GV);        if (auto *F = dyn_cast<Function>(V)) {
+argument|&M](Value *V) -> Value * {       if (auto *GV = dyn_cast<GlobalVariable>(V))         return cloneGlobalVariableDecl(*M, *GV);        if (auto *F = dyn_cast<Function>(V)) {
 comment|// Check whether we want to clone an available_externally definition.
 argument|if (!LD.getStubsToClone(LMId).count(F))           return cloneFunctionDecl(*M, *F);
 comment|// Ok - we want an inlinable stub. For that to work we need a decl
@@ -2708,8 +2700,6 @@ name|this
 operator|,
 operator|&
 name|LD
-operator|,
-name|LMId
 index|]
 operator|(
 specifier|const
@@ -2754,8 +2744,6 @@ end_decl_stmt
 begin_expr_stmt
 unit|},
 index|[
-name|this
-operator|,
 operator|&
 name|LD
 index|]

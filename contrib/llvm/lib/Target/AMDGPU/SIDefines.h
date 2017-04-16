@@ -134,6 +134,12 @@ literal|1
 operator|<<
 literal|10
 block|,
+name|VOP3P
+init|=
+literal|1
+operator|<<
+literal|12
+block|,
 name|VINTRP
 init|=
 literal|1
@@ -298,6 +304,15 @@ literal|1
 argument_list|)
 operator|<<
 literal|41
+block|,
+name|HasFPClamp
+init|=
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|42
 block|}
 enum_decl|;
 comment|// v_cmp_class_* etc. use a 10-bit mask for what operation is checked.
@@ -413,6 +428,10 @@ name|OPERAND_REG_INLINE_C_FP32
 block|,
 name|OPERAND_REG_INLINE_C_FP64
 block|,
+name|OPERAND_REG_INLINE_C_V2FP16
+block|,
+name|OPERAND_REG_INLINE_C_V2INT16
+block|,
 name|OPERAND_REG_IMM_FIRST
 init|=
 name|OPERAND_REG_IMM_INT32
@@ -427,7 +446,7 @@ name|OPERAND_REG_INLINE_C_INT16
 block|,
 name|OPERAND_REG_INLINE_C_LAST
 init|=
-name|OPERAND_REG_INLINE_C_FP64
+name|OPERAND_REG_INLINE_C_V2INT16
 block|,
 name|OPERAND_SRC_FIRST
 init|=
@@ -473,7 +492,24 @@ init|=
 literal|1
 operator|<<
 literal|0
+block|,
 comment|// Integer sign-extend modifier
+name|NEG_HI
+init|=
+name|ABS
+block|,
+comment|// Floating-point negate high packed component modifier.
+name|OP_SEL_0
+init|=
+literal|1
+operator|<<
+literal|2
+block|,
+name|OP_SEL_1
+init|=
+literal|1
+operator|<<
+literal|3
 block|}
 enum|;
 block|}
@@ -858,6 +894,10 @@ name|ID_SYMBOLIC_LAST_
 init|=
 literal|8
 block|,
+name|ID_MEM_BASES
+init|=
+literal|15
+block|,
 name|ID_SHIFT_
 init|=
 literal|0
@@ -914,6 +954,14 @@ operator|)
 operator|<<
 name|OFFSET_SHIFT_
 operator|)
+block|,
+name|OFFSET_SRC_SHARED_BASE
+init|=
+literal|16
+block|,
+name|OFFSET_SRC_PRIVATE_BASE
+init|=
+literal|0
 block|}
 enum|;
 enum|enum
@@ -947,6 +995,14 @@ operator|)
 operator|<<
 name|WIDTH_M1_SHIFT_
 operator|)
+block|,
+name|WIDTH_M1_SRC_SHARED_BASE
+init|=
+literal|15
+block|,
+name|WIDTH_M1_SRC_PRIVATE_BASE
+init|=
+literal|15
 block|}
 enum|;
 block|}
@@ -1087,6 +1143,24 @@ define|#
 directive|define
 name|C_00B84C_USER_SGPR
 value|0xFFFFFFC1
+define|#
+directive|define
+name|S_00B84C_TRAP_HANDLER
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x1)<< 6)
+define|#
+directive|define
+name|G_00B84C_TRAP_HANDLER
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 6)& 0x1)
+define|#
+directive|define
+name|C_00B84C_TRAP_HANDLER
+value|0xFFFFFFBF
 define|#
 directive|define
 name|S_00B84C_TGID_X_EN

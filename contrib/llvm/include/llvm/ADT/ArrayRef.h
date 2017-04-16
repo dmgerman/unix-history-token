@@ -2716,6 +2716,66 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// Construct a MutableArrayRef from a single element.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|MutableArrayRef
+operator|<
+name|T
+operator|>
+name|makeMutableArrayRef
+argument_list|(
+argument|T&OneElt
+argument_list|)
+block|{
+return|return
+name|OneElt
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Construct a MutableArrayRef from a pointer and length.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|MutableArrayRef
+operator|<
+name|T
+operator|>
+name|makeMutableArrayRef
+argument_list|(
+argument|T *data
+argument_list|,
+argument|size_t length
+argument_list|)
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|T
+operator|>
+operator|(
+name|data
+operator|,
+name|length
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @}
 end_comment
 

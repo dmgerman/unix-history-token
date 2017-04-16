@@ -36,11 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file implements the ScheduleDAGInstrs class, which implements
+comment|/// \file Implements the ScheduleDAGInstrs class, which implements scheduling
 end_comment
 
 begin_comment
-comment|// scheduling for a MachineInstr-based dependency graph.
+comment|/// for a MachineInstr-based dependency graph.
 end_comment
 
 begin_comment
@@ -399,8 +399,7 @@ literal|4
 operator|>
 name|UnderlyingObjectsVector
 expr_stmt|;
-comment|/// ScheduleDAGInstrs - A ScheduleDAG subclass for scheduling lists of
-comment|/// MachineInstrs.
+comment|/// A ScheduleDAG for scheduling lists of MachineInstr.
 name|class
 name|ScheduleDAGInstrs
 range|:
@@ -440,8 +439,8 @@ comment|/// Whether lane masks should get tracked.
 name|bool
 name|TrackLaneMasks
 block|;
-comment|/// State specific to the current scheduling region.
-comment|/// ------------------------------------------------
+comment|// State specific to the current scheduling region.
+comment|// ------------------------------------------------
 comment|/// The block in which to insert instructions
 name|MachineBasicBlock
 operator|*
@@ -475,8 +474,8 @@ operator|*
 operator|>
 name|MISUnitMap
 block|;
-comment|/// State internal to DAG building.
-comment|/// -------------------------------
+comment|// State internal to DAG building.
+comment|// -------------------------------
 comment|/// Defs, Uses - Remember where defs and uses of each register are as we
 comment|/// iterate upward through the instructions. This is allocated here instead
 comment|/// of inside BuildSchedGraph to avoid the need for it to be initialized and
@@ -527,13 +526,15 @@ name|SUList
 expr_stmt|;
 name|protected
 operator|:
-comment|/// A map from ValueType to SUList, used during DAG construction,
-comment|/// as a means of remembering which SUs depend on which memory
-comment|/// locations.
+comment|/// \brief A map from ValueType to SUList, used during DAG construction, as
+comment|/// a means of remembering which SUs depend on which memory locations.
 name|class
 name|Value2SUsMap
 decl_stmt|;
-comment|/// Remove in FIFO order some SUs from huge maps.
+comment|/// Reduces maps in FIFO order, by N SUs. This is better than turning
+comment|/// every Nth memory SU into BarrierChain in buildSchedGraph(), since
+comment|/// it avoids unnecessary edges between seen SUs above the new BarrierChain,
+comment|/// and those below it.
 name|void
 name|reduceHugeMemNodeMaps
 parameter_list|(
@@ -549,8 +550,8 @@ name|unsigned
 name|N
 parameter_list|)
 function_decl|;
-comment|/// Add a chain edge between SUa and SUb, but only if both AliasAnalysis
-comment|/// and Target fail to deny the dependency.
+comment|/// \brief Adds a chain edge between SUa and SUb, but only if both
+comment|/// AliasAnalysis and Target fail to deny the dependency.
 name|void
 name|addChainDependency
 parameter_list|(
@@ -568,7 +569,7 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// Add dependencies as needed from all SUs in list to SU.
+comment|/// Adds dependencies as needed from all SUs in list to SU.
 name|void
 name|addChainDependencies
 parameter_list|(
@@ -578,7 +579,7 @@ name|SU
 parameter_list|,
 name|SUList
 modifier|&
-name|sus
+name|SUs
 parameter_list|,
 name|unsigned
 name|Latency
@@ -586,23 +587,23 @@ parameter_list|)
 block|{
 for|for
 control|(
-name|auto
-operator|*
-name|su
-operator|:
-name|sus
+name|SUnit
+modifier|*
+name|Entry
+range|:
+name|SUs
 control|)
 name|addChainDependency
 argument_list|(
 name|SU
 argument_list|,
-name|su
+name|Entry
 argument_list|,
 name|Latency
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Add dependencies as needed from all SUs in map, to SU.
+comment|/// Adds dependencies as needed from all SUs in map, to SU.
 name|void
 name|addChainDependencies
 parameter_list|(
@@ -615,7 +616,7 @@ modifier|&
 name|Val2SUsMap
 parameter_list|)
 function_decl|;
-comment|/// Add dependencies as needed to SU, from all SUs mapped to V.
+comment|/// Adds dependencies as needed to SU, from all SUs mapped to V.
 name|void
 name|addChainDependencies
 parameter_list|(
@@ -631,12 +632,11 @@ name|ValueType
 name|V
 parameter_list|)
 function_decl|;
-comment|/// Add barrier chain edges from all SUs in map, and then clear
-comment|/// the map. This is equivalent to insertBarrierChain(), but
-comment|/// optimized for the common case where the new BarrierChain (a
-comment|/// global memory object) has a higher NodeNum than all SUs in
-comment|/// map. It is assumed BarrierChain has been set before calling
-comment|/// this.
+comment|/// Adds barrier chain edges from all SUs in map, and then clear the map.
+comment|/// This is equivalent to insertBarrierChain(), but optimized for the common
+comment|/// case where the new BarrierChain (a global memory object) has a higher
+comment|/// NodeNum than all SUs in map. It is assumed BarrierChain has been set
+comment|/// before calling this.
 name|void
 name|addBarrierChain
 parameter_list|(
@@ -645,11 +645,10 @@ modifier|&
 name|map
 parameter_list|)
 function_decl|;
-comment|/// Insert a barrier chain in a huge region, far below current
-comment|/// SU. Add barrier chain edges from all SUs in map with higher
-comment|/// NodeNums than this new BarrierChain, and remove them from
-comment|/// map. It is assumed BarrierChain has been set before calling
-comment|/// this.
+comment|/// Inserts a barrier chain in a huge region, far below current SU.
+comment|/// Adds barrier chain edges from all SUs in map with higher NodeNums than
+comment|/// this new BarrierChain, and remove them from map. It is assumed
+comment|/// BarrierChain has been set before calling this.
 name|void
 name|insertBarrierChain
 parameter_list|(
@@ -663,9 +662,6 @@ name|UndefValue
 modifier|*
 name|UnknownValue
 decl_stmt|;
-comment|/// DbgValues - Remember instruction that precedes DBG_VALUE.
-comment|/// These are generated by buildSchedGraph but persist so they can be
-comment|/// referenced when emitting the final schedule.
 typedef|typedef
 name|std
 operator|::
@@ -680,10 +676,12 @@ operator|*
 operator|,
 name|MachineInstr
 operator|*
-operator|>
-expr|>
+operator|>>
 name|DbgValueVector
 expr_stmt|;
+comment|/// Remember instruction that precedes DBG_VALUE.
+comment|/// These are generated by buildSchedGraph but persist so they can be
+comment|/// referenced when emitting the final schedule.
 name|DbgValueVector
 name|DbgValues
 decl_stmt|;
@@ -720,7 +718,7 @@ name|ScheduleDAGInstrs
 argument_list|()
 name|override
 block|{}
-comment|/// \brief Get the machine model for instruction scheduling.
+comment|/// Gets the machine model for instruction scheduling.
 specifier|const
 name|TargetSchedModel
 operator|*
@@ -733,7 +731,7 @@ operator|&
 name|SchedModel
 return|;
 block|}
-comment|/// \brief Resolve and cache a resolved scheduling class for an SUnit.
+comment|/// Resolves and cache a resolved scheduling class for an SUnit.
 specifier|const
 name|MCSchedClassDesc
 modifier|*
@@ -777,7 +775,7 @@ operator|->
 name|SchedClass
 return|;
 block|}
-comment|/// begin - Return an iterator to the top of the current scheduling region.
+comment|/// Returns an iterator to the top of the current scheduling region.
 name|MachineBasicBlock
 operator|::
 name|iterator
@@ -789,7 +787,7 @@ return|return
 name|RegionBegin
 return|;
 block|}
-comment|/// end - Return an iterator to the bottom of the current scheduling region.
+comment|/// Returns an iterator to the bottom of the current scheduling region.
 name|MachineBasicBlock
 operator|::
 name|iterator
@@ -801,7 +799,7 @@ return|return
 name|RegionEnd
 return|;
 block|}
-comment|/// newSUnit - Creates a new SUnit and return a ptr to it.
+comment|/// Creates a new SUnit and return a ptr to it.
 name|SUnit
 modifier|*
 name|newSUnit
@@ -811,7 +809,7 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-comment|/// getSUnit - Return an existing SUnit for this MI, or NULL.
+comment|/// Returns an existing SUnit for this MI, or nullptr.
 name|SUnit
 modifier|*
 name|getSUnit
@@ -822,7 +820,7 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// startBlock - Prepare to perform scheduling in the given block.
+comment|/// Prepares to perform scheduling in the given block.
 name|virtual
 name|void
 name|startBlock
@@ -832,13 +830,16 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
-comment|/// finishBlock - Clean up after scheduling in the given block.
+comment|/// Cleans up after scheduling in the given block.
 name|virtual
 name|void
 name|finishBlock
 parameter_list|()
 function_decl|;
-comment|/// Initialize the scheduler state for the next scheduling region.
+comment|/// \brief Initialize the DAG and common scheduler state for a new
+comment|/// scheduling region. This does not actually create the DAG, only clears
+comment|/// it. The scheduling driver may call BuildSchedGraph multiple times per
+comment|/// scheduling region.
 name|virtual
 name|void
 name|enterRegion
@@ -861,14 +862,16 @@ name|unsigned
 name|regioninstrs
 argument_list|)
 decl_stmt|;
-comment|/// Notify that the scheduler has finished scheduling the current region.
+comment|/// Called when the scheduler has finished scheduling the current region.
 name|virtual
 name|void
 name|exitRegion
 parameter_list|()
 function_decl|;
-comment|/// buildSchedGraph - Build SUnits from the MachineBasicBlock that we are
-comment|/// input.
+comment|/// Builds SUnits for the current region.
+comment|/// If \p RPTracker is non-null, compute register pressure as a side effect.
+comment|/// The DAG builder is an efficient place to do it because it already visits
+comment|/// operands.
 name|void
 name|buildSchedGraph
 parameter_list|(
@@ -900,19 +903,18 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// addSchedBarrierDeps - Add dependencies from instructions in the current
-comment|/// list of instructions being scheduled to scheduling barrier. We want to
-comment|/// make sure instructions which define registers that are either used by
-comment|/// the terminator or are live-out are properly scheduled. This is
-comment|/// especially important when the definition latency of the return value(s)
-comment|/// are too high to be hidden by the branch or when the liveout registers
-comment|/// used by instructions in the fallthrough block.
+comment|/// \brief Adds dependencies from instructions in the current list of
+comment|/// instructions being scheduled to scheduling barrier. We want to make sure
+comment|/// instructions which define registers that are either used by the
+comment|/// terminator or are live-out are properly scheduled. This is especially
+comment|/// important when the definition latency of the return value(s) are too
+comment|/// high to be hidden by the branch or when the liveout registers used by
+comment|/// instructions in the fallthrough block.
 name|void
 name|addSchedBarrierDeps
 parameter_list|()
 function_decl|;
-comment|/// schedule - Order nodes according to selected style, filling
-comment|/// in the Sequence member.
+comment|/// Orders nodes according to selected style.
 comment|///
 comment|/// Typically, a scheduling algorithm will implement schedule() without
 comment|/// overriding enterRegion() or exitRegion().
@@ -923,8 +925,8 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// finalizeSchedule - Allow targets to perform final scheduling actions at
-comment|/// the level of the whole MachineFunction. By default does nothing.
+comment|/// Allow targets to perform final scheduling actions at the level of the
+comment|/// whole MachineFunction. By default does nothing.
 name|virtual
 name|void
 name|finalizeSchedule
@@ -941,7 +943,7 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-comment|/// Return a label for a DAG node that points to an instruction.
+comment|/// Returns a label for a DAG node that points to an instruction.
 name|std
 operator|::
 name|string
@@ -952,7 +954,7 @@ argument_list|)
 specifier|const
 name|override
 expr_stmt|;
-comment|/// Return a label for the region of code covered by the DAG.
+comment|/// Returns a label for the region of code covered by the DAG.
 name|std
 operator|::
 name|string
@@ -961,7 +963,7 @@ argument_list|()
 specifier|const
 name|override
 expr_stmt|;
-comment|/// \brief Fix register kill flags that scheduling has made invalid.
+comment|/// Fixes register kill flags that scheduling has made invalid.
 name|void
 name|fixupKills
 parameter_list|(
@@ -1020,7 +1022,8 @@ name|unsigned
 name|OperIdx
 parameter_list|)
 function_decl|;
-comment|/// \brief PostRA helper for rewriting kill flags.
+comment|/// Initializes register live-range state for updating kills.
+comment|/// PostRA helper for rewriting kill flags.
 name|void
 name|startBlockForKills
 parameter_list|(
@@ -1029,15 +1032,15 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
-comment|/// \brief Toggle a register operand kill flag.
+comment|/// Toggles a register operand kill flag.
 comment|///
 comment|/// Other adjustments may be made to the instruction if necessary. Return
 comment|/// true if the operand has been deleted, false if not.
-name|bool
+name|void
 name|toggleKillFlag
 parameter_list|(
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|,
 name|MachineOperand
@@ -1065,7 +1068,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// newSUnit - Creates a new SUnit and return a ptr to it.
+comment|/// Creates a new SUnit and return a ptr to it.
 end_comment
 
 begin_expr_stmt
@@ -1147,7 +1150,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getSUnit - Return an existing SUnit for this MI, or NULL.
+comment|/// Returns an existing SUnit for this MI, or nullptr.
 end_comment
 
 begin_expr_stmt
@@ -1205,7 +1208,7 @@ end_return
 
 begin_comment
 unit|} }
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

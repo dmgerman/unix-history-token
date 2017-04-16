@@ -268,6 +268,15 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// LoopPredication - This pass does loop predication on guards.
+comment|//
+name|Pass
+modifier|*
+name|createLoopPredicationPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// LoopInterchange - This pass interchanges loops to provide a more
 comment|// cache-friendly memory access patterns.
 comment|//
@@ -298,6 +307,11 @@ name|bool
 name|OptimizeForSize
 init|=
 name|false
+parameter_list|,
+name|bool
+name|hasBranchDivergence
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -317,6 +331,11 @@ name|Pass
 modifier|*
 name|createLoopUnrollPass
 parameter_list|(
+name|int
+name|OptLevel
+init|=
+literal|2
+parameter_list|,
 name|int
 name|Threshold
 init|=
@@ -352,7 +371,12 @@ comment|// Create an unrolling pass for full unrolling that uses exact trip coun
 name|Pass
 modifier|*
 name|createSimpleLoopUnrollPass
-parameter_list|()
+parameter_list|(
+name|int
+name|OptLevel
+init|=
+literal|2
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -466,6 +490,37 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createCFGSimplificationPass
+argument_list|(
+name|int
+name|Threshold
+operator|=
+operator|-
+literal|1
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+specifier|const
+name|Function
+operator|&
+argument_list|)
+operator|>
+name|Ftor
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LateCFGSimplification - Like CFGSimplification, but may also
+comment|// convert switches to lookup tables.
+comment|//
+name|FunctionPass
+modifier|*
+name|createLateCFGSimplificationPass
 argument_list|(
 name|int
 name|Threshold
@@ -734,6 +789,22 @@ modifier|*
 name|createCorrelatedValuePropagationPass
 parameter_list|()
 function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// InferAddressSpaces - Modify users of addrspacecast instructions with values
+comment|// in the source address space if using the destination address space is slower
+comment|// on the target.
+comment|//
+name|FunctionPass
+modifier|*
+name|createInferAddressSpacesPass
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|&
+name|InferAddressSpacesID
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
 comment|// InstructionSimplifier - Remove redundant instructions.

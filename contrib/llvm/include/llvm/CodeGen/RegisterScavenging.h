@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterScavenging.h - Machine register scavenging ------*- C++ -*-===//
+comment|//===- RegisterScavenging.h - Machine register scavenging -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -84,6 +84,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/LiveRegUnits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -93,21 +105,27 @@ directive|include
 file|"llvm/CodeGen/MachineRegisterInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/LaneBitmask.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|MachineRegisterInfo
-decl_stmt|;
-name|class
-name|TargetRegisterInfo
+name|MachineInstr
 decl_stmt|;
 name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
 name|TargetRegisterClass
+decl_stmt|;
+name|class
+name|TargetRegisterInfo
 decl_stmt|;
 name|class
 name|RegScavenger
@@ -129,6 +147,8 @@ decl_stmt|;
 name|MachineBasicBlock
 modifier|*
 name|MBB
+init|=
+name|nullptr
 decl_stmt|;
 name|MachineBasicBlock
 operator|::
@@ -137,10 +157,14 @@ name|MBBI
 expr_stmt|;
 name|unsigned
 name|NumRegUnits
+init|=
+literal|0
 decl_stmt|;
 comment|/// True if RegScavenger is currently tracking the liveness of registers.
 name|bool
 name|Tracking
+init|=
+name|false
 decl_stmt|;
 comment|/// Information on scavenged registers (held in a spill slot).
 struct|struct
@@ -154,33 +178,27 @@ argument_list|)
 block|:
 name|FrameIndex
 argument_list|(
-name|FI
-argument_list|)
-operator|,
-name|Reg
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Restore
-argument_list|(
-argument|nullptr
+argument|FI
 argument_list|)
 block|{}
 comment|/// A spill slot used for scavenging a register post register allocation.
 name|int
 name|FrameIndex
-expr_stmt|;
+decl_stmt|;
 comment|/// If non-zero, the specific register is currently being
 comment|/// scavenged. That is, it is spilled to this scavenging stack slot.
 name|unsigned
 name|Reg
+init|=
+literal|0
 decl_stmt|;
 comment|/// The instruction that restores the scavenged register from stack.
 specifier|const
 name|MachineInstr
 modifier|*
 name|Restore
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 struct|;
@@ -193,11 +211,8 @@ literal|2
 operator|>
 name|Scavenged
 expr_stmt|;
-comment|/// The current state of each reg unit immediately before MBBI.
-comment|/// One bit per register unit. If bit is not set it means any
-comment|/// register containing that register unit is currently being used.
-name|BitVector
-name|RegUnitsAvailable
+name|LiveRegUnits
+name|LiveUnits
 decl_stmt|;
 comment|// These BitVectors are only used internally to forward(). They are members
 comment|// to avoid frequent reallocations.
@@ -213,31 +228,18 @@ name|public
 label|:
 name|RegScavenger
 argument_list|()
-operator|:
-name|MBB
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|NumRegUnits
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Tracking
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Start tracking liveness from the begin of basic block \p MBB.
 name|void
 name|enterBasicBlock
-argument_list|(
+parameter_list|(
 name|MachineBasicBlock
-operator|&
+modifier|&
 name|MBB
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Start tracking liveness from the end of basic block \p MBB.
 comment|/// Use backward() to move towards the beginning of the block. This is
 comment|/// preferred to enterBasicBlock() and forward() because it does not depend
@@ -638,14 +640,15 @@ comment|///
 name|void
 name|setUsed
 parameter_list|(
+specifier|const
 name|BitVector
 modifier|&
 name|RegUnits
 parameter_list|)
 block|{
-name|RegUnitsAvailable
+name|LiveUnits
 operator|.
-name|reset
+name|addUnits
 argument_list|(
 name|RegUnits
 argument_list|)
@@ -654,14 +657,18 @@ block|}
 name|void
 name|setUnused
 parameter_list|(
+specifier|const
 name|BitVector
 modifier|&
 name|RegUnits
 parameter_list|)
 block|{
-name|RegUnitsAvailable
-operator||=
+name|LiveUnits
+operator|.
+name|removeUnits
+argument_list|(
 name|RegUnits
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// Processes the current instruction and fill the KillRegUnits and
@@ -745,13 +752,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_REGISTERSCAVENGING_H
+end_comment
 
 end_unit
 

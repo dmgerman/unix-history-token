@@ -3740,6 +3740,31 @@ name|SawStore
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Returns true if this instruction's memory access aliases the memory
+comment|/// access of Other.
+comment|//
+comment|/// Assumes any physical registers used to compute addresses
+comment|/// have the same value for both instructions.  Returns false if neither
+comment|/// instruction writes to memory.
+comment|///
+comment|/// @param AA Optional alias analysis, used to compare memory operands.
+comment|/// @param Other MachineInstr to check aliasing against.
+comment|/// @param UseTBAA Whether to pass TBAA information to alias analysis.
+name|bool
+name|mayAlias
+parameter_list|(
+name|AliasAnalysis
+modifier|*
+name|AA
+parameter_list|,
+name|MachineInstr
+modifier|&
+name|Other
+parameter_list|,
+name|bool
+name|UseTBAA
+parameter_list|)
+function_decl|;
 comment|/// Return true if this instruction may have an ordered
 comment|/// or volatile memory reference, or if the information describing the memory
 comment|/// reference is not available. Return false if it is known to have no
@@ -3811,9 +3836,14 @@ modifier|&
 name|MI
 parameter_list|)
 function_decl|;
-comment|//
-comment|// Debugging support
-comment|//
+comment|/// Debugging support
+comment|/// @{
+comment|/// Print this MI to \p OS.
+comment|/// Only print the defs and the opcode if \p SkipOpers is true.
+comment|/// Otherwise, also print operands if \p SkipDebugLoc is true.
+comment|/// Otherwise, also print the debug loc, with a terminating newline.
+comment|/// \p TII is used to print the opcode name.  If it's not present, but the
+comment|/// MI is in a function, the opcode will be printed using the function's TII.
 name|void
 name|print
 argument_list|(
@@ -3823,6 +3853,11 @@ name|OS
 argument_list|,
 name|bool
 name|SkipOpers
+operator|=
+name|false
+argument_list|,
+name|bool
+name|SkipDebugLoc
 operator|=
 name|false
 argument_list|,
@@ -3851,6 +3886,11 @@ name|SkipOpers
 operator|=
 name|false
 argument_list|,
+name|bool
+name|SkipDebugLoc
+operator|=
+name|false
+argument_list|,
 specifier|const
 name|TargetInstrInfo
 operator|*
@@ -3862,16 +3902,10 @@ decl|const
 decl_stmt|;
 name|void
 name|dump
-argument_list|(
+argument_list|()
 specifier|const
-name|TargetInstrInfo
-operator|*
-name|TII
-operator|=
-name|nullptr
-argument_list|)
-decl|const
-decl_stmt|;
+expr_stmt|;
+comment|/// @}
 comment|//===--------------------------------------------------------------------===//
 comment|// Accessors used to build up machine instructions.
 comment|/// Add the specified operand to the instruction.  If it is an implicit

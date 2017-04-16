@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MipsMCExpr.h - Mips specific MC expression classes ------*- C++ -*-===//
+comment|//===- MipsMCExpr.h - Mips specific MC expression classes -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -302,7 +302,7 @@ argument_list|)
 return|;
 block|}
 expr|}
-block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment
@@ -313,6 +313,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSMCEXPR_H
+end_comment
 
 end_unit
 

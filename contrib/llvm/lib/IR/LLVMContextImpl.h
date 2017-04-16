@@ -2168,6 +2168,12 @@ block|;
 name|uint32_t
 name|AlignInBits
 block|;
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|DWARFAddressSpace
+block|;
 name|unsigned
 name|Flags
 block|;
@@ -2194,6 +2200,8 @@ argument_list|,
 argument|uint32_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
+argument_list|,
+argument|Optional<unsigned> DWARFAddressSpace
 argument_list|,
 argument|unsigned Flags
 argument_list|,
@@ -2243,6 +2251,11 @@ block|,
 name|AlignInBits
 argument_list|(
 name|AlignInBits
+argument_list|)
+block|,
+name|DWARFAddressSpace
+argument_list|(
+name|DWARFAddressSpace
 argument_list|)
 block|,
 name|Flags
@@ -2335,6 +2348,14 @@ name|getAlignInBits
 argument_list|()
 argument_list|)
 block|,
+name|DWARFAddressSpace
+argument_list|(
+name|N
+operator|->
+name|getDWARFAddressSpace
+argument_list|()
+argument_list|)
+block|,
 name|Flags
 argument_list|(
 name|N
@@ -2417,6 +2438,13 @@ operator|==
 name|RHS
 operator|->
 name|getOffsetInBits
+argument_list|()
+operator|&&
+name|DWARFAddressSpace
+operator|==
+name|RHS
+operator|->
+name|getDWARFAddressSpace
 argument_list|()
 operator|&&
 name|Flags
@@ -4049,6 +4077,10 @@ name|LHS
 operator|.
 name|LinkageName
 argument_list|,
+name|LHS
+operator|.
+name|TemplateParams
+argument_list|,
 name|RHS
 argument_list|)
 return|;
@@ -4080,6 +4112,11 @@ operator|->
 name|getRawLinkageName
 argument_list|()
 argument_list|,
+name|LHS
+operator|->
+name|getRawTemplateParams
+argument_list|()
+argument_list|,
 name|RHS
 argument_list|)
 return|;
@@ -4095,6 +4132,8 @@ argument_list|,
 argument|const Metadata *Scope
 argument_list|,
 argument|const MDString *LinkageName
+argument_list|,
+argument|const Metadata *TemplateParams
 argument_list|,
 argument|const DISubprogram *RHS
 argument_list|)
@@ -4148,6 +4187,26 @@ begin_comment
 comment|// Compare to the RHS.
 end_comment
 
+begin_comment
+comment|// FIXME: We need to compare template parameters here to avoid incorrect
+end_comment
+
+begin_comment
+comment|// collisions in mapMetadata when RF_MoveDistinctMDs and a ODR-DISubprogram
+end_comment
+
+begin_comment
+comment|// has a non-ODR template parameter (i.e., a DICompositeType that does not
+end_comment
+
+begin_comment
+comment|// have an identifier). Eventually we should decouple ODR logic from
+end_comment
+
+begin_comment
+comment|// uniquing logic.
+end_comment
+
 begin_return
 return|return
 name|IsDefinition
@@ -4169,6 +4228,13 @@ operator|==
 name|RHS
 operator|->
 name|getRawLinkageName
+argument_list|()
+operator|&&
+name|TemplateParams
+operator|==
+name|RHS
+operator|->
+name|getRawTemplateParams
 argument_list|()
 return|;
 end_return
@@ -7154,7 +7220,7 @@ name|AttrsSet
 expr_stmt|;
 name|FoldingSet
 operator|<
-name|AttributeSetImpl
+name|AttributeListImpl
 operator|>
 name|AttrsLists
 expr_stmt|;

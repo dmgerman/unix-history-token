@@ -541,16 +541,25 @@ begin_comment
 comment|/// All instructions without a specific address in this alias set.
 end_comment
 
+begin_comment
+comment|/// In rare cases this vector can have a null'ed out WeakVH
+end_comment
+
+begin_comment
+comment|/// instances (can happen if some other loop pass deletes an
+end_comment
+
+begin_comment
+comment|/// instruction in this list).
+end_comment
+
 begin_expr_stmt
 name|std
 operator|::
 name|vector
 operator|<
-name|AssertingVH
-operator|<
-name|Instruction
+name|WeakVH
 operator|>
-expr|>
 name|UnknownInsts
 expr_stmt|;
 end_expr_stmt
@@ -774,10 +783,16 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 return|return
+name|cast_or_null
+operator|<
+name|Instruction
+operator|>
+operator|(
 name|UnknownInsts
 index|[
 name|i
 index|]
+operator|)
 return|;
 block|}
 end_decl_stmt

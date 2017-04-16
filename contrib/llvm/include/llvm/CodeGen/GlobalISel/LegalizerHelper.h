@@ -159,24 +159,6 @@ parameter_list|(
 name|MachineInstr
 modifier|&
 name|MI
-parameter_list|,
-specifier|const
-name|LegalizerInfo
-modifier|&
-name|LegalizerInfo
-parameter_list|)
-function_decl|;
-name|LegalizeResult
-name|legalizeInstr
-parameter_list|(
-name|MachineInstr
-modifier|&
-name|MI
-parameter_list|,
-specifier|const
-name|LegalizerInfo
-modifier|&
-name|LegalizerInfo
 parameter_list|)
 function_decl|;
 comment|/// Legalize an instruction by emiting a runtime library call instead.
@@ -269,6 +251,11 @@ name|LLT
 name|WideTy
 parameter_list|)
 function_decl|;
+comment|/// Expose MIRBuilder so clients can set their own RecordInsertInstruction
+comment|/// functions
+name|MachineIRBuilder
+name|MIRBuilder
+decl_stmt|;
 name|private
 label|:
 comment|/// Helper function to split a wide generic register into bitwise blocks with
@@ -294,12 +281,14 @@ operator|&
 name|Ops
 argument_list|)
 decl_stmt|;
-name|MachineIRBuilder
-name|MIRBuilder
-decl_stmt|;
 name|MachineRegisterInfo
 modifier|&
 name|MRI
+decl_stmt|;
+specifier|const
+name|LegalizerInfo
+modifier|&
+name|LI
 decl_stmt|;
 block|}
 empty_stmt|;

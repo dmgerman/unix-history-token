@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDebugRangeList.h -----------------------------------*- C++ -*-===//
+comment|//===- DWARFDebugRangeList.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,19 +34,37 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGRANGELIST_H
+name|LLVM_DEBUGINFO_DWARF_DWARFDEBUGRANGELIST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGRANGELIST_H
+name|LLVM_DEBUGINFO_DWARF_DWARFDEBUGRANGELIST_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/DataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -252,7 +270,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
@@ -261,7 +279,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_DEBUGINFO_DWARFDEBUGRANGELIST_H
+comment|// LLVM_DEBUGINFO_DWARF_DWARFDEBUGRANGELIST_H
 end_comment
 
 end_unit

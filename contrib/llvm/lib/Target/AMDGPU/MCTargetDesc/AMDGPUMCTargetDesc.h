@@ -223,10 +223,22 @@ directive|include
 file|"AMDGPUGenRegisterInfo.inc"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|GET_REGINFO_ENUM
+end_undef
+
 begin_define
 define|#
 directive|define
 name|GET_INSTRINFO_ENUM
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_OPERAND_ENUM
 end_define
 
 begin_include
@@ -234,6 +246,18 @@ include|#
 directive|include
 file|"AMDGPUGenInstrInfo.inc"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|GET_INSTRINFO_OPERAND_ENUM
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|GET_INSTRINFO_ENUM
+end_undef
 
 begin_define
 define|#
@@ -246,6 +270,12 @@ include|#
 directive|include
 file|"AMDGPUGenSubtargetInfo.inc"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|GET_SUBTARGETINFO_ENUM
+end_undef
 
 begin_endif
 endif|#

@@ -113,6 +113,7 @@ operator|>
 operator|&
 name|Assumes
 argument_list|,
+specifier|const
 name|CallInst
 operator|*
 name|CI
@@ -150,6 +151,7 @@ name|bool
 operator|&
 name|HasNonCallUses
 argument_list|,
+specifier|const
 name|CallInst
 operator|*
 name|CI

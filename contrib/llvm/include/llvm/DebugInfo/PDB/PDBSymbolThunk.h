@@ -113,9 +113,9 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|getAddressSection
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getClassParentId
+argument|getClassParent
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(
@@ -133,9 +133,9 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|getLength
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getLexicalParentId
+argument|getLexicalParent
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(
@@ -169,9 +169,9 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|getThunkOrdinal
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getTypeId
+argument|getType
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(

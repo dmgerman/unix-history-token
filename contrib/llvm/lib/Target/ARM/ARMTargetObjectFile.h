@@ -49,16 +49,16 @@ directive|include
 file|"llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCExpr.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MCContext
-decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
 name|class
 name|ARMElfTargetObjectFile
 range|:
@@ -77,6 +77,8 @@ specifier|const
 name|MCSection
 operator|*
 name|AttributesSection
+operator|=
+name|nullptr
 block|;
 name|public
 operator|:
@@ -85,11 +87,6 @@ argument_list|()
 operator|:
 name|TargetLoweringObjectFileELF
 argument_list|()
-block|,
-name|AttributesSection
-argument_list|(
-argument|nullptr
-argument_list|)
 block|{
 name|PLTRelativeVariantKind
 operator|=
@@ -173,6 +170,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_ARM_ARMTARGETOBJECTFILE_H
+end_comment
 
 end_unit
 

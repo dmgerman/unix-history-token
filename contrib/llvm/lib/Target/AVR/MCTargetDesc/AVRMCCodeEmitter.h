@@ -217,7 +217,7 @@ argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
 block|;
-comment|/// Takes the compliment of a number (~0 - val).
+comment|/// Takes the complement of a number (~0 - val).
 name|unsigned
 name|encodeComplement
 argument_list|(

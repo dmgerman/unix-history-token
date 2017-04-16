@@ -128,11 +128,10 @@ block|{
 comment|/// \brief A cache of @llvm.assume calls within a function.
 comment|///
 comment|/// This cache provides fast lookup of assumptions within a function by caching
-comment|/// them and amortizing the cost of scanning for them across all queries. The
-comment|/// cache is also conservatively self-updating so that it will never return
-comment|/// incorrect results about a function even as the function is being mutated.
-comment|/// However, flushing the cache and rebuilding it (or explicitly updating it)
-comment|/// may allow it to discover new assumptions.
+comment|/// them and amortizing the cost of scanning for them across all queries. Passes
+comment|/// that create new assumptions are required to call registerAssumption() to
+comment|/// register any new @llvm.assume calls that they create. Deletions of
+comment|/// @llvm.assume calls do not require special handling.
 name|class
 name|AssumptionCache
 block|{
@@ -297,18 +296,34 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
+comment|/// This cache is designed to be self-updating and so it should never be
+comment|/// invalidated.
+name|bool
+name|invalidate
+argument_list|(
+argument|Function&
+argument_list|,
+argument|const PreservedAnalyses&
+argument_list|,
+argument|FunctionAnalysisManager::Invalidator&
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Add an @llvm.assume intrinsic to this function's cache.
 comment|///
 comment|/// The call passed in must be an instruction within this function and must
 comment|/// not already be in the cache.
 name|void
 name|registerAssumption
-argument_list|(
+parameter_list|(
 name|CallInst
-operator|*
+modifier|*
 name|CI
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Update the cache of values being affected by this assumption (i.e.
 comment|/// the values about which this assumption provides information).
 name|void
@@ -721,6 +736,9 @@ name|releaseMemory
 parameter_list|()
 function|override
 block|{
+name|verifyAnalysis
+argument_list|()
+expr_stmt|;
 name|AssumptionCaches
 operator|.
 name|shrink_and_clear

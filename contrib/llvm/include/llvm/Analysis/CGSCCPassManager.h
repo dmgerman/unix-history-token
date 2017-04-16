@@ -1115,6 +1115,11 @@ operator|::
 name|all
 argument_list|()
 block|;
+name|CG
+operator|.
+name|buildRefSCCs
+argument_list|()
+block|;
 for|for
 control|(
 name|auto

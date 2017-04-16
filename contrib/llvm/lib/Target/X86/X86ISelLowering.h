@@ -243,8 +243,7 @@ comment|/// relative displacements.
 name|WrapperRIP
 block|,
 comment|/// Copies a 64-bit value from the low word of an XMM vector
-comment|/// to an MMX vector.  If you think this is too close to the previous
-comment|/// mnemonic, so do I; blame Intel.
+comment|/// to an MMX vector.
 name|MOVDQ2Q
 block|,
 comment|/// Copies a 32-bit value from the low word of a MMX
@@ -275,8 +274,6 @@ comment|/// Insert the lower 16-bits of a 32-bit value to a vector,
 comment|/// corresponds to X86::PINSRW.
 name|PINSRW
 block|,
-name|MMX_PINSRW
-block|,
 comment|/// Shuffle 16 8-bit values within a vector.
 name|PSHUFB
 block|,
@@ -292,9 +289,9 @@ block|,
 comment|/// Blend where the selector is an immediate.
 name|BLENDI
 block|,
-comment|/// Blend where the condition has been shrunk.
-comment|/// This is used to emphasize that the condition mask is
-comment|/// no more valid for generic VSELECT optimizations.
+comment|/// Dynamic (non-constant condition) vector blend where only the sign bits
+comment|/// of the condition elements are used. This is used to enforce that the
+comment|/// condition mask is not valid for generic VSELECT optimizations.
 name|SHRUNKBLEND
 block|,
 comment|/// Combined add and sub on an FP vector.
@@ -303,15 +300,27 @@ block|,
 comment|//  FP vector ops with rounding mode.
 name|FADD_RND
 block|,
+name|FADDS_RND
+block|,
 name|FSUB_RND
+block|,
+name|FSUBS_RND
 block|,
 name|FMUL_RND
 block|,
+name|FMULS_RND
+block|,
 name|FDIV_RND
+block|,
+name|FDIVS_RND
 block|,
 name|FMAX_RND
 block|,
+name|FMAXS_RND
+block|,
 name|FMIN_RND
+block|,
+name|FMINS_RND
 block|,
 name|FSQRT_RND
 block|,
@@ -355,9 +364,6 @@ name|FHADD
 block|,
 name|FHSUB
 block|,
-comment|// Integer absolute value
-name|ABS
-block|,
 comment|// Detect Conflicts Within a Vector
 name|CONFLICT
 block|,
@@ -370,6 +376,11 @@ comment|/// Commutative FMIN and FMAX.
 name|FMAXC
 block|,
 name|FMINC
+block|,
+comment|/// Scalar intrinsic floating point max and min.
+name|FMAXS
+block|,
+name|FMINS
 block|,
 comment|/// Floating point reciprocal-sqrt and reciprocal approximation.
 comment|/// Note that these typically require refinement
@@ -466,6 +477,11 @@ block|,
 name|VSRLI
 block|,
 name|VSRAI
+block|,
+comment|// Shifts of mask registers.
+name|KSHIFTL
+block|,
+name|KSHIFTR
 block|,
 comment|// Bit rotate by immediate
 name|VROTLI
@@ -658,9 +674,7 @@ block|,
 comment|// Broadcast subvector to vector.
 name|SUBV_BROADCAST
 block|,
-comment|// Insert/Extract vector element.
-name|VINSERT
-block|,
+comment|// Extract vector element.
 name|VEXTRACT
 block|,
 comment|/// SSE4A Extraction and Insertion.
@@ -1115,6 +1129,18 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|void
+name|markLibCallAttributes
+argument_list|(
+argument|MachineFunction *MF
+argument_list|,
+argument|unsigned CC
+argument_list|,
+argument|ArgListTy&Args
+argument_list|)
+specifier|const
+name|override
+block|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
@@ -1458,10 +1484,47 @@ name|false
 return|;
 block|}
 name|bool
+name|isMaskAndCmp0FoldingBeneficial
+argument_list|(
+specifier|const
+name|Instruction
+operator|&
+name|AndI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
 name|hasAndNotCompare
 argument_list|(
 name|SDValue
 name|Y
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|convertSetCCLogicToBitwiseLogic
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+name|override
+block|{
+return|return
+name|VT
+operator|.
+name|isScalarInteger
+argument_list|()
+return|;
+block|}
+comment|/// Vector-sized comparisons are fast using PCMPEQ + PMOVMSK or PTEST.
+name|MVT
+name|hasFastEqualityCompare
+argument_list|(
+name|unsigned
+name|NumBits
 argument_list|)
 decl|const
 name|override
@@ -1503,6 +1566,11 @@ operator|&
 name|KnownOne
 argument_list|,
 specifier|const
+name|APInt
+operator|&
+name|DemandedElts
+argument_list|,
+specifier|const
 name|SelectionDAG
 operator|&
 name|DAG
@@ -1521,6 +1589,11 @@ name|ComputeNumSignBitsForTargetNode
 argument_list|(
 name|SDValue
 name|Op
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|DemandedElts
 argument_list|,
 specifier|const
 name|SelectionDAG
@@ -2122,6 +2195,16 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|bool
+name|convertSelectOfConstantsToMath
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// Return true if EXTRACT_SUBVECTOR is cheap for this result type
 comment|/// with this index.
 name|bool
@@ -2339,7 +2422,7 @@ argument_list|(
 name|EVT
 name|VT
 argument_list|,
-name|AttributeSet
+name|AttributeList
 name|Attr
 argument_list|)
 decl|const
@@ -2498,6 +2581,10 @@ name|SDValue
 operator|>
 operator|&
 name|InVals
+argument_list|,
+name|uint32_t
+operator|*
+name|RegMask
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2963,11 +3050,6 @@ name|LowerFP_TO_INT
 argument_list|(
 name|SDValue
 name|Op
-argument_list|,
-specifier|const
-name|X86Subtarget
-operator|&
-name|Subtarget
 argument_list|,
 name|SelectionDAG
 operator|&

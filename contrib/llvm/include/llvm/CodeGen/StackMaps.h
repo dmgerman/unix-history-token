@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===------------------- StackMaps.h - StackMaps ----------------*- C++ -*-===//
+comment|//===- StackMaps.h - StackMaps ----------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -64,7 +64,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSymbol.h"
+file|"llvm/IR/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -85,6 +109,15 @@ name|MCExpr
 decl_stmt|;
 name|class
 name|MCStreamer
+decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
+name|class
+name|TargetRegisterInfo
 decl_stmt|;
 comment|/// \brief MI-level stackmap operands.
 comment|///
@@ -660,39 +693,29 @@ block|}
 enum|;
 name|LocationType
 name|Type
+init|=
+name|Unprocessed
 decl_stmt|;
 name|unsigned
 name|Size
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|Reg
+init|=
+literal|0
 decl_stmt|;
 name|int64_t
 name|Offset
+init|=
+literal|0
 decl_stmt|;
 name|Location
 argument_list|()
-operator|:
-name|Type
-argument_list|(
-name|Unprocessed
-argument_list|)
-operator|,
-name|Size
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Reg
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Offset
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|Location
 argument_list|(
 argument|LocationType Type
@@ -703,7 +726,7 @@ argument|unsigned Reg
 argument_list|,
 argument|int64_t Offset
 argument_list|)
-operator|:
+block|:
 name|Type
 argument_list|(
 name|Type
@@ -732,33 +755,26 @@ block|{
 name|unsigned
 name|short
 name|Reg
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|short
 name|DwarfRegNum
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|short
 name|Size
+init|=
+literal|0
 decl_stmt|;
 name|LiveOutReg
 argument_list|()
-operator|:
-name|Reg
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|DwarfRegNum
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Size
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|LiveOutReg
 argument_list|(
 argument|unsigned short Reg
@@ -767,7 +783,7 @@ argument|unsigned short DwarfRegNum
 argument_list|,
 argument|unsigned short Size
 argument_list|)
-operator|:
+block|:
 name|Reg
 argument_list|(
 name|Reg
@@ -905,37 +921,28 @@ name|FunctionInfo
 block|{
 name|uint64_t
 name|StackSize
+init|=
+literal|0
 decl_stmt|;
 name|uint64_t
 name|RecordCount
+init|=
+literal|1
 decl_stmt|;
 name|FunctionInfo
 argument_list|()
-operator|:
-name|StackSize
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|RecordCount
-argument_list|(
-literal|1
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|FunctionInfo
 argument_list|(
 argument|uint64_t StackSize
 argument_list|)
-operator|:
+block|:
 name|StackSize
 argument_list|(
-name|StackSize
-argument_list|)
-operator|,
-name|RecordCount
-argument_list|(
-literal|1
+argument|StackSize
 argument_list|)
 block|{}
 block|}
@@ -947,9 +954,13 @@ specifier|const
 name|MCExpr
 modifier|*
 name|CSOffsetExpr
+init|=
+name|nullptr
 decl_stmt|;
 name|uint64_t
 name|ID
+init|=
+literal|0
 decl_stmt|;
 name|LocationVec
 name|Locations
@@ -959,17 +970,9 @@ name|LiveOuts
 decl_stmt|;
 name|CallsiteInfo
 argument_list|()
-operator|:
-name|CSOffsetExpr
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|ID
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|CallsiteInfo
 argument_list|(
 argument|const MCExpr *CSOffsetExpr
@@ -980,7 +983,7 @@ argument|LocationVec&&Locations
 argument_list|,
 argument|LiveOutVec&&LiveOuts
 argument_list|)
-operator|:
+block|:
 name|CSOffsetExpr
 argument_list|(
 name|CSOffsetExpr
@@ -1176,11 +1179,19 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_STACKMAPS_H
+end_comment
 
 end_unit
 

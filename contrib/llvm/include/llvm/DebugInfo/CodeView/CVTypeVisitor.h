@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/TinyPtrVector.h"
 end_include
 
 begin_include
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/CodeView/TypeRecord.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/TypeServerHandler.h"
 end_include
 
 begin_include
@@ -93,6 +99,14 @@ modifier|&
 name|Callbacks
 parameter_list|)
 function_decl|;
+name|void
+name|addTypeServerHandler
+parameter_list|(
+name|TypeServerHandler
+modifier|&
+name|Handler
+parameter_list|)
+function_decl|;
 name|Error
 name|visitTypeRecord
 parameter_list|(
@@ -120,6 +134,13 @@ name|Types
 parameter_list|)
 function_decl|;
 name|Error
+name|visitTypeStream
+parameter_list|(
+name|CVTypeRange
+name|Types
+parameter_list|)
+function_decl|;
+name|Error
 name|visitFieldListMemberStream
 argument_list|(
 name|ArrayRef
@@ -131,13 +152,11 @@ argument_list|)
 decl_stmt|;
 name|Error
 name|visitFieldListMemberStream
-argument_list|(
-name|msf
-operator|::
-name|StreamReader
+parameter_list|(
+name|BinaryStreamReader
 name|Reader
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|/// The interface to the class that gets notified of each visitation.
@@ -145,6 +164,13 @@ name|TypeVisitorCallbacks
 modifier|&
 name|Callbacks
 decl_stmt|;
+name|TinyPtrVector
+operator|<
+name|TypeServerHandler
+operator|*
+operator|>
+name|Handlers
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- SampleProfWriter.h - Write LLVM sample profile data ----------------===//
+comment|//===- SampleProfWriter.h - Write LLVM sample profile data ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,13 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ProfileData/ProfileCommon.h"
+file|"llvm/IR/ProfileSummary.h"
 end_include
 
 begin_include
@@ -92,13 +98,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/FileSystem.h"
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -132,7 +156,9 @@ name|virtual
 operator|~
 name|SampleProfileWriter
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Write sample profiles in \p S.
 comment|///
 comment|/// \returns status code of the file update operation.
@@ -452,11 +478,8 @@ argument_list|)
 operator|:
 name|SampleProfileWriter
 argument_list|(
-name|OS
+argument|OS
 argument_list|)
-block|,
-name|NameTable
-argument_list|()
 block|{}
 name|std
 operator|::
@@ -540,12 +563,12 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End namespace sampleprof
+comment|// end namespace sampleprof
 end_comment
 
 begin_comment
 unit|}
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

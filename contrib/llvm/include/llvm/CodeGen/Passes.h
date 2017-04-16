@@ -180,12 +180,16 @@ comment|/// This pass resets a MachineFunction when it has the FailedISel proper
 comment|/// as if it was just created.
 comment|/// If EmitFallbackDiag is true, the pass will emit a
 comment|/// DiagnosticInfoISelFallback for every MachineFunction it resets.
+comment|/// If AbortOnFailedISel is true, abort compilation instead of resetting.
 name|MachineFunctionPass
 modifier|*
 name|createResetMachineFunctionPass
 parameter_list|(
 name|bool
 name|EmitFallbackDiag
+parameter_list|,
+name|bool
+name|AbortOnFailedISel
 parameter_list|)
 function_decl|;
 comment|/// createCodeGenPreparePass - Transform the code to expose more pattern
@@ -226,6 +230,12 @@ specifier|extern
 name|char
 modifier|&
 name|MachineDominanceFrontierID
+decl_stmt|;
+comment|/// MachineRegionInfo - This pass computes SESE regions for machine functions.
+specifier|extern
+name|char
+modifier|&
+name|MachineRegionInfoPassID
 decl_stmt|;
 comment|/// EdgeBundles analysis - Bundle machine CFG edges.
 specifier|extern
@@ -613,6 +623,12 @@ name|char
 modifier|&
 name|XRayInstrumentationID
 decl_stmt|;
+comment|/// This pass inserts FEntry calls
+specifier|extern
+name|char
+modifier|&
+name|FEntryInserterID
+decl_stmt|;
 comment|/// \brief This pass implements the "patchable-function" attribute.
 specifier|extern
 name|char
@@ -693,22 +709,6 @@ name|char
 modifier|&
 name|ExpandISelPseudosID
 decl_stmt|;
-comment|/// createExecutionDependencyFixPass - This pass fixes execution time
-comment|/// problems with dependent instructions, such as switching execution
-comment|/// domains to match.
-comment|///
-comment|/// The pass will examine instructions using and defining registers in RC.
-comment|///
-name|FunctionPass
-modifier|*
-name|createExecutionDependencyFixPass
-parameter_list|(
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|RC
-parameter_list|)
-function_decl|;
 comment|/// UnpackMachineBundles - This pass unpack machine instruction bundles.
 specifier|extern
 name|char
@@ -877,6 +877,19 @@ modifier|*
 name|createFreeMachineFunctionPass
 parameter_list|()
 function_decl|;
+comment|/// This pass combine basic blocks guarded by the same branch.
+specifier|extern
+name|char
+modifier|&
+name|BranchCoalescingID
+decl_stmt|;
+comment|/// This pass performs outlining on machine instructions directly before
+comment|/// printing assembly.
+name|ModulePass
+modifier|*
+name|createMachineOutlinerPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -923,7 +936,7 @@ parameter_list|,
 name|analysis
 parameter_list|)
 define|\
-value|PassInfo *PI = new PassInfo(                                                 \       name, arg,&passName::ID,                                                \       PassInfo::NormalCtor_t(callDefaultCtor<passName>), cfg, analysis,        \       PassInfo::TargetMachineCtor_t(callTargetMachineCtor<passName>));         \   Registry.registerPass(*PI, true);                                            \   return PI;                                                                   \   }                                                                            \   LLVM_DEFINE_ONCE_FLAG(Initialize##passName##PassFlag);                       \   void llvm::initialize##passName##Pass(PassRegistry&Registry) {              \     llvm::call_once(Initialize##passName##PassFlag,                            \                     initialize##passName##PassOnce, std::ref(Registry));       \   }
+value|PassInfo *PI = new PassInfo(                                                 \       name, arg,&passName::ID,                                                \       PassInfo::NormalCtor_t(callDefaultCtor<passName>), cfg, analysis,        \       PassInfo::TargetMachineCtor_t(callTargetMachineCtor<passName>));         \   Registry.registerPass(*PI, true);                                            \   return PI;                                                                   \   }                                                                            \   static llvm::once_flag Initialize##passName##PassFlag;                       \   void llvm::initialize##passName##Pass(PassRegistry&Registry) {              \     llvm::call_once(Initialize##passName##PassFlag,                            \                     initialize##passName##PassOnce, std::ref(Registry));       \   }
 end_define
 
 begin_comment

@@ -88,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamReader.h"
+file|"llvm/Support/BinaryStreamReader.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamWriter.h"
+file|"llvm/Support/BinaryStreamWriter.h"
 end_include
 
 begin_include
@@ -158,13 +158,11 @@ label|:
 name|explicit
 name|CodeViewRecordIO
 argument_list|(
-name|msf
-operator|::
-name|StreamReader
+name|BinaryStreamReader
 operator|&
 name|Reader
 argument_list|)
-range|:
+operator|:
 name|Reader
 argument_list|(
 argument|&Reader
@@ -173,9 +171,7 @@ block|{}
 name|explicit
 name|CodeViewRecordIO
 argument_list|(
-name|msf
-operator|::
-name|StreamWriter
+name|BinaryStreamWriter
 operator|&
 name|Writer
 argument_list|)
@@ -194,7 +190,7 @@ name|uint32_t
 operator|>
 name|MaxLength
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|Error
 name|endRecord
 parameter_list|()
@@ -913,27 +909,23 @@ name|Limits
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|msf
-operator|::
-name|StreamReader
-operator|*
+begin_decl_stmt
+name|BinaryStreamReader
+modifier|*
 name|Reader
-operator|=
+init|=
 name|nullptr
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|msf
-operator|::
-name|StreamWriter
-operator|*
+begin_decl_stmt
+name|BinaryStreamWriter
+modifier|*
 name|Writer
-operator|=
+init|=
 name|nullptr
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};  }

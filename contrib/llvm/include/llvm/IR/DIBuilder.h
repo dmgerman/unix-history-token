@@ -356,6 +356,9 @@ comment|/// \param SplitName     The name of the file that we'll split debug inf
 comment|///                      out into.
 comment|/// \param Kind          The kind of debug information to generate.
 comment|/// \param DWOId         The DWOId if this is a split skeleton compile unit.
+comment|/// \param SplitDebugInlining    Whether to emit inline debug info.
+comment|/// \param DebugInfoForProfiling Whether to emit extra debug info for
+comment|///                              profile collection.
 name|DICompileUnit
 modifier|*
 name|createCompileUnit
@@ -405,6 +408,11 @@ name|bool
 name|SplitDebugInlining
 operator|=
 name|true
+argument_list|,
+name|bool
+name|DebugInfoForProfiling
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// Create a file descriptor to hold debugging information for a file.
@@ -553,32 +561,41 @@ name|FromTy
 parameter_list|)
 function_decl|;
 comment|/// Create debugging information entry for a pointer.
-comment|/// \param PointeeTy   Type pointed by this pointer.
-comment|/// \param SizeInBits  Size.
-comment|/// \param AlignInBits Alignment. (optional)
-comment|/// \param Name        Pointer type name. (optional)
+comment|/// \param PointeeTy         Type pointed by this pointer.
+comment|/// \param SizeInBits        Size.
+comment|/// \param AlignInBits       Alignment. (optional)
+comment|/// \param DWARFAddressSpace DWARF address space. (optional)
+comment|/// \param Name              Pointer type name. (optional)
 name|DIDerivedType
 modifier|*
 name|createPointerType
-parameter_list|(
+argument_list|(
 name|DIType
-modifier|*
+operator|*
 name|PointeeTy
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|AlignInBits
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|DWARFAddressSpace
+operator|=
+name|None
+argument_list|,
 name|StringRef
 name|Name
-init|=
+operator|=
 literal|""
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information entry for a pointer to member.
 comment|/// \param PointeeTy Type pointed to by this pointer.
 comment|/// \param SizeInBits  Size.
@@ -619,25 +636,33 @@ comment|/// style reference or rvalue reference type.
 name|DIDerivedType
 modifier|*
 name|createReferenceType
-parameter_list|(
+argument_list|(
 name|unsigned
 name|Tag
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|RTy
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|AlignInBits
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|,
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|DWARFAddressSpace
+operator|=
+name|None
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information entry for a typedef.
 comment|/// \param Ty          Original type.
 comment|/// \param Name        Typedef name.
@@ -1343,25 +1368,6 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/// Create an external type reference.
-comment|/// \param Tag              Dwarf TAG.
-comment|/// \param File             File in which the type is defined.
-comment|/// \param UniqueIdentifier A unique identifier for the type.
-name|DICompositeType
-modifier|*
-name|createExternalTypeRef
-parameter_list|(
-name|unsigned
-name|Tag
-parameter_list|,
-name|DIFile
-modifier|*
-name|File
-parameter_list|,
-name|StringRef
-name|UniqueIdentifier
-parameter_list|)
-function_decl|;
 comment|/// Create a new DIType* with "artificial" flag set.
 name|DIType
 modifier|*

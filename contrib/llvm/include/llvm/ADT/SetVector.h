@@ -412,6 +412,30 @@ name|rend
 argument_list|()
 return|;
 block|}
+comment|/// \brief Return the first element of the SetVector.
+specifier|const
+name|T
+operator|&
+name|front
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|empty
+argument_list|()
+operator|&&
+literal|"Cannot call front() on empty SetVector!"
+argument_list|)
+block|;
+return|return
+name|vector_
+operator|.
+name|front
+argument_list|()
+return|;
+block|}
 comment|/// \brief Return the last element of the SetVector.
 specifier|const
 name|T

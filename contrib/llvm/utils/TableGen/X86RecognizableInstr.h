@@ -158,9 +158,9 @@ comment|/// The hasVEX_4V field from the record
 name|bool
 name|HasVEX_4V
 decl_stmt|;
-comment|/// The hasVEX_WPrefix field from the record
-name|bool
-name|HasVEX_WPrefix
+comment|/// The VEX_WPrefix field from the record
+name|uint8_t
+name|VEX_WPrefix
 decl_stmt|;
 comment|/// Inferred from the operands; indicates whether the L bit in the VEX prefix is set
 name|bool

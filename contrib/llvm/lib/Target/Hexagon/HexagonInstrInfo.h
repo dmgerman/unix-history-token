@@ -564,7 +564,7 @@ comment|/// PredicateOperand.
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr&MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -1416,7 +1416,7 @@ block|;
 name|int
 name|getDotOldOp
 argument_list|(
-argument|const int opc
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
