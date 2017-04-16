@@ -529,6 +529,32 @@ end_expr_stmt
 begin_expr_stmt
 name|PLIST
 argument_list|(
+name|mux_m_c_p_clkm_mud_c2_c3_cud
+argument_list|)
+operator|=
+block|{
+literal|"pllM_out0"
+block|,
+literal|"pllC_out0"
+block|,
+literal|"pllP_out0"
+block|,
+literal|"clk_m"
+block|,
+literal|"pllM_UD"
+block|,
+literal|"pllC2_out0"
+block|,
+literal|"pllC3_out0"
+block|,
+literal|"pllC_UD"
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|PLIST
+argument_list|(
 name|mux_m_c2_c_c3_p_N_a
 argument_list|)
 operator|=
@@ -1645,7 +1671,7 @@ name|EMC
 argument_list|,
 literal|"emc"
 argument_list|,
-literal|"emc_mux"
+literal|"pc_emc_2x"
 argument_list|,
 name|H
 argument_list|(
@@ -2499,7 +2525,20 @@ literal|6
 argument_list|)
 argument_list|)
 block|,
-comment|/* GATE(VIM2_CLK, "vim2_clk", clk_m, X(11)), */
+name|GATE
+argument_list|(
+name|VIM2_CLK
+argument_list|,
+literal|"vim2_clk"
+argument_list|,
+literal|"clk_m"
+argument_list|,
+name|X
+argument_list|(
+literal|11
+argument_list|)
+argument_list|)
+block|,
 comment|/* GATE(EMC_DLL, "emc_dll", "pc_emc_dll", X(14)), */
 name|GATE
 argument_list|(
@@ -2654,7 +2693,7 @@ comment|/* Block with divider */
 end_comment
 
 begin_comment
-comment|/* Mark block with additional bis / functionality. */
+comment|/* Mark block with additional bits / functionality. */
 end_comment
 
 begin_define
@@ -2702,7 +2741,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FDS_IS_SATA
+name|DCF_IS_SATA
 value|0x0006
 end_define
 
@@ -2725,6 +2764,13 @@ define|#
 directive|define
 name|DCF_IS_SOR0
 value|0x0009
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCF_IS_EMC
+value|0x000A
 end_define
 
 begin_comment
@@ -3166,7 +3212,19 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* EMC  8 */
+name|CLK_8_1
+argument_list|(
+literal|0
+argument_list|,
+literal|"pc_emc_2x"
+argument_list|,
+name|mux_m_c_p_clkm_mud_c2_c3_cud
+argument_list|,
+name|CLK_SOURCE_EMC
+argument_list|,
+name|DCF_IS_EMC
+argument_list|)
+block|,
 name|CLK16_1
 argument_list|(
 literal|0
@@ -3596,7 +3654,7 @@ name|mux_p_N_c_N_m_N_clkm
 argument_list|,
 name|CLK_SOURCE_SATA
 argument_list|,
-name|FDS_IS_SATA
+name|DCF_IS_SATA
 argument_list|)
 block|,
 name|CLK_8_1
