@@ -78,6 +78,39 @@ file|"tegra124_car.h"
 end_include
 
 begin_comment
+comment|/* The TEGRA124_CLK_XUSB_GATE is missing in current  * DT bindings, define it localy  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TEGRA124_CLK_XUSB_GATE
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"TEGRA124_CLK_XUSB_GATE is now defined, revisit XUSB code!"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TEGRA124_CLK_XUSB_GATE
+value|143
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Bits in base register. */
 end_comment
 
@@ -928,7 +961,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|uint32_t
-name|clk_enabale_reg
+name|clk_enable_reg
 index|[]
 init|=
 block|{
@@ -1940,7 +1973,7 @@ comment|/* GATE(DEVD2_OUT, "devd2_out", "clk_m", U(29)), */
 comment|/* GATE(DEVD1_OUT, "devd1_out", "clk_m", U(30)), */
 name|GATE
 argument_list|(
-name|XUSB_DEV_SRC
+name|XUSB_DEV
 argument_list|,
 literal|"xusb_core_dev"
 argument_list|,
@@ -2279,7 +2312,20 @@ comment|/* GATE(EMC_IOBIST, "emc_iobist", "clk_m", W(10)), */
 comment|/* GATE(HDMI_IOBIST, "hdmi_iobist", "clk_m", W(11)), */
 comment|/* GATE(SATA_IOBIST, "sata_iobist", "clk_m", W(12)), */
 comment|/* GATE(MIPI_IOBIST, "mipi_iobist", "clk_m", W(13)), */
-comment|/* GATE(XUSB_IOBIST, "xusb_iobist", "clk_m", W(15)), */
+name|GATE
+argument_list|(
+name|XUSB_GATE
+argument_list|,
+literal|"xusb_gate"
+argument_list|,
+literal|"clk_m"
+argument_list|,
+name|W
+argument_list|(
+literal|15
+argument_list|)
+argument_list|)
+block|,
 name|GATE
 argument_list|(
 name|CILAB
@@ -2400,7 +2446,7 @@ literal|"dvfs_ref"
 argument_list|,
 literal|"pc_dvfs_ref"
 argument_list|,
-name|X
+name|W
 argument_list|(
 literal|27
 argument_list|)
@@ -2414,7 +2460,7 @@ literal|"dvfs_soc"
 argument_list|,
 literal|"pc_dvfs_soc"
 argument_list|,
-name|X
+name|W
 argument_list|(
 literal|27
 argument_list|)
@@ -2422,19 +2468,19 @@ argument_list|)
 block|,
 name|GATE
 argument_list|(
-name|XUSB_SS_SRC
+name|XUSB_SS
 argument_list|,
 literal|"xusb_ss"
 argument_list|,
 literal|"xusb_ss_mux"
 argument_list|,
-name|X
+name|W
 argument_list|(
 literal|28
 argument_list|)
 argument_list|)
 block|,
-comment|/* GATE(EMC_LATENCY, "emc_latency", "pc_emc_latency", X(29)), */
+comment|/* GATE(EMC_LATENCY, "emc_latency", "pc_emc_latency", W(29)), */
 comment|/* bank X -> 160-191*/
 comment|/* GATE(SPARE, "spare", "clk_m", X(0)), */
 comment|/* GATE(CAM_MCLK, "CAM_MCLK", "clk_m", X(4)), */
@@ -2717,6 +2763,8 @@ define|#
 directive|define
 name|CLK_8_1
 parameter_list|(
+name|id
+parameter_list|,
 name|cn
 parameter_list|,
 name|pl
@@ -2726,7 +2774,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|PER_CLK(0, cn, pl, r,  8, 1, (f) | DCF_HAVE_MUX | DCF_HAVE_DIV)
+value|PER_CLK(id, cn, pl, r,  8, 1, (f) | DCF_HAVE_MUX | DCF_HAVE_DIV)
 end_define
 
 begin_comment
@@ -2738,6 +2786,8 @@ define|#
 directive|define
 name|CLK16_1
 parameter_list|(
+name|id
+parameter_list|,
 name|cn
 parameter_list|,
 name|pl
@@ -2747,7 +2797,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|PER_CLK(0, cn, pl, r,  16, 1, (f) | DCF_HAVE_MUX | DCF_HAVE_DIV)
+value|PER_CLK(id, cn, pl, r,  16, 1, (f) | DCF_HAVE_MUX | DCF_HAVE_DIV)
 end_define
 
 begin_comment
@@ -2759,6 +2809,8 @@ define|#
 directive|define
 name|CLK16_0
 parameter_list|(
+name|id
+parameter_list|,
 name|cn
 parameter_list|,
 name|pl
@@ -2768,7 +2820,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|PER_CLK(0, cn, pl, r,  16, 0, (f) | DCF_HAVE_MUX | DCF_HAVE_DIV)
+value|PER_CLK(id, cn, pl, r,  16, 0, (f) | DCF_HAVE_MUX | DCF_HAVE_DIV)
 end_define
 
 begin_comment
@@ -2780,6 +2832,8 @@ define|#
 directive|define
 name|CLK_0_0
 parameter_list|(
+name|id
+parameter_list|,
 name|cn
 parameter_list|,
 name|pl
@@ -2789,7 +2843,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|PER_CLK(0, cn, pl, r,  0, 0, (f) | DCF_HAVE_MUX)
+value|PER_CLK(id, cn, pl, r,  0, 0, (f) | DCF_HAVE_MUX)
 end_define
 
 begin_decl_stmt
@@ -2802,6 +2856,8 @@ init|=
 block|{
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2s1"
 argument_list|,
 name|mux_a_N_audio1_N_p_N_clkm
@@ -2813,6 +2869,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2s2"
 argument_list|,
 name|mux_a_N_audio2_N_p_N_clkm
@@ -2824,6 +2882,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_spdif_out"
 argument_list|,
 name|mux_a_N_audio_N_p_N_clkm
@@ -2835,6 +2895,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_spdif_in"
 argument_list|,
 name|mux_p_c2_c_c3_m
@@ -2846,6 +2908,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_pwm"
 argument_list|,
 name|mux_p_c2_c_c3_clks_N_clkm
@@ -2857,6 +2921,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_spi2"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -2868,6 +2934,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_spi3"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -2879,6 +2947,8 @@ argument_list|)
 block|,
 name|CLK16_0
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2c5"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -2890,6 +2960,8 @@ argument_list|)
 block|,
 name|CLK16_0
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2c1"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -2901,6 +2973,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_spi1"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -2912,6 +2986,8 @@ argument_list|)
 block|,
 name|CLK_0_0
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_disp1"
 argument_list|,
 name|mux_p_m_d_a_c_d2_clkm
@@ -2923,6 +2999,8 @@ argument_list|)
 block|,
 name|CLK_0_0
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_disp2"
 argument_list|,
 name|mux_p_m_d_a_c_d2_clkm
@@ -2934,6 +3012,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_isp"
 argument_list|,
 name|mux_m_c_p_a_c2_c3_clkm_c4
@@ -2945,6 +3025,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_vi"
 argument_list|,
 name|mux_m_c2_c_c3_p_N_a_c4
@@ -2956,6 +3038,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_sdmmc1"
 argument_list|,
 name|mux_p_c2_c_c3_m_e_clkm
@@ -2967,6 +3051,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_sdmmc2"
 argument_list|,
 name|mux_p_c2_c_c3_m_e_clkm
@@ -2978,6 +3064,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_sdmmc4"
 argument_list|,
 name|mux_p_c2_c_c3_m_e_clkm
@@ -2989,6 +3077,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_vfir"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3000,6 +3090,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_hsi"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3011,6 +3103,8 @@ argument_list|)
 block|,
 name|CLK16_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_uarta"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3022,6 +3116,8 @@ argument_list|)
 block|,
 name|CLK16_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_uartb"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3033,6 +3129,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_host1x"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3044,6 +3142,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_hdmi"
 argument_list|,
 name|mux_p_m_d_a_c_d2_clkm
@@ -3055,6 +3155,8 @@ argument_list|)
 block|,
 name|CLK16_0
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2c2"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3067,6 +3169,8 @@ block|,
 comment|/* EMC  8 */
 name|CLK16_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_uartc"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3078,6 +3182,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_vi_sensor"
 argument_list|,
 name|mux_m_c2_c_c3_p_N_a
@@ -3089,6 +3195,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_spi4"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3100,6 +3208,8 @@ argument_list|)
 block|,
 name|CLK16_0
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2c3"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3111,6 +3221,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_sdmmc3"
 argument_list|,
 name|mux_p_c2_c_c3_m_e_clkm
@@ -3122,6 +3234,8 @@ argument_list|)
 block|,
 name|CLK16_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_uartd"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3133,6 +3247,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_vde"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3144,6 +3260,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_owr"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3155,6 +3273,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_snor"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3166,6 +3286,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_csite"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3177,6 +3299,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2s0"
 argument_list|,
 name|mux_a_N_audio0_N_p_N_clkm
@@ -3189,6 +3313,8 @@ block|,
 comment|/* DTV xxx */
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_msenc"
 argument_list|,
 name|mux_m_c2_c_c3_p_N_a
@@ -3200,6 +3326,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_tsec"
 argument_list|,
 name|mux_p_c2_c_c3_m_a_clkm
@@ -3212,6 +3340,8 @@ block|,
 comment|/* SPARE2 */
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_mselect"
 argument_list|,
 name|mux_p_c2_c_c3_m_clks_clkm
@@ -3223,6 +3353,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_tsensor"
 argument_list|,
 name|mux_p_c2_c_c3_clkm_N_clks
@@ -3234,6 +3366,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2s3"
 argument_list|,
 name|mux_a_N_audio3_N_p_N_clkm
@@ -3245,6 +3379,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2s4"
 argument_list|,
 name|mux_a_N_audio4_N_p_N_clkm
@@ -3256,6 +3392,8 @@ argument_list|)
 block|,
 name|CLK16_0
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2c4"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3267,6 +3405,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_spi5"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3278,6 +3418,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_spi6"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3289,6 +3431,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_audio"
 argument_list|,
 name|mux_sep_audio
@@ -3300,6 +3444,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_dam0"
 argument_list|,
 name|mux_sep_audio
@@ -3311,6 +3457,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_dam1"
 argument_list|,
 name|mux_sep_audio
@@ -3322,6 +3470,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_dam2"
 argument_list|,
 name|mux_sep_audio
@@ -3333,6 +3483,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_hda2codec_2x"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3344,6 +3496,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_actmon"
 argument_list|,
 name|mux_p_c2_c_c3_clks_N_clkm
@@ -3355,6 +3509,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_extperiph1"
 argument_list|,
 name|mux_a_clks_p_clkm_e
@@ -3366,6 +3522,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_extperiph2"
 argument_list|,
 name|mux_a_clks_p_clkm_e
@@ -3377,6 +3535,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_extperiph3"
 argument_list|,
 name|mux_a_clks_p_clkm_e
@@ -3388,6 +3548,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2c_slow"
 argument_list|,
 name|mux_p_c2_c_c3_clks_N_clkm
@@ -3400,6 +3562,8 @@ block|,
 comment|/* SYS */
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_sor0"
 argument_list|,
 name|mux_p_m_d_a_c_d2_clkm
@@ -3411,6 +3575,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_sata_oob"
 argument_list|,
 name|mux_p_N_c_N_m_N_clkm
@@ -3422,6 +3588,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_sata"
 argument_list|,
 name|mux_p_N_c_N_m_N_clkm
@@ -3433,6 +3601,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_hda"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3444,6 +3614,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+name|TEGRA124_CLK_XUSB_HOST_SRC
+argument_list|,
 literal|"pc_xusb_core_host"
 argument_list|,
 name|mux_clkm_p_c2_c_c3_refre
@@ -3455,6 +3627,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+name|TEGRA124_CLK_XUSB_FALCON_SRC
+argument_list|,
 literal|"pc_xusb_falcon"
 argument_list|,
 name|mux_clkm_p_c2_c_c3_refre
@@ -3466,6 +3640,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+name|TEGRA124_CLK_XUSB_FS_SRC
+argument_list|,
 literal|"pc_xusb_fs"
 argument_list|,
 name|mux_clkm_N_u48_N_p_N_u480
@@ -3477,6 +3653,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+name|TEGRA124_CLK_XUSB_DEV_SRC
+argument_list|,
 literal|"pc_xusb_core_dev"
 argument_list|,
 name|mux_clkm_p_c2_c_c3_refre
@@ -3488,6 +3666,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+name|TEGRA124_CLK_XUSB_SS_SRC
+argument_list|,
 literal|"pc_xusb_ss"
 argument_list|,
 name|mux_clkm_refe_clks_u480_c_c2_c3_oscdiv
@@ -3499,6 +3679,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_cilab"
 argument_list|,
 name|mux_p_N_c_N_N_N_clkm
@@ -3510,6 +3692,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_cilcd"
 argument_list|,
 name|mux_p_N_c_N_N_N_clkm
@@ -3521,6 +3705,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_cile"
 argument_list|,
 name|mux_p_N_c_N_N_N_clkm
@@ -3532,6 +3718,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_dsia_lp"
 argument_list|,
 name|mux_p_N_c_N_N_N_clkm
@@ -3543,6 +3731,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_dsib_lp"
 argument_list|,
 name|mux_p_N_c_N_N_N_clkm
@@ -3554,6 +3744,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_entropy"
 argument_list|,
 name|mux_p_clkm_clks_E
@@ -3565,6 +3757,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_dvfs_ref"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3576,6 +3770,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_dvfs_soc"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3587,6 +3783,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_traceclkin"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3598,6 +3796,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_adx"
 argument_list|,
 name|mux_a_c2_c_c3_p_N_clkm
@@ -3609,6 +3809,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_amx"
 argument_list|,
 name|mux_a_c2_c_c3_p_N_clkm
@@ -3620,6 +3822,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_emc_latency"
 argument_list|,
 name|mux_m_c_p_clkm_mud_c2_c3
@@ -3631,6 +3835,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_soc_therm"
 argument_list|,
 name|mux_m_c_p_a_c2_c3
@@ -3642,6 +3848,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_vi_sensor2"
 argument_list|,
 name|mux_m_c2_c_c3_p_N_a
@@ -3653,6 +3861,8 @@ argument_list|)
 block|,
 name|CLK16_0
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_i2c6"
 argument_list|,
 name|mux_p_c2_c_c3_m_N_clkm
@@ -3664,6 +3874,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_emc_dll"
 argument_list|,
 name|mux_m_c_p_clkm_mud_c2_c3
@@ -3675,6 +3887,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_hdmi_audio"
 argument_list|,
 name|mux_p_c_c2_clkm
@@ -3686,6 +3900,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_clk72mhz"
 argument_list|,
 name|mux_p_c_c2_clkm
@@ -3697,6 +3913,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_adx1"
 argument_list|,
 name|mux_a_c2_c_c3_p_N_clkm
@@ -3708,6 +3926,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_amx1"
 argument_list|,
 name|mux_a_c2_c_c3_p_N_clkm
@@ -3719,6 +3939,8 @@ argument_list|)
 block|,
 name|CLK_8_1
 argument_list|(
+literal|0
+argument_list|,
 literal|"pc_vic"
 argument_list|,
 name|mux_m_c_p_a_c2_c3_clkm
@@ -4498,19 +4720,23 @@ name|divider
 operator|=
 literal|1
 operator|<<
+operator|(
 name|sc
 operator|->
 name|div_f_width
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|*
-name|stop
-operator|!=
-literal|0
-operator|)
-operator|&&
+name|flags
+operator|&
+name|CLK_SET_DRYRUN
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 operator|(
 name|flags
@@ -4541,16 +4767,8 @@ operator|(
 name|ERANGE
 operator|)
 return|;
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|CLK_SET_DRYRUN
-operator|)
-operator|==
-literal|0
-condition|)
+block|}
+else|else
 block|{
 name|DEVICE_LOCK
 argument_list|(
@@ -4877,7 +5095,7 @@ literal|32
 operator|<
 name|nitems
 argument_list|(
-name|clk_enabale_reg
+name|clk_enable_reg
 argument_list|)
 argument_list|,
 operator|(
@@ -4889,7 +5107,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|clk_enabale_reg
+name|clk_enable_reg
 index|[
 name|idx
 operator|/
