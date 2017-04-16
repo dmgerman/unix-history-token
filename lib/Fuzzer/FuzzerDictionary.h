@@ -89,13 +89,20 @@ comment|// A simple POD sized array of bytes.
 name|template
 operator|<
 name|size_t
-name|kMaxSize
+name|kMaxSizeT
 operator|>
 name|class
 name|FixedWord
 block|{
 name|public
 operator|:
+specifier|static
+specifier|const
+name|size_t
+name|kMaxSize
+operator|=
+name|kMaxSizeT
+block|;
 name|FixedWord
 argument_list|()
 block|{}
@@ -155,6 +162,9 @@ name|w
 operator|)
 specifier|const
 block|{
+name|ScopedDoingMyOwnMemOrStr
+name|scoped_doing_my_own_mem_os_str
+block|;
 return|return
 name|Size
 operator|==
@@ -190,6 +200,9 @@ name|w
 operator|)
 specifier|const
 block|{
+name|ScopedDoingMyOwnMemOrStr
+name|scoped_doing_my_own_mem_os_str
+block|;
 if|if
 condition|(
 name|Size
@@ -273,15 +286,11 @@ begin_typedef
 typedef|typedef
 name|FixedWord
 operator|<
-literal|27
+literal|64
 operator|>
 name|Word
 expr_stmt|;
 end_typedef
-
-begin_comment
-comment|// 28 bytes.
-end_comment
 
 begin_decl_stmt
 name|class

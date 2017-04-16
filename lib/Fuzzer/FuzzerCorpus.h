@@ -156,8 +156,6 @@ struct|;
 name|class
 name|InputCorpus
 block|{
-name|public
-label|:
 specifier|static
 specifier|const
 name|size_t
@@ -165,8 +163,10 @@ name|kFeatureSetSize
 init|=
 literal|1
 operator|<<
-literal|16
+literal|21
 decl_stmt|;
+name|public
+label|:
 name|InputCorpus
 argument_list|(
 specifier|const
@@ -502,9 +502,7 @@ expr_stmt|;
 name|UpdateCorpusDistribution
 argument_list|()
 expr_stmt|;
-name|ValidateFeatureSet
-argument_list|()
-expr_stmt|;
+comment|// ValidateFeatureSet();
 block|}
 end_function
 
@@ -631,9 +629,6 @@ operator|(
 name|CorpusDistribution
 argument_list|(
 name|Rand
-operator|.
-name|Get_mt19937
-argument_list|()
 argument_list|)
 operator|)
 decl_stmt|;
@@ -889,7 +884,7 @@ block|}
 end_function
 
 begin_function
-name|bool
+name|void
 name|AddFeature
 parameter_list|(
 name|size_t
@@ -989,6 +984,15 @@ name|OldIdx
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|NumAddedFeatures
+operator|++
+expr_stmt|;
+block|}
+name|NumUpdatedFeatures
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|FeatureDebug
@@ -1023,13 +1027,7 @@ name|CountingFeatures
 operator|=
 name|true
 expr_stmt|;
-return|return
-name|true
-return|;
 block|}
-return|return
-name|false
-return|;
 block|}
 end_function
 
@@ -1039,49 +1037,28 @@ name|NumFeatures
 argument_list|()
 specifier|const
 block|{
-name|size_t
-name|Res
-operator|=
-literal|0
-block|;
-for|for
-control|(
-name|size_t
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
-name|kFeatureSetSize
-condition|;
-name|i
-operator|++
-control|)
-name|Res
-operator|+=
-name|GetFeature
-argument_list|(
-name|i
-argument_list|)
-operator|!=
-literal|0
-expr_stmt|;
+return|return
+name|NumAddedFeatures
+return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-name|Res
-return|;
-end_return
-
-begin_macro
-unit|}    void
-name|ResetFeatureSet
+begin_expr_stmt
+name|size_t
+name|NumFeatureUpdates
 argument_list|()
-end_macro
+specifier|const
+block|{
+return|return
+name|NumUpdatedFeatures
+return|;
+block|}
+end_expr_stmt
 
-begin_block
+begin_function
+name|void
+name|ResetFeatureSet
+parameter_list|()
 block|{
 name|assert
 argument_list|(
@@ -1116,7 +1093,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_label
 name|private
@@ -1452,6 +1429,22 @@ name|bool
 name|CountingFeatures
 init|=
 name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|NumAddedFeatures
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|NumUpdatedFeatures
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 

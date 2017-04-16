@@ -330,8 +330,21 @@ name|void
 name|EmitLabel
 argument_list|(
 argument|MCSymbol *Symbol
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 name|override
+block|;
+name|virtual
+name|void
+name|EmitLabel
+argument_list|(
+argument|MCSymbol *Symbol
+argument_list|,
+argument|SMLoc Loc
+argument_list|,
+argument|MCFragment *F
+argument_list|)
 block|;
 name|void
 name|EmitAssignment
@@ -390,7 +403,9 @@ name|EmitInstruction
 argument_list|(
 argument|const MCInst&Inst
 argument_list|,
-argument|const MCSubtargetInfo& STI
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|bool = false
 argument_list|)
 name|override
 block|;
@@ -676,6 +691,13 @@ argument_list|,
 argument|int64_t Expr
 argument_list|,
 argument|SMLoc Loc = SMLoc()
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitFileDirective
+argument_list|(
+argument|StringRef Filename
 argument_list|)
 name|override
 block|;

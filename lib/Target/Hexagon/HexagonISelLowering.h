@@ -182,8 +182,6 @@ comment|// Jump table.
 name|CP
 block|,
 comment|// Constant pool.
-name|POPCOUNT
-block|,
 name|COMBINE
 block|,
 name|PACKHL
@@ -251,6 +249,8 @@ block|,
 name|EH_RETURN
 block|,
 name|DCFETCH
+block|,
+name|READCYCLE
 block|,
 name|OP_END
 block|}
@@ -513,6 +513,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerREADCYCLECOUNTER
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerEH_LABEL
 argument_list|(
 argument|SDValue Op
@@ -613,7 +622,7 @@ argument|SDValue Chain
 argument_list|,
 argument|GlobalAddressSDNode *GA
 argument_list|,
-argument|SDValue *InFlag
+argument|SDValue InFlag
 argument_list|,
 argument|EVT PtrVT
 argument_list|,
@@ -686,15 +695,6 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerCTPOP
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerFRAMEADDR
 argument_list|(
 argument|SDValue Op
@@ -729,6 +729,22 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+block|;
+name|bool
+name|CanLowerReturn
+argument_list|(
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|LLVMContext&Context
+argument_list|)
+specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerReturn

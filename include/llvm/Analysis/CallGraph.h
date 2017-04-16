@@ -1074,12 +1074,10 @@ name|friend
 name|class
 name|CallGraph
 decl_stmt|;
-name|AssertingVH
-operator|<
 name|Function
-operator|>
+modifier|*
 name|F
-expr_stmt|;
+decl_stmt|;
 name|std
 operator|::
 name|vector

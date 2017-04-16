@@ -1883,8 +1883,7 @@ operator|.
 name|isAliased
 return|;
 block|}
-comment|/// isImmutableObjectIndex - Returns true if the specified index corresponds
-comment|/// to an immutable object.
+comment|/// Returns true if the specified index corresponds to an immutable object.
 name|bool
 name|isImmutableObjectIndex
 argument_list|(
@@ -1928,6 +1927,46 @@ index|]
 operator|.
 name|isImmutable
 return|;
+block|}
+comment|/// Marks the immutability of an object.
+name|void
+name|setIsImmutableObjectIndex
+parameter_list|(
+name|int
+name|ObjectIdx
+parameter_list|,
+name|bool
+name|Immutable
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|isImmutable
+operator|=
+name|Immutable
+expr_stmt|;
 block|}
 comment|/// Returns true if the specified index corresponds to a spill slot.
 name|bool

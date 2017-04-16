@@ -92,6 +92,9 @@ block|{
 name|namespace
 name|codeview
 block|{
+name|class
+name|TypeServerHandler
+decl_stmt|;
 comment|/// Dumper for CodeView type streams found in COFF object files and PDB files.
 name|class
 name|CVTypeDumper
@@ -104,11 +107,22 @@ argument_list|(
 name|TypeDatabase
 operator|&
 name|TypeDB
+argument_list|,
+name|TypeServerHandler
+operator|*
+name|Handler
+operator|=
+name|nullptr
 argument_list|)
 operator|:
 name|TypeDB
 argument_list|(
-argument|TypeDB
+name|TypeDB
+argument_list|)
+operator|,
+name|Handler
+argument_list|(
+argument|Handler
 argument_list|)
 block|{}
 comment|/// Dumps one type record.  Returns false if there was a type parsing error,
@@ -185,6 +199,10 @@ label|:
 name|TypeDatabase
 modifier|&
 name|TypeDB
+decl_stmt|;
+name|TypeServerHandler
+modifier|*
+name|Handler
 decl_stmt|;
 block|}
 empty_stmt|;

@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/ByteStream.h"
+file|"llvm/Support/BinaryByteStream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamReader.h"
+file|"llvm/Support/BinaryStreamReader.h"
 end_include
 
 begin_include
@@ -122,6 +122,12 @@ operator|:
 name|Stream
 argument_list|(
 name|RecordData
+argument_list|,
+name|llvm
+operator|::
+name|support
+operator|::
+name|little
 argument_list|)
 block|,
 name|Reader
@@ -134,14 +140,10 @@ argument_list|(
 argument|Reader
 argument_list|)
 block|{}
-name|msf
-operator|::
-name|ByteStream
+name|BinaryByteStream
 name|Stream
 block|;
-name|msf
-operator|::
-name|StreamReader
+name|BinaryStreamReader
 name|Reader
 block|;
 name|SymbolRecordMapping

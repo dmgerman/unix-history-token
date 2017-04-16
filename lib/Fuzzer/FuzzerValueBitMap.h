@@ -70,17 +70,18 @@ specifier|const
 name|size_t
 name|kMapSizeInBits
 init|=
-literal|65371
+literal|1
+operator|<<
+literal|16
 decl_stmt|;
-comment|// Prime.
 specifier|static
 specifier|const
 name|size_t
-name|kMapSizeInBitsAligned
+name|kMapPrimeMod
 init|=
-literal|65536
+literal|65371
 decl_stmt|;
-comment|// 2^16
+comment|// Largest Prime< kMapSizeInBits;
 specifier|static
 specifier|const
 name|size_t
@@ -100,19 +101,12 @@ specifier|const
 name|size_t
 name|kMapSizeInWords
 init|=
-name|kMapSizeInBitsAligned
+name|kMapSizeInBits
 operator|/
 name|kBitsInWord
 decl_stmt|;
 name|public
 label|:
-specifier|static
-specifier|const
-name|size_t
-name|kNumberOfItems
-init|=
-name|kMapSizeInBits
-decl_stmt|;
 comment|// Clears all bits.
 name|void
 name|Reset
@@ -133,6 +127,7 @@ expr_stmt|;
 block|}
 comment|// Computes a hash function of Value and sets the corresponding bit.
 comment|// Returns true if the bit was changed from 0 to 1.
+name|ATTRIBUTE_NO_SANITIZE_ALL
 specifier|inline
 name|bool
 name|AddValue
@@ -144,12 +139,6 @@ block|{
 name|uintptr_t
 name|Idx
 init|=
-name|Value
-operator|<
-name|kMapSizeInBits
-condition|?
-name|Value
-else|:
 name|Value
 operator|%
 name|kMapSizeInBits
@@ -198,6 +187,24 @@ return|return
 name|New
 operator|!=
 name|Old
+return|;
+block|}
+name|ATTRIBUTE_NO_SANITIZE_ALL
+specifier|inline
+name|bool
+name|AddValueModPrime
+parameter_list|(
+name|uintptr_t
+name|Value
+parameter_list|)
+block|{
+return|return
+name|AddValue
+argument_list|(
+name|Value
+operator|%
+name|kMapPrimeMod
+argument_list|)
 return|;
 block|}
 specifier|inline
@@ -337,7 +344,7 @@ name|M
 condition|)
 name|Res
 operator|+=
-name|__builtin_popcountl
+name|__builtin_popcountll
 argument_list|(
 name|M
 argument_list|)
@@ -358,11 +365,13 @@ operator|<
 name|class
 name|Callback
 operator|>
+name|ATTRIBUTE_NO_SANITIZE_ALL
 name|void
 name|ForEach
 argument_list|(
 argument|Callback CB
 argument_list|)
+specifier|const
 block|{
 for|for
 control|(

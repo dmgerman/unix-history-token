@@ -91,6 +91,9 @@ name|class
 name|AssumptionCacheTracker
 decl_stmt|;
 name|class
+name|BlockFrequencyInfo
+decl_stmt|;
+name|class
 name|CallSite
 decl_stmt|;
 name|class
@@ -431,6 +434,13 @@ name|int
 operator|>
 name|HotCallSiteThreshold
 expr_stmt|;
+comment|/// Threshold to use when the callsite is considered cold.
+name|Optional
+operator|<
+name|int
+operator|>
+name|ColdCallSiteThreshold
+expr_stmt|;
 block|}
 struct|;
 comment|/// Generate the parameters to tune the inline cost analysis based only on the
@@ -505,6 +515,19 @@ operator|>
 operator|&
 name|GetAssumptionCache
 argument_list|,
+name|Optional
+operator|<
+name|function_ref
+operator|<
+name|BlockFrequencyInfo
+operator|&
+operator|(
+name|Function
+operator|&
+operator|)
+operator|>>
+name|GetBFI
+argument_list|,
 name|ProfileSummaryInfo
 operator|*
 name|PSI
@@ -547,6 +570,19 @@ operator|)
 operator|>
 operator|&
 name|GetAssumptionCache
+argument_list|,
+name|Optional
+operator|<
+name|function_ref
+operator|<
+name|BlockFrequencyInfo
+operator|&
+operator|(
+name|Function
+operator|&
+operator|)
+operator|>>
+name|GetBFI
 argument_list|,
 name|ProfileSummaryInfo
 operator|*

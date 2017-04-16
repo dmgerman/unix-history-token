@@ -67,22 +67,10 @@ directive|define
 name|LLVM_LIB_TARGET_AMDGPU_AMDGPUREGISTERINFO_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
-end_include
-
 begin_define
 define|#
 directive|define
 name|GET_REGINFO_HEADER
-end_define
-
-begin_define
-define|#
-directive|define
-name|GET_REGINFO_ENUM
 end_define
 
 begin_include

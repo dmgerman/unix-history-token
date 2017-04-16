@@ -78,6 +78,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ilist_node.h"
 end_include
 
@@ -224,13 +230,6 @@ label|:
 typedef|typedef
 name|SymbolTableList
 operator|<
-name|Argument
-operator|>
-name|ArgumentListType
-expr_stmt|;
-typedef|typedef
-name|SymbolTableList
-operator|<
 name|BasicBlock
 operator|>
 name|BasicBlockListType
@@ -249,17 +248,16 @@ name|const_iterator
 name|const_iterator
 expr_stmt|;
 typedef|typedef
-name|ArgumentListType
-operator|::
-name|iterator
+name|Argument
+modifier|*
 name|arg_iterator
-expr_stmt|;
+typedef|;
 typedef|typedef
-name|ArgumentListType
-operator|::
-name|const_iterator
+specifier|const
+name|Argument
+modifier|*
 name|const_arg_iterator
-expr_stmt|;
+typedef|;
 name|private
 label|:
 comment|// Important things that make up a function!
@@ -268,10 +266,14 @@ name|BasicBlocks
 decl_stmt|;
 comment|///< The basic blocks
 name|mutable
-name|ArgumentListType
-name|ArgumentList
+name|Argument
+modifier|*
+name|Arguments
 decl_stmt|;
 comment|///< The formal arguments
+name|size_t
+name|NumArgs
+decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -281,7 +283,7 @@ operator|>
 name|SymTab
 expr_stmt|;
 comment|///< Symbol table of args/instructions
-name|AttributeSet
+name|AttributeList
 name|AttributeSets
 decl_stmt|;
 comment|///< Parameter attributes
@@ -344,6 +346,10 @@ name|void
 name|BuildLazyArguments
 parameter_list|()
 function_decl|const;
+name|void
+name|clearArguments
+parameter_list|()
+function_decl|;
 comment|/// Function ctor - If the (optional) Module argument is specified, the
 comment|/// function is automatically inserted into the end of the function list for
 comment|/// the module.
@@ -433,20 +439,39 @@ argument_list|(
 name|Value
 argument_list|)
 expr_stmt|;
-comment|/// Returns the type of the ret val.
-name|Type
-operator|*
-name|getReturnType
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// Returns the FunctionType for me.
 name|FunctionType
 operator|*
 name|getFunctionType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|getValueType
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// Returns the type of the ret val.
+name|Type
+operator|*
+name|getReturnType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFunctionType
+argument_list|()
+operator|->
+name|getReturnType
+argument_list|()
+return|;
+block|}
 comment|/// getContext - Return a reference to the LLVMContext associated with this
 comment|/// function.
 name|LLVMContext
@@ -461,19 +486,65 @@ name|bool
 name|isVarArg
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|getFunctionType
+argument_list|()
+operator|->
+name|isVarArg
+argument_list|()
+return|;
+block|}
 name|bool
 name|isMaterializable
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|getGlobalObjectSubClassData
+argument_list|()
+operator|&
+operator|(
+literal|1
+operator|<<
+name|IsMaterializableBit
+operator|)
+return|;
+block|}
 name|void
 name|setIsMaterializable
 parameter_list|(
 name|bool
 name|V
 parameter_list|)
-function_decl|;
+block|{
+name|unsigned
+name|Mask
+init|=
+literal|1
+operator|<<
+name|IsMaterializableBit
+decl_stmt|;
+name|setGlobalObjectSubClassData
+argument_list|(
+operator|(
+operator|~
+name|Mask
+operator|&
+name|getGlobalObjectSubClassData
+argument_list|()
+operator|)
+operator||
+operator|(
+name|V
+condition|?
+name|Mask
+else|:
+literal|0u
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// getIntrinsicID - This method returns the ID number of the specified
 comment|/// function, or Intrinsic::not_intrinsic if the function is not an
 comment|/// intrinsic, or if the pointer is null.  This value is always defined to be
@@ -606,7 +677,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// @brief Return the attribute list for this Function.
-name|AttributeSet
+name|AttributeList
 name|getAttributes
 argument_list|()
 specifier|const
@@ -619,7 +690,7 @@ comment|/// @brief Set the attribute list for this Function.
 name|void
 name|setAttributes
 parameter_list|(
-name|AttributeSet
+name|AttributeList
 name|Attrs
 parameter_list|)
 block|{
@@ -640,7 +711,7 @@ argument_list|)
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -664,7 +735,7 @@ parameter_list|)
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -691,7 +762,7 @@ parameter_list|)
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -711,7 +782,7 @@ argument_list|)
 block|{
 name|removeAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -736,7 +807,7 @@ argument_list|(
 name|getContext
 argument_list|()
 argument_list|,
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -748,14 +819,28 @@ block|}
 comment|/// \brief Set the entry count for this function.
 comment|///
 comment|/// Entry count is the number of times this function was executed based on
-comment|/// pgo data.
+comment|/// pgo data. \p Imports points to a set of GUIDs that needs to be imported
+comment|/// by the function for sample PGO, to enable the same inlines as the
+comment|/// profiled optimized binary.
 name|void
 name|setEntryCount
-parameter_list|(
+argument_list|(
 name|uint64_t
 name|Count
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|DenseSet
+operator|<
+name|GlobalValue
+operator|::
+name|GUID
+operator|>
+operator|*
+name|Imports
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 comment|/// \brief Get the entry count for this function.
 comment|///
 comment|/// Entry count is the number of times the function was executed based on
@@ -765,6 +850,18 @@ operator|<
 name|uint64_t
 operator|>
 name|getEntryCount
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns the set of GUIDs that needs to be imported to the function for
+comment|/// sample PGO, to enable the same inlines as the profiled optimized binary.
+name|DenseSet
+operator|<
+name|GlobalValue
+operator|::
+name|GUID
+operator|>
+name|getImportGUIDs
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -836,7 +933,7 @@ block|{
 return|return
 name|getAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -855,7 +952,7 @@ block|{
 return|return
 name|getAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -887,7 +984,7 @@ name|AttributeSets
 operator|.
 name|getStackAlignment
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|)
@@ -964,7 +1061,7 @@ parameter_list|(
 name|unsigned
 name|i
 parameter_list|,
-name|AttributeSet
+name|AttributeList
 name|Attrs
 parameter_list|)
 function_decl|;
@@ -999,7 +1096,7 @@ parameter_list|(
 name|unsigned
 name|i
 parameter_list|,
-name|AttributeSet
+name|AttributeList
 name|Attrs
 parameter_list|)
 function_decl|;
@@ -1024,6 +1121,32 @@ operator|.
 name|hasAttribute
 argument_list|(
 name|i
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+comment|/// @brief check if an attributes is in the list of attributes.
+name|bool
+name|hasParamAttribute
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl|const
+block|{
+return|return
+name|getAttributes
+argument_list|()
+operator|.
+name|hasParamAttribute
+argument_list|(
+name|ArgNo
 argument_list|,
 name|Kind
 argument_list|)
@@ -1802,49 +1925,6 @@ comment|/// Get the underlying elements of the Function... the basic block list 
 comment|/// empty for external functions.
 comment|///
 specifier|const
-name|ArgumentListType
-operator|&
-name|getArgumentList
-argument_list|()
-specifier|const
-block|{
-name|CheckLazyArguments
-argument_list|()
-block|;
-return|return
-name|ArgumentList
-return|;
-block|}
-name|ArgumentListType
-modifier|&
-name|getArgumentList
-parameter_list|()
-block|{
-name|CheckLazyArguments
-argument_list|()
-expr_stmt|;
-return|return
-name|ArgumentList
-return|;
-block|}
-specifier|static
-name|ArgumentListType
-name|Function
-operator|::
-operator|*
-name|getSublistAccess
-argument_list|(
-argument|Argument*
-argument_list|)
-block|{
-return|return
-operator|&
-name|Function
-operator|::
-name|ArgumentList
-return|;
-block|}
-specifier|const
 name|BasicBlockListType
 operator|&
 name|getBasicBlockList
@@ -2070,10 +2150,7 @@ name|CheckLazyArguments
 argument_list|()
 expr_stmt|;
 return|return
-name|ArgumentList
-operator|.
-name|begin
-argument_list|()
+name|Arguments
 return|;
 block|}
 name|const_arg_iterator
@@ -2085,10 +2162,7 @@ name|CheckLazyArguments
 argument_list|()
 block|;
 return|return
-name|ArgumentList
-operator|.
-name|begin
-argument_list|()
+name|Arguments
 return|;
 block|}
 name|arg_iterator
@@ -2099,10 +2173,9 @@ name|CheckLazyArguments
 argument_list|()
 expr_stmt|;
 return|return
-name|ArgumentList
-operator|.
-name|end
-argument_list|()
+name|Arguments
+operator|+
+name|NumArgs
 return|;
 block|}
 name|const_arg_iterator
@@ -2114,10 +2187,9 @@ name|CheckLazyArguments
 argument_list|()
 block|;
 return|return
-name|ArgumentList
-operator|.
-name|end
-argument_list|()
+name|Arguments
+operator|+
+name|NumArgs
 return|;
 block|}
 name|iterator_range
@@ -2162,12 +2234,23 @@ name|size_t
 name|arg_size
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|NumArgs
+return|;
+block|}
 name|bool
 name|arg_empty
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|arg_size
+argument_list|()
+operator|==
+literal|0
+return|;
+block|}
 comment|/// \brief Check whether this function has a personality function.
 name|bool
 name|hasPersonalityFn
@@ -2401,6 +2484,12 @@ comment|/// to \a DISubprogram.
 name|DISubprogram
 operator|*
 name|getSubprogram
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns true if we should emit debug info for profiling.
+name|bool
+name|isDebugInfoForProfiling
 argument_list|()
 specifier|const
 expr_stmt|;

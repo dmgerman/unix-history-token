@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Module.h"
 end_include
 
@@ -87,10 +93,19 @@ directive|include
 file|"llvm/MC/SectionKind.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|GlobalValue
+decl_stmt|;
 name|class
 name|MachineModuleInfo
 decl_stmt|;
@@ -119,12 +134,6 @@ name|class
 name|MCValue
 decl_stmt|;
 name|class
-name|ConstantExpr
-decl_stmt|;
-name|class
-name|GlobalValue
-decl_stmt|;
-name|class
 name|TargetMachine
 decl_stmt|;
 name|class
@@ -136,6 +145,8 @@ block|{
 name|MCContext
 operator|*
 name|Ctx
+operator|=
+name|nullptr
 block|;
 comment|/// Name-mangler for global names.
 name|Mangler
@@ -144,33 +155,17 @@ name|Mang
 operator|=
 name|nullptr
 block|;
-name|TargetLoweringObjectFile
-argument_list|(
-specifier|const
-name|TargetLoweringObjectFile
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|TargetLoweringObjectFile
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
 name|protected
 operator|:
 name|bool
 name|SupportIndirectSymViaGOTPCRel
+operator|=
+name|false
 block|;
 name|bool
 name|SupportGOTPCRelWithOffset
+operator|=
+name|true
 block|;
 comment|/// This section contains the static constructor pointer list.
 name|MCSection
@@ -184,6 +179,37 @@ name|StaticDtorSection
 block|;
 name|public
 operator|:
+name|TargetLoweringObjectFile
+argument_list|()
+operator|=
+expr|default
+block|;
+name|TargetLoweringObjectFile
+argument_list|(
+specifier|const
+name|TargetLoweringObjectFile
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|TargetLoweringObjectFile
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|TargetLoweringObjectFile
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
+name|virtual
+operator|~
+name|TargetLoweringObjectFile
+argument_list|()
+block|;
 name|MCContext
 operator|&
 name|getContext
@@ -206,37 +232,6 @@ operator|*
 name|Mang
 return|;
 block|}
-name|TargetLoweringObjectFile
-argument_list|()
-operator|:
-name|MCObjectFileInfo
-argument_list|()
-block|,
-name|Ctx
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|Mang
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|SupportIndirectSymViaGOTPCRel
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|SupportGOTPCRelWithOffset
-argument_list|(
-argument|true
-argument_list|)
-block|{}
-name|virtual
-operator|~
-name|TargetLoweringObjectFile
-argument_list|()
-block|;
 comment|/// This method must be called before any actual lowering is done.  This
 comment|/// specifies the current context for codegen, and gives the lowering
 comment|/// implementations a chance to set up their default sections.
@@ -613,6 +608,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TARGET_TARGETLOWERINGOBJECTFILE_H
+end_comment
 
 end_unit
 

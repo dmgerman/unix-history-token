@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/GlobalValue.h"
 end_include
 
 begin_include
@@ -197,15 +209,27 @@ modifier|*
 name|createUnpredictable
 parameter_list|()
 function_decl|;
-comment|/// Return metadata containing the entry count for a function.
+comment|/// Return metadata containing the entry \p Count for a function, and the
+comment|/// GUIDs stored in \p Imports that need to be imported for sample PGO, to
+comment|/// enable the same inlines as the profiled optimized binary
 name|MDNode
 modifier|*
 name|createFunctionEntryCount
-parameter_list|(
+argument_list|(
 name|uint64_t
 name|Count
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|DenseSet
+operator|<
+name|GlobalValue
+operator|::
+name|GUID
+operator|>
+operator|*
+name|Imports
+argument_list|)
+decl_stmt|;
 comment|/// Return metadata containing the section prefix for a function.
 name|MDNode
 modifier|*

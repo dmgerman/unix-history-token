@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- CodeGen/MachineInstBuilder.h - Simplify creation of MIs -*- C++ -*-===//
+comment|//===- CodeGen/MachineInstrBuilder.h - Simplify creation of MIs --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -82,7 +82,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineInstr.h"
 end_include
 
 begin_include
@@ -94,7 +112,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineOperand.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InstrTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Intrinsics.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -164,32 +218,29 @@ name|Kill
 block|}
 enum|;
 block|}
+comment|// end namespace RegState
 name|class
 name|MachineInstrBuilder
 block|{
 name|MachineFunction
 modifier|*
 name|MF
+init|=
+name|nullptr
 decl_stmt|;
 name|MachineInstr
 modifier|*
 name|MI
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|MachineInstrBuilder
 argument_list|()
-operator|:
-name|MF
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|MI
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Create a MachineInstrBuilder for manipulating an existing instruction.
 comment|/// F must be the machine function that was used to allocate I.
 name|MachineInstrBuilder
@@ -1015,7 +1066,7 @@ block|}
 specifier|const
 name|MachineInstrBuilder
 modifier|&
-name|addOperand
+name|add
 argument_list|(
 specifier|const
 name|MachineOperand
@@ -1034,6 +1085,45 @@ argument_list|,
 name|MO
 argument_list|)
 expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+specifier|const
+name|MachineInstrBuilder
+modifier|&
+name|add
+argument_list|(
+name|ArrayRef
+operator|<
+name|MachineOperand
+operator|>
+name|MOs
+argument_list|)
+decl|const
+block|{
+for|for
+control|(
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+range|:
+name|MOs
+control|)
+block|{
+name|MI
+operator|->
+name|addOperand
+argument_list|(
+operator|*
+name|MF
+argument_list|,
+name|MO
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|*
 name|this
@@ -2907,13 +2997,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEINSTRBUILDER_H
+end_comment
 
 end_unit
 

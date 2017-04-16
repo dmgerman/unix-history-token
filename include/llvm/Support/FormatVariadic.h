@@ -785,7 +785,7 @@ comment|// a literal '{' or '}' it must be doubled -- "{{" to print a literal '{
 comment|// "}}" to print a literal '}'.
 comment|//
 comment|// ===Parameter Indexing===
-comment|// `index` specifies the index of the paramter in the parameter pack to format
+comment|// `index` specifies the index of the parameter in the parameter pack to format
 comment|// into the output.  Note that it is possible to refer to the same parameter
 comment|// index multiple times in a given format string.  This makes it possible to
 comment|// output the same value multiple times without passing it multiple times to the

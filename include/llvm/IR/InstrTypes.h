@@ -4278,6 +4278,7 @@ name|isImpliedTrueByMatchingCmp
 argument_list|(
 argument|Predicate Pred2
 argument_list|)
+specifier|const
 block|{
 return|return
 name|isImpliedTrueByMatchingCmp
@@ -4296,6 +4297,7 @@ name|isImpliedFalseByMatchingCmp
 argument_list|(
 argument|Predicate Pred2
 argument_list|)
+specifier|const
 block|{
 return|return
 name|isImpliedFalseByMatchingCmp

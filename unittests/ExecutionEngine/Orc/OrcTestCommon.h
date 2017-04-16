@@ -123,14 +123,15 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// Base class for Orc tests that will execute code.
 name|class
-name|OrcExecutionTest
+name|OrcNativeTarget
 block|{
 name|public
 label|:
-name|OrcExecutionTest
-argument_list|()
+specifier|static
+name|void
+name|initialize
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -152,6 +153,30 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+block|}
+name|private
+label|:
+specifier|static
+name|bool
+name|NativeTargetInitialized
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|// Base class for Orc tests that will execute code.
+name|class
+name|OrcExecutionTest
+block|{
+name|public
+label|:
+name|OrcExecutionTest
+argument_list|()
+block|{
+comment|// Initialize the native target if it hasn't been done already.
+name|OrcNativeTarget
+operator|::
+name|initialize
+argument_list|()
+expr_stmt|;
 comment|// Try to select a TargetMachine for the host.
 name|TM
 operator|.
@@ -227,12 +252,6 @@ name|TargetMachine
 operator|>
 name|TM
 expr_stmt|;
-name|private
-label|:
-specifier|static
-name|bool
-name|NativeTargetInitialized
-decl_stmt|;
 block|}
 empty_stmt|;
 name|class

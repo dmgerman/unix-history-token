@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCAsmBackend.h - MC Asm Backend -----------------*- C++ -*-===//
+comment|//===- llvm/MC/MCAsmBackend.h - MC Asm Backend ------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCDirectives.h"
 end_include
 
@@ -70,13 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ErrorHandling.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -92,9 +92,6 @@ decl_stmt|;
 name|class
 name|MCCFIInstruction
 decl_stmt|;
-name|class
-name|MCELFObjectTargetWriter
-decl_stmt|;
 struct_decl|struct
 name|MCFixupKindInfo
 struct_decl|;
@@ -105,13 +102,10 @@ name|class
 name|MCInst
 decl_stmt|;
 name|class
-name|MCRelaxableFragment
-decl_stmt|;
-name|class
 name|MCObjectWriter
 decl_stmt|;
 name|class
-name|MCSection
+name|MCRelaxableFragment
 decl_stmt|;
 name|class
 name|MCSubtargetInfo
@@ -126,6 +120,14 @@ comment|/// Generic interface to target specific assembler backends.
 name|class
 name|MCAsmBackend
 block|{
+name|protected
+label|:
+comment|// Can only create subclasses.
+name|MCAsmBackend
+argument_list|()
+expr_stmt|;
+name|public
+label|:
 name|MCAsmBackend
 argument_list|(
 specifier|const
@@ -135,7 +137,8 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-name|void
+name|MCAsmBackend
+modifier|&
 name|operator
 init|=
 operator|(
@@ -146,14 +149,6 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|protected
-label|:
-comment|// Can only create subclasses.
-name|MCAsmBackend
-argument_list|()
-expr_stmt|;
-name|public
-label|:
 name|virtual
 operator|~
 name|MCAsmBackend
@@ -258,7 +253,8 @@ parameter_list|)
 block|{}
 comment|/// Apply the \p Value for given \p Fixup into the provided data fragment, at
 comment|/// the offset specified by the fixup and following the fixup kind as
-comment|/// appropriate.
+comment|/// appropriate. Errors (such as an out of range fixup value) should be
+comment|/// reported via \p Ctx.
 name|virtual
 name|void
 name|applyFixup
@@ -280,6 +276,10 @@ name|Value
 argument_list|,
 name|bool
 name|IsPCRel
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
 argument_list|)
 decl|const
 init|=
@@ -469,13 +469,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCASMBACKEND_H
+end_comment
 
 end_unit
 

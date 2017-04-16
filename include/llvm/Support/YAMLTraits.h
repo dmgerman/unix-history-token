@@ -3407,6 +3407,8 @@ name|SaveInfo
 block|;
 name|bool
 name|UseDefault
+operator|=
+name|true
 block|;
 specifier|const
 name|bool
@@ -3443,6 +3445,11 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
+name|Val
+operator|.
+name|hasValue
+argument_list|()
+operator|&&
 name|this
 operator|->
 name|preflightKey
@@ -6948,6 +6955,21 @@ name|Output
 argument_list|()
 name|override
 block|;
+comment|/// \brief Set whether or not to output optional values which are equal
+comment|/// to the default value.  By default, when outputting if you attempt
+comment|/// to write a value that is equal to the default, the value gets ignored.
+comment|/// Sometimes, it is useful to be able to see these in the resulting YAML
+comment|/// anyway.
+name|void
+name|setWriteDefaultValues
+argument_list|(
+argument|bool Write
+argument_list|)
+block|{
+name|WriteDefaultValues
+operator|=
+name|Write
+block|; }
 name|bool
 name|outputting
 argument_list|()
@@ -7245,6 +7267,9 @@ name|EnumerationMatchFound
 block|;
 name|bool
 name|NeedsNewLine
+block|;
+name|bool
+name|WriteDefaultValues
 block|; }
 decl_stmt|;
 end_decl_stmt

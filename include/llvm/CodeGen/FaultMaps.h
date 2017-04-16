@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===------------------- FaultMaps.h - The "FaultMaps" section --*- C++ -*-===//
+comment|//===- FaultMaps.h - The "FaultMaps" section --------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -58,19 +58,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Format.h"
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -84,10 +96,7 @@ name|class
 name|MCExpr
 decl_stmt|;
 name|class
-name|MCSymbol
-decl_stmt|;
-name|class
-name|MCStreamer
+name|raw_ostream
 decl_stmt|;
 name|class
 name|FaultMaps
@@ -101,9 +110,21 @@ name|FaultingLoad
 init|=
 literal|1
 block|,
+name|FaultingLoadStore
+block|,
+name|FaultingStore
+block|,
 name|FaultKindMax
 block|}
 enum|;
+name|explicit
+name|FaultMaps
+parameter_list|(
+name|AsmPrinter
+modifier|&
+name|AP
+parameter_list|)
+function_decl|;
 specifier|static
 specifier|const
 name|char
@@ -111,14 +132,6 @@ modifier|*
 name|faultTypeToString
 parameter_list|(
 name|FaultKind
-parameter_list|)
-function_decl|;
-name|explicit
-name|FaultMaps
-parameter_list|(
-name|AsmPrinter
-modifier|&
-name|AP
 parameter_list|)
 function_decl|;
 name|void
@@ -150,58 +163,60 @@ name|FaultInfo
 block|{
 name|FaultKind
 name|Kind
+init|=
+name|FaultKindMax
 decl_stmt|;
 specifier|const
 name|MCExpr
 modifier|*
 name|FaultingOffsetExpr
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|MCExpr
 modifier|*
 name|HandlerOffsetExpr
+init|=
+name|nullptr
 decl_stmt|;
 name|FaultInfo
 argument_list|()
-operator|:
-name|Kind
-argument_list|(
-name|FaultKindMax
-argument_list|)
-operator|,
-name|FaultingOffsetExpr
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|HandlerOffsetExpr
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|FaultInfo
 argument_list|(
-argument|FaultMaps::FaultKind Kind
+name|FaultMaps
+operator|::
+name|FaultKind
+name|Kind
 argument_list|,
-argument|const MCExpr *FaultingOffset
+specifier|const
+name|MCExpr
+operator|*
+name|FaultingOffset
 argument_list|,
-argument|const MCExpr *HandlerOffset
+specifier|const
+name|MCExpr
+operator|*
+name|HandlerOffset
 argument_list|)
-operator|:
+range|:
 name|Kind
 argument_list|(
 name|Kind
 argument_list|)
-operator|,
+decl_stmt|,
 name|FaultingOffsetExpr
 argument_list|(
 name|FaultingOffset
 argument_list|)
-operator|,
+decl_stmt|,
 name|HandlerOffsetExpr
 argument_list|(
-argument|HandlerOffset
+name|HandlerOffset
 argument_list|)
 block|{}
 block|}
@@ -644,27 +659,23 @@ specifier|const
 name|uint8_t
 modifier|*
 name|P
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|uint8_t
 modifier|*
 name|E
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|FunctionInfoAccessor
 argument_list|()
-operator|:
-name|P
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|E
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|FunctionInfoAccessor
 argument_list|(
@@ -966,13 +977,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_FAULTMAPS_H
+end_comment
 
 end_unit
 

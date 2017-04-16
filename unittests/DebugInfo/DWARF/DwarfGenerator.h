@@ -375,11 +375,6 @@ argument_list|(
 argument|dwarf::Tag Tag
 argument_list|)
 expr_stmt|;
-comment|/// Force a DIE to say it has children even when it doesn't.
-name|void
-name|setForceChildren
-parameter_list|()
-function_decl|;
 block|}
 empty_stmt|;
 comment|/// A DWARF compile unit used to generate DWARF compile/type units.

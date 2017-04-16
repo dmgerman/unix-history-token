@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -104,13 +110,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCInstrItineraries.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<memory>
 end_include
 
 begin_define
@@ -131,12 +149,6 @@ name|llvm
 block|{
 name|class
 name|GlobalValue
-decl_stmt|;
-name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|TargetMachine
 decl_stmt|;
 comment|/// The X86 backend supports a number of different styles of PIC.
 comment|///
@@ -160,6 +172,7 @@ comment|// Set when not in pic mode.
 block|}
 enum|;
 block|}
+comment|// end namespace PICStyles
 name|class
 name|X86Subtarget
 name|final
@@ -341,10 +354,6 @@ comment|/// Processor has RTM instructions.
 name|bool
 name|HasRTM
 block|;
-comment|/// Processor has HLE.
-name|bool
-name|HasHLE
-block|;
 comment|/// Processor has ADX instructions.
 name|bool
 name|HasADX
@@ -368,6 +377,10 @@ block|;
 comment|/// Processor has MONITORX/MWAITX instructions.
 name|bool
 name|HasMWAITX
+block|;
+comment|/// Processor has Cache Line Zero instruction
+name|bool
+name|HasCLZERO
 block|;
 comment|/// Processor has Prefetch with intent to Write instruction
 name|bool
@@ -410,9 +423,9 @@ name|bool
 name|UseLeaForSP
 block|;
 comment|/// True if there is no performance penalty to writing only the lower parts
-comment|/// of a YMM register without clearing the upper part.
+comment|/// of a YMM or ZMM register without clearing the upper part.
 name|bool
-name|HasFastPartialYMMWrite
+name|HasFastPartialYMMorZMMWrite
 block|;
 comment|/// True if hardware SQRTSS instruction is at least as fast (latency) as
 comment|/// RSQRTSS followed by a Newton-Raphson iteration.
@@ -437,6 +450,10 @@ block|;
 comment|/// True if LZCNT instruction is fast.
 name|bool
 name|HasFastLZCNT
+block|;
+comment|/// True if SHLD based rotate is fast.
+name|bool
+name|HasFastSHLDRotate
 block|;
 comment|/// True if the short functions should be padded to prevent
 comment|/// a stall when returning too early.
@@ -493,18 +510,6 @@ comment|/// Processor supports MPX - Memory Protection Extensions
 name|bool
 name|HasMPX
 block|;
-comment|/// Processor supports Invalidate Process-Context Identifier
-name|bool
-name|HasInvPCId
-block|;
-comment|/// Processor has VM Functions
-name|bool
-name|HasVMFUNC
-block|;
-comment|/// Processor has Supervisor Mode Access Protection
-name|bool
-name|HasSMAP
-block|;
 comment|/// Processor has Software Guard Extensions
 name|bool
 name|HasSGX
@@ -512,10 +517,6 @@ block|;
 comment|/// Processor supports Flush Cache Line instruction
 name|bool
 name|HasCLFLUSHOPT
-block|;
-comment|/// Processor has Persistent Commit feature
-name|bool
-name|HasPCOMMIT
 block|;
 comment|/// Processor supports Cache Line Write Back instruction
 name|bool
@@ -1144,7 +1145,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|HasFMA
+operator|||
+name|hasAVX512
+argument_list|()
+operator|)
 operator|&&
 operator|!
 name|HasFMA4
@@ -1169,9 +1175,6 @@ name|hasFMA
 argument_list|()
 operator|||
 name|hasFMA4
-argument_list|()
-operator|||
-name|hasAVX512
 argument_list|()
 return|;
 block|}
@@ -1284,15 +1287,6 @@ name|HasRTM
 return|;
 block|}
 name|bool
-name|hasHLE
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasHLE
-return|;
-block|}
-name|bool
 name|hasADX
 argument_list|()
 specifier|const
@@ -1344,6 +1338,15 @@ specifier|const
 block|{
 return|return
 name|HasMWAITX
+return|;
+block|}
+name|bool
+name|hasCLZERO
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCLZERO
 return|;
 block|}
 name|bool
@@ -1419,12 +1422,12 @@ name|UseLeaForSP
 return|;
 block|}
 name|bool
-name|hasFastPartialYMMWrite
+name|hasFastPartialYMMorZMMWrite
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasFastPartialYMMWrite
+name|HasFastPartialYMMorZMMWrite
 return|;
 block|}
 name|bool
@@ -1452,6 +1455,15 @@ specifier|const
 block|{
 return|return
 name|HasFastLZCNT
+return|;
+block|}
+name|bool
+name|hasFastSHLDRotate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFastSHLDRotate
 return|;
 block|}
 name|bool
@@ -1589,7 +1601,15 @@ return|return
 name|HasMPX
 return|;
 block|}
-name|virtual
+name|bool
+name|hasCLFLUSHOPT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCLFLUSHOPT
+return|;
+block|}
 name|bool
 name|isXRaySupported
 argument_list|()
@@ -1851,6 +1871,18 @@ return|return
 name|TargetTriple
 operator|.
 name|isOSIAMCU
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetFuchsia
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSFuchsia
 argument_list|()
 return|;
 block|}
@@ -2201,6 +2233,17 @@ return|return
 name|true
 return|;
 block|}
+comment|// TODO: Update the regression tests and return true.
+name|bool
+name|supportPrintSchedInfo
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
 name|bool
 name|enableEarlyIfConversion
 argument_list|()
@@ -2238,13 +2281,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_X86_X86SUBTARGET_H
+end_comment
 
 end_unit
 

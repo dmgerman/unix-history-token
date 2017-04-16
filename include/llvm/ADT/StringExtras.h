@@ -1351,6 +1351,50 @@ end_return
 
 begin_comment
 unit|}
+comment|/// Joins the strings in the range [R.begin(), R.end()), adding Separator
+end_comment
+
+begin_comment
+comment|/// between the elements.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|Range
+operator|>
+specifier|inline
+name|std
+operator|::
+name|string
+name|join
+argument_list|(
+argument|Range&&R
+argument_list|,
+argument|StringRef Separator
+argument_list|)
+block|{
+return|return
+name|join
+argument_list|(
+name|R
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|R
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|Separator
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Joins the strings in the parameter pack \p Items, adding \p Separator
 end_comment
 
@@ -1367,7 +1411,7 @@ comment|/// that accepts the argument explicitly.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|Sep

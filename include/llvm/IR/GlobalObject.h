@@ -270,13 +270,56 @@ name|unsigned
 name|getGlobalObjectSubClassData
 argument_list|()
 specifier|const
+block|{
+name|unsigned
+name|ValueData
+operator|=
+name|getGlobalValueSubClassData
+argument_list|()
 block|;
+return|return
+name|ValueData
+operator|>>
+name|GlobalObjectBits
+return|;
+block|}
 name|void
 name|setGlobalObjectSubClassData
 argument_list|(
 argument|unsigned Val
 argument_list|)
+block|{
+name|unsigned
+name|OldData
+operator|=
+name|getGlobalValueSubClassData
+argument_list|()
 block|;
+name|setGlobalValueSubClassData
+argument_list|(
+operator|(
+name|OldData
+operator|&
+name|GlobalObjectMask
+operator|)
+operator||
+operator|(
+name|Val
+operator|<<
+name|GlobalObjectBits
+operator|)
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|getGlobalObjectSubClassData
+argument_list|()
+operator|==
+name|Val
+operator|&&
+literal|"representation error"
+argument_list|)
+block|;   }
 comment|/// Check if this global has a custom object file section.
 comment|///
 comment|/// This is more efficient than calling getSection() and checking for an empty

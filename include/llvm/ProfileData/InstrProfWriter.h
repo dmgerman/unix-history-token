@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=-- InstrProfWriter.h - Instrumented profiling writer -----------*- C++ -*-=//
+comment|//===- InstrProfWriter.h - Instrumented profiling writer --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -72,13 +72,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ProfileData/InstrProf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
@@ -90,7 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -99,10 +117,10 @@ name|llvm
 block|{
 comment|/// Writer for instrumentation based profile data.
 name|class
-name|ProfOStream
+name|InstrProfRecordWriterTrait
 decl_stmt|;
 name|class
-name|InstrProfRecordWriterTrait
+name|ProfOStream
 decl_stmt|;
 name|class
 name|InstrProfWriter
@@ -145,6 +163,8 @@ name|FunctionData
 expr_stmt|;
 name|ProfKind
 name|ProfileKind
+init|=
+name|PF_Unknown
 decl_stmt|;
 comment|// Use raw pointer here for the incomplete type object.
 name|InstrProfRecordWriterTrait
@@ -340,6 +360,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_PROFILEDATA_INSTRPROFWRITER_H
+end_comment
 
 end_unit
 

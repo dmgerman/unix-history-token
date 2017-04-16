@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFCompileUnit.h --------------------------------------*- C++ -*-===//
+comment|//===- DWARFCompileUnit.h ---------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,19 +34,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFCOMPILEUNIT_H
+name|LLVM_DEBUGINFO_DWARFCOMPILEUNIT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFCOMPILEUNIT_H
+name|LLVM_DEBUGINFO_DWARFCOMPILEUNIT_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/DWARF/DWARFUnit.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/DWARF/DWARFUnitIndex.h"
 end_include
 
 begin_decl_stmt
@@ -115,6 +121,12 @@ argument_list|,
 argument|Entry
 argument_list|)
 block|{}
+comment|// VTable anchor.
+operator|~
+name|DWARFCompileUnit
+argument_list|()
+name|override
+block|;
 name|void
 name|dump
 argument_list|(
@@ -129,21 +141,23 @@ name|DWARFSectionKind
 name|Section
 operator|=
 name|DW_SECT_INFO
-block|;
-comment|// VTable anchor.
-operator|~
-name|DWARFCompileUnit
-argument_list|()
-name|override
 block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARFCOMPILEUNIT_H
+end_comment
 
 end_unit
 

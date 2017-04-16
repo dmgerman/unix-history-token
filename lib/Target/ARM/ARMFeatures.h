@@ -78,6 +78,7 @@ comment|// could be MachineInstr or MCInst
 name|bool
 name|IsCPSRDead
 argument_list|(
+specifier|const
 name|InstrType
 operator|*
 name|Instr
@@ -93,7 +94,7 @@ specifier|inline
 name|bool
 name|isV8EligibleForIT
 argument_list|(
-argument|InstrType *Instr
+argument|const InstrType *Instr
 argument_list|)
 block|{
 switch|switch

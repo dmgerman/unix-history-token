@@ -133,6 +133,9 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// Perhaps branch folding, tail merging and other CFG optimizations on the
+comment|/// given function.  Block placement changes the layout and may create new
+comment|/// tail merging opportunities.
 name|bool
 name|OptimizeFunction
 parameter_list|(
@@ -531,6 +534,25 @@ name|Freq
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|view
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|,
+name|bool
+name|isSimple
+init|=
+name|true
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|getEntryFreq
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 specifier|const
@@ -592,6 +614,8 @@ modifier|&
 name|TailMBB
 parameter_list|)
 function_decl|;
+comment|/// Delete the instruction OldInst and everything after it, replacing it
+comment|/// with an unconditional branch to NewDest.
 name|void
 name|ReplaceTailWithBranchTo
 argument_list|(
@@ -605,6 +629,9 @@ operator|*
 name|NewDest
 argument_list|)
 decl_stmt|;
+comment|/// Given a machine basic block and an iterator into it, split the MBB so
+comment|/// that the part before the iterator falls into the part starting at the
+comment|/// iterator.  This returns the new MBB.
 name|MachineBasicBlock
 modifier|*
 name|SplitMBBAt
@@ -624,6 +651,15 @@ operator|*
 name|BB
 argument_list|)
 decl_stmt|;
+comment|/// Look through all the blocks in MergePotentials that have hash CurHash
+comment|/// (guaranteed to match the last element).  Build the vector SameTails of
+comment|/// all those that have the (same) largest number of instructions in common
+comment|/// of any pair of these blocks.  SameTails entries contain an iterator into
+comment|/// MergePotentials (from which the MachineBasicBlock can be found) and a
+comment|/// MachineBasicBlock::iterator into that MBB indicating the instruction
+comment|/// where the matching code sequence begins.  Order of elements in SameTails
+comment|/// is the reverse of the order in which those blocks appear in
+comment|/// MergePotentials (where they are not necessarily consecutive).
 name|unsigned
 name|ComputeSameTails
 parameter_list|(
@@ -642,6 +678,8 @@ modifier|*
 name|PredBB
 parameter_list|)
 function_decl|;
+comment|/// Remove all blocks with hash CurHash from MergePotentials, restoring
+comment|/// branches at ends of blocks as appropriate.
 name|void
 name|RemoveBlocksWithHash
 parameter_list|(
@@ -657,6 +695,8 @@ modifier|*
 name|PredBB
 parameter_list|)
 function_decl|;
+comment|/// None of the blocks to be tail-merged consist only of the common tail.
+comment|/// Create a block that does by splitting one.
 name|bool
 name|CreateCommonTailOnlyBlock
 parameter_list|(
@@ -677,6 +717,15 @@ modifier|&
 name|commonTailIndex
 parameter_list|)
 function_decl|;
+comment|/// Create merged DebugLocs of identical instructions across SameTails and
+comment|/// assign it to the instruction in common tail.
+name|void
+name|MergeCommonTailDebugLocs
+parameter_list|(
+name|unsigned
+name|commonTailIndex
+parameter_list|)
+function_decl|;
 name|bool
 name|OptimizeBranches
 parameter_list|(
@@ -685,6 +734,8 @@ modifier|&
 name|MF
 parameter_list|)
 function_decl|;
+comment|/// Analyze and optimize control flow related to the specified block. This
+comment|/// is never called on the entry block.
 name|bool
 name|OptimizeBlock
 parameter_list|(
@@ -693,6 +744,8 @@ modifier|*
 name|MBB
 parameter_list|)
 function_decl|;
+comment|/// Remove the specified dead machine basic block from the function,
+comment|/// updating the CFG.
 name|void
 name|RemoveDeadBlock
 parameter_list|(
@@ -701,6 +754,8 @@ modifier|*
 name|MBB
 parameter_list|)
 function_decl|;
+comment|/// Hoist common instruction sequences at the start of basic blocks to their
+comment|/// common predecessor.
 name|bool
 name|HoistCommonCode
 parameter_list|(
@@ -709,6 +764,8 @@ modifier|&
 name|MF
 parameter_list|)
 function_decl|;
+comment|/// If the successors of MBB has common instruction sequence at the start of
+comment|/// the function, move the instructions before MBB terminator if it's legal.
 name|bool
 name|HoistCommonCodeInSuccs
 parameter_list|(

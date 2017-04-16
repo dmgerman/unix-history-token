@@ -120,9 +120,6 @@ block|;
 name|PPCABI
 name|TargetABI
 block|;
-name|PPCSubtarget
-name|Subtarget
-block|;
 name|mutable
 name|StringMap
 operator|<

@@ -2020,39 +2020,33 @@ operator|*
 name|li
 argument_list|)
 expr_stmt|;
-comment|/// clear - Clear out the current SelectionDAG and the associated
-comment|/// state and prepare this SelectionDAGBuilder object to be used
-comment|/// for a new block. This doesn't clear out information about
-comment|/// additional blocks that are needed to complete switch lowering
-comment|/// or PHI node updating; that information is cleared out as it is
-comment|/// consumed.
+comment|/// Clear out the current SelectionDAG and the associated state and prepare
+comment|/// this SelectionDAGBuilder object to be used for a new block. This doesn't
+comment|/// clear out information about additional blocks that are needed to complete
+comment|/// switch lowering or PHI node updating; that information is cleared out as
+comment|/// it is consumed.
 name|void
 name|clear
 parameter_list|()
 function_decl|;
-comment|/// clearDanglingDebugInfo - Clear the dangling debug information
-comment|/// map. This function is separated from the clear so that debug
-comment|/// information that is dangling in a basic block can be properly
-comment|/// resolved in a different basic block. This allows the
-comment|/// SelectionDAG to resolve dangling debug information attached
-comment|/// to PHI nodes.
+comment|/// Clear the dangling debug information map. This function is separated from
+comment|/// the clear so that debug information that is dangling in a basic block can
+comment|/// be properly resolved in a different basic block. This allows the
+comment|/// SelectionDAG to resolve dangling debug information attached to PHI nodes.
 name|void
 name|clearDanglingDebugInfo
 parameter_list|()
 function_decl|;
-comment|/// getRoot - Return the current virtual root of the Selection DAG,
-comment|/// flushing any PendingLoad items. This must be done before emitting
-comment|/// a store or any other node that may need to be ordered after any
-comment|/// prior load instructions.
-comment|///
+comment|/// Return the current virtual root of the Selection DAG, flushing any
+comment|/// PendingLoad items. This must be done before emitting a store or any other
+comment|/// node that may need to be ordered after any prior load instructions.
 name|SDValue
 name|getRoot
 parameter_list|()
 function_decl|;
-comment|/// getControlRoot - Similar to getRoot, but instead of flushing all the
-comment|/// PendingLoad items, flush all the PendingExports items. It is necessary
-comment|/// to do this before emitting a terminator instruction.
-comment|///
+comment|/// Similar to getRoot, but instead of flushing all the PendingLoad items,
+comment|/// flush all the PendingExports items. It is necessary to do this before
+comment|/// emitting a terminator instruction.
 name|SDValue
 name|getControlRoot
 parameter_list|()
@@ -2295,6 +2289,9 @@ name|TW
 argument_list|,
 name|BranchProbability
 name|FW
+argument_list|,
+name|bool
+name|InvertCond
 argument_list|)
 decl_stmt|;
 name|void
@@ -2326,6 +2323,9 @@ name|TW
 parameter_list|,
 name|BranchProbability
 name|FW
+parameter_list|,
+name|bool
+name|InvertCond
 parameter_list|)
 function_decl|;
 name|bool
@@ -3753,6 +3753,18 @@ name|Intrinsic
 parameter_list|)
 function_decl|;
 name|void
+name|visitConstrainedFPIntrinsic
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|,
+name|unsigned
+name|Intrinsic
+parameter_list|)
+function_decl|;
+name|void
 name|visitVAStart
 parameter_list|(
 specifier|const
@@ -3969,7 +3981,9 @@ parameter_list|,
 name|int64_t
 name|Offset
 parameter_list|,
+specifier|const
 name|DebugLoc
+modifier|&
 name|dl
 parameter_list|,
 name|unsigned
@@ -3990,9 +4004,8 @@ comment|///
 struct|struct
 name|RegsForValue
 block|{
-comment|/// ValueVTs - The value types of the values, which may not be legal, and
+comment|/// The value types of the values, which may not be legal, and
 comment|/// may need be promoted or synthesized from one or more registers.
-comment|///
 name|SmallVector
 operator|<
 name|EVT
@@ -4001,15 +4014,14 @@ literal|4
 operator|>
 name|ValueVTs
 expr_stmt|;
-comment|/// RegVTs - The value types of the registers. This is the same size as
-comment|/// ValueVTs and it records, for each value, what the type of the assigned
-comment|/// register or registers are. (Individual values are never synthesized
-comment|/// from more than one type of register.)
+comment|/// The value types of the registers. This is the same size as ValueVTs and it
+comment|/// records, for each value, what the type of the assigned register or
+comment|/// registers are. (Individual values are never synthesized from more than one
+comment|/// type of register.)
 comment|///
 comment|/// With virtual registers, the contents of RegVTs is redundant with TLI's
 comment|/// getRegisterType member function, however when with physical registers
 comment|/// it is necessary to have a separate record of the types.
-comment|///
 name|SmallVector
 operator|<
 name|MVT
@@ -4018,10 +4030,9 @@ literal|4
 operator|>
 name|RegVTs
 expr_stmt|;
-comment|/// Regs - This list holds the registers assigned to the values.
+comment|/// This list holds the registers assigned to the values.
 comment|/// Each legal or promoted value requires one register, and each
 comment|/// expanded value requires multiple registers.
-comment|///
 name|SmallVector
 operator|<
 name|unsigned
@@ -4058,7 +4069,7 @@ argument_list|,
 argument|Type *Ty
 argument_list|)
 empty_stmt|;
-comment|/// append - Add the specified values to this one.
+comment|/// Add the specified values to this one.
 name|void
 name|append
 parameter_list|(
@@ -4126,10 +4137,10 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getCopyFromRegs - Emit a series of CopyFromReg nodes that copies from
-comment|/// this value and returns the result as a ValueVTs value.  This uses
-comment|/// Chain/Flag as the input and updates them for the output Chain/Flag.
-comment|/// If the Flag pointer is NULL, no flag is used.
+comment|/// Emit a series of CopyFromReg nodes that copies from this value and returns
+comment|/// the result as a ValueVTs value. This uses Chain/Flag as the input and
+comment|/// updates them for the output Chain/Flag. If the Flag pointer is NULL, no
+comment|/// flag is used.
 name|SDValue
 name|getCopyFromRegs
 argument_list|(
@@ -4163,11 +4174,11 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getCopyToRegs - Emit a series of CopyToReg nodes that copies the specified
-comment|/// value into the registers specified by this object.  This uses Chain/Flag
-comment|/// as the input and updates them for the output Chain/Flag.  If the Flag
-comment|/// pointer is nullptr, no flag is used.  If V is not nullptr, then it is used
-comment|/// in printing better diagnostic messages on error.
+comment|/// Emit a series of CopyToReg nodes that copies the specified value into the
+comment|/// registers specified by this object. This uses Chain/Flag as the input and
+comment|/// updates them for the output Chain/Flag. If the Flag pointer is nullptr, no
+comment|/// flag is used. If V is not nullptr, then it is used in printing better
+comment|/// diagnostic messages on error.
 name|void
 name|getCopyToRegs
 argument_list|(
@@ -4209,9 +4220,9 @@ name|ANY_EXTEND
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// AddInlineAsmOperands - Add this value to the specified inlineasm node
-comment|/// operand list.  This adds the code marker, matching input operand index
-comment|/// (if applicable), and includes the number of values added into it.
+comment|/// Add this value to the specified inlineasm node operand list. This adds the
+comment|/// code marker, matching input operand index (if applicable), and includes
+comment|/// the number of values added into it.
 name|void
 name|AddInlineAsmOperands
 argument_list|(

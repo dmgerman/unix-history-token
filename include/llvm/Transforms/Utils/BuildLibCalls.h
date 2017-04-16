@@ -432,7 +432,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|AttributeSet
+name|AttributeList
 operator|&
 name|Attrs
 argument_list|)
@@ -463,7 +463,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|AttributeSet
+name|AttributeList
 operator|&
 name|Attrs
 argument_list|)

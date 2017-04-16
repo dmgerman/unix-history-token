@@ -106,7 +106,7 @@ name|namespace
 name|dwarf
 block|{
 comment|//===----------------------------------------------------------------------===//
-comment|// Dwarf constants as gleaned from the DWARF Debugging Information Format V.4
+comment|// DWARF constants as gleaned from the DWARF Debugging Information Format V.5
 comment|// reference manual http://www.dwarfstd.org/.
 comment|//
 comment|// Do not mix the following two enumerations sets.  DW_TAG_invalid changes the
@@ -939,7 +939,35 @@ directive|include
 file|"llvm/Support/Dwarf.def"
 block|}
 enum|;
-comment|// Constants for the DWARF5 Accelerator Table Proposal
+comment|/// Constants for unit types in DWARF v5.
+enum|enum
+name|UnitType
+enum|:
+name|unsigned
+name|char
+block|{
+define|#
+directive|define
+name|HANDLE_DW_UT
+parameter_list|(
+name|ID
+parameter_list|,
+name|NAME
+parameter_list|)
+value|DW_UT_##NAME = ID,
+include|#
+directive|include
+file|"llvm/Support/Dwarf.def"
+name|DW_UT_lo_user
+init|=
+literal|0x80
+block|,
+name|DW_UT_hi_user
+init|=
+literal|0xff
+block|}
+enum|;
+comment|// Constants for the DWARF v5 Accelerator Table Proposal
 enum|enum
 name|AcceleratorTable
 block|{
@@ -1169,6 +1197,12 @@ parameter_list|)
 function_decl|;
 name|StringRef
 name|ApplePropertyString
+parameter_list|(
+name|unsigned
+parameter_list|)
+function_decl|;
+name|StringRef
+name|UnitTypeString
 parameter_list|(
 name|unsigned
 parameter_list|)

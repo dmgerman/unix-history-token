@@ -191,6 +191,11 @@ modifier|*
 name|createPPCBoolRetToIntPass
 parameter_list|()
 function_decl|;
+name|FunctionPass
+modifier|*
+name|createPPCExpandISELPass
+parameter_list|()
+function_decl|;
 name|void
 name|LowerPPCMachineInstrToMCInst
 parameter_list|(
@@ -220,6 +225,13 @@ parameter_list|)
 function_decl|;
 name|void
 name|initializePPCBoolRetToIntPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
+name|initializePPCExpandISELPass
 parameter_list|(
 name|PassRegistry
 modifier|&

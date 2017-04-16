@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCWinCOFFObjectWriter.h - Win COFF Object Writer *- C++ -*-===//
+comment|//===- llvm/MC/MCWinCOFFObjectWriter.h - Win COFF Object Writer -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -60,9 +60,6 @@ name|class
 name|MCValue
 decl_stmt|;
 name|class
-name|raw_ostream
-decl_stmt|;
-name|class
 name|raw_pwrite_stream
 decl_stmt|;
 name|class
@@ -90,7 +87,9 @@ name|virtual
 operator|~
 name|MCWinCOFFObjectTargetWriter
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|unsigned
 name|getMachine
 argument_list|()
@@ -164,13 +163,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCWINCOFFOBJECTWRITER_H
+end_comment
 
 end_unit
 

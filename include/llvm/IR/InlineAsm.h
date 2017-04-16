@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/InlineAsm.h - Class to represent inline asm strings-*- C++ -*-===//
+comment|//===- llvm/InlineAsm.h - Class to represent inline asm strings -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -364,6 +364,9 @@ comment|/// constraint #0 and constraint #4 has the value "0", this will be 4).
 name|signed
 name|char
 name|MatchingInput
+operator|=
+operator|-
+literal|1
 block|;
 comment|/// Code - The constraint code, either the register name (in braces) or the
 comment|/// constraint letter/number.
@@ -373,14 +376,9 @@ block|;
 comment|/// Default constructor.
 name|SubConstraintInfo
 argument_list|()
-operator|:
-name|MatchingInput
-argument_list|(
-argument|-
-literal|1
-argument_list|)
-block|{}
-block|}
+operator|=
+expr|default
+block|;   }
 decl_stmt|;
 typedef|typedef
 name|std
@@ -410,11 +408,15 @@ comment|/// Type - The basic type of the constraint: input/output/clobber
 comment|///
 name|ConstraintPrefix
 name|Type
+init|=
+name|isInput
 decl_stmt|;
 comment|/// isEarlyClobber - "&": output operand writes result before inputs are all
 comment|/// read.  This is only ever set for an output operand.
 name|bool
 name|isEarlyClobber
+init|=
+name|false
 decl_stmt|;
 comment|/// MatchingInput - If this is not -1, this is an output constraint where an
 comment|/// input constraint is required to match it (e.g. "0").  The value is the
@@ -423,6 +425,9 @@ comment|/// constraint #0 and constraint #4 has the value "0", this will be 4).
 name|signed
 name|char
 name|MatchingInput
+init|=
+operator|-
+literal|1
 decl_stmt|;
 comment|/// hasMatchingInput - Return true if this is an output constraint that has
 comment|/// a matching input constraint.
@@ -442,6 +447,8 @@ comment|/// isCommutative - This is set to true for a constraint that is commuta
 comment|/// with the next operand.
 name|bool
 name|isCommutative
+init|=
+name|false
 decl_stmt|;
 comment|/// isIndirect - True if this operand is an indirect operand.  This means
 comment|/// that the address of the source or destination is present in the call
@@ -449,6 +456,8 @@ comment|/// instruction, instead of it being returned or passed in explicitly.  
 comment|/// is represented with a '*' in the asm string.
 name|bool
 name|isIndirect
+init|=
+name|false
 decl_stmt|;
 comment|/// Code - The constraint code, either the register name (in braces) or the
 comment|/// constraint letter/number.
@@ -458,6 +467,8 @@ decl_stmt|;
 comment|/// isMultipleAlternative - '|': has multiple-alternative constraints.
 name|bool
 name|isMultipleAlternative
+init|=
+name|false
 decl_stmt|;
 comment|/// multipleAlternatives - If there are multiple alternative constraints,
 comment|/// this array will contain them.  Otherwise it will be empty.
@@ -467,10 +478,14 @@ decl_stmt|;
 comment|/// The currently selected alternative constraint index.
 name|unsigned
 name|currentAlternativeIndex
+init|=
+literal|0
 decl_stmt|;
 comment|/// Default constructor.
 name|ConstraintInfo
 argument_list|()
+operator|=
+expr|default
 expr_stmt|;
 comment|/// Parse - Analyze the specified string (e.g. "=*&{eax}") and fill in the
 comment|/// fields in this structure.  If the constraint string is not understood,

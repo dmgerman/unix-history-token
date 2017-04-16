@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm/Support/SMLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -143,25 +143,8 @@ label|:
 name|ExprKind
 name|Kind
 decl_stmt|;
-name|MCExpr
-argument_list|(
-specifier|const
-name|MCExpr
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCExpr
-operator|&
-operator|)
-operator|=
-name|delete
+name|SMLoc
+name|Loc
 decl_stmt|;
 name|bool
 name|evaluateAsAbsolute
@@ -220,47 +203,60 @@ name|explicit
 name|MCExpr
 argument_list|(
 argument|ExprKind Kind
+argument_list|,
+argument|SMLoc Loc
 argument_list|)
 block|:
 name|Kind
 argument_list|(
-argument|Kind
+name|Kind
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+argument|Loc
 argument_list|)
 block|{}
 name|bool
 name|evaluateAsRelocatableImpl
 argument_list|(
-name|MCValue
-operator|&
-name|Res
+argument|MCValue&Res
 argument_list|,
-specifier|const
-name|MCAssembler
-operator|*
-name|Asm
+argument|const MCAssembler *Asm
 argument_list|,
-specifier|const
-name|MCAsmLayout
-operator|*
-name|Layout
+argument|const MCAsmLayout *Layout
 argument_list|,
-specifier|const
-name|MCFixup
-operator|*
-name|Fixup
+argument|const MCFixup *Fixup
 argument_list|,
-specifier|const
-name|SectionAddrMap
-operator|*
-name|Addrs
+argument|const SectionAddrMap *Addrs
 argument_list|,
-name|bool
-name|InSet
+argument|bool InSet
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 name|public
 label|:
+name|MCExpr
+argument_list|(
+specifier|const
+name|MCExpr
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MCExpr
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCExpr
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 comment|/// \name Accessors
 comment|/// @{
 name|ExprKind
@@ -270,6 +266,15 @@ specifier|const
 block|{
 return|return
 name|Kind
+return|;
+block|}
+name|SMLoc
+name|getLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
 return|;
 block|}
 comment|/// @}
@@ -487,6 +492,9 @@ argument_list|(
 name|MCExpr
 operator|::
 name|Constant
+argument_list|,
+name|SMLoc
+argument_list|()
 argument_list|)
 block|,
 name|Value
@@ -621,6 +629,8 @@ comment|// symbol@SIZE
 name|VK_WEAKREF
 block|,
 comment|// The link between the symbols in .weakref foo, bar
+name|VK_X86_ABS8
+block|,
 name|VK_ARM_NONE
 block|,
 name|VK_ARM_GOT_PREL
@@ -815,6 +825,9 @@ block|,
 name|VK_WebAssembly_FUNCTION
 block|,
 comment|// Function table index, rather than virtual addr
+name|VK_WebAssembly_TYPEINDEX
+block|,
+comment|// Type table index
 name|VK_AMDGPU_GOTPCREL32_LO
 block|,
 comment|// symbol@gotpcrel32@lo
@@ -867,6 +880,8 @@ argument_list|,
 argument|VariantKind Kind
 argument_list|,
 argument|const MCAsmInfo *MAI
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 block|;
 name|public
@@ -908,6 +923,8 @@ argument_list|,
 argument|VariantKind Kind
 argument_list|,
 argument|MCContext&Ctx
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 block|;
 specifier|static
@@ -1041,6 +1058,8 @@ argument_list|(
 argument|Opcode Op
 argument_list|,
 argument|const MCExpr *Expr
+argument_list|,
+argument|SMLoc Loc
 argument_list|)
 operator|:
 name|MCExpr
@@ -1048,6 +1067,8 @@ argument_list|(
 name|MCExpr
 operator|::
 name|Unary
+argument_list|,
+name|Loc
 argument_list|)
 block|,
 name|Op
@@ -1075,6 +1096,8 @@ argument_list|,
 argument|const MCExpr *Expr
 argument_list|,
 argument|MCContext&Ctx
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 block|;
 specifier|static
@@ -1086,6 +1109,8 @@ argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
 argument|MCContext&Ctx
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 block|{
 return|return
@@ -1096,6 +1121,8 @@ argument_list|,
 name|Expr
 argument_list|,
 name|Ctx
+argument_list|,
+name|Loc
 argument_list|)
 return|;
 block|}
@@ -1108,6 +1135,8 @@ argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
 argument|MCContext&Ctx
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 block|{
 return|return
@@ -1118,6 +1147,8 @@ argument_list|,
 name|Expr
 argument_list|,
 name|Ctx
+argument_list|,
+name|Loc
 argument_list|)
 return|;
 block|}
@@ -1130,6 +1161,8 @@ argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
 argument|MCContext&Ctx
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 block|{
 return|return
@@ -1140,6 +1173,8 @@ argument_list|,
 name|Expr
 argument_list|,
 name|Ctx
+argument_list|,
+name|Loc
 argument_list|)
 return|;
 block|}
@@ -1152,6 +1187,8 @@ argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
 argument|MCContext&Ctx
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 block|{
 return|return
@@ -1162,6 +1199,8 @@ argument_list|,
 name|Expr
 argument_list|,
 name|Ctx
+argument_list|,
+name|Loc
 argument_list|)
 return|;
 block|}
@@ -1305,6 +1344,8 @@ argument_list|,
 argument|const MCExpr *LHS
 argument_list|,
 argument|const MCExpr *RHS
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 operator|:
 name|MCExpr
@@ -1312,6 +1353,8 @@ argument_list|(
 name|MCExpr
 operator|::
 name|Binary
+argument_list|,
+name|Loc
 argument_list|)
 block|,
 name|Op
@@ -1346,6 +1389,8 @@ argument_list|,
 argument|const MCExpr *RHS
 argument_list|,
 argument|MCContext&Ctx
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 block|;
 specifier|static
@@ -1924,13 +1969,17 @@ operator|:
 name|MCExpr
 argument_list|(
 argument|Target
+argument_list|,
+argument|SMLoc()
 argument_list|)
 block|{}
 name|virtual
 operator|~
 name|MCTargetExpr
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|public
 operator|:
 name|virtual
@@ -2018,6 +2067,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCEXPR_H
+end_comment
 
 end_unit
 

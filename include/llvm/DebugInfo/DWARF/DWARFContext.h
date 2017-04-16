@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFContext.h ------------------------------------------*- C++ -*-===//
+comment|//===- DWARFContext.h -------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFCONTEXT_H
+name|LLVM_DEBUGINFO_DWARF_DWARFCONTEXT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFCONTEXT_H
+name|LLVM_DEBUGINFO_DWARF_DWARFCONTEXT_H
 end_define
 
 begin_include
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
@@ -166,6 +172,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Host.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdint>
 end_include
 
@@ -197,6 +209,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MemoryBuffer
+decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|// In place of applying the relocations to the data we've read from disk we use
 comment|// a separate mapping table to the side and checking that at locations in the
 comment|// dwarf where we expect relocated values. This adds a bit of complexity to the
@@ -1262,6 +1280,13 @@ literal|4
 operator|>
 name|UncompressedSections
 block|;
+name|StringRef
+operator|*
+name|MapSectionToMember
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|;
 name|public
 operator|:
 name|DWARFContextInMemory
@@ -1279,6 +1304,15 @@ operator|*
 name|L
 operator|=
 name|nullptr
+argument_list|)
+block|;
+name|DWARFContextInMemory
+argument_list|(
+argument|const StringMap<std::unique_ptr<MemoryBuffer>>&Sections
+argument_list|,
+argument|uint8_t AddrSize
+argument_list|,
+argument|bool isLittleEndian = sys::IsLittleEndianHost
 argument_list|)
 block|;
 name|bool
@@ -1619,7 +1653,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_LIB_DEBUGINFO_DWARFCONTEXT_H
+comment|// LLVM_DEBUGINFO_DWARF_DWARFCONTEXT_H
 end_comment
 
 end_unit

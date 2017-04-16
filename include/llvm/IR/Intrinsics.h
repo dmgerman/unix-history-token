@@ -111,7 +111,7 @@ name|class
 name|Module
 decl_stmt|;
 name|class
-name|AttributeSet
+name|AttributeList
 decl_stmt|;
 comment|/// This namespace contains an enum with a value for every intrinsic/builtin
 comment|/// function known by LLVM. The enum values are returned by
@@ -209,7 +209,7 @@ name|id
 parameter_list|)
 function_decl|;
 comment|/// Return the attributes for an intrinsic.
-name|AttributeSet
+name|AttributeList
 name|getAttributes
 parameter_list|(
 name|LLVMContext

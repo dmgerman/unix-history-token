@@ -74,7 +74,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/AMDGPUMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/PseudoSourceValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<array>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
 end_include
 
 begin_include
@@ -83,13 +113,16 @@ directive|include
 file|<map>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MachineRegisterInfo
-decl_stmt|;
 name|class
 name|AMDGPUImagePseudoSourceValue
 range|:
@@ -293,6 +326,9 @@ comment|// Graphics info.
 name|unsigned
 name|PSInputAddr
 block|;
+name|unsigned
+name|PSInputEnable
+block|;
 name|bool
 name|ReturnsVoid
 block|;
@@ -353,19 +389,6 @@ operator|:
 comment|// FIXME: Make private
 name|unsigned
 name|LDSWaveSpillSize
-block|;
-name|unsigned
-name|PSInputEna
-block|;
-name|std
-operator|::
-name|map
-operator|<
-name|unsigned
-block|,
-name|unsigned
-operator|>
-name|LaneVGPRs
 block|;
 name|unsigned
 name|ScratchOffsetReg
@@ -534,9 +557,21 @@ name|SpilledReg
 block|{
 name|unsigned
 name|VGPR
+operator|=
+name|AMDGPU
+operator|::
+name|NoRegister
 block|;
 name|int
 name|Lane
+operator|=
+operator|-
+literal|1
+block|;
+name|SpilledReg
+argument_list|()
+operator|=
+expr|default
 block|;
 name|SpilledReg
 argument_list|(
@@ -553,22 +588,6 @@ block|,
 name|Lane
 argument_list|(
 argument|L
-argument_list|)
-block|{ }
-name|SpilledReg
-argument_list|()
-operator|:
-name|VGPR
-argument_list|(
-name|AMDGPU
-operator|::
-name|NoRegister
-argument_list|)
-block|,
-name|Lane
-argument_list|(
-argument|-
-literal|1
 argument_list|)
 block|{ }
 name|bool
@@ -596,7 +615,49 @@ return|;
 block|}
 expr|}
 block|;
-comment|// SIMachineFunctionInfo definition
+name|private
+operator|:
+comment|// SGPR->VGPR spilling support.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|SpillRegMask
+expr_stmt|;
+comment|// Track VGPR + wave index for each subregister of the SGPR spilled to
+comment|// frameindex key.
+name|DenseMap
+operator|<
+name|int
+block|,
+name|std
+operator|::
+name|vector
+operator|<
+name|SpilledReg
+operator|>>
+name|SGPRToVGPRSpills
+block|;
+name|unsigned
+name|NumVGPRSpillLanes
+operator|=
+literal|0
+block|;
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|2
+operator|>
+name|SpillVGPRs
+block|;
+name|public
+operator|:
 name|SIMachineFunctionInfo
 argument_list|(
 specifier|const
@@ -605,14 +666,65 @@ operator|&
 name|MF
 argument_list|)
 block|;
+name|ArrayRef
+operator|<
 name|SpilledReg
-name|getSpilledReg
+operator|>
+name|getSGPRToVGPRSpills
 argument_list|(
-argument|MachineFunction *MF
+argument|int FrameIndex
+argument_list|)
+specifier|const
+block|{
+name|auto
+name|I
+operator|=
+name|SGPRToVGPRSpills
+operator|.
+name|find
+argument_list|(
+name|FrameIndex
+argument_list|)
+block|;
+return|return
+operator|(
+name|I
+operator|==
+name|SGPRToVGPRSpills
+operator|.
+name|end
+argument_list|()
+operator|)
+condition|?
+name|ArrayRef
+operator|<
+name|SpilledReg
+operator|>
+operator|(
+operator|)
+else|:
+name|makeArrayRef
+argument_list|(
+name|I
+operator|->
+name|second
+argument_list|)
+return|;
+block|}
+name|bool
+name|allocateSGPRSpillToVGPR
+argument_list|(
+argument|MachineFunction&MF
 argument_list|,
-argument|unsigned FrameIndex
-argument_list|,
-argument|unsigned SubIdx
+argument|int FI
+argument_list|)
+block|;
+name|void
+name|removeSGPRToVGPRFrameIndices
+argument_list|(
+name|MachineFrameInfo
+operator|&
+name|MFI
 argument_list|)
 block|;
 name|bool
@@ -1184,6 +1296,15 @@ return|return
 name|PSInputAddr
 return|;
 block|}
+name|unsigned
+name|getPSInputEnable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PSInputEnable
+return|;
+block|}
 name|bool
 name|isPSInputAllocated
 argument_list|(
@@ -1208,6 +1329,18 @@ argument|unsigned Index
 argument_list|)
 block|{
 name|PSInputAddr
+operator||=
+literal|1
+operator|<<
+name|Index
+block|;   }
+name|void
+name|markPSInputEnabled
+argument_list|(
+argument|unsigned Index
+argument_list|)
+block|{
+name|PSInputEnable
 operator||=
 literal|1
 operator|<<
@@ -1553,13 +1686,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_AMDGPU_SIMACHINEFUNCTIONINFO_H
+end_comment
 
 end_unit
 

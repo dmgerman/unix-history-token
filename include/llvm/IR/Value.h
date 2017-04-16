@@ -1002,10 +1002,27 @@ comment|// when using them since you might not get all uses.
 comment|// The methods that don't start with materialized_ assert that modules is
 comment|// fully materialized.
 name|void
-name|assertModuleIsMaterialized
+name|assertModuleIsMaterializedImpl
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|// This indirection exists so we can keep assertModuleIsMaterializedImpl()
+comment|// around in release builds of Value.cpp to be linked with other code built
+comment|// in debug mode. But this avoids calling it in any of the release built code.
+name|void
+name|assertModuleIsMaterialized
+argument_list|()
+specifier|const
+block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|assertModuleIsMaterializedImpl
+argument_list|()
+block|;
+endif|#
+directive|endif
+block|}
 name|bool
 name|use_empty
 argument_list|()
@@ -1585,21 +1602,28 @@ comment|/// \brief Strip off pointer casts, all-zero GEPs, and aliases.
 comment|///
 comment|/// Returns the original uncasted value.  If this is called on a non-pointer
 comment|/// value, it returns 'this'.
-name|Value
-modifier|*
-name|stripPointerCasts
-parameter_list|()
-function_decl|;
 specifier|const
 name|Value
 operator|*
 name|stripPointerCasts
 argument_list|()
 specifier|const
+expr_stmt|;
+name|Value
+modifier|*
+name|stripPointerCasts
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|Value
 operator|*
 operator|>
@@ -1609,27 +1633,35 @@ operator|)
 operator|->
 name|stripPointerCasts
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Strip off pointer casts and all-zero GEPs.
 comment|///
 comment|/// Returns the original uncasted value.  If this is called on a non-pointer
 comment|/// value, it returns 'this'.
-name|Value
-modifier|*
-name|stripPointerCastsNoFollowAliases
-parameter_list|()
-function_decl|;
 specifier|const
 name|Value
 operator|*
 name|stripPointerCastsNoFollowAliases
 argument_list|()
 specifier|const
+expr_stmt|;
+name|Value
+modifier|*
+name|stripPointerCastsNoFollowAliases
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|Value
 operator|*
 operator|>
@@ -1639,27 +1671,35 @@ operator|)
 operator|->
 name|stripPointerCastsNoFollowAliases
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Strip off pointer casts and all-constant inbounds GEPs.
 comment|///
 comment|/// Returns the original pointer value.  If this is called on a non-pointer
 comment|/// value, it returns 'this'.
-name|Value
-modifier|*
-name|stripInBoundsConstantOffsets
-parameter_list|()
-function_decl|;
 specifier|const
 name|Value
 operator|*
 name|stripInBoundsConstantOffsets
 argument_list|()
 specifier|const
+expr_stmt|;
+name|Value
+modifier|*
+name|stripInBoundsConstantOffsets
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|Value
 operator|*
 operator|>
@@ -1669,6 +1709,7 @@ operator|)
 operator|->
 name|stripInBoundsConstantOffsets
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Accumulate offsets from \a stripInBoundsConstantOffsets().
@@ -1678,20 +1719,6 @@ comment|/// The provided APInt will be extended or truncated as needed to be the
 comment|/// correct bitwidth for an offset of this pointer type.
 comment|///
 comment|/// If this is called on a non-pointer value, it returns 'this'.
-name|Value
-modifier|*
-name|stripAndAccumulateInBoundsConstantOffsets
-parameter_list|(
-specifier|const
-name|DataLayout
-modifier|&
-name|DL
-parameter_list|,
-name|APInt
-modifier|&
-name|Offset
-parameter_list|)
-function_decl|;
 specifier|const
 name|Value
 modifier|*
@@ -1707,10 +1734,31 @@ operator|&
 name|Offset
 argument_list|)
 decl|const
+decl_stmt|;
+name|Value
+modifier|*
+name|stripAndAccumulateInBoundsConstantOffsets
+parameter_list|(
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|APInt
+modifier|&
+name|Offset
+parameter_list|)
 block|{
 return|return
 name|const_cast
 operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|Value
 operator|*
 operator|>
@@ -1724,27 +1772,35 @@ name|DL
 argument_list|,
 name|Offset
 argument_list|)
+operator|)
 return|;
 block|}
 comment|/// \brief Strip off pointer casts and inbounds GEPs.
 comment|///
 comment|/// Returns the original pointer value.  If this is called on a non-pointer
 comment|/// value, it returns 'this'.
-name|Value
-modifier|*
-name|stripInBoundsOffsets
-parameter_list|()
-function_decl|;
 specifier|const
 name|Value
 operator|*
 name|stripInBoundsOffsets
 argument_list|()
 specifier|const
+expr_stmt|;
+name|Value
+modifier|*
+name|stripInBoundsOffsets
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|Value
 operator|*
 operator|>
@@ -1754,6 +1810,7 @@ operator|)
 operator|->
 name|stripInBoundsOffsets
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns the number of bytes known to be dereferenceable for the
@@ -1795,21 +1852,6 @@ comment|/// If this value is a PHI node with CurBB as its parent, return the val
 comment|/// the PHI node corresponding to PredBB.  If not, return ourself.  This is
 comment|/// useful if you want to know the value something has in a predecessor
 comment|/// block.
-name|Value
-modifier|*
-name|DoPHITranslation
-parameter_list|(
-specifier|const
-name|BasicBlock
-modifier|*
-name|CurBB
-parameter_list|,
-specifier|const
-name|BasicBlock
-modifier|*
-name|PredBB
-parameter_list|)
-function_decl|;
 specifier|const
 name|Value
 modifier|*
@@ -1826,10 +1868,32 @@ operator|*
 name|PredBB
 argument_list|)
 decl|const
+decl_stmt|;
+name|Value
+modifier|*
+name|DoPHITranslation
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|CurBB
+parameter_list|,
+specifier|const
+name|BasicBlock
+modifier|*
+name|PredBB
+parameter_list|)
 block|{
 return|return
 name|const_cast
 operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|Value
 operator|*
 operator|>
@@ -1843,6 +1907,7 @@ name|CurBB
 argument_list|,
 name|PredBB
 argument_list|)
+operator|)
 return|;
 block|}
 comment|/// \brief The maximum alignment for instructions.

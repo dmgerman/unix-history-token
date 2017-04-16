@@ -8,6 +8,14 @@ comment|// RUN: llvm-cov show %S/Inputs/prevent_false_instantiations.covmapping 
 end_comment
 
 begin_comment
+comment|// RUN: not llvm-cov report %S/Inputs/prevent_false_instantiations.covmapping -instr-profile %S/Inputs/elf_binary_comdat.profdata -format=html
+end_comment
+
+begin_comment
+comment|// RUN: not llvm-cov export %S/Inputs/prevent_false_instantiations.covmapping -instr-profile %S/Inputs/elf_binary_comdat.profdata -format=html
+end_comment
+
+begin_comment
 comment|// FAKE-FILE-STDOUT-NOT: warning: The file '{{.*}}' isn't covered.
 end_comment
 

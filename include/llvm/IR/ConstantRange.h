@@ -166,11 +166,6 @@ name|Lower
 decl_stmt|,
 name|Upper
 decl_stmt|;
-comment|// If we have move semantics, pass APInts by value and move them into place.
-typedef|typedef
-name|APInt
-name|APIntMoveTy
-typedef|;
 name|public
 label|:
 comment|/// Initialize a full (the default) or empty set for the specified bit width.
@@ -191,7 +186,7 @@ comment|/// Initialize a range to hold the single specified value.
 comment|///
 name|ConstantRange
 argument_list|(
-argument|APIntMoveTy Value
+argument|APInt Value
 argument_list|)
 empty_stmt|;
 comment|/// @brief Initialize a range of values explicitly. This will assert out if
@@ -199,9 +194,9 @@ comment|/// Lower==Upper and Lower != Min or Max value for its type. It will als
 comment|/// assert out if the two APInt's are not the same bit width.
 name|ConstantRange
 argument_list|(
-argument|APIntMoveTy Lower
+argument|APInt Lower
 argument_list|,
-argument|APIntMoveTy Upper
+argument|APInt Upper
 argument_list|)
 empty_stmt|;
 comment|/// Produce the smallest range such that all values that may satisfy the given
@@ -511,6 +506,27 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// Compare set size of this range with the range CR.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isSizeStrictlySmallerThanOf
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|CR
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Return the largest unsigned value contained in the ConstantRange.

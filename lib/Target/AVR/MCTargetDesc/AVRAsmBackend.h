@@ -151,6 +151,8 @@ argument_list|,
 argument|uint64_t Value
 argument_list|,
 argument|bool IsPCRel
+argument_list|,
+argument|MCContext&Ctx
 argument_list|)
 specifier|const
 name|override

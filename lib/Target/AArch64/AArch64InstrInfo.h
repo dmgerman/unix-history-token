@@ -466,6 +466,34 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;
+comment|/// Return the immediate offset of the base register in a load/store \p LdSt.
+name|MachineOperand
+operator|&
+name|getMemOpBaseRegImmOfsOffsetOperand
+argument_list|(
+argument|MachineInstr&LdSt
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Returns true if opcode \p Opc is a memory operation. If it is, set
+comment|/// \p Scale, \p Width, \p MinOffset, and \p MaxOffset accordingly.
+comment|///
+comment|/// For unscaled instructions, \p Scale is set to 1.
+name|bool
+name|getMemOpInfo
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned&Scale
+argument_list|,
+argument|unsigned&Width
+argument_list|,
+argument|int64_t&MinOffset
+argument_list|,
+argument|int64_t&MaxOffset
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|shouldClusterMemOps
 argument_list|(
@@ -474,16 +502,6 @@ argument_list|,
 argument|MachineInstr&SecondLdSt
 argument_list|,
 argument|unsigned NumLoads
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
-name|shouldScheduleAdjacent
-argument_list|(
-argument|const MachineInstr&First
-argument_list|,
-argument|const MachineInstr&Second
 argument_list|)
 specifier|const
 name|override
@@ -905,8 +923,100 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|bool
+name|isFunctionSafeToOutlineFrom
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|getOutliningBenefit
+argument_list|(
+argument|size_t SequenceSize
+argument_list|,
+argument|size_t Occurrences
+argument_list|,
+argument|bool CanBeTailCall
+argument_list|)
+specifier|const
+name|override
+block|;
+name|AArch64GenInstrInfo
+operator|::
+name|MachineOutlinerInstrType
+name|getOutliningType
+argument_list|(
+argument|MachineInstr&MI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|insertOutlinerEpilogue
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool IsTailCall
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|insertOutlinerPrologue
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool isTailCall
+argument_list|)
+specifier|const
+name|override
+block|;
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|insertOutlinedCall
+argument_list|(
+argument|Module&M
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator&It
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool IsTailCall
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Returns true if the instruction has a shift by immediate that can be
+comment|/// executed in one cycle less.
+name|bool
+name|isFalkorLSLFast
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
+comment|/// \brief Sets the offsets on outlined instructions in \p MBB which use SP
+comment|/// so that they will be valid post-outlining.
+comment|///
+comment|/// \param MBB A \p MachineBasicBlock in an outlined function.
+name|void
+name|fixupPostOutline
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
 name|void
 name|instantiateCondBranch
 argument_list|(

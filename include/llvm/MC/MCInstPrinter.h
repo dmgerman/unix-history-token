@@ -68,13 +68,10 @@ name|class
 name|ArrayRef
 expr_stmt|;
 name|class
-name|MCInst
-decl_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
 name|MCAsmInfo
+decl_stmt|;
+name|class
+name|MCInst
 decl_stmt|;
 name|class
 name|MCInstrInfo
@@ -84,6 +81,9 @@ name|MCRegisterInfo
 decl_stmt|;
 name|class
 name|MCSubtargetInfo
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 name|class
 name|StringRef
@@ -131,6 +131,8 @@ comment|/// is disable.
 name|raw_ostream
 modifier|*
 name|CommentStream
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|MCAsmInfo
@@ -150,16 +152,24 @@ decl_stmt|;
 comment|/// True if we are printing marked up assembly.
 name|bool
 name|UseMarkup
+init|=
+name|false
 decl_stmt|;
 comment|/// True if we are printing immediates as hex.
 name|bool
 name|PrintImmHex
+init|=
+name|false
 decl_stmt|;
 comment|/// Which style to use for printing hexadecimal values.
 name|HexStyle
 operator|::
 name|Style
 name|PrintHexStyle
+operator|=
+name|HexStyle
+operator|::
+name|C
 expr_stmt|;
 comment|/// Utility function for printing annotations.
 name|void
@@ -193,11 +203,6 @@ operator|&
 name|mri
 argument_list|)
 operator|:
-name|CommentStream
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|MAI
 argument_list|(
 name|mai
@@ -210,22 +215,7 @@ argument_list|)
 operator|,
 name|MRI
 argument_list|(
-name|mri
-argument_list|)
-operator|,
-name|UseMarkup
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|PrintImmHex
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|PrintHexStyle
-argument_list|(
-argument|HexStyle::C
+argument|mri
 argument_list|)
 block|{}
 name|virtual

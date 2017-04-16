@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- llvm/MC/MCSubtargetInfo.h - Subtarget Information ---------*- C++ -*-==//
+comment|//===- llvm/MC/MCSubtargetInfo.h - Subtarget Information --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,13 +68,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCInstrItineraries.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCSchedule.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/SubtargetFeature.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -88,7 +124,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|StringRef
+name|MachineInstr
+decl_stmt|;
+name|class
+name|MCInst
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
@@ -169,34 +208,6 @@ name|FeatureBitset
 name|FeatureBits
 decl_stmt|;
 comment|// Feature bits for current CPU + FS
-name|MCSubtargetInfo
-argument_list|()
-operator|=
-name|delete
-expr_stmt|;
-name|MCSubtargetInfo
-modifier|&
-name|operator
-init|=
-operator|(
-name|MCSubtargetInfo
-operator|&&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-name|MCSubtargetInfo
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCSubtargetInfo
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|public
 label|:
 name|MCSubtargetInfo
@@ -235,6 +246,39 @@ argument_list|,
 argument|const unsigned *FP
 argument_list|)
 empty_stmt|;
+name|MCSubtargetInfo
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
+name|MCSubtargetInfo
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCSubtargetInfo
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|MCSubtargetInfo
+modifier|&
+name|operator
+init|=
+operator|(
+name|MCSubtargetInfo
+operator|&&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|virtual
+operator|~
+name|MCSubtargetInfo
+argument_list|()
+block|{}
 comment|/// getTargetTriple - Return the target triple string.
 specifier|const
 name|Triple
@@ -626,19 +670,58 @@ operator|==
 name|CPU
 return|;
 block|}
+comment|/// Returns string representation of scheduler comment
+name|virtual
+name|std
+operator|::
+name|string
+name|getSchedInfoStr
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|string
+argument_list|()
+return|;
+block|}
+name|virtual
+name|std
+operator|::
+name|string
+name|getSchedInfoStr
+argument_list|(
+argument|MCInst const&MCI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|string
+argument_list|()
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCSUBTARGETINFO_H
+end_comment
 
 end_unit
 

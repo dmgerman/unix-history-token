@@ -295,7 +295,29 @@ name|Module
 modifier|*
 name|getModule
 parameter_list|()
-function_decl|;
+block|{
+return|return
+name|const_cast
+operator|<
+name|Module
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|Instruction
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getModule
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// Return the function this instruction belongs to.
 comment|///
 comment|/// Note: it is undefined behavior to call this on an instruction not
@@ -311,7 +333,29 @@ name|Function
 modifier|*
 name|getFunction
 parameter_list|()
-function_decl|;
+block|{
+return|return
+name|const_cast
+operator|<
+name|Function
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|Instruction
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getFunction
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// This method unlinks 'this' from the containing basic block, but does not
 comment|/// delete it.
 name|void
@@ -967,6 +1011,25 @@ name|TotalVal
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Updates branch_weights metadata by scaling it by \p S / \p T.
+name|void
+name|updateProfWeight
+parameter_list|(
+name|uint64_t
+name|S
+parameter_list|,
+name|uint64_t
+name|T
+parameter_list|)
+function_decl|;
+comment|/// Sets the branch_weights metadata to \p W for CallInst.
+name|void
+name|setProfWeight
+parameter_list|(
+name|uint64_t
+name|W
+parameter_list|)
+function_decl|;
 comment|/// Set the debug location information for this instruction.
 name|void
 name|setDebugLoc
@@ -1042,6 +1105,12 @@ name|hasNoSignedWrap
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Drops flags that may cause this instruction to evaluate to poison despite
+comment|/// having non-poison inputs.
+name|void
+name|dropPoisonGeneratingFlags
+parameter_list|()
+function_decl|;
 comment|/// Determine whether the exact flag is set.
 name|bool
 name|isExact
@@ -1145,6 +1214,12 @@ expr_stmt|;
 comment|/// Determine whether the allow-reciprocal flag is set.
 name|bool
 name|hasAllowReciprocal
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Determine whether the allow-contract flag is set.
+name|bool
+name|hasAllowContract
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1282,20 +1357,43 @@ name|bool
 name|isAssociative
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 specifier|static
 name|bool
 name|isAssociative
 parameter_list|(
 name|unsigned
-name|op
+name|Opcode
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|Opcode
+operator|==
+name|And
+operator|||
+name|Opcode
+operator|==
+name|Or
+operator|||
+name|Opcode
+operator|==
+name|Xor
+operator|||
+name|Opcode
+operator|==
+name|Add
+operator|||
+name|Opcode
+operator|==
+name|Mul
+return|;
+block|}
 comment|/// Return true if the instruction is commutative:
 comment|///
 comment|///   Commutative operators satisfy: (x op y) === (y op x)
 comment|///
-comment|/// In LLVM, these are the associative operators, plus SetEQ and SetNE, when
+comment|/// In LLVM, these are the commutative operators, plus SetEQ and SetNE, when
 comment|/// applied to any type.
 comment|///
 name|bool
@@ -1316,9 +1414,44 @@ name|bool
 name|isCommutative
 parameter_list|(
 name|unsigned
-name|op
+name|Opcode
 parameter_list|)
-function_decl|;
+block|{
+switch|switch
+condition|(
+name|Opcode
+condition|)
+block|{
+case|case
+name|Add
+case|:
+case|case
+name|FAdd
+case|:
+case|case
+name|Mul
+case|:
+case|case
+name|FMul
+case|:
+case|case
+name|And
+case|:
+case|case
+name|Or
+case|:
+case|case
+name|Xor
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
 comment|/// Return true if the instruction is idempotent:
 comment|///
 comment|///   Idempotent operators satisfy:  x op x === x
@@ -1343,9 +1476,19 @@ name|bool
 name|isIdempotent
 parameter_list|(
 name|unsigned
-name|op
+name|Opcode
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|Opcode
+operator|==
+name|And
+operator|||
+name|Opcode
+operator|==
+name|Or
+return|;
+block|}
 comment|/// Return true if the instruction is nilpotent:
 comment|///
 comment|///   Nilpotent operators satisfy:  x op x === Id,
@@ -1373,9 +1516,15 @@ name|bool
 name|isNilpotent
 parameter_list|(
 name|unsigned
-name|op
+name|Opcode
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|Opcode
+operator|==
+name|Xor
+return|;
+block|}
 comment|/// Return true if this instruction may modify memory.
 name|bool
 name|mayWriteToMemory

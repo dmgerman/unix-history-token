@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- FuzzerOptions.h - Internal header for the Fuzzer ---------*- C++ -* ===//
-end_comment
-
-begin_comment
 comment|//
 end_comment
 
@@ -121,11 +117,6 @@ name|false
 decl_stmt|;
 name|bool
 name|UseIndirCalls
-init|=
-name|true
-decl_stmt|;
-name|bool
-name|UseMemcmp
 init|=
 name|true
 decl_stmt|;

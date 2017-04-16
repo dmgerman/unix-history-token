@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ARMInstructionSelector ------------------------------------*- C++ -*-==//
+comment|//===- ARMInstructionSelector -----------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -32,11 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|/// \file
 end_comment
 
 begin_comment
 comment|/// This file declares the targeting of the InstructionSelector class for ARM.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment
@@ -72,9 +80,6 @@ name|class
 name|ARMBaseRegisterInfo
 decl_stmt|;
 name|class
-name|ARMBaseTargetMachine
-decl_stmt|;
-name|class
 name|ARMRegisterBankInfo
 decl_stmt|;
 name|class
@@ -101,7 +106,6 @@ operator|&
 name|RBI
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|select
 argument_list|(
@@ -132,13 +136,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_ARM_ARMINSTRUCTIONSELECTOR_H
+end_comment
 
 end_unit
 

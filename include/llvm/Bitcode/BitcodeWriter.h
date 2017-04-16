@@ -130,6 +130,13 @@ comment|/// (currently for use in ThinLTO optimization).
 comment|///
 comment|/// \p GenerateHash enables hashing the Module and including the hash in the
 comment|/// bitcode (currently for use in ThinLTO incremental build).
+comment|///
+comment|/// If \p ModHash is non-null, when GenerateHash is true, the resulting
+comment|/// hash is written into ModHash. When GenerateHash is false, that value
+comment|/// is used as the hash instead of computing from the generated bitcode.
+comment|/// Can be used to produce the same module hash for a minimized bitcode
+comment|/// used just for the thin link as in the regular full bitcode that will
+comment|/// be used in the backend.
 name|void
 name|writeModule
 parameter_list|(
@@ -154,6 +161,12 @@ name|bool
 name|GenerateHash
 init|=
 name|false
+parameter_list|,
+name|ModuleHash
+modifier|*
+name|ModHash
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 block|}
@@ -172,6 +185,13 @@ comment|/// (currently for use in ThinLTO optimization).
 comment|///
 comment|/// \p GenerateHash enables hashing the Module and including the hash in the
 comment|/// bitcode (currently for use in ThinLTO incremental build).
+comment|///
+comment|/// If \p ModHash is non-null, when GenerateHash is true, the resulting
+comment|/// hash is written into ModHash. When GenerateHash is false, that value
+comment|/// is used as the hash instead of computing from the generated bitcode.
+comment|/// Can be used to produce the same module hash for a minimized bitcode
+comment|/// used just for the thin link as in the regular full bitcode that will
+comment|/// be used in the backend.
 name|void
 name|WriteBitcodeToFile
 parameter_list|(
@@ -200,6 +220,12 @@ name|bool
 name|GenerateHash
 init|=
 name|false
+parameter_list|,
+name|ModuleHash
+modifier|*
+name|ModHash
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Write the specified module summary index to the given raw output stream,

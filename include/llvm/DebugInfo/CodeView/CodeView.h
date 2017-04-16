@@ -921,12 +921,28 @@ name|CV_DEFINE_ENUM_CLASS_FLAGS_OPERATORS
 argument_list|(
 name|MethodOptions
 argument_list|)
-comment|/// Equivalent to CV_modifier_t.
-comment|/// TODO: Add flag for _Atomic modifier
+comment|/// Equivalent to CV_LABEL_TYPE_e.
 expr|enum
 name|class
-name|ModifierOptions
+name|LabelType
 operator|:
+name|uint16_t
+block|{
+name|Near
+operator|=
+literal|0x0
+block|,
+name|Far
+operator|=
+literal|0x4
+block|, }
+expr_stmt|;
+comment|/// Equivalent to CV_modifier_t.
+comment|/// TODO: Add flag for _Atomic modifier
+name|enum
+name|class
+name|ModifierOptions
+range|:
 name|uint16_t
 block|{
 name|None
@@ -945,7 +961,7 @@ name|Unaligned
 operator|=
 literal|0x0004
 block|}
-expr_stmt|;
+decl_stmt|;
 name|CV_DEFINE_ENUM_CLASS_FLAGS_OPERATORS
 argument_list|(
 name|ModifierOptions

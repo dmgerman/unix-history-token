@@ -81,6 +81,12 @@ directive|include
 file|"llvm/MC/MCInstPrinter.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Wasm.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -223,6 +229,17 @@ name|MVT
 name|Ty
 parameter_list|)
 function_decl|;
+specifier|const
+name|char
+modifier|*
+name|TypeToString
+argument_list|(
+name|wasm
+operator|::
+name|ValType
+name|Type
+argument_list|)
+decl_stmt|;
 block|}
 comment|// end namespace WebAssembly
 block|}

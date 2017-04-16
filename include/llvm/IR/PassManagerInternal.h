@@ -1241,6 +1241,8 @@ argument_list|)
 name|override
 block|{
 return|return
+name|llvm
+operator|::
 name|make_unique
 operator|<
 name|ResultModelT

@@ -594,6 +594,8 @@ literal|"Only unsigned integral types are allowed."
 argument_list|)
 block|;
 return|return
+name|llvm
+operator|::
 name|detail
 operator|::
 name|TrailingZerosCounter
@@ -1034,6 +1036,8 @@ literal|"Only unsigned integral types are allowed."
 argument_list|)
 block|;
 return|return
+name|llvm
+operator|::
 name|detail
 operator|::
 name|LeadingZerosCounter

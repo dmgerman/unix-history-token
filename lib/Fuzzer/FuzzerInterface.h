@@ -188,7 +188,7 @@ name|Seed
 parameter_list|)
 function_decl|;
 comment|// Experimental, may go away in future.
-comment|// libFuzzer-provided function to be used inside LLVMFuzzerTestOneInput.
+comment|// libFuzzer-provided function to be used inside LLVMFuzzerCustomMutator.
 comment|// Mutates raw data in [Data, Data+Size) inplace.
 comment|// Returns the new size, which is not greater than MaxSize.
 name|size_t

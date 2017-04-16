@@ -111,6 +111,9 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
+name|RecordStreamer
+decl_stmt|;
+name|class
 name|ModuleSymbolTable
 block|{
 name|public
@@ -216,12 +219,9 @@ name|void
 name|CollectAsmSymbols
 argument_list|(
 specifier|const
-name|Triple
+name|Module
 operator|&
-name|TheTriple
-argument_list|,
-name|StringRef
-name|InlineAsm
+name|M
 argument_list|,
 name|function_ref
 operator|<

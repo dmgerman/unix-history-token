@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- Transforms/InstrProfiling.h - Instrumentation passes ---*- C++ -*-===//
+comment|//===- Transforms/InstrProfiling.h - Instrumentation passes -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/IntrinsicInst.h"
 end_include
 
@@ -81,6 +93,30 @@ begin_include
 include|#
 directive|include
 file|"llvm/Transforms/Instrumentation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -106,7 +142,9 @@ name|public
 operator|:
 name|InstrProfiling
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|InstrProfiling
 argument_list|(
 specifier|const
@@ -154,6 +192,9 @@ name|Module
 operator|*
 name|M
 block|;
+name|Triple
+name|TT
+block|;
 specifier|const
 name|TargetLibraryInfo
 operator|*
@@ -172,23 +213,17 @@ block|;
 name|GlobalVariable
 operator|*
 name|RegionCounters
+operator|=
+name|nullptr
 block|;
 name|GlobalVariable
 operator|*
 name|DataVar
+operator|=
+name|nullptr
 block|;
 name|PerFunctionProfileData
 argument_list|()
-operator|:
-name|RegionCounters
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|DataVar
-argument_list|(
-argument|nullptr
-argument_list|)
 block|{
 name|memset
 argument_list|(
@@ -244,34 +279,13 @@ block|;
 name|size_t
 name|NamesSize
 block|;
-name|bool
-name|isMachO
-argument_list|()
-specifier|const
+comment|// The start value of precise value profile range for memory intrinsic sizes.
+name|int64_t
+name|MemOPSizeRangeStart
 block|;
-comment|/// Get the section name for the counter variables.
-name|StringRef
-name|getCountersSection
-argument_list|()
-specifier|const
-block|;
-comment|/// Get the section name for the name variables.
-name|StringRef
-name|getNameSection
-argument_list|()
-specifier|const
-block|;
-comment|/// Get the section name for the profile data variables.
-name|StringRef
-name|getDataSection
-argument_list|()
-specifier|const
-block|;
-comment|/// Get the section name for the coverage mapping data.
-name|StringRef
-name|getCoverageSection
-argument_list|()
-specifier|const
+comment|// The end value of precise value profile range for memory intrinsic sizes.
+name|int64_t
+name|MemOPSizeRangeLast
 block|;
 comment|/// Count the number of instrumented value sites for the function.
 name|void
@@ -358,13 +372,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_INSTRPROFILING_H
+end_comment
 
 end_unit
 

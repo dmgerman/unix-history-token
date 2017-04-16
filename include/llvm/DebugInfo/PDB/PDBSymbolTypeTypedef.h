@@ -105,9 +105,9 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|getBuiltinType
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getClassParentId
+argument|getClassParent
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(
@@ -133,9 +133,9 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|getLength
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getLexicalParentId
+argument|getLexicalParent
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(
@@ -161,9 +161,9 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|isScoped
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getTypeId
+argument|getType
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(
@@ -173,9 +173,9 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|isUnalignedType
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getVirtualTableShapeId
+argument|getVirtualTableShape
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(

@@ -357,14 +357,40 @@ name|DwarfExpression
 block|{
 name|protected
 label|:
-name|unsigned
-name|DwarfVersion
+comment|/// Holds information about all subregisters comprising a register location.
+struct|struct
+name|Register
+block|{
+name|int
+name|DwarfRegNo
 decl_stmt|;
+name|unsigned
+name|Size
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|Comment
+decl_stmt|;
+block|}
+struct|;
+comment|/// The register location, if any.
+name|SmallVector
+operator|<
+name|Register
+operator|,
+literal|2
+operator|>
+name|DwarfRegs
+expr_stmt|;
 comment|/// Current Fragment Offset in Bits.
 name|uint64_t
 name|OffsetInBits
 init|=
 literal|0
+decl_stmt|;
+name|unsigned
+name|DwarfVersion
 decl_stmt|;
 comment|/// Sometimes we need to add a DW_OP_bit_piece to describe a subregister.
 name|unsigned
@@ -398,33 +424,15 @@ operator|=
 name|OffsetInBits
 expr_stmt|;
 block|}
-name|public
-label|:
-name|DwarfExpression
-argument_list|(
-argument|unsigned DwarfVersion
-argument_list|)
-block|:
-name|DwarfVersion
-argument_list|(
-argument|DwarfVersion
-argument_list|)
-block|{}
-name|virtual
-operator|~
-name|DwarfExpression
-argument_list|()
-block|{}
-expr_stmt|;
-comment|/// This needs to be called last to commit any pending changes.
+comment|/// Add masking operations to stencil out a subregister.
 name|void
-name|finalize
+name|maskSubRegister
 parameter_list|()
 function_decl|;
 comment|/// Output a dwarf operand and an optional assembler comment.
 name|virtual
 name|void
-name|EmitOp
+name|emitOp
 parameter_list|(
 name|uint8_t
 name|Op
@@ -442,7 +450,7 @@ function_decl|;
 comment|/// Emit a raw signed value.
 name|virtual
 name|void
-name|EmitSigned
+name|emitSigned
 parameter_list|(
 name|int64_t
 name|Value
@@ -453,7 +461,7 @@ function_decl|;
 comment|/// Emit a raw unsigned value.
 name|virtual
 name|void
-name|EmitUnsigned
+name|emitUnsigned
 parameter_list|(
 name|uint64_t
 name|Value
@@ -478,9 +486,9 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Emit a dwarf register operation.
+comment|/// Emit a DW_OP_reg operation.
 name|void
-name|AddReg
+name|addReg
 parameter_list|(
 name|int
 name|DwarfReg
@@ -493,77 +501,23 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// Emit an (double-)indirect dwarf register operation.
+comment|/// Emit a DW_OP_breg operation.
 name|void
-name|AddRegIndirect
+name|addBReg
 parameter_list|(
 name|int
 name|DwarfReg
 parameter_list|,
 name|int
 name|Offset
-parameter_list|,
-name|bool
-name|Deref
-init|=
-name|false
 parameter_list|)
 function_decl|;
-comment|/// Emit a DW_OP_piece or DW_OP_bit_piece operation for a variable fragment.
-comment|/// \param OffsetInBits    This is an optional offset into the location that
-comment|/// is at the top of the DWARF stack.
+comment|/// Emit DW_OP_fbreg<Offset>.
 name|void
-name|AddOpPiece
+name|addFBReg
 parameter_list|(
-name|unsigned
-name|SizeInBits
-parameter_list|,
-name|unsigned
-name|OffsetInBits
-init|=
-literal|0
-parameter_list|)
-function_decl|;
-comment|/// Emit a shift-right dwarf expression.
-name|void
-name|AddShr
-parameter_list|(
-name|unsigned
-name|ShiftBy
-parameter_list|)
-function_decl|;
-comment|/// Emit a DW_OP_stack_value, if supported.
-comment|///
-comment|/// The proper way to describe a constant value is DW_OP_constu<const>,
-comment|/// DW_OP_stack_value.  Unfortunately, DW_OP_stack_value was not available
-comment|/// until DWARF 4, so we will continue to generate DW_OP_constu<const> for
-comment|/// DWARF 2 and DWARF 3. Technically, this is incorrect since DW_OP_const
-comment|///<const> actually describes a value at a constant addess, not a constant
-comment|/// value.  However, in the past there was no better way to describe a
-comment|/// constant value, so the producers and consumers started to rely on
-comment|/// heuristics to disambiguate the value vs. location status of the
-comment|/// expression.  See PR21176 for more details.
-name|void
-name|AddStackValue
-parameter_list|()
-function_decl|;
-comment|/// Emit an indirect dwarf register operation for the given machine register.
-comment|/// \return false if no DWARF register exists for MachineReg.
-name|bool
-name|AddMachineRegIndirect
-parameter_list|(
-specifier|const
-name|TargetRegisterInfo
-modifier|&
-name|TRI
-parameter_list|,
-name|unsigned
-name|MachineReg
-parameter_list|,
 name|int
 name|Offset
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 comment|/// Emit a partial DWARF register operation.
@@ -582,7 +536,7 @@ comment|/// multiple subregisters that alias the register.
 comment|///
 comment|/// \return false if no DWARF register exists for MachineReg.
 name|bool
-name|AddMachineReg
+name|addMachineReg
 parameter_list|(
 specifier|const
 name|TargetRegisterInfo
@@ -599,9 +553,78 @@ operator|~
 literal|1U
 parameter_list|)
 function_decl|;
+comment|/// Emit a DW_OP_piece or DW_OP_bit_piece operation for a variable fragment.
+comment|/// \param OffsetInBits    This is an optional offset into the location that
+comment|/// is at the top of the DWARF stack.
+name|void
+name|addOpPiece
+parameter_list|(
+name|unsigned
+name|SizeInBits
+parameter_list|,
+name|unsigned
+name|OffsetInBits
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// Emit a shift-right dwarf operation.
+name|void
+name|addShr
+parameter_list|(
+name|unsigned
+name|ShiftBy
+parameter_list|)
+function_decl|;
+comment|/// Emit a bitwise and dwarf operation.
+name|void
+name|addAnd
+parameter_list|(
+name|unsigned
+name|Mask
+parameter_list|)
+function_decl|;
+comment|/// Emit a DW_OP_stack_value, if supported.
+comment|///
+comment|/// The proper way to describe a constant value is DW_OP_constu<const>,
+comment|/// DW_OP_stack_value.  Unfortunately, DW_OP_stack_value was not available
+comment|/// until DWARF 4, so we will continue to generate DW_OP_constu<const> for
+comment|/// DWARF 2 and DWARF 3. Technically, this is incorrect since DW_OP_const
+comment|///<const> actually describes a value at a constant addess, not a constant
+comment|/// value.  However, in the past there was no better way to describe a
+comment|/// constant value, so the producers and consumers started to rely on
+comment|/// heuristics to disambiguate the value vs. location status of the
+comment|/// expression.  See PR21176 for more details.
+name|void
+name|addStackValue
+parameter_list|()
+function_decl|;
+operator|~
+name|DwarfExpression
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|public
+label|:
+name|DwarfExpression
+argument_list|(
+argument|unsigned DwarfVersion
+argument_list|)
+block|:
+name|DwarfVersion
+argument_list|(
+argument|DwarfVersion
+argument_list|)
+block|{}
+comment|/// This needs to be called last to commit any pending changes.
+name|void
+name|finalize
+parameter_list|()
+function_decl|;
 comment|/// Emit a signed constant.
 name|void
-name|AddSignedConstant
+name|addSignedConstant
 parameter_list|(
 name|int64_t
 name|Value
@@ -609,7 +632,7 @@ parameter_list|)
 function_decl|;
 comment|/// Emit an unsigned constant.
 name|void
-name|AddUnsignedConstant
+name|addUnsignedConstant
 parameter_list|(
 name|uint64_t
 name|Value
@@ -617,7 +640,7 @@ parameter_list|)
 function_decl|;
 comment|/// Emit an unsigned constant.
 name|void
-name|AddUnsignedConstant
+name|addUnsignedConstant
 parameter_list|(
 specifier|const
 name|APInt
@@ -635,7 +658,7 @@ comment|///                                 fragment inside the entire variable.
 comment|/// \return                         false if no DWARF register exists
 comment|///                                 for MachineReg.
 name|bool
-name|AddMachineRegExpression
+name|addMachineRegExpression
 parameter_list|(
 specifier|const
 name|TargetRegisterInfo
@@ -661,7 +684,7 @@ comment|/// \param FragmentOffsetInBits     If this is one fragment out of multi
 comment|///                                 locations, this is the offset of the
 comment|///                                 fragment inside the entire variable.
 name|void
-name|AddExpression
+name|addExpression
 argument_list|(
 name|DIExpressionCursor
 operator|&&
@@ -698,6 +721,7 @@ end_comment
 begin_decl_stmt
 name|class
 name|DebugLocDwarfExpression
+name|final
 range|:
 name|public
 name|DwarfExpression
@@ -705,6 +729,38 @@ block|{
 name|ByteStreamer
 operator|&
 name|BS
+block|;
+name|void
+name|emitOp
+argument_list|(
+argument|uint8_t Op
+argument_list|,
+argument|const char *Comment = nullptr
+argument_list|)
+name|override
+block|;
+name|void
+name|emitSigned
+argument_list|(
+argument|int64_t Value
+argument_list|)
+name|override
+block|;
+name|void
+name|emitUnsigned
+argument_list|(
+argument|uint64_t Value
+argument_list|)
+name|override
+block|;
+name|bool
+name|isFrameRegister
+argument_list|(
+argument|const TargetRegisterInfo&TRI
+argument_list|,
+argument|unsigned MachineReg
+argument_list|)
+name|override
 block|;
 name|public
 operator|:
@@ -725,38 +781,7 @@ argument_list|(
 argument|BS
 argument_list|)
 block|{}
-name|void
-name|EmitOp
-argument_list|(
-argument|uint8_t Op
-argument_list|,
-argument|const char *Comment = nullptr
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitSigned
-argument_list|(
-argument|int64_t Value
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitUnsigned
-argument_list|(
-argument|uint64_t Value
-argument_list|)
-name|override
-block|;
-name|bool
-name|isFrameRegister
-argument_list|(
-argument|const TargetRegisterInfo&TRI
-argument_list|,
-argument|unsigned MachineReg
-argument_list|)
-name|override
-block|; }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -767,6 +792,7 @@ end_comment
 begin_decl_stmt
 name|class
 name|DIEDwarfExpression
+name|final
 range|:
 name|public
 name|DwarfExpression
@@ -783,6 +809,38 @@ block|;
 name|DIELoc
 operator|&
 name|DIE
+block|;
+name|void
+name|emitOp
+argument_list|(
+argument|uint8_t Op
+argument_list|,
+argument|const char *Comment = nullptr
+argument_list|)
+name|override
+block|;
+name|void
+name|emitSigned
+argument_list|(
+argument|int64_t Value
+argument_list|)
+name|override
+block|;
+name|void
+name|emitUnsigned
+argument_list|(
+argument|uint64_t Value
+argument_list|)
+name|override
+block|;
+name|bool
+name|isFrameRegister
+argument_list|(
+argument|const TargetRegisterInfo&TRI
+argument_list|,
+argument|unsigned MachineReg
+argument_list|)
+name|override
 block|;
 name|public
 operator|:
@@ -801,38 +859,6 @@ name|DIELoc
 operator|&
 name|DIE
 argument_list|)
-block|;
-name|void
-name|EmitOp
-argument_list|(
-argument|uint8_t Op
-argument_list|,
-argument|const char *Comment = nullptr
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitSigned
-argument_list|(
-argument|int64_t Value
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitUnsigned
-argument_list|(
-argument|uint64_t Value
-argument_list|)
-name|override
-block|;
-name|bool
-name|isFrameRegister
-argument_list|(
-argument|const TargetRegisterInfo&TRI
-argument_list|,
-argument|unsigned MachineReg
-argument_list|)
-name|override
 block|;
 name|DIELoc
 operator|*

@@ -63,6 +63,12 @@ directive|define
 name|LLVM_CODEGEN_GLOBALISEL_UTILS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -72,6 +78,12 @@ name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineInstr
+decl_stmt|;
+name|class
+name|MachineOptimizationRemarkEmitter
+decl_stmt|;
+name|class
+name|MachineOptimizationRemarkMissed
 decl_stmt|;
 name|class
 name|MachineRegisterInfo
@@ -86,7 +98,13 @@ name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
+name|TargetPassConfig
+decl_stmt|;
+name|class
 name|TargetRegisterInfo
+decl_stmt|;
+name|class
+name|Twine
 decl_stmt|;
 comment|/// Try to constrain Reg so that it is usable by argument OpIdx of the
 comment|/// provided MCInstrDesc \p II. If this fails, create a new virtual
@@ -135,6 +153,75 @@ name|Reg
 parameter_list|,
 name|unsigned
 name|OpIdx
+parameter_list|)
+function_decl|;
+comment|/// Check whether an instruction \p MI is dead: it only defines dead virtual
+comment|/// registers, and doesn't have other side effects.
+name|bool
+name|isTriviallyDead
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|,
+specifier|const
+name|MachineRegisterInfo
+modifier|&
+name|MRI
+parameter_list|)
+function_decl|;
+comment|/// Report an ISel error as a missed optimization remark to the LLVMContext's
+comment|/// diagnostic stream.  Set the FailedISel MachineFunction property.
+name|void
+name|reportGISelFailure
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
+specifier|const
+name|TargetPassConfig
+modifier|&
+name|TPC
+parameter_list|,
+name|MachineOptimizationRemarkEmitter
+modifier|&
+name|MORE
+parameter_list|,
+name|MachineOptimizationRemarkMissed
+modifier|&
+name|R
+parameter_list|)
+function_decl|;
+name|void
+name|reportGISelFailure
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
+specifier|const
+name|TargetPassConfig
+modifier|&
+name|TPC
+parameter_list|,
+name|MachineOptimizationRemarkEmitter
+modifier|&
+name|MORE
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+name|StringRef
+name|Msg
+parameter_list|,
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
 parameter_list|)
 function_decl|;
 block|}

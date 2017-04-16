@@ -258,9 +258,9 @@ argument_list|()
 return|;
 block|}
 name|void
-name|addEarlyAsPossiblePasses
+name|adjustPassManager
 argument_list|(
-argument|PassManagerBase&PM
+argument|PassManagerBuilder&
 argument_list|)
 name|override
 block|;

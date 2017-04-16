@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/MapVector.h"
 end_include
 
@@ -75,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/SMLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -182,7 +194,9 @@ label|:
 comment|// Initialize a new empty constant pool
 name|ConstantPool
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|// Add a new entry to the constant pool in the next slot.
 comment|// \param Value is the new entry to put in the constant pool.
 comment|// \param Size is the size in bytes of the entry
@@ -327,6 +341,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_CONSTANTPOOLS_H
+end_comment
 
 end_unit
 

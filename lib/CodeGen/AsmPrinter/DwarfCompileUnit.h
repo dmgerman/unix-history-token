@@ -788,6 +788,7 @@ argument_list|(
 name|StringRef
 name|Name
 argument_list|,
+specifier|const
 name|DIE
 operator|&
 name|Die
@@ -799,6 +800,19 @@ name|Context
 argument_list|)
 name|override
 decl_stmt|;
+comment|/// Add a new global name present in a type unit to this compile unit.
+name|void
+name|addGlobalNameForTypeUnit
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+specifier|const
+name|DIScope
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
 comment|/// Add a new global type to the compile unit.
 name|void
 name|addGlobalType
@@ -820,6 +834,21 @@ name|Context
 argument_list|)
 name|override
 decl_stmt|;
+comment|/// Add a new global type present in a type unit to this compile unit.
+name|void
+name|addGlobalTypeUnitType
+parameter_list|(
+specifier|const
+name|DIType
+modifier|*
+name|Ty
+parameter_list|,
+specifier|const
+name|DIScope
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
 specifier|const
 name|StringMap
 operator|<

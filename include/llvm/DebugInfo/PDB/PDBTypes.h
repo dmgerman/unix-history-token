@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/Raw/RawTypes.h"
+file|"llvm/DebugInfo/PDB/Native/RawTypes.h"
 end_include
 
 begin_include
@@ -237,7 +237,7 @@ name|class
 name|PDBSymbolUnknown
 decl_stmt|;
 comment|/// Specifies which PDB reader implementation is to be used.  Only a value
-comment|/// of PDB_ReaderType::DIA is supported.
+comment|/// of PDB_ReaderType::DIA is currently supported, but Native is in the works.
 name|enum
 name|class
 name|PDB_ReaderType
@@ -246,7 +246,7 @@ name|DIA
 operator|=
 literal|0
 operator|,
-name|Raw
+name|Native
 operator|=
 literal|1
 operator|,

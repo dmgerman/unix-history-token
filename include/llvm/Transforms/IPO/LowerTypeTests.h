@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -121,15 +115,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|DataLayout
-decl_stmt|;
-name|class
-name|GlobalObject
-decl_stmt|;
-name|class
-name|Value
-decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
@@ -222,14 +207,7 @@ name|Offsets
 expr_stmt|;
 name|uint64_t
 name|Min
-decl_stmt|,
-name|Max
-decl_stmt|;
-name|BitSetBuilder
-argument_list|()
-operator|:
-name|Min
-argument_list|(
+init|=
 name|std
 operator|::
 name|numeric_limits
@@ -239,18 +217,23 @@ operator|>
 operator|::
 name|max
 argument_list|()
-argument_list|)
-operator|,
+decl_stmt|;
+name|uint64_t
 name|Max
-argument_list|(
+init|=
 literal|0
-argument_list|)
-block|{}
+decl_stmt|;
+name|BitSetBuilder
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|addOffset
-argument_list|(
-argument|uint64_t Offset
-argument_list|)
+parameter_list|(
+name|uint64_t
+name|Offset
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -282,10 +265,10 @@ expr_stmt|;
 block|}
 name|BitSetInfo
 name|build
-argument_list|()
-struct|;
+parameter_list|()
+function_decl|;
 block|}
-empty_stmt|;
+struct|;
 comment|/// This class implements a layout algorithm for globals referenced by bit sets
 comment|/// that tries to keep members of small bit sets together. This can
 comment|/// significantly reduce bit set sizes in many cases.
@@ -498,13 +481,7 @@ decl_stmt|;
 block|}
 struct|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// end namespace lowertypetests
-end_comment
-
-begin_decl_stmt
 name|class
 name|LowerTypeTestsPass
 range|:
@@ -529,10 +506,10 @@ name|AM
 argument_list|)
 block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

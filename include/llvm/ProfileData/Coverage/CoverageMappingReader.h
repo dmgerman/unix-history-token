@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=-- CoverageMappingReader.h - Code coverage mapping reader ------*- C++ -*-=//
+comment|//===- CoverageMappingReader.h - Code coverage mapping reader ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_PROFILEDATA_COVERAGEMAPPINGREADER_H
+name|LLVM_PROFILEDATA_COVERAGE_COVERAGEMAPPINGREADER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_PROFILEDATA_COVERAGEMAPPINGREADER_H
+name|LLVM_PROFILEDATA_COVERAGE_COVERAGEMAPPINGREADER_H
 end_define
 
 begin_include
@@ -78,18 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Object/ObjectFile.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ProfileData/Coverage/CoverageMapping.h"
 end_include
 
@@ -102,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/FileSystem.h"
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
@@ -114,7 +102,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -176,6 +188,8 @@ block|{
 name|CoverageMappingReader
 modifier|*
 name|Reader
+init|=
+name|nullptr
 decl_stmt|;
 name|CoverageMappingRecord
 name|Record
@@ -188,12 +202,9 @@ name|public
 label|:
 name|CoverageMappingIterator
 argument_list|()
-operator|:
-name|Reader
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|CoverageMappingIterator
 argument_list|(
 name|CoverageMappingReader
@@ -290,6 +301,13 @@ block|{
 name|public
 label|:
 name|virtual
+operator|~
+name|CoverageMappingReader
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|virtual
 name|Error
 name|readNextRecord
 parameter_list|(
@@ -320,11 +338,6 @@ name|CoverageMappingIterator
 argument_list|()
 return|;
 block|}
-name|virtual
-operator|~
-name|CoverageMappingReader
-argument_list|()
-block|{}
 block|}
 empty_stmt|;
 comment|/// \brief Base class for the raw coverage mapping and filenames data readers.
@@ -399,6 +412,25 @@ operator|>
 operator|&
 name|Filenames
 block|;
+name|public
+operator|:
+name|RawCoverageFilenamesReader
+argument_list|(
+argument|StringRef Data
+argument_list|,
+argument|std::vector<StringRef>&Filenames
+argument_list|)
+operator|:
+name|RawCoverageReader
+argument_list|(
+name|Data
+argument_list|)
+block|,
+name|Filenames
+argument_list|(
+argument|Filenames
+argument_list|)
+block|{}
 name|RawCoverageFilenamesReader
 argument_list|(
 specifier|const
@@ -420,25 +452,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
-name|RawCoverageFilenamesReader
-argument_list|(
-argument|StringRef Data
-argument_list|,
-argument|std::vector<StringRef>&Filenames
-argument_list|)
-operator|:
-name|RawCoverageReader
-argument_list|(
-name|Data
-argument_list|)
-block|,
-name|Filenames
-argument_list|(
-argument|Filenames
-argument_list|)
-block|{}
 name|Error
 name|read
 argument_list|()
@@ -512,27 +525,6 @@ operator|>
 operator|&
 name|MappingRegions
 block|;
-name|RawCoverageMappingReader
-argument_list|(
-specifier|const
-name|RawCoverageMappingReader
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|RawCoverageMappingReader
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|RawCoverageMappingReader
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
 name|RawCoverageMappingReader
@@ -573,6 +565,27 @@ argument_list|(
 argument|MappingRegions
 argument_list|)
 block|{}
+name|RawCoverageMappingReader
+argument_list|(
+specifier|const
+name|RawCoverageMappingReader
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|RawCoverageMappingReader
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|RawCoverageMappingReader
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 name|Error
 name|read
 argument_list|()
@@ -707,6 +720,8 @@ name|ProfileNames
 block|;
 name|size_t
 name|CurrentRecord
+operator|=
+literal|0
 block|;
 name|std
 operator|::
@@ -733,6 +748,13 @@ operator|>
 name|MappingRegions
 block|;
 name|BinaryCoverageReader
+argument_list|()
+operator|=
+expr|default
+block|;
+name|public
+operator|:
+name|BinaryCoverageReader
 argument_list|(
 specifier|const
 name|BinaryCoverageReader
@@ -753,16 +775,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|BinaryCoverageReader
-argument_list|()
-operator|:
-name|CurrentRecord
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|public
-operator|:
 specifier|static
 name|Expected
 operator|<
@@ -803,6 +815,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_PROFILEDATA_COVERAGE_COVERAGEMAPPINGREADER_H
+end_comment
 
 end_unit
 

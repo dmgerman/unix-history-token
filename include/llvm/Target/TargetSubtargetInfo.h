@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCInst.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCSubtargetInfo.h"
 end_include
 
@@ -472,6 +478,17 @@ name|enableMachineScheduler
 argument_list|()
 decl|const
 empty_stmt|;
+comment|/// \brief Support printing of [latency:throughput] comment in output .S file.
+name|virtual
+name|bool
+name|supportPrintSchedInfo
+argument_list|()
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief True if the machine scheduler should disable the TLI preference
 comment|/// for preRA scheduling with the source level scheduler.
 name|virtual
@@ -671,8 +688,35 @@ return|return
 name|false
 return|;
 block|}
-decl|}
+comment|/// Returns string representation of scheduler comment
+name|std
+decl|::
+name|string
+name|getSchedInfoStr
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
+name|override
 empty_stmt|;
+name|std
+decl|::
+name|string
+name|getSchedInfoStr
+argument_list|(
+name|MCInst
+specifier|const
+operator|&
+name|MCI
+argument_list|)
+decl|const
+name|override
+empty_stmt|;
+block|}
+enum|;
 block|}
 end_decl_stmt
 

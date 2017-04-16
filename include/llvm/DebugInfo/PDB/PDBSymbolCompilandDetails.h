@@ -173,9 +173,9 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|getLanguage
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
+name|FORWARD_SYMBOL_ID_METHOD
 argument_list|(
-argument|getLexicalParentId
+argument|getLexicalParent
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(

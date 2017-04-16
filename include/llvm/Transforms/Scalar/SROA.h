@@ -97,6 +97,18 @@ directive|include
 file|"llvm/IR/PassManager.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -120,6 +132,7 @@ name|class
 name|SROALegacyPass
 decl_stmt|;
 block|}
+comment|// end namespace sroa
 comment|/// \brief An optimization pass providing Scalar Replacement of Aggregates.
 comment|///
 comment|/// This pass takes allocations which can be completely analyzed (that is, they
@@ -150,14 +163,20 @@ block|{
 name|LLVMContext
 operator|*
 name|C
+operator|=
+name|nullptr
 block|;
 name|DominatorTree
 operator|*
 name|DT
+operator|=
+name|nullptr
 block|;
 name|AssumptionCache
 operator|*
 name|AC
+operator|=
+name|nullptr
 block|;
 comment|/// \brief Worklist of alloca instructions to simplify.
 comment|///
@@ -272,22 +291,9 @@ name|public
 operator|:
 name|SROA
 argument_list|()
-operator|:
-name|C
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|DT
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|AC
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// \brief Run the pass over the function.
 name|PreservedAnalyses
 name|run
@@ -421,10 +427,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_SCALAR_SROA_H
+end_comment
 
 end_unit
 

@@ -316,7 +316,10 @@ block|; }
 decl_stmt|;
 block|}
 comment|/// Parse the module summary index out of an IR file and return the module
-comment|/// summary index object if found, or nullptr if not.
+comment|/// summary index object if found, or nullptr if not. If Identifier is
+comment|/// non-empty, it is used as the module ID (module path) in the resulting
+comment|/// index. This can be used when the index is being read from a file
+comment|/// containing minimized bitcode just for the thin link.
 name|Expected
 operator|<
 name|std
@@ -328,6 +331,9 @@ operator|>>
 name|getModuleSummaryIndexForFile
 argument_list|(
 argument|StringRef Path
+argument_list|,
+argument|StringRef Identifier =
+literal|""
 argument_list|)
 expr_stmt|;
 block|}

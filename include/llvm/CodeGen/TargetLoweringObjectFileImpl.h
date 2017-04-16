@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- llvm/CodeGen/TargetLoweringObjectFileImpl.h - Object Info -*- C++ -*-==//
+comment|//==- llvm/CodeGen/TargetLoweringObjectFileImpl.h - Object Info --*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCExpr.h"
+file|"llvm/IR/Module.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/SectionKind.h"
+file|"llvm/MC/MCExpr.h"
 end_include
 
 begin_include
@@ -86,28 +86,22 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|GlobalValue
+decl_stmt|;
+name|class
 name|MachineModuleInfo
 decl_stmt|;
 name|class
 name|Mangler
 decl_stmt|;
 name|class
-name|MCAsmInfo
+name|MCContext
 decl_stmt|;
 name|class
 name|MCSection
 decl_stmt|;
 name|class
-name|MCSectionMachO
-decl_stmt|;
-name|class
 name|MCSymbol
-decl_stmt|;
-name|class
-name|MCContext
-decl_stmt|;
-name|class
-name|GlobalValue
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -120,6 +114,8 @@ name|TargetLoweringObjectFile
 block|{
 name|bool
 name|UseInitArray
+operator|=
+name|false
 block|;
 name|mutable
 name|unsigned
@@ -143,17 +139,16 @@ name|public
 operator|:
 name|TargetLoweringObjectFileELF
 argument_list|()
-operator|:
-name|UseInitArray
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 operator|~
 name|TargetLoweringObjectFileELF
 argument_list|()
 name|override
-block|{}
+operator|=
+expr|default
+block|;
 name|void
 name|emitPersonalityValue
 argument_list|(
@@ -315,13 +310,15 @@ name|TargetLoweringObjectFile
 block|{
 name|public
 operator|:
+name|TargetLoweringObjectFileMachO
+argument_list|()
+block|;
 operator|~
 name|TargetLoweringObjectFileMachO
 argument_list|()
 name|override
-block|{}
-name|TargetLoweringObjectFileMachO
-argument_list|()
+operator|=
+expr|default
 block|;
 name|void
 name|Initialize
@@ -469,7 +466,9 @@ operator|~
 name|TargetLoweringObjectFileCOFF
 argument_list|()
 name|override
-block|{}
+operator|=
+expr|default
+block|;
 name|void
 name|Initialize
 argument_list|(
@@ -575,6 +574,87 @@ specifier|const
 name|override
 block|; }
 decl_stmt|;
+name|class
+name|TargetLoweringObjectFileWasm
+range|:
+name|public
+name|TargetLoweringObjectFile
+block|{
+name|mutable
+name|unsigned
+name|NextUniqueID
+operator|=
+literal|0
+block|;
+name|public
+operator|:
+name|TargetLoweringObjectFileWasm
+argument_list|()
+operator|=
+expr|default
+block|;
+operator|~
+name|TargetLoweringObjectFileWasm
+argument_list|()
+name|override
+operator|=
+expr|default
+block|;
+name|MCSection
+operator|*
+name|getExplicitSectionGlobal
+argument_list|(
+argument|const GlobalObject *GO
+argument_list|,
+argument|SectionKind Kind
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|;
+name|MCSection
+operator|*
+name|SelectSectionForGlobal
+argument_list|(
+argument|const GlobalObject *GO
+argument_list|,
+argument|SectionKind Kind
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|shouldPutJumpTableInFunctionSection
+argument_list|(
+argument|bool UsesLabelDifference
+argument_list|,
+argument|const Function&F
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|InitializeWasm
+argument_list|()
+block|;
+specifier|const
+name|MCExpr
+operator|*
+name|lowerRelativeReference
+argument_list|(
+argument|const GlobalValue *LHS
+argument_list|,
+argument|const GlobalValue *RHS
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -586,6 +666,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_TARGETLOWERINGOBJECTFILEIMPL_H
+end_comment
 
 end_unit
 

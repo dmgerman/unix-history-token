@@ -110,6 +110,36 @@ decl_stmt|;
 name|class
 name|TargetMachine
 decl_stmt|;
+comment|/// A struct capturing PGO tunables.
+struct|struct
+name|PGOOptions
+block|{
+name|std
+operator|::
+name|string
+name|ProfileGenFile
+operator|=
+literal|""
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|ProfileUseFile
+operator|=
+literal|""
+expr_stmt|;
+name|bool
+name|RunProfileGen
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|SamplePGO
+init|=
+name|false
+decl_stmt|;
+block|}
+struct|;
 comment|/// \brief This class provides access to building LLVM's passes.
 comment|///
 comment|/// It's members provide the baseline state available to passes during their
@@ -123,6 +153,12 @@ name|TargetMachine
 modifier|*
 name|TM
 decl_stmt|;
+name|Optional
+operator|<
+name|PGOOptions
+operator|>
+name|PGOOpt
+expr_stmt|;
 name|public
 label|:
 comment|/// \brief LLVM-provided high-level optimization levels.
@@ -221,11 +257,24 @@ operator|*
 name|TM
 operator|=
 name|nullptr
+argument_list|,
+name|Optional
+operator|<
+name|PGOOptions
+operator|>
+name|PGOOpt
+operator|=
+name|None
 argument_list|)
-operator|:
+range|:
 name|TM
 argument_list|(
-argument|TM
+name|TM
+argument_list|)
+decl_stmt|,
+name|PGOOpt
+argument_list|(
+name|PGOOpt
 argument_list|)
 block|{}
 comment|/// \brief Cross register the analysis managers through their proxies.
@@ -234,24 +283,24 @@ comment|/// This is an interface that can be used to cross register each
 comment|// AnalysisManager with all the others analysis managers.
 name|void
 name|crossRegisterProxies
-argument_list|(
+parameter_list|(
 name|LoopAnalysisManager
-operator|&
+modifier|&
 name|LAM
-argument_list|,
+parameter_list|,
 name|FunctionAnalysisManager
-operator|&
+modifier|&
 name|FAM
-argument_list|,
+parameter_list|,
 name|CGSCCAnalysisManager
-operator|&
+modifier|&
 name|CGAM
-argument_list|,
+parameter_list|,
 name|ModuleAnalysisManager
-operator|&
+modifier|&
 name|MAM
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Registers all available module analysis passes.
 comment|///
 comment|/// This is an interface that can be used to populate a \c

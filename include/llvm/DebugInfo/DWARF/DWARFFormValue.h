@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFFormValue.h ----------------------------------------*- C++ -*-===//
+comment|//===- DWARFFormValue.h -----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,6 +46,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -61,18 +73,16 @@ directive|include
 file|"llvm/Support/Dwarf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|ArrayRef
-expr_stmt|;
 name|class
 name|DWARFUnit
 decl_stmt|;
@@ -115,34 +125,33 @@ name|ValueType
 block|{
 name|ValueType
 argument_list|()
-operator|:
-name|data
-argument_list|(
-argument|nullptr
-argument_list|)
 block|{
 name|uval
 operator|=
 literal|0
-block|;     }
-expr|union
+expr_stmt|;
+block|}
+union|union
 block|{
 name|uint64_t
 name|uval
-block|;
+decl_stmt|;
 name|int64_t
 name|sval
-block|;
+decl_stmt|;
 specifier|const
 name|char
-operator|*
+modifier|*
 name|cstr
-block|;     }
-expr_stmt|;
+decl_stmt|;
+block|}
+union|;
 specifier|const
 name|uint8_t
 modifier|*
 name|data
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 struct|;
@@ -160,6 +169,8 @@ specifier|const
 name|DWARFUnit
 modifier|*
 name|U
+init|=
+name|nullptr
 decl_stmt|;
 comment|// Remember the DWARFUnit at extract time.
 name|public
@@ -173,12 +184,7 @@ argument_list|)
 block|:
 name|Form
 argument_list|(
-name|F
-argument_list|)
-operator|,
-name|U
-argument_list|(
-argument|nullptr
+argument|F
 argument_list|)
 block|{}
 name|dwarf
@@ -248,6 +254,36 @@ operator|.
 name|cstr
 operator|=
 name|V
+expr_stmt|;
+block|}
+name|void
+name|setBlockValue
+argument_list|(
+specifier|const
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+operator|&
+name|Data
+argument_list|)
+block|{
+name|Value
+operator|.
+name|data
+operator|=
+name|Data
+operator|.
+name|data
+argument_list|()
+expr_stmt|;
+name|setUValue
+argument_list|(
+name|Data
+operator|.
+name|size
+argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 name|bool
@@ -575,13 +611,653 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
+name|namespace
+name|dwarf
+block|{
+comment|/// Take an optional DWARFFormValue and try to extract a string value from it.
+comment|///
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+comment|/// \returns an optional value that contains a value if the form value
+comment|/// was valid and was a string.
+specifier|inline
+name|Optional
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|toString
+argument_list|(
+argument|const Optional<DWARFFormValue>& V
+argument_list|)
+block|{
+if|if
+condition|(
+name|V
+condition|)
+return|return
+name|V
+operator|->
+name|getAsCString
+argument_list|()
+return|;
+return|return
+name|None
+return|;
+block|}
+comment|/// Take an optional DWARFFormValue and extract a string value from it.
+comment|///
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+comment|/// \param Default the default value to return in case of failure.
+comment|/// \returns the string value or Default if the V doesn't have a value or the
+comment|/// form value's encoding wasn't a string.
+specifier|inline
+specifier|const
+name|char
+modifier|*
+name|toString
+argument_list|(
+specifier|const
+name|Optional
+operator|<
+name|DWARFFormValue
+operator|>
+operator|&
+name|V
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Default
+argument_list|)
+block|{
+return|return
+name|toString
+argument_list|(
+name|V
+argument_list|)
+operator|.
+name|getValueOr
+argument_list|(
+name|Default
+argument_list|)
+return|;
+block|}
+comment|/// Take an optional DWARFFormValue and try to extract an unsigned constant.
+comment|///
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+comment|/// \returns an optional value that contains a value if the form value
+comment|/// was valid and has a unsigned constant form.
+specifier|inline
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|toUnsigned
+argument_list|(
+argument|const Optional<DWARFFormValue>& V
+argument_list|)
+block|{
+if|if
+condition|(
+name|V
+condition|)
+return|return
+name|V
+operator|->
+name|getAsUnsignedConstant
+argument_list|()
+return|;
+return|return
+name|None
+return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Take an optional DWARFFormValue and extract a unsigned constant.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
+comment|/// \param Default the default value to return in case of failure.
+end_comment
+
+begin_comment
+comment|/// \returns the extracted unsigned value or Default if the V doesn't have a
+end_comment
+
+begin_comment
+comment|/// value or the form value's encoding wasn't an unsigned constant form.
+end_comment
+
+begin_decl_stmt
+specifier|inline
+name|uint64_t
+name|toUnsigned
+argument_list|(
+specifier|const
+name|Optional
+operator|<
+name|DWARFFormValue
+operator|>
+operator|&
+name|V
+argument_list|,
+name|uint64_t
+name|Default
+argument_list|)
+block|{
+return|return
+name|toUnsigned
+argument_list|(
+name|V
+argument_list|)
+operator|.
+name|getValueOr
+argument_list|(
+name|Default
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Take an optional DWARFFormValue and try to extract an reference.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
+comment|/// \returns an optional value that contains a value if the form value
+end_comment
+
+begin_comment
+comment|/// was valid and has a reference form.
+end_comment
+
+begin_expr_stmt
+specifier|inline
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|toReference
+argument_list|(
+argument|const Optional<DWARFFormValue>& V
+argument_list|)
+block|{
+if|if
+condition|(
+name|V
+condition|)
+return|return
+name|V
+operator|->
+name|getAsReference
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|None
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// Take an optional DWARFFormValue and extract a reference.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
+comment|/// \param Default the default value to return in case of failure.
+end_comment
+
+begin_comment
+comment|/// \returns the extracted reference value or Default if the V doesn't have a
+end_comment
+
+begin_comment
+comment|/// value or the form value's encoding wasn't a reference form.
+end_comment
+
+begin_decl_stmt
+unit|inline
+name|uint64_t
+name|toReference
+argument_list|(
+specifier|const
+name|Optional
+operator|<
+name|DWARFFormValue
+operator|>
+operator|&
+name|V
+argument_list|,
+name|uint64_t
+name|Default
+argument_list|)
+block|{
+return|return
+name|toReference
+argument_list|(
+name|V
+argument_list|)
+operator|.
+name|getValueOr
+argument_list|(
+name|Default
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Take an optional DWARFFormValue and try to extract an signed constant.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
+comment|/// \returns an optional value that contains a value if the form value
+end_comment
+
+begin_comment
+comment|/// was valid and has a signed constant form.
+end_comment
+
+begin_expr_stmt
+specifier|inline
+name|Optional
+operator|<
+name|int64_t
+operator|>
+name|toSigned
+argument_list|(
+argument|const Optional<DWARFFormValue>& V
+argument_list|)
+block|{
+if|if
+condition|(
+name|V
+condition|)
+return|return
+name|V
+operator|->
+name|getAsSignedConstant
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|None
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// Take an optional DWARFFormValue and extract a signed integer.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
+comment|/// \param Default the default value to return in case of failure.
+end_comment
+
+begin_comment
+comment|/// \returns the extracted signed integer value or Default if the V doesn't
+end_comment
+
+begin_comment
+comment|/// have a value or the form value's encoding wasn't a signed integer form.
+end_comment
+
+begin_decl_stmt
+unit|inline
+name|int64_t
+name|toSigned
+argument_list|(
+specifier|const
+name|Optional
+operator|<
+name|DWARFFormValue
+operator|>
+operator|&
+name|V
+argument_list|,
+name|int64_t
+name|Default
+argument_list|)
+block|{
+return|return
+name|toSigned
+argument_list|(
+name|V
+argument_list|)
+operator|.
+name|getValueOr
+argument_list|(
+name|Default
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Take an optional DWARFFormValue and try to extract an address.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
+comment|/// \returns an optional value that contains a value if the form value
+end_comment
+
+begin_comment
+comment|/// was valid and has a address form.
+end_comment
+
+begin_expr_stmt
+specifier|inline
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|toAddress
+argument_list|(
+argument|const Optional<DWARFFormValue>& V
+argument_list|)
+block|{
+if|if
+condition|(
+name|V
+condition|)
+return|return
+name|V
+operator|->
+name|getAsAddress
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|None
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// Take an optional DWARFFormValue and extract a address.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
+comment|/// \param Default the default value to return in case of failure.
+end_comment
+
+begin_comment
+comment|/// \returns the extracted address value or Default if the V doesn't have a
+end_comment
+
+begin_comment
+comment|/// value or the form value's encoding wasn't an address form.
+end_comment
+
+begin_decl_stmt
+unit|inline
+name|uint64_t
+name|toAddress
+argument_list|(
+specifier|const
+name|Optional
+operator|<
+name|DWARFFormValue
+operator|>
+operator|&
+name|V
+argument_list|,
+name|uint64_t
+name|Default
+argument_list|)
+block|{
+return|return
+name|toAddress
+argument_list|(
+name|V
+argument_list|)
+operator|.
+name|getValueOr
+argument_list|(
+name|Default
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Take an optional DWARFFormValue and try to extract an section offset.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
+comment|/// \returns an optional value that contains a value if the form value
+end_comment
+
+begin_comment
+comment|/// was valid and has a section offset form.
+end_comment
+
+begin_expr_stmt
+specifier|inline
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|toSectionOffset
+argument_list|(
+argument|const Optional<DWARFFormValue>& V
+argument_list|)
+block|{
+if|if
+condition|(
+name|V
+condition|)
+return|return
+name|V
+operator|->
+name|getAsSectionOffset
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|None
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// Take an optional DWARFFormValue and extract a section offset.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
+comment|/// \param Default the default value to return in case of failure.
+end_comment
+
+begin_comment
+comment|/// \returns the extracted section offset value or Default if the V doesn't
+end_comment
+
+begin_comment
+comment|/// have a value or the form value's encoding wasn't a section offset form.
+end_comment
+
+begin_decl_stmt
+unit|inline
+name|uint64_t
+name|toSectionOffset
+argument_list|(
+specifier|const
+name|Optional
+operator|<
+name|DWARFFormValue
+operator|>
+operator|&
+name|V
+argument_list|,
+name|uint64_t
+name|Default
+argument_list|)
+block|{
+return|return
+name|toSectionOffset
+argument_list|(
+name|V
+argument_list|)
+operator|.
+name|getValueOr
+argument_list|(
+name|Default
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Take an optional DWARFFormValue and try to extract block data.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
+comment|/// \returns an optional value that contains a value if the form value
+end_comment
+
+begin_comment
+comment|/// was valid and has a block form.
+end_comment
+
+begin_expr_stmt
+specifier|inline
+name|Optional
+operator|<
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>>
+name|toBlock
+argument_list|(
+argument|const Optional<DWARFFormValue>& V
+argument_list|)
+block|{
+if|if
+condition|(
+name|V
+condition|)
+return|return
+name|V
+operator|->
+name|getAsBlock
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|None
+return|;
+end_return
+
+begin_comment
+unit|}  }
+comment|// end namespace dwarf
+end_comment
+
+begin_comment
+unit|}
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARFFORMVALUE_H
+end_comment
 
 end_unit
 

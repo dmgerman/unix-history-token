@@ -286,6 +286,8 @@ name|ARMSubArch_v7s
 block|,
 name|ARMSubArch_v7k
 block|,
+name|ARMSubArch_v7ve
+block|,
 name|ARMSubArch_v6
 block|,
 name|ARMSubArch_v6m
@@ -479,6 +481,8 @@ block|,
 name|ELF
 block|,
 name|MachO
+block|,
+name|Wasm
 block|,   }
 enum|;
 name|private
@@ -1710,6 +1714,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|getOS
 argument_list|()
 operator|==
@@ -1723,6 +1728,11 @@ operator|==
 name|Triple
 operator|::
 name|KFreeBSD
+operator|)
+operator|&&
+operator|!
+name|isAndroid
+argument_list|()
 return|;
 block|}
 comment|/// Tests whether the OS uses the ELF binary format.
@@ -1768,6 +1778,21 @@ operator|==
 name|Triple
 operator|::
 name|MachO
+return|;
+block|}
+comment|/// Tests whether the OS uses the Wasm binary format.
+name|bool
+name|isOSBinFormatWasm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObjectFormat
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Wasm
 return|;
 block|}
 comment|/// Tests whether the target is the PS4 CPU
@@ -1834,6 +1859,75 @@ operator|==
 name|Triple
 operator|::
 name|Android
+return|;
+block|}
+name|bool
+name|isAndroidVersionLT
+argument_list|(
+name|unsigned
+name|Major
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|isAndroid
+argument_list|()
+operator|&&
+literal|"Not an Android triple!"
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|Env
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|getEnvironmentVersion
+argument_list|(
+name|Env
+index|[
+literal|0
+index|]
+argument_list|,
+name|Env
+index|[
+literal|1
+index|]
+argument_list|,
+name|Env
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+comment|// 64-bit targets did not exist before API level 21 (Lollipop).
+if|if
+condition|(
+name|isArch64Bit
+argument_list|()
+operator|&&
+name|Env
+index|[
+literal|0
+index|]
+operator|<
+literal|21
+condition|)
+name|Env
+index|[
+literal|0
+index|]
+operator|=
+literal|21
+expr_stmt|;
+return|return
+name|Env
+index|[
+literal|0
+index|]
+operator|<
+name|Major
 return|;
 block|}
 comment|/// Tests whether the environment is musl-libc

@@ -102,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/Orc/ObjectLinkingLayer.h"
+file|"llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h"
 end_include
 
 begin_include
@@ -129,7 +129,7 @@ expr_stmt|;
 typedef|typedef
 name|orc
 operator|::
-name|ObjectLinkingLayer
+name|RTDyldObjectLinkingLayer
 operator|<
 operator|>
 name|ObjLayerT

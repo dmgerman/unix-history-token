@@ -134,6 +134,9 @@ name|class
 name|BlockFrequencyInfo
 decl_stmt|;
 name|class
+name|CallSite
+decl_stmt|;
+name|class
 name|ProfileSummary
 decl_stmt|;
 comment|/// \brief Analysis providing profile information.
@@ -162,7 +165,7 @@ name|ProfileSummary
 operator|>
 name|Summary
 expr_stmt|;
-name|void
+name|bool
 name|computeSummary
 parameter_list|()
 function_decl|;
@@ -212,19 +215,57 @@ argument_list|(
 argument|std::move(Arg.Summary)
 argument_list|)
 block|{}
+comment|/// Returns the profile count for \p CallInst.
+specifier|static
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getProfileCount
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|CallInst
+argument_list|,
+name|BlockFrequencyInfo
+operator|*
+name|BFI
+argument_list|)
+expr_stmt|;
 comment|/// \brief Returns true if \p F has hot function entry.
 name|bool
 name|isFunctionEntryHot
-argument_list|(
+parameter_list|(
 specifier|const
 name|Function
-operator|*
+modifier|*
 name|F
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
+comment|/// Returns true if \p F has hot function entry or hot call edge.
+name|bool
+name|isFunctionHotInCallGraph
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
 comment|/// \brief Returns true if \p F has cold function entry.
 name|bool
 name|isFunctionEntryCold
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
+comment|/// Returns true if \p F has cold function entry or cold call edge.
+name|bool
+name|isFunctionColdInCallGraph
 parameter_list|(
 specifier|const
 name|Function
@@ -256,6 +297,48 @@ specifier|const
 name|BasicBlock
 modifier|*
 name|B
+parameter_list|,
+name|BlockFrequencyInfo
+modifier|*
+name|BFI
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns true if BasicBlock \p B is considered cold.
+name|bool
+name|isColdBB
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|B
+parameter_list|,
+name|BlockFrequencyInfo
+modifier|*
+name|BFI
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns true if CallSite \p CS is considered hot.
+name|bool
+name|isHotCallSite
+parameter_list|(
+specifier|const
+name|CallSite
+modifier|&
+name|CS
+parameter_list|,
+name|BlockFrequencyInfo
+modifier|*
+name|BFI
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns true if Callsite \p CS is considered cold.
+name|bool
+name|isColdCallSite
+parameter_list|(
+specifier|const
+name|CallSite
+modifier|&
+name|CS
 parameter_list|,
 name|BlockFrequencyInfo
 modifier|*

@@ -7008,6 +7008,9 @@ argument_list|,
 argument|const BlockFrequencyInfoT *Graph
 argument_list|,
 argument|GVDAGType GType
+argument_list|,
+argument|int layout_order = -
+literal|1
 argument_list|)
 block|{
 name|std
@@ -7021,18 +7024,39 @@ argument_list|(
 name|Result
 argument_list|)
 block|;
+if|if
+condition|(
+name|layout_order
+operator|!=
+operator|-
+literal|1
+condition|)
 name|OS
 operator|<<
 name|Node
 operator|->
 name|getName
 argument_list|()
-operator|.
-name|str
+operator|<<
+literal|"["
+operator|<<
+name|layout_order
+operator|<<
+literal|"] : "
+expr_stmt|;
+else|else
+name|OS
+operator|<<
+name|Node
+operator|->
+name|getName
 argument_list|()
 operator|<<
 literal|" : "
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_switch
 switch|switch
 condition|(
 name|GType
@@ -7099,28 +7123,23 @@ literal|"Unknown"
 expr_stmt|;
 break|break;
 block|}
-end_expr_stmt
-
-begin_case
 case|case
 name|GVDT_None
 case|:
-end_case
-
-begin_expr_stmt
 name|llvm_unreachable
 argument_list|(
 literal|"If we are not supposed to render a graph we should "
 literal|"never reach this point."
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_switch
 
-begin_expr_stmt
-unit|}     return
+begin_return
+return|return
 name|Result
-expr_stmt|;
-end_expr_stmt
+return|;
+end_return
 
 begin_expr_stmt
 unit|}    std

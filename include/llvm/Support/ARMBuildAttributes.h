@@ -635,6 +635,32 @@ init|=
 literal|4
 block|,
 comment|// sizeof(wchar_t) == 4
+comment|// Tag_ABI_align_needed, (=24), uleb128
+name|Align8Byte
+init|=
+literal|1
+block|,
+name|Align4Byte
+init|=
+literal|2
+block|,
+name|AlignReserved
+init|=
+literal|3
+block|,
+comment|// Tag_ABI_align_needed, (=25), uleb128
+name|AlignNotPreserved
+init|=
+literal|0
+block|,
+name|AlignPreserve8Byte
+init|=
+literal|1
+block|,
+name|AlignPreserveAll
+init|=
+literal|2
+block|,
 comment|// Tag_ABI_FP_denormal, (=20), uleb128
 name|PositiveZero
 init|=
@@ -650,12 +676,16 @@ literal|2
 block|,
 comment|// sign when flushed-to-zero is preserved
 comment|// Tag_ABI_FP_number_model, (=23), uleb128
+name|AllowIEEENormal
+init|=
+literal|1
+block|,
 name|AllowRTABI
 init|=
 literal|2
 block|,
 comment|// numbers, infinities, and one quiet NaN (see [RTABI])
-name|AllowIEE754
+name|AllowIEEE754
 init|=
 literal|3
 block|,
@@ -715,6 +745,10 @@ comment|// Tag_FP_16bit_format, (=38), uleb128
 name|FP16FormatIEEE
 init|=
 literal|1
+block|,
+name|FP16VFP3
+init|=
+literal|2
 block|,
 comment|// Tag_MPextension_use, (=42), uleb128
 name|AllowMP

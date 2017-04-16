@@ -145,8 +145,55 @@ operator|*
 name|MI
 argument_list|)
 block|;
+comment|//===------------------------------------------------------------------===//
+comment|// XRay implementation
+comment|//===------------------------------------------------------------------===//
+name|public
+operator|:
+comment|// XRay-specific lowering for Mips.
+name|void
+name|LowerPATCHABLE_FUNCTION_ENTER
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+block|;
+name|void
+name|LowerPATCHABLE_FUNCTION_EXIT
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+block|;
+name|void
+name|LowerPATCHABLE_TAIL_CALL
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+block|;
+comment|// Helper function that emits the XRay sleds we've collected for a particular
+comment|// function.
+name|void
+name|EmitXRayTable
+argument_list|()
+block|;
 name|private
 operator|:
+name|void
+name|EmitSled
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|SledKind Kind
+argument_list|)
+block|;
 comment|// tblgen'erated function.
 name|bool
 name|emitPseudoExpansionLowering
@@ -624,7 +671,7 @@ name|OS
 argument_list|)
 block|;
 name|void
-name|EmitDebugValue
+name|EmitDebugThreadLocal
 argument_list|(
 argument|const MCExpr *Value
 argument_list|,

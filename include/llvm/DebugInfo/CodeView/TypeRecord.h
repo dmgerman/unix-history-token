@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamArray.h"
+file|"llvm/Support/BinaryStreamArray.h"
 end_include
 
 begin_include
@@ -125,14 +125,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|namespace
-name|msf
-block|{
 name|class
-name|StreamReader
+name|BinaryStreamReader
 decl_stmt|;
-block|}
-comment|// end namespace msf
 name|namespace
 name|codeview
 block|{
@@ -173,13 +168,20 @@ expr_stmt|;
 block|}
 struct|;
 typedef|typedef
-name|msf
-operator|::
 name|VarStreamArray
 operator|<
 name|CVType
 operator|>
 name|CVTypeArray
+expr_stmt|;
+typedef|typedef
+name|iterator_range
+operator|<
+name|CVTypeArray
+operator|::
+name|Iterator
+operator|>
+name|CVTypeRange
 expr_stmt|;
 comment|/// Equvalent to CV_fldattr_t in cvinfo.h.
 struct|struct
@@ -425,18 +427,6 @@ argument_list|(
 argument|Representation
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-expr_stmt|;
 name|TypeIndex
 name|getContainingType
 argument_list|()
@@ -546,18 +536,6 @@ argument_list|(
 argument|Modifiers
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getModifiedType
 argument_list|()
@@ -648,18 +626,6 @@ argument_list|(
 argument|ArgumentList
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getReturnType
 argument_list|()
@@ -807,18 +773,6 @@ argument_list|(
 argument|ThisPointerAdjustment
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getReturnType
 argument_list|()
@@ -916,6 +870,47 @@ name|int32_t
 name|ThisPointerAdjustment
 block|; }
 decl_stmt|;
+comment|// LF_LABEL
+name|class
+name|LabelRecord
+range|:
+name|public
+name|TypeRecord
+block|{
+name|public
+operator|:
+name|explicit
+name|LabelRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|LabelRecord
+argument_list|(
+argument|LabelType Mode
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|TypeRecordKind
+operator|::
+name|Label
+argument_list|)
+block|,
+name|Mode
+argument_list|(
+argument|Mode
+argument_list|)
+block|{}
+name|LabelType
+name|Mode
+block|; }
+decl_stmt|;
 comment|// LF_MFUNC_ID
 name|class
 name|MemberFuncIdRecord
@@ -967,18 +962,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getClassType
 argument_list|()
@@ -1016,7 +999,7 @@ name|StringRef
 name|Name
 block|; }
 decl_stmt|;
-comment|// LF_ARGLIST, LF_SUBSTR_LIST
+comment|// LF_ARGLIST
 name|class
 name|ArgListRecord
 range|:
@@ -1048,23 +1031,69 @@ argument_list|(
 name|Kind
 argument_list|)
 block|,
+name|ArgIndices
+argument_list|(
+argument|Indices
+argument_list|)
+block|{}
+name|ArrayRef
+operator|<
+name|TypeIndex
+operator|>
+name|getIndices
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArgIndices
+return|;
+block|}
+name|std
+operator|::
+name|vector
+operator|<
+name|TypeIndex
+operator|>
+name|ArgIndices
+block|; }
+decl_stmt|;
+comment|// LF_SUBSTR_LIST
+name|class
+name|StringListRecord
+range|:
+name|public
+name|TypeRecord
+block|{
+name|public
+operator|:
+name|explicit
+name|StringListRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|StringListRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|,
+argument|ArrayRef<TypeIndex> Indices
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|Kind
+argument_list|)
+block|,
 name|StringIndices
 argument_list|(
 argument|Indices
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|TypeIndex
@@ -1286,18 +1315,6 @@ argument_list|(
 argument|Member
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getReferentType
 argument_list|()
@@ -1620,18 +1637,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getNestedType
 argument_list|()
@@ -1699,18 +1704,6 @@ argument_list|(
 argument|Data
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-argument|ArrayRef<TypeIndex> IndexMap
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
 name|ArrayRef
 operator|<
 name|uint8_t
@@ -1776,18 +1769,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getElementType
 argument_list|()
@@ -1903,18 +1884,6 @@ argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 specifier|static
 specifier|const
 name|int
@@ -2094,18 +2063,6 @@ argument_list|(
 argument|Size
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|HfaKind
 name|getHfa
 argument_list|()
@@ -2376,17 +2333,6 @@ argument_list|(
 argument|UnderlyingType
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getUnderlyingType
 argument_list|()
@@ -2451,18 +2397,6 @@ argument_list|(
 argument|BitOffset
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getType
 argument_list|()
@@ -2566,18 +2500,6 @@ argument_list|(
 argument|std::move(Slots)
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|VFTableSlotKind
@@ -2680,18 +2602,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|StringRef
 name|getGuid
 argument_list|()
@@ -2773,18 +2683,6 @@ argument_list|(
 argument|String
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getId
 argument_list|()
@@ -2861,18 +2759,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getParentScope
 argument_list|()
@@ -2961,18 +2847,6 @@ argument_list|(
 argument|LineNumber
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getUDT
 argument_list|()
@@ -3068,16 +2942,6 @@ argument_list|(
 argument|Module
 argument_list|)
 block|{}
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getUDT
 argument_list|()
@@ -3170,18 +3034,6 @@ argument_list|,
 argument|ArgIndices.end()
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|TypeIndex
@@ -3285,18 +3137,6 @@ name|end
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getCompleteClass
 argument_list|()
@@ -3487,18 +3327,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getType
 argument_list|()
@@ -3637,18 +3465,6 @@ argument_list|(
 argument|Methods
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|OneMethodRecord
@@ -3721,18 +3537,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|uint16_t
 name|getNumOverloads
 argument_list|()
@@ -3866,18 +3670,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
@@ -4012,18 +3804,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
@@ -4156,18 +3936,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
@@ -4245,18 +4013,6 @@ argument_list|(
 argument|Type
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getType
 argument_list|()
@@ -4352,18 +4108,6 @@ argument_list|(
 argument|Offset
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
@@ -4514,18 +4258,6 @@ argument_list|(
 argument|Index
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
@@ -4637,16 +4369,6 @@ return|return
 name|ContinuationIndex
 return|;
 block|}
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|ContinuationIndex
 block|; }

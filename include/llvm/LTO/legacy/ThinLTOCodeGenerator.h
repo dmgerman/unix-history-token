@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CachePruning.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/CodeGen.h"
 end_include
 
@@ -372,29 +378,9 @@ name|string
 name|Path
 expr_stmt|;
 comment|// Path to the cache, empty to disable.
-name|int
-name|PruningInterval
-init|=
-literal|1200
+name|CachePruningPolicy
+name|Policy
 decl_stmt|;
-comment|// seconds, -1 to disable pruning.
-name|unsigned
-name|int
-name|Expiration
-init|=
-literal|7
-operator|*
-literal|24
-operator|*
-literal|3600
-decl_stmt|;
-comment|// seconds (1w default).
-name|unsigned
-name|MaxPercentageOfAvailableSpace
-init|=
-literal|75
-decl_stmt|;
-comment|// percentage.
 block|}
 struct|;
 comment|/// Provide a path to a directory where to store the cached files for
@@ -435,9 +421,18 @@ name|Interval
 condition|)
 name|CacheOptions
 operator|.
-name|PruningInterval
-operator|=
+name|Policy
+operator|.
 name|Interval
+operator|=
+name|std
+operator|::
+name|chrono
+operator|::
+name|seconds
+argument_list|(
+name|Interval
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// Cache policy: expiration (in seconds) for an entry.
@@ -455,9 +450,18 @@ name|Expiration
 condition|)
 name|CacheOptions
 operator|.
+name|Policy
+operator|.
 name|Expiration
 operator|=
+name|std
+operator|::
+name|chrono
+operator|::
+name|seconds
+argument_list|(
 name|Expiration
+argument_list|)
 expr_stmt|;
 block|}
 comment|/**    * Sets the maximum cache size that can be persistent across build, in terms    * of percentage of the available space on the the disk. Set to 100 to    * indicate no limit, 50 to indicate that the cache size will not be left over    * half the available space. A value over 100 will be reduced to 100, and a    * value of 0 will be ignored.    *    *    * The formula looks like:    *  AvailableSpace = FreeSpace + ExistingCacheSize    *  NewCacheSize = AvailableSpace * P/100    *    */
@@ -474,7 +478,9 @@ name|Percentage
 condition|)
 name|CacheOptions
 operator|.
-name|MaxPercentageOfAvailableSpace
+name|Policy
+operator|.
+name|PercentageOfAvailableSpace
 operator|=
 name|Percentage
 expr_stmt|;
@@ -586,6 +592,20 @@ name|move
 argument_list|(
 name|Options
 argument_list|)
+expr_stmt|;
+block|}
+comment|/// Enable the Freestanding mode: indicate that the optimizer should not
+comment|/// assume builtins are present on the target.
+name|void
+name|setFreestanding
+parameter_list|(
+name|bool
+name|Enabled
+parameter_list|)
+block|{
+name|Freestanding
+operator|=
+name|Enabled
 expr_stmt|;
 block|}
 comment|/// CodeModel
@@ -871,6 +891,13 @@ comment|/// Flag to indicate that only the CodeGen will be performed, no cross-m
 comment|/// importing or optimization.
 name|bool
 name|CodeGenOnly
+init|=
+name|false
+decl_stmt|;
+comment|/// Flag to indicate that the optimizer should not assume builtins are present
+comment|/// on the target.
+name|bool
+name|Freestanding
 init|=
 name|false
 decl_stmt|;

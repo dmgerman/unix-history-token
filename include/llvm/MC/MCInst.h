@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCInst.h - MCInst class -------------------------*- C++ -*-===//
+comment|//===- llvm/MC/MCInst.h - MCInst class --------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -82,13 +82,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/SMLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/SMLoc.h"
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -96,19 +108,16 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|raw_ostream
+name|MCExpr
 decl_stmt|;
 name|class
-name|MCAsmInfo
+name|MCInst
 decl_stmt|;
 name|class
 name|MCInstPrinter
 decl_stmt|;
 name|class
-name|MCExpr
-decl_stmt|;
-name|class
-name|MCInst
+name|raw_ostream
 decl_stmt|;
 comment|/// \brief Instances of this class represent operands of the MCInst class.
 comment|/// This is a simple discriminated union.
@@ -142,6 +151,8 @@ block|}
 enum|;
 name|MachineOperandType
 name|Kind
+init|=
+name|kInvalid
 decl_stmt|;
 union|union
 block|{
@@ -171,11 +182,6 @@ label|:
 name|MCOperand
 argument_list|()
 operator|:
-name|Kind
-argument_list|(
-name|kInvalid
-argument_list|)
-operator|,
 name|FPImmVal
 argument_list|(
 literal|0.0
@@ -621,6 +627,8 @@ name|MCInst
 block|{
 name|unsigned
 name|Opcode
+init|=
+literal|0
 decl_stmt|;
 name|SMLoc
 name|Loc
@@ -637,22 +645,21 @@ name|public
 label|:
 name|MCInst
 argument_list|()
-operator|:
-name|Opcode
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|setOpcode
-argument_list|(
-argument|unsigned Op
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Op
+parameter_list|)
 block|{
 name|Opcode
 operator|=
 name|Op
-block|; }
+expr_stmt|;
+block|}
 name|unsigned
 name|getOpcode
 argument_list|()
@@ -973,6 +980,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCINST_H
+end_comment
 
 end_unit
 

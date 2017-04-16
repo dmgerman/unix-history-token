@@ -2129,7 +2129,6 @@ operator|<
 name|class
 name|ELFT
 operator|>
-specifier|static
 name|bool
 name|compareAddr
 argument_list|(

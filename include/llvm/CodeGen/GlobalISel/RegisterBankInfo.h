@@ -831,11 +831,25 @@ return|return
 name|InstrMapping
 return|;
 block|}
+comment|/// The MachineRegisterInfo we used to realize the mapping.
+name|MachineRegisterInfo
+operator|&
+name|getMRI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MRI
+return|;
+block|}
 comment|/// @}
 comment|/// Create as many new virtual registers as needed for the mapping of the \p
 comment|/// OpIdx-th operand.
 comment|/// The number of registers is determined by the number of breakdown for the
 comment|/// related operand in the instruction mapping.
+comment|/// The type of the new registers is a plain scalar of the right size.
+comment|/// The proper type is expected to be set when the mapping is applied to
+comment|/// the instruction(s) that realizes the mapping.
 comment|///
 comment|/// \pre getMI().getOperand(OpIdx).isReg()
 comment|///
@@ -942,10 +956,13 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 specifier|const
 name|PartialMapping
-operator|*
-operator|>
+operator|>>
 name|MapOfPartialMappings
 expr_stmt|;
 comment|/// Keep dynamically allocated ValueMapping in a separate map.
@@ -955,10 +972,14 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 specifier|const
 name|ValueMapping
-operator|*
 operator|>
+expr|>
 name|MapOfValueMappings
 expr_stmt|;
 comment|/// Keep dynamically allocated array of ValueMapping in a separate map.
@@ -968,9 +989,13 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ValueMapping
-operator|*
-operator|>
+index|[]
+operator|>>
 name|MapOfOperandsMappings
 expr_stmt|;
 comment|/// Create a RegisterBankInfo that can accomodate up to \p NumRegBanks
@@ -1218,6 +1243,12 @@ comment|/// Helper method to apply something that is like the default mapping.
 comment|/// Basically, that means that \p OpdMapper.getMI() is left untouched
 comment|/// aside from the reassignment of the register operand that have been
 comment|/// remapped.
+comment|///
+comment|/// The type of all the new registers that have been created by the
+comment|/// mapper are properly remapped to the type of the original registers
+comment|/// they replace. In other words, the semantic of the instruction does
+comment|/// not change, only the register banks.
+comment|///
 comment|/// If the mapping of one of the operand spans several registers, this
 comment|/// method will abort as this is not like a default mapping anymore.
 comment|///
@@ -1257,6 +1288,8 @@ name|virtual
 operator|~
 name|RegisterBankInfo
 argument_list|()
+operator|=
+expr|default
 expr_stmt|;
 comment|/// Get the register bank identified by \p ID.
 specifier|const

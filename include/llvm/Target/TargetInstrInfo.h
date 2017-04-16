@@ -450,6 +450,100 @@ return|return
 name|CallFrameDestroyOpcode
 return|;
 block|}
+comment|/// Returns true if the argument is a frame pseudo instruction.
+name|bool
+name|isFrameInstr
+argument_list|(
+argument|const MachineInstr&I
+argument_list|)
+specifier|const
+block|{
+return|return
+name|I
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|getCallFrameSetupOpcode
+argument_list|()
+operator|||
+name|I
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|getCallFrameDestroyOpcode
+argument_list|()
+return|;
+block|}
+comment|/// Returns true if the argument is a frame setup pseudo instruction.
+name|bool
+name|isFrameSetup
+argument_list|(
+argument|const MachineInstr&I
+argument_list|)
+specifier|const
+block|{
+return|return
+name|I
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|getCallFrameSetupOpcode
+argument_list|()
+return|;
+block|}
+comment|/// Returns size of the frame associated with the given frame instruction.
+comment|/// For frame setup instruction this is frame that is set up space set up
+comment|/// after the instruction. For frame destroy instruction this is the frame
+comment|/// freed by the caller.
+comment|/// Note, in some cases a call frame (or a part of it) may be prepared prior
+comment|/// to the frame setup instruction. It occurs in the calls that involve
+comment|/// inalloca arguments. This function reports only the size of the frame part
+comment|/// that is set up between the frame setup and destroy pseudo instructions.
+name|int64_t
+name|getFrameSize
+argument_list|(
+argument|const MachineInstr&I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isFrameInstr
+argument_list|(
+name|I
+argument_list|)
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+operator|>=
+literal|0
+argument_list|)
+block|;
+return|return
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+return|;
+block|}
 name|unsigned
 name|getCatchReturnOpcode
 argument_list|()
@@ -2317,25 +2411,6 @@ argument_list|(
 literal|"target did not implement shouldClusterMemOps()"
 argument_list|)
 block|;   }
-comment|/// Can this target fuse the given instructions if they are scheduled
-comment|/// adjacent. Note that you have to add:
-comment|///   DAG.addMutation(createMacroFusionDAGMutation());
-comment|/// to TargetPassConfig::createMachineScheduler() to have an effect.
-name|virtual
-name|bool
-name|shouldScheduleAdjacent
-argument_list|(
-argument|const MachineInstr&First
-argument_list|,
-argument|const MachineInstr&Second
-argument_list|)
-specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"target did not implement shouldScheduleAdjacent()"
-argument_list|)
-block|;   }
 comment|/// Reverses the branch condition of the specified condition list,
 comment|/// returning false on success and true if it cannot be reversed.
 name|virtual
@@ -2406,6 +2481,52 @@ argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
+comment|/// Returns true if MI is an unconditional tail call.
+name|virtual
+name|bool
+name|isUnconditionalTailCall
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Returns true if the tail call can be made conditional on BranchCond.
+name|virtual
+name|bool
+name|canMakeTailCallConditional
+argument_list|(
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|const MachineInstr&TailCall
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Replace the conditional branch in MBB with a conditional tail call.
+name|virtual
+name|void
+name|replaceBranchWithTailCall
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|const MachineInstr&TailCall
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement replaceBranchWithTailCall!"
+argument_list|)
+block|;   }
 comment|/// Convert the instruction into a predicated instruction.
 comment|/// It returns true if the operation was successful.
 name|virtual
@@ -2458,7 +2579,7 @@ name|virtual
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr&MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|{
@@ -3067,10 +3188,17 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|// Sometimes, it is possible for the target
-comment|// to tell, even without aliasing information, that two MIs access different
-comment|// memory addresses. This function returns true if two MIs access different
-comment|// memory addresses and false otherwise.
+comment|/// Sometimes, it is possible for the target
+comment|/// to tell, even without aliasing information, that two MIs access different
+comment|/// memory addresses. This function returns true if two MIs access different
+comment|/// memory addresses and false otherwise.
+comment|///
+comment|/// Assumes any physical registers used to compute addresses have the same
+comment|/// value for both instructions. (This is the most useful assumption for
+comment|/// post-RA scheduling.)
+comment|///
+comment|/// See also MachineInstr::mayAlias, which is implemented on top of this
+comment|/// function.
 name|virtual
 name|bool
 name|areMemAccessesTriviallyDisjoint
@@ -3242,7 +3370,9 @@ return|return
 name|None
 return|;
 block|}
-comment|/// Determines whether |Inst| is a tail call instruction.
+comment|/// Determines whether \p Inst is a tail call instruction. Override this
+comment|/// method on targets that do not properly set MCID::Return and MCID::Call on
+comment|/// tail call instructions."
 name|virtual
 name|bool
 name|isTailCall
@@ -3252,9 +3382,162 @@ argument_list|)
 specifier|const
 block|{
 return|return
+name|Inst
+operator|.
+name|isReturn
+argument_list|()
+operator|&&
+name|Inst
+operator|.
+name|isCall
+argument_list|()
+return|;
+block|}
+comment|/// True if the instruction is bound to the top of its basic block and no
+comment|/// other instructions shall be inserted before it. This can be implemented
+comment|/// to prevent register allocator to insert spills before such instructions.
+name|virtual
+name|bool
+name|isBasicBlockPrologue
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+return|return
 name|false
 return|;
 block|}
+comment|/// \brief Return how many instructions would be saved by outlining a
+comment|/// sequence containing \p SequenceSize instructions that appears
+comment|/// \p Occurrences times in a module.
+name|virtual
+name|unsigned
+name|getOutliningBenefit
+argument_list|(
+argument|size_t SequenceSize
+argument_list|,
+argument|size_t Occurrences
+argument_list|,
+argument|bool CanBeTailCall
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::getOutliningBenefit!"
+argument_list|)
+block|;   }
+comment|/// Represents how an instruction should be mapped by the outliner.
+comment|/// \p Legal instructions are those which are safe to outline.
+comment|/// \p Illegal instructions are those which cannot be outlined.
+comment|/// \p Invisible instructions are instructions which can be outlined, but
+comment|/// shouldn't actually impact the outlining result.
+expr|enum
+name|MachineOutlinerInstrType
+block|{
+name|Legal
+block|,
+name|Illegal
+block|,
+name|Invisible
+block|}
+block|;
+comment|/// Returns how or if \p MI should be outlined.
+name|virtual
+name|MachineOutlinerInstrType
+name|getOutliningType
+argument_list|(
+argument|MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::getOutliningType!"
+argument_list|)
+block|;   }
+comment|/// Insert a custom epilogue for outlined functions.
+comment|/// This may be empty, in which case no epilogue or return statement will be
+comment|/// emitted.
+name|virtual
+name|void
+name|insertOutlinerEpilogue
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool IsTailCall
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::insertOutlinerEpilogue!"
+argument_list|)
+block|;   }
+comment|/// Insert a call to an outlined function into the program.
+comment|/// Returns an iterator to the spot where we inserted the call. This must be
+comment|/// implemented by the target.
+name|virtual
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|insertOutlinedCall
+argument_list|(
+argument|Module&M
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator&It
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool IsTailCall
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::insertOutlinedCall!"
+argument_list|)
+block|;   }
+comment|/// Insert a custom prologue for outlined functions.
+comment|/// This may be empty, in which case no prologue will be emitted.
+name|virtual
+name|void
+name|insertOutlinerPrologue
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool IsTailCall
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::insertOutlinerPrologue!"
+argument_list|)
+block|;   }
+comment|/// Return true if the function can safely be outlined from.
+comment|/// By default, this means that the function has no red zone.
+name|virtual
+name|bool
+name|isFunctionSafeToOutlineFrom
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement "
+literal|"TargetInstrInfo::isFunctionSafeToOutlineFrom!"
+argument_list|)
+block|;   }
 name|private
 operator|:
 name|unsigned

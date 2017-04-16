@@ -212,11 +212,6 @@ name|MODULE_CODE_ALIAS_OLD
 init|=
 literal|9
 block|,
-comment|// MODULE_CODE_PURGEVALS: [numvals]
-name|MODULE_CODE_PURGEVALS
-init|=
-literal|10
-block|,
 name|MODULE_CODE_GCNAME
 init|=
 literal|11
@@ -511,10 +506,42 @@ name|FS_VERSION
 init|=
 literal|10
 block|,
-comment|// The list of llvm.type.test type identifiers used by the following function.
+comment|// The list of llvm.type.test type identifiers used by the following function
+comment|// that are used other than by an llvm.assume.
+comment|// [n x typeid]
 name|FS_TYPE_TESTS
 init|=
 literal|11
+block|,
+comment|// The list of virtual calls made by this function using
+comment|// llvm.assume(llvm.type.test) intrinsics that do not have all constant
+comment|// integer arguments.
+comment|// [n x (typeid, offset)]
+name|FS_TYPE_TEST_ASSUME_VCALLS
+init|=
+literal|12
+block|,
+comment|// The list of virtual calls made by this function using
+comment|// llvm.type.checked.load intrinsics that do not have all constant integer
+comment|// arguments.
+comment|// [n x (typeid, offset)]
+name|FS_TYPE_CHECKED_LOAD_VCALLS
+init|=
+literal|13
+block|,
+comment|// Identifies a virtual call made by this function using an
+comment|// llvm.assume(llvm.type.test) intrinsic with all constant integer arguments.
+comment|// [typeid, offset, n x arg]
+name|FS_TYPE_TEST_ASSUME_CONST_VCALL
+init|=
+literal|14
+block|,
+comment|// Identifies a virtual call made by this function using an
+comment|// llvm.type.checked.load intrinsic with all constant integer arguments.
+comment|// [typeid, offset, n x arg]
+name|FS_TYPE_CHECKED_LOAD_CONST_VCALL
+init|=
+literal|15
 block|, }
 enum|;
 enum|enum

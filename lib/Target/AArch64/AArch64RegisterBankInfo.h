@@ -65,6 +65,18 @@ directive|include
 file|"llvm/CodeGen/GlobalISel/RegisterBankInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_REGBANK_DECLARATIONS
+end_define
+
+begin_include
+include|#
+directive|include
+file|"AArch64GenRegisterBank.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -72,50 +84,208 @@ block|{
 name|class
 name|TargetRegisterInfo
 decl_stmt|;
-name|namespace
-name|AArch64
+name|class
+name|AArch64GenRegisterBankInfo
+range|:
+name|public
+name|RegisterBankInfo
 block|{
-enum|enum
+name|protected
+operator|:
+expr|enum
+name|PartialMappingIdx
 block|{
-name|GPRRegBankID
-init|=
-literal|0
-block|,
-comment|/// General Purpose Registers: W, X.
-name|FPRRegBankID
-init|=
+name|PMI_None
+operator|=
+operator|-
 literal|1
 block|,
-comment|/// Floating Point/Vector Registers: B, H, S, D, Q.
-name|CCRRegBankID
-init|=
-literal|2
+name|PMI_FPR32
+operator|=
+literal|1
 block|,
-comment|/// Conditional register: NZCV.
-name|NumRegisterBanks
+name|PMI_FPR64
+block|,
+name|PMI_FPR128
+block|,
+name|PMI_FPR256
+block|,
+name|PMI_FPR512
+block|,
+name|PMI_GPR32
+block|,
+name|PMI_GPR64
+block|,
+name|PMI_FirstGPR
+operator|=
+name|PMI_GPR32
+block|,
+name|PMI_LastGPR
+operator|=
+name|PMI_GPR64
+block|,
+name|PMI_FirstFPR
+operator|=
+name|PMI_FPR32
+block|,
+name|PMI_LastFPR
+operator|=
+name|PMI_FPR512
+block|,
+name|PMI_Min
+operator|=
+name|PMI_FirstFPR
+block|,   }
+block|;
+specifier|static
+name|RegisterBankInfo
+operator|::
+name|PartialMapping
+name|PartMappings
+index|[]
+block|;
+specifier|static
+name|RegisterBankInfo
+operator|::
+name|ValueMapping
+name|ValMappings
+index|[]
+block|;
+specifier|static
+name|PartialMappingIdx
+name|BankIDToCopyMapIdx
+index|[]
+block|;    enum
+name|ValueMappingIdx
+block|{
+name|InvalidIdx
+operator|=
+literal|0
+block|,
+name|First3OpsIdx
+operator|=
+literal|1
+block|,
+name|Last3OpsIdx
+operator|=
+literal|19
+block|,
+name|DistanceBetweenRegBanks
+operator|=
+literal|3
+block|,
+name|FirstCrossRegCpyIdx
+operator|=
+literal|22
+block|,
+name|LastCrossRegCpyIdx
+operator|=
+literal|34
+block|,
+name|DistanceBetweenCrossRegCpy
+operator|=
+literal|2
 block|}
-enum|;
-specifier|extern
-name|RegisterBank
-name|GPRRegBank
-decl_stmt|;
-specifier|extern
-name|RegisterBank
-name|FPRRegBank
-decl_stmt|;
-specifier|extern
-name|RegisterBank
-name|CCRRegBank
-decl_stmt|;
+block|;
+specifier|static
+name|bool
+name|checkPartialMap
+argument_list|(
+argument|unsigned Idx
+argument_list|,
+argument|unsigned ValStartIdx
+argument_list|,
+argument|unsigned ValLength
+argument_list|,
+argument|const RegisterBank&RB
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|checkValueMapImpl
+argument_list|(
+argument|unsigned Idx
+argument_list|,
+argument|unsigned FirstInBank
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|unsigned Offset
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|checkPartialMappingIdx
+argument_list|(
+argument|PartialMappingIdx FirstAlias
+argument_list|,
+argument|PartialMappingIdx LastAlias
+argument_list|,
+argument|ArrayRef<PartialMappingIdx> Order
+argument_list|)
+block|;
+specifier|static
+name|unsigned
+name|getRegBankBaseIdxOffset
+argument_list|(
+argument|unsigned RBIdx
+argument_list|,
+argument|unsigned Size
+argument_list|)
+block|;
+comment|/// Get the pointer to the ValueMapping representing the RegisterBank
+comment|/// at \p RBIdx with a size of \p Size.
+comment|///
+comment|/// The returned mapping works for instructions with the same kind of
+comment|/// operands for up to 3 operands.
+comment|///
+comment|/// \pre \p RBIdx != PartialMappingIdx::None
+specifier|static
+specifier|const
+name|RegisterBankInfo
+operator|::
+name|ValueMapping
+operator|*
+name|getValueMapping
+argument_list|(
+argument|PartialMappingIdx RBIdx
+argument_list|,
+argument|unsigned Size
+argument_list|)
+block|;
+comment|/// Get the pointer to the ValueMapping of the operands of a copy
+comment|/// instruction from the \p SrcBankID register bank to the \p DstBankID
+comment|/// register bank with a size of \p Size.
+specifier|static
+specifier|const
+name|RegisterBankInfo
+operator|::
+name|ValueMapping
+operator|*
+name|getCopyMapping
+argument_list|(
+argument|unsigned DstBankID
+argument_list|,
+argument|unsigned SrcBankID
+argument_list|,
+argument|unsigned Size
+argument_list|)
+block|;
+define|#
+directive|define
+name|GET_TARGET_REGBANK_CLASS
+include|#
+directive|include
+file|"AArch64GenRegisterBank.inc"
 block|}
-comment|// End AArch64 namespace.
+decl_stmt|;
 comment|/// This class provides the information for the target register banks.
 name|class
 name|AArch64RegisterBankInfo
 name|final
 range|:
 name|public
-name|RegisterBankInfo
+name|AArch64GenRegisterBankInfo
 block|{
 comment|/// See RegisterBankInfo::applyMapping.
 name|void

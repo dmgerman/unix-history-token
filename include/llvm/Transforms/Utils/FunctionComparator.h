@@ -712,11 +712,11 @@ name|int
 name|cmpAttrs
 argument_list|(
 specifier|const
-name|AttributeSet
+name|AttributeList
 name|L
 argument_list|,
 specifier|const
-name|AttributeSet
+name|AttributeList
 name|R
 argument_list|)
 decl|const

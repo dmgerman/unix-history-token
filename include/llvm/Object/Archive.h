@@ -1054,6 +1054,8 @@ name|K_MIPS64
 block|,
 name|K_BSD
 block|,
+name|K_DARWIN
+block|,
 name|K_DARWIN64
 block|,
 name|K_COFF

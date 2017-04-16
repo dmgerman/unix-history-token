@@ -830,6 +830,47 @@ operator|&&
 literal|"Copying of LiveRanges with active SegmentSets is not supported"
 argument_list|)
 expr_stmt|;
+name|assign
+argument_list|(
+name|Other
+argument_list|,
+name|Allocator
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Copies values numbers and live segments from \p Other into this range.
+name|void
+name|assign
+parameter_list|(
+specifier|const
+name|LiveRange
+modifier|&
+name|Other
+parameter_list|,
+name|BumpPtrAllocator
+modifier|&
+name|Allocator
+parameter_list|)
+block|{
+if|if
+condition|(
+name|this
+operator|==
+operator|&
+name|Other
+condition|)
+return|return;
+name|assert
+argument_list|(
+name|Other
+operator|.
+name|segmentSet
+operator|==
+name|nullptr
+operator|&&
+literal|"Copying of LiveRanges with active SegmentSets is not supported"
+argument_list|)
+expr_stmt|;
 comment|// Duplicate valnos.
 for|for
 control|(
@@ -842,7 +883,6 @@ name|Other
 operator|.
 name|valnos
 control|)
-block|{
 name|createValueCopy
 argument_list|(
 name|VNI
@@ -850,7 +890,6 @@ argument_list|,
 name|Allocator
 argument_list|)
 expr_stmt|;
-block|}
 comment|// Now we can copy segments and remap their valnos.
 for|for
 control|(
@@ -863,7 +902,6 @@ name|Other
 operator|.
 name|segments
 control|)
-block|{
 name|segments
 operator|.
 name|push_back
@@ -889,7 +927,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/// advanceTo - Advance the specified iterator to point to the Segment
 comment|/// containing the specified position, or end() if the position is past the
@@ -3025,6 +3062,74 @@ operator|&
 name|Indexes
 argument_list|)
 decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Refines the subranges to support \p LaneMask. This may only be called
+end_comment
+
+begin_comment
+comment|/// for LI.hasSubrange()==true. Subregister ranges are split or created
+end_comment
+
+begin_comment
+comment|/// until \p LaneMask can be matched exactly. \p Mod is executed on the
+end_comment
+
+begin_comment
+comment|/// matching subranges.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Example:
+end_comment
+
+begin_comment
+comment|///    Given an interval with subranges with lanemasks L0F00, L00F0 and
+end_comment
+
+begin_comment
+comment|///    L000F, refining for mask L0018. Will split the L00F0 lane into
+end_comment
+
+begin_comment
+comment|///    L00E0 and L0010 and the L000F lane into L0007 and L0008. The Mod
+end_comment
+
+begin_comment
+comment|///    function will be applied to the L0010 and L0008 subranges.
+end_comment
+
+begin_decl_stmt
+name|void
+name|refineSubRanges
+argument_list|(
+name|BumpPtrAllocator
+operator|&
+name|Allocator
+argument_list|,
+name|LaneBitmask
+name|LaneMask
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|LiveInterval
+operator|::
+name|SubRange
+operator|&
+argument_list|)
+operator|>
+name|Mod
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

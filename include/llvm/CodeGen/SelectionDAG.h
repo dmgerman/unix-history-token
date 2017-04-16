@@ -167,6 +167,9 @@ name|class
 name|MDNode
 decl_stmt|;
 name|class
+name|OptimizationRemarkEmitter
+decl_stmt|;
+name|class
 name|SDDbgValue
 decl_stmt|;
 name|class
@@ -770,6 +773,12 @@ operator|::
 name|Level
 name|OptLevel
 expr_stmt|;
+comment|/// The function-level optimization remark emitter.  Used to emit remarks
+comment|/// whenever manipulating the DAG.
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
+decl_stmt|;
 comment|/// The starting token.
 name|SDNode
 name|EntryNode
@@ -987,7 +996,7 @@ argument_list|)
 block|,
 name|Callback
 argument_list|(
-argument|Callback
+argument|std::move(Callback)
 argument_list|)
 block|{}
 name|void
@@ -1358,7 +1367,11 @@ name|init
 parameter_list|(
 name|MachineFunction
 modifier|&
-name|mf
+name|NewMF
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|&
+name|NewORE
 parameter_list|)
 function_decl|;
 comment|/// Clear state and free memory necessary to make this
@@ -1449,6 +1462,17 @@ specifier|const
 block|{
 return|return
 name|Context
+return|;
+block|}
+name|OptimizationRemarkEmitter
+operator|&
+name|getORE
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|ORE
 return|;
 block|}
 comment|/// Pop up a GraphViz/gv window with the DAG rendered using 'dot'.
@@ -1996,6 +2020,51 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+name|SDValue
+name|getAllOnesConstant
+parameter_list|(
+specifier|const
+name|SDLoc
+modifier|&
+name|DL
+parameter_list|,
+name|EVT
+name|VT
+parameter_list|,
+name|bool
+name|IsTarget
+init|=
+name|false
+parameter_list|,
+name|bool
+name|IsOpaque
+init|=
+name|false
+parameter_list|)
+block|{
+return|return
+name|getConstant
+argument_list|(
+name|APInt
+operator|::
+name|getAllOnesValue
+argument_list|(
+name|VT
+operator|.
+name|getScalarSizeInBits
+argument_list|()
+argument_list|)
+argument_list|,
+name|DL
+argument_list|,
+name|VT
+argument_list|,
+name|IsTarget
+argument_list|,
+name|IsOpaque
+argument_list|)
+return|;
+block|}
 name|SDValue
 name|getConstant
 parameter_list|(
@@ -3722,6 +3791,20 @@ name|Ops
 argument_list|)
 return|;
 block|}
+comment|/// Return true if the result of this operation is always undefined.
+name|bool
+name|isUndef
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|ArrayRef
+operator|<
+name|SDValue
+operator|>
+name|Ops
+argument_list|)
+decl_stmt|;
 comment|/// Return an UNDEF node. UNDEF does not have a useful SDLoc.
 name|SDValue
 name|getUNDEF
@@ -7136,6 +7219,32 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Used to represent the possible overflow behavior of an operation.
+comment|/// Never: the operation cannot overflow.
+comment|/// Always: the operation will always overflow.
+comment|/// Sometime: the operation may or may not overflow.
+enum|enum
+name|OverflowKind
+block|{
+name|OFK_Never
+block|,
+name|OFK_Sometime
+block|,
+name|OFK_Always
+block|,   }
+enum|;
+comment|/// Determine if the result of the addition of 2 node can overflow.
+name|OverflowKind
+name|computeOverflowKind
+argument_list|(
+name|SDValue
+name|N0
+argument_list|,
+name|SDValue
+name|N1
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Test if the given value is known to have exactly one bit set. This differs
 comment|/// from computeKnownBits in that it doesn't necessarily determine which bit
 comment|/// is set.
@@ -7159,6 +7268,32 @@ name|ComputeNumSignBits
 argument_list|(
 name|SDValue
 name|Op
+argument_list|,
+name|unsigned
+name|Depth
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return the number of times the sign bit of the register is replicated into
+comment|/// the other bits. We know that at least 1 bit is always equal to the sign
+comment|/// bit (itself), but other cases can give us information. For example,
+comment|/// immediately after an "SRA X, 2", we know that the top 3 bits are all equal
+comment|/// to each other, so we return 3. The DemandedElts argument allows
+comment|/// us to only collect the minimum sign bits of the requested vector elements.
+comment|/// Targets can implement the ComputeNumSignBitsForTarget method in the
+comment|/// TargetLowering class to allow target nodes to be understood.
+name|unsigned
+name|ComputeNumSignBits
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|DemandedElts
 argument_list|,
 name|unsigned
 name|Depth

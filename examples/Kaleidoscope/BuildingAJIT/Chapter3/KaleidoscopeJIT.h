@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/Orc/ObjectLinkingLayer.h"
+file|"llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h"
 end_include
 
 begin_include
@@ -227,7 +227,7 @@ specifier|const
 name|DataLayout
 name|DL
 decl_stmt|;
-name|ObjectLinkingLayer
+name|RTDyldObjectLinkingLayer
 operator|<
 operator|>
 name|ObjectLayer
@@ -383,9 +383,7 @@ name|CODLayer
 argument_list|(
 name|OptimizeLayer
 argument_list|,
-index|[
-name|this
-index|]
+index|[]
 operator|(
 name|Function
 operator|&

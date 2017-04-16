@@ -124,6 +124,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|int
+name|getFrameIndexReference
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
+argument_list|)
+specifier|const
+name|override
+block|;
 name|void
 name|processFunctionBeforeFrameFinalized
 argument_list|(
@@ -139,9 +151,7 @@ operator|:
 name|void
 name|emitFlatScratchInit
 argument_list|(
-argument|const SIInstrInfo *TII
-argument_list|,
-argument|const SIRegisterInfo* TRI
+argument|const SISubtarget&ST
 argument_list|,
 argument|MachineFunction&MF
 argument_list|,

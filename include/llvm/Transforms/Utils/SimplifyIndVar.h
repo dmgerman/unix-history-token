@@ -84,9 +84,6 @@ name|class
 name|DominatorTree
 decl_stmt|;
 name|class
-name|IVUsers
-decl_stmt|;
-name|class
 name|Loop
 decl_stmt|;
 name|class
@@ -109,6 +106,8 @@ specifier|const
 name|DominatorTree
 modifier|*
 name|DT
+init|=
+name|nullptr
 decl_stmt|;
 name|virtual
 name|void
@@ -119,17 +118,16 @@ name|public
 label|:
 name|IVVisitor
 argument_list|()
-operator|:
-name|DT
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 operator|~
 name|IVVisitor
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 specifier|const
 name|DominatorTree
 operator|*
@@ -222,13 +220,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_UTILS_SIMPLIFYINDVAR_H
+end_comment
 
 end_unit
 

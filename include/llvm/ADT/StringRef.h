@@ -2529,6 +2529,47 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Parse the current string as an IEEE double-precision floating
+end_comment
+
+begin_comment
+comment|/// point value.  The string must be a well-formed double.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If \p AllowInexact is false, the function will fail if the string
+end_comment
+
+begin_comment
+comment|/// cannot be represented exactly.  Otherwise, the function only fails
+end_comment
+
+begin_comment
+comment|/// in case of an overflow or underflow.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|getAsDouble
+argument_list|(
+name|double
+operator|&
+name|Result
+argument_list|,
+name|bool
+name|AllowInexact
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// @}
 end_comment
 
@@ -2716,7 +2757,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// Return a StringRef equal to 'this' but with only the first \p N
+comment|/// Return a StringRef equal to 'this' but with only the last \p N
 end_comment
 
 begin_comment

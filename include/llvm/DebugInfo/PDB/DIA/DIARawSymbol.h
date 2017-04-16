@@ -600,6 +600,17 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PDBSymbolTypeVTable
+operator|>
+name|getVirtualBaseTableType
+argument_list|()
+specifier|const
+name|override
+block|;
 name|PDB_DataKind
 name|getDataKind
 argument_list|()

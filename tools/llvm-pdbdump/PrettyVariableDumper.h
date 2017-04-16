@@ -80,11 +80,27 @@ block|;
 name|void
 name|start
 argument_list|(
-specifier|const
-name|PDBSymbolData
-operator|&
-name|Var
+argument|const PDBSymbolData&Var
+argument_list|,
+argument|uint32_t Offset =
+literal|0
 argument_list|)
+block|;
+name|void
+name|start
+argument_list|(
+argument|const PDBSymbolTypeVTable&Var
+argument_list|,
+argument|uint32_t Offset =
+literal|0
+argument_list|)
+block|;
+name|void
+name|dump
+argument_list|(
+argument|const PDBSymbolTypeArray&Symbol
+argument_list|)
+name|override
 block|;
 name|void
 name|dump
@@ -128,18 +144,31 @@ argument|const PDBSymbolTypeUDT&Symbol
 argument_list|)
 name|override
 block|;
+name|void
+name|dumpRight
+argument_list|(
+argument|const PDBSymbolTypeArray&Symbol
+argument_list|)
+name|override
+block|;
+name|void
+name|dumpRight
+argument_list|(
+argument|const PDBSymbolTypeFunctionSig&Symbol
+argument_list|)
+name|override
+block|;
+name|void
+name|dumpRight
+argument_list|(
+argument|const PDBSymbolTypePointer&Symbol
+argument_list|)
+name|override
+block|;
 name|private
 operator|:
 name|void
 name|dumpSymbolTypeAndName
-argument_list|(
-argument|const PDBSymbol&Type
-argument_list|,
-argument|StringRef Name
-argument_list|)
-block|;
-name|bool
-name|tryDumpFunctionPointer
 argument_list|(
 argument|const PDBSymbol&Type
 argument_list|,

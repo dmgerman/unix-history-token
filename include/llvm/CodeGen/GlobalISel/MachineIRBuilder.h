@@ -336,6 +336,15 @@ operator|=
 name|DL
 expr_stmt|;
 block|}
+comment|/// Get the current instruction's debug location.
+name|DebugLoc
+name|getDebugLoc
+parameter_list|()
+block|{
+return|return
+name|DL
+return|;
+block|}
 comment|/// Build and insert<empty> = \p Opcode<empty>.
 comment|/// The insertion point is the one set by the last call of either
 comment|/// setBasicBlock or setMI.
@@ -368,6 +377,92 @@ name|insertInstr
 parameter_list|(
 name|MachineInstrBuilder
 name|MIB
+parameter_list|)
+function_decl|;
+comment|/// Build and insert a DBG_VALUE instruction expressing the fact that the
+comment|/// associated \p Variable lives in \p Reg (suitably modified by \p Expr).
+name|MachineInstrBuilder
+name|buildDirectDbgValue
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Variable
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Expr
+parameter_list|)
+function_decl|;
+comment|/// Build and insert a DBG_VALUE instruction expressing the fact that the
+comment|/// associated \p Variable lives in memory at \p Reg + \p Offset (suitably
+comment|/// modified by \p Expr).
+name|MachineInstrBuilder
+name|buildIndirectDbgValue
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|unsigned
+name|Offset
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Variable
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Expr
+parameter_list|)
+function_decl|;
+comment|/// Build and insert a DBG_VALUE instruction expressing the fact that the
+comment|/// associated \p Variable lives in the stack slot specified by \p FI
+comment|/// (suitably modified by \p Expr).
+name|MachineInstrBuilder
+name|buildFIDbgValue
+parameter_list|(
+name|int
+name|FI
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Variable
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Expr
+parameter_list|)
+function_decl|;
+comment|/// Build and insert a DBG_VALUE instructions specifying that \p Variable is
+comment|/// given by \p C (suitably modified by \p Expr).
+name|MachineInstrBuilder
+name|buildConstDbgValue
+parameter_list|(
+specifier|const
+name|Constant
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|Offset
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Variable
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Expr
 parameter_list|)
 function_decl|;
 comment|/// Build and insert \p Res<def> = G_FRAME_INDEX \p Idx
@@ -504,6 +599,32 @@ name|unsigned
 name|Op1
 parameter_list|)
 function_decl|;
+comment|/// Build and insert \p Res<def> = G_PTR_MASK \p Op0, \p NumBits
+comment|///
+comment|/// G_PTR_MASK clears the low bits of a pointer operand without destroying its
+comment|/// pointer properties. This has the effect of rounding the address *down* to
+comment|/// a specified alignment in bits.
+comment|///
+comment|/// \pre setBasicBlock or setMI must have been called.
+comment|/// \pre \p Res and \p Op0 must be generic virtual registers with pointer
+comment|///      type.
+comment|/// \pre \p NumBits must be an integer representing the number of low bits to
+comment|///      be cleared in \p Op0.
+comment|///
+comment|/// \return a MachineInstrBuilder for the newly created instruction.
+name|MachineInstrBuilder
+name|buildPtrMask
+parameter_list|(
+name|unsigned
+name|Res
+parameter_list|,
+name|unsigned
+name|Op0
+parameter_list|,
+name|uint32_t
+name|NumBits
+parameter_list|)
+function_decl|;
 comment|/// Build and insert \p Res<def>, \p CarryOut<def> = G_UADDE \p Op0,
 comment|/// \p Op1, \p CarryIn
 comment|///
@@ -535,6 +656,29 @@ name|Op1
 parameter_list|,
 name|unsigned
 name|CarryIn
+parameter_list|)
+function_decl|;
+comment|/// Build and insert \p Res<def> = G_AND \p Op0, \p Op1
+comment|///
+comment|/// G_AND sets \p Res to the bitwise and of integer parameters \p Op0 and \p
+comment|/// Op1.
+comment|///
+comment|/// \pre setBasicBlock or setMI must have been called.
+comment|/// \pre \p Res, \p Op0 and \p Op1 must be generic virtual registers
+comment|///      with the same (scalar or vector) type).
+comment|///
+comment|/// \return a MachineInstrBuilder for the newly created instruction.
+name|MachineInstrBuilder
+name|buildAnd
+parameter_list|(
+name|unsigned
+name|Res
+parameter_list|,
+name|unsigned
+name|Op0
+parameter_list|,
+name|unsigned
+name|Op1
 parameter_list|)
 function_decl|;
 comment|/// Build and insert \p Res<def> = G_ANYEXT \p Op0
@@ -622,6 +766,35 @@ name|unsigned
 name|Op
 parameter_list|)
 function_decl|;
+comment|/// Build and insert \p Res<def> = G_ZEXT \p Op, \p Res = G_TRUNC \p Op, or
+comment|/// \p Res = COPY \p Op depending on the differing sizes of \p Res and \p Op.
+comment|///  ///
+comment|/// \pre setBasicBlock or setMI must have been called.
+comment|/// \pre \p Res must be a generic virtual register with scalar or vector type.
+comment|/// \pre \p Op must be a generic virtual register with scalar or vector type.
+comment|///
+comment|/// \return The newly created instruction.
+name|MachineInstrBuilder
+name|buildZExtOrTrunc
+parameter_list|(
+name|unsigned
+name|Res
+parameter_list|,
+name|unsigned
+name|Op
+parameter_list|)
+function_decl|;
+comment|/// Build and insert an appropriate cast between two registers of equal size.
+name|MachineInstrBuilder
+name|buildCast
+parameter_list|(
+name|unsigned
+name|Dst
+parameter_list|,
+name|unsigned
+name|Src
+parameter_list|)
+function_decl|;
 comment|/// Build and insert G_BR \p Dest
 comment|///
 comment|/// G_BR is an unconditional branch to \p Dest.
@@ -658,6 +831,21 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|&
 name|BB
+parameter_list|)
+function_decl|;
+comment|/// Build and insert G_BRINDIRECT \p Tgt
+comment|///
+comment|/// G_BRINDIRECT is an indirect branch to \p Tgt.
+comment|///
+comment|/// \pre setBasicBlock or setMI must have been called.
+comment|/// \pre \p Tgt must be a generic virtual register with pointer type.
+comment|///
+comment|/// \return a MachineInstrBuilder for the newly created instruction.
+name|MachineInstrBuilder
+name|buildBrIndirect
+parameter_list|(
+name|unsigned
+name|Tgt
 parameter_list|)
 function_decl|;
 comment|/// Build and insert \p Res = G_CONSTANT \p Val
@@ -784,36 +972,33 @@ modifier|&
 name|MMO
 parameter_list|)
 function_decl|;
-comment|/// Build and insert `Res0<def>, ... = G_EXTRACT Src, Idx0, ...`.
-comment|///
-comment|/// If \p Res[i] has size N bits, G_EXTRACT sets \p Res[i] to bits `[Idxs[i],
-comment|/// Idxs[i] + N)` of \p Src.
+comment|/// Build and insert `Res0<def>, ... = G_EXTRACT Src, Idx0`.
 comment|///
 comment|/// \pre setBasicBlock or setMI must have been called.
-comment|/// \pre Indices must be in ascending order of bit position.
-comment|/// \pre Each member of \p Results and \p Src must be a generic
-comment|///      virtual register.
+comment|/// \pre \p Res and \p Src must be generic virtual registers.
 comment|///
 comment|/// \return a MachineInstrBuilder for the newly created instruction.
 name|MachineInstrBuilder
 name|buildExtract
-argument_list|(
-name|ArrayRef
-operator|<
+parameter_list|(
 name|unsigned
-operator|>
-name|Results
-argument_list|,
-name|ArrayRef
-operator|<
-name|uint64_t
-operator|>
-name|Indices
-argument_list|,
+name|Res
+parameter_list|,
 name|unsigned
 name|Src
-argument_list|)
-decl_stmt|;
+parameter_list|,
+name|uint64_t
+name|Index
+parameter_list|)
+function_decl|;
+comment|/// Build and insert \p Res = IMPLICIT_DEF.
+name|MachineInstrBuilder
+name|buildUndef
+parameter_list|(
+name|unsigned
+name|Dst
+parameter_list|)
+function_decl|;
 comment|/// Build and insert \p Res<def> = G_SEQUENCE \p Op0, \p Idx0...
 comment|///
 comment|/// G_SEQUENCE inserts each element of Ops into an IMPLICIT_DEF register,
@@ -844,6 +1029,53 @@ operator|<
 name|uint64_t
 operator|>
 name|Indices
+argument_list|)
+decl_stmt|;
+comment|/// Build and insert \p Res<def> = G_MERGE_VALUES \p Op0, ...
+comment|///
+comment|/// G_MERGE_VALUES combines the input elements contiguously into a larger
+comment|/// register.
+comment|///
+comment|/// \pre setBasicBlock or setMI must have been called.
+comment|/// \pre The entire register \p Res (and no more) must be covered by the input
+comment|///      registers.
+comment|/// \pre The type of all \p Ops registers must be identical.
+comment|///
+comment|/// \return a MachineInstrBuilder for the newly created instruction.
+name|MachineInstrBuilder
+name|buildMerge
+argument_list|(
+name|unsigned
+name|Res
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Ops
+argument_list|)
+decl_stmt|;
+comment|/// Build and insert \p Res0<def>, ... = G_UNMERGE_VALUES \p Op
+comment|///
+comment|/// G_UNMERGE_VALUES splits contiguous bits of the input into multiple
+comment|///
+comment|/// \pre setBasicBlock or setMI must have been called.
+comment|/// \pre The entire register \p Res (and no more) must be covered by the input
+comment|///      registers.
+comment|/// \pre The type of all \p Res registers must be identical.
+comment|///
+comment|/// \return a MachineInstrBuilder for the newly created instruction.
+name|MachineInstrBuilder
+name|buildUnmerge
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Res
+argument_list|,
+name|unsigned
+name|Op
 argument_list|)
 decl_stmt|;
 name|void
@@ -940,62 +1172,22 @@ return|return
 name|MIB
 return|;
 block|}
-name|template
-operator|<
-name|typename
-operator|...
-name|ArgTys
-operator|>
 name|MachineInstrBuilder
 name|buildInsert
-argument_list|(
-argument|unsigned Res
-argument_list|,
-argument|unsigned Src
-argument_list|,
-argument|unsigned Op
-argument_list|,
-argument|unsigned Index
-argument_list|,
-argument|ArgTys... Args
-argument_list|)
-block|{
-name|MachineInstrBuilder
-name|MIB
-operator|=
-name|buildInstr
-argument_list|(
-name|TargetOpcode
-operator|::
-name|G_INSERT
-argument_list|)
-operator|.
-name|addDef
-argument_list|(
+parameter_list|(
+name|unsigned
 name|Res
-argument_list|)
-operator|.
-name|addUse
-argument_list|(
+parameter_list|,
+name|unsigned
 name|Src
-argument_list|)
-block|;
-name|addUsesWithIndices
-argument_list|(
-name|MIB
-argument_list|,
+parameter_list|,
+name|unsigned
 name|Op
-argument_list|,
+parameter_list|,
+name|unsigned
 name|Index
-argument_list|,
-name|Args
-operator|...
-argument_list|)
-block|;
-return|return
-name|MIB
-return|;
-block|}
+parameter_list|)
+function_decl|;
 comment|/// Build and insert either a G_INTRINSIC (if \p HasSideEffects is false) or
 comment|/// G_INTRINSIC_W_SIDE_EFFECTS instruction. Its first operand will be the
 comment|/// result register definition unless \p Reg is NoReg (== 0). The second
@@ -1144,6 +1336,53 @@ name|Op0
 parameter_list|,
 name|unsigned
 name|Op1
+parameter_list|)
+function_decl|;
+comment|/// Build and insert \p Res<def> = G_INSERT_VECTOR_ELT \p Val,
+comment|/// \p Elt, \p Idx
+comment|///
+comment|/// \pre setBasicBlock or setMI must have been called.
+comment|/// \pre \p Res and \p Val must be a generic virtual register
+comment|//       with the same vector type.
+comment|/// \pre \p Elt and \p Idx must be a generic virtual register
+comment|///      with scalar type.
+comment|///
+comment|/// \return The newly created instruction.
+name|MachineInstrBuilder
+name|buildInsertVectorElement
+parameter_list|(
+name|unsigned
+name|Res
+parameter_list|,
+name|unsigned
+name|Val
+parameter_list|,
+name|unsigned
+name|Elt
+parameter_list|,
+name|unsigned
+name|Idx
+parameter_list|)
+function_decl|;
+comment|/// Build and insert \p Res<def> = G_EXTRACT_VECTOR_ELT \p Val, \p Idx
+comment|///
+comment|/// \pre setBasicBlock or setMI must have been called.
+comment|/// \pre \p Res must be a generic virtual register with scalar type.
+comment|/// \pre \p Val must be a generic virtual register with vector type.
+comment|/// \pre \p Idx must be a generic virtual register with scalar type.
+comment|///
+comment|/// \return The newly created instruction.
+name|MachineInstrBuilder
+name|buildExtractVectorElement
+parameter_list|(
+name|unsigned
+name|Res
+parameter_list|,
+name|unsigned
+name|Val
+parameter_list|,
+name|unsigned
+name|Idx
 parameter_list|)
 function_decl|;
 block|}

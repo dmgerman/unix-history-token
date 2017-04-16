@@ -1542,9 +1542,8 @@ return|;
 block|}
 comment|/// getBlockNumbered - MachineBasicBlocks are automatically numbered when they
 comment|/// are inserted into the machine function.  The block number for a machine
-comment|/// basic block can be found by using the MBB::getBlockNumber method, this
-comment|/// method provides the inverse mapping.
-comment|///
+comment|/// basic block can be found by using the MBB::getNumber method, this method
+comment|/// provides the inverse mapping.
 name|MachineBasicBlock
 modifier|*
 name|getBlockNumbered

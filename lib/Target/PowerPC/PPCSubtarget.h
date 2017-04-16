@@ -1213,6 +1213,8 @@ name|isELFv2ABI
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Originally, this function return hasISEL(). Now we always enable it,
+comment|/// but may expand the ISEL instruction later.
 name|bool
 name|enableEarlyIfConversion
 argument_list|()
@@ -1220,8 +1222,7 @@ specifier|const
 name|override
 block|{
 return|return
-name|hasISEL
-argument_list|()
+name|true
 return|;
 block|}
 comment|// Scheduling customization.
@@ -1292,6 +1293,18 @@ name|GV
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|isXRaySupported
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|IsPPC64
+operator|&&
+name|IsLittleEndian
+return|;
+block|}
 block|}
 end_decl_stmt
 

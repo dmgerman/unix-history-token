@@ -201,6 +201,9 @@ comment|///< Intrinsic ID for ISel
 name|MO_Predicate
 block|,
 comment|///< Generic predicate for ISel
+name|MO_Placeholder
+block|,
+comment|///< Placeholder for GlobalISel ComplexPattern result.
 block|}
 enum|;
 name|private
@@ -649,7 +652,6 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-name|LLVM_DUMP_METHOD
 name|void
 name|dump
 argument_list|()
@@ -1155,7 +1157,7 @@ argument_list|(
 name|isReg
 argument_list|()
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|SubReg_TargetFlags
@@ -1245,7 +1247,7 @@ argument_list|(
 name|isReg
 argument_list|()
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsImp
@@ -1270,7 +1272,7 @@ operator|&&
 operator|!
 name|IsDef
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1308,7 +1310,7 @@ argument_list|()
 operator|&&
 name|IsDef
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsDead
@@ -1330,7 +1332,7 @@ argument_list|(
 name|isReg
 argument_list|()
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsUndef
@@ -1352,7 +1354,7 @@ argument_list|(
 name|isReg
 argument_list|()
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsInternalRead
@@ -1376,7 +1378,7 @@ argument_list|()
 operator|&&
 name|IsDef
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsEarlyClobber
@@ -1401,7 +1403,7 @@ operator|&&
 operator|!
 name|IsDef
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsDebug
@@ -1947,7 +1949,7 @@ name|isBlockAddress
 argument_list|()
 operator|)
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|SmallContents
@@ -1996,7 +1998,7 @@ name|isJTI
 argument_list|()
 operator|)
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|Contents
@@ -2023,7 +2025,7 @@ argument_list|(
 name|isMBB
 argument_list|()
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|Contents
@@ -3075,6 +3077,23 @@ name|Pred
 operator|=
 name|Pred
 expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
+specifier|static
+name|MachineOperand
+name|CreatePlaceholder
+parameter_list|()
+block|{
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_Placeholder
+argument_list|)
+decl_stmt|;
 return|return
 name|Op
 return|;

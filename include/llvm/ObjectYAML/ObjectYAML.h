@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/YAMLTraits.h"
+file|"llvm/ObjectYAML/COFFYAML.h"
 end_include
 
 begin_include
@@ -58,13 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/COFFYAML.h"
+file|"llvm/ObjectYAML/MachOYAML.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/MachOYAML.h"
+file|"llvm/ObjectYAML/WasmYAML.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/YAMLTraits.h"
 end_include
 
 begin_decl_stmt
@@ -116,6 +122,16 @@ operator|::
 name|UniversalBinary
 operator|>
 name|FatMachO
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|WasmYAML
+operator|::
+name|Object
+operator|>
+name|Wasm
 expr_stmt|;
 block|}
 struct|;

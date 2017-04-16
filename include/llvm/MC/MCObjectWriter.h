@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCObjectWriter.h - Object File Writer Interface -*- C++ -*-===//
+comment|//===- llvm/MC/MCObjectWriter.h - Object File Writer Interface --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Endian.h"
 end_include
 
 begin_include
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -118,26 +124,6 @@ comment|/// binary data to the output stream.
 name|class
 name|MCObjectWriter
 block|{
-name|MCObjectWriter
-argument_list|(
-specifier|const
-name|MCObjectWriter
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCObjectWriter
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|raw_pwrite_stream
 modifier|*
 name|OS
@@ -149,8 +135,6 @@ name|IsLittleEndian
 range|:
 literal|1
 decl_stmt|;
-name|protected
-label|:
 comment|// Can only create subclasses.
 name|MCObjectWriter
 argument_list|(
@@ -183,6 +167,27 @@ return|;
 block|}
 name|public
 label|:
+name|MCObjectWriter
+argument_list|(
+specifier|const
+name|MCObjectWriter
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MCObjectWriter
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCObjectWriter
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|virtual
 operator|~
 name|MCObjectWriter
@@ -369,20 +374,6 @@ name|InSet
 argument_list|,
 name|bool
 name|IsPCRel
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// True if this symbol (which is a variable) is weak. This is not
-comment|/// just STB_WEAK, but more generally whether or not we can evaluate
-comment|/// past it.
-name|virtual
-name|bool
-name|isWeak
-argument_list|(
-specifier|const
-name|MCSymbol
-operator|&
-name|Sym
 argument_list|)
 decl|const
 decl_stmt|;
@@ -819,13 +810,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCOBJECTWRITER_H
+end_comment
 
 end_unit
 

@@ -203,6 +203,17 @@ name|string
 name|TmpDir
 argument_list|()
 expr_stmt|;
+name|bool
+name|IsInterestingCoverageFile
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|FileName
+argument_list|)
+decl_stmt|;
 name|void
 name|DupAndCloseStderr
 parameter_list|()
@@ -220,6 +231,16 @@ modifier|*
 name|Fmt
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+comment|// Print using raw syscalls, useful when printing at early init stages.
+name|void
+name|RawPrint
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Str
 parameter_list|)
 function_decl|;
 comment|// Platform specific functions:
@@ -305,6 +326,20 @@ operator|&
 name|Path
 argument_list|)
 decl_stmt|;
+name|void
+name|DiscardOutput
+parameter_list|(
+name|int
+name|Fd
+parameter_list|)
+function_decl|;
+name|intptr_t
+name|GetHandleFromFd
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

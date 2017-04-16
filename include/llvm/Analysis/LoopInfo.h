@@ -112,7 +112,7 @@ comment|// Note that this analysis specifically identifies *Loops* not cycles or
 end_comment
 
 begin_comment
-comment|// in the CFG.  There can be strongly connected compontents in the CFG which
+comment|// in the CFG.  There can be strongly connected components in the CFG which
 end_comment
 
 begin_comment
@@ -1940,7 +1940,7 @@ comment|/// Represents a single loop in the control flow graph.  Note that not a
 end_comment
 
 begin_comment
-comment|/// in the CFG are neccessarily loops.
+comment|/// in the CFG are necessarily loops.
 end_comment
 
 begin_decl_stmt
@@ -2219,7 +2219,7 @@ comment|/// The LoopID metadata node will be added to each terminator instructio
 comment|/// the loop that branches to the loop header.
 comment|///
 comment|/// The LoopID metadata node should have one or more operands and the first
-comment|/// operand should should be the node itself.
+comment|/// operand should be the node itself.
 name|void
 name|setLoopID
 argument_list|(
@@ -2238,7 +2238,8 @@ specifier|const
 expr_stmt|;
 comment|/// Return all unique successor blocks of this loop.
 comment|/// These are the blocks _outside of the current loop_ which are branched to.
-comment|/// This assumes that loop exits are in canonical form.
+comment|/// This assumes that loop exits are in canonical form, i.e. all exits are
+comment|/// dedicated exits.
 name|void
 name|getUniqueExitBlocks
 argument_list|(
@@ -2715,6 +2716,84 @@ name|empty
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Return all of the loops in the function in preorder across the loop
+end_comment
+
+begin_comment
+comment|/// nests, with siblings in forward program order.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that because loops form a forest of trees, preorder is equivalent to
+end_comment
+
+begin_comment
+comment|/// reverse postorder.
+end_comment
+
+begin_expr_stmt
+name|SmallVector
+operator|<
+name|LoopT
+operator|*
+operator|,
+literal|4
+operator|>
+name|getLoopsInPreorder
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Return all of the loops in the function in preorder across the loop
+end_comment
+
+begin_comment
+comment|/// nests, with siblings in *reverse* program order.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that because loops form a forest of trees, preorder is equivalent to
+end_comment
+
+begin_comment
+comment|/// reverse postorder.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Also note that this is *not* a reverse preorder. Only the siblings are in
+end_comment
+
+begin_comment
+comment|/// reverse program order.
+end_comment
+
+begin_expr_stmt
+name|SmallVector
+operator|<
+name|LoopT
+operator|*
+operator|,
+literal|4
+operator|>
+name|getLoopsInReverseSiblingPreorder
+argument_list|()
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -3382,6 +3461,25 @@ operator|*
 name|this
 return|;
 block|}
+comment|/// Handle invalidation explicitly.
+name|bool
+name|invalidate
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+argument_list|)
+decl_stmt|;
 comment|// Most of the public interface is provided via LoopInfoBase.
 comment|/// Update LoopInfo after removing the last backedge from a loop. This updates
 comment|/// the loop forest and parent loops for each block so that \c L is no longer

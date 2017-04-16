@@ -135,6 +135,9 @@ operator|::
 name|ArgFlagsTy
 name|Flags
 expr_stmt|;
+name|bool
+name|IsFixed
+decl_stmt|;
 name|ArgInfo
 argument_list|(
 argument|unsigned Reg
@@ -142,6 +145,8 @@ argument_list|,
 argument|Type *Ty
 argument_list|,
 argument|ISD::ArgFlagsTy Flags = ISD::ArgFlagsTy{}
+argument_list|,
+argument|bool IsFixed = true
 argument_list|)
 block|:
 name|Reg
@@ -156,7 +161,12 @@ argument_list|)
 operator|,
 name|Flags
 argument_list|(
-argument|Flags
+name|Flags
+argument_list|)
+operator|,
+name|IsFixed
+argument_list|(
+argument|IsFixed
 argument_list|)
 block|{}
 block|}
@@ -239,6 +249,34 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Handle custom values, which may be passed into one or more of \p VAs.
+comment|/// \return The number of \p VAs that have been assigned after the first
+comment|///         one, and which should therefore be skipped from further
+comment|///         processing.
+name|virtual
+name|unsigned
+name|assignCustomValue
+argument_list|(
+specifier|const
+name|ArgInfo
+operator|&
+name|Arg
+argument_list|,
+name|ArrayRef
+operator|<
+name|CCValAssign
+operator|>
+name|VAs
+argument_list|)
+block|{
+comment|// This is not a pure virtual method because not all targets need to worry
+comment|// about custom values.
+name|llvm_unreachable
+argument_list|(
+literal|"Custom values not supported"
+argument_list|)
+expr_stmt|;
+block|}
 name|unsigned
 name|extendRegister
 parameter_list|(
@@ -250,6 +288,53 @@ modifier|&
 name|VA
 parameter_list|)
 function_decl|;
+name|virtual
+name|bool
+name|assignArg
+argument_list|(
+name|unsigned
+name|ValNo
+argument_list|,
+name|MVT
+name|ValVT
+argument_list|,
+name|MVT
+name|LocVT
+argument_list|,
+name|CCValAssign
+operator|::
+name|LocInfo
+name|LocInfo
+argument_list|,
+specifier|const
+name|ArgInfo
+operator|&
+name|Info
+argument_list|,
+name|CCState
+operator|&
+name|State
+argument_list|)
+block|{
+return|return
+name|AssignFn
+argument_list|(
+name|ValNo
+argument_list|,
+name|ValVT
+argument_list|,
+name|LocVT
+argument_list|,
+name|LocInfo
+argument_list|,
+name|Info
+operator|.
+name|Flags
+argument_list|,
+name|State
+argument_list|)
+return|;
+block|}
 name|ValueHandler
 argument_list|(
 name|MachineIRBuilder
@@ -259,6 +344,10 @@ argument_list|,
 name|MachineRegisterInfo
 operator|&
 name|MRI
+argument_list|,
+name|CCAssignFn
+operator|*
+name|AssignFn
 argument_list|)
 operator|:
 name|MIRBuilder
@@ -268,7 +357,12 @@ argument_list|)
 operator|,
 name|MRI
 argument_list|(
-argument|MRI
+name|MRI
+argument_list|)
+operator|,
+name|AssignFn
+argument_list|(
+argument|AssignFn
 argument_list|)
 block|{}
 name|virtual
@@ -283,6 +377,10 @@ expr_stmt|;
 name|MachineRegisterInfo
 modifier|&
 name|MRI
+decl_stmt|;
+name|CCAssignFn
+modifier|*
+name|AssignFn
 decl_stmt|;
 block|}
 struct|;
@@ -343,7 +441,7 @@ argument|const FuncInfoTy&FuncInfo
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// Invoke the \p AssignFn on each of the given \p Args and then use
+comment|/// Invoke Handler::assignArg on each of the given \p Args and then use
 comment|/// \p Callback to move them to the assigned locations.
 comment|///
 comment|/// \return True if everything has succeeded, false otherwise.
@@ -353,10 +451,6 @@ argument_list|(
 name|MachineIRBuilder
 operator|&
 name|MIRBuilder
-argument_list|,
-name|CCAssignFn
-operator|*
-name|AssignFn
 argument_list|,
 name|ArrayRef
 operator|<
@@ -448,6 +542,8 @@ block|}
 comment|/// This hook must be implemented to lower the given call instruction,
 comment|/// including argument and return value marshalling.
 comment|///
+comment|/// \p CallConv is the calling convention to be used for the call.
+comment|///
 comment|/// \p Callee is the destination of the call. It should be either a register,
 comment|/// globaladdress, or externalsymbol.
 comment|///
@@ -471,6 +567,11 @@ name|MachineIRBuilder
 operator|&
 name|MIRBuilder
 argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
 specifier|const
 name|MachineOperand
 operator|&
@@ -493,8 +594,10 @@ return|return
 name|false
 return|;
 block|}
-comment|/// This hook must be implemented to lower the given call instruction,
-comment|/// including argument and return value marshalling.
+comment|/// Lower the given call instruction, including argument and return value
+comment|/// marshalling.
+comment|///
+comment|/// \p CI is the call/invoke instruction.
 comment|///
 comment|/// \p ResReg is a register where the call's return value should be stored (or
 comment|/// 0 if there is no return value).
@@ -508,7 +611,6 @@ comment|/// CI. This might be because \p CI is indirect, or because of the limit
 comment|/// range of an immediate jump.
 comment|///
 comment|/// \return true if the lowering succeeded, false otherwise.
-name|virtual
 name|bool
 name|lowerCall
 argument_list|(
@@ -516,10 +618,8 @@ name|MachineIRBuilder
 operator|&
 name|MIRBuilder
 argument_list|,
-specifier|const
-name|CallInst
-operator|&
-name|CI
+name|ImmutableCallSite
+name|CS
 argument_list|,
 name|unsigned
 name|ResReg

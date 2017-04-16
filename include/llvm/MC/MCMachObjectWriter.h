@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCMachObjectWriter.h - Mach Object Writer -------*- C++ -*-===//
+comment|//===- llvm/MC/MCMachObjectWriter.h - Mach Object Writer --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCExpr.h"
 end_include
 
@@ -76,13 +82,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/MachO.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MachO.h"
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
@@ -322,8 +340,6 @@ argument_list|)
 block|{}
 block|}
 block|;
-name|llvm
-operator|::
 name|DenseMap
 operator|<
 specifier|const
@@ -338,8 +354,6 @@ name|RelAndSymbol
 operator|>>
 name|Relocations
 block|;
-name|llvm
-operator|::
 name|DenseMap
 operator|<
 specifier|const
@@ -905,13 +919,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCMACHOBJECTWRITER_H
+end_comment
 
 end_unit
 

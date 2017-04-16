@@ -60,6 +60,9 @@ name|class
 name|LinePrinter
 decl_stmt|;
 name|class
+name|ClassLayout
+decl_stmt|;
+name|class
 name|TypeDumper
 range|:
 name|public
@@ -98,11 +101,13 @@ argument_list|)
 name|override
 block|;
 name|void
-name|dump
+name|dumpClassLayout
 argument_list|(
-argument|const PDBSymbolTypeUDT&Symbol
+specifier|const
+name|ClassLayout
+operator|&
+name|Class
 argument_list|)
-name|override
 block|;
 name|private
 operator|:

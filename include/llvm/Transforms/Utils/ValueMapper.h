@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/ValueMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_decl_stmt
@@ -107,21 +119,23 @@ name|virtual
 operator|~
 name|ValueMapTypeRemapper
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// The client should implement this method if they want to remap types while
 comment|/// mapping values.
 name|virtual
 name|Type
-operator|*
+modifier|*
 name|remapType
-argument_list|(
+parameter_list|(
 name|Type
-operator|*
+modifier|*
 name|SrcTy
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// This is a class that can be implemented by clients to materialize Values on
@@ -263,9 +277,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-name|class
-name|ValueMapperImpl
-decl_stmt|;
 comment|/// Context for (re-)mapping values (and metadata).
 comment|///
 comment|/// A shared context used for mapping and remapping of Value and Metadata
@@ -309,46 +320,6 @@ name|void
 modifier|*
 name|pImpl
 decl_stmt|;
-name|ValueMapper
-argument_list|(
-name|ValueMapper
-operator|&&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|ValueMapper
-argument_list|(
-specifier|const
-name|ValueMapper
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|ValueMapper
-modifier|&
-name|operator
-init|=
-operator|(
-name|ValueMapper
-operator|&&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-name|ValueMapper
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|ValueMapper
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|public
 label|:
 name|ValueMapper
@@ -362,6 +333,46 @@ argument_list|,
 argument|ValueMaterializer *Materializer = nullptr
 argument_list|)
 empty_stmt|;
+name|ValueMapper
+argument_list|(
+name|ValueMapper
+operator|&&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|ValueMapper
+argument_list|(
+specifier|const
+name|ValueMapper
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|ValueMapper
+modifier|&
+name|operator
+init|=
+operator|(
+name|ValueMapper
+operator|&&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|ValueMapper
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|ValueMapper
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 operator|~
 name|ValueMapper
 argument_list|()
@@ -878,13 +889,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_UTILS_VALUEMAPPER_H
+end_comment
 
 end_unit
 

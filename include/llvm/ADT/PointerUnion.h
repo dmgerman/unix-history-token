@@ -904,7 +904,6 @@ operator|,
 name|typename
 name|PT2
 operator|>
-specifier|static
 name|bool
 name|operator
 operator|==
@@ -949,7 +948,6 @@ operator|,
 name|typename
 name|PT2
 operator|>
-specifier|static
 name|bool
 name|operator
 operator|!=
@@ -994,7 +992,6 @@ operator|,
 name|typename
 name|PT2
 operator|>
-specifier|static
 name|bool
 name|operator
 operator|<

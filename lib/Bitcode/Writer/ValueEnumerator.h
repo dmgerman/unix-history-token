@@ -142,7 +142,7 @@ name|class
 name|NamedMDNode
 decl_stmt|;
 name|class
-name|AttributeSet
+name|AttributeList
 decl_stmt|;
 name|class
 name|ValueSymbolTable
@@ -418,7 +418,7 @@ decl_stmt|;
 typedef|typedef
 name|DenseMap
 operator|<
-name|AttributeSet
+name|AttributeList
 operator|,
 name|unsigned
 operator|>
@@ -431,14 +431,14 @@ name|std
 operator|::
 name|vector
 operator|<
-name|AttributeSet
+name|AttributeList
 operator|>
 name|AttributeGroups
 expr_stmt|;
 typedef|typedef
 name|DenseMap
 operator|<
-name|AttributeSet
+name|AttributeList
 operator|,
 name|unsigned
 operator|>
@@ -451,7 +451,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|AttributeSet
+name|AttributeList
 operator|>
 name|Attribute
 expr_stmt|;
@@ -740,7 +740,7 @@ function_decl|;
 name|unsigned
 name|getAttributeID
 argument_list|(
-name|AttributeSet
+name|AttributeList
 name|PAL
 argument_list|)
 decl|const
@@ -789,7 +789,7 @@ block|}
 name|unsigned
 name|getAttributeGroupID
 argument_list|(
-name|AttributeSet
+name|AttributeList
 name|PAL
 argument_list|)
 decl|const
@@ -972,7 +972,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|AttributeSet
+name|AttributeList
 operator|>
 operator|&
 name|getAttributes
@@ -988,7 +988,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|AttributeSet
+name|AttributeList
 operator|>
 operator|&
 name|getAttributeGroups
@@ -1235,7 +1235,7 @@ function_decl|;
 name|void
 name|EnumerateAttributes
 parameter_list|(
-name|AttributeSet
+name|AttributeList
 name|PAL
 parameter_list|)
 function_decl|;

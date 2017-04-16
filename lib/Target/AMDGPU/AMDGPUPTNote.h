@@ -80,7 +80,7 @@ name|namespace
 name|AMDGPU
 block|{
 name|namespace
-name|PT_NOTE
+name|ElfNote
 block|{
 specifier|const
 name|char
@@ -96,6 +96,7 @@ index|[]
 init|=
 literal|"AMD"
 decl_stmt|;
+comment|// TODO: Move this enum to include/llvm/Support so it can be used in tools?
 enum|enum
 name|NoteType
 block|{
@@ -123,9 +124,9 @@ name|NT_AMDGPU_HSA_EXTENSION
 init|=
 literal|6
 block|,
-name|NT_AMDGPU_HSA_RUNTIME_METADATA
+name|NT_AMDGPU_HSA_CODE_OBJECT_METADATA
 init|=
-literal|7
+literal|10
 block|,
 name|NT_AMDGPU_HSA_HLDEBUG_DEBUG
 init|=

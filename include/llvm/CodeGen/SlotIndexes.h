@@ -2454,7 +2454,9 @@ return|return
 name|newIndex
 return|;
 block|}
-comment|/// Remove the given machine instruction from the mapping.
+comment|/// Removes machine instruction (bundle) \p MI from the mapping.
+comment|/// This should be called before MachineInstr::eraseFromParent() is used to
+comment|/// remove a whole bundle or an unbundled instruction.
 name|void
 name|removeMachineInstrFromMaps
 parameter_list|(
@@ -2462,74 +2464,18 @@ name|MachineInstr
 modifier|&
 name|MI
 parameter_list|)
-block|{
-comment|// remove index -> MachineInstr and
-comment|// MachineInstr -> index mappings
-name|Mi2IndexMap
-operator|::
-name|iterator
-name|mi2iItr
-operator|=
-name|mi2iMap
-operator|.
-name|find
-argument_list|(
-operator|&
+function_decl|;
+comment|/// Removes a single machine instruction \p MI from the mapping.
+comment|/// This should be called before MachineInstr::eraseFromBundle() is used to
+comment|/// remove a single instruction (out of a bundle).
+name|void
+name|removeSingleMachineInstrFromMaps
+parameter_list|(
+name|MachineInstr
+modifier|&
 name|MI
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mi2iItr
-operator|!=
-name|mi2iMap
-operator|.
-name|end
-argument_list|()
-condition|)
-block|{
-name|IndexListEntry
-modifier|*
-name|miEntry
-argument_list|(
-name|mi2iItr
-operator|->
-name|second
-operator|.
-name|listEntry
-argument_list|()
-argument_list|)
-decl_stmt|;
-name|assert
-argument_list|(
-name|miEntry
-operator|->
-name|getInstr
-argument_list|()
-operator|==
-operator|&
-name|MI
-operator|&&
-literal|"Instruction indexes broken."
-argument_list|)
-expr_stmt|;
-comment|// FIXME: Eventually we want to actually delete these indexes.
-name|miEntry
-operator|->
-name|setInstr
-argument_list|(
-name|nullptr
-argument_list|)
-expr_stmt|;
-name|mi2iMap
-operator|.
-name|erase
-argument_list|(
-name|mi2iItr
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+parameter_list|)
+function_decl|;
 comment|/// ReplaceMachineInstrInMaps - Replacing a machine instr with a new one in
 comment|/// maps used by register allocator. \returns the index where the new
 comment|/// instruction was inserted.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCInstrItineraries.h - Scheduling ---------------*- C++ -*-===//
+comment|//===- llvm/MC/MCInstrItineraries.h - Scheduling ----------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -241,64 +241,50 @@ name|public
 label|:
 name|MCSchedModel
 name|SchedModel
+init|=
+name|MCSchedModel
+operator|::
+name|GetDefaultSchedModel
+argument_list|()
 decl_stmt|;
 comment|///< Basic machine properties.
 specifier|const
 name|InstrStage
 modifier|*
 name|Stages
+init|=
+name|nullptr
 decl_stmt|;
 comment|///< Array of stages selected
 specifier|const
 name|unsigned
 modifier|*
 name|OperandCycles
+init|=
+name|nullptr
 decl_stmt|;
 comment|///< Array of operand cycles selected
 specifier|const
 name|unsigned
 modifier|*
 name|Forwardings
+init|=
+name|nullptr
 decl_stmt|;
 comment|///< Array of pipeline forwarding paths
 specifier|const
 name|InstrItinerary
 modifier|*
 name|Itineraries
+init|=
+name|nullptr
 decl_stmt|;
 comment|///< Array of itineraries selected
-comment|/// Ctors.
 name|InstrItineraryData
 argument_list|()
-operator|:
-name|SchedModel
-argument_list|(
-name|MCSchedModel
-operator|::
-name|GetDefaultSchedModel
-argument_list|()
-argument_list|)
-operator|,
-name|Stages
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|OperandCycles
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Forwardings
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Itineraries
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|InstrItineraryData
 argument_list|(
 specifier|const
@@ -860,13 +846,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCINSTRITINERARIES_H
+end_comment
 
 end_unit
 

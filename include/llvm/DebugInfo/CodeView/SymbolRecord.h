@@ -64,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamArray.h"
+file|"llvm/Support/BinaryStreamArray.h"
 end_include
 
 begin_include
@@ -698,7 +698,9 @@ name|bool
 name|operator
 operator|!=
 operator|(
+specifier|const
 name|BinaryAnnotationIterator
+operator|&
 name|Other
 operator|)
 specifier|const
@@ -3773,8 +3775,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|msf
-operator|::
 name|VarStreamArray
 operator|<
 name|CVSymbol

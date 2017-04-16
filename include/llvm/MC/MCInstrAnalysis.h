@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCInstrAnalysis.h - InstrDesc target hooks ------*- C++ -*-===//
+comment|//===- llvm/MC/MCInstrAnalysis.h - InstrDesc target hooks -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -81,6 +81,12 @@ directive|include
 file|"llvm/MC/MCInstrInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -118,14 +124,19 @@ name|virtual
 operator|~
 name|MCInstrAnalysis
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|bool
 name|isBranch
 argument_list|(
-argument|const MCInst&Inst
-argument_list|)
 specifier|const
+name|MCInst
+operator|&
+name|Inst
+argument_list|)
+decl|const
 block|{
 return|return
 name|Info
@@ -327,13 +338,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCINSTRANALYSIS_H
+end_comment
 
 end_unit
 

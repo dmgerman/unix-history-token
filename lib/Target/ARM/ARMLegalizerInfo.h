@@ -70,7 +70,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|LLVMContext
+name|ARMSubtarget
 decl_stmt|;
 comment|/// This class provides the information for the target register banks.
 name|class
@@ -82,7 +82,12 @@ block|{
 name|public
 operator|:
 name|ARMLegalizerInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|ARMSubtarget
+operator|&
+name|ST
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

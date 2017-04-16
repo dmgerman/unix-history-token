@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=== MC/MCRegisterInfo.h - Target Register Description ---------*- C++ -*-===//
+comment|//===- MC/MCRegisterInfo.h - Target Register Description --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -76,19 +76,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/LaneBitmask.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorHandling.h"
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -147,11 +159,8 @@ name|ID
 decl_stmt|;
 specifier|const
 name|uint16_t
-name|RegSize
-decl_stmt|,
-name|Alignment
+name|PhysRegSize
 decl_stmt|;
-comment|// Size& Alignment of register in bytes
 specifier|const
 name|int8_t
 name|CopyCost
@@ -305,26 +314,25 @@ name|Reg2
 argument_list|)
 return|;
 block|}
-comment|/// getSize - Return the size of the register in bytes, which is also the size
-comment|/// of a stack slot allocated to hold a spilled copy of this register.
+comment|/// Return the size of the physical register in bytes.
+name|unsigned
+name|getPhysRegSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PhysRegSize
+return|;
+block|}
+comment|/// Temporary function to allow out-of-tree targets to switch.
 name|unsigned
 name|getSize
 argument_list|()
 specifier|const
 block|{
 return|return
-name|RegSize
-return|;
-block|}
-comment|/// getAlignment - Return the minimum required alignment for a register of
-comment|/// this class.
-name|unsigned
-name|getAlignment
+name|getPhysRegSize
 argument_list|()
-specifier|const
-block|{
-return|return
-name|Alignment
 return|;
 block|}
 comment|/// getCopyCost - Return the cost of copying a value between two registers in
@@ -617,53 +625,54 @@ name|DiffListIterator
 block|{
 name|uint16_t
 name|Val
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|MCPhysReg
 modifier|*
 name|List
+init|=
+name|nullptr
 decl_stmt|;
 name|protected
 label|:
 comment|/// Create an invalid iterator. Call init() to point to something useful.
 name|DiffListIterator
 argument_list|()
-operator|:
-name|Val
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|List
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// init - Point the iterator to InitVal, decoding subsequent values from
 comment|/// DiffList. The iterator will initially point to InitVal, sub-classes are
 comment|/// responsible for skipping the seed value if it is not part of the list.
 name|void
 name|init
-argument_list|(
-argument|MCPhysReg InitVal
-argument_list|,
-argument|const MCPhysReg *DiffList
-argument_list|)
+parameter_list|(
+name|MCPhysReg
+name|InitVal
+parameter_list|,
+specifier|const
+name|MCPhysReg
+modifier|*
+name|DiffList
+parameter_list|)
 block|{
 name|Val
 operator|=
 name|InitVal
-block|;
+expr_stmt|;
 name|List
 operator|=
 name|DiffList
-block|;     }
+expr_stmt|;
+block|}
 comment|/// advance - Move to the next list position, return the applied
 comment|/// differential. This function does not detect the end of the list, that
 comment|/// is the caller's responsibility (by checking for a 0 return value).
 name|unsigned
 name|advance
-argument_list|()
+parameter_list|()
 block|{
 name|assert
 argument_list|(
@@ -672,18 +681,18 @@ argument_list|()
 operator|&&
 literal|"Cannot move off the end of the list."
 argument_list|)
-block|;
+expr_stmt|;
 name|MCPhysReg
 name|D
-operator|=
+init|=
 operator|*
 name|List
 operator|++
-block|;
+decl_stmt|;
 name|Val
 operator|+=
 name|D
-block|;
+expr_stmt|;
 return|return
 name|D
 return|;
@@ -1326,6 +1335,25 @@ operator|+
 name|NumClasses
 return|;
 block|}
+name|iterator_range
+operator|<
+name|regclass_iterator
+operator|>
+name|regclasses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|regclass_begin
+argument_list|()
+argument_list|,
+name|regclass_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|unsigned
 name|getNumRegClasses
 argument_list|()
@@ -1696,7 +1724,9 @@ name|public
 operator|:
 name|MCSuperRegIterator
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|MCSuperRegIterator
 argument_list|(
 argument|unsigned Reg
@@ -1809,7 +1839,9 @@ comment|/// MCRegUnitIterator - Create an iterator that traverses the register u
 comment|/// in Reg.
 name|MCRegUnitIterator
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|MCRegUnitIterator
 argument_list|(
 argument|unsigned Reg
@@ -1893,7 +1925,9 @@ name|public
 operator|:
 name|MCRegUnitMaskIterator
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// Constructs an iterator that traverses the register units and their
 comment|/// associated LaneMasks in Reg.
 name|MCRegUnitMaskIterator
@@ -2002,25 +2036,21 @@ name|MCRegUnitRootIterator
 block|{
 name|uint16_t
 name|Reg0
+operator|=
+literal|0
 block|;
 name|uint16_t
 name|Reg1
+operator|=
+literal|0
 block|;
 name|public
 operator|:
 name|MCRegUnitRootIterator
 argument_list|()
-operator|:
-name|Reg0
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Reg1
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|MCRegUnitRootIterator
 argument_list|(
 argument|unsigned RegUnit
@@ -2396,13 +2426,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCREGISTERINFO_H
+end_comment
 
 end_unit
 

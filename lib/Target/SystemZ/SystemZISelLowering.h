@@ -1726,6 +1726,14 @@ name|ByScalar
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|canTreatAsByteVector
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+decl_stmt|;
 name|SDValue
 name|combineExtract
 argument_list|(

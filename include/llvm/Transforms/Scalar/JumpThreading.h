@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/BlockFrequencyInfo.h"
 end_include
 
@@ -111,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Instructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/IntrinsicInst.h"
 end_include
 
 begin_include
@@ -207,6 +219,10 @@ name|LazyValueInfo
 operator|*
 name|LVI
 block|;
+name|AliasAnalysis
+operator|*
+name|AA
+block|;
 name|std
 operator|::
 name|unique_ptr
@@ -225,6 +241,11 @@ name|BPI
 block|;
 name|bool
 name|HasProfileData
+operator|=
+name|false
+block|;
+name|bool
+name|HasGuards
 operator|=
 name|false
 block|;
@@ -375,6 +396,8 @@ argument_list|,
 argument|TargetLibraryInfo *TLI_
 argument_list|,
 argument|LazyValueInfo *LVI_
+argument_list|,
+argument|AliasAnalysis *AA_
 argument_list|,
 argument|bool HasProfileData_
 argument_list|,
@@ -539,6 +562,30 @@ argument_list|(
 name|BasicBlock
 operator|*
 name|BB
+argument_list|)
+block|;
+name|bool
+name|ProcessGuards
+argument_list|(
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+block|;
+name|bool
+name|ThreadGuard
+argument_list|(
+name|BasicBlock
+operator|*
+name|BB
+argument_list|,
+name|IntrinsicInst
+operator|*
+name|Guard
+argument_list|,
+name|BranchInst
+operator|*
+name|BI
 argument_list|)
 block|;
 name|private

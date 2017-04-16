@@ -544,7 +544,7 @@ name|V
 argument_list|)
 block|;
 comment|/// Return the constant as an APInt value reference. This allows clients to
-comment|/// obtain a copy of the value, with all its precision in tact.
+comment|/// obtain a full-precision copy of the value.
 comment|/// @brief Return the constant's value.
 specifier|inline
 specifier|const

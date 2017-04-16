@@ -890,6 +890,23 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
+comment|/// Prints all timers as JSON key/value pairs, and clears them all out.
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|printAllJSONValues
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|delim
+parameter_list|)
+function_decl|;
 comment|/// Ensure global timer group lists are initialized. This function is mostly
 comment|/// used by the Statistic code to influence the construction and destruction
 comment|/// order of the global timer lists.
@@ -966,22 +983,6 @@ specifier|const
 name|char
 modifier|*
 name|printJSONValues
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|delim
-parameter_list|)
-function_decl|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|printAllJSONValues
 parameter_list|(
 name|raw_ostream
 modifier|&

@@ -81,6 +81,9 @@ name|namespace
 name|pdb
 block|{
 name|class
+name|ClassLayout
+decl_stmt|;
+name|class
 name|LinePrinter
 block|{
 name|friend
@@ -92,6 +95,8 @@ label|:
 name|LinePrinter
 argument_list|(
 argument|int Indent
+argument_list|,
+argument|bool UseColor
 argument_list|,
 argument|raw_ostream&Stream
 argument_list|)
@@ -108,6 +113,15 @@ name|void
 name|NewLine
 parameter_list|()
 function_decl|;
+name|bool
+name|hasColor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseColor
+return|;
+block|}
 name|raw_ostream
 modifier|&
 name|getStream
@@ -127,12 +141,24 @@ name|CurrentIndent
 return|;
 block|}
 name|bool
+name|IsClassExcluded
+parameter_list|(
+specifier|const
+name|ClassLayout
+modifier|&
+name|Class
+parameter_list|)
+function_decl|;
+name|bool
 name|IsTypeExcluded
 argument_list|(
 name|llvm
 operator|::
 name|StringRef
 name|TypeName
+argument_list|,
+name|uint32_t
+name|Size
 argument_list|)
 decl_stmt|;
 name|bool
@@ -206,6 +232,9 @@ name|IndentSpaces
 decl_stmt|;
 name|int
 name|CurrentIndent
+decl_stmt|;
+name|bool
+name|UseColor
 decl_stmt|;
 name|std
 operator|::
@@ -302,6 +331,10 @@ name|Address
 operator|,
 name|Type
 operator|,
+name|Comment
+operator|,
+name|Padding
+operator|,
 name|Keyword
 operator|,
 name|Offset
@@ -355,6 +388,9 @@ function_decl|;
 name|raw_ostream
 modifier|&
 name|OS
+decl_stmt|;
+name|bool
+name|UseColor
 decl_stmt|;
 block|}
 empty_stmt|;

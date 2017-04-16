@@ -249,9 +249,9 @@ operator|&
 name|OS
 operator|,
 specifier|const
-name|PDB_UdtType
+name|PDB_UniqueId
 operator|&
-name|Type
+name|Guid
 operator|)
 expr_stmt|;
 name|raw_ostream
@@ -264,9 +264,9 @@ operator|&
 name|OS
 operator|,
 specifier|const
-name|PDB_UniqueId
+name|PDB_UdtType
 operator|&
-name|Id
+name|Type
 operator|)
 expr_stmt|;
 name|raw_ostream

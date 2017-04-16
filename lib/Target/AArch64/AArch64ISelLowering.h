@@ -528,6 +528,8 @@ argument|APInt&KnownZero
 argument_list|,
 argument|APInt&KnownOne
 argument_list|,
+argument|const APInt&DemandedElts
+argument_list|,
 argument|const SelectionDAG&DAG
 argument_list|,
 argument|unsigned Depth =
@@ -1075,7 +1077,7 @@ name|isIntDivCheap
 argument_list|(
 argument|EVT VT
 argument_list|,
-argument|AttributeSet Attr
+argument|AttributeList Attr
 argument_list|)
 specifier|const
 name|override
@@ -1100,6 +1102,14 @@ return|return
 name|true
 return|;
 block|}
+name|bool
+name|isMaskAndCmp0FoldingBeneficial
+argument_list|(
+argument|const Instruction&AndI
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
 name|hasAndNotCompare
 argument_list|(
@@ -1198,6 +1208,38 @@ return|return
 name|true
 return|;
 block|}
+comment|/// Returns the size of the platform's va_list object.
+name|unsigned
+name|getVaListSizeInBits
+argument_list|(
+argument|const DataLayout&DL
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Returns true if \p VecTy is a legal interleaved access type. This
+comment|/// function checks the vector element type and the overall width of the
+comment|/// vector.
+name|bool
+name|isLegalInterleavedAccessType
+argument_list|(
+argument|VectorType *VecTy
+argument_list|,
+argument|const DataLayout&DL
+argument_list|)
+specifier|const
+block|;
+comment|/// Returns the number of interleaved accesses that will be generated when
+comment|/// lowering accesses of the given type.
+name|unsigned
+name|getNumInterleavedAccesses
+argument_list|(
+argument|VectorType *VecTy
+argument_list|,
+argument|const DataLayout&DL
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 name|bool

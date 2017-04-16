@@ -74,13 +74,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamInterface.h"
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
+file|"llvm/Support/BinaryStream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/BinaryStream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/BinaryStreamRef.h"
 end_include
 
 begin_include
@@ -131,7 +143,7 @@ name|class
 name|MappedBlockStream
 range|:
 name|public
-name|ReadableStream
+name|BinaryStream
 block|{
 name|friend
 name|class
@@ -154,7 +166,7 @@ argument|uint32_t NumBlocks
 argument_list|,
 argument|const MSFStreamLayout&Layout
 argument_list|,
-argument|const ReadableStream&MsfData
+argument|BinaryStreamRef MsfData
 argument_list|)
 block|;
 specifier|static
@@ -168,7 +180,7 @@ name|createIndexedStream
 argument_list|(
 argument|const MSFLayout&Layout
 argument_list|,
-argument|const ReadableStream&MsfData
+argument|BinaryStreamRef MsfData
 argument_list|,
 argument|uint32_t StreamIndex
 argument_list|)
@@ -182,15 +194,9 @@ name|MappedBlockStream
 operator|>
 name|createFpmStream
 argument_list|(
-specifier|const
-name|MSFLayout
-operator|&
-name|Layout
+argument|const MSFLayout&Layout
 argument_list|,
-specifier|const
-name|ReadableStream
-operator|&
-name|MsfData
+argument|BinaryStreamRef MsfData
 argument_list|)
 block|;
 specifier|static
@@ -202,17 +208,29 @@ name|MappedBlockStream
 operator|>
 name|createDirectoryStream
 argument_list|(
-specifier|const
-name|MSFLayout
-operator|&
-name|Layout
+argument|const MSFLayout&Layout
 argument_list|,
-specifier|const
-name|ReadableStream
-operator|&
-name|MsfData
+argument|BinaryStreamRef MsfData
 argument_list|)
 block|;
+name|llvm
+operator|::
+name|support
+operator|::
+name|endianness
+name|getEndian
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|llvm
+operator|::
+name|support
+operator|::
+name|little
+return|;
+block|}
 name|Error
 name|readBytes
 argument_list|(
@@ -222,7 +240,6 @@ argument|uint32_t Size
 argument_list|,
 argument|ArrayRef<uint8_t>&Buffer
 argument_list|)
-specifier|const
 name|override
 block|;
 name|Error
@@ -232,13 +249,11 @@ argument|uint32_t Offset
 argument_list|,
 argument|ArrayRef<uint8_t>&Buffer
 argument_list|)
-specifier|const
 name|override
 block|;
 name|uint32_t
 name|getLength
 argument_list|()
-specifier|const
 name|override
 block|;
 name|uint32_t
@@ -300,7 +315,7 @@ argument|uint32_t NumBlocks
 argument_list|,
 argument|const MSFStreamLayout&StreamLayout
 argument_list|,
-argument|const ReadableStream&MsfData
+argument|BinaryStreamRef MsfData
 argument_list|)
 block|;
 name|private
@@ -332,7 +347,6 @@ argument|uint32_t Offset
 argument_list|,
 argument|MutableArrayRef<uint8_t> Buffer
 argument_list|)
-specifier|const
 block|;
 name|bool
 name|tryReadContiguously
@@ -343,7 +357,6 @@ argument|uint32_t Size
 argument_list|,
 argument|ArrayRef<uint8_t>&Buffer
 argument_list|)
-specifier|const
 block|;
 specifier|const
 name|uint32_t
@@ -357,9 +370,7 @@ specifier|const
 name|MSFStreamLayout
 name|StreamLayout
 block|;
-specifier|const
-name|ReadableStream
-operator|&
+name|BinaryStreamRef
 name|MsfData
 block|;
 typedef|typedef
@@ -369,13 +380,11 @@ name|uint8_t
 operator|>
 name|CacheEntry
 expr_stmt|;
-name|mutable
 name|llvm
 operator|::
 name|BumpPtrAllocator
 name|Pool
 decl_stmt|;
-name|mutable
 name|DenseMap
 operator|<
 name|uint32_t
@@ -394,7 +403,7 @@ name|class
 name|WritableMappedBlockStream
 range|:
 name|public
-name|WritableStream
+name|WritableBinaryStream
 block|{
 name|public
 operator|:
@@ -413,7 +422,7 @@ argument|uint32_t NumBlocks
 argument_list|,
 argument|const MSFStreamLayout&Layout
 argument_list|,
-argument|const WritableStream&MsfData
+argument|WritableBinaryStreamRef MsfData
 argument_list|)
 block|;
 specifier|static
@@ -427,7 +436,7 @@ name|createIndexedStream
 argument_list|(
 argument|const MSFLayout&Layout
 argument_list|,
-argument|const WritableStream&MsfData
+argument|WritableBinaryStreamRef MsfData
 argument_list|,
 argument|uint32_t StreamIndex
 argument_list|)
@@ -441,15 +450,9 @@ name|WritableMappedBlockStream
 operator|>
 name|createDirectoryStream
 argument_list|(
-specifier|const
-name|MSFLayout
-operator|&
-name|Layout
+argument|const MSFLayout&Layout
 argument_list|,
-specifier|const
-name|WritableStream
-operator|&
-name|MsfData
+argument|WritableBinaryStreamRef MsfData
 argument_list|)
 block|;
 specifier|static
@@ -461,17 +464,29 @@ name|WritableMappedBlockStream
 operator|>
 name|createFpmStream
 argument_list|(
-specifier|const
-name|MSFLayout
-operator|&
-name|Layout
+argument|const MSFLayout&Layout
 argument_list|,
-specifier|const
-name|WritableStream
-operator|&
-name|MsfData
+argument|WritableBinaryStreamRef MsfData
 argument_list|)
 block|;
+name|llvm
+operator|::
+name|support
+operator|::
+name|endianness
+name|getEndian
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|llvm
+operator|::
+name|support
+operator|::
+name|little
+return|;
+block|}
 name|Error
 name|readBytes
 argument_list|(
@@ -481,7 +496,6 @@ argument|uint32_t Size
 argument_list|,
 argument|ArrayRef<uint8_t>&Buffer
 argument_list|)
-specifier|const
 name|override
 block|;
 name|Error
@@ -491,13 +505,11 @@ argument|uint32_t Offset
 argument_list|,
 argument|ArrayRef<uint8_t>&Buffer
 argument_list|)
-specifier|const
 name|override
 block|;
 name|uint32_t
 name|getLength
 argument_list|()
-specifier|const
 name|override
 block|;
 name|Error
@@ -507,13 +519,11 @@ argument|uint32_t Offset
 argument_list|,
 argument|ArrayRef<uint8_t> Buffer
 argument_list|)
-specifier|const
 name|override
 block|;
 name|Error
 name|commit
 argument_list|()
-specifier|const
 name|override
 block|;
 specifier|const
@@ -576,7 +586,7 @@ argument|uint32_t NumBlocks
 argument_list|,
 argument|const MSFStreamLayout&StreamLayout
 argument_list|,
-argument|const WritableStream&MsfData
+argument|WritableBinaryStreamRef MsfData
 argument_list|)
 block|;
 name|private
@@ -584,9 +594,7 @@ operator|:
 name|MappedBlockStream
 name|ReadInterface
 block|;
-specifier|const
-name|WritableStream
-operator|&
+name|WritableBinaryStreamRef
 name|WriteInterface
 block|; }
 decl_stmt|;

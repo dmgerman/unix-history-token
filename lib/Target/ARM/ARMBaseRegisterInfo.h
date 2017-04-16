@@ -68,7 +68,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineInstr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_define
@@ -103,6 +133,7 @@ literal|2
 block|}
 enum|;
 block|}
+comment|// end namespace ARMRI
 comment|/// isARMArea1Register - Returns true if the register is a low register (r0-r7)
 comment|/// or a stack/pc register that we should push/pop.
 specifier|static
@@ -418,6 +449,10 @@ comment|/// frames. I.e., when we need a 3rd base, not just SP and FP, due to
 comment|/// variable size stack objects.
 name|unsigned
 name|BasePtr
+operator|=
+name|ARM
+operator|::
+name|R6
 block|;
 comment|// Can be only subclassed.
 name|explicit
@@ -804,6 +839,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_ARM_ARMBASEREGISTERINFO_H
+end_comment
 
 end_unit
 

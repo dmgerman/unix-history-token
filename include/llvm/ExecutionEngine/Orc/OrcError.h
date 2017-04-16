@@ -97,22 +97,27 @@ name|RemoteIndirectStubsOwnerDoesNotExist
 block|,
 name|RemoteIndirectStubsOwnerIdAlreadyInUse
 block|,
+name|RPCConnectionClosed
+block|,
+name|RPCCouldNotNegotiateFunction
+block|,
 name|RPCResponseAbandoned
 block|,
 name|UnexpectedRPCCall
 block|,
 name|UnexpectedRPCResponse
 block|,
-name|UnknownRPCFunction
+name|UnknownErrorCodeFromRemote
 block|}
 decl_stmt|;
-name|Error
+name|std
+operator|::
+name|error_code
 name|orcError
-parameter_list|(
-name|OrcErrorCode
-name|ErrCode
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|OrcErrorCode ErrCode
+argument_list|)
+expr_stmt|;
 block|}
 comment|// End namespace orc.
 block|}

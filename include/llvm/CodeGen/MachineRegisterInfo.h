@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/MachineRegisterInfo.h ----------------------*- C++ -*-===//
+comment|//===- llvm/CodeGen/MachineRegisterInfo.h -----------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/IndexedMap.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerUnion.h"
+file|"llvm/ADT/IndexedMap.h"
 end_include
 
 begin_include
@@ -83,9 +83,11 @@ directive|include
 file|"llvm/ADT/iterator_range.h"
 end_include
 
-begin_comment
-comment|// PointerUnion needs to have access to the full RegisterBank type.
-end_comment
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
 
 begin_include
 include|#
@@ -102,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
@@ -109,6 +117,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineInstrBundle.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineOperand.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/LaneBitmask.h"
 end_include
 
 begin_include
@@ -127,6 +147,42 @@ begin_include
 include|#
 directive|include
 file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -169,6 +225,13 @@ function_decl|;
 name|public
 label|:
 name|virtual
+operator|~
+name|Delegate
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|virtual
 name|void
 name|MRI_NoteNewVirtualRegister
 parameter_list|(
@@ -178,11 +241,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-name|virtual
-operator|~
-name|Delegate
-argument_list|()
-block|{}
 block|}
 empty_stmt|;
 name|private
@@ -194,6 +252,8 @@ decl_stmt|;
 name|Delegate
 modifier|*
 name|TheDelegate
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// True if subregister liveness is tracked.
 specifier|const
@@ -219,6 +279,22 @@ operator|,
 name|VirtReg2IndexFunctor
 operator|>
 name|VRegInfo
+expr_stmt|;
+comment|/// The flag is true upon \p UpdatedCSRs initialization
+comment|/// and false otherwise.
+name|bool
+name|IsUpdatedCSRsInitialized
+decl_stmt|;
+comment|/// Contains the updated callee saved register list.
+comment|/// As opposed to the static list defined in register info,
+comment|/// all registers that were disabled are removed from the list.
+name|SmallVector
+operator|<
+name|MCPhysReg
+operator|,
+literal|16
+operator|>
+name|UpdatedCSRs
 expr_stmt|;
 comment|/// RegAllocHints - This vector records register allocation hints for virtual
 comment|/// registers. For each virtual register, it keeps a register and hint type
@@ -402,30 +478,9 @@ operator|<
 name|unsigned
 operator|,
 name|unsigned
-operator|>
-expr|>
+operator|>>
 name|LiveIns
 expr_stmt|;
-name|MachineRegisterInfo
-argument_list|(
-specifier|const
-name|MachineRegisterInfo
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MachineRegisterInfo
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -436,6 +491,27 @@ modifier|*
 name|MF
 parameter_list|)
 function_decl|;
+name|MachineRegisterInfo
+argument_list|(
+specifier|const
+name|MachineRegisterInfo
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MachineRegisterInfo
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MachineRegisterInfo
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 specifier|const
 name|TargetRegisterInfo
 operator|*
@@ -664,6 +740,48 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Register Info
 comment|//===--------------------------------------------------------------------===//
+comment|/// Returns true if the updated CSR list was initialized and false otherwise.
+name|bool
+name|isUpdatedCSRsInitialized
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsUpdatedCSRsInitialized
+return|;
+block|}
+comment|/// Disables the register from the list of CSRs.
+comment|/// I.e. the register will not appear as part of the CSR mask.
+comment|/// \see UpdatedCalleeSavedRegs.
+name|void
+name|disableCalleeSavedRegister
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
+comment|/// Returns list of callee saved registers.
+comment|/// The function returns the updated CSR list (after taking into account
+comment|/// registers that are disabled from the CSR list).
+specifier|const
+name|MCPhysReg
+operator|*
+name|getCalleeSavedRegs
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Sets the updated Callee Saved Registers list.
+comment|/// Notice that it will override ant previously disabled/saved CSRs.
+name|void
+name|setCalleeSavedRegs
+argument_list|(
+name|ArrayRef
+operator|<
+name|MCPhysReg
+operator|>
+name|CSRs
+argument_list|)
+decl_stmt|;
 comment|// Strictly for use by MachineInstr.cpp.
 name|void
 name|addRegOperandToUseList
@@ -2730,19 +2848,6 @@ return|return
 name|UsedPhysRegMask
 return|;
 block|}
-name|void
-name|setUsedPhysRegMask
-parameter_list|(
-name|BitVector
-modifier|&
-name|Mask
-parameter_list|)
-block|{
-name|UsedPhysRegMask
-operator|=
-name|Mask
-expr_stmt|;
-block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Reserved Register Info
 comment|//===--------------------------------------------------------------------===//
@@ -2925,8 +3030,7 @@ operator|<
 name|unsigned
 operator|,
 name|unsigned
-operator|>
-expr|>
+operator|>>
 operator|::
 name|const_iterator
 name|livein_iterator
@@ -3068,9 +3172,15 @@ operator|,
 name|ptrdiff_t
 operator|>
 block|{
+name|friend
+name|class
+name|MachineRegisterInfo
+block|;
 name|MachineOperand
 operator|*
 name|Op
+operator|=
+name|nullptr
 block|;
 name|explicit
 name|defusechain_iterator
@@ -3128,10 +3238,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|friend
-name|class
-name|MachineRegisterInfo
-block|;
 name|void
 name|advance
 argument_list|()
@@ -3262,12 +3368,9 @@ name|pointer
 expr_stmt|;
 name|defusechain_iterator
 argument_list|()
-operator|:
-name|Op
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|bool
 name|operator
 operator|==
@@ -3570,9 +3673,15 @@ operator|,
 name|ptrdiff_t
 operator|>
 block|{
+name|friend
+name|class
+name|MachineRegisterInfo
+block|;
 name|MachineOperand
 operator|*
 name|Op
+operator|=
+name|nullptr
 block|;
 name|explicit
 name|defusechain_instr_iterator
@@ -3630,16 +3739,9 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|friend
-name|class
-name|MachineRegisterInfo
-expr_stmt|;
-end_expr_stmt
-
-begin_function
 name|void
 name|advance
-parameter_list|()
+argument_list|()
 block|{
 name|assert
 argument_list|(
@@ -3647,14 +3749,14 @@ name|Op
 operator|&&
 literal|"Cannot increment end iterator!"
 argument_list|)
-expr_stmt|;
+block|;
 name|Op
 operator|=
 name|getNextOperandForReg
 argument_list|(
 name|Op
 argument_list|)
-expr_stmt|;
+block|;
 comment|// All defs come before the uses, so stop def_iterator early.
 if|if
 condition|(
@@ -3691,8 +3793,10 @@ literal|"Can't have debug defs"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
+end_expr_stmt
+
+begin_block
+unit|} else
 block|{
 comment|// If this is an operand we don't care about, skip it.
 while|while
@@ -3728,15 +3832,10 @@ name|Op
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_label
-name|public
-label|:
-end_label
+end_block
 
 begin_typedef
+unit|}    public:
 typedef|typedef
 name|std
 operator|::
@@ -3779,12 +3878,12 @@ end_typedef
 begin_expr_stmt
 name|defusechain_instr_iterator
 argument_list|()
-operator|:
-name|Op
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|operator
 operator|==
@@ -4086,25 +4185,21 @@ specifier|const
 name|int
 modifier|*
 name|PSet
+init|=
+name|nullptr
 decl_stmt|;
 name|unsigned
 name|Weight
+init|=
+literal|0
 decl_stmt|;
 name|public
 label|:
 name|PSetIterator
 argument_list|()
-operator|:
-name|PSet
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Weight
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|PSetIterator
 argument_list|(
 argument|unsigned RegUnit
@@ -4114,14 +4209,14 @@ argument_list|)
 block|{
 specifier|const
 name|TargetRegisterInfo
-operator|*
+modifier|*
 name|TRI
-operator|=
+init|=
 name|MRI
 operator|->
 name|getTargetRegisterInfo
 argument_list|()
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|TargetRegisterInfo
@@ -4290,13 +4385,17 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEREGISTERINFO_H
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCParsedAsmOperand.h - Asm Parser Operand -------*- C++ -*-===//
+comment|//===- llvm/MC/MCParsedAsmOperand.h - Asm Parser Operand --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/SMLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -94,6 +94,11 @@ comment|// lots of members and MSVC doesn't support defaulted move ops, so to av
 comment|// that verbosity, just rely on defaulted copy ops. It's only the Constraint
 comment|// string member that would benefit from movement anyway.
 name|MCParsedAsmOperand
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|MCParsedAsmOperand
 argument_list|(
 specifier|const
 name|MCParsedAsmOperand
@@ -115,23 +120,21 @@ operator|)
 operator|=
 expr|default
 decl_stmt|;
-name|MCParsedAsmOperand
-argument_list|()
-operator|=
-expr|default
-expr_stmt|;
 name|public
 label|:
 name|virtual
 operator|~
 name|MCParsedAsmOperand
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|setConstraint
-argument_list|(
-argument|StringRef C
-argument_list|)
+parameter_list|(
+name|StringRef
+name|C
+parameter_list|)
 block|{
 name|Constraint
 operator|=
@@ -139,10 +142,11 @@ name|C
 operator|.
 name|str
 argument_list|()
-block|; }
+expr_stmt|;
+block|}
 name|StringRef
 name|getConstraint
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Constraint
@@ -342,13 +346,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCPARSER_MCPARSEDASMOPERAND_H
+end_comment
 
 end_unit
 

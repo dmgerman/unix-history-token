@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cinttypes>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -148,7 +154,8 @@ literal|"("
 operator|<<
 name|format
 argument_list|(
-literal|"0x%x8"
+literal|"0x%08"
+name|PRIxPTR
 argument_list|,
 name|D
 operator|.
@@ -159,7 +166,7 @@ literal|" ("
 operator|<<
 name|format
 argument_list|(
-literal|"0x%x8"
+literal|"0x%08x"
 argument_list|,
 name|D
 operator|.
@@ -172,7 +179,7 @@ literal|", "
 operator|<<
 name|format
 argument_list|(
-literal|"0x%x8"
+literal|"0x%08x"
 argument_list|,
 name|D
 operator|.

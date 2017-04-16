@@ -364,8 +364,9 @@ argument_list|)
 block|;
 name|assert
 argument_list|(
-operator|~
 name|FI
+operator|!=
+name|INT_MAX
 operator|&&
 literal|"Expected valid index"
 argument_list|)
@@ -2034,6 +2035,53 @@ decl_stmt|;
 end_decl_stmt
 
 begin_label
+name|protected
+label|:
+end_label
+
+begin_comment
+comment|/// Gather pre-function debug information.
+end_comment
+
+begin_decl_stmt
+name|void
+name|beginFunctionImpl
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Gather and emit post-function debug information.
+end_comment
+
+begin_decl_stmt
+name|void
+name|endFunctionImpl
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|void
+name|skippedNonDebugFunction
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|public
 label|:
 end_label
@@ -2098,40 +2146,6 @@ argument_list|()
 name|override
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/// Gather pre-function debug information.
-end_comment
-
-begin_decl_stmt
-name|void
-name|beginFunction
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-argument_list|)
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Gather and emit post-function debug information.
-end_comment
-
-begin_decl_stmt
-name|void
-name|endFunction
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-argument_list|)
-name|override
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/// Process beginning of an instruction.

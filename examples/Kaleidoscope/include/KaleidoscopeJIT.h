@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/Orc/ObjectLinkingLayer.h"
+file|"llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h"
 end_include
 
 begin_include
@@ -192,7 +192,7 @@ block|{
 name|public
 label|:
 typedef|typedef
-name|ObjectLinkingLayer
+name|RTDyldObjectLinkingLayer
 operator|<
 operator|>
 name|ObjLayerT
@@ -506,6 +506,32 @@ operator|&
 name|Name
 argument_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|LLVM_ON_WIN32
+comment|// The symbol lookup of ObjectLinkingLayer uses the SymbolRef::SF_Exported
+comment|// flag to decide whether a symbol will be visible or not, when we call
+comment|// IRCompileLayer::findSymbolIn with ExportedSymbolsOnly set to true.
+comment|//
+comment|// But for Windows COFF objects, this flag is currently never set.
+comment|// For a potential solution see: https://reviews.llvm.org/rL258665
+comment|// For now, we allow non-exported symbols on Windows as a workaround.
+specifier|const
+name|bool
+name|ExportedSymbolsOnly
+init|=
+name|false
+decl_stmt|;
+else|#
+directive|else
+specifier|const
+name|bool
+name|ExportedSymbolsOnly
+init|=
+name|true
+decl_stmt|;
+endif|#
+directive|endif
 comment|// Search modules in reverse order: from last added to first added.
 comment|// This is the opposite of the usual search order for dlsym, but makes more
 comment|// sense in a REPL where we want to bind to the newest available definition.
@@ -540,7 +566,7 @@ name|H
 argument_list|,
 name|Name
 argument_list|,
-name|true
+name|ExportedSymbolsOnly
 argument_list|)
 condition|)
 return|return
@@ -569,6 +595,57 @@ operator|::
 name|Exported
 argument_list|)
 return|;
+ifdef|#
+directive|ifdef
+name|LLVM_ON_WIN32
+comment|// For Windows retry without "_" at begining, as RTDyldMemoryManager uses
+comment|// GetProcAddress and standard libraries like msvcrt.dll use names
+comment|// with and without "_" (for example "_itoa" but "sin").
+if|if
+condition|(
+name|Name
+operator|.
+name|length
+argument_list|()
+operator|>
+literal|2
+operator|&&
+name|Name
+index|[
+literal|0
+index|]
+operator|==
+literal|'_'
+condition|)
+if|if
+condition|(
+name|auto
+name|SymAddr
+init|=
+name|RTDyldMemoryManager
+operator|::
+name|getSymbolAddressInProcess
+argument_list|(
+name|Name
+operator|.
+name|substr
+argument_list|(
+literal|1
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|JITSymbol
+argument_list|(
+name|SymAddr
+argument_list|,
+name|JITSymbolFlags
+operator|::
+name|Exported
+argument_list|)
+return|;
+endif|#
+directive|endif
 return|return
 name|nullptr
 return|;

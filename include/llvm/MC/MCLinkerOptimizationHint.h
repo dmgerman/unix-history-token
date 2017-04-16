@@ -95,19 +95,30 @@ directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// Forward declarations.
+name|class
+name|MachObjectWriter
+decl_stmt|;
 name|class
 name|MCAsmLayout
 decl_stmt|;
 name|class
 name|MCSymbol
-decl_stmt|;
-name|class
-name|MachObjectWriter
 decl_stmt|;
 comment|/// Linker Optimization Hint Type.
 enum|enum
@@ -509,6 +520,8 @@ comment|/// Keep track of the emit size of all the LOHs.
 name|mutable
 name|uint64_t
 name|EmitSize
+init|=
+literal|0
 decl_stmt|;
 comment|/// Keep track of all LOH directives.
 name|SmallVector
@@ -530,12 +543,9 @@ name|LOHDirectives
 expr_stmt|;
 name|MCLOHContainer
 argument_list|()
-operator|:
-name|EmitSize
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Const accessor to the directives.
 specifier|const
 name|LOHDirectives
@@ -699,6 +709,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCLINKEROPTIMIZATIONHINT_H
+end_comment
 
 end_unit
 

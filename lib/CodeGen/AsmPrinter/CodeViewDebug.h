@@ -1188,6 +1188,29 @@ name|unsigned
 name|getPointerSizeInBytes
 parameter_list|()
 function_decl|;
+name|protected
+label|:
+comment|/// \brief Gather pre-function debug information.
+name|void
+name|beginFunctionImpl
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+name|override
+decl_stmt|;
+comment|/// \brief Gather post-function debug information.
+name|void
+name|endFunctionImpl
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+argument_list|)
+name|override
+decl_stmt|;
 name|public
 label|:
 name|CodeViewDebug
@@ -1216,27 +1239,6 @@ name|endModule
 argument_list|()
 name|override
 expr_stmt|;
-comment|/// \brief Gather pre-function debug information.
-name|void
-name|beginFunction
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-argument_list|)
-name|override
-decl_stmt|;
-comment|/// \brief Gather post-function debug information.
-name|void
-name|endFunction
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-argument_list|)
-name|override
-decl_stmt|;
 comment|/// \brief Process beginning of an instruction.
 name|void
 name|beginInstruction

@@ -775,6 +775,24 @@ specifier|const
 modifier|&
 parameter_list|)
 function_decl|;
+name|void
+name|initReg
+parameter_list|(
+name|MCInst
+specifier|const
+modifier|&
+parameter_list|,
+name|unsigned
+parameter_list|,
+name|unsigned
+modifier|&
+name|PredReg
+parameter_list|,
+name|bool
+modifier|&
+name|isTrue
+parameter_list|)
+function_decl|;
 comment|// Checks performed.
 name|bool
 name|checkBranches
@@ -802,6 +820,10 @@ parameter_list|()
 function_decl|;
 name|bool
 name|checkSlots
+parameter_list|()
+function_decl|;
+name|bool
+name|checkSize
 parameter_list|()
 function_decl|;
 specifier|static
@@ -932,7 +954,12 @@ parameter_list|)
 function_decl|;
 name|bool
 name|check
-parameter_list|()
+parameter_list|(
+name|bool
+name|FullCheck
+init|=
+name|true
+parameter_list|)
 function_decl|;
 comment|/// add a new error/warning
 name|void

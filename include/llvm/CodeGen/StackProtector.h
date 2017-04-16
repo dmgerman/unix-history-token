@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- StackProtector.h - Stack Protector Insertion ----------------------===//
+comment|//===- StackProtector.h - Stack Protector Insertion -------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -107,6 +107,12 @@ directive|include
 file|"llvm/Target/TargetLowering.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -168,6 +174,8 @@ specifier|const
 name|TargetMachine
 operator|*
 name|TM
+operator|=
+name|nullptr
 decl_stmt|;
 comment|/// TLI - Keep a pointer of a TargetLowering to consult for determining
 comment|/// target type sizes.
@@ -175,6 +183,8 @@ specifier|const
 name|TargetLoweringBase
 modifier|*
 name|TLI
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|Triple
@@ -202,6 +212,8 @@ comment|/// \brief The minimum size of buffers that will receive stack smashing
 comment|/// protection when -fstack-protection is used.
 name|unsigned
 name|SSPBufferSize
+init|=
+literal|0
 decl_stmt|;
 comment|/// VisitedPHIs - The set of PHI nodes visited when determining
 comment|/// if a variable's reference has been taken.  This set
@@ -303,22 +315,7 @@ argument_list|()
 operator|:
 name|FunctionPass
 argument_list|(
-name|ID
-argument_list|)
-operator|,
-name|TM
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|TLI
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|SSPBufferSize
-argument_list|(
-literal|0
+argument|ID
 argument_list|)
 block|{
 name|initializeStackProtectorPass
@@ -346,11 +343,6 @@ operator|,
 name|TM
 argument_list|(
 name|TM
-argument_list|)
-operator|,
-name|TLI
-argument_list|(
-name|nullptr
 argument_list|)
 operator|,
 name|Trip

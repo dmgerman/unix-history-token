@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|<cstddef>
 end_include
 
 begin_include
@@ -125,37 +125,30 @@ block|{
 name|unsigned
 operator|*
 name|Data
+operator|=
+name|nullptr
 block|;
 comment|// The maximum number of cycles monitored by the Scoreboard. This
 comment|// value is determined based on the target itineraries to ensure
 comment|// that all hazards can be tracked.
 name|size_t
 name|Depth
+operator|=
+literal|0
 block|;
 comment|// Indices into the Scoreboard that represent the current cycle.
 name|size_t
 name|Head
+operator|=
+literal|0
 block|;
 name|public
 operator|:
 name|Scoreboard
 argument_list|()
-operator|:
-name|Data
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|Depth
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Head
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
+operator|=
+expr|default
+block|;
 operator|~
 name|Scoreboard
 argument_list|()
@@ -330,10 +323,14 @@ decl_stmt|;
 comment|/// IssueWidth - Max issue per cycle. 0=Unknown.
 name|unsigned
 name|IssueWidth
+init|=
+literal|0
 decl_stmt|;
 comment|/// IssueCount - Count instructions issued in this cycle.
 name|unsigned
 name|IssueCount
+init|=
+literal|0
 decl_stmt|;
 name|Scoreboard
 name|ReservedScoreboard
@@ -416,14 +413,18 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|//!LLVM_CODEGEN_SCOREBOARDHAZARDRECOGNIZER_H
+comment|// LLVM_CODEGEN_SCOREBOARDHAZARDRECOGNIZER_H
 end_comment
 
 end_unit

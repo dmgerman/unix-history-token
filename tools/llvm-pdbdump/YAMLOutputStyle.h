@@ -103,6 +103,10 @@ block|;
 name|private
 operator|:
 name|Error
+name|dumpStringTable
+argument_list|()
+block|;
+name|Error
 name|dumpFileHeaders
 argument_list|()
 block|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Solution.h ------- PBQP Solution ------------------------*- C++ -*-===//
+comment|//===- Solution.h - PBQP Solution -------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Graph.h"
+file|"llvm/CodeGen/PBQP/Graph.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Math.h"
+file|<cassert>
 end_include
 
 begin_include
@@ -110,48 +110,45 @@ name|selections
 decl_stmt|;
 name|unsigned
 name|r0Reductions
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
 name|r1Reductions
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
 name|r2Reductions
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
 name|rNReductions
+init|=
+literal|0
 decl_stmt|;
 name|public
 label|:
 comment|/// \brief Initialise an empty solution.
 name|Solution
 argument_list|()
-operator|:
-name|r0Reductions
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|r1Reductions
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|r2Reductions
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|rNReductions
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// \brief Set the selection for a given node.
 comment|/// @param nodeId Node id.
 comment|/// @param selection Selection for nodeId.
 name|void
 name|setSelection
 argument_list|(
-argument|GraphBase::NodeId nodeId
+name|GraphBase
+operator|::
+name|NodeId
+name|nodeId
 argument_list|,
-argument|unsigned selection
+name|unsigned
+name|selection
 argument_list|)
 block|{
 name|selections
@@ -160,16 +157,20 @@ name|nodeId
 index|]
 operator|=
 name|selection
-block|;     }
+expr_stmt|;
+block|}
 comment|/// \brief Get a node's selection.
 comment|/// @param nodeId Node id.
 comment|/// @return The selection for nodeId;
 name|unsigned
 name|getSelection
 argument_list|(
-argument|GraphBase::NodeId nodeId
+name|GraphBase
+operator|::
+name|NodeId
+name|nodeId
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|SelectionsMap
 operator|::
@@ -182,7 +183,7 @@ name|find
 argument_list|(
 name|nodeId
 argument_list|)
-block|;
+expr_stmt|;
 name|assert
 argument_list|(
 name|sItr
@@ -194,7 +195,7 @@ argument_list|()
 operator|&&
 literal|"No selection for node."
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|sItr
 operator|->
@@ -204,12 +205,12 @@ block|}
 block|}
 empty_stmt|;
 block|}
-comment|// namespace PBQP
+comment|// end namespace PBQP
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

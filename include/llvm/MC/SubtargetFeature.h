@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/SubtargetFeature.h - CPU characteristics --------*- C++ -*-===//
+comment|//===- llvm/MC/SubtargetFeature.h - CPU characteristics ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,23 +36,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines and manages user or tool specified CPU characteristics.
+comment|/// \file Defines and manages user or tool specified CPU characteristics.
 end_comment
 
 begin_comment
-comment|// The intent is to be able to package specific features that should or should
+comment|/// The intent is to be able to package specific features that should or should
 end_comment
 
 begin_comment
-comment|// not be used on a specific target processor.  A tool, such as llc, could, as
+comment|/// not be used on a specific target processor.  A tool, such as llc, could, as
 end_comment
 
 begin_comment
-comment|// as example, gather chip info from the command line, a long with features
+comment|/// as example, gather chip info from the command line, a long with features
 end_comment
 
 begin_comment
-comment|// that should be used on that chip.
+comment|/// that should be used on that chip.
 end_comment
 
 begin_comment
@@ -78,19 +78,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<bitset>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<initializer_list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
@@ -115,17 +121,17 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
-name|StringRef
+name|Triple
 decl_stmt|;
-comment|// A container class for subtarget features.
-comment|// This is convenient because std::bitset does not have a constructor
-comment|// with an initializer list of set bits.
 specifier|const
 name|unsigned
 name|MAX_SUBTARGET_FEATURES
 init|=
-literal|128
+literal|192
 decl_stmt|;
+comment|/// Container class for subtarget features.
+comment|/// This is convenient because std::bitset does not have a constructor
+comment|/// with an initializer list of set bits.
 name|class
 name|FeatureBitset
 range|:
@@ -142,10 +148,9 @@ operator|:
 comment|// Cannot inherit constructors because it's not supported by VC++..
 name|FeatureBitset
 argument_list|()
-operator|:
-name|bitset
-argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|FeatureBitset
 argument_list|(
 specifier|const
@@ -164,17 +169,8 @@ argument_list|)
 block|{}
 name|FeatureBitset
 argument_list|(
-name|std
-operator|::
-name|initializer_list
-operator|<
-name|unsigned
-operator|>
-name|Init
+argument|std::initializer_list<unsigned> Init
 argument_list|)
-operator|:
-name|bitset
-argument_list|()
 block|{
 for|for
 control|(
@@ -192,10 +188,7 @@ block|}
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
-comment|///
-comment|/// SubtargetFeatureKV - Used to provide key value pairs for feature and
-comment|/// CPU bit flags.
-comment|//
+comment|/// Used to provide key value pairs for feature and CPU bit flags.
 block|struct
 name|SubtargetFeatureKV
 block|{
@@ -204,22 +197,22 @@ name|char
 operator|*
 name|Key
 block|;
-comment|// K-V key string
+comment|///< K-V key string
 specifier|const
 name|char
 operator|*
 name|Desc
 block|;
-comment|// Help descriptor
+comment|///< Help descriptor
 name|FeatureBitset
 name|Value
 block|;
-comment|// K-V integer value
+comment|///< K-V integer value
 name|FeatureBitset
 name|Implies
 block|;
-comment|// K-V bit mask
-comment|// Compare routine for std::lower_bound
+comment|///< K-V bit mask
+comment|/// Compare routine for std::lower_bound
 name|bool
 name|operator
 operator|<
@@ -238,7 +231,7 @@ operator|<
 name|S
 return|;
 block|}
-comment|// Compare routine for std::is_sorted.
+comment|/// Compare routine for std::is_sorted.
 name|bool
 name|operator
 operator|<
@@ -267,10 +260,7 @@ block|}
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
-comment|///
-comment|/// SubtargetInfoKV - Used to provide key value pairs for CPU and arbitrary
-comment|/// pointers.
-comment|//
+comment|/// Used to provide key value pairs for CPU and arbitrary pointers.
 block|struct
 name|SubtargetInfoKV
 block|{
@@ -279,14 +269,14 @@ name|char
 operator|*
 name|Key
 block|;
-comment|// K-V key string
+comment|///< K-V key string
 specifier|const
 name|void
 operator|*
 name|Value
 block|;
-comment|// K-V pointer value
-comment|// Compare routine for std::lower_bound
+comment|///< K-V pointer value
+comment|/// Compare routine for std::lower_bound
 name|bool
 name|operator
 operator|<
@@ -308,15 +298,14 @@ block|}
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
+comment|/// Manages the enabling and disabling of subtarget specific features.
 comment|///
-comment|/// SubtargetFeatures - Manages the enabling and disabling of subtarget
-comment|/// specific features.  Features are encoded as a string of the form
+comment|/// Features are encoded as a string of the form
 comment|///   "+attr1,+attr2,-attr3,...,+attrN"
 comment|/// A comma separates each feature from the next (all lowercase.)
 comment|/// Each of the remaining features is prefixed with + or - indicating whether
 comment|/// that feature should be enabled or disabled contrary to the cpu
 comment|/// specification.
-comment|///
 name|class
 name|SubtargetFeatures
 block|{
@@ -330,7 +319,7 @@ name|string
 operator|>
 name|Features
 block|;
-comment|// Subtarget features as a vector
+comment|///< Subtarget features as a vector
 name|public
 operator|:
 name|explicit
@@ -340,7 +329,7 @@ argument|StringRef Initial =
 literal|""
 argument_list|)
 block|;
-comment|/// Features string accessors.
+comment|/// Returns features as a string.
 name|std
 operator|::
 name|string
@@ -348,7 +337,7 @@ name|getString
 argument_list|()
 specifier|const
 block|;
-comment|/// Adding Features.
+comment|/// Adds Features.
 name|void
 name|AddFeature
 argument_list|(
@@ -357,7 +346,7 @@ argument_list|,
 argument|bool Enable = true
 argument_list|)
 block|;
-comment|/// ToggleFeature - Toggle a feature and update the feature bits.
+comment|/// Toggles a feature and update the feature bits.
 specifier|static
 name|void
 name|ToggleFeature
@@ -369,7 +358,7 @@ argument_list|,
 argument|ArrayRef<SubtargetFeatureKV> FeatureTable
 argument_list|)
 block|;
-comment|/// Apply the feature flag and update the feature bits.
+comment|/// Applies the feature flag and update the feature bits.
 specifier|static
 name|void
 name|ApplyFeatureFlag
@@ -381,7 +370,7 @@ argument_list|,
 argument|ArrayRef<SubtargetFeatureKV> FeatureTable
 argument_list|)
 block|;
-comment|/// Get feature bits of a CPU.
+comment|/// Returns feature bits of a CPU.
 name|FeatureBitset
 name|getFeatureBits
 argument_list|(
@@ -392,7 +381,7 @@ argument_list|,
 argument|ArrayRef<SubtargetFeatureKV> FeatureTable
 argument_list|)
 block|;
-comment|/// Print feature string.
+comment|/// Prints feature string.
 name|void
 name|print
 argument_list|(
@@ -400,7 +389,7 @@ argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|;
-comment|// Dump feature info.
+comment|// Dumps feature info.
 name|void
 name|dump
 argument_list|()
@@ -420,13 +409,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_SUBTARGETFEATURE_H
+end_comment
 
 end_unit
 

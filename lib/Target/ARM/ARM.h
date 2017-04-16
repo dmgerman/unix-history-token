@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ARMBasicBlockInfo.h"
+file|<functional>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<functional>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -91,6 +91,9 @@ decl_stmt|;
 name|class
 name|ARMBaseTargetMachine
 decl_stmt|;
+struct_decl|struct
+name|BasicBlockInfo
+struct_decl|;
 name|class
 name|Function
 decl_stmt|;
@@ -98,7 +101,10 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
-name|ImmutablePass
+name|MachineBasicBlock
+decl_stmt|;
+name|class
+name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -108,12 +114,6 @@ name|MCInst
 decl_stmt|;
 name|class
 name|PassRegistry
-decl_stmt|;
-name|class
-name|TargetLowering
-decl_stmt|;
-name|class
-name|TargetMachine
 decl_stmt|;
 name|FunctionPass
 modifier|*
@@ -249,17 +249,28 @@ name|PassRegistry
 modifier|&
 parameter_list|)
 function_decl|;
+name|void
+name|initializeARMConstantIslandsPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace llvm;
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_ARM_ARM_H
+end_comment
 
 end_unit
 

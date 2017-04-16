@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/TypeDatabase.h"
 end_include
 
@@ -59,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ScopedPrinter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -93,10 +105,6 @@ name|override
 block|;
 name|private
 operator|:
-name|void
-name|discoverStreamPurposes
-argument_list|()
-block|;
 name|Error
 name|dumpFileHeaders
 argument_list|()
@@ -123,6 +131,10 @@ argument_list|()
 block|;
 name|Error
 name|dumpStreamBlocks
+argument_list|()
+block|;
+name|Error
+name|dumpStringTable
 argument_list|()
 block|;
 name|Error
@@ -183,13 +195,18 @@ operator|::
 name|TypeDatabase
 name|TypeDB
 block|;
-name|std
+name|codeview
 operator|::
-name|vector
+name|TypeDatabase
+name|ItemDB
+block|;
+name|SmallVector
 operator|<
 name|std
 operator|::
 name|string
+block|,
+literal|32
 operator|>
 name|StreamPurposes
 block|; }

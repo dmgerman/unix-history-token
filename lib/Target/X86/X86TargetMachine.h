@@ -62,19 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"X86InstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"X86Subtarget.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DataLayout.h"
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/TargetTransformInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_include
@@ -83,12 +95,24 @@ directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|StringRef
+decl_stmt|;
+name|class
+name|X86Subtarget
+decl_stmt|;
+name|class
+name|X86RegisterBankInfo
 decl_stmt|;
 name|class
 name|X86TargetMachine
@@ -185,13 +209,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_X86_X86TARGETMACHINE_H
+end_comment
 
 end_unit
 

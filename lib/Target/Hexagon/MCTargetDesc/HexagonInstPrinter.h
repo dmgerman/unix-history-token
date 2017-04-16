@@ -215,50 +215,6 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|prints3_6ImmOperand
-argument_list|(
-argument|MCInst const *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-specifier|const
-block|;
-name|void
-name|prints3_7ImmOperand
-argument_list|(
-argument|MCInst const *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-specifier|const
-block|;
-name|void
-name|prints4_6ImmOperand
-argument_list|(
-argument|MCInst const *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-specifier|const
-block|;
-name|void
-name|prints4_7ImmOperand
-argument_list|(
-argument|MCInst const *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-specifier|const
-block|;
-name|void
 name|printBranchOperand
 argument_list|(
 argument|MCInst const *MI

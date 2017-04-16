@@ -1575,6 +1575,22 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Because it does the traversal in its constructor, it won't invalidate when
+end_comment
+
+begin_comment
+comment|// BasicBlocks are removed, *but* it may contain erased blocks. Some places
+end_comment
+
+begin_comment
+comment|// rely on this behavior (i.e. GVN).
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// This class should be used like this:
 end_comment
 

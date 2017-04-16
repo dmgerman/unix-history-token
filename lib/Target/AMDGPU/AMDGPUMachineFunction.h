@@ -94,8 +94,13 @@ comment|/// Start of implicit kernel args
 name|unsigned
 name|ABIArgOffset
 block|;
+comment|// Kernels + shaders. i.e. functions called by the driver and not not called
+comment|// by other functions.
 name|bool
-name|IsKernel
+name|IsEntryFunction
+block|;
+name|bool
+name|NoSignedZerosFPMath
 block|;
 name|public
 operator|:
@@ -203,12 +208,21 @@ name|LDSSize
 return|;
 block|}
 name|bool
-name|isKernel
+name|isEntryFunction
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsKernel
+name|IsEntryFunction
+return|;
+block|}
+name|bool
+name|hasNoSignedZerosFPMath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NoSignedZerosFPMath
 return|;
 block|}
 name|unsigned
