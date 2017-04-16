@@ -154,7 +154,7 @@ decl_stmt|;
 name|bool
 name|AsanUseAfterScope
 init|=
-name|false
+name|true
 decl_stmt|;
 name|bool
 name|LinkCXXRuntimes

@@ -365,7 +365,7 @@ comment|// CHECK: store ppc_fp128 0xM40000000000000000000000000000000, ppc_fp128
 end_comment
 
 begin_comment
-comment|// CHECK: store ppc_fp128 0xMC0040000000000000000000000000000, ppc_fp128* %[[VAR23]]
+comment|// CHECK: store ppc_fp128 0xMC0040000000000008000000000000000, ppc_fp128* %[[VAR23]]
 end_comment
 
 begin_comment

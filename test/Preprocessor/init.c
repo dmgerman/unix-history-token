@@ -68,7 +68,7 @@ comment|// CXX1Z:#define __GXX_WEAK__ 1
 end_comment
 
 begin_comment
-comment|// CXX1Z:#define __cplusplus 201406L
+comment|// CXX1Z:#define __cplusplus 201703L
 end_comment
 
 begin_comment
@@ -468,7 +468,7 @@ comment|// GXX1Z:#define __GXX_WEAK__ 1
 end_comment
 
 begin_comment
-comment|// GXX1Z:#define __cplusplus 201406L
+comment|// GXX1Z:#define __cplusplus 201703L
 end_comment
 
 begin_comment
@@ -3321,6 +3321,774 @@ end_comment
 
 begin_comment
 comment|// AARCH64-NETBSD:#define __aarch64__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=aarch64-openbsd< /dev/null | FileCheck -match-full-lines -check-prefix AARCH64-OPENBSD %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define _LP64 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD-NOT:#define __AARCH64EB__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __AARCH64EL__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD-NOT:#define __AARCH_BIG_ENDIAN 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __ARM_64BIT_STATE 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __ARM_ARCH 8
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __ARM_ARCH_ISA_A64 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD-NOT:#define __ARM_BIG_ENDIAN 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __BIGGEST_ALIGNMENT__ 16
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __DECIMAL_DIG__ __LDBL_DECIMAL_DIG__
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __ELF__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT16_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT32_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT8_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INTMAX_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENSD:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_LEAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_DENORM_MIN__ 6.47517511943802511092443895822764655e-4966L
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_DIG__ 33
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_EPSILON__ 1.92592994438723585305597794258492732e-34L
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_MANT_DIG__ 113
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_MAX_10_EXP__ 4932
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_MAX_EXP__ 16384
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_MAX__ 1.18973149535723176508575932662800702e+4932L
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_MIN_10_EXP__ (-4931)
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_MIN_EXP__ (-16381)
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LDBL_MIN__ 3.36210314311209350626267781732175260e-4932L
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LONG_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __LP64__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __OpenBSD__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __POINTER_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __PTRDIFF_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __PTRDIFF_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_LONG_DOUBLE__ 16
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_LONG__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_POINTER__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_PTRDIFF_T__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_SIZE_T__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZE_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __SIZE_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT16_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT8_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __UINT_LEAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __USER_LABEL_PREFIX__
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __WCHAR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __WCHAR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64-OPENBSD:#define __aarch64__ 1
 end_comment
 
 begin_comment
@@ -12052,6 +12820,10 @@ comment|// MIPS32BE:#define __mips__ 1
 end_comment
 
 begin_comment
+comment|// MIPS32BE:#define __mips_abicalls 1
+end_comment
+
+begin_comment
 comment|// MIPS32BE:#define __mips_fpr 32
 end_comment
 
@@ -12873,6 +13645,10 @@ end_comment
 
 begin_comment
 comment|// MIPS32EL:#define __mips__ 1
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __mips_abicalls 1
 end_comment
 
 begin_comment
@@ -14112,6 +14888,10 @@ comment|// MIPSN32BE: #define __mips__ 1
 end_comment
 
 begin_comment
+comment|// MIPSN32BE: #define __mips_abicalls 1
+end_comment
+
+begin_comment
 comment|// MIPSN32BE: #define __mips_fpr 64
 end_comment
 
@@ -15336,6 +16116,10 @@ comment|// MIPSN32EL: #define __mips__ 1
 end_comment
 
 begin_comment
+comment|// MIPSN32EL: #define __mips_abicalls 1
+end_comment
+
+begin_comment
 comment|// MIPSN32EL: #define __mips_fpr 64
 end_comment
 
@@ -16184,6 +16968,10 @@ comment|// MIPS64BE:#define __mips__ 1
 end_comment
 
 begin_comment
+comment|// MIPS64BE:#define __mips_abicalls 1
+end_comment
+
+begin_comment
 comment|// MIPS64BE:#define __mips_fpr 64
 end_comment
 
@@ -17017,6 +17805,10 @@ end_comment
 
 begin_comment
 comment|// MIPS64EL:#define __mips__ 1
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __mips_abicalls 1
 end_comment
 
 begin_comment
@@ -17937,6 +18729,162 @@ end_comment
 
 begin_comment
 comment|// MIPS-XXR6:#define __mips_nan2008 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -target-cpu mips32 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips-unknown-netbsd -mrelocation-model pic< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines -check-prefix MIPS-ABICALLS-NETBSD %s
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-NETBSD-NOT: #define __ABICALLS__ 1
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-NETBSD: #define __mips_abicalls 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -target-cpu mips64 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips64-unknown-netbsd -mrelocation-model pic< \
+end_comment
+
+begin_comment
+comment|// RUN:   /dev/null | FileCheck -match-full-lines \
+end_comment
+
+begin_comment
+comment|// RUN:   -check-prefix MIPS-ABICALLS-NETBSD64 %s
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-NETBSD64-NOT: #define __ABICALLS__ 1
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-NETBSD64: #define __mips_abicalls 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -target-cpu mips32 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips-unknown-freebsd -mrelocation-model pic< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines -check-prefix MIPS-ABICALLS-FREEBSD %s
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-FREEBSD: #define __ABICALLS__ 1
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-FREEBSD: #define __mips_abicalls 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -target-cpu mips64 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips64-unknown-freebsd -mrelocation-model pic< \
+end_comment
+
+begin_comment
+comment|// RUN:   /dev/null | FileCheck -match-full-lines \
+end_comment
+
+begin_comment
+comment|// RUN:   -check-prefix MIPS-ABICALLS-FREEBSD64 %s
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-FREEBSD64: #define __ABICALLS__ 1
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-FREEBSD64: #define __mips_abicalls 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -target-cpu mips32 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips-unknown-openbsd -mrelocation-model pic< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines -check-prefix MIPS-ABICALLS-OPENBSD %s
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-OPENBSD: #define __ABICALLS__ 1
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-OPENBSD: #define __mips_abicalls 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -target-cpu mips64 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips64-unknown-openbsd -mrelocation-model pic< \
+end_comment
+
+begin_comment
+comment|// RUN:   /dev/null | FileCheck -match-full-lines \
+end_comment
+
+begin_comment
+comment|// RUN:   -check-prefix MIPS-ABICALLS-OPENBSD64 %s
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-OPENBSD64: #define __ABICALLS__ 1
+end_comment
+
+begin_comment
+comment|// MIPS-ABICALLS-OPENBSD64: #define __mips_abicalls 1
 end_comment
 
 begin_comment
@@ -20240,7 +21188,7 @@ comment|// PPC603E-NOT:#define _LP64
 end_comment
 
 begin_comment
-comment|// PPC603E:#define __BIGGEST_ALIGNMENT__ 8
+comment|// PPC603E:#define __BIGGEST_ALIGNMENT__ 16
 end_comment
 
 begin_comment
@@ -20688,6 +21636,10 @@ comment|// PPC603E:#define __LDBL_MIN__ 2.00416836000897277799610805135016e-292L
 end_comment
 
 begin_comment
+comment|// PPC603E:#define __LONGDOUBLE128 1
+end_comment
+
+begin_comment
 comment|// PPC603E:#define __LONG_DOUBLE_128__ 1
 end_comment
 
@@ -21040,7 +21992,7 @@ comment|// PPC64:#define _LP64 1
 end_comment
 
 begin_comment
-comment|// PPC64:#define __BIGGEST_ALIGNMENT__ 8
+comment|// PPC64:#define __BIGGEST_ALIGNMENT__ 16
 end_comment
 
 begin_comment
@@ -21181,6 +22133,10 @@ end_comment
 
 begin_comment
 comment|// PPC64:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// PPC64:#define __HAVE_BSWAP__ 1
 end_comment
 
 begin_comment
@@ -21489,6 +22445,10 @@ end_comment
 
 begin_comment
 comment|// PPC64:#define __LDBL_MIN__ 2.00416836000897277799610805135016e-292L
+end_comment
+
+begin_comment
+comment|// PPC64:#define __LONGDOUBLE128 1
 end_comment
 
 begin_comment
@@ -21856,7 +22816,7 @@ comment|// PPC64LE:#define _LP64 1
 end_comment
 
 begin_comment
-comment|// PPC64LE:#define __BIGGEST_ALIGNMENT__ 8
+comment|// PPC64LE:#define __BIGGEST_ALIGNMENT__ 16
 end_comment
 
 begin_comment
@@ -21993,6 +22953,10 @@ end_comment
 
 begin_comment
 comment|// PPC64LE:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __HAVE_BSWAP__ 1
 end_comment
 
 begin_comment
@@ -22308,6 +23272,10 @@ comment|// PPC64LE:#define __LITTLE_ENDIAN__ 1
 end_comment
 
 begin_comment
+comment|// PPC64LE:#define __LONGDOUBLE128 1
+end_comment
+
+begin_comment
 comment|// PPC64LE:#define __LONG_DOUBLE_128__ 1
 end_comment
 
@@ -22429,6 +23397,10 @@ end_comment
 
 begin_comment
 comment|// PPC64LE:#define __SIZE_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __STRUCT_PARM_ALIGN__ 16
 end_comment
 
 begin_comment
@@ -23312,6 +24284,18 @@ comment|//
 end_comment
 
 begin_comment
+comment|// ppc64le also defaults to power8.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64le-none-none -target-cpu ppc64le -fno-signed-char< /dev/null | FileCheck -match-full-lines -check-prefix PPCPOWER8 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// PPCPOWER8:#define _ARCH_PPC 1
 end_comment
 
@@ -23504,11 +24488,15 @@ comment|// PPC64-LINUX:#define _BIG_ENDIAN 1
 end_comment
 
 begin_comment
+comment|// PPC64-LINUX:#define _CALL_LINUX 1
+end_comment
+
+begin_comment
 comment|// PPC64-LINUX:#define _LP64 1
 end_comment
 
 begin_comment
-comment|// PPC64-LINUX:#define __BIGGEST_ALIGNMENT__ 8
+comment|// PPC64-LINUX:#define __BIGGEST_ALIGNMENT__ 16
 end_comment
 
 begin_comment
@@ -23649,6 +24637,10 @@ end_comment
 
 begin_comment
 comment|// PPC64-LINUX:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __HAVE_BSWAP__ 1
 end_comment
 
 begin_comment
@@ -23957,6 +24949,10 @@ end_comment
 
 begin_comment
 comment|// PPC64-LINUX:#define __LDBL_MIN__ 2.00416836000897277799610805135016e-292L
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __LONGDOUBLE128 1
 end_comment
 
 begin_comment
@@ -24308,6 +25304,26 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Most of this is encompassed in other places.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64le-unknown-linux-gnu -target-abi elfv2< /dev/null | FileCheck -match-full-lines -check-prefix PPC64LE-LINUX %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64LE-LINUX:#define _CALL_LINUX 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc-none-none -fno-signed-char< /dev/null | FileCheck -match-full-lines -check-prefix PPC %s
 end_comment
 
@@ -24328,7 +25344,7 @@ comment|// PPC-NOT:#define _LP64
 end_comment
 
 begin_comment
-comment|// PPC:#define __BIGGEST_ALIGNMENT__ 8
+comment|// PPC:#define __BIGGEST_ALIGNMENT__ 16
 end_comment
 
 begin_comment
@@ -24469,6 +25485,10 @@ end_comment
 
 begin_comment
 comment|// PPC:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// PPC:#define __HAVE_BSWAP__ 1
 end_comment
 
 begin_comment
@@ -24777,6 +25797,10 @@ end_comment
 
 begin_comment
 comment|// PPC:#define __LDBL_MIN__ 2.00416836000897277799610805135016e-292L
+end_comment
+
+begin_comment
+comment|// PPC:#define __LONGDOUBLE128 1
 end_comment
 
 begin_comment
@@ -25092,7 +26116,7 @@ comment|// PPC-LINUX-NOT:#define _LP64
 end_comment
 
 begin_comment
-comment|// PPC-LINUX:#define __BIGGEST_ALIGNMENT__ 8
+comment|// PPC-LINUX:#define __BIGGEST_ALIGNMENT__ 16
 end_comment
 
 begin_comment
@@ -25233,6 +26257,10 @@ end_comment
 
 begin_comment
 comment|// PPC-LINUX:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __HAVE_BSWAP__ 1
 end_comment
 
 begin_comment
@@ -25544,6 +26572,10 @@ comment|// PPC-LINUX:#define __LDBL_MIN__ 2.00416836000897277799610805135016e-29
 end_comment
 
 begin_comment
+comment|// PPC-LINUX:#define __LONGDOUBLE128 1
+end_comment
+
+begin_comment
 comment|// PPC-LINUX:#define __LONG_DOUBLE_128__ 1
 end_comment
 
@@ -25844,6 +26876,22 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc-unknown-linux-gnu -fno-signed-char< /dev/null | FileCheck -match-full-lines -check-prefix PPC32-LINUX %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC32-LINUX-NOT: _CALL_LINUX
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc-apple-darwin8< /dev/null | FileCheck -match-full-lines -check-prefix PPC-DARWIN %s
 end_comment
 
@@ -25997,6 +27045,10 @@ end_comment
 
 begin_comment
 comment|// PPC-DARWIN:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __HAVE_BSWAP__ 1
 end_comment
 
 begin_comment
@@ -26305,6 +27357,10 @@ end_comment
 
 begin_comment
 comment|// PPC-DARWIN:#define __LDBL_MIN__ 2.00416836000897277799610805135016e-292L
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __LONGDOUBLE128 1
 end_comment
 
 begin_comment
@@ -26624,7 +27680,11 @@ comment|// PPC-DARWIN:#define __ppc__ 1
 end_comment
 
 begin_comment
-comment|//
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-apple-darwin8< /dev/null | FileCheck -match-full-lines -check-prefix PPC64-DARWIN %s
+end_comment
+
+begin_comment
+comment|// PPC64-DARWIN:#define __STRUCT_PARM_ALIGN__ 16
 end_comment
 
 begin_comment
@@ -33740,6 +34800,10 @@ comment|// PS4:#define __x86_64__ 1
 end_comment
 
 begin_comment
+comment|// PS4:#define unix 1
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -33968,11 +35032,27 @@ comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=amd64-unknown-openbsd6.
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=aarch64-unknown-openbsd6.1< /dev/null | FileCheck -match-full-lines -check-prefix OPENBSD %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-unknown-openbsd6.1-gnueabi< /dev/null | FileCheck -match-full-lines -check-prefix OPENBSD %s
 end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=i386-unknown-openbsd6.1< /dev/null | FileCheck -match-full-lines -check-prefix OPENBSD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc-unknown-openbsd6.1< /dev/null | FileCheck -match-full-lines -check-prefix OPENBSD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips64-unknown-openbsd6.1< /dev/null | FileCheck -match-full-lines -check-prefix OPENBSD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips64el-unknown-openbsd6.1< /dev/null | FileCheck -match-full-lines -check-prefix OPENBSD %s
 end_comment
 
 begin_comment
@@ -34693,6 +35773,10 @@ end_comment
 
 begin_comment
 comment|// WEBASSEMBLY32-NEXT:#define __NO_INLINE__ 1
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __OBJC_BOOL_IS_BOOL 0
 end_comment
 
 begin_comment
@@ -35953,6 +37037,10 @@ end_comment
 
 begin_comment
 comment|// WEBASSEMBLY64-NEXT:#define __NO_INLINE__ 1
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __OBJC_BOOL_IS_BOOL 0
 end_comment
 
 begin_comment

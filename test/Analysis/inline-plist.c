@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang --analyze %s -fblocks -Xanalyzer -analyzer-output=text -Xanalyzer -analyzer-config -Xanalyzer suppress-null-return-paths=false -Xclang -verify %s
+comment|// RUN: %clang_analyze_cc1 %s -analyzer-checker=core.NullDereference,core.DivideZero -fblocks -analyzer-output=text -analyzer-config suppress-null-return-paths=false -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang --analyze %s -fblocks -Xanalyzer -analyzer-config -Xanalyzer suppress-null-return-paths=false -Xanalyzer -analyzer-config -Xanalyzer path-diagnostics-alternate=false -o %t
+comment|// RUN: %clang_analyze_cc1 %s -analyzer-checker=core.NullDereference,core.DivideZero -fblocks -analyzer-output=plist -analyzer-config suppress-null-return-paths=false -analyzer-config path-diagnostics-alternate=false -o %t
 end_comment
 
 begin_comment
@@ -2180,7 +2180,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
 end_comment
 
 begin_comment
@@ -2200,7 +2200,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
 end_comment
 
 begin_comment
@@ -2248,7 +2248,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
 end_comment
 
 begin_comment
@@ -2280,7 +2280,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
 end_comment
 
 begin_comment
@@ -2380,7 +2380,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
 end_comment
 
 begin_comment
@@ -2400,7 +2400,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
 end_comment
 
 begin_comment

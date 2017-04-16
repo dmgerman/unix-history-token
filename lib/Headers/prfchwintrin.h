@@ -56,6 +56,50 @@ name|__3dNOW__
 argument_list|)
 end_if
 
+begin_comment
+comment|/// \brief Loads a memory sequence containing the specified memory address into
+end_comment
+
+begin_comment
+comment|///    all data cache levels. The cache-coherency state is set to exclusive.
+end_comment
+
+begin_comment
+comment|///    Data can be read from and written to the cache line without additional
+end_comment
+
+begin_comment
+comment|///    delay.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PREFETCHT0 instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __P
+end_comment
+
+begin_comment
+comment|///    A pointer specifying the memory address to be prefetched.
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|__inline__
@@ -87,6 +131,58 @@ argument_list|)
 expr_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Loads a memory sequence containing the specified memory address into
+end_comment
+
+begin_comment
+comment|///    the L1 data cache and sets the cache-coherency to modified. This
+end_comment
+
+begin_comment
+comment|///    provides a hint to the processor that the cache line will be modified.
+end_comment
+
+begin_comment
+comment|///    It is intended for use when the cache line will be written to shortly
+end_comment
+
+begin_comment
+comment|///    after the prefetch is performed. Note that the effect of this intrinsic
+end_comment
+
+begin_comment
+comment|///    is dependent on the processor implementation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PREFETCHW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __P
+end_comment
+
+begin_comment
+comment|///    A pointer specifying the memory address to be prefetched.
+end_comment
 
 begin_decl_stmt
 specifier|static

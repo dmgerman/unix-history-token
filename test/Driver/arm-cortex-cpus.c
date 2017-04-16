@@ -2008,6 +2008,22 @@ comment|// CHECK-CORTEX-A73-SOFT: "-target-feature" "+soft-float-abi"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm -mcpu=cortex-m23 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8MBASE %s
+end_comment
+
+begin_comment
+comment|// CHECK-CPUV8MBASE:  "-cc1"{{.*}} "-triple" "thumbv8m.base-
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=cortex-m33 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8MMAIN %s
+end_comment
+
+begin_comment
+comment|// CHECK-CPUV8MMAIN:  "-cc1"{{.*}} "-triple" "thumbv8m.main-
+end_comment
+
+begin_comment
 comment|// ================== Check whether -mcpu accepts mixed-case values.
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Wno-conversion -analyze -analyzer-checker=core,alpha.core.Conversion -verify %s
+comment|// RUN: %clang_analyze_cc1 -Wno-conversion -analyzer-checker=core,alpha.core.Conversion -verify %s
 end_comment
 
 begin_decl_stmt
@@ -61,6 +61,7 @@ name|U8
 operator|=
 name|S
 expr_stmt|;
+comment|// no-warning
 if|if
 condition|(
 name|U
@@ -71,6 +72,256 @@ name|S8
 operator|=
 name|U
 expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|addAssign
+parameter_list|()
+block|{
+name|unsigned
+name|long
+name|L
+init|=
+literal|1000
+decl_stmt|;
+name|int
+name|I
+init|=
+operator|-
+literal|100
+decl_stmt|;
+name|U8
+operator|+=
+name|L
+expr_stmt|;
+comment|// expected-warning {{Loss of precision in implicit conversion}}
+name|L
+operator|+=
+name|I
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|subAssign
+parameter_list|()
+block|{
+name|unsigned
+name|long
+name|L
+init|=
+literal|1000
+decl_stmt|;
+name|int
+name|I
+init|=
+operator|-
+literal|100
+decl_stmt|;
+name|U8
+operator|-=
+name|L
+expr_stmt|;
+comment|// expected-warning {{Loss of precision in implicit conversion}}
+name|L
+operator|-=
+name|I
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|mulAssign
+parameter_list|()
+block|{
+name|unsigned
+name|long
+name|L
+init|=
+literal|1000
+decl_stmt|;
+name|int
+name|I
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|U8
+operator|*=
+name|L
+expr_stmt|;
+comment|// expected-warning {{Loss of precision in implicit conversion}}
+name|L
+operator|*=
+name|I
+expr_stmt|;
+comment|// expected-warning {{Loss of sign in implicit conversion}}
+name|I
+operator|=
+literal|10
+expr_stmt|;
+name|L
+operator|*=
+name|I
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|divAssign
+parameter_list|()
+block|{
+name|unsigned
+name|long
+name|L
+init|=
+literal|1000
+decl_stmt|;
+name|int
+name|I
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|U8
+operator|/=
+name|L
+expr_stmt|;
+comment|// no-warning
+name|L
+operator|/=
+name|I
+expr_stmt|;
+comment|// expected-warning {{Loss of sign in implicit conversion}}
+block|}
+end_function
+
+begin_function
+name|void
+name|remAssign
+parameter_list|()
+block|{
+name|unsigned
+name|long
+name|L
+init|=
+literal|1000
+decl_stmt|;
+name|int
+name|I
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|U8
+operator|%=
+name|L
+expr_stmt|;
+comment|// no-warning
+name|L
+operator|%=
+name|I
+expr_stmt|;
+comment|// expected-warning {{Loss of sign in implicit conversion}}
+block|}
+end_function
+
+begin_function
+name|void
+name|andAssign
+parameter_list|()
+block|{
+name|unsigned
+name|long
+name|L
+init|=
+literal|1000
+decl_stmt|;
+name|int
+name|I
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|U8
+operator|&=
+name|L
+expr_stmt|;
+comment|// no-warning
+name|L
+operator|&=
+name|I
+expr_stmt|;
+comment|// expected-warning {{Loss of sign in implicit conversion}}
+block|}
+end_function
+
+begin_function
+name|void
+name|orAssign
+parameter_list|()
+block|{
+name|unsigned
+name|long
+name|L
+init|=
+literal|1000
+decl_stmt|;
+name|int
+name|I
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|U8
+operator||=
+name|L
+expr_stmt|;
+comment|// expected-warning {{Loss of precision in implicit conversion}}
+name|L
+operator||=
+name|I
+expr_stmt|;
+comment|// expected-warning {{Loss of sign in implicit conversion}}
+block|}
+end_function
+
+begin_function
+name|void
+name|xorAssign
+parameter_list|()
+block|{
+name|unsigned
+name|long
+name|L
+init|=
+literal|1000
+decl_stmt|;
+name|int
+name|I
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|U8
+operator|^=
+name|L
+expr_stmt|;
+comment|// expected-warning {{Loss of precision in implicit conversion}}
+name|L
+operator|^=
+name|I
+expr_stmt|;
+comment|// expected-warning {{Loss of sign in implicit conversion}}
 block|}
 end_function
 
@@ -120,7 +371,9 @@ name|U
 operator|<
 name|S
 condition|)
-block|{     }
+block|{
+comment|// no-warning
+block|}
 block|}
 if|if
 condition|(
@@ -166,6 +419,7 @@ name|U
 operator|*
 name|S
 expr_stmt|;
+comment|// no-warning
 if|if
 condition|(
 name|S
@@ -206,6 +460,7 @@ name|U
 operator|/
 name|S
 expr_stmt|;
+comment|// no-warning
 if|if
 condition|(
 name|S

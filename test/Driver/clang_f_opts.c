@@ -200,6 +200,26 @@ comment|// CHECK-AUTO-PROFILE: "-fprofile-sample-use={{.*}}/file.prof"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -S -fauto-profile=%S/Inputs/file.prof -fno-profile-sample-use %s 2>&1 | FileCheck -check-prefix=CHECK-NO-AUTO-PROFILE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fauto-profile=%S/Inputs/file.prof -fno-auto-profile %s 2>&1 | FileCheck -check-prefix=CHECK-NO-AUTO-PROFILE %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-AUTO-PROFILE-NOT: "-fprofile-sample-use={{.*}}/file.prof"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fauto-profile=%S/Inputs/file.prof -fno-profile-sample-use -fauto-profile %s 2>&1 | FileCheck -check-prefix=CHECK-AUTO-PROFILE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fauto-profile=%S/Inputs/file.prof -fno-auto-profile -fprofile-sample-use %s 2>&1 | FileCheck -check-prefix=CHECK-AUTO-PROFILE %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -S -fprofile-arcs %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-ARCS %s
 end_comment
 
@@ -1793,6 +1813,22 @@ end_comment
 
 begin_comment
 comment|// CHECK-NO-STRICT-RETURN: "-fno-strict-return"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fno-debug-info-for-profiling -fdebug-info-for-profiling %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-DEBUG %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fdebug-info-for-profiling -fno-debug-info-for-profiling %s 2>&1 | FileCheck -check-prefix=CHECK-NO-PROFILE-DEBUG %s
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-DEBUG: -fdebug-info-for-profiling
+end_comment
+
+begin_comment
+comment|// CHECK-NO-PROFILE-DEBUG-NOT: -fdebug-info-for-profiling
 end_comment
 
 end_unit

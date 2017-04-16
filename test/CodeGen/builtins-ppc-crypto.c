@@ -4,7 +4,7 @@ comment|// REQUIRES: powerpc-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -triple powerpc64le-unknown-unknown \
+comment|// RUN: %clang_cc1 -target-feature +altivec -triple powerpc64le-unknown-unknown \
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -triple powerpc64-unknown-unknown \
+comment|// RUN: %clang_cc1 -target-feature +altivec -triple powerpc64-unknown-unknown \
 end_comment
 
 begin_comment

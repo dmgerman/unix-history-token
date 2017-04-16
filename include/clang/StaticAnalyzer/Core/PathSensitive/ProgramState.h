@@ -745,6 +745,11 @@ argument_list|,
 name|SVal
 name|V
 argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
 name|bool
 name|notifyChanges
 operator|=
@@ -760,6 +765,11 @@ name|location
 argument_list|,
 name|SVal
 name|V
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
 argument_list|)
 decl|const
 decl_stmt|;
@@ -771,6 +781,11 @@ name|loc
 argument_list|,
 name|SVal
 name|V
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2844,6 +2859,8 @@ argument_list|(
 argument|SVal LV
 argument_list|,
 argument|SVal V
+argument_list|,
+argument|const LocationContext *LCtx
 argument_list|)
 specifier|const
 block|{
@@ -2871,6 +2888,8 @@ operator|*
 name|L
 argument_list|,
 name|V
+argument_list|,
+name|LCtx
 argument_list|)
 return|;
 end_expr_stmt

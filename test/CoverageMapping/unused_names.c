@@ -12,27 +12,31 @@ comment|// RUN: FileCheck -check-prefix=SYSHEADER -input-file %t %s
 end_comment
 
 begin_comment
-comment|// Since foo is never emitted, there should not be a profile name for it.
+comment|// CHECK-DAG: @__profc_bar
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @__profn_bar = {{.*}} [3 x i8] c"bar"
+comment|// CHECK-DAG: @__llvm_prf_nm = private constant {{.*}}, section "{{.*__llvm_prf_names|.*lprfn}}"
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @__profn_baz = {{.*}} [3 x i8] c"baz"
+comment|// These are never instantiated, so we shouldn't get counters for them.
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @__profn_unused_names.c_qux = {{.*}} [18 x i8] c"unused_names.c:qux"
+comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @__llvm_prf_nm = private constant {{.*}}, section "{{.*}}__llvm_prf_names"
+comment|// CHECK-NOT: @__profc_baz
 end_comment
 
 begin_comment
-comment|// SYSHEADER-NOT: @__profn_foo =
+comment|// CHECK-NOT: @__profc_unused_names.c_qux
+end_comment
+
+begin_comment
+comment|// SYSHEADER-NOT: @__profc_foo =
 end_comment
 
 begin_ifdef

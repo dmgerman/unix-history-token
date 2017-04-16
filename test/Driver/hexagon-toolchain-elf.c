@@ -316,6 +316,34 @@ comment|// CHECK023: hexagon-link{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
+end_comment
+
+begin_comment
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   -mcpu=hexagonv62 \
+end_comment
+
+begin_comment
+comment|// RUN:   %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK024 %s
+end_comment
+
+begin_comment
+comment|// CHECK024: "-cc1" {{.*}} "-target-cpu" "hexagonv62"
+end_comment
+
+begin_comment
+comment|// CHECK024: hexagon-link{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v62/crt0
+end_comment
+
+begin_comment
 comment|// -----------------------------------------------------------------------------
 end_comment
 

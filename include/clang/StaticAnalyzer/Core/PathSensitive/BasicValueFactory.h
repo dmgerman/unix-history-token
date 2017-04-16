@@ -91,6 +91,12 @@ directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/StoreRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/MemRegion.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -135,7 +141,17 @@ name|L
 argument_list|(
 argument|l
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|NonLoc
+operator|::
+name|isCompoundType
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+block|;   }
 typedef|typedef
 name|llvm
 operator|::
@@ -244,7 +260,20 @@ name|region
 argument_list|(
 argument|r
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|NonLoc
+operator|::
+name|isCompoundType
+argument_list|(
+name|r
+operator|->
+name|getValueType
+argument_list|()
+argument_list|)
+argument_list|)
+block|;   }
 specifier|const
 name|void
 operator|*

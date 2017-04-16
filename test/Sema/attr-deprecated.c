@@ -3,6 +3,14 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -verify -fsyntax-only
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 %s -std=c89 -verify -fsyntax-only
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -std=c99 -verify -fsyntax-only
+end_comment
+
 begin_function_decl
 name|int
 name|f
@@ -35,16 +43,16 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// expected-note {{'g' has been explicitly marked deprecated here}}
+end_comment
+
 begin_function_decl
 name|void
 name|g
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|// expected-note {{'g' has been explicitly marked deprecated here}}
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -60,7 +68,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{'var' has been explicitly marked deprecated here}}
+comment|// expected-note 2 {{'var' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function
@@ -105,10 +113,6 @@ name|var
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// expected-note {{'var' has been explicitly marked deprecated here}}
-end_comment
-
 begin_function
 name|int
 name|w
@@ -135,16 +139,16 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// expected-note {{'old_fn' has been explicitly marked deprecated here}}
+end_comment
+
 begin_function_decl
 name|int
 name|old_fn
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|// expected-note {{'old_fn' has been explicitly marked deprecated here}}
-end_comment
 
 begin_function_decl
 name|int
@@ -268,6 +272,7 @@ argument_list|(
 operator|(
 name|deprecated
 operator|,
+comment|// expected-note 2 {{'bar_dep' has been explicitly marked deprecated here}}
 name|invalid_attribute
 operator|)
 argument_list|)
@@ -276,7 +281,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{unknown attribute 'invalid_attribute' ignored}} expected-note 2 {{'bar_dep' has been explicitly marked deprecated here}}
+comment|// expected-warning {{unknown attribute 'invalid_attribute' ignored}}
 end_comment
 
 begin_decl_stmt
@@ -779,16 +784,16 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|// expected-note@-5 {{'test23_ty' has been explicitly marked deprecated here}}
+end_comment
+
 begin_typedef
 typedef|typedef
 name|int
 name|test23_ty
 typedef|;
 end_typedef
-
-begin_comment
-comment|// expected-note {{'test23_ty' has been explicitly marked deprecated here}}
-end_comment
 
 begin_endif
 endif|#

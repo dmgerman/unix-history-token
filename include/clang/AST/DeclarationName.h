@@ -100,6 +100,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|CXXDeductionGuideNameExtra
+decl_stmt|;
+name|class
 name|CXXLiteralOperatorIdName
 decl_stmt|;
 name|class
@@ -127,6 +130,9 @@ name|PrintingPolicy
 struct_decl|;
 name|class
 name|QualType
+decl_stmt|;
+name|class
+name|TemplateDecl
 decl_stmt|;
 name|class
 name|Type
@@ -179,6 +185,8 @@ block|,
 name|CXXDestructorName
 block|,
 name|CXXConversionFunctionName
+block|,
+name|CXXDeductionGuideName
 block|,
 name|CXXOperatorName
 block|,
@@ -333,17 +341,51 @@ name|CXXSpecialName
 operator|*
 operator|>
 operator|(
-name|Ptr
-operator|&
-operator|~
-name|PtrMask
+name|getExtra
+argument_list|()
 operator|)
 return|;
 return|return
 name|nullptr
 return|;
 block|}
+comment|/// If the stored pointer is actually a CXXDeductionGuideNameExtra, returns a
+comment|/// pointer to it. Otherwise, returns a NULL pointer.
+name|CXXDeductionGuideNameExtra
+operator|*
+name|getAsCXXDeductionGuideNameExtra
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getNameKind
+argument_list|()
+operator|==
+name|CXXDeductionGuideName
+condition|)
+return|return
+name|reinterpret_cast
+operator|<
+name|CXXDeductionGuideNameExtra
+operator|*
+operator|>
+operator|(
+name|getExtra
+argument_list|()
+operator|)
+return|;
+return|return
+name|nullptr
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getAsCXXOperatorIdName
+end_comment
+
+begin_expr_stmt
 name|CXXOperatorIdName
 operator|*
 name|getAsCXXOperatorIdName
@@ -364,20 +406,20 @@ name|CXXOperatorIdName
 operator|*
 operator|>
 operator|(
-name|Ptr
-operator|&
-operator|~
-name|PtrMask
+name|getExtra
+argument_list|()
 operator|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|nullptr
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_expr_stmt
-name|CXXLiteralOperatorIdName
+unit|}    CXXLiteralOperatorIdName
 operator|*
 name|getAsCXXLiteralOperatorIdName
 argument_list|()
@@ -397,10 +439,8 @@ name|CXXLiteralOperatorIdName
 operator|*
 operator|>
 operator|(
-name|Ptr
-operator|&
-operator|~
-name|PtrMask
+name|getExtra
+argument_list|()
 operator|)
 return|;
 end_expr_stmt
@@ -423,7 +463,7 @@ end_comment
 begin_expr_stmt
 unit|DeclarationName
 operator|(
-name|CXXSpecialName
+name|DeclarationNameExtra
 operator|*
 name|Name
 operator|)
@@ -443,67 +483,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
-literal|"Improperly aligned CXXSpecialName"
-argument_list|)
-block|;
-name|Ptr
-operator||=
-name|StoredDeclarationNameExtra
-block|;   }
-comment|// Construct a declaration name from the name of a C++ overloaded
-comment|// operator.
-name|DeclarationName
-argument_list|(
-name|CXXOperatorIdName
-operator|*
-name|Name
-argument_list|)
-operator|:
-name|Ptr
-argument_list|(
-argument|reinterpret_cast<uintptr_t>(Name)
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|Ptr
-operator|&
-name|PtrMask
-operator|)
-operator|==
-literal|0
-operator|&&
-literal|"Improperly aligned CXXOperatorId"
-argument_list|)
-block|;
-name|Ptr
-operator||=
-name|StoredDeclarationNameExtra
-block|;   }
-name|DeclarationName
-argument_list|(
-name|CXXLiteralOperatorIdName
-operator|*
-name|Name
-argument_list|)
-operator|:
-name|Ptr
-argument_list|(
-argument|reinterpret_cast<uintptr_t>(Name)
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|Ptr
-operator|&
-name|PtrMask
-operator|)
-operator|==
-literal|0
-operator|&&
-literal|"Improperly aligned CXXLiteralOperatorId"
+literal|"Improperly aligned DeclarationNameExtra"
 argument_list|)
 block|;
 name|Ptr
@@ -947,6 +927,23 @@ end_comment
 begin_expr_stmt
 name|QualType
 name|getCXXNameType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// If this name is the name of a C++ deduction guide, return the
+end_comment
+
+begin_comment
+comment|/// template associated with that name.
+end_comment
+
+begin_expr_stmt
+name|TemplateDecl
+operator|*
+name|getCXXDeductionGuideTemplate
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1456,6 +1453,11 @@ modifier|*
 name|CXXLiteralOperatorNames
 decl_stmt|;
 comment|// Actually a CXXOperatorIdName*
+name|void
+modifier|*
+name|CXXDeductionGuideNames
+decl_stmt|;
+comment|// FoldingSet<CXXDeductionGuideNameExtra> *
 name|DeclarationNameTable
 argument_list|(
 specifier|const
@@ -1524,6 +1526,15 @@ name|getCXXDestructorName
 parameter_list|(
 name|CanQualType
 name|Ty
+parameter_list|)
+function_decl|;
+comment|/// Returns the name of a C++ deduction guide for the given template.
+name|DeclarationName
+name|getCXXDeductionGuideName
+parameter_list|(
+name|TemplateDecl
+modifier|*
+name|TD
 parameter_list|)
 function_decl|;
 comment|/// getCXXConversionFunctionName - Returns the name of a C++

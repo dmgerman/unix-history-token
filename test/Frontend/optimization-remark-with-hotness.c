@@ -24,7 +24,11 @@ comment|// RUN:     -fprofile-instrument-use-path=%t.profdata -Rpass=inline \
 end_comment
 
 begin_comment
-comment|// RUN:     -Rpass-analysis=inline -fdiagnostics-show-hotness -verify
+comment|// RUN:     -Rpass-analysis=inline -Rpass-missed=inline \
+end_comment
+
+begin_comment
+comment|// RUN:     -fdiagnostics-show-hotness -verify
 end_comment
 
 begin_comment
@@ -40,7 +44,11 @@ comment|// RUN:     -fprofile-instr-use=%t.profdata -Rpass=inline \
 end_comment
 
 begin_comment
-comment|// RUN:     -Rpass-analysis=inline -fdiagnostics-show-hotness -Xclang -verify
+comment|// RUN:     -Rpass-analysis=inline -Rpass-missed=inline \
+end_comment
+
+begin_comment
+comment|// RUN:     -fdiagnostics-show-hotness -Xclang -verify
 end_comment
 
 begin_comment
@@ -197,7 +205,7 @@ condition|;
 name|i
 operator|++
 control|)
-comment|// expected-remark@+1 {{bar should never be inlined}}
+comment|// expected-remark@+1 {{bar not inlined into main because it should never be inlined}}
 name|bar
 argument_list|(
 name|argc

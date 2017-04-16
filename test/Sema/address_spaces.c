@@ -126,6 +126,7 @@ name|int
 modifier|*
 name|_boundsB
 decl_stmt|;
+comment|// expected-error {{address space is larger than the maximum supported}}
 name|__attribute__
 argument_list|(
 argument|(address_space(

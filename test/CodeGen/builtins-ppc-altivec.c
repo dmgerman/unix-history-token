@@ -4,7 +4,7 @@ comment|// REQUIRES: powerpc-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -triple powerpc-unknown-unknown -emit-llvm %s \
+comment|// RUN: %clang_cc1 -target-feature +altivec -triple powerpc-unknown-unknown -emit-llvm %s \
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN:            -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -triple powerpc64-unknown-unknown -emit-llvm %s \
+comment|// RUN: %clang_cc1 -target-feature +altivec -triple powerpc64-unknown-unknown -emit-llvm %s \
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|// RUN:            -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -triple powerpc64le-unknown-unknown -emit-llvm %s \
+comment|// RUN: %clang_cc1 -target-feature +altivec -triple powerpc64le-unknown-unknown -emit-llvm %s \
 end_comment
 
 begin_comment
@@ -9127,8 +9127,10 @@ argument_list|,
 name|vuc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: shl<16 x i8>
-comment|// CHECK-LE: shl<16 x i8>
+comment|// CHECK: [[UREM:[0-9a-zA-Z%.]+]] = urem<16 x i8> {{[0-9a-zA-Z%.]+}},<i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8>
+comment|// CHECK: shl<16 x i8> {{[0-9a-zA-Z%.]+}}, [[UREM]]
+comment|// CHECK-LE: [[UREM:[0-9a-zA-Z%.]+]] = urem<16 x i8> {{[0-9a-zA-Z%.]+}},<i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8>
+comment|// CHECK-LE: shl<16 x i8> {{[0-9a-zA-Z%.]+}}, [[UREM]]
 name|res_vuc
 operator|=
 name|vec_sl
@@ -9138,8 +9140,10 @@ argument_list|,
 name|vuc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: shl<16 x i8>
-comment|// CHECK-LE: shl<16 x i8>
+comment|// CHECK: [[UREM:[0-9a-zA-Z%.]+]] = urem<16 x i8> {{[0-9a-zA-Z%.]+}},<i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8>
+comment|// CHECK: shl<16 x i8> {{[0-9a-zA-Z%.]+}}, [[UREM]]
+comment|// CHECK-LE: [[UREM:[0-9a-zA-Z%.]+]] = urem<16 x i8> {{[0-9a-zA-Z%.]+}},<i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8>
+comment|// CHECK-LE: shl<16 x i8> {{[0-9a-zA-Z%.]+}}, [[UREM]]
 name|res_vs
 operator|=
 name|vec_sl
@@ -9149,8 +9153,10 @@ argument_list|,
 name|vus
 argument_list|)
 expr_stmt|;
-comment|// CHECK: shl<8 x i16>
-comment|// CHECK-LE: shl<8 x i16>
+comment|// CHECK: [[UREM:[0-9a-zA-Z%.]+]] = urem<8 x i16> {{[0-9a-zA-Z%.]+}},<i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16>
+comment|// CHECK: shl<8 x i16> {{[0-9a-zA-Z%.]+}}, [[UREM]]
+comment|// CHECK-LE: [[UREM:[0-9a-zA-Z%.]+]] = urem<8 x i16> {{[0-9a-zA-Z%.]+}},<i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16>
+comment|// CHECK-LE: shl<8 x i16> {{[0-9a-zA-Z%.]+}}, [[UREM]]
 name|res_vus
 operator|=
 name|vec_sl
@@ -9160,8 +9166,10 @@ argument_list|,
 name|vus
 argument_list|)
 expr_stmt|;
-comment|// CHECK: shl<8 x i16>
-comment|// CHECK-LE: shl<8 x i16>
+comment|// CHECK: [[UREM:[0-9a-zA-Z%.]+]] = urem<8 x i16> {{[0-9a-zA-Z%.]+}},<i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16>
+comment|// CHECK: shl<8 x i16> {{[0-9a-zA-Z%.]+}}, [[UREM]]
+comment|// CHECK-LE: [[UREM:[0-9a-zA-Z%.]+]] = urem<8 x i16> {{[0-9a-zA-Z%.]+}},<i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16, i16 16>
+comment|// CHECK-LE: shl<8 x i16> {{[0-9a-zA-Z%.]+}}, [[UREM]]
 name|res_vi
 operator|=
 name|vec_sl
@@ -9171,8 +9179,10 @@ argument_list|,
 name|vui
 argument_list|)
 expr_stmt|;
-comment|// CHECK: shl<4 x i32>
-comment|// CHECK-LE: shl<4 x i32>
+comment|// CHECK: [[UREM:[0-9a-zA-Z%.]+]] = urem<4 x i32> {{[0-9a-zA-Z%.]+}},<i32 32, i32 32, i32 32, i32 32>
+comment|// CHECK: shl<4 x i32> {{[0-9a-zA-Z%.]+}}, [[UREM]]
+comment|// CHECK-LE: [[UREM:[0-9a-zA-Z%.]+]] = urem<4 x i32> {{[0-9a-zA-Z%.]+}},<i32 32, i32 32, i32 32, i32 32>
+comment|// CHECK-LE: shl<4 x i32> {{[0-9a-zA-Z%.]+}}, [[UREM]]
 name|res_vui
 operator|=
 name|vec_sl
@@ -9182,8 +9192,10 @@ argument_list|,
 name|vui
 argument_list|)
 expr_stmt|;
-comment|// CHECK: shl<4 x i32>
-comment|// CHECK-LE: shl<4 x i32>
+comment|// CHECK: [[UREM:[0-9a-zA-Z%.]+]] = urem<4 x i32> {{[0-9a-zA-Z%.]+}},<i32 32, i32 32, i32 32, i32 32>
+comment|// CHECK: shl<4 x i32> {{[0-9a-zA-Z%.]+}}, [[UREM]]
+comment|// CHECK-LE: [[UREM:[0-9a-zA-Z%.]+]] = urem<4 x i32> {{[0-9a-zA-Z%.]+}},<i32 32, i32 32, i32 32, i32 32>
+comment|// CHECK-LE: shl<4 x i32> {{[0-9a-zA-Z%.]+}}, [[UREM]]
 name|res_vsc
 operator|=
 name|vec_vslb

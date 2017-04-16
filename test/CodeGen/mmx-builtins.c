@@ -1455,6 +1455,320 @@ end_function
 
 begin_function
 name|__m64
+name|test_mm_set_pi8
+parameter_list|(
+name|char
+name|a
+parameter_list|,
+name|char
+name|b
+parameter_list|,
+name|char
+name|c
+parameter_list|,
+name|char
+name|d
+parameter_list|,
+name|char
+name|e
+parameter_list|,
+name|char
+name|f
+parameter_list|,
+name|char
+name|g
+parameter_list|,
+name|char
+name|h
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_set_pi8
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+return|return
+name|_mm_set_pi8
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+name|c
+argument_list|,
+name|d
+argument_list|,
+name|e
+argument_list|,
+name|f
+argument_list|,
+name|g
+argument_list|,
+name|h
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_set_pi16
+parameter_list|(
+name|short
+name|a
+parameter_list|,
+name|short
+name|b
+parameter_list|,
+name|short
+name|c
+parameter_list|,
+name|short
+name|d
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_set_pi16
+comment|// CHECK: insertelement<4 x i16>
+comment|// CHECK: insertelement<4 x i16>
+comment|// CHECK: insertelement<4 x i16>
+comment|// CHECK: insertelement<4 x i16>
+return|return
+name|_mm_set_pi16
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+name|c
+argument_list|,
+name|d
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_set_pi32
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_set_pi32
+comment|// CHECK: insertelement<2 x i32>
+comment|// CHECK: insertelement<2 x i32>
+return|return
+name|_mm_set_pi32
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_setr_pi8
+parameter_list|(
+name|char
+name|a
+parameter_list|,
+name|char
+name|b
+parameter_list|,
+name|char
+name|c
+parameter_list|,
+name|char
+name|d
+parameter_list|,
+name|char
+name|e
+parameter_list|,
+name|char
+name|f
+parameter_list|,
+name|char
+name|g
+parameter_list|,
+name|char
+name|h
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_setr_pi8
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+return|return
+name|_mm_setr_pi8
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+name|c
+argument_list|,
+name|d
+argument_list|,
+name|e
+argument_list|,
+name|f
+argument_list|,
+name|g
+argument_list|,
+name|h
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_setr_pi16
+parameter_list|(
+name|short
+name|a
+parameter_list|,
+name|short
+name|b
+parameter_list|,
+name|short
+name|c
+parameter_list|,
+name|short
+name|d
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_setr_pi16
+comment|// CHECK: insertelement<4 x i16>
+comment|// CHECK: insertelement<4 x i16>
+comment|// CHECK: insertelement<4 x i16>
+comment|// CHECK: insertelement<4 x i16>
+return|return
+name|_mm_setr_pi16
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+name|c
+argument_list|,
+name|d
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_setr_pi32
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_setr_pi32
+comment|// CHECK: insertelement<2 x i32>
+comment|// CHECK: insertelement<2 x i32>
+return|return
+name|_mm_setr_pi32
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_set1_pi8
+parameter_list|(
+name|char
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_set1_pi8
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+comment|// CHECK: insertelement<8 x i8>
+return|return
+name|_mm_set1_pi8
+argument_list|(
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_set1_pi16
+parameter_list|(
+name|short
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_set1_pi16
+comment|// CHECK: insertelement<4 x i16>
+comment|// CHECK: insertelement<4 x i16>
+comment|// CHECK: insertelement<4 x i16>
+comment|// CHECK: insertelement<4 x i16>
+return|return
+name|_mm_set1_pi16
+argument_list|(
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_set1_pi32
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_set1_pi32
+comment|// CHECK: insertelement<2 x i32>
+comment|// CHECK: insertelement<2 x i32>
+return|return
+name|_mm_set1_pi32
+argument_list|(
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
 name|test_mm_shuffle_pi8
 parameter_list|(
 name|__m64

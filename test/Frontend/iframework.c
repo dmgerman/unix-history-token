@@ -4,6 +4,10 @@ comment|// RUN: %clang -fsyntax-only -iframework %S/Inputs %s -Xclang -verify
 end_comment
 
 begin_comment
+comment|// RUN: %clang -fsyntax-only -isysroot %S -iframeworkwithsysroot /Inputs %s -Xclang -verify
+end_comment
+
+begin_comment
 comment|// expected-no-diagnostics
 end_comment
 

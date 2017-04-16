@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -O3 -ffp-contract=fast -triple=powerpc-apple-darwin10 -S -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -O3 -ffp-contract=fast -triple=aarch64-apple-darwin -S -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// REQUIRES: powerpc-registered-target
+comment|// REQUIRES: aarch64-registered-target
 end_comment
 
 begin_function
@@ -21,7 +21,7 @@ name|float
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: fmadds
+comment|// CHECK: fmadd
 name|float
 name|x
 init|=

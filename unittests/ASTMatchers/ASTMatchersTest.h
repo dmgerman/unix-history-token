@@ -281,7 +281,7 @@ argument|const T&AMatcher
 argument_list|,
 argument|bool ExpectMatch
 argument_list|,
-argument|llvm::StringRef CompileArg
+argument|llvm::ArrayRef<llvm::StringRef> CompileArgs
 argument_list|,
 argument|const FileContentMappings&VirtualMappedFiles = FileContentMappings()
 argument_list|,
@@ -382,19 +382,38 @@ operator|::
 name|string
 operator|>
 name|Args
-operator|=
+argument_list|(
+name|CompileArgs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|CompileArgs
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|Args
+operator|.
+name|insert
+argument_list|(
+name|Args
+operator|.
+name|end
+argument_list|()
+argument_list|,
 block|{
-name|CompileArg
-block|,
 literal|"-frtti"
-block|,
+operator|,
 literal|"-fexceptions"
-block|,
+operator|,
 literal|"-target"
-block|,
+operator|,
 literal|"i386-unknown-unknown"
 block|}
-expr_stmt|;
+block|)
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -513,6 +532,58 @@ name|AssertionSuccess
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|testing
+operator|::
+name|AssertionResult
+name|matchesConditionally
+argument_list|(
+argument|const std::string&Code
+argument_list|,
+argument|const T&AMatcher
+argument_list|,
+argument|bool ExpectMatch
+argument_list|,
+argument|llvm::StringRef CompileArg
+argument_list|,
+argument|const FileContentMappings&VirtualMappedFiles = FileContentMappings()
+argument_list|,
+argument|const std::string&Filename =
+literal|"input.cc"
+argument_list|)
+block|{
+return|return
+name|matchesConditionally
+argument_list|(
+name|Code
+argument_list|,
+name|AMatcher
+argument_list|,
+name|ExpectMatch
+argument_list|,
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|CompileArg
+argument_list|)
+argument_list|,
+name|VirtualMappedFiles
+argument_list|,
+name|Filename
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -541,6 +612,9 @@ literal|"-std=c++11"
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -569,6 +643,9 @@ literal|"-std=c++11"
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -582,6 +659,8 @@ argument_list|(
 argument|const std::string&Code
 argument_list|,
 argument|const T&AMatcher
+argument_list|,
+argument|bool ExpectMatch = true
 argument_list|)
 block|{
 return|return
@@ -591,18 +670,29 @@ name|Code
 argument_list|,
 name|AMatcher
 argument_list|,
-name|true
+name|ExpectMatch
 argument_list|,
-literal|""
-argument_list|,
+block|{
+literal|"-fobjc-nonfragile-abi"
+operator|,
+literal|"-Wno-objc-root-class"
+operator|,
+literal|"-Wno-incomplete-implementation"
+block|}
+operator|,
 name|FileContentMappings
 argument_list|()
-argument_list|,
+operator|,
 literal|"input.m"
-argument_list|)
-return|;
-block|}
-name|template
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+unit|}  template
 operator|<
 name|typename
 name|T
@@ -635,6 +725,9 @@ literal|"input.c"
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -668,6 +761,9 @@ literal|"input.c"
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -701,6 +797,9 @@ literal|"input.c"
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -717,25 +816,27 @@ argument|const T&AMatcher
 argument_list|)
 block|{
 return|return
-name|matchesConditionally
+name|matchesObjC
 argument_list|(
 name|Code
 argument_list|,
 name|AMatcher
 argument_list|,
 name|false
-argument_list|,
-literal|""
-argument_list|,
-name|FileContentMappings
-argument_list|()
-argument_list|,
-literal|"input.m"
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Function based on matchesConditionally with "-x cuda" argument added and
+end_comment
+
+begin_comment
 comment|// small CUDA header prepended to the code string.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -853,9 +954,21 @@ name|Finder
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Some tests use typeof, which is a gnu extension.  Using an explicit
+end_comment
+
+begin_comment
 comment|// unknown-unknown triple is good for a large speedup, because it lets us
+end_comment
+
+begin_comment
 comment|// avoid constructing a full system triple.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -882,6 +995,9 @@ block|,
 name|CompileArg
 block|}
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -913,6 +1029,9 @@ operator|<<
 literal|"\""
 return|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|Found
@@ -937,6 +1056,9 @@ operator|<<
 literal|")"
 return|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -980,17 +1102,19 @@ operator|<<
 literal|"\""
 return|;
 block|}
+end_if
+
+begin_return
 return|return
 name|testing
 operator|::
 name|AssertionSuccess
 argument_list|()
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_expr_stmt
-name|template
+unit|}  template
 operator|<
 name|typename
 name|T

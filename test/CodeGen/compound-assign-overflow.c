@@ -89,14 +89,6 @@ comment|// CHECK: @__ubsan_handle_add_overflow(i8* bitcast ({{.*}} @[[LINE_200]]
 block|}
 end_function
 
-begin_decl_stmt
-name|int8_t
-name|a
-decl_stmt|,
-name|b
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|// CHECK: @compdiv
 end_comment
@@ -109,9 +101,9 @@ block|{
 line|#
 directive|line
 number|300
-name|a
+name|x
 operator|/=
-name|b
+name|x
 expr_stmt|;
 comment|// CHECK: @__ubsan_handle_divrem_overflow(i8* bitcast ({{.*}} @[[LINE_300]] to i8*), {{.*}})
 block|}

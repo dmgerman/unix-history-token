@@ -1187,7 +1187,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_extractf128_pd
-comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> zeroinitializer,<2 x i32><i32 2, i32 3>
 return|return
 name|_mm256_extractf128_pd
 argument_list|(
@@ -1208,7 +1208,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_extractf128_ps
-comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|_mm256_extractf128_ps
 argument_list|(
@@ -1229,7 +1229,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_extractf128_si256
-comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> zeroinitializer,<2 x i32><i32 2, i32 3>
 return|return
 name|_mm256_extractf128_si256
 argument_list|(
@@ -2307,7 +2307,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_permute_pd
-comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> undef,<2 x i32><i32 1, i32 0>
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> zeroinitializer,<2 x i32><i32 1, i32 0>
 return|return
 name|_mm_permute_pd
 argument_list|(
@@ -2328,7 +2328,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_permute_pd
-comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<4 x i32><i32 1, i32 0, i32 3, i32 2>
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> zeroinitializer,<4 x i32><i32 1, i32 0, i32 3, i32 2>
 return|return
 name|_mm256_permute_pd
 argument_list|(
@@ -2349,7 +2349,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_permute_ps
-comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> undef,<4 x i32><i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> zeroinitializer,<4 x i32><i32 3, i32 2, i32 1, i32 0>
 return|return
 name|_mm_permute_ps
 argument_list|(
@@ -2374,7 +2374,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test2_mm_permute_ps
-comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> undef,<4 x i32><i32 2, i32 1, i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> zeroinitializer,<4 x i32><i32 2, i32 1, i32 2, i32 3>
 return|return
 name|_mm_permute_ps
 argument_list|(
@@ -2395,7 +2395,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_permute_ps
-comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> undef,<8 x i32><i32 3, i32 2, i32 1, i32 0, i32 7, i32 6, i32 5, i32 4>
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> zeroinitializer,<8 x i32><i32 3, i32 2, i32 1, i32 0, i32 7, i32 6, i32 5, i32 4>
 return|return
 name|_mm256_permute_ps
 argument_list|(
@@ -4312,7 +4312,7 @@ block|{
 comment|// CHECK-LABEL: test_mm256_storeu2_m128
 comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> %{{.*}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
 comment|// CHECK: store<4 x float> %{{.*}},<4 x float>* %{{.*}}, align 1{{$}}
-comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 comment|// CHECK: store<4 x float> %{{.*}},<4 x float>* %{{.*}}, align 1{{$}}
 name|_mm256_storeu2_m128
 argument_list|(
@@ -4345,7 +4345,7 @@ block|{
 comment|// CHECK-LABEL: test_mm256_storeu2_m128d
 comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> %{{.*}},<2 x i32><i32 0, i32 1>
 comment|// CHECK: store<2 x double> %{{.*}},<2 x double>* %{{.*}}, align 1{{$}}
-comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> zeroinitializer,<2 x i32><i32 2, i32 3>
 comment|// CHECK: store<2 x double> %{{.*}},<2 x double>* %{{.*}}, align 1{{$}}
 name|_mm256_storeu2_m128d
 argument_list|(
@@ -4378,7 +4378,7 @@ block|{
 comment|// CHECK-LABEL: test_mm256_storeu2_m128i
 comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> %{{.*}},<2 x i32><i32 0, i32 1>
 comment|// CHECK: store<2 x i64> %{{.*}},<2 x i64>* %{{.*}}, align 1{{$}}
-comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> zeroinitializer,<2 x i32><i32 2, i32 3>
 comment|// CHECK: store<2 x i64> %{{.*}},<2 x i64>* %{{.*}}, align 1{{$}}
 name|_mm256_storeu2_m128i
 argument_list|(
@@ -4878,7 +4878,7 @@ name|test_mm256_undefined_ps
 parameter_list|()
 block|{
 comment|// CHECK-LABEL: @test_mm256_undefined_ps
-comment|// CHECK: ret<8 x float> undef
+comment|// CHECK: ret<8 x float> zeroinitializer
 return|return
 name|_mm256_undefined_ps
 argument_list|()
@@ -4892,7 +4892,7 @@ name|test_mm256_undefined_pd
 parameter_list|()
 block|{
 comment|// CHECK-LABEL: @test_mm256_undefined_pd
-comment|// CHECK: ret<4 x double> undef
+comment|// CHECK: ret<4 x double> zeroinitializer
 return|return
 name|_mm256_undefined_pd
 argument_list|()
@@ -4906,7 +4906,7 @@ name|test_mm256_undefined_si256
 parameter_list|()
 block|{
 comment|// CHECK-LABEL: @test_mm256_undefined_si256
-comment|// CHECK: ret<4 x i64> undef
+comment|// CHECK: ret<4 x i64> zeroinitializer
 return|return
 name|_mm256_undefined_si256
 argument_list|()

@@ -4,7 +4,7 @@ comment|// RUN: rm -f %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=debug.DumpDominators %s> %t 2>&1
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=debug.DumpDominators %s> %t 2>&1
 end_comment
 
 begin_comment

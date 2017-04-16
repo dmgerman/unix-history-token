@@ -43,6 +43,10 @@ begin_comment
 comment|// REQUIRES: can-remove-opened-file
 end_comment
 
+begin_comment
+comment|// UNSUPPORTED: libstdcxx-safe-mode
+end_comment
+
 begin_warning
 warning|#
 directive|warning

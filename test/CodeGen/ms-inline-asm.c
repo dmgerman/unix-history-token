@@ -128,6 +128,13 @@ unit|}
 asm|__asm {}
 end_asm
 
+begin_asm
+asm|__asm {     ;     ;
+asm|label
+asm|mov eax, ebx
+asm|}
+end_asm
+
 begin_comment
 comment|// CHECK: t7
 end_comment
@@ -138,6 +145,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: call void asm sideeffect inteldialect "", "~{dirflag},~{fpsr},~{flags}"()
+end_comment
+
+begin_comment
+comment|// CHECK: call void asm sideeffect inteldialect "mov eax, ebx", "~{eax},~{dirflag},~{fpsr},~{flags}"()
 end_comment
 
 begin_function
@@ -458,6 +469,8 @@ asm|__asm mov eax, LENGTH _foo
 comment|// CHECK: mov eax, $$4
 asm|__asm mov eax, LENGTH _bar
 comment|// CHECK: mov eax, $$2
+asm|__asm mov eax, [eax + LENGTH foo * 4]
+comment|// CHECK: mov eax, [eax + $$1 * $$4]
 asm|__asm mov eax, TYPE foo
 comment|// CHECK: mov eax, $$4
 asm|__asm mov eax, TYPE bar
@@ -466,12 +479,16 @@ asm|__asm mov eax, TYPE _foo
 comment|// CHECK: mov eax, $$4
 asm|__asm mov eax, TYPE _bar
 comment|// CHECK: mov eax, $$1
+asm|__asm mov eax, [eax + TYPE foo * 4]
+comment|// CHECK: mov eax, [eax + $$4 * $$4]
 asm|__asm mov eax, SIZE foo
 comment|// CHECK: mov eax, $$4
 asm|__asm mov eax, SIZE bar
 comment|// CHECK: mov eax, $$1
 asm|__asm mov eax, SIZE _foo
 comment|// CHECK: mov eax, $$16
+asm|__asm mov eax, [eax + SIZE _foo * 4]
+comment|// CHECK: mov eax, [eax + $$16 * $$4]
 asm|__asm mov eax, SIZE _bar
 comment|// CHECK: mov eax, $$2
 comment|// CHECK: "~{eax},~{dirflag},~{fpsr},~{flags}"()
@@ -1267,6 +1284,33 @@ comment|// CHECK-LABEL: define void @label6
 comment|// CHECK: call void asm sideeffect inteldialect "jmp {{.*}}__MSASMLABEL_.${:uid}__label\0A\09{{.*}}__MSASMLABEL_.${:uid}__label:", "~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
+
+begin_comment
+comment|// Don't include mxcsr in the clobber list.
+end_comment
+
+begin_function
+name|void
+name|mxcsr
+parameter_list|()
+block|{
+name|char
+name|buf
+index|[
+literal|4096
+index|]
+decl_stmt|;
+asm|__asm fxrstor buf
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define void @mxcsr
+end_comment
+
+begin_comment
+comment|// CHECK: call void asm sideeffect inteldialect "fxrstor byte ptr $0", "=*m,~{dirflag},~{fpsr},~{flags}"
+end_comment
 
 begin_typedef
 typedef|typedef

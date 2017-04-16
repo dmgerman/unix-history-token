@@ -3571,15 +3571,15 @@ comment|// CHECK-NOERRNO: declare i32 @ilogbl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @lgamma(double) [[NUW]]
+comment|// CHECK-NOERRNO: declare double @lgamma(double) [[NONCONST:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @lgammaf(float) [[NUW]]
+comment|// CHECK-NOERRNO: declare float @lgammaf(float) [[NONCONST]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @lgammal(x86_fp80) [[NUW]]
+comment|// CHECK-NOERRNO: declare x86_fp80 @lgammal(x86_fp80) [[NONCONST]]
 end_comment
 
 begin_comment
@@ -4175,6 +4175,18 @@ comment|// CHECK-ERRNO: declare x86_fp80 @fminl(x86_fp80, x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
+comment|// CHECK-ERRNO: declare double @lgamma(double) [[NONCONST:#[0-9]+]]
+end_comment
+
+begin_comment
+comment|// CHECK-ERRNO: declare float @lgammaf(float) [[NONCONST]]
+end_comment
+
+begin_comment
+comment|// CHECK-ERRNO: declare x86_fp80 @lgammal(x86_fp80) [[NONCONST]]
+end_comment
+
+begin_comment
 comment|// CHECK-ERRNO: declare double @nearbyint(double) [[NUW]]
 end_comment
 
@@ -4400,6 +4412,30 @@ end_comment
 
 begin_comment
 comment|// CHECK-NOERRNO: attributes [[NUW]] = { nounwind readnone{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO: attributes [[NONCONST]] = {
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO-NOT: readnone
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO-SAME: nounwind{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-ERRNO: attributes [[NONCONST]] = {
+end_comment
+
+begin_comment
+comment|// CHECK-ERRNO-NOT: readnone
+end_comment
+
+begin_comment
+comment|// CHECK-ERRNO-SAME: nounwind{{.*}} }
 end_comment
 
 begin_comment

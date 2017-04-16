@@ -766,7 +766,7 @@ argument|llvm::index_sequence<Is...>
 argument_list|)
 block|{
 comment|// It's important that the restores are emitted in order. The braced init
-comment|// list guarentees that.
+comment|// list guarantees that.
 return|return
 name|T
 block|{

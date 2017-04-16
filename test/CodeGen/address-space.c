@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm< %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm< %s | FileCheck -check-prefixes=CHECK,GIZ %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple amdgcn -emit-llvm< %s | FileCheck -check-prefixes=CHECK,PIZ %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple amdgcn---amdgiz -emit-llvm< %s | FileCheck -check-prefixes=CHeCK,GIZ %s
 end_comment
 
 begin_comment
@@ -38,6 +46,25 @@ operator|(
 name|address_space
 argument_list|(
 literal|1
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK: @a = common global
+end_comment
+
+begin_decl_stmt
+name|int
+name|a
+name|__attribute__
+argument_list|(
+operator|(
+name|address_space
+argument_list|(
+literal|0
 argument_list|)
 operator|)
 argument_list|)
@@ -120,7 +147,11 @@ comment|// CHECK-LABEL: define void @test3()
 end_comment
 
 begin_comment
-comment|// CHECK: load i32 addrspace(2)*, i32 addrspace(2)** @B
+comment|// GIZ: load i32 addrspace(2)*, i32 addrspace(2)** @B
+end_comment
+
+begin_comment
+comment|// PIZ: load i32 addrspace(2)*, i32 addrspace(2)* addrspace(4)* @B
 end_comment
 
 begin_comment
@@ -128,7 +159,11 @@ comment|// CHECK: load i32, i32 addrspace(2)*
 end_comment
 
 begin_comment
-comment|// CHECK: load i32 addrspace(2)*, i32 addrspace(2)** @A
+comment|// GIZ: load i32 addrspace(2)*, i32 addrspace(2)** @A
+end_comment
+
+begin_comment
+comment|// PIZ: load i32 addrspace(2)*, i32 addrspace(2)* addrspace(4)* @A
 end_comment
 
 begin_comment

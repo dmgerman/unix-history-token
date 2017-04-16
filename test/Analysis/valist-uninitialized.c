@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-pc-linux-gnu -analyze -analyzer-checker=core,alpha.valist.Uninitialized,alpha.valist.CopyToSelf -analyzer-output=text -analyzer-store=region -verify %s
+comment|// RUN: %clang_analyze_cc1 -triple hexagon-unknown-linux -analyzer-checker=core,valist.Uninitialized,valist.CopyToSelf -analyzer-disable-checker=core.CallAndMessage -analyzer-output=text -analyzer-store=region -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_analyze_cc1 -triple x86_64-pc-linux-gnu -analyzer-checker=core,valist.Uninitialized,valist.CopyToSelf -analyzer-disable-checker=core.CallAndMessage -analyzer-output=text -analyzer-store=region -verify %s
 end_comment
 
 begin_include
@@ -32,7 +36,8 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-comment|//expected-warning{{va_arg() is called on an uninitialized va_list}} expected-note{{va_arg() is called on an uninitialized va_list}}
+comment|// expected-warning{{va_arg() is called on an uninitialized va_list}}
+comment|// expected-note@-1{{va_arg() is called on an uninitialized va_list}}
 block|}
 end_function
 
@@ -71,7 +76,8 @@ argument_list|,
 name|int
 argument_list|)
 return|;
-comment|//expected-warning{{va_arg() is called on an uninitialized va_list}} expected-note{{va_arg() is called on an uninitialized va_list}}
+comment|// expected-warning{{va_arg() is called on an uninitialized va_list}}
+comment|// expected-note@-1{{va_arg() is called on an uninitialized va_list}}
 block|}
 end_function
 
@@ -149,7 +155,8 @@ condition|(
 name|cond
 condition|)
 block|{
-comment|// expected-note{{Assuming 'cond' is 0}} expected-note{{Taking false branch}}
+comment|// expected-note{{Assuming 'cond' is 0}}
+comment|// expected-note@-1{{Taking false branch}}
 name|va_start
 argument_list|(
 name|va
@@ -173,7 +180,8 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|//expected-warning{{va_end() is called on an uninitialized va_list}} expected-note{{va_end() is called on an uninitialized va_list}}
+comment|//expected-warning{{va_end() is called on an uninitialized va_list}}
+comment|// expected-note@-1{{va_end() is called on an uninitialized va_list}}
 block|}
 end_function
 
@@ -215,50 +223,6 @@ end_function
 begin_comment
 comment|// no-warning
 end_comment
-
-begin_comment
-comment|//FIXME: this should not cause a warning
-end_comment
-
-begin_function
-name|void
-name|f6
-parameter_list|(
-name|va_list
-modifier|*
-name|fst
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_start
-argument_list|(
-operator|*
-name|fst
-argument_list|,
-name|fst
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|va_arg
-argument_list|(
-operator|*
-name|fst
-argument_list|,
-name|int
-argument_list|)
-expr_stmt|;
-comment|//expected-warning{{va_arg() is called on an uninitialized va_list}} expected-note{{va_arg() is called on an uninitialized va_list}}
-name|va_end
-argument_list|(
-operator|*
-name|fst
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 name|void
@@ -358,13 +322,10 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-comment|//expected-warning{{va_arg() is called on an uninitialized va_list}} expected-note{{va_arg() is called on an uninitialized va_list}}
+comment|//expected-warning{{va_arg() is called on an uninitialized va_list}}
+comment|// expected-note@-1{{va_arg() is called on an uninitialized va_list}}
 block|}
 end_function
-
-begin_comment
-comment|// no-warning
-end_comment
 
 begin_comment
 comment|// This only contains problems which are handled by varargs.Unterminated.
@@ -552,7 +513,8 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-comment|//expected-warning{{va_arg() is called on an uninitialized va_list}} expected-note{{va_arg() is called on an uninitialized va_list}}
+comment|//expected-warning{{va_arg() is called on an uninitialized va_list}}
+comment|// expected-note@-1{{va_arg() is called on an uninitialized va_list}}
 block|}
 end_function
 
@@ -584,7 +546,8 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{va_list 'va' is copied onto itself}} expected-note{{va_list 'va' is copied onto itself}}
+comment|// expected-warning{{va_list 'va' is copied onto itself}}
+comment|// expected-note@-1{{va_list 'va' is copied onto itself}}
 name|va_end
 argument_list|(
 name|va
@@ -592,10 +555,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|// no-warning
-end_comment
 
 begin_function
 name|void
@@ -617,13 +576,10 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{va_list 'va' is copied onto itself}} expected-note{{va_list 'va' is copied onto itself}}
+comment|// expected-warning{{va_list 'va' is copied onto itself}}
+comment|// expected-note@-1{{va_list 'va' is copied onto itself}}
 block|}
 end_function
-
-begin_comment
-comment|// no-warning
-end_comment
 
 begin_function
 name|void
@@ -655,13 +611,10 @@ argument_list|,
 name|va2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Initialized va_list 'va' is overwritten by an uninitialized one}} expected-note{{Initialized va_list 'va' is overwritten by an uninitialized one}}
+comment|// expected-warning{{Initialized va_list 'va' is overwritten by an uninitialized one}}
+comment|// expected-note@-1{{Initialized va_list 'va' is overwritten by an uninitialized one}}
 block|}
 end_function
-
-begin_comment
-comment|// no-warning
-end_comment
 
 begin_function
 name|void
@@ -685,7 +638,8 @@ argument_list|,
 name|va2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Uninitialized va_list is copied}} expected-note{{Uninitialized va_list is copied}}
+comment|// expected-warning{{Uninitialized va_list is copied}}
+comment|// expected-note@-1{{Uninitialized va_list is copied}}
 block|}
 end_function
 
@@ -707,7 +661,8 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{va_end() is called on an uninitialized va_list}} expected-note{{va_end() is called on an uninitialized va_list}}
+comment|// expected-warning{{va_end() is called on an uninitialized va_list}}
+comment|// expected-note@-1{{va_end() is called on an uninitialized va_list}}
 block|}
 end_function
 
@@ -743,7 +698,8 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{va_end() is called on an uninitialized va_list}} expected-note{{va_end() is called on an uninitialized va_list}}
+comment|// expected-warning{{va_end() is called on an uninitialized va_list}}
+comment|// expected-note@-1{{va_end() is called on an uninitialized va_list}}
 block|}
 end_function
 
@@ -765,7 +721,8 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{va_end() is called on an uninitialized va_list}} expected-note{{va_end() is called on an uninitialized va_list}}
+comment|// expected-warning{{va_end() is called on an uninitialized va_list}}
+comment|// expected-note@-1{{va_end() is called on an uninitialized va_list}}
 operator|*
 operator|(
 operator|(
@@ -778,7 +735,6 @@ operator|)
 operator|=
 literal|1
 expr_stmt|;
-comment|//no-warning
 block|}
 end_function
 
@@ -835,58 +791,6 @@ begin_comment
 comment|//no-warning
 end_comment
 
-begin_comment
-comment|// This is the same function as the previous one, but it is called in call_uses_arg2(),
-end_comment
-
-begin_comment
-comment|// and the warning is generated during the analysis of call_uses_arg2().
-end_comment
-
-begin_function
-name|void
-name|inlined_uses_arg
-parameter_list|(
-name|va_list
-name|arg
-parameter_list|)
-block|{
-operator|(
-name|void
-operator|)
-name|va_arg
-argument_list|(
-name|arg
-argument_list|,
-name|int
-argument_list|)
-expr_stmt|;
-comment|//expected-warning{{va_arg() is called on an uninitialized va_list}} expected-note{{va_arg() is called on an uninitialized va_list}}
-block|}
-end_function
-
-begin_function
-name|void
-name|call_inlined_uses_arg
-parameter_list|(
-name|int
-name|fst
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|va
-decl_stmt|;
-name|inlined_uses_arg
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
-comment|// expected-note{{Calling 'inlined_uses_arg'}}
-block|}
-end_function
-
 begin_function
 name|void
 name|call_vprintf_ok
@@ -932,75 +836,6 @@ end_comment
 
 begin_function
 name|void
-name|call_vprintf_bad
-parameter_list|(
-name|int
-name|isstring
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|va
-decl_stmt|;
-name|vprintf
-argument_list|(
-name|isstring
-condition|?
-literal|"%s"
-else|:
-literal|"%d"
-argument_list|,
-name|va
-argument_list|)
-expr_stmt|;
-comment|//expected-warning{{Function 'vprintf' is called with an uninitialized va_list argument}} expected-note{{Function 'vprintf' is called with an uninitialized va_list argument}} expected-note{{Assuming 'isstring' is 0}} expected-note{{'?' condition is false}}
-block|}
-end_function
-
-begin_function
-name|void
-name|call_vsprintf_bad
-parameter_list|(
-name|char
-modifier|*
-name|buffer
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|va
-decl_stmt|;
-name|va_start
-argument_list|(
-name|va
-argument_list|,
-name|buffer
-argument_list|)
-expr_stmt|;
-comment|// expected-note{{Initialized va_list}}
-name|va_end
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
-comment|// expected-note{{Ended va_list}}
-name|vsprintf
-argument_list|(
-name|buffer
-argument_list|,
-literal|"%s %d %d %lf %03d"
-argument_list|,
-name|va
-argument_list|)
-expr_stmt|;
-comment|//expected-warning{{Function 'vsprintf' is called with an uninitialized va_list argument}} expected-note{{Function 'vsprintf' is called with an uninitialized va_list argument}}
-block|}
-end_function
-
-begin_function
-name|void
 name|call_some_other_func
 parameter_list|(
 name|int
@@ -1025,6 +860,86 @@ end_function
 begin_comment
 comment|//no-warning
 end_comment
+
+begin_function
+name|void
+name|inlined_uses_arg_good
+parameter_list|(
+name|va_list
+name|arg
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|va_arg
+argument_list|(
+name|arg
+argument_list|,
+name|int
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|call_inlined_uses_arg_good
+parameter_list|(
+name|int
+name|fst
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|va
+decl_stmt|;
+name|va_start
+argument_list|(
+name|va
+argument_list|,
+name|fst
+argument_list|)
+expr_stmt|;
+name|inlined_uses_arg_good
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|va_copy_test
+parameter_list|(
+name|va_list
+name|arg
+parameter_list|)
+block|{
+name|va_list
+name|dst
+decl_stmt|;
+name|va_copy
+argument_list|(
+name|dst
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|dst
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

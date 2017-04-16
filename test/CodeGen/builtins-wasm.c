@@ -32,20 +32,21 @@ block|}
 end_function
 
 begin_function
-name|void
+name|__SIZE_TYPE__
 name|f2
 parameter_list|(
-name|long
+name|__SIZE_TYPE__
 name|delta
 parameter_list|)
 block|{
+return|return
 name|__builtin_wasm_grow_memory
 argument_list|(
 name|delta
 argument_list|)
-expr_stmt|;
-comment|// WEBASSEMBLY32: call void @llvm.wasm.grow.memory.i32(i32 %{{.*}})
-comment|// WEBASSEMBLY64: call void @llvm.wasm.grow.memory.i64(i64 %{{.*}})
+return|;
+comment|// WEBASSEMBLY32: call i32 @llvm.wasm.grow.memory.i32(i32 %{{.*}})
+comment|// WEBASSEMBLY64: call i64 @llvm.wasm.grow.memory.i64(i64 %{{.*}})
 block|}
 end_function
 

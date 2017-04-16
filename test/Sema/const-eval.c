@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i686-linux %s -Wno-tautological-pointer-compare
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-linux %s -Wno-tautological-pointer-compare
 end_comment
 
 begin_define
@@ -1199,7 +1199,7 @@ name|EVAL_EXPR
 argument_list|(
 literal|50
 argument_list|,
-argument|&Test50< (struct Test50S*)((unsigned)&Test50 +
+argument|&Test50< (struct Test50S*)((unsigned long)&Test50 +
 literal|10
 argument|)
 argument_list|)
@@ -1283,6 +1283,102 @@ end_expr_stmt
 begin_comment
 comment|// expected-error {{must have a constant size}}
 end_comment
+
+begin_comment
+comment|// We evaluate these by providing 2s' complement semantics in constant
+end_comment
+
+begin_comment
+comment|// expressions, like we do for integers.
+end_comment
+
+begin_decl_stmt
+name|void
+modifier|*
+name|PR28739a
+init|=
+operator|(
+name|__int128
+operator|)
+operator|(
+name|unsigned
+name|long
+operator|)
+operator|-
+literal|1
+operator|+
+operator|&
+name|PR28739a
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|PR28739b
+init|=
+operator|&
+name|PR28739b
+operator|+
+operator|(
+name|__int128
+operator|)
+operator|(
+name|unsigned
+name|long
+operator|)
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__int128
+name|PR28739c
+init|=
+operator|(
+operator|&
+name|PR28739c
+operator|+
+operator|(
+name|__int128
+operator|)
+operator|(
+name|unsigned
+name|long
+operator|)
+operator|-
+literal|1
+operator|)
+operator|-
+operator|&
+name|PR28739c
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|PR28739d
+init|=
+operator|&
+operator|(
+operator|&
+name|PR28739d
+operator|)
+index|[
+operator|(
+name|__int128
+operator|)
+operator|(
+name|unsigned
+name|long
+operator|)
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

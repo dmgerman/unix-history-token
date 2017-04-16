@@ -193,10 +193,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|// FIXME: We should produce a special case error for this.
-end_comment
-
 begin_function
 name|void
 name|f5
@@ -223,7 +219,7 @@ block|{}
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{redefinition of 'fun5'}} // expected-note {{previous definition}}
+comment|// expected-error {{definition 'fun5' cannot also be an alias}}
 end_comment
 
 begin_decl_stmt

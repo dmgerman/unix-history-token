@@ -44,7 +44,7 @@ comment|// RUN: %clang_cc1 -triple aarch64-unknown-unknown -target-cpu kryo -ver
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple aarch64-unknown-unknown -target-cpu vulcan -verify %s
+comment|// RUN: %clang_cc1 -triple aarch64-unknown-unknown -target-cpu thunderx2t99 -verify %s
 end_comment
 
 begin_comment

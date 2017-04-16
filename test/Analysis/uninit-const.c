@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=unix.Malloc,core,alpha.core.CallAndMessageUnInitRefArg -analyzer-output=text -verify %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=unix.Malloc,core,alpha.core.CallAndMessageUnInitRefArg -analyzer-output=text -verify %s
 end_comment
 
 begin_comment
@@ -233,8 +233,8 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 
@@ -267,8 +267,8 @@ argument_list|(
 name|tp2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 
@@ -320,8 +320,8 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 
@@ -395,8 +395,8 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 
@@ -419,8 +419,8 @@ argument_list|(
 name|ta
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 
@@ -540,8 +540,8 @@ argument_list|(
 name|g
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is an uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is an uninitialized value}}
+comment|// expected-warning {{1st function call argument is an uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is an uninitialized value}}
 block|}
 end_function
 
@@ -571,8 +571,8 @@ argument_list|(
 name|ptau
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 
@@ -595,8 +595,8 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 
@@ -619,8 +619,8 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 
@@ -699,8 +699,8 @@ argument_list|(
 name|ptr
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 name|free
 argument_list|(
 name|ptr
@@ -791,8 +791,8 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 
@@ -830,8 +830,8 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 
@@ -869,8 +869,8 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is an uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is an uninitialized value}}
+comment|// expected-warning {{2nd function call argument is an uninitialized value}}
+comment|// expected-note@-1 {{2nd function call argument is an uninitialized value}}
 block|}
 end_function
 
@@ -1000,8 +1000,8 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 
@@ -1088,8 +1088,8 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Function call argument is a pointer to uninitialized value}}
-comment|// expected-note@-1 {{Function call argument is a pointer to uninitialized value}}
+comment|// expected-warning {{1st function call argument is a pointer to uninitialized value}}
+comment|// expected-note@-1 {{1st function call argument is a pointer to uninitialized value}}
 block|}
 end_function
 

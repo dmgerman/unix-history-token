@@ -4,7 +4,7 @@ comment|// REQUIRES: powerpc-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -target-feature +power8-vector \
+comment|// RUN: %clang_cc1 -target-feature +altivec -target-feature +power8-vector \
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: -triple powerpc64-unknown-unknown -emit-llvm %s -o - | FileCheck
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -target-feature +power8-vector \
+comment|// RUN: %clang_cc1 -target-feature +altivec -target-feature +power8-vector \
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|// RUN: | FileCheck %s -check-prefix=CHECK-LE
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -faltivec -triple powerpc-unknown-unknown \
+comment|// RUN: not %clang_cc1 -target-feature +altivec -triple powerpc-unknown-unknown \
 end_comment
 
 begin_comment

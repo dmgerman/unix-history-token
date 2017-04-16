@@ -1220,17 +1220,39 @@ begin_comment
 comment|/// \brief Return true if this token is a keyword in the specified language.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|bool
 name|isKeyword
-parameter_list|(
+argument_list|(
 specifier|const
 name|LangOptions
-modifier|&
+operator|&
 name|LangOpts
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Return true if this token is a C++ keyword in the specified
+end_comment
+
+begin_comment
+comment|/// language.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isCPlusPlusKeyword
+argument_list|(
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpts
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// getFETokenInfo/setFETokenInfo - The language front-end is allowed to
@@ -3325,6 +3347,8 @@ value|CXXOperator##Name,
 include|#
 directive|include
 file|"clang/Basic/OperatorKinds.def"
+name|CXXDeductionGuide
+block|,
 name|CXXLiteralOperator
 block|,
 name|CXXUsingDirective

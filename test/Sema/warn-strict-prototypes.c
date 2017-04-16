@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -Wstrict-prototypes -verify %s
+comment|// RUN: %clang_cc1 -triple i386-pc-unknown -fsyntax-only -Wstrict-prototypes -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -Wstrict-prototypes -fdiagnostics-parseable-fixits %s 2>&1 | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i386-pc-unknown -fsyntax-only -Wstrict-prototypes -fdiagnostics-parseable-fixits %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
@@ -328,6 +328,32 @@ name|p2
 decl_stmt|;
 block|{}
 end_function
+
+begin_comment
+comment|// PR31020
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|cdecl
+operator|)
+argument_list|)
+name|foo12
+argument_list|(
+name|d
+argument_list|)
+comment|// expected-warning {{this old-style function definition is not preceded by a prototype}}
+name|short
+name|d
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{}
+end_block
 
 end_unit
 

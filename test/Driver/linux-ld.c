@@ -2828,6 +2828,38 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Check that we do not pass --hash-style=gnu or --hash-style=both to
+end_comment
+
+begin_comment
+comment|// hexagon linux linker
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=hexagon-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-HEXAGON %s
+end_comment
+
+begin_comment
+comment|// CHECK-HEXAGON: "{{.*}}hexagon-link{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-HEXAGON-NOT: "--hash-style={{gnu|both}}"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// Check that we do not pass --hash-style=gnu and --hash-style=both to linker
 end_comment
 

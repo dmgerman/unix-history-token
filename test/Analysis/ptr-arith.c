@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=alpha.core.FixedAddr,alpha.core.PointerArithm,alpha.core.PointerSub,debug.ExprInspection -analyzer-store=region -verify -triple x86_64-apple-darwin9 -Wno-tautological-pointer-compare %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=alpha.core.FixedAddr,alpha.core.PointerArithm,alpha.core.PointerSub,debug.ExprInspection -analyzer-store=region -verify -triple x86_64-apple-darwin9 -Wno-tautological-pointer-compare %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=alpha.core.FixedAddr,alpha.core.PointerArithm,alpha.core.PointerSub,debug.ExprInspection -analyzer-store=region -verify -triple i686-apple-darwin9 -Wno-tautological-pointer-compare %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=alpha.core.FixedAddr,alpha.core.PointerArithm,alpha.core.PointerSub,debug.ExprInspection -analyzer-store=region -verify -triple i686-apple-darwin9 -Wno-tautological-pointer-compare %s
 end_comment
 
 begin_function_decl
@@ -1271,6 +1271,24 @@ name|rhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
+comment|// FIXME: In Z3ConstraintManager, ptrdiff_t is mapped to signed bitvector. However, this does not directly imply the unsigned comparison.
+ifdef|#
+directive|ifdef
+name|ANALYZER_CM_Z3
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|rhs
+operator|-
+name|lhs
+operator|)
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+else|#
+directive|else
 name|clang_analyzer_eval
 argument_list|(
 operator|(
@@ -1283,6 +1301,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
+endif|#
+directive|endif
 name|clang_analyzer_eval
 argument_list|(
 operator|(
@@ -1332,6 +1352,23 @@ name|rhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
+ifdef|#
+directive|ifdef
+name|ANALYZER_CM_Z3
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|rhs
+operator|-
+name|lhs
+operator|)
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+else|#
+directive|else
 name|clang_analyzer_eval
 argument_list|(
 operator|(
@@ -1344,6 +1381,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1389,6 +1428,19 @@ expr_stmt|;
 comment|// expected-warning{{FALSE}}
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|ANALYZER_CM_Z3
+name|clang_analyzer_eval
+argument_list|(
+name|lhs
+operator|<=
+name|rhs
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+else|#
+directive|else
 name|clang_analyzer_eval
 argument_list|(
 name|lhs
@@ -1397,6 +1449,8 @@ name|rhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
+endif|#
+directive|endif
 name|clang_analyzer_eval
 argument_list|(
 operator|(
@@ -1450,6 +1504,19 @@ name|rhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{FALSE}}
+ifdef|#
+directive|ifdef
+name|ANALYZER_CM_Z3
+name|clang_analyzer_eval
+argument_list|(
+name|lhs
+operator|<
+name|rhs
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+else|#
+directive|else
 name|clang_analyzer_eval
 argument_list|(
 name|lhs
@@ -1458,6 +1525,8 @@ name|rhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
+endif|#
+directive|endif
 name|clang_analyzer_eval
 argument_list|(
 operator|(
@@ -1521,7 +1590,27 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|// FIXME: Should be FALSE.
+ifdef|#
+directive|ifdef
+name|ANALYZER_CM_Z3
+name|clang_analyzer_eval
+argument_list|(
+name|rhs
+operator|!=
+name|lhs
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|rhs
+operator|==
+name|lhs
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+else|#
+directive|else
 name|clang_analyzer_eval
 argument_list|(
 name|rhs
@@ -1530,7 +1619,6 @@ name|lhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{UNKNOWN}}
-comment|// FIXME: Should be TRUE.
 name|clang_analyzer_eval
 argument_list|(
 name|rhs
@@ -1539,6 +1627,8 @@ name|lhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{UNKNOWN}}
+endif|#
+directive|endif
 return|return;
 block|}
 name|clang_analyzer_eval
@@ -1553,7 +1643,27 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{FALSE}}
-comment|// FIXME: Should be FALSE.
+ifdef|#
+directive|ifdef
+name|ANALYZER_CM_Z3
+name|clang_analyzer_eval
+argument_list|(
+name|rhs
+operator|==
+name|lhs
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|rhs
+operator|!=
+name|lhs
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+else|#
+directive|else
 name|clang_analyzer_eval
 argument_list|(
 name|rhs
@@ -1562,7 +1672,6 @@ name|lhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{UNKNOWN}}
-comment|// FIXME: Should be TRUE.
 name|clang_analyzer_eval
 argument_list|(
 name|rhs
@@ -1571,6 +1680,8 @@ name|lhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{UNKNOWN}}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1602,7 +1713,19 @@ operator|==
 name|rhs
 condition|)
 block|{
-comment|// FIXME: Should be TRUE.
+ifdef|#
+directive|ifdef
+name|ANALYZER_CM_Z3
+name|clang_analyzer_eval
+argument_list|(
+name|rhs
+operator|==
+name|lhs
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+else|#
+directive|else
 name|clang_analyzer_eval
 argument_list|(
 name|rhs
@@ -1611,6 +1734,8 @@ name|lhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{UNKNOWN}}
+endif|#
+directive|endif
 return|return;
 block|}
 name|clang_analyzer_eval
@@ -1621,7 +1746,19 @@ name|rhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{FALSE}}
-comment|// FIXME: Should be FALSE.
+ifdef|#
+directive|ifdef
+name|ANALYZER_CM_Z3
+name|clang_analyzer_eval
+argument_list|(
+name|rhs
+operator|==
+name|lhs
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+else|#
+directive|else
 name|clang_analyzer_eval
 argument_list|(
 name|rhs
@@ -1630,6 +1767,8 @@ name|lhs
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{UNKNOWN}}
+endif|#
+directive|endif
 block|}
 end_function
 

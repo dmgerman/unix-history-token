@@ -20,7 +20,7 @@ comment|// Specific triple set to test structures of size 0.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-pc-linux-gnu -analyze -analyzer-checker=core,unix.Malloc,debug.ExprInspection -analyzer-store=region -verify %s
+comment|// RUN: %clang_analyze_cc1 -triple x86_64-pc-linux-gnu -analyzer-checker=core,unix.Malloc,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
 
 begin_typedef

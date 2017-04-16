@@ -24,7 +24,7 @@ modifier|*
 name|__m
 parameter_list|)
 block|{
-comment|//CHECK-LABLE: @test_mm_clflushopt
+comment|//CHECK-LABEL: @test_mm_clflushopt
 comment|//CHECK: @llvm.x86.clflushopt
 name|_mm_clflushopt
 argument_list|(

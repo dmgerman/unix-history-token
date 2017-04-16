@@ -8,10 +8,6 @@ comment|// RUN: %clang_cc1 -fsanitize-trap=alignment,null,object-size,shift-base
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsanitize=null -fsanitize-recover=null -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-NULL
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -fsanitize=signed-integer-overflow -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-OVERFLOW
 end_comment
 
@@ -108,19 +104,11 @@ comment|// CHECK-UBSAN: @[[LINE_1600:.*]] = {{.*}}, i32 1600, i32 10 {{.*}} @{{.
 end_comment
 
 begin_comment
-comment|// CHECK-NULL: @[[LINE_100:.*]] = private unnamed_addr global {{.*}}, i32 100, i32 5 {{.*}}
-end_comment
-
-begin_comment
 comment|// PR6805
 end_comment
 
 begin_comment
 comment|// CHECK-COMMON-LABEL: @foo
-end_comment
-
-begin_comment
-comment|// CHECK-NULL-LABEL: @foo
 end_comment
 
 begin_function
@@ -136,25 +124,19 @@ decl_stmt|;
 block|}
 name|u
 union|;
-comment|// CHECK-COMMON:      %[[CHECK0:.*]] = icmp ne {{.*}}* %[[PTR:.*]], null
-comment|// CHECK-COMMON:      %[[I8PTR:.*]] = bitcast i32* %[[PTR]] to i8*
-comment|// CHECK-COMMON-NEXT: %[[SIZE:.*]] = call i64 @llvm.objectsize.i64.p0i8(i8* %[[I8PTR]], i1 false)
-comment|// CHECK-COMMON-NEXT: %[[CHECK1:.*]] = icmp uge i64 %[[SIZE]], 4
+comment|// CHECK-COMMON:      %[[I8PTR:.*]] = bitcast i32* %[[PTR:.*]] to i8*
+comment|// CHECK-COMMON-NEXT: %[[SIZE:.*]] = call i64 @llvm.objectsize.i64.p0i8(i8* %[[I8PTR]], i1 false, i1 false)
+comment|// CHECK-COMMON-NEXT: %[[CHECK0:.*]] = icmp uge i64 %[[SIZE]], 4
 comment|// CHECK-COMMON:      %[[PTRTOINT:.*]] = ptrtoint {{.*}}* %[[PTR]] to i64
 comment|// CHECK-COMMON-NEXT: %[[MISALIGN:.*]] = and i64 %[[PTRTOINT]], 3
-comment|// CHECK-COMMON-NEXT: %[[CHECK2:.*]] = icmp eq i64 %[[MISALIGN]], 0
-comment|// CHECK-COMMON:       %[[CHECK01:.*]] = and i1 %[[CHECK0]], %[[CHECK1]]
-comment|// CHECK-COMMON-NEXT:  %[[OK:.*]] = and i1 %[[CHECK01]], %[[CHECK2]]
+comment|// CHECK-COMMON-NEXT: %[[CHECK1:.*]] = icmp eq i64 %[[MISALIGN]], 0
+comment|// CHECK-COMMON:       %[[OK:.*]] = and i1 %[[CHECK0]], %[[CHECK1]]
 comment|// CHECK-UBSAN: br i1 %[[OK]], {{.*}} !prof ![[WEIGHT_MD:.*]], !nosanitize
 comment|// CHECK-TRAP:  br i1 %[[OK]], {{.*}}
 comment|// CHECK-UBSAN:      %[[ARG:.*]] = ptrtoint {{.*}} %[[PTR]] to i64
 comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_type_mismatch_v1(i8* bitcast ({{.*}} @[[LINE_100]] to i8*), i64 %[[ARG]])
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW:#[0-9]+]]
 comment|// CHECK-TRAP-NEXT: unreachable
-comment|// With -fsanitize=null, only perform the null check.
-comment|// CHECK-NULL: %[[NULL:.*]] = icmp ne {{.*}}, null
-comment|// CHECK-NULL: br i1 %[[NULL]]
-comment|// CHECK-NULL: call void @__ubsan_handle_type_mismatch_v1(i8* bitcast ({{.*}} @[[LINE_100]] to i8*), i64 %{{.*}})
 line|#
 directive|line
 number|100

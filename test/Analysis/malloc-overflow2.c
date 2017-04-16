@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -analyze -analyzer-checker=alpha.security.MallocOverflow,unix -verify %s
+comment|// RUN: %clang_analyze_cc1 -triple x86_64-unknown-unknown -analyzer-checker=alpha.security.MallocOverflow,unix -verify %s
 end_comment
 
 begin_typedef

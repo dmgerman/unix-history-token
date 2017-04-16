@@ -396,6 +396,33 @@ operator|!=
 name|nullptr
 return|;
 block|}
+name|bool
+name|isPreprocessed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|IK_PreprocessedC
+operator|||
+name|Kind
+operator|==
+name|IK_PreprocessedCXX
+operator|||
+name|Kind
+operator|==
+name|IK_PreprocessedObjC
+operator|||
+name|Kind
+operator|==
+name|IK_PreprocessedObjCXX
+operator|||
+name|Kind
+operator|==
+name|IK_PreprocessedCuda
+return|;
+block|}
 name|StringRef
 name|getFile
 argument_list|()
@@ -539,6 +566,13 @@ literal|1
 decl_stmt|;
 comment|///< Whether we include declaration
 comment|///< dumps in AST dumps.
+name|unsigned
+name|ASTDumpAll
+range|:
+literal|1
+decl_stmt|;
+comment|///< Whether we deserialize all decls
+comment|///< when forming AST dumps.
 name|unsigned
 name|ASTDumpLookups
 range|:

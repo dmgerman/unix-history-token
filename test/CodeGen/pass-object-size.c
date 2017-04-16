@@ -1932,12 +1932,16 @@ name|void
 name|test13
 parameter_list|()
 block|{
-comment|// Ensuring that we don't lower objectsize if the expression has side-effects
 name|char
 name|c
 index|[
 literal|10
 index|]
+decl_stmt|;
+name|unsigned
+name|i
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -1951,16 +1955,29 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NOT: @llvm.objectsize
+comment|// Allow side-effects, since they always need to happen anyway. Just make sure
+comment|// we don't perform them twice.
+comment|// CHECK: = add
+comment|// CHECK-NOT: = add
+comment|// CHECK: @llvm.objectsize
+comment|// CHECK: call i32 @ObjectSize0
 name|ObjectSize0
 argument_list|(
-operator|++
 name|p
+operator|+
+operator|++
+name|i
 argument_list|)
 expr_stmt|;
+comment|// CHECK: = add
+comment|// CHECK: @llvm.objectsize
+comment|// CHECK-NOT: = add
+comment|// CHECK: call i32 @ObjectSize0
 name|ObjectSize0
 argument_list|(
 name|p
+operator|+
+name|i
 operator|++
 argument_list|)
 expr_stmt|;
@@ -2031,6 +2048,167 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
+name|void
+name|pass_size_unsigned
+argument_list|(
+name|unsigned
+operator|*
+specifier|const
+name|PS
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Bug: we weren't lowering to the proper @llvm.objectsize for pointers that
+end_comment
+
+begin_comment
+comment|// don't turn into i8*s, which caused crashes.
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: define void @test15
+end_comment
+
+begin_function
+name|void
+name|test15
+parameter_list|(
+name|unsigned
+modifier|*
+name|I
+parameter_list|)
+block|{
+comment|// CHECK: @llvm.objectsize.i64.p0i32
+comment|// CHECK: call void @pass_size_unsigned
+name|pass_size_unsigned
+argument_list|(
+name|I
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
+name|void
+name|pass_size_as1
+argument_list|(
+name|__attribute__
+argument_list|(
+argument|(address_space(
+literal|1
+argument|))
+argument_list|)
+name|void
+operator|*
+specifier|const
+name|PS
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|pass_size_unsigned_as1
+argument_list|(
+name|__attribute__
+argument_list|(
+argument|(address_space(
+literal|1
+argument|))
+argument_list|)
+name|unsigned
+operator|*
+specifier|const
+name|PS
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK-LABEL: define void @test16
+end_comment
+
+begin_decl_stmt
+name|void
+name|test16
+argument_list|(
+name|__attribute__
+argument_list|(
+argument|(address_space(
+literal|1
+argument|))
+argument_list|)
+name|unsigned
+operator|*
+name|I
+argument_list|)
+block|{
+comment|// CHECK: call i64 @llvm.objectsize.i64.p1i8
+comment|// CHECK: call void @pass_size_as1
+name|pass_size_as1
+argument_list|(
+name|I
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call i64 @llvm.objectsize.i64.p1i32
+comment|// CHECK: call void @pass_size_unsigned_as1
+name|pass_size_unsigned_as1
+argument_list|(
+name|I
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// This used to cause assertion failures, since we'd try to emit the statement
+end_comment
+
+begin_comment
+comment|// expression (and definitions for `a`) twice.
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: define void @test17
+end_comment
+
+begin_function
+name|void
+name|test17
+parameter_list|(
+name|char
+modifier|*
+name|C
+parameter_list|)
+block|{
+comment|// Check for 65535 to see if we're emitting this pointer twice.
+comment|// CHECK: 65535
+comment|// CHECK-NOT: 65535
+comment|// CHECK: @llvm.objectsize.i64.p0i8(i8* [[PTR:%[^,]+]],
+comment|// CHECK-NOT: 65535
+comment|// CHECK: call i32 @ObjectSize0(i8* [[PTR]]
+name|ObjectSize0
+argument_list|(
+argument|C + ({ int a =
+literal|65535
+argument|; a; })
+argument_list|)
+empty_stmt|;
 block|}
 end_function
 

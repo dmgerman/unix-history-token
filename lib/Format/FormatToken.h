@@ -108,7 +108,7 @@ define|#
 directive|define
 name|LIST_TOKEN_TYPES
 define|\
-value|TYPE(ArrayInitializerLSquare) \   TYPE(ArraySubscriptLSquare) \   TYPE(AttributeParen) \   TYPE(BinaryOperator) \   TYPE(BitFieldColon) \   TYPE(BlockComment) \   TYPE(CastRParen) \   TYPE(ConditionalExpr) \   TYPE(ConflictAlternative) \   TYPE(ConflictEnd) \   TYPE(ConflictStart) \   TYPE(CtorInitializerColon) \   TYPE(CtorInitializerComma) \   TYPE(DesignatedInitializerPeriod) \   TYPE(DictLiteral) \   TYPE(ForEachMacro) \   TYPE(FunctionAnnotationRParen) \   TYPE(FunctionDeclarationName) \   TYPE(FunctionLBrace) \   TYPE(FunctionTypeLParen) \   TYPE(ImplicitStringLiteral) \   TYPE(InheritanceColon) \   TYPE(InlineASMBrace) \   TYPE(InlineASMColon) \   TYPE(JavaAnnotation) \   TYPE(JsComputedPropertyName) \   TYPE(JsFatArrow) \   TYPE(JsTypeColon) \   TYPE(JsTypeOperator) \   TYPE(JsTypeOptionalQuestion) \   TYPE(LambdaArrow) \   TYPE(LambdaLSquare) \   TYPE(LeadingJavaAnnotation) \   TYPE(LineComment) \   TYPE(MacroBlockBegin) \   TYPE(MacroBlockEnd) \   TYPE(ObjCBlockLBrace) \   TYPE(ObjCBlockLParen) \   TYPE(ObjCDecl) \   TYPE(ObjCForIn) \   TYPE(ObjCMethodExpr) \   TYPE(ObjCMethodSpecifier) \   TYPE(ObjCProperty) \   TYPE(ObjCStringLiteral) \   TYPE(OverloadedOperator) \   TYPE(OverloadedOperatorLParen) \   TYPE(PointerOrReference) \   TYPE(PureVirtualSpecifier) \   TYPE(RangeBasedForLoopColon) \   TYPE(RegexLiteral) \   TYPE(SelectorName) \   TYPE(StartOfName) \   TYPE(TemplateCloser) \   TYPE(TemplateOpener) \   TYPE(TemplateString) \   TYPE(TrailingAnnotation) \   TYPE(TrailingReturnArrow) \   TYPE(TrailingUnaryOperator) \   TYPE(UnaryOperator) \   TYPE(Unknown)
+value|TYPE(ArrayInitializerLSquare) \   TYPE(ArraySubscriptLSquare) \   TYPE(AttributeParen) \   TYPE(BinaryOperator) \   TYPE(BitFieldColon) \   TYPE(BlockComment) \   TYPE(CastRParen) \   TYPE(ConditionalExpr) \   TYPE(ConflictAlternative) \   TYPE(ConflictEnd) \   TYPE(ConflictStart) \   TYPE(CtorInitializerColon) \   TYPE(CtorInitializerComma) \   TYPE(DesignatedInitializerPeriod) \   TYPE(DictLiteral) \   TYPE(ForEachMacro) \   TYPE(FunctionAnnotationRParen) \   TYPE(FunctionDeclarationName) \   TYPE(FunctionLBrace) \   TYPE(FunctionTypeLParen) \   TYPE(ImplicitStringLiteral) \   TYPE(InheritanceColon) \   TYPE(InheritanceComma) \   TYPE(InlineASMBrace) \   TYPE(InlineASMColon) \   TYPE(JavaAnnotation) \   TYPE(JsComputedPropertyName) \   TYPE(JsFatArrow) \   TYPE(JsNonNullAssertion) \   TYPE(JsTypeColon) \   TYPE(JsTypeOperator) \   TYPE(JsTypeOptionalQuestion) \   TYPE(LambdaArrow) \   TYPE(LambdaLSquare) \   TYPE(LeadingJavaAnnotation) \   TYPE(LineComment) \   TYPE(MacroBlockBegin) \   TYPE(MacroBlockEnd) \   TYPE(ObjCBlockLBrace) \   TYPE(ObjCBlockLParen) \   TYPE(ObjCDecl) \   TYPE(ObjCForIn) \   TYPE(ObjCMethodExpr) \   TYPE(ObjCMethodSpecifier) \   TYPE(ObjCProperty) \   TYPE(ObjCStringLiteral) \   TYPE(OverloadedOperator) \   TYPE(OverloadedOperatorLParen) \   TYPE(PointerOrReference) \   TYPE(PureVirtualSpecifier) \   TYPE(RangeBasedForLoopColon) \   TYPE(RegexLiteral) \   TYPE(SelectorName) \   TYPE(StartOfName) \   TYPE(TemplateCloser) \   TYPE(TemplateOpener) \   TYPE(TemplateString) \   TYPE(TrailingAnnotation) \   TYPE(TrailingReturnArrow) \   TYPE(TrailingUnaryOperator) \   TYPE(UnaryOperator) \   TYPE(Unknown)
 enum|enum
 name|TokenType
 block|{
@@ -371,6 +371,12 @@ name|NestingLevel
 init|=
 literal|0
 decl_stmt|;
+comment|/// \brief The indent level of this token. Copied from the surrounding line.
+name|unsigned
+name|IndentLevel
+init|=
+literal|0
+decl_stmt|;
 comment|/// \brief Penalty for inserting a line break before this token.
 name|unsigned
 name|SplitPenalty
@@ -441,6 +447,14 @@ comment|///
 comment|/// Only set if \c Type == \c TT_StartOfName.
 name|bool
 name|PartOfMultiVariableDeclStmt
+init|=
+name|false
+decl_stmt|;
+comment|/// \brief Does this line comment continue a line comment section?
+comment|///
+comment|/// Only set to true if \c Type == \c TT_LineComment.
+name|bool
+name|ContinuesLineCommentSection
 init|=
 name|false
 decl_stmt|;
@@ -865,6 +879,23 @@ name|opensScope
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|is
+argument_list|(
+name|TT_TemplateString
+argument_list|)
+operator|&&
+name|TokenText
+operator|.
+name|endswith
+argument_list|(
+literal|"${"
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
 return|return
 name|isOneOf
 argument_list|(
@@ -888,8 +919,25 @@ comment|/// \brief Returns whether \p Tok is )]} or a template closing>.
 name|bool
 name|closesScope
 argument_list|()
-specifier|const
+decl|const
 block|{
+if|if
+condition|(
+name|is
+argument_list|(
+name|TT_TemplateString
+argument_list|)
+operator|&&
+name|TokenText
+operator|.
+name|startswith
+argument_list|(
+literal|"}"
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
 return|return
 name|isOneOf
 argument_list|(
@@ -913,7 +961,7 @@ comment|/// \brief Returns \c true if this is a "." or "->" accessing a member.
 name|bool
 name|isMemberAccess
 argument_list|()
-specifier|const
+decl|const
 block|{
 return|return
 name|isOneOf
@@ -945,7 +993,7 @@ block|}
 name|bool
 name|isUnaryOperator
 argument_list|()
-specifier|const
+decl|const
 block|{
 switch|switch
 condition|(
@@ -1007,7 +1055,7 @@ block|}
 name|bool
 name|isBinaryOperator
 argument_list|()
-specifier|const
+decl|const
 block|{
 comment|// Comma is a binary operator, but does not behave as such wrt. formatting.
 return|return
@@ -1022,7 +1070,7 @@ block|}
 name|bool
 name|isTrailingComment
 argument_list|()
-specifier|const
+decl|const
 block|{
 return|return
 name|is
@@ -1054,7 +1102,7 @@ comment|/// like a function call (e.g. sizeof, typeid, ...).
 name|bool
 name|isFunctionLikeKeyword
 argument_list|()
-specifier|const
+decl|const
 block|{
 switch|switch
 condition|(
@@ -1128,7 +1176,7 @@ comment|/// e.g. ends with "=" or ":".
 name|bool
 name|isLabelString
 argument_list|()
-specifier|const
+decl|const
 block|{
 if|if
 condition|(
@@ -1145,9 +1193,9 @@ name|false
 return|;
 name|StringRef
 name|Content
-operator|=
+init|=
 name|TokenText
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|Content
@@ -1354,6 +1402,19 @@ name|Style
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|is
+argument_list|(
+name|TT_TemplateString
+argument_list|)
+operator|&&
+name|opensScope
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
 return|return
 name|is
 argument_list|(
@@ -1403,6 +1464,19 @@ name|Style
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|is
+argument_list|(
+name|TT_TemplateString
+argument_list|)
+operator|&&
+name|closesScope
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
 return|return
 name|MatchingParen
 operator|&&
@@ -2263,6 +2337,26 @@ argument_list|(
 literal|"__except"
 argument_list|)
 expr_stmt|;
+name|kw___has_include
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"__has_include"
+argument_list|)
+expr_stmt|;
+name|kw___has_include_next
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"__has_include_next"
+argument_list|)
+expr_stmt|;
 name|kw_mark
 operator|=
 operator|&
@@ -2410,6 +2504,14 @@ decl_stmt|;
 name|IdentifierInfo
 modifier|*
 name|kw___except
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|kw___has_include
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|kw___has_include_next
 decl_stmt|;
 comment|// JavaScript keywords.
 name|IdentifierInfo

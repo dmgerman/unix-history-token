@@ -2582,7 +2582,7 @@ name|test_mm_undefined_ps
 parameter_list|()
 block|{
 comment|// CHECK-LABEL: @test_mm_undefined_ps
-comment|// CHECK: ret<4 x float> undef
+comment|// CHECK: ret<4 x float> zeroinitializer
 return|return
 name|_mm_undefined_ps
 argument_list|()

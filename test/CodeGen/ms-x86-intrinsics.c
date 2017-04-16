@@ -33,6 +33,74 @@ argument_list|)
 end_if
 
 begin_function
+name|char
+name|test__readfsbyte
+parameter_list|(
+name|unsigned
+name|long
+name|Offset
+parameter_list|)
+block|{
+return|return
+name|__readfsbyte
+argument_list|(
+name|Offset
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-I386-LABEL: define signext i8 @test__readfsbyte(i32 %Offset)
+end_comment
+
+begin_comment
+comment|// CHECK-I386:   [[PTR:%[0-9]+]] = inttoptr i32 %Offset to i8 addrspace(257)*
+end_comment
+
+begin_comment
+comment|// CHECK-I386:   [[VALUE:%[0-9]+]] = load volatile i8, i8 addrspace(257)* [[PTR]], align 1
+end_comment
+
+begin_comment
+comment|// CHECK-I386:   ret i8 [[VALUE:%[0-9]+]]
+end_comment
+
+begin_function
+name|short
+name|test__readfsword
+parameter_list|(
+name|unsigned
+name|long
+name|Offset
+parameter_list|)
+block|{
+return|return
+name|__readfsword
+argument_list|(
+name|Offset
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-I386-LABEL: define signext i16 @test__readfsword(i32 %Offset)
+end_comment
+
+begin_comment
+comment|// CHECK-I386:   [[PTR:%[0-9]+]] = inttoptr i32 %Offset to i16 addrspace(257)*
+end_comment
+
+begin_comment
+comment|// CHECK-I386:   [[VALUE:%[0-9]+]] = load volatile i16, i16 addrspace(257)* [[PTR]], align 2
+end_comment
+
+begin_comment
+comment|// CHECK-I386:   ret i16 [[VALUE:%[0-9]+]]
+end_comment
+
+begin_function
 name|long
 name|test__readfsdword
 parameter_list|(
@@ -51,7 +119,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-I386-LABEL: define i32 @test__readfsdword(i32 %Offset){{.*}}{
+comment|// CHECK-I386-LABEL: define i32 @test__readfsdword(i32 %Offset)
 end_comment
 
 begin_comment
@@ -66,8 +134,39 @@ begin_comment
 comment|// CHECK-I386:   ret i32 [[VALUE:%[0-9]+]]
 end_comment
 
+begin_function
+name|long
+name|long
+name|test__readfsqword
+parameter_list|(
+name|unsigned
+name|long
+name|Offset
+parameter_list|)
+block|{
+return|return
+name|__readfsqword
+argument_list|(
+name|Offset
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|// CHECK-I386: }
+comment|// CHECK-I386-LABEL: define i64 @test__readfsqword(i32 %Offset)
+end_comment
+
+begin_comment
+comment|// CHECK-I386:   [[PTR:%[0-9]+]] = inttoptr i32 %Offset to i64 addrspace(257)*
+end_comment
+
+begin_comment
+comment|// CHECK-I386:   [[VALUE:%[0-9]+]] = load volatile i64, i64 addrspace(257)* [[PTR]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK-I386:   ret i64 [[VALUE:%[0-9]+]]
 end_comment
 
 begin_endif
@@ -170,6 +269,159 @@ argument_list|(
 name|__x86_64__
 argument_list|)
 end_if
+
+begin_function
+name|char
+name|test__readgsbyte
+parameter_list|(
+name|unsigned
+name|long
+name|Offset
+parameter_list|)
+block|{
+return|return
+name|__readgsbyte
+argument_list|(
+name|Offset
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-X64-LABEL: define i8 @test__readgsbyte(i32 %Offset)
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[ZEXT:%[0-9]+]] = zext i32 %Offset to i64
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[PTR:%[0-9]+]] = inttoptr i64 [[ZEXT]] to i8 addrspace(256)*
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[VALUE:%[0-9]+]] = load volatile i8, i8 addrspace(256)* [[PTR]], align 1
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   ret i8 [[VALUE:%[0-9]+]]
+end_comment
+
+begin_function
+name|short
+name|test__readgsword
+parameter_list|(
+name|unsigned
+name|long
+name|Offset
+parameter_list|)
+block|{
+return|return
+name|__readgsword
+argument_list|(
+name|Offset
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-X64-LABEL: define i16 @test__readgsword(i32 %Offset)
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[ZEXT:%[0-9]+]] = zext i32 %Offset to i64
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[PTR:%[0-9]+]] = inttoptr i64 [[ZEXT]] to i16 addrspace(256)*
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[VALUE:%[0-9]+]] = load volatile i16, i16 addrspace(256)* [[PTR]], align 2
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   ret i16 [[VALUE:%[0-9]+]]
+end_comment
+
+begin_function
+name|long
+name|test__readgsdword
+parameter_list|(
+name|unsigned
+name|long
+name|Offset
+parameter_list|)
+block|{
+return|return
+name|__readgsdword
+argument_list|(
+name|Offset
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-X64-LABEL: define i32 @test__readgsdword(i32 %Offset)
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[ZEXT:%[0-9]+]] = zext i32 %Offset to i64
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[PTR:%[0-9]+]] = inttoptr i64 [[ZEXT]] to i32 addrspace(256)*
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[VALUE:%[0-9]+]] = load volatile i32, i32 addrspace(256)* [[PTR]], align 4
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   ret i32 [[VALUE:%[0-9]+]]
+end_comment
+
+begin_function
+name|long
+name|long
+name|test__readgsqword
+parameter_list|(
+name|unsigned
+name|long
+name|Offset
+parameter_list|)
+block|{
+return|return
+name|__readgsqword
+argument_list|(
+name|Offset
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-X64-LABEL: define i64 @test__readgsqword(i32 %Offset)
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[ZEXT:%[0-9]+]] = zext i32 %Offset to i64
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[PTR:%[0-9]+]] = inttoptr i64 [[ZEXT]] to i64 addrspace(256)*
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   [[VALUE:%[0-9]+]] = load volatile i64, i64 addrspace(256)* [[PTR]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK-X64:   ret i64 [[VALUE:%[0-9]+]]
+end_comment
 
 begin_function
 name|__int64

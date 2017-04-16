@@ -4,7 +4,7 @@ comment|// REQUIRES: powerpc-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -target-feature +htm                       \
+comment|// RUN: %clang_cc1 -target-feature +altivec -target-feature +htm                       \
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -target-feature +crypto                    \
+comment|// RUN: %clang_cc1 -target-feature +altivec -target-feature +crypto                    \
 end_comment
 
 begin_comment

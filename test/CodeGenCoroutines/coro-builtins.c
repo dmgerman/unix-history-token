@@ -110,7 +110,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// CHECK-NEXT: %[[FRAME6:.+]] = call i8* @llvm.coro.frame()
-comment|// CHECK-NEXT: call void @llvm.coro.end(i8* %[[FRAME6]], i1 false)
+comment|// CHECK-NEXT: call i1 @llvm.coro.end(i8* %[[FRAME6]], i1 false)
 name|__builtin_coro_end
 argument_list|(
 name|__builtin_coro_frame

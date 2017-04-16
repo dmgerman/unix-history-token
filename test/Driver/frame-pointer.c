@@ -60,6 +60,30 @@ comment|// RUN: %clang -target s390x-pc-linux -### -S -O1 %s -o %t.s 2>&1 | File
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target powerpc-unknown-linux-gnu -### -S -O0 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK0-64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc-unknown-linux-gnu -### -S -O1 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK1-64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu -### -S -O0 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK0-64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu -### -S -O1 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK1-64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64le-unknown-linux-gnu -### -S -O0 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK0-64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64le-unknown-linux-gnu -### -S -O1 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK1-64 %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target mips-linux-gnu -### -S -O0 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK0-32 %s
 end_comment
 

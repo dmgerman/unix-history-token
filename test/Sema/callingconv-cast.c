@@ -73,6 +73,44 @@ parameter_list|)
 block|{}
 end_function
 
+begin_comment
+comment|// expected-note@+1 {{consider defining 'mismatched_declaration' with the 'stdcall' calling convention}}
+end_comment
+
+begin_function_decl
+name|void
+name|mismatched_declaration
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note@+1 {{consider defining 'suggest_fix_first_redecl' with the 'stdcall' calling convention}}
+end_comment
+
+begin_function_decl
+name|void
+name|suggest_fix_first_redecl
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|suggest_fix_first_redecl
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_typedef
 typedef|typedef
 name|void
@@ -213,6 +251,25 @@ name|void
 operator|*
 operator|)
 name|mismatched
+argument_list|)
+expr_stmt|;
+comment|// Warn on declarations as well as definitions.
+comment|// expected-warning@+1 {{cast between incompatible calling conventions 'cdecl' and 'stdcall'}}
+name|take_callback
+argument_list|(
+operator|(
+name|callback_t
+operator|)
+name|mismatched_declaration
+argument_list|)
+expr_stmt|;
+comment|// expected-warning@+1 {{cast between incompatible calling conventions 'cdecl' and 'stdcall'}}
+name|take_callback
+argument_list|(
+operator|(
+name|callback_t
+operator|)
+name|suggest_fix_first_redecl
 argument_list|)
 expr_stmt|;
 comment|// Don't warn, because we're casting from stdcall to cdecl. Usually that means

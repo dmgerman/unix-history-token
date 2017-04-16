@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,osx.coreFoundation.CFNumber,osx.cocoa.RetainCount -analyzer-store=region -verify -triple x86_64-apple-darwin9 %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=core,osx.coreFoundation.CFNumber,osx.cocoa.RetainCount -analyzer-store=region -verify -triple x86_64-apple-darwin9 %s
 end_comment
 
 begin_typedef

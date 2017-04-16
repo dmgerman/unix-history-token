@@ -167,5 +167,117 @@ begin_comment
 comment|// NO-XSAVE: "-target-feature" "-xsave" "-target-feature" "-xsaveopt" "-target-feature" "-xsavec" "-target-feature" "-xsaves"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mclflushopt %s -### -o %t.o 2>&1 | FileCheck -check-prefix=CLFLUSHOPT %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mno-clflushopt %s -### -o %t.o 2>&1 | FileCheck -check-prefix=NO-CLFLUSHOPT %s
+end_comment
+
+begin_comment
+comment|// CLFLUSHOPT: "-target-feature" "+clflushopt"
+end_comment
+
+begin_comment
+comment|// NO-CLFLUSHOPT: "-target-feature" "-clflushopt"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mclwb %s -### -o %t.o 2>&1 | FileCheck -check-prefix=CLWB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mno-clwb %s -### -o %t.o 2>&1 | FileCheck -check-prefix=NO-CLWB %s
+end_comment
+
+begin_comment
+comment|// CLWB: "-target-feature" "+clwb"
+end_comment
+
+begin_comment
+comment|// NO-CLWB: "-target-feature" "-clwb"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mmovbe %s -### -o %t.o 2>&1 | FileCheck -check-prefix=MOVBE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mno-movbe %s -### -o %t.o 2>&1 | FileCheck -check-prefix=NO-MOVBE %s
+end_comment
+
+begin_comment
+comment|// MOVBE: "-target-feature" "+movbe"
+end_comment
+
+begin_comment
+comment|// NO-MOVBE: "-target-feature" "-movbe"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mmpx %s -### -o %t.o 2>&1 | FileCheck -check-prefix=MPX %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mno-mpx %s -### -o %t.o 2>&1 | FileCheck -check-prefix=NO-MPX %s
+end_comment
+
+begin_comment
+comment|// MPX: "-target-feature" "+mpx"
+end_comment
+
+begin_comment
+comment|// NO-MPX: "-target-feature" "-mpx"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -msgx %s -### -o %t.o 2>&1 | FileCheck -check-prefix=SGX %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mno-sgx %s -### -o %t.o 2>&1 | FileCheck -check-prefix=NO-SGX %s
+end_comment
+
+begin_comment
+comment|// SGX: "-target-feature" "+sgx"
+end_comment
+
+begin_comment
+comment|// NO-SGX: "-target-feature" "-sgx"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mprefetchwt1 %s -### -o %t.o 2>&1 | FileCheck -check-prefix=PREFETCHWT1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mno-prefetchwt1 %s -### -o %t.o 2>&1 | FileCheck -check-prefix=NO-PREFETCHWT1 %s
+end_comment
+
+begin_comment
+comment|// PREFETCHWT1: "-target-feature" "+prefetchwt1"
+end_comment
+
+begin_comment
+comment|// NO-PREFETCHWT1: "-target-feature" "-prefetchwt1"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mclzero %s -### -o %t.o 2>&1 | FileCheck -check-prefix=CLZERO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux-gnu -march=i386 -mno-clzero %s -### -o %t.o 2>&1 | FileCheck -check-prefix=NO-CLZERO %s
+end_comment
+
+begin_comment
+comment|// CLZERO: "-target-feature" "+clzero"
+end_comment
+
+begin_comment
+comment|// NO-CLZERO: "-target-feature" "-clzero"
+end_comment
+
 end_unit
 

@@ -450,5 +450,143 @@ begin_comment
 comment|// CHECK-NEXT:   br label [[CE:%.*]]
 end_comment
 
+begin_comment
+comment|// Ensure that we don't emit helper code in copy/dispose routines for variables
+end_comment
+
+begin_comment
+comment|// that are const-captured.
+end_comment
+
+begin_function
+name|void
+name|testConstCaptureInCopyAndDestroyHelpers
+parameter_list|()
+block|{
+specifier|const
+name|int
+name|x
+init|=
+literal|0
+decl_stmt|;
+specifier|__block
+name|int
+name|i
+decl_stmt|;
+operator|(
+lambda|^
+block|{
+name|i
+operator|=
+name|x
+expr_stmt|;
+block|}
+operator|)
+operator|(
+operator|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: testConstCaptureInCopyAndDestroyHelpers_block_invoke
+end_comment
+
+begin_comment
+comment|// CHECK: @__copy_helper_block
+end_comment
+
+begin_comment
+comment|// CHECK: alloca
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: alloca
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: store
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: store
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: load
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: bitcast
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: load
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: bitcast
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: getelementptr
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: getelementptr
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: load
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: bitcast
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: call void @_Block_object_assign
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: ret
+end_comment
+
+begin_comment
+comment|// CHECK: @__destroy_helper_block
+end_comment
+
+begin_comment
+comment|// CHECK: alloca
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: store
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: load
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: bitcast
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: getelementptr
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: load
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: call void @_Block_object_dispose
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: ret
+end_comment
+
 end_unit
 

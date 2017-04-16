@@ -143,5 +143,21 @@ begin_comment
 comment|// CHECK-RELOCATABLE: "-r"
 end_comment
 
+begin_comment
+comment|// RUN: %clang %s -### --target=x86_64-unknown-fuchsia \
+end_comment
+
+begin_comment
+comment|// RUN:     -fsanitize=safe-stack 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     | FileCheck %s -check-prefix=CHECK-SAFESTACK
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK: "-fsanitize=safe-stack"
+end_comment
+
 end_unit
 

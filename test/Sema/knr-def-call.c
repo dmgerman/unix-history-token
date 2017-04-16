@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Wconversion -Wliteral-conversion -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -triple i386-pc-unknown -Wconversion -Wliteral-conversion -fsyntax-only -verify %s
 end_comment
 
 begin_comment
@@ -235,6 +235,56 @@ expr_stmt|;
 comment|// expected-warning{{implicit conversion from 'double' to 'int' changes value from 42.1 to 42}}
 block|}
 end_function
+
+begin_comment
+comment|// PR31020
+end_comment
+
+begin_function_decl
+name|void
+name|func
+parameter_list|(
+name|short
+name|d
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(cdecl
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-note{{previous declaration is here}}
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|cdecl
+operator|)
+argument_list|)
+name|func
+argument_list|(
+name|d
+argument_list|)
+name|short
+name|d
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{promoted type 'int' of K&R function parameter is not compatible with the parameter type 'short' declared in a previous prototype}}
+end_comment
+
+begin_block
+block|{}
+end_block
 
 end_unit
 

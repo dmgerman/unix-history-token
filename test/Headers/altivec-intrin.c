@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -triple powerpc64le-unknown-linux-gnu -target-cpu pow
 end_comment
 
 begin_comment
-comment|// RUN:     -faltivec -verify %s
+comment|// RUN:     -target-feature +altivec -verify %s
 end_comment
 
 begin_comment

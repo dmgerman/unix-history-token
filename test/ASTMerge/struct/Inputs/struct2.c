@@ -285,5 +285,56 @@ name|x11
 struct|;
 end_struct
 
+begin_comment
+comment|// Matches
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|i
+decl_stmt|;
+name|float
+name|f
+decl_stmt|;
+block|}
+name|S12
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|S12
+name|x12
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Mismatch
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|i
+decl_stmt|;
+comment|// Mismatch here.
+name|float
+name|f
+decl_stmt|;
+block|}
+name|S13
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|S13
+name|x13
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

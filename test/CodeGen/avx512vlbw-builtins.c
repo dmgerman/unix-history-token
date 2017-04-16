@@ -11806,7 +11806,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_movm_epi8
-comment|// CHECK: @llvm.x86.avx512.cvtmask2b.128
+comment|// CHECK: %{{.*}} = bitcast i16 %{{.*}} to<16 x i1>
+comment|// CHECK: %vpmovm2.i = sext<16 x i1> %{{.*}} to<16 x i8>
 return|return
 name|_mm_movm_epi8
 argument_list|(
@@ -11825,7 +11826,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_movm_epi8
-comment|// CHECK: @llvm.x86.avx512.cvtmask2b.256
+comment|// CHECK: %{{.*}} = bitcast i32 %{{.*}} to<32 x i1>
+comment|// CHECK: %vpmovm2.i = sext<32 x i1> %{{.*}} to<32 x i8>
 return|return
 name|_mm256_movm_epi8
 argument_list|(
@@ -11844,7 +11846,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_movm_epi16
-comment|// CHECK: @llvm.x86.avx512.cvtmask2w.128
+comment|// CHECK: %{{.*}} = bitcast i8 %{{.*}} to<8 x i1>
+comment|// CHECK: %vpmovm2.i = sext<8 x i1> %{{.*}} to<8 x i16>
 return|return
 name|_mm_movm_epi16
 argument_list|(
@@ -11863,7 +11866,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_movm_epi16
-comment|// CHECK: @llvm.x86.avx512.cvtmask2w.256
+comment|// CHECK: %{{.*}} = bitcast i16 %{{.*}} to<16 x i1>
+comment|// CHECK: %vpmovm2.i = sext<16 x i1> %{{.*}} to<16 x i16>
 return|return
 name|_mm256_movm_epi16
 argument_list|(

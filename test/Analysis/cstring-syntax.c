@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=unix.cstring.BadSizeArg -analyzer-store=region -Wno-strncat-size -Wno-strlcpy-strlcat-size -Wno-sizeof-array-argument -Wno-sizeof-pointer-memaccess -verify %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=unix.cstring.BadSizeArg -analyzer-store=region -Wno-strncat-size -Wno-strlcpy-strlcat-size -Wno-sizeof-array-argument -Wno-sizeof-pointer-memaccess -verify %s
 end_comment
 
 begin_typedef
@@ -114,6 +114,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{Potential buffer overflow. Replace with}}
+comment|// Should not crash when sizeof has a type argument.
+name|strncat
+argument_list|(
+name|dest
+argument_list|,
+literal|"AAAAAAAAAAAAAAAAAAAAAAAAAAA"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

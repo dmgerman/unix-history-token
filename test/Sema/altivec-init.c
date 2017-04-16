@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=powerpc-apple-darwin8 -faltivec -verify -pedantic -fsyntax-only
+comment|// RUN: %clang_cc1 %s -triple=powerpc-apple-darwin8 -target-feature +altivec -verify -pedantic -fsyntax-only
 end_comment
 
 begin_typedef
@@ -219,8 +219,8 @@ block|,
 literal|4
 block|}
 return|;
-comment|// FIXME: test that (type)(fn)(args) still works with -faltivec
-comment|// FIXME: test that c++ overloaded commas still work -faltivec
+comment|// FIXME: test that (type)(fn)(args) still works with -maltivec
+comment|// FIXME: test that c++ overloaded commas still work -maltivec
 block|}
 end_function
 

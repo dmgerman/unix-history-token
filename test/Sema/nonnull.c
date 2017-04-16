@@ -1178,5 +1178,47 @@ comment|// expected-warning {{nonnull function call 'returns_nonnull_whee()' wil
 block|}
 end_function
 
+begin_decl_stmt
+name|void
+name|pr30828
+argument_list|(
+name|char
+operator|*
+name|p
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+operator|)
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|pr30828
+parameter_list|(
+name|char
+modifier|*
+name|p
+parameter_list|)
+block|{}
+end_function
+
+begin_function
+name|void
+name|call_pr30828
+parameter_list|()
+block|{
+name|pr30828
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{null passed to a callee that requires a non-null argument}}
+block|}
+end_function
+
 end_unit
 

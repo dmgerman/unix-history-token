@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-store=region -fblocks -verify %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=core -analyzer-store=region -fblocks -verify %s
 end_comment
 
 begin_struct
@@ -84,7 +84,7 @@ argument_list|)
 operator|+
 literal|1
 return|;
-comment|// expected-warning{{Function call argument is an uninitialized value}}
+comment|// expected-warning{{1st function call argument is an uninitialized value}}
 block|}
 end_function
 
@@ -262,6 +262,41 @@ operator|.
 name|x
 return|;
 comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|f6
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+name|int
+name|a
+index|[
+literal|20
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|x
+operator|==
+literal|25
+condition|)
+block|{}
+if|if
+condition|(
+name|a
+index|[
+name|x
+index|]
+operator|==
+literal|123
+condition|)
+block|{}
+comment|// expected-warning{{The left operand of '==' is a garbage value due to array index out of bounds}}
 block|}
 end_function
 

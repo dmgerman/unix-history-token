@@ -69,6 +69,11 @@ block|{}
 struct|;
 comment|// expected-warning {{made available}}
 struct|struct
+name|__is_aggregate
+block|{}
+struct|;
+comment|// expected-warning {{made available}}
+struct|struct
 name|__is_arithmetic
 block|{}
 struct|;

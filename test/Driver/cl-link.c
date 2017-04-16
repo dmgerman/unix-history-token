@@ -52,11 +52,19 @@ comment|// ASAN: "-incremental:no"
 end_comment
 
 begin_comment
-comment|// ASAN: "{{.*}}clang_rt.asan-i386.lib"
+comment|// ASAN: "{{[^"]*}}clang_rt.asan-i386.lib"
 end_comment
 
 begin_comment
-comment|// ASAN: "{{.*}}clang_rt.asan_cxx-i386.lib"
+comment|// ASAN: "-wholearchive:{{.*}}clang_rt.asan-i386.lib"
+end_comment
+
+begin_comment
+comment|// ASAN: "{{[^"]*}}clang_rt.asan_cxx-i386.lib"
+end_comment
+
+begin_comment
+comment|// ASAN: "-wholearchive:{{.*}}clang_rt.asan_cxx-i386.lib"
 end_comment
 
 begin_comment
@@ -84,11 +92,15 @@ comment|// ASAN-MD: "{{.*}}clang_rt.asan_dynamic-i386.lib"
 end_comment
 
 begin_comment
-comment|// ASAN-MD: "{{.*}}clang_rt.asan_dynamic_runtime_thunk-i386.lib"
+comment|// ASAN-MD: "{{[^"]*}}clang_rt.asan_dynamic_runtime_thunk-i386.lib"
 end_comment
 
 begin_comment
 comment|// ASAN-MD: "-include:___asan_seh_interceptor"
+end_comment
+
+begin_comment
+comment|// ASAN-MD: "-wholearchive:{{.*}}clang_rt.asan_dynamic_runtime_thunk-i386.lib"
 end_comment
 
 begin_comment

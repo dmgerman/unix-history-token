@@ -164,7 +164,7 @@ comment|// RUN:   FileCheck --check-prefix=WARN-OMIT-LEAF-7S %s
 end_comment
 
 begin_comment
-comment|// WARN-OMIT-LEAF-7S: warning: optimization flag '-momit-leaf-frame-pointer' is not supported for target 'armv7s'
+comment|// WARN-OMIT-LEAF-7S-NOT: warning: optimization flag '-momit-leaf-frame-pointer' is not supported for target 'armv7s'
 end_comment
 
 begin_comment
@@ -172,7 +172,7 @@ comment|// WARN-OMIT-LEAF-7S: "-mdisable-fp-elim"
 end_comment
 
 begin_comment
-comment|// WARN-OMIT-LEAF-7S-NOT: "-momit-leaf-frame-pointer"
+comment|// WARN-OMIT-LEAF-7S: "-momit-leaf-frame-pointer"
 end_comment
 
 begin_comment

@@ -1424,18 +1424,6 @@ block|}
 comment|/// \brief Comparison function class, useful for sorting FullSourceLocs.
 expr|struct
 name|BeforeThanCompare
-operator|:
-name|public
-name|std
-operator|::
-name|binary_function
-operator|<
-name|FullSourceLoc
-block|,
-name|FullSourceLoc
-block|,
-name|bool
-operator|>
 block|{
 name|bool
 name|operator

@@ -24756,7 +24756,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_permute_pd
-comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> undef,<2 x i32><i32 1, i32 0>
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> zeroinitializer,<2 x i32><i32 1, i32 0>
 comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_mask_permute_pd
@@ -24785,7 +24785,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_permute_pd
-comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> undef,<2 x i32><i32 1, i32 0>
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> zeroinitializer,<2 x i32><i32 1, i32 0>
 comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_maskz_permute_pd
@@ -24815,7 +24815,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_permute_pd
-comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<4 x i32><i32 1, i32 0, i32 3, i32 2>
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> zeroinitializer,<4 x i32><i32 1, i32 0, i32 3, i32 2>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_permute_pd
@@ -24844,7 +24844,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_permute_pd
-comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<4 x i32><i32 1, i32 0, i32 3, i32 2>
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> zeroinitializer,<4 x i32><i32 1, i32 0, i32 3, i32 2>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_permute_pd
@@ -24874,7 +24874,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_permute_ps
-comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> undef,<4 x i32><i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> zeroinitializer,<4 x i32><i32 3, i32 2, i32 1, i32 0>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_mask_permute_ps
@@ -24903,7 +24903,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_permute_ps
-comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> undef,<4 x i32><i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> zeroinitializer,<4 x i32><i32 3, i32 2, i32 1, i32 0>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_maskz_permute_ps
@@ -24933,7 +24933,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_permute_ps
-comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> undef,<8 x i32><i32 3, i32 2, i32 1, i32 0, i32 7, i32 6, i32 5, i32 4>
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> zeroinitializer,<8 x i32><i32 3, i32 2, i32 1, i32 0, i32 7, i32 6, i32 5, i32 4>
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_mask_permute_ps
@@ -24962,7 +24962,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_permute_ps
-comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> undef,<8 x i32><i32 3, i32 2, i32 1, i32 0, i32 7, i32 6, i32 5, i32 4>
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> zeroinitializer,<8 x i32><i32 3, i32 2, i32 1, i32 0, i32 7, i32 6, i32 5, i32 4>
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_maskz_permute_ps
@@ -28124,7 +28124,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_broadcast_f32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf32x4
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
 return|return
 name|_mm256_broadcast_f32x4
 argument_list|(
@@ -28149,7 +28149,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_broadcast_f32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf32x4
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_mask_broadcast_f32x4
 argument_list|(
@@ -28175,7 +28176,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_broadcast_f32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf32x4
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_maskz_broadcast_f32x4
 argument_list|(
@@ -28192,15 +28194,20 @@ name|__m256i
 name|test_mm256_broadcast_i32x4
 parameter_list|(
 name|__m128i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_broadcast_i32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti32x4
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
 return|return
 name|_mm256_broadcast_i32x4
 argument_list|(
+name|_mm_loadu_si128
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -28217,11 +28224,14 @@ name|__mmask8
 name|__M
 parameter_list|,
 name|__m128i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_broadcast_i32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti32x4
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_broadcast_i32x4
 argument_list|(
@@ -28229,7 +28239,10 @@ name|__O
 argument_list|,
 name|__M
 argument_list|,
+name|_mm_loadu_si128
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -28243,17 +28256,23 @@ name|__mmask8
 name|__M
 parameter_list|,
 name|__m128i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_broadcast_i32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti32x4
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_broadcast_i32x4
 argument_list|(
 name|__M
 argument_list|,
+name|_mm_loadu_si128
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -31713,7 +31732,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_extractf32x4_ps
-comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|_mm256_extractf32x4_ps
 argument_list|(
@@ -31740,7 +31759,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_extractf32x4_ps
-comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm256_mask_extractf32x4_ps
@@ -31769,7 +31788,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_extractf32x4_ps
-comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm256_maskz_extractf32x4_ps
@@ -33007,7 +33026,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_permutex_pd
-comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<4 x i32><i32 3, i32 0, i32 0, i32 0>
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> zeroinitializer,<4 x i32><i32 3, i32 0, i32 0, i32 0>
 return|return
 name|_mm256_permutex_pd
 argument_list|(
@@ -33034,7 +33053,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_permutex_pd
-comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<4 x i32><i32 1, i32 0, i32 0, i32 0>
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> zeroinitializer,<4 x i32><i32 1, i32 0, i32 0, i32 0>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_permutex_pd
@@ -33063,7 +33082,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_permutex_pd
-comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<4 x i32><i32 1, i32 0, i32 0, i32 0>
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> zeroinitializer,<4 x i32><i32 1, i32 0, i32 0, i32 0>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_permutex_pd
@@ -33087,7 +33106,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_permutex_epi64
-comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> undef,<4 x i32><i32 3, i32 0, i32 0, i32 0>
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> zeroinitializer,<4 x i32><i32 3, i32 0, i32 0, i32 0>
 return|return
 name|_mm256_permutex_epi64
 argument_list|(
@@ -33114,7 +33133,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_permutex_epi64
-comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> undef,<4 x i32><i32 3, i32 0, i32 0, i32 0>
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> zeroinitializer,<4 x i32><i32 3, i32 0, i32 0, i32 0>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_permutex_epi64
@@ -33143,7 +33162,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_permutex_epi64
-comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> undef,<4 x i32><i32 3, i32 0, i32 0, i32 0>
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> zeroinitializer,<4 x i32><i32 3, i32 0, i32 0, i32 0>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_permutex_epi64

@@ -193,6 +193,9 @@ name|class
 name|FrontendAction
 decl_stmt|;
 name|class
+name|MemoryBufferCache
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 name|class
@@ -283,6 +286,13 @@ operator|<
 name|SourceManager
 operator|>
 name|SourceMgr
+block|;
+comment|/// The cache of PCM files.
+name|IntrusiveRefCntPtr
+operator|<
+name|MemoryBufferCache
+operator|>
+name|PCMCache
 block|;
 comment|/// The preprocessor.
 name|std
@@ -431,14 +441,20 @@ comment|/// \brief Whether we should (re)build the global module index once we
 comment|/// have finished with this translation unit.
 name|bool
 name|BuildGlobalModuleIndex
+operator|=
+name|false
 block|;
 comment|/// \brief We have a full global module index, with all modules.
 name|bool
 name|HaveFullGlobalModuleIndex
+operator|=
+name|false
 block|;
 comment|/// \brief One or more modules failed to build.
 name|bool
 name|ModuleBuildFailed
+operator|=
+name|false
 block|;
 comment|/// \brief Holds information about the output file.
 comment|///
@@ -529,9 +545,28 @@ operator|:
 name|explicit
 name|CompilerInstance
 argument_list|(
-argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps =           std::make_shared<PCHContainerOperations>()
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+operator|=
+name|std
+operator|::
+name|make_shared
+operator|<
+name|PCHContainerOperations
+operator|>
+operator|(
+operator|)
 argument_list|,
-argument|bool BuildingModule = false
+name|MemoryBufferCache
+operator|*
+name|SharedPCMCache
+operator|=
+name|nullptr
 argument_list|)
 block|;
 operator|~
@@ -1918,6 +1953,10 @@ argument|const PCHContainerReader&PCHContainerRdr
 argument_list|,
 argument|ArrayRef<std::shared_ptr<ModuleFileExtension>> Extensions
 argument_list|,
+argument|DependencyFileGenerator *DependencyFile
+argument_list|,
+argument|ArrayRef<std::shared_ptr<DependencyCollector>> DependencyCollectors
+argument_list|,
 argument|void *DeserializationListener
 argument_list|,
 argument|bool OwnDeserializationListener
@@ -2229,9 +2268,20 @@ name|ExternalSemaSource
 operator|>
 name|ESS
 argument_list|)
-block|; }
-decl_stmt|;
+block|;
+name|MemoryBufferCache
+operator|&
+name|getPCMCache
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|PCMCache
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

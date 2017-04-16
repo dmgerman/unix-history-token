@@ -912,6 +912,22 @@ comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE1
 end_comment
 
 begin_comment
+comment|// RUN: %clang -c %s -target aarch64-unknown-openbsd -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target arm-unknown-openbsd -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE1
+end_comment
+
+begin_comment
 comment|// RUN: %clang -c %s -target mips64-unknown-openbsd -### 2>&1 \
 end_comment
 

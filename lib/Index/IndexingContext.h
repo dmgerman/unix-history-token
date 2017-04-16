@@ -213,16 +213,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|isFunctionLocalDecl
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|D
-parameter_list|)
-function_decl|;
-specifier|static
-name|bool
 name|isTemplateImplicitInstantiation
 parameter_list|(
 specifier|const
@@ -310,6 +300,9 @@ name|DC
 argument_list|,
 name|SymbolRoleSet
 name|Roles
+operator|=
+name|SymbolRoleSet
+argument_list|()
 argument_list|,
 name|ArrayRef
 operator|<

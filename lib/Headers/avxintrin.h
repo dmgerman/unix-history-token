@@ -6642,7 +6642,7 @@ value|0x07
 end_define
 
 begin_comment
-comment|/* Ordered (nonsignaling)   */
+comment|/* Ordered (non-signaling)   */
 end_comment
 
 begin_define
@@ -6664,7 +6664,7 @@ value|0x09
 end_define
 
 begin_comment
-comment|/* Not-greater-than-or-equal (unord, signaling)  */
+comment|/* Not-greater-than-or-equal (unordered, signaling)  */
 end_comment
 
 begin_define
@@ -6807,7 +6807,7 @@ value|0x16
 end_define
 
 begin_comment
-comment|/* Not-less-than-or-equal (unord, non-signaling)  */
+comment|/* Not-less-than-or-equal (unordered, non-signaling)  */
 end_comment
 
 begin_define
@@ -6840,7 +6840,7 @@ value|0x19
 end_define
 
 begin_comment
-comment|/* Not-greater-than-or-equal (unord, non-sign)  */
+comment|/* Not-greater-than-or-equal (unordered, non-signaling)  */
 end_comment
 
 begin_define
@@ -6994,47 +6994,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -7140,47 +7224,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -7286,47 +7454,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -7432,47 +7684,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -7574,47 +7910,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -7716,47 +8136,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -9181,6 +9685,46 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Returns the first element of the input vector of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<avxintrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 64 bit double containing the first element of the input vector.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -9200,6 +9744,46 @@ index|]
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Returns the first element of the input vector of [8 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<avxintrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x i32].
+end_comment
+
+begin_comment
+comment|/// \returns A 32 bit integer containing the first element of the input vector.
+end_comment
 
 begin_function
 specifier|static
@@ -9228,6 +9812,46 @@ index|]
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Returns the first element of the input vector of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<avxintrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 32 bit float containing the first element of the input vector.
+end_comment
 
 begin_function
 specifier|static

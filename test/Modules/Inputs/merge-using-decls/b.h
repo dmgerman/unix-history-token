@@ -125,6 +125,18 @@ block|; }
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|__cplusplus
+operator|<=
+literal|199711L
+end_if
+
+begin_comment
+comment|// C++11 does not allow access declarations
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -149,6 +161,11 @@ name|v
 block|; }
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|template
@@ -223,6 +240,18 @@ name|I
 expr_stmt|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+name|__cplusplus
+operator|<=
+literal|199711L
+end_if
+
+begin_comment
+comment|// C++11 does not allow access declarations
+end_comment
+
 begin_typedef
 typedef|typedef
 name|E
@@ -234,6 +263,11 @@ name|type
 name|I
 expr_stmt|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef

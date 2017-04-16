@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -target x86_64-unknown-freebsd --analyze %s
+comment|// RUN: %clang_analyze_cc1 -triple x86_64-unknown-freebsd %s
 end_comment
 
 begin_include

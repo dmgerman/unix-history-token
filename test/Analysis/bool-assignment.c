@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,alpha.core.BoolAssignment -analyzer-store=region -verify -std=c99 -Dbool=_Bool %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=core,alpha.core.BoolAssignment -analyzer-store=region -verify -std=c99 -Dbool=_Bool %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,alpha.core.BoolAssignment -analyzer-store=region -verify -x c++ %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=core,alpha.core.BoolAssignment -analyzer-store=region -verify -x c++ %s
 end_comment
 
 begin_comment
@@ -178,13 +178,25 @@ operator|<
 literal|250
 condition|)
 block|{
-comment|// FIXME: Currently we are loosing this warning due to a SymbolCast in RHS.
+ifdef|#
+directive|ifdef
+name|ANALYZER_CM_Z3
+name|BOOL
+name|x
+init|=
+name|y
+decl_stmt|;
+comment|// expected-warning {{Assignment of a non-Boolean value}}
+else|#
+directive|else
 name|BOOL
 name|x
 init|=
 name|y
 decl_stmt|;
 comment|// no-warning
+endif|#
+directive|endif
 return|return;
 block|}
 if|if

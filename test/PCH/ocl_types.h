@@ -122,17 +122,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// ndrange_t
-end_comment
-
-begin_typedef
-typedef|typedef
-name|ndrange_t
-name|range_t
-typedef|;
-end_typedef
-
-begin_comment
 comment|// reserve_id_t
 end_comment
 

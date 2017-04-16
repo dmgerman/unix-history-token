@@ -8,7 +8,7 @@ comment|// RUN: mkdir %T/dir
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -analyzer-checker=core -o %T/dir %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-output=html -analyzer-checker=core -o %T/dir %s
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|// RUN: cd %T/dir
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -analyzer-checker=core -o testrelative %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-output=html -analyzer-checker=core -o testrelative %s
 end_comment
 
 begin_comment

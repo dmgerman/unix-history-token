@@ -244,6 +244,14 @@ comment|// RUN:    | FileCheck %s -check-prefix CHECK-EXECUTE-ONLY-LONG-CALLS
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armv7m-eabi -x assembler -mexecute-only %s -c -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:    | FileCheck %s -check-prefix CHECK-NO-EXECUTE-ONLY -check-prefix CHECK-NO-EXECUTE-ONLY-ASM
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -265,6 +273,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-EXECUTE-ONLY-LONG-CALLS: error: option '-mexecute-only' cannot be specified with '-mlong-calls'
+end_comment
+
+begin_comment
+comment|// CHECK-NO-EXECUTE-ONLY-ASM: warning: argument unused during compilation: '-mexecute-only'
 end_comment
 
 end_unit

@@ -213,10 +213,8 @@ name|int
 name|j
 parameter_list|)
 block|{
-comment|// expected-remark@+6 {{foz should never be inlined (cost=never)}}
-comment|// expected-remark@+5 {{foz will not be inlined into bar}}
-comment|// expected-remark@+4 {{foz should never be inlined}}
-comment|// expected-remark@+3 {{foz will not be inlined into bar}}
+comment|// expected-remark@+4 {{foz not inlined into bar because it should never be inlined (cost=never)}}
+comment|// expected-remark@+3 {{foz not inlined into bar because it should never be inlined (cost=never)}}
 comment|// expected-remark@+2 {{foo should always be inlined}}
 comment|// expected-remark@+1 {{foo inlined into bar}}
 return|return

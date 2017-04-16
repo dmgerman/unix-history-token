@@ -1536,7 +1536,15 @@ comment|// CHECK-SAFESTACK-LINUX-NOT: "-lc"
 end_comment
 
 begin_comment
+comment|// CHECK-SAFESTACK-LINUX-NOT: whole-archive
+end_comment
+
+begin_comment
 comment|// CHECK-SAFESTACK-LINUX: libclang_rt.safestack-x86_64.a"
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-LINUX: "-u" "__safestack_init"
 end_comment
 
 begin_comment

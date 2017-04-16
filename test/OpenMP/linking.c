@@ -36,7 +36,7 @@ comment|// CHECK-LD-32: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-32: "-l[[DEFAULT_OPENMP_LIB:[^"]*]]" "-lgcc"
+comment|// CHECK-LD-32: "-l[[DEFAULT_OPENMP_LIB:[^"]*]]"
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|// CHECK-LD-64: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-64: "-l[[DEFAULT_OPENMP_LIB:[^"]*]]" "-lgcc"
+comment|// CHECK-LD-64: "-l[[DEFAULT_OPENMP_LIB:[^"]*]]"
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ comment|// CHECK-GOMP-LD-32: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-GOMP-LD-32: "-lgomp" "-lrt" "-lgcc"
+comment|// CHECK-GOMP-LD-32: "-lgomp" "-lrt"
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ comment|// CHECK-GOMP-LD-64: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-GOMP-LD-64: "-lgomp" "-lrt" "-lgcc"
+comment|// CHECK-GOMP-LD-64: "-lgomp" "-lrt"
 end_comment
 
 begin_comment
@@ -148,7 +148,7 @@ comment|// CHECK-IOMP5-LD-32: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-IOMP5-LD-32: "-l[[DEFAULT_OPENMP_LIB:[^"]*]]" "-lgcc"
+comment|// CHECK-IOMP5-LD-32: "-l[[DEFAULT_OPENMP_LIB:[^"]*]]"
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ comment|// CHECK-IOMP5-LD-64: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-IOMP5-LD-64: "-l[[DEFAULT_OPENMP_LIB:[^"]*]]" "-lgcc"
+comment|// CHECK-IOMP5-LD-64: "-l[[DEFAULT_OPENMP_LIB:[^"]*]]"
 end_comment
 
 begin_comment
@@ -248,7 +248,7 @@ comment|// CHECK-LD-OVERRIDE-32: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-OVERRIDE-32: "-lgomp" "-lrt" "-lgcc"
+comment|// CHECK-LD-OVERRIDE-32: "-lgomp" "-lrt"
 end_comment
 
 begin_comment
@@ -280,7 +280,7 @@ comment|// CHECK-LD-OVERRIDE-64: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-OVERRIDE-64: "-lgomp" "-lrt" "-lgcc"
+comment|// CHECK-LD-OVERRIDE-64: "-lgomp" "-lrt"
 end_comment
 
 begin_comment

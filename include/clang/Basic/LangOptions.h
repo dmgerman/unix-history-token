@@ -304,6 +304,19 @@ init|=
 literal|19
 block|}
 enum|;
+enum|enum
+name|FPContractModeKind
+block|{
+name|FPC_Off
+block|,
+comment|// Form fused FP ops only where result will not be affected.
+name|FPC_On
+block|,
+comment|// Form fused FP ops according to FP_CONTRACT rules.
+name|FPC_Fast
+comment|// Aggressively fuse FP ops (E.g. FMA).
+block|}
+enum|;
 name|public
 label|:
 comment|/// \brief Set of enabled sanitizers.
@@ -321,6 +334,32 @@ operator|::
 name|string
 operator|>
 name|SanitizerBlacklistFiles
+expr_stmt|;
+comment|/// \brief Paths to the XRay "always instrument" files specifying which
+comment|/// objects (files, functions, variables) should be imbued with the XRay
+comment|/// "always instrument" attribute.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|XRayAlwaysInstrumentFiles
+expr_stmt|;
+comment|/// \brief Paths to the XRay "never instrument" files specifying which
+comment|/// objects (files, functions, variables) should be imbued with the XRay
+comment|/// "never instrument" attribute.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|XRayNeverInstrumentFiles
 expr_stmt|;
 name|clang
 operator|::
@@ -510,6 +549,18 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief True if any ObjC types may have non-trivial lifetime qualifiers.
+name|bool
+name|allowsNonTrivialObjCLifetimeQualifiers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjCAutoRefCount
+operator|||
+name|ObjCWeak
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -527,19 +578,27 @@ name|FPOptions
 block|{
 name|public
 label|:
-name|unsigned
-name|fp_contract
-range|:
-literal|1
-decl_stmt|;
 name|FPOptions
 argument_list|()
 operator|:
 name|fp_contract
 argument_list|(
-literal|0
+argument|LangOptions::FPC_Off
 argument_list|)
 block|{}
+comment|// Used for serializing.
+name|explicit
+name|FPOptions
+argument_list|(
+argument|unsigned I
+argument_list|)
+operator|:
+name|fp_contract
+argument_list|(
+argument|static_cast<LangOptions::FPContractModeKind>(I)
+argument_list|)
+block|{}
+name|explicit
 name|FPOptions
 argument_list|(
 specifier|const
@@ -550,9 +609,86 @@ argument_list|)
 operator|:
 name|fp_contract
 argument_list|(
-argument|LangOpts.DefaultFPContract
+argument|LangOpts.getDefaultFPContractMode()
 argument_list|)
 block|{}
+name|bool
+name|allowFPContractWithinStatement
+argument_list|()
+specifier|const
+block|{
+return|return
+name|fp_contract
+operator|==
+name|LangOptions
+operator|::
+name|FPC_On
+return|;
+block|}
+name|bool
+name|allowFPContractAcrossStatement
+argument_list|()
+specifier|const
+block|{
+return|return
+name|fp_contract
+operator|==
+name|LangOptions
+operator|::
+name|FPC_Fast
+return|;
+block|}
+name|void
+name|setAllowFPContractWithinStatement
+parameter_list|()
+block|{
+name|fp_contract
+operator|=
+name|LangOptions
+operator|::
+name|FPC_On
+expr_stmt|;
+block|}
+name|void
+name|setAllowFPContractAcrossStatement
+parameter_list|()
+block|{
+name|fp_contract
+operator|=
+name|LangOptions
+operator|::
+name|FPC_Fast
+expr_stmt|;
+block|}
+name|void
+name|setDisallowFPContract
+parameter_list|()
+block|{
+name|fp_contract
+operator|=
+name|LangOptions
+operator|::
+name|FPC_Off
+expr_stmt|;
+block|}
+comment|/// Used to serialize this.
+name|unsigned
+name|getInt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|fp_contract
+return|;
+block|}
+name|private
+label|:
+comment|/// Adjust BinaryOperator::FPFeatures to match the bit-field size of this.
+name|unsigned
+name|fp_contract
+range|:
+literal|2
+decl_stmt|;
 block|}
 end_decl_stmt
 

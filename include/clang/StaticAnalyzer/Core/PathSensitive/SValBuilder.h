@@ -478,6 +478,22 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Simplify symbolic expressions within a given SVal. Return an SVal
+comment|/// that represents the same value, but is hopefully easier to work with
+comment|/// than the original SVal.
+name|virtual
+name|SVal
+name|simplifySVal
+parameter_list|(
+name|ProgramStateRef
+name|State
+parameter_list|,
+name|SVal
+name|Val
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// Constructs a symbolic expression for two non-location values.
 name|SVal
 name|makeSymExprValNN

@@ -68,7 +68,25 @@ name|P4
 operator|>
 expr|@
 name|end
+comment|// A hidden extension
+expr|@
+name|interface
+name|Foo
+argument_list|()
+expr|@
+name|property
+argument_list|(
+argument|assign
+argument_list|)
+name|int
+name|hiddenPropertyFromExtension
+expr_stmt|;
 end_expr_stmt
+
+begin_macro
+unit|@
+name|end
+end_macro
 
 end_unit
 

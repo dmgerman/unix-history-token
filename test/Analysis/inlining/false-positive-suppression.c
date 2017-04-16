@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-eagerly-assume -analyzer-checker=core -analyzer-config suppress-null-return-paths=false -verify %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-eagerly-assume -analyzer-checker=core -analyzer-config suppress-null-return-paths=false -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-eagerly-assume -analyzer-checker=core -verify -DSUPPRESSED=1 %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-eagerly-assume -analyzer-checker=core -verify -DSUPPRESSED=1 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-eagerly-assume -analyzer-checker=core -analyzer-config avoid-suppressing-null-argument-paths=true -DSUPPRESSED=1 -DNULL_ARGS=1 -verify %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-eagerly-assume -analyzer-checker=core -analyzer-config avoid-suppressing-null-argument-paths=true -DSUPPRESSED=1 -DNULL_ARGS=1 -verify %s
 end_comment
 
 begin_function_decl

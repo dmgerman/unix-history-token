@@ -40,7 +40,7 @@ comment|// CHECK-NGM-ARM: "-backend-option" "-arm-global-merge=false"
 end_comment
 
 begin_comment
-comment|// CHECK-NGM-AARCH64: "-backend-option" "-aarch64-global-merge=false"
+comment|// CHECK-NGM-AARCH64: "-backend-option" "-aarch64-enable-global-merge=false"
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ comment|// CHECK-GM-ARM: "-backend-option" "-arm-global-merge=true"
 end_comment
 
 begin_comment
-comment|// CHECK-GM-AARCH64: "-backend-option" "-aarch64-global-merge=true"
+comment|// CHECK-GM-AARCH64: "-backend-option" "-aarch64-enable-global-merge=true"
 end_comment
 
 begin_comment

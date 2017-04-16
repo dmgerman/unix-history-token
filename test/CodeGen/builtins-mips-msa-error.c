@@ -995,10 +995,10 @@ name|v16i8_r
 operator|=
 name|__msa_ldi_b
 argument_list|(
-literal|512
+literal|256
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{argument should be a value from -512 to 511}}
+comment|// expected-error {{argument should be a value from -128 to 255}}
 name|v8i16_r
 operator|=
 name|__msa_ldi_h
@@ -1313,54 +1313,6 @@ literal|256
 argument_list|)
 expr_stmt|;
 comment|// CHECK: warning: argument should be a value from 0 to 255}}
-name|v16i8_r
-operator|=
-name|__msa_sld_b
-argument_list|(
-name|v16i8_r
-argument_list|,
-name|v16i8_a
-argument_list|,
-literal|16
-argument_list|)
-expr_stmt|;
-comment|// expected-error {{argument should be a value from 0 to 15}}
-name|v8i16_r
-operator|=
-name|__msa_sld_h
-argument_list|(
-name|v8i16_r
-argument_list|,
-name|v8i16_a
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-comment|// expected-error {{argument should be a value from 0 to 7}}
-name|v4i32_r
-operator|=
-name|__msa_sld_w
-argument_list|(
-name|v4i32_r
-argument_list|,
-name|v4i32_a
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-comment|// expected-error {{argument should be a value from 0 to 3}}
-name|v2i64_r
-operator|=
-name|__msa_sld_d
-argument_list|(
-name|v2i64_r
-argument_list|,
-name|v2i64_a
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-comment|// expected-error {{argument should be a value from 0 to 1}}
 name|v16i8_r
 operator|=
 name|__msa_sldi_b
@@ -2630,10 +2582,10 @@ operator|=
 name|__msa_ldi_b
 argument_list|(
 operator|-
-literal|513
+literal|129
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{argument should be a value from -512 to 511}}
+comment|// expected-error {{argument should be a value from -128 to 255}}
 name|v8i16_r
 operator|=
 name|__msa_ldi_h
@@ -2980,58 +2932,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|// CHECK: warning: argument should be a value from 0 to 255}}
-name|v16i8_r
-operator|=
-name|__msa_sld_b
-argument_list|(
-name|v16i8_r
-argument_list|,
-name|v16i8_a
-argument_list|,
-operator|-
-literal|17
-argument_list|)
-expr_stmt|;
-comment|// expected-error {{argument should be a value from 0 to 15}}
-name|v8i16_r
-operator|=
-name|__msa_sld_h
-argument_list|(
-name|v8i16_r
-argument_list|,
-name|v8i16_a
-argument_list|,
-operator|-
-literal|8
-argument_list|)
-expr_stmt|;
-comment|// expected-error {{argument should be a value from 0 to 7}}
-name|v4i32_r
-operator|=
-name|__msa_sld_w
-argument_list|(
-name|v4i32_r
-argument_list|,
-name|v4i32_a
-argument_list|,
-operator|-
-literal|4
-argument_list|)
-expr_stmt|;
-comment|// expected-error {{argument should be a value from 0 to 3}}
-name|v2i64_r
-operator|=
-name|__msa_sld_d
-argument_list|(
-name|v2i64_r
-argument_list|,
-name|v2i64_a
-argument_list|,
-operator|-
-literal|2
-argument_list|)
-expr_stmt|;
-comment|// expected-error {{argument should be a value from 0 to 1}}
 name|v16i8_r
 operator|=
 name|__msa_sldi_b

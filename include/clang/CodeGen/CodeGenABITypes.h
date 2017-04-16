@@ -72,7 +72,7 @@ comment|// actually used in function calls, which makes it possible to then dete
 end_comment
 
 begin_comment
-comment|// the acutal ABI locations (e.g. registers, stack locations, etc.) that
+comment|// the actual ABI locations (e.g. registers, stack locations, etc.) that
 end_comment
 
 begin_comment

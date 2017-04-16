@@ -1548,6 +1548,11 @@ operator|>
 name|Regions
 argument_list|,
 specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
+specifier|const
 name|CallEvent
 operator|*
 name|Call
@@ -2100,6 +2105,11 @@ name|MemRegion
 operator|*
 operator|>
 name|Regions
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
 argument_list|,
 specifier|const
 name|CallEvent

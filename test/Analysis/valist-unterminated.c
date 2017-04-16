@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-pc-linux-gnu -analyze -analyzer-checker=core,alpha.valist.Unterminated,alpha.valist.CopyToSelf -analyzer-output=text -analyzer-store=region -verify %s
+comment|// RUN: %clang_analyze_cc1 -triple hexagon-unknown-linux -analyzer-checker=core,valist.Unterminated,valist.CopyToSelf -analyzer-output=text -analyzer-store=region -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_analyze_cc1 -triple x86_64-pc-linux-gnu -analyzer-checker=core,valist.Unterminated,valist.CopyToSelf -analyzer-output=text -analyzer-store=region -verify %s
 end_comment
 
 begin_include
@@ -31,7 +35,8 @@ argument_list|)
 expr_stmt|;
 comment|// expected-note{{Initialized va_list}}
 return|return;
-comment|// expected-warning{{Initialized va_list 'va' is leaked}} expected-note{{Initialized va_list 'va' is leaked}}
+comment|// expected-warning{{Initialized va_list 'va' is leaked}}
+comment|// expected-note@-1{{Initialized va_list 'va' is leaked}}
 block|}
 end_function
 
@@ -74,7 +79,11 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{Initialized va_list 'va' is leaked}} expected-note{{Initialized va_list 'va' is leaked}}}
+comment|// expected-warning{{Initialized va_list 'va' is leaked}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{Initialized va_list 'va' is leaked}}
 end_comment
 
 begin_function
@@ -112,7 +121,8 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Initialized va_list 'va2' is leaked}} expected-note{{Initialized va_list 'va2' is leaked}}
+comment|// expected-warning{{Initialized va_list 'va2' is leaked}}
+comment|// expected-note@-1{{Initialized va_list 'va2' is leaked}}
 block|}
 end_function
 
@@ -137,7 +147,8 @@ argument_list|)
 expr_stmt|;
 comment|// expected-note{{Initialized va_list}}
 return|return;
-comment|// expected-warning{{Initialized va_list is leaked}} expected-note{{Initialized va_list is leaked}}
+comment|// expected-warning{{Initialized va_list is leaked}}
+comment|// expected-note@-1{{Initialized va_list is leaked}}
 block|}
 end_function
 
@@ -158,12 +169,16 @@ argument_list|,
 name|fst
 argument_list|)
 expr_stmt|;
-comment|//FIXME: this should cause a warning
+comment|// expected-note{{Initialized va_list}}
 block|}
 end_function
 
 begin_comment
-comment|// no-warning
+comment|// expected-warning{{Initialized va_list}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{Initialized va_list}}
 end_comment
 
 begin_function
@@ -204,7 +219,8 @@ operator|*
 name|fst
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Initialized va_list is leaked}} expected-note{{Initialized va_list is leaked}}
+comment|// expected-warning{{Initialized va_list is leaked}}
+comment|// expected-note@-1{{Initialized va_list is leaked}}
 block|}
 end_function
 
@@ -242,7 +258,11 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{Initialized va_list 'x' is leaked}} expected-note{{Initialized va_list 'x' is leaked}}
+comment|// expected-warning{{Initialized va_list 'x' is leaked}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{Initialized va_list 'x' is leaked}}
 end_comment
 
 begin_function
@@ -307,7 +327,8 @@ argument_list|,
 name|fst
 argument_list|)
 expr_stmt|;
-comment|// expected-note{{Initialized va_list}} expected-note{{Initialized va_list}}
+comment|// expected-note{{Initialized va_list}}
+comment|// expected-note@-1{{Initialized va_list}}
 name|va_start
 argument_list|(
 name|va
@@ -315,12 +336,17 @@ argument_list|,
 name|fst
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Initialized va_list 'va' is initialized again}} expected-note{{Initialized va_list 'va' is initialized again}}
+comment|// expected-warning{{Initialized va_list 'va' is initialized again}}
+comment|// expected-note@-1{{Initialized va_list 'va' is initialized again}}
 block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{Initialized va_list 'va' is leaked}} expected-note{{Initialized va_list 'va' is leaked}}
+comment|// expected-warning{{Initialized va_list 'va' is leaked}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{Initialized va_list 'va' is leaked}}
 end_comment
 
 begin_function
@@ -396,7 +422,8 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{va_list 'va' is copied onto itself}} expected-note{{va_list 'va' is copied onto itself}}
+comment|// expected-warning{{va_list 'va' is copied onto itself}}
+comment|// expected-note@-1{{va_list 'va' is copied onto itself}}
 name|va_end
 argument_list|(
 name|va
@@ -404,10 +431,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|// no-warning
-end_comment
 
 begin_function
 name|void
@@ -429,13 +452,10 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{va_list 'va' is copied onto itself}} expected-note{{va_list 'va' is copied onto itself}}
+comment|// expected-warning{{va_list 'va' is copied onto itself}}
+comment|// expected-note@-1{{va_list 'va' is copied onto itself}}
 block|}
 end_function
-
-begin_comment
-comment|// no-warning
-end_comment
 
 begin_function
 name|void
@@ -467,13 +487,10 @@ argument_list|,
 name|va2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Initialized va_list 'va' is overwritten by an uninitialized one}} expected-note{{Initialized va_list 'va' is overwritten by an uninitialized one}}
+comment|// expected-warning{{Initialized va_list 'va' is overwritten by an uninitialized one}}
+comment|// expected-note@-1{{Initialized va_list 'va' is overwritten by an uninitialized one}}
 block|}
 end_function
-
-begin_comment
-comment|// no-warning
-end_comment
 
 begin_comment
 comment|//This only generates a warning for the valist.Uninitialized checker
@@ -545,7 +562,8 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Initialized va_list 'va2' is initialized again}} expected-note{{Initialized va_list 'va2' is initialized again}}
+comment|// expected-warning{{Initialized va_list 'va2' is initialized again}}
+comment|// expected-note@-1{{Initialized va_list 'va2' is initialized again}}
 name|va_end
 argument_list|(
 name|va
@@ -558,10 +576,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|//no-warning
-end_comment
 
 begin_function
 name|void
@@ -592,7 +606,12 @@ argument_list|,
 name|fst
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Initialized va_list 'va' is leaked}} expected-warning{{Initialized va_list 'va2' is leaked}} expected-note{{Initialized va_list}} expected-note{{Initialized va_list}} expected-note{{Initialized va_list}} expected-note{{Initialized va_list 'va' is leaked}}
+comment|// expected-warning{{Initialized va_list 'va' is leaked}}
+comment|// expected-warning@-1{{Initialized va_list 'va2' is leaked}}
+comment|// expected-note@-2{{Initialized va_list}}
+comment|// expected-note@-3{{Initialized va_list}}
+comment|// expected-note@-4{{Initialized va_list}}
+comment|// expected-note@-5{{Initialized va_list 'va' is leaked}}
 block|}
 end_function
 
@@ -627,7 +646,11 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{Initialized va_list 'va_array[3]' is leaked}} expected-note{{Initialized va_list 'va_array[3]' is leaked}}
+comment|// expected-warning{{Initialized va_list 'va_array[3]' is leaked}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{Initialized va_list 'va_array[3]' is leaked}}
 end_comment
 
 begin_struct
@@ -672,7 +695,11 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{Initialized va_list 's.vafield' is leaked}} expected-note{{Initialized va_list 's.vafield' is leaked}}
+comment|// expected-warning{{Initialized va_list 's.vafield' is leaked}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{Initialized va_list 's.vafield' is leaked}}
 end_comment
 
 begin_function
@@ -711,7 +738,11 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{Initialized va_list 'mem[0]' is leaked}} expected-note{{Initialized va_list 'mem[0]' is leaked}}
+comment|// expected-warning{{Initialized va_list 'mem[0]' is leaked}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{Initialized va_list 'mem[0]' is leaked}}
 end_comment
 
 begin_function

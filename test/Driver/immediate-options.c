@@ -43,5 +43,21 @@ begin_comment
 comment|// PRINT-SEARCH-DIRS: libraries: ={{.*}}
 end_comment
 
+begin_comment
+comment|// Test if the -print-resource-dir option is accepted without error.
+end_comment
+
+begin_comment
+comment|// Allow unspecified output because the value of CLANG_RESOURCE_DIR is unknown.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -print-resource-dir | FileCheck %s -check-prefix=PRINT-RESOURCE-DIR
+end_comment
+
+begin_comment
+comment|// PRINT-RESOURCE-DIR: {{.+}}
+end_comment
+
 end_unit
 

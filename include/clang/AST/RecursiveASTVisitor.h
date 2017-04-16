@@ -2571,6 +2571,29 @@ break|break;
 case|case
 name|DeclarationName
 operator|::
+name|CXXDeductionGuideName
+case|:
+name|TRY_TO
+argument_list|(
+name|TraverseTemplateName
+argument_list|(
+name|TemplateName
+argument_list|(
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
+operator|.
+name|getCXXDeductionGuideTemplate
+argument_list|()
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DeclarationName
+operator|::
 name|Identifier
 case|:
 case|case
@@ -3513,6 +3536,15 @@ end_macro
 begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
+argument|DeducedTemplateSpecializationType
+argument_list|,
+argument|{   TRY_TO(TraverseTemplateName(T->getTemplateName()));   TRY_TO(TraverseType(T->getDeducedType())); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_TYPE
+argument_list|(
 argument|RecordType
 argument_list|,
 argument|{}
@@ -4076,6 +4108,15 @@ argument_list|(
 argument|AutoType
 argument_list|,
 argument|{   TRY_TO(TraverseType(TL.getTypePtr()->getDeducedType())); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_TYPELOC
+argument_list|(
+argument|DeducedTemplateSpecializationType
+argument_list|,
+argument|{   TRY_TO(TraverseTemplateName(TL.getTypePtr()->getTemplateName()));   TRY_TO(TraverseType(TL.getTypePtr()->getDeducedType())); }
 argument_list|)
 end_macro
 
@@ -5918,6 +5959,15 @@ block|; }
 operator|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
+argument|CXXDeductionGuideDecl
+argument_list|,
+argument|{
+comment|// We skip decls_begin/decls_end, which are already covered by
+comment|// TraverseFunctionHelper().
+argument|ShouldVisitChildren = false;   ReturnValue = TraverseFunctionHelper(D); }
+argument_list|)
+name|DEF_TRAVERSE_DECL
+argument_list|(
 argument|CXXMethodDecl
 argument_list|,
 argument|{
@@ -7114,6 +7164,12 @@ argument|{   if (!getDerived().shouldVisitImplicitCode()) {     TRY_TO_TRAVERSE_
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
+argument|DependentCoawaitExpr
+argument_list|,
+argument|{   if (!getDerived().shouldVisitImplicitCode()) {     TRY_TO_TRAVERSE_OR_ENQUEUE_STMT(S->getOperand());     ShouldVisitChildren = false;   } }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
 argument|CoyieldExpr
 argument_list|,
 argument|{   if (!getDerived().shouldVisitImplicitCode()) {     TRY_TO_TRAVERSE_OR_ENQUEUE_STMT(S->getOperand());     ShouldVisitChildren = false;   } }
@@ -7842,6 +7898,14 @@ argument_list|)
 block|{
 name|TRY_TO
 argument_list|(
+name|VisitOMPClauseWithPreInit
+argument_list|(
+name|C
+argument_list|)
+argument_list|)
+block|;
+name|TRY_TO
+argument_list|(
 name|TraverseStmt
 argument_list|(
 name|C
@@ -7908,6 +7972,14 @@ argument_list|(
 argument|OMPNumThreadsClause *C
 argument_list|)
 block|{
+name|TRY_TO
+argument_list|(
+name|VisitOMPClauseWithPreInit
+argument_list|(
+name|C
+argument_list|)
+argument_list|)
+block|;
 name|TRY_TO
 argument_list|(
 name|TraverseStmt
@@ -9462,6 +9534,14 @@ argument_list|)
 block|{
 name|TRY_TO
 argument_list|(
+name|VisitOMPClauseWithPreInit
+argument_list|(
+name|C
+argument_list|)
+argument_list|)
+block|;
+name|TRY_TO
+argument_list|(
 name|TraverseStmt
 argument_list|(
 name|C
@@ -9494,6 +9574,14 @@ argument_list|(
 argument|OMPThreadLimitClause *C
 argument_list|)
 block|{
+name|TRY_TO
+argument_list|(
+name|VisitOMPClauseWithPreInit
+argument_list|(
+name|C
+argument_list|)
+argument_list|)
+block|;
 name|TRY_TO
 argument_list|(
 name|TraverseStmt

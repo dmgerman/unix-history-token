@@ -430,6 +430,37 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|||
+name|__has_feature
+argument_list|(
+name|modules
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CLZERO__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<clzerointrin.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* FIXME: LWP */
 end_comment

@@ -47,7 +47,7 @@ condition|(
 name|n
 condition|)
 block|{
-comment|// CHECK-ASAN-USE-AFTER-SCOPE: @llvm.lifetime.start(i64 10, i8* {{.*}})
+comment|// CHECK-ASAN-USE-AFTER-SCOPE: @llvm.lifetime.start.p0i8(i64 10, i8* {{.*}})
 name|char
 name|A
 index|[
@@ -62,11 +62,11 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK-ASAN-USE-AFTER-SCOPE: @llvm.lifetime.end(i64 10, i8* {{.*}})
+comment|// CHECK-ASAN-USE-AFTER-SCOPE: @llvm.lifetime.end.p0i8(i64 10, i8* {{.*}})
 block|}
 else|else
 block|{
-comment|// CHECK-ASAN-USE-AFTER-SCOPE: @llvm.lifetime.start(i64 20, i8* {{.*}})
+comment|// CHECK-ASAN-USE-AFTER-SCOPE: @llvm.lifetime.start.p0i8(i64 20, i8* {{.*}})
 name|char
 name|A
 index|[
@@ -81,7 +81,7 @@ argument_list|,
 literal|2
 argument_list|)
 return|;
-comment|// CHECK-ASAN-USE-AFTER-SCOPE: @llvm.lifetime.end(i64 20, i8* {{.*}})
+comment|// CHECK-ASAN-USE-AFTER-SCOPE: @llvm.lifetime.end.p0i8(i64 20, i8* {{.*}})
 block|}
 block|}
 end_function

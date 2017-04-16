@@ -300,6 +300,9 @@ comment|///< Promotion
 name|ICR_Conversion
 block|,
 comment|///< Conversion
+name|ICR_OCL_Scalar_Widening
+block|,
+comment|///< OpenCL Scalar Widening
 name|ICR_Complex_Real_Conversion
 block|,
 comment|///< Complex<-> Real conversion

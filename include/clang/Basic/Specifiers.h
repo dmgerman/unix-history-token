@@ -227,11 +227,22 @@ comment|/// were written in a particular type specifier sequence.
 struct|struct
 name|WrittenBuiltinSpecs
 block|{
+name|static_assert
+argument_list|(
+name|TST_error
+operator|<
+literal|1
+operator|<<
+literal|6
+argument_list|,
+literal|"Type bitfield not wide enough for TST"
+argument_list|)
+expr_stmt|;
 comment|/*DeclSpec::TST*/
 name|unsigned
 name|Type
 range|:
-literal|5
+literal|6
 decl_stmt|;
 comment|/*DeclSpec::TSS*/
 name|unsigned

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 -analyze -analyzer-checker=core,alpha.core,debug.ExprInspection -analyzer-store=region -verify %s
+comment|// RUN: %clang_analyze_cc1 -triple x86_64-apple-darwin9 -analyzer-checker=core,alpha.core,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -analyze -analyzer-checker=core,alpha.core,debug.ExprInspection -analyzer-store=region -verify %s
+comment|// RUN: %clang_analyze_cc1 -triple i386-apple-darwin9 -analyzer-checker=core,alpha.core,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
 
 begin_function_decl
@@ -628,6 +628,35 @@ name|globalFloat
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{UNKNOWN}}
+block|}
+end_function
+
+begin_function
+name|void
+name|locAsIntegerCasts
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|int
+name|x
+init|=
+operator|(
+name|int
+operator|)
+name|p
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+operator|++
+name|x
+operator|<
+literal|10
+argument_list|)
+expr_stmt|;
+comment|// no-crash // expected-warning{{UNKNOWN}}
 block|}
 end_function
 

@@ -4137,7 +4137,7 @@ return|return
 operator|(
 name|__m256i
 operator|)
-name|__builtin_ia32_movntdqa256
+name|__builtin_nontemporal_load
 argument_list|(
 operator|(
 specifier|const

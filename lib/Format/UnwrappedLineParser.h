@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Regex.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<list>
 end_include
 
@@ -139,6 +145,21 @@ name|InPPDirective
 decl_stmt|;
 name|bool
 name|MustBeDeclaration
+decl_stmt|;
+comment|/// \brief If this \c UnwrappedLine closes a block in a sequence of lines,
+comment|/// \c MatchingOpeningBlockLineIndex stores the index of the corresponding
+comment|/// opening line. Otherwise, \c MatchingOpeningBlockLineIndex must be
+comment|/// \c kInvalidIndex.
+name|size_t
+name|MatchingOpeningBlockLineIndex
+decl_stmt|;
+specifier|static
+specifier|const
+name|size_t
+name|kInvalidIndex
+init|=
+operator|-
+literal|1
 decl_stmt|;
 block|}
 struct|;
@@ -355,9 +376,17 @@ name|void
 name|parseJavaEnumBody
 parameter_list|()
 function_decl|;
+comment|// Parses a record (aka class) as a top level element. If ParseAsExpr is true,
+comment|// parses the record as a child block, i.e. if the class declaration is an
+comment|// expression.
 name|void
 name|parseRecord
-parameter_list|()
+parameter_list|(
+name|bool
+name|ParseAsExpr
+init|=
+name|false
+parameter_list|)
 function_decl|;
 name|void
 name|parseObjCProtocolList
@@ -414,6 +443,35 @@ name|void
 name|readToken
 parameter_list|()
 function_decl|;
+comment|// Decides which comment tokens should be added to the current line and which
+comment|// should be added as comments before the next token.
+comment|//
+comment|// Comments specifies the sequence of comment tokens to analyze. They get
+comment|// either pushed to the current line or added to the comments before the next
+comment|// token.
+comment|//
+comment|// NextTok specifies the next token. A null pointer NextTok is supported, and
+comment|// signifies either the absense of a next token, or that the next token
+comment|// shouldn't be taken into accunt for the analysis.
+name|void
+name|distributeComments
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|FormatToken
+operator|*
+operator|>
+operator|&
+name|Comments
+argument_list|,
+specifier|const
+name|FormatToken
+operator|*
+name|NextTok
+argument_list|)
+decl_stmt|;
+comment|// Adds the comment preceding the next token to unwrapped lines.
 name|void
 name|flushComments
 parameter_list|(
@@ -555,6 +613,11 @@ name|AdditionalKeywords
 modifier|&
 name|Keywords
 decl_stmt|;
+name|llvm
+operator|::
+name|Regex
+name|CommentPragmasRegex
+expr_stmt|;
 name|FormatTokenSource
 modifier|*
 name|Tokens
@@ -699,7 +762,12 @@ argument_list|)
 operator|,
 name|MustBeDeclaration
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|MatchingOpeningBlockLineIndex
+argument_list|(
+argument|kInvalidIndex
 argument_list|)
 block|{}
 block|}

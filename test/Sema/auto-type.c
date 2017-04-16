@@ -94,7 +94,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{variable 'e' declared with '__auto_type' type cannot appear in its own initializer}}
+comment|// expected-error {{variable 'e' declared with deduced type '__auto_type' cannot appear in its own initializer}}
 end_comment
 
 begin_struct

@@ -16,6 +16,26 @@ comment|// CHECK-LD: ld{{.*}}" "-e" "__start" "--eh-frame-hdr" "-Bdynamic" "-dyn
 end_comment
 
 begin_comment
+comment|// Check for --eh-frame-hdr being passed with static linking
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target i686-pc-openbsd -static %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LD-STATIC-EH %s
+end_comment
+
+begin_comment
+comment|// CHECK-LD-STATIC-EH: clang{{.*}}" "-cc1" "-triple" "i686-pc-openbsd"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-STATIC-EH: ld{{.*}}" "-e" "__start" "--eh-frame-hdr" "-Bstatic" "-o" "a.out" "{{.*}}rcrt0.o" "{{.*}}crtbegin.o" "{{.*}}.o" "-lgcc" "-lc" "-lgcc" "{{.*}}crtend.o"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -no-canonical-prefixes -target i686-pc-openbsd -pg -pthread %s -### 2>&1 \
 end_comment
 
@@ -345,6 +365,22 @@ end_comment
 
 begin_comment
 comment|// CHECK-NOPIE: "-nopie" "{{.*}}crt0.o"
+end_comment
+
+begin_comment
+comment|// Check ARM float ABI
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-unknown-openbsd -### -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-ARM-FLOAT-ABI %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-FLOAT-ABI: "-mfloat-abi" "soft"
 end_comment
 
 end_unit

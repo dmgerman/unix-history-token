@@ -305,6 +305,10 @@ name|Stmt
 modifier|*
 name|PreInit
 decl_stmt|;
+comment|/// Region that captures the associated stmt.
+name|OpenMPDirectiveKind
+name|CaptureRegion
+decl_stmt|;
 name|protected
 label|:
 comment|/// Set pre-initialization statement for the clause.
@@ -314,11 +318,20 @@ parameter_list|(
 name|Stmt
 modifier|*
 name|S
+parameter_list|,
+name|OpenMPDirectiveKind
+name|ThisRegion
+init|=
+name|OMPD_unknown
 parameter_list|)
 block|{
 name|PreInit
 operator|=
 name|S
+expr_stmt|;
+name|CaptureRegion
+operator|=
+name|ThisRegion
 expr_stmt|;
 block|}
 name|OMPClauseWithPreInit
@@ -331,7 +344,12 @@ argument_list|)
 operator|:
 name|PreInit
 argument_list|(
-argument|nullptr
+name|nullptr
+argument_list|)
+operator|,
+name|CaptureRegion
+argument_list|(
+argument|OMPD_unknown
 argument_list|)
 block|{
 name|assert
@@ -366,6 +384,15 @@ parameter_list|()
 block|{
 return|return
 name|PreInit
+return|;
+block|}
+comment|/// Get capture region for the stmt in the clause.
+name|OpenMPDirectiveKind
+name|getCaptureRegion
+parameter_list|()
+block|{
+return|return
+name|CaptureRegion
 return|;
 block|}
 specifier|static
@@ -865,86 +892,101 @@ name|OMPIfClause
 range|:
 name|public
 name|OMPClause
+decl_stmt|,
+name|public
+name|OMPClauseWithPreInit
 block|{
 name|friend
 name|class
 name|OMPClauseReader
-block|;
+decl_stmt|;
 comment|/// \brief Location of '('.
 name|SourceLocation
 name|LParenLoc
-block|;
+decl_stmt|;
 comment|/// \brief Condition of the 'if' clause.
 name|Stmt
-operator|*
+modifier|*
 name|Condition
-block|;
+decl_stmt|;
 comment|/// \brief Location of ':' (if any).
 name|SourceLocation
 name|ColonLoc
-block|;
+decl_stmt|;
 comment|/// \brief Directive name modifier for the clause.
 name|OpenMPDirectiveKind
 name|NameModifier
-block|;
+decl_stmt|;
 comment|/// \brief Name modifier location.
 name|SourceLocation
 name|NameModifierLoc
-block|;
+decl_stmt|;
 comment|/// \brief Set condition.
 comment|///
 name|void
 name|setCondition
-argument_list|(
-argument|Expr *Cond
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|Cond
+parameter_list|)
 block|{
 name|Condition
 operator|=
 name|Cond
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Set directive name modifier for the clause.
 comment|///
 name|void
 name|setNameModifier
-argument_list|(
-argument|OpenMPDirectiveKind NM
-argument_list|)
+parameter_list|(
+name|OpenMPDirectiveKind
+name|NM
+parameter_list|)
 block|{
 name|NameModifier
 operator|=
 name|NM
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Set location of directive name modifier for the clause.
 comment|///
 name|void
 name|setNameModifierLoc
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
 block|{
 name|NameModifierLoc
 operator|=
 name|Loc
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Set location of ':'.
 comment|///
 name|void
 name|setColonLoc
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
 block|{
 name|ColonLoc
 operator|=
 name|Loc
-block|; }
+expr_stmt|;
+block|}
 name|public
-operator|:
+label|:
 comment|/// \brief Build 'if' clause with condition \a Cond.
 comment|///
 comment|/// \param NameModifier [OpenMP 4.1] Directive name modifier of clause.
 comment|/// \param Cond Condition of the clause.
+comment|/// \param HelperCond Helper condition for the clause.
+comment|/// \param CaptureRegion Innermost OpenMP region where expressions in this
+comment|/// clause must be captured.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param NameModifierLoc Location of directive name modifier.
@@ -957,6 +999,10 @@ argument|OpenMPDirectiveKind NameModifier
 argument_list|,
 argument|Expr *Cond
 argument_list|,
+argument|Stmt *HelperCond
+argument_list|,
+argument|OpenMPDirectiveKind CaptureRegion
+argument_list|,
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation LParenLoc
@@ -967,7 +1013,7 @@ argument|SourceLocation ColonLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|)
-operator|:
+block|:
 name|OMPClause
 argument_list|(
 name|OMPC_if
@@ -976,32 +1022,44 @@ name|StartLoc
 argument_list|,
 name|EndLoc
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|(
 name|LParenLoc
 argument_list|)
-block|,
+operator|,
 name|Condition
 argument_list|(
 name|Cond
 argument_list|)
-block|,
+operator|,
 name|ColonLoc
 argument_list|(
 name|ColonLoc
 argument_list|)
-block|,
+operator|,
 name|NameModifier
 argument_list|(
 name|NameModifier
 argument_list|)
-block|,
+operator|,
 name|NameModifierLoc
 argument_list|(
 argument|NameModifierLoc
 argument_list|)
-block|{}
+block|{
+name|setPreInitStmt
+argument_list|(
+name|HelperCond
+argument_list|,
+name|CaptureRegion
+argument_list|)
+block|;   }
 comment|/// \brief Build an empty clause.
 comment|///
 name|OMPIfClause
@@ -1017,23 +1075,28 @@ argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|()
-block|,
+operator|,
 name|Condition
 argument_list|(
 name|nullptr
 argument_list|)
-block|,
+operator|,
 name|ColonLoc
 argument_list|()
-block|,
+operator|,
 name|NameModifier
 argument_list|(
 name|OMPD_unknown
 argument_list|)
-block|,
+operator|,
 name|NameModifierLoc
 argument_list|()
 block|{}
@@ -1108,9 +1171,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -1123,7 +1189,7 @@ return|;
 block|}
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
@@ -1138,19 +1204,49 @@ literal|1
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents 'final' clause in the '#pragma omp ...' directive.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp task final(a> 5)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp task' has simple 'final'
+end_comment
+
+begin_comment
 comment|/// clause with condition 'a> 5'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPFinalClause
-operator|:
+range|:
 name|public
 name|OMPClause
 block|{
@@ -1332,6 +1428,9 @@ name|OMPNumThreadsClause
 operator|:
 name|public
 name|OMPClause
+block|,
+name|public
+name|OMPClauseWithPreInit
 block|{
 name|friend
 name|class
@@ -1363,6 +1462,9 @@ operator|:
 comment|/// \brief Build 'num_threads' clause with condition \a NumThreads.
 comment|///
 comment|/// \param NumThreads Number of threads for the construct.
+comment|/// \param HelperNumThreads Helper Number of threads for the construct.
+comment|/// \param CaptureRegion Innermost OpenMP region where expressions in this
+comment|/// clause must be captured.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
@@ -1370,6 +1472,10 @@ comment|///
 name|OMPNumThreadsClause
 argument_list|(
 argument|Expr *NumThreads
+argument_list|,
+argument|Stmt *HelperNumThreads
+argument_list|,
+argument|OpenMPDirectiveKind CaptureRegion
 argument_list|,
 argument|SourceLocation StartLoc
 argument_list|,
@@ -1387,6 +1493,11 @@ argument_list|,
 name|EndLoc
 argument_list|)
 block|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+block|,
 name|LParenLoc
 argument_list|(
 name|LParenLoc
@@ -1396,7 +1507,14 @@ name|NumThreads
 argument_list|(
 argument|NumThreads
 argument_list|)
-block|{}
+block|{
+name|setPreInitStmt
+argument_list|(
+name|HelperNumThreads
+argument_list|,
+name|CaptureRegion
+argument_list|)
+block|;   }
 comment|/// \brief Build an empty clause.
 comment|///
 name|OMPNumThreadsClause
@@ -1411,6 +1529,11 @@ argument_list|()
 argument_list|,
 name|SourceLocation
 argument_list|()
+argument_list|)
+block|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
 argument_list|)
 block|,
 name|LParenLoc
@@ -7198,6 +7321,9 @@ name|privates_iterator
 operator|>
 name|privates_range
 expr_stmt|;
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -7207,9 +7333,12 @@ name|privates_const_iterator
 operator|>
 name|privates_const_range
 expr_stmt|;
+end_typedef
+
+begin_function
 name|privates_range
 name|privates
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|privates_range
@@ -7228,6 +7357,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|privates_const_range
 name|privates
 argument_list|()
@@ -7250,7 +7382,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -13065,39 +13197,48 @@ name|OMPNumTeamsClause
 range|:
 name|public
 name|OMPClause
+decl_stmt|,
+name|public
+name|OMPClauseWithPreInit
 block|{
 name|friend
 name|class
 name|OMPClauseReader
-block|;
+decl_stmt|;
 comment|/// \brief Location of '('.
 name|SourceLocation
 name|LParenLoc
-block|;
+decl_stmt|;
 comment|/// \brief NumTeams number.
 name|Stmt
-operator|*
+modifier|*
 name|NumTeams
-block|;
+decl_stmt|;
 comment|/// \brief Set the NumTeams number.
 comment|///
 comment|/// \param E NumTeams number.
 comment|///
 name|void
 name|setNumTeams
-argument_list|(
-argument|Expr *E
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|E
+parameter_list|)
 block|{
 name|NumTeams
 operator|=
 name|E
-block|; }
+expr_stmt|;
+block|}
 name|public
-operator|:
+label|:
 comment|/// \brief Build 'num_teams' clause.
 comment|///
 comment|/// \param E Expression associated with this clause.
+comment|/// \param HelperE Helper Expression associated with this clause.
+comment|/// \param CaptureRegion Innermost OpenMP region where expressions in this
+comment|/// clause must be captured.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
@@ -13106,13 +13247,17 @@ name|OMPNumTeamsClause
 argument_list|(
 argument|Expr *E
 argument_list|,
+argument|Stmt *HelperE
+argument_list|,
+argument|OpenMPDirectiveKind CaptureRegion
+argument_list|,
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|)
-operator|:
+block|:
 name|OMPClause
 argument_list|(
 name|OMPC_num_teams
@@ -13121,17 +13266,29 @@ name|StartLoc
 argument_list|,
 name|EndLoc
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|(
 name|LParenLoc
 argument_list|)
-block|,
+operator|,
 name|NumTeams
 argument_list|(
 argument|E
 argument_list|)
-block|{}
+block|{
+name|setPreInitStmt
+argument_list|(
+name|HelperE
+argument_list|,
+name|CaptureRegion
+argument_list|)
+block|;   }
 comment|/// \brief Build an empty clause.
 comment|///
 name|OMPNumTeamsClause
@@ -13147,13 +13304,18 @@ argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|(
 name|SourceLocation
 argument_list|()
 argument_list|)
-block|,
+operator|,
 name|NumTeams
 argument_list|(
 argument|nullptr
@@ -13182,9 +13344,9 @@ return|;
 block|}
 comment|/// \brief Return NumTeams number.
 name|Expr
-operator|*
+modifier|*
 name|getNumTeams
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|cast
@@ -13216,9 +13378,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -13231,7 +13396,7 @@ return|;
 block|}
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
@@ -13246,55 +13411,97 @@ literal|1
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents 'thread_limit' clause in the '#pragma omp ...'
+end_comment
+
+begin_comment
 comment|/// directive.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp teams thread_limit(n)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp teams' has clause 'thread_limit'
+end_comment
+
+begin_comment
 comment|/// with single expression 'n'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPThreadLimitClause
-operator|:
+range|:
 name|public
 name|OMPClause
+decl_stmt|,
+name|public
+name|OMPClauseWithPreInit
 block|{
 name|friend
 name|class
 name|OMPClauseReader
-block|;
+decl_stmt|;
 comment|/// \brief Location of '('.
 name|SourceLocation
 name|LParenLoc
-block|;
+decl_stmt|;
 comment|/// \brief ThreadLimit number.
 name|Stmt
-operator|*
+modifier|*
 name|ThreadLimit
-block|;
+decl_stmt|;
 comment|/// \brief Set the ThreadLimit number.
 comment|///
 comment|/// \param E ThreadLimit number.
 comment|///
 name|void
 name|setThreadLimit
-argument_list|(
-argument|Expr *E
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|E
+parameter_list|)
 block|{
 name|ThreadLimit
 operator|=
 name|E
-block|; }
+expr_stmt|;
+block|}
 name|public
-operator|:
+label|:
 comment|/// \brief Build 'thread_limit' clause.
 comment|///
 comment|/// \param E Expression associated with this clause.
+comment|/// \param HelperE Helper Expression associated with this clause.
+comment|/// \param CaptureRegion Innermost OpenMP region where expressions in this
+comment|/// clause must be captured.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
@@ -13303,13 +13510,17 @@ name|OMPThreadLimitClause
 argument_list|(
 argument|Expr *E
 argument_list|,
+argument|Stmt *HelperE
+argument_list|,
+argument|OpenMPDirectiveKind CaptureRegion
+argument_list|,
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|)
-operator|:
+block|:
 name|OMPClause
 argument_list|(
 name|OMPC_thread_limit
@@ -13318,17 +13529,29 @@ name|StartLoc
 argument_list|,
 name|EndLoc
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|(
 name|LParenLoc
 argument_list|)
-block|,
+operator|,
 name|ThreadLimit
 argument_list|(
 argument|E
 argument_list|)
-block|{}
+block|{
+name|setPreInitStmt
+argument_list|(
+name|HelperE
+argument_list|,
+name|CaptureRegion
+argument_list|)
+block|;   }
 comment|/// \brief Build an empty clause.
 comment|///
 name|OMPThreadLimitClause
@@ -13344,13 +13567,18 @@ argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|(
 name|SourceLocation
 argument_list|()
 argument_list|)
-block|,
+operator|,
 name|ThreadLimit
 argument_list|(
 argument|nullptr
@@ -13379,9 +13607,9 @@ return|;
 block|}
 comment|/// \brief Return ThreadLimit number.
 name|Expr
-operator|*
+modifier|*
 name|getThreadLimit
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|cast
@@ -13413,9 +13641,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -13428,7 +13659,7 @@ return|;
 block|}
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
@@ -13443,20 +13674,53 @@ literal|1
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents 'priority' clause in the '#pragma omp ...'
+end_comment
+
+begin_comment
 comment|/// directive.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp task priority(n)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp teams' has clause 'priority' with
+end_comment
+
+begin_comment
 comment|/// single expression 'n'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPPriorityClause
-operator|:
+range|:
 name|public
 name|OMPClause
 block|{

@@ -291,6 +291,37 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+name|void
+modifier|*
+name|f6_ifunc
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|ifunc
+argument_list|(
+literal|"f6_ifunc"
+argument_list|)
+operator|)
+argument_list|)
+name|f6
+argument_list|()
+block|{}
+end_decl_stmt
+
+begin_comment
+comment|//expected-error@-1 {{definition 'f6' cannot also be an ifunc}}
+end_comment
+
 begin_endif
 endif|#
 directive|endif

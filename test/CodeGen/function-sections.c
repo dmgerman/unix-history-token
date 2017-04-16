@@ -27,6 +27,26 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-pc-linux-gnu -S -fno-data-sections -fdata-sections -o -< %s | FileCheck %s --check-prefix=DATA_SECT
 end_comment
 
+begin_comment
+comment|// Try again through a clang invocation of the ThinLTO backend.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-pc-linux-gnu -O2 %s -flto=thin -emit-llvm-bc -o %t.o
+end_comment
+
+begin_comment
+comment|// RUN: llvm-lto -thinlto -o %t %t.o
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-pc-linux-gnu -O2 -x ir %t.o -fthinlto-index=%t.thinlto.bc -S -ffunction-sections -o - | FileCheck %s --check-prefix=FUNC_SECT
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-pc-linux-gnu -O2 -x ir %t.o -fthinlto-index=%t.thinlto.bc -S -fdata-sections -o - | FileCheck %s --check-prefix=DATA_SECT
+end_comment
+
 begin_decl_stmt
 specifier|const
 name|int
@@ -76,7 +96,7 @@ comment|// FUNC_SECT: hello:
 end_comment
 
 begin_comment
-comment|// DATA_SECT-NOT: section
+comment|// DATA_SECT-NOT: .section
 end_comment
 
 begin_comment

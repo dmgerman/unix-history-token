@@ -4270,6 +4270,8 @@ block|,
 name|ExpectedForMaybeUnused
 block|,
 name|ExpectedEnumOrClass
+block|,
+name|ExpectedNamedDecl
 block|, }
 enum|;
 end_enum

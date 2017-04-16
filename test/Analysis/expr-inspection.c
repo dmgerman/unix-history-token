@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=debug.ExprInspection -verify %s 2>&1 | FileCheck %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=debug.ExprInspection -verify %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
@@ -87,7 +87,7 @@ comment|// CHECK-NEXT: clang_analyzer_printState :&code{clang_analyzer_printStat
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: Ranges are empty.
+comment|// CHECK-NEXT: {{(Ranges are empty.)|(Constraints:[[:space:]]*$)}}
 end_comment
 
 end_unit

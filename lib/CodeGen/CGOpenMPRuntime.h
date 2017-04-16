@@ -1899,7 +1899,31 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|emitParallelOrTeamsOutlinedFunction
+name|emitParallelOutlinedFunction
+argument_list|(
+argument|const OMPExecutableDirective&D
+argument_list|,
+argument|const VarDecl *ThreadIDVar
+argument_list|,
+argument|OpenMPDirectiveKind InnermostKind
+argument_list|,
+argument|const RegionCodeGenTy&CodeGen
+argument_list|)
+expr_stmt|;
+comment|/// \brief Emits outlined function for the specified OpenMP teams directive
+comment|/// \a D. This outlined function has type void(*)(kmp_int32 *ThreadID,
+comment|/// kmp_int32 BoundID, struct context_vars*).
+comment|/// \param D OpenMP directive.
+comment|/// \param ThreadIDVar Variable for thread id in the current OpenMP region.
+comment|/// \param InnermostKind Kind of innermost directive (for simple directives it
+comment|/// is a directive itself, for combined - its innermost directive).
+comment|/// \param CodeGen Code generation sequence for the \a D directive.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|emitTeamsOutlinedFunction
 argument_list|(
 argument|const OMPExecutableDirective&D
 argument_list|,
@@ -2771,6 +2795,105 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// Emits reduction function.
+comment|/// \param ArgsType Array type containing pointers to reduction variables.
+comment|/// \param Privates List of private copies for original reduction arguments.
+comment|/// \param LHSExprs List of LHS in \a ReductionOps reduction operations.
+comment|/// \param RHSExprs List of RHS in \a ReductionOps reduction operations.
+comment|/// \param ReductionOps List of reduction operations in form 'LHS binop RHS'
+comment|/// or 'operator binop(LHS, RHS)'.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|emitReductionFunction
+argument_list|(
+name|CodeGenModule
+operator|&
+name|CGM
+argument_list|,
+name|llvm
+operator|::
+name|Type
+operator|*
+name|ArgsType
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|Privates
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|LHSExprs
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|RHSExprs
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|ReductionOps
+argument_list|)
+expr_stmt|;
+comment|/// Emits single reduction combiner
+name|void
+name|emitSingleReductionCombiner
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|ReductionOp
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|PrivateRef
+parameter_list|,
+specifier|const
+name|DeclRefExpr
+modifier|*
+name|LHS
+parameter_list|,
+specifier|const
+name|DeclRefExpr
+modifier|*
+name|RHS
+parameter_list|)
+function_decl|;
+struct|struct
+name|ReductionOptionsTy
+block|{
+name|bool
+name|WithNowait
+decl_stmt|;
+name|bool
+name|SimpleReduction
+decl_stmt|;
+name|OpenMPDirectiveKind
+name|ReductionKind
+decl_stmt|;
+block|}
+struct|;
 comment|/// \brief Emit a code for reduction clause. Next code should be emitted for
 comment|/// reduction:
 comment|/// \code
@@ -2807,8 +2930,12 @@ comment|/// \param LHSExprs List of LHS in \a ReductionOps reduction operations.
 comment|/// \param RHSExprs List of RHS in \a ReductionOps reduction operations.
 comment|/// \param ReductionOps List of reduction operations in form 'LHS binop RHS'
 comment|/// or 'operator binop(LHS, RHS)'.
-comment|/// \param WithNowait true if parent directive has also nowait clause, false
-comment|/// otherwise.
+comment|/// \param Options List of options for reduction codegen:
+comment|///     WithNowait true if parent directive has also nowait clause, false
+comment|///     otherwise.
+comment|///     SimpleReduction Emit reduction operation only. Used for omp simd
+comment|///     directive on the host.
+comment|///     ReductionKind The kind of reduction to perform.
 name|virtual
 name|void
 name|emitReduction
@@ -2852,11 +2979,8 @@ operator|*
 operator|>
 name|ReductionOps
 argument_list|,
-name|bool
-name|WithNowait
-argument_list|,
-name|bool
-name|SimpleReduction
+name|ReductionOptionsTy
+name|Options
 argument_list|)
 decl_stmt|;
 comment|/// \brief Emit code for 'taskwait' directive.
@@ -3040,7 +3164,7 @@ name|GD
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit the global \a GD if it is meaningful for the target. Returns
-comment|/// if it was emitted succesfully.
+comment|/// if it was emitted successfully.
 comment|/// \param GD Global to scan.
 name|virtual
 name|bool

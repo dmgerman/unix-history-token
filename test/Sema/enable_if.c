@@ -1193,7 +1193,7 @@ init|=
 operator|&
 name|f4
 function_decl|;
-comment|// expected-error{{cannot take address of function 'f4' becuase it has one or more non-tautological enable_if conditions}}
+comment|// expected-error{{cannot take address of function 'f4' because it has one or more non-tautological enable_if conditions}}
 name|void
 function_decl|(
 modifier|*
@@ -1205,7 +1205,7 @@ parameter_list|)
 init|=
 name|f4
 function_decl|;
-comment|// expected-error{{cannot take address of function 'f4' becuase it has one or more non-tautological enable_if conditions}}
+comment|// expected-error{{cannot take address of function 'f4' because it has one or more non-tautological enable_if conditions}}
 block|}
 end_function
 

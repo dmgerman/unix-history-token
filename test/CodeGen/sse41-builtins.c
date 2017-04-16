@@ -1284,7 +1284,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_stream_load_si128
-comment|// CHECK: call<2 x i64> @llvm.x86.sse41.movntdqa(i8* %{{.*}})
+comment|// CHECK: load<2 x i64>,<2 x i64>* %{{.*}}, align 16, !nontemporal
 return|return
 name|_mm_stream_load_si128
 argument_list|(

@@ -2116,5 +2116,57 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+block|{
+struct|struct
+block|{ }
+name|s1
+struct|;
+union|union
+block|{
+name|int
+name|a
+decl_stmt|;
+name|int
+name|b
+decl_stmt|;
+block|}
+name|u1
+union|;
+block|}
+name|s
+init|=
+block|{
+operator|.
+name|s1
+operator|=
+block|{
+operator|.
+name|x
+operator|=
+literal|0
+block|,
+comment|// expected-error{{field designator}}
+block|}
+block|,
+operator|.
+name|u1
+operator|=
+block|{
+operator|.
+name|a
+operator|=
+literal|0
+block|,
+operator|.
+name|b
+operator|=
+literal|0
+block|,   }
+block|, }
+struct|;
+end_struct
+
 end_unit
 

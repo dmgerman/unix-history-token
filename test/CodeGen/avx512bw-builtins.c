@@ -2368,7 +2368,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_packs_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.packssdw.512
+comment|// CHECK: @llvm.x86.avx512.packssdw.512
 return|return
 name|_mm512_packs_epi32
 argument_list|(
@@ -2395,7 +2395,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_packs_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.packssdw.512
+comment|// CHECK: @llvm.x86.avx512.packssdw.512
+comment|// CHECK: select<32 x i1> %{{.*}},<32 x i16> %{{.*}},<32 x i16> %{{.*}}
 return|return
 name|_mm512_maskz_packs_epi32
 argument_list|(
@@ -2427,7 +2428,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_packs_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.packssdw.512
+comment|// CHECK: @llvm.x86.avx512.packssdw.512
+comment|// CHECK: select<32 x i1> %{{.*}},<32 x i16> %{{.*}},<32 x i16> %{{.*}}
 return|return
 name|_mm512_mask_packs_epi32
 argument_list|(
@@ -2455,7 +2457,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_packs_epi16
-comment|// CHECK: @llvm.x86.avx512.mask.packsswb.512
+comment|// CHECK: @llvm.x86.avx512.packsswb.512
 return|return
 name|_mm512_packs_epi16
 argument_list|(
@@ -2485,7 +2487,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_packs_epi16
-comment|// CHECK: @llvm.x86.avx512.mask.packsswb.512
+comment|// CHECK: @llvm.x86.avx512.packsswb.512
+comment|// CHECK: select<64 x i1> %{{.*}},<64 x i8> %{{.*}},<64 x i8> %{{.*}}
 return|return
 name|_mm512_mask_packs_epi16
 argument_list|(
@@ -2516,7 +2519,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_packs_epi16
-comment|// CHECK: @llvm.x86.avx512.mask.packsswb.512
+comment|// CHECK: @llvm.x86.avx512.packsswb.512
+comment|// CHECK: select<64 x i1> %{{.*}},<64 x i8> %{{.*}},<64 x i8> %{{.*}}
 return|return
 name|_mm512_maskz_packs_epi16
 argument_list|(
@@ -2542,7 +2546,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_packus_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.packusdw.512
+comment|// CHECK: @llvm.x86.avx512.packusdw.512
 return|return
 name|_mm512_packus_epi32
 argument_list|(
@@ -2569,7 +2573,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_packus_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.packusdw.512
+comment|// CHECK: @llvm.x86.avx512.packusdw.512
+comment|// CHECK: select<32 x i1> %{{.*}},<32 x i16> %{{.*}},<32 x i16> %{{.*}}
 return|return
 name|_mm512_maskz_packus_epi32
 argument_list|(
@@ -2601,7 +2606,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_packus_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.packusdw.512
+comment|// CHECK: @llvm.x86.avx512.packusdw.512
+comment|// CHECK: select<32 x i1> %{{.*}},<32 x i16> %{{.*}},<32 x i16> %{{.*}}
 return|return
 name|_mm512_mask_packus_epi32
 argument_list|(
@@ -2629,7 +2635,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_packus_epi16
-comment|// CHECK: @llvm.x86.avx512.mask.packuswb.512
+comment|// CHECK: @llvm.x86.avx512.packuswb.512
 return|return
 name|_mm512_packus_epi16
 argument_list|(
@@ -2659,7 +2665,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_packus_epi16
-comment|// CHECK: @llvm.x86.avx512.mask.packuswb.512
+comment|// CHECK: @llvm.x86.avx512.packuswb.512
+comment|// CHECK: select<64 x i1> %{{.*}},<64 x i8> %{{.*}},<64 x i8> %{{.*}}
 return|return
 name|_mm512_mask_packus_epi16
 argument_list|(
@@ -2690,7 +2697,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_packus_epi16
-comment|// CHECK: @llvm.x86.avx512.mask.packuswb.512
+comment|// CHECK: @llvm.x86.avx512.packuswb.512
+comment|// CHECK: select<64 x i1> %{{.*}},<64 x i8> %{{.*}},<64 x i8> %{{.*}}
 return|return
 name|_mm512_maskz_packus_epi16
 argument_list|(
@@ -7282,7 +7290,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_movm_epi8
-comment|// CHECK: @llvm.x86.avx512.cvtmask2b.512
+comment|// CHECK:  %{{.*}} = bitcast i64 %{{.*}} to<64 x i1>
+comment|// CHECK:  %vpmovm2.i = sext<64 x i1> %{{.*}} to<64 x i8>
 return|return
 name|_mm512_movm_epi8
 argument_list|(
@@ -7301,7 +7310,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_movm_epi16
-comment|// CHECK: @llvm.x86.avx512.cvtmask2w.512
+comment|// CHECK:  %{{.*}} = bitcast i32 %{{.*}} to<32 x i1>
+comment|// CHECK:  %vpmovm2.i = sext<32 x i1> %{{.*}} to<32 x i16>
 return|return
 name|_mm512_movm_epi16
 argument_list|(
@@ -7320,7 +7330,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_broadcastb_epi8
-comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> undef,<64 x i32> zeroinitializer
+comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> zeroinitializer,<64 x i32> zeroinitializer
 return|return
 name|_mm512_broadcastb_epi8
 argument_list|(
@@ -7345,7 +7355,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_broadcastb_epi8
-comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> undef,<64 x i32> zeroinitializer
+comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> zeroinitializer,<64 x i32> zeroinitializer
 comment|// CHECK: select<64 x i1> %{{.*}},<64 x i8> %{{.*}},<64 x i8> %{{.*}}
 return|return
 name|_mm512_mask_broadcastb_epi8
@@ -7372,7 +7382,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_broadcastb_epi8
-comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> undef,<64 x i32> zeroinitializer
+comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> zeroinitializer,<64 x i32> zeroinitializer
 comment|// CHECK: select<64 x i1> %{{.*}},<64 x i8> %{{.*}},<64 x i8> %{{.*}}
 return|return
 name|_mm512_maskz_broadcastb_epi8
@@ -7394,7 +7404,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_broadcastw_epi16
-comment|// CHECK: shufflevector<8 x i16> %{{.*}},<8 x i16> undef,<32 x i32> zeroinitializer
+comment|// CHECK: shufflevector<8 x i16> %{{.*}},<8 x i16> zeroinitializer,<32 x i32> zeroinitializer
 return|return
 name|_mm512_broadcastw_epi16
 argument_list|(
@@ -7419,7 +7429,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_broadcastw_epi16
-comment|// CHECK: shufflevector<8 x i16> %{{.*}},<8 x i16> undef,<32 x i32> zeroinitializer
+comment|// CHECK: shufflevector<8 x i16> %{{.*}},<8 x i16> zeroinitializer,<32 x i32> zeroinitializer
 comment|// CHECK: select<32 x i1> %{{.*}},<32 x i16> %{{.*}},<32 x i16> %{{.*}}
 return|return
 name|_mm512_mask_broadcastw_epi16
@@ -7446,7 +7456,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_broadcastw_epi16
-comment|// CHECK: shufflevector<8 x i16> %{{.*}},<8 x i16> undef,<32 x i32> zeroinitializer
+comment|// CHECK: shufflevector<8 x i16> %{{.*}},<8 x i16> zeroinitializer,<32 x i32> zeroinitializer
 comment|// CHECK: select<32 x i1> %{{.*}},<32 x i16> %{{.*}},<32 x i16> %{{.*}}
 return|return
 name|_mm512_maskz_broadcastw_epi16
@@ -7847,13 +7857,13 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepi16_storeu_epi8
 comment|// CHECK: @llvm.x86.avx512.mask.pmov.wb.mem.512
-name|__builtin_ia32_pmovwb512mem_mask
+name|_mm512_mask_cvtepi16_storeu_epi8
 argument_list|(
 name|__P
 argument_list|,
-name|__A
-argument_list|,
 name|__M
+argument_list|,
+name|__A
 argument_list|)
 expr_stmt|;
 block|}
@@ -7876,13 +7886,13 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtsepi16_storeu_epi8
 comment|// CHECK: @llvm.x86.avx512.mask.pmovs.wb.mem.512
-name|__builtin_ia32_pmovswb512mem_mask
+name|_mm512_mask_cvtsepi16_storeu_epi8
 argument_list|(
 name|__P
 argument_list|,
-name|__A
-argument_list|,
 name|__M
+argument_list|,
+name|__A
 argument_list|)
 expr_stmt|;
 block|}
@@ -7905,13 +7915,13 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtusepi16_storeu_epi8
 comment|// CHECK: @llvm.x86.avx512.mask.pmovus.wb.mem.512
-name|__builtin_ia32_pmovuswb512mem_mask
+name|_mm512_mask_cvtusepi16_storeu_epi8
 argument_list|(
 name|__P
 argument_list|,
-name|__A
-argument_list|,
 name|__M
+argument_list|,
+name|__A
 argument_list|)
 expr_stmt|;
 block|}

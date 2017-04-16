@@ -1,7 +1,54 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=debug.DumpCallGraph %s -fblocks 2>&1 | FileCheck %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=debug.DumpCallGraph %s -fblocks 2>&1 | FileCheck %s
 end_comment
+
+begin_function
+name|int
+name|get5
+parameter_list|()
+block|{
+return|return
+literal|5
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|add
+parameter_list|(
+name|int
+name|val1
+parameter_list|,
+name|int
+name|val2
+parameter_list|)
+block|{
+return|return
+name|val1
+operator|+
+name|val2
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_add
+parameter_list|()
+block|{
+return|return
+name|add
+argument_list|(
+literal|10
+argument_list|,
+name|get5
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -162,11 +209,52 @@ block|}
 end_function
 
 begin_comment
+comment|// This test case tests that forward declaration for the top-level function
+end_comment
+
+begin_comment
+comment|// does not affect call graph construction.
+end_comment
+
+begin_function
+name|void
+name|do_nothing
+parameter_list|()
+block|{}
+end_function
+
+begin_function_decl
+name|void
+name|test_single_call
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test_single_call
+parameter_list|()
+block|{
+name|do_nothing
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|// CHECK:--- Call graph Dump ---
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{Function:< root> calls: mmm foo aaa<> bbb ccc ddd eee fff $}}
+comment|// CHECK-NEXT: {{Function:< root> calls: get5 add test_add mmm foo aaa<> bbb ddd ccc eee fff do_nothing test_single_call $}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{Function: test_single_call calls: do_nothing $}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{Function: do_nothing calls: $}}
 end_comment
 
 begin_comment
@@ -203,6 +291,18 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: {{Function: mmm calls: $}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{Function: test_add calls: add get5 $}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{Function: add calls: $}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{Function: get5 calls: $}}
 end_comment
 
 end_unit

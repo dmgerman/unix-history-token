@@ -344,7 +344,7 @@ comment|// RUN: %clang -target aarch64 -mcpu=kryo -### -c %s 2>&1 | FileCheck -c
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64 -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MCPU-VULCAN %s
+comment|// RUN: %clang -target aarch64 -mcpu=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MCPU-THUNDERX2T99 %s
 end_comment
 
 begin_comment
@@ -380,7 +380,7 @@ comment|// CHECK-MCPU-KRYO: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-feat
 end_comment
 
 begin_comment
-comment|// CHECK-MCPU-VULCAN: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-feature" "+neon" "-target-feature" "+crc" "-target-feature" "+crypto"
+comment|// CHECK-MCPU-THUNDERX2T99: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-feature" "+neon" "-target-feature" "+crc" "-target-feature" "+crypto"
 end_comment
 
 begin_comment

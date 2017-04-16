@@ -1283,7 +1283,7 @@ argument_list|,
 literal|5
 argument_list|)
 decl_stmt|;
-comment|// CHECK: @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size

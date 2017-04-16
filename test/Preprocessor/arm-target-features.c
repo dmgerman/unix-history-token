@@ -104,6 +104,30 @@ comment|// CHECK-V7: #define __ARM_FP 0xC
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armv7ve-none-linux-gnu -x c -E -dM %s -o - | FileCheck -match-full-lines --check-prefix=CHECK-V7VE %s
+end_comment
+
+begin_comment
+comment|// CHECK-V7VE: #define __ARMEL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK-V7VE: #define __ARM_ARCH 7
+end_comment
+
+begin_comment
+comment|// CHECK-V7VE: #define __ARM_ARCH_7VE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK-V7VE: #define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// CHECK-V7VE: #define __ARM_FP 0xC
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-apple-macosx10.10 -arch armv7s -x c -E -dM %s -o - | FileCheck -match-full-lines --check-prefix=CHECK-V7S %s
 end_comment
 
@@ -1345,6 +1369,98 @@ end_comment
 
 begin_comment
 comment|// M7-THUMB:#define __ARM_FPV5__ 1
+end_comment
+
+begin_comment
+comment|// Test whether predefines are as expected when targeting v8m cores
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=cortex-m23 -x c -E -dM %s -o - | FileCheck -match-full-lines --check-prefix=M23 %s
+end_comment
+
+begin_comment
+comment|// M23: #define __ARM_ARCH 8
+end_comment
+
+begin_comment
+comment|// M23: #define __ARM_ARCH_8M_BASE__ 1
+end_comment
+
+begin_comment
+comment|// M23: #define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// M23-NOT: __ARM_ARCH_ISA_ARM
+end_comment
+
+begin_comment
+comment|// M23: #define __ARM_ARCH_ISA_THUMB 1
+end_comment
+
+begin_comment
+comment|// M23: #define __ARM_ARCH_PROFILE 'M'
+end_comment
+
+begin_comment
+comment|// M23-NOT: __ARM_FEATURE_CRC32
+end_comment
+
+begin_comment
+comment|// M23-NOT: __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
+comment|// M23-NOT: __ARM_FP 0x{{.*}}
+end_comment
+
+begin_comment
+comment|// M23-NOT: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=cortex-m33 -x c -E -dM %s -o - | FileCheck -match-full-lines --check-prefix=M33 %s
+end_comment
+
+begin_comment
+comment|// M33: #define __ARM_ARCH 8
+end_comment
+
+begin_comment
+comment|// M33: #define __ARM_ARCH_8M_MAIN__ 1
+end_comment
+
+begin_comment
+comment|// M33: #define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// M33-NOT: __ARM_ARCH_ISA_ARM
+end_comment
+
+begin_comment
+comment|// M33: #define __ARM_ARCH_ISA_THUMB 2
+end_comment
+
+begin_comment
+comment|// M33: #define __ARM_ARCH_PROFILE 'M'
+end_comment
+
+begin_comment
+comment|// M33-NOT: __ARM_FEATURE_CRC32
+end_comment
+
+begin_comment
+comment|// M33: #define __ARM_FEATURE_DSP 1
+end_comment
+
+begin_comment
+comment|// M33: #define __ARM_FP 0x6
+end_comment
+
+begin_comment
+comment|// M33: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1 1
 end_comment
 
 begin_comment

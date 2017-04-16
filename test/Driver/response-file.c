@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: long_tests
-end_comment
-
-begin_comment
 comment|// Check that clang is able to process short response files
 end_comment
 
@@ -44,11 +40,19 @@ comment|// sequence of arguments to other tools by using response files as well.
 end_comment
 
 begin_comment
-comment|// We generate a 2MB response file to be big enough to surpass any system
+comment|// We generate a 2MB response file to attempt to surpass any system limit.
 end_comment
 
 begin_comment
-comment|// limit.
+comment|// But there's no guarantee that we actually will (the system limit could be
+end_comment
+
+begin_comment
+comment|// *huge*), so just check that invoking cc1 succeeds under these conditions.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment
@@ -57,10 +61,6 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -E @%t.1.txt %s -v 2>&1 | FileCheck %s -check-prefix=LONG
-end_comment
-
-begin_comment
-comment|// LONG: Arguments passed via response file
 end_comment
 
 begin_comment

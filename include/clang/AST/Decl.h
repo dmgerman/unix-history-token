@@ -3283,7 +3283,7 @@ literal|1
 block|;
 comment|/// Describes the kind of default argument for this parameter. By default
 comment|/// this is none. If this is normal, then the default argument is stored in
-comment|/// the \c VarDecl initalizer expression unless we were unble to parse
+comment|/// the \c VarDecl initializer expression unless we were unable to parse
 comment|/// (even an invalid) expression for the default argument.
 name|unsigned
 name|DefaultArgKind
@@ -6851,7 +6851,7 @@ comment|// NOTE: VC++ packs bitfields poorly if the types differ.
 name|unsigned
 name|SClass
 range|:
-literal|2
+literal|3
 decl_stmt|;
 name|unsigned
 name|IsInline
@@ -6863,6 +6863,17 @@ name|IsInlineSpecified
 range|:
 literal|1
 decl_stmt|;
+name|protected
+label|:
+comment|// This is shared by CXXConstructorDecl, CXXConversionDecl, and
+comment|// CXXDeductionGuideDecl.
+name|unsigned
+name|IsExplicitSpecified
+range|:
+literal|1
+decl_stmt|;
+name|private
+label|:
 name|unsigned
 name|IsVirtualAsWritten
 range|:
@@ -7151,6 +7162,11 @@ operator|,
 name|IsInlineSpecified
 argument_list|(
 name|isInlineSpecified
+argument_list|)
+operator|,
+name|IsExplicitSpecified
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|IsVirtualAsWritten
@@ -10599,6 +10615,15 @@ operator|*
 operator|>
 name|MaybeModedTInfo
 block|;
+comment|// FIXME: This can be packed into the bitfields in Decl.
+comment|/// If 0, we have not computed IsTransparentTag.
+comment|/// Otherwise, IsTransparentTag is (CacheIsTransparentTag>> 1).
+name|mutable
+name|unsigned
+name|CacheIsTransparentTag
+operator|:
+literal|2
+block|;
 name|protected
 operator|:
 name|TypedefNameDecl
@@ -10638,7 +10663,12 @@ argument_list|)
 block|,
 name|MaybeModedTInfo
 argument_list|(
-argument|TInfo
+name|TInfo
+argument_list|)
+block|,
+name|CacheIsTransparentTag
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 typedef|typedef
@@ -10957,11 +10987,44 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Determines if this typedef shares a name and spelling location with its
+end_comment
+
+begin_comment
+comment|/// underlying tag type, as is the case with the NS_ENUM macro.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isTransparentTag
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|CacheIsTransparentTag
+condition|)
+return|return
+name|CacheIsTransparentTag
+operator|&
+literal|0x2
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|isTransparentTagSlow
+argument_list|()
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|// Implement isa/cast/dyncast/etc.
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|bool
 name|classof
 parameter_list|(
@@ -11003,6 +11066,19 @@ name|lastTypedefName
 return|;
 block|}
 end_function
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_expr_stmt
+name|bool
+name|isTransparentTagSlow
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|};
@@ -13425,6 +13501,54 @@ name|isFixed
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Returns true if this enum is either annotated with
+end_comment
+
+begin_comment
+comment|/// enum_extensibility(closed) or isn't annotated with enum_extensibility.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isClosed
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Returns true if this enum is annotated with flag_enum and isn't annotated
+end_comment
+
+begin_comment
+comment|/// with enum_extensibility(open).
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isClosedFlag
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Returns true if this enum is annotated with neither flag_enum nor
+end_comment
+
+begin_comment
+comment|/// enum_extensibility(open).
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isClosedNonFlag
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment

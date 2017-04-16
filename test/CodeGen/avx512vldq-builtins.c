@@ -3805,7 +3805,9 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_movm_epi32
-comment|// CHECK: @llvm.x86.avx512.cvtmask2d.128
+comment|// CHECK: %{{.*}} = bitcast i8 %{{.*}} to<8 x i1>
+comment|// CHECK: %extract.i = shufflevector<8 x i1> %{{.*}},<8 x i1> %{{.*}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: %vpmovm2.i = sext<4 x i1> %extract.i to<4 x i32>
 return|return
 name|_mm_movm_epi32
 argument_list|(
@@ -3824,7 +3826,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_movm_epi32
-comment|// CHECK: @llvm.x86.avx512.cvtmask2d.256
+comment|// CHECK: %{{.*}} = bitcast i8 %{{.*}} to<8 x i1>
+comment|// CHECK: %vpmovm2.i = sext<8 x i1> %{{.*}} to<8 x i32>
 return|return
 name|_mm256_movm_epi32
 argument_list|(
@@ -3843,7 +3846,9 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_movm_epi64
-comment|// CHECK: @llvm.x86.avx512.cvtmask2q.128
+comment|// CHECK: %{{.*}} = bitcast i8 %{{.*}} to<8 x i1>
+comment|// CHECK: %extract.i = shufflevector<8 x i1> %{{.*}},<8 x i1> %{{.*}},<2 x i32><i32 0, i32 1>
+comment|// CHECK: %vpmovm2.i = sext<2 x i1> %extract.i to<2 x i64>
 return|return
 name|_mm_movm_epi64
 argument_list|(
@@ -3862,7 +3867,9 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_movm_epi64
-comment|// CHECK: @llvm.x86.avx512.cvtmask2q.256
+comment|// CHECK: %{{.*}} = bitcast i8 %{{.*}} to<8 x i1>
+comment|// CHECK: %extract.i = shufflevector<8 x i1> %{{.*}},<8 x i1> %{{.*}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: %vpmovm2.i = sext<4 x i1> %extract.i to<4 x i64>
 return|return
 name|_mm256_movm_epi64
 argument_list|(
@@ -3986,16 +3993,21 @@ begin_function
 name|__m256d
 name|test_mm256_broadcast_f64x2
 parameter_list|(
-name|__m128d
+name|double
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_broadcast_f64x2
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf64x2
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> %{{.*}},<4 x i32><i32 0, i32 1, i32 0, i32 1>
 return|return
 name|_mm256_broadcast_f64x2
 argument_list|(
+name|_mm_loadu_pd
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -4011,12 +4023,15 @@ parameter_list|,
 name|__mmask8
 name|__M
 parameter_list|,
-name|__m128d
+name|double
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_broadcast_f64x2
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf64x2
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> %{{.*}},<4 x i32><i32 0, i32 1, i32 0, i32 1>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_broadcast_f64x2
 argument_list|(
@@ -4024,7 +4039,10 @@ name|__O
 argument_list|,
 name|__M
 argument_list|,
+name|_mm_loadu_pd
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -4037,18 +4055,24 @@ parameter_list|(
 name|__mmask8
 name|__M
 parameter_list|,
-name|__m128d
+name|double
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_broadcast_f64x2
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf64x2
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> %{{.*}},<4 x i32><i32 0, i32 1, i32 0, i32 1>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_broadcast_f64x2
 argument_list|(
 name|__M
 argument_list|,
+name|_mm_loadu_pd
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -4203,15 +4227,20 @@ name|__m256i
 name|test_mm256_broadcast_i64x2
 parameter_list|(
 name|__m128i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_broadcast_i64x2
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti64x2
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 0, i32 1>
 return|return
 name|_mm256_broadcast_i64x2
 argument_list|(
+name|_mm_loadu_si128
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -4228,11 +4257,14 @@ name|__mmask8
 name|__M
 parameter_list|,
 name|__m128i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_broadcast_i64x2
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti64x2
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 0, i32 1>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_broadcast_i64x2
 argument_list|(
@@ -4240,7 +4272,10 @@ name|__O
 argument_list|,
 name|__M
 argument_list|,
+name|_mm_loadu_si128
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -4254,17 +4289,23 @@ name|__mmask8
 name|__M
 parameter_list|,
 name|__m128i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_broadcast_i64x2
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti64x2
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 0, i32 1>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_broadcast_i64x2
 argument_list|(
 name|__M
 argument_list|,
+name|_mm_loadu_si128
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -4279,7 +4320,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_extractf64x2_pd
-comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> zeroinitializer,<2 x i32><i32 2, i32 3>
 return|return
 name|_mm256_extractf64x2_pd
 argument_list|(
@@ -4306,7 +4347,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_extractf64x2_pd
-comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> zeroinitializer,<2 x i32><i32 2, i32 3>
 comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm256_mask_extractf64x2_pd
@@ -4335,7 +4376,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_extractf64x2_pd
-comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> zeroinitializer,<2 x i32><i32 2, i32 3>
 comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm256_maskz_extractf64x2_pd
@@ -4359,7 +4400,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_extracti64x2_epi64
-comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> zeroinitializer,<2 x i32><i32 2, i32 3>
 return|return
 name|_mm256_extracti64x2_epi64
 argument_list|(
@@ -4386,7 +4427,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_extracti64x2_epi64
-comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> zeroinitializer,<2 x i32><i32 2, i32 3>
 comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm256_mask_extracti64x2_epi64
@@ -4415,7 +4456,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_extracti64x2_epi64
-comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> zeroinitializer,<2 x i32><i32 2, i32 3>
 comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_extracti64x2_epi64

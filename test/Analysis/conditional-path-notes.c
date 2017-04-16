@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang --analyze %s -Xanalyzer -analyzer-output=text -Xclang -verify
+comment|// RUN: %clang_analyze_cc1 %s -analyzer-checker=core.NullDereference -analyzer-output=text -verify
 end_comment
 
 begin_comment
-comment|// RUN: %clang --analyze %s -Xanalyzer -analyzer-config -Xanalyzer path-diagnostics-alternate=false -o %t
+comment|// RUN: %clang_analyze_cc1 %s -analyzer-checker=core.NullDereference -analyzer-output=plist -analyzer-config path-diagnostics-alternate=false -o %t
 end_comment
 
 begin_comment

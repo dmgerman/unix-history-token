@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -std=c99 -Dbool=_Bool -analyze -analyzer-checker=core,alpha.core.TestAfterDivZero -analyzer-output=text -verify %s
+comment|// RUN: %clang_analyze_cc1 -std=c99 -Dbool=_Bool -analyzer-checker=core,alpha.core.TestAfterDivZero -analyzer-output=text -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x c++ -analyze -analyzer-checker=core,alpha.core.TestAfterDivZero -analyzer-output=text -verify %s
+comment|// RUN: %clang_analyze_cc1 -x c++ -analyzer-checker=core,alpha.core.TestAfterDivZero -analyzer-output=text -verify %s
 end_comment
 
 begin_decl_stmt

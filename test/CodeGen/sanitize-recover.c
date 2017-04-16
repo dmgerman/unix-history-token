@@ -67,15 +67,13 @@ name|i
 operator|=
 literal|1
 expr_stmt|;
-comment|// PARTIAL:      %[[CHECK0:.*]] = icmp ne {{.*}}* %[[PTR:.*]], null
-comment|// PARTIAL:      %[[SIZE:.*]] = call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false)
-comment|// PARTIAL-NEXT: %[[CHECK1:.*]] = icmp uge i64 %[[SIZE]], 4
+comment|// PARTIAL:      %[[SIZE:.*]] = call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false, i1 false)
+comment|// PARTIAL-NEXT: %[[CHECK0:.*]] = icmp uge i64 %[[SIZE]], 4
 comment|// PARTIAL:      %[[MISALIGN:.*]] = and i64 {{.*}}, 3
-comment|// PARTIAL-NEXT: %[[CHECK2:.*]] = icmp eq i64 %[[MISALIGN]], 0
-comment|// PARTIAL:      %[[CHECK02:.*]] = and i1 %[[CHECK0]], %[[CHECK2]]
-comment|// PARTIAL-NEXT: %[[CHECK012:.*]] = and i1 %[[CHECK02]], %[[CHECK1]]
-comment|// PARTIAL:      br i1 %[[CHECK012]], {{.*}} !prof ![[WEIGHT_MD:.*]], !nosanitize
-comment|// PARTIAL:      br i1 %[[CHECK02]], {{.*}}
+comment|// PARTIAL-NEXT: %[[CHECK1:.*]] = icmp eq i64 %[[MISALIGN]], 0
+comment|// PARTIAL:      %[[CHECK01:.*]] = and i1 %[[CHECK1]], %[[CHECK0]]
+comment|// PARTIAL:      br i1 %[[CHECK01]], {{.*}} !nosanitize
+comment|// PARTIAL:      br i1 %[[CHECK1]], {{.*}} !nosanitize
 comment|// PARTIAL:      call void @__ubsan_handle_type_mismatch_v1_abort(
 comment|// PARTIAL-NEXT: unreachable
 comment|// PARTIAL:      call void @__ubsan_handle_type_mismatch_v1(

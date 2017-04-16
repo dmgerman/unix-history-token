@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -verify -analyze -analyzer-checker=core,alpha.security.ArrayBound -analyzer-store=region %s
+comment|// RUN: %clang_analyze_cc1 -verify -analyzer-checker=core,alpha.security.ArrayBound -analyzer-store=region %s
 end_comment
 
 begin_struct

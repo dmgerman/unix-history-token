@@ -6923,6 +6923,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Loads a 64-bit integer value to the low element of a 128-bit integer
+end_comment
+
+begin_comment
+comment|///    vector and clears the upper element.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVQ / MOVQ</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a 64-bit memory location. The address of the memory
+end_comment
+
+begin_comment
+comment|///    location does not have to be aligned.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x i64] containing the loaded value.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -6980,6 +7024,50 @@ block|}
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Loads a 64-bit double-precision value to the low element of a
+end_comment
+
+begin_comment
+comment|///    128-bit integer vector and clears the upper element.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVSD / MOVSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    An pointer to a memory location containing a double-precision value.
+end_comment
+
+begin_comment
+comment|///    The address of the memory location does not have to be aligned.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the loaded value.
+end_comment
 
 begin_function
 specifier|static
@@ -7755,7 +7843,7 @@ comment|///    64 bits are set to the upper 64 bits of the first parameter.
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
@@ -10383,7 +10471,7 @@ comment|///    values in two 128-bit vectors. Sums the first 8 absolute differen
 end_comment
 
 begin_comment
-comment|///    separately sums the second 8 absolute differences. Packss these two
+comment|///    separately sums the second 8 absolute differences. Packs these two
 end_comment
 
 begin_comment
@@ -17560,6 +17648,7 @@ parameter_list|(
 name|void
 specifier|const
 modifier|*
+name|__p
 parameter_list|)
 function_decl|;
 comment|/// \brief Forces strong memory ordering (serialization) between load
@@ -18017,7 +18106,7 @@ comment|/// \param __imm
 end_comment
 
 begin_comment
-comment|///    An immediate value. Bits [3:0] selects values from \a __a to be assigned
+comment|///    An immediate value. Bits [2:0] selects values from \a __a to be assigned
 end_comment
 
 begin_comment
@@ -20817,6 +20906,45 @@ parameter_list|,
 name|y
 parameter_list|)
 value|(((x)<< 1) | (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MM_DENORMALS_ZERO_ON
+value|(0x0040)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MM_DENORMALS_ZERO_OFF
+value|(0x0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MM_DENORMALS_ZERO_MASK
+value|(0x0040)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MM_GET_DENORMALS_ZERO_MODE
+parameter_list|()
+value|(_mm_getcsr()& _MM_DENORMALS_ZERO_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MM_SET_DENORMALS_ZERO_MODE
+parameter_list|(
+name|x
+parameter_list|)
+value|(_mm_setcsr((_mm_getcsr()& ~_MM_DENORMALS_ZERO_MASK) | (x)))
 end_define
 
 begin_endif

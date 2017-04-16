@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fblocks -analyze -analyzer-checker=core,nullability -verify %s
+comment|// RUN: %clang_analyze_cc1 -fblocks -analyzer-checker=core,nullability -verify %s
 end_comment
 
 begin_function_decl

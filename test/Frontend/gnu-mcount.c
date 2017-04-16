@@ -28,7 +28,7 @@ comment|// RUN: %clang -target armv7-unknown-linux-gnueabi -meabi gnu -pg -S -em
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64-unknown-linux-gnueabi -pg -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM64-EABI
+comment|// RUN: %clang -target aarch64-unknown-linux-gnueabi -pg -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM64-EABI-LINUX
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|// RUN: %clang -target armv7-unknown-linux-gnueabihf -meabi gnu -pg -S -
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64-unknown-linux-gnueabihf -pg -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM64-EABI
+comment|// RUN: %clang -target aarch64-unknown-linux-gnueabihf -pg -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM64-EABI-LINUX
 end_comment
 
 begin_comment
@@ -207,6 +207,10 @@ comment|// CHECK-ARM64-EABI-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-func
 end_comment
 
 begin_comment
+comment|// CHECK-ARM64-EABI-LINUX: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01_mcount"{{.*}} }
+end_comment
+
+begin_comment
 comment|// CHECK-ARM-EABI-FREEBSD: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="__mcount"{{.*}} }
 end_comment
 
@@ -239,7 +243,7 @@ comment|// CHECK-ARM-EABI-OPENBSD-NOT: attributes #{{[0-9]+}} = { {{.*}}"countin
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI-OPENBSD: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="mcount"{{.*}} }
+comment|// CHECK-ARM64-EABI-OPENBSD: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="__mcount"{{.*}} }
 end_comment
 
 begin_comment

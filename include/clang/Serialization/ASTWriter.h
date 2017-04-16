@@ -222,6 +222,9 @@ name|class
 name|ASTReader
 decl_stmt|;
 name|class
+name|MemoryBufferCache
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 name|class
@@ -364,6 +367,20 @@ name|BitstreamWriter
 operator|&
 name|Stream
 expr_stmt|;
+comment|/// The buffer associated with the bitstream.
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Buffer
+expr_stmt|;
+comment|/// \brief The PCM manager which manages memory buffers for pcm files.
+name|MemoryBufferCache
+modifier|&
+name|PCMCache
+decl_stmt|;
 comment|/// \brief The ASTContext we're writing.
 name|ASTContext
 modifier|*
@@ -1252,6 +1269,14 @@ literal|16
 operator|>
 name|EagerlyDeserializedDecls
 expr_stmt|;
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|16
+operator|>
+name|ModularCodegenDecls
+expr_stmt|;
 comment|/// \brief DeclContexts that have received extensions since their serialized
 comment|/// form.
 comment|///
@@ -1411,7 +1436,7 @@ name|void
 name|WriteBlockInfoBlock
 parameter_list|()
 function_decl|;
-name|uint64_t
+name|void
 name|WriteControlBlock
 argument_list|(
 name|Preprocessor
@@ -1433,6 +1458,28 @@ operator|&
 name|OutputFile
 argument_list|)
 decl_stmt|;
+comment|/// Write out the signature and diagnostic options, and return the signature.
+name|ASTFileSignature
+name|writeUnhashedControlBlock
+parameter_list|(
+name|Preprocessor
+modifier|&
+name|PP
+parameter_list|,
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|)
+function_decl|;
+comment|/// Calculate hash of the pcm content.
+specifier|static
+name|ASTFileSignature
+name|createSignature
+parameter_list|(
+name|StringRef
+name|Bytes
+parameter_list|)
+function_decl|;
 name|void
 name|WriteInputFiles
 parameter_list|(
@@ -1735,6 +1782,14 @@ name|SemaRef
 parameter_list|)
 function_decl|;
 name|void
+name|WritePackPragmaOptions
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|)
+function_decl|;
+name|void
 name|WriteModuleFileExtension
 parameter_list|(
 name|Sema
@@ -1837,7 +1892,7 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-name|uint64_t
+name|ASTFileSignature
 name|WriteASTCore
 argument_list|(
 name|Sema
@@ -1866,6 +1921,10 @@ comment|/// the given bitstream.
 name|ASTWriter
 argument_list|(
 argument|llvm::BitstreamWriter&Stream
+argument_list|,
+argument|SmallVectorImpl<char>&Buffer
+argument_list|,
+argument|MemoryBufferCache&PCMCache
 argument_list|,
 argument|ArrayRef<std::shared_ptr<ModuleFileExtension>> Extensions
 argument_list|,
@@ -1911,7 +1970,7 @@ comment|/// build directory will be used in preference to this if both are avail
 comment|///
 comment|/// \return the module signature, which eventually will be a hash of
 comment|/// the module but currently is merely a random 32-bit number.
-name|uint64_t
+name|ASTFileSignature
 name|WriteAST
 argument_list|(
 name|Sema

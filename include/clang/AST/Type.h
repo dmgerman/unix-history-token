@@ -1541,6 +1541,55 @@ operator|>>
 name|AddressSpaceShift
 return|;
 block|}
+comment|/// Get the address space attribute value to be printed by diagnostics.
+name|unsigned
+name|getAddressSpaceAttributePrintValue
+argument_list|()
+specifier|const
+block|{
+name|auto
+name|Addr
+operator|=
+name|getAddressSpace
+argument_list|()
+block|;
+comment|// This function is not supposed to be used with language specific
+comment|// address spaces. If that happens, the diagnostic message should consider
+comment|// printing the QualType instead of the address space value.
+name|assert
+argument_list|(
+name|Addr
+operator|==
+literal|0
+operator|||
+name|Addr
+operator|>=
+name|LangAS
+operator|::
+name|Count
+argument_list|)
+block|;
+if|if
+condition|(
+name|Addr
+condition|)
+return|return
+name|Addr
+operator|-
+name|LangAS
+operator|::
+name|Count
+return|;
+comment|// TODO: The diagnostic messages where Addr may be 0 should be fixed
+comment|// since it cannot differentiate the situation where 0 denotes the default
+comment|// address space or user specified __attribute__((address_space(0))).
+return|return
+literal|0
+return|;
+block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|setAddressSpace
 parameter_list|(
@@ -1576,6 +1625,9 @@ name|AddressSpaceShift
 operator|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|removeAddressSpace
 parameter_list|()
@@ -1586,6 +1638,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|addAddressSpace
 parameter_list|(
@@ -1604,8 +1659,17 @@ name|space
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// Fast qualifiers are those that can be allocated directly
+end_comment
+
+begin_comment
 comment|// on a QualType object.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasFastQualifiers
 argument_list|()
@@ -1616,6 +1680,9 @@ name|getFastQualifiers
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getFastQualifiers
 argument_list|()
@@ -1627,6 +1694,9 @@ operator|&
 name|FastMask
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setFastQualifiers
 parameter_list|(
@@ -1659,6 +1729,9 @@ operator||
 name|mask
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|removeFastQualifiers
 parameter_list|(
@@ -1685,6 +1758,9 @@ operator|~
 name|mask
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|removeFastQualifiers
 parameter_list|()
@@ -1695,6 +1771,9 @@ name|FastMask
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|addFastQualifiers
 parameter_list|(
@@ -1720,8 +1799,17 @@ operator||=
 name|mask
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// Return true if the set contains any qualifiers which require an ExtQuals
+end_comment
+
+begin_comment
 comment|/// node to be allocated.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasNonFastQualifiers
 argument_list|()
@@ -1734,6 +1822,9 @@ operator|~
 name|FastMask
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Qualifiers
 name|getNonFastQualifiers
 argument_list|()
@@ -1756,7 +1847,13 @@ return|return
 name|Quals
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Return true if the set contains any qualifiers.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasQualifiers
 argument_list|()
@@ -1766,6 +1863,9 @@ return|return
 name|Mask
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|empty
 argument_list|()
@@ -1776,7 +1876,13 @@ operator|!
 name|Mask
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Add the qualifiers from the given set to this set.
+end_comment
+
+begin_function
 name|void
 name|addQualifiers
 parameter_list|(
@@ -1863,7 +1969,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Remove the qualifiers from the given set from this set.
+end_comment
+
+begin_function
 name|void
 name|removeQualifiers
 parameter_list|(
@@ -1946,8 +2058,17 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/// Add the qualifiers from the given set to this set, given that
+end_comment
+
+begin_comment
 comment|/// they don't conflict.
+end_comment
+
+begin_function
 name|void
 name|addConsistentQualifiers
 parameter_list|(
@@ -2025,13 +2146,37 @@ operator|.
 name|Mask
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// Returns true if this address space is a superset of the other one.
+end_comment
+
+begin_comment
 comment|/// OpenCL v2.0 defines conversion rules (OpenCLC v2.0 s6.5.5) and notion of
+end_comment
+
+begin_comment
 comment|/// overlapping address spaces.
+end_comment
+
+begin_comment
 comment|/// CL1.1 or CL1.2:
+end_comment
+
+begin_comment
 comment|///   every address space is a superset of itself.
+end_comment
+
+begin_comment
 comment|/// CL2.0 adds:
+end_comment
+
+begin_comment
 comment|///   __generic is a superset of any address space except for __constant.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isAddressSpaceSupersetOf
 argument_list|(
@@ -2071,9 +2216,21 @@ name|opencl_constant
 operator|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Determines if these qualifiers compatibly include another set.
+end_comment
+
+begin_comment
 comment|/// Generally this answers the question of whether an object with the other
+end_comment
+
+begin_comment
 comment|/// qualifiers can be safely used as an object with these qualifiers.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|compatiblyIncludes
 argument_list|(
@@ -2157,13 +2314,37 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determines if these qualifiers compatibly include another set of
+end_comment
+
+begin_comment
 comment|/// qualifiers from the narrow perspective of Objective-C ARC lifetime.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// One set of Objective-C lifetime qualifiers compatibly includes the other
+end_comment
+
+begin_comment
 comment|/// if the lifetime qualifiers match, or if both are non-__weak and the
+end_comment
+
+begin_comment
 comment|/// including set also contains the 'const' qualifier, or both are non-__weak
+end_comment
+
+begin_comment
 comment|/// and one is None (which can only happen in non-ARC modes).
+end_comment
+
+begin_decl_stmt
 name|bool
 name|compatiblyIncludesObjCLifetime
 argument_list|(
@@ -2224,8 +2405,17 @@ name|hasConst
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether this set of qualifiers is a strict superset of
+end_comment
+
+begin_comment
 comment|/// another set of qualifiers, not considering qualifier compatibility.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isStrictSupersetOf
 argument_list|(
@@ -2234,6 +2424,9 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|operator
 operator|==
@@ -2251,6 +2444,9 @@ operator|.
 name|Mask
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|operator
 operator|!=
@@ -2268,6 +2464,9 @@ operator|.
 name|Mask
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|explicit
 name|operator
 name|bool
@@ -2279,6 +2478,9 @@ name|hasQualifiers
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Qualifiers
 operator|&
 name|operator
@@ -2298,8 +2500,17 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Union two qualifier sets.  If an enumerated qualifier appears
+end_comment
+
+begin_comment
 comment|// in both sets, use the one from the right.
+end_comment
+
+begin_expr_stmt
 name|friend
 name|Qualifiers
 name|operator
@@ -2320,6 +2531,9 @@ return|return
 name|L
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Qualifiers
 operator|&
 name|operator
@@ -2339,7 +2553,13 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Compute the difference between two qualifier sets.
+end_comment
+
+begin_expr_stmt
 name|friend
 name|Qualifiers
 name|operator
@@ -2360,6 +2580,9 @@ return|return
 name|L
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
@@ -2367,6 +2590,9 @@ name|getAsString
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
@@ -2376,6 +2602,9 @@ argument|const PrintingPolicy&Policy
 argument_list|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|bool
 name|isEmptyWhenPrinted
 argument_list|(
@@ -2386,6 +2615,9 @@ name|Policy
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -2405,6 +2637,9 @@ name|false
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|Profile
 argument_list|(
@@ -2424,13 +2659,28 @@ name|Mask
 argument_list|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|// bits:     |0 1 2|3|4 .. 5|6  ..  8|9   ...   31|
+end_comment
+
+begin_comment
 comment|//           |C R V|U|GCAttr|Lifetime|AddressSpace|
+end_comment
+
+begin_decl_stmt
 name|uint32_t
 name|Mask
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
@@ -2438,6 +2688,9 @@ name|UMask
 init|=
 literal|0x8
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
@@ -2445,6 +2698,9 @@ name|UShift
 init|=
 literal|3
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
@@ -2452,6 +2708,9 @@ name|GCAttrMask
 init|=
 literal|0x30
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
@@ -2459,6 +2718,9 @@ name|GCAttrShift
 init|=
 literal|4
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
@@ -2466,6 +2728,9 @@ name|LifetimeMask
 init|=
 literal|0x1C0
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
@@ -2473,6 +2738,9 @@ name|LifetimeShift
 init|=
 literal|6
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
@@ -2489,6 +2757,9 @@ operator||
 name|LifetimeMask
 operator|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
@@ -2496,14 +2767,10 @@ name|AddressSpaceShift
 init|=
 literal|9
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// A std::pair-like structure for storing a qualified type split
 end_comment
 
@@ -4948,6 +5215,23 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|// true when Type is objc's weak and weak is enabled but ARC isn't.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isNonWeakInMRRWithObjCWeak
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_enum
 enum|enum
 name|DestructionKind
@@ -7272,12 +7556,6 @@ specifier|const
 block|;
 comment|// OpenCL queue_t
 name|bool
-name|isNDRangeT
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL ndrange_t
-name|bool
 name|isReserveIDT
 argument_list|()
 specifier|const
@@ -7367,7 +7645,8 @@ name|InstantiationDependent
 return|;
 block|}
 comment|/// \brief Determine whether this type is an undeduced type, meaning that
-comment|/// it somehow involves a C++11 'auto' type which has not yet been deduced.
+comment|/// it somehow involves a C++11 'auto' type or similar which has not yet been
+comment|/// deduced.
 name|bool
 name|isUndeducedType
 argument_list|()
@@ -7550,12 +7829,40 @@ name|getPointeeCXXRecordDecl
 argument_list|()
 specifier|const
 block|;
+comment|/// Get the DeducedType whose type will be deduced for a variable with
+comment|/// an initializer of this type. This looks through declarators like pointer
+comment|/// types, but not through decltype or typedefs.
+name|DeducedType
+operator|*
+name|getContainedDeducedType
+argument_list|()
+specifier|const
+block|;
 comment|/// Get the AutoType whose type will be deduced for a variable with
 comment|/// an initializer of this type. This looks through declarators like pointer
 comment|/// types, but not through decltype or typedefs.
 name|AutoType
 operator|*
 name|getContainedAutoType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|dyn_cast_or_null
+operator|<
+name|AutoType
+operator|>
+operator|(
+name|getContainedDeducedType
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// Determine whether this type was written with a leading 'auto'
+comment|/// corresponding to a trailing return type (possibly for a nested
+comment|/// function type within a pointer to function type or similar).
+name|bool
+name|hasAutoForTrailingReturnType
 argument_list|()
 specifier|const
 block|;
@@ -7574,6 +7881,23 @@ specifier|const
 name|T
 operator|*
 name|getAs
+argument_list|()
+specifier|const
+block|;
+comment|/// Member-template getAsAdjusted<specific type>. Look through specific kinds
+comment|/// of sugar (parens, attributes, etc) for an instance of \<specific type>.
+comment|/// This is used when you need to walk over sugar nodes that represent some
+comment|/// kind of type adjustment from a type that was written as a \<specific type>
+comment|/// to another type that is still canonically a \<specific type>.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|const
+name|T
+operator|*
+name|getAsAdjusted
 argument_list|()
 specifier|const
 block|;
@@ -7999,7 +8323,7 @@ argument_list|,
 comment|/*VariablyModified=*/
 argument|false
 argument_list|,
-comment|/*Unexpanded paramter pack=*/
+comment|/*Unexpanded parameter pack=*/
 argument|false
 argument_list|)
 block|{
@@ -12298,7 +12622,11 @@ block|,
 name|IsConsumed
 operator|=
 literal|0x10
-block|}
+block|,
+name|HasPassObjSize
+operator|=
+literal|0x20
+block|,     }
 block|;
 name|unsigned
 name|char
@@ -12416,6 +12744,38 @@ expr_stmt|;
 block|}
 return|return
 name|copy
+return|;
+block|}
+name|bool
+name|hasPassObjectSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+operator|&
+name|HasPassObjSize
+return|;
+block|}
+name|ExtParameterInfo
+name|withHasPassObjectSize
+argument_list|()
+specifier|const
+block|{
+name|ExtParameterInfo
+name|Copy
+operator|=
+operator|*
+name|this
+block|;
+name|Copy
+operator|.
+name|Data
+operator||=
+name|HasPassObjSize
+block|;
+return|return
+name|Copy
 return|;
 block|}
 name|unsigned
@@ -16105,57 +16465,59 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents a C++11 auto or C++14 decltype(auto) type.
+comment|/// \brief Common base class for placeholders for types that get replaced by
+comment|/// placeholder type deduction: C++11 auto, C++14 decltype(auto), C++17 deduced
+comment|/// class template types, and (eventually) constrained type names from the C++
+comment|/// Concepts TS.
 comment|///
 comment|/// These types are usually a placeholder for a deduced type. However, before
 comment|/// the initializer is attached, or (usually) if the initializer is
-comment|/// type-dependent, there is no deduced type and an auto type is canonical. In
+comment|/// type-dependent, there is no deduced type and the type is canonical. In
 comment|/// the latter case, it is also a dependent type.
 name|class
-name|AutoType
+name|DeducedType
 operator|:
 name|public
 name|Type
-block|,
-name|public
-name|llvm
-operator|::
-name|FoldingSetNode
 block|{
-name|AutoType
+name|protected
+operator|:
+name|DeducedType
 argument_list|(
-argument|QualType DeducedType
+argument|TypeClass TC
 argument_list|,
-argument|AutoTypeKeyword Keyword
+argument|QualType DeducedAsType
 argument_list|,
 argument|bool IsDependent
+argument_list|,
+argument|bool IsInstantiationDependent
+argument_list|,
+argument|bool ContainsParameterPack
 argument_list|)
 operator|:
 name|Type
 argument_list|(
-argument|Auto
+argument|TC
 argument_list|,
-argument|DeducedType.isNull() ? QualType(this,
+comment|// FIXME: Retain the sugared deduced type?
+argument|DeducedAsType.isNull() ? QualType(this,
 literal|0
-argument|) : DeducedType
+argument|)                                     : DeducedAsType.getCanonicalType()
 argument_list|,
-comment|/*Dependent=*/
 argument|IsDependent
 argument_list|,
-comment|/*InstantiationDependent=*/
-argument|IsDependent
+argument|IsInstantiationDependent
 argument_list|,
 comment|/*VariablyModified=*/
 argument|false
 argument_list|,
-comment|/*ContainsParameterPack=*/
-argument|false
+argument|ContainsParameterPack
 argument_list|)
 block|{
 if|if
 condition|(
 operator|!
-name|DeducedType
+name|DeducedAsType
 operator|.
 name|isNull
 argument_list|()
@@ -16163,7 +16525,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|DeducedType
+name|DeducedAsType
 operator|->
 name|isDependentType
 argument_list|()
@@ -16173,7 +16535,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|DeducedType
+name|DeducedAsType
 operator|->
 name|isInstantiationDependentType
 argument_list|()
@@ -16183,7 +16545,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|DeducedType
+name|DeducedAsType
 operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
@@ -16192,6 +16554,123 @@ name|setContainsUnexpandedParameterPack
 argument_list|()
 expr_stmt|;
 block|}
+block|}
+name|public
+operator|:
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isCanonicalUnqualified
+argument_list|()
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCanonicalTypeInternal
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get the type deduced for this placeholder type, or null if it's
+comment|/// either not been deduced or was deduced to a dependent type.
+name|QualType
+name|getDeducedType
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isCanonicalUnqualified
+argument_list|()
+operator|?
+name|getCanonicalTypeInternal
+argument_list|()
+operator|:
+name|QualType
+argument_list|()
+return|;
+block|}
+name|bool
+name|isDeduced
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isCanonicalUnqualified
+argument_list|()
+operator|||
+name|isDependentType
+argument_list|()
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|Auto
+operator|||
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|DeducedTemplateSpecialization
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Represents a C++11 auto or C++14 decltype(auto) type.
+name|class
+name|AutoType
+operator|:
+name|public
+name|DeducedType
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|AutoType
+argument_list|(
+argument|QualType DeducedAsType
+argument_list|,
+argument|AutoTypeKeyword Keyword
+argument_list|,
+argument|bool IsDeducedAsDependent
+argument_list|)
+operator|:
+name|DeducedType
+argument_list|(
+argument|Auto
+argument_list|,
+argument|DeducedAsType
+argument_list|,
+argument|IsDeducedAsDependent
+argument_list|,
+argument|IsDeducedAsDependent
+argument_list|,
+comment|/*ContainsPack=*/
+argument|false
+argument_list|)
+block|{
 name|AutoTypeBits
 operator|.
 name|Keyword
@@ -16200,8 +16679,7 @@ operator|(
 name|unsigned
 operator|)
 name|Keyword
-expr_stmt|;
-block|}
+block|;   }
 name|friend
 name|class
 name|ASTContext
@@ -16235,60 +16713,6 @@ operator|)
 name|AutoTypeBits
 operator|.
 name|Keyword
-return|;
-block|}
-name|bool
-name|isSugared
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|isCanonicalUnqualified
-argument_list|()
-return|;
-block|}
-name|QualType
-name|desugar
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getCanonicalTypeInternal
-argument_list|()
-return|;
-block|}
-comment|/// \brief Get the type deduced for this auto type, or null if it's either
-comment|/// not been deduced or was deduced to a dependent type.
-name|QualType
-name|getDeducedType
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|isCanonicalUnqualified
-argument_list|()
-operator|?
-name|getCanonicalTypeInternal
-argument_list|()
-operator|:
-name|QualType
-argument_list|()
-return|;
-block|}
-name|bool
-name|isDeduced
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|isCanonicalUnqualified
-argument_list|()
-operator|||
-name|isDependentType
-argument_list|()
 return|;
 block|}
 name|void
@@ -16365,6 +16789,154 @@ name|getTypeClass
 argument_list|()
 operator|==
 name|Auto
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Represents a C++17 deduced template specialization type.
+name|class
+name|DeducedTemplateSpecializationType
+operator|:
+name|public
+name|DeducedType
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+comment|/// The name of the template whose arguments will be deduced.
+name|TemplateName
+name|Template
+block|;
+name|DeducedTemplateSpecializationType
+argument_list|(
+argument|TemplateName Template
+argument_list|,
+argument|QualType DeducedAsType
+argument_list|,
+argument|bool IsDeducedAsDependent
+argument_list|)
+operator|:
+name|DeducedType
+argument_list|(
+name|DeducedTemplateSpecialization
+argument_list|,
+name|DeducedAsType
+argument_list|,
+name|IsDeducedAsDependent
+operator|||
+name|Template
+operator|.
+name|isDependent
+argument_list|()
+argument_list|,
+name|IsDeducedAsDependent
+operator|||
+name|Template
+operator|.
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
+name|Template
+operator|.
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|,
+name|Template
+argument_list|(
+argument|Template
+argument_list|)
+block|{}
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these
+name|public
+operator|:
+comment|/// Retrieve the name of the template that we are deducing.
+name|TemplateName
+name|getTemplateName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Template
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getTemplateName
+argument_list|()
+argument_list|,
+name|getDeducedType
+argument_list|()
+argument_list|,
+name|isDependentType
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|TemplateName Template
+argument_list|,
+argument|QualType Deduced
+argument_list|,
+argument|bool IsDependent
+argument_list|)
+block|{
+name|Template
+operator|.
+name|Profile
+argument_list|(
+name|ID
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|Deduced
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|IsDependent
+argument_list|)
+block|;   }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|DeducedTemplateSpecialization
 return|;
 block|}
 expr|}
@@ -16933,6 +17505,19 @@ operator|.
 name|getTypePtr
 argument_list|()
 operator|)
+return|;
+block|}
+name|TemplateName
+name|getTemplateName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getInjectedTST
+argument_list|()
+operator|->
+name|getTemplateName
+argument_list|()
 return|;
 block|}
 name|CXXRecordDecl
@@ -22204,23 +22789,6 @@ specifier|inline
 name|bool
 name|Type
 operator|::
-name|isNDRangeT
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLNDRange
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
 name|isReserveIDT
 argument_list|()
 specifier|const
@@ -22305,9 +22873,6 @@ name|isClkEventT
 argument_list|()
 operator|||
 name|isQueueT
-argument_list|()
-operator|||
-name|isNDRangeT
 argument_list|()
 operator|||
 name|isReserveIDT
@@ -22544,9 +23109,6 @@ return|return
 name|false
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -22580,16 +23142,11 @@ name|BuiltinType
 operator|::
 name|Void
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
-
-begin_expr_stmt
-unit|}  inline
+block|}
+specifier|inline
 name|bool
 name|Type
 operator|::
@@ -22622,20 +23179,15 @@ name|BuiltinType
 operator|::
 name|Half
 return|;
-end_expr_stmt
-
-begin_comment
 comment|// FIXME: Should we allow complex __fp16? Probably not.
-end_comment
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_block
 
 begin_expr_stmt
-unit|}  inline
+specifier|inline
 name|bool
 name|Type
 operator|::
@@ -23041,19 +23593,18 @@ name|isUndeducedType
 argument_list|()
 specifier|const
 block|{
-specifier|const
-name|AutoType
+name|auto
 operator|*
-name|AT
+name|DT
 operator|=
-name|getContainedAutoType
+name|getContainedDeducedType
 argument_list|()
 block|;
 return|return
-name|AT
+name|DT
 operator|&&
 operator|!
-name|AT
+name|DT
 operator|->
 name|isDeduced
 argument_list|()
@@ -23506,6 +24057,228 @@ operator|>
 operator|(
 name|getUnqualifiedDesugaredType
 argument_list|()
+operator|)
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|const
+name|T
+operator|*
+name|Type
+operator|::
+name|getAsAdjusted
+argument_list|()
+specifier|const
+block|{
+name|static_assert
+argument_list|(
+operator|!
+name|TypeIsArrayType
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"ArrayType cannot be used with getAsAdjusted!"
+argument_list|)
+block|;
+comment|// If this is directly a T type, return it.
+if|if
+condition|(
+specifier|const
+name|T
+modifier|*
+name|Ty
+init|=
+name|dyn_cast
+operator|<
+name|T
+operator|>
+operator|(
+name|this
+operator|)
+condition|)
+return|return
+name|Ty
+return|;
+end_expr_stmt
+
+begin_comment
+comment|// If the canonical form of this type isn't the right kind, reject it.
+end_comment
+
+begin_if
+if|if
+condition|(
+operator|!
+name|isa
+operator|<
+name|T
+operator|>
+operator|(
+name|CanonicalType
+operator|)
+condition|)
+return|return
+name|nullptr
+return|;
+end_if
+
+begin_comment
+comment|// Strip off type adjustments that do not modify the underlying nature of the
+end_comment
+
+begin_comment
+comment|// type.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|Type
+modifier|*
+name|Ty
+init|=
+name|this
+decl_stmt|;
+end_decl_stmt
+
+begin_while
+while|while
+condition|(
+name|Ty
+condition|)
+block|{
+if|if
+condition|(
+specifier|const
+specifier|auto
+modifier|*
+name|A
+init|=
+name|dyn_cast
+operator|<
+name|AttributedType
+operator|>
+operator|(
+name|Ty
+operator|)
+condition|)
+name|Ty
+operator|=
+name|A
+operator|->
+name|getModifiedType
+argument_list|()
+operator|.
+name|getTypePtr
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+specifier|const
+specifier|auto
+modifier|*
+name|E
+init|=
+name|dyn_cast
+operator|<
+name|ElaboratedType
+operator|>
+operator|(
+name|Ty
+operator|)
+condition|)
+name|Ty
+operator|=
+name|E
+operator|->
+name|desugar
+argument_list|()
+operator|.
+name|getTypePtr
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+specifier|const
+specifier|auto
+modifier|*
+name|P
+init|=
+name|dyn_cast
+operator|<
+name|ParenType
+operator|>
+operator|(
+name|Ty
+operator|)
+condition|)
+name|Ty
+operator|=
+name|P
+operator|->
+name|desugar
+argument_list|()
+operator|.
+name|getTypePtr
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+specifier|const
+specifier|auto
+modifier|*
+name|A
+init|=
+name|dyn_cast
+operator|<
+name|AdjustedType
+operator|>
+operator|(
+name|Ty
+operator|)
+condition|)
+name|Ty
+operator|=
+name|A
+operator|->
+name|desugar
+argument_list|()
+operator|.
+name|getTypePtr
+argument_list|()
+expr_stmt|;
+else|else
+break|break;
+block|}
+end_while
+
+begin_comment
+comment|// Just because the canonical type is correct does not mean we can use cast<>,
+end_comment
+
+begin_comment
+comment|// since we may not have stripped off all the sugar down to the base type.
+end_comment
+
+begin_return
+return|return
+name|dyn_cast
+operator|<
+name|T
+operator|>
+operator|(
+name|Ty
 operator|)
 return|;
 end_return

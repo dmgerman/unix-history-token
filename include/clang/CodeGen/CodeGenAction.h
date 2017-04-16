@@ -83,6 +83,41 @@ name|ASTFrontendAction
 block|{
 name|private
 operator|:
+comment|// Let BackendConsumer access LinkModule.
+name|friend
+name|class
+name|BackendConsumer
+block|;
+comment|/// Info about module to link into a module we're generating.
+block|struct
+name|LinkModule
+block|{
+comment|/// The module to link in.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|Module
+operator|>
+name|Module
+block|;
+comment|/// If true, we set attributes on Module's functions according to our
+comment|/// CodeGenOptions and LangOptions, as though we were generating the
+comment|/// function ourselves.
+name|bool
+name|PropagateAttrs
+block|;
+comment|/// If true, we use LLVM module internalizer.
+name|bool
+name|Internalize
+block|;
+comment|/// Bitwise combination of llvm::LinkerFlags used when we link the module.
+name|unsigned
+name|LinkFlags
+block|;   }
+block|;
 name|unsigned
 name|Act
 block|;
@@ -96,21 +131,10 @@ name|Module
 operator|>
 name|TheModule
 block|;
-comment|// Vector of {Linker::Flags, Module*} pairs to specify bitcode
-comment|// modules to link in using corresponding linker flags.
+comment|/// Bitcode modules to link in to our module.
 name|SmallVector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-block|,
-name|llvm
-operator|::
-name|Module
-operator|*
-operator|>
+name|LinkModule
 block|,
 literal|4
 operator|>
@@ -124,6 +148,19 @@ name|VMContext
 block|;
 name|bool
 name|OwnsVMContext
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|Module
+operator|>
+name|loadModule
+argument_list|(
+argument|llvm::MemoryBufferRef MBRef
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -174,31 +211,6 @@ name|CodeGenAction
 argument_list|()
 name|override
 block|;
-comment|/// setLinkModule - Set the link module to be used by this action.  If a link
-comment|/// module is not provided, and CodeGenOptions::LinkBitcodeFile is non-empty,
-comment|/// the action will load it from the specified file.
-name|void
-name|addLinkModule
-argument_list|(
-argument|llvm::Module *Mod
-argument_list|,
-argument|unsigned LinkFlags
-argument_list|)
-block|{
-name|LinkModules
-operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|LinkFlags
-argument_list|,
-name|Mod
-argument_list|)
-argument_list|)
-block|;   }
 comment|/// Take the generated LLVM module, for use after the action has been run.
 comment|/// The result may be null on failure.
 name|std

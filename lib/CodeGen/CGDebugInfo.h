@@ -246,6 +246,14 @@ name|CurLoc
 decl_stmt|;
 name|llvm
 operator|::
+name|MDNode
+operator|*
+name|CurInlinedAt
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
 name|DIType
 operator|*
 name|VTablePtrType
@@ -1697,6 +1705,27 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
+comment|/// If target-specific LLVM \p AddressSpace directly maps to target-specific
+comment|/// DWARF address space, appends extended dereferencing mechanism to complex
+comment|/// expression \p Expr. Otherwise, does nothing.
+comment|///
+comment|/// Extended dereferencing mechanism is has the following format:
+comment|///     DW_OP_constu<DWARF Address Space> DW_OP_swap DW_OP_xderef
+name|void
+name|AppendAddressSpaceXDeref
+argument_list|(
+name|unsigned
+name|AddressSpace
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|int64_t
+operator|>
+operator|&
+name|Expr
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 name|CGDebugInfo
@@ -1768,6 +1797,47 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
+comment|/// Return the current source location. This does not necessarily correspond
+comment|/// to the IRBuilder's current DebugLoc.
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurLoc
+return|;
+block|}
+comment|/// Update the current inline scope. All subsequent calls to \p EmitLocation
+comment|/// will create a location with this inlinedAt field.
+name|void
+name|setInlinedAt
+argument_list|(
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|InlinedAt
+argument_list|)
+block|{
+name|CurInlinedAt
+operator|=
+name|InlinedAt
+expr_stmt|;
+block|}
+comment|/// \return the current inline scope.
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getInlinedAt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurInlinedAt
+return|;
+block|}
 comment|// Converts a SourceLocation to a DebugLoc
 name|llvm
 operator|::
@@ -1821,6 +1891,27 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
+comment|/// Start a new scope for an inlined function.
+name|void
+name|EmitInlineFunctionStart
+parameter_list|(
+name|CGBuilderTy
+modifier|&
+name|Builder
+parameter_list|,
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
+comment|/// End an inlined function scope.
+name|void
+name|EmitInlineFunctionEnd
+parameter_list|(
+name|CGBuilderTy
+modifier|&
+name|Builder
+parameter_list|)
+function_decl|;
 comment|/// Emit debug info for a function declaration.
 name|void
 name|EmitFunctionDecl
@@ -2134,6 +2225,15 @@ name|RD
 parameter_list|)
 function_decl|;
 name|void
+name|completeClass
+parameter_list|(
+specifier|const
+name|RecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+name|void
 name|completeTemplateDefinition
 parameter_list|(
 specifier|const
@@ -2142,6 +2242,48 @@ modifier|&
 name|SD
 parameter_list|)
 function_decl|;
+name|void
+name|completeUnusedClass
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|&
+name|D
+parameter_list|)
+function_decl|;
+comment|/// Create debug info for a macro defined by a #define directive or a macro
+comment|/// undefined by a #undef directive.
+name|llvm
+operator|::
+name|DIMacro
+operator|*
+name|CreateMacro
+argument_list|(
+argument|llvm::DIMacroFile *Parent
+argument_list|,
+argument|unsigned MType
+argument_list|,
+argument|SourceLocation LineLoc
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|StringRef Value
+argument_list|)
+expr_stmt|;
+comment|/// Create debug info for a file referenced by an #include directive.
+name|llvm
+operator|::
+name|DIMacroFile
+operator|*
+name|CreateTempMacroFile
+argument_list|(
+argument|llvm::DIMacroFile *Parent
+argument_list|,
+argument|SourceLocation LineLoc
+argument_list|,
+argument|SourceLocation FileLoc
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 comment|/// Emit call to llvm.dbg.declare for a variable declaration.
@@ -2434,21 +2576,41 @@ operator|*
 name|D
 argument_list|)
 expr_stmt|;
+comment|/// Helper that either creates a forward declaration or a stub.
+name|llvm
+operator|::
+name|DISubprogram
+operator|*
+name|getFunctionFwdDeclOrStub
+argument_list|(
+argument|GlobalDecl GD
+argument_list|,
+argument|bool Stub
+argument_list|)
+expr_stmt|;
 comment|/// Create a subprogram describing the forward declaration
-comment|/// represented in the given FunctionDecl.
+comment|/// represented in the given FunctionDecl wrapped in a GlobalDecl.
 name|llvm
 operator|::
 name|DISubprogram
 operator|*
 name|getFunctionForwardDeclaration
 argument_list|(
-specifier|const
-name|FunctionDecl
-operator|*
-name|FD
+argument|GlobalDecl GD
 argument_list|)
 expr_stmt|;
-comment|/// Create a global variable describing the forward decalration
+comment|/// Create a DISubprogram describing the function
+comment|/// represented in the given FunctionDecl wrapped in a GlobalDecl.
+name|llvm
+operator|::
+name|DISubprogram
+operator|*
+name|getFunctionStub
+argument_list|(
+argument|GlobalDecl GD
+argument_list|)
+expr_stmt|;
+comment|/// Create a global variable describing the forward declaration
 comment|/// represented in the given VarDecl.
 name|llvm
 operator|::
@@ -2932,6 +3094,36 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+block|}
+empty_stmt|;
+comment|/// A scoped helper to set the current debug location to an inlined location.
+name|class
+name|ApplyInlineDebugLocation
+block|{
+name|SourceLocation
+name|SavedLocation
+decl_stmt|;
+name|CodeGenFunction
+modifier|*
+name|CGF
+decl_stmt|;
+name|public
+label|:
+comment|/// Set up the CodeGenFunction's DebugInfo to produce inline locations for the
+comment|/// function \p InlinedFn. The current debug location becomes the inlined call
+comment|/// site of the inlined function.
+name|ApplyInlineDebugLocation
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|GlobalDecl InlinedFn
+argument_list|)
+empty_stmt|;
+comment|/// Restore everything back to the orginial state.
+operator|~
+name|ApplyInlineDebugLocation
+argument_list|()
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

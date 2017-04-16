@@ -6271,7 +6271,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_extractf64x4_pd
-comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|_mm512_extractf64x4_pd
 argument_list|(
@@ -6298,7 +6298,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL:@test_mm512_mask_extractf64x4_pd
-comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm512_mask_extractf64x4_pd
@@ -6327,7 +6327,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL:@test_mm512_maskz_extractf64x4_pd
-comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm512_maskz_extractf64x4_pd
@@ -6351,7 +6351,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_extractf32x4_ps
-comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|_mm512_extractf32x4_ps
 argument_list|(
@@ -6378,7 +6378,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL:@test_mm512_mask_extractf32x4_ps
-comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm512_mask_extractf32x4_ps
@@ -6407,7 +6407,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL:@test_mm512_maskz_extractf32x4_ps
-comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm512_maskz_extractf32x4_ps
@@ -12580,7 +12580,7 @@ name|test_mm512_undefined
 parameter_list|()
 block|{
 comment|// CHECK-LABEL: @test_mm512_undefined
-comment|// CHECK: ret<16 x float> undef
+comment|// CHECK: ret<16 x float> zeroinitializer
 return|return
 name|_mm512_undefined
 argument_list|()
@@ -12594,7 +12594,7 @@ name|test_mm512_undefined_ps
 parameter_list|()
 block|{
 comment|// CHECK-LABEL: @test_mm512_undefined_ps
-comment|// CHECK: ret<16 x float> undef
+comment|// CHECK: ret<16 x float> zeroinitializer
 return|return
 name|_mm512_undefined_ps
 argument_list|()
@@ -12608,7 +12608,7 @@ name|test_mm512_undefined_pd
 parameter_list|()
 block|{
 comment|// CHECK-LABEL: @test_mm512_undefined_pd
-comment|// CHECK: ret<8 x double> undef
+comment|// CHECK: ret<8 x double> zeroinitializer
 return|return
 name|_mm512_undefined_pd
 argument_list|()
@@ -12622,7 +12622,7 @@ name|test_mm512_undefined_epi32
 parameter_list|()
 block|{
 comment|// CHECK-LABEL: @test_mm512_undefined_epi32
-comment|// CHECK: ret<8 x i64> undef
+comment|// CHECK: ret<8 x i64> zeroinitializer
 return|return
 name|_mm512_undefined_epi32
 argument_list|()
@@ -17931,7 +17931,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_permute_pd
-comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<8 x i32><i32 0, i32 1, i32 2, i32 2, i32 4, i32 4, i32 6, i32 6>
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> zeroinitializer,<8 x i32><i32 0, i32 1, i32 2, i32 2, i32 4, i32 4, i32 6, i32 6>
 return|return
 name|_mm512_permute_pd
 argument_list|(
@@ -17958,7 +17958,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_permute_pd
-comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<8 x i32><i32 0, i32 1, i32 2, i32 2, i32 4, i32 4, i32 6, i32 6>
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> zeroinitializer,<8 x i32><i32 0, i32 1, i32 2, i32 2, i32 4, i32 4, i32 6, i32 6>
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_mask_permute_pd
@@ -17987,7 +17987,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_permute_pd
-comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<8 x i32><i32 0, i32 1, i32 2, i32 2, i32 4, i32 4, i32 6, i32 6>
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> zeroinitializer,<8 x i32><i32 0, i32 1, i32 2, i32 2, i32 4, i32 4, i32 6, i32 6>
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_maskz_permute_pd
@@ -18011,7 +18011,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_permute_ps
-comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> undef,<16 x i32><i32 2, i32 0, i32 0, i32 0, i32 6, i32 4, i32 4, i32 4, i32 10, i32 8, i32 8, i32 8, i32 14, i32 12, i32 12, i32 12>
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> zeroinitializer,<16 x i32><i32 2, i32 0, i32 0, i32 0, i32 6, i32 4, i32 4, i32 4, i32 10, i32 8, i32 8, i32 8, i32 14, i32 12, i32 12, i32 12>
 return|return
 name|_mm512_permute_ps
 argument_list|(
@@ -18038,7 +18038,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_permute_ps
-comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> undef,<16 x i32><i32 2, i32 0, i32 0, i32 0, i32 6, i32 4, i32 4, i32 4, i32 10, i32 8, i32 8, i32 8, i32 14, i32 12, i32 12, i32 12>
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> zeroinitializer,<16 x i32><i32 2, i32 0, i32 0, i32 0, i32 6, i32 4, i32 4, i32 4, i32 10, i32 8, i32 8, i32 8, i32 14, i32 12, i32 12, i32 12>
 comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_mask_permute_ps
@@ -18067,7 +18067,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_permute_ps
-comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> undef,<16 x i32><i32 2, i32 0, i32 0, i32 0, i32 6, i32 4, i32 4, i32 4, i32 10, i32 8, i32 8, i32 8, i32 14, i32 12, i32 12, i32 12>
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> zeroinitializer,<16 x i32><i32 2, i32 0, i32 0, i32 0, i32 6, i32 4, i32 4, i32 4, i32 10, i32 8, i32 8, i32 8, i32 14, i32 12, i32 12, i32 12>
 comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_maskz_permute_ps
@@ -22417,16 +22417,21 @@ begin_function
 name|__m512
 name|test_mm512_broadcast_f32x4
 parameter_list|(
-name|__m128
+name|float
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_broadcast_f32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf32x4
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
 return|return
 name|_mm512_broadcast_f32x4
 argument_list|(
+name|_mm_loadu_ps
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22442,12 +22447,15 @@ parameter_list|,
 name|__mmask16
 name|__M
 parameter_list|,
-name|__m128
+name|float
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_broadcast_f32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf32x4
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_mask_broadcast_f32x4
 argument_list|(
@@ -22455,7 +22463,10 @@ name|__O
 argument_list|,
 name|__M
 argument_list|,
+name|_mm_loadu_ps
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22468,18 +22479,24 @@ parameter_list|(
 name|__mmask16
 name|__M
 parameter_list|,
-name|__m128
+name|float
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_broadcast_f32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf32x4
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_maskz_broadcast_f32x4
 argument_list|(
 name|__M
 argument_list|,
+name|_mm_loadu_ps
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22489,16 +22506,21 @@ begin_function
 name|__m512d
 name|test_mm512_broadcast_f64x4
 parameter_list|(
-name|__m256d
+name|float
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_broadcast_f64x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf64x4
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
 return|return
 name|_mm512_broadcast_f64x4
 argument_list|(
+name|_mm256_loadu_ps
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22514,12 +22536,15 @@ parameter_list|,
 name|__mmask8
 name|__M
 parameter_list|,
-name|__m256d
+name|float
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_broadcast_f64x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf64x4
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_mask_broadcast_f64x4
 argument_list|(
@@ -22527,7 +22552,10 @@ name|__O
 argument_list|,
 name|__M
 argument_list|,
+name|_mm256_loadu_ps
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22540,18 +22568,24 @@ parameter_list|(
 name|__mmask8
 name|__M
 parameter_list|,
-name|__m256d
+name|float
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_broadcast_f64x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcastf64x4
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_maskz_broadcast_f64x4
 argument_list|(
 name|__M
 argument_list|,
+name|_mm256_loadu_ps
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22562,15 +22596,20 @@ name|__m512i
 name|test_mm512_broadcast_i32x4
 parameter_list|(
 name|__m128i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_broadcast_i32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti32x4
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
 return|return
 name|_mm512_broadcast_i32x4
 argument_list|(
+name|_mm_loadu_si128
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22587,11 +22626,14 @@ name|__mmask16
 name|__M
 parameter_list|,
 name|__m128i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_broadcast_i32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti32x4
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_broadcast_i32x4
 argument_list|(
@@ -22599,7 +22641,10 @@ name|__O
 argument_list|,
 name|__M
 argument_list|,
+name|_mm_loadu_si128
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22613,17 +22658,23 @@ name|__mmask16
 name|__M
 parameter_list|,
 name|__m128i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_broadcast_i32x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti32x4
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_broadcast_i32x4
 argument_list|(
 name|__M
 argument_list|,
+name|_mm_loadu_si128
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22634,15 +22685,20 @@ name|__m512i
 name|test_mm512_broadcast_i64x4
 parameter_list|(
 name|__m256i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_broadcast_i64x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti64x4
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
 return|return
 name|_mm512_broadcast_i64x4
 argument_list|(
+name|_mm256_loadu_si256
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22659,11 +22715,14 @@ name|__mmask8
 name|__M
 parameter_list|,
 name|__m256i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_broadcast_i64x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti64x4
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_broadcast_i64x4
 argument_list|(
@@ -22671,7 +22730,10 @@ name|__O
 argument_list|,
 name|__M
 argument_list|,
+name|_mm256_loadu_si256
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22685,17 +22747,23 @@ name|__mmask8
 name|__M
 parameter_list|,
 name|__m256i
+specifier|const
+modifier|*
 name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_broadcast_i64x4
-comment|// CHECK: @llvm.x86.avx512.mask.broadcasti64x4
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_broadcast_i64x4
 argument_list|(
 name|__M
 argument_list|,
+name|_mm256_loadu_si256
+argument_list|(
 name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -22710,7 +22778,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_broadcastsd_pd
-comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> undef,<8 x i32> zeroinitializer
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> zeroinitializer,<8 x i32> zeroinitializer
 return|return
 name|_mm512_broadcastsd_pd
 argument_list|(
@@ -22735,7 +22803,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_broadcastsd_pd
-comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> undef,<8 x i32> zeroinitializer
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> zeroinitializer,<8 x i32> zeroinitializer
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_mask_broadcastsd_pd
@@ -22762,7 +22830,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_broadcastsd_pd
-comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> undef,<8 x i32> zeroinitializer
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> zeroinitializer,<8 x i32> zeroinitializer
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_maskz_broadcastsd_pd
@@ -22784,7 +22852,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_broadcastss_ps
-comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> undef,<16 x i32> zeroinitializer
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> zeroinitializer,<16 x i32> zeroinitializer
 return|return
 name|_mm512_broadcastss_ps
 argument_list|(
@@ -22809,7 +22877,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_broadcastss_ps
-comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> undef,<16 x i32> zeroinitializer
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> zeroinitializer,<16 x i32> zeroinitializer
 comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_mask_broadcastss_ps
@@ -22836,7 +22904,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_broadcastss_ps
-comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> undef,<16 x i32> zeroinitializer
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> zeroinitializer,<16 x i32> zeroinitializer
 comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_maskz_broadcastss_ps
@@ -22858,7 +22926,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_broadcastd_epi32
-comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> undef,<16 x i32> zeroinitializer
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> zeroinitializer,<16 x i32> zeroinitializer
 return|return
 name|_mm512_broadcastd_epi32
 argument_list|(
@@ -22883,7 +22951,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_broadcastd_epi32
-comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> undef,<16 x i32> zeroinitializer
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> zeroinitializer,<16 x i32> zeroinitializer
 comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_broadcastd_epi32
@@ -22910,7 +22978,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_broadcastd_epi32
-comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> undef,<16 x i32> zeroinitializer
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> zeroinitializer,<16 x i32> zeroinitializer
 comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_broadcastd_epi32
@@ -22932,7 +23000,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_broadcastq_epi64
-comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> undef,<8 x i32> zeroinitializer
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> zeroinitializer,<8 x i32> zeroinitializer
 return|return
 name|_mm512_broadcastq_epi64
 argument_list|(
@@ -22957,7 +23025,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_broadcastq_epi64
-comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> undef,<8 x i32> zeroinitializer
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> zeroinitializer,<8 x i32> zeroinitializer
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_broadcastq_epi64
@@ -22984,7 +23052,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_broadcastq_epi64
-comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> undef,<8 x i32> zeroinitializer
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> zeroinitializer,<8 x i32> zeroinitializer
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_broadcastq_epi64
@@ -24616,7 +24684,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_extracti64x4_epi64
-comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|_mm512_extracti64x4_epi64
 argument_list|(
@@ -24643,7 +24711,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_extracti64x4_epi64
-comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm512_mask_extracti64x4_epi64
@@ -24672,7 +24740,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_extracti64x4_epi64
-comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> zeroinitializer,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_extracti64x4_epi64
@@ -29394,7 +29462,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_permutex_pd
-comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> zeroinitializer,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
 return|return
 name|_mm512_permutex_pd
 argument_list|(
@@ -29421,7 +29489,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_permutex_pd
-comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> zeroinitializer,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_mask_permutex_pd
@@ -29450,7 +29518,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_permutex_pd
-comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> zeroinitializer,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_maskz_permutex_pd
@@ -29474,7 +29542,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_permutex_epi64
-comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> undef,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> zeroinitializer,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
 return|return
 name|_mm512_permutex_epi64
 argument_list|(
@@ -29501,7 +29569,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_permutex_epi64
-comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> undef,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> zeroinitializer,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_permutex_epi64
@@ -29530,7 +29598,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_permutex_epi64
-comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> undef,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> zeroinitializer,<8 x i32><i32 0, i32 0, i32 0, i32 0, i32 4, i32 4, i32 4, i32 4>
 comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_permutex_epi64
@@ -30119,7 +30187,7 @@ name|__P
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_stream_load_si512
-comment|// CHECK: @llvm.x86.avx512.movntdqa
+comment|// CHECK: load<8 x i64>,<8 x i64>* %{{.*}}, align 64, !nontemporal
 return|return
 name|_mm512_stream_load_si512
 argument_list|(
@@ -34080,6 +34148,44 @@ block|}
 end_function
 
 begin_function
+name|double
+name|test_mm512_cvtsd_f64
+parameter_list|(
+name|__m512d
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm512_cvtsd_f64
+comment|// CHECK: extractelement<8 x double> %{{.*}}, i32 0
+return|return
+name|_mm512_cvtsd_f64
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|float
+name|test_mm512_cvtss_f32
+parameter_list|(
+name|__m512
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm512_cvtss_f32
+comment|// CHECK: extractelement<16 x float> %{{.*}}, i32 0
+return|return
+name|_mm512_cvtss_f32
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|__m512d
 name|test_mm512_mask_max_pd
 parameter_list|(
@@ -35861,6 +35967,608 @@ argument_list|,
 name|__M
 argument_list|,
 name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_set_epi8
+parameter_list|(
+name|char
+name|e63
+parameter_list|,
+name|char
+name|e62
+parameter_list|,
+name|char
+name|e61
+parameter_list|,
+name|char
+name|e60
+parameter_list|,
+name|char
+name|e59
+parameter_list|,
+name|char
+name|e58
+parameter_list|,
+name|char
+name|e57
+parameter_list|,
+name|char
+name|e56
+parameter_list|,
+name|char
+name|e55
+parameter_list|,
+name|char
+name|e54
+parameter_list|,
+name|char
+name|e53
+parameter_list|,
+name|char
+name|e52
+parameter_list|,
+name|char
+name|e51
+parameter_list|,
+name|char
+name|e50
+parameter_list|,
+name|char
+name|e49
+parameter_list|,
+name|char
+name|e48
+parameter_list|,
+name|char
+name|e47
+parameter_list|,
+name|char
+name|e46
+parameter_list|,
+name|char
+name|e45
+parameter_list|,
+name|char
+name|e44
+parameter_list|,
+name|char
+name|e43
+parameter_list|,
+name|char
+name|e42
+parameter_list|,
+name|char
+name|e41
+parameter_list|,
+name|char
+name|e40
+parameter_list|,
+name|char
+name|e39
+parameter_list|,
+name|char
+name|e38
+parameter_list|,
+name|char
+name|e37
+parameter_list|,
+name|char
+name|e36
+parameter_list|,
+name|char
+name|e35
+parameter_list|,
+name|char
+name|e34
+parameter_list|,
+name|char
+name|e33
+parameter_list|,
+name|char
+name|e32
+parameter_list|,
+name|char
+name|e31
+parameter_list|,
+name|char
+name|e30
+parameter_list|,
+name|char
+name|e29
+parameter_list|,
+name|char
+name|e28
+parameter_list|,
+name|char
+name|e27
+parameter_list|,
+name|char
+name|e26
+parameter_list|,
+name|char
+name|e25
+parameter_list|,
+name|char
+name|e24
+parameter_list|,
+name|char
+name|e23
+parameter_list|,
+name|char
+name|e22
+parameter_list|,
+name|char
+name|e21
+parameter_list|,
+name|char
+name|e20
+parameter_list|,
+name|char
+name|e19
+parameter_list|,
+name|char
+name|e18
+parameter_list|,
+name|char
+name|e17
+parameter_list|,
+name|char
+name|e16
+parameter_list|,
+name|char
+name|e15
+parameter_list|,
+name|char
+name|e14
+parameter_list|,
+name|char
+name|e13
+parameter_list|,
+name|char
+name|e12
+parameter_list|,
+name|char
+name|e11
+parameter_list|,
+name|char
+name|e10
+parameter_list|,
+name|char
+name|e9
+parameter_list|,
+name|char
+name|e8
+parameter_list|,
+name|char
+name|e7
+parameter_list|,
+name|char
+name|e6
+parameter_list|,
+name|char
+name|e5
+parameter_list|,
+name|char
+name|e4
+parameter_list|,
+name|char
+name|e3
+parameter_list|,
+name|char
+name|e2
+parameter_list|,
+name|char
+name|e1
+parameter_list|,
+name|char
+name|e0
+parameter_list|)
+block|{
+comment|//CHECK-LABEL: @test_mm512_set_epi8
+comment|//CHECK: load i8, i8* %e63.addr, align 1
+comment|//CHECK: load i8, i8* %e62.addr, align 1
+comment|//CHECK: load i8, i8* %e61.addr, align 1
+comment|//CHECK: load i8, i8* %e60.addr, align 1
+comment|//CHECK: load i8, i8* %e59.addr, align 1
+comment|//CHECK: load i8, i8* %e58.addr, align 1
+comment|//CHECK: load i8, i8* %e57.addr, align 1
+comment|//CHECK: load i8, i8* %e56.addr, align 1
+comment|//CHECK: load i8, i8* %e55.addr, align 1
+comment|//CHECK: load i8, i8* %e54.addr, align 1
+comment|//CHECK: load i8, i8* %e53.addr, align 1
+comment|//CHECK: load i8, i8* %e52.addr, align 1
+comment|//CHECK: load i8, i8* %e51.addr, align 1
+comment|//CHECK: load i8, i8* %e50.addr, align 1
+comment|//CHECK: load i8, i8* %e49.addr, align 1
+comment|//CHECK: load i8, i8* %e48.addr, align 1
+comment|//CHECK: load i8, i8* %e47.addr, align 1
+comment|//CHECK: load i8, i8* %e46.addr, align 1
+comment|//CHECK: load i8, i8* %e45.addr, align 1
+comment|//CHECK: load i8, i8* %e44.addr, align 1
+comment|//CHECK: load i8, i8* %e43.addr, align 1
+comment|//CHECK: load i8, i8* %e42.addr, align 1
+comment|//CHECK: load i8, i8* %e41.addr, align 1
+comment|//CHECK: load i8, i8* %e40.addr, align 1
+comment|//CHECK: load i8, i8* %e39.addr, align 1
+comment|//CHECK: load i8, i8* %e38.addr, align 1
+comment|//CHECK: load i8, i8* %e37.addr, align 1
+comment|//CHECK: load i8, i8* %e36.addr, align 1
+comment|//CHECK: load i8, i8* %e35.addr, align 1
+comment|//CHECK: load i8, i8* %e34.addr, align 1
+comment|//CHECK: load i8, i8* %e33.addr, align 1
+comment|//CHECK: load i8, i8* %e32.addr, align 1
+comment|//CHECK: load i8, i8* %e31.addr, align 1
+comment|//CHECK: load i8, i8* %e30.addr, align 1
+comment|//CHECK: load i8, i8* %e29.addr, align 1
+comment|//CHECK: load i8, i8* %e28.addr, align 1
+comment|//CHECK: load i8, i8* %e27.addr, align 1
+comment|//CHECK: load i8, i8* %e26.addr, align 1
+comment|//CHECK: load i8, i8* %e25.addr, align 1
+comment|//CHECK: load i8, i8* %e24.addr, align 1
+comment|//CHECK: load i8, i8* %e23.addr, align 1
+comment|//CHECK: load i8, i8* %e22.addr, align 1
+comment|//CHECK: load i8, i8* %e21.addr, align 1
+comment|//CHECK: load i8, i8* %e20.addr, align 1
+comment|//CHECK: load i8, i8* %e19.addr, align 1
+comment|//CHECK: load i8, i8* %e18.addr, align 1
+comment|//CHECK: load i8, i8* %e17.addr, align 1
+comment|//CHECK: load i8, i8* %e16.addr, align 1
+comment|//CHECK: load i8, i8* %e15.addr, align 1
+comment|//CHECK: load i8, i8* %e14.addr, align 1
+comment|//CHECK: load i8, i8* %e13.addr, align 1
+comment|//CHECK: load i8, i8* %e12.addr, align 1
+comment|//CHECK: load i8, i8* %e11.addr, align 1
+comment|//CHECK: load i8, i8* %e10.addr, align 1
+comment|//CHECK: load i8, i8* %e9.addr, align 1
+comment|//CHECK: load i8, i8* %e8.addr, align 1
+comment|//CHECK: load i8, i8* %e7.addr, align 1
+comment|//CHECK: load i8, i8* %e6.addr, align 1
+comment|//CHECK: load i8, i8* %e5.addr, align 1
+comment|//CHECK: load i8, i8* %e4.addr, align 1
+comment|//CHECK: load i8, i8* %e3.addr, align 1
+comment|//CHECK: load i8, i8* %e2.addr, align 1
+comment|//CHECK: load i8, i8* %e1.addr, align 1
+comment|//CHECK: load i8, i8* %e0.addr, align 1
+return|return
+name|_mm512_set_epi8
+argument_list|(
+name|e63
+argument_list|,
+name|e62
+argument_list|,
+name|e61
+argument_list|,
+name|e60
+argument_list|,
+name|e59
+argument_list|,
+name|e58
+argument_list|,
+name|e57
+argument_list|,
+name|e56
+argument_list|,
+name|e55
+argument_list|,
+name|e54
+argument_list|,
+name|e53
+argument_list|,
+name|e52
+argument_list|,
+name|e51
+argument_list|,
+name|e50
+argument_list|,
+name|e49
+argument_list|,
+name|e48
+argument_list|,
+name|e47
+argument_list|,
+name|e46
+argument_list|,
+name|e45
+argument_list|,
+name|e44
+argument_list|,
+name|e43
+argument_list|,
+name|e42
+argument_list|,
+name|e41
+argument_list|,
+name|e40
+argument_list|,
+name|e39
+argument_list|,
+name|e38
+argument_list|,
+name|e37
+argument_list|,
+name|e36
+argument_list|,
+name|e35
+argument_list|,
+name|e34
+argument_list|,
+name|e33
+argument_list|,
+name|e32
+argument_list|,
+name|e31
+argument_list|,
+name|e30
+argument_list|,
+name|e29
+argument_list|,
+name|e28
+argument_list|,
+name|e27
+argument_list|,
+name|e26
+argument_list|,
+name|e25
+argument_list|,
+name|e24
+argument_list|,
+name|e23
+argument_list|,
+name|e22
+argument_list|,
+name|e21
+argument_list|,
+name|e20
+argument_list|,
+name|e19
+argument_list|,
+name|e18
+argument_list|,
+name|e17
+argument_list|,
+name|e16
+argument_list|,
+name|e15
+argument_list|,
+name|e14
+argument_list|,
+name|e13
+argument_list|,
+name|e12
+argument_list|,
+name|e11
+argument_list|,
+name|e10
+argument_list|,
+name|e9
+argument_list|,
+name|e8
+argument_list|,
+name|e7
+argument_list|,
+name|e6
+argument_list|,
+name|e5
+argument_list|,
+name|e4
+argument_list|,
+name|e3
+argument_list|,
+name|e2
+argument_list|,
+name|e1
+argument_list|,
+name|e0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_set_epi16
+parameter_list|(
+name|short
+name|e31
+parameter_list|,
+name|short
+name|e30
+parameter_list|,
+name|short
+name|e29
+parameter_list|,
+name|short
+name|e28
+parameter_list|,
+name|short
+name|e27
+parameter_list|,
+name|short
+name|e26
+parameter_list|,
+name|short
+name|e25
+parameter_list|,
+name|short
+name|e24
+parameter_list|,
+name|short
+name|e23
+parameter_list|,
+name|short
+name|e22
+parameter_list|,
+name|short
+name|e21
+parameter_list|,
+name|short
+name|e20
+parameter_list|,
+name|short
+name|e19
+parameter_list|,
+name|short
+name|e18
+parameter_list|,
+name|short
+name|e17
+parameter_list|,
+name|short
+name|e16
+parameter_list|,
+name|short
+name|e15
+parameter_list|,
+name|short
+name|e14
+parameter_list|,
+name|short
+name|e13
+parameter_list|,
+name|short
+name|e12
+parameter_list|,
+name|short
+name|e11
+parameter_list|,
+name|short
+name|e10
+parameter_list|,
+name|short
+name|e9
+parameter_list|,
+name|short
+name|e8
+parameter_list|,
+name|short
+name|e7
+parameter_list|,
+name|short
+name|e6
+parameter_list|,
+name|short
+name|e5
+parameter_list|,
+name|short
+name|e4
+parameter_list|,
+name|short
+name|e3
+parameter_list|,
+name|short
+name|e2
+parameter_list|,
+name|short
+name|e1
+parameter_list|,
+name|short
+name|e0
+parameter_list|)
+block|{
+comment|//CHECK-LABEL: @test_mm512_set_epi16
+comment|//CHECK: insertelement{{.*}}i32 0
+comment|//CHECK: insertelement{{.*}}i32 1
+comment|//CHECK: insertelement{{.*}}i32 2
+comment|//CHECK: insertelement{{.*}}i32 3
+comment|//CHECK: insertelement{{.*}}i32 4
+comment|//CHECK: insertelement{{.*}}i32 5
+comment|//CHECK: insertelement{{.*}}i32 6
+comment|//CHECK: insertelement{{.*}}i32 7
+comment|//CHECK: insertelement{{.*}}i32 8
+comment|//CHECK: insertelement{{.*}}i32 9
+comment|//CHECK: insertelement{{.*}}i32 10
+comment|//CHECK: insertelement{{.*}}i32 11
+comment|//CHECK: insertelement{{.*}}i32 12
+comment|//CHECK: insertelement{{.*}}i32 13
+comment|//CHECK: insertelement{{.*}}i32 14
+comment|//CHECK: insertelement{{.*}}i32 15
+comment|//CHECK: insertelement{{.*}}i32 16
+comment|//CHECK: insertelement{{.*}}i32 17
+comment|//CHECK: insertelement{{.*}}i32 18
+comment|//CHECK: insertelement{{.*}}i32 19
+comment|//CHECK: insertelement{{.*}}i32 20
+comment|//CHECK: insertelement{{.*}}i32 21
+comment|//CHECK: insertelement{{.*}}i32 22
+comment|//CHECK: insertelement{{.*}}i32 23
+comment|//CHECK: insertelement{{.*}}i32 24
+comment|//CHECK: insertelement{{.*}}i32 25
+comment|//CHECK: insertelement{{.*}}i32 26
+comment|//CHECK: insertelement{{.*}}i32 27
+comment|//CHECK: insertelement{{.*}}i32 28
+comment|//CHECK: insertelement{{.*}}i32 29
+comment|//CHECK: insertelement{{.*}}i32 30
+comment|//CHECK: insertelement{{.*}}i32 31
+return|return
+name|_mm512_set_epi16
+argument_list|(
+name|e31
+argument_list|,
+name|e30
+argument_list|,
+name|e29
+argument_list|,
+name|e28
+argument_list|,
+name|e27
+argument_list|,
+name|e26
+argument_list|,
+name|e25
+argument_list|,
+name|e24
+argument_list|,
+name|e23
+argument_list|,
+name|e22
+argument_list|,
+name|e21
+argument_list|,
+name|e20
+argument_list|,
+name|e19
+argument_list|,
+name|e18
+argument_list|,
+name|e17
+argument_list|,
+name|e16
+argument_list|,
+name|e15
+argument_list|,
+name|e14
+argument_list|,
+name|e13
+argument_list|,
+name|e12
+argument_list|,
+name|e11
+argument_list|,
+name|e10
+argument_list|,
+name|e9
+argument_list|,
+name|e8
+argument_list|,
+name|e7
+argument_list|,
+name|e6
+argument_list|,
+name|e5
+argument_list|,
+name|e4
+argument_list|,
+name|e3
+argument_list|,
+name|e2
+argument_list|,
+name|e1
+argument_list|,
+name|e0
 argument_list|)
 return|;
 block|}

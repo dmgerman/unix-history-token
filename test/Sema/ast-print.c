@@ -301,5 +301,43 @@ struct|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: enum EnumWithAttributes {
+end_comment
+
+begin_enum
+enum|enum
+name|EnumWithAttributes
+block|{
+comment|// CHECK-NEXT: EnumWithAttributesFoo __attribute__((deprecated(""))),
+name|EnumWithAttributesFoo
+name|__attribute__
+argument_list|(
+operator|(
+name|deprecated
+operator|)
+argument_list|)
+block|,
+comment|// CHECK-NEXT: EnumWithAttributesBar __attribute__((unavailable(""))) = 50
+name|EnumWithAttributesBar
+name|__attribute__
+argument_list|(
+operator|(
+name|unavailable
+operator|)
+argument_list|)
+init|=
+literal|50
+comment|// CHECK-NEXT: } __attribute__((deprecated("")))
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|deprecated
+operator|)
+argument_list|)
+enum|;
+end_enum
+
 end_unit
 

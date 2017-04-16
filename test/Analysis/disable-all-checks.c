@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-store=region -analyzer-disable-all-checks -verify %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=core -analyzer-store=region -analyzer-disable-all-checks -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-disable-all-checks -analyzer-checker=core -analyzer-store=region -verify %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-disable-all-checks -analyzer-checker=core -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang --analyze -Xanalyzer -analyzer-disable-all-checks -Xclang -verify %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-disable-all-checks -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -analyze -analyzer-checker=core -analyzer-store=region -analyzer-disable-checker -verify %s 2>&1 | FileCheck %s
+comment|// RUN: not %clang_analyze_cc1 -analyzer-checker=core -analyzer-store=region -analyzer-disable-checker -verify %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

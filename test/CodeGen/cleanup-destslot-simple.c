@@ -51,11 +51,11 @@ name|p
 return|;
 comment|// CHECK: [[X:%.*]] = alloca i32
 comment|// CHECK: [[P:%.*]] = alloca i32*
-comment|// LIFETIME: call void @llvm.lifetime.start(i64 4, i8* nonnull %{{.*}}){{( #[0-9]+)?}}, !dbg
-comment|// LIFETIME: call void @llvm.lifetime.start(i64 8, i8* nonnull %{{.*}}){{( #[0-9]+)?}}, !dbg
+comment|// LIFETIME: call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %{{.*}}){{( #[0-9]+)?}}, !dbg
+comment|// LIFETIME: call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %{{.*}}){{( #[0-9]+)?}}, !dbg
 comment|// CHECK-NOT: store i32 %{{.*}}, i32* %cleanup.dest.slot
-comment|// LIFETIME: call void @llvm.lifetime.end(i64 8, {{.*}}){{( #[0-9]+)?}}, !dbg
-comment|// LIFETIME: call void @llvm.lifetime.end(i64 4, {{.*}}){{( #[0-9]+)?}}, !dbg
+comment|// LIFETIME: call void @llvm.lifetime.end.p0i8(i64 8, {{.*}}){{( #[0-9]+)?}}, !dbg
+comment|// LIFETIME: call void @llvm.lifetime.end.p0i8(i64 4, {{.*}}){{( #[0-9]+)?}}, !dbg
 block|}
 end_function
 

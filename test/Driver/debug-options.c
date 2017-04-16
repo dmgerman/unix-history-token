@@ -456,11 +456,51 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -grecord-gcc-switches -gno-record-gcc-switches \
+comment|// RUN: %clang -### -c -grecord-gcc-switches %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:        -gstrict-dwarf -gno-strict-dwarf %s 2>&1 \
+comment|//             | FileCheck -check-prefix=GRECORD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -gno-record-gcc-switches %s 2>&1 \
+end_comment
+
+begin_comment
+comment|//             | FileCheck -check-prefix=GNO_RECORD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -grecord-gcc-switches -gno-record-gcc-switches %s 2>&1 \
+end_comment
+
+begin_comment
+comment|//             | FileCheck -check-prefix=GNO_RECORD %s/
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -grecord-gcc-switches -o - %s 2>&1 \
+end_comment
+
+begin_comment
+comment|//             | FileCheck -check-prefix=GRECORD_O %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -O3 -ffunction-sections -grecord-gcc-switches %s 2>&1 \
+end_comment
+
+begin_comment
+comment|//             | FileCheck -check-prefix=GRECORD_OPT %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -gstrict-dwarf -gno-strict-dwarf %s 2>&1 \
 end_comment
 
 begin_comment
@@ -764,6 +804,50 @@ comment|//
 end_comment
 
 begin_comment
+comment|// GRECORD: "-dwarf-debug-flags"
+end_comment
+
+begin_comment
+comment|// GRECORD: -### -c -grecord-gcc-switches
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// GNO_RECORD-NOT: "-dwarf-debug-flags"
+end_comment
+
+begin_comment
+comment|// GNO_RECORD-NOT: -### -c -grecord-gcc-switches
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// GRECORD_O: "-dwarf-debug-flags"
+end_comment
+
+begin_comment
+comment|// GRECORD_O: -### -c -grecord-gcc-switches -o -
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// GRECORD_OPT: -### -c -O3 -ffunction-sections -grecord-gcc-switches
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// GIGNORE-NOT: "argument unused during compilation"
 end_comment
 
@@ -837,6 +921,26 @@ end_comment
 
 begin_comment
 comment|// BADSTRING2: error: invalid value 'gmodal' in '-debugger-tuning=gmodal'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fdebug-macro    %s 2>&1 | FileCheck -check-prefix=MACRO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-debug-macro %s 2>&1 | FileCheck -check-prefix=NOMACRO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -###                  %s 2>&1 | FileCheck -check-prefix=NOMACRO %s
+end_comment
+
+begin_comment
+comment|// MACRO: "-debug-info-macro"
+end_comment
+
+begin_comment
+comment|// NOMACRO-NOT: "-debug-info-macro"
 end_comment
 
 end_unit

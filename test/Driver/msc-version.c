@@ -168,7 +168,7 @@ comment|// CHECK-MS-EXTENSIONS: _MSC_FULL_VER {{.+}}
 end_comment
 
 begin_comment
-comment|// CHECK-MS-EXTENSIONS: _MSC_VER {{..}}00
+comment|// CHECK-MS-EXTENSIONS: _MSC_VER {{....}}
 end_comment
 
 end_unit

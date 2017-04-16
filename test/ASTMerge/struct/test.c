@@ -160,7 +160,27 @@ comment|// CHECK: struct1.c:57:3: note: declared here with type 'struct DeepErro
 end_comment
 
 begin_comment
-comment|// CHECK: 8 warnings and 7 errors generated
+comment|// CHECK: struct1.c:74:9: warning: type 'S13' has incompatible definitions in different translation units
+end_comment
+
+begin_comment
+comment|// CHECK: struct1.c:75:9: note: field 'i' has type 'Float' (aka 'float') here
+end_comment
+
+begin_comment
+comment|// CHECK: struct2.c:72:7: note: field 'i' has type 'int' here
+end_comment
+
+begin_comment
+comment|// CHECK: struct2.c:76:5: error: external variable 'x13' declared with incompatible types in different translation units ('S13' vs. 'S13')
+end_comment
+
+begin_comment
+comment|// CHECK: struct1.c:79:5: note: declared here with type 'S13'
+end_comment
+
+begin_comment
+comment|// CHECK: 9 warnings and 8 errors generated
 end_comment
 
 end_unit

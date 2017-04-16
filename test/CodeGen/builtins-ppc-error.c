@@ -4,7 +4,7 @@ comment|// REQUIRES: powerpc-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -target-feature +power9-vector \
+comment|// RUN: %clang_cc1 -target-feature +altivec -target-feature +power9-vector \
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: -Wall -Werror -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -target-feature +power9-vector  \
+comment|// RUN: %clang_cc1 -target-feature +altivec -target-feature +power9-vector  \
 end_comment
 
 begin_comment

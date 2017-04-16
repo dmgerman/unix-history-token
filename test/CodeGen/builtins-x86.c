@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -DUSE_64 -triple x86_64-unknown-unknown -target-feature +fxsr -target-feature +avx -target-feature +xsaveopt -target-feature +xsaves -target-feature +xsavec -target-feature +mwaitx -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -DUSE_64 -triple x86_64-unknown-unknown -target-feature +fxsr -target-feature +avx -target-feature +xsaveopt -target-feature +xsaves -target-feature +xsavec -target-feature +mwaitx -target-feature +clzero -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -DUSE_ALL -triple x86_64-unknown-unknown -target-feature +fxsr -target-feature +avx -target-feature +xsaveopt -target-feature +xsaves -target-feature +xsavec -target-feature +mwaitx -fsyntax-only -o %t %s
+comment|// RUN: %clang_cc1 -DUSE_ALL -triple x86_64-unknown-unknown -target-feature +fxsr -target-feature +avx -target-feature +xsaveopt -target-feature +xsaves -target-feature +xsavec -target-feature +mwaitx -target-feature +clzero -fsyntax-only -o %t %s
 end_comment
 
 begin_ifdef
@@ -2096,6 +2096,14 @@ argument_list|,
 name|tmp_Ui
 argument_list|,
 name|tmp_Ui
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|__builtin_ia32_clzero
+argument_list|(
+name|tmp_vp
 argument_list|)
 expr_stmt|;
 name|tmp_V4f

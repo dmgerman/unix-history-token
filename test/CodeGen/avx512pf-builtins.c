@@ -41,7 +41,7 @@ name|addr
 argument_list|,
 literal|2
 argument_list|,
-literal|1
+name|_MM_HINT_T0
 argument_list|)
 return|;
 block|}
@@ -74,7 +74,7 @@ name|addr
 argument_list|,
 literal|2
 argument_list|,
-literal|1
+name|_MM_HINT_T0
 argument_list|)
 return|;
 block|}
@@ -112,7 +112,7 @@ name|addr
 argument_list|,
 literal|2
 argument_list|,
-literal|1
+name|_MM_HINT_T0
 argument_list|)
 return|;
 block|}
@@ -145,7 +145,7 @@ name|addr
 argument_list|,
 literal|2
 argument_list|,
-literal|1
+name|_MM_HINT_T0
 argument_list|)
 return|;
 block|}
@@ -183,7 +183,7 @@ name|addr
 argument_list|,
 literal|2
 argument_list|,
-literal|1
+name|_MM_HINT_T0
 argument_list|)
 return|;
 block|}
@@ -216,7 +216,7 @@ name|addr
 argument_list|,
 literal|2
 argument_list|,
-literal|1
+name|_MM_HINT_T0
 argument_list|)
 return|;
 block|}
@@ -254,7 +254,7 @@ name|addr
 argument_list|,
 literal|2
 argument_list|,
-literal|1
+name|_MM_HINT_T0
 argument_list|)
 return|;
 block|}
@@ -287,7 +287,7 @@ name|addr
 argument_list|,
 literal|2
 argument_list|,
-literal|1
+name|_MM_HINT_T0
 argument_list|)
 return|;
 block|}
@@ -316,7 +316,7 @@ name|index
 argument_list|,
 literal|1
 argument_list|,
-literal|2
+name|_MM_HINT_T1
 argument_list|)
 return|;
 block|}
@@ -350,7 +350,7 @@ name|index
 argument_list|,
 literal|1
 argument_list|,
-literal|2
+name|_MM_HINT_T1
 argument_list|)
 return|;
 block|}
@@ -379,7 +379,7 @@ name|index
 argument_list|,
 literal|1
 argument_list|,
-literal|2
+name|_MM_HINT_T1
 argument_list|)
 return|;
 block|}
@@ -413,7 +413,7 @@ name|index
 argument_list|,
 literal|1
 argument_list|,
-literal|2
+name|_MM_HINT_T1
 argument_list|)
 return|;
 block|}
@@ -442,7 +442,7 @@ name|index
 argument_list|,
 literal|1
 argument_list|,
-literal|2
+name|_MM_HINT_T1
 argument_list|)
 return|;
 block|}
@@ -476,7 +476,7 @@ name|index
 argument_list|,
 literal|1
 argument_list|,
-literal|2
+name|_MM_HINT_T1
 argument_list|)
 return|;
 block|}
@@ -505,7 +505,7 @@ name|index
 argument_list|,
 literal|1
 argument_list|,
-literal|2
+name|_MM_HINT_T1
 argument_list|)
 return|;
 block|}
@@ -539,7 +539,7 @@ name|index
 argument_list|,
 literal|1
 argument_list|,
-literal|2
+name|_MM_HINT_T1
 argument_list|)
 return|;
 block|}

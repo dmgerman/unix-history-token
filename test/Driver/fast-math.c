@@ -600,11 +600,11 @@ comment|// program by adding a special preprocessor macro. Check that the fronte
 end_comment
 
 begin_comment
-comment|// modeling this semantic change is provided. Also check that the semantic
+comment|// modeling this semantic change is provided. Also check that the flag is not
 end_comment
 
 begin_comment
-comment|// impact remains even if every optimization is disabled.
+comment|// present if any of the optimization is disabled.
 end_comment
 
 begin_comment
@@ -624,11 +624,27 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-FAST-MATH %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -ffast-math -fno-finite-math-only \
+comment|// RUN: %clang -### -funsafe-math-optimizations -ffinite-math-only \
 end_comment
 
 begin_comment
-comment|// RUN:     -fno-unsafe-math-optimizations -fmath-errno -c %s 2>&1 \
+comment|// RUN:     -fno-math-errno -ffp-contract=fast -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-FAST-MATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-honor-infinities -fno-honor-nans -fno-math-errno \
+end_comment
+
+begin_comment
+comment|// RUN:     -fassociative-math -freciprocal-math -fno-signed-zeros \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-trapping-math -ffp-contract=fast -c %s 2>&1 \
 end_comment
 
 begin_comment
@@ -644,11 +660,39 @@ comment|// CHECK-FAST-MATH: "-ffast-math"
 end_comment
 
 begin_comment
+comment|// CHECK-FAST-MATH: "-ffinite-math-only"
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
 begin_comment
 comment|// RUN: %clang -### -ffast-math -fno-fast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FAST-MATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -ffast-math -fno-finite-math-only -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FAST-MATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -ffast-math -fno-unsafe-math-optimizations -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FAST-MATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -ffast-math -fmath-errno -c %s 2>&1 \
 end_comment
 
 begin_comment
@@ -724,6 +768,10 @@ comment|// CHECK-NO-NO-INFS-NOT: "-menable-no-infs"
 end_comment
 
 begin_comment
+comment|// CHECK-NO-NO-INFS-NOT: "-ffinite-math-only"
+end_comment
+
+begin_comment
 comment|// CHECK-NO-NO-INFS: "-o"
 end_comment
 
@@ -777,6 +825,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NO-NO-NANS-NOT: "-menable-no-nans"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-NO-NANS-NOT: "-ffinite-math-only"
 end_comment
 
 begin_comment

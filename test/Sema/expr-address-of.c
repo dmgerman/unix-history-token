@@ -579,6 +579,15 @@ name|a
 range|:
 literal|10
 decl_stmt|;
+struct|struct
+block|{
+name|int
+name|b
+range|:
+literal|10
+decl_stmt|;
+block|}
+struct|;
 block|}
 name|t2
 struct|;
@@ -591,6 +600,18 @@ operator|(
 name|t2
 operator|.
 name|a
+operator|)
+decl_stmt|;
+comment|// expected-error {{address of bit-field requested}}
+name|int
+modifier|*
+name|dummy3
+init|=
+operator|&
+operator|(
+name|t2
+operator|.
+name|b
 operator|)
 decl_stmt|;
 comment|// expected-error {{address of bit-field requested}}

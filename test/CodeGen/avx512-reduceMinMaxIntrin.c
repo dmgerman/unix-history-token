@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// FIXME: We should not be testing with -O2 (ie, a dependency on the entire IR optimizer).
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -ffreestanding %s -O2 -triple=x86_64-apple-darwin -target-cpu skylake-avx512 -emit-llvm -o - -Wall -Werror |opt -instnamer -S |FileCheck %s
 end_comment
 
@@ -413,7 +417,7 @@ parameter_list|)
 block|{
 comment|// CHECK: %tmp = bitcast<8 x i64> %__W to<16 x i32>
 comment|// CHECK: %shuffle1.i = shufflevector<16 x i32> %tmp,<16 x i32> undef,<16 x i32><i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
-comment|// CHECK: %tmp1 = icmp sgt<16 x i32> %tmp, %shuffle1.i
+comment|// CHECK: %tmp1 = icmp slt<16 x i32> %shuffle1.i, %tmp
 comment|// CHECK: %tmp2 = select<16 x i1> %tmp1,<16 x i32> %tmp,<16 x i32> %shuffle1.i
 comment|// CHECK: %shuffle3.i = shufflevector<16 x i32> %tmp2,<16 x i32> undef,<16 x i32><i32 4, i32 5, i32 6, i32 7, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
 comment|// CHECK: %tmp3 = icmp sgt<16 x i32> %tmp2, %shuffle3.i
@@ -448,7 +452,7 @@ parameter_list|)
 block|{
 comment|// CHECK: %tmp = bitcast<8 x i64> %__W to<16 x i32>
 comment|// CHECK: %shuffle1.i = shufflevector<16 x i32> %tmp,<16 x i32> undef,<16 x i32><i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
-comment|// CHECK: %tmp1 = icmp ugt<16 x i32> %tmp, %shuffle1.i
+comment|// CHECK: %tmp1 = icmp ult<16 x i32> %shuffle1.i, %tmp
 comment|// CHECK: %tmp2 = select<16 x i1> %tmp1,<16 x i32> %tmp,<16 x i32> %shuffle1.i
 comment|// CHECK: %shuffle3.i = shufflevector<16 x i32> %tmp2,<16 x i32> undef,<16 x i32><i32 4, i32 5, i32 6, i32 7, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
 comment|// CHECK: %tmp3 = icmp ugt<16 x i32> %tmp2, %shuffle3.i
@@ -509,7 +513,7 @@ parameter_list|)
 block|{
 comment|// CHECK: %tmp = bitcast<8 x i64> %__W to<16 x i32>
 comment|// CHECK: %shuffle1.i = shufflevector<16 x i32> %tmp,<16 x i32> undef,<16 x i32><i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
-comment|// CHECK: %tmp1 = icmp slt<16 x i32> %tmp, %shuffle1.i
+comment|// CHECK: %tmp1 = icmp sgt<16 x i32> %shuffle1.i, %tmp
 comment|// CHECK: %tmp2 = select<16 x i1> %tmp1,<16 x i32> %tmp,<16 x i32> %shuffle1.i
 comment|// CHECK: %shuffle3.i = shufflevector<16 x i32> %tmp2,<16 x i32> undef,<16 x i32><i32 4, i32 5, i32 6, i32 7, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
 comment|// CHECK: %tmp3 = icmp slt<16 x i32> %tmp2, %shuffle3.i
@@ -544,7 +548,7 @@ parameter_list|)
 block|{
 comment|// CHECK: %tmp = bitcast<8 x i64> %__W to<16 x i32>
 comment|// CHECK: %shuffle1.i = shufflevector<16 x i32> %tmp,<16 x i32> undef,<16 x i32><i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
-comment|// CHECK: %tmp1 = icmp ult<16 x i32> %tmp, %shuffle1.i
+comment|// CHECK: %tmp1 = icmp ugt<16 x i32> %shuffle1.i, %tmp
 comment|// CHECK: %tmp2 = select<16 x i1> %tmp1,<16 x i32> %tmp,<16 x i32> %shuffle1.i
 comment|// CHECK: %shuffle3.i = shufflevector<16 x i32> %tmp2,<16 x i32> undef,<16 x i32><i32 4, i32 5, i32 6, i32 7, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
 comment|// CHECK: %tmp3 = icmp ult<16 x i32> %tmp2, %shuffle3.i

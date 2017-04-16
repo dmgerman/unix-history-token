@@ -1043,5 +1043,13 @@ begin_comment
 comment|// NOXSAVE-NOT: #define __XSAVE__ 1
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mclflushopt -x c -E -dM -o - %s | FileCheck -match-full-lines --check-prefix=CLFLUSHOPT %s
+end_comment
+
+begin_comment
+comment|// CLFLUSHOPT: #define __CLFLUSHOPT__ 1
+end_comment
+
 end_unit
 

@@ -4133,6 +4133,23 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.ldi.b(
+name|v16i8_r
+operator|=
+name|__msa_ldi_b
+argument_list|(
+operator|-
+literal|128
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<16 x i8>  @llvm.mips.ldi.b(
+name|v16i8_r
+operator|=
+name|__msa_ldi_b
+argument_list|(
+literal|255
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<16 x i8>  @llvm.mips.ldi.b(
 name|v8i16_r
 operator|=
 name|__msa_ldi_h
@@ -5488,6 +5505,54 @@ argument_list|,
 name|v2i64_a
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2  x i64> @llvm.mips.sld.d(
+name|v16i8_r
+operator|=
+name|__msa_sld_b
+argument_list|(
+name|v16i8_r
+argument_list|,
+name|v16i8_a
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<16 x i8>  @llvm.mips.sld.b(
+name|v8i16_r
+operator|=
+name|__msa_sld_h
+argument_list|(
+name|v8i16_r
+argument_list|,
+name|v8i16_a
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<8  x i16> @llvm.mips.sld.h(
+name|v4i32_r
+operator|=
+name|__msa_sld_w
+argument_list|(
+name|v4i32_r
+argument_list|,
+name|v4i32_a
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4  x i32> @llvm.mips.sld.w(
+name|v2i64_r
+operator|=
+name|__msa_sld_d
+argument_list|(
+name|v2i64_r
+argument_list|,
+name|v2i64_a
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.sld.d(

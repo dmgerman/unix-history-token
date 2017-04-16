@@ -185,7 +185,7 @@ name|test5
 parameter_list|()
 block|{
 comment|// CHECK:     = load i8*, i8** @gp
-comment|// CHECK-NEXT:= call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK-NEXT:= call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|strcpy
 argument_list|(
 name|gp
@@ -1365,7 +1365,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1375,7 +1375,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1385,7 +1385,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1407,7 +1407,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1433,7 +1433,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1459,7 +1459,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1475,7 +1475,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1491,7 +1491,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1539,7 +1539,7 @@ name|void
 name|test24
 parameter_list|()
 block|{
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1553,7 +1553,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1567,7 +1567,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1609,7 +1609,7 @@ name|void
 name|test25
 parameter_list|()
 block|{
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1623,7 +1623,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1637,7 +1637,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1667,7 +1667,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1683,7 +1683,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1699,7 +1699,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1858,7 +1858,7 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1868,7 +1868,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1878,7 +1878,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1900,7 +1900,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1911,7 +1911,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -1922,7 +1922,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* {{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2256,7 +2256,7 @@ modifier|*
 name|ss
 parameter_list|)
 block|{
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2268,7 +2268,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2280,7 +2280,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2304,7 +2304,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2316,7 +2316,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2328,7 +2328,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2352,7 +2352,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2364,7 +2364,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2376,7 +2376,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2400,7 +2400,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2412,7 +2412,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2424,7 +2424,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2472,7 +2472,7 @@ block|}
 modifier|*
 name|nested
 struct|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2500,7 +2500,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2528,7 +2528,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2542,7 +2542,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2556,7 +2556,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2600,7 +2600,7 @@ block|}
 modifier|*
 name|u
 union|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2612,7 +2612,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2624,7 +2624,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2648,7 +2648,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2662,7 +2662,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2676,7 +2676,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2737,7 +2737,7 @@ name|StaticStruct
 modifier|*
 name|ss
 decl_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2752,7 +2752,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2771,7 +2771,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2790,7 +2790,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2809,7 +2809,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2864,7 +2864,7 @@ name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2876,7 +2876,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2888,7 +2888,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true, i1 true)
 name|gi
 operator|=
 name|__builtin_object_size

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-pc-win32 %s -emit-llvm -fms-compatibility -O2 -disable-llvm-optzns -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i386-pc-win32 %s -emit-llvm -fms-compatibility -O2 -disable-llvm-passes -o - | FileCheck %s
 end_comment
 
 begin_macro

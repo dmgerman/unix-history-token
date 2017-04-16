@@ -4,7 +4,7 @@ comment|// REQUIRES: x86-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple x86_64-apple-darwin10 -fms-extensions -fasm-blocks -Wno-microsoft -Wunused-label -verify -fsyntax-only
+comment|// RUN: %clang_cc1 %s -triple i386-apple-darwin10 -fms-extensions -fasm-blocks -Wno-microsoft -Wunused-label -verify -fsyntax-only
 end_comment
 
 begin_function

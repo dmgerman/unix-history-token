@@ -5120,7 +5120,7 @@ name|test_mm_undefined_pd
 parameter_list|()
 block|{
 comment|// CHECK-LABEL: @test_mm_undefined_pd
-comment|// CHECK: ret<2 x double> undef
+comment|// CHECK: ret<2 x double> zeroinitializer
 return|return
 name|_mm_undefined_pd
 argument_list|()
@@ -5134,7 +5134,7 @@ name|test_mm_undefined_si128
 parameter_list|()
 block|{
 comment|// CHECK-LABEL: @test_mm_undefined_si128
-comment|// CHECK: ret<2 x i64> undef
+comment|// CHECK: ret<2 x i64> zeroinitializer
 return|return
 name|_mm_undefined_si128
 argument_list|()

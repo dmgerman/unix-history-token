@@ -20,7 +20,7 @@ comment|// RUN:         -triple thumbv7--windows -Oz -emit-llvm %s -o - \
 end_comment
 
 begin_comment
-comment|// RUN:         | FileCheck %s --check-prefixes CHECK,CHECK-ARM-X64
+comment|// RUN:         | FileCheck %s --check-prefixes CHECK,CHECK-ARM,CHECK-ARM-X64
 end_comment
 
 begin_comment
@@ -130,6 +130,48 @@ end_comment
 
 begin_comment
 comment|// CHECK-X64: }
+end_comment
+
+begin_function
+name|void
+name|test__ud2
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|__ud2
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-INTEL-LABEL: define{{.*}} void @test__ud2()
+end_comment
+
+begin_comment
+comment|// CHECK-INTEL: call void @llvm.trap()
+end_comment
+
+begin_function
+name|void
+name|test__int2c
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|__int2c
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-INTEL-LABEL: define{{.*}} void @test__int2c()
+end_comment
+
+begin_comment
+comment|// CHECK-INTEL: call void asm sideeffect "int $$0x2c", ""() #[[NORETURN:[0-9]+]]
 end_comment
 
 begin_endif
@@ -2037,6 +2079,92 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|unsigned
+name|char
+name|test_interlockedbittestandset
+parameter_list|(
+specifier|volatile
+name|long
+modifier|*
+name|ptr
+parameter_list|,
+name|long
+name|bit
+parameter_list|)
+block|{
+return|return
+name|_interlockedbittestandset
+argument_list|(
+name|ptr
+argument_list|,
+name|bit
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define{{.*}} i8 @test_interlockedbittestandset
+end_comment
+
+begin_comment
+comment|// CHECK: [[MASKBIT:%[0-9]+]] = shl i32 1, %bit
+end_comment
+
+begin_comment
+comment|// CHECK: [[OLD:%[0-9]+]] = atomicrmw or i32* %ptr, i32 [[MASKBIT]] seq_cst
+end_comment
+
+begin_comment
+comment|// CHECK: [[SHIFT:%[0-9]+]] = lshr i32 [[OLD]], %bit
+end_comment
+
+begin_comment
+comment|// CHECK: [[TRUNC:%[0-9]+]] = trunc i32 [[SHIFT]] to i8
+end_comment
+
+begin_comment
+comment|// CHECK: [[AND:%[0-9]+]] = and i8 [[TRUNC]], 1
+end_comment
+
+begin_comment
+comment|// CHECK: ret i8 [[AND]]
+end_comment
+
+begin_function
+name|void
+name|test__fastfail
+parameter_list|()
+block|{
+name|__fastfail
+argument_list|(
+literal|42
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define{{.*}} void @test__fastfail()
+end_comment
+
+begin_comment
+comment|// CHECK-ARM: call void asm sideeffect "udf #251", "{r0}"(i32 42) #[[NORETURN:[0-9]+]]
+end_comment
+
+begin_comment
+comment|// CHECK-INTEL: call void asm sideeffect "int $$0x29", "{cx}"(i32 42) #[[NORETURN]]
+end_comment
+
+begin_comment
+comment|// Attributes come last.
+end_comment
+
+begin_comment
+comment|// CHECK: attributes #[[NORETURN]] = { noreturn{{.*}} }
+end_comment
 
 end_unit
 

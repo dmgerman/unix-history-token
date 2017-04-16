@@ -4,7 +4,7 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules-cache-path=%t -fmodules -fimplicit-module-maps -fmodule-name=Clib %s -I %S/Inputs/module-impl-with-link -emit-llvm -o -
+comment|// RUN: %clang_cc1 -fmodules-cache-path=%t -fmodules -fimplicit-module-maps -fmodule-name=Clib %s -I %S/Inputs/module-impl-with-link -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_include

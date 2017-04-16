@@ -520,67 +520,67 @@ comment|// ARM64-KRYO: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "kryo"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64 -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+comment|// RUN: %clang -target aarch64 -mcpu=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64 -mlittle-endian -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mcpu=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64_be -mlittle-endian -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+comment|// RUN: %clang -target aarch64_be -mlittle-endian -mcpu=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64 -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-TUNE %s
+comment|// RUN: %clang -target aarch64 -mtune=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99-TUNE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64 -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-TUNE %s
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mtune=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99-TUNE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64_be -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-TUNE %s
+comment|// RUN: %clang -target aarch64_be -mlittle-endian -mtune=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99-TUNE %s
 end_comment
 
 begin_comment
-comment|// VULCAN: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "vulcan" "-target-feature" "+v8.1a"
+comment|// THUNDERX2T99: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "thunderx2t99" "-target-feature" "+v8.1a"
 end_comment
 
 begin_comment
-comment|// VULCAN-TUNE: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "vulcan"
+comment|// THUNDERX2T99-TUNE: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "thunderx2t99"
 end_comment
 
 begin_comment
-comment|// VULCAN-TUNE-NOT: +v8.1a
+comment|// THUNDERX2T99-TUNE-NOT: +v8.1a
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm64 -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN %s
+comment|// RUN: %clang -target arm64 -mcpu=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-THUNDERX2T99 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN %s
+comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-THUNDERX2T99 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm64 -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN-TUNE %s
+comment|// RUN: %clang -target arm64 -mtune=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-THUNDERX2T99-TUNE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN-TUNE %s
+comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-THUNDERX2T99-TUNE %s
 end_comment
 
 begin_comment
-comment|// ARM64-VULCAN: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "vulcan" "-target-feature" "+v8.1a"
+comment|// ARM64-THUNDERX2T99: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "thunderx2t99" "-target-feature" "+v8.1a"
 end_comment
 
 begin_comment
-comment|// ARM64-VULCAN-TUNE: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "vulcan"
+comment|// ARM64-THUNDERX2T99-TUNE: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "thunderx2t99"
 end_comment
 
 begin_comment
-comment|// ARM64-VULCAN-TUNE-NOT: +v8.1a
+comment|// ARM64-THUNDERX2T99-TUNE-NOT: +v8.1a
 end_comment
 
 begin_comment
@@ -824,31 +824,31 @@ comment|// M3-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "exyno
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64_be -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+comment|// RUN: %clang -target aarch64_be -mcpu=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99-BE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64 -mbig-endian -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+comment|// RUN: %clang -target aarch64 -mbig-endian -mcpu=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99-BE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64_be -mbig-endian -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mcpu=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99-BE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64_be -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+comment|// RUN: %clang -target aarch64_be -mtune=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99-BE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64 -mbig-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+comment|// RUN: %clang -target aarch64 -mbig-endian -mtune=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99-BE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64_be -mbig-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mtune=thunderx2t99 -### -c %s 2>&1 | FileCheck -check-prefix=THUNDERX2T99-BE %s
 end_comment
 
 begin_comment
-comment|// VULCAN-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "vulcan"
+comment|// THUNDERX2T99-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "thunderx2t99"
 end_comment
 
 begin_comment
@@ -872,11 +872,11 @@ comment|// RUN: %clang -target aarch64 -mtune=cortex-a53 -mcpu=cortex-a73     -#
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64 -mcpu=vulcan -mtune=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=MCPU-MTUNE %s
+comment|// RUN: %clang -target aarch64 -mcpu=thunderx2t99 -mtune=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=MCPU-MTUNE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64 -mtune=cortex-a53 -mcpu=vulcan  -### -c %s 2>&1 | FileCheck -check-prefix=MCPU-MTUNE %s
+comment|// RUN: %clang -target aarch64 -mtune=cortex-a53 -mcpu=thunderx2t99  -### -c %s 2>&1 | FileCheck -check-prefix=MCPU-MTUNE %s
 end_comment
 
 begin_comment

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple=powerpc64-unknown-linux-gnu -faltivec -target-feature +vsx -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -triple=powerpc64-unknown-linux-gnu -target-feature +altivec -target-feature +vsx -fsyntax-only -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple=powerpc64le-unknown-linux-gnu -faltivec -target-feature +vsx -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -triple=powerpc64le-unknown-linux-gnu -target-feature +altivec -target-feature +vsx -fsyntax-only -verify %s
 end_comment
 
 begin_comment

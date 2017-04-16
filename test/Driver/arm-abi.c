@@ -104,6 +104,18 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK-AAPCS %s
 end_comment
 
 begin_comment
+comment|// OpenBSD defaults to aapcs-linux
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm--openbsd- %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-AAPCS-LINUX %s
+end_comment
+
+begin_comment
 comment|// Otherwise, ABI is selected based on environment
 end_comment
 

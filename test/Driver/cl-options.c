@@ -1432,6 +1432,26 @@ comment|// Xclang: "hellocc1"
 end_comment
 
 begin_comment
+comment|// Files under /Users are often confused with the /U flag. (This could happen
+end_comment
+
+begin_comment
+comment|// for other flags too, but this is the one people run into.)
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /c /Users/me/myfile.c -### 2>&1 | FileCheck -check-prefix=SlashU %s
+end_comment
+
+begin_comment
+comment|// SlashU: warning: '/Users/me/myfile.c' treated as the '/U' option
+end_comment
+
+begin_comment
+comment|// SlashU: note: Use '--' to treat subsequent arguments as filenames
+end_comment
+
+begin_comment
 comment|// RTTI is on by default. /GR- controls -fno-rtti-data.
 end_comment
 
@@ -1653,6 +1673,30 @@ end_comment
 
 begin_comment
 comment|// RUN: env CL="%s" _CL_="%s" not %clang --rsp-quoting=windows -c
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### /c -flto -- %s 2>&1 | FileCheck -check-prefix=LTO %s
+end_comment
+
+begin_comment
+comment|// LTO: -flto
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### /c -flto=thin -- %s 2>&1 | FileCheck -check-prefix=LTO-THIN %s
+end_comment
+
+begin_comment
+comment|// LTO-THIN: -flto=thin
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### -Fe%t.exe -entry:main -flto -- %s 2>&1 | FileCheck -check-prefix=LTO-WITHOUT-LLD %s
+end_comment
+
+begin_comment
+comment|// LTO-WITHOUT-LLD: LTO requires -fuse-ld=lld
 end_comment
 
 begin_comment

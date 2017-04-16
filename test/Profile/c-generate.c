@@ -28,7 +28,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PROF-INSTR-NONE-NOT: @__profn_main
+comment|// PROF-INSTR-NONE-NOT: __llvm_prf
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment

@@ -665,7 +665,10 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_cmov_si128
-comment|// CHECK: call<2 x i64> @llvm.x86.xop.vpcmov(<2 x i64> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}})
+comment|// CHECK: [[AND:%.*]] = and<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: [[NEG:%.*]] = xor<2 x i64> %{{.*}},<i64 -1, i64 -1>
+comment|// CHECK-NEXT: [[ANDN:%.*]] = and<2 x i64> %{{.*}}, [[NEG]]
+comment|// CHECK-NEXT: %{{.*}} = or<2 x i64> [[AND]], [[ANDN]]
 return|return
 name|_mm_cmov_si128
 argument_list|(
@@ -694,7 +697,10 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_cmov_si256
-comment|// CHECK: call<4 x i64> @llvm.x86.xop.vpcmov.256(<4 x i64> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}})
+comment|// CHECK: [[AND:%.*]] = and<4 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: [[NEG:%.*]] = xor<4 x i64> %{{.*}},<i64 -1, i64 -1, i64 -1, i64 -1>
+comment|// CHECK-NEXT: [[ANDN:%.*]] = and<4 x i64> %{{.*}}, [[NEG]]
+comment|// CHECK-NEXT: %{{.*}} = or<4 x i64> [[AND]], [[ANDN]]
 return|return
 name|_mm256_cmov_si256
 argument_list|(

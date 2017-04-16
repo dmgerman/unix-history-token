@@ -132,6 +132,26 @@ comment|// CHECK-LTO-NOT: -fembed-bitcode=all
 end_comment
 
 begin_comment
+comment|// RUN: touch %t.o
+end_comment
+
+begin_comment
+comment|// RUN: %clang  -target armv7-apple-darwin -miphoneos-version-min=6.0 %t.o -fembed-bitcode  -fembed-bitcode-marker -mlinker-version=277  2>&1 -### | FileCheck %s -check-prefix=CHECK-LTO-MARKER-277
+end_comment
+
+begin_comment
+comment|// RUN: %clang  -target armv7-apple-darwin -miphoneos-version-min=6.0 %t.o -fembed-bitcode  -fembed-bitcode-marker -mlinker-version=278  2>&1 -### | FileCheck %s -check-prefix=CHECK-LTO-MARKER-278
+end_comment
+
+begin_comment
+comment|// CHECK-LTO-MARKER-277-NOT: bitcode_process_mode
+end_comment
+
+begin_comment
+comment|// CHECK-LTO-MARKER-278: bitcode_process_mode
+end_comment
+
+begin_comment
 comment|// RUN: %clang -c %s -fembed-bitcode-marker -fintegrated-as 2>&1 -### | FileCheck %s -check-prefix=CHECK-MARKER
 end_comment
 
@@ -188,11 +208,11 @@ comment|// RUN: %clang -target armv7-apple-darwin -miphoneos-version-min=5.0 %s 
 end_comment
 
 begin_comment
-comment|// RUN:   FileCheck %s -check-prefix=CHECK-PLATFORM-UNSUPPORTED
+comment|// RUN:   FileCheck %s -check-prefix=CHECK-PLATFORM-NOTSUPPORTED
 end_comment
 
 begin_comment
-comment|// CHECK-PLATFORM-UNSUPPORTED: -fembed-bitcode is not supported on versions of iOS prior to 6.0
+comment|// CHECK-PLATFORM-NOTSUPPORTED: -fembed-bitcode is not supported on versions of iOS prior to 6.0
 end_comment
 
 end_unit

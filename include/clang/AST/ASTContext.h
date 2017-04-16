@@ -210,6 +210,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/XRayLists.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/APSInt.h"
 end_include
 
@@ -367,6 +373,12 @@ begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
 end_include
 
 begin_include
@@ -860,6 +872,15 @@ operator|<
 name|AutoType
 operator|>
 name|AutoTypes
+block|;
+name|mutable
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|DeducedTemplateSpecializationType
+operator|>
+name|DeducedTemplateSpecializationTypes
 block|;
 name|mutable
 name|llvm
@@ -1703,6 +1724,16 @@ operator|<
 name|SanitizerBlacklist
 operator|>
 name|SanitizerBL
+expr_stmt|;
+comment|/// \brief Function filtering mechanism to determine whether a given function
+comment|/// should be imbued with the XRay "always" or "never" attributes.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|XRayFunctionFilter
+operator|>
+name|XRayFilter
 expr_stmt|;
 comment|/// \brief The allocator used to create AST objects.
 comment|///
@@ -2601,6 +2632,21 @@ block|{
 return|return
 operator|*
 name|SanitizerBL
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|XRayFunctionFilter
+operator|&
+name|getXRayFilter
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|XRayFilter
 return|;
 block|}
 end_expr_stmt
@@ -4248,8 +4294,6 @@ end_decl_stmt
 begin_decl_stmt
 name|CanQualType
 name|OCLQueueTy
-decl_stmt|,
-name|OCLNDRangeTy
 decl_stmt|,
 name|OCLReserveIDTy
 decl_stmt|;
@@ -6283,6 +6327,17 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|TemplateArgument
+name|getInjectedTemplateArg
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|ParamDecl
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// Get a template argument list with one argument per template parameter
 end_comment
@@ -6594,6 +6649,27 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief C++1z deduced class template specialization type.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getDeducedTemplateSpecializationType
+argument_list|(
+name|TemplateName
+name|Template
+argument_list|,
+name|QualType
+name|DeducedType
+argument_list|,
+name|bool
+name|IsDependent
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Return the unique reference to the type for the specified TagDecl
@@ -10953,43 +11029,7 @@ name|unsigned
 name|AS
 argument_list|)
 decl|const
-block|{
-if|if
-condition|(
-name|AS
-operator|<
-name|LangAS
-operator|::
-name|Offset
-operator|||
-name|AS
-operator|>=
-name|LangAS
-operator|::
-name|Offset
-operator|+
-name|LangAS
-operator|::
-name|Count
-condition|)
-return|return
-name|AS
-return|;
-else|else
-return|return
-operator|(
-operator|*
-name|AddrSpaceMap
-operator|)
-index|[
-name|AS
-operator|-
-name|LangAS
-operator|::
-name|Offset
-index|]
-return|;
-block|}
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -11024,17 +11064,7 @@ return|return
 name|AddrSpaceMapMangling
 operator|||
 name|AS
-operator|<
-name|LangAS
-operator|::
-name|Offset
-operator|||
-name|AS
 operator|>=
-name|LangAS
-operator|::
-name|Offset
-operator|+
 name|LangAS
 operator|::
 name|Count
@@ -11941,16 +11971,83 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|GVALinkage
+begin_comment
+comment|/// If T isn't trivially destructible, calls AddDeallocation to register it
+end_comment
+
+begin_comment
+comment|/// for destruction.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|void
+name|addDestruction
+argument_list|(
+argument|T *Ptr
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|std
+operator|::
+name|is_trivially_destructible
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+condition|)
+block|{
+name|auto
+name|DestroyPtr
+init|=
+index|[]
+operator|(
+name|void
+operator|*
+name|V
+operator|)
+block|{
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|V
+operator|)
+operator|->
+expr|~
+name|T
+argument_list|()
+block|; }
+decl_stmt|;
+name|AddDeallocation
+argument_list|(
+name|DestroyPtr
+argument_list|,
+name|Ptr
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_macro
+unit|}    GVALinkage
 name|GetGVALinkageForFunction
 argument_list|(
-specifier|const
-name|FunctionDecl
-operator|*
-name|FD
+argument|const FunctionDecl *FD
 argument_list|)
-decl|const
+end_macro
+
+begin_decl_stmt
+specifier|const
 decl_stmt|;
 end_decl_stmt
 

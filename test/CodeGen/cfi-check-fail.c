@@ -245,5 +245,21 @@ begin_comment
 comment|// CHECK:   ret void
 end_comment
 
+begin_comment
+comment|// CHECK: define weak void @__cfi_check(i64, i8*, i8*)
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: }
+end_comment
+
+begin_comment
+comment|// CHECK: call void @llvm.trap()
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: ret void
+end_comment
+
 end_unit
 

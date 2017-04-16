@@ -35,6 +35,10 @@ begin_comment
 comment|// REQUIRES: crash-recovery
 end_comment
 
+begin_comment
+comment|// UNSUPPORTED: libstdcxx-safe-mode
+end_comment
+
 begin_warning
 warning|#
 directive|warning

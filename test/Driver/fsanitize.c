@@ -324,6 +324,10 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-ad
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl --target=x86_64-windows -fsanitize=address -fsanitize-address-use-after-scope -### -- %s 2>&1 | FileCheck %s --check-prefix=CHECK-USE-AFTER-SCOPE
+end_comment
+
+begin_comment
 comment|// CHECK-USE-AFTER-SCOPE: -cc1{{.*}}-fsanitize-address-use-after-scope
 end_comment
 
@@ -332,11 +336,19 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fno-sanitize
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl --target=x86_64-windows -fsanitize=address -fno-sanitize-address-use-after-scope -### -- %s 2>&1 | FileCheck %s --check-prefix=CHECK-USE-AFTER-SCOPE-OFF
+end_comment
+
+begin_comment
 comment|// CHECK-USE-AFTER-SCOPE-OFF-NOT: -cc1{{.*}}address-use-after-scope
 end_comment
 
 begin_comment
 comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fno-sanitize-address-use-after-scope -fsanitize-address-use-after-scope %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-USE-AFTER-SCOPE-BOTH
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl --target=x86_64-windows -fsanitize=address -fno-sanitize-address-use-after-scope -fsanitize-address-use-after-scope -### -- %s 2>&1 | FileCheck %s --check-prefix=CHECK-USE-AFTER-SCOPE-BOTH
 end_comment
 
 begin_comment
@@ -356,7 +368,7 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address %s -### 2>&1 
 end_comment
 
 begin_comment
-comment|// CHECK-ASAN-WITHOUT-USE-AFTER-SCOPE-NOT: -cc1{{.*}}address-use-after-scope
+comment|// CHECK-ASAN-WITHOUT-USE-AFTER-SCOPE: -cc1{{.*}}address-use-after-scope
 end_comment
 
 begin_comment
@@ -689,6 +701,86 @@ end_comment
 
 begin_comment
 comment|// CHECK-SANA-SANL-NO-SANA: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i686-linux-gnu -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANL-X86
+end_comment
+
+begin_comment
+comment|// CHECK-SANL-X86: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i686-linux-gnu -fsanitize=address,leak -fno-sanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANA-SANL-NO-SANA-X86
+end_comment
+
+begin_comment
+comment|// CHECK-SANA-SANL-NO-SANA-X86: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnu -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANL-ARM
+end_comment
+
+begin_comment
+comment|// CHECK-SANL-ARM: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnu -fsanitize=address,leak -fno-sanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANA-SANL-NO-SANA-ARM
+end_comment
+
+begin_comment
+comment|// CHECK-SANA-SANL-NO-SANA-ARM: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target thumb-linux -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANL-THUMB
+end_comment
+
+begin_comment
+comment|// CHECK-SANL-THUMB: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target thumb-linux -fsanitize=address,leak -fno-sanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANA-SANL-NO-SANA-THUMB
+end_comment
+
+begin_comment
+comment|// CHECK-SANA-SANL-NO-SANA-THUMB: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armeb-linux-gnu -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANL-ARMEB
+end_comment
+
+begin_comment
+comment|// CHECK-SANL-ARMEB: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armeb-linux-gnu -fsanitize=address,leak -fno-sanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANA-SANL-NO-SANA-ARMEB
+end_comment
+
+begin_comment
+comment|// CHECK-SANA-SANL-NO-SANA-ARMEB: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target thumbeb-linux -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANL-THUMBEB
+end_comment
+
+begin_comment
+comment|// CHECK-SANL-THUMBEB: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target thumbeb-linux -fsanitize=address,leak -fno-sanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANA-SANL-NO-SANA-THUMBEB
+end_comment
+
+begin_comment
+comment|// CHECK-SANA-SANL-NO-SANA-THUMBEB: "-fsanitize=leak"
 end_comment
 
 begin_comment

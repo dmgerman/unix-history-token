@@ -202,7 +202,7 @@ comment|///
 comment|/// \param To the requested destination type.
 comment|///
 comment|/// \param Specificity value corresponding to the "specificity" of the
-comment|///   convertion.
+comment|///   conversion.
 name|bool
 name|isConvertibleTo
 argument_list|(
@@ -578,7 +578,7 @@ comment|///
 comment|/// \param Kind the requested destination type.
 comment|///
 comment|/// \param Specificity value corresponding to the "specificity" of the
-comment|///   convertion.
+comment|///   conversion.
 name|bool
 name|isConvertibleTo
 argument_list|(
@@ -939,7 +939,7 @@ comment|///
 comment|/// \param Kind the requested destination type.
 comment|///
 comment|/// \param Specificity value corresponding to the "specificity" of the
-comment|///   convertion.
+comment|///   conversion.
 name|bool
 name|isConvertibleTo
 argument_list|(
@@ -958,7 +958,7 @@ comment|///
 comment|/// \param Kinds the requested destination types.
 comment|///
 comment|/// \param Specificity value corresponding to the "specificity" of the
-comment|///   convertion. It is the maximum specificity of all the possible
+comment|///   conversion. It is the maximum specificity of all the possible
 comment|///   conversions.
 name|bool
 name|isConvertibleTo

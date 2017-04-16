@@ -4,6 +4,10 @@ comment|// Test returning a single element aggregate value containing a double.
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple i686-linux %s -emit-llvm -o - | FileCheck %s --check-prefix=X86_32
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 %s -emit-llvm -o -
 end_comment
 
@@ -80,6 +84,22 @@ name|a
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// X86_32: define void @foo(%struct.Y* %P)
+end_comment
+
+begin_comment
+comment|// X86_32:   call void @bar(%struct.Y* sret %{{[^),]*}})
+end_comment
+
+begin_comment
+comment|// X86_32: define void @bar(%struct.Y* noalias sret %{{[^,)]*}})
+end_comment
+
+begin_comment
+comment|// X86_32:   ret void
+end_comment
 
 end_unit
 

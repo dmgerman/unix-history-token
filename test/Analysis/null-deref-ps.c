@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core,deadcode,alpha.core -std=gnu99 -analyzer-store=region -analyzer-purge=none -verify %s -Wno-error=return-type
+comment|// RUN: %clang_analyze_cc1 -triple i386-apple-darwin10 -analyzer-checker=core,deadcode,alpha.core -std=gnu99 -analyzer-store=region -analyzer-purge=none -verify %s -Wno-error=return-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core,deadcode,alpha.core -std=gnu99 -analyzer-store=region -verify %s -Wno-error=return-type
+comment|// RUN: %clang_analyze_cc1 -triple i386-apple-darwin10 -analyzer-checker=core,deadcode,alpha.core -std=gnu99 -analyzer-store=region -verify %s -Wno-error=return-type
 end_comment
 
 begin_typedef
@@ -1339,7 +1339,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Function call argument is an uninitialized value}}
+comment|// expected-warning{{1st function call argument is an uninitialized value}}
 block|}
 end_function
 

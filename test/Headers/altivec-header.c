@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -faltivec -ffreestanding -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -target-feature +altivec -ffreestanding -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -faltivec -ffreestanding -emit-llvm -fno-lax-vector-conversions -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -target-feature +altivec -ffreestanding -emit-llvm -fno-lax-vector-conversions -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -faltivec -ffreestanding -emit-llvm -x c++ -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -target-feature +altivec -ffreestanding -emit-llvm -x c++ -o - %s | FileCheck %s
 end_comment
 
 begin_include
@@ -34,7 +34,7 @@ comment|// CHECK-NEXT: {{^$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: llvm.ident
+comment|// CHECK-NEXT: {{llvm\..*}}
 end_comment
 
 end_unit

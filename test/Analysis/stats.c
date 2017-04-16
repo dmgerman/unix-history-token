@@ -4,7 +4,7 @@ comment|// REQUIRES: asserts
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-stats %s 2>&1 | FileCheck %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=core -analyzer-stats %s 2>&1 | FileCheck %s
 end_comment
 
 begin_function

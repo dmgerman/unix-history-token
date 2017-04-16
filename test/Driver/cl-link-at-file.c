@@ -52,10 +52,6 @@ comment|// consume only remaining args in its response file.
 end_comment
 
 begin_comment
-comment|// ARGS-NOT: warning
-end_comment
-
-begin_comment
 comment|// ARGS-NOT: argument unused during compilation
 end_comment
 
