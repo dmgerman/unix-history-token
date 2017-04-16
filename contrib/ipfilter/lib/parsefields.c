@@ -188,6 +188,22 @@ name|fields
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fields
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"memory allocation error at __LINE__ in __FUNCTIOIN__ in __FILE__"
+argument_list|)
+expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
