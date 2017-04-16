@@ -482,22 +482,14 @@ name|LINUX_BOOT_ABI
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|membanks
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|memstart
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|memsize
 index|[]

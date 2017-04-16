@@ -181,6 +181,11 @@ directive|define
 name|EFI_MD_TYPE_PALCODE
 value|13
 comment|/* PAL */
+define|#
+directive|define
+name|EFI_MD_TYPE_PERSISTENT
+value|14
+comment|/* Persistent memory. */
 name|uint32_t
 name|__pad
 decl_stmt|;
@@ -229,6 +234,19 @@ define|#
 directive|define
 name|EFI_MD_ATTR_XP
 value|0x0000000000004000UL
+define|#
+directive|define
+name|EFI_MD_ATTR_NV
+value|0x0000000000008000UL
+define|#
+directive|define
+name|EFI_MD_ATTR_MORE_RELIABLE
+define|\
+value|0x0000000000010000UL
+define|#
+directive|define
+name|EFI_MD_ATTR_RO
+value|0x0000000000020000UL
 define|#
 directive|define
 name|EFI_MD_ATTR_RT

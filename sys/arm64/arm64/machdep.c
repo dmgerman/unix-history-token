@@ -3309,6 +3309,8 @@ block|,
 literal|"MemoryMappedIOPortSpace"
 block|,
 literal|"PalCode"
+block|,
+literal|"PersistentMemory"
 block|}
 decl_stmt|;
 comment|/* 	 * Memory map data provided by UEFI via the GetMemoryMap 	 * Boot Services API. 	 */
@@ -3425,8 +3427,11 @@ condition|(
 name|p
 operator|->
 name|md_type
-operator|<=
-name|EFI_MD_TYPE_PALCODE
+operator|<
+name|nitems
+argument_list|(
+name|types
+argument_list|)
 condition|)
 name|type
 operator|=
@@ -3563,6 +3568,45 @@ condition|)
 name|printf
 argument_list|(
 literal|"XP "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|md_attr
+operator|&
+name|EFI_MD_ATTR_NV
+condition|)
+name|printf
+argument_list|(
+literal|"NV "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|md_attr
+operator|&
+name|EFI_MD_ATTR_MORE_RELIABLE
+condition|)
+name|printf
+argument_list|(
+literal|"MORE_RELIABLE "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|md_attr
+operator|&
+name|EFI_MD_ATTR_RO
+condition|)
+name|printf
+argument_list|(
+literal|"RO "
 argument_list|)
 expr_stmt|;
 if|if
