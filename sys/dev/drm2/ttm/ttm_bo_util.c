@@ -2081,6 +2081,12 @@ name|defined
 argument_list|(
 name|__powerpc__
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
 if|if
 condition|(
 name|caching_flags

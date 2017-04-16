@@ -1667,6 +1667,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__OS_HAS_MTRR
+end_if
+
 begin_function
 name|int
 name|drm_mtrr_add
@@ -1826,6 +1832,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
