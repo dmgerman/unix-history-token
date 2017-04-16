@@ -3636,6 +3636,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_NVIDIATEGRA30
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0020)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIATEGRA114
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0022)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIATEGRA124
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0028)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIATEGRA210
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0029)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_NVIDIAMCP67
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0067)
 end_define
@@ -3936,6 +3964,8 @@ block|,
 name|HDA_IVAR_NODE_TYPE
 block|,
 name|HDA_IVAR_DMA_NOCACHE
+block|,
+name|HDA_IVAR_STRIPES_MASK
 block|, }
 enum|;
 end_enum
@@ -4081,6 +4111,18 @@ argument_list|(
 name|dma_nocache
 argument_list|,
 name|DMA_NOCACHE
+argument_list|,
+name|uint8_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|HDA_ACCESSOR
+argument_list|(
+name|stripes_mask
+argument_list|,
+name|STRIPES_MASK
 argument_list|,
 name|uint8_t
 argument_list|)

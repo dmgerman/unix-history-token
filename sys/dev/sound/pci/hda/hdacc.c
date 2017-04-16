@@ -2124,6 +2124,38 @@ literal|"NVIDIA GTX570"
 block|}
 block|,
 block|{
+name|HDA_CODEC_NVIDIATEGRA30
+block|,
+literal|0
+block|,
+literal|"NVIDIA Tegra30"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIATEGRA114
+block|,
+literal|0
+block|,
+literal|"NVIDIA Tegra114"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIATEGRA124
+block|,
+literal|0
+block|,
+literal|"NVIDIA Tegra124"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIATEGRA210
+block|,
+literal|0
+block|,
+literal|"NVIDIA Tegra210"
+block|}
+block|,
+block|{
 name|HDA_CODEC_INTELIP
 block|,
 literal|0
