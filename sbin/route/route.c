@@ -7960,7 +7960,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|if (rtm_addrs& (w)) {						\ 		l = (((struct sockaddr *)&(u))->sa_len == 0) ?		\ 		    sizeof(long) :					\ 		    1 + ((((struct sockaddr *)&(u))->sa_len - 1)	\ 			| (sizeof(long) - 1));				\ 		memmove(cp, (char *)&(u), l);				\ 		cp += l;						\ 		if (verbose)						\ 			sodump((struct sockaddr *)&(u), #w);		\ 	}
+value|if (rtm_addrs& (w)) {						\ 		l = SA_SIZE(&(u));					\ 		memmove(cp, (char *)&(u), l);				\ 		cp += l;						\ 		if (verbose)						\ 			sodump((struct sockaddr *)&(u), #w);		\ 	}
 name|errno
 operator|=
 literal|0
@@ -8319,6 +8319,12 @@ operator|==
 literal|0
 operator|&&
 operator|(
+name|rtm
+operator|.
+name|rtm_type
+operator|!=
+name|RTM_GET
+operator|||
 name|rtm
 operator|.
 name|rtm_seq
@@ -8934,6 +8940,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|rtm
+operator|->
+name|rtm_type
+operator|<=
+name|RTM_RESOLVE
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"pid: %ld, seq %d, errno %d, flags:"
@@ -8966,6 +8981,19 @@ expr_stmt|;
 name|pmsg_common
 argument_list|(
 name|rtm
+argument_list|,
+name|msglen
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"type: %u, len: %zu\n"
+argument_list|,
+name|rtm
+operator|->
+name|rtm_type
 argument_list|,
 name|msglen
 argument_list|)

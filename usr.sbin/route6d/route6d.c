@@ -9537,24 +9537,6 @@ operator|*
 operator|)
 name|p
 expr_stmt|;
-name|addrs
-operator|=
-name|rtm
-operator|->
-name|rtm_addrs
-expr_stmt|;
-name|q
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|rtm
-operator|+
-literal|1
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|rtm
@@ -9580,6 +9562,47 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 			 * Only messages that use the struct rt_msghdr 			 * format are allowed beyond this point. 			 */
+if|if
+condition|(
+name|rtm
+operator|->
+name|rtm_type
+operator|>
+name|RTM_RESOLVE
+condition|)
+block|{
+name|trace
+argument_list|(
+literal|1
+argument_list|,
+literal|"rtmsg type %d ignored\n"
+argument_list|,
+name|rtm
+operator|->
+name|rtm_type
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|addrs
+operator|=
+name|rtm
+operator|->
+name|rtm_addrs
+expr_stmt|;
+name|q
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|rtm
+operator|+
+literal|1
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|rtm
@@ -15858,7 +15881,7 @@ comment|/* No such route found */
 end_comment
 
 begin_endif
-unit|return NULL; 		perror("write to rtsock"); 		exit(1); 	} 	do { 		if ((len = read(rtsock, buf, sizeof(buf)))< 0) { 			perror("read from rtsock"); 			exit(1); 		} 		rtm = (struct rt_msghdr *)(void *)buf; 	} while (rtm->rtm_seq != myseq || rtm->rtm_pid != pid); 	sin6 = (struct sockaddr_in6 *)(void *)&buf[sizeof(struct rt_msghdr)]; 	if (rtm->rtm_addrs& RTA_DST) { 		sin6 = (struct sockaddr_in6 *)(void *) 			((char *)sin6 + ROUNDUP(sin6->sin6_len)); 	} 	if (rtm->rtm_addrs& RTA_GATEWAY) { 		*gw = sin6->sin6_addr; 		return gw; 	} 	return NULL; }
+unit|return NULL; 		perror("write to rtsock"); 		exit(1); 	} 	do { 		if ((len = read(rtsock, buf, sizeof(buf)))< 0) { 			perror("read from rtsock"); 			exit(1); 		} 		rtm = (struct rt_msghdr *)(void *)buf; 	} while (rtm->rtm_type != RTM_GET || rtm->rtm_seq != myseq || 	    rtm->rtm_pid != pid); 	sin6 = (struct sockaddr_in6 *)(void *)&buf[sizeof(struct rt_msghdr)]; 	if (rtm->rtm_addrs& RTA_DST) { 		sin6 = (struct sockaddr_in6 *)(void *) 			((char *)sin6 + ROUNDUP(sin6->sin6_len)); 	} 	if (rtm->rtm_addrs& RTA_GATEWAY) { 		*gw = sin6->sin6_addr; 		return gw; 	} 	return NULL; }
 endif|#
 directive|endif
 end_endif

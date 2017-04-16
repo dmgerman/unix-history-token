@@ -1142,7 +1142,7 @@ comment|/* Up the ante and ignore older versions */
 end_comment
 
 begin_comment
-comment|/*  * Message types.  */
+comment|/*  * Message types.  *  * The format for each message is annotated below using the following  * identifiers:  *  * (1) struct rt_msghdr  * (2) struct ifa_msghdr  * (3) struct if_msghdr  * (4) struct ifma_msghdr  * (5) struct if_announcemsghdr  *  */
 end_comment
 
 begin_define
@@ -1153,7 +1153,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* Add Route */
+comment|/* (1) Add Route */
 end_comment
 
 begin_define
@@ -1164,7 +1164,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* Delete Route */
+comment|/* (1) Delete Route */
 end_comment
 
 begin_define
@@ -1175,7 +1175,7 @@ value|0x3
 end_define
 
 begin_comment
-comment|/* Change Metrics or flags */
+comment|/* (1) Change Metrics or flags */
 end_comment
 
 begin_define
@@ -1186,7 +1186,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* Report Metrics */
+comment|/* (1) Report Metrics */
 end_comment
 
 begin_define
@@ -1197,7 +1197,7 @@ value|0x5
 end_define
 
 begin_comment
-comment|/* Kernel Suspects Partitioning */
+comment|/* (1) Kernel Suspects Partitioning */
 end_comment
 
 begin_define
@@ -1208,7 +1208,7 @@ value|0x6
 end_define
 
 begin_comment
-comment|/* Told to use different route */
+comment|/* (1) Told to use different route */
 end_comment
 
 begin_define
@@ -1219,7 +1219,7 @@ value|0x7
 end_define
 
 begin_comment
-comment|/* Lookup failed on this address */
+comment|/* (1) Lookup failed on this address */
 end_comment
 
 begin_define
@@ -1230,7 +1230,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* fix specified metrics */
+comment|/* (1) fix specified metrics */
 end_comment
 
 begin_comment
@@ -1249,7 +1249,7 @@ value|0xb
 end_define
 
 begin_comment
-comment|/* req to resolve dst to LL addr */
+comment|/* (1) req to resolve dst to LL addr */
 end_comment
 
 begin_define
@@ -1260,7 +1260,7 @@ value|0xc
 end_define
 
 begin_comment
-comment|/* address being added to iface */
+comment|/* (2) address being added to iface */
 end_comment
 
 begin_define
@@ -1271,7 +1271,7 @@ value|0xd
 end_define
 
 begin_comment
-comment|/* address being removed from iface */
+comment|/* (2) address being removed from iface */
 end_comment
 
 begin_define
@@ -1282,7 +1282,7 @@ value|0xe
 end_define
 
 begin_comment
-comment|/* iface going up/down etc. */
+comment|/* (3) iface going up/down etc. */
 end_comment
 
 begin_define
@@ -1293,7 +1293,7 @@ value|0xf
 end_define
 
 begin_comment
-comment|/* mcast group membership being added to if */
+comment|/* (4) mcast group membership being added to if */
 end_comment
 
 begin_define
@@ -1304,7 +1304,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* mcast group membership being deleted */
+comment|/* (4) mcast group membership being deleted */
 end_comment
 
 begin_define
@@ -1315,7 +1315,7 @@ value|0x11
 end_define
 
 begin_comment
-comment|/* iface arrival/departure */
+comment|/* (5) iface arrival/departure */
 end_comment
 
 begin_define
@@ -1326,7 +1326,7 @@ value|0x12
 end_define
 
 begin_comment
-comment|/* IEEE80211 wireless event */
+comment|/* (5) IEEE80211 wireless event */
 end_comment
 
 begin_comment
@@ -1705,7 +1705,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This macro returns the size of a struct sockaddr when passed  * through a routing socket. Basically we round up sa_len to  * a multiple of sizeof(long), with a minimum of sizeof(long).  * The check for a NULL pointer is just a convenience, probably never used.  * The case sa_len == 0 should only apply to empty structures.  */
+comment|/*  * This macro returns the size of a struct sockaddr when passed  * through a routing socket. Basically we round up sa_len to  * a multiple of sizeof(long), with a minimum of sizeof(long).  * The case sa_len == 0 should only apply to empty structures.  */
 end_comment
 
 begin_define
@@ -1716,7 +1716,7 @@ parameter_list|(
 name|sa
 parameter_list|)
 define|\
-value|(  (!(sa) || ((struct sockaddr *)(sa))->sa_len == 0) ?	\ 	sizeof(long)		:				\ 	1 + ( (((struct sockaddr *)(sa))->sa_len - 1) | (sizeof(long) - 1) ) )
+value|(  (((struct sockaddr *)(sa))->sa_len == 0) ?		\ 	sizeof(long)		:				\ 	1 + ( (((struct sockaddr *)(sa))->sa_len - 1) | (sizeof(long) - 1) ) )
 end_define
 
 begin_define
