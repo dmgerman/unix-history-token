@@ -43,24 +43,30 @@ directive|define
 name|liblldb_SourceManager_h_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
 begin_comment
-comment|// Project includes
+comment|// for DISALLOW_COPY_AND_ASSIGN
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_comment
-comment|// Other libraries and framework includes
+comment|// for DebuggerSP, DebuggerWP, DataBufferSP
 end_comment
 
 begin_include
@@ -69,12 +75,14 @@ directive|include
 file|"llvm/Support/Chrono.h"
 end_include
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
 
 begin_comment
-comment|// C++ Includes
+comment|// for uint32_t, UINT32_MAX
 end_comment
 
 begin_include
@@ -92,8 +100,68 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_comment
+comment|// for string
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|RegularExpression
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|SymbolContextList
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Target
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace

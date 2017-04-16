@@ -74,31 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Flags.h"
+file|"lldb/Utility/Flags.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/Core/Scalar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StreamString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UserID.h"
 end_include
 
 begin_include
@@ -123,6 +105,24 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/StackID.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StreamString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_decl_stmt

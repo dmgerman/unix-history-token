@@ -43,25 +43,21 @@ directive|define
 name|liblldb_Timer_h_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
 begin_comment
-comment|// C Includes
+comment|// for DISALLOW_COPY_AND_ASSIGN
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|"llvm/Support/Chrono.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_comment
-comment|// C++ Includes
-end_comment
 
 begin_include
 include|#
@@ -72,28 +68,22 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mutex>
+file|<stdint.h>
 end_include
 
 begin_comment
-comment|// Other libraries and framework includes
+comment|// for uint32_t
 end_comment
 
-begin_comment
-comment|// Project includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Chrono.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace

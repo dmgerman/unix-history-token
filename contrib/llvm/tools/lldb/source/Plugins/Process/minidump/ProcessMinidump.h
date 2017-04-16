@@ -66,18 +66,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/Process.h"
 end_include
 
@@ -91,6 +79,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/Target.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include

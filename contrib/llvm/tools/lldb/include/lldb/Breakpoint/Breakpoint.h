@@ -128,13 +128,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StringList.h"
+file|"lldb/Core/StructuredData.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
+file|"lldb/Utility/StringList.h"
 end_include
 
 begin_decl_stmt

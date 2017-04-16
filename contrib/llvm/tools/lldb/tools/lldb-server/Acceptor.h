@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Host/Socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Socket.h"
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include

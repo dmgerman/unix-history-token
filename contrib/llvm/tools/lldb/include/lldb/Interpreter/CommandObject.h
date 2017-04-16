@@ -80,13 +80,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Flags.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StringList.h"
+file|"lldb/Utility/Flags.h"
 end_include
 
 begin_include
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/ExecutionContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StringList.h"
 end_include
 
 begin_include

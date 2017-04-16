@@ -191,6 +191,12 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 end_if
 
 begin_define
@@ -298,13 +304,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Host/Predicate.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Predicate.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_decl_stmt

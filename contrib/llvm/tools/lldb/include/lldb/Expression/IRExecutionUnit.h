@@ -98,12 +98,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataBufferHeap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Expression/IRMemoryMap.h"
 end_include
 
@@ -117,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/SymbolContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/DataBufferHeap.h"
 end_include
 
 begin_include

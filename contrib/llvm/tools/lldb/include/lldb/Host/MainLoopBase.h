@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Host/IOObject.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/IOObject.h"
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_decl_stmt

@@ -43,110 +43,15 @@ directive|define
 name|utility_TaskPool_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|&&
-operator|(
-name|_HAS_EXCEPTIONS
-operator|==
-literal|0
-operator|)
-end_if
-
-begin_comment
-comment|// Compiling MSVC libraries with _HAS_EXCEPTIONS=0, eliminates most but not all
-end_comment
-
-begin_comment
-comment|// calls to __uncaught_exception.  Unfortunately, it does seem to eliminate
-end_comment
-
-begin_comment
-comment|// the delcaration of __uncaught_excpeiton.  Including<eh.h> ensures that it is
-end_comment
-
-begin_comment
-comment|// declared.  This may not be necessary after MSVC 12.
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<eh.h>
+file|<functional>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-end_if
-
 begin_comment
-comment|// Due to another bug in MSVC 2013, including<future> will generate hundreds of
+comment|// for bind, function
 end_comment
-
-begin_comment
-comment|// warnings in the Concurrency Runtime.  This can be removed when we switch to
-end_comment
-
-begin_comment
-comment|// MSVC 2015
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|push
-name|)
-end_pragma
-
-begin_pragma
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4062
-name|)
-end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cstdint>
-end_include
 
 begin_include
 include|#
@@ -163,20 +68,32 @@ end_include
 begin_include
 include|#
 directive|include
-file|<queue>
+file|<memory>
 end_include
+
+begin_comment
+comment|// for make_shared
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<thread>
+file|<mutex>
 end_include
+
+begin_comment
+comment|// for mutex, unique_lock, condition_variable
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<type_traits>
 end_include
+
+begin_comment
+comment|// for forward, result_of, move
+end_comment
 
 begin_comment
 comment|// Global TaskPool class for running tasks in parallel on a set of worker thread
@@ -1229,29 +1146,6 @@ condition|)
 empty_stmt|;
 block|}
 end_expr_stmt
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-end_if
-
-begin_pragma
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|pop
-name|)
-end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

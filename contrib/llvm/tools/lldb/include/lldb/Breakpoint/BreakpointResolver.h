@@ -68,25 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Breakpoint/BreakpointResolver.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Address.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/RegularExpression.h"
 end_include
 
 begin_include
@@ -98,7 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/RegularExpression.h"
 end_include
 
 begin_include

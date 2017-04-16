@@ -68,12 +68,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/FormatEntity.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/Property.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_decl_stmt

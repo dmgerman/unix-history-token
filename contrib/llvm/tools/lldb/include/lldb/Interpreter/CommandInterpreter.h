@@ -92,18 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StringList.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Interpreter/Args.h"
 end_include
 
@@ -129,6 +117,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/ScriptInterpreter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StringList.h"
 end_include
 
 begin_include

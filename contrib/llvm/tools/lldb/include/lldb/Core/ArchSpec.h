@@ -55,14 +55,30 @@ end_if
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
+file|"lldb/lldb-enumerations.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_comment
+comment|// for StringRef
+end_comment
 
 begin_include
 include|#
@@ -70,13 +86,80 @@ directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_comment
+comment|// for string
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t
+end_comment
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
-struct_decl|struct
-name|CoreDefinition
-struct_decl|;
+name|class
+name|Platform
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|StringList
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Thread
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
 comment|//----------------------------------------------------------------------
 comment|/// @class ArchSpec ArchSpec.h "lldb/Core/ArchSpec.h"
 comment|/// @brief An architecture specification class.
@@ -747,6 +830,7 @@ operator|::
 name|string
 name|GetClangTargetCPU
 argument_list|()
+specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Return a string representing target application ABI.

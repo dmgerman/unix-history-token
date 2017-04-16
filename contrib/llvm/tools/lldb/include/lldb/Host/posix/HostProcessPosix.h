@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Host/HostNativeProcessBase.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/HostNativeProcessBase.h"
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include

@@ -52,19 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/EmulateInstruction.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_decl_stmt

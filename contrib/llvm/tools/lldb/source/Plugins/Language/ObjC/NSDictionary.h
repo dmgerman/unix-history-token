@@ -50,18 +50,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Stream.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ValueObject.h"
 end_include
 
@@ -75,6 +63,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/DataFormatters/TypeSynthetic.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Stream.h"
 end_include
 
 begin_include

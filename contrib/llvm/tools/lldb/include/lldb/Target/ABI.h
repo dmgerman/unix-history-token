@@ -62,12 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/PluginInterface.h"
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/UnwindPlan.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include

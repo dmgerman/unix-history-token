@@ -46,25 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<mutex>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/MainLoop.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Error.h"
 end_include
 
 begin_include
@@ -82,7 +70,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_include
@@ -194,6 +206,23 @@ name|Kill
 argument_list|()
 operator|=
 literal|0
+block|;
+comment|//------------------------------------------------------------------
+comment|// Tells a process not to stop the inferior on given signals
+comment|// and just reinject them back.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|IgnoreSignals
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|int
+operator|>
+name|signals
+argument_list|)
 block|;
 comment|//----------------------------------------------------------------------
 comment|// Memory and memory region functions
@@ -327,6 +356,8 @@ name|Error
 name|RemoveBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
+argument_list|,
+argument|bool hardware = false
 argument_list|)
 block|;
 name|virtual
@@ -339,6 +370,33 @@ block|;
 name|virtual
 name|Error
 name|DisableBreakpoint
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|)
+block|;
+comment|//----------------------------------------------------------------------
+comment|// Hardware Breakpoint functions
+comment|//----------------------------------------------------------------------
+name|virtual
+specifier|const
+name|HardwareBreakpointMap
+operator|&
+name|GetHardwareBreakpointMap
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Error
+name|SetHardwareBreakpoint
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|,
+argument|size_t size
+argument_list|)
+block|;
+name|virtual
+name|Error
+name|RemoveHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
 argument_list|)
@@ -357,8 +415,19 @@ argument_list|()
 specifier|const
 block|;
 name|virtual
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
 name|uint32_t
-name|GetMaxWatchpoints
+block|,
+name|uint32_t
+operator|>>
+name|GetHardwareDebugSupportInfo
 argument_list|()
 specifier|const
 block|;
@@ -451,6 +520,25 @@ argument_list|(
 argument|lldb::ByteOrder&byte_order
 argument_list|)
 specifier|const
+block|;
+name|virtual
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|>>
+name|GetAuxvData
+argument_list|()
+specifier|const
+operator|=
+literal|0
 block|;
 comment|//----------------------------------------------------------------------
 comment|// Exit Status
@@ -844,11 +932,24 @@ block|;
 name|NativeWatchpointList
 name|m_watchpoint_list
 block|;
+name|HardwareBreakpointMap
+name|m_hw_breakpoints_map
+block|;
 name|int
 name|m_terminal_fd
 block|;
 name|uint32_t
 name|m_stop_id
+block|;
+comment|// Set of signal numbers that LLDB directly injects back to inferior
+comment|// without stopping it.
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|int
+operator|>
+name|m_signals_to_ignore
 block|;
 comment|// lldb_private::Host calls should be used to launch a process for debugging,
 comment|// and

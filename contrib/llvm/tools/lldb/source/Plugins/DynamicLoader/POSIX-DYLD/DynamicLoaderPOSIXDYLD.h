@@ -51,6 +51,18 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment

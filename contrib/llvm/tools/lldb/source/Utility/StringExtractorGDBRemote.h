@@ -43,12 +43,20 @@ directive|define
 name|utility_StringExtractorGDBRemote_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StringExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
+comment|// for StringRef
 end_comment
 
 begin_include
@@ -57,19 +65,25 @@ directive|include
 file|<string>
 end_include
 
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
 
 begin_comment
-comment|// Project includes
+comment|// for size_t
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/StringExtractor.h"
+file|<stdint.h>
 end_include
+
+begin_comment
+comment|// for uint8_t
+end_comment
 
 begin_decl_stmt
 name|class
@@ -323,6 +337,8 @@ comment|// debug server packages
 name|eServerPacketType_QEnvironmentHexEncoded
 block|,
 name|eServerPacketType_QListThreadsInStopReply
+block|,
+name|eServerPacketType_QPassSignals
 block|,
 name|eServerPacketType_QRestoreRegisterState
 block|,

@@ -43,12 +43,26 @@ directive|define
 name|liblldb_StructuredData_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
+comment|// for FileSpec
 end_comment
 
 begin_include
@@ -78,6 +92,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<type_traits>
+end_include
+
+begin_comment
+comment|// for move
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -87,37 +111,55 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
 begin_comment
-comment|// Other libraries and framework includes
+comment|// for assert
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|<stddef.h>
 end_include
 
 begin_comment
-comment|// Project includes
+comment|// for size_t
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|<stdint.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Stream.h"
-end_include
+begin_comment
+comment|// for uint64_t
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-defines.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Error
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -1791,20 +1833,17 @@ name|GetKeys
 argument_list|()
 specifier|const
 block|{
-name|ObjectSP
+name|auto
 name|object_sp
-argument_list|(
-argument|new Array()
-argument_list|)
-block|;
-name|Array
-operator|*
-name|array
 operator|=
-name|object_sp
-operator|->
-name|GetAsArray
-argument_list|()
+name|std
+operator|::
+name|make_shared
+operator|<
+name|Array
+operator|>
+operator|(
+operator|)
 block|;
 name|collection
 operator|::
@@ -1831,18 +1870,19 @@ operator|++
 name|iter
 control|)
 block|{
-name|ObjectSP
+name|auto
 name|key_object_sp
-parameter_list|(
-name|new
+init|=
+name|std
+operator|::
+name|make_shared
+operator|<
 name|String
-parameter_list|()
-parameter_list|)
-function_decl|;
+operator|>
+operator|(
+operator|)
+decl_stmt|;
 name|key_object_sp
-operator|->
-name|GetAsString
-argument_list|()
 operator|->
 name|SetValue
 argument_list|(
@@ -1854,7 +1894,7 @@ name|AsCString
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|array
+name|object_sp
 operator|->
 name|Push
 argument_list|(
@@ -2520,10 +2560,15 @@ name|AddItem
 argument_list|(
 name|key
 argument_list|,
-name|ObjectSP
-argument_list|(
-argument|new Integer(value)
-argument_list|)
+name|std
+operator|::
+name|make_shared
+operator|<
+name|Integer
+operator|>
+operator|(
+name|value
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2546,10 +2591,15 @@ name|AddItem
 argument_list|(
 name|key
 argument_list|,
-name|ObjectSP
-argument_list|(
-argument|new Float(value)
-argument_list|)
+name|std
+operator|::
+name|make_shared
+operator|<
+name|Float
+operator|>
+operator|(
+name|value
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2574,10 +2624,20 @@ name|AddItem
 argument_list|(
 name|key
 argument_list|,
-name|ObjectSP
+name|std
+operator|::
+name|make_shared
+operator|<
+name|String
+operator|>
+operator|(
+name|std
+operator|::
+name|move
 argument_list|(
-argument|new String(std::move(value))
+name|value
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2600,10 +2660,15 @@ name|AddItem
 argument_list|(
 name|key
 argument_list|,
-name|ObjectSP
-argument_list|(
-argument|new Boolean(value)
-argument_list|)
+name|std
+operator|::
+name|make_shared
+operator|<
+name|Boolean
+operator|>
+operator|(
+name|value
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

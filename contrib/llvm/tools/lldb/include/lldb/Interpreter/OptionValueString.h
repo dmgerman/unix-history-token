@@ -68,7 +68,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Flags.h"
+file|"lldb/Utility/Flags.h"
 end_include
 
 begin_include

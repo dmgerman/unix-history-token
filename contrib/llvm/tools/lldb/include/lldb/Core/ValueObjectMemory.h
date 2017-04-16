@@ -43,20 +43,14 @@ directive|define
 name|liblldb_ValueObjectMemory_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Address.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
+comment|// for Address
 end_comment
 
 begin_include
@@ -70,6 +64,86 @@ include|#
 directive|include
 file|"lldb/Symbol/CompilerType.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_comment
+comment|// for ConstString
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_comment
+comment|// for DISALLOW_COPY_AND_ASSIGN
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_comment
+comment|// for ValueType
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_comment
+comment|// for TypeSP, ValueObjectSP, ModuleSP
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_comment
+comment|// for StringRef
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t, uint64_t
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ExecutionContextScope
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace

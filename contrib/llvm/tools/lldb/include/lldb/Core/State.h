@@ -43,27 +43,51 @@ directive|define
 name|liblldb_State_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FormatProviders.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
+comment|// for StateType
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"llvm/ADT/StringRef.h"
 end_include
+
+begin_comment
+comment|// for StringRef
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_comment
+comment|// for raw_ostream
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -159,6 +183,46 @@ end_decl_stmt
 begin_comment
 comment|// namespace lldb_private
 end_comment
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|format_provider
+operator|<
+name|lldb
+operator|::
+name|StateType
+operator|>
+block|{
+specifier|static
+name|void
+name|format
+argument_list|(
+argument|const lldb::StateType&state
+argument_list|,
+argument|raw_ostream&Stream
+argument_list|,
+argument|StringRef Style
+argument_list|)
+block|{
+name|Stream
+operator|<<
+name|lldb_private
+operator|::
+name|StateAsCString
+argument_list|(
+name|state
+argument_list|)
+block|;   }
+block|}
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

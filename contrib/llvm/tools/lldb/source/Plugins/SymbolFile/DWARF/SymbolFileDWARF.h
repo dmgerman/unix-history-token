@@ -100,13 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"llvm/Support/Threading.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Flags.h"
+file|"lldb/Utility/Flags.h"
 end_include
 
 begin_include
@@ -149,6 +149,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/SymbolFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_include
@@ -1368,7 +1374,7 @@ expr_stmt|;
 struct|struct
 name|DWARFDataSegment
 block|{
-name|std
+name|llvm
 operator|::
 name|once_flag
 name|m_flag

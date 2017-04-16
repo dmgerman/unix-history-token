@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ValueObjectConstResultChild.h -------------------------------*- C++
-end_comment
-
-begin_comment
-comment|//-*-===//
+comment|//===-- ValueObjectConstResultChild.h ----------------------------*- C++-*-===//
 end_comment
 
 begin_comment
@@ -47,22 +43,6 @@ directive|define
 name|liblldb_ValueObjectConstResultChild_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -74,6 +54,106 @@ include|#
 directive|include
 file|"lldb/Core/ValueObjectConstResultImpl.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_comment
+comment|// for CompilerType
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_comment
+comment|// for ConstString
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_comment
+comment|// for DISALLOW_COPY_AND_...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_comment
+comment|// for ValueObjectSP
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
+
+begin_comment
+comment|// for addr_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t, int32_t
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|DataExtractor
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Error
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ValueObject
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace

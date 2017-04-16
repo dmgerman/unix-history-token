@@ -80,7 +80,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Stream.h"
+file|"lldb/Utility/Stream.h"
 end_include
 
 begin_include

@@ -245,6 +245,15 @@ name|GetFunctionName
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|// Return the frame function's language.  If there isn't a function, then
+comment|// guess the language type from the mangled name.
+name|lldb
+operator|::
+name|LanguageType
+name|GuessLanguage
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Return true if this frame represents an inlined function.
 comment|///
 comment|/// See also GetFunctionName().

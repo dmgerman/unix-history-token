@@ -905,6 +905,10 @@ name|GetEchoSupported
 argument_list|()
 block|;
 name|bool
+name|GetQPassSignalsSupported
+argument_list|()
+block|;
+name|bool
 name|GetAugmentedLibrariesSVR4ReadSupported
 argument_list|()
 block|;
@@ -1271,6 +1275,19 @@ operator|*
 name|process
 argument_list|)
 block|;
+comment|// Sends QPassSignals packet to the server with given signals to ignore.
+name|Error
+name|SendSignalsToIgnore
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|int32_t
+operator|>
+name|signals
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Return the feature set supported by the gdb-remote server.
 comment|///
@@ -1440,6 +1457,9 @@ name|m_supports_jLoadedDynamicLibrariesInfos
 block|;
 name|LazyBool
 name|m_supports_jGetSharedCacheInfo
+block|;
+name|LazyBool
+name|m_supports_QPassSignals
 block|;
 name|bool
 name|m_supports_qProcessInfoPID

@@ -76,9 +76,7 @@ argument|llvm::StringRef name
 argument_list|,
 argument|bool child_processes_inherit
 argument_list|,
-argument|Socket *&send_socket
-argument_list|,
-argument|Socket *&recv_socket
+argument|Socket *&socket
 argument_list|)
 block|;
 name|private
@@ -125,7 +123,7 @@ argument_list|)
 name|override
 block|;
 name|SocketAddress
-name|m_send_sockaddr
+name|m_sockaddr
 block|; }
 decl_stmt|;
 block|}

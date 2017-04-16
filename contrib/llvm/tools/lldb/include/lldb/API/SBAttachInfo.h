@@ -190,7 +190,7 @@ comment|/// Designed to be used after a call to SBAttachInfo::SetExecutable().
 comment|/// This function implies that a call to SBTarget::Attach(...) will
 comment|/// be synchronous.
 comment|///
-comment|/// @param[in] wait_for
+comment|/// @param[in] b
 comment|///     If \b false, attach to an existing process whose name matches.
 comment|///     If \b true, then wait for the next process whose name matches.
 comment|//------------------------------------------------------------------
@@ -208,7 +208,7 @@ comment|/// Designed to be used after a call to SBAttachInfo::SetExecutable().
 comment|/// Future calls to SBTarget::Attach(...) will be synchronous or
 comment|/// asynchronous depending on the \a async argument.
 comment|///
-comment|/// @param[in] wait_for
+comment|/// @param[in] b
 comment|///     If \b false, attach to an existing process whose name matches.
 comment|///     If \b true, then wait for the next process whose name matches.
 comment|///

@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataExtractor.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/FileSpecList.h"
 end_include
 
@@ -70,18 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Endian.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Symbol/Symtab.h"
 end_include
 
@@ -89,6 +71,30 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/UnwindTable.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/DataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UUID.h"
 end_include
 
 begin_include
@@ -1119,6 +1125,77 @@ return|return
 literal|0
 return|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Some object files may have an identifier string embedded in them,
+comment|/// e.g. in a Mach-O core file using the LC_IDENT load command (which
+comment|/// is obsolete, but can still be found in some old files)
+comment|///
+comment|/// @return
+comment|///     Returns the identifier string if one exists, else an empty
+comment|///     string.
+comment|//------------------------------------------------------------------
+name|virtual
+name|std
+operator|::
+name|string
+name|GetIdentifierString
+argument_list|()
+block|{
+return|return
+name|std
+operator|::
+name|string
+argument_list|()
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// When the ObjectFile is a core file, lldb needs to locate the
+comment|/// "binary" in the core file.  lldb can iterate over the pages looking
+comment|/// for a valid binary, but some core files may have metadata
+comment|/// describing where the main binary is exactly which removes ambiguity
+comment|/// when there are multiple binaries present in the captured memory pages.
+comment|///
+comment|/// @param[out] address
+comment|///   If the address of the binary is specified, this will be set.
+comment|///   This is an address is the virtual address space of the core file
+comment|///   memory segments; it is not an offset into the object file.
+comment|///   If no address is available, will be set to LLDB_INVALID_ADDRESS.
+comment|///
+comment|/// @param[out] uuid
+comment|///   If the uuid of the binary is specified, this will be set.
+comment|///   If no UUID is available, will be cleared.
+comment|///
+comment|/// @return
+comment|///   Returns true if either address or uuid has been set.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|GetCorefileMainBinaryInfo
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|address
+argument_list|,
+name|UUID
+operator|&
+name|uuid
+argument_list|)
+block|{
+name|address
+operator|=
+name|LLDB_INVALID_ADDRESS
+expr_stmt|;
+name|uuid
+operator|.
+name|Clear
+argument_list|()
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 name|virtual
 name|lldb
 operator|::
@@ -1616,6 +1693,30 @@ argument_list|,
 argument|lldb::SymbolType symbol_type_hint = lldb::eSymbolTypeUndefined
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Loads this objfile to memory.
+comment|///
+comment|/// Loads the bits needed to create an executable image to the memory.
+comment|/// It is useful with bare-metal targets where target does not have the
+comment|/// ability to start a process itself.
+comment|///
+comment|/// @param[in] target
+comment|///     Target where to load.
+comment|///
+comment|/// @return
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|LoadInMemory
+parameter_list|(
+name|Target
+modifier|&
+name|target
+parameter_list|,
+name|bool
+name|set_pc
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------

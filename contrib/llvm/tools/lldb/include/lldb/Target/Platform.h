@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/PluginInterface.h"
 end_include
 
@@ -122,13 +116,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Interpreter/Options.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/Options.h"
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include

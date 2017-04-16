@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/RegularExpression.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ValueObject.h"
 end_include
 
@@ -141,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/RegularExpression.h"
 end_include
 
 begin_include

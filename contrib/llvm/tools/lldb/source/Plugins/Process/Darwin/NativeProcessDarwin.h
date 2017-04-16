@@ -100,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/HostThread.h"
 end_include
 
@@ -125,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/MemoryRegionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include
