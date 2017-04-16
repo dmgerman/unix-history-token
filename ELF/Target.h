@@ -105,15 +105,6 @@ decl|const
 decl_stmt|;
 name|virtual
 name|bool
-name|isTlsGlobalDynamicRel
-argument_list|(
-name|uint32_t
-name|Type
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
-name|bool
 name|isPicRel
 argument_list|(
 name|uint32_t
@@ -180,7 +171,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|virtual
-name|uint64_t
+name|int64_t
 name|getImplicitAddend
 argument_list|(
 specifier|const
@@ -228,6 +219,29 @@ name|RelOff
 argument_list|)
 decl|const
 block|{}
+name|virtual
+name|void
+name|addPltHeaderSymbols
+argument_list|(
+name|InputSectionBase
+operator|*
+name|IS
+argument_list|)
+decl|const
+block|{}
+name|virtual
+name|void
+name|addPltSymbols
+argument_list|(
+name|InputSectionBase
+operator|*
+name|IS
+argument_list|,
+name|uint64_t
+name|Off
+argument_list|)
+decl|const
+block|{}
 comment|// Returns true if a relocation only uses the low bits of a value such that
 comment|// all those bits are in in the same page. For example, if the relocation
 comment|// only uses the low 12 bits in a system with 4k pages. If this is true, the
@@ -243,14 +257,10 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|// Decide whether a Thunk is needed for the relocation from File
-comment|// targeting S. Returns one of:
-comment|// Expr if there is no Thunk required
-comment|// R_THUNK_ABS if thunk is required and expression is absolute
-comment|// R_THUNK_PC if thunk is required and expression is pc rel
-comment|// R_THUNK_PLT_PC if thunk is required to PLT entry and expression is pc rel
+comment|// targeting S.
 name|virtual
-name|RelExpr
-name|getThunkExpr
+name|bool
+name|needsThunk
 argument_list|(
 name|RelExpr
 name|Expr
@@ -260,7 +270,7 @@ name|RelocType
 argument_list|,
 specifier|const
 name|InputFile
-operator|&
+operator|*
 name|File
 argument_list|,
 specifier|const
@@ -281,6 +291,11 @@ specifier|const
 name|SymbolBody
 operator|&
 name|S
+argument_list|,
+specifier|const
+name|uint8_t
+operator|*
+name|Loc
 argument_list|)
 decl|const
 init|=
@@ -393,6 +408,13 @@ name|bool
 name|NeedsThunks
 init|=
 name|false
+decl_stmt|;
+comment|// A 4-byte field corresponding to one or more trap instructions, used to pad
+comment|// executable OutputSections.
+name|uint32_t
+name|TrapInstr
+init|=
+literal|0
 decl_stmt|;
 name|virtual
 name|RelExpr

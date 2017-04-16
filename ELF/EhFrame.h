@@ -56,14 +56,9 @@ block|{
 name|namespace
 name|elf
 block|{
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|InputSectionBase
-expr_stmt|;
+decl_stmt|;
 struct_decl|struct
 name|EhSectionPiece
 struct_decl|;
@@ -75,7 +70,7 @@ operator|>
 name|size_t
 name|readEhRecordSize
 argument_list|(
-argument|InputSectionBase<ELFT> *S
+argument|InputSectionBase *S
 argument_list|,
 argument|size_t Off
 argument_list|)

@@ -142,9 +142,6 @@ name|class
 name|ArchiveFile
 decl_stmt|;
 name|class
-name|BitcodeFile
-decl_stmt|;
-name|class
 name|InputFile
 decl_stmt|;
 name|class
@@ -186,8 +183,6 @@ name|DefinedAbsoluteKind
 block|,
 name|DefinedRelativeKind
 block|,
-name|DefinedBitcodeKind
-block|,
 name|UndefinedKind
 block|,
 name|LazyKind
@@ -198,7 +193,7 @@ name|DefinedCommonKind
 block|,
 name|LastDefinedKind
 init|=
-name|DefinedBitcodeKind
+name|DefinedRelativeKind
 block|,   }
 enum|;
 name|Kind
@@ -291,11 +286,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|IsReplaceable
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|WrittenToSymtab
 argument_list|(
 name|false
@@ -323,15 +313,10 @@ name|IsCOMDAT
 range|:
 literal|1
 decl_stmt|;
-comment|// This bit is used by the \c DefinedBitcode subclass.
-name|unsigned
-name|IsReplaceable
-range|:
-literal|1
-decl_stmt|;
 name|public
 label|:
-comment|// This bit is used by Writer::createSymbolAndStringTable().
+comment|// This bit is used by Writer::createSymbolAndStringTable() to prevent
+comment|// symbols from being written to the symbol table more than once.
 name|unsigned
 name|WrittenToSymtab
 range|:
@@ -358,8 +343,7 @@ name|Defined
 argument_list|(
 argument|Kind K
 argument_list|,
-argument|StringRef N =
-literal|""
+argument|StringRef N
 argument_list|)
 operator|:
 name|SymbolBody
@@ -410,7 +394,10 @@ name|isExecutable
 argument_list|()
 block|; }
 decl_stmt|;
-comment|// Symbols defined via a COFF object file.
+comment|// Symbols defined via a COFF object file or bitcode file.  For COFF files, this
+comment|// stores a coff_symbol_generic*, and names of internal symbols are lazily
+comment|// loaded through that. For bitcode files, Sym is nullptr and the name is stored
+comment|// as a StringRef.
 name|class
 name|DefinedCOFF
 range|:
@@ -426,14 +413,18 @@ name|DefinedCOFF
 argument_list|(
 argument|Kind K
 argument_list|,
-argument|ObjectFile *F
+argument|InputFile *F
 argument_list|,
-argument|COFFSymbolRef S
+argument|StringRef N
+argument_list|,
+argument|const coff_symbol_generic *S
 argument_list|)
 operator|:
 name|Defined
 argument_list|(
 name|K
+argument_list|,
+name|N
 argument_list|)
 block|,
 name|File
@@ -443,7 +434,7 @@ argument_list|)
 block|,
 name|Sym
 argument_list|(
-argument|S.getGeneric()
+argument|S
 argument_list|)
 block|{}
 specifier|static
@@ -462,7 +453,7 @@ operator|<=
 name|LastDefinedCOFFKind
 return|;
 block|}
-name|ObjectFile
+name|InputFile
 operator|*
 name|getFile
 argument_list|()
@@ -475,7 +466,7 @@ name|COFFSymbolRef
 name|getCOFFSymbol
 argument_list|()
 block|;
-name|ObjectFile
+name|InputFile
 operator|*
 name|File
 block|;
@@ -498,11 +489,17 @@ name|public
 operator|:
 name|DefinedRegular
 argument_list|(
-argument|ObjectFile *F
+argument|InputFile *F
 argument_list|,
-argument|COFFSymbolRef S
+argument|StringRef N
 argument_list|,
-argument|SectionChunk *C
+argument|bool IsCOMDAT
+argument_list|,
+argument|bool IsExternal = false
+argument_list|,
+argument|const coff_symbol_generic *S = nullptr
+argument_list|,
+argument|SectionChunk *C = nullptr
 argument_list|)
 operator|:
 name|DefinedCOFF
@@ -511,27 +508,27 @@ name|DefinedRegularKind
 argument_list|,
 name|F
 argument_list|,
+name|N
+argument_list|,
 name|S
 argument_list|)
 block|,
 name|Data
 argument_list|(
-argument|&C->Repl
+argument|C ?&C->Repl : nullptr
 argument_list|)
 block|{
+name|this
+operator|->
 name|IsExternal
 operator|=
-name|S
-operator|.
-name|isExternal
-argument_list|()
+name|IsExternal
 block|;
+name|this
+operator|->
 name|IsCOMDAT
 operator|=
-name|C
-operator|->
-name|isCOMDAT
-argument_list|()
+name|IsCOMDAT
 block|;   }
 specifier|static
 name|bool
@@ -613,11 +610,15 @@ name|public
 operator|:
 name|DefinedCommon
 argument_list|(
-argument|ObjectFile *F
+argument|InputFile *F
 argument_list|,
-argument|COFFSymbolRef S
+argument|StringRef N
 argument_list|,
-argument|CommonChunk *C
+argument|uint64_t Size
+argument_list|,
+argument|const coff_symbol_generic *S = nullptr
+argument_list|,
+argument|CommonChunk *C = nullptr
 argument_list|)
 operator|:
 name|DefinedCOFF
@@ -626,20 +627,26 @@ name|DefinedCommonKind
 argument_list|,
 name|F
 argument_list|,
+name|N
+argument_list|,
 name|S
 argument_list|)
 block|,
 name|Data
 argument_list|(
-argument|C
+name|C
+argument_list|)
+block|,
+name|Size
+argument_list|(
+argument|Size
 argument_list|)
 block|{
+name|this
+operator|->
 name|IsExternal
 operator|=
-name|S
-operator|.
-name|isExternal
-argument_list|()
+name|true
 block|;   }
 specifier|static
 name|bool
@@ -676,16 +683,18 @@ block|;
 name|uint64_t
 name|getSize
 argument_list|()
+specifier|const
 block|{
 return|return
-name|Sym
-operator|->
-name|Value
+name|Size
 return|;
 block|}
 name|CommonChunk
 operator|*
 name|Data
+block|;
+name|uint64_t
+name|Size
 block|; }
 decl_stmt|;
 comment|// Absolute symbols.
@@ -1242,70 +1251,6 @@ operator|*
 name|Data
 block|; }
 decl_stmt|;
-name|class
-name|DefinedBitcode
-range|:
-name|public
-name|Defined
-block|{
-name|friend
-name|SymbolBody
-block|;
-name|public
-operator|:
-name|DefinedBitcode
-argument_list|(
-argument|BitcodeFile *F
-argument_list|,
-argument|StringRef N
-argument_list|,
-argument|bool IsReplaceable
-argument_list|)
-operator|:
-name|Defined
-argument_list|(
-name|DefinedBitcodeKind
-argument_list|,
-name|N
-argument_list|)
-block|,
-name|File
-argument_list|(
-argument|F
-argument_list|)
-block|{
-comment|// IsReplaceable tracks whether the bitcode symbol may be replaced with some
-comment|// other (defined, common or bitcode) symbol. This is the case for common,
-comment|// comdat and weak external symbols. We try to replace bitcode symbols with
-comment|// "real" symbols (see SymbolTable::add{Regular,Bitcode}), and resolve the
-comment|// result against the real symbol from the combined LTO object.
-name|this
-operator|->
-name|IsReplaceable
-operator|=
-name|IsReplaceable
-block|;   }
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const SymbolBody *S
-argument_list|)
-block|{
-return|return
-name|S
-operator|->
-name|kind
-argument_list|()
-operator|==
-name|DefinedBitcodeKind
-return|;
-block|}
-name|BitcodeFile
-operator|*
-name|File
-block|; }
-decl_stmt|;
 specifier|inline
 name|uint64_t
 name|Defined
@@ -1425,14 +1370,6 @@ name|getRVA
 argument_list|()
 return|;
 case|case
-name|DefinedBitcodeKind
-case|:
-name|llvm_unreachable
-argument_list|(
-literal|"There is no address for a bitcode symbol."
-argument_list|)
-expr_stmt|;
-case|case
 name|LazyKind
 case|:
 case|case
@@ -1495,8 +1432,6 @@ block|,
 name|DefinedImportThunk
 block|,
 name|DefinedLocalImport
-block|,
-name|DefinedBitcode
 operator|>
 name|Body
 block|;

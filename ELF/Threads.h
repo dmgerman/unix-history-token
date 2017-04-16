@@ -68,7 +68,7 @@ comment|// Complex multi-threaded algorithms are sometimes extremely hard to
 end_comment
 
 begin_comment
-comment|// justify the correctness and can easily mess up the entire design.
+comment|// reason about and can easily mess up the entire design.
 end_comment
 
 begin_comment
@@ -144,7 +144,7 @@ comment|// without any coordination between them. That's very easy to understand
 end_comment
 
 begin_comment
-comment|// and justify.
+comment|// and reason about.
 end_comment
 
 begin_comment
@@ -279,7 +279,7 @@ name|class
 name|FuncTy
 operator|>
 name|void
-name|forEach
+name|parallelForEach
 argument_list|(
 argument|IterTy Begin
 argument_list|,
@@ -318,7 +318,7 @@ expr_stmt|;
 block|}
 specifier|inline
 name|void
-name|forLoop
+name|parallelFor
 argument_list|(
 name|size_t
 name|Begin

@@ -1636,6 +1636,8 @@ for|for
 control|(
 init|;
 name|I
+operator|+
+name|TaskSize
 operator|<
 name|End
 condition|;
@@ -1684,13 +1686,6 @@ block|}
 block|)
 empty_stmt|;
 end_for
-
-begin_expr_stmt
-name|Begin
-operator|+=
-name|TaskSize
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 unit|}   Tg

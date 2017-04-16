@@ -137,6 +137,9 @@ decl_stmt|;
 name|class
 name|TarWriter
 decl_stmt|;
+struct_decl|struct
+name|DILineInfo
+struct_decl|;
 name|namespace
 name|lto
 block|{
@@ -249,18 +252,37 @@ block|}
 name|MemoryBufferRef
 name|MB
 decl_stmt|;
+comment|// Returns sections. It is a runtime error to call this function
+comment|// on files that don't have the notion of sections.
+name|ArrayRef
+operator|<
+name|InputSectionBase
+operator|*
+operator|>
+name|getSections
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|FileKind
+operator|==
+name|ObjectKind
+operator|||
+name|FileKind
+operator|==
+name|BinaryKind
+argument_list|)
+block|;
+return|return
+name|Sections
+return|;
+block|}
 comment|// Filename of .a which contained this file. If this file was
 comment|// not in an archive file, it is the empty string. We use this
 comment|// string for creating error messages.
 name|StringRef
 name|ArchiveName
-decl_stmt|;
-comment|// If this file is in an archive, the member contains the offset of
-comment|// the file in the archive. Otherwise, it's just zero. We store this
-comment|// field so that we can pass it to lib/LTO in order to disambiguate
-comment|// between objects.
-name|uint64_t
-name|OffsetInArchive
 decl_stmt|;
 comment|// If this is an architecture-specific file, the following members
 comment|// have ELF type (i.e. ELF{32,64}{LE,BE}) and target machine type.
@@ -283,6 +305,20 @@ name|OSABI
 init|=
 literal|0
 decl_stmt|;
+comment|// For SharedKind inputs, the string to use in DT_NEEDED when the library
+comment|// has no soname.
+name|std
+operator|::
+name|string
+name|DefaultSoName
+expr_stmt|;
+comment|// Cache for toString(). Only toString() should use this member.
+name|mutable
+name|std
+operator|::
+name|string
+name|ToStringCache
+expr_stmt|;
 name|protected
 label|:
 name|InputFile
@@ -291,23 +327,22 @@ argument|Kind K
 argument_list|,
 argument|MemoryBufferRef M
 argument_list|)
-block|:
-name|MB
-argument_list|(
-name|M
-argument_list|)
-operator|,
-name|FileKind
-argument_list|(
-argument|K
-argument_list|)
-block|{}
+empty_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|InputSectionBase
+operator|*
+operator|>
+name|Sections
+expr_stmt|;
 name|private
-operator|:
+label|:
 specifier|const
 name|Kind
 name|FileKind
-expr_stmt|;
+decl_stmt|;
 block|}
 empty_stmt|;
 name|template
@@ -531,22 +566,8 @@ typedef|typedef
 name|typename
 name|ELFT
 operator|::
-name|SymRange
-name|Elf_Sym_Range
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
 name|Word
 name|Elf_Word
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|uint
-name|uintX_t
 expr_stmt|;
 name|StringRef
 name|getShtGroupSignature
@@ -614,14 +635,6 @@ operator|>
 name|getLocalSymbols
 argument_list|()
 expr_stmt|;
-name|ArrayRef
-operator|<
-name|SymbolBody
-operator|*
-operator|>
-name|getNonLocalSymbols
-argument_list|()
-expr_stmt|;
 name|explicit
 name|ObjectFile
 parameter_list|(
@@ -644,33 +657,17 @@ operator|&
 name|ComdatGroups
 argument_list|)
 decl_stmt|;
-name|ArrayRef
-operator|<
 name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
-operator|>
-name|getSections
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Sections
-return|;
-block|}
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
+modifier|*
 name|getSection
 argument_list|(
-argument|const Elf_Sym&Sym
-argument_list|)
 specifier|const
-expr_stmt|;
+name|Elf_Sym
+operator|&
+name|Sym
+argument_list|)
+decl|const
+decl_stmt|;
 name|SymbolBody
 modifier|&
 name|getSymbolBody
@@ -729,7 +726,7 @@ name|getSymbol
 argument_list|(
 name|Config
 operator|->
-name|Mips64EL
+name|IsMips64EL
 argument_list|)
 block|;
 return|return
@@ -746,9 +743,25 @@ operator|::
 name|string
 name|getLineInfo
 argument_list|(
-argument|InputSectionBase<ELFT> *S
+argument|InputSectionBase *S
 argument_list|,
-argument|uintX_t Offset
+argument|uint64_t Offset
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|llvm
+operator|::
+name|DILineInfo
+operator|>
+name|getDILineInfo
+argument_list|(
+name|InputSectionBase
+operator|*
+argument_list|,
+name|uint64_t
 argument_list|)
 expr_stmt|;
 comment|// MIPS GP0 value defined by this file. This value represents the gp value
@@ -791,30 +804,28 @@ name|initializeDwarfLine
 parameter_list|()
 function_decl|;
 name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
+modifier|*
 name|getRelocTarget
-argument_list|(
+parameter_list|(
 specifier|const
 name|Elf_Shdr
-operator|&
+modifier|&
 name|Sec
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
+modifier|*
 name|createInputSection
-argument_list|(
-argument|const Elf_Shdr&Sec
-argument_list|,
-argument|StringRef SectionStringTable
-argument_list|)
-expr_stmt|;
+parameter_list|(
+specifier|const
+name|Elf_Shdr
+modifier|&
+name|Sec
+parameter_list|,
+name|StringRef
+name|SectionStringTable
+parameter_list|)
+function_decl|;
 name|bool
 name|shouldMerge
 parameter_list|(
@@ -834,19 +845,6 @@ modifier|*
 name|Sym
 parameter_list|)
 function_decl|;
-comment|// List of all sections defined by this file.
-name|std
-operator|::
-name|vector
-operator|<
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
-operator|>
-name|Sections
-expr_stmt|;
 comment|// List of all symbols referenced or defined by this file.
 name|std
 operator|::
@@ -1102,10 +1100,13 @@ name|InputFile
 block|{
 name|public
 operator|:
-name|explicit
 name|BitcodeFile
 argument_list|(
 argument|MemoryBufferRef M
+argument_list|,
+argument|StringRef ArchiveName
+argument_list|,
+argument|uint64_t OffsetInArchive
 argument_list|)
 block|;
 specifier|static
@@ -1270,26 +1271,6 @@ name|Elf_Versym
 expr_stmt|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Word
-name|Elf_Word
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|uint
-name|uintX_t
-expr_stmt|;
-end_typedef
-
 begin_expr_stmt
 name|std
 operator|::
@@ -1337,11 +1318,7 @@ name|StringRef
 name|getSoName
 argument_list|()
 specifier|const
-block|{
-return|return
-name|SoName
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
@@ -1564,30 +1541,6 @@ operator|>
 name|void
 name|parse
 argument_list|()
-block|;
-name|ArrayRef
-operator|<
-name|InputSectionData
-operator|*
-operator|>
-name|getSections
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Sections
-return|;
-block|}
-name|private
-operator|:
-name|std
-operator|::
-name|vector
-operator|<
-name|InputSectionData
-operator|*
-operator|>
-name|Sections
 block|; }
 decl_stmt|;
 end_decl_stmt

@@ -129,6 +129,9 @@ name|addFile
 parameter_list|(
 name|StringRef
 name|Path
+parameter_list|,
+name|bool
+name|WithLOption
 parameter_list|)
 function_decl|;
 name|void
