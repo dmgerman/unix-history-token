@@ -153,6 +153,10 @@ name|ucontext_t
 name|sf_uc
 decl_stmt|;
 comment|/* actual saved ucontext */
+name|mcontext_vfp_t
+name|sf_vfp
+decl_stmt|;
+comment|/* actual saved VFP context */
 block|}
 struct|;
 end_struct

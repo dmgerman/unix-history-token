@@ -523,12 +523,23 @@ operator|->
 name|uc_mcontext
 decl_stmt|;
 comment|/* XXX */
-name|memset
-argument_list|(
-operator|&
 name|mc
 operator|->
-name|__fpu
+name|mc_vfp_size
+operator|=
+literal|0
+expr_stmt|;
+name|mc
+operator|->
+name|mc_vfp_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|memset
+argument_list|(
+name|mc
+operator|->
+name|mc_spare
 argument_list|,
 literal|0
 argument_list|,
@@ -536,7 +547,7 @@ sizeof|sizeof
 argument_list|(
 name|mc
 operator|->
-name|__fpu
+name|mc_spare
 argument_list|)
 argument_list|)
 expr_stmt|;
