@@ -5,6 +5,12 @@ directive|include
 file|"ipf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -195,9 +201,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warnx
 argument_list|(
-literal|"memory allocation error at __LINE__ in __FUNCTIOIN__ in __FILE__"
+literal|"memory allocation error at %d in %s in %s"
+argument_list|,
+name|__LINE__
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|__FILE__
 argument_list|)
 expr_stmt|;
 name|abort
