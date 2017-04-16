@@ -201,11 +201,25 @@ directive|include
 file|<sys/reboot.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LINUX_BOOT_ABI
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/boot.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1980,6 +1994,11 @@ name|vector_page
 operator|=
 name|va
 expr_stmt|;
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
 if|if
 condition|(
 name|va
@@ -1996,6 +2015,8 @@ name|CPU_CONTROL_VECRELOC
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
