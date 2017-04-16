@@ -219,19 +219,15 @@ name|hash
 operator|<
 name|MoveOnly
 operator|>
-operator|:
-name|public
-name|std
-operator|::
-name|unary_function
-operator|<
-name|MoveOnly
-operator|,
-name|std
-operator|::
-name|size_t
-operator|>
 block|{
+typedef|typedef
+name|MoveOnly
+name|argument_type
+typedef|;
+typedef|typedef
+name|size_t
+name|result_type
+typedef|;
 name|std
 operator|::
 name|size_t
@@ -252,11 +248,15 @@ name|get
 argument_list|()
 return|;
 block|}
-expr|}
-block|;  }
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

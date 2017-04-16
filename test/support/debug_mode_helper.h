@@ -838,10 +838,10 @@ operator|!=
 name|CT_ForwardList
 condition|)
 block|{
+comment|// FIXME: This should work for both forward_list and string
 name|SwapInvalidatesIterators
 argument_list|()
 expr_stmt|;
-comment|// FIXME: This should work
 block|}
 block|}
 name|catch
@@ -1879,6 +1879,25 @@ name|it1
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|CT
+operator|==
+name|CT_String
+condition|)
+block|{
+name|CHECK_DEBUG_THROWS
+argument_list|(
+name|C1
+operator|.
+name|erase
+argument_list|(
+name|it2
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|C1
 operator|.
 name|erase

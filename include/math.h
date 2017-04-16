@@ -180,6 +180,51 @@ name|__lcpp_x
 argument_list|)
 return|;
 block|}
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_LIBCPP_MSVCRT
+argument_list|)
+name|template
+operator|<
+name|typename
+name|_A1
+operator|>
+specifier|inline
+name|_LIBCPP_INLINE_VISIBILITY
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_arithmetic
+operator|<
+name|_A1
+operator|>
+operator|::
+name|value
+operator|,
+name|bool
+operator|>
+operator|::
+name|type
+name|signbit
+argument_list|(
+argument|_A1 __lcpp_x
+argument_list|)
+name|_NOEXCEPT
+block|{
+return|return
+operator|::
+name|signbit
+argument_list|(
+argument|static_cast<typename std::__promote<_A1>::type>(__lcpp_x)
+argument_list|)
+return|;
+block|}
 endif|#
 directive|endif
 comment|// signbit
@@ -256,6 +301,51 @@ operator|::
 name|type
 operator|)
 name|__lcpp_x
+argument_list|)
+return|;
+block|}
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_LIBCPP_MSVCRT
+argument_list|)
+name|template
+operator|<
+name|typename
+name|_A1
+operator|>
+specifier|inline
+name|_LIBCPP_INLINE_VISIBILITY
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_arithmetic
+operator|<
+name|_A1
+operator|>
+operator|::
+name|value
+operator|,
+name|int
+operator|>
+operator|::
+name|type
+name|fpclassify
+argument_list|(
+argument|_A1 __lcpp_x
+argument_list|)
+name|_NOEXCEPT
+block|{
+return|return
+operator|::
+name|fpclassify
+argument_list|(
+argument|static_cast<typename std::__promote<_A1>::type>(__lcpp_x)
 argument_list|)
 return|;
 block|}
@@ -1405,6 +1495,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fabsf
 argument_list|(
 name|__lcpp_x
@@ -1425,6 +1516,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fabs
 argument_list|(
 name|__lcpp_x
@@ -1447,6 +1539,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fabsl
 argument_list|(
 name|__lcpp_x
@@ -1475,11 +1568,6 @@ operator|!
 operator|(
 name|defined
 argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|_AIX
 argument_list|)
 operator|||
@@ -1502,6 +1590,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|acosf
 argument_list|(
 name|__lcpp_x
@@ -1524,6 +1613,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|acosl
 argument_list|(
 name|__lcpp_x
@@ -1570,6 +1660,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|acos
 argument_list|(
 operator|(
@@ -1590,11 +1681,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -1619,6 +1705,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|asinf
 argument_list|(
 name|__lcpp_x
@@ -1641,6 +1728,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|asinl
 argument_list|(
 name|__lcpp_x
@@ -1687,6 +1775,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|asin
 argument_list|(
 operator|(
@@ -1707,11 +1796,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -1736,6 +1820,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|atanf
 argument_list|(
 name|__lcpp_x
@@ -1758,6 +1843,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|atanl
 argument_list|(
 name|__lcpp_x
@@ -1804,6 +1890,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|atan
 argument_list|(
 operator|(
@@ -1824,11 +1911,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -1856,6 +1938,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|atan2f
 argument_list|(
 name|__lcpp_y
@@ -1884,6 +1967,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|atan2l
 argument_list|(
 name|__lcpp_y
@@ -2002,6 +2086,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|atan2
 argument_list|(
 operator|(
@@ -2029,11 +2114,6 @@ operator|!
 operator|(
 name|defined
 argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|_AIX
 argument_list|)
 operator|||
@@ -2056,6 +2136,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|ceilf
 argument_list|(
 name|__lcpp_x
@@ -2078,6 +2159,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|ceill
 argument_list|(
 name|__lcpp_x
@@ -2124,6 +2206,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|ceil
 argument_list|(
 operator|(
@@ -2144,11 +2227,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -2173,6 +2251,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|cosf
 argument_list|(
 name|__lcpp_x
@@ -2195,6 +2274,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|cosl
 argument_list|(
 name|__lcpp_x
@@ -2241,6 +2321,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|cos
 argument_list|(
 operator|(
@@ -2261,11 +2342,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -2290,6 +2366,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|coshf
 argument_list|(
 name|__lcpp_x
@@ -2312,6 +2389,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|coshl
 argument_list|(
 name|__lcpp_x
@@ -2358,6 +2436,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|cosh
 argument_list|(
 operator|(
@@ -2378,11 +2457,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -2407,6 +2481,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|expf
 argument_list|(
 name|__lcpp_x
@@ -2429,6 +2504,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|expl
 argument_list|(
 name|__lcpp_x
@@ -2475,6 +2551,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|exp
 argument_list|(
 operator|(
@@ -2495,11 +2572,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -2524,6 +2596,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fabsf
 argument_list|(
 name|__lcpp_x
@@ -2546,6 +2619,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fabsl
 argument_list|(
 name|__lcpp_x
@@ -2592,6 +2666,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fabs
 argument_list|(
 operator|(
@@ -2612,11 +2687,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -2641,6 +2711,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|floorf
 argument_list|(
 name|__lcpp_x
@@ -2663,6 +2734,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|floorl
 argument_list|(
 name|__lcpp_x
@@ -2709,6 +2781,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|floor
 argument_list|(
 operator|(
@@ -2729,11 +2802,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -2761,6 +2829,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fmodf
 argument_list|(
 name|__lcpp_x
@@ -2789,6 +2858,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fmodl
 argument_list|(
 name|__lcpp_x
@@ -2907,6 +2977,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|fmod
 argument_list|(
 operator|(
@@ -2932,11 +3003,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -2965,6 +3031,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|frexpf
 argument_list|(
 name|__lcpp_x
@@ -2993,6 +3060,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|frexpl
 argument_list|(
 name|__lcpp_x
@@ -3043,6 +3111,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|frexp
 argument_list|(
 operator|(
@@ -3065,11 +3134,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -3097,6 +3161,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|ldexpf
 argument_list|(
 name|__lcpp_x
@@ -3124,6 +3189,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|ldexpl
 argument_list|(
 name|__lcpp_x
@@ -3174,6 +3240,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|ldexp
 argument_list|(
 operator|(
@@ -3198,11 +3265,6 @@ operator|!
 operator|(
 name|defined
 argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|_AIX
 argument_list|)
 operator|||
@@ -3225,6 +3287,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|logf
 argument_list|(
 name|__lcpp_x
@@ -3247,6 +3310,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|logl
 argument_list|(
 name|__lcpp_x
@@ -3293,6 +3357,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|log
 argument_list|(
 operator|(
@@ -3313,11 +3378,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -3342,6 +3402,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|log10f
 argument_list|(
 name|__lcpp_x
@@ -3364,6 +3425,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|log10l
 argument_list|(
 name|__lcpp_x
@@ -3410,6 +3472,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|log10
 argument_list|(
 operator|(
@@ -3430,11 +3493,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -3463,6 +3521,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|modff
 argument_list|(
 name|__lcpp_x
@@ -3492,6 +3551,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|modfl
 argument_list|(
 name|__lcpp_x
@@ -3516,11 +3576,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -3548,6 +3603,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|powf
 argument_list|(
 name|__lcpp_x
@@ -3576,6 +3632,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|powl
 argument_list|(
 name|__lcpp_x
@@ -3694,6 +3751,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|pow
 argument_list|(
 operator|(
@@ -3721,11 +3779,6 @@ operator|!
 operator|(
 name|defined
 argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|_AIX
 argument_list|)
 operator|||
@@ -3748,6 +3801,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|sinf
 argument_list|(
 name|__lcpp_x
@@ -3770,6 +3824,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|sinl
 argument_list|(
 name|__lcpp_x
@@ -3816,6 +3871,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|sin
 argument_list|(
 operator|(
@@ -3836,11 +3892,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -3865,6 +3916,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|sinhf
 argument_list|(
 name|__lcpp_x
@@ -3887,6 +3939,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|sinhl
 argument_list|(
 name|__lcpp_x
@@ -3933,6 +3986,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|sinh
 argument_list|(
 operator|(
@@ -3953,11 +4007,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -3982,6 +4031,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|sqrtf
 argument_list|(
 name|__lcpp_x
@@ -4004,6 +4054,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|sqrtl
 argument_list|(
 name|__lcpp_x
@@ -4050,6 +4101,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|sqrt
 argument_list|(
 operator|(
@@ -4070,11 +4122,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -4099,6 +4146,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|tanf
 argument_list|(
 name|__lcpp_x
@@ -4121,6 +4169,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|tanl
 argument_list|(
 name|__lcpp_x
@@ -4167,6 +4216,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|tan
 argument_list|(
 operator|(
@@ -4187,11 +4237,6 @@ if|#
 directive|if
 operator|!
 operator|(
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_AIX
@@ -4216,6 +4261,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|tanhf
 argument_list|(
 name|__lcpp_x
@@ -4238,6 +4284,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|tanhl
 argument_list|(
 name|__lcpp_x
@@ -4284,6 +4331,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|tanh
 argument_list|(
 operator|(
@@ -4299,12 +4347,6 @@ begin_comment
 comment|// acosh
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBCPP_MSVCRT
-end_ifndef
-
 begin_function
 specifier|inline
 name|_LIBCPP_INLINE_VISIBILITY
@@ -4317,6 +4359,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|acoshf
 argument_list|(
 name|__lcpp_x
@@ -4339,6 +4382,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|acoshl
 argument_list|(
 name|__lcpp_x
@@ -4380,6 +4424,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|acosh
 argument_list|(
 operator|(
@@ -4391,20 +4436,9 @@ return|;
 block|}
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|// asinh
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBCPP_MSVCRT
-end_ifndef
 
 begin_function
 specifier|inline
@@ -4418,6 +4452,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|asinhf
 argument_list|(
 name|__lcpp_x
@@ -4440,6 +4475,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|asinhl
 argument_list|(
 name|__lcpp_x
@@ -4481,6 +4517,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|asinh
 argument_list|(
 operator|(
@@ -4492,20 +4529,9 @@ return|;
 block|}
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|// atanh
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBCPP_MSVCRT
-end_ifndef
 
 begin_function
 specifier|inline
@@ -4519,6 +4545,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|atanhf
 argument_list|(
 name|__lcpp_x
@@ -4541,6 +4568,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|atanhl
 argument_list|(
 name|__lcpp_x
@@ -4582,6 +4610,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|atanh
 argument_list|(
 operator|(
@@ -4593,20 +4622,9 @@ return|;
 block|}
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|// cbrt
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBCPP_MSVCRT
-end_ifndef
 
 begin_function
 specifier|inline
@@ -4620,6 +4638,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|cbrtf
 argument_list|(
 name|__lcpp_x
@@ -4642,6 +4661,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|cbrtl
 argument_list|(
 name|__lcpp_x
@@ -4683,6 +4703,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|cbrt
 argument_list|(
 operator|(
@@ -4694,30 +4715,9 @@ return|;
 block|}
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|// copysign
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_VC_CRT_MAJOR_VERSION
-argument_list|)
-operator|||
-operator|(
-name|_VC_CRT_MAJOR_VERSION
-operator|<
-literal|12
-operator|)
-end_if
 
 begin_function
 specifier|inline
@@ -4734,6 +4734,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|copysignf
 argument_list|(
 name|__lcpp_x
@@ -4762,6 +4763,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|copysignl
 argument_list|(
 name|__lcpp_x
@@ -4771,11 +4773,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|template
@@ -4880,6 +4877,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|copysign
 argument_list|(
 operator|(
@@ -4895,14 +4893,8 @@ argument_list|)
 return|;
 end_return
 
-begin_ifndef
-unit|}
-ifndef|#
-directive|ifndef
-name|_LIBCPP_MSVCRT
-end_ifndef
-
 begin_comment
+unit|}
 comment|// erf
 end_comment
 
@@ -4918,6 +4910,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|erff
 argument_list|(
 name|__lcpp_x
@@ -4940,6 +4933,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|erfl
 argument_list|(
 name|__lcpp_x
@@ -4981,6 +4975,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|erf
 argument_list|(
 operator|(
@@ -5008,6 +5003,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|erfcf
 argument_list|(
 name|__lcpp_x
@@ -5030,6 +5026,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|erfcl
 argument_list|(
 name|__lcpp_x
@@ -5071,6 +5068,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|erfc
 argument_list|(
 operator|(
@@ -5098,6 +5096,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|exp2f
 argument_list|(
 name|__lcpp_x
@@ -5120,6 +5119,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|exp2l
 argument_list|(
 name|__lcpp_x
@@ -5161,6 +5161,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|exp2
 argument_list|(
 operator|(
@@ -5188,6 +5189,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|expm1f
 argument_list|(
 name|__lcpp_x
@@ -5210,6 +5212,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|expm1l
 argument_list|(
 name|__lcpp_x
@@ -5251,6 +5254,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|expm1
 argument_list|(
 operator|(
@@ -5281,6 +5285,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fdimf
 argument_list|(
 name|__lcpp_x
@@ -5309,6 +5314,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fdiml
 argument_list|(
 name|__lcpp_x
@@ -5422,6 +5428,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|fdim
 argument_list|(
 operator|(
@@ -5460,6 +5467,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fmaf
 argument_list|(
 name|__lcpp_x
@@ -5494,6 +5502,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fmal
 argument_list|(
 name|__lcpp_x
@@ -5638,6 +5647,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|fma
 argument_list|(
 operator|(
@@ -5678,6 +5688,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fmaxf
 argument_list|(
 name|__lcpp_x
@@ -5706,6 +5717,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fmaxl
 argument_list|(
 name|__lcpp_x
@@ -5819,6 +5831,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|fmax
 argument_list|(
 operator|(
@@ -5854,6 +5867,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fminf
 argument_list|(
 name|__lcpp_x
@@ -5882,6 +5896,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|fminl
 argument_list|(
 name|__lcpp_x
@@ -5995,6 +6010,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|fmin
 argument_list|(
 operator|(
@@ -6030,6 +6046,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|hypotf
 argument_list|(
 name|__lcpp_x
@@ -6058,6 +6075,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|hypotl
 argument_list|(
 name|__lcpp_x
@@ -6171,6 +6189,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|hypot
 argument_list|(
 operator|(
@@ -6203,6 +6222,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|ilogbf
 argument_list|(
 name|__lcpp_x
@@ -6224,6 +6244,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|ilogbl
 argument_list|(
 name|__lcpp_x
@@ -6265,6 +6286,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|ilogb
 argument_list|(
 operator|(
@@ -6292,6 +6314,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|lgammaf
 argument_list|(
 name|__lcpp_x
@@ -6314,6 +6337,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|lgammal
 argument_list|(
 name|__lcpp_x
@@ -6355,6 +6379,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|lgamma
 argument_list|(
 operator|(
@@ -6383,6 +6408,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|llrintf
 argument_list|(
 name|__lcpp_x
@@ -6405,6 +6431,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|llrintl
 argument_list|(
 name|__lcpp_x
@@ -6447,6 +6474,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|llrint
 argument_list|(
 operator|(
@@ -6475,6 +6503,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|llroundf
 argument_list|(
 name|__lcpp_x
@@ -6497,6 +6526,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|llroundl
 argument_list|(
 name|__lcpp_x
@@ -6539,6 +6569,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|llround
 argument_list|(
 operator|(
@@ -6566,6 +6597,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|log1pf
 argument_list|(
 name|__lcpp_x
@@ -6588,6 +6620,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|log1pl
 argument_list|(
 name|__lcpp_x
@@ -6629,6 +6662,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|log1p
 argument_list|(
 operator|(
@@ -6656,6 +6690,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|log2f
 argument_list|(
 name|__lcpp_x
@@ -6678,6 +6713,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|log2l
 argument_list|(
 name|__lcpp_x
@@ -6719,6 +6755,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|log2
 argument_list|(
 operator|(
@@ -6746,6 +6783,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|logbf
 argument_list|(
 name|__lcpp_x
@@ -6768,6 +6806,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|logbl
 argument_list|(
 name|__lcpp_x
@@ -6809,6 +6848,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|logb
 argument_list|(
 operator|(
@@ -6836,6 +6876,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|lrintf
 argument_list|(
 name|__lcpp_x
@@ -6857,6 +6898,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|lrintl
 argument_list|(
 name|__lcpp_x
@@ -6898,6 +6940,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|lrint
 argument_list|(
 operator|(
@@ -6925,6 +6968,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|lroundf
 argument_list|(
 name|__lcpp_x
@@ -6946,6 +6990,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|lroundl
 argument_list|(
 name|__lcpp_x
@@ -6987,6 +7032,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|lround
 argument_list|(
 operator|(
@@ -7018,6 +7064,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|nearbyintf
 argument_list|(
 name|__lcpp_x
@@ -7040,6 +7087,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|nearbyintl
 argument_list|(
 name|__lcpp_x
@@ -7081,6 +7129,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|nearbyint
 argument_list|(
 operator|(
@@ -7111,6 +7160,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|nextafterf
 argument_list|(
 name|__lcpp_x
@@ -7139,6 +7189,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|nextafterl
 argument_list|(
 name|__lcpp_x
@@ -7252,6 +7303,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|nextafter
 argument_list|(
 operator|(
@@ -7288,6 +7340,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|nexttowardf
 argument_list|(
 name|__lcpp_x
@@ -7316,6 +7369,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|nexttowardl
 argument_list|(
 name|__lcpp_x
@@ -7361,6 +7415,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|nexttoward
 argument_list|(
 operator|(
@@ -7393,6 +7448,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|remainderf
 argument_list|(
 name|__lcpp_x
@@ -7421,6 +7477,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|remainderl
 argument_list|(
 name|__lcpp_x
@@ -7534,6 +7591,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|remainder
 argument_list|(
 operator|(
@@ -7573,6 +7631,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|remquof
 argument_list|(
 name|__lcpp_x
@@ -7607,6 +7666,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|remquol
 argument_list|(
 name|__lcpp_x
@@ -7724,6 +7784,7 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|::
 name|remquo
 argument_list|(
 operator|(
@@ -7758,6 +7819,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|rintf
 argument_list|(
 name|__lcpp_x
@@ -7780,6 +7842,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|rintl
 argument_list|(
 name|__lcpp_x
@@ -7821,6 +7884,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|rint
 argument_list|(
 operator|(
@@ -7848,6 +7912,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|roundf
 argument_list|(
 name|__lcpp_x
@@ -7870,6 +7935,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|roundl
 argument_list|(
 name|__lcpp_x
@@ -7911,6 +7977,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|round
 argument_list|(
 operator|(
@@ -7941,6 +8008,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|scalblnf
 argument_list|(
 name|__lcpp_x
@@ -7968,6 +8036,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|scalblnl
 argument_list|(
 name|__lcpp_x
@@ -8013,6 +8082,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|scalbln
 argument_list|(
 operator|(
@@ -8045,6 +8115,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|scalbnf
 argument_list|(
 name|__lcpp_x
@@ -8072,6 +8143,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|scalbnl
 argument_list|(
 name|__lcpp_x
@@ -8117,6 +8189,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|scalbn
 argument_list|(
 operator|(
@@ -8146,6 +8219,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|tgammaf
 argument_list|(
 name|__lcpp_x
@@ -8168,6 +8242,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|tgammal
 argument_list|(
 name|__lcpp_x
@@ -8209,6 +8284,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|tgamma
 argument_list|(
 operator|(
@@ -8236,6 +8312,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|truncf
 argument_list|(
 name|__lcpp_x
@@ -8258,6 +8335,7 @@ parameter_list|)
 function|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|truncl
 argument_list|(
 name|__lcpp_x
@@ -8299,6 +8377,7 @@ argument_list|)
 name|_NOEXCEPT
 block|{
 return|return
+operator|::
 name|trunc
 argument_list|(
 operator|(
@@ -8309,15 +8388,6 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// !_LIBCPP_MSVCRT
-end_comment
 
 begin_comment
 unit|}

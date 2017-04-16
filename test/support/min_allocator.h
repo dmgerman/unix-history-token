@@ -647,7 +647,18 @@ name|template
 operator|<
 name|class
 name|T
+operator|,
+name|class
+operator|=
+name|std
+operator|::
+name|integral_constant
+operator|<
+name|size_t
+operator|,
+literal|0
 operator|>
+expr|>
 name|class
 name|min_pointer
 expr_stmt|;
@@ -658,12 +669,17 @@ name|template
 operator|<
 name|class
 name|T
+operator|,
+name|class
+name|ID
 operator|>
 name|class
 name|min_pointer
 operator|<
 specifier|const
 name|T
+operator|,
+name|ID
 operator|>
 expr_stmt|;
 end_expr_stmt
@@ -671,11 +687,15 @@ end_expr_stmt
 begin_expr_stmt
 name|template
 operator|<
+name|class
+name|ID
 operator|>
 name|class
 name|min_pointer
 operator|<
 name|void
+operator|,
+name|ID
 operator|>
 expr_stmt|;
 end_expr_stmt
@@ -683,12 +703,16 @@ end_expr_stmt
 begin_expr_stmt
 name|template
 operator|<
+name|class
+name|ID
 operator|>
 name|class
 name|min_pointer
 operator|<
 specifier|const
 name|void
+operator|,
+name|ID
 operator|>
 expr_stmt|;
 end_expr_stmt
@@ -707,12 +731,16 @@ end_expr_stmt
 begin_expr_stmt
 name|template
 operator|<
+name|class
+name|ID
 operator|>
 name|class
 name|min_pointer
 operator|<
 specifier|const
 name|void
+operator|,
+name|ID
 operator|>
 block|{
 specifier|const
@@ -746,7 +774,9 @@ name|T
 operator|>
 name|min_pointer
 argument_list|(
-argument|min_pointer<T> p
+argument|min_pointer<T
+argument_list|,
+argument|ID> p
 argument_list|)
 name|TEST_NOEXCEPT
 operator|:
@@ -820,6 +850,9 @@ name|template
 operator|<
 name|class
 name|U
+operator|,
+name|class
+name|XID
 operator|>
 name|friend
 name|class
@@ -831,11 +864,15 @@ begin_expr_stmt
 unit|};
 name|template
 operator|<
+name|class
+name|ID
 operator|>
 name|class
 name|min_pointer
 operator|<
 name|void
+operator|,
+name|ID
 operator|>
 block|{
 name|void
@@ -888,7 +925,9 @@ name|type
 operator|>
 name|min_pointer
 argument_list|(
-argument|min_pointer<T> p
+argument|min_pointer<T
+argument_list|,
+argument|ID> p
 argument_list|)
 name|TEST_NOEXCEPT
 operator|:
@@ -962,6 +1001,9 @@ name|template
 operator|<
 name|class
 name|U
+operator|,
+name|class
+name|XID
 operator|>
 name|friend
 name|class
@@ -975,6 +1017,9 @@ name|template
 operator|<
 name|class
 name|T
+operator|,
+name|class
+name|ID
 operator|>
 name|class
 name|min_pointer
@@ -1017,7 +1062,9 @@ block|{}
 name|explicit
 name|min_pointer
 argument_list|(
-argument|min_pointer<void> p
+argument|min_pointer<void
+argument_list|,
+argument|ID> p
 argument_list|)
 name|TEST_NOEXCEPT
 operator|:
@@ -1530,6 +1577,9 @@ name|template
 operator|<
 name|class
 name|U
+operator|,
+name|class
+name|XID
 operator|>
 name|friend
 name|class
@@ -1555,12 +1605,17 @@ name|template
 operator|<
 name|class
 name|T
+operator|,
+name|class
+name|ID
 operator|>
 name|class
 name|min_pointer
 operator|<
 specifier|const
 name|T
+operator|,
+name|ID
 operator|>
 block|{
 specifier|const
@@ -1607,6 +1662,8 @@ argument_list|(
 name|min_pointer
 operator|<
 name|T
+argument_list|,
+name|ID
 operator|>
 name|p
 argument_list|)
@@ -1623,6 +1680,8 @@ name|min_pointer
 operator|<
 specifier|const
 name|void
+argument_list|,
+name|ID
 operator|>
 name|p
 argument_list|)
@@ -2140,6 +2199,9 @@ name|template
 operator|<
 name|class
 name|U
+operator|,
+name|class
+name|XID
 operator|>
 name|friend
 name|class
@@ -2153,6 +2215,9 @@ name|template
 operator|<
 name|class
 name|T
+operator|,
+name|class
+name|ID
 operator|>
 specifier|inline
 name|bool
@@ -2162,6 +2227,8 @@ operator|(
 name|min_pointer
 operator|<
 name|T
+operator|,
+name|ID
 operator|>
 name|x
 operator|,
@@ -2188,6 +2255,9 @@ name|template
 operator|<
 name|class
 name|T
+operator|,
+name|class
+name|ID
 operator|>
 specifier|inline
 name|bool
@@ -2201,6 +2271,8 @@ operator|,
 name|min_pointer
 operator|<
 name|T
+operator|,
+name|ID
 operator|>
 name|x
 operator|)
@@ -2223,6 +2295,9 @@ name|template
 operator|<
 name|class
 name|T
+operator|,
+name|class
+name|ID
 operator|>
 specifier|inline
 name|bool
@@ -2232,6 +2307,8 @@ operator|(
 name|min_pointer
 operator|<
 name|T
+operator|,
+name|ID
 operator|>
 name|x
 operator|,
@@ -2257,6 +2334,9 @@ name|template
 operator|<
 name|class
 name|T
+operator|,
+name|class
+name|ID
 operator|>
 specifier|inline
 name|bool
@@ -2270,6 +2350,8 @@ operator|,
 name|min_pointer
 operator|<
 name|T
+operator|,
+name|ID
 operator|>
 name|x
 operator|)

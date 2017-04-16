@@ -785,7 +785,7 @@ comment|//======================================================================
 end_comment
 
 begin_comment
-comment|// DerivedFromBase - A type that derives from it's template argument 'Base'
+comment|// DerivedFromBase - A type that derives from its template argument 'Base'
 end_comment
 
 begin_expr_stmt
@@ -834,7 +834,7 @@ comment|//======================================================================
 end_comment
 
 begin_comment
-comment|// DerefToType - A type that dereferences to it's template argument 'To'.
+comment|// DerefToType - A type that dereferences to its template argument 'To'.
 end_comment
 
 begin_comment
@@ -907,7 +907,7 @@ comment|//======================================================================
 end_comment
 
 begin_comment
-comment|// DerefPropToType - A type that dereferences to it's template argument 'To'.
+comment|// DerefPropToType - A type that dereferences to its template argument 'To'.
 end_comment
 
 begin_comment

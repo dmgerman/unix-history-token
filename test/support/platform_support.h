@@ -341,7 +341,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|// Newlib provies this, but in the header it's under __STRICT_ANSI__
+comment|// Newlib provides this, but in the header it's under __STRICT_ANSI__
 end_comment
 
 begin_extern

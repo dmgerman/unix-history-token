@@ -140,7 +140,7 @@ comment|//   being constructed by the container.
 end_comment
 
 begin_comment
-comment|//   The controllers primary functions are:
+comment|//   The controller's primary functions are:
 end_comment
 
 begin_comment
@@ -1641,7 +1641,7 @@ argument_list|(
 argument|other
 argument_list|)
 block|{}
-comment|// Forgive pair for not downcasting this to an lvalue it its constructors.
+comment|// Forgive pair for not downcasting this to an lvalue in its constructors.
 name|CopyInsertable
 argument_list|(
 name|CopyInsertable

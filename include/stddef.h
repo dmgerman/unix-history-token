@@ -182,6 +182,13 @@ name|defined
 argument_list|(
 name|_GCC_MAX_ALIGN_T
 argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|__DEFINED_max_align_t
+argument_list|)
 end_if
 
 begin_typedef
