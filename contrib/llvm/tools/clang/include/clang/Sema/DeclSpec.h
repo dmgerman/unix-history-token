@@ -2125,7 +2125,7 @@ name|range
 expr_stmt|;
 block|}
 name|bool
-name|containsPlaceholderType
+name|hasAutoTypeSpec
 argument_list|()
 specifier|const
 block|{
@@ -3630,6 +3630,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|ObjCDeclQualifier
+operator|)
 name|objcDeclQualifier
 return|;
 block|}
@@ -3835,17 +3838,33 @@ return|return
 name|GetterName
 return|;
 block|}
+name|SourceLocation
+name|getGetterNameLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetterNameLoc
+return|;
+block|}
 name|void
 name|setGetterName
 parameter_list|(
 name|IdentifierInfo
 modifier|*
 name|name
+parameter_list|,
+name|SourceLocation
+name|loc
 parameter_list|)
 block|{
 name|GetterName
 operator|=
 name|name
+expr_stmt|;
+name|GetterNameLoc
+operator|=
+name|loc
 expr_stmt|;
 block|}
 specifier|const
@@ -3868,17 +3887,33 @@ return|return
 name|SetterName
 return|;
 block|}
+name|SourceLocation
+name|getSetterNameLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SetterNameLoc
+return|;
+block|}
 name|void
 name|setSetterName
 parameter_list|(
 name|IdentifierInfo
 modifier|*
 name|name
+parameter_list|,
+name|SourceLocation
+name|loc
 parameter_list|)
 block|{
 name|SetterName
 operator|=
 name|name
+expr_stmt|;
+name|SetterNameLoc
+operator|=
+name|loc
 expr_stmt|;
 block|}
 name|private
@@ -3886,7 +3921,7 @@ label|:
 comment|// FIXME: These two are unrelated and mutually exclusive. So perhaps
 comment|// we can put them in a union to reflect their mutual exclusivity
 comment|// (space saving is negligible).
-name|ObjCDeclQualifier
+name|unsigned
 name|objcDeclQualifier
 range|:
 literal|7
@@ -3915,6 +3950,14 @@ modifier|*
 name|SetterName
 decl_stmt|;
 comment|// setter name or NULL if no setter
+name|SourceLocation
+name|GetterNameLoc
+decl_stmt|;
+comment|// location of the getter attribute's value
+name|SourceLocation
+name|SetterNameLoc
+decl_stmt|;
+comment|// location of the setter attribute's value
 block|}
 empty_stmt|;
 comment|/// \brief Represents a C++ unqualified-id that has been parsed.
@@ -3978,6 +4021,9 @@ name|IK_TemplateId
 block|,
 comment|/// \brief An implicit 'self' parameter
 name|IK_ImplicitSelfParam
+block|,
+comment|/// \brief A deduction-guide name (a template-name)
+name|IK_DeductionGuideName
 block|}
 name|Kind
 enum|;
@@ -4007,8 +4053,8 @@ comment|/// \brief Anonymous union that holds extra data associated with the
 comment|/// parsed unqualified-id.
 union|union
 block|{
-comment|/// \brief When Kind == IK_Identifier, the parsed identifier, or when Kind
-comment|/// == IK_UserLiteralId, the identifier suffix.
+comment|/// \brief When Kind == IK_Identifier, the parsed identifier, or when
+comment|/// Kind == IK_UserLiteralId, the identifier suffix.
 name|IdentifierInfo
 modifier|*
 name|Identifier
@@ -4033,6 +4079,10 @@ comment|/// \brief When Kind == IK_DestructorName, the type referred to by the
 comment|/// class-name.
 name|UnionParsedType
 name|DestructorName
+decl_stmt|;
+comment|/// \brief When Kind == IK_DeductionGuideName, the parsed template-name.
+name|UnionParsedTemplateTy
+name|TemplateName
 decl_stmt|;
 comment|/// \brief When Kind == IK_TemplateId or IK_ConstructorTemplateId,
 comment|/// the template-id annotation that contains the template name and
@@ -4385,6 +4435,36 @@ modifier|*
 name|TemplateId
 parameter_list|)
 function_decl|;
+comment|/// \brief Specify that this unqualified-id was parsed as a template-name for
+comment|/// a deduction-guide.
+comment|///
+comment|/// \param Template The parsed template-name.
+comment|/// \param TemplateLoc The location of the parsed template-name.
+name|void
+name|setDeductionGuideName
+parameter_list|(
+name|ParsedTemplateTy
+name|Template
+parameter_list|,
+name|SourceLocation
+name|TemplateLoc
+parameter_list|)
+block|{
+name|Kind
+operator|=
+name|IK_DeductionGuideName
+expr_stmt|;
+name|TemplateName
+operator|=
+name|Template
+expr_stmt|;
+name|StartLocation
+operator|=
+name|EndLocation
+operator|=
+name|TemplateLoc
+expr_stmt|;
+block|}
 comment|/// \brief Return the source range that covers this unqualified-id.
 name|SourceRange
 name|getSourceRange
@@ -6283,6 +6363,9 @@ comment|// K&R type definition list for formals.
 name|TypeNameContext
 block|,
 comment|// Abstract declarator for types.
+name|FunctionalCastContext
+block|,
+comment|// Type in a C++ functional cast expression.
 name|MemberContext
 block|,
 comment|// Struct/Union field.
@@ -6985,6 +7068,9 @@ case|case
 name|TypeNameContext
 case|:
 case|case
+name|FunctionalCastContext
+case|:
+case|case
 name|AliasDeclContext
 case|:
 case|case
@@ -7095,6 +7181,9 @@ case|case
 name|TypeNameContext
 case|:
 case|case
+name|FunctionalCastContext
+case|:
+case|case
 name|CXXNewContext
 case|:
 case|case
@@ -7184,6 +7273,9 @@ name|ObjCCatchContext
 case|:
 case|case
 name|TypeNameContext
+case|:
+case|case
+name|FunctionalCastContext
 case|:
 case|case
 name|ConversionIdContext
@@ -7278,6 +7370,9 @@ name|KNRTypeListContext
 case|:
 case|case
 name|TypeNameContext
+case|:
+case|case
+name|FunctionalCastContext
 case|:
 case|case
 name|AliasDeclContext
@@ -7466,6 +7561,10 @@ case|:
 case|case
 name|TypeNameContext
 case|:
+case|case
+name|FunctionalCastContext
+case|:
+comment|// FIXME
 case|case
 name|CXXNewContext
 case|:
@@ -8499,6 +8598,9 @@ case|case
 name|TypeNameContext
 case|:
 case|case
+name|FunctionalCastContext
+case|:
+case|case
 name|AliasDeclContext
 case|:
 case|case
@@ -8627,6 +8729,62 @@ end_for
 begin_return
 return|return
 name|true
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Determine whether a trailing return type was written (at any
+end_comment
+
+begin_comment
+comment|/// level) within this declarator.
+end_comment
+
+begin_macro
+unit|bool
+name|hasTrailingReturnType
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|Chunk
+range|:
+name|type_objects
+argument_list|()
+control|)
+if|if
+condition|(
+name|Chunk
+operator|.
+name|Kind
+operator|==
+name|DeclaratorChunk
+operator|::
+name|Function
+operator|&&
+name|Chunk
+operator|.
+name|Fun
+operator|.
+name|hasTrailingReturnType
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|false
 return|;
 end_return
 

@@ -2122,7 +2122,7 @@ name|FromASTFile
 return|;
 block|}
 comment|/// \brief Retrieve the global declaration ID associated with this
-comment|/// declaration, which specifies where in the
+comment|/// declaration, which specifies where this Decl was loaded from.
 name|unsigned
 name|getGlobalID
 argument_list|()
@@ -4057,6 +4057,11 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|Out
+argument_list|,
+name|bool
+name|Deserialize
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -7343,6 +7348,11 @@ name|OS
 argument_list|,
 name|bool
 name|DumpDecls
+operator|=
+name|false
+argument_list|,
+name|bool
+name|Deserialize
 operator|=
 name|false
 argument_list|)

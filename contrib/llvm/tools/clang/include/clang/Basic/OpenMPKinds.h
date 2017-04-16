@@ -575,6 +575,23 @@ name|OpenMPDirectiveKind
 name|Kind
 parameter_list|)
 function_decl|;
+comment|/// Return the captured regions of an OpenMP directive.
+name|void
+name|getOpenMPCaptureRegions
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|OpenMPDirectiveKind
+operator|>
+operator|&
+name|CaptureRegions
+argument_list|,
+name|OpenMPDirectiveKind
+name|DKind
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

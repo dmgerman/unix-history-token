@@ -543,6 +543,24 @@ name|TypeAliasDecl
 operator|>
 name|typeAliasDecl
 expr_stmt|;
+comment|/// \brief Matches type alias template declarations.
+comment|///
+comment|/// typeAliasTemplateDecl() matches
+comment|/// \code
+comment|///   template<typename T>
+comment|///   using Y = X<T>;
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|TypeAliasTemplateDecl
+operator|>
+name|typeAliasTemplateDecl
+expr_stmt|;
 comment|/// \brief Matches AST nodes that were expanded within the main-file.
 comment|///
 comment|/// Example matches X but not Y
@@ -2471,6 +2489,104 @@ operator|,
 name|ObjCInterfaceDecl
 operator|>
 name|objcInterfaceDecl
+expr_stmt|;
+comment|/// \brief Matches Objective-C protocol declarations.
+comment|///
+comment|/// Example matches FooDelegate
+comment|/// \code
+comment|///   @protocol FooDelegate
+comment|///   @end
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|ObjCProtocolDecl
+operator|>
+name|objcProtocolDecl
+expr_stmt|;
+comment|/// \brief Matches Objective-C category declarations.
+comment|///
+comment|/// Example matches Foo (Additions)
+comment|/// \code
+comment|///   @interface Foo (Additions)
+comment|///   @end
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|ObjCCategoryDecl
+operator|>
+name|objcCategoryDecl
+expr_stmt|;
+comment|/// \brief Matches Objective-C method declarations.
+comment|///
+comment|/// Example matches both declaration and definition of -[Foo method]
+comment|/// \code
+comment|///   @interface Foo
+comment|///   - (void)method;
+comment|///   @end
+comment|///
+comment|///   @implementation Foo
+comment|///   - (void)method {}
+comment|///   @end
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|ObjCMethodDecl
+operator|>
+name|objcMethodDecl
+expr_stmt|;
+comment|/// \brief Matches Objective-C instance variable declarations.
+comment|///
+comment|/// Example matches _enabled
+comment|/// \code
+comment|///   @implementation Foo {
+comment|///     BOOL _enabled;
+comment|///   }
+comment|///   @end
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|ObjCIvarDecl
+operator|>
+name|objcIvarDecl
+expr_stmt|;
+comment|/// \brief Matches Objective-C property declarations.
+comment|///
+comment|/// Example matches enabled
+comment|/// \code
+comment|///   @interface Foo
+comment|///   @property BOOL enabled;
+comment|///   @end
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|ObjCPropertyDecl
+operator|>
+name|objcPropertyDecl
 expr_stmt|;
 comment|/// \brief Matches expressions that introduce cleanups to be run at the end
 comment|/// of the sub-expression's evaluation.
@@ -5369,7 +5485,7 @@ block|}
 comment|/// \brief Matches on the receiver of an ObjectiveC Message expression.
 comment|///
 comment|/// Example
-comment|/// matcher = objCMessageExpr(hasRecieverType(asString("UIWebView *")));
+comment|/// matcher = objCMessageExpr(hasReceiverType(asString("UIWebView *")));
 comment|/// matches the [webView ...] message invocation.
 comment|/// \code
 comment|///   NSString *webViewJavaScript = ...
@@ -12171,7 +12287,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// \brief Matches declaration of the function the statemenet belongs to
+comment|/// \brief Matches declaration of the function the statement belongs to
 comment|///
 comment|/// Given:
 comment|/// \code

@@ -274,6 +274,11 @@ return|return
 name|false
 return|;
 block|}
+name|bool
+name|shouldEraseOutputFiles
+argument_list|()
+name|override
+block|;
 name|public
 operator|:
 comment|/// \brief Compute the AST consumer arguments that will be used to

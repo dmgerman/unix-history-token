@@ -230,6 +230,9 @@ name|class
 name|HeaderSearch
 decl_stmt|;
 name|class
+name|MemoryBufferCache
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|class
@@ -363,6 +366,12 @@ operator|<
 name|SourceManager
 operator|>
 name|SourceMgr
+block|;
+name|IntrusiveRefCntPtr
+operator|<
+name|MemoryBufferCache
+operator|>
+name|PCMCache
 block|;
 name|std
 operator|::
@@ -2126,6 +2135,17 @@ return|return
 name|FileSystemOpts
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|IntrusiveRefCntPtr
+operator|<
+name|ASTReader
+operator|>
+name|getASTReader
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_function

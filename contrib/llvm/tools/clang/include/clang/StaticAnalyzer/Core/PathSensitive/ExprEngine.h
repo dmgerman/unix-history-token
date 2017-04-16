@@ -688,7 +688,7 @@ argument_list|)
 name|override
 block|;
 comment|/// Called by CoreEngine.  Used to processing branching behavior
-comment|/// at static initalizers.
+comment|/// at static initializers.
 name|void
 name|processStaticInitializer
 argument_list|(
@@ -823,6 +823,8 @@ argument_list|,
 argument|ArrayRef<const MemRegion *> ExplicitRegions
 argument_list|,
 argument|ArrayRef<const MemRegion *> Regions
+argument_list|,
+argument|const LocationContext *LCtx
 argument_list|,
 argument|const CallEvent *Call
 argument_list|)
@@ -1882,6 +1884,8 @@ argument_list|,
 argument|SVal Loc
 argument_list|,
 argument|SVal Val
+argument_list|,
+argument|const LocationContext *LCtx
 argument_list|)
 name|override
 block|;
@@ -2183,12 +2187,12 @@ operator|&
 name|Call
 argument_list|)
 block|;
-comment|/// If the value of the given expression is a NonLoc, copy it into a new
-comment|/// temporary object region, and replace the value of the expression with
-comment|/// that.
+comment|/// If the value of the given expression \p InitWithAdjustments is a NonLoc,
+comment|/// copy it into a new temporary object region, and replace the value of the
+comment|/// expression with that.
 comment|///
-comment|/// If \p ResultE is provided, the new region will be bound to this expression
-comment|/// instead of \p E.
+comment|/// If \p Result is provided, the new region will be bound to this expression
+comment|/// instead of \p InitWithAdjustments.
 name|ProgramStateRef
 name|createTemporaryRegionIfNeeded
 argument_list|(
@@ -2196,9 +2200,9 @@ argument|ProgramStateRef State
 argument_list|,
 argument|const LocationContext *LC
 argument_list|,
-argument|const Expr *E
+argument|const Expr *InitWithAdjustments
 argument_list|,
-argument|const Expr *ResultE = nullptr
+argument|const Expr *Result = nullptr
 argument_list|)
 block|;
 comment|/// For a DeclStmt or CXXInitCtorInitializer, walk backward in the current CFG

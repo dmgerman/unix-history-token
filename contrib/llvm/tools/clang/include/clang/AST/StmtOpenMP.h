@@ -785,6 +785,120 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|/// \brief Returns the captured statement associated with the
+comment|/// component region within the (combined) directive.
+comment|//
+comment|// \param RegionKind Component region kind.
+name|CapturedStmt
+operator|*
+name|getCapturedStmt
+argument_list|(
+argument|OpenMPDirectiveKind RegionKind
+argument_list|)
+specifier|const
+block|{
+name|SmallVector
+operator|<
+name|OpenMPDirectiveKind
+block|,
+literal|4
+operator|>
+name|CaptureRegions
+block|;
+name|getOpenMPCaptureRegions
+argument_list|(
+name|CaptureRegions
+argument_list|,
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|std
+operator|::
+name|any_of
+argument_list|(
+name|CaptureRegions
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|CaptureRegions
+operator|.
+name|end
+argument_list|()
+argument_list|,
+index|[
+operator|=
+index|]
+operator|(
+specifier|const
+name|OpenMPDirectiveKind
+name|K
+operator|)
+block|{
+return|return
+name|K
+operator|==
+name|RegionKind
+return|;
+block|}
+argument_list|)
+operator|&&
+literal|"RegionKind not found in OpenMP CaptureRegions."
+argument_list|)
+block|;
+name|auto
+operator|*
+name|CS
+operator|=
+name|cast
+operator|<
+name|CapturedStmt
+operator|>
+operator|(
+name|getAssociatedStmt
+argument_list|()
+operator|)
+block|;
+for|for
+control|(
+name|auto
+name|ThisCaptureRegion
+range|:
+name|CaptureRegions
+control|)
+block|{
+if|if
+condition|(
+name|ThisCaptureRegion
+operator|==
+name|RegionKind
+condition|)
+return|return
+name|CS
+return|;
+name|CS
+operator|=
+name|cast
+operator|<
+name|CapturedStmt
+operator|>
+operator|(
+name|CS
+operator|->
+name|getCapturedStmt
+argument_list|()
+operator|)
+expr_stmt|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Incorrect RegionKind specified for directive."
+argument_list|)
+expr_stmt|;
+block|}
 name|OpenMPDirectiveKind
 name|getDirectiveKind
 argument_list|()
@@ -1142,6 +1256,11 @@ comment|/// After the fixed children, three arrays of length CollapsedNum are
 comment|/// allocated: loop counters, their updates and final values.
 comment|/// PrevLowerBound and PrevUpperBound are used to communicate blocking
 comment|/// information in composite constructs which require loop blocking
+comment|/// DistInc is used to generate the increment expression for the distribute
+comment|/// loop when combined with a further nested loop
+comment|/// PrevEnsureUpperBound is used as the EnsureUpperBound expression for the
+comment|/// for loop when combined with a previous distribute loop in the same pragma
+comment|/// (e.g. 'distribute parallel for')
 comment|///
 block|enum
 block|{
@@ -1188,7 +1307,7 @@ name|DefaultEnd
 operator|=
 literal|9
 block|,
-comment|// The following 7 exprs are used by worksharing loops only.
+comment|// The following 12 exprs are used by worksharing and distribute loops only.
 name|IsLastIterVariableOffset
 operator|=
 literal|9
@@ -1229,11 +1348,19 @@ name|PrevUpperBoundVariableOffset
 operator|=
 literal|18
 block|,
+name|DistIncOffset
+operator|=
+literal|19
+block|,
+name|PrevEnsureUpperBoundOffset
+operator|=
+literal|20
+block|,
 comment|// Offset to the end (and start of the following counters/updates/finals
 comment|// arrays) for worksharing loop directives.
 name|WorksharingEnd
 operator|=
-literal|19
+literal|21
 block|,   }
 block|;
 comment|/// \brief Get the counters storage.
@@ -2223,6 +2350,94 @@ operator|=
 name|PrevUB
 block|;   }
 name|void
+name|setDistInc
+argument_list|(
+argument|Expr *DistInc
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+name|isOpenMPWorksharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
+operator|&&
+literal|"expected worksharing loop directive"
+argument_list|)
+block|;
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|DistIncOffset
+argument_list|)
+operator|=
+name|DistInc
+block|;   }
+name|void
+name|setPrevEnsureUpperBound
+argument_list|(
+argument|Expr *PrevEUB
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+name|isOpenMPWorksharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
+operator|&&
+literal|"expected worksharing loop directive"
+argument_list|)
+block|;
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|PrevEnsureUpperBoundOffset
+argument_list|)
+operator|=
+name|PrevEUB
+block|;   }
+name|void
 name|setCounters
 argument_list|(
 name|ArrayRef
@@ -2344,7 +2559,7 @@ name|Expr
 operator|*
 name|ST
 block|;
-comment|/// \brief EnsureUpperBound -- expression LB = min(LB, NumIterations).
+comment|/// \brief EnsureUpperBound -- expression UB = min(UB, NumIterations).
 name|Expr
 operator|*
 name|EUB
@@ -2370,6 +2585,22 @@ comment|/// enclosing schedule or null if that does not apply.
 name|Expr
 operator|*
 name|PrevUB
+block|;
+comment|/// \brief DistInc - increment expression for distribute loop when found
+comment|/// combined with a further loop level (e.g. in 'distribute parallel for')
+comment|/// expression IV = IV + ST
+name|Expr
+operator|*
+name|DistInc
+block|;
+comment|/// \brief PrevEUB - expression similar to EUB but to be used when loop
+comment|/// scheduling uses PrevLB and PrevUB (e.g.  in 'distribute parallel for'
+comment|/// when ensuring that the UB is either the calculated UB by the runtime or
+comment|/// the end of the assigned distribute chunk)
+comment|/// expression UB = min (UB, PrevUB)
+name|Expr
+operator|*
+name|PrevEUB
 block|;
 comment|/// \brief Counters Loop counters.
 name|SmallVector
@@ -2535,6 +2766,14 @@ operator|=
 name|nullptr
 block|;
 name|PrevUB
+operator|=
+name|nullptr
+block|;
+name|DistInc
+operator|=
+name|nullptr
+block|;
+name|PrevEUB
 operator|=
 name|nullptr
 block|;
@@ -3502,6 +3741,124 @@ name|child_begin
 argument_list|()
 argument_list|,
 name|PrevUpperBoundVariableOffset
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+name|Expr
+operator|*
+name|getDistInc
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|isOpenMPWorksharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
+operator|&&
+literal|"expected worksharing loop directive"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|DistIncOffset
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+name|Expr
+operator|*
+name|getPrevEnsureUpperBound
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|isOpenMPWorksharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
+operator|&&
+literal|"expected worksharing loop directive"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|PrevEnsureUpperBoundOffset
 argument_list|)
 operator|)
 operator|)

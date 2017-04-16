@@ -174,9 +174,10 @@ comment|/// of the \c UnwrappedLine if there was no structural parsing error.
 name|void
 name|formatFirstToken
 parameter_list|(
-name|FormatToken
+specifier|const
+name|AnnotatedLine
 modifier|&
-name|RootToken
+name|Line
 parameter_list|,
 specifier|const
 name|AnnotatedLine
@@ -184,13 +185,7 @@ modifier|*
 name|PreviousLine
 parameter_list|,
 name|unsigned
-name|IndentLevel
-parameter_list|,
-name|unsigned
 name|Indent
-parameter_list|,
-name|bool
-name|InPPDirective
 parameter_list|)
 function_decl|;
 comment|/// \brief Returns the column limit for a line, taking into account whether we

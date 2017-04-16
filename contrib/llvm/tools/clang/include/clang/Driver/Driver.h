@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Driver/ToolChain.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Types.h"
 end_include
 
@@ -191,12 +197,16 @@ comment|/// from a set of gcc-driver-like command line arguments.
 name|class
 name|Driver
 block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|opt
 operator|::
 name|OptTable
-operator|*
+operator|>
 name|Opts
 expr_stmt|;
 name|DiagnosticsEngine
@@ -532,6 +542,14 @@ name|CCCUsePCH
 range|:
 literal|1
 decl_stmt|;
+comment|/// Force clang to emit reproducer for driver invocation. This is enabled
+comment|/// indirectly by setting FORCE_CLANG_DIAGNOSTICS_CRASH environment variable
+comment|/// or when using the -gen-reproducer driver flag.
+name|unsigned
+name|GenReproducer
+range|:
+literal|1
+decl_stmt|;
 name|private
 label|:
 comment|/// Certain options suppress the 'no input files' warning.
@@ -570,9 +588,12 @@ name|llvm
 operator|::
 name|StringMap
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ToolChain
-operator|*
-operator|>
+operator|>>
 name|ToolChains
 expr_stmt|;
 name|private
@@ -677,10 +698,6 @@ argument_list|,
 argument|IntrusiveRefCntPtr<vfs::FileSystem> VFS = nullptr
 argument_list|)
 empty_stmt|;
-operator|~
-name|Driver
-argument_list|()
-expr_stmt|;
 comment|/// @name Accessors
 comment|/// @{
 comment|/// Name to use when invoking gcc/g++.
@@ -883,17 +900,12 @@ name|embedBitcodeInObject
 argument_list|()
 specifier|const
 block|{
-comment|// LTO has no object file output so ignore embed bitcode option in LTO.
 return|return
 operator|(
 name|BitcodeEmbed
 operator|==
 name|EmbedBitcode
 operator|)
-operator|&&
-operator|!
-name|isUsingLTO
-argument_list|()
 return|;
 block|}
 name|bool
@@ -907,10 +919,6 @@ name|BitcodeEmbed
 operator|==
 name|EmbedMarker
 operator|)
-operator|&&
-operator|!
-name|isUsingLTO
-argument_list|()
 return|;
 block|}
 comment|/// Compute the desired OpenMP runtime from the flags provided.

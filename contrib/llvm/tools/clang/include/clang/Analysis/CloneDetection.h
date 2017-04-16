@@ -72,13 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Hashing.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -106,7 +100,7 @@ decl_stmt|;
 name|class
 name|CompoundStmt
 decl_stmt|;
-comment|/// \brief Identifies a list of statements.
+comment|/// Identifies a list of statements.
 comment|///
 comment|/// Can either identify a single arbitrary Stmt object, a continuous sequence of
 comment|/// child statements inside a CompoundStmt or no statements at all.
@@ -121,10 +115,11 @@ name|Stmt
 modifier|*
 name|S
 decl_stmt|;
-comment|/// The related ASTContext for S.
-name|ASTContext
+comment|/// The declaration that contains the statements.
+specifier|const
+name|Decl
 modifier|*
-name|Context
+name|D
 decl_stmt|;
 comment|/// If EndIndex is non-zero, then S is a CompoundStmt and this StmtSequence
 comment|/// instance is representing the CompoundStmt children inside the array
@@ -137,7 +132,7 @@ name|EndIndex
 decl_stmt|;
 name|public
 label|:
-comment|/// \brief Constructs a StmtSequence holding multiple statements.
+comment|/// Constructs a StmtSequence holding multiple statements.
 comment|///
 comment|/// The resulting StmtSequence identifies a continuous sequence of statements
 comment|/// in the body of the given CompoundStmt. Which statements of the body should
@@ -145,7 +140,7 @@ comment|/// be identified needs to be specified by providing a start and end ind
 comment|/// that describe a non-empty sub-array in the body of the given CompoundStmt.
 comment|///
 comment|/// \param Stmt A CompoundStmt that contains all statements in its body.
-comment|/// \param Context The ASTContext for the given CompoundStmt.
+comment|/// \param D The Decl containing this Stmt.
 comment|/// \param StartIndex The inclusive start index in the children array of
 comment|///                   \p Stmt
 comment|/// \param EndIndex The exclusive end index in the children array of \p Stmt.
@@ -153,17 +148,17 @@ name|StmtSequence
 argument_list|(
 argument|const CompoundStmt *Stmt
 argument_list|,
-argument|ASTContext&Context
+argument|const Decl *D
 argument_list|,
 argument|unsigned StartIndex
 argument_list|,
 argument|unsigned EndIndex
 argument_list|)
 empty_stmt|;
-comment|/// \brief Constructs a StmtSequence holding a single statement.
+comment|/// Constructs a StmtSequence holding a single statement.
 comment|///
 comment|/// \param Stmt An arbitrary Stmt.
-comment|/// \param Context The ASTContext for the given Stmt.
+comment|/// \param D The Decl containing this Stmt.
 name|StmtSequence
 argument_list|(
 specifier|const
@@ -171,12 +166,13 @@ name|Stmt
 operator|*
 name|Stmt
 argument_list|,
-name|ASTContext
-operator|&
-name|Context
+specifier|const
+name|Decl
+operator|*
+name|D
 argument_list|)
 expr_stmt|;
-comment|/// \brief Constructs an empty StmtSequence.
+comment|/// Constructs an empty StmtSequence.
 name|StmtSequence
 argument_list|()
 expr_stmt|;
@@ -301,15 +297,22 @@ operator|&
 name|getASTContext
 argument_list|()
 specifier|const
+expr_stmt|;
+comment|/// Returns the declaration that contains the stored Stmts.
+specifier|const
+name|Decl
+operator|*
+name|getContainingDecl
+argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
-name|Context
+name|D
 argument_list|)
 block|;
 return|return
-operator|*
-name|Context
+name|D
 return|;
 block|}
 comment|/// Returns true if this objects holds a list of statements.
@@ -452,7 +455,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// \brief Searches for clones in source code.
+comment|/// Searches for similar subtrees in the AST.
 end_comment
 
 begin_comment
@@ -460,23 +463,31 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// First, this class needs a translation unit which is passed via
+comment|/// First, this class needs several declarations with statement bodies which
 end_comment
 
 begin_comment
-comment|/// \p analyzeTranslationUnit . It will then generate and store search data
+comment|/// can be passed via analyzeCodeBody. Afterwards all statements can be
 end_comment
 
 begin_comment
-comment|/// for all statements inside the given translation unit.
+comment|/// searched for clones by calling findClones with a given list of constraints
 end_comment
 
 begin_comment
-comment|/// Afterwards the generated data can be used to find code clones by calling
+comment|/// that should specify the wanted properties of the clones.
 end_comment
 
 begin_comment
-comment|/// \p findClones .
+comment|///
+end_comment
+
+begin_comment
+comment|/// The result of findClones can be further constrained with the constrainClones
+end_comment
+
+begin_comment
+comment|/// method.
 end_comment
 
 begin_comment
@@ -501,135 +512,20 @@ name|CloneDetector
 block|{
 name|public
 label|:
+comment|/// A collection of StmtSequences that share an arbitrary property.
 typedef|typedef
-name|unsigned
-name|DataPiece
-typedef|;
-comment|/// Holds the data about a StmtSequence that is needed during the search for
-comment|/// code clones.
-struct|struct
-name|CloneSignature
-block|{
-comment|/// \brief The hash code of the StmtSequence.
-comment|///
-comment|/// The initial clone groups that are formed during the search for clones
-comment|/// consist only of Sequences that share the same hash code. This makes this
-comment|/// value the central part of this heuristic that is needed to find clones
-comment|/// in a performant way. For this to work, the type of this variable
-comment|/// always needs to be small and fast to compare.
-comment|///
-comment|/// Also, StmtSequences that are clones of each others have to share
-comment|/// the same hash code. StmtSequences that are not clones of each other
-comment|/// shouldn't share the same hash code, but if they do, it will only
-comment|/// degrade the performance of the hash search but doesn't influence
-comment|/// the correctness of the result.
-name|size_t
-name|Hash
-decl_stmt|;
-comment|/// \brief The complexity of the StmtSequence.
-comment|///
-comment|/// This value gives an approximation on how many direct or indirect child
-comment|/// statements are contained in the related StmtSequence. In general, the
-comment|/// greater this value, the greater the amount of statements. However, this
-comment|/// is only an approximation and the actual amount of statements can be
-comment|/// higher or lower than this value. Statements that are generated by the
-comment|/// compiler (e.g. macro expansions) for example barely influence the
-comment|/// complexity value.
-comment|///
-comment|/// The main purpose of this value is to filter clones that are too small
-comment|/// and therefore probably not interesting enough for the user.
-name|unsigned
-name|Complexity
-decl_stmt|;
-comment|/// \brief Creates an empty CloneSignature without any data.
-name|CloneSignature
-argument_list|()
-operator|:
-name|Complexity
-argument_list|(
-literal|1
-argument_list|)
-block|{}
-name|CloneSignature
-argument_list|(
-argument|llvm::hash_code Hash
-argument_list|,
-argument|unsigned Complexity
-argument_list|)
-operator|:
-name|Hash
-argument_list|(
-name|Hash
-argument_list|)
-operator|,
-name|Complexity
-argument_list|(
-argument|Complexity
-argument_list|)
-block|{}
-block|}
-struct|;
-comment|/// Holds group of StmtSequences that are clones of each other and the
-comment|/// complexity value (see CloneSignature::Complexity) that all stored
-comment|/// StmtSequences have in common.
-struct|struct
-name|CloneGroup
-block|{
-name|std
+name|llvm
 operator|::
-name|vector
+name|SmallVector
 operator|<
 name|StmtSequence
+operator|,
+literal|8
 operator|>
-name|Sequences
-expr_stmt|;
-name|CloneSignature
-name|Signature
-decl_stmt|;
 name|CloneGroup
-argument_list|()
-block|{}
-name|CloneGroup
-argument_list|(
-argument|const StmtSequence&Seq
-argument_list|,
-argument|CloneSignature Signature
-argument_list|)
-block|:
-name|Signature
-argument_list|(
-argument|Signature
-argument_list|)
-block|{
-name|Sequences
-operator|.
-name|push_back
-argument_list|(
-name|Seq
-argument_list|)
 expr_stmt|;
-block|}
-comment|/// \brief Returns false if and only if this group should be skipped when
-comment|///        searching for clones.
-name|bool
-name|isValid
-argument_list|()
-specifier|const
-block|{
-comment|// A clone group with only one member makes no sense, so we skip them.
-return|return
-name|Sequences
-operator|.
-name|size
-argument_list|()
-operator|>
-literal|1
-return|;
-block|}
-block|}
-struct|;
-comment|/// \brief Generates and stores search data for all statements in the body of
-comment|///        the given Decl.
+comment|/// Generates and stores search data for all statements in the body of
+comment|/// the given Decl.
 name|void
 name|analyzeCodeBody
 parameter_list|(
@@ -639,58 +535,695 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-comment|/// \brief Stores the CloneSignature to allow future querying.
-name|void
-name|add
-parameter_list|(
-specifier|const
-name|StmtSequence
-modifier|&
-name|S
-parameter_list|,
-specifier|const
-name|CloneSignature
-modifier|&
-name|Signature
-parameter_list|)
-function_decl|;
-comment|/// \brief Searches the provided statements for clones.
+comment|/// Constrains the given list of clone groups with the given constraint.
 comment|///
-comment|/// \param Result Output parameter that is filled with a list of found
-comment|///               clone groups. Each group contains multiple StmtSequences
-comment|///               that were identified to be clones of each other.
-comment|/// \param MinGroupComplexity Only return clones which have at least this
-comment|///                           complexity value.
-comment|/// \param CheckPatterns Returns only clone groups in which the referenced
-comment|///                      variables follow the same pattern.
+comment|/// The constraint is expected to have a method with the signature
+comment|///     `void constrain(std::vector<CloneDetector::CloneGroup>&Sequences)`
+comment|/// as this is the interface that the CloneDetector uses for applying the
+comment|/// constraint. The constraint is supposed to directly modify the passed list
+comment|/// so that all clones in the list fulfill the specific property this
+comment|/// constraint ensures.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|static
+name|void
+name|constrainClones
+argument_list|(
+argument|std::vector<CloneGroup>&CloneGroups
+argument_list|,
+argument|T C
+argument_list|)
+block|{
+name|C
+operator|.
+name|constrain
+argument_list|(
+name|CloneGroups
+argument_list|)
+block|;   }
+comment|/// Constrains the given list of clone groups with the given list of
+comment|/// constraints.
+comment|///
+comment|/// The constraints are applied in sequence in the order in which they are
+comment|/// passed to this function.
+name|template
+operator|<
+name|typename
+name|T1
+operator|,
+name|typename
+operator|...
+name|Ts
+operator|>
+specifier|static
+name|void
+name|constrainClones
+argument_list|(
+argument|std::vector<CloneGroup>&CloneGroups
+argument_list|,
+argument|T1 C
+argument_list|,
+argument|Ts... ConstraintList
+argument_list|)
+block|{
+name|constrainClones
+argument_list|(
+name|CloneGroups
+argument_list|,
+name|C
+argument_list|)
+block|;
+name|constrainClones
+argument_list|(
+name|CloneGroups
+argument_list|,
+name|ConstraintList
+operator|...
+argument_list|)
+block|;   }
+comment|/// Searches for clones in all previously passed statements.
+comment|/// \param Result Output parameter to which all created clone groups are
+comment|///               added.
+comment|/// \param ConstraintList The constraints that should be applied to the
+comment|//         result.
+name|template
+operator|<
+name|typename
+operator|...
+name|Ts
+operator|>
 name|void
 name|findClones
+argument_list|(
+argument|std::vector<CloneGroup>&Result
+argument_list|,
+argument|Ts... ConstraintList
+argument_list|)
+block|{
+comment|// The initial assumption is that there is only one clone group and every
+comment|// statement is a clone of the others. This clone group will then be
+comment|// split up with the help of the constraints.
+name|CloneGroup
+name|AllClones
+block|;
+name|AllClones
+operator|.
+name|reserve
+argument_list|(
+name|Sequences
+operator|.
+name|size
+argument_list|()
+argument_list|)
+block|;
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|C
+range|:
+name|Sequences
+control|)
+block|{
+name|AllClones
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+name|Result
+operator|.
+name|push_back
+argument_list|(
+name|AllClones
+argument_list|)
+expr_stmt|;
+name|constrainClones
+argument_list|(
+name|Result
+argument_list|,
+name|ConstraintList
+operator|...
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_decl_stmt
+name|CloneGroup
+name|Sequences
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};
+comment|/// This class is a utility class that contains utility functions for building
+end_comment
+
+begin_comment
+comment|/// custom constraints.
+end_comment
+
+begin_decl_stmt
+name|class
+name|CloneConstraint
+block|{
+name|public
+label|:
+comment|/// Removes all groups by using a filter function.
+comment|/// \param CloneGroups The list of CloneGroups that is supposed to be
+comment|///                    filtered.
+comment|/// \param Filter The filter function that should return true for all groups
+comment|///               that should be removed from the list.
+specifier|static
+name|void
+name|filterGroups
 argument_list|(
 name|std
 operator|::
 name|vector
 operator|<
+name|CloneDetector
+operator|::
+name|CloneGroup
+operator|>
+operator|&
+name|CloneGroups
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+specifier|const
+name|CloneDetector
+operator|::
+name|CloneGroup
+operator|&
+argument_list|)
+operator|>
+name|Filter
+argument_list|)
+block|{
+name|CloneGroups
+operator|.
+name|erase
+argument_list|(
+name|std
+operator|::
+name|remove_if
+argument_list|(
+name|CloneGroups
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|CloneGroups
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|Filter
+argument_list|)
+argument_list|,
+name|CloneGroups
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Splits the given CloneGroups until the given Compare function returns true
+comment|/// for all clones in a single group.
+comment|/// \param CloneGroups A list of CloneGroups that should be modified.
+comment|/// \param Compare The comparison function that all clones are supposed to
+comment|///                pass. Should return true if and only if two clones belong
+comment|///                to the same CloneGroup.
+specifier|static
+name|void
+name|splitCloneGroups
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|CloneDetector
+operator|::
+name|CloneGroup
+operator|>
+operator|&
+name|CloneGroups
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+specifier|const
+name|StmtSequence
+operator|&
+argument_list|,
+specifier|const
+name|StmtSequence
+operator|&
+argument_list|)
+operator|>
+name|Compare
+argument_list|)
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// Searches all children of the given clones for type II clones (i.e. they are
+end_comment
+
+begin_comment
+comment|/// identical in every aspect beside the used variable names).
+end_comment
+
+begin_decl_stmt
+name|class
+name|RecursiveCloneTypeIIConstraint
+block|{
+comment|/// Generates and saves a hash code for the given Stmt.
+comment|/// \param S The given Stmt.
+comment|/// \param D The Decl containing S.
+comment|/// \param StmtsByHash Output parameter that will contain the hash codes for
+comment|///                    each StmtSequence in the given Stmt.
+comment|/// \return The hash code of the given Stmt.
+comment|///
+comment|/// If the given Stmt is a CompoundStmt, this method will also generate
+comment|/// hashes for all possible StmtSequences in the children of this Stmt.
+name|size_t
+name|saveHash
+argument_list|(
+specifier|const
+name|Stmt
+operator|*
+name|S
+argument_list|,
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|size_t
+argument_list|,
+name|StmtSequence
+operator|>>
+operator|&
+name|StmtsByHash
+argument_list|)
+decl_stmt|;
+name|public
+label|:
+name|void
+name|constrain
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|CloneDetector
+operator|::
+name|CloneGroup
+operator|>
+operator|&
+name|Sequences
+argument_list|)
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// Ensures that every clone has at least the given complexity.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Complexity is here defined as the total amount of children of a statement.
+end_comment
+
+begin_comment
+comment|/// This constraint assumes the first statement in the group is representative
+end_comment
+
+begin_comment
+comment|/// for all other statements in the group in terms of complexity.
+end_comment
+
+begin_decl_stmt
+name|class
+name|MinComplexityConstraint
+block|{
+name|unsigned
+name|MinComplexity
+decl_stmt|;
+name|public
+label|:
+name|MinComplexityConstraint
+argument_list|(
+argument|unsigned MinComplexity
+argument_list|)
+block|:
+name|MinComplexity
+argument_list|(
+argument|MinComplexity
+argument_list|)
+block|{}
+name|size_t
+name|calculateStmtComplexity
+argument_list|(
+specifier|const
+name|StmtSequence
+operator|&
+name|Seq
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|ParentMacroStack
+operator|=
+literal|""
+argument_list|)
+decl_stmt|;
+name|void
+name|constrain
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|CloneDetector
+operator|::
+name|CloneGroup
+operator|>
+operator|&
+name|CloneGroups
+argument_list|)
+block|{
+name|CloneConstraint
+operator|::
+name|filterGroups
+argument_list|(
+name|CloneGroups
+argument_list|,
+index|[
+name|this
+index|]
+operator|(
+specifier|const
+name|CloneDetector
+operator|::
+name|CloneGroup
+operator|&
+name|A
+operator|)
+block|{
+if|if
+condition|(
+operator|!
+name|A
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|calculateStmtComplexity
+argument_list|(
+name|A
+operator|.
+name|front
+argument_list|()
+argument_list|)
+operator|<
+name|MinComplexity
+return|;
+else|else
+return|return
+name|false
+return|;
+block|}
+block|)
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+unit|};
+comment|/// Ensures that all clone groups contain at least the given amount of clones.
+end_comment
+
+begin_decl_stmt
+name|class
+name|MinGroupSizeConstraint
+block|{
+name|unsigned
+name|MinGroupSize
+decl_stmt|;
+name|public
+label|:
+name|MinGroupSizeConstraint
+argument_list|(
+argument|unsigned MinGroupSize =
+literal|2
+argument_list|)
+block|:
+name|MinGroupSize
+argument_list|(
+argument|MinGroupSize
+argument_list|)
+block|{}
+name|void
+name|constrain
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|CloneDetector
+operator|::
+name|CloneGroup
+operator|>
+operator|&
+name|CloneGroups
+argument_list|)
+block|{
+name|CloneConstraint
+operator|::
+name|filterGroups
+argument_list|(
+name|CloneGroups
+argument_list|,
+index|[
+name|this
+index|]
+operator|(
+specifier|const
+name|CloneDetector
+operator|::
+name|CloneGroup
+operator|&
+name|A
+operator|)
+block|{
+return|return
+name|A
+operator|.
+name|size
+argument_list|()
+operator|<
+name|MinGroupSize
+return|;
+block|}
+block|)
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+unit|};
+comment|/// Ensures that no clone group fully contains another clone group.
+end_comment
+
+begin_struct
+struct|struct
+name|OnlyLargestCloneConstraint
+block|{
+name|void
+name|constrain
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|CloneDetector
+operator|::
 name|CloneGroup
 operator|>
 operator|&
 name|Result
-argument_list|,
-name|unsigned
-name|MinGroupComplexity
-argument_list|,
-name|bool
-name|CheckPatterns
-operator|=
-name|true
 argument_list|)
 decl_stmt|;
-comment|/// \brief Describes two clones that reference their variables in a different
-comment|///        pattern which could indicate a programming error.
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// Analyzes the pattern of the referenced variables in a statement.
+end_comment
+
+begin_decl_stmt
+name|class
+name|VariablePattern
+block|{
+comment|/// Describes an occurence of a variable reference in a statement.
+struct|struct
+name|VariableOccurence
+block|{
+comment|/// The index of the associated VarDecl in the Variables vector.
+name|size_t
+name|KindID
+decl_stmt|;
+comment|/// The statement in the code where the variable was referenced.
+specifier|const
+name|Stmt
+modifier|*
+name|Mention
+decl_stmt|;
+name|VariableOccurence
+argument_list|(
+argument|size_t KindID
+argument_list|,
+argument|const Stmt *Mention
+argument_list|)
+block|:
+name|KindID
+argument_list|(
+name|KindID
+argument_list|)
+operator|,
+name|Mention
+argument_list|(
+argument|Mention
+argument_list|)
+block|{}
+block|}
+struct|;
+comment|/// All occurences of referenced variables in the order of appearance.
+name|std
+operator|::
+name|vector
+operator|<
+name|VariableOccurence
+operator|>
+name|Occurences
+expr_stmt|;
+comment|/// List of referenced variables in the order of appearance.
+comment|/// Every item in this list is unique.
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|VarDecl
+operator|*
+operator|>
+name|Variables
+expr_stmt|;
+comment|/// Adds a new variable referenced to this pattern.
+comment|/// \param VarDecl The declaration of the variable that is referenced.
+comment|/// \param Mention The SourceRange where this variable is referenced.
+name|void
+name|addVariableOccurence
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|VarDecl
+parameter_list|,
+specifier|const
+name|Stmt
+modifier|*
+name|Mention
+parameter_list|)
+function_decl|;
+comment|/// Adds each referenced variable from the given statement.
+name|void
+name|addVariables
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
+function_decl|;
+name|public
+label|:
+comment|/// Creates an VariablePattern object with information about the given
+comment|/// StmtSequence.
+name|VariablePattern
+argument_list|(
+argument|const StmtSequence&Sequence
+argument_list|)
+block|{
+for|for
+control|(
+specifier|const
+name|Stmt
+modifier|*
+name|S
+range|:
+name|Sequence
+control|)
+name|addVariables
+argument_list|(
+name|S
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Describes two clones that reference their variables in a different pattern
+comment|/// which could indicate a programming error.
 struct|struct
 name|SuspiciousClonePair
 block|{
-comment|/// \brief Utility class holding the relevant information about a single
-comment|///        clone in this pair.
+comment|/// Utility class holding the relevant information about a single
+comment|/// clone in this pair.
 struct|struct
 name|SuspiciousCloneInfo
 block|{
@@ -762,50 +1295,79 @@ name|SecondCloneInfo
 decl_stmt|;
 block|}
 struct|;
-comment|/// \brief Searches the provided statements for pairs of clones that don't
-comment|///        follow the same pattern when referencing variables.
-comment|/// \param Result Output parameter that will contain the clone pairs.
-comment|/// \param MinGroupComplexity Only clone pairs in which the clones have at
-comment|///                           least this complexity value.
-name|void
-name|findSuspiciousClones
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|SuspiciousClonePair
-operator|>
-operator|&
-name|Result
-argument_list|,
+comment|/// Counts the differences between this pattern and the given one.
+comment|/// \param Other The given VariablePattern to compare with.
+comment|/// \param FirstMismatch Output parameter that will be filled with information
+comment|///        about the first difference between the two patterns. This parameter
+comment|///        can be a nullptr, in which case it will be ignored.
+comment|/// \return Returns the number of differences between the pattern this object
+comment|///         is following and the given VariablePattern.
+comment|///
+comment|/// For example, the following statements all have the same pattern and this
+comment|/// function would return zero:
+comment|///
+comment|///   if (a< b) return a; return b;
+comment|///   if (x< y) return x; return y;
+comment|///   if (u2< u1) return u2; return u1;
+comment|///
+comment|/// But the following statement has a different pattern (note the changed
+comment|/// variables in the return statements) and would have two differences when
+comment|/// compared with one of the statements above.
+comment|///
+comment|///   if (a< b) return b; return a;
+comment|///
+comment|/// This function should only be called if the related statements of the given
+comment|/// pattern and the statements of this objects are clones of each other.
 name|unsigned
-name|MinGroupComplexity
+name|countPatternDifferences
+argument_list|(
+specifier|const
+name|VariablePattern
+operator|&
+name|Other
+argument_list|,
+name|VariablePattern
+operator|::
+name|SuspiciousClonePair
+operator|*
+name|FirstMismatch
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
-name|private
-label|:
-comment|/// Stores all encountered StmtSequences alongside their CloneSignature.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|CloneSignature
-operator|,
-name|StmtSequence
-operator|>>
-name|Sequences
-expr_stmt|;
 block|}
 end_decl_stmt
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// Ensures that all clones reference variables in the same pattern.
+end_comment
+
+begin_struct
+struct|struct
+name|MatchingVariablePatternConstraint
+block|{
+name|void
+name|constrain
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|CloneDetector
+operator|::
+name|CloneGroup
+operator|>
+operator|&
+name|CloneGroups
+argument_list|)
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 unit|}

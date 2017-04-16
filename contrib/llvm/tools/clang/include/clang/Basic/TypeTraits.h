@@ -95,6 +95,8 @@ name|UTT_HasVirtualDestructor
 block|,
 name|UTT_IsAbstract
 block|,
+name|UTT_IsAggregate
+block|,
 name|UTT_IsArithmetic
 block|,
 name|UTT_IsArray

@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/XRayLists.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -2071,6 +2077,16 @@ operator|*
 name|ObjCData
 return|;
 block|}
+comment|// Version checking function, used to implement ObjC's @available:
+comment|// i32 @__isOSVersionAtLeast(i32, i32, i32)
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|IsOSVersionAtLeastFn
+operator|=
+name|nullptr
+expr_stmt|;
 name|InstrProfStats
 modifier|&
 name|getPGOStats
@@ -3953,7 +3969,7 @@ argument|llvm::FunctionType *Ty
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|llvm::AttributeSet ExtraAttrs = llvm::AttributeSet()
+argument|llvm::AttributeList ExtraAttrs = llvm::AttributeList()
 argument_list|,
 argument|bool Local = false
 argument_list|)
@@ -3975,7 +3991,7 @@ argument|llvm::FunctionType *Ty
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|llvm::AttributeSet ExtraAttrs =                                           llvm::AttributeSet()
+argument|llvm::AttributeList ExtraAttrs = llvm::AttributeList()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4556,6 +4572,87 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Adds attributes to F according to our CodeGenOptions and LangOptions, as
+end_comment
+
+begin_comment
+comment|/// though we had emitted it ourselves.  We remove any attributes on F that
+end_comment
+
+begin_comment
+comment|/// conflict with the attributes we add here.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is useful for adding attrs to bitcode modules that you want to link
+end_comment
+
+begin_comment
+comment|/// with but don't control, such as CUDA's libdevice.  When linking with such
+end_comment
+
+begin_comment
+comment|/// a bitcode library, you might want to set e.g. its functions'
+end_comment
+
+begin_comment
+comment|/// "unsafe-fp-math" attribute to match the attr of the functions you're
+end_comment
+
+begin_comment
+comment|/// codegen'ing.  Otherwise, LLVM will interpret the bitcode module's lack of
+end_comment
+
+begin_comment
+comment|/// unsafe-fp-math attrs as tantamount to unsafe-fp-math=false, and then LLVM
+end_comment
+
+begin_comment
+comment|/// will propagate unsafe-fp-math=false up to every transitive caller of a
+end_comment
+
+begin_comment
+comment|/// function in the bitcode library!
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// With the exception of fast-math attrs, this will only make the attributes
+end_comment
+
+begin_comment
+comment|/// on the function more conservative.  But it's unsafe to call this on a
+end_comment
+
+begin_comment
+comment|/// function which relies on particular fast-math attributes for correctness.
+end_comment
+
+begin_comment
+comment|/// It's up to you to ensure that this is safe.
+end_comment
+
+begin_decl_stmt
+name|void
+name|AddDefaultFnAttrs
+argument_list|(
+name|llvm
+operator|::
+name|Function
+operator|&
+name|F
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Fills in the supplied string map with the set of target features for the
 end_comment
 
@@ -5003,6 +5100,41 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Imbue XRay attributes to a function, applying the always/never attribute
+end_comment
+
+begin_comment
+comment|/// lists in the process. Returns true if we did imbue attributes this way,
+end_comment
+
+begin_comment
+comment|/// false otherwise.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|imbueXRayAttrs
+argument_list|(
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
+name|StringRef
+name|Category
+operator|=
+name|StringRef
+argument_list|()
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|SanitizerMetadata
 modifier|*
@@ -5413,7 +5545,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \breif Get the declaration of std::terminate for the platform.
+comment|/// \brief Get the declaration of std::terminate for the platform.
 end_comment
 
 begin_expr_stmt
@@ -5505,7 +5637,7 @@ argument|bool DontDefer = false
 argument_list|,
 argument|bool IsThunk = false
 argument_list|,
-argument|llvm::AttributeSet ExtraAttrs = llvm::AttributeSet()
+argument|llvm::AttributeList ExtraAttrs = llvm::AttributeList()
 argument_list|,
 argument|ForDefinition_t IsForDefinition = NotForDefinition
 argument_list|)
@@ -5690,18 +5822,6 @@ name|EmitLinkageSpec
 parameter_list|(
 specifier|const
 name|LinkageSpecDecl
-modifier|*
-name|D
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|CompleteDIClassType
-parameter_list|(
-specifier|const
-name|CXXMethodDecl
 modifier|*
 name|D
 parameter_list|)
@@ -5926,6 +6046,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Emit a dummy function that reference a CoreFoundation symbol when
+end_comment
+
+begin_comment
+comment|/// @available is used on Darwin.
+end_comment
+
+begin_function_decl
+name|void
+name|emitAtAvailableLinkGuard
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Emit the llvm.used and llvm.compiler.used metadata.
 end_comment
 
@@ -6084,6 +6219,36 @@ name|SimplifyPersonality
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Helper function for ConstructAttributeList and AddDefaultFnAttrs.
+end_comment
+
+begin_comment
+comment|/// Constructs an AttrList for a function with the given properties.
+end_comment
+
+begin_decl_stmt
+name|void
+name|ConstructDefaultFnAttrList
+argument_list|(
+name|StringRef
+name|Name
+argument_list|,
+name|bool
+name|HasOptnone
+argument_list|,
+name|bool
+name|AttrOnCallSite
+argument_list|,
+name|llvm
+operator|::
+name|AttrBuilder
+operator|&
+name|FuncAttrs
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|}; }

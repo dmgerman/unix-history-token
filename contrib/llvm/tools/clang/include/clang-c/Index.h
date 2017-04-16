@@ -543,7 +543,7 @@ modifier|*
 name|offset
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the file, line, column, and offset represented by  * the given source location, as specified in a # line directive.  *  * Example: given the following source code in a file somefile.c  *  * \code  * #123 "dummy.c" 1  *  * static int func(void)  * {  *     return 0;  * }  * \endcode  *  * the location information returned by this function would be  *  * File: dummy.c Line: 124 Column: 12  *  * whereas clang_getExpansionLocation would have returned  *  * File: somefile.c Line: 3 Column: 12  *  * \param location the location within a source file that will be decomposed  * into its parts.  *  * \param filename [out] if non-NULL, will be set to the filename of the  * source location. Note that filenames returned will be for "virtual" files,  * which don't necessarily exist on the machine running clang - e.g. when  * parsing preprocessed output obtained from a different environment. If  * a non-NULL value is passed in, remember to dispose of the returned value  * using \c clang_disposeString() once you've finished with it. For an invalid  * source location, an empty string is returned.  *  * \param line [out] if non-NULL, will be set to the line number of the  * source location. For an invalid source location, zero is returned.  *  * \param column [out] if non-NULL, will be set to the column number of the  * source location. For an invalid source location, zero is returned.  */
+comment|/**  * \brief Retrieve the file, line and column represented by the given source  * location, as specified in a # line directive.  *  * Example: given the following source code in a file somefile.c  *  * \code  * #123 "dummy.c" 1  *  * static int func(void)  * {  *     return 0;  * }  * \endcode  *  * the location information returned by this function would be  *  * File: dummy.c Line: 124 Column: 12  *  * whereas clang_getExpansionLocation would have returned  *  * File: somefile.c Line: 3 Column: 12  *  * \param location the location within a source file that will be decomposed  * into its parts.  *  * \param filename [out] if non-NULL, will be set to the filename of the  * source location. Note that filenames returned will be for "virtual" files,  * which don't necessarily exist on the machine running clang - e.g. when  * parsing preprocessed output obtained from a different environment. If  * a non-NULL value is passed in, remember to dispose of the returned value  * using \c clang_disposeString() once you've finished with it. For an invalid  * source location, an empty string is returned.  *  * \param line [out] if non-NULL, will be set to the line number of the  * source location. For an invalid source location, zero is returned.  *  * \param column [out] if non-NULL, will be set to the column number of the  * source location. For an invalid source location, zero is returned.  */
 name|CINDEX_LINKAGE
 name|void
 name|clang_getPresumedLocation
@@ -3271,13 +3271,17 @@ name|CXType_Float128
 init|=
 literal|30
 block|,
+name|CXType_Half
+init|=
+literal|31
+block|,
 name|CXType_FirstBuiltin
 init|=
 name|CXType_Void
 block|,
 name|CXType_LastBuiltin
 init|=
-name|CXType_ObjCSel
+name|CXType_Half
 block|,
 name|CXType_Complex
 init|=
@@ -3860,6 +3864,15 @@ comment|/**  * \brief Retrieve the type named by the qualified-id.  *  * If a no
 name|CINDEX_LINKAGE
 name|CXType
 name|clang_Type_getNamedType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine if a typedef is 'transparent' tag.  *  * A typedef is considered 'transparent' if it shares a name and spelling  * location with its underlying tag type, as is the case with the NS_ENUM macro.  *  * \returns non-zero if transparent and zero otherwise.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Type_isTransparentTagTypedef
 parameter_list|(
 name|CXType
 name|T
@@ -4498,7 +4511,7 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Given a cursor that represents an Objective-C method or property  * declaration, return non-zero if the declaration was affected by "@optional".  * Returns zero if the cursor is not such a declaration or it is "@required".  */
+comment|/**  * \brief Given a cursor that represents an Objective-C method or property  * declaration, return non-zero if the declaration was affected by "\@optional".  * Returns zero if the cursor is not such a declaration or it is "\@required".  */
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_Cursor_isObjCOptional
@@ -5103,7 +5116,7 @@ block|,
 comment|/**    * Horizontal space (' ').    */
 name|CXCompletionChunk_HorizontalSpace
 block|,
-comment|/**    * Vertical space ('\n'), after which it is generally a good idea to    * perform indentation.    */
+comment|/**    * Vertical space ('\\n'), after which it is generally a good idea to    * perform indentation.    */
 name|CXCompletionChunk_VerticalSpace
 block|}
 enum|;

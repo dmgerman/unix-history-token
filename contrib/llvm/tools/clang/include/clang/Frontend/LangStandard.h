@@ -160,6 +160,14 @@ literal|1
 operator|<<
 literal|11
 operator|)
+block|,
+name|OpenCL
+init|=
+operator|(
+literal|1
+operator|<<
+literal|12
+operator|)
 block|}
 enum|;
 block|}
@@ -396,6 +404,20 @@ operator|&
 name|frontend
 operator|::
 name|ImplicitInt
+return|;
+block|}
+comment|/// isOpenCL - Language is a OpenCL variant.
+name|bool
+name|isOpenCL
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|frontend
+operator|::
+name|OpenCL
 return|;
 block|}
 specifier|static

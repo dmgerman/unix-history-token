@@ -1791,19 +1791,31 @@ begin_comment
 comment|// Iterator access to parameter types.
 end_comment
 
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|const_mem_fun_t
-operator|<
+begin_struct
+struct|struct
+name|GetTypeFn
+block|{
 name|QualType
-operator|,
+name|operator
+argument_list|()
+operator|(
+specifier|const
 name|ParmVarDecl
-operator|>
-name|deref_fun
-expr_stmt|;
-end_typedef
+operator|*
+name|PD
+operator|)
+specifier|const
+block|{
+return|return
+name|PD
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
+block|}
+struct|;
+end_struct
 
 begin_typedef
 typedef|typedef
@@ -1813,7 +1825,7 @@ name|mapped_iterator
 operator|<
 name|param_const_iterator
 operator|,
-name|deref_fun
+name|GetTypeFn
 operator|>
 name|param_type_iterator
 expr_stmt|;
@@ -1833,13 +1845,8 @@ argument_list|(
 name|param_begin
 argument_list|()
 argument_list|,
-name|deref_fun
-argument_list|(
-operator|&
-name|ParmVarDecl
-operator|::
-name|getType
-argument_list|)
+name|GetTypeFn
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -1859,13 +1866,8 @@ argument_list|(
 name|param_end
 argument_list|()
 argument_list|,
-name|deref_fun
-argument_list|(
-operator|&
-name|ParmVarDecl
-operator|::
-name|getType
-argument_list|)
+name|GetTypeFn
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -3460,6 +3462,14 @@ name|Selector
 name|SetterName
 block|;
 comment|// setter name of NULL if no setter
+name|SourceLocation
+name|GetterNameLoc
+block|;
+comment|// location of the getter attribute's value
+name|SourceLocation
+name|SetterNameLoc
+block|;
+comment|// location of the setter attribute's value
 name|ObjCMethodDecl
 operator|*
 name|GetterMethodDecl
@@ -3928,17 +3938,39 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|SourceLocation
+name|getGetterNameLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetterNameLoc
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 name|void
 name|setGetterName
 parameter_list|(
 name|Selector
 name|Sel
+parameter_list|,
+name|SourceLocation
+name|Loc
+init|=
+name|SourceLocation
+argument_list|()
 parameter_list|)
 block|{
 name|GetterName
 operator|=
 name|Sel
+expr_stmt|;
+name|GetterNameLoc
+operator|=
+name|Loc
 expr_stmt|;
 block|}
 end_function
@@ -3955,17 +3987,39 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|SourceLocation
+name|getSetterNameLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SetterNameLoc
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 name|void
 name|setSetterName
 parameter_list|(
 name|Selector
 name|Sel
+parameter_list|,
+name|SourceLocation
+name|Loc
+init|=
+name|SourceLocation
+argument_list|()
 parameter_list|)
 block|{
 name|SetterName
 operator|=
 name|Sel
+expr_stmt|;
+name|SetterNameLoc
+operator|=
+name|Loc
 expr_stmt|;
 block|}
 end_function
@@ -10561,6 +10615,8 @@ argument|DeclContext *DC
 argument_list|,
 argument|ObjCInterfaceDecl *classInterface
 argument_list|,
+argument|IdentifierInfo *Id
+argument_list|,
 argument|SourceLocation nameLoc
 argument_list|,
 argument|SourceLocation atStartLoc
@@ -10572,14 +10628,7 @@ name|DK
 argument_list|,
 name|DC
 argument_list|,
-name|classInterface
-condition|?
-name|classInterface
-operator|->
-name|getIdentifier
-argument_list|()
-else|:
-name|nullptr
+name|Id
 argument_list|,
 name|nameLoc
 argument_list|,
@@ -10869,11 +10918,6 @@ name|anchor
 argument_list|()
 name|override
 block|;
-comment|// Category name
-name|IdentifierInfo
-operator|*
-name|Id
-block|;
 comment|// Category name location
 name|SourceLocation
 name|CategoryNameLoc
@@ -10901,14 +10945,11 @@ name|DC
 argument_list|,
 name|classInterface
 argument_list|,
+name|Id
+argument_list|,
 name|nameLoc
 argument_list|,
 name|atStartLoc
-argument_list|)
-block|,
-name|Id
-argument_list|(
-name|Id
 argument_list|)
 block|,
 name|CategoryNameLoc
@@ -10948,34 +10989,6 @@ argument_list|,
 argument|unsigned ID
 argument_list|)
 block|;
-comment|/// getIdentifier - Get the identifier that names the category
-comment|/// interface associated with this implementation.
-comment|/// FIXME: This is a bad API, we are hiding NamedDecl::getIdentifier()
-comment|/// with a different meaning. For example:
-comment|/// ((NamedDecl *)SomeCategoryImplDecl)->getIdentifier()
-comment|/// returns the class interface name, whereas
-comment|/// ((ObjCCategoryImplDecl *)SomeCategoryImplDecl)->getIdentifier()
-comment|/// returns the category name.
-name|IdentifierInfo
-operator|*
-name|getIdentifier
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Id
-return|;
-block|}
-name|void
-name|setIdentifier
-argument_list|(
-argument|IdentifierInfo *II
-argument_list|)
-block|{
-name|Id
-operator|=
-name|II
-block|; }
 name|ObjCCategoryDecl
 operator|*
 name|getCategoryDecl
@@ -10989,43 +11002,6 @@ specifier|const
 block|{
 return|return
 name|CategoryNameLoc
-return|;
-block|}
-comment|/// getName - Get the name of identifier for the class interface associated
-comment|/// with this implementation as a StringRef.
-comment|//
-comment|// FIXME: This is a bad API, we are hiding NamedDecl::getName with a different
-comment|// meaning.
-name|StringRef
-name|getName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Id
-operator|?
-name|Id
-operator|->
-name|getName
-argument_list|()
-operator|:
-name|StringRef
-argument_list|()
-return|;
-block|}
-comment|/// @brief Get the name of the class associated with this interface.
-comment|//
-comment|// FIXME: Deprecated, move clients to getName().
-name|std
-operator|::
-name|string
-name|getNameAsString
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getName
-argument_list|()
 return|;
 block|}
 specifier|static
@@ -11229,6 +11205,15 @@ argument_list|,
 name|DC
 argument_list|,
 name|classInterface
+argument_list|,
+name|classInterface
+condition|?
+name|classInterface
+operator|->
+name|getIdentifier
+argument_list|()
+else|:
+name|nullptr
 argument_list|,
 name|nameLoc
 argument_list|,

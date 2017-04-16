@@ -245,6 +245,13 @@ argument|uint64_t Offset
 argument_list|)
 name|override
 block|;
+name|ExtKind
+name|hasExternalDefinitions
+argument_list|(
+argument|const Decl *D
+argument_list|)
+name|override
+block|;
 comment|/// \brief Find all declarations with the given name in the
 comment|/// given context.
 name|bool

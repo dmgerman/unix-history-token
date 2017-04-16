@@ -284,7 +284,7 @@ name|configure
 argument_list|()
 block|;   }
 comment|// TODO: consider whether this constructor should be restricted to take
-comment|// as input a const IndentifierInfo* (instead of Name),
+comment|// as input a const IdentifierInfo* (instead of Name),
 comment|// forcing other cases towards the constructor taking a DNInfo.
 name|LookupResult
 argument_list|(

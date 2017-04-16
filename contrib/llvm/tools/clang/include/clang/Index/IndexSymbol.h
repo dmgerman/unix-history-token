@@ -129,6 +129,8 @@ block|,
 name|Destructor
 block|,
 name|ConversionFunction
+block|,
+name|Parameter
 block|, }
 decl_stmt|;
 name|enum
@@ -208,6 +210,12 @@ operator|=
 literal|1
 operator|<<
 literal|6
+block|,
+name|Local
+operator|=
+literal|1
+operator|<<
+literal|7
 block|, }
 decl_stmt|;
 specifier|static
@@ -215,7 +223,7 @@ specifier|const
 name|unsigned
 name|SymbolPropertyBitNum
 init|=
-literal|7
+literal|8
 decl_stmt|;
 typedef|typedef
 name|unsigned
@@ -406,6 +414,15 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
+name|bool
+name|isFunctionLocalSymbol
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 name|void
 name|applyForEachSymbolRole
 argument_list|(
@@ -417,6 +434,24 @@ operator|::
 name|function_ref
 operator|<
 name|void
+argument_list|(
+name|SymbolRole
+argument_list|)
+operator|>
+name|Fn
+argument_list|)
+decl_stmt|;
+name|bool
+name|applyForEachSymbolRoleInterruptible
+argument_list|(
+name|SymbolRoleSet
+name|Roles
+argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|bool
 argument_list|(
 name|SymbolRole
 argument_list|)

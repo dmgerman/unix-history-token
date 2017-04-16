@@ -587,6 +587,11 @@ argument_list|(
 name|this
 argument_list|)
 argument_list|)
+block|;
+name|assert
+argument_list|(
+name|mgr
+argument_list|)
 block|;   }
 name|MemRegionManager
 operator|*
@@ -726,7 +731,15 @@ argument|mgr
 argument_list|,
 argument|k
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|classof
+argument_list|(
+name|this
+argument_list|)
+argument_list|)
+block|;   }
 name|public
 operator|:
 specifier|static
@@ -799,7 +812,12 @@ name|CR
 argument_list|(
 argument|cr
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|cr
+argument_list|)
+block|;   }
 name|public
 operator|:
 name|void
@@ -859,6 +877,12 @@ operator|:
 name|public
 name|GlobalsSpaceRegion
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+name|override
+block|;
 name|protected
 operator|:
 name|NonStaticGlobalSpaceRegion
@@ -874,7 +898,15 @@ argument|mgr
 argument_list|,
 argument|k
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|classof
+argument_list|(
+name|this
+argument_list|)
+argument_list|)
+block|;   }
 name|public
 operator|:
 specifier|static
@@ -1076,11 +1108,6 @@ operator|:
 name|public
 name|MemSpaceRegion
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|friend
 name|class
 name|MemRegionManager
@@ -1133,11 +1160,6 @@ operator|:
 name|public
 name|MemSpaceRegion
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|friend
 name|class
 name|MemRegionManager
@@ -1190,8 +1212,11 @@ operator|:
 name|public
 name|MemSpaceRegion
 block|{
-name|private
-operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 specifier|const
 name|StackFrameContext
 operator|*
@@ -1226,6 +1251,11 @@ name|classof
 argument_list|(
 name|this
 argument_list|)
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|sfc
 argument_list|)
 block|;   }
 name|public
@@ -1282,11 +1312,6 @@ operator|:
 name|public
 name|StackSpaceRegion
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|friend
 name|class
 name|MemRegionManager
@@ -1348,11 +1373,6 @@ name|StackSpaceRegion
 block|{
 name|private
 operator|:
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|friend
 name|class
 name|MemRegionManager
@@ -1414,8 +1434,6 @@ operator|:
 name|public
 name|MemRegion
 block|{
-name|private
-operator|:
 name|virtual
 name|void
 name|anchor
@@ -1430,7 +1448,7 @@ name|superRegion
 block|;
 name|SubRegion
 argument_list|(
-argument|const MemRegion* sReg
+argument|const MemRegion *sReg
 argument_list|,
 argument|Kind k
 argument_list|)
@@ -1444,7 +1462,20 @@ name|superRegion
 argument_list|(
 argument|sReg
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|classof
+argument_list|(
+name|this
+argument_list|)
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|sReg
+argument_list|)
+block|;   }
 name|public
 operator|:
 specifier|const
@@ -1520,8 +1551,6 @@ name|friend
 name|class
 name|MemRegionManager
 block|;
-name|protected
-operator|:
 name|unsigned
 name|Cnt
 block|;
@@ -1538,7 +1567,7 @@ argument|const Expr *ex
 argument_list|,
 argument|unsigned cnt
 argument_list|,
-argument|const MemRegion *superRegion
+argument|const MemSpaceRegion *superRegion
 argument_list|)
 operator|:
 name|SubRegion
@@ -1557,7 +1586,25 @@ name|Ex
 argument_list|(
 argument|ex
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|Ex
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|ProfileRegion
+argument_list|(
+argument|llvm::FoldingSetNodeID& ID
+argument_list|,
+argument|const Expr *Ex
+argument_list|,
+argument|unsigned Cnt
+argument_list|,
+argument|const MemRegion *superRegion
+argument_list|)
+block|;
 name|public
 operator|:
 specifier|const
@@ -1597,19 +1644,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|static
-name|void
-name|ProfileRegion
-argument_list|(
-argument|llvm::FoldingSetNodeID& ID
-argument_list|,
-argument|const Expr *Ex
-argument_list|,
-argument|unsigned Cnt
-argument_list|,
-argument|const MemRegion *superRegion
-argument_list|)
-block|;
 name|void
 name|dumpToStream
 argument_list|(
@@ -1643,8 +1677,7 @@ operator|:
 name|public
 name|SubRegion
 block|{
-name|public
-operator|:
+name|virtual
 name|void
 name|anchor
 argument_list|()
@@ -1654,7 +1687,7 @@ name|protected
 operator|:
 name|TypedRegion
 argument_list|(
-argument|const MemRegion* sReg
+argument|const MemRegion *sReg
 argument_list|,
 argument|Kind k
 argument_list|)
@@ -1665,7 +1698,15 @@ argument|sReg
 argument_list|,
 argument|k
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|classof
+argument_list|(
+name|this
+argument_list|)
+argument_list|)
+block|;   }
 name|public
 operator|:
 name|virtual
@@ -1737,8 +1778,7 @@ operator|:
 name|public
 name|TypedRegion
 block|{
-name|public
-operator|:
+name|virtual
 name|void
 name|anchor
 argument_list|()
@@ -1759,7 +1799,15 @@ argument|sReg
 argument_list|,
 argument|k
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|classof
+argument_list|(
+name|this
+argument_list|)
+argument_list|)
+block|;   }
 name|public
 operator|:
 name|virtual
@@ -1889,8 +1937,7 @@ operator|:
 name|public
 name|TypedRegion
 block|{
-name|public
-operator|:
+name|virtual
 name|void
 name|anchor
 argument_list|()
@@ -1900,7 +1947,7 @@ name|protected
 operator|:
 name|CodeTextRegion
 argument_list|(
-argument|const MemRegion *sreg
+argument|const MemSpaceRegion *sreg
 argument_list|,
 argument|Kind k
 argument_list|)
@@ -1911,7 +1958,15 @@ argument|sreg
 argument_list|,
 argument|k
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|classof
+argument_list|(
+name|this
+argument_list|)
+argument_list|)
+block|;   }
 name|public
 operator|:
 name|bool
@@ -1958,13 +2013,15 @@ operator|:
 name|public
 name|CodeTextRegion
 block|{
+name|friend
+name|class
+name|MemRegionManager
+block|;
 specifier|const
 name|NamedDecl
 operator|*
 name|FD
 block|;
-name|public
-operator|:
 name|FunctionCodeRegion
 argument_list|(
 specifier|const
@@ -1973,7 +2030,7 @@ operator|*
 name|fd
 argument_list|,
 specifier|const
-name|MemRegion
+name|CodeSpaceRegion
 operator|*
 name|sreg
 argument_list|)
@@ -2009,6 +2066,28 @@ name|fd
 operator|)
 argument_list|)
 block|;   }
+specifier|static
+name|void
+name|ProfileRegion
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+specifier|const
+name|NamedDecl
+operator|*
+name|FD
+argument_list|,
+specifier|const
+name|MemRegion
+operator|*
+argument_list|)
+block|;
+name|public
+operator|:
 name|QualType
 name|getLocationType
 argument_list|()
@@ -2104,26 +2183,6 @@ specifier|const
 name|override
 block|;
 specifier|static
-name|void
-name|ProfileRegion
-argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|,
-specifier|const
-name|NamedDecl
-operator|*
-name|FD
-argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-argument_list|)
-block|;
-specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -2177,7 +2236,7 @@ argument|CanQualType lTy
 argument_list|,
 argument|AnalysisDeclContext *ac
 argument_list|,
-argument|const MemRegion* sreg
+argument|const CodeSpaceRegion* sreg
 argument_list|)
 operator|:
 name|CodeTextRegion
@@ -2201,7 +2260,54 @@ name|locTy
 argument_list|(
 argument|lTy
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|bd
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|ac
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|lTy
+operator|->
+name|getTypePtr
+argument_list|()
+operator|->
+name|isBlockPointerType
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|ProfileRegion
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+specifier|const
+name|BlockDecl
+operator|*
+name|BD
+argument_list|,
+name|CanQualType
+argument_list|,
+specifier|const
+name|AnalysisDeclContext
+operator|*
+argument_list|,
+specifier|const
+name|MemRegion
+operator|*
+argument_list|)
+block|;
 name|public
 operator|:
 name|QualType
@@ -2250,32 +2356,6 @@ argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
 name|override
-block|;
-specifier|static
-name|void
-name|ProfileRegion
-argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|,
-specifier|const
-name|BlockDecl
-operator|*
-name|BD
-argument_list|,
-name|CanQualType
-argument_list|,
-specifier|const
-name|AnalysisDeclContext
-operator|*
-argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-argument_list|)
 block|;
 specifier|static
 name|bool
@@ -2341,7 +2421,7 @@ argument|const LocationContext *lc
 argument_list|,
 argument|unsigned count
 argument_list|,
-argument|const MemRegion *sreg
+argument|const MemSpaceRegion *sreg
 argument_list|)
 operator|:
 name|TypedRegion
@@ -2375,7 +2455,68 @@ name|OriginalVars
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|bc
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|lc
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|GlobalImmutableSpaceRegion
+operator|>
+operator|(
+name|sreg
+operator|)
+operator|||
+name|isa
+operator|<
+name|StackLocalsSpaceRegion
+operator|>
+operator|(
+name|sreg
+operator|)
+operator|||
+name|isa
+operator|<
+name|UnknownSpaceRegion
+operator|>
+operator|(
+name|sreg
+operator|)
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|ProfileRegion
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+argument_list|,
+specifier|const
+name|BlockCodeRegion
+operator|*
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+argument_list|,
+name|unsigned
+argument_list|,
+specifier|const
+name|MemRegion
+operator|*
+argument_list|)
+block|;
 name|public
 operator|:
 specifier|const
@@ -2629,30 +2770,6 @@ specifier|const
 name|override
 block|;
 specifier|static
-name|void
-name|ProfileRegion
-argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-argument_list|,
-specifier|const
-name|BlockCodeRegion
-operator|*
-argument_list|,
-specifier|const
-name|LocationContext
-operator|*
-argument_list|,
-name|unsigned
-argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-argument_list|)
-block|;
-specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -2706,19 +2823,19 @@ operator|:
 name|public
 name|SubRegion
 block|{
-name|protected
-operator|:
+name|friend
+name|class
+name|MemRegionManager
+block|;
 specifier|const
 name|SymbolRef
 name|sym
 block|;
-name|public
-operator|:
 name|SymbolicRegion
 argument_list|(
 argument|const SymbolRef s
 argument_list|,
-argument|const MemRegion* sreg
+argument|const MemSpaceRegion *sreg
 argument_list|)
 operator|:
 name|SubRegion
@@ -2732,7 +2849,60 @@ name|sym
 argument_list|(
 argument|s
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|s
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|s
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isAnyPointerType
+argument_list|()
+operator|||
+name|s
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isReferenceType
+argument_list|()
+operator|||
+name|s
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isBlockPointerType
+argument_list|()
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|UnknownSpaceRegion
+operator|>
+operator|(
+name|sreg
+operator|)
+operator|||
+name|isa
+operator|<
+name|HeapSpaceRegion
+operator|>
+operator|(
+name|sreg
+operator|)
+argument_list|)
+block|;   }
+name|public
+operator|:
 name|SymbolRef
 name|getSymbol
 argument_list|()
@@ -2821,8 +2991,6 @@ name|StringLiteral
 operator|*
 name|Str
 block|;
-name|protected
-operator|:
 name|StringRegion
 argument_list|(
 specifier|const
@@ -2831,7 +2999,7 @@ operator|*
 name|str
 argument_list|,
 specifier|const
-name|MemRegion
+name|GlobalInternalSpaceRegion
 operator|*
 name|sreg
 argument_list|)
@@ -2847,7 +3015,12 @@ name|Str
 argument_list|(
 argument|str
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|str
+argument_list|)
+block|;   }
 specifier|static
 name|void
 name|ProfileRegion
@@ -2972,8 +3145,6 @@ name|ObjCStringLiteral
 operator|*
 name|Str
 block|;
-name|protected
-operator|:
 name|ObjCStringRegion
 argument_list|(
 specifier|const
@@ -2982,7 +3153,7 @@ operator|*
 name|str
 argument_list|,
 specifier|const
-name|MemRegion
+name|GlobalInternalSpaceRegion
 operator|*
 name|sreg
 argument_list|)
@@ -2998,7 +3169,12 @@ name|Str
 argument_list|(
 argument|str
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|str
+argument_list|)
+block|;   }
 specifier|static
 name|void
 name|ProfileRegion
@@ -3108,8 +3284,6 @@ operator|:
 name|public
 name|TypedValueRegion
 block|{
-name|private
-operator|:
 name|friend
 name|class
 name|MemRegionManager
@@ -3127,7 +3301,7 @@ operator|*
 name|cl
 argument_list|,
 specifier|const
-name|MemRegion
+name|MemSpaceRegion
 operator|*
 name|sReg
 argument_list|)
@@ -3143,7 +3317,31 @@ name|CL
 argument_list|(
 argument|cl
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|cl
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|GlobalInternalSpaceRegion
+operator|>
+operator|(
+name|sReg
+operator|)
+operator|||
+name|isa
+operator|<
+name|StackLocalsSpaceRegion
+operator|>
+operator|(
+name|sReg
+operator|)
+argument_list|)
+block|;   }
 specifier|static
 name|void
 name|ProfileRegion
@@ -3256,7 +3454,7 @@ name|DeclRegion
 argument_list|(
 argument|const Decl *d
 argument_list|,
-argument|const MemRegion* sReg
+argument|const MemRegion *sReg
 argument_list|,
 argument|Kind k
 argument_list|)
@@ -3272,7 +3470,20 @@ name|D
 argument_list|(
 argument|d
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|classof
+argument_list|(
+name|this
+argument_list|)
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|d
+argument_list|)
+block|;   }
 specifier|static
 name|void
 name|ProfileRegion
@@ -3366,7 +3577,46 @@ argument|sReg
 argument_list|,
 argument|VarRegionKind
 argument_list|)
-block|{}
+block|{
+comment|// VarRegion appears in unknown space when it's a block variable as seen
+comment|// from a block using it, when this block is analyzed at top-level.
+comment|// Other block variables appear within block data regions,
+comment|// which, unlike everything else on this list, are not memory spaces.
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|GlobalsSpaceRegion
+operator|>
+operator|(
+name|sReg
+operator|)
+operator|||
+name|isa
+operator|<
+name|StackSpaceRegion
+operator|>
+operator|(
+name|sReg
+operator|)
+operator|||
+name|isa
+operator|<
+name|BlockDataRegion
+operator|>
+operator|(
+name|sReg
+operator|)
+operator|||
+name|isa
+operator|<
+name|UnknownSpaceRegion
+operator|>
+operator|(
+name|sReg
+operator|)
+argument_list|)
+block|;   }
 specifier|static
 name|void
 name|ProfileRegion
@@ -3391,6 +3641,8 @@ argument_list|,
 name|VarRegionKind
 argument_list|)
 block|;   }
+name|public
+operator|:
 name|void
 name|Profile
 argument_list|(
@@ -3399,8 +3651,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|public
-operator|:
 specifier|const
 name|VarDecl
 operator|*
@@ -3500,7 +3750,7 @@ operator|*
 name|thisPointerTy
 argument_list|,
 specifier|const
-name|MemRegion
+name|StackArgumentsSpaceRegion
 operator|*
 name|sReg
 argument_list|)
@@ -3538,6 +3788,8 @@ operator|*
 name|sReg
 argument_list|)
 block|;
+name|public
+operator|:
 name|void
 name|Profile
 argument_list|(
@@ -3546,8 +3798,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|public
-operator|:
 name|QualType
 name|getValueType
 argument_list|()
@@ -3613,7 +3863,7 @@ operator|*
 name|fd
 argument_list|,
 specifier|const
-name|MemRegion
+name|SubRegion
 operator|*
 name|sReg
 argument_list|)
@@ -3627,6 +3877,30 @@ argument_list|,
 argument|FieldRegionKind
 argument_list|)
 block|{}
+specifier|static
+name|void
+name|ProfileRegion
+argument_list|(
+argument|llvm::FoldingSetNodeID& ID
+argument_list|,
+argument|const FieldDecl *FD
+argument_list|,
+argument|const MemRegion* superRegion
+argument_list|)
+block|{
+name|DeclRegion
+operator|::
+name|ProfileRegion
+argument_list|(
+name|ID
+argument_list|,
+name|FD
+argument_list|,
+name|superRegion
+argument_list|,
+name|FieldRegionKind
+argument_list|)
+block|;   }
 name|public
 operator|:
 specifier|const
@@ -3669,30 +3943,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|static
-name|void
-name|ProfileRegion
-argument_list|(
-argument|llvm::FoldingSetNodeID& ID
-argument_list|,
-argument|const FieldDecl *FD
-argument_list|,
-argument|const MemRegion* superRegion
-argument_list|)
-block|{
-name|DeclRegion
-operator|::
-name|ProfileRegion
-argument_list|(
-name|ID
-argument_list|,
-name|FD
-argument_list|,
-name|superRegion
-argument_list|,
-name|FieldRegionKind
-argument_list|)
-block|;   }
 specifier|static
 name|bool
 name|classof
@@ -3764,7 +4014,7 @@ operator|*
 name|ivd
 argument_list|,
 specifier|const
-name|MemRegion
+name|SubRegion
 operator|*
 name|sReg
 argument_list|)
@@ -3854,8 +4104,6 @@ block|;
 name|class
 name|RegionRawOffset
 block|{
-name|private
-operator|:
 name|friend
 name|class
 name|ElementRegion
@@ -3944,7 +4192,7 @@ argument|QualType elementType
 argument_list|,
 argument|NonLoc Idx
 argument_list|,
-argument|const MemRegion* sReg
+argument|const SubRegion *sReg
 argument_list|)
 operator|:
 name|TypedValueRegion
@@ -4106,7 +4354,7 @@ specifier|const
 operator|*
 name|E
 argument_list|,
-name|MemRegion
+name|MemSpaceRegion
 specifier|const
 operator|*
 name|sReg
@@ -4123,7 +4371,31 @@ name|Ex
 argument_list|(
 argument|E
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|E
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|StackLocalsSpaceRegion
+operator|>
+operator|(
+name|sReg
+operator|)
+operator|||
+name|isa
+operator|<
+name|GlobalInternalSpaceRegion
+operator|>
+operator|(
+name|sReg
+operator|)
+argument_list|)
+block|;   }
 specifier|static
 name|void
 name|ProfileRegion
@@ -4237,7 +4509,7 @@ argument|const CXXRecordDecl *RD
 argument_list|,
 argument|bool IsVirtual
 argument_list|,
-argument|const MemRegion *SReg
+argument|const SubRegion *SReg
 argument_list|)
 operator|:
 name|TypedValueRegion
@@ -4253,7 +4525,12 @@ argument|RD
 argument_list|,
 argument|IsVirtual
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|RD
+argument_list|)
+block|;   }
 specifier|static
 name|void
 name|ProfileRegion
@@ -4740,7 +5017,7 @@ argument|QualType elementType
 argument_list|,
 argument|NonLoc Idx
 argument_list|,
-argument|const MemRegion *superRegion
+argument|const SubRegion *superRegion
 argument_list|,
 argument|ASTContext&Ctx
 argument_list|)
@@ -4752,7 +5029,7 @@ name|getElementRegionWithSuper
 argument_list|(
 argument|const ElementRegion *ER
 argument_list|,
-argument|const MemRegion *superRegion
+argument|const SubRegion *superRegion
 argument_list|)
 block|{
 return|return
@@ -4792,7 +5069,7 @@ operator|*
 name|fd
 argument_list|,
 specifier|const
-name|MemRegion
+name|SubRegion
 operator|*
 name|superRegion
 argument_list|)
@@ -4804,7 +5081,7 @@ name|getFieldRegionWithSuper
 argument_list|(
 argument|const FieldRegion *FR
 argument_list|,
-argument|const MemRegion *superRegion
+argument|const SubRegion *superRegion
 argument_list|)
 block|{
 return|return
@@ -4834,7 +5111,7 @@ operator|*
 name|ivd
 argument_list|,
 specifier|const
-name|MemRegion
+name|SubRegion
 operator|*
 name|superRegion
 argument_list|)
@@ -4866,7 +5143,7 @@ name|getCXXBaseObjectRegion
 argument_list|(
 argument|const CXXRecordDecl *BaseClass
 argument_list|,
-argument|const MemRegion *Super
+argument|const SubRegion *Super
 argument_list|,
 argument|bool IsVirtual
 argument_list|)
@@ -4880,7 +5157,7 @@ name|getCXXBaseObjectRegionWithSuper
 argument_list|(
 argument|const CXXBaseObjectRegion *baseReg
 argument_list|,
-argument|const MemRegion *superRegion
+argument|const SubRegion *superRegion
 argument_list|)
 block|{
 return|return
@@ -4961,15 +5238,18 @@ name|typename
 name|RegionTy
 block|,
 name|typename
-name|A1
+name|SuperTy
+block|,
+name|typename
+name|Arg1Ty
 operator|>
 name|RegionTy
 operator|*
 name|getSubRegion
 argument_list|(
-argument|const A1 a1
+argument|const Arg1Ty arg1
 argument_list|,
-argument|const MemRegion* superRegion
+argument|const SuperTy* superRegion
 argument_list|)
 block|;
 name|template
@@ -4978,20 +5258,23 @@ name|typename
 name|RegionTy
 block|,
 name|typename
-name|A1
+name|SuperTy
 block|,
 name|typename
-name|A2
+name|Arg1Ty
+block|,
+name|typename
+name|Arg2Ty
 operator|>
 name|RegionTy
 operator|*
 name|getSubRegion
 argument_list|(
-argument|const A1 a1
+argument|const Arg1Ty arg1
 argument_list|,
-argument|const A2 a2
+argument|const Arg2Ty arg2
 argument_list|,
-argument|const MemRegion* superRegion
+argument|const SuperTy* superRegion
 argument_list|)
 block|;
 name|template
@@ -5000,25 +5283,28 @@ name|typename
 name|RegionTy
 block|,
 name|typename
-name|A1
+name|SuperTy
 block|,
 name|typename
-name|A2
+name|Arg1Ty
 block|,
 name|typename
-name|A3
+name|Arg2Ty
+block|,
+name|typename
+name|Arg3Ty
 operator|>
 name|RegionTy
 operator|*
 name|getSubRegion
 argument_list|(
-argument|const A1 a1
+argument|const Arg1Ty arg1
 argument_list|,
-argument|const A2 a2
+argument|const Arg2Ty arg2
 argument_list|,
-argument|const A3 a3
+argument|const Arg3Ty arg3
 argument_list|,
-argument|const MemRegion* superRegion
+argument|const SuperTy* superRegion
 argument_list|)
 block|;
 name|template

@@ -1023,45 +1023,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|_MM_DENORMALS_ZERO_ON
-value|(0x0040)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_MM_DENORMALS_ZERO_OFF
-value|(0x0000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_MM_DENORMALS_ZERO_MASK
-value|(0x0040)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_MM_GET_DENORMALS_ZERO_MODE
-parameter_list|()
-value|(_mm_getcsr()& _MM_DENORMALS_ZERO_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_MM_SET_DENORMALS_ZERO_MODE
-parameter_list|(
-name|x
-parameter_list|)
-value|(_mm_setcsr((_mm_getcsr()& ~_MM_DENORMALS_ZERO_MASK) | (x)))
-end_define
-
 begin_comment
 comment|/// \brief Establishes a linear address memory range to be monitored and puts
 end_comment

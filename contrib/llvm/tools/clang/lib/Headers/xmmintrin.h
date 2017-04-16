@@ -10587,6 +10587,7 @@ name|_mm_setcsr
 parameter_list|(
 name|unsigned
 name|int
+name|__i
 parameter_list|)
 function_decl|;
 if|#

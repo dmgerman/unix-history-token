@@ -1333,6 +1333,11 @@ comment|/// \brief The module manager which manages modules and their dependenci
 name|ModuleManager
 name|ModuleMgr
 decl_stmt|;
+comment|/// The cache that manages memory buffers for PCM files.
+name|MemoryBufferCache
+modifier|&
+name|PCMCache
+decl_stmt|;
 comment|/// \brief A dummy identifier resolver used to merge TU-scope declarations in
 comment|/// C, for the cases where we don't have a Sema object to provide a real
 comment|/// identifier resolver.
@@ -2237,7 +2242,7 @@ name|GlobalPreprocessedEntityMapType
 expr_stmt|;
 comment|/// \brief Mapping from global preprocessing entity IDs to the module in
 comment|/// which the preprocessed entity resides along with the offset that should be
-comment|/// added to the global preprocessing entitiy ID to produce a local ID.
+comment|/// added to the global preprocessing entity ID to produce a local ID.
 name|GlobalPreprocessedEntityMapType
 name|GlobalPreprocessedEntityMap
 decl_stmt|;
@@ -2439,6 +2444,52 @@ decl_stmt|;
 name|SourceLocation
 name|PointersToMembersPragmaLocation
 decl_stmt|;
+comment|/// \brief The pragma pack state.
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|PragmaPackCurrentValue
+expr_stmt|;
+name|SourceLocation
+name|PragmaPackCurrentLocation
+decl_stmt|;
+struct|struct
+name|PragmaPackStackEntry
+block|{
+name|unsigned
+name|Value
+decl_stmt|;
+name|SourceLocation
+name|Location
+decl_stmt|;
+name|StringRef
+name|SlotLabel
+decl_stmt|;
+block|}
+struct|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|PragmaPackStackEntry
+operator|,
+literal|2
+operator|>
+name|PragmaPackStack
+expr_stmt|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+literal|2
+operator|>
+name|PragmaPackStrings
+expr_stmt|;
 comment|/// \brief The OpenCL extension settings.
 name|OpenCLOptions
 name|OpenCLExtensions
@@ -2826,7 +2877,56 @@ name|unsigned
 operator|>
 name|IdentifierGeneration
 expr_stmt|;
-comment|/// \brief Contains declarations and definitions that will be
+name|class
+name|InterestingDecl
+block|{
+name|Decl
+modifier|*
+name|D
+decl_stmt|;
+name|bool
+name|DeclHasPendingBody
+decl_stmt|;
+name|public
+label|:
+name|InterestingDecl
+argument_list|(
+argument|Decl *D
+argument_list|,
+argument|bool HasBody
+argument_list|)
+block|:
+name|D
+argument_list|(
+name|D
+argument_list|)
+operator|,
+name|DeclHasPendingBody
+argument_list|(
+argument|HasBody
+argument_list|)
+block|{}
+name|Decl
+operator|*
+name|getDecl
+argument_list|()
+block|{
+return|return
+name|D
+return|;
+block|}
+comment|/// Whether the declaration has a pending body.
+name|bool
+name|hasPendingBody
+parameter_list|()
+block|{
+return|return
+name|DeclHasPendingBody
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// \brief Contains declarations and definitions that could be
 comment|/// "interesting" to the ASTConsumer, when we get that AST consumer.
 comment|///
 comment|/// "Interesting" declarations are those that have data that may
@@ -2836,10 +2936,9 @@ name|std
 operator|::
 name|deque
 operator|<
-name|Decl
-operator|*
+name|InterestingDecl
 operator|>
-name|InterestingDecls
+name|PotentiallyInterestingDecls
 expr_stmt|;
 comment|/// \brief The list of redeclaration chains that still need to be
 comment|/// reconstructed, and the local offset to the corresponding list
@@ -3214,6 +3313,18 @@ operator|::
 name|string
 name|SuggestedPredefines
 expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|bool
+operator|>
+name|BodySource
+expr_stmt|;
 comment|/// \brief Reads a statement from the specified cursor.
 name|Stmt
 modifier|*
@@ -3559,8 +3670,6 @@ argument_list|,
 name|time_t
 name|ExpectedModTime
 argument_list|,
-name|serialization
-operator|::
 name|ASTFileSignature
 name|ExpectedSignature
 argument_list|,
@@ -3616,6 +3725,48 @@ operator|::
 name|string
 operator|&
 name|SuggestedPredefines
+argument_list|)
+decl_stmt|;
+comment|/// Read the unhashed control block.
+comment|///
+comment|/// This has no effect on \c F.Stream, instead creating a fresh cursor from
+comment|/// \c F.Data and reading ahead.
+name|ASTReadResult
+name|readUnhashedControlBlock
+parameter_list|(
+name|ModuleFile
+modifier|&
+name|F
+parameter_list|,
+name|bool
+name|WasImportedBy
+parameter_list|,
+name|unsigned
+name|ClientLoadCapabilities
+parameter_list|)
+function_decl|;
+specifier|static
+name|ASTReadResult
+name|readUnhashedControlBlockImpl
+argument_list|(
+name|ModuleFile
+operator|*
+name|F
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|StreamData
+argument_list|,
+name|unsigned
+name|ClientLoadCapabilities
+argument_list|,
+name|bool
+name|AllowCompatibleConfigurationMismatch
+argument_list|,
+name|ASTReaderListener
+operator|*
+name|Listener
 argument_list|,
 name|bool
 name|ValidateDiagnosticOptions
@@ -3640,6 +3791,15 @@ modifier|&
 name|F
 parameter_list|)
 function_decl|;
+name|void
+name|ReadModuleOffsetMap
+argument_list|(
+name|ModuleFile
+operator|&
+name|F
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|ParseLineTable
 parameter_list|(
@@ -4070,6 +4230,8 @@ argument|ModuleFile&Mod
 argument_list|)
 specifier|const
 expr_stmt|;
+name|public
+label|:
 name|class
 name|ModuleDeclIterator
 range|:
@@ -4257,6 +4419,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_label
+name|private
+label|:
+end_label
+
 begin_function_decl
 name|void
 name|PassInterestingDeclsToConsumer
@@ -4364,15 +4531,16 @@ begin_comment
 comment|/// do with non-routine failures (e.g., corrupted AST file).
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|Error
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Msg
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -4393,7 +4561,7 @@ init|=
 name|StringRef
 argument_list|()
 parameter_list|)
-function_decl|;
+function_decl|const;
 end_function_decl
 
 begin_expr_stmt
@@ -5514,45 +5682,43 @@ begin_comment
 comment|/// translation unit with the given language and target options.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|bool
 name|isAcceptableASTFile
-argument_list|(
+parameter_list|(
 name|StringRef
 name|Filename
-argument_list|,
+parameter_list|,
 name|FileManager
-operator|&
+modifier|&
 name|FileMgr
-argument_list|,
+parameter_list|,
 specifier|const
 name|PCHContainerReader
-operator|&
+modifier|&
 name|PCHContainerRdr
-argument_list|,
+parameter_list|,
 specifier|const
 name|LangOptions
-operator|&
+modifier|&
 name|LangOpts
-argument_list|,
+parameter_list|,
 specifier|const
 name|TargetOptions
-operator|&
+modifier|&
 name|TargetOpts
-argument_list|,
+parameter_list|,
 specifier|const
 name|PreprocessorOptions
-operator|&
+modifier|&
 name|PPOpts
-argument_list|,
-name|std
-operator|::
-name|string
+parameter_list|,
+name|StringRef
 name|ExistingModuleCachePath
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Returns the suggested contents of the predefines buffer,
@@ -5872,39 +6038,19 @@ literal|0
 block|;
 for|for
 control|(
-name|ModuleConstIterator
-name|I
-init|=
+specifier|const
+specifier|auto
+modifier|&
+name|M
+range|:
 name|ModuleMgr
-operator|.
-name|begin
-argument_list|()
-init|,
-name|E
-init|=
-name|ModuleMgr
-operator|.
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
 control|)
-block|{
 name|Result
 operator|+=
-operator|(
-operator|*
-name|I
-operator|)
-operator|->
+name|M
+operator|.
 name|NumPreprocessedEntities
 expr_stmt|;
-block|}
 end_expr_stmt
 
 begin_return
@@ -7350,32 +7496,34 @@ begin_comment
 comment|/// \brief Report a diagnostic.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|DiagnosticBuilder
 name|Diag
-parameter_list|(
+argument_list|(
 name|unsigned
 name|DiagID
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Report a diagnostic.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|DiagnosticBuilder
 name|Diag
-parameter_list|(
+argument_list|(
 name|SourceLocation
 name|Loc
-parameter_list|,
+argument_list|,
 name|unsigned
 name|DiagID
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|IdentifierInfo
@@ -7699,6 +7847,19 @@ argument_list|)
 name|override
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|ExtKind
+name|hasExternalDefinitions
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Retrieve a selector from the given module with its local ID
@@ -8254,6 +8415,21 @@ name|Loc
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+operator|!
+name|ModuleFile
+operator|.
+name|ModuleOffsetMap
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|ReadModuleOffsetMap
+argument_list|(
+name|ModuleFile
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|ModuleFile
@@ -8539,22 +8715,13 @@ begin_function_decl
 name|void
 name|ReadAttributes
 parameter_list|(
-name|ModuleFile
+name|ASTRecordReader
 modifier|&
-name|F
+name|Record
 parameter_list|,
 name|AttrVec
 modifier|&
 name|Attrs
-parameter_list|,
-specifier|const
-name|RecordData
-modifier|&
-name|Record
-parameter_list|,
-name|unsigned
-modifier|&
-name|Idx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8989,6 +9156,42 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// Visit all the input files of the given module file.
+end_comment
+
+begin_decl_stmt
+name|void
+name|visitInputFiles
+argument_list|(
+name|serialization
+operator|::
+name|ModuleFile
+operator|&
+name|MF
+argument_list|,
+name|bool
+name|IncludeSystem
+argument_list|,
+name|bool
+name|Complain
+argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|(
+argument|const serialization::InputFile&IF
+argument_list|,
+argument|bool isSystem
+argument_list|)
+operator|>
+name|Visitor
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|bool
 name|isProcessingUpdateRecords
@@ -9418,6 +9621,39 @@ name|Reader
 operator|->
 name|ReadSubExpr
 argument_list|()
+return|;
+block|}
+comment|/// \brief Reads a declaration with the given local ID in the given module.
+comment|///
+comment|/// \returns The requested declaration, casted to the given return type.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+operator|*
+name|GetLocalDeclAs
+argument_list|(
+argument|uint32_t LocalID
+argument_list|)
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|T
+operator|>
+operator|(
+name|Reader
+operator|->
+name|GetLocalDecl
+argument_list|(
+operator|*
+name|F
+argument_list|,
+name|LocalID
+argument_list|)
+operator|)
 return|;
 block|}
 comment|/// \brief Reads a TemplateArgumentLocInfo appropriate for the
@@ -10144,13 +10380,9 @@ operator|->
 name|ReadAttributes
 argument_list|(
 operator|*
-name|F
+name|this
 argument_list|,
 name|Attrs
-argument_list|,
-name|Record
-argument_list|,
-name|Idx
 argument_list|)
 return|;
 block|}

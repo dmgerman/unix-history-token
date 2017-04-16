@@ -108,7 +108,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|AttributeSet
+name|AttributeList
 decl_stmt|;
 name|class
 name|Function
@@ -149,7 +149,7 @@ name|SmallVector
 operator|<
 name|llvm
 operator|::
-name|AttributeSet
+name|AttributeList
 operator|,
 literal|8
 operator|>

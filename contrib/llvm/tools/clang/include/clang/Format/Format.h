@@ -239,6 +239,19 @@ name|AlignConsecutiveDeclarations
 decl_stmt|;
 comment|/// \brief If ``true``, aligns escaped newlines as far left as possible.
 comment|/// Otherwise puts them into the right-most column.
+comment|/// \code
+comment|///   true:
+comment|///   #define A   \
+comment|///     int aaaa; \
+comment|///     int b;    \
+comment|///     int dddddddddd;
+comment|///
+comment|///   false:
+comment|///   #define A                                                                      \
+comment|///     int aaaa;                                                                    \
+comment|///     int b;                                                                       \
+comment|///     int dddddddddd;
+comment|/// \endcode
 name|bool
 name|AlignEscapedNewlinesLeft
 decl_stmt|;
@@ -255,11 +268,22 @@ name|bool
 name|AlignOperands
 decl_stmt|;
 comment|/// \brief If ``true``, aligns trailing comments.
+comment|/// \code
+comment|///   true:                                   false:
+comment|///   int a;     // My comment a      vs.     int a; // My comment a
+comment|///   int b = 2; // comment  b                int b = 2; // comment about b
+comment|/// \endcode
 name|bool
 name|AlignTrailingComments
 decl_stmt|;
 comment|/// \brief Allow putting all parameters of a function declaration onto
 comment|/// the next line even if ``BinPackParameters`` is ``false``.
+comment|/// \code
+comment|///   true:                                   false:
+comment|///   myFunction(foo,                 vs.     myFunction(foo, bar, plop);
+comment|///              bar,
+comment|///              plop);
+comment|/// \endcode
 name|bool
 name|AllowAllParametersOfDeclarationOnNextLine
 decl_stmt|;
@@ -270,6 +294,16 @@ name|bool
 name|AllowShortBlocksOnASingleLine
 decl_stmt|;
 comment|/// \brief If ``true``, short case labels will be contracted to a single line.
+comment|/// \code
+comment|///   true:                                   false:
+comment|///   switch (a) {                    vs.     switch (a) {
+comment|///   case 1: x = 1; break;                   case 1:
+comment|///   case 2: return;                           x = 1;
+comment|///   }                                         break;
+comment|///                                           case 2:
+comment|///                                             return;
+comment|///                                           }
+comment|/// \endcode
 name|bool
 name|AllowShortCaseLabelsOnASingleLine
 decl_stmt|;
@@ -282,12 +316,29 @@ comment|/// \brief Never merge functions into a single line.
 name|SFS_None
 block|,
 comment|/// \brief Only merge empty functions.
+comment|/// \code
+comment|///   void f() { bar(); }
+comment|///   void f2() {
+comment|///     bar2();
+comment|///   }
+comment|/// \endcode
 name|SFS_Empty
 block|,
 comment|/// \brief Only merge functions defined inside a class. Implies "empty".
+comment|/// \code
+comment|///   class Foo {
+comment|///     void f() { foo(); }
+comment|///   };
+comment|/// \endcode
 name|SFS_Inline
 block|,
 comment|/// \brief Merge all functions fitting on a single line.
+comment|/// \code
+comment|///   class Foo {
+comment|///     void f() { foo(); }
+comment|///   };
+comment|///   void f() { bar(); }
+comment|/// \endcode
 name|SFS_All
 block|,   }
 enum|;
@@ -306,6 +357,7 @@ name|bool
 name|AllowShortLoopsOnASingleLine
 decl_stmt|;
 comment|/// \brief Different ways to break after the function definition return type.
+comment|/// This option is **deprecated** and is retained for backwards compatibility.
 enum|enum
 name|DefinitionReturnTypeBreakingStyle
 block|{
@@ -327,23 +379,78 @@ name|ReturnTypeBreakingStyle
 block|{
 comment|/// Break after return type automatically.
 comment|/// ``PenaltyReturnTypeOnItsOwnLine`` is taken into account.
+comment|/// \code
+comment|///   class A {
+comment|///     int f() { return 0; };
+comment|///   };
+comment|///   int f();
+comment|///   int f() { return 1; }
+comment|/// \endcode
 name|RTBS_None
 block|,
 comment|/// Always break after the return type.
+comment|/// \code
+comment|///   class A {
+comment|///     int
+comment|///     f() {
+comment|///       return 0;
+comment|///     };
+comment|///   };
+comment|///   int
+comment|///   f();
+comment|///   int
+comment|///   f() {
+comment|///     return 1;
+comment|///   }
+comment|/// \endcode
 name|RTBS_All
 block|,
 comment|/// Always break after the return types of top-level functions.
+comment|/// \code
+comment|///   class A {
+comment|///     int f() { return 0; };
+comment|///   };
+comment|///   int
+comment|///   f();
+comment|///   int
+comment|///   f() {
+comment|///     return 1;
+comment|///   }
+comment|/// \endcode
 name|RTBS_TopLevel
 block|,
 comment|/// Always break after the return type of function definitions.
+comment|/// \code
+comment|///   class A {
+comment|///     int
+comment|///     f() {
+comment|///       return 0;
+comment|///     };
+comment|///   };
+comment|///   int f();
+comment|///   int
+comment|///   f() {
+comment|///     return 1;
+comment|///   }
+comment|/// \endcode
 name|RTBS_AllDefinitions
 block|,
 comment|/// Always break after the return type of top-level definitions.
+comment|/// \code
+comment|///   class A {
+comment|///     int f() { return 0; };
+comment|///   };
+comment|///   int f();
+comment|///   int
+comment|///   f() {
+comment|///     return 1;
+comment|///   }
+comment|/// \endcode
 name|RTBS_TopLevelDefinitions
 block|,   }
 enum|;
 comment|/// \brief The function definition return type breaking style to use.  This
-comment|/// option is deprecated and is retained for backwards compatibility.
+comment|/// option is **deprecated** and is retained for backwards compatibility.
 name|DefinitionReturnTypeBreakingStyle
 name|AlwaysBreakAfterDefinitionReturnType
 decl_stmt|;
@@ -357,21 +464,56 @@ comment|/// This flag is mean to make cases where there are multiple multiline s
 comment|/// in a file look more consistent. Thus, it will only take effect if wrapping
 comment|/// the string at that point leads to it being indented
 comment|/// ``ContinuationIndentWidth`` spaces from the start of the line.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    aaaa =                         vs.     aaaa = "bbbb"
+comment|///        "bbbb"                                    "cccc";
+comment|///        "cccc";
+comment|/// \endcode
 name|bool
 name|AlwaysBreakBeforeMultilineStrings
 decl_stmt|;
 comment|/// \brief If ``true``, always break after the ``template<...>`` of a template
 comment|/// declaration.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    template<typename T>          vs.     template<typename T> class C {};
+comment|///    class C {};
+comment|/// \endcode
 name|bool
 name|AlwaysBreakTemplateDeclarations
 decl_stmt|;
 comment|/// \brief If ``false``, a function call's arguments will either be all on the
 comment|/// same line or will have one line each.
+comment|/// \code
+comment|///   true:
+comment|///   void f() {
+comment|///     f(aaaaaaaaaaaaaaaaaaaa, aaaaaaaaaaaaaaaaaaaa,
+comment|///       aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa);
+comment|///   }
+comment|///
+comment|///   false:
+comment|///   void f() {
+comment|///     f(aaaaaaaaaaaaaaaaaaaa,
+comment|///       aaaaaaaaaaaaaaaaaaaa,
+comment|///       aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa);
+comment|///   }
+comment|/// \endcode
 name|bool
 name|BinPackArguments
 decl_stmt|;
 comment|/// \brief If ``false``, a function declaration's or function definition's
 comment|/// parameters will either all be on the same line or will have one line each.
+comment|/// \code
+comment|///   true:
+comment|///   void f(int aaaaaaaaaaaaaaaaaaaa, int aaaaaaaaaaaaaaaaaaaa,
+comment|///          int aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) {}
+comment|///
+comment|///   false:
+comment|///   void f(int aaaaaaaaaaaaaaaaaaaa,
+comment|///          int aaaaaaaaaaaaaaaaaaaa,
+comment|///          int aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) {}
+comment|/// \endcode
 name|bool
 name|BinPackParameters
 decl_stmt|;
@@ -380,12 +522,42 @@ enum|enum
 name|BinaryOperatorStyle
 block|{
 comment|/// Break after operators.
+comment|/// \code
+comment|///    LooooooooooongType loooooooooooooooooooooongVariable =
+comment|///        someLooooooooooooooooongFunction();
+comment|///
+comment|///    bool value = aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa +
+comment|///                         aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ==
+comment|///                     aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&&
+comment|///                 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>
+comment|///                     ccccccccccccccccccccccccccccccccccccccccc;
+comment|/// \endcode
 name|BOS_None
 block|,
 comment|/// Break before operators that aren't assignments.
+comment|/// \code
+comment|///    LooooooooooongType loooooooooooooooooooooongVariable =
+comment|///        someLooooooooooooooooongFunction();
+comment|///
+comment|///    bool value = aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+comment|///                         + aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+comment|///                     == aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+comment|///&& aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+comment|///> ccccccccccccccccccccccccccccccccccccccccc;
+comment|/// \endcode
 name|BOS_NonAssignment
 block|,
 comment|/// Break before operators.
+comment|/// \code
+comment|///    LooooooooooongType loooooooooooooooooooooongVariable
+comment|///        = someLooooooooooooooooongFunction();
+comment|///
+comment|///    bool value = aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+comment|///                         + aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+comment|///                     == aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+comment|///&& aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+comment|///> ccccccccccccccccccccccccccccccccccccccccc;
+comment|/// \endcode
 name|BOS_All
 block|,   }
 enum|;
@@ -398,29 +570,139 @@ enum|enum
 name|BraceBreakingStyle
 block|{
 comment|/// Always attach braces to surrounding context.
+comment|/// \code
+comment|///   try {
+comment|///     foo();
+comment|///   } catch () {
+comment|///   }
+comment|///   void foo() { bar(); }
+comment|///   class foo {};
+comment|///   if (foo()) {
+comment|///   } else {
+comment|///   }
+comment|///   enum X : int { A, B };
+comment|/// \endcode
 name|BS_Attach
 block|,
 comment|/// Like ``Attach``, but break before braces on function, namespace and
 comment|/// class definitions.
+comment|/// \code
+comment|///   try {
+comment|///     foo();
+comment|///   } catch () {
+comment|///   }
+comment|///   void foo() { bar(); }
+comment|///   class foo
+comment|///   {
+comment|///   };
+comment|///   if (foo()) {
+comment|///   } else {
+comment|///   }
+comment|///   enum X : int { A, B };
+comment|/// \endcode
 name|BS_Linux
 block|,
 comment|/// Like ``Attach``, but break before braces on enum, function, and record
 comment|/// definitions.
+comment|/// \code
+comment|///   try {
+comment|///     foo();
+comment|///   } catch () {
+comment|///   }
+comment|///   void foo() { bar(); }
+comment|///   class foo
+comment|///   {
+comment|///   };
+comment|///   if (foo()) {
+comment|///   } else {
+comment|///   }
+comment|///   enum X : int { A, B };
+comment|/// \endcode
 name|BS_Mozilla
 block|,
 comment|/// Like ``Attach``, but break before function definitions, ``catch``, and
 comment|/// ``else``.
+comment|/// \code
+comment|///   try {
+comment|///     foo();
+comment|///   } catch () {
+comment|///   }
+comment|///   void foo() { bar(); }
+comment|///   class foo
+comment|///   {
+comment|///   };
+comment|///   if (foo()) {
+comment|///   } else {
+comment|///   }
+comment|///   enum X : int
+comment|///   {
+comment|///     A,
+comment|///     B
+comment|///   };
+comment|/// \endcode
 name|BS_Stroustrup
 block|,
 comment|/// Always break before braces.
+comment|/// \code
+comment|///   try {
+comment|///     foo();
+comment|///   }
+comment|///   catch () {
+comment|///   }
+comment|///   void foo() { bar(); }
+comment|///   class foo {
+comment|///   };
+comment|///   if (foo()) {
+comment|///   }
+comment|///   else {
+comment|///   }
+comment|///   enum X : int { A, B };
+comment|/// \endcode
 name|BS_Allman
 block|,
 comment|/// Always break before braces and add an extra level of indentation to
 comment|/// braces of control statements, not to those of class, function
 comment|/// or other definitions.
+comment|/// \code
+comment|///   try
+comment|///     {
+comment|///       foo();
+comment|///     }
+comment|///   catch ()
+comment|///     {
+comment|///     }
+comment|///   void foo() { bar(); }
+comment|///   class foo
+comment|///   {
+comment|///   };
+comment|///   if (foo())
+comment|///     {
+comment|///     }
+comment|///   else
+comment|///     {
+comment|///     }
+comment|///   enum X : int
+comment|///   {
+comment|///     A,
+comment|///     B
+comment|///   };
+comment|/// \endcode
 name|BS_GNU
 block|,
 comment|/// Like ``Attach``, but break before functions.
+comment|/// \code
+comment|///   try {
+comment|///     foo();
+comment|///   } catch () {
+comment|///   }
+comment|///   void foo() { bar(); }
+comment|///   class foo {
+comment|///   };
+comment|///   if (foo()) {
+comment|///   } else {
+comment|///   }
+comment|///   enum X : int { A, B };
+comment|/// \endcode
 name|BS_WebKit
 block|,
 comment|/// Configure each individual brace in `BraceWrapping`.
@@ -432,26 +714,94 @@ name|BraceBreakingStyle
 name|BreakBeforeBraces
 decl_stmt|;
 comment|/// \brief Precise control over the wrapping of braces.
+comment|/// \code
+comment|///   # Should be declared this way:
+comment|///   BreakBeforeBraces: Custom
+comment|///   BraceWrapping:
+comment|///       AfterClass: true
+comment|/// \endcode
 struct|struct
 name|BraceWrappingFlags
 block|{
 comment|/// \brief Wrap class definitions.
+comment|/// \code
+comment|///   true:
+comment|///   class foo {};
+comment|///
+comment|///   false:
+comment|///   class foo
+comment|///   {};
+comment|/// \endcode
 name|bool
 name|AfterClass
 decl_stmt|;
 comment|/// \brief Wrap control statements (``if``/``for``/``while``/``switch``/..).
+comment|/// \code
+comment|///   true:
+comment|///   if (foo())
+comment|///   {
+comment|///   } else
+comment|///   {}
+comment|///   for (int i = 0; i< 10; ++i)
+comment|///   {}
+comment|///
+comment|///   false:
+comment|///   if (foo()) {
+comment|///   } else {
+comment|///   }
+comment|///   for (int i = 0; i< 10; ++i) {
+comment|///   }
+comment|/// \endcode
 name|bool
 name|AfterControlStatement
 decl_stmt|;
 comment|/// \brief Wrap enum definitions.
+comment|/// \code
+comment|///   true:
+comment|///   enum X : int
+comment|///   {
+comment|///     B
+comment|///   };
+comment|///
+comment|///   false:
+comment|///   enum X : int { B };
+comment|/// \endcode
 name|bool
 name|AfterEnum
 decl_stmt|;
 comment|/// \brief Wrap function definitions.
+comment|/// \code
+comment|///   true:
+comment|///   void foo()
+comment|///   {
+comment|///     bar();
+comment|///     bar2();
+comment|///   }
+comment|///
+comment|///   false:
+comment|///   void foo() {
+comment|///     bar();
+comment|///     bar2();
+comment|///   }
+comment|/// \endcode
 name|bool
 name|AfterFunction
 decl_stmt|;
 comment|/// \brief Wrap namespace definitions.
+comment|/// \code
+comment|///   true:
+comment|///   namespace
+comment|///   {
+comment|///   int foo();
+comment|///   int bar();
+comment|///   }
+comment|///
+comment|///   false:
+comment|///   namespace {
+comment|///   int foo();
+comment|///   int bar();
+comment|///   }
+comment|/// \endcode
 name|bool
 name|AfterNamespace
 decl_stmt|;
@@ -460,18 +810,68 @@ name|bool
 name|AfterObjCDeclaration
 decl_stmt|;
 comment|/// \brief Wrap struct definitions.
+comment|/// \code
+comment|///   true:
+comment|///   struct foo
+comment|///   {
+comment|///     int x;
+comment|///   }
+comment|///
+comment|///   false:
+comment|///   struct foo {
+comment|///     int x;
+comment|///   }
+comment|/// \endcode
 name|bool
 name|AfterStruct
 decl_stmt|;
 comment|/// \brief Wrap union definitions.
+comment|/// \code
+comment|///   true:
+comment|///   union foo
+comment|///   {
+comment|///     int x;
+comment|///   }
+comment|///
+comment|///   false:
+comment|///   union foo {
+comment|///     int x;
+comment|///   }
+comment|/// \endcode
 name|bool
 name|AfterUnion
 decl_stmt|;
 comment|/// \brief Wrap before ``catch``.
+comment|/// \code
+comment|///   true:
+comment|///   try {
+comment|///     foo();
+comment|///   }
+comment|///   catch () {
+comment|///   }
+comment|///
+comment|///   false:
+comment|///   try {
+comment|///     foo();
+comment|///   } catch () {
+comment|///   }
+comment|/// \endcode
 name|bool
 name|BeforeCatch
 decl_stmt|;
 comment|/// \brief Wrap before ``else``.
+comment|/// \code
+comment|///   true:
+comment|///   if (foo()) {
+comment|///   }
+comment|///   else {
+comment|///   }
+comment|///
+comment|///   false:
+comment|///   if (foo()) {
+comment|///   } else {
+comment|///   }
+comment|/// \endcode
 name|bool
 name|BeforeElse
 decl_stmt|;
@@ -489,15 +889,39 @@ name|BraceWrappingFlags
 name|BraceWrapping
 decl_stmt|;
 comment|/// \brief If ``true``, ternary operators will be placed after line breaks.
+comment|/// \code
+comment|///    true:
+comment|///    veryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongDescription
+comment|///        ? firstValue
+comment|///        : SecondValueVeryVeryVeryVeryLong;
+comment|///
+comment|///    true:
+comment|///    veryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongDescription ?
+comment|///        firstValue :
+comment|///        SecondValueVeryVeryVeryVeryLong;
+comment|/// \endcode
 name|bool
 name|BreakBeforeTernaryOperators
 decl_stmt|;
 comment|/// \brief Always break constructor initializers before commas and align
 comment|/// the commas with the colon.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    SomeClass::Constructor()       vs.     SomeClass::Constructor() : a(a),
+comment|///        : a(a)                                                   b(b),
+comment|///        , b(b)                                                   c(c) {}
+comment|///        , c(c) {}
+comment|/// \endcode
 name|bool
 name|BreakConstructorInitializersBeforeComma
 decl_stmt|;
 comment|/// \brief Break after each annotation on a field in Java files.
+comment|/// \code{.java}
+comment|///    true:                                  false:
+comment|///    @Partial                       vs.     @Partial @Mock DataLoad loader;
+comment|///    @Mock
+comment|///    DataLoad loader;
+comment|/// \endcode
 name|bool
 name|BreakAfterJavaFieldAnnotations
 decl_stmt|;
@@ -515,13 +939,44 @@ name|ColumnLimit
 decl_stmt|;
 comment|/// \brief A regular expression that describes comments with special meaning,
 comment|/// which should not be split into lines or otherwise changed.
+comment|/// \code
+comment|///    // CommentPragmas: '^ FOOBAR pragma:'
+comment|///    // Will leave the following line unaffected
+comment|///    #include<vector> // FOOBAR pragma: keep
+comment|/// \endcode
 name|std
 operator|::
 name|string
 name|CommentPragmas
 expr_stmt|;
+comment|/// \brief If ``true``, in the class inheritance expression clang-format will
+comment|/// break before ``:`` and ``,`` if there is multiple inheritance.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    class MyClass                  vs.     class MyClass : public X, public Y {
+comment|///        : public X                         };
+comment|///        , public Y {
+comment|///    };
+comment|/// \endcode
+name|bool
+name|BreakBeforeInheritanceComma
+decl_stmt|;
 comment|/// \brief If the constructor initializers don't fit on a line, put each
 comment|/// initializer on its own line.
+comment|/// \code
+comment|///   true:
+comment|///   SomeClass::Constructor()
+comment|///       : aaaaaaaa(aaaaaaaa), aaaaaaaa(aaaaaaaa), aaaaaaaa(aaaaaaaaaaaaaaaaaaaaaaaaa) {
+comment|///     return 0;
+comment|///   }
+comment|///
+comment|///   false:
+comment|///   SomeClass::Constructor()
+comment|///       : aaaaaaaa(aaaaaaaa), aaaaaaaa(aaaaaaaa),
+comment|///         aaaaaaaa(aaaaaaaaaaaaaaaaaaaaaaaaa) {
+comment|///     return 0;
+comment|///   }
+comment|/// \endcode
 name|bool
 name|ConstructorInitializerAllOnOneLineOrOnePerLine
 decl_stmt|;
@@ -531,6 +986,13 @@ name|unsigned
 name|ConstructorInitializerIndentWidth
 decl_stmt|;
 comment|/// \brief Indent width for line continuations.
+comment|/// \code
+comment|///    ContinuationIndentWidth: 2
+comment|///
+comment|///    int i =         //  VeryVeryVeryVeryVeryLongComment
+comment|///      longFunction( // Again a long comment
+comment|///        arg);
+comment|/// \endcode
 name|unsigned
 name|ContinuationIndentWidth
 decl_stmt|;
@@ -547,12 +1009,21 @@ comment|/// calls would be formatted in their place. If the braced list follows 
 comment|/// (e.g. a type or variable name), clang-format formats as if the ``{}`` were
 comment|/// the parentheses of a function call with that name. If there is no name,
 comment|/// a zero-length name is assumed.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    vector<int> x{1, 2, 3, 4};     vs.     vector<int> x{ 1, 2, 3, 4 };
+comment|///    vector<T> x{{}, {}, {}, {}};           vector<T> x{ {}, {}, {}, {} };
+comment|///    f(MyMap[{composite, key}]);            f(MyMap[{ composite, key }]);
+comment|///    new int[3]{1, 2, 3};                   new int[3]{ 1, 2, 3 };
+comment|/// \endcode
 name|bool
 name|Cpp11BracedListStyle
 decl_stmt|;
 comment|/// \brief If ``true``, analyze the formatted file for the most common
-comment|/// alignment of ``&`` and ``*``. ``PointerAlignment`` is then used only as
-comment|/// fallback.
+comment|/// alignment of ``&`` and ``*``.
+comment|/// Pointer and reference alignment styles are going to be updated according
+comment|/// to the preferences found in the file.
+comment|/// ``PointerAlignment`` is then used only as fallback.
 name|bool
 name|DerivePointerAlignment
 decl_stmt|;
@@ -572,6 +1043,17 @@ comment|/// NOTE: This is an experimental flag, that might go away or be renamed
 comment|/// not use this in config files, etc. Use at your own risk.
 name|bool
 name|ExperimentalAutoDetectBinPacking
+decl_stmt|;
+comment|/// \brief If ``true``, clang-format adds missing namespace end comments and
+comment|/// fixes invalid existing ones.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    namespace a {                  vs.     namespace a {
+comment|///    foo();                                 foo();
+comment|///    } // namespace a;                      }
+comment|/// \endcode
+name|bool
+name|FixNamespaceComments
 decl_stmt|;
 comment|/// \brief A vector of macros that should be interpreted as foreach loops
 comment|/// instead of as function calls.
@@ -693,15 +1175,44 @@ comment|/// \brief Indent case labels one level from the switch statement.
 comment|///
 comment|/// When ``false``, use the same indentation level as for the switch statement.
 comment|/// Switch statement body is always indented one level more than case labels.
+comment|/// \code
+comment|///    false:                                 true:
+comment|///    switch (fool) {                vs.     switch (fool) {
+comment|///    case 1:                                  case 1:
+comment|///      bar();                                   bar();
+comment|///      break;                                   break;
+comment|///    default:                                 default:
+comment|///      plop();                                  plop();
+comment|///    }                                      }
+comment|/// \endcode
 name|bool
 name|IndentCaseLabels
 decl_stmt|;
 comment|/// \brief The number of columns to use for indentation.
+comment|/// \code
+comment|///    IndentWidth: 3
+comment|///
+comment|///    void f() {
+comment|///       someFunction();
+comment|///       if (true, false) {
+comment|///          f();
+comment|///       }
+comment|///    }
+comment|/// \endcode
 name|unsigned
 name|IndentWidth
 decl_stmt|;
 comment|/// \brief Indent if a function definition or declaration is wrapped after the
 comment|/// type.
+comment|/// \code
+comment|///    true:
+comment|///    LoooooooooooooooooooooooooooooooooooooooongReturnType
+comment|///        LoooooooooooooooooooooooooooooooongFunctionDeclaration();
+comment|///
+comment|///    false:
+comment|///    LoooooooooooooooooooooooooooooooooooooooongReturnType
+comment|///    LoooooooooooooooooooooooooooooooongFunctionDeclaration();
+comment|/// \endcode
 name|bool
 name|IndentWrappedFunctionNames
 decl_stmt|;
@@ -711,12 +1222,24 @@ enum|enum
 name|JavaScriptQuoteStyle
 block|{
 comment|/// Leave string quotes as they are.
+comment|/// \code{.js}
+comment|///    string1 = "foo";
+comment|///    string2 = 'bar';
+comment|/// \endcode
 name|JSQS_Leave
 block|,
 comment|/// Always use single quotes.
+comment|/// \code{.js}
+comment|///    string1 = 'foo';
+comment|///    string2 = 'bar';
+comment|/// \endcode
 name|JSQS_Single
 block|,
 comment|/// Always use double quotes.
+comment|/// \code{.js}
+comment|///    string1 = "foo";
+comment|///    string2 = "bar";
+comment|/// \endcode
 name|JSQS_Double
 block|}
 enum|;
@@ -725,10 +1248,28 @@ name|JavaScriptQuoteStyle
 name|JavaScriptQuotes
 decl_stmt|;
 comment|/// \brief Whether to wrap JavaScript import/export statements.
+comment|/// \code{.js}
+comment|///    true:
+comment|///    import {
+comment|///        VeryLongImportsAreAnnoying,
+comment|///        VeryLongImportsAreAnnoying,
+comment|///        VeryLongImportsAreAnnoying,
+comment|///    } from 'some/module.js'
+comment|///
+comment|///    false:
+comment|///    import {VeryLongImportsAreAnnoying, VeryLongImportsAreAnnoying, VeryLongImportsAreAnnoying,} from "some/module.js"
+comment|/// \endcode
 name|bool
 name|JavaScriptWrapImports
 decl_stmt|;
-comment|/// \brief If true, empty lines at the start of blocks are kept.
+comment|/// \brief If true, the empty line at the start of blocks is kept.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    if (foo) {                     vs.     if (foo) {
+comment|///                                             bar();
+comment|///      bar();                               }
+comment|///    }
+comment|/// \endcode
 name|bool
 name|KeepEmptyLinesAtTheStartOfBlocks
 decl_stmt|;
@@ -743,7 +1284,7 @@ block|{
 comment|/// Do not use.
 name|LK_None
 block|,
-comment|/// Should be used for C, C++, ObjectiveC, ObjectiveC++.
+comment|/// Should be used for C, C++.
 name|LK_Cpp
 block|,
 comment|/// Should be used for Java.
@@ -752,7 +1293,7 @@ block|,
 comment|/// Should be used for JavaScript.
 name|LK_JavaScript
 block|,
-comment|/// Should be used for ObjC code.
+comment|/// Should be used for Objective-C, Objective-C++.
 name|LK_ObjC
 block|,
 comment|/// Should be used for Protocol Buffers
@@ -763,11 +1304,51 @@ comment|/// Should be used for TableGen code.
 name|LK_TableGen
 block|}
 enum|;
+name|bool
+name|isCpp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Language
+operator|==
+name|LK_Cpp
+operator|||
+name|Language
+operator|==
+name|LK_ObjC
+return|;
+block|}
 comment|/// \brief Language, this format style is targeted at.
 name|LanguageKind
 name|Language
 decl_stmt|;
 comment|/// \brief A regular expression matching macros that start a block.
+comment|/// \code
+comment|///    # With:
+comment|///    MacroBlockBegin: "^NS_MAP_BEGIN|\
+comment|///    NS_TABLE_HEAD$"
+comment|///    MacroBlockEnd: "^\
+comment|///    NS_MAP_END|\
+comment|///    NS_TABLE_.*_END$"
+comment|///
+comment|///    NS_MAP_BEGIN
+comment|///      foo();
+comment|///    NS_MAP_END
+comment|///
+comment|///    NS_TABLE_HEAD
+comment|///      bar();
+comment|///    NS_TABLE_FOO_END
+comment|///
+comment|///    # Without:
+comment|///    NS_MAP_BEGIN
+comment|///    foo();
+comment|///    NS_MAP_END
+comment|///
+comment|///    NS_TABLE_HEAD
+comment|///    bar();
+comment|///    NS_TABLE_FOO_END
+comment|/// \endcode
 name|std
 operator|::
 name|string
@@ -780,6 +1361,16 @@ name|string
 name|MacroBlockEnd
 expr_stmt|;
 comment|/// \brief The maximum number of consecutive empty lines to keep.
+comment|/// \code
+comment|///    MaxEmptyLinesToKeep: 1         vs.     MaxEmptyLinesToKeep: 0
+comment|///    int f() {                              int f() {
+comment|///      int = 1;                                 int i = 1;
+comment|///                                               i = foo();
+comment|///      i = foo();                               return i;
+comment|///                                           }
+comment|///      return i;
+comment|///    }
+comment|/// \endcode
 name|unsigned
 name|MaxEmptyLinesToKeep
 decl_stmt|;
@@ -788,12 +1379,36 @@ enum|enum
 name|NamespaceIndentationKind
 block|{
 comment|/// Don't indent in namespaces.
+comment|/// \code
+comment|///    namespace out {
+comment|///    int i;
+comment|///    namespace in {
+comment|///    int i;
+comment|///    }
+comment|///    }
+comment|/// \endcode
 name|NI_None
 block|,
 comment|/// Indent only in inner namespaces (nested in other namespaces).
+comment|/// \code
+comment|///    namespace out {
+comment|///    int i;
+comment|///    namespace in {
+comment|///      int i;
+comment|///    }
+comment|///    }
+comment|/// \endcode
 name|NI_Inner
 block|,
 comment|/// Indent in all namespaces.
+comment|/// \code
+comment|///    namespace out {
+comment|///      int i;
+comment|///      namespace in {
+comment|///        int i;
+comment|///      }
+comment|///    }
+comment|/// \endcode
 name|NI_All
 block|}
 enum|;
@@ -802,6 +1417,13 @@ name|NamespaceIndentationKind
 name|NamespaceIndentation
 decl_stmt|;
 comment|/// \brief The number of characters to use for indentation of ObjC blocks.
+comment|/// \code{.objc}
+comment|///    ObjCBlockIndentWidth: 4
+comment|///
+comment|///    [operation setCompletionBlock:^{
+comment|///        [self onOperationDone];
+comment|///    }];
+comment|/// \endcode
 name|unsigned
 name|ObjCBlockIndentWidth
 decl_stmt|;
@@ -845,12 +1467,21 @@ enum|enum
 name|PointerAlignmentStyle
 block|{
 comment|/// Align pointer to the left.
+comment|/// \code
+comment|///   int* a;
+comment|/// \endcode
 name|PAS_Left
 block|,
 comment|/// Align pointer to the right.
+comment|/// \code
+comment|///   int *a;
+comment|/// \endcode
 name|PAS_Right
 block|,
 comment|/// Align pointer in the middle.
+comment|/// \code
+comment|///   int * a;
+comment|/// \endcode
 name|PAS_Middle
 block|}
 enum|;
@@ -859,22 +1490,51 @@ name|PointerAlignmentStyle
 name|PointerAlignment
 decl_stmt|;
 comment|/// \brief If ``true``, clang-format will attempt to re-flow comments.
+comment|/// \code
+comment|///    false:
+comment|///    // veryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongComment with plenty of information
+comment|///    /* second veryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongComment with plenty of information */
+comment|///
+comment|///    true:
+comment|///    // veryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongComment with plenty of
+comment|///    // information
+comment|///    /* second veryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongComment with plenty of
+comment|///     * information */
+comment|/// \endcode
 name|bool
 name|ReflowComments
 decl_stmt|;
 comment|/// \brief If ``true``, clang-format will sort ``#includes``.
+comment|/// \code
+comment|///    false:                                 true:
+comment|///    #include "b.h"                 vs.     #include "a.h"
+comment|///    #include "a.h"                         #include "b.h"
+comment|/// \endcode
 name|bool
 name|SortIncludes
 decl_stmt|;
-comment|/// \brief If ``true``, a space may be inserted after C style casts.
+comment|/// \brief If ``true``, a space is inserted after C style casts.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    (int)i;                        vs.     (int) i;
+comment|/// \endcode
 name|bool
 name|SpaceAfterCStyleCast
 decl_stmt|;
 comment|/// \brief If \c true, a space will be inserted after the 'template' keyword.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    template<int> void foo();     vs.     template<int> void foo();
+comment|/// \endcode
 name|bool
 name|SpaceAfterTemplateKeyword
 decl_stmt|;
 comment|/// \brief If ``false``, spaces will be removed before assignment operators.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    int a = 5;                     vs.     int a=5;
+comment|///    a += 42                                a+=42;
+comment|/// \endcode
 name|bool
 name|SpaceBeforeAssignmentOperators
 decl_stmt|;
@@ -883,16 +1543,37 @@ enum|enum
 name|SpaceBeforeParensOptions
 block|{
 comment|/// Never put a space before opening parentheses.
+comment|/// \code
+comment|///    void f() {
+comment|///      if(true) {
+comment|///        f();
+comment|///      }
+comment|///    }
+comment|/// \endcode
 name|SBPO_Never
 block|,
 comment|/// Put a space before opening parentheses only after control statement
 comment|/// keywords (``for/if/while...``).
+comment|/// \code
+comment|///    void f() {
+comment|///      if (true) {
+comment|///        f();
+comment|///      }
+comment|///    }
+comment|/// \endcode
 name|SBPO_ControlStatements
 block|,
 comment|/// Always put a space before opening parentheses, except when it's
 comment|/// prohibited by the syntax rules (in function-like macro definitions) or
 comment|/// when determined by other style rules (after unary operators, opening
 comment|/// parentheses, etc.)
+comment|/// \code
+comment|///    void f () {
+comment|///      if (true) {
+comment|///        f ();
+comment|///      }
+comment|///    }
+comment|/// \endcode
 name|SBPO_Always
 block|}
 enum|;
@@ -901,6 +1582,15 @@ name|SpaceBeforeParensOptions
 name|SpaceBeforeParens
 decl_stmt|;
 comment|/// \brief If ``true``, spaces may be inserted into ``()``.
+comment|/// \code
+comment|///    true:                                false:
+comment|///    void f( ) {                    vs.   void f() {
+comment|///      int x[] = {foo( ), bar( )};          int x[] = {foo(), bar()};
+comment|///      if (true) {                          if (true) {
+comment|///        f( );                                f();
+comment|///      }                                    }
+comment|///    }                                    }
+comment|/// \endcode
 name|bool
 name|SpaceInEmptyParentheses
 decl_stmt|;
@@ -910,28 +1600,60 @@ comment|///
 comment|/// This does not affect trailing block comments (``/*`` - comments) as
 comment|/// those commonly have different usage patterns and a number of special
 comment|/// cases.
+comment|/// \code
+comment|///    SpacesBeforeTrailingComments: 3
+comment|///    void f() {
+comment|///      if (true) {   // foo1
+comment|///        f();        // bar
+comment|///      }             // foo
+comment|///    }
+comment|/// \endcode
 name|unsigned
 name|SpacesBeforeTrailingComments
 decl_stmt|;
 comment|/// \brief If ``true``, spaces will be inserted after ``<`` and before ``>``
 comment|/// in template argument lists.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    static_cast< int>(arg);       vs.     static_cast<int>(arg);
+comment|///    std::function< void(int)> fct;        std::function<void(int)> fct;
+comment|/// \endcode
 name|bool
 name|SpacesInAngles
 decl_stmt|;
 comment|/// \brief If ``true``, spaces are inserted inside container literals (e.g.
 comment|/// ObjC and Javascript array and dict literals).
+comment|/// \code{.js}
+comment|///    true:                                  false:
+comment|///    var arr = [ 1, 2, 3 ];         vs.     var arr = [1, 2, 3];
+comment|///    f({a : 1, b : 2, c : 3});              f({a: 1, b: 2, c: 3});
+comment|/// \endcode
 name|bool
 name|SpacesInContainerLiterals
 decl_stmt|;
 comment|/// \brief If ``true``, spaces may be inserted into C style casts.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    x = ( int32 )y                 vs.     x = (int32)y
+comment|/// \endcode
 name|bool
 name|SpacesInCStyleCastParentheses
 decl_stmt|;
 comment|/// \brief If ``true``, spaces will be inserted after ``(`` and before ``)``.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    t f( Deleted& )& = delete;   vs.     t f(Deleted&)& = delete;
+comment|/// \endcode
 name|bool
 name|SpacesInParentheses
 decl_stmt|;
 comment|/// \brief If ``true``, spaces will be inserted after ``[`` and before ``]``.
+comment|/// Lambdas or unspecified size array declarations will not be affected.
+comment|/// \code
+comment|///    true:                                  false:
+comment|///    int a[ 5 ];                    vs.     int a[5];
+comment|///    std::unique_ptr<int[]> foo() {} // Won't be affected
+comment|/// \endcode
 name|bool
 name|SpacesInSquareBrackets
 decl_stmt|;
@@ -942,7 +1664,8 @@ block|{
 comment|/// Use C++03-compatible syntax.
 name|LS_Cpp03
 block|,
-comment|/// Use features of C++11 (e.g. ``A<A<int>>`` instead of ``A<A<int>>``).
+comment|/// Use features of C++11, C++14 and C++1z (e.g. ``A<A<int>>`` instead of
+comment|/// ``A<A<int>>``).
 name|LS_Cpp11
 block|,
 comment|/// Automatic detection based on the input.
@@ -1148,6 +1871,12 @@ name|R
 operator|.
 name|CommentPragmas
 operator|&&
+name|BreakBeforeInheritanceComma
+operator|==
+name|R
+operator|.
+name|BreakBeforeInheritanceComma
+operator|&&
 name|ConstructorInitializerAllOnOneLineOrOnePerLine
 operator|==
 name|R
@@ -1189,6 +1918,12 @@ operator|==
 name|R
 operator|.
 name|ExperimentalAutoDetectBinPacking
+operator|&&
+name|FixNamespaceComments
+operator|==
+name|R
+operator|.
+name|FixNamespaceComments
 operator|&&
 name|ForEachMacros
 operator|==
@@ -1639,6 +2374,25 @@ argument|StringRef FileName =
 literal|"<stdin>"
 argument_list|)
 expr_stmt|;
+comment|/// \brief Fix namespace end comments in the given \p Ranges in \p Code.
+comment|///
+comment|/// Returns the ``Replacements`` that fix the namespace comments in all
+comment|/// \p Ranges in \p Code.
+name|tooling
+operator|::
+name|Replacements
+name|fixNamespaceEndComments
+argument_list|(
+argument|const FormatStyle&Style
+argument_list|,
+argument|StringRef Code
+argument_list|,
+argument|ArrayRef<tooling::Range> Ranges
+argument_list|,
+argument|StringRef FileName =
+literal|"<stdin>"
+argument_list|)
+expr_stmt|;
 comment|/// \brief Returns the ``LangOpts`` that the formatter expects you to set.
 comment|///
 comment|/// \param Style determines specific settings for lexing mode.
@@ -1678,40 +2432,35 @@ comment|/// above.
 comment|/// \param[in] FileName Path to start search for .clang-format if ``StyleName``
 comment|/// == "file".
 comment|/// \param[in] FallbackStyle The name of a predefined style used to fallback to
-comment|/// in case the style can't be determined from \p StyleName.
+comment|/// in case \p StyleName is "file" and no file can be found.
 comment|/// \param[in] Code The actual code to be formatted. Used to determine the
 comment|/// language if the filename isn't sufficient.
 comment|/// \param[in] FS The underlying file system, in which the file resides. By
 comment|/// default, the file system is the real file system.
 comment|///
-comment|/// \returns FormatStyle as specified by ``StyleName``. If no style could be
-comment|/// determined, the default is LLVM Style (see ``getLLVMStyle()``).
+comment|/// \returns FormatStyle as specified by ``StyleName``. If ``StyleName`` is
+comment|/// "file" and no file is found, returns ``FallbackStyle``. If no style could be
+comment|/// determined, returns an Error.
+name|llvm
+operator|::
+name|Expected
+operator|<
 name|FormatStyle
+operator|>
 name|getStyle
 argument_list|(
-name|StringRef
-name|StyleName
+argument|StringRef StyleName
 argument_list|,
-name|StringRef
-name|FileName
+argument|StringRef FileName
 argument_list|,
-name|StringRef
-name|FallbackStyle
+argument|StringRef FallbackStyle
 argument_list|,
-name|StringRef
-name|Code
-operator|=
+argument|StringRef Code =
 literal|""
 argument_list|,
-name|vfs
-operator|::
-name|FileSystem
-operator|*
-name|FS
-operator|=
-name|nullptr
+argument|vfs::FileSystem *FS = nullptr
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|// \brief Returns a string representation of ``Language``.
 specifier|inline
 name|StringRef
@@ -1735,6 +2484,14 @@ name|LK_Cpp
 case|:
 return|return
 literal|"C++"
+return|;
+case|case
+name|FormatStyle
+operator|::
+name|LK_ObjC
+case|:
+return|return
+literal|"Objective-C"
 return|;
 case|case
 name|FormatStyle

@@ -374,7 +374,7 @@ define|#
 directive|define
 name|LIST_SANITIZER_CHECKS
 define|\
-value|SANITIZER_CHECK(AddOverflow, add_overflow, 0)                                \   SANITIZER_CHECK(BuiltinUnreachable, builtin_unreachable, 0)                  \   SANITIZER_CHECK(CFICheckFail, cfi_check_fail, 0)                             \   SANITIZER_CHECK(DivremOverflow, divrem_overflow, 0)                          \   SANITIZER_CHECK(DynamicTypeCacheMiss, dynamic_type_cache_miss, 0)            \   SANITIZER_CHECK(FloatCastOverflow, float_cast_overflow, 0)                   \   SANITIZER_CHECK(FunctionTypeMismatch, function_type_mismatch, 0)             \   SANITIZER_CHECK(LoadInvalidValue, load_invalid_value, 0)                     \   SANITIZER_CHECK(MissingReturn, missing_return, 0)                            \   SANITIZER_CHECK(MulOverflow, mul_overflow, 0)                                \   SANITIZER_CHECK(NegateOverflow, negate_overflow, 0)                          \   SANITIZER_CHECK(NonnullArg, nonnull_arg, 0)                                  \   SANITIZER_CHECK(NonnullReturn, nonnull_return, 0)                            \   SANITIZER_CHECK(OutOfBounds, out_of_bounds, 0)                               \   SANITIZER_CHECK(ShiftOutOfBounds, shift_out_of_bounds, 0)                    \   SANITIZER_CHECK(SubOverflow, sub_overflow, 0)                                \   SANITIZER_CHECK(TypeMismatch, type_mismatch, 1)                              \   SANITIZER_CHECK(VLABoundNotPositive, vla_bound_not_positive, 0)
+value|SANITIZER_CHECK(AddOverflow, add_overflow, 0)                                \   SANITIZER_CHECK(BuiltinUnreachable, builtin_unreachable, 0)                  \   SANITIZER_CHECK(CFICheckFail, cfi_check_fail, 0)                             \   SANITIZER_CHECK(DivremOverflow, divrem_overflow, 0)                          \   SANITIZER_CHECK(DynamicTypeCacheMiss, dynamic_type_cache_miss, 0)            \   SANITIZER_CHECK(FloatCastOverflow, float_cast_overflow, 0)                   \   SANITIZER_CHECK(FunctionTypeMismatch, function_type_mismatch, 0)             \   SANITIZER_CHECK(LoadInvalidValue, load_invalid_value, 0)                     \   SANITIZER_CHECK(MissingReturn, missing_return, 0)                            \   SANITIZER_CHECK(MulOverflow, mul_overflow, 0)                                \   SANITIZER_CHECK(NegateOverflow, negate_overflow, 0)                          \   SANITIZER_CHECK(NullabilityArg, nullability_arg, 0)                          \   SANITIZER_CHECK(NullabilityReturn, nullability_return, 0)                    \   SANITIZER_CHECK(NonnullArg, nonnull_arg, 0)                                  \   SANITIZER_CHECK(NonnullReturn, nonnull_return, 0)                            \   SANITIZER_CHECK(OutOfBounds, out_of_bounds, 0)                               \   SANITIZER_CHECK(ShiftOutOfBounds, shift_out_of_bounds, 0)                    \   SANITIZER_CHECK(SubOverflow, sub_overflow, 0)                                \   SANITIZER_CHECK(TypeMismatch, type_mismatch, 1)                              \   SANITIZER_CHECK(VLABoundNotPositive, vla_bound_not_positive, 0)
 enum|enum
 name|SanitizerHandler
 block|{
@@ -689,6 +689,30 @@ comment|/// value. This is invalid iff the function has no return value.
 name|Address
 name|ReturnValue
 decl_stmt|;
+comment|/// Return true if a label was seen in the current scope.
+name|bool
+name|hasLabelBeenSeenInCurrentScope
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|CurLexicalScope
+condition|)
+return|return
+name|CurLexicalScope
+operator|->
+name|hasLabels
+argument_list|()
+return|;
+return|return
+operator|!
+name|LabelMap
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
 comment|/// AllocaInsertPoint - This is an instruction in the entry block before which
 comment|/// we prefer to insert allocas.
 name|llvm
@@ -1084,15 +1108,200 @@ name|PrevCapturedStmtInfo
 block|; }
 block|}
 empty_stmt|;
+comment|/// An abstract representation of regular/ObjC call/message targets.
+name|class
+name|AbstractCallee
+block|{
+comment|/// The function declaration of the callee.
+specifier|const
+name|Decl
+modifier|*
+name|CalleeDecl
+decl_stmt|;
+name|public
+label|:
+name|AbstractCallee
+argument_list|()
+operator|:
+name|CalleeDecl
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|AbstractCallee
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|)
+operator|:
+name|CalleeDecl
+argument_list|(
+argument|FD
+argument_list|)
+block|{}
+name|AbstractCallee
+argument_list|(
+specifier|const
+name|ObjCMethodDecl
+operator|*
+name|OMD
+argument_list|)
+operator|:
+name|CalleeDecl
+argument_list|(
+argument|OMD
+argument_list|)
+block|{}
+name|bool
+name|hasFunctionDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|dyn_cast_or_null
+operator|<
+name|FunctionDecl
+operator|>
+operator|(
+name|CalleeDecl
+operator|)
+return|;
+block|}
+specifier|const
+name|Decl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CalleeDecl
+return|;
+block|}
+name|unsigned
+name|getNumParams
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+specifier|auto
+modifier|*
+name|FD
+init|=
+name|dyn_cast
+operator|<
+name|FunctionDecl
+operator|>
+operator|(
+name|CalleeDecl
+operator|)
+condition|)
+return|return
+name|FD
+operator|->
+name|getNumParams
+argument_list|()
+return|;
+return|return
+name|cast
+operator|<
+name|ObjCMethodDecl
+operator|>
+operator|(
+name|CalleeDecl
+operator|)
+operator|->
+name|param_size
+argument_list|()
+return|;
+block|}
+specifier|const
+name|ParmVarDecl
+modifier|*
+name|getParamDecl
+argument_list|(
+name|unsigned
+name|I
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+specifier|const
+specifier|auto
+modifier|*
+name|FD
+init|=
+name|dyn_cast
+operator|<
+name|FunctionDecl
+operator|>
+operator|(
+name|CalleeDecl
+operator|)
+condition|)
+return|return
+name|FD
+operator|->
+name|getParamDecl
+argument_list|(
+name|I
+argument_list|)
+return|;
+return|return
+operator|*
+operator|(
+name|cast
+operator|<
+name|ObjCMethodDecl
+operator|>
+operator|(
+name|CalleeDecl
+operator|)
+operator|->
+name|param_begin
+argument_list|()
+operator|+
+name|I
+operator|)
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Sanitizers enabled for this function.
+end_comment
+
+begin_decl_stmt
 name|SanitizerSet
 name|SanOpts
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief True if CodeGen currently emits code implementing sanitizer checks.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|IsSanitizerScope
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief RAII object to set/unset CodeGenFunction::IsSanitizerScope.
+end_comment
+
+begin_decl_stmt
 name|class
 name|SanitizerScope
 block|{
@@ -1114,21 +1323,51 @@ name|SanitizerScope
 argument_list|()
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// In C++, whether we are code generating a thunk.  This controls whether we
+end_comment
+
+begin_comment
 comment|/// should emit cleanups.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|CurFuncIsThunk
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// In ARC, whether we should autorelease the return value.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|AutoreleaseResult
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Whether we processed a Microsoft-style asm block during CodeGen. These can
+end_comment
+
+begin_comment
 comment|/// potentially set the return value.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|SawAsmBlock
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|const
 name|FunctionDecl
 modifier|*
@@ -1136,11 +1375,23 @@ name|CurSEHParent
 init|=
 name|nullptr
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// True if the current function is an outlined SEH helper. This can be a
+end_comment
+
+begin_comment
 comment|/// finally block or filter expression.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|IsOutlinedSEHHelper
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 specifier|const
 name|CodeGen
 operator|::
@@ -1148,12 +1399,18 @@ name|CGBlockInfo
 operator|*
 name|BlockInfo
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
 operator|*
 name|BlockPointer
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|DenseMap
@@ -1167,12 +1424,24 @@ operator|*
 operator|>
 name|LambdaCaptureFields
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|FieldDecl
 modifier|*
 name|LambdaThisCaptureField
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief A mapping from NRVO variables to the flags used to indicate
+end_comment
+
+begin_comment
 comment|/// when the NRVO has been applied to this variable.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|DenseMap
@@ -1188,9 +1457,15 @@ operator|*
 operator|>
 name|NRVOFlags
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|EHScopeStack
 name|EHStack
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|SmallVector
@@ -1201,6 +1476,9 @@ literal|256
 operator|>
 name|LifetimeExtendedCleanupStack
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|SmallVector
@@ -1213,6 +1491,9 @@ literal|2
 operator|>
 name|SEHTryEpilogueStack
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Instruction
@@ -1221,6 +1502,9 @@ name|CurrentFuncletPad
 operator|=
 name|nullptr
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|class
 name|CallLifetimeEnd
 name|final
@@ -1284,7 +1568,13 @@ argument_list|)
 block|;     }
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Header for data within LifetimeExtendedCleanupStack.
+end_comment
+
+begin_struct
 struct|struct
 name|LifetimeExtendedCleanupHeader
 block|{
@@ -1316,47 +1606,98 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/// i32s containing the indexes of the cleanup destinations.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|AllocaInst
 operator|*
 name|NormalCleanupDest
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|unsigned
 name|NextCleanupDestIndex
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// FirstBlockInfo - The head of a singly-linked-list of block layouts.
+end_comment
+
+begin_decl_stmt
 name|CGBlockInfo
 modifier|*
 name|FirstBlockInfo
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EHResumeBlock - Unified block containing a call to llvm.eh.resume.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
 name|EHResumeBlock
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// The exception slot.  All landing pads write the current exception pointer
+end_comment
+
+begin_comment
 comment|/// into this alloca.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
 operator|*
 name|ExceptionSlot
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// The selector slot.  Under the MandatoryCleanup model, all landing pads
+end_comment
+
+begin_comment
 comment|/// write the current selector value into this alloca.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|AllocaInst
 operator|*
 name|EHSelectorSlot
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// A stack of exception code slots. Entering an __except block pushes a slot
+end_comment
+
+begin_comment
 comment|/// on the stack and leaving pops one. The __exception_code() intrinsic loads
+end_comment
+
+begin_comment
 comment|/// a value from the top of the stack.
+end_comment
+
+begin_expr_stmt
 name|SmallVector
 operator|<
 name|Address
@@ -1365,7 +1706,13 @@ literal|1
 operator|>
 name|SEHCodeSlotStack
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Value returned by __exception_info intrinsic.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -1374,7 +1721,13 @@ name|SEHInfo
 operator|=
 name|nullptr
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Emits a landing pad for the current EH stack.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
@@ -1382,6 +1735,9 @@ operator|*
 name|EmitLandingPad
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
@@ -1389,6 +1745,9 @@ operator|*
 name|getInvokeDestImpl
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1421,10 +1780,22 @@ name|value
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|/// ObjCEHValueStack - Stack of Objective-C exception values, used for
+end_comment
+
+begin_comment
 comment|/// rethrows.
+end_comment
+
+begin_expr_stmt
 name|SmallVector
 operator|<
 name|llvm
@@ -1436,7 +1807,13 @@ literal|8
 operator|>
 name|ObjCEHValueStack
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// A class controlling the emission of a finally block.
+end_comment
+
+begin_decl_stmt
 name|class
 name|FinallyInfo
 block|{
@@ -1509,8 +1886,17 @@ name|CGF
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// Returns true inside SEH __try blocks.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isSEHTryScope
 argument_list|()
@@ -1524,7 +1910,13 @@ name|empty
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Returns true while emitting a cleanuppad.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isCleanupPadScope
 argument_list|()
@@ -1544,9 +1936,21 @@ name|CurrentFuncletPad
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// pushFullExprCleanup - Push a cleanup to be run at the end of the
+end_comment
+
+begin_comment
 comment|/// current full-expression.  Safe against the possibility that
+end_comment
+
+begin_comment
 comment|/// we're currently inside a conditionally-evaluated expression.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1586,7 +1990,13 @@ name|A
 operator|...
 operator|)
 return|;
+end_expr_stmt
+
+begin_comment
 comment|// Stash values in a tuple so we can guarantee the order of saves.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1603,6 +2013,9 @@ operator|...
 operator|>
 name|SavedTuple
 expr_stmt|;
+end_typedef
+
+begin_decl_stmt
 name|SavedTuple
 name|Saved
 block|{
@@ -1612,7 +2025,13 @@ name|A
 argument_list|)
 operator|...
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_typedef
 typedef|typedef
 name|EHScopeStack
 operator|::
@@ -1625,6 +2044,9 @@ operator|...
 operator|>
 name|CleanupType
 expr_stmt|;
+end_typedef
+
+begin_expr_stmt
 name|EHStack
 operator|.
 name|pushCleanupTuple
@@ -1637,13 +2059,25 @@ operator|,
 name|Saved
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|initFullExprCleanup
 argument_list|()
 expr_stmt|;
-block|}
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|/// \brief Queue a cleanup to be pushed after finishing the current
+end_comment
+
+begin_comment
 comment|/// full-expression.
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|class
 name|T
@@ -1760,10 +2194,25 @@ name|void
 name|initFullExprCleanup
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// PushDestructorCleanup - Push a cleanup to call the
+end_comment
+
+begin_comment
 comment|/// complete-object destructor of an object of the given type at the
+end_comment
+
+begin_comment
 comment|/// given address.  Does nothing if T is not a C++ class type with a
+end_comment
+
+begin_comment
 comment|/// non-trivial destructor.
+end_comment
+
+begin_function_decl
 name|void
 name|PushDestructorCleanup
 parameter_list|(
@@ -1774,9 +2223,21 @@ name|Address
 name|Addr
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// PushDestructorCleanup - Push a cleanup to call the
+end_comment
+
+begin_comment
 comment|/// complete-object variant of the given destructor on the object at
+end_comment
+
+begin_comment
 comment|/// the given address.
+end_comment
+
+begin_function_decl
 name|void
 name|PushDestructorCleanup
 parameter_list|(
@@ -1789,8 +2250,17 @@ name|Address
 name|Addr
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// PopCleanupBlock - Will pop the cleanup entry on the stack and
+end_comment
+
+begin_comment
 comment|/// process all branch fixups.
+end_comment
+
+begin_function_decl
 name|void
 name|PopCleanupBlock
 parameter_list|(
@@ -1800,14 +2270,41 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// DeactivateCleanupBlock - Deactivates the given cleanup block.
+end_comment
+
+begin_comment
 comment|/// The block cannot be reactivated.  Pops it if it's the top of the
+end_comment
+
+begin_comment
 comment|/// stack.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param DominatingIP - An instruction which is known to
+end_comment
+
+begin_comment
 comment|///   dominate the current IP (if set) and which lies along
+end_comment
+
+begin_comment
 comment|///   all paths of execution between the current IP and the
+end_comment
+
+begin_comment
 comment|///   the point at which the cleanup comes into scope.
+end_comment
+
+begin_decl_stmt
 name|void
 name|DeactivateCleanupBlock
 argument_list|(
@@ -1823,13 +2320,37 @@ operator|*
 name|DominatingIP
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// ActivateCleanupBlock - Activates an initially-inactive cleanup.
+end_comment
+
+begin_comment
 comment|/// Cannot be used to resurrect a deactivated cleanup.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param DominatingIP - An instruction which is known to
+end_comment
+
+begin_comment
 comment|///   dominate the current IP (if set) and which lies along
+end_comment
+
+begin_comment
 comment|///   all paths of execution between the current IP and the
+end_comment
+
+begin_comment
 comment|///   the point at which the cleanup comes into scope.
+end_comment
+
+begin_decl_stmt
 name|void
 name|ActivateCleanupBlock
 argument_list|(
@@ -1845,8 +2366,17 @@ operator|*
 name|DominatingIP
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Enters a new scope for capturing cleanups, all of which
+end_comment
+
+begin_comment
 comment|/// will be executed once the scope is exited.
+end_comment
+
+begin_decl_stmt
 name|class
 name|RunCleanupsScope
 block|{
@@ -1945,8 +2475,7 @@ name|DidCallStackSave
 operator|=
 name|false
 block|;     }
-comment|/// \brief Exit this cleanup scope, emitting any accumulated
-comment|/// cleanups.
+comment|/// \brief Exit this cleanup scope, emitting any accumulated cleanups.
 operator|~
 name|RunCleanupsScope
 argument_list|()
@@ -1955,23 +2484,9 @@ if|if
 condition|(
 name|PerformCleanup
 condition|)
-block|{
-name|CGF
-operator|.
-name|DidCallStackSave
-operator|=
-name|OldDidCallStackSave
+name|ForceCleanup
+argument_list|()
 expr_stmt|;
-name|CGF
-operator|.
-name|PopCleanupBlocks
-argument_list|(
-name|CleanupStackDepth
-argument_list|,
-name|LifetimeExtendedCleanupStackSize
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/// \brief Determine whether this scope requires any cleanups.
 name|bool
@@ -1992,9 +2507,27 @@ return|;
 block|}
 comment|/// \brief Force the emission of cleanups now, instead of waiting
 comment|/// until this object is destroyed.
+comment|/// \param ValuesToReload - A list of values that need to be available at
+comment|/// the insertion point after cleanup emission. If cleanup emission created
+comment|/// a shared cleanup block, these value pointers will be rewritten.
+comment|/// Otherwise, they not will be modified.
 name|void
 name|ForceCleanup
-parameter_list|()
+argument_list|(
+name|std
+operator|::
+name|initializer_list
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|*
+operator|>
+name|ValuesToReload
+operator|=
+block|{}
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -2016,6 +2549,8 @@ argument_list|(
 name|CleanupStackDepth
 argument_list|,
 name|LifetimeExtendedCleanupStackSize
+argument_list|,
+name|ValuesToReload
 argument_list|)
 expr_stmt|;
 name|PerformCleanup
@@ -2024,7 +2559,13 @@ name|false
 expr_stmt|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|class
 name|LexicalScope
 range|:
@@ -2229,18 +2770,33 @@ name|rescopeLabels
 argument_list|()
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|bool
+name|hasLabels
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|Labels
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_function_decl
 name|void
 name|rescopeLabels
 parameter_list|()
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_typedef
+unit|};
 typedef|typedef
 name|llvm
 operator|::
@@ -2753,6 +3309,20 @@ name|EHScopeStack
 operator|::
 name|stable_iterator
 name|OldCleanupStackSize
+argument_list|,
+name|std
+operator|::
+name|initializer_list
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|*
+operator|>
+name|ValuesToReload
+operator|=
+block|{}
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2780,6 +3350,20 @@ name|OldCleanupStackSize
 argument_list|,
 name|size_t
 name|OldLifetimeExtendedStackSize
+argument_list|,
+name|std
+operator|::
+name|initializer_list
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|*
+operator|>
+name|ValuesToReload
+operator|=
+block|{}
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -4664,18 +5248,30 @@ label|:
 end_label
 
 begin_comment
-comment|/// Increment the profiler's counter for the given statement.
+comment|/// Increment the profiler's counter for the given statement by \p StepV.
 end_comment
 
-begin_function
+begin_comment
+comment|/// If \p StepV is null, the default increment is 1.
+end_comment
+
+begin_decl_stmt
 name|void
 name|incrementProfileCounter
-parameter_list|(
+argument_list|(
 specifier|const
 name|Stmt
-modifier|*
+operator|*
 name|S
-parameter_list|)
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|StepV
+operator|=
+name|nullptr
+argument_list|)
 block|{
 if|if
 condition|(
@@ -4694,6 +5290,8 @@ argument_list|(
 name|Builder
 argument_list|,
 name|S
+argument_list|,
+name|StepV
 argument_list|)
 expr_stmt|;
 name|PGO
@@ -4704,7 +5302,7 @@ name|S
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/// Get the profiler's count for the given statement.
@@ -5715,6 +6313,45 @@ name|BlockByrefInfo
 operator|>
 name|BlockByrefInfos
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Used by -fsanitize=nullability-return to determine whether the return
+end_comment
+
+begin_comment
+comment|/// value can be checked.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|RetValNullabilityPrecondition
+operator|=
+name|nullptr
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Check if -fsanitize=nullability-return instrumentation is required for
+end_comment
+
+begin_comment
+comment|/// this function.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|requiresReturnValueNullabilityCheck
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RetValNullabilityPrecondition
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
@@ -7039,6 +7676,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
+name|bool
+name|IsConstructorDelegationValid
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|Ctor
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitConstructorBody
 parameter_list|(
@@ -7911,6 +8561,26 @@ name|EndLoc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Emit a test that checks if the return value \p RV is nonnull.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitReturnValueCheck
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|RV
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// EmitStartEHSpec - Emit the start of the exception spec.
@@ -9151,7 +9821,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitAnyExprToTemp - Similary to EmitAnyExpr(), however, the result will
+comment|/// EmitAnyExprToTemp - Similarly to EmitAnyExpr(), however, the result will
 end_comment
 
 begin_comment
@@ -9701,6 +10371,23 @@ name|GetIndirectGotoBlock
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// Check if \p E is a C++ "this" pointer wrapped in value-preserving casts.
+end_comment
+
+begin_function_decl
+specifier|static
+name|bool
+name|IsWrappedCXXThis
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// EmitNullInitialization - Generate code to set a value of the given type to
@@ -10750,6 +11437,9 @@ block|,
 comment|/// Checking the operand of a cast to a virtual base object. Must be an
 comment|/// object within its lifetime.
 name|TCK_UpcastToVirtualBase
+block|,
+comment|/// Checking the value assigned to a _Nonnull pointer. Must not be null.
+name|TCK_NonnullAssign
 block|}
 enum|;
 end_enum
@@ -10805,10 +11495,11 @@ operator|::
 name|Zero
 argument_list|()
 argument_list|,
-name|bool
-name|SkipNullCheck
+name|SanitizerSet
+name|SkippedChecks
 operator|=
-name|false
+name|SanitizerSet
+argument_list|()
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -11619,6 +12310,50 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|void
+name|EmitAlignmentAssumption
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|PtrValue
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Alignment
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|OffsetValue
+operator|=
+name|nullptr
+argument_list|)
+block|{
+name|Builder
+operator|.
+name|CreateAlignmentAssumption
+argument_list|(
+name|CGM
+operator|.
+name|getDataLayout
+argument_list|()
+argument_list|,
+name|PtrValue
+argument_list|,
+name|Alignment
+argument_list|,
+name|OffsetValue
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
 begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
@@ -12095,6 +12830,68 @@ specifier|const
 name|CoroutineBodyStmt
 modifier|&
 name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitCoreturnStmt
+parameter_list|(
+specifier|const
+name|CoreturnStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|RValue
+name|EmitCoawaitExpr
+parameter_list|(
+specifier|const
+name|CoawaitExpr
+modifier|&
+name|E
+parameter_list|,
+name|AggValueSlot
+name|aggSlot
+init|=
+name|AggValueSlot
+operator|::
+name|ignored
+argument_list|()
+parameter_list|,
+name|bool
+name|ignoreResult
+init|=
+name|false
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|RValue
+name|EmitCoyieldExpr
+parameter_list|(
+specifier|const
+name|CoyieldExpr
+modifier|&
+name|E
+parameter_list|,
+name|AggValueSlot
+name|aggSlot
+init|=
+name|AggValueSlot
+operator|::
+name|ignored
+argument_list|()
+parameter_list|,
+name|bool
+name|ignoreResult
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13111,6 +13908,10 @@ begin_comment
 comment|/// \param D Directive that has at least one 'reduction' directives.
 end_comment
 
+begin_comment
+comment|/// \param ReductionKind The kind of reduction to perform.
+end_comment
+
 begin_function_decl
 name|void
 name|EmitOMPReductionClauseFinal
@@ -13119,6 +13920,10 @@ specifier|const
 name|OMPExecutableDirective
 modifier|&
 name|D
+parameter_list|,
+specifier|const
+name|OpenMPDirectiveKind
+name|ReductionKind
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13795,39 +14600,68 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit outlined function for the target directive.
+comment|/// Emit device code for the target directive.
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
-name|std
-operator|::
-name|pair
-operator|<
-name|llvm
-operator|::
-name|Function
-operator|*
-comment|/*OutlinedFn*/
-operator|,
-name|llvm
-operator|::
-name|Constant
-operator|*
-comment|/*OutlinedFnID*/
-operator|>
-name|EmitOMPTargetDirectiveOutlinedFunction
-argument_list|(
-argument|CodeGenModule&CGM
-argument_list|,
-argument|const OMPTargetDirective&S
-argument_list|,
-argument|StringRef ParentName
-argument_list|,
-argument|bool IsOffloadEntry
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+name|void
+name|EmitOMPTargetDeviceFunction
+parameter_list|(
+name|CodeGenModule
+modifier|&
+name|CGM
+parameter_list|,
+name|StringRef
+name|ParentName
+parameter_list|,
+specifier|const
+name|OMPTargetDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|EmitOMPTargetParallelDeviceFunction
+parameter_list|(
+name|CodeGenModule
+modifier|&
+name|CGM
+parameter_list|,
+name|StringRef
+name|ParentName
+parameter_list|,
+specifier|const
+name|OMPTargetParallelDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|EmitOMPTargetTeamsDeviceFunction
+parameter_list|(
+name|CodeGenModule
+modifier|&
+name|CGM
+parameter_list|,
+name|StringRef
+name|ParentName
+parameter_list|,
+specifier|const
+name|OMPTargetTeamsDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Emit inner loop of the worksharing/simd construct.
@@ -14635,6 +15469,41 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// Check if the scalar \p Value is within the valid range for the given
+end_comment
+
+begin_comment
+comment|/// type \p Ty.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Returns true if a check is needed (even if the range is unknown).
+end_comment
+
+begin_decl_stmt
+name|bool
+name|EmitScalarRangeCheck
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Value
+argument_list|,
+name|QualType
+name|Ty
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EmitLoadOfScalar - Load a scalar value from an address, taking
 end_comment
 
@@ -14857,6 +15726,9 @@ name|EmitLoadOfBitfieldLValue
 parameter_list|(
 name|LValue
 name|LV
+parameter_list|,
+name|SourceLocation
+name|Loc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -16419,7 +17291,7 @@ end_function_decl
 
 begin_function_decl
 name|RValue
-name|EmitCUDADevicePrintfCallExpr
+name|EmitNVPTXDevicePrintfCallExpr
 parameter_list|(
 specifier|const
 name|CallExpr
@@ -16812,6 +17684,25 @@ argument_list|(
 argument|MSVCIntrin BuiltinID
 argument_list|,
 argument|const CallExpr *E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitBuiltinAvailable
+argument_list|(
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|Args
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -18526,6 +19417,33 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Given an assignment `*LHS = RHS`, emit a test that checks if \p RHS is
+end_comment
+
+begin_comment
+comment|/// nonnull, if \p LHS is marked _Nonnull.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitNullabilityCheck
+argument_list|(
+name|LValue
+name|LHS
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|RHS
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Emit a description of a type in a format suitable for passing to
 end_comment
 
@@ -18731,6 +19649,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Emit a stub for the cross-DSO CFI check function.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitCfiCheckStub
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Emit a cross-DSO CFI failure handling function.
 end_comment
 
@@ -18762,10 +19691,8 @@ parameter_list|,
 name|SourceLocation
 name|ArgLoc
 parameter_list|,
-specifier|const
-name|FunctionDecl
-modifier|*
-name|FD
+name|AbstractCallee
+name|AC
 parameter_list|,
 name|unsigned
 name|ParmNum
@@ -19116,6 +20043,14 @@ begin_comment
 comment|/// pass_object_size aware.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If EmittedExpr is non-null, this will use that instead of re-emitting E.
+end_comment
+
 begin_expr_stmt
 name|llvm
 operator|::
@@ -19128,6 +20063,8 @@ argument_list|,
 argument|unsigned Type
 argument_list|,
 argument|llvm::IntegerType *ResType
+argument_list|,
+argument|llvm::Value *EmittedE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -19156,6 +20093,8 @@ argument_list|,
 argument|unsigned Type
 argument_list|,
 argument|llvm::IntegerType *ResType
+argument_list|,
+argument|llvm::Value *EmittedE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -19315,7 +20254,7 @@ argument|const T *CallArgTypeInfo
 argument_list|,
 argument|llvm::iterator_range<CallExpr::const_arg_iterator> ArgRange
 argument_list|,
-argument|const FunctionDecl *CalleeDecl = nullptr
+argument|AbstractCallee AC = AbstractCallee()
 argument_list|,
 argument|unsigned ParamsToSkip =
 literal|0
@@ -19575,7 +20514,7 @@ name|ArgTypes
 argument_list|,
 name|ArgRange
 argument_list|,
-name|CalleeDecl
+name|AC
 argument_list|,
 name|ParamsToSkip
 argument_list|,
@@ -19594,7 +20533,7 @@ argument|ArrayRef<QualType> ArgTypes
 argument_list|,
 argument|llvm::iterator_range<CallExpr::const_arg_iterator> ArgRange
 argument_list|,
-argument|const FunctionDecl *CalleeDecl = nullptr
+argument|AbstractCallee AC = AbstractCallee()
 argument_list|,
 argument|unsigned ParamsToSkip =
 literal|0

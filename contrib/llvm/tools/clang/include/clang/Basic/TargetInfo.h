@@ -561,7 +561,7 @@ block|,
 comment|/// typedef void* __builtin_va_list;
 name|VoidPtrBuiltinVaList
 block|,
-comment|/// __builtin_va_list as defind by the AArch64 ABI
+comment|/// __builtin_va_list as defined by the AArch64 ABI
 comment|/// http://infocenter.arm.com/help/topic/com.arm.doc.ihi0055a/IHI0055A_aapcs64.pdf
 name|AArch64ABIBuiltinVaList
 block|,
@@ -575,7 +575,7 @@ comment|///        /resources/downloads/Power-Arch-32-bit-ABI-supp-1.0-Embedded.
 name|PowerABIBuiltinVaList
 block|,
 comment|/// __builtin_va_list as defined by the x86-64 ABI:
-comment|/// http://www.x86-64.org/documentation/abi.pdf
+comment|/// http://refspecs.linuxbase.org/elf/x86_64-abi-0.21.pdf
 name|X86_64ABIBuiltinVaList
 block|,
 comment|/// __builtin_va_list as defined by ARM AAPCS ABI
@@ -2697,12 +2697,12 @@ block|}
 comment|/// \brief Set forced language options.
 comment|///
 comment|/// Apply changes to the target information with respect to certain
-comment|/// language options which change the target configuration.
+comment|/// language options which change the target configuration and adjust
+comment|/// the language based on the target options where applicable.
 name|virtual
 name|void
 name|adjust
 argument_list|(
-specifier|const
 name|LangOptions
 operator|&
 name|Opts
@@ -3223,6 +3223,38 @@ return|return
 name|LangAS
 operator|::
 name|opencl_global
+return|;
+block|}
+comment|/// \returns Target specific vtbl ptr address space.
+name|virtual
+name|unsigned
+name|getVtblPtrAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/// \returns If a target requires an address within a target specific address
+comment|/// space \p AddressSpace to be converted in order to be used, then return the
+comment|/// corresponding target specific DWARF address space.
+comment|///
+comment|/// \returns Otherwise return None and no conversion will be emitted in the
+comment|/// DWARF.
+name|virtual
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|getDWARFAddressSpace
+argument_list|(
+argument|unsigned AddressSpace
+argument_list|)
+specifier|const
+block|{
+return|return
+name|None
 return|;
 block|}
 comment|/// \brief Check the target is valid after it is fully initialized.
