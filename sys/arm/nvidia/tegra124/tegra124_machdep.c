@@ -519,7 +519,7 @@ literal|0
 argument_list|,
 literal|"nvidia,jetson-tk1"
 argument_list|,
-literal|0
+literal|120
 argument_list|)
 expr_stmt|;
 end_expr_stmt
