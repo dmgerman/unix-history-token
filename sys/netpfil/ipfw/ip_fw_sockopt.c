@@ -7903,7 +7903,7 @@ operator|->
 name|object_opcodes
 operator|++
 expr_stmt|;
-comment|/* Do we have O_EXTERNAL_INSTANCE opcode? */
+comment|/* 			 * Do we have O_EXTERNAL_INSTANCE or O_EXTERNAL_DATA 			 * opcode? 			 */
 if|if
 condition|(
 name|l
@@ -7926,6 +7926,17 @@ argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|->
+name|opcode
+operator|==
+name|O_EXTERNAL_DATA
+condition|)
+goto|goto
+name|check_action
+goto|;
 if|if
 condition|(
 name|cmd
@@ -11534,7 +11545,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"table id %d not found"
+literal|"object id %d not found"
 operator|,
 name|kidx
 operator|)
@@ -11549,7 +11560,7 @@ operator|==
 name|subtype
 argument_list|,
 operator|(
-literal|"wrong type %d (%d) for table id %d"
+literal|"wrong type %d (%d) for object id %d"
 operator|,
 name|no
 operator|->
@@ -11570,7 +11581,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"refcount for table %d is %d"
+literal|"refcount for object %d is %d"
 operator|,
 name|kidx
 operator|,

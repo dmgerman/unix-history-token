@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2016 Yandex LLC  * Copyright (c) 2016 Andrey V. Elsukov<ae@FreeBSD.org>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2016-2017 Yandex LLC  * Copyright (c) 2016-2017 Andrey V. Elsukov<ae@FreeBSD.org>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -134,7 +134,7 @@ file|"opt_ipfw.h"
 end_include
 
 begin_comment
-comment|/*  * External actions support for ipfw.  *  * This code provides KPI for implementing loadable modules, that  * can provide handlers for external action opcodes in the ipfw's  * rules.  * Module should implement opcode handler with type ipfw_eaction_t.  * This handler will be called by ipfw_chk() function when  * O_EXTERNAL_ACTION opcode will be matched. The handler must return  * value used as return value in ipfw_chk(), i.e. IP_FW_PASS,  * IP_FW_DENY (see ip_fw_private.h).  * Also the last argument must be set by handler. If it is zero,  * the search continues to the next rule. If it has non zero value,  * the search terminates.  *  * The module that implements external action should register its  * handler and name with ipfw_add_eaction() function.  * This function will return eaction_id, that can be used by module.  *  * It is possible to pass some additional information to external  * action handler via the O_EXTERNAL_INSTANCE opcode. This opcode  * will be next after the O_EXTERNAL_ACTION opcode. cmd->arg1 will  * contain index of named object related to instance of external action.  *  * In case when eaction module uses named instances, it should register  * opcode rewriting routines for O_EXTERNAL_INSTANCE opcode. The  * classifier callback can look back into O_EXTERNAL_ACTION opcode (it  * must be in the (ipfw_insn *)(cmd - 1)). By arg1 from O_EXTERNAL_ACTION  * it can deteremine eaction_id and compare it with its own.  * The macro IPFW_TLV_EACTION_NAME(eaction_id) can be used to deteremine  * the type of named_object related to external action instance.  *  * On module unload handler should be deregistered with ipfw_del_eaction()  * function using known eaction_id.  */
+comment|/*  * External actions support for ipfw.  *  * This code provides KPI for implementing loadable modules, that  * can provide handlers for external action opcodes in the ipfw's  * rules.  * Module should implement opcode handler with type ipfw_eaction_t.  * This handler will be called by ipfw_chk() function when  * O_EXTERNAL_ACTION opcode is matched. The handler must return  * value used as return value in ipfw_chk(), i.e. IP_FW_PASS,  * IP_FW_DENY (see ip_fw_private.h).  * Also the last argument must be set by handler. If it is zero,  * the search continues to the next rule. If it has non zero value,  * the search terminates.  *  * The module that implements external action should register its  * handler and name with ipfw_add_eaction() function.  * This function will return eaction_id, that can be used by module.  *  * It is possible to pass some additional information to external  * action handler using O_EXTERNAL_INSTANCE and O_EXTERNAL_DATA opcodes.  * Such opcodes should be next after the O_EXTERNAL_ACTION opcode.  * For the O_EXTERNAL_INSTANCE opcode the cmd->arg1 contains index of named  * object related to an instance of external action.  * For the O_EXTERNAL_DATA opcode the cmd contains the data that can be used  * by external action handler without needing to create named instance.  *  * In case when eaction module uses named instances, it should register  * opcode rewriting routines for O_EXTERNAL_INSTANCE opcode. The  * classifier callback can look back into O_EXTERNAL_ACTION opcode (it  * must be in the (ipfw_insn *)(cmd - 1)). By arg1 from O_EXTERNAL_ACTION  * it can deteremine eaction_id and compare it with its own.  * The macro IPFW_TLV_EACTION_NAME(eaction_id) can be used to deteremine  * the type of named_object related to external action instance.  *  * On module unload handler should be deregistered with ipfw_del_eaction()  * function using known eaction_id.  */
 end_comment
 
 begin_struct
@@ -1073,7 +1073,7 @@ operator|->
 name|refcnt
 operator|++
 expr_stmt|;
-comment|/* 		 * Since named_object related to this instance will be 		 * also destroyed, truncate the chain of opcodes to 		 * remove O_EXTERNAL_INSTANCE opcode. 		 */
+comment|/* 		 * Since named_object related to this instance will be 		 * also destroyed, truncate the chain of opcodes to 		 * remove the rest of cmd chain just after O_EXTERNAL_ACTION 		 * opcode. 		 */
 if|if
 condition|(
 name|rule
@@ -1089,17 +1089,32 @@ condition|)
 block|{
 name|EACTION_DEBUG
 argument_list|(
-literal|"truncate rule %d"
+literal|"truncate rule %d: len %u -> %u"
 argument_list|,
 name|rule
 operator|->
 name|rulenum
+argument_list|,
+name|rule
+operator|->
+name|cmd_len
+argument_list|,
+name|rule
+operator|->
+name|act_ofs
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|rule
 operator|->
 name|cmd_len
-operator|--
+operator|=
+name|rule
+operator|->
+name|act_ofs
+operator|+
+literal|1
 expr_stmt|;
 block|}
 block|}
