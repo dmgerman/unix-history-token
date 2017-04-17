@@ -59,6 +59,12 @@ directive|include
 file|<sys/rmlock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|mbuf
@@ -285,6 +291,24 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
+name|rmlock
+argument_list|,
+name|pfil_lock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_pfil_lock
+value|VNET(pfil_lock)
+end_define
 
 begin_comment
 comment|/* Public functions for pfil hook management by packet filters. */

@@ -4198,8 +4198,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* flag to exit the outer loop */
-name|IPFW_RLOCK_TRACKER
-expr_stmt|;
 if|if
 condition|(
 name|m
