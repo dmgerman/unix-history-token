@@ -1677,18 +1677,6 @@ name|lastmatch
 operator|=
 name|pmatch
 expr_stmt|;
-comment|/* Skip over zero-length matches */
-if|if
-condition|(
-name|pmatch
-operator|.
-name|rm_so
-operator|==
-name|pmatch
-operator|.
-name|rm_eo
-condition|)
-continue|continue;
 if|if
 condition|(
 name|m
@@ -2456,6 +2444,24 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* Don't output zero length matches */
+if|if
+condition|(
+name|matches
+index|[
+name|i
+index|]
+operator|.
+name|rm_so
+operator|==
+name|matches
+index|[
+name|i
+index|]
+operator|.
+name|rm_eo
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
