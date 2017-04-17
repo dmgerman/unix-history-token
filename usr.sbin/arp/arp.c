@@ -220,6 +220,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|void
@@ -492,6 +498,13 @@ parameter_list|)
 value|{ if (func) usage(); func = (f); }
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARP_XO_VERSION
+value|"1"
+end_define
+
 begin_function
 name|int
 name|main
@@ -523,6 +536,26 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* do it for all entries */
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -651,7 +684,7 @@ operator|&&
 name|aflag
 operator|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -674,7 +707,7 @@ name|errno
 operator|==
 name|ENXIO
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -684,7 +717,7 @@ name|rifname
 argument_list|)
 expr_stmt|;
 else|else
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -717,12 +750,40 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+name|xo_set_version
+argument_list|(
+name|ARP_XO_VERSION
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"arp"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"arp-cache"
+argument_list|)
+expr_stmt|;
 name|search
 argument_list|(
 literal|0
 argument_list|,
 name|print_entry
 argument_list|)
+expr_stmt|;
+name|xo_close_list
+argument_list|(
+literal|"arp-cache"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"arp"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -950,7 +1011,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -1140,7 +1201,7 @@ operator|<
 literal|2
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"bad line: %s"
 argument_list|,
@@ -1267,7 +1328,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -1567,7 +1628,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -1656,7 +1717,7 @@ operator|&
 name|RTF_REJECT
 condition|)
 block|{
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1693,7 +1754,7 @@ operator|&
 name|RTF_BLACKHOLE
 condition|)
 block|{
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1709,7 +1770,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"Invalid parameter '%s'"
 argument_list|,
@@ -1768,7 +1829,7 @@ name|ea
 argument_list|)
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"no interface found for %s"
 argument_list|,
@@ -1812,7 +1873,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"invalid Ethernet address '%s'"
 argument_list|,
@@ -1861,7 +1922,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -1934,7 +1995,7 @@ name|sdl_type
 argument_list|)
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"cannot intuit interface index and type for %s"
 argument_list|,
@@ -2000,6 +2061,9 @@ name|sockaddr_in
 modifier|*
 name|addr
 decl_stmt|;
+name|int
+name|found
+decl_stmt|;
 name|addr
 operator|=
 name|getaddr
@@ -2018,10 +2082,23 @@ operator|(
 literal|1
 operator|)
 return|;
-if|if
-condition|(
-literal|0
-operator|==
+name|xo_set_version
+argument_list|(
+name|ARP_XO_VERSION
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"arp"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"arp-cache"
+argument_list|)
+expr_stmt|;
+name|found
+operator|=
 name|search
 argument_list|(
 name|addr
@@ -2032,11 +2109,17 @@ name|s_addr
 argument_list|,
 name|print_entry
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|found
+operator|==
+literal|0
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s (%s) -- no entry"
+literal|"{d:hostname/%s} ({d:ip-address/%s}) -- no entry"
 argument_list|,
 name|host
 argument_list|,
@@ -2052,26 +2135,36 @@ if|if
 condition|(
 name|rifname
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" on %s"
+literal|" on {d:interface/%s}"
 argument_list|,
 name|rifname
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"arp-cache"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"arp"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
+name|found
+operator|==
 literal|0
 operator|)
 return|;
@@ -2191,7 +2284,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -2285,7 +2378,7 @@ operator|&
 name|RTF_ANNOUNCE
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"delete: cannot locate %s"
 argument_list|,
@@ -2491,7 +2584,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -2533,7 +2626,7 @@ name|buf
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2583,7 +2676,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -2788,11 +2881,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
 literal|"cannot retrieve interface names"
+argument_list|)
+expr_stmt|;
+name|xo_open_instance
+argument_list|(
+literal|"arp-cache"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2855,9 +2953,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s (%s) at "
+literal|"{:hostname/%s} ({:ip-address/%s}) at "
 argument_list|,
 name|host
 argument_list|,
@@ -2904,9 +3002,9 @@ name|sdl_alen
 operator|==
 name|ETHER_ADDR_LEN
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{:mac-address/%s}"
 argument_list|,
 name|ether_ntoa
 argument_list|(
@@ -2941,9 +3039,9 @@ literal|1
 else|:
 literal|0
 decl_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{:mac-address/%s}"
 argument_list|,
 name|link_ntoa
 argument_list|(
@@ -2956,9 +3054,9 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"(incomplete)"
+literal|"{d:/(incomplete)}{en:incomplete/true}"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2992,9 +3090,9 @@ operator|->
 name|sdl_index
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|" on %s"
+literal|" on {:interface/%s}"
 argument_list|,
 name|p
 operator|->
@@ -3014,9 +3112,9 @@ name|rmx_expire
 operator|==
 literal|0
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" permanent"
+literal|"{d:/ permanent}{en:permanent/true}"
 argument_list|)
 expr_stmt|;
 else|else
@@ -3060,9 +3158,9 @@ operator|)
 operator|>
 literal|0
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" expires in %d seconds"
+literal|" expires in {:expires/%d} seconds"
 argument_list|,
 operator|(
 name|int
@@ -3071,9 +3169,9 @@ name|expire_time
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|" expired"
+literal|"{d:/ expired}{en:expired/true}"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3085,9 +3183,9 @@ name|rtm_flags
 operator|&
 name|RTF_ANNOUNCE
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" published"
+literal|"{d:/ published}{en:published/true}"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3100,18 +3198,18 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
-name|printf
+name|xo_emit
 argument_list|(
-literal|" [ethernet]"
+literal|" [{:type/ethernet}]"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|IFT_ISO88025
 case|:
-name|printf
+name|xo_emit
 argument_list|(
-literal|" [token-ring]"
+literal|" [{:type/token-ring}]"
 argument_list|)
 expr_stmt|;
 name|trld
@@ -3130,7 +3228,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
 literal|" rt=%x"
 argument_list|,
@@ -3168,7 +3266,7 @@ condition|;
 name|seg
 operator|++
 control|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|":%x"
 argument_list|,
@@ -3191,63 +3289,68 @@ break|break;
 case|case
 name|IFT_FDDI
 case|:
-name|printf
+name|xo_emit
 argument_list|(
-literal|" [fddi]"
+literal|" [{:type/fddi}]"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|IFT_ATM
 case|:
-name|printf
+name|xo_emit
 argument_list|(
-literal|" [atm]"
+literal|" [{:type/atm}]"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|IFT_L2VLAN
 case|:
-name|printf
+name|xo_emit
 argument_list|(
-literal|" [vlan]"
+literal|" [{:type/vlan}]"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|IFT_IEEE1394
 case|:
-name|printf
+name|xo_emit
 argument_list|(
-literal|" [firewire]"
+literal|" [{:type/firewire}]"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|IFT_BRIDGE
 case|:
-name|printf
+name|xo_emit
 argument_list|(
-literal|" [bridge]"
+literal|" [{:type/bridge}]"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|IFT_INFINIBAND
 case|:
-name|printf
+name|xo_emit
 argument_list|(
-literal|" [infiniband]"
+literal|" [{:type/infiniband}]"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 break|break;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"arp-cache"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3469,7 +3572,7 @@ name|s
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -3554,7 +3657,7 @@ name|cmd
 condition|)
 block|{
 default|default:
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3725,7 +3828,7 @@ operator|!=
 name|RTM_DELETE
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"writing to routing socket"
 argument_list|)
@@ -3786,7 +3889,7 @@ name|l
 operator|<
 literal|0
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"read from routing socket"
 argument_list|)
@@ -3885,7 +3988,7 @@ name|sock
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -3922,7 +4025,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"ioctl(SIOCGIFCONF)"
 argument_list|)
