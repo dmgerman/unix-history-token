@@ -132,7 +132,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: readelf.c 3484 2016-08-03 13:36:49Z emaste $"
+literal|"$Id: readelf.c 3519 2017-04-09 23:15:58Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4909,6 +4909,12 @@ name|SHT_MIPS_PDR_EXCEPTION
 case|:
 return|return
 literal|"MIPS_PDR_EXCEPTION"
+return|;
+case|case
+name|SHT_MIPS_ABIFLAGS
+case|:
+return|return
+literal|"MIPS_ABIFLAGS"
 return|;
 default|default:
 break|break;
@@ -22430,13 +22436,7 @@ name|s
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|options_found
 decl_stmt|;
-name|options_found
-operator|=
-literal|0
-expr_stmt|;
 name|s
 operator|=
 name|NULL
@@ -22506,19 +22506,9 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-name|options_found
-operator|=
-literal|1
-expr_stmt|;
 block|}
 block|}
-comment|/* 	 * According to SGI mips64 spec, .reginfo should be ignored if 	 * .MIPS.options section is present. 	 */
-if|if
-condition|(
-operator|!
-name|options_found
-condition|)
-block|{
+comment|/* 	 * Dump .reginfo if present (although it will be ignored by an OS if a 	 * .MIPS.options section is present, according to SGI mips64 spec). 	 */
 for|for
 control|(
 name|i
@@ -22583,7 +22573,6 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -33732,12 +33721,9 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|ret
+decl_stmt|,
+name|has_content
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"\nContents of section .debug_loc:\n"
-argument_list|)
-expr_stmt|;
 comment|/* Search .debug_info section. */
 while|while
 condition|(
@@ -34092,10 +34078,9 @@ name|lalist
 argument_list|)
 condition|)
 return|return;
-name|printf
-argument_list|(
-literal|"    Offset   Begin    End      Expression\n"
-argument_list|)
+name|has_content
+operator|=
+literal|0
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -34108,6 +34093,9 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
 name|dwarf_loclist_n
 argument_list|(
 name|la
@@ -34123,10 +34111,17 @@ argument_list|,
 operator|&
 name|de
 argument_list|)
+operator|)
 operator|!=
 name|DW_DLV_OK
 condition|)
 block|{
+if|if
+condition|(
+name|ret
+operator|!=
+name|DW_DLV_NO_ENTRY
+condition|)
 name|warnx
 argument_list|(
 literal|"dwarf_loclist_n failed: %s"
@@ -34138,6 +34133,27 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|has_content
+condition|)
+block|{
+name|has_content
+operator|=
+literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nContents of section .debug_loc:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    Offset   Begin    End      Expression\n"
+argument_list|)
+expr_stmt|;
 block|}
 name|set_cu_context
 argument_list|(
@@ -34399,6 +34415,16 @@ name|DW_DLA_LIST
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|has_content
+condition|)
+name|printf
+argument_list|(
+literal|"\nSection '.debug_loc' has no debugging data.\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -36498,11 +36524,19 @@ modifier|*
 name|re
 parameter_list|)
 block|{
-name|int
-name|error
+name|struct
+name|loc_at
+modifier|*
+name|la
+decl_stmt|,
+modifier|*
+name|_la
 decl_stmt|;
 name|Dwarf_Error
 name|de
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -36727,6 +36761,33 @@ argument_list|(
 name|re
 argument_list|)
 expr_stmt|;
+name|TAILQ_FOREACH_SAFE
+argument_list|(
+argument|la
+argument_list|,
+argument|&lalist
+argument_list|,
+argument|la_next
+argument_list|,
+argument|_la
+argument_list|)
+block|{
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|lalist
+argument_list|,
+name|la
+argument_list|,
+name|la_next
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|la
+argument_list|)
+expr_stmt|;
+block|}
 name|dwarf_finish
 argument_list|(
 name|re

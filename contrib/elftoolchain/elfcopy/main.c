@@ -78,7 +78,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: main.c 3446 2016-05-03 01:31:17Z emaste $"
+literal|"$Id: main.c 3520 2017-04-17 01:47:52Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1509,6 +1509,13 @@ name|flags
 operator||=
 name|SYMTAB_INTACT
 expr_stmt|;
+name|ecp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SYMTAB_EXIST
+expr_stmt|;
 comment|/* Create EHDR. */
 if|if
 condition|(
@@ -2441,6 +2448,24 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|ecp
+operator|->
+name|symtab
+operator|=
+name|NULL
+expr_stmt|;
+name|ecp
+operator|->
+name|strtab
+operator|=
+name|NULL
+expr_stmt|;
+name|ecp
+operator|->
+name|shstrtab
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|ecp
