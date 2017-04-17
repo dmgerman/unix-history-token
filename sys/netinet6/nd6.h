@@ -2449,6 +2449,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|defrouter_select_fib
+parameter_list|(
+name|int
+name|fibnum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|defrouter_select
 parameter_list|(
 name|void

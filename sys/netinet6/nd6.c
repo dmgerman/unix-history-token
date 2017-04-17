@@ -898,6 +898,9 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
+name|int
+name|fibnum
+decl_stmt|;
 name|LLE_WLOCK_ASSERT
 argument_list|(
 name|lle
@@ -1127,6 +1130,16 @@ name|RTA_DST
 operator||
 name|RTA_GATEWAY
 expr_stmt|;
+name|fibnum
+operator|=
+name|V_rt_add_addr_allfibs
+condition|?
+name|RT_ALL_FIBS
+else|:
+name|ifp
+operator|->
+name|if_fib
+expr_stmt|;
 name|rt_missmsg_fib
 argument_list|(
 name|type
@@ -1150,7 +1163,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|RT_DEFAULT_FIB
+name|fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -4703,8 +4716,12 @@ name|ND6_IFF_ACCEPT_RTADV
 condition|)
 block|{
 comment|/* Refresh default router list. */
-name|defrouter_select
-argument_list|()
+name|defrouter_select_fib
+argument_list|(
+name|ifp
+operator|->
+name|if_fib
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -4944,7 +4961,7 @@ decl_stmt|;
 name|struct
 name|ifaddr
 modifier|*
-name|dstaddr
+name|ifa
 decl_stmt|;
 name|struct
 name|rt_addrinfo
@@ -5084,11 +5101,6 @@ operator|)
 operator|&
 name|rt_key
 expr_stmt|;
-comment|/* Always use the default FIB here. XXME - why? */
-name|fibnum
-operator|=
-name|RT_DEFAULT_FIB
-expr_stmt|;
 comment|/* 	 * If the address matches one of our addresses, 	 * it should be a neighbor. 	 * If the address matches one of our on-link prefixes, it should be a 	 * neighbor. 	 */
 name|ND6_RLOCK
 argument_list|()
@@ -5126,7 +5138,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Always use the default FIB here. */
 name|dst6
 operator|=
 operator|(
@@ -5140,6 +5151,28 @@ name|pr
 operator|->
 name|ndpr_prefix
 expr_stmt|;
+comment|/* 			 * We only need to check all FIBs if add_addr_allfibs 			 * is unset. If set, checking any FIB will suffice. 			 */
+name|fibnum
+operator|=
+name|V_rt_add_addr_allfibs
+condition|?
+name|rt_numfibs
+operator|-
+literal|1
+else|:
+literal|0
+expr_stmt|;
+for|for
+control|(
+init|;
+name|fibnum
+operator|<
+name|rt_numfibs
+condition|;
+name|fibnum
+operator|++
+control|)
+block|{
 name|genid
 operator|=
 name|V_nd6_list_genid
@@ -5147,7 +5180,7 @@ expr_stmt|;
 name|ND6_RUNLOCK
 argument_list|()
 expr_stmt|;
-comment|/* Restore length field before retrying lookup */
+comment|/* 				 * Restore length field before 				 * retrying lookup 				 */
 name|rt_key
 operator|.
 name|sin6_len
@@ -5185,6 +5218,14 @@ condition|)
 goto|goto
 name|restart
 goto|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
 if|if
 condition|(
 name|error
@@ -5250,51 +5291,73 @@ name|ND6_RUNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * If the address is assigned on the node of the other side of 	 * a p2p interface, the address should be a neighbor. 	 */
-name|dstaddr
-operator|=
-name|ifa_ifwithdstaddr
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_POINTOPOINT
+condition|)
+block|{
+name|IF_ADDR_RLOCK
 argument_list|(
-operator|(
-specifier|const
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-name|addr
-argument_list|,
-name|RT_ALL_FIBS
+name|ifp
 argument_list|)
 expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifa
+argument_list|,
+argument|&ifp->if_addrhead
+argument_list|,
+argument|ifa_link
+argument_list|)
+block|{
 if|if
 condition|(
-name|dstaddr
+name|ifa
+operator|->
+name|ifa_addr
+operator|->
+name|sa_family
+operator|!=
+name|addr
+operator|->
+name|sin6_family
+condition|)
+continue|continue;
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_dstaddr
 operator|!=
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|dstaddr
-operator|->
-name|ifa_ifp
-operator|==
-name|ifp
-condition|)
-block|{
-name|ifa_free
+operator|&&
+name|sa_equal
 argument_list|(
-name|dstaddr
+name|addr
+argument_list|,
+name|ifa
+operator|->
+name|ifa_dstaddr
+argument_list|)
+condition|)
+block|{
+name|IF_ADDR_RUNLOCK
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
-name|ifa_free
+block|}
+name|IF_ADDR_RUNLOCK
 argument_list|(
-name|dstaddr
+name|ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -5674,7 +5737,7 @@ operator|||
 name|dr
 condition|)
 block|{
-comment|/* 			 * We need to unlock to avoid a LOR with rt6_flush() with the 			 * rnh and for the calls to pfxlist_onlink_check() and 			 * defrouter_select() in the block further down for calls 			 * into nd6_lookup().  We still hold a ref. 			 */
+comment|/* 			 * We need to unlock to avoid a LOR with rt6_flush() with the 			 * rnh and for the calls to pfxlist_onlink_check() and 			 * defrouter_select_fib() in the block further down for calls 			 * into nd6_lookup().  We still hold a ref. 			 */
 name|LLE_WUNLOCK
 argument_list|(
 name|ln
@@ -5699,13 +5762,19 @@ condition|(
 name|dr
 condition|)
 block|{
-comment|/* 			 * Since defrouter_select() does not affect the 			 * on-link determination and MIP6 needs the check 			 * before the default router selection, we perform 			 * the check now. 			 */
+comment|/* 			 * Since defrouter_select_fib() does not affect the 			 * on-link determination and MIP6 needs the check 			 * before the default router selection, we perform 			 * the check now. 			 */
 name|pfxlist_onlink_check
 argument_list|()
 expr_stmt|;
 comment|/* 			 * Refresh default router list. 			 */
-name|defrouter_select
-argument_list|()
+name|defrouter_select_fib
+argument_list|(
+name|dr
+operator|->
+name|ifp
+operator|->
+name|if_fib
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * If this entry was added by an on-link redirect, remove the 		 * corresponding host route. 		 */
@@ -7993,7 +8062,7 @@ operator|&
 name|sin6
 argument_list|)
 expr_stmt|;
-comment|/* 	 * When the link-layer address of a router changes, select the 	 * best router again.  In particular, when the neighbor entry is newly 	 * created, it might affect the selection policy. 	 * Question: can we restrict the first condition to the "is_newentry" 	 * case? 	 * XXX: when we hear an RA from a new router with the link-layer 	 * address option, defrouter_select() is called twice, since 	 * defrtrlist_update called the function as well.  However, I believe 	 * we can compromise the overhead, since it only happens the first 	 * time. 	 * XXX: although defrouter_select() should not have a bad effect 	 * for those are not autoconfigured hosts, we explicitly avoid such 	 * cases for safety. 	 */
+comment|/* 	 * When the link-layer address of a router changes, select the 	 * best router again.  In particular, when the neighbor entry is newly 	 * created, it might affect the selection policy. 	 * Question: can we restrict the first condition to the "is_newentry" 	 * case? 	 * XXX: when we hear an RA from a new router with the link-layer 	 * address option, defrouter_select_fib() is called twice, since 	 * defrtrlist_update called the function as well.  However, I believe 	 * we can compromise the overhead, since it only happens the first 	 * time. 	 * XXX: although defrouter_select_fib() should not have a bad effect 	 * for those are not autoconfigured hosts, we explicitly avoid such 	 * cases for safety. 	 */
 if|if
 condition|(
 operator|(
@@ -8015,8 +8084,12 @@ name|ND6_IFF_ACCEPT_RTADV
 condition|)
 block|{
 comment|/* 		 * guaranteed recursion 		 */
-name|defrouter_select
-argument_list|()
+name|defrouter_select_fib
+argument_list|(
+name|ifp
+operator|->
+name|if_fib
+argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -603,6 +603,9 @@ name|struct
 name|rtentry
 name|rt
 decl_stmt|;
+name|int
+name|fibnum
+decl_stmt|;
 comment|/* 	 * initialize for rtmsg generation 	 */
 name|bzero
 argument_list|(
@@ -737,8 +740,23 @@ name|rt_flags
 operator||=
 name|RTF_UP
 expr_stmt|;
-comment|/* Announce arrival of local address to all FIBs. */
-name|rt_newaddrmsg
+name|fibnum
+operator|=
+name|V_rt_add_addr_allfibs
+condition|?
+name|RT_ALL_FIBS
+else|:
+name|ia62ifa
+argument_list|(
+name|ia
+argument_list|)
+operator|->
+name|ifa_ifp
+operator|->
+name|if_fib
+expr_stmt|;
+comment|/* Announce arrival of local address to this FIB. */
+name|rt_newaddrmsg_fib
 argument_list|(
 name|cmd
 argument_list|,
@@ -751,6 +769,8 @@ literal|0
 argument_list|,
 operator|&
 name|rt
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -8972,6 +8992,9 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
+name|int
+name|fibnum
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|l3addr
@@ -8989,7 +9012,6 @@ name|sa_family
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Our local addresses are always only installed on the default FIB. */
 name|sin6
 operator|=
 operator|(
@@ -9014,11 +9036,21 @@ operator|&
 name|scopeid
 argument_list|)
 expr_stmt|;
+name|fibnum
+operator|=
+name|V_rt_add_addr_allfibs
+condition|?
+name|RT_DEFAULT_FIB
+else|:
+name|ifp
+operator|->
+name|if_fib
+expr_stmt|;
 name|error
 operator|=
 name|fib6_lookup_nh_basic
 argument_list|(
-name|RT_DEFAULT_FIB
+name|fibnum
 argument_list|,
 operator|&
 name|dst
