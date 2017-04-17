@@ -106,22 +106,6 @@ file|<net/bpf_jitter.h>
 end_include
 
 begin_function_decl
-name|bpf_filter_func
-name|bpf_jit_compile
-parameter_list|(
-name|struct
-name|bpf_insn
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|size_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|u_int
 name|bpf_jit_accept_all
