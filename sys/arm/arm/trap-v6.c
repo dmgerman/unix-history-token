@@ -77,6 +77,12 @@ directive|include
 file|<sys/ktr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vmmeter.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
