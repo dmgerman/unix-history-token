@@ -71,20 +71,15 @@ define|#
 directive|define
 name|PCPU_MD_AIM32_FIELDS
 define|\
-value|vm_offset_t	pc_qmap_addr;					\ 	struct pvo_entry *pc_qmap_pvo;					\ 	struct mtx	pc_qmap_lock;
+value|vm_offset_t	pc_qmap_addr;					\ 	struct pvo_entry *pc_qmap_pvo;					\ 	struct mtx	pc_qmap_lock;					\ 	char		__pad[128]
 end_define
-
-begin_comment
-unit|\
-comment|/* char		__pad[0] */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|PCPU_MD_AIM64_FIELDS
 define|\
-value|struct slb	pc_slb[64];					\ 	struct slb	**pc_userslb;					\ 	register_t	pc_slbsave[18];					\ 	uint8_t		pc_slbstack[1024];				\ 	vm_offset_t	pc_qmap_addr;					\ 	struct pvo_entry *pc_qmap_pvo;					\ 	struct mtx	pc_qmap_lock;					\ 	char		__pad[1121 - sizeof(struct mtx)]
+value|struct slb	pc_slb[64];					\ 	struct slb	**pc_userslb;					\ 	register_t	pc_slbsave[18];					\ 	uint8_t		pc_slbstack[1024];				\ 	vm_offset_t	pc_qmap_addr;					\ 	struct pvo_entry *pc_qmap_pvo;					\ 	struct mtx	pc_qmap_lock;					\ 	char		__pad[1345]
 end_define
 
 begin_ifdef
@@ -155,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|BOOKE_PCPU_PAD
-value|773
+value|901
 end_define
 
 begin_else
@@ -167,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|BOOKE_PCPU_PAD
-value|173
+value|429
 end_define
 
 begin_endif

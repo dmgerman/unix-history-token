@@ -2185,10 +2185,8 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_swtch
 argument_list|)
 expr_stmt|;

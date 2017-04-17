@@ -61,7 +61,7 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|struct	cacheinfo pc_cache;					\ 	struct	intr_request pc_irpool[IR_FREE];			\ 	struct	intr_request *pc_irhead;				\ 	struct	intr_request **pc_irtail;				\ 	struct	intr_request *pc_irfree;				\ 	struct	pmap *pc_pmap;						\ 	vm_offset_t pc_addr;						\ 	vm_offset_t pc_qmap_addr;					\ 	u_long	pc_tickref;						\ 	u_long	pc_tickadj;						\ 	u_long	pc_tickincrement;					\ 	u_int	pc_clock;						\ 	u_int	pc_impl;						\ 	u_int	pc_mid;							\ 	u_int	pc_node;						\ 	u_int	pc_tlb_ctx;						\ 	u_int	pc_tlb_ctx_max;						\ 	u_int	pc_tlb_ctx_min;						\ 	char	__pad[397]
+value|struct	cacheinfo pc_cache;					\ 	struct	intr_request pc_irpool[IR_FREE];			\ 	struct	intr_request *pc_irhead;				\ 	struct	intr_request **pc_irtail;				\ 	struct	intr_request *pc_irfree;				\ 	struct	pmap *pc_pmap;						\ 	vm_offset_t pc_addr;						\ 	vm_offset_t pc_qmap_addr;					\ 	u_long	pc_tickref;						\ 	u_long	pc_tickadj;						\ 	u_long	pc_tickincrement;					\ 	u_int	pc_clock;						\ 	u_int	pc_impl;						\ 	u_int	pc_mid;							\ 	u_int	pc_node;						\ 	u_int	pc_tlb_ctx;						\ 	u_int	pc_tlb_ctx_max;						\ 	u_int	pc_tlb_ctx_min;						\ 	char	__pad[653]
 end_define
 
 begin_ifdef

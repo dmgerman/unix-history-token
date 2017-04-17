@@ -41,6 +41,13 @@ end_endif
 begin_define
 define|#
 directive|define
+name|EARLY_COUNTER
+value|&((struct pcpu *)pcpu_space)->pc_early_dummy_counter
+end_define
+
+begin_define
+define|#
+directive|define
 name|counter_enter
 parameter_list|()
 value|critical_enter()

@@ -1861,35 +1861,59 @@ argument_list|(
 name|sb
 argument_list|,
 literal|"disk 0 0 0 0\n"
-literal|"page %u %u\n"
-literal|"swap %u %u\n"
-literal|"intr %u\n"
-literal|"ctxt %u\n"
+literal|"page %ju %ju\n"
+literal|"swap %ju %ju\n"
+literal|"intr %ju\n"
+literal|"ctxt %ju\n"
 literal|"btime %lld\n"
 argument_list|,
-name|vm_cnt
-operator|.
+operator|(
+name|uintmax_t
+operator|)
+name|VM_CNT_FETCH
+argument_list|(
 name|v_vnodepgsin
+argument_list|)
 argument_list|,
-name|vm_cnt
-operator|.
+operator|(
+name|uintmax_t
+operator|)
+name|VM_CNT_FETCH
+argument_list|(
 name|v_vnodepgsout
+argument_list|)
 argument_list|,
-name|vm_cnt
-operator|.
+operator|(
+name|uintmax_t
+operator|)
+name|VM_CNT_FETCH
+argument_list|(
 name|v_swappgsin
+argument_list|)
 argument_list|,
-name|vm_cnt
-operator|.
+operator|(
+name|uintmax_t
+operator|)
+name|VM_CNT_FETCH
+argument_list|(
 name|v_swappgsout
+argument_list|)
 argument_list|,
-name|vm_cnt
-operator|.
+operator|(
+name|uintmax_t
+operator|)
+name|VM_CNT_FETCH
+argument_list|(
 name|v_intr
+argument_list|)
 argument_list|,
-name|vm_cnt
-operator|.
+operator|(
+name|uintmax_t
+operator|)
+name|VM_CNT_FETCH
+argument_list|(
 name|v_swtch
+argument_list|)
 argument_list|,
 operator|(
 name|long

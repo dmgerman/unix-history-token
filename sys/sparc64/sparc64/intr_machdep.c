@@ -395,6 +395,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|counter_intr_inc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|void
@@ -2030,6 +2039,34 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Do VM_CNT_INC(intr), being in the interrupt context already. This is  * called from assembly.  * To avoid counter_enter() and appropriate assertion, unwrap VM_CNT_INC()  * and hardcode the actual increment.  */
+end_comment
+
+begin_function
+name|void
+name|counter_intr_inc
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|uint64_t
+operator|*
+operator|)
+name|zpcpu_get
+argument_list|(
+name|vm_cnt
+operator|.
+name|v_intr
+argument_list|)
+operator|+=
+literal|1
+expr_stmt|;
 block|}
 end_function
 

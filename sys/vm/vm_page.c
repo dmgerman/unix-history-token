@@ -10392,10 +10392,8 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_tfree
 argument_list|)
 expr_stmt|;

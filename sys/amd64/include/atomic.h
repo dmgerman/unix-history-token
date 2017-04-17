@@ -914,7 +914,7 @@ begin_define
 define|#
 directive|define
 name|OFFSETOF_MONITORBUF
-value|0x180
+value|0x100
 end_define
 
 begin_if

@@ -97,10 +97,8 @@ name|error
 decl_stmt|,
 name|traced
 decl_stmt|;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_syscall
 argument_list|)
 expr_stmt|;

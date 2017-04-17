@@ -71,12 +71,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vmmeter.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/resource.h>
 end_include
 
@@ -465,11 +459,6 @@ name|lock_list_entry
 modifier|*
 name|pc_spinlocks
 decl_stmt|;
-name|struct
-name|vmmeter
-name|pc_cnt
-decl_stmt|;
-comment|/* VM stats counters */
 name|long
 name|pc_cp_time
 index|[
@@ -504,6 +493,10 @@ name|uintptr_t
 name|pc_dynamic
 decl_stmt|;
 comment|/* Dynamic per-cpu data area */
+name|uint64_t
+name|pc_early_dummy_counter
+decl_stmt|;
+comment|/* Startup time counter(9) */
 comment|/* 	 * Keep MD fields last, so that CPU-specific variations on a 	 * single architecture don't result in offset variations of 	 * the machine-independent fields of the pcpu.  Even though 	 * the pcpu structure is private to the kernel, some ports 	 * (e.g., lsof, part of gtop) define _KERNEL and include this 	 * header.  While strictly speaking this is wrong, there's no 	 * reason not to keep the offsets of the MI fields constant 	 * if only to make kernel debugging easier. 	 */
 name|PCPU_MD_FIELDS
 expr_stmt|;

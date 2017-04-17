@@ -508,6 +508,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
+name|pcpu
+name|dummy_pcpu
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|trapframe
 name|frame0
 decl_stmt|;
