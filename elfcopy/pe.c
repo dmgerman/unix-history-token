@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: pe.c 3490 2016-08-31 00:12:22Z emaste $"
+literal|"$Id: pe.c 3508 2016-12-27 06:19:39Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -217,9 +217,7 @@ if|if
 condition|(
 name|elf_getshstrndx
 argument_list|(
-name|ecp
-operator|->
-name|ein
+name|e
 argument_list|,
 operator|&
 name|indx
@@ -472,9 +470,7 @@ name|name
 operator|=
 name|elf_strptr
 argument_list|(
-name|ecp
-operator|->
-name|ein
+name|e
 argument_list|,
 name|indx
 argument_list|,
@@ -926,6 +922,15 @@ name|pb_off
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|sh
+operator|.
+name|sh_type
+operator|!=
+name|SHT_NOBITS
+condition|)
+block|{
 name|pb
 operator|->
 name|pb_size
@@ -983,6 +988,7 @@ operator|.
 name|sh_size
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|elferr
 operator|=

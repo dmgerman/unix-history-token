@@ -60,7 +60,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: cxxfilt.c 3454 2016-05-07 17:11:05Z kaiwang27 $"
+literal|"$Id: cxxfilt.c 3499 2016-11-25 16:06:29Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -660,6 +660,17 @@ init|;
 condition|;
 control|)
 block|{
+name|setvbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|fgetc

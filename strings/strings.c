@@ -114,23 +114,10 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: strings.c 3446 2016-05-03 01:31:17Z emaste $"
+literal|"$Id: strings.c 3498 2016-10-26 19:25:13Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_enum
-enum|enum
-name|return_code
-block|{
-name|RETURN_OK
-block|,
-name|RETURN_NOINPUT
-block|,
-name|RETURN_SOFTWARE
-block|}
-enum|;
-end_enum
 
 begin_enum
 enum|enum
@@ -405,7 +392,7 @@ name|rc
 decl_stmt|;
 name|rc
 operator|=
-name|RETURN_OK
+literal|0
 expr_stmt|;
 name|min_len
 operator|=
@@ -785,13 +772,19 @@ operator|*
 name|argv
 condition|)
 block|{
-name|rc
-operator|=
+if|if
+condition|(
 name|handle_file
 argument_list|(
 operator|*
 name|argv
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|rc
+operator|=
+literal|1
 expr_stmt|;
 name|argv
 operator|++
@@ -828,7 +821,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|RETURN_NOINPUT
+literal|1
 operator|)
 return|;
 if|if
@@ -871,7 +864,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|RETURN_NOINPUT
+literal|1
 operator|)
 return|;
 block|}
@@ -912,7 +905,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|RETURN_NOINPUT
+literal|1
 operator|)
 return|;
 name|rt
@@ -1012,7 +1005,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|RETURN_SOFTWARE
+literal|1
 operator|)
 return|;
 block|}
@@ -1054,7 +1047,7 @@ name|rc
 decl_stmt|;
 name|rc
 operator|=
-name|RETURN_OK
+literal|0
 expr_stmt|;
 comment|/* If entire file is chosen, treat it as a binary file */
 if|if
@@ -1156,7 +1149,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|RETURN_SOFTWARE
+literal|1
 operator|)
 return|;
 block|}
@@ -1588,7 +1581,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|RETURN_SOFTWARE
+literal|1
 operator|)
 return|;
 block|}
@@ -1948,7 +1941,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|RETURN_OK
+literal|0
 operator|)
 return|;
 block|}

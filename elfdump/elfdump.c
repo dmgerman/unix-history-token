@@ -125,7 +125,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elfdump.c 3482 2016-08-02 18:47:00Z emaste $"
+literal|"$Id: elfdump.c 3497 2016-10-17 20:57:22Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1061,22 +1061,22 @@ return|return
 literal|"DT_IA_64_PLT_RESERVE"
 return|;
 case|case
-literal|0x7ffffffd
+name|DT_AUXILIARY
 case|:
 return|return
-literal|"DT_SUNW_AUXILIARY"
+literal|"DT_AUXILIARY"
 return|;
 case|case
-literal|0x7ffffffe
+name|DT_USED
 case|:
 return|return
-literal|"DT_SUNW_USED"
+literal|"DT_USED"
 return|;
 case|case
-literal|0x7fffffff
+name|DT_FILTER
 case|:
 return|return
-literal|"DT_SUNW_FILTER"
+literal|"DT_FILTER"
 return|;
 block|}
 name|snprintf
