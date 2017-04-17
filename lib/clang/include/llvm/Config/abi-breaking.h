@@ -63,15 +63,8 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to disable the link-time checking of mismatch for    LLVM_ENABLE_ABI_BREAKING_CHECKS */
+comment|/* Allow selectively disabling link-time mismatch checking so that header-only    ADT content from LLVM can be used without linking libSupport. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_DISABLE_ABI_BREAKING_CHECKS_ENFORCING
-value|0
-end_define
 
 begin_if
 if|#

@@ -54,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|ENABLE_BACKTRACES
-value|1
+value|0
 end_define
 
 begin_comment
@@ -68,13 +68,36 @@ name|ENABLE_CRASH_OVERRIDES
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000052
+end_if
+
 begin_comment
 comment|/* Define to 1 if you have the `backtrace' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_BACKTRACE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_BACKTRACE
+value|TRUE
+end_define
+
+begin_define
+define|#
+directive|define
+name|BACKTRACE_HEADER
+value|<execinfo.h>
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<CrashReporterClient.h> header file. */
@@ -184,6 +207,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if dladdr() is available on this platform. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLADDR
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<errno.h> header file. */
 end_comment
 
@@ -198,25 +232,9 @@ begin_comment
 comment|/* Define to 1 if you have the<execinfo.h> header file. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1000052
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_EXECINFO_H
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #undef HAVE_EXECINFO_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
@@ -1271,17 +1289,6 @@ comment|/* #undef LLVM_ON_WIN32 */
 end_comment
 
 begin_comment
-comment|/* Installation prefix directory */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_PREFIX
-value|"/usr"
-end_define
-
-begin_comment
 comment|/* Define if we have the Intel JIT API runtime support library */
 end_comment
 
@@ -1319,7 +1326,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MAJOR
-value|4
+value|5
 end_define
 
 begin_comment
@@ -1352,7 +1359,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"4.0.0"
+value|"5.0.0svn"
 end_define
 
 begin_comment
@@ -1396,7 +1403,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 4.0.0"
+value|"LLVM 5.0.0svn"
 end_define
 
 begin_comment
@@ -1417,7 +1424,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.0.0"
+value|"5.0.0svn"
 end_define
 
 begin_comment

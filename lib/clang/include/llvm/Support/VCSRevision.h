@@ -6,8 +6,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FREEBSD_CC_VERSION
-value|1200007
+name|LLVM_REVISION
+value|"svn-r300422"
 end_define
 
 end_unit
