@@ -961,7 +961,7 @@ operator|-
 literal|1
 index|]
 operator|==
-literal|'\n'
+name|fileeol
 condition|)
 operator|--
 name|ln
@@ -2522,7 +2522,7 @@ argument_list|)
 expr_stmt|;
 name|putchar
 argument_list|(
-literal|'\n'
+name|fileeol
 argument_list|)
 expr_stmt|;
 block|}

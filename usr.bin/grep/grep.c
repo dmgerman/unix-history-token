@@ -178,7 +178,7 @@ comment|/* 3*/
 literal|"unknown %s option"
 block|,
 comment|/* 4*/
-literal|"usage: %s [-abcDEFGHhIiJLlmnOoPqRSsUVvwxZ] [-A num] [-B num] [-C[num]]\n"
+literal|"usage: %s [-abcDEFGHhIiJLlmnOoPqRSsUVvwxZz] [-A num] [-B num] [-C[num]]\n"
 block|,
 comment|/* 5*/
 literal|"\t[-e pattern] [-f file] [--binary-files=value] [--color=when]\n"
@@ -446,6 +446,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* requested value for -m */
+end_comment
+
+begin_decl_stmt
+name|char
+name|fileeol
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* indicator for eol */
 end_comment
 
 begin_decl_stmt
@@ -826,7 +836,7 @@ name|char
 modifier|*
 name|optstr
 init|=
-literal|"0123456789A:B:C:D:EFGHIJMLOPSRUVZabcd:e:f:hilm:nopqrsuvwxXy"
+literal|"0123456789A:B:C:D:EFGHIJMLOPSRUVZabcd:e:f:hilm:nopqrsuvwxXyz"
 decl_stmt|;
 end_decl_stmt
 
@@ -1297,6 +1307,16 @@ block|,
 name|NULL
 block|,
 literal|'X'
+block|}
+block|,
+block|{
+literal|"null-data"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'z'
 block|}
 block|,
 block|{
@@ -2143,6 +2163,10 @@ expr_stmt|;
 name|needpattern
 operator|=
 literal|1
+expr_stmt|;
+name|fileeol
+operator|=
+literal|'\n'
 expr_stmt|;
 name|eopts
 operator|=
@@ -3182,6 +3206,14 @@ case|:
 name|filebehave
 operator|=
 name|FILE_XZ
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|fileeol
+operator|=
+literal|'\0'
 expr_stmt|;
 break|break;
 case|case
