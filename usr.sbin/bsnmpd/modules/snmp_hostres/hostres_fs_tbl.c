@@ -550,7 +550,7 @@ begin_define
 define|#
 directive|define
 name|N_FS_TYPE_MAP
-value|(sizeof(fs_type_map) / sizeof(fs_type_map[0]))
+value|nitems(fs_type_map)
 end_define
 
 begin_comment
