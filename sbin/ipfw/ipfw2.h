@@ -517,6 +517,8 @@ block|,
 name|TOK_EXTPREFIX
 block|,
 name|TOK_PREFIXLEN
+block|,
+name|TOK_TCPSETMSS
 block|, }
 enum|;
 end_enum
