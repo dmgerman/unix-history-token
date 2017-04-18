@@ -241,6 +241,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|armada38x_mbus_optimization
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -993,6 +1002,18 @@ condition|)
 name|printf
 argument_list|(
 literal|"WARNING: could not map CPU Subsystem registers\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|armada38x_mbus_optimization
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: could not enable mbus optimization\n"
 argument_list|)
 expr_stmt|;
 if|if

@@ -2504,6 +2504,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_MBUS_CTRL_BASE
+value|(MV_BASE + 0x20420)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_MBUS_CTRL_REGS_LEN
+value|0x10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
