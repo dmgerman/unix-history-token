@@ -332,6 +332,10 @@ name|rsizep
 operator|=
 literal|0
 expr_stmt|;
+name|flag
+operator|&=
+name|F_MASK
+expr_stmt|;
 if|if
 condition|(
 name|flag

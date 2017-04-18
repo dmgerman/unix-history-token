@@ -3105,6 +3105,8 @@ block|}
 switch|switch
 condition|(
 name|rw
+operator|&
+name|F_MASK
 condition|)
 block|{
 case|case

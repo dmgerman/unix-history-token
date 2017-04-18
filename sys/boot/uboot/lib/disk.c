@@ -621,6 +621,10 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|rw
+operator|&=
+name|F_MASK
+expr_stmt|;
 if|if
 condition|(
 name|rw
