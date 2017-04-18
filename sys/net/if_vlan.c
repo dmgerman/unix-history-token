@@ -6603,7 +6603,11 @@ name|p
 operator|->
 name|if_capabilities
 operator|&
+operator|(
 name|IFCAP_HWCSUM
+operator||
+name|IFCAP_HWCSUM_IPV6
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -6628,7 +6632,11 @@ name|p
 operator|->
 name|if_capenable
 operator|&
+operator|(
 name|IFCAP_HWCSUM
+operator||
+name|IFCAP_HWCSUM_IPV6
+operator|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -6646,6 +6654,12 @@ operator||
 name|CSUM_UDP
 operator||
 name|CSUM_SCTP
+operator||
+name|CSUM_TCP_IPV6
+operator||
+name|CSUM_UDP_IPV6
+operator||
+name|CSUM_SCTP_IPV6
 operator|)
 expr_stmt|;
 block|}
