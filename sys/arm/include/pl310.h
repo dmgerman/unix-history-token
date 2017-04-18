@@ -733,14 +733,14 @@ begin_define
 define|#
 directive|define
 name|POWER_CTRL_ENABLE_GATING
-value|(1<< 0)
+value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|POWER_CTRL_ENABLE_STANDBY
-value|(1<< 1)
+value|(1<< 0)
 end_define
 
 begin_struct_decl
