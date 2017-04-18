@@ -3648,6 +3648,28 @@ begin_comment
 comment|/* default TTL for gif encap packet */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPCTL_INTRDQMAXLEN
+value|17
+end_define
+
+begin_comment
+comment|/* max length of direct netisr queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPCTL_INTRDQDROPS
+value|18
+end_define
+
+begin_comment
+comment|/* number of direct netisr q drops */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
