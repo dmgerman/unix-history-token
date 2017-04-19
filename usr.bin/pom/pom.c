@@ -287,9 +287,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|cap_rights_t
-name|rights
-decl_stmt|;
 name|time_t
 name|tt
 decl_stmt|;
@@ -347,14 +344,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"unable to limit capabitilities for stdio"
-argument_list|)
-expr_stmt|;
-name|cap_rights_init
-argument_list|(
-operator|&
-name|rights
-argument_list|,
-name|CAP_WRITE
 argument_list|)
 expr_stmt|;
 name|caph_cache_catpages
