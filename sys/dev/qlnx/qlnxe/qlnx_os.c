@@ -11008,14 +11008,6 @@ argument_list|(
 name|ha
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
 block|}
 break|break;
 case|case
@@ -28564,14 +28556,18 @@ decl_stmt|;
 name|uint16_t
 name|cqe_prod
 decl_stmt|;
+union|union
+block|{
 name|struct
 name|eth_rx_prod_data
-name|rx_prods
-init|=
-block|{
-literal|0
-block|}
+name|rx_prod_data
 decl_stmt|;
+name|uint32_t
+name|data32
+decl_stmt|;
+block|}
+name|rx_prods
+union|;
 name|bd_prod
 operator|=
 name|ecore_chain_get_prod_idx
@@ -28595,6 +28591,8 @@ expr_stmt|;
 comment|/* Update producers */
 name|rx_prods
 operator|.
+name|rx_prod_data
+operator|.
 name|bd_prod
 operator|=
 name|htole16
@@ -28603,6 +28601,8 @@ name|bd_prod
 argument_list|)
 expr_stmt|;
 name|rx_prods
+operator|.
+name|rx_prod_data
 operator|.
 name|cqe_prod
 operator|=
@@ -28615,8 +28615,6 @@ comment|/* Make sure that the BD and SGE data is updated before updating the    
 name|wmb
 argument_list|()
 expr_stmt|;
-comment|//bus_barrier(ha->pci_reg,  0, 0, BUS_SPACE_BARRIER_READ);
-comment|//bus_barrier(ha->pci_dbells,  0, 0, BUS_SPACE_BARRIER_READ);
 name|internal_ram_wr
 argument_list|(
 name|p_hwfn
@@ -28630,12 +28628,10 @@ argument_list|(
 name|rx_prods
 argument_list|)
 argument_list|,
-operator|(
-name|u32
-operator|*
-operator|)
 operator|&
 name|rx_prods
+operator|.
+name|data32
 argument_list|)
 expr_stmt|;
 comment|/* mmiowb is needed to synchronize doorbell writes from more than one          * processor. It guarantees that the write arrives to the device before          * the napi lock is released and another qlnx_poll is called (possibly          * on another CPU). Without this barrier, the next doorbell can bypass          * this doorbell. This is applicable to IA64/Altix systems.          */
@@ -30873,7 +30869,7 @@ name|mcast
 operator|->
 name|mac
 index|[
-literal|0
+name|i
 index|]
 argument_list|,
 operator|&
@@ -30895,9 +30891,6 @@ expr_stmt|;
 name|mcast
 operator|->
 name|num_mc_addrs
-operator|++
-expr_stmt|;
-name|mcast
 operator|++
 expr_stmt|;
 block|}
@@ -30968,6 +30961,8 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Remove all unicast macs */
+name|rc
+operator|=
 name|qlnx_remove_all_ucast_mac
 argument_list|(
 name|ha
