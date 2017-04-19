@@ -985,9 +985,17 @@ end_define
 begin_elif
 elif|#
 directive|elif
+operator|(
 name|GCC_VERSION
 operator|>=
 literal|403
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
+operator|)
 end_elif
 
 begin_define
