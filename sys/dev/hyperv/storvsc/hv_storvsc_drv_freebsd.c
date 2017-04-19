@@ -7468,7 +7468,7 @@ else|else
 block|{
 name|tmp_bits
 operator||=
-literal|1
+literal|1ULL
 operator|<<
 name|i
 expr_stmt|;
