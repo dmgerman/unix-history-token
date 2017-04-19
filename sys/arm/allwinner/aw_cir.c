@@ -1764,13 +1764,13 @@ block|}
 comment|/* De-assert reset */
 if|if
 condition|(
-name|hwreset_get_by_ofw_name
+name|hwreset_get_by_ofw_idx
 argument_list|(
 name|dev
 argument_list|,
 literal|0
 argument_list|,
-literal|"apb"
+literal|0
 argument_list|,
 operator|&
 name|rst_apb
