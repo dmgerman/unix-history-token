@@ -5667,6 +5667,12 @@ name|uint32_t
 name|min_lro_pkt_size
 decl_stmt|;
 name|uint32_t
+name|enable_hw_lro
+decl_stmt|;
+name|uint32_t
+name|enable_soft_lro
+decl_stmt|;
+name|uint32_t
 name|enable_9kb
 decl_stmt|;
 name|uint32_t
