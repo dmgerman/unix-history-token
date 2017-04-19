@@ -605,6 +605,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|lc
+operator|->
+name|lro_hash
+argument_list|,
+name|M_LRO
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|lc
