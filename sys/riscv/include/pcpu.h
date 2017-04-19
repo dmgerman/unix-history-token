@@ -41,7 +41,7 @@ name|PCPU_MD_FIELDS
 define|\
 value|uint32_t pc_pending_ipis;
 comment|/* IPIs pending to this CPU */
-value|\ 	char __pad[125]
+value|\ 	char __pad[61]
 end_define
 
 begin_ifdef
