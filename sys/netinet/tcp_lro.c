@@ -440,12 +440,6 @@ literal|0
 expr_stmt|;
 name|lc
 operator|->
-name|lro_cnt
-operator|=
-literal|0
-expr_stmt|;
-name|lc
-operator|->
 name|lro_mbuf_count
 operator|=
 literal|0
