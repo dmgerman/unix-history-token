@@ -845,6 +845,20 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SC_PIXEL_MODE
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 specifier|const
