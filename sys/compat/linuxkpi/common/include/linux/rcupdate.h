@@ -52,7 +52,7 @@ parameter_list|(
 name|v
 parameter_list|)
 define|\
-value|((typeof(*(v)) __force __rcu *)(v))
+value|((__typeof(*(v)) *)(v))
 end_define
 
 begin_define
@@ -149,7 +149,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((typeof(*p) __force __kernel *)(READ_ONCE(p)))
+value|((__typeof(*p) *)(READ_ONCE(p)))
 end_define
 
 begin_define
@@ -162,7 +162,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|((typeof(*p) __force __kernel *)(p))
+value|((__typeof(*p) *)(p))
 end_define
 
 begin_define
