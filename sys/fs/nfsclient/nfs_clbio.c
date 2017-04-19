@@ -6148,6 +6148,14 @@ name|on
 operator|)
 operator|==
 name|biosize
+operator|||
+operator|(
+name|ioflag
+operator|&
+name|IO_ASYNC
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|bp
