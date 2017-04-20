@@ -1374,7 +1374,7 @@ comment|/* We're processing CPU, update next_id used in the next iteration */
 name|next_id
 operator|++
 expr_stmt|;
-comment|/* 		 * If we are filtering by runnable then limit to only 		 * those that have been enabled. 		 */
+comment|/* 		 * If we are filtering by runnable then limit to only 		 * those that have been enabled, or do provide a method 		 * to enable them. 		 */
 if|if
 condition|(
 name|only_runnable
