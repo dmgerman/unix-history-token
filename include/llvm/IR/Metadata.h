@@ -154,6 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CBindingWrapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -489,6 +495,37 @@ decl_stmt|;
 comment|/// @}
 block|}
 empty_stmt|;
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+name|DEFINE_ISA_CONVERSION_FUNCTIONS
+argument_list|(
+argument|Metadata
+argument_list|,
+argument|LLVMMetadataRef
+argument_list|)
+comment|// Specialized opaque metadata conversions.
+specifier|inline
+name|Metadata
+modifier|*
+modifier|*
+name|unwrap
+parameter_list|(
+name|LLVMMetadataRef
+modifier|*
+name|MDs
+parameter_list|)
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Metadata
+operator|*
+operator|*
+operator|>
+operator|(
+name|MDs
+operator|)
+return|;
+block|}
 define|#
 directive|define
 name|HANDLE_METADATA

@@ -3517,6 +3517,7 @@ decl_stmt|;
 name|bool
 name|mayBeEmittedAsTailCall
 argument_list|(
+specifier|const
 name|CallInst
 operator|*
 name|CI

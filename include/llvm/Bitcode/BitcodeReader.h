@@ -192,6 +192,10 @@ expr_stmt|;
 name|StringRef
 name|ModuleIdentifier
 decl_stmt|;
+comment|// The string table used to interpret this module.
+name|StringRef
+name|Strtab
+decl_stmt|;
 comment|// The bitstream location of the IDENTIFICATION_BLOCK.
 name|uint64_t
 name|IdentificationBit
@@ -290,6 +294,15 @@ operator|.
 name|size
 argument_list|()
 argument_list|)
+return|;
+block|}
+name|StringRef
+name|getStrtab
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Strtab
 return|;
 block|}
 name|StringRef

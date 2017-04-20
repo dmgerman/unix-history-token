@@ -210,11 +210,6 @@ name|true
 decl_stmt|;
 comment|// Print a status line when new units are found;
 name|bool
-name|OutputCSV
-init|=
-name|false
-decl_stmt|;
-name|bool
 name|PrintNewCovPcs
 init|=
 name|false

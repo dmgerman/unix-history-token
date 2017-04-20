@@ -169,6 +169,12 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -705,6 +711,25 @@ name|DWARFDebugInfoEntry
 operator|>
 name|DieArray
 expr_stmt|;
+comment|// Map from range's start address to end address and corresponding DIE.
+comment|// IntervalMap does not support range removal, as a result, we use the
+comment|// std::map::upper_bound for address range lookup.
+name|std
+operator|::
+name|map
+operator|<
+name|uint64_t
+operator|,
+name|std
+operator|::
+name|pair
+operator|<
+name|uint64_t
+operator|,
+name|DWARFDie
+operator|>>
+name|AddrDieMap
+expr_stmt|;
 typedef|typedef
 name|iterator_range
 operator|<
@@ -940,6 +965,14 @@ operator|=
 name|Base
 expr_stmt|;
 block|}
+comment|// Recursively update address to Die map.
+name|void
+name|updateAddressDieMap
+parameter_list|(
+name|DWARFDie
+name|Die
+parameter_list|)
+function_decl|;
 name|void
 name|setRangesSection
 parameter_list|(
@@ -1759,7 +1792,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// getSubprogramForAddress - Returns subprogram DIE with address range
+comment|/// getSubroutineForAddress - Returns subprogram DIE with address range
 end_comment
 
 begin_comment
@@ -1772,7 +1805,7 @@ end_comment
 
 begin_function_decl
 name|DWARFDie
-name|getSubprogramForAddress
+name|getSubroutineForAddress
 parameter_list|(
 name|uint64_t
 name|Address

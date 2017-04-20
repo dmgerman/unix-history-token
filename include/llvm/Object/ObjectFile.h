@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -74,19 +80,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Object/Binary.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/SymbolicFile.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorHandling.h"
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorOr.h"
 end_include
 
 begin_include
@@ -104,7 +128,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstring>
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -118,16 +160,16 @@ name|namespace
 name|object
 block|{
 name|class
-name|ObjectFile
-decl_stmt|;
-name|class
 name|COFFObjectFile
 decl_stmt|;
 name|class
 name|MachOObjectFile
 decl_stmt|;
 name|class
-name|WasmObjectFile
+name|ObjectFile
+decl_stmt|;
+name|class
+name|SectionRef
 decl_stmt|;
 name|class
 name|SymbolRef
@@ -136,15 +178,16 @@ name|class
 name|symbol_iterator
 decl_stmt|;
 name|class
-name|SectionRef
+name|WasmObjectFile
 decl_stmt|;
-typedef|typedef
+name|using
+name|section_iterator
+init|=
 name|content_iterator
 operator|<
 name|SectionRef
 operator|>
-name|section_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// This is a value type class that represents a single relocation in the list
 comment|/// of relocations in the object file.
 name|class
@@ -157,24 +200,23 @@ specifier|const
 name|ObjectFile
 modifier|*
 name|OwningObject
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|RelocationRef
 argument_list|()
-operator|:
-name|OwningObject
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 name|RelocationRef
 argument_list|(
 argument|DataRefImpl RelocationP
 argument_list|,
 argument|const ObjectFile *Owner
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|bool
 name|operator
 operator|==
@@ -234,13 +276,14 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
+name|using
+name|relocation_iterator
+init|=
 name|content_iterator
 operator|<
 name|RelocationRef
 operator|>
-name|relocation_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// This is a value type class that represents a single section in the list of
 comment|/// sections in the object file.
 name|class
@@ -257,24 +300,23 @@ specifier|const
 name|ObjectFile
 modifier|*
 name|OwningObject
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|SectionRef
 argument_list|()
-operator|:
-name|OwningObject
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 name|SectionRef
 argument_list|(
 argument|DataRefImpl SectionP
 argument_list|,
 argument|const ObjectFile *Owner
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|bool
 name|operator
 operator|==
@@ -446,12 +488,6 @@ name|SectionRef
 block|;
 name|public
 operator|:
-name|SymbolRef
-argument_list|()
-operator|:
-name|BasicSymbolRef
-argument_list|()
-block|{}
 expr|enum
 name|Type
 block|{
@@ -468,6 +504,11 @@ name|ST_Function
 block|,
 name|ST_Other
 block|}
+block|;
+name|SymbolRef
+argument_list|()
+operator|=
+expr|default
 block|;
 name|SymbolRef
 argument_list|(
@@ -680,21 +721,6 @@ name|virtual
 name|void
 name|anchor
 argument_list|()
-block|;
-name|ObjectFile
-argument_list|()
-operator|=
-name|delete
-block|;
-name|ObjectFile
-argument_list|(
-specifier|const
-name|ObjectFile
-operator|&
-name|other
-argument_list|)
-operator|=
-name|delete
 block|;
 name|protected
 operator|:
@@ -1059,6 +1085,21 @@ specifier|const
 block|;
 name|public
 operator|:
+name|ObjectFile
+argument_list|()
+operator|=
+name|delete
+block|;
+name|ObjectFile
+argument_list|(
+specifier|const
+name|ObjectFile
+operator|&
+name|other
+argument_list|)
+operator|=
+name|delete
+block|;
 name|uint64_t
 name|getCommonSymbolSize
 argument_list|(
@@ -1085,13 +1126,14 @@ name|Symb
 argument_list|)
 return|;
 block|}
-typedef|typedef
+name|using
+name|symbol_iterator_range
+operator|=
 name|iterator_range
 operator|<
 name|symbol_iterator
 operator|>
-name|symbol_iterator_range
-expr_stmt|;
+block|;
 name|symbol_iterator_range
 name|symbols
 argument_list|()
@@ -1115,7 +1157,7 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-decl_stmt|;
+block|;
 name|virtual
 name|section_iterator
 name|section_end
@@ -1123,14 +1165,15 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|section_iterator_range
+operator|=
 name|iterator_range
 operator|<
 name|section_iterator
 operator|>
-name|section_iterator_range
-expr_stmt|;
+block|;
 name|section_iterator_range
 name|sections
 argument_list|()
@@ -1156,7 +1199,7 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|virtual
 name|StringRef
 name|getFileFormatName
@@ -1164,7 +1207,7 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|virtual
 comment|/* Triple::ArchType */
 name|unsigned
@@ -1173,7 +1216,7 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|virtual
 name|SubtargetFeatures
 name|getFeatures
@@ -1181,16 +1224,14 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|virtual
 name|void
 name|setARMSubArch
 argument_list|(
-name|Triple
-operator|&
-name|TheTriple
+argument|Triple&TheTriple
 argument_list|)
-decl|const
+specifier|const
 block|{ }
 comment|/// Returns platform-specific object flags, if any.
 name|virtual
@@ -1238,7 +1279,7 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 comment|/// @returns Pointer to ObjectFile subclass to handle this type of object.
 comment|/// @param ObjectPath The path to the object file. ObjectPath.isObject must
 comment|///        return true.
@@ -1254,7 +1295,7 @@ name|createObjectFile
 argument_list|(
 argument|StringRef ObjectPath
 argument_list|)
-expr_stmt|;
+block|;
 specifier|static
 name|Expected
 operator|<
@@ -1270,7 +1311,7 @@ argument|MemoryBufferRef Object
 argument_list|,
 argument|sys::fs::file_magic Type
 argument_list|)
-expr_stmt|;
+block|;
 specifier|static
 name|Expected
 operator|<
@@ -1304,12 +1345,9 @@ specifier|static
 specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Binary
-modifier|*
-name|v
-parameter_list|)
+argument_list|(
+argument|const Binary *v
+argument_list|)
 block|{
 return|return
 name|v
@@ -1331,7 +1369,7 @@ name|createCOFFObjectFile
 argument_list|(
 argument|MemoryBufferRef Object
 argument_list|)
-expr_stmt|;
+block|;
 specifier|static
 name|ErrorOr
 operator|<
@@ -1345,7 +1383,7 @@ name|createELFObjectFile
 argument_list|(
 argument|MemoryBufferRef Object
 argument_list|)
-expr_stmt|;
+block|;
 specifier|static
 name|Expected
 operator|<
@@ -1365,7 +1403,7 @@ argument_list|,
 argument|uint32_t UniversalIndex =
 literal|0
 argument_list|)
-expr_stmt|;
+block|;
 specifier|static
 name|Expected
 operator|<
@@ -1379,9 +1417,8 @@ name|createWasmObjectFile
 argument_list|(
 argument|MemoryBufferRef Object
 argument_list|)
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 comment|// Inline function definitions.
 specifier|inline
 name|SymbolRef
@@ -2114,14 +2151,11 @@ name|OwningObject
 return|;
 block|}
 block|}
+comment|// end namespace object
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace object
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 
@@ -2129,6 +2163,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECT_OBJECTFILE_H
+end_comment
 
 end_unit
 

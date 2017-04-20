@@ -531,9 +531,9 @@ name|HasD16
 operator|=
 name|false
 block|;
-comment|/// HasHardwareDivide - True if subtarget supports [su]div
+comment|/// HasHardwareDivide - True if subtarget supports [su]div in Thumb mode
 name|bool
-name|HasHardwareDivide
+name|HasHardwareDivideInThumb
 operator|=
 name|false
 block|;
@@ -1448,12 +1448,12 @@ name|UseNEONForSinglePrecisionFP
 return|;
 block|}
 name|bool
-name|hasDivide
+name|hasDivideInThumbMode
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasHardwareDivide
+name|HasHardwareDivideInThumb
 return|;
 block|}
 name|bool

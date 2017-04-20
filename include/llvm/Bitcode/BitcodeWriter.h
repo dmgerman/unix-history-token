@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/StringTableBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -102,6 +108,32 @@ name|BitstreamWriter
 operator|>
 name|Stream
 expr_stmt|;
+name|StringTableBuilder
+name|StrtabBuilder
+block|{
+name|StringTableBuilder
+operator|::
+name|RAW
+block|}
+empty_stmt|;
+name|bool
+name|WroteStrtab
+init|=
+name|false
+decl_stmt|;
+name|void
+name|writeBlob
+parameter_list|(
+name|unsigned
+name|Block
+parameter_list|,
+name|unsigned
+name|Record
+parameter_list|,
+name|StringRef
+name|Blob
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|/// Create a BitcodeWriter that writes to Buffer.
@@ -119,6 +151,21 @@ operator|~
 name|BitcodeWriter
 argument_list|()
 expr_stmt|;
+comment|/// Write the bitcode file's string table. This must be called exactly once
+comment|/// after all modules have been written.
+name|void
+name|writeStrtab
+parameter_list|()
+function_decl|;
+comment|/// Copy the string table for another module into this bitcode file. This
+comment|/// should be called after copying the module itself into the bitcode file.
+name|void
+name|copyStrtab
+parameter_list|(
+name|StringRef
+name|Strtab
+parameter_list|)
+function_decl|;
 comment|/// Write the specified module to the buffer specified at construction time.
 comment|///
 comment|/// If \c ShouldPreserveUseListOrder, encode the use-list order for each \a

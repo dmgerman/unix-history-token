@@ -290,9 +290,11 @@ specifier|const
 block|;
 comment|/// Add attributes to an argument.
 name|void
-name|addAttr
+name|addAttrs
 argument_list|(
-argument|AttributeList AS
+name|AttrBuilder
+operator|&
+name|B
 argument_list|)
 block|;
 name|void
@@ -300,25 +302,13 @@ name|addAttr
 argument_list|(
 argument|Attribute::AttrKind Kind
 argument_list|)
-block|{
+block|;
+name|void
 name|addAttr
 argument_list|(
-name|AttributeList
-operator|::
-name|get
-argument_list|(
-name|getContext
-argument_list|()
-argument_list|,
-name|getArgNo
-argument_list|()
-operator|+
-literal|1
-argument_list|,
-name|Kind
+argument|Attribute Attr
 argument_list|)
-argument_list|)
-block|;   }
+block|;
 comment|/// Remove attributes from an argument.
 name|void
 name|removeAttr
@@ -331,25 +321,7 @@ name|removeAttr
 argument_list|(
 argument|Attribute::AttrKind Kind
 argument_list|)
-block|{
-name|removeAttr
-argument_list|(
-name|AttributeList
-operator|::
-name|get
-argument_list|(
-name|getContext
-argument_list|()
-argument_list|,
-name|getArgNo
-argument_list|()
-operator|+
-literal|1
-argument_list|,
-name|Kind
-argument_list|)
-argument_list|)
-block|;   }
+block|;
 comment|/// Check if an argument has a given attribute.
 name|bool
 name|hasAttribute

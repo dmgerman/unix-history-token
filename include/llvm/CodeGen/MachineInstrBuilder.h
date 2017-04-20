@@ -2409,6 +2409,35 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Clone a DBG_VALUE whose value has been spilled to FrameIndex.
+end_comment
+
+begin_decl_stmt
+name|MachineInstr
+modifier|*
+name|buildDbgValueForSpill
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|BB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|&
+name|Orig
+argument_list|,
+name|int
+name|FrameIndex
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|inline
 name|unsigned

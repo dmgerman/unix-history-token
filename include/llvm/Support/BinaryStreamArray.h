@@ -659,6 +659,27 @@ return|;
 block|}
 end_expr_stmt
 
+begin_function
+name|ValueType
+modifier|&
+name|operator
+modifier|*
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|Array
+operator|&&
+operator|!
+name|HasError
+argument_list|)
+expr_stmt|;
+return|return
+name|ThisValue
+return|;
+block|}
+end_function
+
 begin_expr_stmt
 name|IterType
 operator|&

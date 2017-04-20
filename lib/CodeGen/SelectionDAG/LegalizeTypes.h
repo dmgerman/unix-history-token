@@ -2608,6 +2608,9 @@ parameter_list|(
 name|SDNode
 modifier|*
 name|N
+parameter_list|,
+name|unsigned
+name|ResNo
 parameter_list|)
 function_decl|;
 name|SDValue

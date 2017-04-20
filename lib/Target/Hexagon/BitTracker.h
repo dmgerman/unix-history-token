@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SetVector.h"
 end_include
 
@@ -365,6 +371,13 @@ name|EdgeQueueType
 name|FlowQ
 decl_stmt|;
 comment|// Work queue of CFG edges.
+name|DenseSet
+operator|<
+name|unsigned
+operator|>
+name|ReachedBB
+expr_stmt|;
+comment|// Cache of reached blocks.
 name|bool
 name|Trace
 decl_stmt|;

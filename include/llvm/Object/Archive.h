@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorHandling.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/FileSystem.h"
 end_include
 
@@ -111,6 +105,42 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -147,8 +177,6 @@ comment|// ArchiveMemberHeader() = default;
 comment|/// Get the name without looking up long names.
 name|Expected
 operator|<
-name|llvm
-operator|::
 name|StringRef
 operator|>
 name|getRawName
@@ -158,8 +186,6 @@ expr_stmt|;
 comment|/// Get the name looking up long names.
 name|Expected
 operator|<
-name|llvm
-operator|::
 name|StringRef
 operator|>
 name|getName
@@ -205,8 +231,6 @@ name|getLastModified
 argument_list|()
 specifier|const
 expr_stmt|;
-name|llvm
-operator|::
 name|StringRef
 name|getRawLastModified
 argument_list|()
@@ -343,13 +367,13 @@ block|{
 name|friend
 name|Archive
 block|;
+name|friend
+name|ArchiveMemberHeader
+block|;
 specifier|const
 name|Archive
 operator|*
 name|Parent
-block|;
-name|friend
-name|ArchiveMemberHeader
 block|;
 name|ArchiveMemberHeader
 name|Header
@@ -639,6 +663,8 @@ block|;
 name|Error
 operator|*
 name|E
+operator|=
+name|nullptr
 block|;
 name|public
 operator|:
@@ -647,19 +673,7 @@ argument_list|()
 operator|:
 name|C
 argument_list|(
-name|Child
-argument_list|(
-name|nullptr
-argument_list|,
-name|nullptr
-argument_list|,
-name|nullptr
-argument_list|)
-argument_list|)
-block|,
-name|E
-argument_list|(
-argument|nullptr
+argument|Child(nullptr, nullptr, nullptr)
 argument_list|)
 block|{}
 name|child_iterator
@@ -843,6 +857,30 @@ block|;
 comment|// Extra index to the string.
 name|public
 operator|:
+name|Symbol
+argument_list|(
+argument|const Archive *p
+argument_list|,
+argument|uint32_t symi
+argument_list|,
+argument|uint32_t stri
+argument_list|)
+operator|:
+name|Parent
+argument_list|(
+name|p
+argument_list|)
+block|,
+name|SymbolIndex
+argument_list|(
+name|symi
+argument_list|)
+block|,
+name|StringIndex
+argument_list|(
+argument|stri
+argument_list|)
+block|{}
 name|bool
 name|operator
 operator|==
@@ -872,30 +910,6 @@ name|SymbolIndex
 operator|)
 return|;
 block|}
-name|Symbol
-argument_list|(
-argument|const Archive *p
-argument_list|,
-argument|uint32_t symi
-argument_list|,
-argument|uint32_t stri
-argument_list|)
-operator|:
-name|Parent
-argument_list|(
-name|p
-argument_list|)
-block|,
-name|SymbolIndex
-argument_list|(
-name|symi
-argument_list|)
-block|,
-name|StringIndex
-argument_list|(
-argument|stri
-argument_list|)
-block|{}
 name|StringRef
 name|getName
 argument_list|()
@@ -1287,13 +1301,22 @@ name|ThinBuffers
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace object
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECT_ARCHIVE_H
+end_comment
 
 end_unit
 

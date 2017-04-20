@@ -3935,7 +3935,7 @@ name|int64_t
 name|Offset
 parameter_list|,
 name|bool
-name|IsIndirect
+name|IsDbgDeclare
 parameter_list|,
 specifier|const
 name|SDValue

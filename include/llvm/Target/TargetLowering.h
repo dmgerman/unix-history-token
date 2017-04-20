@@ -864,6 +864,30 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|/// Return the type for frame index, which is determined by
+comment|/// the alloca address space specified through the data layout.
+name|MVT
+name|getFrameIndexTy
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+block|{
+return|return
+name|getPointerTy
+argument_list|(
+name|DL
+argument_list|,
+name|DL
+operator|.
+name|getAllocaAddrSpace
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// EVT is not used in-tree, but is used by out-of-tree target.
 comment|/// A documentation for this function would be nice...
 name|virtual
@@ -9219,7 +9243,7 @@ name|virtual
 name|bool
 name|mayBeEmittedAsTailCall
 argument_list|(
-argument|CallInst *
+argument|const CallInst *
 argument_list|)
 specifier|const
 block|{

@@ -1462,20 +1462,26 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// Scratch is allocated in 256 dword per wave blocks for the entire
+end_comment
+
+begin_comment
+comment|// wavefront. When viewed from the perspecive of an arbitrary workitem, this
+end_comment
+
+begin_comment
+comment|// is 4-byte aligned.
+end_comment
+
 begin_expr_stmt
 name|unsigned
 name|getStackAlignment
 argument_list|()
 specifier|const
 block|{
-comment|// Scratch is allocated in 256 dword per wave blocks.
 return|return
 literal|4
-operator|*
-literal|256
-operator|/
-name|getWavefrontSize
-argument_list|()
 return|;
 block|}
 end_expr_stmt

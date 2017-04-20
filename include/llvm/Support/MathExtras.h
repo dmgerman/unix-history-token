@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<climits>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstring>
 end_include
 
@@ -1138,6 +1144,124 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Create a bitmask with the N right-most bits set to 1, and all other
+end_comment
+
+begin_comment
+comment|/// bits set to 0.  Only unsigned types are allowed.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+name|maskTrailingOnes
+argument_list|(
+argument|unsigned N
+argument_list|)
+block|{
+name|static_assert
+argument_list|(
+name|std
+operator|::
+name|is_unsigned
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"Invalid type!"
+argument_list|)
+block|;
+specifier|const
+name|unsigned
+name|Bits
+operator|=
+name|CHAR_BIT
+operator|*
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|N
+operator|<=
+name|Bits
+operator|&&
+literal|"Invalid bit index"
+argument_list|)
+block|;
+return|return
+name|N
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
+operator|(
+name|T
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+operator|>>
+operator|(
+name|Bits
+operator|-
+name|N
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Create a bitmask with the N left-most bits set to 1, and all other
+end_comment
+
+begin_comment
+comment|/// bits set to 0.  Only unsigned types are allowed.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+name|maskLeadingOnes
+argument_list|(
+argument|unsigned N
+argument_list|)
+block|{
+return|return
+operator|~
+name|maskTrailingOnes
+operator|<
+name|T
+operator|>
+operator|(
+name|CHAR_BIT
+operator|*
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|-
+name|N
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Get the index of the last set bit starting from the least
 end_comment
 
@@ -1166,7 +1290,7 @@ comment|///   valid arguments.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|T

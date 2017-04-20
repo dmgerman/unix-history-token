@@ -154,7 +154,37 @@ comment|// Section version number for .debug_pubnames.
 name|DW_ARANGES_VERSION
 init|=
 literal|2
+block|,
 comment|// Section version number for .debug_aranges.
+comment|// Identifiers we use to distinguish vendor extensions.
+name|DWARF_VENDOR_DWARF
+init|=
+literal|0
+block|,
+comment|// Defined in v2 or later of the DWARF standard.
+name|DWARF_VENDOR_APPLE
+init|=
+literal|1
+block|,
+name|DWARF_VENDOR_BORLAND
+init|=
+literal|2
+block|,
+name|DWARF_VENDOR_GNU
+init|=
+literal|3
+block|,
+name|DWARF_VENDOR_GOOGLE
+init|=
+literal|4
+block|,
+name|DWARF_VENDOR_LLVM
+init|=
+literal|5
+block|,
+name|DWARF_VENDOR_MIPS
+init|=
+literal|6
 block|}
 enum|;
 comment|// Special ID values that distinguish a CIE from a FDE in DWARF CFI.
@@ -183,6 +213,10 @@ parameter_list|(
 name|ID
 parameter_list|,
 name|NAME
+parameter_list|,
+name|VERSION
+parameter_list|,
+name|VENDOR
 parameter_list|)
 value|DW_TAG_##NAME = ID,
 include|#
@@ -297,6 +331,10 @@ parameter_list|(
 name|ID
 parameter_list|,
 name|NAME
+parameter_list|,
+name|VERSION
+parameter_list|,
+name|VENDOR
 parameter_list|)
 value|DW_AT_##NAME = ID,
 include|#
@@ -323,6 +361,10 @@ parameter_list|(
 name|ID
 parameter_list|,
 name|NAME
+parameter_list|,
+name|VERSION
+parameter_list|,
+name|VENDOR
 parameter_list|)
 value|DW_FORM_##NAME = ID,
 include|#
@@ -345,6 +387,10 @@ parameter_list|(
 name|ID
 parameter_list|,
 name|NAME
+parameter_list|,
+name|VERSION
+parameter_list|,
+name|VENDOR
 parameter_list|)
 value|DW_OP_##NAME = ID,
 include|#
@@ -374,6 +420,10 @@ parameter_list|(
 name|ID
 parameter_list|,
 name|NAME
+parameter_list|,
+name|VERSION
+parameter_list|,
+name|VENDOR
 parameter_list|)
 value|DW_ATE_##NAME = ID,
 include|#
@@ -522,6 +572,10 @@ parameter_list|(
 name|ID
 parameter_list|,
 name|NAME
+parameter_list|,
+name|VERSION
+parameter_list|,
+name|VENDOR
 parameter_list|)
 value|DW_LANG_##NAME = ID,
 include|#
@@ -675,7 +729,7 @@ literal|0xff
 block|}
 enum|;
 enum|enum
-name|LinerNumberEntryFormat
+name|LineNumberEntryFormat
 block|{
 define|#
 directive|define
@@ -685,7 +739,7 @@ name|ID
 parameter_list|,
 name|NAME
 parameter_list|)
-value|DW_DEFAULTED_##NAME = ID,
+value|DW_LNCT_##NAME = ID,
 include|#
 directive|include
 file|"llvm/Support/Dwarf.def"
@@ -1289,6 +1343,123 @@ name|MacinfoString
 parameter_list|)
 function_decl|;
 comment|/// @}
+comment|/// \defgroup DwarfConstantsVersioning Dwarf version for constants
+comment|///
+comment|/// For constants defined by DWARF, returns the DWARF version when the constant
+comment|/// was first defined. For vendor extensions, if there is a version-related
+comment|/// policy for when to emit it, returns a version number for that policy.
+comment|/// Otherwise returns 0.
+comment|///
+comment|/// @{
+name|unsigned
+name|TagVersion
+parameter_list|(
+name|Tag
+name|T
+parameter_list|)
+function_decl|;
+name|unsigned
+name|AttributeVersion
+parameter_list|(
+name|Attribute
+name|A
+parameter_list|)
+function_decl|;
+name|unsigned
+name|FormVersion
+parameter_list|(
+name|Form
+name|F
+parameter_list|)
+function_decl|;
+name|unsigned
+name|OperationVersion
+parameter_list|(
+name|LocationAtom
+name|O
+parameter_list|)
+function_decl|;
+name|unsigned
+name|AttributeEncodingVersion
+parameter_list|(
+name|TypeKind
+name|E
+parameter_list|)
+function_decl|;
+name|unsigned
+name|LanguageVersion
+parameter_list|(
+name|SourceLanguage
+name|L
+parameter_list|)
+function_decl|;
+comment|/// @}
+comment|/// \defgroup DwarfConstantsVendor Dwarf "vendor" for constants
+comment|///
+comment|/// These functions return an identifier describing "who" defined the constant,
+comment|/// either the DWARF standard itself or the vendor who defined the extension.
+comment|///
+comment|/// @{
+name|unsigned
+name|TagVendor
+parameter_list|(
+name|Tag
+name|T
+parameter_list|)
+function_decl|;
+name|unsigned
+name|AttributeVendor
+parameter_list|(
+name|Attribute
+name|A
+parameter_list|)
+function_decl|;
+name|unsigned
+name|FormVendor
+parameter_list|(
+name|Form
+name|F
+parameter_list|)
+function_decl|;
+name|unsigned
+name|OperationVendor
+parameter_list|(
+name|LocationAtom
+name|O
+parameter_list|)
+function_decl|;
+name|unsigned
+name|AttributeEncodingVendor
+parameter_list|(
+name|TypeKind
+name|E
+parameter_list|)
+function_decl|;
+name|unsigned
+name|LanguageVendor
+parameter_list|(
+name|SourceLanguage
+name|L
+parameter_list|)
+function_decl|;
+comment|/// @}
+comment|/// Tells whether the specified form is defined in the specified version,
+comment|/// or is an extension if extensions are allowed.
+name|bool
+name|isValidFormForVersion
+parameter_list|(
+name|Form
+name|F
+parameter_list|,
+name|unsigned
+name|Version
+parameter_list|,
+name|bool
+name|ExtensionsOk
+init|=
+name|true
+parameter_list|)
+function_decl|;
 comment|/// \brief Returns the symbolic string representing Val when used as a value
 comment|/// for attribute Attr.
 name|StringRef

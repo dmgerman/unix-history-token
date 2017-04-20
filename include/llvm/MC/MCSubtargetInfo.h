@@ -330,6 +330,21 @@ operator|=
 name|FeatureBits_
 expr_stmt|;
 block|}
+name|bool
+name|hasFeature
+argument_list|(
+name|unsigned
+name|Feature
+argument_list|)
+decl|const
+block|{
+return|return
+name|FeatureBits
+index|[
+name|Feature
+index|]
+return|;
+block|}
 name|protected
 label|:
 comment|/// Initialize the scheduling model and feature bits.

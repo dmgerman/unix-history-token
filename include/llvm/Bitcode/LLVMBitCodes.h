@@ -88,7 +88,7 @@ block|{
 name|namespace
 name|bitc
 block|{
-comment|// The only top-level block type defined is for a module.
+comment|// The only top-level block types are MODULE, IDENTIFICATION and STRTAB.
 enum|enum
 name|BlockIDs
 block|{
@@ -128,7 +128,9 @@ block|,
 name|OPERAND_BUNDLE_TAGS_BLOCK_ID
 block|,
 name|METADATA_KIND_BLOCK_ID
-block|}
+block|,
+name|STRTAB_BLOCK_ID
+block|, }
 enum|;
 comment|/// Identification block contains a string that describes the producer details,
 comment|/// and an epoch that defines the auto-upgrade capability.
@@ -542,6 +544,13 @@ comment|// [typeid, offset, n x arg]
 name|FS_TYPE_CHECKED_LOAD_CONST_VCALL
 init|=
 literal|15
+block|,
+comment|// Assigns a GUID to a value ID. This normally appears only in combined
+comment|// summaries, but it can also appear in per-module summaries for PGO data.
+comment|// [valueid, guid]
+name|FS_VALUE_GUID
+init|=
+literal|16
 block|, }
 enum|;
 enum|enum
@@ -1653,6 +1662,14 @@ block|,
 name|COMDAT_SELECTION_KIND_SAME_SIZE
 init|=
 literal|5
+block|, }
+enum|;
+enum|enum
+name|StrtabCodes
+block|{
+name|STRTAB_BLOB
+init|=
+literal|1
 block|, }
 enum|;
 block|}

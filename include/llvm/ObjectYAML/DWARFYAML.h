@@ -1101,6 +1101,10 @@ parameter_list|(
 name|unused
 parameter_list|,
 name|name
+parameter_list|,
+name|unused2
+parameter_list|,
+name|unused3
 parameter_list|)
 define|\
 value|io.enumCase(value, "DW_TAG_" #name, dwarf::DW_TAG_##name);
@@ -1236,6 +1240,10 @@ parameter_list|(
 name|unused
 parameter_list|,
 name|name
+parameter_list|,
+name|unused2
+parameter_list|,
+name|unused3
 parameter_list|)
 define|\
 value|io.enumCase(value, "DW_AT_" #name, dwarf::DW_AT_##name);
@@ -1281,6 +1289,10 @@ parameter_list|(
 name|unused
 parameter_list|,
 name|name
+parameter_list|,
+name|unused2
+parameter_list|,
+name|unused3
 parameter_list|)
 define|\
 value|io.enumCase(value, "DW_FORM_" #name, dwarf::DW_FORM_##name);

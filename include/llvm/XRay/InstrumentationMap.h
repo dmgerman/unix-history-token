@@ -186,6 +186,11 @@ expr_stmt|;
 name|bool
 name|AlwaysInstrument
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|FunctionName
+expr_stmt|;
 block|}
 struct|;
 comment|/// The InstrumentationMap represents the computed function id's and indicated
@@ -459,6 +464,17 @@ argument_list|,
 name|Entry
 operator|.
 name|AlwaysInstrument
+argument_list|)
+block|;
+name|IO
+operator|.
+name|mapOptional
+argument_list|(
+literal|"function-name"
+argument_list|,
+name|Entry
+operator|.
+name|FunctionName
 argument_list|)
 block|;   }
 specifier|static

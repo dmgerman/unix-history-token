@@ -224,7 +224,7 @@ name|AEK_FP
 init|=
 literal|0x8
 block|,
-name|AEK_HWDIV
+name|AEK_HWDIVTHUMB
 init|=
 literal|0x10
 block|,

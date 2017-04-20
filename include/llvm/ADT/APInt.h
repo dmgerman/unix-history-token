@@ -510,17 +510,23 @@ name|that
 parameter_list|)
 function_decl|;
 comment|/// out-of-line slow case for shl
-name|APInt
+name|void
 name|shlSlowCase
-argument_list|(
+parameter_list|(
 name|unsigned
-name|shiftAmt
-argument_list|)
-decl|const
-decl_stmt|;
+name|ShiftAmt
+parameter_list|)
+function_decl|;
+comment|/// out-of-line slow case for lshr.
+name|void
+name|lshrSlowCase
+parameter_list|(
+name|unsigned
+name|ShiftAmt
+parameter_list|)
+function_decl|;
 comment|/// out-of-line slow case for operator=
-name|APInt
-modifier|&
+name|void
 name|AssignSlowCase
 parameter_list|(
 specifier|const
@@ -537,16 +543,6 @@ specifier|const
 name|APInt
 operator|&
 name|RHS
-argument_list|)
-decl|const
-name|LLVM_READONLY
-decl_stmt|;
-comment|/// out-of-line slow case for operator==
-name|bool
-name|EqualSlowCase
-argument_list|(
-name|uint64_t
-name|Val
 argument_list|)
 decl|const
 name|LLVM_READONLY
@@ -572,6 +568,30 @@ argument_list|()
 specifier|const
 name|LLVM_READONLY
 expr_stmt|;
+comment|/// out-of-line slow case for intersects.
+name|bool
+name|intersectsSlowCase
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|)
+decl|const
+name|LLVM_READONLY
+decl_stmt|;
+comment|/// out-of-line slow case for isSubsetOf.
+name|bool
+name|isSubsetOfSlowCase
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|)
+decl|const
+name|LLVM_READONLY
+decl_stmt|;
 comment|/// out-of-line slow case for setBits.
 name|void
 name|setBitsSlowCase
@@ -589,8 +609,7 @@ name|flipAllBitsSlowCase
 parameter_list|()
 function_decl|;
 comment|/// out-of-line slow case for operator&=.
-name|APInt
-modifier|&
+name|void
 name|AndAssignSlowCase
 parameter_list|(
 specifier|const
@@ -600,8 +619,7 @@ name|RHS
 parameter_list|)
 function_decl|;
 comment|/// out-of-line slow case for operator|=.
-name|APInt
-modifier|&
+name|void
 name|OrAssignSlowCase
 parameter_list|(
 specifier|const
@@ -611,8 +629,7 @@ name|RHS
 parameter_list|)
 function_decl|;
 comment|/// out-of-line slow case for operator^=.
-name|APInt
-modifier|&
+name|void
 name|XorAssignSlowCase
 parameter_list|(
 specifier|const
@@ -886,6 +903,44 @@ name|isNegative
 argument_list|()
 return|;
 block|}
+comment|/// \brief Determine if sign bit of this APInt is set.
+comment|///
+comment|/// This tests the high bit of this APInt to determine if it is set.
+comment|///
+comment|/// \returns true if this APInt has its sign bit set, false otherwise.
+name|bool
+name|isSignBitSet
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+operator|*
+name|this
+operator|)
+index|[
+name|BitWidth
+operator|-
+literal|1
+index|]
+return|;
+block|}
+comment|/// \brief Determine if sign bit of this APInt is clear.
+comment|///
+comment|/// This tests the high bit of this APInt to determine if it is clear.
+comment|///
+comment|/// \returns true if this APInt has its sign bit clear, false otherwise.
+name|bool
+name|isSignBitClear
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isSignBitSet
+argument_list|()
+return|;
+block|}
 comment|/// \brief Determine if this APInt Value is positive.
 comment|///
 comment|/// This tests if the value of this APInt is positive (> 0). Note
@@ -1081,7 +1136,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Check if the APInt's value is returned by getSignBit.
+comment|/// \brief Check if the APInt's value is returned by getSignMask.
 end_comment
 
 begin_comment
@@ -1089,12 +1144,12 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \returns true if this is the value returned by getSignBit.
+comment|/// \returns true if this is the value returned by getSignMask.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|isSignBit
+name|isSignMask
 argument_list|()
 specifier|const
 block|{
@@ -1152,17 +1207,10 @@ argument_list|)
 decl|const
 block|{
 return|return
-operator|(
-name|getActiveBits
-argument_list|()
-operator|>
-literal|64
-operator|||
-name|getZExtValue
-argument_list|()
-operator|>
+name|ugt
+argument_list|(
 name|Limit
-operator|)
+argument_list|)
 condition|?
 name|Limit
 else|:
@@ -1259,7 +1307,7 @@ return|;
 name|unsigned
 name|Ones
 init|=
-name|countTrailingOnes
+name|countTrailingOnesSlowCase
 argument_list|()
 decl_stmt|;
 return|return
@@ -1273,7 +1321,7 @@ operator|(
 operator|(
 name|Ones
 operator|+
-name|countLeadingZeros
+name|countLeadingZerosSlowCase
 argument_list|()
 operator|)
 operator|==
@@ -1315,7 +1363,7 @@ return|;
 name|unsigned
 name|Ones
 operator|=
-name|countTrailingOnes
+name|countTrailingOnesSlowCase
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -1332,7 +1380,7 @@ operator|(
 operator|(
 name|Ones
 operator|+
-name|countLeadingZeros
+name|countLeadingZerosSlowCase
 argument_list|()
 operator|)
 operator|==
@@ -1373,20 +1421,28 @@ return|;
 name|unsigned
 name|Ones
 operator|=
-name|countPopulation
+name|countPopulationSlowCase
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|unsigned
+name|LeadZ
+init|=
+name|countLeadingZerosSlowCase
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_return
 return|return
 operator|(
 name|Ones
 operator|+
-name|countTrailingZeros
-argument_list|()
+name|LeadZ
 operator|+
-name|countLeadingZeros
+name|countTrailingZeros
 argument_list|()
 operator|)
 operator|==
@@ -1526,7 +1582,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Get the SignBit for a specific bit width.
+comment|/// \brief Get the SignMask for a specific bit width.
 end_comment
 
 begin_comment
@@ -1538,13 +1594,13 @@ comment|/// This is just a wrapper function of getSignedMinValue(), and it helps
 end_comment
 
 begin_comment
-comment|/// readability when we want to get a SignBit.
+comment|/// readability when we want to get a SignMask.
 end_comment
 
 begin_function
 specifier|static
 name|APInt
-name|getSignBit
+name|getSignMask
 parameter_list|(
 name|unsigned
 name|BitWidth
@@ -2478,56 +2534,56 @@ name|clearUnusedBits
 argument_list|()
 return|;
 block|}
-return|return
 name|AssignSlowCase
 argument_list|(
 name|RHS
 argument_list|)
-return|;
-block|}
+expr_stmt|;
 end_decl_stmt
 
+begin_return
+return|return
+operator|*
+name|this
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/// @brief Move assignment operator.
 end_comment
 
-begin_decl_stmt
-name|APInt
-modifier|&
+begin_expr_stmt
+unit|APInt
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 name|APInt
 operator|&&
 name|that
 operator|)
 block|{
+name|assert
+argument_list|(
+name|this
+operator|!=
+operator|&
+name|that
+operator|&&
+literal|"Self-move not supported"
+argument_list|)
+block|;
 if|if
 condition|(
 operator|!
 name|isSingleWord
 argument_list|()
 condition|)
-block|{
-comment|// The MSVC STL shipped in 2013 requires that self move assignment be a
-comment|// no-op.  Otherwise algorithms like stable_sort will produce answers
-comment|// where half of the output is left in a moved-from state.
-if|if
-condition|(
-name|this
-operator|==
-operator|&
-name|that
-condition|)
-return|return
-operator|*
-name|this
-return|;
 name|delete
 index|[]
 name|pVal
 decl_stmt|;
-block|}
 comment|// Use memcpy so that type based alias analysis sees both VAL and pVal
 comment|// as modified.
 name|memcpy
@@ -2546,16 +2602,16 @@ name|uint64_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// If 'this ==&that', avoid zeroing our own bitwidth by storing to 'that'
-comment|// first.
-name|unsigned
-name|ThatBitWidth
+end_expr_stmt
+
+begin_expr_stmt
+name|BitWidth
 operator|=
 name|that
 operator|.
 name|BitWidth
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|that
@@ -2563,13 +2619,6 @@ operator|.
 name|BitWidth
 operator|=
 literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BitWidth
-operator|=
-name|ThatBitWidth
 expr_stmt|;
 end_expr_stmt
 
@@ -2726,26 +2775,24 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
-block|{
 name|VAL
 operator|&=
 name|RHS
 operator|.
 name|VAL
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_expr_stmt
-
-begin_return
-return|return
+else|else
 name|AndAssignSlowCase
 argument_list|(
 name|RHS
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|*
+name|this
 return|;
 end_return
 
@@ -2885,26 +2932,24 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
-block|{
 name|VAL
 operator||=
 name|RHS
 operator|.
 name|VAL
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_expr_stmt
-
-begin_return
-return|return
+else|else
 name|OrAssignSlowCase
 argument_list|(
 name|RHS
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|*
+name|this
 return|;
 end_return
 
@@ -3028,26 +3073,24 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
-block|{
 name|VAL
 operator|^=
 name|RHS
 operator|.
 name|VAL
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_expr_stmt
-
-begin_return
-return|return
+else|else
 name|XorAssignSlowCase
 argument_list|(
 name|RHS
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|*
+name|this
 return|;
 end_return
 
@@ -3262,7 +3305,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \returns *this after shifting left by shiftAmt
+comment|/// \returns *this after shifting left by ShiftAmt
 end_comment
 
 begin_expr_stmt
@@ -3272,25 +3315,60 @@ name|operator
 operator|<<=
 operator|(
 name|unsigned
-name|shiftAmt
+name|ShiftAmt
 operator|)
 block|{
-operator|*
-name|this
-operator|=
-name|shl
+name|assert
 argument_list|(
-name|shiftAmt
+name|ShiftAmt
+operator|<=
+name|BitWidth
+operator|&&
+literal|"Invalid shift amount"
 argument_list|)
 block|;
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+name|ShiftAmt
+operator|==
+name|BitWidth
+condition|)
+name|VAL
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|VAL
+operator|<<=
+name|ShiftAmt
+expr_stmt|;
+return|return
+name|clearUnusedBits
+argument_list|()
+return|;
+block|}
+name|shlSlowCase
+argument_list|(
+name|ShiftAmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|*
 name|this
 return|;
-block|}
-end_expr_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// @}
 end_comment
 
@@ -3314,19 +3392,22 @@ begin_comment
 comment|/// Multiplies this APInt by RHS and returns the result.
 end_comment
 
-begin_decl_stmt
-name|APInt
+begin_macro
+unit|APInt
 name|operator
-modifier|*
-argument_list|(
+end_macro
+
+begin_expr_stmt
+operator|*
+operator|(
 specifier|const
 name|APInt
 operator|&
 name|RHS
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+operator|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Left logical shift operator.
@@ -3457,18 +3538,56 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// Logical right-shift this APInt by shiftAmt in place.
+comment|/// Logical right-shift this APInt by ShiftAmt in place.
 end_comment
 
-begin_function_decl
+begin_function
 name|void
 name|lshrInPlace
 parameter_list|(
 name|unsigned
-name|shiftAmt
+name|ShiftAmt
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|assert
+argument_list|(
+name|ShiftAmt
+operator|<=
+name|BitWidth
+operator|&&
+literal|"Invalid shift amount"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+name|ShiftAmt
+operator|==
+name|BitWidth
+condition|)
+name|VAL
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|VAL
+operator|>>=
+name|ShiftAmt
+expr_stmt|;
+return|return;
+block|}
+name|lshrSlowCase
+argument_list|(
+name|ShiftAmt
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Left-shift function.
@@ -3491,52 +3610,19 @@ name|shiftAmt
 argument_list|)
 decl|const
 block|{
-name|assert
+name|APInt
+name|R
 argument_list|(
-name|shiftAmt
-operator|<=
-name|BitWidth
-operator|&&
-literal|"Invalid shift amount"
+operator|*
+name|this
 argument_list|)
+decl_stmt|;
+name|R
+operator|<<=
+name|shiftAmt
 expr_stmt|;
-if|if
-condition|(
-name|isSingleWord
-argument_list|()
-condition|)
-block|{
-if|if
-condition|(
-name|shiftAmt
-operator|>=
-name|BitWidth
-condition|)
 return|return
-name|APInt
-argument_list|(
-name|BitWidth
-argument_list|,
-literal|0
-argument_list|)
-return|;
-comment|// avoid undefined shift results
-return|return
-name|APInt
-argument_list|(
-name|BitWidth
-argument_list|,
-name|VAL
-operator|<<
-name|shiftAmt
-argument_list|)
-return|;
-block|}
-return|return
-name|shlSlowCase
-argument_list|(
-name|shiftAmt
-argument_list|)
+name|R
 return|;
 block|}
 end_decl_stmt
@@ -3615,11 +3701,45 @@ argument_list|(
 specifier|const
 name|APInt
 operator|&
-name|shiftAmt
+name|ShiftAmt
 argument_list|)
 decl|const
+block|{
+name|APInt
+name|R
+argument_list|(
+operator|*
+name|this
+argument_list|)
 decl_stmt|;
+name|R
+operator|.
+name|lshrInPlace
+argument_list|(
+name|ShiftAmt
+argument_list|)
+expr_stmt|;
+return|return
+name|R
+return|;
+block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Logical right-shift this APInt by ShiftAmt in place.
+end_comment
+
+begin_function_decl
+name|void
+name|lshrInPlace
+parameter_list|(
+specifier|const
+name|APInt
+modifier|&
+name|ShiftAmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Left-shift function.
@@ -4222,29 +4342,26 @@ name|Val
 operator|)
 specifier|const
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|isSingleWord
 argument_list|()
-condition|)
-return|return
-name|VAL
+operator|||
+name|getActiveBits
+argument_list|()
+operator|<=
+literal|64
+operator|)
+operator|&&
+name|getZExtValue
+argument_list|()
 operator|==
 name|Val
 return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-name|EqualSlowCase
-argument_list|(
-name|Val
-argument_list|)
-return|;
-end_return
-
 begin_comment
-unit|}
 comment|/// \brief Equality comparison.
 end_comment
 
@@ -4268,16 +4385,16 @@ begin_comment
 comment|/// \returns true if *this == Val
 end_comment
 
-begin_macro
-unit|bool
+begin_decl_stmt
+name|bool
 name|eq
 argument_list|(
-argument|const APInt&RHS
-argument_list|)
-end_macro
-
-begin_expr_stmt
 specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|)
+decl|const
 block|{
 return|return
 operator|(
@@ -4288,7 +4405,7 @@ operator|==
 name|RHS
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Inequality operator.
@@ -4508,14 +4625,18 @@ name|RHS
 argument_list|)
 decl|const
 block|{
+comment|// Only need to check active bits if not a single word.
 return|return
+operator|(
+name|isSingleWord
+argument_list|()
+operator|||
 name|getActiveBits
 argument_list|()
-operator|>
+operator|<=
 literal|64
-condition|?
-name|false
-else|:
+operator|)
+operator|&&
 name|getZExtValue
 argument_list|()
 operator|<
@@ -4596,10 +4717,16 @@ argument_list|)
 decl|const
 block|{
 return|return
+operator|(
+operator|!
+name|isSingleWord
+argument_list|()
+operator|&&
 name|getMinSignedBits
 argument_list|()
 operator|>
 literal|64
+operator|)
 condition|?
 name|isNegative
 argument_list|()
@@ -4880,14 +5007,19 @@ name|RHS
 argument_list|)
 decl|const
 block|{
+comment|// Only need to check active bits if not a single word.
 return|return
+operator|(
+operator|!
+name|isSingleWord
+argument_list|()
+operator|&&
 name|getActiveBits
 argument_list|()
 operator|>
 literal|64
-condition|?
-name|true
-else|:
+operator|)
+operator|||
 name|getZExtValue
 argument_list|()
 operator|>
@@ -4981,10 +5113,16 @@ argument_list|)
 decl|const
 block|{
 return|return
+operator|(
+operator|!
+name|isSingleWord
+argument_list|()
+operator|&&
 name|getMinSignedBits
 argument_list|()
 operator|>
 literal|64
+operator|)
 condition|?
 operator|!
 name|isNegative
@@ -5193,21 +5331,90 @@ name|RHS
 argument_list|)
 decl|const
 block|{
-name|APInt
-name|temp
+name|assert
 argument_list|(
-operator|*
-name|this
-argument_list|)
-decl_stmt|;
-name|temp
-operator|&=
+name|BitWidth
+operator|==
 name|RHS
+operator|.
+name|BitWidth
+operator|&&
+literal|"Bit widths must be the same"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
 return|return
-name|temp
+operator|(
+name|VAL
+operator|&
+name|RHS
+operator|.
+name|VAL
+operator|)
 operator|!=
 literal|0
+return|;
+return|return
+name|intersectsSlowCase
+argument_list|(
+name|RHS
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// This operation checks that all bits set in this APInt are also set in RHS.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isSubsetOf
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|BitWidth
+operator|==
+name|RHS
+operator|.
+name|BitWidth
+operator|&&
+literal|"Bit widths must be the same"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+return|return
+operator|(
+name|VAL
+operator|&
+operator|~
+name|RHS
+operator|.
+name|VAL
+operator|)
+operator|==
+literal|0
+return|;
+return|return
+name|isSubsetOfSlowCase
+argument_list|(
+name|RHS
+argument_list|)
 return|;
 block|}
 end_decl_stmt
@@ -6212,22 +6419,12 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
-name|int64_t
+name|SignExtend64
 argument_list|(
 name|VAL
-operator|<<
-operator|(
-name|APINT_BITS_PER_WORD
-operator|-
+argument_list|,
 name|BitWidth
-operator|)
 argument_list|)
-operator|>>
-operator|(
-name|APINT_BITS_PER_WORD
-operator|-
-name|BitWidth
-operator|)
 return|;
 name|assert
 argument_list|(
@@ -7969,11 +8166,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Shift a bignum left COUNT bits.  Shifted in bits are zero.  There are no
+comment|/// Shift a bignum left Count bits. Shifted in bits are zero. There are no
 end_comment
 
 begin_comment
-comment|/// restrictions on COUNT.
+comment|/// restrictions on Count.
 end_comment
 
 begin_function_decl
@@ -7985,20 +8182,20 @@ name|WordType
 modifier|*
 parameter_list|,
 name|unsigned
-name|parts
+name|Words
 parameter_list|,
 name|unsigned
-name|count
+name|Count
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Shift a bignum right COUNT bits.  Shifted in bits are zero.  There are no
+comment|/// Shift a bignum right Count bits.  Shifted in bits are zero.  There are no
 end_comment
 
 begin_comment
-comment|/// restrictions on COUNT.
+comment|/// restrictions on Count.
 end_comment
 
 begin_function_decl
@@ -8010,10 +8207,10 @@ name|WordType
 modifier|*
 parameter_list|,
 name|unsigned
-name|parts
+name|Words
 parameter_list|,
 name|unsigned
-name|count
+name|Count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9053,7 +9250,7 @@ block|}
 comment|/// \brief Compute GCD of two unsigned APInt values.
 comment|///
 comment|/// This function returns the greatest common divisor of the two APInt values
-comment|/// using Euclid's algorithm.
+comment|/// using Stein's algorithm.
 comment|///
 comment|/// \returns the greatest common divisor of A and B.
 name|APInt
