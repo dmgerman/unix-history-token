@@ -43,11 +43,25 @@ directive|define
 name|EMPLACEABLE_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBCPP_HAS_NO_RVALUE_REFERENCES
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"test_macros.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|TEST_STD_VER
+operator|>=
+literal|11
+end_if
 
 begin_decl_stmt
 name|class
@@ -307,7 +321,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _LIBCPP_HAS_NO_RVALUE_REFERENCES
+comment|// TEST_STD_VER>= 11
 end_comment
 
 begin_endif

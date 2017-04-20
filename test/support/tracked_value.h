@@ -49,6 +49,12 @@ directive|include
 file|<cassert>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"test_macros.h"
+end_include
+
 begin_struct
 struct|struct
 name|TrackedValue
@@ -113,9 +119,11 @@ operator|&&
 literal|"copying a destroyed object"
 argument_list|)
 block|;     }
-ifndef|#
-directive|ifndef
-name|_LIBCPP_HAS_NO_RVALUE_REFERENCES
+if|#
+directive|if
+name|TEST_STD_VER
+operator|>=
+literal|11
 name|TrackedValue
 argument_list|(
 name|TrackedValue
@@ -223,9 +231,11 @@ operator|*
 name|this
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|_LIBCPP_HAS_NO_RVALUE_REFERENCES
+if|#
+directive|if
+name|TEST_STD_VER
+operator|>=
+literal|11
 name|TrackedValue
 modifier|&
 name|operator

@@ -99,6 +99,9 @@ name|BigOFunc
 operator|*
 name|complexity_lambda
 block|;
+name|UserCounters
+name|counters
+block|;
 name|bool
 name|last_benchmark_instance
 block|;
@@ -107,6 +110,9 @@ name|repetitions
 block|;
 name|double
 name|min_time
+block|;
+name|size_t
+name|iterations
 block|;
 name|int
 name|threads

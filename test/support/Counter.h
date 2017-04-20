@@ -53,6 +53,12 @@ begin_comment
 comment|// for std::hash
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"test_macros.h"
+end_include
+
 begin_struct
 struct|struct
 name|Counter_base
@@ -145,9 +151,11 @@ operator|*
 name|this
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|_LIBCPP_HAS_NO_RVALUE_REFERENCES
+if|#
+directive|if
+name|TEST_STD_VER
+operator|>=
+literal|11
 name|Counter
 argument_list|(
 name|Counter

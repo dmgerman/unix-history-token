@@ -203,6 +203,29 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BENCHMARK_OS_EMSCRIPTEN
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<emscripten.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -245,6 +268,26 @@ comment|// reset to zero.
 return|return
 name|mach_absolute_time
 argument_list|()
+return|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|BENCHMARK_OS_EMSCRIPTEN
+argument_list|)
+comment|// this goes above x86-specific code because old versions of Emscripten
+comment|// define __x86_64__, although they have nothing to do with it.
+return|return
+name|static_cast
+operator|<
+name|int64_t
+operator|>
+operator|(
+name|emscripten_get_now
+argument_list|()
+operator|*
+literal|1e+6
+operator|)
 return|;
 elif|#
 directive|elif
@@ -316,7 +359,7 @@ operator|&=
 operator|-
 name|static_cast
 operator|<
-name|int64
+name|int64_t
 operator|>
 operator|(
 name|tbu0
@@ -392,6 +435,58 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
+name|BENCHMARK_OS_NACL
+argument_list|)
+comment|// Native Client validator on x86/x86-64 allows RDTSC instructions,
+comment|// and this case is handled above. Native Client validator on ARM
+comment|// rejects MRC instructions (used in the ARM-specific sequence below),
+comment|// so we handle it here. Portable Native Client compiles to
+comment|// architecture-agnostic bytecode, which doesn't provide any
+comment|// cycle counter access mnemonics.
+comment|// Native Client does not provide any API to access cycle counter.
+comment|// Use clock_gettime(CLOCK_MONOTONIC, ...) instead of gettimeofday
+comment|// because is provides nanosecond resolution (which is noticable at
+comment|// least for PNaCl modules running on x86 Mac& Linux).
+comment|// Initialize to always return 0 if clock_gettime fails.
+name|struct
+name|timespec
+name|ts
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+name|clock_gettime
+argument_list|(
+name|CLOCK_MONOTONIC
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
+return|return
+name|static_cast
+operator|<
+name|int64_t
+operator|>
+operator|(
+name|ts
+operator|.
+name|tv_sec
+operator|)
+operator|*
+literal|1000000000
+operator|+
+name|ts
+operator|.
+name|tv_nsec
+return|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__aarch64__
 argument_list|)
 comment|// System timer of ARMv8 runs at a different frequency than the CPU's.
@@ -413,6 +508,8 @@ name|defined
 argument_list|(
 name|__ARM_ARCH
 argument_list|)
+comment|// V6 is the earliest arch that has a standard cyclecount
+comment|// Native Client validator doesn't allow MRC instructions.
 if|#
 directive|if
 operator|(
@@ -420,7 +517,6 @@ name|__ARM_ARCH
 operator|>=
 literal|6
 operator|)
-comment|// V6 is the earliest arch that has a standard cyclecount
 name|uint32_t
 name|pmccntr
 decl_stmt|;

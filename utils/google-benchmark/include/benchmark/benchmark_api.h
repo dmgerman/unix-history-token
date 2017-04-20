@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"macros.h"
 end_include
 
@@ -73,8 +79,38 @@ end_include
 begin_include
 include|#
 directive|include
+file|<initializer_list>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<intrin.h>
+end_include
+
+begin_comment
+comment|// for _ReadWriteBarrier
+end_comment
 
 begin_endif
 endif|#
@@ -93,6 +129,20 @@ name|Initialize
 parameter_list|(
 name|int
 modifier|*
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+function_decl|;
+comment|// Report to stdout all arguments in 'argv' as unrecognized except the first.
+comment|// Returns true there is at least on unrecognized argument (i.e. 'argc'> 1).
+name|bool
+name|ReportUnrecognizedArguments
+parameter_list|(
+name|int
 name|argc
 parameter_list|,
 name|char
@@ -155,61 +205,6 @@ decl_stmt|;
 name|class
 name|BenchmarkFamilies
 decl_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|>
-expr|struct
-name|Voider
-block|{
-typedef|typedef
-name|void
-name|type
-typedef|;
-block|}
-empty_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|,
-name|class
-operator|=
-name|void
-operator|>
-expr|struct
-name|EnableIfString
-block|{}
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|>
-expr|struct
-name|EnableIfString
-operator|<
-name|T
-operator|,
-name|typename
-name|Voider
-operator|<
-name|typename
-name|T
-operator|::
-name|basic_string
-operator|>
-operator|::
-name|type
-operator|>
-block|{
-typedef|typedef
-name|int
-name|type
-typedef|;
-block|}
-empty_stmt|;
 name|void
 name|UseCharPointer
 parameter_list|(
@@ -244,16 +239,35 @@ argument_list|()
 decl_stmt|;
 block|}
 comment|// end namespace internal
-comment|// The DoNotOptimize(...) function can be used to prevent a value or
-comment|// expression from being optimized away by the compiler. This function is
-comment|// intended to add little to no overhead.
-comment|// See: https://youtu.be/nXaxk27zwlk?t=2441
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__pnacl__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|EMSCRIPTN
+argument_list|)
+define|#
+directive|define
+name|BENCHMARK_HAS_NO_INLINE_ASSEMBLY
+endif|#
+directive|endif
+comment|// The DoNotOptimize(...) function can be used to prevent a value or
+comment|// expression from being optimized away by the compiler. This function is
+comment|// intended to add little to no overhead.
+comment|// See: https://youtu.be/nXaxk27zwlk?t=2441
+ifndef|#
+directive|ifndef
+name|BENCHMARK_HAS_NO_INLINE_ASSEMBLY
 name|template
 operator|<
 name|class
@@ -299,6 +313,54 @@ operator|:
 literal|"memory"
 operator|)
 block|; }
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+name|template
+operator|<
+name|class
+name|Tp
+operator|>
+specifier|inline
+name|BENCHMARK_ALWAYS_INLINE
+name|void
+name|DoNotOptimize
+argument_list|(
+argument|Tp const& value
+argument_list|)
+block|{
+name|internal
+operator|::
+name|UseCharPointer
+argument_list|(
+operator|&
+name|reinterpret_cast
+operator|<
+name|char
+specifier|const
+specifier|volatile
+operator|&
+operator|>
+operator|(
+name|value
+operator|)
+argument_list|)
+block|;
+name|_ReadWriteBarrier
+argument_list|()
+block|; }
+specifier|inline
+name|BENCHMARK_ALWAYS_INLINE
+name|void
+name|ClobberMemory
+argument_list|()
+block|{
+name|_ReadWriteBarrier
+argument_list|()
+block|; }
 else|#
 directive|else
 name|template
@@ -331,12 +393,110 @@ name|value
 operator|)
 argument_list|)
 block|; }
-comment|// FIXME Add ClobberMemory() for non-gnu compilers
+comment|// FIXME Add ClobberMemory() for non-gnu and non-msvc compilers
 endif|#
 directive|endif
+comment|// This class is used for user-defined counters.
+name|class
+name|Counter
+block|{
+name|public
+operator|:
+expr|enum
+name|Flags
+block|{
+name|kDefaults
+operator|=
+literal|0
+block|,
+comment|// Mark the counter as a rate. It will be presented divided
+comment|// by the duration of the benchmark.
+name|kIsRate
+operator|=
+literal|1
+block|,
+comment|// Mark the counter as a thread-average quantity. It will be
+comment|// presented divided by the number of threads.
+name|kAvgThreads
+operator|=
+literal|2
+block|,
+comment|// Mark the counter as a thread-average rate. See above.
+name|kAvgThreadsRate
+operator|=
+name|kIsRate
+operator||
+name|kAvgThreads
+block|}
+block|;
+name|double
+name|value
+block|;
+name|Flags
+name|flags
+block|;
+name|BENCHMARK_ALWAYS_INLINE
+name|Counter
+argument_list|(
+argument|double v =
+literal|0.
+argument_list|,
+argument|Flags f = kDefaults
+argument_list|)
+operator|:
+name|value
+argument_list|(
+name|v
+argument_list|)
+block|,
+name|flags
+argument_list|(
+argument|f
+argument_list|)
+block|{}
+name|BENCHMARK_ALWAYS_INLINE
+name|operator
+name|double
+specifier|const
+operator|&
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|value
+return|;
+block|}
+name|BENCHMARK_ALWAYS_INLINE
+name|operator
+name|double
+operator|&
+operator|(
+operator|)
+block|{
+return|return
+name|value
+return|;
+block|}
+expr|}
+block|;
+comment|// This is the container for the user-defined counters.
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|Counter
+operator|>
+name|UserCounters
+expr_stmt|;
 comment|// TimeUnit is passed to a benchmark in order to specify the order of magnitude
 comment|// for the measured time.
-expr|enum
+block|enum
 name|TimeUnit
 block|{
 name|kNanosecond
@@ -652,22 +812,16 @@ modifier|*
 name|label
 parameter_list|)
 function_decl|;
-comment|// Allow the use of std::string without actually including<string>.
-comment|// This function does not participate in overload resolution unless StringType
-comment|// has the nested typename `basic_string`. This typename should be provided
-comment|// as an injected class name in the case of std::string.
-name|template
-operator|<
-name|class
-name|StringType
-operator|>
 name|void
+name|BENCHMARK_ALWAYS_INLINE
 name|SetLabel
 argument_list|(
-argument|StringType const& str
-argument_list|,
-argument|typename internal::EnableIfString<StringType>::type =
-literal|1
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|str
 argument_list|)
 block|{
 name|this
@@ -679,16 +833,21 @@ operator|.
 name|c_str
 argument_list|()
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|// Range arguments for this run. CHECKs if the argument has been set.
 name|BENCHMARK_ALWAYS_INLINE
 name|int
 name|range
 argument_list|(
-argument|std::size_t pos =
+name|std
+operator|::
+name|size_t
+name|pos
+operator|=
 literal|0
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -699,7 +858,7 @@ argument_list|()
 operator|>
 name|pos
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|range_
 index|[
@@ -782,6 +941,10 @@ name|error_occurred_
 decl_stmt|;
 name|public
 label|:
+comment|// Container for user-defined counters.
+name|UserCounters
+name|counters
+decl_stmt|;
 comment|// Index of the executing thread. Values from [0, threads).
 specifier|const
 name|int
@@ -1144,13 +1307,27 @@ parameter_list|)
 function_decl|;
 comment|// Set the minimum amount of time to use when running this benchmark. This
 comment|// option overrides the `benchmark_min_time` flag.
-comment|// REQUIRES: `t> 0`
+comment|// REQUIRES: `t> 0` and `Iterations` has not been called on this benchmark.
 name|Benchmark
 modifier|*
 name|MinTime
 parameter_list|(
 name|double
 name|t
+parameter_list|)
+function_decl|;
+comment|// Specify the amount of iterations that should be run by this benchmark.
+comment|// REQUIRES: 'n> 0' and `MinTime` has not been called on this benchmark.
+comment|//
+comment|// NOTE: This function should only be used when *exact* iteration control is
+comment|//   needed and never to control or limit how long a benchmark runs, where
+comment|// `--benchmark_min_time=N` or `MinTime(...)` should be used instead.
+name|Benchmark
+modifier|*
+name|Iterations
+parameter_list|(
+name|size_t
+name|n
 parameter_list|)
 function_decl|;
 comment|// Specify the amount of times to repeat this benchmark. This option overrides
@@ -1402,6 +1579,9 @@ name|range_multiplier_
 decl_stmt|;
 name|double
 name|min_time_
+decl_stmt|;
+name|size_t
+name|iterations_
 decl_stmt|;
 name|int
 name|repetitions_
@@ -2370,7 +2550,7 @@ directive|define
 name|BENCHMARK_MAIN
 parameter_list|()
 define|\
-value|int main(int argc, char** argv) {        \     ::benchmark::Initialize(&argc, argv);  \     ::benchmark::RunSpecifiedBenchmarks(); \   }
+value|int main(int argc, char** argv) {        \     ::benchmark::Initialize(&argc, argv);  \     if (::benchmark::ReportUnrecognizedArguments(argc, argv)) return 1; \     ::benchmark::RunSpecifiedBenchmarks(); \   }
 end_define
 
 begin_endif

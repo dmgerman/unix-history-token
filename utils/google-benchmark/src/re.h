@@ -63,6 +63,58 @@ directive|define
 name|BENCHMARK_RE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"internal_macros.h"
+end_include
+
+begin_comment
+comment|// Prefer C regex libraries when compiling w/o exceptions so that we can
+end_comment
+
+begin_comment
+comment|// correctly report errors.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BENCHMARK_HAS_NO_EXCEPTIONS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_STD_REGEX
+argument_list|)
+operator|&&
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|HAVE_GNU_POSIX_REGEX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_POSIX_REGEX
+argument_list|)
+operator|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STD_REGEX
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -249,8 +301,23 @@ argument_list|,
 argument|std::string* error
 argument_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|BENCHMARK_HAS_NO_EXCEPTIONS
+operator|(
+operator|(
+name|void
+operator|)
+name|error
+operator|)
+block|;
+comment|// suppress unused warning
+else|#
+directive|else
 name|try
 block|{
+endif|#
+directive|endif
 name|re_
 operator|=
 name|std
@@ -269,7 +336,11 @@ block|;
 name|init_
 operator|=
 name|true
-block|;   }
+block|;
+ifndef|#
+directive|ifndef
+name|BENCHMARK_HAS_NO_EXCEPTIONS
+block|}
 name|catch
 argument_list|(
 argument|const std::regex_error& e
@@ -290,6 +361,8 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 return|return
 name|init_
 return|;

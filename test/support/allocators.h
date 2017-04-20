@@ -61,11 +61,13 @@ directive|include
 file|"test_macros.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBCPP_HAS_NO_RVALUE_REFERENCES
-end_ifndef
+begin_if
+if|#
+directive|if
+name|TEST_STD_VER
+operator|>=
+literal|11
+end_if
 
 begin_expr_stmt
 name|template
@@ -1369,7 +1371,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _LIBCPP_HAS_NO_RVALUE_REFERENCES
+comment|// TEST_STD_VER>= 11
 end_comment
 
 begin_endif
