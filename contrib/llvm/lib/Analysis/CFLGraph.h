@@ -2150,15 +2150,7 @@ comment|// strdup(),
 comment|// etc.
 if|if
 condition|(
-name|isMallocLikeFn
-argument_list|(
-name|Inst
-argument_list|,
-operator|&
-name|TLI
-argument_list|)
-operator|||
-name|isCallocLikeFn
+name|isMallocOrCallocLikeFn
 argument_list|(
 name|Inst
 argument_list|,

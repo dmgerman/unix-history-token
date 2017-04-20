@@ -1430,7 +1430,7 @@ name|V
 return|;
 block|}
 expr|struct
-name|is_sign_bit
+name|is_sign_mask
 block|{
 name|bool
 name|isValue
@@ -1441,7 +1441,7 @@ block|{
 return|return
 name|C
 operator|.
-name|isSignBit
+name|isSignMask
 argument_list|()
 return|;
 block|}
@@ -1451,15 +1451,15 @@ comment|/// \brief Match an integer or vector with only the sign bit(s) set.
 specifier|inline
 name|cst_pred_ty
 operator|<
-name|is_sign_bit
+name|is_sign_mask
 operator|>
-name|m_SignBit
+name|m_SignMask
 argument_list|()
 block|{
 return|return
 name|cst_pred_ty
 operator|<
-name|is_sign_bit
+name|is_sign_mask
 operator|>
 operator|(
 operator|)
@@ -1468,9 +1468,9 @@ block|}
 specifier|inline
 name|api_pred_ty
 operator|<
-name|is_sign_bit
+name|is_sign_mask
 operator|>
-name|m_SignBit
+name|m_SignMask
 argument_list|(
 argument|const APInt *&V
 argument_list|)

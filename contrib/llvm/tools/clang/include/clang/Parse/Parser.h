@@ -691,6 +691,14 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|PragmaHandler
+operator|>
+name|AttributePragmaHandler
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CommentHandler
 operator|>
 name|CommentSemaHandler
@@ -1893,6 +1901,28 @@ name|LoopHint
 modifier|&
 name|Hint
 parameter_list|)
+function_decl|;
+name|bool
+name|ParsePragmaAttributeSubjectMatchRuleSet
+argument_list|(
+name|attr
+operator|::
+name|ParsedSubjectMatchRuleSet
+operator|&
+name|SubjectMatchRules
+argument_list|,
+name|SourceLocation
+operator|&
+name|AnyLoc
+argument_list|,
+name|SourceLocation
+operator|&
+name|LastMatchRuleEndLoc
+argument_list|)
+decl_stmt|;
+name|void
+name|HandlePragmaAttribute
+parameter_list|()
 function_decl|;
 comment|/// GetLookAheadToken - This peeks ahead N tokens and returns that token
 comment|/// without consuming any tokens.  LookAhead(0) returns 'Tok', LookAhead(1)

@@ -2200,16 +2200,18 @@ argument_list|,
 literal|"NodeBase must be at most NodeAllocator::NodeMemSize bytes"
 argument_list|)
 block|;
+comment|//  typedef std::vector<NodeAddr<NodeBase*>> NodeList;
 typedef|typedef
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|NodeAddr
 operator|<
 name|NodeBase
 operator|*
-operator|>>
+operator|>
+operator|,
+literal|4
+operator|>
 name|NodeList
 expr_stmt|;
 typedef|typedef

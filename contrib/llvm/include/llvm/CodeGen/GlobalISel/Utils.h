@@ -224,6 +224,17 @@ modifier|&
 name|MI
 parameter_list|)
 function_decl|;
+name|Optional
+operator|<
+name|int64_t
+operator|>
+name|getConstantVRegVal
+argument_list|(
+argument|unsigned VReg
+argument_list|,
+argument|const MachineRegisterInfo&MRI
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

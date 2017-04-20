@@ -995,6 +995,14 @@ begin_comment
 comment|/// no DW_AT_call_column attribute in this DIE.
 end_comment
 
+begin_comment
+comment|/// \param CallDiscriminator filled in with non-zero if successful, zero if
+end_comment
+
+begin_comment
+comment|/// there is no DW_AT_GNU_discriminator attribute in this DIE.
+end_comment
+
 begin_decl_stmt
 name|void
 name|getCallerFrame
@@ -1010,37 +1018,10 @@ argument_list|,
 name|uint32_t
 operator|&
 name|CallColumn
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Get inlined chain for a given address, rooted at the current DIE.
-end_comment
-
-begin_comment
-comment|/// Returns empty chain if address is not contained in address range
-end_comment
-
-begin_comment
-comment|/// of current DIE.
-end_comment
-
-begin_decl_stmt
-name|void
-name|getInlinedChainForAddress
-argument_list|(
-specifier|const
-name|uint64_t
-name|Address
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|DWARFDie
-operator|>
+name|uint32_t
 operator|&
-name|InlinedChain
+name|CallDiscriminator
 argument_list|)
 decl|const
 decl_stmt|;

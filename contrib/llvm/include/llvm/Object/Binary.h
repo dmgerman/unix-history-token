@@ -68,25 +68,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Object/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ErrorOr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/FileSystem.h"
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -107,21 +113,6 @@ name|Binary
 block|{
 name|private
 label|:
-name|Binary
-argument_list|()
-operator|=
-name|delete
-expr_stmt|;
-name|Binary
-argument_list|(
-specifier|const
-name|Binary
-operator|&
-name|other
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
 name|unsigned
 name|int
 name|TypeID
@@ -253,6 +244,21 @@ return|;
 block|}
 name|public
 label|:
+name|Binary
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
+name|Binary
+argument_list|(
+specifier|const
+name|Binary
+operator|&
+name|other
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
 name|virtual
 operator|~
 name|Binary
@@ -672,7 +678,9 @@ operator|>
 operator|::
 name|OwningBinary
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|template
 operator|<
 name|typename
@@ -868,11 +876,23 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
+comment|// end namespace object
+end_comment
+
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECT_BINARY_H
+end_comment
 
 end_unit
 

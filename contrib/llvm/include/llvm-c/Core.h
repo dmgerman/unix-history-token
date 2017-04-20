@@ -3760,6 +3760,25 @@ name|unsigned
 name|Count
 parameter_list|)
 function_decl|;
+comment|/**  * Obtain a Metadata as a Value.  */
+name|LLVMValueRef
+name|LLVMMetadataAsValue
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|,
+name|LLVMMetadataRef
+name|MD
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain a Value as a Metadata.  */
+name|LLVMMetadataRef
+name|LLVMValueAsMetadata
+parameter_list|(
+name|LLVMValueRef
+name|Val
+parameter_list|)
+function_decl|;
 comment|/**  * Obtain the underlying string from a MDString value.  *  * @param V Instance to obtain string from.  * @param Length Memory address which will hold length of returned string.  * @return String data in MDString.  */
 specifier|const
 name|char

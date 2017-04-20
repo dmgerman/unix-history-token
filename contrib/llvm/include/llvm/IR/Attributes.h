@@ -1300,17 +1300,6 @@ argument|LLVMContext&C
 argument_list|,
 argument|unsigned Index
 argument_list|,
-argument|AttributeSet AS
-argument_list|)
-specifier|const
-block|;
-name|AttributeList
-name|addAttributes
-argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|unsigned Index
-argument_list|,
 argument|const AttrBuilder&B
 argument_list|)
 specifier|const

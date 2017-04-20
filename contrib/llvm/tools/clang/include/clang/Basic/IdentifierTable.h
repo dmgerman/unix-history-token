@@ -1550,6 +1550,68 @@ block|}
 end_function
 
 begin_comment
+comment|/// Return true if this identifier is an editor placeholder.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Editor placeholders are produced by the code-completion engine and are
+end_comment
+
+begin_comment
+comment|/// represented as characters between '<#' and '#>' in the source code. An
+end_comment
+
+begin_comment
+comment|/// example of auto-completed call with a placeholder parameter is shown
+end_comment
+
+begin_comment
+comment|/// below:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|///   function(<#int x#>);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isEditorPlaceholder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getName
+argument_list|()
+operator|.
+name|startswith
+argument_list|(
+literal|"<#"
+argument_list|)
+operator|&&
+name|getName
+argument_list|()
+operator|.
+name|endswith
+argument_list|(
+literal|"#>"
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Provide less than operator for lexicographical sorting.
 end_comment
 

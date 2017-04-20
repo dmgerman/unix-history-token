@@ -171,18 +171,6 @@ name|RBI
 argument_list|)
 decl|const
 decl_stmt|;
-name|Optional
-operator|<
-name|int64_t
-operator|>
-name|getConstantVRegVal
-argument_list|(
-argument|unsigned VReg
-argument_list|,
-argument|const MachineRegisterInfo&MRI
-argument_list|)
-specifier|const
-expr_stmt|;
 name|bool
 name|isOperandImmEqual
 argument_list|(

@@ -278,11 +278,7 @@ comment|///
 comment|/// static RegisterPass<YourPassClassName> tmp("passopt", "My Pass Name");
 comment|///
 comment|/// This statement will cause your pass to be created by calling the default
-comment|/// constructor exposed by the pass.  If you have a different constructor that
-comment|/// must be called, create a global constructor function (which takes the
-comment|/// arguments you need and returns a Pass*) and register your pass like this:
-comment|///
-comment|/// static RegisterPass<PassClassName> tmp("passopt", "My Name");
+comment|/// constructor exposed by the pass.
 comment|///
 name|template
 operator|<

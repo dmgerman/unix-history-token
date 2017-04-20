@@ -405,7 +405,8 @@ operator|&
 name|CmdArgs
 argument_list|)
 decl_stmt|;
-name|void
+comment|/// Returns true, if an OpenMP runtime has been added.
+name|bool
 name|addOpenMPRuntime
 argument_list|(
 name|llvm
@@ -429,6 +430,16 @@ operator|::
 name|ArgList
 operator|&
 name|Args
+argument_list|,
+name|bool
+name|IsOffloadingHost
+operator|=
+name|false
+argument_list|,
+name|bool
+name|GompNeedsRT
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 name|llvm

@@ -1299,11 +1299,107 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
-block|; }
-decl_stmt|;
+block|;
+comment|/// Returns predicate register associated with the given frame instruction.
+name|unsigned
+name|getFramePred
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isFrameInstr
+argument_list|(
+name|MI
+argument_list|)
+argument_list|)
+block|;
+if|if
+condition|(
+name|isFrameSetup
+argument_list|(
+name|MI
+argument_list|)
+condition|)
+comment|// Operands of ADJCALLSTACKDOWN:
+comment|// - argument declared in ADJCALLSTACKDOWN pattern:
+comment|// 0 - frame size
+comment|// 1 - predicate code (like ARMCC::AL)
+comment|// - added by predOps:
+comment|// 2 - predicate reg
+return|return
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+literal|2
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+return|;
+name|assert
+argument_list|(
+name|MI
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|ARM
+operator|::
+name|ADJCALLSTACKUP
+operator|||
+name|MI
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|ARM
+operator|::
+name|tADJCALLSTACKUP
+argument_list|)
+block|;
+comment|// Operands of ADJCALLSTACKUP:
+comment|// - argument declared in ADJCALLSTACKUP pattern:
+comment|// 0 - frame size
+comment|// 1 - arg of CALLSEQ_END
+comment|// 2 - predicate code
+comment|// - added by predOps:
+comment|// 3 - predicate reg
+return|return
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+literal|3
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// Get the operands corresponding to the given \p Pred value. By default, the
+end_comment
+
+begin_comment
 comment|/// predicate register is assumed to be 0 (no register), but you can pass in a
+end_comment
+
+begin_comment
 comment|/// \p PredReg if that is not the case.
+end_comment
+
+begin_expr_stmt
 specifier|static
 specifier|inline
 name|std
@@ -1350,8 +1446,17 @@ block|}
 block|}
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Get the operand corresponding to the conditional code result. By default,
+end_comment
+
+begin_comment
 comment|/// this is 0 (no register).
+end_comment
+
+begin_function
 specifier|static
 specifier|inline
 name|MachineOperand
@@ -1374,9 +1479,21 @@ name|false
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Get the operand corresponding to the conditional code result for Thumb1.
+end_comment
+
+begin_comment
 comment|/// This operand will always refer to CPSR and it will have the Define flag set.
+end_comment
+
+begin_comment
 comment|/// You can optionally set the Dead flag by means of \p isDead.
+end_comment
+
+begin_function
 specifier|static
 specifier|inline
 name|MachineOperand
@@ -1410,6 +1527,9 @@ name|isDead
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|inline
 name|bool
@@ -1439,6 +1559,9 @@ operator|::
 name|t2B
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|inline
 name|bool
@@ -1468,6 +1591,9 @@ operator|::
 name|t2Bcc
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|inline
 name|bool
@@ -1509,6 +1635,9 @@ operator|::
 name|t2BR_JT
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|inline
 name|bool
@@ -1538,6 +1667,9 @@ operator|::
 name|tBRIND
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|inline
 name|bool
@@ -1591,6 +1723,9 @@ operator|::
 name|VLDMDIA_UPD
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|inline
 name|bool
@@ -1626,9 +1761,21 @@ operator|::
 name|VSTMDDB_UPD
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// getInstrPredicate - If instruction is predicated, returns its predicate
+end_comment
+
+begin_comment
 comment|/// condition, otherwise returns AL. It also returns the condition code
+end_comment
+
+begin_comment
 comment|/// register by reference.
+end_comment
+
+begin_expr_stmt
 name|ARMCC
 operator|::
 name|CondCodes
@@ -1644,6 +1791,9 @@ operator|&
 name|PredReg
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 name|unsigned
 name|getMatchingCondBranchOpcode
 parameter_list|(
@@ -1651,8 +1801,17 @@ name|unsigned
 name|Opc
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Determine if MI can be folded into an ARM MOVCC instruction, and return the
+end_comment
+
+begin_comment
 comment|/// opcode of the SSA instruction representing the conditional MI.
+end_comment
+
+begin_function_decl
 name|unsigned
 name|canFoldARMInstrIntoMOVCC
 parameter_list|(
@@ -1670,9 +1829,21 @@ modifier|&
 name|MRI
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Map pseudo instructions that imply an 'S' bit onto real opcodes. Whether
+end_comment
+
+begin_comment
 comment|/// the instruction is encoded with an 'S' bit is determined by the optional
+end_comment
+
+begin_comment
 comment|/// CPSR def operand.
+end_comment
+
+begin_function_decl
 name|unsigned
 name|convertAddSubFlagsOpcode
 parameter_list|(
@@ -1680,9 +1851,21 @@ name|unsigned
 name|OldOpc
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// emitARMRegPlusImmediate / emitT2RegPlusImmediate - Emits a series of
+end_comment
+
+begin_comment
 comment|/// instructions to materializea destreg = basereg + immediate in ARM / Thumb2
+end_comment
+
+begin_comment
 comment|/// code.
+end_comment
+
+begin_decl_stmt
 name|void
 name|emitARMRegPlusImmediate
 argument_list|(
@@ -1729,6 +1912,9 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|emitT2RegPlusImmediate
 argument_list|(
@@ -1775,6 +1961,9 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|emitThumbRegPlusImmediate
 argument_list|(
@@ -1818,11 +2007,29 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Tries to add registers to the reglist of a given base-updating
+end_comment
+
+begin_comment
 comment|/// push/pop instruction to adjust the stack by an additional
+end_comment
+
+begin_comment
 comment|/// NumBytes. This can save a few bytes per function in code-size, but
+end_comment
+
+begin_comment
 comment|/// obviously generates more memory traffic. As such, it only takes
+end_comment
+
+begin_comment
 comment|/// effect in functions being optimised for size.
+end_comment
+
+begin_function_decl
 name|bool
 name|tryFoldSPUpdateIntoPushPop
 parameter_list|(
@@ -1843,10 +2050,25 @@ name|unsigned
 name|NumBytes
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// rewriteARMFrameIndex / rewriteT2FrameIndex -
+end_comment
+
+begin_comment
 comment|/// Rewrite MI to access 'Offset' bytes from the FP. Return false if the
+end_comment
+
+begin_comment
 comment|/// offset could not be handled directly in MI, and return the left-over
+end_comment
+
+begin_comment
 comment|/// portion by reference.
+end_comment
+
+begin_function_decl
 name|bool
 name|rewriteARMFrameIndex
 parameter_list|(
@@ -1870,6 +2092,9 @@ modifier|&
 name|TII
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|rewriteT2FrameIndex
 parameter_list|(
@@ -1893,10 +2118,10 @@ modifier|&
 name|TII
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
+end_function_decl
 
 begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

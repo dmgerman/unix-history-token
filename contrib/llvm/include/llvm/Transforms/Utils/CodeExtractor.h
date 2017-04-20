@@ -186,21 +186,6 @@ modifier|&
 name|BB
 parameter_list|)
 function_decl|;
-comment|/// \brief Create a code extractor for a single basic block.
-comment|///
-comment|/// In this formation, we don't require a dominator tree. The given basic
-comment|/// block is set up for extraction.
-name|CodeExtractor
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|bool AggregateArgs = false
-argument_list|,
-argument|BlockFrequencyInfo *BFI = nullptr
-argument_list|,
-argument|BranchProbabilityInfo *BPI = nullptr
-argument_list|)
-empty_stmt|;
 comment|/// \brief Create a code extractor for a sequence of blocks.
 comment|///
 comment|/// Given a sequence of basic blocks where the first block in the sequence
@@ -229,23 +214,6 @@ argument_list|(
 argument|DominatorTree&DT
 argument_list|,
 argument|Loop&L
-argument_list|,
-argument|bool AggregateArgs = false
-argument_list|,
-argument|BlockFrequencyInfo *BFI = nullptr
-argument_list|,
-argument|BranchProbabilityInfo *BPI = nullptr
-argument_list|)
-empty_stmt|;
-comment|/// \brief Create a code extractor for a region node.
-comment|///
-comment|/// Behaves just like the generic code sequence constructor, but uses the
-comment|/// block sequence of the region node passed in.
-name|CodeExtractor
-argument_list|(
-argument|DominatorTree&DT
-argument_list|,
-argument|const RegionNode&RN
 argument_list|,
 argument|bool AggregateArgs = false
 argument_list|,

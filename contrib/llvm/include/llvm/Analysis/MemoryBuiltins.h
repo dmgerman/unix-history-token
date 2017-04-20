@@ -219,6 +219,27 @@ name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Tests if a value is a call or invoke to a library function that
+comment|/// allocates memory similar to malloc or calloc.
+name|bool
+name|isMallocOrCallocLikeFn
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+parameter_list|,
+name|bool
+name|LookThroughBitCast
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Tests if a value is a call or invoke to a library function that
 comment|/// allocates memory (either malloc, calloc, or strdup like).
 name|bool
 name|isAllocLikeFn

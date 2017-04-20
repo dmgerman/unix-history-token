@@ -10245,6 +10245,24 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|iterator_range
+operator|<
+name|expr_op_iterator
+operator|>
+name|expr_ops
+argument_list|()
+specifier|const
+block|{
+return|return
+block|{
+name|expr_op_begin
+argument_list|()
+block|,
+name|expr_op_end
+argument_list|()
+block|}
+return|;
+block|}
 comment|/// @}
 name|bool
 name|isValid
@@ -10267,7 +10285,7 @@ operator|==
 name|DIExpressionKind
 return|;
 block|}
-comment|/// Is the first element a DW_OP_deref?.
+comment|/// Return whether the first element a DW_OP_deref.
 name|bool
 name|startsWithDeref
 argument_list|()

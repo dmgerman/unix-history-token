@@ -171,6 +171,82 @@ argument|const lldb::DataBufferSP&data_sp
 argument_list|)
 name|override
 block|;
+name|Error
+name|IsWatchpointHit
+argument_list|(
+argument|uint32_t wp_index
+argument_list|,
+argument|bool&is_hit
+argument_list|)
+name|override
+block|;
+name|Error
+name|GetWatchpointHitIndex
+argument_list|(
+argument|uint32_t&wp_index
+argument_list|,
+argument|lldb::addr_t trap_addr
+argument_list|)
+name|override
+block|;
+name|Error
+name|IsWatchpointVacant
+argument_list|(
+argument|uint32_t wp_index
+argument_list|,
+argument|bool&is_vacant
+argument_list|)
+name|override
+block|;
+name|bool
+name|ClearHardwareWatchpoint
+argument_list|(
+argument|uint32_t wp_index
+argument_list|)
+name|override
+block|;
+name|Error
+name|ClearAllHardwareWatchpoints
+argument_list|()
+name|override
+block|;
+name|Error
+name|SetHardwareWatchpointWithIndex
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|,
+argument|size_t size
+argument_list|,
+argument|uint32_t watch_flags
+argument_list|,
+argument|uint32_t wp_index
+argument_list|)
+block|;
+name|uint32_t
+name|SetHardwareWatchpoint
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|,
+argument|size_t size
+argument_list|,
+argument|uint32_t watch_flags
+argument_list|)
+name|override
+block|;
+name|lldb
+operator|::
+name|addr_t
+name|GetWatchpointAddress
+argument_list|(
+argument|uint32_t wp_index
+argument_list|)
+name|override
+block|;
+name|uint32_t
+name|NumSupportedHardwareWatchpoints
+argument_list|()
+name|override
+block|;
 name|protected
 operator|:
 name|void
@@ -195,6 +271,17 @@ operator|&
 name|m_fpr_x86_64
 return|;
 block|}
+name|void
+operator|*
+name|GetDBRBuffer
+argument_list|()
+name|override
+block|{
+return|return
+operator|&
+name|m_dbr_x86_64
+return|;
+block|}
 name|private
 operator|:
 comment|// Private member types.
@@ -203,6 +290,8 @@ block|{
 name|GPRegSet
 block|,
 name|FPRegSet
+block|,
+name|DBRegSet
 block|}
 block|;
 comment|// Private member variables.
@@ -212,6 +301,9 @@ name|m_gpr_x86_64
 block|;   struct
 name|fpreg
 name|m_fpr_x86_64
+block|;   struct
+name|dbreg
+name|m_dbr_x86_64
 block|;
 name|int
 name|GetSetForNativeRegNum

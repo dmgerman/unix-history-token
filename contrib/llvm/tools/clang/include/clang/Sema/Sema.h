@@ -1474,6 +1474,48 @@ modifier|*
 name|VisContext
 decl_stmt|;
 comment|// Really a "PragmaVisStack*"
+comment|/// \brief This represents the stack of attributes that were pushed by
+comment|/// \#pragma clang attribute.
+struct|struct
+name|PragmaAttributeEntry
+block|{
+name|SourceLocation
+name|Loc
+decl_stmt|;
+name|AttributeList
+modifier|*
+name|Attribute
+decl_stmt|;
+name|SmallVector
+operator|<
+name|attr
+operator|::
+name|SubjectMatchRule
+operator|,
+literal|4
+operator|>
+name|MatchRules
+expr_stmt|;
+name|bool
+name|IsUsed
+decl_stmt|;
+block|}
+struct|;
+name|SmallVector
+operator|<
+name|PragmaAttributeEntry
+operator|,
+literal|2
+operator|>
+name|PragmaAttributeStack
+expr_stmt|;
+comment|/// \brief The declaration that is currently receiving an attribute from the
+comment|/// #pragma attribute stack.
+specifier|const
+name|Decl
+modifier|*
+name|PragmaAttributeCurrentTargetDecl
+decl_stmt|;
 comment|/// \brief This represents the last location of a "#pragma clang optimize off"
 comment|/// directive if such a directive has not been closed by an "on" yet. If
 comment|/// optimizations are currently "on", this is set to an invalid location.
@@ -33766,12 +33808,26 @@ name|size
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|PragmaAttributeCurrentTargetDecl
+condition|)
+name|PrintPragmaAttributeInstantiationPoint
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
 begin_function_decl
 name|void
 name|PrintInstantiationStack
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|PrintPragmaAttributeInstantiationPoint
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -38117,6 +38173,73 @@ name|Decl
 modifier|*
 name|D
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Called on well-formed '\#pragma clang attribute push'.
+end_comment
+
+begin_decl_stmt
+name|void
+name|ActOnPragmaAttributePush
+argument_list|(
+name|AttributeList
+operator|&
+name|Attribute
+argument_list|,
+name|SourceLocation
+name|PragmaLoc
+argument_list|,
+name|attr
+operator|::
+name|ParsedSubjectMatchRuleSet
+name|Rules
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Called on well-formed '\#pragma clang attribute pop'.
+end_comment
+
+begin_function_decl
+name|void
+name|ActOnPragmaAttributePop
+parameter_list|(
+name|SourceLocation
+name|PragmaLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Adds the attributes that have been specified using the
+end_comment
+
+begin_comment
+comment|/// '\#pragma clang attribute push' directives to the given declaration.
+end_comment
+
+begin_function_decl
+name|void
+name|AddPragmaAttributes
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|DiagnoseUnterminatedPragmaAttribute
+parameter_list|()
 function_decl|;
 end_function_decl
 

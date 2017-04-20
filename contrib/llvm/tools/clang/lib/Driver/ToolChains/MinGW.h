@@ -404,6 +404,17 @@ block|;
 name|void
 name|findGccLibDir
 argument_list|()
+block|;
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|findGcc
+argument_list|()
 block|; }
 decl_stmt|;
 block|}

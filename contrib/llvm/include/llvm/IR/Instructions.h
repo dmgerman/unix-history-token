@@ -1197,9 +1197,9 @@ return|return
 literal|0U
 return|;
 block|}
-comment|/// Returns the address space of the pointer operand.
-name|unsigned
-name|getPointerAddressSpace
+name|Type
+operator|*
+name|getPointerOperandType
 argument_list|()
 specifier|const
 block|{
@@ -1208,6 +1208,17 @@ name|getPointerOperand
 argument_list|()
 operator|->
 name|getType
+argument_list|()
+return|;
+block|}
+comment|/// Returns the address space of the pointer operand.
+name|unsigned
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPointerOperandType
 argument_list|()
 operator|->
 name|getPointerAddressSpace
@@ -1754,9 +1765,9 @@ return|return
 literal|1U
 return|;
 block|}
-comment|/// Returns the address space of the pointer operand.
-name|unsigned
-name|getPointerAddressSpace
+name|Type
+operator|*
+name|getPointerOperandType
 argument_list|()
 specifier|const
 block|{
@@ -1765,6 +1776,17 @@ name|getPointerOperand
 argument_list|()
 operator|->
 name|getType
+argument_list|()
+return|;
+block|}
+comment|/// Returns the address space of the pointer operand.
+name|unsigned
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPointerOperandType
 argument_list|()
 operator|->
 name|getPointerAddressSpace

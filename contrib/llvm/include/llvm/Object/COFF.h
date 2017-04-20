@@ -62,13 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerUnion.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/CodeView/CVDebugRecord.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/SubtargetFeature.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/Binary.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/Error.h"
 end_include
 
 begin_include
@@ -92,7 +110,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -111,7 +159,7 @@ name|namespace
 name|object
 block|{
 name|class
-name|ImportDirectoryEntryRef
+name|BaseRelocRef
 decl_stmt|;
 name|class
 name|DelayImportDirectoryEntryRef
@@ -120,46 +168,51 @@ name|class
 name|ExportDirectoryEntryRef
 decl_stmt|;
 name|class
-name|ImportedSymbolRef
+name|ImportDirectoryEntryRef
 decl_stmt|;
 name|class
-name|BaseRelocRef
+name|ImportedSymbolRef
 decl_stmt|;
-typedef|typedef
-name|content_iterator
-operator|<
-name|ImportDirectoryEntryRef
-operator|>
+name|using
 name|import_directory_iterator
-expr_stmt|;
-typedef|typedef
+init|=
+name|content_iterator
+operator|<
+name|ImportDirectoryEntryRef
+operator|>
+decl_stmt|;
+name|using
+name|delay_import_directory_iterator
+init|=
 name|content_iterator
 operator|<
 name|DelayImportDirectoryEntryRef
 operator|>
-name|delay_import_directory_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|export_directory_iterator
+init|=
 name|content_iterator
 operator|<
 name|ExportDirectoryEntryRef
 operator|>
-name|export_directory_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|imported_symbol_iterator
+init|=
 name|content_iterator
 operator|<
 name|ImportedSymbolRef
 operator|>
-name|imported_symbol_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|base_reloc_iterator
+init|=
 name|content_iterator
 operator|<
 name|BaseRelocRef
 operator|>
-name|base_reloc_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The DOS compatible header at the front of all PE/COFF executables.
 struct|struct
 name|dos_header
@@ -814,25 +867,26 @@ return|;
 block|}
 expr|}
 block|;
-typedef|typedef
+name|using
+name|import_lookup_table_entry32
+operator|=
 name|import_lookup_table_entry
 operator|<
 name|support
 operator|::
 name|little32_t
 operator|>
-name|import_lookup_table_entry32
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|import_lookup_table_entry64
+operator|=
 name|import_lookup_table_entry
 operator|<
 name|support
 operator|::
 name|little64_t
 operator|>
-name|import_lookup_table_entry64
-expr_stmt|;
-struct|struct
+block|;  struct
 name|delay_import_directory_table_entry
 block|{
 comment|// dumpbin reports this field as "Characteristics" instead of "Attributes".
@@ -840,146 +894,142 @@ name|support
 operator|::
 name|ulittle32_t
 name|Attributes
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|Name
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|ModuleHandle
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|DelayImportAddressTable
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|DelayImportNameTable
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|BoundDelayImportTable
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|UnloadDelayImportTable
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|TimeStamp
-expr_stmt|;
-block|}
-struct|;
-struct|struct
+block|; }
+block|;  struct
 name|export_directory_table_entry
 block|{
 name|support
 operator|::
 name|ulittle32_t
 name|ExportFlags
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|TimeDateStamp
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle16_t
 name|MajorVersion
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle16_t
 name|MinorVersion
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|NameRVA
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|OrdinalBase
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|AddressTableEntries
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|NumberOfNamePointers
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|ExportAddressTableRVA
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|NamePointerRVA
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|OrdinalTableRVA
-expr_stmt|;
-block|}
-struct|;
-union|union
+block|; }
+block|;
+expr|union
 name|export_address_table_entry
 block|{
 name|support
 operator|::
 name|ulittle32_t
 name|ExportRVA
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|ForwarderRVA
-expr_stmt|;
-block|}
-union|;
-typedef|typedef
+block|; }
+block|;
+name|using
+name|export_name_pointer_table_entry
+operator|=
 name|support
 operator|::
 name|ulittle32_t
-name|export_name_pointer_table_entry
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|export_ordinal_table_entry
+operator|=
 name|support
 operator|::
 name|ulittle16_t
-name|export_ordinal_table_entry
-expr_stmt|;
-struct|struct
+block|;  struct
 name|StringTableOffset
 block|{
 name|support
 operator|::
 name|ulittle32_t
 name|Zeroes
-expr_stmt|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|Offset
-expr_stmt|;
-block|}
-struct|;
+block|; }
+block|;
 name|template
 operator|<
 name|typename
@@ -1022,30 +1072,32 @@ block|;
 name|uint8_t
 name|NumberOfAuxSymbols
 block|; }
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|coff_symbol16
+operator|=
 name|coff_symbol
 operator|<
 name|support
 operator|::
 name|ulittle16_t
 operator|>
-name|coff_symbol16
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|coff_symbol32
+operator|=
 name|coff_symbol
 operator|<
 name|support
 operator|::
 name|ulittle32_t
 operator|>
-name|coff_symbol32
-expr_stmt|;
+block|;
 comment|// Contains only common parts of coff_symbol16 and coff_symbol32.
-struct|struct
+block|struct
 name|coff_symbol_generic
 block|{
-union|union
+expr|union
 block|{
 name|char
 name|ShortName
@@ -1054,25 +1106,28 @@ name|COFF
 operator|::
 name|NameSize
 index|]
-decl_stmt|;
+block|;
 name|StringTableOffset
 name|Offset
-decl_stmt|;
-block|}
+block|;   }
 name|Name
-union|;
+block|;
 name|support
 operator|::
 name|ulittle32_t
 name|Value
-expr_stmt|;
-block|}
-struct|;
+block|; }
+block|;
 name|class
 name|COFFSymbolRef
 block|{
 name|public
-label|:
+operator|:
+name|COFFSymbolRef
+argument_list|()
+operator|=
+expr|default
+block|;
 name|COFFSymbolRef
 argument_list|(
 specifier|const
@@ -1083,12 +1138,7 @@ argument_list|)
 operator|:
 name|CS16
 argument_list|(
-name|CS
-argument_list|)
-operator|,
-name|CS32
-argument_list|(
-argument|nullptr
+argument|CS
 argument_list|)
 block|{}
 name|COFFSymbolRef
@@ -1099,27 +1149,9 @@ operator|*
 name|CS
 argument_list|)
 operator|:
-name|CS16
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|CS32
 argument_list|(
 argument|CS
-argument_list|)
-block|{}
-name|COFFSymbolRef
-argument_list|()
-operator|:
-name|CS16
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|CS32
-argument_list|(
-argument|nullptr
 argument_list|)
 block|{}
 specifier|const
@@ -1727,6 +1759,8 @@ specifier|const
 name|coff_symbol16
 modifier|*
 name|CS16
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -1735,6 +1769,8 @@ specifier|const
 name|coff_symbol32
 modifier|*
 name|CS32
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -2378,30 +2414,32 @@ return|;
 block|}
 end_expr_stmt
 
-begin_typedef
+begin_decl_stmt
 unit|};
-typedef|typedef
+name|using
+name|coff_tls_directory32
+init|=
 name|coff_tls_directory
 operator|<
 name|support
 operator|::
 name|little32_t
 operator|>
-name|coff_tls_directory32
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|coff_tls_directory64
+init|=
 name|coff_tls_directory
 operator|<
 name|support
 operator|::
 name|little64_t
 operator|>
-name|coff_tls_directory64
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -2930,7 +2968,7 @@ return|;
 end_return
 
 begin_macro
-unit|}   uint16_t
+unit|}    uint16_t
 name|getMachine
 argument_list|()
 end_macro
@@ -2970,7 +3008,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}   uint16_t
+unit|}    uint16_t
 name|getSizeOfOptionalHeader
 argument_list|()
 end_macro
@@ -3019,7 +3057,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}   uint16_t
+unit|}    uint16_t
 name|getCharacteristics
 argument_list|()
 end_macro
@@ -3072,7 +3110,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}   uint32_t
+unit|}    uint32_t
 name|getTimeDateStamp
 argument_list|()
 end_macro
@@ -3112,7 +3150,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}   uint32_t
+unit|}    uint32_t
 name|getNumberOfSections
 argument_list|()
 end_macro
@@ -3159,7 +3197,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}   uint32_t
+unit|}    uint32_t
 name|getPointerToSymbolTable
 argument_list|()
 end_macro
@@ -3206,7 +3244,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}   uint32_t
+unit|}    uint32_t
 name|getRawNumberOfSymbols
 argument_list|()
 end_macro
@@ -3253,7 +3291,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}   uint32_t
+unit|}    uint32_t
 name|getNumberOfSymbols
 argument_list|()
 end_macro
@@ -3282,7 +3320,7 @@ return|;
 end_return
 
 begin_decl_stmt
-unit|} protected:
+unit|}  protected:
 name|void
 name|moveSymbolNext
 argument_list|(
@@ -4204,7 +4242,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}   template
+unit|}    template
 operator|<
 name|typename
 name|T
@@ -4273,7 +4311,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}   std
+unit|}    std
 operator|::
 name|error_code
 name|getSymbolName
@@ -4593,12 +4631,9 @@ name|public
 label|:
 name|ImportDirectoryEntryRef
 argument_list|()
-operator|:
-name|OwningObject
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|ImportDirectoryEntryRef
 argument_list|(
 argument|const coff_import_directory_table_entry *Table
@@ -4607,7 +4642,7 @@ argument|uint32_t I
 argument_list|,
 argument|const COFFObjectFile *Owner
 argument_list|)
-operator|:
+block|:
 name|ImportTable
 argument_list|(
 name|Table
@@ -4724,6 +4759,8 @@ specifier|const
 name|COFFObjectFile
 modifier|*
 name|OwningObject
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -4740,12 +4777,9 @@ name|public
 label|:
 name|DelayImportDirectoryEntryRef
 argument_list|()
-operator|:
-name|OwningObject
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|DelayImportDirectoryEntryRef
 argument_list|(
 argument|const delay_import_directory_table_entry *T
@@ -4754,7 +4788,7 @@ argument|uint32_t I
 argument_list|,
 argument|const COFFObjectFile *Owner
 argument_list|)
-operator|:
+block|:
 name|Table
 argument_list|(
 name|T
@@ -4846,6 +4880,8 @@ specifier|const
 name|COFFObjectFile
 modifier|*
 name|OwningObject
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -4866,12 +4902,9 @@ name|public
 label|:
 name|ExportDirectoryEntryRef
 argument_list|()
-operator|:
-name|OwningObject
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|ExportDirectoryEntryRef
 argument_list|(
 argument|const export_directory_table_entry *Table
@@ -4880,7 +4913,7 @@ argument|uint32_t I
 argument_list|,
 argument|const COFFObjectFile *Owner
 argument_list|)
-operator|:
+block|:
 name|ExportTable
 argument_list|(
 name|Table
@@ -4988,6 +5021,8 @@ specifier|const
 name|COFFObjectFile
 modifier|*
 name|OwningObject
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -5004,12 +5039,9 @@ name|public
 label|:
 name|ImportedSymbolRef
 argument_list|()
-operator|:
-name|OwningObject
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|ImportedSymbolRef
 argument_list|(
 argument|const import_lookup_table_entry32 *Entry
@@ -5018,7 +5050,7 @@ argument|uint32_t I
 argument_list|,
 argument|const COFFObjectFile *Owner
 argument_list|)
-operator|:
+block|:
 name|Entry32
 argument_list|(
 name|Entry
@@ -5138,6 +5170,8 @@ specifier|const
 name|COFFObjectFile
 modifier|*
 name|OwningObject
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -5154,12 +5188,9 @@ name|public
 label|:
 name|BaseRelocRef
 argument_list|()
-operator|:
-name|OwningObject
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|BaseRelocRef
 argument_list|(
 specifier|const
@@ -5235,6 +5266,8 @@ specifier|const
 name|COFFObjectFile
 modifier|*
 name|OwningObject
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -5370,6 +5403,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECT_COFF_H
+end_comment
 
 end_unit
 

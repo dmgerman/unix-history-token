@@ -1163,6 +1163,16 @@ argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 block|;
+name|unsigned
+name|char
+name|classifyGlobalFunctionReference
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+block|;
 comment|/// This function returns the name of a function which has an interface
 comment|/// like the non-standard bzero function, if such a function exists on
 comment|/// the current subtarget and it is considered prefereable over

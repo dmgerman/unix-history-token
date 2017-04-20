@@ -344,6 +344,12 @@ operator|=
 literal|1
 operator|<<
 literal|17
+block|,
+name|RelationSpecializationOf
+operator|=
+literal|1
+operator|<<
+literal|18
 block|, }
 decl_stmt|;
 specifier|static
@@ -351,7 +357,7 @@ specifier|const
 name|unsigned
 name|SymbolRoleBitNum
 init|=
-literal|18
+literal|19
 decl_stmt|;
 typedef|typedef
 name|unsigned

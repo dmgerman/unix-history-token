@@ -310,6 +310,34 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|DIExpression
+operator|::
+name|expr_op_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Start
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|DIExpression
+operator|::
+name|expr_op_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|End
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// Retrieve the fragment information, if any.
 end_comment
@@ -403,6 +431,23 @@ name|SubRegisterOffsetInBits
 init|=
 literal|0
 decl_stmt|;
+comment|/// The kind of location description being produced.
+enum|enum
+block|{
+name|Unknown
+init|=
+literal|0
+block|,
+name|Register
+block|,
+name|Memory
+block|,
+name|Implicit
+block|}
+name|LocationKind
+init|=
+name|Unknown
+enum|;
 comment|/// Push a DW_OP_piece / DW_OP_bit_piece for emitting later, if one is needed
 comment|/// to represent a subregister.
 name|void
@@ -486,7 +531,8 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Emit a DW_OP_reg operation.
+comment|/// Emit a DW_OP_reg operation. Note that this is only legal inside a DWARF
+comment|/// register location description.
 name|void
 name|addReg
 parameter_list|(
@@ -648,11 +694,29 @@ modifier|&
 name|Value
 parameter_list|)
 function_decl|;
+comment|/// Lock this down to become a memory location description.
+name|void
+name|setMemoryLocationKind
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|LocationKind
+operator|==
+name|Unknown
+argument_list|)
+expr_stmt|;
+name|LocationKind
+operator|=
+name|Memory
+expr_stmt|;
+block|}
 comment|/// Emit a machine register location. As an optimization this may also consume
 comment|/// the prefix of a DwarfExpression if a more efficient representation for
 comment|/// combining the register location and the first operation exists.
 comment|///
-comment|/// \param FragmentOffsetInBits     If this is one fragment out of a fragmented
+comment|/// \param FragmentOffsetInBits     If this is one fragment out of a
+comment|/// fragmented
 comment|///                                 location, this is the offset of the
 comment|///                                 fragment inside the entire variable.
 comment|/// \return                         false if no DWARF register exists

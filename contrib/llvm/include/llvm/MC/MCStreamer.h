@@ -501,6 +501,15 @@ argument_list|(
 argument|unsigned Arch
 argument_list|)
 block|;
+name|void
+name|emitTargetAttributes
+argument_list|(
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|)
+block|;
 name|virtual
 name|void
 name|finishAttributeSection

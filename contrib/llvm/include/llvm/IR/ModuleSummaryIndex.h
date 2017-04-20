@@ -626,7 +626,6 @@ name|RefEdgeList
 expr_stmt|;
 name|protected
 label|:
-comment|/// GlobalValueSummary constructor.
 name|GlobalValueSummary
 argument_list|(
 argument|SummaryKind K
@@ -862,7 +861,6 @@ name|AliaseeSummary
 block|;
 name|public
 operator|:
-comment|/// Summary constructors.
 name|AliasSummary
 argument_list|(
 argument|GVFlags Flags
@@ -1080,7 +1078,6 @@ name|TIdInfo
 block|;
 name|public
 operator|:
-comment|/// Summary constructors.
 name|FunctionSummary
 argument_list|(
 argument|GVFlags Flags
@@ -1743,7 +1740,6 @@ name|GlobalValueSummary
 block|{
 name|public
 operator|:
-comment|/// Summary constructors.
 name|GlobalVarSummary
 argument_list|(
 argument|GVFlags Flags

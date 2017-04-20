@@ -769,7 +769,7 @@ block|;
 name|bool
 name|mayBeEmittedAsTailCall
 argument_list|(
-argument|CallInst *CI
+argument|const CallInst *CI
 argument_list|)
 specifier|const
 name|override

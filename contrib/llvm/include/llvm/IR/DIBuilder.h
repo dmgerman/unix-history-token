@@ -2500,7 +2500,21 @@ block|}
 end_decl_stmt
 
 begin_comment
-unit|};  }
+unit|};
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+end_comment
+
+begin_macro
+name|DEFINE_ISA_CONVERSION_FUNCTIONS
+argument_list|(
+argument|DIBuilder
+argument_list|,
+argument|LLVMDIBuilderRef
+argument_list|)
+end_macro
+
+begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

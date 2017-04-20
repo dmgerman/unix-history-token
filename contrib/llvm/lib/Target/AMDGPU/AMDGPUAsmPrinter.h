@@ -224,6 +224,8 @@ literal|0
 block|;
 name|uint32_t
 name|LDSSize
+operator|=
+literal|0
 block|;
 name|bool
 name|FlatUsed
@@ -293,16 +295,18 @@ name|VCCUsed
 operator|=
 name|false
 block|;
-name|uint64_t
-name|CodeLen
-operator|=
-literal|0
-block|;
 name|SIProgramInfo
 argument_list|()
 operator|=
 expr|default
 block|;   }
+block|;
+name|uint64_t
+name|getFunctionCodeSize
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
 block|;
 name|void
 name|getSIProgramInfo

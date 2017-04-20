@@ -191,9 +191,9 @@ label|:
 comment|//===------------------------------------------------------------------===//
 comment|// Properties to be set by the target writer, used to configure asm printer.
 comment|//
-comment|/// Pointer size in bytes.  Default is 4.
+comment|/// Code pointer size in bytes.  Default is 4.
 name|unsigned
-name|PointerSize
+name|CodePointerSize
 init|=
 literal|4
 decl_stmt|;
@@ -773,14 +773,14 @@ operator|~
 name|MCAsmInfo
 argument_list|()
 expr_stmt|;
-comment|/// Get the pointer size in bytes.
+comment|/// Get the code pointer size in bytes.
 name|unsigned
-name|getPointerSize
+name|getCodePointerSize
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PointerSize
+name|CodePointerSize
 return|;
 block|}
 comment|/// Get the callee-saved register stack slot

@@ -384,9 +384,8 @@ block|;
 name|AMDGPUImagePseudoSourceValue
 name|ImagePSV
 block|;
-name|public
+name|private
 operator|:
-comment|// FIXME: Make private
 name|unsigned
 name|LDSWaveSpillSize
 block|;
@@ -399,8 +398,6 @@ block|;
 name|unsigned
 name|NumSystemSGPRs
 block|;
-name|private
-operator|:
 name|bool
 name|HasSpilledSGPRs
 block|;
@@ -1656,6 +1653,15 @@ argument_list|(
 literal|"unexpected dimension"
 argument_list|)
 expr_stmt|;
+block|}
+name|unsigned
+name|getLDSWaveSpillSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LDSWaveSpillSize
+return|;
 block|}
 specifier|const
 name|AMDGPUBufferPseudoSourceValue
