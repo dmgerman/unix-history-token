@@ -10677,7 +10677,7 @@ comment|///    An immediate value containing an 8-bit value specifying which ele
 end_comment
 
 begin_comment
-comment|///    copy from \ a and \a b. \n
+comment|///    copy from \a a and \a b. \n
 end_comment
 
 begin_comment

@@ -13,8 +13,8 @@ parameter_list|)
 block|{
 comment|// CHECK: dbg.declare
 comment|// CHECK: dbg.declare({{.*}}, metadata ![[VAR:.*]], metadata ![[EXPR:.*]])
-comment|// CHECK: ![[VAR]] = !DILocalVariable(name: "vla",{{.*}} line: [[@LINE+2]]
-comment|// CHECK: ![[EXPR]] = !DIExpression(DW_OP_deref)
+comment|// CHECK: ![[EXPR]] = !DIExpression()
+comment|// CHECK: ![[VAR]] = !DILocalVariable(name: "vla",{{.*}} line: [[@LINE+1]]
 name|int
 name|vla
 index|[

@@ -5967,7 +5967,36 @@ name|DependentSizedArrayTypeLoc
 block|,
 name|DependentSizedArrayType
 operator|>
-block|{  }
+block|{
+name|public
+operator|:
+name|void
+name|initializeLocal
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|ArrayTypeLoc
+operator|::
+name|initializeLocal
+argument_list|(
+name|Context
+argument_list|,
+name|Loc
+argument_list|)
+block|;
+name|setSizeExpr
+argument_list|(
+name|getTypePtr
+argument_list|()
+operator|->
+name|getSizeExpr
+argument_list|()
+argument_list|)
+block|;   }
+block|}
 block|;
 name|class
 name|VariableArrayTypeLoc

@@ -80,35 +80,7 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-co
 end_comment
 
 begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-1: warning: argument '-fsanitize-coverage=1' is deprecated, use '-fsanitize-coverage=func' instead
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=2 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-2
-end_comment
-
-begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-2: warning: argument '-fsanitize-coverage=2' is deprecated, use '-fsanitize-coverage=bb' instead
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=3 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-3
-end_comment
-
-begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-3: warning: argument '-fsanitize-coverage=3' is deprecated, use '-fsanitize-coverage=edge' instead
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=5 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-5
-end_comment
-
-begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-5: error: unsupported argument '5' to option 'fsanitize-coverage='
+comment|// CHECK-SANITIZE-COVERAGE-1: warning: argument '-fsanitize-coverage=1' is deprecated, use '-fsanitize-coverage=trace-pc-guard' instead
 end_comment
 
 begin_comment
@@ -136,7 +108,7 @@ comment|// CHECK-SANITIZE-COVERAGE-SAN-DISABLED-NOT: argument unused
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=edge,indirect-calls,trace-bb,trace-pc,trace-cmp,8bit-counters,trace-div,trace-gep %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FEATURES
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=edge,indirect-calls,trace-pc,trace-cmp,trace-div,trace-gep %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FEATURES
 end_comment
 
 begin_comment
@@ -145,10 +117,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-SANITIZE-COVERAGE-FEATURES: -fsanitize-coverage-indirect-calls
-end_comment
-
-begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-FEATURES: -fsanitize-coverage-trace-bb
 end_comment
 
 begin_comment
@@ -164,15 +132,11 @@ comment|// CHECK-SANITIZE-COVERAGE-FEATURES: -fsanitize-coverage-trace-gep
 end_comment
 
 begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-FEATURES: -fsanitize-coverage-8bit-counters
-end_comment
-
-begin_comment
 comment|// CHECK-SANITIZE-COVERAGE-FEATURES: -fsanitize-coverage-trace-pc
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=func,edge,indirect-calls,trace-bb,trace-cmp -fno-sanitize-coverage=edge,indirect-calls,trace-bb %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MASK
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=func,edge,indirect-calls,trace-cmp -fno-sanitize-coverage=edge,indirect-calls %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MASK
 end_comment
 
 begin_comment
@@ -204,11 +168,19 @@ comment|// CHECK-INCOMPATIBLE: error: invalid argument '-fsanitize-coverage=func
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=8bit-counters %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MISSING-TYPE
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-coverage=8bit-counters %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-8BIT
 end_comment
 
 begin_comment
-comment|// CHECK-MISSING-TYPE: error: invalid argument '-fsanitize-coverage=8bit-counters' only allowed with '-fsanitize-coverage=(func|bb|edge)'
+comment|// CHECK-8BIT: warning: argument '-fsanitize-coverage=8bit-counters' is deprecated, use '-fsanitize-coverage=trace-pc-guard' instead
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-coverage=trace-bb %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TRACE-BB
+end_comment
+
+begin_comment
+comment|// CHECK-TRACE-BB: warning: argument '-fsanitize-coverage=trace-bb' is deprecated, use '-fsanitize-coverage=trace-pc-guard' instead
 end_comment
 
 begin_comment

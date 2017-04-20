@@ -1831,5 +1831,21 @@ begin_comment
 comment|// CHECK-NO-PROFILE-DEBUG-NOT: -fdebug-info-for-profiling
 end_comment
 
+begin_comment
+comment|// RUN: %clang -### -S -fallow-editor-placeholders %s 2>&1 | FileCheck -check-prefix=CHECK-ALLOW-PLACEHOLDERS %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fno-allow-editor-placeholders %s 2>&1 | FileCheck -check-prefix=CHECK-NO-ALLOW-PLACEHOLDERS %s
+end_comment
+
+begin_comment
+comment|// CHECK-ALLOW-PLACEHOLDERS: -fallow-editor-placeholders
+end_comment
+
+begin_comment
+comment|// CHECK-NO-ALLOW-PLACEHOLDERS-NOT: -fallow-editor-placeholders
+end_comment
+
 end_unit
 

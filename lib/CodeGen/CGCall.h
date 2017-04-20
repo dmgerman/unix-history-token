@@ -144,17 +144,6 @@ decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
-typedef|typedef
-name|SmallVector
-operator|<
-name|llvm
-operator|::
-name|AttributeList
-operator|,
-literal|8
-operator|>
-name|AttributeListType
-expr_stmt|;
 comment|/// Abstract information about a function or function prototype.
 name|class
 name|CGCalleeInfo

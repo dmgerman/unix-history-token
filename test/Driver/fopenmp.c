@@ -80,7 +80,7 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fopenmp=libomp %s -o %t -### 2>
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fopenmp=libgomp %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-GOMP
+comment|// RUN: %clang -target x86_64-linux-gnu -fopenmp=libgomp %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-GOMP --check-prefix=CHECK-LD-GOMP-RT
 end_comment
 
 begin_comment
@@ -112,7 +112,7 @@ comment|// RUN: %clang -target x86_64-darwin -fopenmp=libomp %s -o %t -### 2>&1 
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-darwin -fopenmp=libgomp %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-GOMP
+comment|// RUN: %clang -target x86_64-darwin -fopenmp=libgomp %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-GOMP --check-prefix=CHECK-LD-GOMP-NO-RT
 end_comment
 
 begin_comment
@@ -140,15 +140,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-netbsd -fopenmp=libomp %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-OMP
+comment|// RUN: %clang -target x86_64-freebsd -fopenmp=libomp %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-OMP
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-netbsd -fopenmp=libgomp %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-GOMP
+comment|// RUN: %clang -target x86_64-freebsd -fopenmp=libgomp %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-GOMP --check-prefix=CHECK-LD-GOMP-NO-RT
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-netbsd -fopenmp=libiomp5 %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-IOMP5
+comment|// RUN: %clang -target x86_64-freebsd -fopenmp=libiomp5 %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-IOMP5
 end_comment
 
 begin_comment
@@ -165,6 +165,22 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -nostdlib -target x86_64-freebsd -fopenmp=libiomp5 %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-IOMP5
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-netbsd -fopenmp=libomp %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-OMP
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-netbsd -fopenmp=libgomp %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-GOMP --check-prefix=CHECK-LD-GOMP-NO-RT
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-netbsd -fopenmp=libiomp5 %s -o %t -### 2>&1 | FileCheck %s --check-prefix=CHECK-LD-IOMP5
 end_comment
 
 begin_comment
@@ -205,6 +221,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-LD-GOMP: "-lgomp"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GOMP-RT: "-lrt"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GOMP-NO-RT-NOT: "-lrt"
 end_comment
 
 begin_comment

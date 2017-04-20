@@ -8572,10 +8572,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Returns true if this function or its return type has the
-comment|/// warn_unused_result attribute. If the return type has the attribute and
-comment|/// this function is a method of the return type's class, then false will be
-comment|/// returned to avoid spurious warnings on member methods such as assignment
-comment|/// operators.
+comment|/// warn_unused_result attribute.
 name|bool
 name|hasUnusedResultAttr
 argument_list|()

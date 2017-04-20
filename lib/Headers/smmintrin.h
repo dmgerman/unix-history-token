@@ -168,11 +168,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDPS / ROUNDPS</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDPS / ROUNDPS</c> instruction.
 end_comment
 
 begin_comment
@@ -242,11 +238,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDPD / ROUNDPD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDPD / ROUNDPD</c> instruction.
 end_comment
 
 begin_comment
@@ -324,11 +316,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDSS / ROUNDSS</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDSS / ROUNDSS</c> instruction.
 end_comment
 
 begin_comment
@@ -432,11 +420,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDSD / ROUNDSD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDSD / ROUNDSD</c> instruction.
 end_comment
 
 begin_comment
@@ -532,11 +516,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDPS / ROUNDPS</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDPS / ROUNDPS</c> instruction.
 end_comment
 
 begin_comment
@@ -606,11 +586,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDPD / ROUNDPD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDPD / ROUNDPD</c> instruction.
 end_comment
 
 begin_comment
@@ -688,11 +664,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDSS / ROUNDSS</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDSS / ROUNDSS</c> instruction.
 end_comment
 
 begin_comment
@@ -796,11 +768,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDSD / ROUNDSD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDSD / ROUNDSD</c> instruction.
 end_comment
 
 begin_comment
@@ -900,11 +868,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDPS / ROUNDPS</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDPS / ROUNDPS</c> instruction.
 end_comment
 
 begin_comment
@@ -1044,11 +1008,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDSS / ROUNDSS</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDSS / ROUNDSS</c> instruction.
 end_comment
 
 begin_comment
@@ -1206,11 +1166,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDPD / ROUNDPD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDPD / ROUNDPD</c> instruction.
 end_comment
 
 begin_comment
@@ -1350,11 +1306,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VROUNDSD / ROUNDSD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VROUNDSD / ROUNDSD</c> instruction.
 end_comment
 
 begin_comment
@@ -1512,11 +1464,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VBLENDPD / BLENDPD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VBLENDPD / BLENDPD</c> instruction.
 end_comment
 
 begin_comment
@@ -1626,11 +1574,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VBLENDPS / BLENDPS</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VBLENDPS / BLENDPS</c> instruction.
 end_comment
 
 begin_comment
@@ -1724,11 +1668,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VBLENDVPD / BLENDVPD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VBLENDVPD / BLENDVPD</c> instruction.
 end_comment
 
 begin_comment
@@ -1850,11 +1790,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VBLENDVPS / BLENDVPS</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VBLENDVPS / BLENDVPS</c> instruction.
 end_comment
 
 begin_comment
@@ -1976,11 +1912,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPBLENDVB / PBLENDVB</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPBLENDVB / PBLENDVB</c> instruction.
 end_comment
 
 begin_comment
@@ -2118,11 +2050,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPBLENDW / PBLENDW</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPBLENDW / PBLENDW</c> instruction.
 end_comment
 
 begin_comment
@@ -2220,11 +2148,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMULLD / PMULLD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMULLD / PMULLD</c> instruction.
 end_comment
 
 begin_comment
@@ -2309,11 +2233,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMULDQ / PMULDQ</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMULDQ / PMULDQ</c> instruction.
 end_comment
 
 begin_comment
@@ -2431,11 +2351,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VDPPS / DPPS</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VDPPS / DPPS</c> instruction.
 end_comment
 
 begin_comment
@@ -2569,11 +2485,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VDPPD / DPPD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VDPPD / DPPD</c> instruction.
 end_comment
 
 begin_comment
@@ -2679,11 +2591,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VMOVNTDQA / MOVNTDQA</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVNTDQA / MOVNTDQA</c> instruction.
 end_comment
 
 begin_comment
@@ -2769,11 +2677,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMINSB / PMINSB</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMINSB / PMINSB</c> instruction.
 end_comment
 
 begin_comment
@@ -2859,11 +2763,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMAXSB / PMAXSB</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMAXSB / PMAXSB</c> instruction.
 end_comment
 
 begin_comment
@@ -2949,11 +2849,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMINUW / PMINUW</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMINUW / PMINUW</c> instruction.
 end_comment
 
 begin_comment
@@ -3039,11 +2935,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMAXUW / PMAXUW</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMAXUW / PMAXUW</c> instruction.
 end_comment
 
 begin_comment
@@ -3129,11 +3021,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMINSD / PMINSD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMINSD / PMINSD</c> instruction.
 end_comment
 
 begin_comment
@@ -3219,11 +3107,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMAXSD / PMAXSD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMAXSD / PMAXSD</c> instruction.
 end_comment
 
 begin_comment
@@ -3309,11 +3193,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMINUD / PMINUD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMINUD / PMINUD</c>  instruction.
 end_comment
 
 begin_comment
@@ -3399,11 +3279,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMAXUD / PMAXUD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMAXUD / PMAXUD</c> instruction.
 end_comment
 
 begin_comment
@@ -3513,7 +3389,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VINSERTPS</i></c> instruction.
+comment|/// This intrinsic corresponds to the<c> VINSERTPS</c> instruction.
 end_comment
 
 begin_comment
@@ -3679,7 +3555,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VEXTRACTPS / EXTRACTPS</i></c>
+comment|/// This intrinsic corresponds to the<c> VEXTRACTPS / EXTRACTPS</c>
 end_comment
 
 begin_comment
@@ -3847,11 +3723,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPINSRB / PINSRB</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPINSRB / PINSRB</c> instruction.
 end_comment
 
 begin_comment
@@ -4025,11 +3897,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPINSRD / PINSRD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPINSRD / PINSRD</c> instruction.
 end_comment
 
 begin_comment
@@ -4073,7 +3941,7 @@ comment|///    An immediate value. Bits [1:0] specify the bit offset in the resu
 end_comment
 
 begin_comment
-comment|///    which the integer \a I is written.
+comment|///    which the integer \a I is written. \n
 end_comment
 
 begin_comment
@@ -4161,11 +4029,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPINSRQ / PINSRQ</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPINSRQ / PINSRQ</c> instruction.
 end_comment
 
 begin_comment
@@ -4209,7 +4073,7 @@ comment|///    An immediate value. Bit [0] specifies the bit offset in the resul
 end_comment
 
 begin_comment
-comment|///    which the integer \a I is written.
+comment|///    which the integer \a I is written. \n
 end_comment
 
 begin_comment
@@ -4288,11 +4152,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPEXTRB / PEXTRB</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPEXTRB / PEXTRB</c> instruction.
 end_comment
 
 begin_comment
@@ -4312,11 +4172,11 @@ comment|/// \param N
 end_comment
 
 begin_comment
-comment|///    An immediate value. Bits [3:0] specify which 8-bit vector element
+comment|///    An immediate value. Bits [3:0] specify which 8-bit vector element from
 end_comment
 
 begin_comment
-comment|///    from the argument \a X to extract and copy to the result. \n
+comment|///    the argument \a X to extract and copy to the result. \n
 end_comment
 
 begin_comment
@@ -4444,11 +4304,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPEXTRD / PEXTRD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPEXTRD / PEXTRD</c> instruction.
 end_comment
 
 begin_comment
@@ -4468,11 +4324,11 @@ comment|/// \param N
 end_comment
 
 begin_comment
-comment|///    An immediate value. Bits [1:0] specify which 32-bit vector element
+comment|///    An immediate value. Bits [1:0] specify which 32-bit vector element from
 end_comment
 
 begin_comment
-comment|///    from the argument \a X to extract and copy to the result. \n
+comment|///    the argument \a X to extract and copy to the result. \n
 end_comment
 
 begin_comment
@@ -4554,11 +4410,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPEXTRQ / PEXTRQ</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPEXTRQ / PEXTRQ</c> instruction.
 end_comment
 
 begin_comment
@@ -4578,11 +4430,11 @@ comment|/// \param N
 end_comment
 
 begin_comment
-comment|///    An immediate value. Bit [0] specifies which 64-bit vector element
+comment|///    An immediate value. Bit [0] specifies which 64-bit vector element from
 end_comment
 
 begin_comment
-comment|///    from the argument \a X to return. \n
+comment|///    the argument \a X to return. \n
 end_comment
 
 begin_comment
@@ -4643,11 +4495,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPTEST / PTEST</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPTEST / PTEST</c> instruction.
 end_comment
 
 begin_comment
@@ -4726,11 +4574,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPTEST / PTEST</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPTEST / PTEST</c> instruction.
 end_comment
 
 begin_comment
@@ -4809,11 +4653,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPTEST / PTEST</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPTEST / PTEST</c> instruction.
 end_comment
 
 begin_comment
@@ -4912,11 +4752,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPTEST / PTEST</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPTEST / PTEST</c> instruction.
 end_comment
 
 begin_comment
@@ -4986,11 +4822,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPTEST / PTEST</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPTEST / PTEST</c> instruction.
 end_comment
 
 begin_comment
@@ -5070,11 +4902,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPTEST / PTEST</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPTEST / PTEST</c> instruction.
 end_comment
 
 begin_comment
@@ -5138,11 +4966,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPEQQ / PCMPEQQ</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPEQQ / PCMPEQQ</c> instruction.
 end_comment
 
 begin_comment
@@ -5235,11 +5059,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVSXBW / PMOVSXBW</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVSXBW / PMOVSXBW</c> instruction.
 end_comment
 
 begin_comment
@@ -5344,11 +5164,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVSXBD / PMOVSXBD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVSXBD / PMOVSXBD</c> instruction.
 end_comment
 
 begin_comment
@@ -5445,11 +5261,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVSXBQ / PMOVSXBQ</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVSXBQ / PMOVSXBQ</c> instruction.
 end_comment
 
 begin_comment
@@ -5542,11 +5354,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVSXWD / PMOVSXWD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVSXWD / PMOVSXWD</c> instruction.
 end_comment
 
 begin_comment
@@ -5642,11 +5450,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVSXWQ / PMOVSXWQ</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVSXWQ / PMOVSXWQ</c> instruction.
 end_comment
 
 begin_comment
@@ -5738,11 +5542,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVSXDQ / PMOVSXDQ</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVSXDQ / PMOVSXDQ</c> instruction.
 end_comment
 
 begin_comment
@@ -5838,11 +5638,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVZXBW / PMOVZXBW</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVZXBW / PMOVZXBW</c> instruction.
 end_comment
 
 begin_comment
@@ -5946,11 +5742,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVZXBD / PMOVZXBD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVZXBD / PMOVZXBD</c> instruction.
 end_comment
 
 begin_comment
@@ -6046,11 +5838,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVZXBQ / PMOVZXBQ</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVZXBQ / PMOVZXBQ</c> instruction.
 end_comment
 
 begin_comment
@@ -6142,11 +5930,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVZXWD / PMOVZXWD</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVZXWD / PMOVZXWD</c> instruction.
 end_comment
 
 begin_comment
@@ -6242,11 +6026,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVZXWQ / PMOVZXWQ</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVZXWQ / PMOVZXWQ</c> instruction.
 end_comment
 
 begin_comment
@@ -6338,11 +6118,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPMOVZXDQ / PMOVZXDQ</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPMOVZXDQ / PMOVZXDQ</c> instruction.
 end_comment
 
 begin_comment
@@ -6438,11 +6214,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPACKUSDW / PACKUSDW</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPACKUSDW / PACKUSDW</c> instruction.
 end_comment
 
 begin_comment
@@ -6584,11 +6356,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VMPSADBW / MPSADBW</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VMPSADBW / MPSADBW</c> instruction.
 end_comment
 
 begin_comment
@@ -6718,7 +6486,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPHMINPOSUW / PHMINPOSUW</i></c>
+comment|/// This intrinsic corresponds to the<c> VPHMINPOSUW / PHMINPOSUW</c>
 end_comment
 
 begin_comment
@@ -6977,7 +6745,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPISTRM / PCMPISTRM</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPISTRM / PCMPISTRM</c>
 end_comment
 
 begin_comment
@@ -7200,7 +6968,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPISTRI / PCMPISTRI</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPISTRI / PCMPISTRI</c>
 end_comment
 
 begin_comment
@@ -7415,7 +7183,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPESTRM / PCMPESTRM</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPESTRM / PCMPESTRM</c>
 end_comment
 
 begin_comment
@@ -7658,7 +7426,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPESTRI / PCMPESTRI</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPESTRI / PCMPESTRI</c>
 end_comment
 
 begin_comment
@@ -7897,7 +7665,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPISTRI / PCMPISTRI</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPISTRI / PCMPISTRI</c>
 end_comment
 
 begin_comment
@@ -8096,7 +7864,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPISTRI / PCMPISTRI</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPISTRI / PCMPISTRI</c>
 end_comment
 
 begin_comment
@@ -8287,7 +8055,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPISTRI / PCMPISTRI</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPISTRI / PCMPISTRI</c>
 end_comment
 
 begin_comment
@@ -8482,7 +8250,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPISTRI / PCMPISTRI</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPISTRI / PCMPISTRI</c>
 end_comment
 
 begin_comment
@@ -8681,7 +8449,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPISTRI / PCMPISTRI</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPISTRI / PCMPISTRI</c>
 end_comment
 
 begin_comment
@@ -8880,7 +8648,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPESTRI / PCMPESTRI</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPESTRI / PCMPESTRI</c>
 end_comment
 
 begin_comment
@@ -9099,7 +8867,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPESTRI / PCMPESTRI</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPESTRI / PCMPESTRI</c>
 end_comment
 
 begin_comment
@@ -9310,7 +9078,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPESTRI / PCMPESTRI</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPESTRI / PCMPESTRI</c>
 end_comment
 
 begin_comment
@@ -9525,7 +9293,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPESTRI / PCMPESTRI</i></c>
+comment|/// This intrinsic corresponds to the<c> VPCMPESTRI / PCMPESTRI</c>
 end_comment
 
 begin_comment
@@ -9744,7 +9512,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPESTRI</i></c> instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPESTRI</c> instruction.
 end_comment
 
 begin_comment
@@ -9943,11 +9711,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> VPCMPGTQ / PCMPGTQ</i></c>
-end_comment
-
-begin_comment
-comment|/// instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPGTQ / PCMPGTQ</c> instruction.
 end_comment
 
 begin_comment
@@ -10032,7 +9796,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> CRC32B</i></c> instruction.
+comment|/// This intrinsic corresponds to the<c> CRC32B</c> instruction.
 end_comment
 
 begin_comment
@@ -10116,7 +9880,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> CRC32W</i></c> instruction.
+comment|/// This intrinsic corresponds to the<c> CRC32W</c> instruction.
 end_comment
 
 begin_comment
@@ -10200,7 +9964,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> CRC32L</i></c> instruction.
+comment|/// This intrinsic corresponds to the<c> CRC32L</c> instruction.
 end_comment
 
 begin_comment
@@ -10290,7 +10054,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c><i> CRC32Q</i></c> instruction.
+comment|/// This intrinsic corresponds to the<c> CRC32Q</c> instruction.
 end_comment
 
 begin_comment

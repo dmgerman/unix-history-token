@@ -408,6 +408,114 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target aarch64-linux-gnu -mcpu=cortex-a53 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-ARM64-MCPU %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARM64-MCPU: as{{(.exe)?}}" "-mcpu=cortex-a53"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-linux-gnu -march=armv8-a -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-ARM64-MARCH %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARM64-MARCH: as{{(.exe)?}}" "-march=armv8-a"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-linux-gnu -mcpu=cortex-a53 -march=armv8-a -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-ARM64-ALL %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARM64-ALL: as{{(.exe)?}}" "-march=armv8-a" "-mcpu=cortex-a53"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be-linux-gnu -mcpu=cortex-a53 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-ARM64-MCPU %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be-linux-gnu -march=armv8-a -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-ARM64-MARCH %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be-linux-gnu -mcpu=cortex-a53 -march=armv8-a -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-ARM64-ALL %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target ppc-linux -mcpu=invalid-cpu -### \
 end_comment
 

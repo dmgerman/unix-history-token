@@ -656,7 +656,7 @@ literal|1
 return|;
 block|}
 empty_stmt|;
-comment|// expected-warning {{'availability' attribute ignored}}
+comment|// expected-warning {{'availability' attribute only applies to named declarations}}
 block|}
 end_function
 

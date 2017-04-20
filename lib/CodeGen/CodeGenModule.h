@@ -4535,41 +4535,43 @@ comment|/// contribute to the function attributes and calling convention.
 end_comment
 
 begin_comment
-comment|/// \param PAL [out] - On return, the attribute list to use.
+comment|/// \param Attrs [out] - On return, the attribute list to use.
 end_comment
 
 begin_comment
 comment|/// \param CallingConv [out] - On return, the LLVM calling convention to use.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|ConstructAttributeList
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 specifier|const
 name|CGFunctionInfo
-modifier|&
+operator|&
 name|Info
-parameter_list|,
+argument_list|,
 name|CGCalleeInfo
 name|CalleeInfo
-parameter_list|,
-name|AttributeListType
-modifier|&
-name|PAL
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|AttributeList
+operator|&
+name|Attrs
+argument_list|,
 name|unsigned
-modifier|&
+operator|&
 name|CallingConv
-parameter_list|,
+argument_list|,
 name|bool
 name|AttrOnCallSite
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Adds attributes to F according to our CodeGenOptions and LangOptions, as

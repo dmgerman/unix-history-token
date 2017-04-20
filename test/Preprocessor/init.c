@@ -9484,6 +9484,18 @@ comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-none-eabi< /dev/nul
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-none-eabihf< /dev/null | FileCheck -match-full-lines -check-prefix ARM-NONE-EABI %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=aarch64-none-eabi< /dev/null | FileCheck -match-full-lines -check-prefix ARM-NONE-EABI %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=aarch64-none-eabihf< /dev/null | FileCheck -match-full-lines -check-prefix ARM-NONE-EABI %s
+end_comment
+
+begin_comment
 comment|// ARM-NONE-EABI: #define __ELF__ 1
 end_comment
 
