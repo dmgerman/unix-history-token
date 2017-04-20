@@ -1179,6 +1179,15 @@ literal|3
 operator|)
 block|,
 comment|/* iq is an eth rxq with LRO enabled */
+name|IQ_ADJ_CREDIT
+init|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+block|,
+comment|/* hw is off by 1 credit for this iq */
 comment|/* iq state */
 name|IQS_DISABLED
 init|=

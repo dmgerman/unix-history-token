@@ -148,6 +148,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|group_format
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|stat
 name|stb1
@@ -197,6 +206,8 @@ block|,
 name|OPT_HORIZON_LINES
 block|,
 name|OPT_SPEED_LARGE_FILES
+block|,
+name|OPT_CHANGED_GROUP_FORMAT
 block|, }
 enum|;
 end_enum
@@ -527,6 +538,16 @@ block|,
 name|NULL
 block|,
 name|OPT_TSIZE
+block|}
+block|,
+block|{
+literal|"changed-group-format"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPT_CHANGED_GROUP_FORMAT
 block|}
 block|,
 block|{
@@ -1141,6 +1162,18 @@ name|push_excludes
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OPT_CHANGED_GROUP_FORMAT
+case|:
+name|diff_format
+operator|=
+name|D_GFORMAT
+expr_stmt|;
+name|group_format
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case

@@ -440,12 +440,6 @@ literal|0
 expr_stmt|;
 name|lc
 operator|->
-name|lro_cnt
-operator|=
-literal|0
-expr_stmt|;
-name|lc
-operator|->
 name|lro_mbuf_count
 operator|=
 literal|0
@@ -611,6 +605,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|lc
+operator|->
+name|lro_hash
+argument_list|,
+name|M_LRO
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|lc
@@ -741,15 +744,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* free hash table */
-if|if
-condition|(
-name|lc
-operator|->
-name|lro_hash
-operator|!=
-name|NULL
-condition|)
-block|{
 name|free
 argument_list|(
 name|lc
@@ -765,7 +759,6 @@ name|lro_hash
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|lc
 operator|->
 name|lro_hashsz

@@ -640,6 +640,9 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+name|uint64_t
+name|val
+decl_stmt|;
 name|int
 name|ifcount
 decl_stmt|;
@@ -1027,7 +1030,7 @@ name|stat
 parameter_list|,
 name|cnt
 parameter_list|)
-value|do {					\ 	len = sizeof((stat));						\ 	if (sysctlbyname("vm.stats." #cnt ,&(stat),&len, 0, 0)< 0) { \ 		syslog(LOG_ERR, "sysctl(vm.stats." #cnt "): %m"); \ 		exit(1);						\ 	}								\ } while (0)
+value|do {					\ 	len = sizeof(uint64_t);						\ 	if (sysctlbyname("vm.stats." #cnt ,&val,&len, NULL, 0)< 0) {	\ 		syslog(LOG_ERR, "sysctl(vm.stats." #cnt "): %m");	\ 		exit(1);						\ 	}								\ 	stat = val;							\ } while (0)
 name|FETCH_CNT
 argument_list|(
 name|stats_all

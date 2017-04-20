@@ -4120,6 +4120,14 @@ operator|=
 name|IPPROTO_FRAGMENT
 expr_stmt|;
 block|}
+comment|/* The MTU must be a multiple of 8 bytes, or we risk doing the 	 * fragmentation wrong. */
+name|maxlen
+operator|=
+name|maxlen
+operator|&
+operator|~
+literal|7
+expr_stmt|;
 comment|/* 	 * Maxlen may be less than 8 if there was only a single 	 * fragment.  As it was fragmented before, add a fragment 	 * header also for a single fragment.  If total or maxlen 	 * is less than 8, ip6_fragment() will return EMSGSIZE and 	 * we drop the packet. 	 */
 name|error
 operator|=

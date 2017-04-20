@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -823,10 +829,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_intr
 argument_list|)
 expr_stmt|;

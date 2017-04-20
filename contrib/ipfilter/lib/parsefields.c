@@ -5,6 +5,12 @@ directive|include
 file|"ipf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -188,6 +194,28 @@ name|fields
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fields
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"memory allocation error at %d in %s in %s"
+argument_list|,
+name|__LINE__
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|__FILE__
+argument_list|)
+expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

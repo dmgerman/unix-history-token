@@ -69,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|__OFFSETOF_MONITORBUF
-value|0x180
+value|0x80
 end_define
 
 begin_function

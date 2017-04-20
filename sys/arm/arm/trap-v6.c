@@ -77,6 +77,12 @@ directive|include
 file|<sys/ktr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vmmeter.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -826,10 +832,8 @@ name|onfault
 decl_stmt|;
 endif|#
 directive|endif
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_trap
 argument_list|)
 expr_stmt|;

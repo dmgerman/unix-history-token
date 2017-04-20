@@ -611,6 +611,16 @@ name|struct
 name|intr_config_hook
 name|enc_boot_hold_ch
 decl_stmt|;
+define|#
+directive|define
+name|ENC_ANNOUNCE_SZ
+value|400
+name|char
+name|announce_buf
+index|[
+name|ENC_ANNOUNCE_SZ
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -38,6 +38,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcpu
+name|__pcpu
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|EARLY_COUNTER
+value|&__pcpu[0].pc_early_dummy_counter
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -234,17 +250,6 @@ name|i
 parameter_list|)
 value|counter_u64_add(c, i)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pcpu
-name|__pcpu
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static

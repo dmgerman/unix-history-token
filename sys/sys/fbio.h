@@ -1366,6 +1366,10 @@ define|#
 directive|define
 name|V_INFO_NONVGA
 value|(1<< 4)
+define|#
+directive|define
+name|V_INFO_CWIDTH9
+value|(1<< 5)
 name|int
 name|vi_width
 decl_stmt|;
@@ -1604,6 +1608,10 @@ define|#
 directive|define
 name|V_ADP_DAC8
 value|(1<< 20)
+define|#
+directive|define
+name|V_ADP_CWIDTH9
+value|(1<< 21)
 name|vm_offset_t
 name|va_io_base
 decl_stmt|;

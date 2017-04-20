@@ -15,22 +15,10 @@ directive|define
 name|_LINUX_SRCU_H_
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|srcu_epoch_record
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|srcu_struct
-block|{
-name|struct
-name|srcu_epoch_record
-modifier|*
-name|ss_epoch_record
-decl_stmt|;
-block|}
+block|{ }
 struct|;
 end_struct
 

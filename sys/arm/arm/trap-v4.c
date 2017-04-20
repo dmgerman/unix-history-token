@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -617,10 +623,8 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_trap
 argument_list|)
 expr_stmt|;
@@ -2060,10 +2064,8 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_trap
 argument_list|)
 expr_stmt|;

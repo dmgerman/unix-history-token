@@ -1911,8 +1911,7 @@ name|RTM_GET
 argument_list|,
 name|dst
 argument_list|,
-operator|&
-name|sdl_m
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2203,10 +2202,6 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
-name|struct
-name|sockaddr_dl
-name|sdl_m
-decl_stmt|;
 name|dst
 operator|=
 name|getaddr
@@ -2231,33 +2226,6 @@ operator|&=
 operator|~
 name|RTF_ANNOUNCE
 expr_stmt|;
-comment|/* 	 * setup the data structure to notify the kernel 	 * it is the ARP entry the RTM_GET is interested 	 * in 	 */
-name|bzero
-argument_list|(
-operator|&
-name|sdl_m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sdl_m
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sdl_m
-operator|.
-name|sdl_len
-operator|=
-sizeof|sizeof
-argument_list|(
-name|sdl_m
-argument_list|)
-expr_stmt|;
-name|sdl_m
-operator|.
-name|sdl_family
-operator|=
-name|AF_LINK
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -2273,8 +2241,7 @@ name|RTM_GET
 argument_list|,
 name|dst
 argument_list|,
-operator|&
-name|sdl_m
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2370,7 +2337,7 @@ name|s_addr
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Regualar entry delete failed, now check if there 		 * is a proxy-arp entry to remove. 		 */
+comment|/* 		 * Regular entry delete failed, now check if there 		 * is a proxy-arp entry to remove. 		 */
 if|if
 condition|(
 name|flags
@@ -3869,6 +3836,12 @@ operator|>
 literal|0
 operator|&&
 operator|(
+name|rtm
+operator|->
+name|rtm_type
+operator|!=
+name|cmd
+operator|||
 name|rtm
 operator|->
 name|rtm_seq

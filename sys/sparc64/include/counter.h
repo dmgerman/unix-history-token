@@ -38,6 +38,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcpu
+name|dummy_pcpu
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|EARLY_COUNTER
+value|&dummy_pcpu[0].pc_early_dummy_counter
+end_define
+
 begin_define
 define|#
 directive|define

@@ -224,6 +224,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -496,6 +502,16 @@ index|[
 name|PCPU_PAGES
 operator|*
 name|PAGE_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pcpu
+name|dummy_pcpu
+index|[
+name|MAXCPU
 index|]
 decl_stmt|;
 end_decl_stmt

@@ -1779,6 +1779,7 @@ operator|<<
 name|i
 operator|)
 condition|)
+block|{
 name|addr
 index|[
 name|i
@@ -1806,6 +1807,7 @@ name|sa
 argument_list|)
 operator|)
 expr_stmt|;
+block|}
 block|}
 name|protrusion
 operator|=

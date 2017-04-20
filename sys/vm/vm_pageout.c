@@ -2696,10 +2696,8 @@ name|p
 argument_list|)
 condition|)
 continue|continue;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_pdpages
 argument_list|)
 expr_stmt|;
@@ -4048,10 +4046,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_reactivated
 argument_list|)
 expr_stmt|;
@@ -4145,10 +4141,8 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_dfree
 argument_list|)
 expr_stmt|;
@@ -4681,7 +4675,7 @@ literal|0
 expr_stmt|;
 name|wakeups
 operator|=
-name|VM_METER_PCPU_CNT
+name|VM_CNT_FETCH
 argument_list|(
 name|v_pdwakeups
 argument_list|)
@@ -5224,10 +5218,8 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_pdpages
 argument_list|)
 expr_stmt|;
@@ -5541,10 +5533,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_reactivated
 argument_list|)
 expr_stmt|;
@@ -5665,10 +5655,8 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_dfree
 argument_list|)
 expr_stmt|;
@@ -5815,10 +5803,8 @@ name|vm_laundry_request
 operator|=
 name|VM_LAUNDRY_SHORTFALL
 expr_stmt|;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_pdshortfalls
 argument_list|)
 expr_stmt|;
@@ -6133,10 +6119,8 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * The count for page daemon pages is updated after checking 		 * the page for eligibility. 		 */
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_pdpages
 argument_list|)
 expr_stmt|;
@@ -7297,10 +7281,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_pdwakeups
 argument_list|)
 expr_stmt|;

@@ -81,7 +81,7 @@ value|\ 	struct	mtx pc_cmap_lock;					\ 	void	*pc_cmap_pte1;						\ 	void	*pc_cm
 comment|/* KVA for temporary mappings */
 value|\ 	uint32_t pc_smp_tlb_done;
 comment|/* TLB op acknowledgement */
-value|\ 	char	__pad[189]
+value|\ 	char	__pad[445]
 end_define
 
 begin_ifdef

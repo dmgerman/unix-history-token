@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/types.h>
+file|<linux/list.h>
 end_include
 
 begin_include
@@ -205,6 +205,15 @@ decl_stmt|;
 name|struct
 name|completion
 name|exited
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|task_struct
+argument_list|)
+name|rcu_entry
+expr_stmt|;
+name|int
+name|rcu_recurse
 decl_stmt|;
 block|}
 struct|;

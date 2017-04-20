@@ -651,10 +651,8 @@ decl_stmt|;
 name|ksiginfo_t
 name|ksi
 decl_stmt|;
-name|PCPU_INC
+name|VM_CNT_INC
 argument_list|(
-name|cnt
-operator|.
 name|v_trap
 argument_list|)
 expr_stmt|;

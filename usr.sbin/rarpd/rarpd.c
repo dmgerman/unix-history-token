@@ -3662,6 +3662,12 @@ operator|&&
 operator|(
 name|rt
 operator|->
+name|rtm_type
+operator|!=
+name|RTM_GET
+operator|||
+name|rt
+operator|->
 name|rtm_seq
 operator|!=
 name|seq
@@ -3977,6 +3983,12 @@ operator|>
 literal|0
 operator|&&
 operator|(
+name|rt
+operator|->
+name|rtm_type
+operator|!=
+name|RTM_ADD
+operator|||
 name|rt
 operator|->
 name|rtm_seq

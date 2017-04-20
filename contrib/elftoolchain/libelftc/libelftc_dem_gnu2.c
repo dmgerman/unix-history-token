@@ -72,7 +72,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelftc_dem_gnu2.c 3447 2016-05-03 13:32:23Z emaste $"
+literal|"$Id: libelftc_dem_gnu2.c 3513 2016-12-29 07:04:22Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -171,6 +171,18 @@ parameter_list|,
 name|y
 parameter_list|)
 value|(64 * x + y)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VEC_PUSH_STR
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+value|vector_str_push((d), (s), strlen((s)))
 end_define
 
 begin_define
@@ -541,7 +553,7 @@ name|clean
 goto|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -549,8 +561,6 @@ operator|.
 name|vec
 argument_list|,
 literal|"(void)"
-argument_list|,
-literal|6
 argument_list|)
 operator|==
 name|false
@@ -613,7 +623,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -621,8 +631,6 @@ operator|.
 name|vec
 argument_list|,
 literal|"(void)"
-argument_list|,
-literal|6
 argument_list|)
 operator|==
 name|false
@@ -642,7 +650,7 @@ block|}
 comment|/* start argument types */
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -650,8 +658,6 @@ operator|.
 name|vec
 argument_list|,
 literal|"("
-argument_list|,
-literal|1
 argument_list|)
 operator|==
 name|false
@@ -777,7 +783,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -785,8 +791,6 @@ operator|.
 name|vec
 argument_list|,
 literal|"*"
-argument_list|,
-literal|1
 argument_list|)
 operator|==
 name|false
@@ -812,7 +816,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -820,8 +824,6 @@ operator|.
 name|vec
 argument_list|,
 literal|"&"
-argument_list|,
-literal|1
 argument_list|)
 operator|==
 name|false
@@ -847,7 +849,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -855,8 +857,6 @@ operator|.
 name|vec
 argument_list|,
 literal|" const"
-argument_list|,
-literal|6
 argument_list|)
 operator|==
 name|false
@@ -990,7 +990,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -998,8 +998,6 @@ operator|.
 name|vec
 argument_list|,
 literal|", "
-argument_list|,
-literal|2
 argument_list|)
 operator|==
 name|false
@@ -1021,7 +1019,7 @@ block|}
 comment|/* end argument types */
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -1029,8 +1027,6 @@ operator|.
 name|vec
 argument_list|,
 literal|")"
-argument_list|,
-literal|1
 argument_list|)
 operator|==
 name|false
@@ -1048,7 +1044,7 @@ name|cnst_fn
 operator|==
 name|true
 operator|&&
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -1056,8 +1052,6 @@ operator|.
 name|vec
 argument_list|,
 literal|" const"
-argument_list|,
-literal|6
 argument_list|)
 operator|==
 name|false
@@ -1951,7 +1945,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 name|v
 argument_list|,
@@ -1965,20 +1959,6 @@ name|size
 operator|-
 literal|2
 index|]
-argument_list|,
-name|strlen
-argument_list|(
-name|v
-operator|->
-name|container
-index|[
-name|v
-operator|->
-name|size
-operator|-
-literal|2
-index|]
-argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -2495,7 +2475,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -2503,8 +2483,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"::"
-argument_list|,
-literal|2
 argument_list|)
 operator|==
 name|false
@@ -2723,7 +2701,7 @@ name|ENCODE_FUNC
 expr_stmt|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -2731,8 +2709,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"__"
-argument_list|,
-literal|2
 argument_list|)
 operator|==
 name|false
@@ -2939,7 +2915,7 @@ name|clean
 goto|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -2947,8 +2923,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"::"
-argument_list|,
-literal|2
 argument_list|)
 operator|==
 name|false
@@ -3098,7 +3072,7 @@ name|clean
 goto|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -3106,8 +3080,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"::"
-argument_list|,
-literal|2
 argument_list|)
 operator|==
 name|false
@@ -3366,7 +3338,7 @@ return|;
 block|}
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -3374,8 +3346,6 @@ operator|->
 name|vec
 argument_list|,
 literal|" virtual table"
-argument_list|,
-literal|14
 argument_list|)
 operator|)
 return|;
@@ -3526,7 +3496,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|fptr
@@ -3534,8 +3504,6 @@ operator|.
 name|vec
 argument_list|,
 literal|"*"
-argument_list|,
-literal|1
 argument_list|)
 operator|==
 name|false
@@ -3571,7 +3539,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|fptr
@@ -3579,8 +3547,6 @@ operator|.
 name|vec
 argument_list|,
 literal|"&"
-argument_list|,
-literal|1
 argument_list|)
 operator|==
 name|false
@@ -3616,7 +3582,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|fptr
@@ -3624,8 +3590,6 @@ operator|.
 name|vec
 argument_list|,
 literal|" const"
-argument_list|,
-literal|6
 argument_list|)
 operator|==
 name|false
@@ -3662,7 +3626,7 @@ condition|)
 break|break;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|fptr
@@ -3670,8 +3634,6 @@ operator|.
 name|vec
 argument_list|,
 literal|", "
-argument_list|,
-literal|2
 argument_list|)
 operator|==
 name|false
@@ -3869,7 +3831,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -3877,8 +3839,6 @@ operator|->
 name|vec
 argument_list|,
 literal|" (*)("
-argument_list|,
-literal|5
 argument_list|)
 operator|==
 name|false
@@ -3930,7 +3890,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -3938,8 +3898,6 @@ operator|->
 name|vec
 argument_list|,
 literal|")"
-argument_list|,
-literal|1
 argument_list|)
 operator|)
 return|;
@@ -4113,7 +4071,7 @@ name|clean
 goto|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4121,8 +4079,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"::*"
-argument_list|,
-literal|3
 argument_list|)
 operator|==
 name|false
@@ -4226,7 +4182,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4234,8 +4190,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator*"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4255,7 +4209,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4263,8 +4217,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator/"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4284,7 +4236,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4292,8 +4244,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator%"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4313,7 +4263,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4321,8 +4271,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator+"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4342,7 +4290,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4350,8 +4298,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator-"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4371,7 +4317,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4379,8 +4325,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator<<"
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4400,7 +4344,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4408,8 +4352,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator>>"
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4429,7 +4371,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4437,8 +4379,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator=="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4458,7 +4398,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4466,8 +4406,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator!="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4487,7 +4425,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4495,8 +4433,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator<"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4516,7 +4452,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4524,8 +4460,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator>"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4545,7 +4479,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4553,8 +4487,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator<="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4574,7 +4506,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4582,8 +4514,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator>="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4618,7 +4548,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4626,8 +4556,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator/="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4635,7 +4563,7 @@ block|}
 else|else
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4643,8 +4571,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator&"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4664,7 +4590,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4672,8 +4598,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator|"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4693,7 +4617,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4701,8 +4625,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator^"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4737,7 +4659,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4745,8 +4667,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator&="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4754,7 +4674,7 @@ block|}
 else|else
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4762,8 +4682,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator&&"
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4783,7 +4701,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4791,8 +4709,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator||"
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4812,7 +4728,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4820,8 +4736,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator!"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4841,7 +4755,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4849,8 +4763,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator~"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4870,7 +4782,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4878,8 +4790,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator++"
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4899,7 +4809,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4907,8 +4817,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator--"
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -4928,7 +4836,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4936,8 +4844,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator="
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -4957,7 +4863,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -4965,8 +4871,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator->"
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -5005,7 +4909,7 @@ literal|3
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5013,8 +4917,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator+="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -5049,7 +4951,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5057,8 +4959,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator-="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -5081,7 +4981,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5089,8 +4989,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator*="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -5113,7 +5011,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5121,8 +5019,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator%="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -5167,7 +5063,7 @@ literal|3
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5175,8 +5071,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator<<="
-argument_list|,
-literal|11
 argument_list|)
 operator|)
 return|;
@@ -5215,7 +5109,7 @@ literal|3
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5223,8 +5117,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator>>="
-argument_list|,
-literal|11
 argument_list|)
 operator|)
 return|;
@@ -5263,7 +5155,7 @@ literal|3
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5271,8 +5163,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator|="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -5311,7 +5201,7 @@ literal|3
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5319,8 +5209,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator^="
-argument_list|,
-literal|10
 argument_list|)
 operator|)
 return|;
@@ -5340,7 +5228,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5348,8 +5236,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator,"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;
@@ -5369,7 +5255,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5377,8 +5263,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator->*"
-argument_list|,
-literal|11
 argument_list|)
 operator|)
 return|;
@@ -5398,7 +5282,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5406,8 +5290,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"()"
-argument_list|,
-literal|2
 argument_list|)
 operator|)
 return|;
@@ -5427,7 +5309,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5435,8 +5317,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"[]"
-argument_list|,
-literal|2
 argument_list|)
 operator|)
 return|;
@@ -5456,7 +5336,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5464,8 +5344,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator new()"
-argument_list|,
-literal|14
 argument_list|)
 operator|)
 return|;
@@ -5485,7 +5363,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5493,8 +5371,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"operator delete()"
-argument_list|,
-literal|17
 argument_list|)
 operator|)
 return|;
@@ -5563,7 +5439,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5571,8 +5447,6 @@ operator|->
 name|vec
 argument_list|,
 literal|" type_info function"
-argument_list|,
-literal|19
 argument_list|)
 operator|)
 return|;
@@ -5612,7 +5486,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5620,8 +5494,6 @@ operator|->
 name|vec
 argument_list|,
 literal|" type_info node"
-argument_list|,
-literal|15
 argument_list|)
 operator|)
 return|;
@@ -5927,7 +5799,7 @@ name|clean
 goto|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5935,8 +5807,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"::operator "
-argument_list|,
-literal|11
 argument_list|)
 operator|==
 name|false
@@ -5965,7 +5835,7 @@ name|clean
 goto|;
 name|rtn
 operator|=
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -5973,8 +5843,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"()"
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 name|clean
@@ -6122,7 +5990,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -6130,8 +5998,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"::"
-argument_list|,
-literal|2
 argument_list|)
 operator|==
 name|false
@@ -6263,7 +6129,7 @@ name|str
 expr_stmt|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -6280,20 +6146,6 @@ name|idx
 operator|-
 literal|1
 index|]
-argument_list|,
-name|strlen
-argument_list|(
-name|d
-operator|->
-name|arg
-operator|.
-name|container
-index|[
-name|idx
-operator|-
-literal|1
-index|]
-argument_list|)
 argument_list|)
 operator|==
 name|false
@@ -6306,7 +6158,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -6323,20 +6175,6 @@ name|idx
 operator|-
 literal|1
 index|]
-argument_list|,
-name|strlen
-argument_list|(
-name|d
-operator|->
-name|arg
-operator|.
-name|container
-index|[
-name|idx
-operator|-
-literal|1
-index|]
-argument_list|)
 argument_list|)
 operator|==
 name|false
@@ -6522,7 +6360,7 @@ control|)
 block|{
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -6539,20 +6377,6 @@ name|idx
 operator|-
 literal|1
 index|]
-argument_list|,
-name|strlen
-argument_list|(
-name|d
-operator|->
-name|arg
-operator|.
-name|container
-index|[
-name|idx
-operator|-
-literal|1
-index|]
-argument_list|)
 argument_list|)
 operator|==
 name|false
@@ -6565,7 +6389,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -6582,20 +6406,6 @@ name|idx
 operator|-
 literal|1
 index|]
-argument_list|,
-name|strlen
-argument_list|(
-name|d
-operator|->
-name|arg
-operator|.
-name|container
-index|[
-name|idx
-operator|-
-literal|1
-index|]
-argument_list|)
 argument_list|)
 operator|==
 name|false
@@ -6614,7 +6424,7 @@ name|repeat
 operator|-
 literal|1
 operator|&&
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -6622,8 +6432,6 @@ operator|->
 name|vec
 argument_list|,
 literal|", "
-argument_list|,
-literal|2
 argument_list|)
 operator|==
 name|false
@@ -6774,7 +6582,7 @@ name|p
 expr_stmt|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -6782,8 +6590,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"unsigned "
-argument_list|,
-literal|9
 argument_list|)
 operator|==
 name|false
@@ -6821,7 +6627,7 @@ else|else
 block|{
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -6829,8 +6635,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"const "
-argument_list|,
-literal|6
 argument_list|)
 operator|==
 name|false
@@ -6852,7 +6656,7 @@ name|p
 expr_stmt|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -6860,8 +6664,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"volatile "
-argument_list|,
-literal|9
 argument_list|)
 operator|==
 name|false
@@ -6882,7 +6684,7 @@ name|p
 expr_stmt|;
 if|if
 condition|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -6890,8 +6692,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"signed "
-argument_list|,
-literal|7
 argument_list|)
 operator|==
 name|false
@@ -7056,7 +6856,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7064,8 +6864,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"void"
-argument_list|,
-literal|4
 argument_list|)
 operator|)
 return|;
@@ -7079,7 +6877,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7087,8 +6885,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"bool"
-argument_list|,
-literal|4
 argument_list|)
 operator|)
 return|;
@@ -7102,7 +6898,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7110,8 +6906,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"char"
-argument_list|,
-literal|4
 argument_list|)
 operator|)
 return|;
@@ -7125,7 +6919,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7133,8 +6927,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"short"
-argument_list|,
-literal|5
 argument_list|)
 operator|)
 return|;
@@ -7148,7 +6940,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7156,8 +6948,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"int"
-argument_list|,
-literal|3
 argument_list|)
 operator|)
 return|;
@@ -7171,7 +6961,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7179,8 +6969,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"long"
-argument_list|,
-literal|4
 argument_list|)
 operator|)
 return|;
@@ -7194,7 +6982,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7202,8 +6990,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"float"
-argument_list|,
-literal|5
 argument_list|)
 operator|)
 return|;
@@ -7217,7 +7003,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7225,8 +7011,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"double"
-argument_list|,
-literal|6
 argument_list|)
 operator|)
 return|;
@@ -7240,7 +7024,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7248,8 +7032,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"long double"
-argument_list|,
-literal|11
 argument_list|)
 operator|)
 return|;
@@ -7263,7 +7045,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7271,8 +7053,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"..."
-argument_list|,
-literal|3
 argument_list|)
 operator|)
 return|;
@@ -7286,7 +7066,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7294,8 +7074,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"wchar_t"
-argument_list|,
-literal|7
 argument_list|)
 operator|)
 return|;
@@ -7309,7 +7087,7 @@ name|p
 expr_stmt|;
 return|return
 operator|(
-name|vector_str_push
+name|VEC_PUSH_STR
 argument_list|(
 operator|&
 name|d
@@ -7317,8 +7095,6 @@ operator|->
 name|vec
 argument_list|,
 literal|"long long"
-argument_list|,
-literal|9
 argument_list|)
 operator|)
 return|;

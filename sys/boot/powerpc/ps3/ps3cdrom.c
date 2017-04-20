@@ -308,6 +308,10 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|flag
+operator|&=
+name|F_MASK
+expr_stmt|;
 if|if
 condition|(
 name|flag

@@ -159,7 +159,7 @@ begin_define
 define|#
 directive|define
 name|SC_CURSOR_CHAR
-value|(0x07)
+value|7
 end_define
 
 begin_endif
@@ -177,7 +177,7 @@ begin_define
 define|#
 directive|define
 name|SC_MOUSE_CHAR
-value|(0xd0)
+value|8
 end_define
 
 begin_endif

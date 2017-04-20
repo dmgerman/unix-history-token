@@ -677,6 +677,12 @@ do|while
 condition|(
 name|rp
 operator|->
+name|rtm_type
+operator|!=
+name|RTM_GET
+operator|||
+name|rp
+operator|->
 name|rtm_seq
 operator|!=
 name|seq

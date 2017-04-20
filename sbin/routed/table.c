@@ -5122,6 +5122,29 @@ operator|.
 name|rtm_pid
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Only messages that use the struct rt_msghdr format are 		 * allowed beyond this point. 		 */
+if|if
+condition|(
+name|m
+operator|.
+name|r
+operator|.
+name|rtm
+operator|.
+name|rtm_type
+operator|>
+name|RTM_RESOLVE
+condition|)
+block|{
+name|trace_act
+argument_list|(
+literal|"ignore %s"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|rt_xaddrs
 argument_list|(
 operator|&

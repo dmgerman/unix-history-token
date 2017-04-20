@@ -162,6 +162,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_object.h>
 end_include
 
@@ -3764,10 +3770,10 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* 	 * Add one table for end of kernel map, one for stacks, msgbuf and 	 * L1 and L2 tables map and one for vectors map. 	 */
+comment|/* 	 * Add one table for end of kernel map, one for stacks, msgbuf and 	 * L1 and L2 tables map,  one for vectors map and two for 	 * l2 structures from pmap_bootstrap. 	 */
 name|l2size
 operator|+=
-literal|3
+literal|5
 expr_stmt|;
 comment|/* Make it divisible by 4 */
 name|l2size

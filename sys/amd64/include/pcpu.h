@@ -71,7 +71,7 @@ value|\ 	u_int	pc_vcpu_id;
 comment|/* Xen vCPU ID */
 value|\ 	uint32_t pc_pcid_next;						\ 	uint32_t pc_pcid_gen;						\ 	uint32_t pc_smp_tlb_done;
 comment|/* TLB op acknowledgement */
-value|\ 	char	__pad[145]
+value|\ 	char	__pad[384]
 end_define
 
 begin_comment

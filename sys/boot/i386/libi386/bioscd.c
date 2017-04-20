@@ -1129,7 +1129,11 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|rw
+operator|&
+name|F_MASK
+operator|)
 operator|!=
 name|F_READ
 condition|)

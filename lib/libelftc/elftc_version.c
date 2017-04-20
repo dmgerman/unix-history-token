@@ -25,7 +25,7 @@ name|void
 parameter_list|)
 block|{
 return|return
-literal|"elftoolchain r3490M"
+literal|"elftoolchain r3520M"
 return|;
 block|}
 end_function

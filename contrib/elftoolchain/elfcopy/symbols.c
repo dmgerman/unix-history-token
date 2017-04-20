@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: symbols.c 3446 2016-05-03 01:31:17Z emaste $"
+literal|"$Id: symbols.c 3520 2017-04-17 01:47:52Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3464,6 +3464,17 @@ operator|=
 name|ecp
 operator|->
 name|strtab
+expr_stmt|;
+name|assert
+argument_list|(
+name|sy
+operator|!=
+name|NULL
+operator|&&
+name|st
+operator|!=
+name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Set section index map for .symtab and .strtab. We need to set 	 * these map because otherwise symbols which refer to .symtab and 	 * .strtab will be removed by symbol filtering unconditionally. 	 * And we have to figure out scn index this way (instead of calling 	 * elf_ndxscn) because we can not create Elf_Scn before we're certain 	 * that .symtab and .strtab will exist in the output object. 	 */
 name|maxndx

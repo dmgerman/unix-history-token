@@ -4295,6 +4295,12 @@ operator|&&
 operator|(
 name|rtm
 operator|->
+name|rtm_type
+operator|!=
+name|cmd
+operator|||
+name|rtm
+operator|->
 name|rtm_seq
 operator|!=
 name|seq

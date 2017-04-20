@@ -157,6 +157,7 @@ name|pt_map
 modifier|*
 name|map
 decl_stmt|;
+name|unsigned
 name|int
 name|map_len
 decl_stmt|;

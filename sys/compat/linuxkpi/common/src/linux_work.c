@@ -128,6 +128,15 @@ name|system_power_efficient_wq
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|linux_default_wq_cpus
+init|=
+literal|4
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -1999,6 +2008,17 @@ name|workqueue_struct
 modifier|*
 name|wq
 decl_stmt|;
+comment|/* 	 * If zero CPUs are specified use the default number of CPUs: 	 */
+if|if
+condition|(
+name|cpus
+operator|==
+literal|0
+condition|)
+name|cpus
+operator|=
+name|linux_default_wq_cpus
+expr_stmt|;
 name|wq
 operator|=
 name|kmalloc
@@ -2240,6 +2260,11 @@ condition|)
 name|max_wq_cpus
 operator|=
 literal|4
+expr_stmt|;
+comment|/* set default number of CPUs */
+name|linux_default_wq_cpus
+operator|=
+name|max_wq_cpus
 expr_stmt|;
 name|linux_system_short_wq
 operator|=

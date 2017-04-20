@@ -27,7 +27,95 @@ value|20
 end_define
 
 begin_comment
-comment|/*  * System wide statistics counters.  * Locking:  *      a - locked by atomic operations  *      c - constant after initialization  *      f - locked by vm_page_queue_free_mtx  *      p - locked by being in the PCPU and atomicity respect to interrupts  *      q - changes are synchronized by the corresponding vm_pagequeue lock  */
+comment|/* Systemwide totals computed every five seconds. */
+end_comment
+
+begin_struct
+struct|struct
+name|vmtotal
+block|{
+name|int16_t
+name|t_rq
+decl_stmt|;
+comment|/* length of the run queue */
+name|int16_t
+name|t_dw
+decl_stmt|;
+comment|/* jobs in ``disk wait'' (neg priority) */
+name|int16_t
+name|t_pw
+decl_stmt|;
+comment|/* jobs in page wait */
+name|int16_t
+name|t_sl
+decl_stmt|;
+comment|/* jobs sleeping in core */
+name|int16_t
+name|t_sw
+decl_stmt|;
+comment|/* swapped out runnable/short block jobs */
+name|int32_t
+name|t_vm
+decl_stmt|;
+comment|/* total virtual memory */
+name|int32_t
+name|t_avm
+decl_stmt|;
+comment|/* active virtual memory */
+name|int32_t
+name|t_rm
+decl_stmt|;
+comment|/* total real memory in use */
+name|int32_t
+name|t_arm
+decl_stmt|;
+comment|/* active real memory */
+name|int32_t
+name|t_vmshr
+decl_stmt|;
+comment|/* shared virtual memory */
+name|int32_t
+name|t_avmshr
+decl_stmt|;
+comment|/* active shared virtual memory */
+name|int32_t
+name|t_rmshr
+decl_stmt|;
+comment|/* shared real memory */
+name|int32_t
+name|t_armshr
+decl_stmt|;
+comment|/* active shared real memory */
+name|int32_t
+name|t_free
+decl_stmt|;
+comment|/* free memory pages */
+block|}
+struct|;
+end_struct
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_VMMETER
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
+begin_comment
+comment|/*  * System wide statistics counters.  * Locking:  *      a - locked by atomic operations  *      c - constant after initialization  *      f - locked by vm_page_queue_free_mtx  *      p - uses counter(9)  *      q - changes are synchronized by the corresponding vm_pagequeue lock  */
 end_comment
 
 begin_struct
@@ -35,115 +123,153 @@ struct|struct
 name|vmmeter
 block|{
 comment|/* 	 * General system activity. 	 */
-name|u_int
+name|counter_u64_t
 name|v_swtch
 decl_stmt|;
 comment|/* (p) context switches */
-name|u_int
+name|counter_u64_t
 name|v_trap
 decl_stmt|;
 comment|/* (p) calls to trap */
-name|u_int
+name|counter_u64_t
 name|v_syscall
 decl_stmt|;
 comment|/* (p) calls to syscall() */
-name|u_int
+name|counter_u64_t
 name|v_intr
 decl_stmt|;
 comment|/* (p) device interrupts */
-name|u_int
+name|counter_u64_t
 name|v_soft
 decl_stmt|;
 comment|/* (p) software interrupts */
 comment|/* 	 * Virtual memory activity. 	 */
-name|u_int
+name|counter_u64_t
 name|v_vm_faults
 decl_stmt|;
 comment|/* (p) address memory faults */
-name|u_int
+name|counter_u64_t
 name|v_io_faults
 decl_stmt|;
 comment|/* (p) page faults requiring I/O */
-name|u_int
+name|counter_u64_t
 name|v_cow_faults
 decl_stmt|;
 comment|/* (p) copy-on-writes faults */
-name|u_int
+name|counter_u64_t
 name|v_cow_optim
 decl_stmt|;
-comment|/* (p) optimized copy-on-writes faults */
-name|u_int
+comment|/* (p) optimized COW faults */
+name|counter_u64_t
 name|v_zfod
 decl_stmt|;
 comment|/* (p) pages zero filled on demand */
-name|u_int
+name|counter_u64_t
 name|v_ozfod
 decl_stmt|;
 comment|/* (p) optimized zero fill pages */
-name|u_int
+name|counter_u64_t
 name|v_swapin
 decl_stmt|;
 comment|/* (p) swap pager pageins */
-name|u_int
+name|counter_u64_t
 name|v_swapout
 decl_stmt|;
 comment|/* (p) swap pager pageouts */
-name|u_int
+name|counter_u64_t
 name|v_swappgsin
 decl_stmt|;
 comment|/* (p) swap pager pages paged in */
-name|u_int
+name|counter_u64_t
 name|v_swappgsout
 decl_stmt|;
 comment|/* (p) swap pager pages paged out */
-name|u_int
+name|counter_u64_t
 name|v_vnodein
 decl_stmt|;
 comment|/* (p) vnode pager pageins */
-name|u_int
+name|counter_u64_t
 name|v_vnodeout
 decl_stmt|;
 comment|/* (p) vnode pager pageouts */
-name|u_int
+name|counter_u64_t
 name|v_vnodepgsin
 decl_stmt|;
 comment|/* (p) vnode_pager pages paged in */
-name|u_int
+name|counter_u64_t
 name|v_vnodepgsout
 decl_stmt|;
 comment|/* (p) vnode pager pages paged out */
-name|u_int
+name|counter_u64_t
 name|v_intrans
 decl_stmt|;
 comment|/* (p) intransit blocking page faults */
-name|u_int
+name|counter_u64_t
 name|v_reactivated
 decl_stmt|;
-comment|/* (p) pages reactivated by the pagedaemon */
-name|u_int
+comment|/* (p) reactivated by the pagedaemon */
+name|counter_u64_t
 name|v_pdwakeups
 decl_stmt|;
-comment|/* (p) times daemon has awaken from sleep */
-name|u_int
+comment|/* (p) times daemon has awaken */
+name|counter_u64_t
 name|v_pdpages
 decl_stmt|;
 comment|/* (p) pages analyzed by daemon */
-name|u_int
+name|counter_u64_t
 name|v_pdshortfalls
 decl_stmt|;
 comment|/* (p) page reclamation shortfalls */
-name|u_int
+name|counter_u64_t
 name|v_dfree
 decl_stmt|;
 comment|/* (p) pages freed by daemon */
-name|u_int
+name|counter_u64_t
 name|v_pfree
 decl_stmt|;
-comment|/* (p) pages freed by exiting processes */
-name|u_int
+comment|/* (p) pages freed by processes */
+name|counter_u64_t
 name|v_tfree
 decl_stmt|;
 comment|/* (p) total pages freed */
+comment|/* 	 * Fork/vfork/rfork activity. 	 */
+name|counter_u64_t
+name|v_forks
+decl_stmt|;
+comment|/* (p) fork() calls */
+name|counter_u64_t
+name|v_vforks
+decl_stmt|;
+comment|/* (p) vfork() calls */
+name|counter_u64_t
+name|v_rforks
+decl_stmt|;
+comment|/* (p) rfork() calls */
+name|counter_u64_t
+name|v_kthreads
+decl_stmt|;
+comment|/* (p) fork() calls by kernel */
+name|counter_u64_t
+name|v_forkpages
+decl_stmt|;
+comment|/* (p) pages affected by fork() */
+name|counter_u64_t
+name|v_vforkpages
+decl_stmt|;
+comment|/* (p) pages affected by vfork() */
+name|counter_u64_t
+name|v_rforkpages
+decl_stmt|;
+comment|/* (p) pages affected by rfork() */
+name|counter_u64_t
+name|v_kthreadpages
+decl_stmt|;
+comment|/* (p) ... and by kernel fork() */
+define|#
+directive|define
+name|VM_METER_NCOUNTERS
+define|\
+value|(offsetof(struct vmmeter, v_page_size) / sizeof(counter_u64_t))
 comment|/* 	 * Distribution of page usages. 	 */
 name|u_int
 name|v_page_size
@@ -201,42 +327,18 @@ name|u_int
 name|v_free_severe
 decl_stmt|;
 comment|/* (c) severe page depletion point */
-comment|/* 	 * Fork/vfork/rfork activity. 	 */
-name|u_int
-name|v_forks
-decl_stmt|;
-comment|/* (p) fork() calls */
-name|u_int
-name|v_vforks
-decl_stmt|;
-comment|/* (p) vfork() calls */
-name|u_int
-name|v_rforks
-decl_stmt|;
-comment|/* (p) rfork() calls */
-name|u_int
-name|v_kthreads
-decl_stmt|;
-comment|/* (p) fork() calls by kernel */
-name|u_int
-name|v_forkpages
-decl_stmt|;
-comment|/* (p) VM pages affected by fork() */
-name|u_int
-name|v_vforkpages
-decl_stmt|;
-comment|/* (p) VM pages affected by vfork() */
-name|u_int
-name|v_rforkpages
-decl_stmt|;
-comment|/* (p) VM pages affected by rfork() */
-name|u_int
-name|v_kthreadpages
-decl_stmt|;
-comment|/* (p) VM pages affected by fork() by kernel */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL || _WANT_VMMETER */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -258,6 +360,38 @@ name|u_int
 name|vm_pageout_wakeup_thresh
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|VM_CNT_ADD
+parameter_list|(
+name|var
+parameter_list|,
+name|x
+parameter_list|)
+value|counter_u64_add(vm_cnt.var, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_CNT_INC
+parameter_list|(
+name|var
+parameter_list|)
+value|VM_CNT_ADD(var, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_CNT_FETCH
+parameter_list|(
+name|var
+parameter_list|)
+value|counter_u64_fetch(vm_cnt.var)
+end_define
 
 begin_comment
 comment|/*  * Return TRUE if we are under our severe low-free-pages threshold  *  * This routine is typically used at the user<->system interface to determine  * whether we need to block in order to avoid a low memory deadlock.  */
@@ -414,29 +548,14 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Obtain the value of a per-CPU counter.  */
+comment|/* _KERNEL */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_METER_PCPU_CNT
-parameter_list|(
-name|member
-parameter_list|)
-define|\
-value|vm_meter_cnt(__offsetof(struct vmmeter, member))
-end_define
-
-begin_function_decl
-name|u_int
-name|vm_meter_cnt
-parameter_list|(
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#
@@ -444,77 +563,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* systemwide totals computed every five seconds */
+comment|/* _SYS_VMMETER_H_ */
 end_comment
-
-begin_struct
-struct|struct
-name|vmtotal
-block|{
-name|int16_t
-name|t_rq
-decl_stmt|;
-comment|/* length of the run queue */
-name|int16_t
-name|t_dw
-decl_stmt|;
-comment|/* jobs in ``disk wait'' (neg priority) */
-name|int16_t
-name|t_pw
-decl_stmt|;
-comment|/* jobs in page wait */
-name|int16_t
-name|t_sl
-decl_stmt|;
-comment|/* jobs sleeping in core */
-name|int16_t
-name|t_sw
-decl_stmt|;
-comment|/* swapped out runnable/short block jobs */
-name|int32_t
-name|t_vm
-decl_stmt|;
-comment|/* total virtual memory */
-name|int32_t
-name|t_avm
-decl_stmt|;
-comment|/* active virtual memory */
-name|int32_t
-name|t_rm
-decl_stmt|;
-comment|/* total real memory in use */
-name|int32_t
-name|t_arm
-decl_stmt|;
-comment|/* active real memory */
-name|int32_t
-name|t_vmshr
-decl_stmt|;
-comment|/* shared virtual memory */
-name|int32_t
-name|t_avmshr
-decl_stmt|;
-comment|/* active shared virtual memory */
-name|int32_t
-name|t_rmshr
-decl_stmt|;
-comment|/* shared real memory */
-name|int32_t
-name|t_armshr
-decl_stmt|;
-comment|/* active shared real memory */
-name|int32_t
-name|t_free
-decl_stmt|;
-comment|/* free memory pages */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

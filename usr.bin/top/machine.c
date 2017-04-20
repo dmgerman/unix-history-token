@@ -2565,7 +2565,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|static
-name|int
+name|uint64_t
 name|nspgsin
 decl_stmt|,
 name|nspgsout

@@ -20,13 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/stat.h>
 end_include
 
 begin_include

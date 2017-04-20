@@ -60,7 +60,7 @@ define|#
 directive|define
 name|PCPU_MD_MIPS64_FIELDS
 define|\
-value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[53]
+value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[245]
 end_define
 
 begin_else
@@ -73,7 +73,7 @@ define|#
 directive|define
 name|PCPU_MD_MIPS32_FIELDS
 define|\
-value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[189]
+value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[125]
 end_define
 
 begin_endif
