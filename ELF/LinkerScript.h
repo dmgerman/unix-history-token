@@ -1043,6 +1043,13 @@ operator|*
 name|OutputSections
 expr_stmt|;
 name|void
+name|fabricateDefaultCommands
+parameter_list|(
+name|bool
+name|AllocateHeader
+parameter_list|)
+function_decl|;
+name|void
 name|addOrphanSections
 parameter_list|(
 name|OutputSectionFactory

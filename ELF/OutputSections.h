@@ -323,6 +323,15 @@ name|void
 name|finalize
 argument_list|()
 block|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|void
+name|maybeCompress
+argument_list|()
+block|;
 name|void
 name|assignOffsets
 argument_list|()
@@ -335,6 +344,25 @@ name|InputSection
 operator|*
 operator|>
 name|Sections
+block|;
+comment|// Used for implementation of --compress-debug-sections option.
+name|std
+operator|::
+name|vector
+operator|<
+name|uint8_t
+operator|>
+name|ZDebugHeader
+block|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|char
+block|,
+literal|1
+operator|>
+name|CompressedData
 block|;
 comment|// Location in the output buffer.
 name|uint8_t
