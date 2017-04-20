@@ -8276,6 +8276,16 @@ name|vi_buffer
 operator|+
 name|offset
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VM_MEMATTR_WRITE_COMBINING
+operator|*
+name|memattr
+operator|=
+name|VM_MEMATTR_WRITE_COMBINING
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
