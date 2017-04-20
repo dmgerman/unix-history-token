@@ -419,8 +419,6 @@ name|ta
 operator|->
 name|map_len
 operator|*
-literal|2
-operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
