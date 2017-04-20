@@ -1483,6 +1483,10 @@ name|exact_match
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|UpdateCore
+parameter_list|()
+function_decl|;
 name|llvm
 operator|::
 name|Triple

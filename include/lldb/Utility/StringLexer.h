@@ -176,13 +176,6 @@ name|Size
 name|s
 parameter_list|)
 function_decl|;
-name|bool
-name|HasAny
-parameter_list|(
-name|Character
-name|c
-parameter_list|)
-function_decl|;
 name|std
 operator|::
 name|string

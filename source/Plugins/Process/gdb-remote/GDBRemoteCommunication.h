@@ -288,6 +288,12 @@ name|chrono
 operator|::
 name|seconds
 name|m_saved_timeout
+block|;
+comment|// Don't ever reduce the timeout for a packet, only increase it. If the
+comment|// requested timeout if less than the current timeout, we don't set it
+comment|// and won't need to restore it.
+name|bool
+name|m_timeout_modified
 block|;   }
 block|;
 name|GDBRemoteCommunication

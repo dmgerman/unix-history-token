@@ -5,6 +5,61 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+end_if
+
+begin_comment
+comment|// Clang does not accept regparm attribute on these platforms.
+end_comment
+
+begin_comment
+comment|// Fortunately, the default calling convention passes arguments in registers
+end_comment
+
+begin_comment
+comment|// anyway.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REGPARM
+parameter_list|(
+name|N
+parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|REGPARM
+parameter_list|(
+name|N
+parameter_list|)
+value|__attribute__((regparm(N)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|bar
@@ -38,14 +93,9 @@ end_function_decl
 
 begin_expr_stmt
 unit|))
-name|__attribute__
-argument_list|(
-operator|(
-name|regparm
+name|REGPARM
 argument_list|(
 literal|2
-argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -93,14 +143,9 @@ end_function_decl
 
 begin_expr_stmt
 unit|))
-name|__attribute__
-argument_list|(
-operator|(
-name|regparm
+name|REGPARM
 argument_list|(
 literal|1
-argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt

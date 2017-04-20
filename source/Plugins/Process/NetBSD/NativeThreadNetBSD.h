@@ -49,6 +49,18 @@ directive|include
 file|"lldb/Host/common/NativeThreadProtocol.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -171,6 +183,12 @@ name|SetStoppedByExec
 argument_list|()
 block|;
 name|void
+name|SetStoppedByWatchpoint
+argument_list|(
+argument|uint32_t wp_index
+argument_list|)
+block|;
+name|void
 name|SetStopped
 argument_list|()
 block|;
@@ -200,6 +218,26 @@ name|std
 operator|::
 name|string
 name|m_stop_description
+block|;
+name|using
+name|WatchpointIndexMap
+operator|=
+name|std
+operator|::
+name|map
+operator|<
+name|lldb
+operator|::
+name|addr_t
+block|,
+name|uint32_t
+operator|>
+block|;
+name|WatchpointIndexMap
+name|m_watchpoint_index_map
+block|;
+name|WatchpointIndexMap
+name|m_hw_break_index_map
 block|; }
 decl_stmt|;
 typedef|typedef
