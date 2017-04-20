@@ -1392,6 +1392,17 @@ operator|=
 operator|&
 name|V_tcp_syncache
 expr_stmt|;
+name|V_tcp_syncache
+operator|.
+name|hashbase
+index|[
+name|i
+index|]
+operator|.
+name|sch_last_overflow
+operator|=
+name|INT64_MIN
+expr_stmt|;
 block|}
 comment|/* Create the syncache entry zone. */
 name|V_tcp_syncache
@@ -1762,6 +1773,12 @@ name|sch_bucket
 argument_list|,
 name|sch_head
 argument_list|)
+expr_stmt|;
+name|sch
+operator|->
+name|sch_last_overflow
+operator|=
+name|time_uptime
 expr_stmt|;
 name|syncache_drop
 argument_list|(
@@ -4533,7 +4550,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * There is no syncache entry, so see if this ACK is 		 * a returning syncookie.  To do this, first: 		 *  A. See if this socket has had a syncache entry dropped in 		 *     the past.  We don't want to accept a bogus syncookie 		 *     if we've never received a SYN. 		 *  B. check that the syncookie is valid.  If it is, then 		 *     cobble up a fake syncache entry, and return. 		 */
+comment|/* 		 * There is no syncache entry, so see if this ACK is 		 * a returning syncookie.  To do this, first: 		 *  A. Check if syncookies are used in case of syncache 		 *     overflows 		 *  B. See if this socket has had a syncache entry dropped in 		 *     the recent past. We don't want to accept a bogus 		 *     syncookie if we've never received a SYN or accept it 		 *     twice. 		 *  C. check that the syncookie is valid.  If it is, then 		 *     cobble up a fake syncache entry, and return. 		 */
 if|if
 condition|(
 operator|!
@@ -4568,6 +4585,58 @@ name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Spurious ACK, "
 literal|"segment rejected (syncookies disabled)\n"
+argument_list|,
+name|s
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failed
+goto|;
+block|}
+if|if
+condition|(
+operator|!
+name|V_tcp_syncookiesonly
+operator|&&
+name|sch
+operator|->
+name|sch_last_overflow
+operator|<
+name|time_uptime
+operator|-
+name|SYNCOOKIE_LIFETIME
+condition|)
+block|{
+name|SCH_UNLOCK
+argument_list|(
+name|sch
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|tcp_log_addrs
+argument_list|(
+name|inc
+argument_list|,
+name|th
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+condition|)
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s; %s: Spurious ACK, "
+literal|"segment rejected (no syncache entry)\n"
 argument_list|,
 name|s
 argument_list|,
@@ -6376,6 +6445,13 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|sch
+operator|->
+name|sch_last_overflow
+operator|=
+name|time_uptime
+expr_stmt|;
 name|syncache_drop
 argument_list|(
 name|sc
@@ -6383,6 +6459,7 @@ argument_list|,
 name|sch
 argument_list|)
 expr_stmt|;
+block|}
 name|sc
 operator|=
 name|uma_zalloc

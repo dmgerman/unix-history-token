@@ -436,6 +436,9 @@ name|tcp_syncache
 modifier|*
 name|sch_sc
 decl_stmt|;
+name|time_t
+name|sch_last_overflow
+decl_stmt|;
 block|}
 struct|;
 end_struct
