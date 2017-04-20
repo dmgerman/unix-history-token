@@ -1486,6 +1486,57 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// On PowerPC and ARM Thumb, calling pthread_exit() causes LSan to detect leaks.
+end_comment
+
+begin_comment
+comment|// pthread_exit() performs unwinding that leads to dlopen'ing libgcc_s.so.
+end_comment
+
+begin_comment
+comment|// dlopen mallocs "libgcc_s.so" string which confuses LSan, it fails to realize
+end_comment
+
+begin_comment
+comment|// that this allocation happens in dynamic linker and should be ignored.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SANITIZER_PPC
+operator|||
+name|defined
+argument_list|(
+name|__thumb__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_SUPPRESS_LEAK_ON_PTHREAD_EXIT
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_SUPPRESS_LEAK_ON_PTHREAD_EXIT
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

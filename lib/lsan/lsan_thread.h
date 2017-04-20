@@ -196,7 +196,7 @@ parameter_list|(
 name|u32
 name|tid
 parameter_list|,
-name|uptr
+name|tid_t
 name|os_id
 parameter_list|)
 function_decl|;

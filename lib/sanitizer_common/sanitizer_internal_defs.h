@@ -668,6 +668,22 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+if|#
+directive|if
+name|SANITIZER_MAC
+comment|// On Darwin, thread IDs are 64-bit even on 32-bit systems.
+typedef|typedef
+name|u64
+name|tid_t
+typedef|;
+else|#
+directive|else
+typedef|typedef
+name|uptr
+name|tid_t
+typedef|;
+endif|#
+directive|endif
 comment|// ----------- ATTENTION -------------
 comment|// This header should NOT include any other headers to avoid portability issues.
 comment|// Common defs.

@@ -464,6 +464,14 @@ expr_stmt|;
 comment|// The primary adds the whole class size to the stats when allocating a
 comment|// chunk, so we will do something similar here. But we will not account for
 comment|// the guard pages.
+block|{
+name|SpinMutexLock
+name|l
+argument_list|(
+operator|&
+name|StatsMutex
+argument_list|)
+decl_stmt|;
 name|Stats
 operator|->
 name|Add
@@ -490,6 +498,7 @@ operator|*
 name|PageSize
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|reinterpret_cast
 operator|<
@@ -588,6 +597,14 @@ argument_list|(
 name|Ptr
 argument_list|)
 decl_stmt|;
+block|{
+name|SpinMutexLock
+name|l
+argument_list|(
+operator|&
+name|StatsMutex
+argument_list|)
+decl_stmt|;
 name|Stats
 operator|->
 name|Sub
@@ -618,6 +635,7 @@ operator|*
 name|PageSize
 argument_list|)
 expr_stmt|;
+block|}
 name|UnmapOrDie
 argument_list|(
 name|reinterpret_cast
@@ -675,7 +693,7 @@ argument_list|(
 name|Ptr
 argument_list|)
 decl_stmt|;
-comment|// Deduct PageSize as MapEnd includes the trailing guard page.
+comment|// Deduct PageSize as MapSize includes the trailing guard page.
 name|uptr
 name|MapEnd
 init|=
@@ -883,6 +901,9 @@ name|AlignedChunkHeaderSize
 decl_stmt|;
 name|uptr
 name|PageSize
+decl_stmt|;
+name|SpinMutex
+name|StatsMutex
 decl_stmt|;
 name|atomic_uint8_t
 name|MayReturnNull

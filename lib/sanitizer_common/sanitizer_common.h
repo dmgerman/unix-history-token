@@ -314,7 +314,7 @@ name|GetMaxVirtualAddress
 parameter_list|()
 function_decl|;
 comment|// Threads
-name|uptr
+name|tid_t
 name|GetTid
 parameter_list|()
 function_decl|;
@@ -3749,6 +3749,9 @@ name|end
 parameter_list|,
 name|bool
 name|executable
+parameter_list|,
+name|bool
+name|readable
 parameter_list|)
 function_decl|;
 name|bool
@@ -3833,6 +3836,9 @@ decl_stmt|;
 name|bool
 name|executable
 decl_stmt|;
+name|bool
+name|readable
+decl_stmt|;
 name|AddressRange
 argument_list|(
 argument|uptr beg
@@ -3840,6 +3846,8 @@ argument_list|,
 argument|uptr end
 argument_list|,
 argument|bool executable
+argument_list|,
+argument|bool readable
 argument_list|)
 block|:
 name|next
@@ -3859,7 +3867,12 @@ argument_list|)
 operator|,
 name|executable
 argument_list|(
-argument|executable
+name|executable
+argument_list|)
+operator|,
+name|readable
+argument_list|(
+argument|readable
 argument_list|)
 block|{}
 block|}

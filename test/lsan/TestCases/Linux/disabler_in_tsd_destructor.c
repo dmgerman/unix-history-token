@@ -12,7 +12,7 @@ comment|// RUN: %clang_lsan %s -o %t
 end_comment
 
 begin_comment
-comment|// RUN: LSAN_OPTIONS=$LSAN_BASE %run %t
+comment|// RUN: %env_lsan_opts=$LSAN_BASE %run %t
 end_comment
 
 begin_include

@@ -3917,7 +3917,7 @@ parameter_list|,
 name|int
 name|tid
 parameter_list|,
-name|uptr
+name|tid_t
 name|os_id
 parameter_list|,
 name|bool

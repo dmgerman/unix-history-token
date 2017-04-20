@@ -256,7 +256,7 @@ block|{
 name|int
 name|id
 decl_stmt|;
-name|uptr
+name|tid_t
 name|os_id
 decl_stmt|;
 name|bool

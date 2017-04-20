@@ -136,7 +136,7 @@ name|u32
 name|reuse_count
 decl_stmt|;
 comment|// Number of times this tid was reused.
-name|uptr
+name|tid_t
 name|os_id
 decl_stmt|;
 comment|// PID (used for reporting).
@@ -196,7 +196,7 @@ function_decl|;
 name|void
 name|SetStarted
 parameter_list|(
-name|uptr
+name|tid_t
 name|_os_id
 parameter_list|,
 name|bool
@@ -493,7 +493,7 @@ name|ThreadContextBase
 modifier|*
 name|FindThreadContextByOsIDLocked
 parameter_list|(
-name|uptr
+name|tid_t
 name|os_id
 parameter_list|)
 function_decl|;
@@ -556,7 +556,7 @@ parameter_list|(
 name|u32
 name|tid
 parameter_list|,
-name|uptr
+name|tid_t
 name|os_id
 parameter_list|,
 name|bool

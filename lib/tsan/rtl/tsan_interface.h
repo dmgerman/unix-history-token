@@ -85,6 +85,14 @@ name|uptr
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|using
+name|__sanitizer
+operator|::
+name|tid_t
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|// This header should NOT include any other headers.
 end_comment
@@ -809,7 +817,7 @@ name|int
 modifier|*
 name|tid
 parameter_list|,
-name|uptr
+name|tid_t
 modifier|*
 name|os_id
 parameter_list|,
@@ -899,7 +907,7 @@ name|int
 modifier|*
 name|thread_id
 parameter_list|,
-name|uptr
+name|tid_t
 modifier|*
 name|os_id
 parameter_list|)

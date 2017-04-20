@@ -142,8 +142,7 @@ comment|// Our header requires 64 bits of storage. Having the offset saves us fr
 comment|// using functions such as GetBlockBegin, that is fairly costly. Our first
 comment|// implementation used the MetaData as well, which offers the advantage of
 comment|// being stored away from the chunk itself, but accessing it was costly as
-comment|// well. The header will be atomically loaded and stored using the 16-byte
-comment|// primitives offered by the platform (likely requires cmpxchg16b support).
+comment|// well. The header will be atomically loaded and stored.
 typedef|typedef
 name|u64
 name|PackedHeader
@@ -157,11 +156,17 @@ range|:
 literal|16
 decl_stmt|;
 name|u64
-name|UnusedBytes
+name|SizeOrUnusedBytes
 range|:
-literal|20
+literal|19
 decl_stmt|;
-comment|// Needed for reallocation purposes.
+comment|// Size for Primary backed allocations, amount of
+comment|// unused bytes in the chunk for Secondary ones.
+name|u64
+name|FromPrimary
+range|:
+literal|1
+decl_stmt|;
 name|u64
 name|State
 range|:
@@ -180,9 +185,9 @@ range|:
 literal|16
 decl_stmt|;
 comment|// Offset from the beginning of the backend
-comment|// allocation to the beginning of the chunk itself,
-comment|// in multiples of MinAlignment. See comment about
-comment|// its maximum value and test in init().
+comment|// allocation to the beginning of the chunk
+comment|// itself, in multiples of MinAlignment. See
+comment|/// comment about its maximum value and in init().
 name|u64
 name|Salt
 range|:
