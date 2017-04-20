@@ -107,6 +107,17 @@ begin_comment
 comment|/* Say if the files differ */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|D_GFORMAT
+value|7
+end_define
+
+begin_comment
+comment|/* Diff with defined changed group format */
+end_comment
+
 begin_comment
 comment|/*  * Output flags  */
 end_comment
@@ -393,6 +404,14 @@ index|]
 decl_stmt|,
 modifier|*
 name|ignore_pats
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|group_format
 decl_stmt|;
 end_decl_stmt
 
