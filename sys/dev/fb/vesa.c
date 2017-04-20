@@ -6758,6 +6758,13 @@ name|MONO_CRTC
 expr_stmt|;
 name|vesa_adp
 operator|->
+name|va_flags
+operator|&=
+operator|~
+name|V_ADP_CWIDTH9
+expr_stmt|;
+name|vesa_adp
+operator|->
 name|va_line_width
 operator|=
 name|info
