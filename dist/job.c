@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.188 2016/08/26 23:28:39 dholland Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.190 2017/04/16 21:23:43 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.188 2016/08/26 23:28:39 dholland Exp $"
+literal|"$NetBSD: job.c,v 1.190 2017/04/16 21:23:43 riastradh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.188 2016/08/26 23:28:39 dholland Exp $"
+literal|"$NetBSD: job.c,v 1.190 2017/04/16 21:23:43 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1604,6 +1604,8 @@ name|int
 name|i
 decl_stmt|,
 name|fd
+decl_stmt|,
+name|flags
 decl_stmt|;
 if|if
 condition|(
@@ -1688,9 +1690,8 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Set close-on-exec flag for both */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fcntl
 argument_list|(
 name|job
@@ -1704,10 +1705,22 @@ name|F_SETFD
 argument_list|,
 name|FD_CLOEXEC
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|Punt
+argument_list|(
+literal|"Cannot set close-on-exec: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fcntl
 argument_list|(
 name|job
@@ -1721,19 +1734,23 @@ name|F_SETFD
 argument_list|,
 name|FD_CLOEXEC
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|Punt
+argument_list|(
+literal|"Cannot set close-on-exec: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/*      * We mark the input side of the pipe non-blocking; we poll(2) the      * pipe when we're waiting for a job token, but we might lose the      * race for the token when a new one becomes available, so the read       * from the pipe should not block.      */
-name|fcntl
-argument_list|(
-name|job
-operator|->
-name|jobPipe
-index|[
-literal|0
-index|]
-argument_list|,
-name|F_SETFL
-argument_list|,
+name|flags
+operator|=
 name|fcntl
 argument_list|(
 name|job
@@ -1747,8 +1764,55 @@ name|F_GETFL
 argument_list|,
 literal|0
 argument_list|)
-operator||
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|==
+operator|-
+literal|1
+condition|)
+name|Punt
+argument_list|(
+literal|"Cannot get flags: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|flags
+operator||=
 name|O_NONBLOCK
+expr_stmt|;
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|job
+operator|->
+name|jobPipe
+index|[
+literal|0
+index|]
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|flags
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|Punt
+argument_list|(
+literal|"Cannot set flags: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2459,6 +2523,11 @@ argument_list|,
 name|job
 operator|->
 name|node
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cmdStart
 argument_list|)
 expr_stmt|;
 return|return
@@ -4776,9 +4845,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fcntl
 argument_list|(
 literal|0
@@ -4787,10 +4855,26 @@ name|F_SETFD
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|execError
+argument_list|(
+literal|"fcntl clear close-on-exec"
+argument_list|,
+literal|"stdin"
+argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|lseek
 argument_list|(
 literal|0
@@ -4802,7 +4886,24 @@ literal|0
 argument_list|,
 name|SEEK_SET
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|execError
+argument_list|(
+literal|"lseek to 0"
+argument_list|,
+literal|"stdin"
+argument_list|)
 expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|job
@@ -4819,6 +4920,8 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Pass job token pipe to submakes. 		 */
+if|if
+condition|(
 name|fcntl
 argument_list|(
 name|tokenWaitJob
@@ -4829,7 +4932,26 @@ name|F_SETFD
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|execError
+argument_list|(
+literal|"clear close-on-exec"
+argument_list|,
+literal|"tokenWaitJob.inPipe"
+argument_list|)
 expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|fcntl
 argument_list|(
 name|tokenWaitJob
@@ -4840,7 +4962,24 @@ name|F_SETFD
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|execError
+argument_list|(
+literal|"clear close-on-exec"
+argument_list|,
+literal|"tokenWaitJob.outPipe"
+argument_list|)
 expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Set up the child's output to be routed through the pipe 	 * we've created for it. 	 */
 if|if
@@ -4872,9 +5011,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * The output channels are marked close on exec. This bit was 	 * duplicated by the dup2(on some systems), so we have to clear 	 * it before routing the shell's error output to the same place as 	 * its standard output. 	 */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fcntl
 argument_list|(
 literal|1
@@ -4883,7 +5021,24 @@ name|F_SETFD
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|execError
+argument_list|(
+literal|"clear close-on-exec"
+argument_list|,
+literal|"stdout"
+argument_list|)
 expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dup2
