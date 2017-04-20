@@ -210,104 +210,104 @@ index|[
 name|CPUSTATES
 index|]
 decl_stmt|;
-name|u_int
+name|uint64_t
 name|v_swtch
 decl_stmt|;
 comment|/* context switches */
-name|u_int
+name|uint64_t
 name|v_trap
 decl_stmt|;
 comment|/* calls to trap */
-name|u_int
+name|uint64_t
 name|v_syscall
 decl_stmt|;
 comment|/* calls to syscall() */
-name|u_int
+name|uint64_t
 name|v_intr
 decl_stmt|;
 comment|/* device interrupts */
-name|u_int
+name|uint64_t
 name|v_soft
 decl_stmt|;
 comment|/* software interrupts */
 comment|/* 	 * Virtual memory activity. 	 */
-name|u_int
+name|uint64_t
 name|v_vm_faults
 decl_stmt|;
 comment|/* number of address memory faults */
-name|u_int
+name|uint64_t
 name|v_io_faults
 decl_stmt|;
 comment|/* page faults requiring I/O */
-name|u_int
+name|uint64_t
 name|v_cow_faults
 decl_stmt|;
 comment|/* number of copy-on-writes */
-name|u_int
+name|uint64_t
 name|v_zfod
 decl_stmt|;
 comment|/* pages zero filled on demand */
-name|u_int
+name|uint64_t
 name|v_ozfod
 decl_stmt|;
 comment|/* optimized zero fill pages */
-name|u_int
+name|uint64_t
 name|v_swapin
 decl_stmt|;
 comment|/* swap pager pageins */
-name|u_int
+name|uint64_t
 name|v_swapout
 decl_stmt|;
 comment|/* swap pager pageouts */
-name|u_int
+name|uint64_t
 name|v_swappgsin
 decl_stmt|;
 comment|/* swap pager pages paged in */
-name|u_int
+name|uint64_t
 name|v_swappgsout
 decl_stmt|;
 comment|/* swap pager pages paged out */
-name|u_int
+name|uint64_t
 name|v_vnodein
 decl_stmt|;
 comment|/* vnode pager pageins */
-name|u_int
+name|uint64_t
 name|v_vnodeout
 decl_stmt|;
 comment|/* vnode pager pageouts */
-name|u_int
+name|uint64_t
 name|v_vnodepgsin
 decl_stmt|;
 comment|/* vnode_pager pages paged in */
-name|u_int
+name|uint64_t
 name|v_vnodepgsout
 decl_stmt|;
 comment|/* vnode pager pages paged out */
-name|u_int
+name|uint64_t
 name|v_intrans
 decl_stmt|;
 comment|/* intransit blocking page faults */
-name|u_int
+name|uint64_t
 name|v_reactivated
 decl_stmt|;
 comment|/* number of pages reactivated by pagedaemon */
-name|u_int
+name|uint64_t
 name|v_pdwakeups
 decl_stmt|;
 comment|/* number of times daemon has awaken from sleep */
-name|u_int
+name|uint64_t
 name|v_pdpages
 decl_stmt|;
 comment|/* number of pages analyzed by daemon */
-name|u_int
+name|uint64_t
 name|v_dfree
 decl_stmt|;
 comment|/* pages freed by daemon */
-name|u_int
+name|uint64_t
 name|v_pfree
 decl_stmt|;
 comment|/* pages freed by exiting processes */
-name|u_int
+name|uint64_t
 name|v_tfree
 decl_stmt|;
 comment|/* total pages freed */
