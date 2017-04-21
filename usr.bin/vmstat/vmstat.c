@@ -1903,13 +1903,6 @@ parameter_list|,
 name|size_t
 modifier|*
 name|oldlenp
-parameter_list|,
-name|void
-modifier|*
-name|newp
-parameter_list|,
-name|size_t
-name|newlen
 parameter_list|)
 block|{
 name|int
@@ -1925,9 +1918,9 @@ name|oldp
 argument_list|,
 name|oldlenp
 argument_list|,
-name|newp
+name|NULL
 argument_list|,
-name|newlen
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2528,11 +2521,6 @@ else|else
 block|{
 name|size_t
 name|size
-init|=
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
 decl_stmt|;
 define|#
 directive|define
@@ -2542,8 +2530,7 @@ name|cat
 parameter_list|,
 name|name
 parameter_list|)
-define|\
-value|mysysctl("vm.stats." #cat "." #name,&vmmp->name,&size, NULL, 0)
+value|do {					\ 	size = sizeof(vmmp->name);					\ 	mysysctl("vm.stats." #cat "." #name,&vmmp->name,&size);	\ } while (0)
 comment|/* sys */
 name|GET_VM_STATS
 argument_list|(
@@ -2936,10 +2923,6 @@ name|vmtp
 argument_list|,
 operator|&
 name|size
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3045,10 +3028,6 @@ name|maxcpu
 argument_list|,
 operator|&
 name|size
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3108,10 +3087,6 @@ name|times
 argument_list|,
 operator|&
 name|size
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|maxid
@@ -3566,10 +3541,6 @@ name|clockrate
 argument_list|,
 operator|&
 name|size
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3722,10 +3693,6 @@ name|cp_time
 argument_list|,
 operator|&
 name|size
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3764,10 +3731,6 @@ name|cur_cp_times
 argument_list|,
 operator|&
 name|size
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5452,10 +5415,6 @@ name|lnchstats
 argument_list|,
 operator|&
 name|size
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6635,10 +6594,6 @@ name|intrcnts
 argument_list|,
 operator|&
 name|intrcntlen
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 operator|==
 literal|0
@@ -7054,10 +7009,6 @@ name|intrnames
 argument_list|,
 operator|&
 name|inamlen
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 operator|==
 literal|0
