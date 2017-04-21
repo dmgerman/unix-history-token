@@ -8421,6 +8421,11 @@ name|rnh
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|order
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -8482,6 +8487,11 @@ name|rnh
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|order
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
