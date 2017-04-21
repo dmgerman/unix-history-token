@@ -278,12 +278,12 @@ condition|(
 operator|(
 name|p
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|internal_array
 argument_list|,
 name|sz
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char

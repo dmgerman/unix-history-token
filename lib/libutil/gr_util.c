@@ -957,13 +957,13 @@ condition|(
 operator|(
 name|tmp
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|buf
 argument_list|,
-name|size
-operator|*
 literal|2
+argument_list|,
+name|size
 argument_list|)
 operator|)
 operator|==
