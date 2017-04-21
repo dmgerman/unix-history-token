@@ -119,11 +119,22 @@ directive|include
 file|<wctype.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITHOUT_FASTMATCH
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"fastmatch.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1437,6 +1448,9 @@ name|l
 operator|->
 name|len
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|WITHOUT_FASTMATCH
 if|if
 condition|(
 name|fg_pattern
@@ -1469,6 +1483,8 @@ name|leflags
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|r
 operator|=
 name|regexec
@@ -1543,6 +1559,9 @@ operator|=
 name|REG_NOMATCH
 expr_stmt|;
 comment|/* Check for whole word match */
+ifndef|#
+directive|ifndef
+name|WITHOUT_FASTMATCH
 if|if
 condition|(
 name|r
@@ -1561,6 +1580,19 @@ name|word
 operator|)
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+operator|&&
+name|wflag
+condition|)
+block|{
+endif|#
+directive|endif
 name|wchar_t
 name|wbegin
 decl_stmt|,
@@ -2067,13 +2099,7 @@ name|c
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Safe malloc() for internal use.  */
-end_comment
-
-begin_function
 name|void
 modifier|*
 name|grep_malloc
@@ -2112,13 +2138,7 @@ name|ptr
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Safe calloc() for internal use.  */
-end_comment
-
-begin_function
 name|void
 modifier|*
 name|grep_calloc
@@ -2162,13 +2182,7 @@ name|ptr
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Safe realloc() for internal use.  */
-end_comment
-
-begin_function
 name|void
 modifier|*
 name|grep_realloc
@@ -2209,13 +2223,7 @@ name|ptr
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Safe strdup() for internal use.  */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|grep_strdup
@@ -2256,13 +2264,7 @@ name|ret
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Prints a matching line according to the command line options.  */
-end_comment
-
-begin_function
 name|void
 name|printline
 parameter_list|(
