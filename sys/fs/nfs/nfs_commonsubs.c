@@ -198,16 +198,12 @@ end_decl_stmt
 begin_decl_stmt
 name|uid_t
 name|nfsrv_defaultuid
-init|=
-literal|65534
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|gid_t
 name|nfsrv_defaultgid
-init|=
-literal|65533
 decl_stmt|;
 end_decl_stmt
 
