@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: suff.c,v 1.84 2016/06/30 05:34:04 dholland Exp $	*/
+comment|/*	$NetBSD: suff.c,v 1.86 2017/04/16 20:38:18 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: suff.c,v 1.84 2016/06/30 05:34:04 dholland Exp $"
+literal|"$NetBSD: suff.c,v 1.86 2017/04/16 20:38:18 riastradh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: suff.c,v 1.84 2016/06/30 05:34:04 dholland Exp $"
+literal|"$NetBSD: suff.c,v 1.86 2017/04/16 20:38:18 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -86,6 +86,12 @@ end_endif
 begin_comment
 comment|/*-  * suff.c --  *	Functions to maintain suffix lists and find implicit dependents  *	using suffix transformation rules  *  * Interface:  *	Suff_Init 	    	Initialize all things to do with suffixes.  *  *	Suff_End 	    	Cleanup the module  *  *	Suff_DoPaths	    	This function is used to make life easier  *	    	  	    	when searching for a file according to its  *	    	  	    	suffix. It takes the global search path,  *	    	  	    	as defined using the .PATH: target, and appends  *	    	  	    	its directories to the path of each of the  *	    	  	    	defined suffixes, as specified using  *	    	  	    	.PATH<suffix>: targets. In addition, all  *	    	  	    	directories given for suffixes labeled as  *	    	  	    	include files or libraries, using the .INCLUDES  *	    	  	    	or .LIBS targets, are played with using  *	    	  	    	Dir_MakeFlags to create the .INCLUDES and  *	    	  	    	.LIBS global variables.  *  *	Suff_ClearSuffixes  	Clear out all the suffixes and defined  *	    	  	    	transformations.  *  *	Suff_IsTransform    	Return TRUE if the passed string is the lhs  *	    	  	    	of a transformation rule.  *  *	Suff_AddSuffix	    	Add the passed string as another known suffix.  *  *	Suff_GetPath	    	Return the search path for the given suffix.  *  *	Suff_AddInclude	    	Mark the given suffix as denoting an include  *	    	  	    	file.  *  *	Suff_AddLib	    	Mark the given suffix as denoting a library.  *  *	Suff_AddTransform   	Add another transformation to the suffix  *	    	  	    	graph. Returns  GNode suitable for framing, I  *	    	  	    	mean, tacking commands, attributes, etc. on.  *  *	Suff_SetNull	    	Define the suffix to consider the suffix of  *	    	  	    	any file that doesn't have a known one.  *  *	Suff_FindDeps	    	Find implicit sources for and the location of  *	    	  	    	a target based on its suffix. Returns the  *	    	  	    	bottom-most node added to the graph or NULL  *	    	  	    	if the target had no implicit sources.  *  *	Suff_FindPath	    	Return the appropriate path to search in  *				order to find the node.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
 
 begin_include
 include|#
@@ -2184,6 +2190,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|GNode
@@ -2196,11 +2203,6 @@ operator|*
 operator|)
 name|gnp
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|dummy
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6010,6 +6012,21 @@ argument_list|,
 literal|')'
 argument_list|)
 expr_stmt|;
+comment|/*      * Caller guarantees the format `libname(member)', via      * Arch_ParseArchive.      */
+name|assert
+argument_list|(
+name|eoarch
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|eoname
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 operator|*
 name|eoname
 operator|=
@@ -8185,13 +8202,9 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|dummy
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|debug_file
@@ -8227,6 +8240,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|Suff
@@ -8245,11 +8259,6 @@ decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|dummy
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|debug_file
@@ -8454,6 +8463,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|GNode
@@ -8466,11 +8476,6 @@ operator|*
 operator|)
 name|tp
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|dummy
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|debug_file

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.218 2017/03/01 16:39:49 sjg Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.225 2017/04/17 13:29:07 maya Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.218 2017/03/01 16:39:49 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.225 2017/04/17 13:29:07 maya Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.218 2017/03/01 16:39:49 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.225 2017/04/17 13:29:07 maya Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -127,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -1906,7 +1912,7 @@ name|char
 modifier|*
 name|b
 init|=
-name|malloc
+name|bmake_malloc
 argument_list|(
 name|lf
 operator|->
@@ -2020,6 +2026,34 @@ operator|->
 name|len
 condition|)
 block|{
+if|if
+condition|(
+name|lf
+operator|->
+name|len
+operator|>
+name|SIZE_MAX
+operator|/
+literal|2
+condition|)
+block|{
+name|errno
+operator|=
+name|EFBIG
+expr_stmt|;
+name|Error
+argument_list|(
+literal|"%s: file too large"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|lf
 operator|->
 name|len
@@ -2042,6 +2076,15 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+name|assert
+argument_list|(
+name|bufpos
+operator|<
+name|lf
+operator|->
+name|len
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|read
@@ -3831,6 +3874,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|GNode
@@ -3866,25 +3910,13 @@ name|gn
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|1
-else|:
-literal|1
-operator|)
 return|;
 block|}
 else|else
 block|{
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 block|}
@@ -3949,6 +3981,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|Dir_ClearPath
@@ -3960,13 +3993,7 @@ name|path
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -5522,6 +5549,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|paths
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5535,6 +5566,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|assert
+argument_list|(
+name|paths
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -5750,6 +5788,13 @@ expr_stmt|;
 block|}
 name|out
 label|:
+name|assert
+argument_list|(
+name|paths
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|curTargs
@@ -8445,7 +8490,9 @@ argument_list|,
 literal|"Filename missing from \"include\""
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 for|for
 control|(
@@ -8515,6 +8562,8 @@ name|silent
 argument_list|)
 expr_stmt|;
 block|}
+name|out
+label|:
 name|free
 argument_list|(
 name|all_files
@@ -8661,6 +8710,11 @@ argument_list|,
 name|value
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|value
 argument_list|)
 expr_stmt|;
 block|}

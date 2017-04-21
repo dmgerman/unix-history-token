@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: arch.c,v 1.69 2016/04/06 09:57:00 gson Exp $	*/
+comment|/*	$NetBSD: arch.c,v 1.70 2017/04/16 20:49:09 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: arch.c,v 1.69 2016/04/06 09:57:00 gson Exp $"
+literal|"$NetBSD: arch.c,v 1.70 2017/04/16 20:49:09 riastradh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: arch.c,v 1.69 2016/04/06 09:57:00 gson Exp $"
+literal|"$NetBSD: arch.c,v 1.70 2017/04/16 20:49:09 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2393,6 +2393,8 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -2402,7 +2404,12 @@ name|elen
 argument_list|,
 name|SEEK_CUR
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|badarch
+goto|;
 if|if
 condition|(
 name|DEBUG
@@ -2475,6 +2482,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -2490,7 +2499,12 @@ literal|1
 argument_list|,
 name|SEEK_CUR
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|badarch
+goto|;
 block|}
 name|fclose
 argument_list|(
@@ -3282,6 +3296,8 @@ block|}
 else|else
 block|{
 comment|/* 		 * To make life easier, we reposition the file at the start 		 * of the header we just read before we return the stream. 		 * In a more general situation, it might be better to leave 		 * the file at the actual member, rather than its header, but 		 * not here... 		 */
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -3295,7 +3311,19 @@ argument_list|)
 argument_list|,
 name|SEEK_CUR
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|arch
+argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 return|return
 operator|(
 name|arch
@@ -3462,6 +3490,8 @@ literal|0
 condition|)
 block|{
 comment|/* Found as extended name */
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -3477,13 +3507,27 @@ name|elen
 argument_list|,
 name|SEEK_CUR
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|arch
+argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 return|return
 operator|(
 name|arch
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -3493,7 +3537,19 @@ name|elen
 argument_list|,
 name|SEEK_CUR
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|arch
+argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 goto|goto
 name|skip
 goto|;
@@ -3507,7 +3563,7 @@ label|:
 comment|/* 	     * This isn't the member we're after, so we need to advance the 	     * stream's pointer to the start of the next header. Files are 	     * padded with newlines to an even-byte boundary, so we need to 	     * extract the size of the file from the 'size' field of the 	     * header and round it up during the seek. 	     */
 name|arhPtr
 operator|->
-name|ar_size
+name|AR_SIZE
 index|[
 sizeof|sizeof
 argument_list|(
@@ -3537,6 +3593,8 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -3552,7 +3610,19 @@ literal|1
 argument_list|,
 name|SEEK_CUR
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|arch
+argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 block|}
 block|}
 comment|/*      * We've looked everywhere, but the member is not to be found. Close the      * archive and return NULL -- an error.      */
