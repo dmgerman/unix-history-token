@@ -198,12 +198,16 @@ end_decl_stmt
 begin_decl_stmt
 name|uid_t
 name|nfsrv_defaultuid
+init|=
+name|UID_NOBODY
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|gid_t
 name|nfsrv_defaultgid
+init|=
+name|GID_NOGROUP
 decl_stmt|;
 end_decl_stmt
 
