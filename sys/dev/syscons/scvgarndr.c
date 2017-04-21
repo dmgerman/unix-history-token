@@ -3128,7 +3128,7 @@ name|rndr
 operator|->
 name|draw
 operator|=
-name|vga_egadraw
+name|vga_vgadraw_planar
 expr_stmt|;
 else|else
 name|scp
@@ -3137,7 +3137,7 @@ name|rndr
 operator|->
 name|draw
 operator|=
-name|vga_vgadraw_planar
+name|vga_egadraw
 expr_stmt|;
 name|scp
 operator|->
@@ -5249,14 +5249,6 @@ name|outw
 argument_list|(
 name|GDCIDX
 argument_list|,
-literal|0x0005
-argument_list|)
-expr_stmt|;
-comment|/* read mode 0, write mode 0 */
-name|outw
-argument_list|(
-name|GDCIDX
-argument_list|,
 name|bg
 operator||
 literal|0x00
@@ -5267,7 +5259,7 @@ name|writeb
 argument_list|(
 name|d
 argument_list|,
-literal|0
+literal|0xff
 argument_list|)
 expr_stmt|;
 name|c
@@ -5278,14 +5270,6 @@ name|d
 argument_list|)
 expr_stmt|;
 comment|/* set bg color in the latch */
-name|outw
-argument_list|(
-name|GDCIDX
-argument_list|,
-literal|0x0305
-argument_list|)
-expr_stmt|;
-comment|/* read mode 0, write mode 3 */
 block|}
 comment|/* foreground color */
 name|outw
