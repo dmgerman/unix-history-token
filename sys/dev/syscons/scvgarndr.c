@@ -4600,6 +4600,8 @@ name|f
 decl_stmt|;
 name|u_short
 name|bg
+decl_stmt|,
+name|fg
 decl_stmt|;
 name|u_short
 name|col1
@@ -4698,6 +4700,8 @@ literal|0x0f01
 argument_list|)
 expr_stmt|;
 comment|/* set/reset enable */
+name|fg
+operator|=
 name|bg
 operator|=
 operator|-
@@ -4831,6 +4835,11 @@ name|bg
 operator|=
 name|col2
 expr_stmt|;
+name|fg
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|outw
 argument_list|(
 name|GDCIDX
@@ -4878,6 +4887,17 @@ expr_stmt|;
 comment|/* set bg color in the latch */
 block|}
 comment|/* foreground color */
+if|if
+condition|(
+name|fg
+operator|!=
+name|col1
+condition|)
+block|{
+name|fg
+operator|=
+name|col1
+expr_stmt|;
 name|outw
 argument_list|(
 name|GDCIDX
@@ -4888,6 +4908,7 @@ literal|0x00
 argument_list|)
 expr_stmt|;
 comment|/* set/reset */
+block|}
 name|e
 operator|=
 name|d
