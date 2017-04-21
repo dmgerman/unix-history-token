@@ -260,23 +260,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|ipf_rdx_node_t
-modifier|*
-name|ipf_rx_match
-name|__P
-argument_list|(
-operator|(
-name|ipf_rdx_head_t
-operator|*
-operator|,
-name|addrfamily_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*	$NetBSD: radix_ipf.c,v 1.6 2015/12/15 12:30:34 christos Exp $	*/
+end_comment
 
 begin_comment
 comment|/*  * Foreword.  * ---------  * The code in this file has been written to target using the addrfamily_t  * data structure to house the address information and no other. Thus there  * are certain aspects of thise code (such as offsets to the address itself)  * that are hard coded here whilst they might be more variable elsewhere.  * Similarly, this code enforces no maximum key length as that's implied by  * all keys needing to be stored in addrfamily_t.  */
@@ -8410,6 +8396,11 @@ name|rnh
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|order
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -8471,6 +8462,11 @@ name|rnh
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|order
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
