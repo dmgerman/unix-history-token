@@ -1801,31 +1801,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Controls whether the shell is interactive or not.  */
+comment|/*  * Controls whether the shell is interactive or not based on iflag.  */
 end_comment
 
 begin_function
 name|void
 name|setinteractive
 parameter_list|(
-name|int
-name|on
+name|void
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|is_interactive
-init|=
-operator|-
-literal|1
-decl_stmt|;
-if|if
-condition|(
-name|on
-operator|==
-name|is_interactive
-condition|)
-return|return;
 name|setsignal
 argument_list|(
 name|SIGINT
@@ -1840,10 +1825,6 @@ name|setsignal
 argument_list|(
 name|SIGTERM
 argument_list|)
-expr_stmt|;
-name|is_interactive
-operator|=
-name|on
 expr_stmt|;
 block|}
 end_function
