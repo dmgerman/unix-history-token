@@ -4335,7 +4335,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|NAME_ERR_MULTIPLE_AT
+name|NAME_ERR_MULTIPLE_DELIMITERS
 case|:
 name|zfs_error_aux
 argument_list|(
@@ -4345,7 +4345,8 @@ name|dgettext
 argument_list|(
 name|TEXT_DOMAIN
 argument_list|,
-literal|"multiple '@' delimiters in name"
+literal|"multiple '@' and/or '#' delimiters in "
+literal|"name"
 argument_list|)
 argument_list|)
 expr_stmt|;

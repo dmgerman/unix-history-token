@@ -51,11 +51,22 @@ directive|include
 file|<zlib.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITHOUT_FASTMATCH
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"fastmatch.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -560,6 +571,12 @@ name|r_pattern
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITHOUT_FASTMATCH
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|fastmatch_t
@@ -567,6 +584,11 @@ modifier|*
 name|fg_pattern
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* For regex errors  */

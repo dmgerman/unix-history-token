@@ -1041,6 +1041,9 @@ literal|0
 operator|||
 name|id
 operator|>=
+operator|(
+name|long
+operator|)
 name|ta
 operator|->
 name|map_len
@@ -6088,6 +6091,9 @@ name|th
 operator|->
 name|th_tid
 operator|>=
+operator|(
+name|long
+operator|)
 name|th
 operator|->
 name|th_ta

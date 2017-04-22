@@ -1154,12 +1154,17 @@ name|retries
 operator|=
 name|INT_MAX
 expr_stmt|;
+comment|/* cred == NULL for DS connects. */
 if|if
 condition|(
 name|NFSHASNFSV4N
 argument_list|(
 name|nmp
 argument_list|)
+operator|&&
+name|cred
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 			 * Make sure the nfscbd_pool doesn't get destroyed 			 * while doing this. 			 */
@@ -4660,10 +4665,16 @@ operator||=
 name|ND_INCRSEQID
 expr_stmt|;
 block|}
-comment|/* 			 * If this op's status is non-zero, mark 			 * that there is no more data to process. 			 */
+comment|/* 			 * If this op's status is non-zero, mark 			 * that there is no more data to process. 			 * The exception is Setattr, which always has xdr 			 * when it has failed. 			 */
 if|if
 condition|(
 name|j
+operator|!=
+literal|0
+operator|&&
+name|i
+operator|!=
+name|NFSV4OP_SETATTR
 condition|)
 name|nd
 operator|->

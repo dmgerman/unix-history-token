@@ -3740,6 +3740,13 @@ condition|(
 name|freeing_dnode
 condition|)
 block|{
+name|dn
+operator|->
+name|dn_objset
+operator|->
+name|os_freed_dnodes
+operator|++
+expr_stmt|;
 name|dnode_sync_free
 argument_list|(
 name|dn

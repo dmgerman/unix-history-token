@@ -1249,7 +1249,7 @@ else|else
 block|{
 name|p
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|ei
 operator|->
@@ -1258,12 +1258,6 @@ index|[
 name|i
 index|]
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|_ISO2022Charset
-argument_list|)
-operator|*
-operator|(
 name|ei
 operator|->
 name|recommendsize
@@ -1272,7 +1266,11 @@ name|i
 index|]
 operator|+
 literal|1
-operator|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_ISO2022Charset
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

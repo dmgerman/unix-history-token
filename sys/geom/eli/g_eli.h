@@ -2954,10 +2954,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"iterations: %u\n"
+literal|"iterations: %d\n"
 argument_list|,
 operator|(
-name|u_int
+name|int
 operator|)
 name|md
 operator|->

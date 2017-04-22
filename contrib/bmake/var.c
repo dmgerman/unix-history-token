@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.213 2017/02/01 18:39:27 sjg Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.215 2017/04/16 21:39:49 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.213 2017/02/01 18:39:27 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.215 2017/04/16 21:39:49 riastradh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.213 2017/02/01 18:39:27 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.215 2017/04/16 21:39:49 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4409,6 +4409,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|char
@@ -4507,13 +4508,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
-name|dummy
-condition|?
 name|TRUE
-else|:
-name|TRUE
-operator|)
 return|;
 block|}
 end_function
@@ -4550,6 +4545,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|char
@@ -4634,13 +4630,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
-name|dummy
-condition|?
 name|TRUE
-else|:
-name|TRUE
-operator|)
 return|;
 block|}
 end_function
@@ -4677,6 +4667,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|char
@@ -4750,13 +4741,7 @@ name|TRUE
 expr_stmt|;
 block|}
 return|return
-operator|(
-name|dummy
-condition|?
 name|addSpace
-else|:
-name|addSpace
-operator|)
 return|;
 block|}
 end_function
@@ -4793,6 +4778,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|char
@@ -4873,13 +4859,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
-name|dummy
-condition|?
 name|TRUE
-else|:
-name|TRUE
-operator|)
 return|;
 block|}
 end_function
@@ -6842,12 +6822,12 @@ operator|!=
 literal|'\n'
 operator|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 name|addSpace

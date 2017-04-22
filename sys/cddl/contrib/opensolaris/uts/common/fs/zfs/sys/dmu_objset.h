@@ -262,6 +262,12 @@ decl_stmt|;
 name|uint64_t
 name|os_flags
 decl_stmt|;
+name|uint64_t
+name|os_freed_dnodes
+decl_stmt|;
+name|boolean_t
+name|os_rescan_dnodes
+decl_stmt|;
 comment|/* Protected by os_obj_lock */
 name|kmutex_t
 name|os_obj_lock
