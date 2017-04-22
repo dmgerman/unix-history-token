@@ -184,13 +184,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__clang__
+name|_LIBCPP_MSVC
 argument_list|)
 end_if
 
