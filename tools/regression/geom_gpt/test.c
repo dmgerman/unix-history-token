@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libgeom.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<limits.h>
 end_include
 
@@ -63,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libgeom.h>
 end_include
 
 begin_struct
