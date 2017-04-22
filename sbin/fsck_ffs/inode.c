@@ -2802,7 +2802,7 @@ name|inoinfo
 operator|*
 operator|*
 operator|)
-name|realloc
+name|reallocarray
 argument_list|(
 operator|(
 name|char
@@ -2810,11 +2810,8 @@ operator|*
 operator|)
 name|inpsort
 argument_list|,
-operator|(
-name|unsigned
-operator|)
 name|listmax
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct

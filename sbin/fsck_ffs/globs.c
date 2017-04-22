@@ -178,13 +178,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|long
-name|numdirs
-decl_stmt|,
 name|dirhash
 decl_stmt|,
-name|listmax
-decl_stmt|,
 name|inplast
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|numdirs
+decl_stmt|,
+name|listmax
 decl_stmt|;
 end_decl_stmt
 
@@ -845,11 +850,11 @@ name|cursnapshot
 operator|=
 literal|0
 expr_stmt|;
+name|listmax
+operator|=
 name|numdirs
 operator|=
 name|dirhash
-operator|=
-name|listmax
 operator|=
 name|inplast
 operator|=
