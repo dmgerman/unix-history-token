@@ -97,18 +97,24 @@ end_define
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|COMPILER_RT_ARMHF_TARGET
+argument_list|)
+operator|||
+operator|(
 operator|!
 name|defined
 argument_list|(
 name|__clang__
 argument_list|)
 operator|&&
+expr|\
 name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
 operator|&&
-expr|\
 operator|(
 name|__GNUC__
 operator|<
@@ -121,6 +127,7 @@ operator|&&
 name|__GNUC_MINOR__
 operator|<
 literal|5
+operator|)
 operator|)
 end_if
 

@@ -144,6 +144,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__has_attribute
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_attribute
+parameter_list|(
+name|attr
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_enum
 enum|enum
 name|VendorSignatures
@@ -2701,17 +2722,36 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_INIT_PRIORITY
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|CONSTRUCTOR_PRIORITY
-value|(101)
+name|CONSTRUCTOR_ATTRIBUTE
+value|__attribute__((__constructor__ 101))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__has_attribute
+argument_list|(
+name|__constructor__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|CONSTRUCTOR_ATTRIBUTE
+value|__attribute__((__constructor__))
 end_define
 
 begin_else
@@ -2719,10 +2759,18 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|// FIXME: For MSVC, we should make a function pointer global in .CRT$X?? so that
+end_comment
+
+begin_comment
+comment|// this runs during initialization.
+end_comment
+
 begin_define
 define|#
 directive|define
-name|CONSTRUCTOR_PRIORITY
+name|CONSTRUCTOR_ATTRIBUTE
 end_define
 
 begin_endif
@@ -2730,21 +2778,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|__cpu_indicator_init
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(constructor CONSTRUCTOR_PRIORITY
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
+argument_list|)
+name|CONSTRUCTOR_ATTRIBUTE
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -2790,19 +2832,13 @@ begin_comment
 comment|/* A constructor function that is sets __cpu_model and __cpu_features with    the right values.  This needs to run only once.  This constructor is    given the highest priority and it should run before constructors without    the priority set.  However, it still runs after ifunc initializers and    needs to be called explicitly there.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|int
-name|__attribute__
-argument_list|(
-operator|(
-name|constructor
-name|CONSTRUCTOR_PRIORITY
-operator|)
-argument_list|)
+name|CONSTRUCTOR_ATTRIBUTE
 name|__cpu_indicator_init
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -3066,7 +3102,7 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_endif
 endif|#

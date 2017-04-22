@@ -181,10 +181,6 @@ name|Entries
 decl_stmt|;
 block|}
 struct|;
-name|uint64_t
-name|cycleFrequency
-parameter_list|()
-function_decl|;
 name|bool
 name|patchFunctionEntry
 parameter_list|(
@@ -198,6 +194,13 @@ specifier|const
 name|XRaySledEntry
 modifier|&
 name|Sled
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|Trampoline
+function_decl|)
+parameter_list|()
 parameter_list|)
 function_decl|;
 name|bool
@@ -256,6 +259,11 @@ function_decl|;
 specifier|extern
 name|void
 name|__xray_FunctionTailExit
+parameter_list|()
+function_decl|;
+specifier|extern
+name|void
+name|__xray_ArgLoggerEntry
 parameter_list|()
 function_decl|;
 block|}

@@ -621,6 +621,13 @@ name|MBlock
 block|{
 name|u64
 name|siz
+range|:
+literal|48
+decl_stmt|;
+name|u64
+name|tag
+range|:
+literal|16
 decl_stmt|;
 name|u32
 name|stk

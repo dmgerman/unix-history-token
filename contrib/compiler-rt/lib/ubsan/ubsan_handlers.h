@@ -387,10 +387,17 @@ name|AttrLoc
 decl_stmt|;
 block|}
 struct|;
-comment|/// \brief Handle returning null from function with returns_nonnull attribute.
+comment|/// \brief Handle returning null from function with the returns_nonnull
+comment|/// attribute, or a return type annotated with _Nonnull.
 name|RECOVERABLE
 argument_list|(
 argument|nonnull_return
+argument_list|,
+argument|NonNullReturnData *Data
+argument_list|)
+name|RECOVERABLE
+argument_list|(
+argument|nullability_return
 argument_list|,
 argument|NonNullReturnData *Data
 argument_list|)
@@ -408,10 +415,17 @@ name|ArgIndex
 decl_stmt|;
 block|}
 struct|;
-comment|/// \brief Handle passing null pointer to function with nonnull attribute.
+comment|/// \brief Handle passing null pointer to a function parameter with the nonnull
+comment|/// attribute, or a _Nonnull type annotation.
 name|RECOVERABLE
 argument_list|(
-name|nonnull_arg
+argument|nonnull_arg
+argument_list|,
+argument|NonNullArgData *Data
+argument_list|)
+name|RECOVERABLE
+argument_list|(
+name|nullability_arg
 argument_list|,
 name|NonNullArgData
 operator|*

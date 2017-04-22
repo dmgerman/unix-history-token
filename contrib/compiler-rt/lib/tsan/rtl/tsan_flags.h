@@ -113,11 +113,6 @@ name|str
 argument_list|)
 block|; }
 decl_stmt|;
-name|Flags
-modifier|*
-name|flags
-parameter_list|()
-function_decl|;
 name|void
 name|InitializeFlags
 parameter_list|(

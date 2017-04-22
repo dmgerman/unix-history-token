@@ -73,6 +73,7 @@ begin_extern
 extern|extern
 literal|"C"
 block|{
+comment|// Synchronize this with AsmPrinter::SledKind in LLVM.
 enum|enum
 name|XRayEntryType
 block|{
@@ -87,7 +88,11 @@ block|,
 name|TAIL
 init|=
 literal|2
-block|}
+block|,
+name|LOG_ARGS_ENTRY
+init|=
+literal|3
+block|, }
 enum|;
 comment|// Provide a function to invoke for when instrumentation points are hit. This is
 comment|// a user-visible control surface that overrides the default implementation. The
@@ -164,6 +169,35 @@ comment|// result values.
 specifier|extern
 name|XRayPatchingStatus
 name|__xray_unpatch
+parameter_list|()
+function_decl|;
+comment|// Use XRay to log the first argument of each (instrumented) function call.
+comment|// When this function exits, all threads will have observed the effect and
+comment|// start logging their subsequent affected function calls (if patched).
+comment|//
+comment|// Returns 1 on success, 0 on error.
+specifier|extern
+name|int
+name|__xray_set_handler_arg1
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|int32_t
+parameter_list|,
+name|XRayEntryType
+parameter_list|,
+name|uint64_t
+parameter_list|)
+parameter_list|)
+function_decl|;
+comment|// Disables the XRay handler used to log first arguments of function calls.
+comment|// Returns 1 on success, 0 on error.
+specifier|extern
+name|int
+name|__xray_remove_handler_arg1
 parameter_list|()
 function_decl|;
 block|}

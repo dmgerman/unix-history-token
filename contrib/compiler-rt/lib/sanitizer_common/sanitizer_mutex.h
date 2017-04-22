@@ -312,6 +312,13 @@ name|void
 name|Unlock
 parameter_list|()
 function_decl|;
+comment|// This function does not guarantee an explicit check that the calling thread
+comment|// is the thread which owns the mutex. This behavior, while more strictly
+comment|// correct, causes problems in cases like StopTheWorld, where a parent thread
+comment|// owns the mutex but a child checks that it is locked. Rather than
+comment|// maintaining complex state to work around those situations, the check only
+comment|// checks that the mutex is owned, and assumes callers to be generally
+comment|// well-behaved.
 name|void
 name|CheckLocked
 parameter_list|()

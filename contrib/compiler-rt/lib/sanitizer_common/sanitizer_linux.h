@@ -281,6 +281,17 @@ name|defined
 argument_list|(
 name|__s390__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
 name|uptr
 name|internal_clone
 parameter_list|(

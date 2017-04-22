@@ -602,12 +602,16 @@ function_decl|;
 comment|// Prints stack traces for all live heap allocations ordered by total
 comment|// allocation size until `top_percent` of total live heap is shown.
 comment|// `top_percent` should be between 1 and 100.
+comment|// At most `max_number_of_contexts` contexts (stack traces) is printed.
 comment|// Experimental feature currently available only with asan on Linux/x86_64.
 name|void
 name|__sanitizer_print_memory_profile
 parameter_list|(
 name|size_t
 name|top_percent
+parameter_list|,
+name|size_t
+name|max_number_of_contexts
 parameter_list|)
 function_decl|;
 comment|// Fiber annotation interface.
