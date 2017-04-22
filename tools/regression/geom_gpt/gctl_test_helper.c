@@ -498,7 +498,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|"GPT"
+literal|"PART"
 argument_list|)
 expr_stmt|;
 while|while
