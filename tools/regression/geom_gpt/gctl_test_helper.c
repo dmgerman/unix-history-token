@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -88,6 +94,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|retval
 modifier|*
@@ -96,6 +103,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 decl_stmt|;
@@ -105,7 +113,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -472,6 +482,13 @@ operator|=
 name|gctl_get_handle
 argument_list|()
 expr_stmt|;
+name|assert
+argument_list|(
+name|req
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|gctl_ro_param
 argument_list|(
 name|req
@@ -572,6 +589,13 @@ argument_list|(
 expr|struct
 name|retval
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|rv
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 name|rv
