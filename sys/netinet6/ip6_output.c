@@ -804,6 +804,21 @@ name|m_pkthdr
 operator|.
 name|len
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|mtu
+operator|%
+literal|8
+operator|==
+literal|0
+operator|)
+argument_list|,
+operator|(
+literal|"Fragment length must be a multiple of 8"
+operator|)
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 name|m0
