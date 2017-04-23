@@ -37689,7 +37689,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|CTL_RETVAL_COMPLETE
+name|retval
 operator|)
 return|;
 block|}
