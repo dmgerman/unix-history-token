@@ -78,8 +78,6 @@ specifier|static
 name|uint
 name|npages
 decl_stmt|,
-name|pagesize
-decl_stmt|,
 name|spp
 decl_stmt|;
 end_decl_stmt
@@ -87,6 +85,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|pagesize
+decl_stmt|,
 name|statsfd
 init|=
 operator|-
