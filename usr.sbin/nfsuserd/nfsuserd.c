@@ -356,10 +356,7 @@ begin_decl_stmt
 name|uid_t
 name|defaultuid
 init|=
-operator|(
-name|uid_t
-operator|)
-literal|32767
+literal|65534
 decl_stmt|;
 end_decl_stmt
 
@@ -376,10 +373,7 @@ begin_decl_stmt
 name|gid_t
 name|defaultgid
 init|=
-operator|(
-name|gid_t
-operator|)
-literal|32767
+literal|65533
 decl_stmt|;
 end_decl_stmt
 
