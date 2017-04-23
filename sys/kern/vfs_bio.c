@@ -20047,6 +20047,24 @@ condition|;
 name|j
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_io_tracking
+index|[
+name|BUF_TRACKING_ENTRY
+argument_list|(
+name|i
+operator|-
+name|j
+argument_list|)
+index|]
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|db_printf
 argument_list|(
 literal|" %2u: %s\n"
@@ -20066,6 +20084,7 @@ argument_list|)
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 elif|#
 directive|elif
 name|defined
