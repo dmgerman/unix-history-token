@@ -22535,15 +22535,6 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-name|fc
-operator|=
-name|ISP_FC_PC
-argument_list|(
-name|isp
-argument_list|,
-name|bus
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|evt
