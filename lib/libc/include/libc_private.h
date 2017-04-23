@@ -1872,6 +1872,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|__throw_constraint_handler_s
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+specifier|restrict
+name|msg
+parameter_list|,
+name|int
+name|error
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

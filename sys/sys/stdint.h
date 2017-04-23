@@ -217,6 +217,43 @@ name|WCHAR_MAX
 value|__WCHAR_MAX
 end_define
 
+begin_if
+if|#
+directive|if
+name|__EXT1_VISIBLE
+end_if
+
+begin_comment
+comment|/* ISO/IEC 9899:2011 K.3.4.4 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RSIZE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RSIZE_MAX
+value|(SIZE_MAX>> 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __EXT1_VISIBLE */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
