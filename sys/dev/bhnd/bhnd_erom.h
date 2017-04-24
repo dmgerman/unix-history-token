@@ -514,6 +514,32 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/**  * Enumerate and print all entries in @p erom.  *   * @param	erom	The erom parser to be enumerated.  *   * @retval 0		success  * @retval non-zero	If an error occurs parsing the EROM table, a regular  *			unix error code will be returned.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_erom_dump
+parameter_list|(
+name|bhnd_erom_t
+modifier|*
+name|erom
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_EROM_DUMP
+argument_list|(
+name|erom
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif

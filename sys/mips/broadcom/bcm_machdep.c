@@ -1240,6 +1240,20 @@ name|error
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|bhnd_erom_dump
+argument_list|(
+operator|&
+name|bp
+operator|->
+name|erom
+operator|.
+name|obj
+argument_list|)
+expr_stmt|;
 comment|/* Fetch chipcommon core info */
 name|error
 operator|=
