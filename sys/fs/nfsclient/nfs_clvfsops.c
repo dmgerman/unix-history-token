@@ -8213,6 +8213,14 @@ operator|->
 name|nm_bufq
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|nmp
+operator|->
+name|nm_sess
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|clval

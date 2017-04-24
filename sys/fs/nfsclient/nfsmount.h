@@ -354,7 +354,7 @@ value|((struct nfsmount *)((mp)->mnt_data))
 end_define
 
 begin_comment
-comment|/*  * Get a pointer to the MDS session, which is always the first element  * in the list.  */
+comment|/*  * Get a pointer to the MDS session, which is always the first element  * in the list.  * This macro can only be safely used when the NFSLOCKMNT() lock is held.  * The inline function can be used when the lock isn't held.  */
 end_comment
 
 begin_define
@@ -366,6 +366,52 @@ name|m
 parameter_list|)
 value|(&(TAILQ_FIRST(&((m)->nm_sess))->nfsclds_sess))
 end_define
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|nfsclsession
+operator|*
+name|nfsmnt_mdssession
+argument_list|(
+argument|struct nfsmount *nmp
+argument_list|)
+block|{ 	struct
+name|nfsclsession
+operator|*
+name|tsep
+block|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|nmp
+operator|->
+name|nm_mtx
+argument_list|)
+block|;
+name|tsep
+operator|=
+name|NFSMNT_MDSSESSION
+argument_list|(
+name|nmp
+argument_list|)
+block|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|nmp
+operator|->
+name|nm_mtx
+argument_list|)
+block|;
+return|return
+operator|(
+name|tsep
+operator|)
+return|;
+block|}
+end_expr_stmt
 
 begin_ifndef
 ifndef|#

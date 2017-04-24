@@ -236,13 +236,6 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|mtx
-name|nfs_clstate_mutex
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mtx
 name|ncl_iod_mutex
 decl_stmt|;
 end_decl_stmt
@@ -7030,18 +7023,6 @@ expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
-name|nfs_clstate_mutex
-argument_list|,
-literal|"nfs_clstate_mutex"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
 name|ncl_iod_mutex
 argument_list|,
 literal|"ncl_iod_mutex"
@@ -7100,7 +7081,7 @@ directive|if
 literal|0
 block|ncl_call_invalcaches = NULL; 		nfsd_call_nfscl = NULL;
 comment|/* and get rid of the mutexes */
-block|mtx_destroy(&nfs_clstate_mutex); 		mtx_destroy(&ncl_iod_mutex); 		loaded = 0; 		break;
+block|mtx_destroy(&ncl_iod_mutex); 		loaded = 0; 		break;
 else|#
 directive|else
 comment|/* FALLTHROUGH */
