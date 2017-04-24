@@ -4291,16 +4291,6 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|lc
-operator|->
-name|lro_flushed
-operator|++
-expr_stmt|;
-name|lc
-operator|->
-name|lro_queued
-operator|++
-expr_stmt|;
 comment|/* input packet to network layer */
 call|(
 modifier|*
