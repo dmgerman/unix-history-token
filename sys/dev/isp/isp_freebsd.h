@@ -698,12 +698,6 @@ name|dmap
 decl_stmt|;
 comment|/* dma map for this command */
 name|struct
-name|ispsoftc
-modifier|*
-name|isp
-decl_stmt|;
-comment|/* containing isp */
-name|struct
 name|callout
 name|wdog
 decl_stmt|;
