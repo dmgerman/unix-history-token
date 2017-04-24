@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -535,6 +541,22 @@ operator|+
 name|blk_desc_length
 expr_stmt|;
 comment|/* 	 * Create the control page at the correct point in the mode_buf, it 	 * starts after the header and the blk description. 	 */
+name|assert
+argument_list|(
+name|hdr_and_blk_length
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|mode_buf
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|scsi_control_ext_page
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|control_page
 operator|=
 operator|(
@@ -986,6 +1008,11 @@ condition|)
 name|cam_freeccb
 argument_list|(
 name|ccb
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|report_buf
 argument_list|)
 expr_stmt|;
 return|return
