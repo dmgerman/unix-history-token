@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -129,6 +135,23 @@ begin_include
 include|#
 directive|include
 file|<machine/vfp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_PSCI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/psci/psci.h>
 end_include
 
 begin_endif
@@ -462,9 +485,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_PSCI
+name|psci_reset
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
-literal|"cpu_reset"
+literal|"cpu_reset failed"
 argument_list|)
 expr_stmt|;
 while|while

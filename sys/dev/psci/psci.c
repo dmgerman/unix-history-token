@@ -1665,6 +1665,23 @@ comment|/* System reset and off do not return. */
 block|}
 end_function
 
+begin_function
+name|void
+name|psci_reset
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|psci_shutdown
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
