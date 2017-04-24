@@ -148,7 +148,7 @@ literal|"struct tcpcb *"
 argument_list|,
 literal|"csinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|,
@@ -178,7 +178,7 @@ literal|"struct tcpcb *"
 argument_list|,
 literal|"csinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|,
@@ -208,7 +208,7 @@ literal|"struct tcpcb *"
 argument_list|,
 literal|"csinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|,
@@ -238,7 +238,7 @@ literal|"struct tcpcb *"
 argument_list|,
 literal|"csinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|,
@@ -298,7 +298,7 @@ literal|"struct tcpcb *"
 argument_list|,
 literal|"csinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|,
@@ -373,6 +373,40 @@ argument_list|,
 literal|"int"
 argument_list|,
 literal|"tcplsinfo_t *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE6_XLATE
+argument_list|(
+name|tcp
+argument_list|, , ,
+name|receive__autoresize
+argument_list|,
+literal|"void *"
+argument_list|,
+literal|"void *"
+argument_list|,
+literal|"struct tcpcb *"
+argument_list|,
+literal|"csinfo_t *"
+argument_list|,
+literal|"struct mbuf *"
+argument_list|,
+literal|"ipinfo_t *"
+argument_list|,
+literal|"struct tcpcb *"
+argument_list|,
+literal|"tcpsinfo_t *"
+argument_list|,
+literal|"struct tcphdr *"
+argument_list|,
+literal|"tcpinfoh_t *"
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"int"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
