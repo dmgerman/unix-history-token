@@ -139,9 +139,10 @@ decl_stmt|,
 modifier|*
 name|sdt
 decl_stmt|;
-name|char
+name|int
 name|c
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|progname
 decl_stmt|;
