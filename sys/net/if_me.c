@@ -231,7 +231,7 @@ begin_define
 define|#
 directive|define
 name|MEMTU
-value|1500
+value|(1500 - sizeof(struct mobhdr))
 end_define
 
 begin_decl_stmt
@@ -1057,13 +1057,8 @@ operator|->
 name|if_mtu
 operator|=
 name|MEMTU
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mobhdr
-argument_list|)
 expr_stmt|;
+empty_stmt|;
 name|ME2IFP
 argument_list|(
 name|sc
@@ -1339,12 +1334,6 @@ operator|=
 name|ifr
 operator|->
 name|ifr_mtu
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mobhdr
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

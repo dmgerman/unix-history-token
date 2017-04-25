@@ -159,9 +159,6 @@ decl_stmt|;
 name|uint32_t
 name|gre_options
 decl_stmt|;
-name|uint32_t
-name|gre_mtu
-decl_stmt|;
 name|u_int
 name|gre_fibnum
 decl_stmt|;
