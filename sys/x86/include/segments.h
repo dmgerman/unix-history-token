@@ -1486,17 +1486,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LSOL26CALLS_SEL
-value|4
-end_define
-
-begin_comment
-comment|/* Solaris>= 2.6 system call gate */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LUDATA_SEL
 value|5
 end_define
