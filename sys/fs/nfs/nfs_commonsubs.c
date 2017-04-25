@@ -273,19 +273,6 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
-block|}
-block|,
-comment|/* undef */
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|LK_EXCLUSIVE
 block|,
 literal|1
 block|}
@@ -301,6 +288,25 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
+block|,
+literal|1
+block|}
+block|,
+comment|/* undef */
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -316,6 +322,8 @@ block|,
 literal|0
 block|,
 name|LK_SHARED
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -333,6 +341,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Close */
@@ -346,6 +356,8 @@ block|,
 literal|1
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -363,6 +375,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* Create */
@@ -378,6 +392,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Delegpurge */
@@ -393,6 +409,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Delegreturn */
@@ -406,6 +424,8 @@ block|,
 literal|0
 block|,
 name|LK_SHARED
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -423,6 +443,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* GetFH */
@@ -436,6 +458,8 @@ block|,
 literal|1
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -453,6 +477,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Lock */
@@ -468,6 +494,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* LockT */
@@ -483,6 +511,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* LockU */
@@ -496,6 +526,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -513,6 +545,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* Lookupp */
@@ -526,6 +560,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -543,6 +579,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Open */
@@ -558,6 +596,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* OpenAttr */
@@ -573,6 +613,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* OpenConfirm */
@@ -588,6 +630,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* OpenDowngrade */
@@ -601,6 +645,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -618,6 +664,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* PutPubFH */
@@ -631,6 +679,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -648,6 +698,8 @@ block|,
 name|LK_SHARED
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Read */
@@ -661,6 +713,8 @@ block|,
 literal|0
 block|,
 name|LK_SHARED
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -678,6 +732,8 @@ block|,
 name|LK_SHARED
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* ReadLink */
@@ -691,6 +747,8 @@ block|,
 literal|1
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -708,6 +766,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* Rename */
@@ -723,6 +783,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Renew */
@@ -736,6 +798,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -753,6 +817,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* SaveFH */
@@ -766,6 +832,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -783,6 +851,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Setattr */
@@ -796,6 +866,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -813,6 +885,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* SetClientIDConfirm */
@@ -826,6 +900,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -843,6 +919,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Write */
@@ -858,6 +936,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* ReleaseLockOwner */
@@ -871,6 +951,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -888,6 +970,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* Bind Conn to Sess */
@@ -901,6 +985,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -918,6 +1004,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* Create Session */
@@ -931,6 +1019,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -948,6 +1038,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Free StateID */
@@ -961,6 +1053,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -978,6 +1072,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* Get Device Info */
@@ -991,6 +1087,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -1008,6 +1106,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* Layout Commit */
@@ -1021,6 +1121,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -1038,6 +1140,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Layout Return */
@@ -1051,6 +1155,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -1068,6 +1174,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 comment|/* Sequence */
@@ -1081,6 +1189,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -1098,6 +1208,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 comment|/* Test StateID */
@@ -1111,6 +1223,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -1128,6 +1242,8 @@ block|,
 name|LK_EXCLUSIVE
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* Destroy ClientID */
@@ -1141,6 +1257,8 @@ block|,
 literal|0
 block|,
 name|LK_EXCLUSIVE
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -21917,24 +22035,6 @@ argument_list|,
 name|sessionid
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-return|return;
-name|KASSERT
-argument_list|(
-name|maxslot
-operator|>=
-literal|0
-argument_list|,
-operator|(
-literal|"nfscl_setsequence neg maxslot"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* Build the Sequence arguments. */
 name|NFSM_BUILD
 argument_list|(
@@ -21949,6 +22049,12 @@ literal|4
 operator|*
 name|NFSX_UNSIGNED
 argument_list|)
+expr_stmt|;
+name|nd
+operator|->
+name|nd_sequence
+operator|=
+name|tl
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -21971,6 +22077,13 @@ name|nd_slotseq
 operator|=
 name|tl
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 operator|*
 name|tl
 operator|++
@@ -22015,6 +22128,34 @@ name|tl
 operator|=
 name|newnfs_false
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * There are two errors and the rest of the session can 		 * just be zeros. 		 * NFSERR_BADSESSION: This bad session should just generate 		 *    the same error again when the RPC is retried. 		 * ESTALE: A forced dismount is in progress and will cause the 		 *    RPC to fail later. 		 */
+operator|*
+name|tl
+operator|++
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|tl
+operator|++
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|tl
+operator|++
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|tl
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|nd
 operator|->
 name|nd_flag
@@ -22086,6 +22227,45 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+if|if
+condition|(
+name|nmp
+operator|!=
+name|NULL
+operator|&&
+name|sep
+operator|->
+name|nfsess_defunct
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Just return the bad session. */
+name|bcopy
+argument_list|(
+name|sep
+operator|->
+name|nfsess_sessionid
+argument_list|,
+name|sessionid
+argument_list|,
+name|NFSX_V4SESSIONID
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sep
+operator|->
+name|nfsess_mtx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NFSERR_BADSESSION
+operator|)
+return|;
+block|}
 name|bitval
 operator|=
 literal|1

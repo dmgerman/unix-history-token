@@ -2443,6 +2443,11 @@ modifier|*
 name|nd_xprt
 decl_stmt|;
 comment|/* Server RPC handle */
+name|uint32_t
+modifier|*
+name|nd_sequence
+decl_stmt|;
+comment|/* Sequence Op. ptr */
 block|}
 struct|;
 end_struct
@@ -2668,6 +2673,13 @@ name|ND_LASTOP
 value|0x10000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|ND_LOOPBADSESS
+value|0x20000000
+end_define
+
 begin_comment
 comment|/*  * ND_GSS should be the "or" of all GSS type authentications.  */
 end_comment
@@ -2700,6 +2712,9 @@ name|lktype
 decl_stmt|;
 name|int
 name|needsseq
+decl_stmt|;
+name|int
+name|loopbadsess
 decl_stmt|;
 block|}
 struct|;

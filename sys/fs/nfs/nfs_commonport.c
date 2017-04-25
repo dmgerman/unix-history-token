@@ -739,6 +739,13 @@ name|nfs_slock_mutex
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|nfs_clstate_mutex
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* local functions */
 end_comment
@@ -2596,6 +2603,18 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|nfs_clstate_mutex
+argument_list|,
+literal|"nfs_clstate_mutex"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2877,6 +2896,12 @@ name|mtx_destroy
 argument_list|(
 operator|&
 name|nfs_state_mutex
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|nfs_clstate_mutex
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
