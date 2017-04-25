@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_include
@@ -123,11 +123,7 @@ specifier|static
 name|enum
 name|tag_result
 name|findctag
-parameter_list|(
-name|char
-modifier|*
-name|tag
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -136,14 +132,7 @@ specifier|static
 name|enum
 name|tag_result
 name|findgtag
-parameter_list|(
-name|char
-modifier|*
-name|tag
-parameter_list|,
-name|int
-name|type
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -152,9 +141,7 @@ specifier|static
 name|char
 modifier|*
 name|nextgtag
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -163,9 +150,7 @@ specifier|static
 name|char
 modifier|*
 name|prevgtag
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -173,9 +158,7 @@ begin_function_decl
 specifier|static
 name|POSITION
 name|ctagsearch
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -183,9 +166,7 @@ begin_function_decl
 specifier|static
 name|POSITION
 name|gtagsearch
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -193,26 +174,7 @@ begin_function_decl
 specifier|static
 name|int
 name|getentry
-parameter_list|(
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|tag
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|file
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|line
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -333,10 +295,9 @@ begin_function
 name|public
 name|void
 name|cleantags
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
+specifier|register
 name|struct
 name|tag
 modifier|*
@@ -391,25 +352,36 @@ name|tag
 modifier|*
 name|maketagent
 parameter_list|(
+name|name
+parameter_list|,
+name|file
+parameter_list|,
+name|linenum
+parameter_list|,
+name|pattern
+parameter_list|,
+name|endline
+parameter_list|)
 name|char
 modifier|*
 name|name
-parameter_list|,
+decl_stmt|;
 name|char
 modifier|*
 name|file
-parameter_list|,
+decl_stmt|;
 name|LINENUM
 name|linenum
-parameter_list|,
+decl_stmt|;
 name|char
 modifier|*
 name|pattern
-parameter_list|,
+decl_stmt|;
 name|int
 name|endline
-parameter_list|)
+decl_stmt|;
 block|{
+specifier|register
 name|struct
 name|tag
 modifier|*
@@ -540,9 +512,7 @@ begin_function
 name|public
 name|int
 name|gettagtype
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|f
@@ -657,10 +627,13 @@ name|public
 name|void
 name|findtag
 parameter_list|(
+name|tag
+parameter_list|)
+specifier|register
 name|char
 modifier|*
 name|tag
-parameter_list|)
+decl_stmt|;
 block|{
 name|int
 name|type
@@ -752,9 +725,7 @@ begin_function
 name|public
 name|POSITION
 name|tagsearch
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -798,9 +769,11 @@ name|char
 modifier|*
 name|nexttag
 parameter_list|(
-name|int
 name|n
 parameter_list|)
+name|int
+name|n
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -840,9 +813,11 @@ name|char
 modifier|*
 name|prevtag
 parameter_list|(
-name|int
 name|n
 parameter_list|)
+name|int
+name|n
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -880,9 +855,7 @@ begin_function
 name|public
 name|int
 name|ntags
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 return|return
 name|total
@@ -898,9 +871,7 @@ begin_function
 name|public
 name|int
 name|curr_tag
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 return|return
 name|curseq
@@ -922,19 +893,24 @@ name|enum
 name|tag_result
 name|findctag
 parameter_list|(
+name|tag
+parameter_list|)
+specifier|register
 name|char
 modifier|*
 name|tag
-parameter_list|)
+decl_stmt|;
 block|{
 name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|register
 name|FILE
 modifier|*
 name|f
 decl_stmt|;
+specifier|register
 name|int
 name|taglen
 decl_stmt|;
@@ -1298,9 +1274,7 @@ begin_function
 name|public
 name|int
 name|edit_tagfile
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1334,9 +1308,7 @@ begin_function
 specifier|static
 name|POSITION
 name|ctagsearch
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|POSITION
 name|pos
@@ -1529,13 +1501,19 @@ name|enum
 name|tag_result
 name|findgtag
 parameter_list|(
+name|tag
+parameter_list|,
+name|type
+parameter_list|)
 name|char
 modifier|*
 name|tag
-parameter_list|,
+decl_stmt|;
+comment|/* tag to load */
 name|int
 name|type
-parameter_list|)
+decl_stmt|;
+comment|/* tags type */
 block|{
 name|char
 name|buf
@@ -2024,9 +2002,7 @@ specifier|static
 name|char
 modifier|*
 name|nextgtag
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|tag
@@ -2105,9 +2081,7 @@ specifier|static
 name|char
 modifier|*
 name|prevgtag
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|tag
@@ -2185,9 +2159,7 @@ begin_function
 specifier|static
 name|POSITION
 name|gtagsearch
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -2223,25 +2195,37 @@ specifier|static
 name|int
 name|getentry
 parameter_list|(
+name|buf
+parameter_list|,
+name|tag
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
 name|char
 modifier|*
 name|buf
-parameter_list|,
+decl_stmt|;
+comment|/* standard or extended ctags -x format data */
 name|char
 modifier|*
 modifier|*
 name|tag
-parameter_list|,
+decl_stmt|;
+comment|/* name of the tag we actually found */
 name|char
 modifier|*
 modifier|*
 name|file
-parameter_list|,
+decl_stmt|;
+comment|/* file in which to find this tag */
 name|char
 modifier|*
 modifier|*
 name|line
-parameter_list|)
+decl_stmt|;
+comment|/* line number of file where this tag is found */
 block|{
 name|char
 modifier|*

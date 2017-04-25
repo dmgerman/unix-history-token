@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -1268,8 +1268,6 @@ block|,
 name|STRING
 operator||
 name|REPAINT
-operator||
-name|NO_QUERY
 block|,
 literal|0
 block|,
@@ -1280,7 +1278,7 @@ block|,
 block|{
 literal|"color desc: "
 block|,
-literal|"Ddknsu0123456789."
+literal|"Dadknsu0123456789."
 block|,
 name|NULL
 block|}
@@ -2279,10 +2277,9 @@ begin_function
 name|public
 name|void
 name|init_option
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
+specifier|register
 name|struct
 name|loption
 modifier|*
@@ -2391,10 +2388,13 @@ name|loption
 modifier|*
 name|findopt
 parameter_list|(
-name|int
 name|c
 parameter_list|)
+name|int
+name|c
+decl_stmt|;
 block|{
+specifier|register
 name|struct
 name|loption
 modifier|*
@@ -2471,9 +2471,11 @@ specifier|static
 name|int
 name|is_optchar
 parameter_list|(
-name|char
 name|c
 parameter_list|)
+name|char
+name|c
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2521,20 +2523,26 @@ name|loption
 modifier|*
 name|findopt_name
 parameter_list|(
+name|p_optname
+parameter_list|,
+name|p_oname
+parameter_list|,
+name|p_err
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|p_optname
-parameter_list|,
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|p_oname
-parameter_list|,
+decl_stmt|;
 name|int
 modifier|*
 name|p_err
-parameter_list|)
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -2543,16 +2551,19 @@ init|=
 operator|*
 name|p_optname
 decl_stmt|;
+specifier|register
 name|struct
 name|loption
 modifier|*
 name|o
 decl_stmt|;
+specifier|register
 name|struct
 name|optname
 modifier|*
 name|oname
 decl_stmt|;
+specifier|register
 name|int
 name|len
 decl_stmt|;

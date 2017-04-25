@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -71,9 +71,7 @@ begin_function
 name|public
 name|void
 name|jump_forw
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|POSITION
 name|pos
@@ -171,9 +169,7 @@ begin_function
 name|public
 name|void
 name|jump_forw_buffered
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|POSITION
 name|end
@@ -231,9 +227,11 @@ name|public
 name|void
 name|jump_back
 parameter_list|(
-name|LINENUM
 name|linenum
 parameter_list|)
+name|LINENUM
+name|linenum
+decl_stmt|;
 block|{
 name|POSITION
 name|pos
@@ -337,9 +335,7 @@ begin_function
 name|public
 name|void
 name|repaint
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|scrpos
@@ -355,6 +351,23 @@ expr_stmt|;
 name|pos_clear
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|scrpos
+operator|.
+name|pos
+operator|==
+name|NULL_POSITION
+condition|)
+comment|/* Screen hasn't been drawn yet. */
+name|jump_loc
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|jump_loc
 argument_list|(
 name|scrpos
@@ -378,12 +391,16 @@ name|public
 name|void
 name|jump_percent
 parameter_list|(
-name|int
 name|percent
 parameter_list|,
-name|long
 name|fraction
 parameter_list|)
+name|int
+name|percent
+decl_stmt|;
+name|long
+name|fraction
+decl_stmt|;
 block|{
 name|POSITION
 name|pos
@@ -477,12 +494,16 @@ name|public
 name|void
 name|jump_line_loc
 parameter_list|(
-name|POSITION
 name|pos
 parameter_list|,
-name|int
 name|sline
 parameter_list|)
+name|POSITION
+name|pos
+decl_stmt|;
+name|int
+name|sline
+decl_stmt|;
 block|{
 name|int
 name|c
@@ -560,13 +581,18 @@ name|public
 name|void
 name|jump_loc
 parameter_list|(
-name|POSITION
 name|pos
 parameter_list|,
-name|int
 name|sline
 parameter_list|)
+name|POSITION
+name|pos
+decl_stmt|;
+name|int
+name|sline
+decl_stmt|;
 block|{
+specifier|register
 name|int
 name|nline
 decl_stmt|;

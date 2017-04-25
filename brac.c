@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -28,22 +28,34 @@ name|public
 name|void
 name|match_brac
 parameter_list|(
-name|int
 name|obrac
 parameter_list|,
-name|int
 name|cbrac
 parameter_list|,
-name|int
 name|forwdir
 parameter_list|,
-name|int
 name|n
 parameter_list|)
+specifier|register
+name|int
+name|obrac
+decl_stmt|;
+specifier|register
+name|int
+name|cbrac
+decl_stmt|;
+name|int
+name|forwdir
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
 block|{
+specifier|register
 name|int
 name|c
 decl_stmt|;
+specifier|register
 name|int
 name|nest
 decl_stmt|;
@@ -55,21 +67,15 @@ function_decl|(
 modifier|*
 name|chget
 function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 specifier|extern
 name|int
 name|ch_forw_get
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 decl_stmt|,
 name|ch_back_get
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 decl_stmt|;
 comment|/* 	 * Seek to the line containing the open bracket. 	 * This is either the top or bottom line on the screen, 	 * depending on the type of bracket. 	 */
 name|pos

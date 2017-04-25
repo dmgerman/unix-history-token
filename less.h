@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_define
@@ -2432,42 +2432,21 @@ end_comment
 begin_function_decl
 name|void
 name|postoa
-parameter_list|(
-name|POSITION
-name|num
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|linenumtoa
-parameter_list|(
-name|LINENUM
-name|num
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|inttoa
-parameter_list|(
-name|int
-name|num
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
