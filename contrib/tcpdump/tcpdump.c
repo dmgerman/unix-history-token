@@ -4779,11 +4779,6 @@ name|PCAP_ERROR_NO_SUCH_DEVICE
 condition|)
 block|{
 comment|/* 			 * Return an error for our caller to handle. 			 */
-name|pcap_close
-argument_list|(
-name|pc
-argument_list|)
-expr_stmt|;
 name|snprintf
 argument_list|(
 name|ebuf
@@ -4800,6 +4795,11 @@ name|status
 argument_list|)
 argument_list|,
 name|cp
+argument_list|)
+expr_stmt|;
+name|pcap_close
+argument_list|(
+name|pc
 argument_list|)
 expr_stmt|;
 return|return
