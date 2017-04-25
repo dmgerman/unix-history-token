@@ -7382,8 +7382,14 @@ name|nd
 operator|->
 name|nd_flag
 operator|&
+operator|(
 name|ND_NFSV4
+operator||
+name|ND_NOMOREDATA
 operator|)
+operator|)
+operator|==
+name|ND_NFSV4
 operator|&&
 operator|!
 name|error
