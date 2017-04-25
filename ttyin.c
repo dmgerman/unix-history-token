@@ -99,7 +99,9 @@ begin_function
 name|public
 name|void
 name|open_getchr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -284,7 +286,9 @@ begin_function
 name|public
 name|void
 name|close_getchr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -322,7 +326,9 @@ begin_function
 name|public
 name|int
 name|getchr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|c
