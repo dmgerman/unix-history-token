@@ -7931,8 +7931,6 @@ block|{
 comment|/* 				 * The MT_SONAME mbuf has already been removed 				 * from the record, so it is necessary to 				 * remove the data mbufs, if any, to preserve 				 * the invariant in the case of PR_ADDR that 				 * requires MT_SONAME mbufs at the head of 				 * each record. 				 */
 if|if
 condition|(
-name|m
-operator|&&
 name|pr
 operator|->
 name|pr_flags
