@@ -430,6 +430,7 @@ name|pfi_attach_group_event
 parameter_list|(
 name|void
 modifier|*
+name|__unused
 parameter_list|,
 name|struct
 name|ifg_group
@@ -445,6 +446,7 @@ name|pfi_change_group_event
 parameter_list|(
 name|void
 modifier|*
+name|__unused
 parameter_list|,
 name|char
 modifier|*
@@ -459,6 +461,7 @@ name|pfi_detach_group_event
 parameter_list|(
 name|void
 modifier|*
+name|__unused
 parameter_list|,
 name|struct
 name|ifg_group
@@ -762,7 +765,7 @@ name|group_attach_event
 argument_list|,
 name|pfi_attach_group_event
 argument_list|,
-name|curvnet
+name|NULL
 argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
@@ -775,7 +778,7 @@ name|group_change_event
 argument_list|,
 name|pfi_change_group_event
 argument_list|,
-name|curvnet
+name|NULL
 argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
@@ -788,7 +791,7 @@ name|group_detach_event
 argument_list|,
 name|pfi_detach_group_event
 argument_list|,
-name|curvnet
+name|NULL
 argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
@@ -4367,13 +4370,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|V_pf_vnet_active
@@ -4382,9 +4378,6 @@ literal|0
 condition|)
 block|{
 comment|/* Avoid teardown race in the least expensive way. */
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 return|return;
 block|}
 name|pfi_attach_ifnet
@@ -4410,9 +4403,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -4453,13 +4443,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|V_pf_vnet_active
@@ -4468,9 +4451,6 @@ literal|0
 condition|)
 block|{
 comment|/* Avoid teardown race in the least expensive way. */
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 return|return;
 block|}
 name|PF_RULES_WLOCK
@@ -4511,9 +4491,6 @@ directive|endif
 name|PF_RULES_WUNLOCK
 argument_list|()
 expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -4525,6 +4502,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|struct
 name|ifg_group
@@ -4532,16 +4510,6 @@ modifier|*
 name|ifg
 parameter_list|)
 block|{
-name|CURVNET_SET
-argument_list|(
-operator|(
-expr|struct
-name|vnet
-operator|*
-operator|)
-name|arg
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|V_pf_vnet_active
@@ -4550,18 +4518,12 @@ literal|0
 condition|)
 block|{
 comment|/* Avoid teardown race in the least expensive way. */
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 return|return;
 block|}
 name|pfi_attach_ifgroup
 argument_list|(
 name|ifg
 argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -4574,6 +4536,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|char
 modifier|*
@@ -4585,16 +4548,6 @@ name|pfi_kif
 modifier|*
 name|kif
 decl_stmt|;
-name|CURVNET_SET
-argument_list|(
-operator|(
-expr|struct
-name|vnet
-operator|*
-operator|)
-name|arg
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|V_pf_vnet_active
@@ -4603,9 +4556,6 @@ literal|0
 condition|)
 block|{
 comment|/* Avoid teardown race in the least expensive way. */
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 return|return;
 block|}
 name|kif
@@ -4646,9 +4596,6 @@ expr_stmt|;
 name|PF_RULES_WUNLOCK
 argument_list|()
 expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -4660,6 +4607,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|struct
 name|ifg_group
@@ -4688,16 +4636,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|CURVNET_SET
-argument_list|(
-operator|(
-expr|struct
-name|vnet
-operator|*
-operator|)
-name|arg
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|V_pf_vnet_active
@@ -4706,9 +4644,6 @@ literal|0
 condition|)
 block|{
 comment|/* Avoid teardown race in the least expensive way. */
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 return|return;
 block|}
 name|PF_RULES_WLOCK
@@ -4730,9 +4665,6 @@ operator|=
 name|NULL
 expr_stmt|;
 name|PF_RULES_WUNLOCK
-argument_list|()
-expr_stmt|;
-name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
@@ -4763,13 +4695,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|V_pf_vnet_active
@@ -4778,9 +4703,6 @@ literal|0
 condition|)
 block|{
 comment|/* Avoid teardown race in the least expensive way. */
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 return|return;
 block|}
 name|PF_RULES_WLOCK
@@ -4807,9 +4729,6 @@ argument_list|)
 expr_stmt|;
 block|}
 name|PF_RULES_WUNLOCK
-argument_list|()
-expr_stmt|;
-name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
