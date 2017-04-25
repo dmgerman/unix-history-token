@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2014 Integros [integros.com]  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<sys/zfs_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zio.h>
 end_include
 
 begin_include
@@ -1099,6 +1105,7 @@ expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
+break|break;
 block|}
 block|}
 if|if
@@ -2148,13 +2155,13 @@ argument_list|)
 expr_stmt|;
 name|drrw
 operator|->
-name|drr_length
+name|drr_logical_size
 operator|=
 name|BSWAP_64
 argument_list|(
 name|drrw
 operator|->
-name|drr_length
+name|drr_logical_size
 argument_list|)
 expr_stmt|;
 name|drrw
@@ -2181,9 +2188,28 @@ operator|->
 name|drr_key
 operator|.
 name|ddk_prop
+argument_list|)
+expr_stmt|;
+name|drrw
+operator|->
+name|drr_compressed_size
+operator|=
+name|BSWAP_64
+argument_list|(
+name|drrw
+operator|->
+name|drr_compressed_size
 argument_list|)
 expr_stmt|;
 block|}
+name|uint64_t
+name|payload_size
+init|=
+name|DRR_WRITE_PAYLOAD_SIZE
+argument_list|(
+name|drrw
+argument_list|)
+decl_stmt|;
 comment|/* 			 * If this is verbose and/or dump output, 			 * print info on the modified block 			 */
 if|if
 condition|(
@@ -2196,8 +2222,10 @@ operator|)
 name|printf
 argument_list|(
 literal|"WRITE object = %llu type = %u "
-literal|"checksum type = %u\n"
-literal|"    offset = %llu length = %llu "
+literal|"checksum type = %u compression type = %u\n"
+literal|"    offset = %llu logical_size = %llu "
+literal|"compressed_size = %llu "
+literal|"payload_size = %llu "
 literal|"props = %llx\n"
 argument_list|,
 operator|(
@@ -2215,6 +2243,10 @@ name|drrw
 operator|->
 name|drr_checksumtype
 argument_list|,
+name|drrw
+operator|->
+name|drr_compressiontype
+argument_list|,
 operator|(
 name|u_longlong_t
 operator|)
@@ -2227,7 +2259,19 @@ name|u_longlong_t
 operator|)
 name|drrw
 operator|->
-name|drr_length
+name|drr_logical_size
+argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
+name|drrw
+operator|->
+name|drr_compressed_size
+argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
+name|payload_size
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -2248,9 +2292,7 @@ name|ssread
 argument_list|(
 name|buf
 argument_list|,
-name|drrw
-operator|->
-name|drr_length
+name|payload_size
 argument_list|,
 operator|&
 name|zc
@@ -2266,17 +2308,13 @@ name|print_block
 argument_list|(
 name|buf
 argument_list|,
-name|drrw
-operator|->
-name|drr_length
+name|payload_size
 argument_list|)
 expr_stmt|;
 block|}
 name|total_write_size
 operator|+=
-name|drrw
-operator|->
-name|drr_length
+name|payload_size
 expr_stmt|;
 break|break;
 case|case
