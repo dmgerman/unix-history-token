@@ -17328,13 +17328,11 @@ expr_stmt|;
 comment|/* 	 * If this packet is a fragment and the rule says to track fragments, 	 * then create a new fragment cache entry. 	 */
 if|if
 condition|(
-operator|(
 name|fin
 operator|->
 name|fin_flx
 operator|&
 name|FI_FRAG
-operator|)
 operator|&&
 name|FR_ISPASS
 argument_list|(
@@ -17342,6 +17340,12 @@ name|is
 operator|->
 name|is_pass
 argument_list|)
+operator|&&
+name|is
+operator|->
+name|is_pass
+operator|&
+name|FR_KEEPFRAG
 condition|)
 operator|(
 name|void
