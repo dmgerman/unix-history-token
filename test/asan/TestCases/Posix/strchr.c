@@ -194,9 +194,7 @@ argument_list|,
 literal|'x'
 argument_list|)
 decl_stmt|;
-comment|// CHECK: AddressSanitizer: SEGV on unknown address
-comment|// CHECK: The signal is caused by a READ memory access
-comment|// CHECK: strchr.c:[[@LINE-3]]
+comment|// CHECK: AddressSanitizer: {{SEGV|BUS}} on unknown address
 name|assert
 argument_list|(
 name|r

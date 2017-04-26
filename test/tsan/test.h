@@ -53,6 +53,12 @@ directive|include
 file|"sanitizer_common/print_address.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sanitizer/tsan_interface.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -20,6 +20,10 @@ comment|// RUN: not ls /usr/include/linux/seccomp.h || ( %clang_asan %s -o %t&& 
 end_comment
 
 begin_comment
+comment|// REQUIRES: shell
+end_comment
+
+begin_comment
 comment|// UNSUPPORTED: android
 end_comment
 

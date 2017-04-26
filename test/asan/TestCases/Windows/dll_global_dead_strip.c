@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl_asan -LD -O0 %s -Fe%t.dll
+comment|// RUN: %clang_cl_asan /Gw -LD -O0 %s -Fe%t.dll
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: %env_asan_opts=report_globals=2 %run %t %t.dll 2>&1 | FileCheck 
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl_asan -LD -O2 %s -Fe%t.dll -link -opt:ref
+comment|// RUN: %clang_cl_asan /Gw -LD -O2 %s -Fe%t.dll -link -opt:ref
 end_comment
 
 begin_comment

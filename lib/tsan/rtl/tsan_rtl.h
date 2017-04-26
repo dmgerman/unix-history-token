@@ -1946,6 +1946,9 @@ decl_stmt|;
 name|int
 name|ignore_sync
 decl_stmt|;
+name|int
+name|suppress_reports
+decl_stmt|;
 comment|// Go does not support ignores.
 if|#
 directive|if

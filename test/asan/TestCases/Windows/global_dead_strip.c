@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cl_asan /O0 %s /Fe%t.exe
+comment|// RUN: %clang_cl_asan /Gw /O0 %s /Fe%t.exe
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|// RUN: %env_asan_opts=report_globals=2 %t.exe 2>&1 | FileCheck %s --che
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl_asan /O2 %s /Fe%t.exe -link -opt:ref
+comment|// RUN: %clang_cl_asan /Gw /O2 %s /Fe%t.exe -link -opt:ref
 end_comment
 
 begin_comment
