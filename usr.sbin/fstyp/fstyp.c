@@ -162,7 +162,7 @@ block|,
 operator|&
 name|fstyp_exfat
 block|,
-name|true
+name|false
 block|}
 block|,
 block|{
