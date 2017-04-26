@@ -1082,6 +1082,11 @@ parameter_list|,
 specifier|const
 name|MCAsmInfo
 modifier|&
+parameter_list|,
+name|unsigned
+name|CB
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 block|}
