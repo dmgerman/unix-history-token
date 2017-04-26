@@ -1563,6 +1563,12 @@ name|BUS_SPACE_UNRESTRICTED
 argument_list|,
 name|BUS_SPACE_MAXSIZE
 argument_list|,
+name|ctlr
+operator|->
+name|dma_coherent
+condition|?
+name|BUS_DMA_COHERENT
+else|:
 literal|0
 argument_list|,
 name|NULL

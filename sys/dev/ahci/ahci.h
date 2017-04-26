@@ -2790,6 +2790,10 @@ name|ahci_channel
 modifier|*
 parameter_list|)
 function_decl|;
+name|int
+name|dma_coherent
+decl_stmt|;
+comment|/* DMA is cache-coherent */
 block|}
 struct|;
 end_struct
