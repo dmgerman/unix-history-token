@@ -248,6 +248,9 @@ return|return
 name|IMAGE_FILE_MACHINE_UNKNOWN
 return|;
 block|}
+name|MemoryBufferRef
+name|MB
+decl_stmt|;
 comment|// An archive file name if this file is created from an archive.
 name|StringRef
 name|ParentName
@@ -286,9 +289,6 @@ argument_list|(
 argument|K
 argument_list|)
 block|{}
-name|MemoryBufferRef
-name|MB
-expr_stmt|;
 name|std
 operator|::
 name|string
