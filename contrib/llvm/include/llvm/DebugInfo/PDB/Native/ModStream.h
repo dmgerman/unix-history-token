@@ -172,6 +172,11 @@ argument|bool *HadError
 argument_list|)
 specifier|const
 expr_stmt|;
+name|bool
+name|hasLineInfo
+argument_list|()
+specifier|const
+expr_stmt|;
 name|Error
 name|commit
 parameter_list|()

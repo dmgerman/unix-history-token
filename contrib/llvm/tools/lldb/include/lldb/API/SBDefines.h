@@ -320,6 +320,14 @@ name|SBThreadPlan
 decl_stmt|;
 name|class
 name|LLDB_API
+name|SBTrace
+decl_stmt|;
+name|class
+name|LLDB_API
+name|SBTraceOptions
+decl_stmt|;
+name|class
+name|LLDB_API
 name|SBType
 decl_stmt|;
 name|class

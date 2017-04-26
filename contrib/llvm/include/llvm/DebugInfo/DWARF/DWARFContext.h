@@ -235,6 +235,29 @@ name|int64_t
 operator|>>
 name|RelocAddrMap
 expr_stmt|;
+comment|/// Reads a value from data extractor and applies a relocation to the result if
+comment|/// one exists for the given offset.
+name|uint64_t
+name|getRelocatedValue
+parameter_list|(
+specifier|const
+name|DataExtractor
+modifier|&
+name|Data
+parameter_list|,
+name|uint32_t
+name|Size
+parameter_list|,
+name|uint32_t
+modifier|*
+name|Off
+parameter_list|,
+specifier|const
+name|RelocAddrMap
+modifier|*
+name|Relocs
+parameter_list|)
+function_decl|;
 comment|/// DWARFContext
 comment|/// This data structure is the top level entity that deals with dwarf debug
 comment|/// information parsing. The actual data is supplied through pure virtual
@@ -921,7 +944,9 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|&
 name|getRangeSection
 parameter_list|()
 init|=
@@ -1021,7 +1046,9 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|&
 name|getRangeDWOSection
 parameter_list|()
 init|=
@@ -1202,7 +1229,7 @@ block|;
 name|StringRef
 name|StringSection
 block|;
-name|StringRef
+name|DWARFSection
 name|RangeSection
 block|;
 name|StringRef
@@ -1242,7 +1269,7 @@ block|;
 name|StringRef
 name|StringOffsetDWOSection
 block|;
-name|StringRef
+name|DWARFSection
 name|RangeDWOSection
 block|;
 name|StringRef
@@ -1424,7 +1451,9 @@ return|return
 name|StringSection
 return|;
 block|}
-name|StringRef
+specifier|const
+name|DWARFSection
+operator|&
 name|getRangeSection
 argument_list|()
 name|override
@@ -1594,7 +1623,9 @@ return|return
 name|StringOffsetDWOSection
 return|;
 block|}
-name|StringRef
+specifier|const
+name|DWARFSection
+operator|&
 name|getRangeDWOSection
 argument_list|()
 name|override

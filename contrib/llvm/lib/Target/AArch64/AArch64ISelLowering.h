@@ -538,6 +538,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|targetShrinkDemandedConstant
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|const APInt&Demanded
+argument_list|,
+argument|TargetLoweringOpt&TLO
+argument_list|)
+specifier|const
+name|override
+block|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
@@ -1434,6 +1446,100 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 name|override
+block|;
+name|SDValue
+name|getTargetNode
+argument_list|(
+argument|GlobalAddressSDNode *N
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|getTargetNode
+argument_list|(
+argument|JumpTableSDNode *N
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|getTargetNode
+argument_list|(
+argument|ConstantPoolSDNode *N
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|getTargetNode
+argument_list|(
+argument|BlockAddressSDNode *N
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+name|template
+operator|<
+name|class
+name|NodeTy
+operator|>
+name|SDValue
+name|getGOT
+argument_list|(
+argument|NodeTy *N
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|template
+operator|<
+name|class
+name|NodeTy
+operator|>
+name|SDValue
+name|getAddrLarge
+argument_list|(
+argument|NodeTy *N
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|template
+operator|<
+name|class
+name|NodeTy
+operator|>
+name|SDValue
+name|getAddr
+argument_list|(
+argument|NodeTy *N
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerGlobalAddress

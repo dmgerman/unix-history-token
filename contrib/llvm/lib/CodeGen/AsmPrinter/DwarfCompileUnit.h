@@ -104,6 +104,7 @@ name|LexicalScope
 decl_stmt|;
 name|class
 name|DwarfCompileUnit
+name|final
 range|:
 name|public
 name|DwarfUnit

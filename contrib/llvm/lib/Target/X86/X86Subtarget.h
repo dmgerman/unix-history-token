@@ -455,6 +455,10 @@ comment|/// True if SHLD based rotate is fast.
 name|bool
 name|HasFastSHLDRotate
 block|;
+comment|/// True if the processor has enhanced REP MOVSB/STOSB.
+name|bool
+name|HasERMSB
+block|;
 comment|/// True if the short functions should be padded to prevent
 comment|/// a stall when returning too early.
 name|bool
@@ -1464,6 +1468,15 @@ specifier|const
 block|{
 return|return
 name|HasFastSHLDRotate
+return|;
+block|}
+name|bool
+name|hasERMSB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasERMSB
 return|;
 block|}
 name|bool

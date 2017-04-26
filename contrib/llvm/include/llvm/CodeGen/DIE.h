@@ -3385,6 +3385,14 @@ name|uint8_t
 name|AddrSize
 decl_stmt|;
 comment|/// The size in bytes of an address for this unit.
+name|protected
+label|:
+operator|~
+name|DIEUnit
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|public
 label|:
 name|DIEUnit
@@ -3465,6 +3473,18 @@ name|Section
 operator|=
 name|Section
 expr_stmt|;
+block|}
+name|virtual
+specifier|const
+name|MCSymbol
+operator|*
+name|getCrossSectionRelativeBaseAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|nullptr
+return|;
 block|}
 comment|/// Return the section that this DIEUnit will be emitted into.
 comment|///
@@ -3565,6 +3585,35 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_decl_stmt
+name|struct
+name|BasicDIEUnit
+name|final
+range|:
+name|DIEUnit
+block|{
+name|BasicDIEUnit
+argument_list|(
+argument|uint16_t Version
+argument_list|,
+argument|uint8_t AddrSize
+argument_list|,
+argument|dwarf::Tag UnitTag
+argument_list|)
+operator|:
+name|DIEUnit
+argument_list|(
+argument|Version
+argument_list|,
+argument|AddrSize
+argument_list|,
+argument|UnitTag
+argument_list|)
+block|{}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//

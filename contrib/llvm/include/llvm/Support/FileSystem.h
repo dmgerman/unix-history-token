@@ -534,10 +534,17 @@ name|perms
 name|x
 operator|)
 block|{
+comment|// Avoid UB by explicitly truncating the (unsigned) ~ result.
 return|return
 name|static_cast
 operator|<
 name|perms
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|unsigned
+name|short
 operator|>
 operator|(
 operator|~
@@ -548,6 +555,7 @@ name|short
 operator|>
 operator|(
 name|x
+operator|)
 operator|)
 operator|)
 return|;

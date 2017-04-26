@@ -72,6 +72,11 @@ name|ignoring_
 decl_stmt|;
 block|}
 empty_stmt|;
+name|LibIgnore
+modifier|*
+name|libignore
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

@@ -2771,15 +2771,20 @@ block|}
 return|return
 name|RI
 operator|.
+name|getRegSizeInBits
+argument_list|(
+operator|*
+name|RI
+operator|.
 name|getRegClass
 argument_list|(
 name|OpInfo
 operator|.
 name|RegClass
 argument_list|)
-operator|->
-name|getSize
-argument_list|()
+argument_list|)
+operator|/
+literal|8
 return|;
 block|}
 comment|/// \brief This form should usually be preferred since it handles operands
@@ -2798,15 +2803,20 @@ argument_list|)
 decl|const
 block|{
 return|return
+name|RI
+operator|.
+name|getRegSizeInBits
+argument_list|(
+operator|*
 name|getOpRegClass
 argument_list|(
 name|MI
 argument_list|,
 name|OpNo
 argument_list|)
-operator|->
-name|getSize
-argument_list|()
+argument_list|)
+operator|/
+literal|8
 return|;
 block|}
 comment|/// \returns true if it is legal for the operand at index \p OpNo

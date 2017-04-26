@@ -174,7 +174,14 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|std
+operator|::
+name|pair
+operator|<
 name|unsigned
+block|,
+name|unsigned
+operator|>
 name|getReservedPrivateSegmentWaveByteOffsetReg
 argument_list|(
 argument|const SISubtarget&ST

@@ -1046,6 +1046,12 @@ comment|/// \param FormatMaxPadding The maximum number of zeros to
 comment|///   consider inserting before falling back to scientific
 comment|///   notation.  0 means to always use scientific notation.
 comment|///
+comment|/// \param TruncateZero Indicate whether to remove the trailing zero in
+comment|///   fraction part or not. Also setting this parameter to false forcing
+comment|///   producing of output more similar to default printf behavior.
+comment|///   Specifically the lower e is used as exponent delimiter and exponent
+comment|///   always contains no less than two digits.
+comment|///
 comment|/// Number       Precision    MaxPadding      Result
 comment|/// ------       ---------    ----------      ------
 comment|/// 1.01E+4              5             2       10100
@@ -1064,6 +1070,8 @@ literal|0
 argument_list|,
 argument|unsigned FormatMaxPadding =
 literal|3
+argument_list|,
+argument|bool TruncateZero = true
 argument_list|)
 specifier|const
 block|;
@@ -2157,6 +2165,8 @@ argument_list|,
 argument|unsigned FormatPrecision
 argument_list|,
 argument|unsigned FormatMaxPadding
+argument_list|,
+argument|bool TruncateZero = true
 argument_list|)
 specifier|const
 block|;
@@ -5623,6 +5633,11 @@ name|unsigned
 name|FormatMaxPadding
 operator|=
 literal|3
+argument_list|,
+name|bool
+name|TruncateZero
+operator|=
+name|true
 argument_list|)
 decl|const
 block|{
@@ -5635,6 +5650,8 @@ argument_list|,
 name|FormatPrecision
 argument_list|,
 name|FormatMaxPadding
+argument_list|,
+name|TruncateZero
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -79,12 +79,30 @@ directive|include
 file|<cstdint>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<bitset>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|MachineInstr
+decl_stmt|;
+name|class
+name|MachineInstrBuilder
+decl_stmt|;
+name|class
+name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineOperand
@@ -101,16 +119,110 @@ decl_stmt|;
 name|class
 name|TargetRegisterInfo
 decl_stmt|;
+comment|/// Container class for CodeGen predicate results.
+comment|/// This is convenient because std::bitset does not have a constructor
+comment|/// with an initializer list of set bits.
+comment|///
+comment|/// Each InstructionSelector subclass should define a PredicateBitset class with:
+comment|///   const unsigned MAX_SUBTARGET_PREDICATES = 192;
+comment|///   using PredicateBitset = PredicateBitsetImpl<MAX_SUBTARGET_PREDICATES>;
+comment|/// and updating the constant to suit the target. Tablegen provides a suitable
+comment|/// definition for the predicates in use in<Target>GenGlobalISel.inc when
+comment|/// GET_GLOBALISEL_PREDICATE_BITSET is defined.
+name|template
+operator|<
+name|std
+operator|::
+name|size_t
+name|MaxPredicates
+operator|>
+name|class
+name|PredicateBitsetImpl
+operator|:
+name|public
+name|std
+operator|::
+name|bitset
+operator|<
+name|MaxPredicates
+operator|>
+block|{
+name|public
+operator|:
+comment|// Cannot inherit constructors because it's not supported by VC++..
+name|PredicateBitsetImpl
+argument_list|()
+operator|=
+expr|default
+block|;
+name|PredicateBitsetImpl
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|bitset
+operator|<
+name|MaxPredicates
+operator|>
+operator|&
+name|B
+argument_list|)
+operator|:
+name|std
+operator|::
+name|bitset
+operator|<
+name|MaxPredicates
+operator|>
+operator|(
+name|B
+operator|)
+block|{}
+name|PredicateBitsetImpl
+argument_list|(
+argument|std::initializer_list<unsigned> Init
+argument_list|)
+block|{
+for|for
+control|(
+name|auto
+name|I
+range|:
+name|Init
+control|)
+name|std
+operator|::
+name|bitset
+operator|<
+name|MaxPredicates
+operator|>
+operator|::
+name|set
+argument_list|(
+name|I
+argument_list|)
+expr_stmt|;
+block|}
+expr|}
+block|;
 comment|/// Provides the logic to select generic machine instructions.
 name|class
 name|InstructionSelector
 block|{
 name|public
-label|:
+operator|:
 name|virtual
 operator|~
 name|InstructionSelector
 argument_list|()
+block|{}
+comment|/// This is executed before selecting a function.
+name|virtual
+name|void
+name|beginFunction
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
 block|{}
 comment|/// Select the (possibly generic) instruction \p I to only use target-specific
 comment|/// opcodes. It is OK to insert multiple instructions, but they cannot be
@@ -132,12 +244,25 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|protected
-label|:
+operator|:
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|MachineInstrBuilder
+operator|&
+argument_list|)
+operator|>
+name|ComplexRendererFn
+expr_stmt|;
 name|InstructionSelector
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// Mutate the newly-selected instruction \p I to constrain its (possibly
 comment|/// generic) virtual register operands to the instruction's register class.
 comment|/// This could involve inserting COPYs before (for uses) or after (for defs).
@@ -150,56 +275,35 @@ comment|// constrain individual registers, like fast-isel.
 name|bool
 name|constrainSelectedInstRegOperands
 argument_list|(
-name|MachineInstr
-operator|&
-name|I
+argument|MachineInstr&I
 argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
+argument|const TargetInstrInfo&TII
 argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|&
-name|TRI
+argument|const TargetRegisterInfo&TRI
 argument_list|,
-specifier|const
-name|RegisterBankInfo
-operator|&
-name|RBI
+argument|const RegisterBankInfo&RBI
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|bool
 name|isOperandImmEqual
 argument_list|(
-specifier|const
-name|MachineOperand
-operator|&
-name|MO
+argument|const MachineOperand&MO
 argument_list|,
-name|int64_t
-name|Value
+argument|int64_t Value
 argument_list|,
-specifier|const
-name|MachineRegisterInfo
-operator|&
-name|MRI
+argument|const MachineRegisterInfo&MRI
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|bool
 name|isObviouslySafeToFold
 argument_list|(
-name|MachineInstr
-operator|&
-name|MI
+argument|MachineInstr&MI
 argument_list|)
-decl|const
-decl_stmt|;
-block|}
-empty_stmt|;
+specifier|const
+block|; }
+expr_stmt|;
 block|}
 end_decl_stmt
 

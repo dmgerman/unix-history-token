@@ -435,11 +435,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-name|virtual
-operator|~
-name|DwarfUnit
-argument_list|()
-block|;
 comment|// Accessors.
 name|AsmPrinter
 operator|*
@@ -1182,6 +1177,10 @@ argument_list|)
 block|;
 name|protected
 operator|:
+operator|~
+name|DwarfUnit
+argument_list|()
+block|;
 comment|/// Create new static data member DIE.
 name|DIE
 operator|*
@@ -1413,10 +1412,19 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
+block|;
+specifier|const
+name|MCSymbol
+operator|*
+name|getCrossSectionRelativeBaseAddress
+argument_list|()
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 name|class
 name|DwarfTypeUnit
+name|final
 range|:
 name|public
 name|DwarfUnit

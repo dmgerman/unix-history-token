@@ -63,16 +63,14 @@ name|StringRef
 name|Path
 parameter_list|)
 function_decl|;
-name|bool
-name|isFileWritable
-parameter_list|(
-name|StringRef
-name|Path
-parameter_list|,
-name|StringRef
-name|FileDescription
-parameter_list|)
-function_decl|;
+name|std
+operator|::
+name|error_code
+name|tryCreateFile
+argument_list|(
+argument|StringRef Path
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt

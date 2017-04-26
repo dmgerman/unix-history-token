@@ -278,19 +278,6 @@ name|hasNOP
 argument_list|()
 specifier|const
 block|;
-name|virtual
-name|void
-name|getNoopForElfTarget
-argument_list|(
-argument|MCInst&NopInst
-argument_list|)
-specifier|const
-block|{
-name|getNoopForMachoTarget
-argument_list|(
-name|NopInst
-argument_list|)
-block|;   }
 comment|// Return the non-pre/post incrementing version of 'Opc'. Return 0
 comment|// if there is not such an opcode.
 name|virtual

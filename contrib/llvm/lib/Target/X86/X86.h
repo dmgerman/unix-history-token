@@ -224,6 +224,11 @@ name|InstructionSelector
 modifier|*
 name|createX86InstructionSelector
 parameter_list|(
+specifier|const
+name|X86TargetMachine
+modifier|&
+name|TM
+parameter_list|,
 name|X86Subtarget
 modifier|&
 parameter_list|,

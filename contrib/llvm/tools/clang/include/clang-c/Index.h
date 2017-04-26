@@ -6195,6 +6195,10 @@ block|,
 name|CXIdxEntityLang_CXX
 init|=
 literal|3
+block|,
+name|CXIdxEntityLang_Swift
+init|=
+literal|4
 block|}
 name|CXIdxEntityLanguage
 typedef|;

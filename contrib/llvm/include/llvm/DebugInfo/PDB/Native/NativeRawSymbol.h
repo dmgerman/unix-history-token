@@ -580,7 +580,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|PDBSymbolTypeVTable
+name|PDBSymbolTypeBuiltin
 operator|>
 name|getVirtualBaseTableType
 argument_list|()

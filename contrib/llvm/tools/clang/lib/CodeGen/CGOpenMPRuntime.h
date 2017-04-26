@@ -2265,30 +2265,50 @@ name|ScheduleKind
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
-name|void
-name|emitForDispatchInit
+comment|/// struct with the values to be passed to the dispatch runtime function
+struct|struct
+name|DispatchRTInput
+block|{
+comment|/// Loop lower bound
+name|llvm
+operator|::
+name|Value
+operator|*
+name|LB
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// Loop upper bound
+name|llvm
+operator|::
+name|Value
+operator|*
+name|UB
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// Chunk size specified using 'schedule' clause (nullptr if chunk
+comment|/// was not specified)
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Chunk
+operator|=
+name|nullptr
+expr_stmt|;
+name|DispatchRTInput
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|DispatchRTInput
 argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|,
-name|SourceLocation
-name|Loc
-argument_list|,
-specifier|const
-name|OpenMPScheduleTy
-operator|&
-name|ScheduleKind
-argument_list|,
-name|unsigned
-name|IVSize
-argument_list|,
-name|bool
-name|IVSigned
-argument_list|,
-name|bool
-name|Ordered
+name|llvm
+operator|::
+name|Value
+operator|*
+name|LB
 argument_list|,
 name|llvm
 operator|::
@@ -2301,14 +2321,80 @@ operator|::
 name|Value
 operator|*
 name|Chunk
-operator|=
-name|nullptr
 argument_list|)
-decl_stmt|;
+operator|:
+name|LB
+argument_list|(
+name|LB
+argument_list|)
+operator|,
+name|UB
+argument_list|(
+name|UB
+argument_list|)
+operator|,
+name|Chunk
+argument_list|(
+argument|Chunk
+argument_list|)
+block|{}
+block|}
+struct|;
+comment|/// Call the appropriate runtime routine to initialize it before start
+comment|/// of loop.
+comment|/// This is used for non static scheduled types and when the ordered
+comment|/// clause is present on the loop construct.
+comment|/// Depending on the loop schedule, it is necessary to call some runtime
+comment|/// routine before start of the OpenMP loop to get the loop upper / lower
+comment|/// bounds \a LB and \a UB and stride \a ST.
+comment|///
+comment|/// \param CGF Reference to current CodeGenFunction.
+comment|/// \param Loc Clang source location.
+comment|/// \param ScheduleKind Schedule kind, specified by the 'schedule' clause.
+comment|/// \param IVSize Size of the iteration variable in bits.
+comment|/// \param IVSigned Sign of the interation variable.
+comment|/// \param Ordered true if loop is ordered, false otherwise.
+comment|/// \param DispatchValues struct containing llvm values for lower bound, upper
+comment|/// bound, and chunk expression.
+comment|/// For the default (nullptr) value, the chunk 1 will be used.
+comment|///
+name|virtual
+name|void
+name|emitForDispatchInit
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|OpenMPScheduleTy
+modifier|&
+name|ScheduleKind
+parameter_list|,
+name|unsigned
+name|IVSize
+parameter_list|,
+name|bool
+name|IVSigned
+parameter_list|,
+name|bool
+name|Ordered
+parameter_list|,
+specifier|const
+name|DispatchRTInput
+modifier|&
+name|DispatchValues
+parameter_list|)
+function_decl|;
 comment|/// \brief Call the appropriate runtime routine to initialize it before start
 comment|/// of loop.
 comment|///
-comment|/// Depending on the loop schedule, it is nesessary to call some runtime
+comment|/// This is used only in case of static schedule, when the user did not
+comment|/// specify a ordered clause on the loop construct.
+comment|/// Depending on the loop schedule, it is necessary to call some runtime
 comment|/// routine before start of the OpenMP loop to get the loop upper / lower
 comment|/// bounds \a LB and \a UB and stride \a ST.
 comment|///

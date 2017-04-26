@@ -113,7 +113,7 @@ argument|const DWARFSection&Section
 argument_list|,
 argument|const DWARFDebugAbbrev *DA
 argument_list|,
-argument|StringRef RS
+argument|const DWARFSection *RS
 argument_list|,
 argument|StringRef SS
 argument_list|,

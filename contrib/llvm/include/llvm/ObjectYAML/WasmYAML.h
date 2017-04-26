@@ -290,11 +290,9 @@ operator|::
 name|Hex32
 name|Offset
 expr_stmt|;
-name|yaml
-operator|::
-name|Hex32
+name|int32_t
 name|Addend
-expr_stmt|;
+decl_stmt|;
 block|}
 struct|;
 struct|struct

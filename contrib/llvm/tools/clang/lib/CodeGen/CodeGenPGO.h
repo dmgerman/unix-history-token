@@ -202,11 +202,6 @@ expr_stmt|;
 name|uint64_t
 name|CurrentRegionCount
 decl_stmt|;
-comment|/// \brief A flag that is set to true when this function doesn't need
-comment|/// to have coverage mapping data.
-name|bool
-name|SkipCoverageMapping
-decl_stmt|;
 name|public
 label|:
 name|CodeGenPGO
@@ -243,11 +238,6 @@ operator|,
 name|CurrentRegionCount
 argument_list|(
 literal|0
-argument_list|)
-operator|,
-name|SkipCoverageMapping
-argument_list|(
-argument|false
 argument_list|)
 block|{}
 comment|/// Whether or not we have PGO region data for the current function. This is

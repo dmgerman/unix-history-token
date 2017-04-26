@@ -417,9 +417,12 @@ name|Header
 operator|->
 name|Flags
 operator|&
+name|uint32_t
+argument_list|(
 name|LineFlags
 operator|::
 name|HaveColumns
+argument_list|)
 block|;
 name|uint32_t
 name|LineInfoSize

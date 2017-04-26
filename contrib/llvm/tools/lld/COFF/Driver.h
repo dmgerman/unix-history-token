@@ -228,9 +228,9 @@ operator|::
 name|InputArgList
 name|parseLINK
 argument_list|(
-name|llvm
+name|std
 operator|::
-name|ArrayRef
+name|vector
 operator|<
 specifier|const
 name|char

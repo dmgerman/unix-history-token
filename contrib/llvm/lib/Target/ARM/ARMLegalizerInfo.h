@@ -88,6 +88,18 @@ name|ARMSubtarget
 operator|&
 name|ST
 argument_list|)
+block|;
+name|bool
+name|legalizeCustom
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|MachineRegisterInfo&MRI
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

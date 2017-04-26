@@ -112,6 +112,16 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|OS
+parameter_list|,
+name|StringRef
+name|ExtSymbolDefinedIn
+init|=
+literal|""
+parameter_list|,
+name|StringRef
+name|CategoryContextExtSymbolDefinedIn
+init|=
+literal|""
 parameter_list|)
 function_decl|;
 comment|/// \brief Generate a USR fragment for an Objective-C class category.
@@ -127,6 +137,16 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|OS
+parameter_list|,
+name|StringRef
+name|ClsExtSymbolDefinedIn
+init|=
+literal|""
+parameter_list|,
+name|StringRef
+name|CatExtSymbolDefinedIn
+init|=
+literal|""
 parameter_list|)
 function_decl|;
 comment|/// \brief Generate a USR fragment for an Objective-C instance variable.  The
@@ -179,6 +199,40 @@ name|generateUSRForObjCProtocol
 parameter_list|(
 name|StringRef
 name|Prot
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|StringRef
+name|ExtSymbolDefinedIn
+init|=
+literal|""
+parameter_list|)
+function_decl|;
+comment|/// Generate USR fragment for a global (non-nested) enum.
+name|void
+name|generateUSRForGlobalEnum
+parameter_list|(
+name|StringRef
+name|EnumName
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|StringRef
+name|ExtSymbolDefinedIn
+init|=
+literal|""
+parameter_list|)
+function_decl|;
+comment|/// Generate a USR fragment for an enum constant.
+name|void
+name|generateUSRForEnumConstant
+parameter_list|(
+name|StringRef
+name|EnumConstantName
 parameter_list|,
 name|raw_ostream
 modifier|&

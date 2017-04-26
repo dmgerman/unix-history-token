@@ -313,6 +313,11 @@ name|defined
 argument_list|(
 name|__x86_64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
 struct|struct
 name|AP64
 block|{

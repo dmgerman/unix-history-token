@@ -270,7 +270,9 @@ name|DWARFDebugAbbrev
 modifier|*
 name|DA
 parameter_list|,
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|*
 name|RS
 parameter_list|,
 name|StringRef
@@ -473,7 +475,9 @@ name|DWARFDebugAbbrev
 modifier|*
 name|DA
 parameter_list|,
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|*
 name|RS
 parameter_list|,
 name|StringRef
@@ -647,7 +651,9 @@ name|DWARFDebugAbbrev
 modifier|*
 name|Abbrev
 decl_stmt|;
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|*
 name|RangeSection
 decl_stmt|;
 name|uint32_t
@@ -885,7 +891,7 @@ argument|const DWARFSection&Section
 argument_list|,
 argument|const DWARFDebugAbbrev *DA
 argument_list|,
-argument|StringRef RS
+argument|const DWARFSection *RS
 argument_list|,
 argument|StringRef SS
 argument_list|,
@@ -976,7 +982,9 @@ function_decl|;
 name|void
 name|setRangesSection
 parameter_list|(
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|*
 name|RS
 parameter_list|,
 name|uint32_t

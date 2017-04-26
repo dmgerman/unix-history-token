@@ -932,7 +932,7 @@ comment|/// Look up the specified function in the module symbol table. If it doe
 comment|/// exist, add a prototype for the function and return it. This function
 comment|/// guarantees to return a constant of pointer to the specified function type
 comment|/// or a ConstantExpr BitCast of that type if the named function has a
-comment|/// different type. This version of the method takes a null terminated list of
+comment|/// different type. This version of the method takes a list of
 comment|/// function arguments, which makes it easier for clients to use.
 name|template
 operator|<

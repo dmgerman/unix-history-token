@@ -305,13 +305,6 @@ name|OSABI
 init|=
 literal|0
 decl_stmt|;
-comment|// For SharedKind inputs, the string to use in DT_NEEDED when the library
-comment|// has no soname.
-name|std
-operator|::
-name|string
-name|DefaultSoName
-expr_stmt|;
 comment|// Cache for toString(). Only toString() should use this member.
 name|mutable
 name|std
@@ -1283,12 +1276,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|StringRef
-name|SoName
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|const
 name|Elf_Shdr
 modifier|*
@@ -1314,10 +1301,10 @@ label|:
 end_label
 
 begin_expr_stmt
-name|StringRef
-name|getSoName
-argument_list|()
-specifier|const
+name|std
+operator|::
+name|string
+name|SoName
 expr_stmt|;
 end_expr_stmt
 
@@ -1376,15 +1363,18 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-name|explicit
+begin_macro
 name|SharedFile
-parameter_list|(
-name|MemoryBufferRef
-name|M
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|MemoryBufferRef M
+argument_list|,
+argument|StringRef DefaultSoName
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -1573,6 +1563,9 @@ name|createSharedFile
 parameter_list|(
 name|MemoryBufferRef
 name|MB
+parameter_list|,
+name|StringRef
+name|DefaultSoName
 parameter_list|)
 function_decl|;
 end_function_decl

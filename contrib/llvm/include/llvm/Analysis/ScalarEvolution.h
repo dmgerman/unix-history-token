@@ -2930,6 +2930,198 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|// Helper functions for computeExitLimitFromCond to avoid exponential time
+comment|// complexity.
+name|class
+name|ExitLimitCache
+block|{
+comment|// It may look like we need key on the whole (L, TBB, FBB, ControlsExit,
+comment|// AllowPredicates) tuple, but recursive calls to
+comment|// computeExitLimitFromCondCached from computeExitLimitFromCondImpl only
+comment|// vary the in \c ExitCond and \c ControlsExit parameters.  We remember the
+comment|// initial values of the other values to assert our assumption.
+name|SmallDenseMap
+operator|<
+name|PointerIntPair
+operator|<
+name|Value
+operator|*
+operator|,
+literal|1
+operator|>
+operator|,
+name|ExitLimit
+operator|>
+name|TripCountMap
+expr_stmt|;
+specifier|const
+name|Loop
+modifier|*
+name|L
+decl_stmt|;
+name|BasicBlock
+modifier|*
+name|TBB
+decl_stmt|;
+name|BasicBlock
+modifier|*
+name|FBB
+decl_stmt|;
+name|bool
+name|AllowPredicates
+decl_stmt|;
+name|public
+label|:
+name|ExitLimitCache
+argument_list|(
+argument|const Loop *L
+argument_list|,
+argument|BasicBlock *TBB
+argument_list|,
+argument|BasicBlock *FBB
+argument_list|,
+argument|bool AllowPredicates
+argument_list|)
+block|:
+name|L
+argument_list|(
+name|L
+argument_list|)
+operator|,
+name|TBB
+argument_list|(
+name|TBB
+argument_list|)
+operator|,
+name|FBB
+argument_list|(
+name|FBB
+argument_list|)
+operator|,
+name|AllowPredicates
+argument_list|(
+argument|AllowPredicates
+argument_list|)
+block|{}
+name|Optional
+operator|<
+name|ExitLimit
+operator|>
+name|find
+argument_list|(
+argument|const Loop *L
+argument_list|,
+argument|Value *ExitCond
+argument_list|,
+argument|BasicBlock *TBB
+argument_list|,
+argument|BasicBlock *FBB
+argument_list|,
+argument|bool ControlsExit
+argument_list|,
+argument|bool AllowPredicates
+argument_list|)
+expr_stmt|;
+name|void
+name|insert
+parameter_list|(
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+name|Value
+modifier|*
+name|ExitCond
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|TBB
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|FBB
+parameter_list|,
+name|bool
+name|ControlsExit
+parameter_list|,
+name|bool
+name|AllowPredicates
+parameter_list|,
+specifier|const
+name|ExitLimit
+modifier|&
+name|EL
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+typedef|typedef
+name|ExitLimitCache
+name|ExitLimitCacheTy
+typedef|;
+name|ExitLimit
+name|computeExitLimitFromCondCached
+parameter_list|(
+name|ExitLimitCacheTy
+modifier|&
+name|Cache
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+name|Value
+modifier|*
+name|ExitCond
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|TBB
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|FBB
+parameter_list|,
+name|bool
+name|ControlsExit
+parameter_list|,
+name|bool
+name|AllowPredicates
+parameter_list|)
+function_decl|;
+name|ExitLimit
+name|computeExitLimitFromCondImpl
+parameter_list|(
+name|ExitLimitCacheTy
+modifier|&
+name|Cache
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+name|Value
+modifier|*
+name|ExitCond
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|TBB
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|FBB
+parameter_list|,
+name|bool
+name|ControlsExit
+parameter_list|,
+name|bool
+name|AllowPredicates
+parameter_list|)
+function_decl|;
 comment|/// Compute the number of times the backedge of the specified loop will
 comment|/// execute if its exit condition were a conditional branch of the ICmpInst
 comment|/// ExitCond, TBB, and FBB. If AllowPredicates is set, this call will try

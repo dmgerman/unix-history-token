@@ -192,6 +192,11 @@ name|Private
 init|=
 name|false
 decl_stmt|;
+name|bool
+name|Constant
+init|=
+name|false
+decl_stmt|;
 comment|// If an export is a form of /export:foo=dllname.bar, that means
 comment|// that foo should be exported as an alias to bar in the DLL.
 comment|// ForwardTo is set to "dllname.bar" part. Usually empty.

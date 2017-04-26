@@ -72,7 +72,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -84,13 +108,79 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/SubtargetFeature.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/Binary.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/ObjectFile.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/Object/SymbolicFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Format.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MachO.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -112,24 +202,23 @@ specifier|const
 name|ObjectFile
 modifier|*
 name|OwningObject
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|DiceRef
 argument_list|()
-operator|:
-name|OwningObject
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 name|DiceRef
 argument_list|(
 argument|DataRefImpl DiceP
 argument_list|,
 argument|const ObjectFile *Owner
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|bool
 name|operator
 operator|==
@@ -197,13 +286,14 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
+name|using
+name|dice_iterator
+init|=
 name|content_iterator
 operator|<
 name|DiceRef
 operator|>
-name|dice_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// ExportEntry encapsulates the current-state-of-the-walk used when doing a
 comment|/// non-recursive walk of the trie data structure.  This allows you to iterate
 comment|/// across all exported symbols using:
@@ -326,29 +416,45 @@ name|Current
 decl_stmt|;
 name|uint64_t
 name|Flags
+init|=
+literal|0
 decl_stmt|;
 name|uint64_t
 name|Address
+init|=
+literal|0
 decl_stmt|;
 name|uint64_t
 name|Other
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|ImportName
+init|=
+name|nullptr
 decl_stmt|;
 name|unsigned
 name|ChildCount
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|NextChildIndex
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|ParentStringLength
+init|=
+literal|0
 decl_stmt|;
 name|bool
 name|IsExportNode
+init|=
+name|false
 decl_stmt|;
 block|}
 struct|;
@@ -374,19 +480,24 @@ name|Stack
 expr_stmt|;
 name|bool
 name|Malformed
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|Done
+init|=
+name|false
 decl_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
+name|using
+name|export_iterator
+init|=
 name|content_iterator
 operator|<
 name|ExportEntry
 operator|>
-name|export_iterator
-expr_stmt|;
+decl_stmt|;
 comment|// Segment info so SegIndex/SegOffset pairs in a Mach-O Bind or Rebase entry
 comment|// can be checked and translated.  Only the SegIndex/SegOffset pairs from
 comment|// checked entries are to be used with the segmentName(), sectionName() and
@@ -399,8 +510,6 @@ label|:
 name|BindRebaseSegInfo
 argument_list|(
 specifier|const
-name|object
-operator|::
 name|MachOObjectFile
 operator|*
 name|Obj
@@ -637,34 +746,48 @@ name|Ptr
 decl_stmt|;
 name|uint64_t
 name|SegmentOffset
+init|=
+literal|0
 decl_stmt|;
 name|int32_t
 name|SegmentIndex
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|uint64_t
 name|RemainingLoopCount
+init|=
+literal|0
 decl_stmt|;
 name|uint64_t
 name|AdvanceAmount
+init|=
+literal|0
 decl_stmt|;
 name|uint8_t
 name|RebaseType
+init|=
+literal|0
 decl_stmt|;
 name|uint8_t
 name|PointerSize
 decl_stmt|;
 name|bool
 name|Done
+init|=
+name|false
 decl_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
+name|using
+name|rebase_iterator
+init|=
 name|content_iterator
 operator|<
 name|MachORebaseEntry
 operator|>
-name|rebase_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// MachOBindEntry encapsulates the current state in the decompression of
 comment|/// binding opcodes. This allows you to iterate through the compressed table of
 comment|/// bindings using:
@@ -821,33 +944,52 @@ name|Ptr
 decl_stmt|;
 name|uint64_t
 name|SegmentOffset
+init|=
+literal|0
 decl_stmt|;
 name|int32_t
 name|SegmentIndex
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|StringRef
 name|SymbolName
 decl_stmt|;
 name|bool
 name|LibraryOrdinalSet
+init|=
+name|false
 decl_stmt|;
 name|int
 name|Ordinal
+init|=
+literal|0
 decl_stmt|;
 name|uint32_t
 name|Flags
+init|=
+literal|0
 decl_stmt|;
 name|int64_t
 name|Addend
+init|=
+literal|0
 decl_stmt|;
 name|uint64_t
 name|RemainingLoopCount
+init|=
+literal|0
 decl_stmt|;
 name|uint64_t
 name|AdvanceAmount
+init|=
+literal|0
 decl_stmt|;
 name|uint8_t
 name|BindType
+init|=
+literal|0
 decl_stmt|;
 name|uint8_t
 name|PointerSize
@@ -857,16 +999,19 @@ name|TableKind
 decl_stmt|;
 name|bool
 name|Done
+init|=
+name|false
 decl_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
+name|using
+name|bind_iterator
+init|=
 name|content_iterator
 operator|<
 name|MachOBindEntry
 operator|>
-name|bind_iterator
-expr_stmt|;
+decl_stmt|;
 name|class
 name|MachOObjectFile
 range|:
@@ -892,21 +1037,23 @@ block|;
 comment|// The command itself.
 block|}
 block|;
-typedef|typedef
+name|using
+name|LoadCommandList
+operator|=
 name|SmallVector
 operator|<
 name|LoadCommandInfo
-operator|,
+block|,
 literal|4
 operator|>
-name|LoadCommandList
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|load_command_iterator
+operator|=
 name|LoadCommandList
 operator|::
 name|const_iterator
-name|load_command_iterator
-expr_stmt|;
+block|;
 specifier|static
 name|Expected
 operator|<
@@ -930,25 +1077,22 @@ argument_list|,
 argument|uint32_t UniversalIndex =
 literal|0
 argument_list|)
-expr_stmt|;
+block|;
 name|void
 name|moveSymbolNext
 argument_list|(
-name|DataRefImpl
-operator|&
-name|Symb
+argument|DataRefImpl&Symb
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|uint64_t
 name|getNValue
 argument_list|(
-name|DataRefImpl
-name|Sym
+argument|DataRefImpl Sym
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|Expected
 operator|<
 name|StringRef
@@ -959,13 +1103,13 @@ argument|DataRefImpl Symb
 argument_list|)
 specifier|const
 name|override
-expr_stmt|;
+block|;
 comment|// MachO specific.
 name|Error
 name|checkSymbolTable
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|std
 operator|::
 name|error_code
@@ -976,15 +1120,14 @@ argument_list|,
 argument|StringRef&Res
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|unsigned
 name|getSectionType
 argument_list|(
-name|SectionRef
-name|Sec
+argument|SectionRef Sec
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|Expected
 operator|<
 name|uint64_t
@@ -995,25 +1138,23 @@ argument|DataRefImpl Symb
 argument_list|)
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|uint32_t
 name|getSymbolAlignment
 argument_list|(
-name|DataRefImpl
-name|Symb
+argument|DataRefImpl Symb
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|uint64_t
 name|getCommonSymbolSizeImpl
 argument_list|(
-name|DataRefImpl
-name|Symb
+argument|DataRefImpl Symb
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|Expected
 operator|<
 name|SymbolRef
@@ -1026,16 +1167,15 @@ argument|DataRefImpl Symb
 argument_list|)
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|uint32_t
 name|getSymbolFlags
 argument_list|(
-name|DataRefImpl
-name|Symb
+argument|DataRefImpl Symb
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|Expected
 operator|<
 name|section_iterator
@@ -1046,33 +1186,29 @@ argument|DataRefImpl Symb
 argument_list|)
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|unsigned
 name|getSymbolSectionID
 argument_list|(
-name|SymbolRef
-name|Symb
+argument|SymbolRef Symb
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|unsigned
 name|getSectionID
 argument_list|(
-name|SectionRef
-name|Sec
+argument|SectionRef Sec
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|void
 name|moveSectionNext
 argument_list|(
-name|DataRefImpl
-operator|&
-name|Sec
+argument|DataRefImpl&Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|std
 operator|::
 name|error_code
@@ -1084,25 +1220,23 @@ argument|StringRef&Res
 argument_list|)
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|uint64_t
 name|getSectionAddress
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|uint64_t
 name|getSectionSize
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|std
 operator|::
 name|error_code
@@ -1114,157 +1248,135 @@ argument|StringRef&Res
 argument_list|)
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|uint64_t
 name|getSectionAlignment
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|bool
 name|isSectionCompressed
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|bool
 name|isSectionText
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|bool
 name|isSectionData
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|bool
 name|isSectionBSS
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|bool
 name|isSectionVirtual
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|bool
 name|isSectionBitcode
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|relocation_iterator
 name|section_rel_begin
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|relocation_iterator
 name|section_rel_end
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|void
 name|moveRelocationNext
 argument_list|(
-name|DataRefImpl
-operator|&
-name|Rel
+argument|DataRefImpl&Rel
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|uint64_t
 name|getRelocationOffset
 argument_list|(
-name|DataRefImpl
-name|Rel
+argument|DataRefImpl Rel
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|symbol_iterator
 name|getRelocationSymbol
 argument_list|(
-name|DataRefImpl
-name|Rel
+argument|DataRefImpl Rel
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|section_iterator
 name|getRelocationSection
 argument_list|(
-name|DataRefImpl
-name|Rel
+argument|DataRefImpl Rel
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|uint64_t
 name|getRelocationType
 argument_list|(
-name|DataRefImpl
-name|Rel
+argument|DataRefImpl Rel
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|void
 name|getRelocationTypeName
 argument_list|(
-name|DataRefImpl
-name|Rel
+argument|DataRefImpl Rel
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|Result
+argument|SmallVectorImpl<char>&Result
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|uint8_t
 name|getRelocationLength
 argument_list|(
-name|DataRefImpl
-name|Rel
+argument|DataRefImpl Rel
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|// MachO specific.
 name|std
 operator|::
@@ -1276,20 +1388,19 @@ argument_list|,
 argument|StringRef&
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|uint32_t
 name|getLibraryCount
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|section_iterator
 name|getRelocationRelocatedSection
 argument_list|(
-name|relocation_iterator
-name|Rel
+argument|relocation_iterator Rel
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|// TODO: Would be useful to have an iterator based version
 comment|// of the load command interface too.
 name|basic_symbol_iterator
@@ -1297,60 +1408,58 @@ name|symbol_begin
 argument_list|()
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|basic_symbol_iterator
 name|symbol_end
 argument_list|()
 specifier|const
 name|override
-expr_stmt|;
+block|;
 comment|// MachO specific.
 name|basic_symbol_iterator
 name|getSymbolByIndex
 argument_list|(
-name|unsigned
-name|Index
+argument|unsigned Index
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|uint64_t
 name|getSymbolIndex
 argument_list|(
-name|DataRefImpl
-name|Symb
+argument|DataRefImpl Symb
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|section_iterator
 name|section_begin
 argument_list|()
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|section_iterator
 name|section_end
 argument_list|()
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|uint8_t
 name|getBytesInAddress
 argument_list|()
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|StringRef
 name|getFileFormatName
 argument_list|()
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|unsigned
 name|getArch
 argument_list|()
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|SubtargetFeatures
 name|getFeatures
 argument_list|()
@@ -1365,52 +1474,44 @@ block|}
 name|Triple
 name|getArchTriple
 argument_list|(
-specifier|const
-name|char
-operator|*
-operator|*
-name|McpuDefault
-operator|=
-name|nullptr
+argument|const char **McpuDefault = nullptr
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|relocation_iterator
 name|section_rel_begin
 argument_list|(
-name|unsigned
-name|Index
+argument|unsigned Index
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|relocation_iterator
 name|section_rel_end
 argument_list|(
-name|unsigned
-name|Index
+argument|unsigned Index
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|dice_iterator
 name|begin_dices
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|dice_iterator
 name|end_dices
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|load_command_iterator
 name|begin_load_commands
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|load_command_iterator
 name|end_load_commands
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|iterator_range
 operator|<
 name|load_command_iterator
@@ -1418,7 +1519,7 @@ operator|>
 name|load_commands
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// For use iterating over all exported symbols.
 name|iterator_range
 operator|<
@@ -1427,7 +1528,7 @@ operator|>
 name|exports
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// For use examining a trie not in a MachOObjectFile.
 specifier|static
 name|iterator_range
@@ -1442,7 +1543,7 @@ name|uint8_t
 operator|>
 name|Trie
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// For use iterating over all rebase table entries.
 name|iterator_range
 operator|<
@@ -1454,7 +1555,7 @@ name|Error
 operator|&
 name|Err
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// For use examining rebase opcodes in a MachOObjectFile.
 specifier|static
 name|iterator_range
@@ -1471,7 +1572,7 @@ argument|ArrayRef<uint8_t> Opcodes
 argument_list|,
 argument|bool is64
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// For use iterating over all bind table entries.
 name|iterator_range
 operator|<
@@ -1483,7 +1584,7 @@ name|Error
 operator|&
 name|Err
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// For use iterating over all lazy bind table entries.
 name|iterator_range
 operator|<
@@ -1495,7 +1596,7 @@ name|Error
 operator|&
 name|Err
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// For use iterating over all weak bind table entries.
 name|iterator_range
 operator|<
@@ -1507,7 +1608,7 @@ name|Error
 operator|&
 name|Err
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// For use examining bind opcodes in a MachOObjectFile.
 specifier|static
 name|iterator_range
@@ -1526,24 +1627,21 @@ argument|bool is64
 argument_list|,
 argument|MachOBindEntry::Kind
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// For use with a SegIndex,SegOffset pair in MachOBindEntry::moveNext() to
 comment|/// validate a MachOBindEntry.
 specifier|const
 name|char
-modifier|*
+operator|*
 name|BindEntryCheckSegAndOffset
 argument_list|(
-name|int32_t
-name|SegIndex
+argument|int32_t SegIndex
 argument_list|,
-name|uint64_t
-name|SegOffset
+argument|uint64_t SegOffset
 argument_list|,
-name|bool
-name|endInvalid
+argument|bool endInvalid
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|BindRebaseSectionTable
@@ -1562,25 +1660,20 @@ comment|/// For use in MachOBindEntry::moveNext() to validate a MachOBindEntry f
 comment|/// the BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB opcode.
 specifier|const
 name|char
-modifier|*
+operator|*
 name|BindEntryCheckCountAndSkip
 argument_list|(
-name|uint32_t
-name|Count
+argument|uint32_t Count
 argument_list|,
-name|uint32_t
-name|Skip
+argument|uint32_t Skip
 argument_list|,
-name|uint8_t
-name|PointerSize
+argument|uint8_t PointerSize
 argument_list|,
-name|int32_t
-name|SegIndex
+argument|int32_t SegIndex
 argument_list|,
-name|uint64_t
-name|SegOffset
+argument|uint64_t SegOffset
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|BindRebaseSectionTable
@@ -1603,19 +1696,16 @@ comment|/// For use with a SegIndex,SegOffset pair in MachORebaseEntry::moveNext
 comment|/// validate a MachORebaseEntry.
 specifier|const
 name|char
-modifier|*
+operator|*
 name|RebaseEntryCheckSegAndOffset
 argument_list|(
-name|int32_t
-name|SegIndex
+argument|int32_t SegIndex
 argument_list|,
-name|uint64_t
-name|SegOffset
+argument|uint64_t SegOffset
 argument_list|,
-name|bool
-name|endInvalid
+argument|bool endInvalid
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|BindRebaseSectionTable
@@ -1634,25 +1724,20 @@ comment|/// For use in MachORebaseEntry::moveNext() to validate a MachORebaseEnt
 comment|/// the REBASE_OPCODE_DO_*_TIMES* opcodes.
 specifier|const
 name|char
-modifier|*
+operator|*
 name|RebaseEntryCheckCountAndSkip
 argument_list|(
-name|uint32_t
-name|Count
+argument|uint32_t Count
 argument_list|,
-name|uint32_t
-name|Skip
+argument|uint32_t Skip
 argument_list|,
-name|uint8_t
-name|PointerSize
+argument|uint8_t PointerSize
 argument_list|,
-name|int32_t
-name|SegIndex
+argument|int32_t SegIndex
 argument_list|,
-name|uint64_t
-name|SegOffset
+argument|uint64_t SegOffset
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|BindRebaseSectionTable
@@ -1676,10 +1761,9 @@ comment|/// get the segment name.
 name|StringRef
 name|BindRebaseSegmentName
 argument_list|(
-name|int32_t
-name|SegIndex
+argument|int32_t SegIndex
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|BindRebaseSectionTable
@@ -1695,13 +1779,11 @@ comment|/// Rebase entry to get the section name.
 name|StringRef
 name|BindRebaseSectionName
 argument_list|(
-name|uint32_t
-name|SegIndex
+argument|uint32_t SegIndex
 argument_list|,
-name|uint64_t
-name|SegOffset
+argument|uint64_t SegOffset
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|BindRebaseSectionTable
@@ -1719,13 +1801,11 @@ comment|/// Rebase entry to get the address.
 name|uint64_t
 name|BindRebaseAddress
 argument_list|(
-name|uint32_t
-name|SegIndex
+argument|uint32_t SegIndex
 argument_list|,
-name|uint64_t
-name|SegOffset
+argument|uint64_t SegOffset
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|BindRebaseSectionTable
@@ -1744,11 +1824,10 @@ comment|// a section should be put in in the final object.
 name|StringRef
 name|getSectionFinalSegmentName
 argument_list|(
-name|DataRefImpl
-name|Sec
+argument|DataRefImpl Sec
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|// Names are stored as 16 bytes. These returns the raw 16 bytes without
 comment|// interpreting them as a C string.
 name|ArrayRef
@@ -1760,7 +1839,7 @@ argument_list|(
 argument|DataRefImpl Sec
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|ArrayRef
 operator|<
 name|char
@@ -1770,140 +1849,85 @@ argument_list|(
 argument|DataRefImpl Sec
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 comment|// MachO specific Info about relocations.
 name|bool
 name|isRelocationScattered
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|RE
+argument|const MachO::any_relocation_info&RE
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|unsigned
 name|getPlainRelocationSymbolNum
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|RE
+argument|const MachO::any_relocation_info&RE
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|bool
 name|getPlainRelocationExternal
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|RE
+argument|const MachO::any_relocation_info&RE
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|bool
 name|getScatteredRelocationScattered
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|RE
+argument|const MachO::any_relocation_info&RE
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|uint32_t
 name|getScatteredRelocationValue
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|RE
+argument|const MachO::any_relocation_info&RE
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|uint32_t
 name|getScatteredRelocationType
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|RE
+argument|const MachO::any_relocation_info&RE
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|unsigned
 name|getAnyRelocationAddress
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|RE
+argument|const MachO::any_relocation_info&RE
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|unsigned
 name|getAnyRelocationPCRel
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|RE
+argument|const MachO::any_relocation_info&RE
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|unsigned
 name|getAnyRelocationLength
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|RE
+argument|const MachO::any_relocation_info&RE
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|unsigned
 name|getAnyRelocationType
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|RE
+argument|const MachO::any_relocation_info&RE
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|SectionRef
 name|getAnyRelocationSection
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|RE
+argument|const MachO::any_relocation_info&RE
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|// MachO specific structures.
 name|MachO
 operator|::
@@ -1913,7 +1937,7 @@ argument_list|(
 argument|DataRefImpl DRI
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|section_64
@@ -1922,7 +1946,7 @@ argument_list|(
 argument|DataRefImpl DRI
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|section
@@ -1933,7 +1957,7 @@ argument_list|,
 argument|unsigned Index
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|section_64
@@ -1944,7 +1968,7 @@ argument_list|,
 argument|unsigned Index
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|nlist
@@ -1953,7 +1977,7 @@ argument_list|(
 argument|DataRefImpl DRI
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|nlist_64
@@ -1962,7 +1986,7 @@ argument_list|(
 argument|DataRefImpl DRI
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|linkedit_data_command
@@ -1971,7 +1995,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|segment_command
@@ -1980,7 +2004,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|segment_command_64
@@ -1989,7 +2013,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|linker_option_command
@@ -1998,7 +2022,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|version_min_command
@@ -2007,7 +2031,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|note_command
@@ -2016,7 +2040,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|build_version_command
@@ -2025,7 +2049,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|build_tool_version
@@ -2034,7 +2058,7 @@ argument_list|(
 argument|unsigned index
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|dylib_command
@@ -2043,7 +2067,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|dyld_info_command
@@ -2052,7 +2076,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|dylinker_command
@@ -2061,7 +2085,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|uuid_command
@@ -2070,7 +2094,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|rpath_command
@@ -2079,7 +2103,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|source_version_command
@@ -2088,7 +2112,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|entry_point_command
@@ -2097,7 +2121,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|encryption_info_command
@@ -2106,7 +2130,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|encryption_info_command_64
@@ -2115,7 +2139,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|sub_framework_command
@@ -2124,7 +2148,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|sub_umbrella_command
@@ -2133,7 +2157,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|sub_library_command
@@ -2142,7 +2166,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|sub_client_command
@@ -2151,7 +2175,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|routines_command
@@ -2160,7 +2184,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|routines_command_64
@@ -2169,7 +2193,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|thread_command
@@ -2178,7 +2202,7 @@ argument_list|(
 argument|const LoadCommandInfo&L
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|any_relocation_info
@@ -2187,7 +2211,7 @@ argument_list|(
 argument|DataRefImpl Rel
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|data_in_code_entry
@@ -2196,7 +2220,7 @@ argument_list|(
 argument|DataRefImpl Rel
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 specifier|const
 name|MachO
 operator|::
@@ -2205,7 +2229,7 @@ operator|&
 name|getHeader
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 specifier|const
 name|MachO
 operator|::
@@ -2214,22 +2238,16 @@ operator|&
 name|getHeader64
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|uint32_t
 name|getIndirectSymbolTableEntry
 argument_list|(
-specifier|const
-name|MachO
-operator|::
-name|dysymtab_command
-operator|&
-name|DLC
+argument|const MachO::dysymtab_command&DLC
 argument_list|,
-name|unsigned
-name|Index
+argument|unsigned Index
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|MachO
 operator|::
 name|data_in_code_entry
@@ -2240,35 +2258,35 @@ argument_list|,
 argument|unsigned Index
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|symtab_command
 name|getSymtabLoadCommand
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|dysymtab_command
 name|getDysymtabLoadCommand
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|linkedit_data_command
 name|getDataInCodeLoadCommand
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|MachO
 operator|::
 name|linkedit_data_command
 name|getLinkOptHintsLoadCommand
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|ArrayRef
 operator|<
 name|uint8_t
@@ -2276,7 +2294,7 @@ operator|>
 name|getDyldInfoRebaseOpcodes
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|ArrayRef
 operator|<
 name|uint8_t
@@ -2284,7 +2302,7 @@ operator|>
 name|getDyldInfoBindOpcodes
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|ArrayRef
 operator|<
 name|uint8_t
@@ -2292,7 +2310,7 @@ operator|>
 name|getDyldInfoWeakBindOpcodes
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|ArrayRef
 operator|<
 name|uint8_t
@@ -2300,7 +2318,7 @@ operator|>
 name|getDyldInfoLazyBindOpcodes
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|ArrayRef
 operator|<
 name|uint8_t
@@ -2308,7 +2326,7 @@ operator|>
 name|getDyldInfoExportsTrie
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|ArrayRef
 operator|<
 name|uint8_t
@@ -2316,48 +2334,37 @@ operator|>
 name|getUuid
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|StringRef
 name|getStringTableData
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|is64Bit
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|void
 name|ReadULEB128s
 argument_list|(
-name|uint64_t
-name|Index
+argument|uint64_t Index
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|uint64_t
-operator|>
-operator|&
-name|Out
+argument|SmallVectorImpl<uint64_t>&Out
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 specifier|static
 name|StringRef
 name|guessLibraryShortName
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-name|bool
-modifier|&
-name|isFramework
-parameter_list|,
-name|StringRef
-modifier|&
-name|Suffix
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|bool&isFramework
+argument_list|,
+argument|StringRef&Suffix
+argument_list|)
+block|;
 specifier|static
 name|Triple
 operator|::
@@ -2366,53 +2373,38 @@ name|getArch
 argument_list|(
 argument|uint32_t CPUType
 argument_list|)
-expr_stmt|;
+block|;
 specifier|static
 name|Triple
 name|getArchTriple
-parameter_list|(
-name|uint32_t
-name|CPUType
-parameter_list|,
-name|uint32_t
-name|CPUSubType
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|McpuDefault
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|ArchFlag
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|uint32_t CPUType
+argument_list|,
+argument|uint32_t CPUSubType
+argument_list|,
+argument|const char **McpuDefault = nullptr
+argument_list|,
+argument|const char **ArchFlag = nullptr
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|isValidArch
-parameter_list|(
-name|StringRef
-name|ArchFlag
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef ArchFlag
+argument_list|)
+block|;
 specifier|static
 name|Triple
 name|getHostArch
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|bool
 name|isRelocatableObject
 argument_list|()
 specifier|const
 name|override
-expr_stmt|;
+block|;
 name|bool
 name|hasPageZeroSegment
 argument_list|()
@@ -2425,12 +2417,9 @@ block|}
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Binary
-modifier|*
-name|v
-parameter_list|)
+argument_list|(
+argument|const Binary *v
+argument_list|)
 block|{
 return|return
 name|v
@@ -2443,31 +2432,26 @@ specifier|static
 name|uint32_t
 name|getVersionMinMajor
 argument_list|(
-name|MachO
-operator|::
-name|version_min_command
-operator|&
-name|C
+argument|MachO::version_min_command&C
 argument_list|,
-name|bool
-name|SDK
+argument|bool SDK
 argument_list|)
 block|{
 name|uint32_t
 name|VersionOrSDK
-init|=
+operator|=
 operator|(
 name|SDK
 operator|)
-condition|?
+operator|?
 name|C
 operator|.
 name|sdk
-else|:
+operator|:
 name|C
 operator|.
 name|version
-decl_stmt|;
+block|;
 return|return
 operator|(
 name|VersionOrSDK
@@ -2482,19 +2466,14 @@ specifier|static
 name|uint32_t
 name|getVersionMinMinor
 argument_list|(
-name|MachO
-operator|::
-name|version_min_command
-operator|&
-name|C
+argument|MachO::version_min_command&C
 argument_list|,
-name|bool
-name|SDK
+argument|bool SDK
 argument_list|)
 block|{
 name|uint32_t
 name|VersionOrSDK
-init|=
+operator|=
 operator|(
 name|SDK
 operator|)
@@ -2506,7 +2485,7 @@ else|:
 name|C
 operator|.
 name|version
-decl_stmt|;
+block|;
 return|return
 operator|(
 name|VersionOrSDK
@@ -2521,19 +2500,14 @@ specifier|static
 name|uint32_t
 name|getVersionMinUpdate
 argument_list|(
-name|MachO
-operator|::
-name|version_min_command
-operator|&
-name|C
+argument|MachO::version_min_command&C
 argument_list|,
-name|bool
-name|SDK
+argument|bool SDK
 argument_list|)
 block|{
 name|uint32_t
 name|VersionOrSDK
-init|=
+operator|=
 operator|(
 name|SDK
 operator|)
@@ -2545,7 +2519,7 @@ else|:
 name|C
 operator|.
 name|version
-decl_stmt|;
+block|;
 return|return
 name|VersionOrSDK
 operator|&
@@ -2612,14 +2586,12 @@ operator|::
 name|string
 name|ret
 expr_stmt|;
-name|llvm
-operator|::
 name|raw_string_ostream
 name|ss
-argument_list|(
+parameter_list|(
 name|ret
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|ss
 operator|<<
 name|format_hex
@@ -2683,14 +2655,12 @@ operator|::
 name|string
 name|ret
 expr_stmt|;
-name|llvm
-operator|::
 name|raw_string_ostream
 name|ss
-argument_list|(
+parameter_list|(
 name|ret
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|ss
 operator|<<
 name|format_hex
@@ -2832,46 +2802,40 @@ name|Header
 expr_stmt|;
 block|}
 union|;
-typedef|typedef
+name|using
+name|SectionList
+init|=
 name|SmallVector
 operator|<
 specifier|const
 name|char
 operator|*
-operator|,
-literal|1
-operator|>
-name|SectionList
-expr_stmt|;
+decl_stmt|, 1>;
 name|SectionList
 name|Sections
 decl_stmt|;
-typedef|typedef
+name|using
+name|LibraryList
+init|=
 name|SmallVector
 operator|<
 specifier|const
 name|char
 operator|*
-operator|,
-literal|1
-operator|>
-name|LibraryList
-expr_stmt|;
+decl_stmt|, 1>;
 name|LibraryList
 name|Libraries
 decl_stmt|;
 name|LoadCommandList
 name|LoadCommands
 decl_stmt|;
-typedef|typedef
+name|using
+name|LibraryShortName
+init|=
 name|SmallVector
 operator|<
 name|StringRef
-operator|,
-literal|1
-operator|>
-name|LibraryShortName
-expr_stmt|;
+decl_stmt|, 1>;
 name|using
 name|BuildToolList
 init|=
@@ -2900,47 +2864,52 @@ specifier|const
 name|char
 modifier|*
 name|SymtabLoadCmd
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|DysymtabLoadCmd
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|DataInCodeLoadCmd
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|LinkOptHintsLoadCmd
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|DyldInfoLoadCmd
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|UuidLoadCmd
+init|=
+name|nullptr
 decl_stmt|;
 name|bool
 name|HasPageZeroSegment
+init|=
+name|false
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// DiceRef
-end_comment
-
-begin_expr_stmt
 specifier|inline
 name|DiceRef
 operator|::
@@ -2983,9 +2952,6 @@ operator|.
 name|DicePimpl
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|DiceRef
@@ -3008,9 +2974,6 @@ operator|.
 name|DicePimpl
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|void
 name|DiceRef
@@ -3108,9 +3071,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|std
 operator|::
@@ -3163,9 +3123,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|std
 operator|::
@@ -3218,9 +3175,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|DataRefImpl
 name|DiceRef
@@ -3233,9 +3187,6 @@ return|return
 name|DicePimpl
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|ObjectFile
@@ -3250,13 +3201,26 @@ return|return
 name|OwningObject
 return|;
 block|}
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// end namespace object
+end_comment
+
+begin_comment
+unit|}
+comment|// end namespace llvm
+end_comment
 
 begin_endif
-unit|} }
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECT_MACHO_H
+end_comment
 
 end_unit
 

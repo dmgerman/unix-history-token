@@ -121,6 +121,20 @@ name|uint8_t
 operator|>>
 name|ColorMap
 expr_stmt|;
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|tuple
+operator|<
+name|uint8_t
+operator|,
+name|uint8_t
+operator|,
+name|uint8_t
+operator|>>
+name|BoundMap
+expr_stmt|;
 name|public
 label|:
 comment|/// Enum of the availible Sequential Color Schemes
@@ -183,6 +197,45 @@ argument|double Point
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|// Get the Default color, at the moment allways black.
+name|std
+operator|::
+name|tuple
+operator|<
+name|uint8_t
+operator|,
+name|uint8_t
+operator|,
+name|uint8_t
+operator|>
+name|getDefaultColorTuple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_tuple
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+name|std
+operator|::
+name|string
+name|getDefaultColorString
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|"black"
+return|;
+block|}
 comment|// Convert a tuple to a string
 specifier|static
 name|std
@@ -206,8 +259,13 @@ expr_stmt|;
 block|}
 empty_stmt|;
 block|}
+comment|// namespace xray
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

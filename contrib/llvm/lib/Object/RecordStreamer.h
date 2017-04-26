@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RecordStreamer.h - Record asm defined and used symbols ---*- C++ -*===//
+comment|//===- RecordStreamer.h - Record asm defined and used symbols ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,7 +46,43 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCDirectives.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCStreamer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SMLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -140,144 +176,110 @@ name|override
 block|;
 name|public
 operator|:
-typedef|typedef
-name|StringMap
-operator|<
-name|State
-operator|>
-operator|::
-name|const_iterator
-name|const_iterator
-expr_stmt|;
-name|const_iterator
-name|begin
-argument_list|()
-decl_stmt|;
-name|const_iterator
-name|end
-parameter_list|()
-function_decl|;
 name|RecordStreamer
 argument_list|(
 name|MCContext
 operator|&
 name|Context
 argument_list|)
-expr_stmt|;
+block|;
+name|using
+name|const_iterator
+operator|=
+name|StringMap
+operator|<
+name|State
+operator|>
+operator|::
+name|const_iterator
+block|;
+name|const_iterator
+name|begin
+argument_list|()
+block|;
+name|const_iterator
+name|end
+argument_list|()
+block|;
 name|void
 name|EmitInstruction
 argument_list|(
-specifier|const
-name|MCInst
-operator|&
-name|Inst
+argument|const MCInst&Inst
 argument_list|,
-specifier|const
-name|MCSubtargetInfo
-operator|&
-name|STI
+argument|const MCSubtargetInfo&STI
 argument_list|,
-name|bool
+argument|bool
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|EmitLabel
 argument_list|(
-name|MCSymbol
-operator|*
-name|Symbol
+argument|MCSymbol *Symbol
 argument_list|,
-name|SMLoc
-name|Loc
-operator|=
-name|SMLoc
-argument_list|()
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|EmitAssignment
 argument_list|(
-name|MCSymbol
-operator|*
-name|Symbol
+argument|MCSymbol *Symbol
 argument_list|,
-specifier|const
-name|MCExpr
-operator|*
-name|Value
+argument|const MCExpr *Value
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|bool
 name|EmitSymbolAttribute
 argument_list|(
-name|MCSymbol
-operator|*
-name|Symbol
+argument|MCSymbol *Symbol
 argument_list|,
-name|MCSymbolAttr
-name|Attribute
+argument|MCSymbolAttr Attribute
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|EmitZerofill
 argument_list|(
-name|MCSection
-operator|*
-name|Section
+argument|MCSection *Section
 argument_list|,
-name|MCSymbol
-operator|*
-name|Symbol
+argument|MCSymbol *Symbol
 argument_list|,
-name|uint64_t
-name|Size
+argument|uint64_t Size
 argument_list|,
-name|unsigned
-name|ByteAlignment
+argument|unsigned ByteAlignment
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|EmitCommonSymbol
 argument_list|(
-name|MCSymbol
-operator|*
-name|Symbol
+argument|MCSymbol *Symbol
 argument_list|,
-name|uint64_t
-name|Size
+argument|uint64_t Size
 argument_list|,
-name|unsigned
-name|ByteAlignment
+argument|unsigned ByteAlignment
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 comment|/// Record .symver aliases for later processing.
 name|void
 name|emitELFSymverDirective
 argument_list|(
-name|MCSymbol
-operator|*
-name|Alias
+argument|MCSymbol *Alias
 argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|Aliasee
+argument|const MCSymbol *Aliasee
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 comment|/// Return the map of .symver aliasee to associated aliases.
 name|DenseMap
 operator|<
 specifier|const
 name|MCSymbol
 operator|*
-operator|,
+block|,
 name|std
 operator|::
 name|vector
@@ -296,16 +298,13 @@ block|}
 comment|/// Get the state recorded for the given symbol.
 name|State
 name|getSymbolState
-parameter_list|(
-specifier|const
-name|MCSymbol
-modifier|*
-name|Sym
-parameter_list|)
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|)
 block|{
 name|auto
 name|SI
-init|=
+operator|=
 name|Symbols
 operator|.
 name|find
@@ -315,7 +314,7 @@ operator|->
 name|getName
 argument_list|()
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|SI
@@ -341,11 +340,19 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_OBJECT_RECORDSTREAMER_H
+end_comment
 
 end_unit
 

@@ -334,6 +334,70 @@ name|unsigned
 name|flags
 parameter_list|)
 function_decl|;
+comment|// External race detection API.
+comment|// Can be used by non-instrumented libraries to detect when their objects are
+comment|// being used in an unsafe manner.
+comment|//   - __tsan_external_read/__tsan_external_write annotates the logical reads
+comment|//       and writes of the object at the specified address. 'caller_pc' should
+comment|//       be the PC of the library user, which the library can obtain with e.g.
+comment|//       `__builtin_return_address(0)`.
+comment|//   - __tsan_external_register_tag registers a 'tag' with the specified name,
+comment|//       which is later used in read/write annotations to denote the object type
+comment|//   - __tsan_external_assign_tag can optionally mark a heap object with a tag
+name|void
+modifier|*
+name|__tsan_external_register_tag
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|object_type
+parameter_list|)
+function_decl|;
+name|void
+name|__tsan_external_assign_tag
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+name|void
+name|__tsan_external_read
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|void
+modifier|*
+name|caller_pc
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+name|void
+name|__tsan_external_write
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|void
+modifier|*
+name|caller_pc
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

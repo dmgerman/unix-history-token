@@ -141,9 +141,10 @@ name|function
 operator|<
 name|void
 argument_list|(
+name|ArrayRef
+operator|<
 name|unsigned
-argument_list|,
-name|uint64_t
+operator|>
 argument_list|)
 operator|>
 name|SplitArgTy
@@ -172,7 +173,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End of namespace llvm;
+comment|// namespace llvm
 end_comment
 
 begin_endif

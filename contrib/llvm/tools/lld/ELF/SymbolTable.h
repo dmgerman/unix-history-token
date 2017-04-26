@@ -479,6 +479,16 @@ name|StringRef
 name|Name
 parameter_list|)
 function_decl|;
+name|void
+name|alias
+parameter_list|(
+name|StringRef
+name|Alias
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|std

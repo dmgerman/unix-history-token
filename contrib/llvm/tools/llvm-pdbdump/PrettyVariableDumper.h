@@ -96,6 +96,14 @@ literal|0
 argument_list|)
 block|;
 name|void
+name|startVbptr
+argument_list|(
+argument|uint32_t Offset
+argument_list|,
+argument|uint32_t Size
+argument_list|)
+block|;
+name|void
 name|dump
 argument_list|(
 argument|const PDBSymbolTypeArray&Symbol

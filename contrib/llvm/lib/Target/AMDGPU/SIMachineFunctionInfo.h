@@ -270,6 +270,16 @@ block|;
 name|unsigned
 name|ScratchWaveOffsetReg
 block|;
+comment|// This is the current function's incremented size from the kernel's scratch
+comment|// wave offset register. For an entry function, this is exactly the same as
+comment|// the ScratchWaveOffsetReg.
+name|unsigned
+name|FrameOffsetReg
+block|;
+comment|// Top of the stack SGPR offset derived from the ScratchWaveOffsetReg.
+name|unsigned
+name|StackPtrOffsetReg
+block|;
 comment|// Input registers for non-HSA ABI
 name|unsigned
 name|PrivateMemoryPtrUserSGPR
@@ -1150,6 +1160,45 @@ return|return
 name|ScratchWaveOffsetReg
 return|;
 block|}
+name|unsigned
+name|getFrameOffsetReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FrameOffsetReg
+return|;
+block|}
+name|void
+name|setStackPtrOffsetReg
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Reg
+operator|!=
+name|AMDGPU
+operator|::
+name|NoRegister
+operator|&&
+literal|"Should never be unset"
+argument_list|)
+block|;
+name|StackPtrOffsetReg
+operator|=
+name|Reg
+block|;   }
+name|unsigned
+name|getStackPtrOffsetReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StackPtrOffsetReg
+return|;
+block|}
 name|void
 name|setScratchWaveOffsetReg
 argument_list|(
@@ -1170,6 +1219,11 @@ block|;
 name|ScratchWaveOffsetReg
 operator|=
 name|Reg
+block|;
+comment|// FIXME: Only for entry functions.
+name|FrameOffsetReg
+operator|=
+name|ScratchWaveOffsetReg
 block|;   }
 name|unsigned
 name|getQueuePtrUserSGPR

@@ -1135,6 +1135,9 @@ decl_stmt|;
 name|uptr
 name|class_size
 decl_stmt|;
+name|uptr
+name|class_id_for_transfer_batch
+decl_stmt|;
 name|void
 modifier|*
 name|batch
@@ -1180,6 +1183,20 @@ operator|.
 name|max_count
 condition|)
 return|return;
+comment|// TransferBatch class is declared in SizeClassAllocator.
+name|uptr
+name|class_id_for_transfer_batch
+init|=
+name|SizeClassMap
+operator|::
+name|ClassID
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|TransferBatch
+argument_list|)
+argument_list|)
+decl_stmt|;
 for|for
 control|(
 name|uptr
@@ -1205,18 +1222,23 @@ index|[
 name|i
 index|]
 decl_stmt|;
-name|c
-operator|->
-name|max_count
-operator|=
-literal|2
-operator|*
+name|uptr
+name|max_cached
+init|=
 name|TransferBatch
 operator|::
 name|MaxCached
 argument_list|(
 name|i
 argument_list|)
+decl_stmt|;
+name|c
+operator|->
+name|max_count
+operator|=
+literal|2
+operator|*
+name|max_cached
 expr_stmt|;
 name|c
 operator|->
@@ -1229,74 +1251,33 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|// TransferBatch class is declared in SizeClassAllocator.
-end_comment
-
-begin_comment
-comment|// We transfer chunks between central and thread-local free lists in batches.
-end_comment
-
-begin_comment
-comment|// For small size classes we allocate batches separately.
-end_comment
-
-begin_comment
-comment|// For large size classes we may use one of the chunks to store the batch.
-end_comment
-
-begin_comment
-comment|// sizeof(TransferBatch) must be a power of 2 for more efficient allocation.
-end_comment
-
-begin_function
-specifier|static
-name|uptr
-name|SizeClassForTransferBatch
-parameter_list|(
-name|uptr
-name|class_id
-parameter_list|)
-block|{
-if|if
-condition|(
-name|Allocator
-operator|::
-name|ClassIdToSize
-argument_list|(
-name|class_id
-argument_list|)
+comment|// We transfer chunks between central and thread-local free lists in
+comment|// batches. For small size classes we allocate batches separately. For
+comment|// large size classes we may use one of the chunks to store the batch.
+comment|// sizeof(TransferBatch) must be a power of 2 for more efficient
+comment|// allocation.
+name|c
+operator|->
+name|class_id_for_transfer_batch
+operator|=
+operator|(
+name|c
+operator|->
+name|class_size
 operator|<
 name|TransferBatch
 operator|::
 name|AllocationSizeRequiredForNElements
 argument_list|(
-name|TransferBatch
-operator|::
-name|MaxCached
-argument_list|(
-name|class_id
+name|max_cached
 argument_list|)
-argument_list|)
-condition|)
-return|return
-name|SizeClassMap
-operator|::
-name|ClassID
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|TransferBatch
-argument_list|)
-argument_list|)
-return|;
-return|return
+operator|)
+condition|?
+name|class_id_for_transfer_batch
+else|:
 literal|0
-return|;
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1334,10 +1315,12 @@ condition|(
 name|uptr
 name|batch_class_id
 init|=
-name|SizeClassForTransferBatch
-argument_list|(
+name|per_class_
+index|[
 name|class_id
-argument_list|)
+index|]
+operator|.
+name|class_id_for_transfer_batch
 condition|)
 return|return
 operator|(
@@ -1390,10 +1373,12 @@ condition|(
 name|uptr
 name|batch_class_id
 init|=
-name|SizeClassForTransferBatch
-argument_list|(
+name|per_class_
+index|[
 name|class_id
-argument_list|)
+index|]
+operator|.
+name|class_id_for_transfer_batch
 condition|)
 name|Deallocate
 argument_list|(

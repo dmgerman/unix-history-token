@@ -66,7 +66,7 @@ name|class
 name|UDTLayoutBase
 decl_stmt|;
 name|class
-name|StorageItemBase
+name|LayoutItemBase
 decl_stmt|;
 name|class
 name|LinePrinter
@@ -83,6 +83,8 @@ name|PrettyClassLayoutGraphicalDumper
 argument_list|(
 argument|LinePrinter&P
 argument_list|,
+argument|uint32_t RecurseLevel
+argument_list|,
 argument|uint32_t InitialOffset
 argument_list|)
 block|;
@@ -95,6 +97,7 @@ operator|&
 name|Layout
 argument_list|)
 block|;
+comment|// Layout based symbol types.
 name|void
 name|dump
 argument_list|(
@@ -116,8 +119,49 @@ argument|const PDBSymbolTypeVTable&Symbol
 argument_list|)
 name|override
 block|;
+comment|// Non layout-based symbol types.
+name|void
+name|dump
+argument_list|(
+argument|const PDBSymbolTypeEnum&Symbol
+argument_list|)
+name|override
+block|;
+name|void
+name|dump
+argument_list|(
+argument|const PDBSymbolFunc&Symbol
+argument_list|)
+name|override
+block|;
+name|void
+name|dump
+argument_list|(
+argument|const PDBSymbolTypeTypedef&Symbol
+argument_list|)
+name|override
+block|;
+name|void
+name|dump
+argument_list|(
+argument|const PDBSymbolTypeUDT&Symbol
+argument_list|)
+name|override
+block|;
+name|void
+name|dump
+argument_list|(
+argument|const PDBSymbolTypeBuiltin&Symbol
+argument_list|)
+name|override
+block|;
 name|private
 operator|:
+name|bool
+name|shouldRecurse
+argument_list|()
+specifier|const
+block|;
 name|void
 name|printPaddingRow
 argument_list|(
@@ -128,11 +172,16 @@ name|LinePrinter
 operator|&
 name|Printer
 block|;
-name|StorageItemBase
+name|LayoutItemBase
 operator|*
 name|CurrentItem
 operator|=
 name|nullptr
+block|;
+name|uint32_t
+name|RecursionLevel
+operator|=
+literal|0
 block|;
 name|uint32_t
 name|ClassOffsetZero

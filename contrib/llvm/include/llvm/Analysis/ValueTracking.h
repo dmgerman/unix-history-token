@@ -120,6 +120,9 @@ decl_stmt|;
 name|class
 name|Instruction
 decl_stmt|;
+struct_decl|struct
+name|KnownBits
+struct_decl|;
 name|class
 name|Loop
 decl_stmt|;
@@ -166,13 +169,9 @@ name|Value
 modifier|*
 name|V
 parameter_list|,
-name|APInt
+name|KnownBits
 modifier|&
-name|KnownZero
-parameter_list|,
-name|APInt
-modifier|&
-name|KnownOne
+name|Known
 parameter_list|,
 specifier|const
 name|DataLayout

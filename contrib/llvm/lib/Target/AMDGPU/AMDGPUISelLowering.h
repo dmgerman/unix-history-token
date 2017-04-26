@@ -1411,6 +1411,26 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
+name|MVT
+name|getFenceOperandTy
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+name|override
+block|{
+return|return
+name|MVT
+operator|::
+name|i32
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
 unit|};
 name|namespace
 name|AMDGPUISD
@@ -1435,6 +1455,8 @@ block|,
 comment|// End AMDIL ISD Opcodes
 comment|// Function call.
 name|CALL
+block|,
+name|TRAP
 block|,
 comment|// Masked control flow nodes.
 name|IF

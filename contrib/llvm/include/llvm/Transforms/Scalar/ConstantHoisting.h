@@ -150,6 +150,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/BlockFrequencyInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/TargetTransformInfo.h"
 end_include
 
@@ -377,6 +383,10 @@ name|DominatorTree
 operator|&
 name|DT
 argument_list|,
+name|BlockFrequencyInfo
+operator|*
+name|BFI
+argument_list|,
 name|BasicBlock
 operator|&
 name|Entry
@@ -433,6 +443,10 @@ name|DominatorTree
 modifier|*
 name|DT
 decl_stmt|;
+name|BlockFrequencyInfo
+modifier|*
+name|BFI
+decl_stmt|;
 name|BasicBlock
 modifier|*
 name|Entry
@@ -479,19 +493,19 @@ literal|0U
 argument_list|)
 decl|const
 decl_stmt|;
+name|SmallPtrSet
+operator|<
 name|Instruction
-modifier|*
+operator|*
+operator|,
+literal|8
+operator|>
 name|findConstantInsertionPoint
 argument_list|(
-specifier|const
-name|consthoist
-operator|::
-name|ConstantInfo
-operator|&
-name|ConstInfo
+argument|const consthoist::ConstantInfo&ConstInfo
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 name|void
 name|collectConstantCandidates
 parameter_list|(

@@ -177,15 +177,18 @@ name|SocketAddress
 operator|>
 name|GetAddressInfo
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|hostname
+argument|const char *hostname
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|servname
+argument|const char *servname
+argument_list|,
+argument|int ai_family
+argument_list|,
+argument|int ai_socktype
+argument_list|,
+argument|int ai_protocol
+argument_list|,
+argument|int ai_flags =
+literal|0
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------

@@ -74,6 +74,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/Binary.h"
 end_include
 
@@ -179,23 +191,19 @@ name|public
 label|:
 name|WasmSection
 argument_list|()
-operator|:
-name|Type
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Offset
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|uint32_t
 name|Type
-expr_stmt|;
+init|=
+literal|0
+decl_stmt|;
 comment|// Section type (See below)
 name|uint32_t
 name|Offset
+init|=
+literal|0
 decl_stmt|;
 comment|// Offset with in the file
 name|StringRef
@@ -1172,6 +1180,9 @@ name|CodeSection
 block|;
 name|uint32_t
 name|StartFunction
+operator|=
+operator|-
+literal|1
 block|; }
 decl_stmt|;
 block|}

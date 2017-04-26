@@ -2951,7 +2951,7 @@ comment|/// \brief Matches nodes where temporaries are materialized.
 comment|///
 comment|/// Example: Given
 comment|/// \code
-comment|///   struct T {void func()};
+comment|///   struct T {void func();};
 comment|///   T f();
 comment|///   void g(T);
 comment|/// \endcode
