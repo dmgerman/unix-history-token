@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -debug-info-kind=limited -split-dwarf-file foo.dwo -S -emit-llvm -o - %s | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -debug-info-kind=limited -enable-split-dwarf -split-dwarf-file foo.dwo -S -emit-llvm -o - %s | FileCheck --check-prefix=VANILLA %s
+end_comment
+
 begin_function
 name|int
 name|main
@@ -22,6 +26,18 @@ end_comment
 
 begin_comment
 comment|// CHECK: !DICompileUnit({{.*}}, splitDebugFilename: "foo.dwo"
+end_comment
+
+begin_comment
+comment|// Testing to ensure that the dwo name is not output into the compile unit if
+end_comment
+
+begin_comment
+comment|// it's for vanilla split-dwarf rather than split-dwarf for implicit modules.
+end_comment
+
+begin_comment
+comment|// VANILLA-NOT: splitDebugFilename
 end_comment
 
 end_unit

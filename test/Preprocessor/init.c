@@ -35252,6 +35252,46 @@ comment|// WEBASSEMBLY32-NOT:#define __CHAR_UNSIGNED__
 end_comment
 
 begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_BOOL_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_CHAR16_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_CHAR32_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_CHAR_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_INT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_LLONG_LOCK_FREE 1
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_LONG_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_POINTER_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_SHORT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_WCHAR_T_LOCK_FREE 2
+end_comment
+
+begin_comment
 comment|// WEBASSEMBLY32-NEXT:#define __CONSTANT_CFSTRINGS__ 1
 end_comment
 
@@ -36513,6 +36553,46 @@ end_comment
 
 begin_comment
 comment|// WEBASSEMBLY64-NOT:#define __CHAR_UNSIGNED__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CLANG_ATOMIC_BOOL_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CLANG_ATOMIC_CHAR16_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CLANG_ATOMIC_CHAR32_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CLANG_ATOMIC_CHAR_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CLANG_ATOMIC_INT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CLANG_ATOMIC_LLONG_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CLANG_ATOMIC_LONG_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CLANG_ATOMIC_POINTER_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CLANG_ATOMIC_SHORT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CLANG_ATOMIC_WCHAR_T_LOCK_FREE 2
 end_comment
 
 begin_comment
@@ -38401,6 +38481,118 @@ end_comment
 
 begin_comment
 comment|// AVR:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding \
+end_comment
+
+begin_comment
+comment|// RUN:    -triple i686-windows-msvc -fms-compatibility< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:  | FileCheck -match-full-lines -check-prefix MSVC-X32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding \
+end_comment
+
+begin_comment
+comment|// RUN:    -triple x86_64-windows-msvc -fms-compatibility< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:  | FileCheck -match-full-lines -check-prefix MSVC-X64 %s
+end_comment
+
+begin_comment
+comment|// MSVC-X32:#define __CLANG_ATOMIC_BOOL_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X32-NEXT:#define __CLANG_ATOMIC_CHAR16_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X32-NEXT:#define __CLANG_ATOMIC_CHAR32_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X32-NEXT:#define __CLANG_ATOMIC_CHAR_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X32-NEXT:#define __CLANG_ATOMIC_INT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X32-NEXT:#define __CLANG_ATOMIC_LLONG_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X32-NEXT:#define __CLANG_ATOMIC_LONG_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X32-NEXT:#define __CLANG_ATOMIC_POINTER_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X32-NEXT:#define __CLANG_ATOMIC_SHORT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X32-NEXT:#define __CLANG_ATOMIC_WCHAR_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X32-NOT:#define __GCC_ATOMIC{{.*}}
+end_comment
+
+begin_comment
+comment|// MSVC-X64:#define __CLANG_ATOMIC_BOOL_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X64-NEXT:#define __CLANG_ATOMIC_CHAR16_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X64-NEXT:#define __CLANG_ATOMIC_CHAR32_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X64-NEXT:#define __CLANG_ATOMIC_CHAR_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X64-NEXT:#define __CLANG_ATOMIC_INT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X64-NEXT:#define __CLANG_ATOMIC_LLONG_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X64-NEXT:#define __CLANG_ATOMIC_LONG_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X64-NEXT:#define __CLANG_ATOMIC_POINTER_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X64-NEXT:#define __CLANG_ATOMIC_SHORT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X64-NEXT:#define __CLANG_ATOMIC_WCHAR_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MSVC-X86-NOT:#define __GCC_ATOMIC{{.*}}
 end_comment
 
 end_unit

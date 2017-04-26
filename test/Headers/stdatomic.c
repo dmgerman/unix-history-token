@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -std=c11 -E %s | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -std=c11 -fms-compatibility -E %s | FileCheck %s
+end_comment
+
 begin_include
 include|#
 directive|include

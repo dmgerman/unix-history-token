@@ -120,7 +120,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-GMLT-WITH-SPLIT: "-split-dwarf=Enable"
+comment|// CHECK-GMLT-WITH-SPLIT: "-enable-split-dwarf"
 end_comment
 
 begin_comment
@@ -144,7 +144,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-SPLIT-WITH-GMLT: "-split-dwarf=Enable"
+comment|// CHECK-SPLIT-WITH-GMLT: "-enable-split-dwarf"
 end_comment
 
 begin_comment
@@ -168,7 +168,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-SPLIT-WITH-NOINL: "-split-dwarf=Enable"
+comment|// CHECK-SPLIT-WITH-NOINL: "-enable-split-dwarf"
 end_comment
 
 begin_comment
@@ -192,7 +192,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-GMLT-OVER-SPLIT-NOT: "-split-dwarf=Enable"
+comment|// CHECK-GMLT-OVER-SPLIT-NOT: "-enable-split-dwarf"
 end_comment
 
 begin_comment
@@ -216,7 +216,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-SPLIT-OVER-GMLT: "-split-dwarf=Enable" "-debug-info-kind=limited"
+comment|// CHECK-SPLIT-OVER-GMLT: "-enable-split-dwarf" "-debug-info-kind=limited"
 end_comment
 
 begin_comment
@@ -236,7 +236,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-G0-OVER-SPLIT-NOT: "-split-dwarf=Enable"
+comment|// CHECK-G0-OVER-SPLIT-NOT: "-enable-split-dwarf"
 end_comment
 
 begin_comment
@@ -260,7 +260,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-G0-OVER-SPLIT-NOT: "-split-dwarf=Enable"
+comment|// CHECK-G0-OVER-SPLIT-NOT: "-enable-split-dwarf"
 end_comment
 
 begin_comment
@@ -284,7 +284,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-SPLIT-OVER-G0: "-split-dwarf=Enable" "-debug-info-kind=limited"
+comment|// CHECK-SPLIT-OVER-G0: "-enable-split-dwarf" "-debug-info-kind=limited"
 end_comment
 
 begin_comment

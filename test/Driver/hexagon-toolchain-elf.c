@@ -344,6 +344,62 @@ comment|// CHECK024: hexagon-link{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
+end_comment
+
+begin_comment
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   -O3 \
+end_comment
+
+begin_comment
+comment|// RUN:   %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK025 %s
+end_comment
+
+begin_comment
+comment|// CHECK025: "-ffp-contract=fast"
+end_comment
+
+begin_comment
+comment|// CHECK025: hexagon-link
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
+end_comment
+
+begin_comment
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   -O3 -ffp-contract=off \
+end_comment
+
+begin_comment
+comment|// RUN:   %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK026 %s
+end_comment
+
+begin_comment
+comment|// CHECK026-NOT: "-ffp-contract=fast"
+end_comment
+
+begin_comment
+comment|// CHECK026: hexagon-link
+end_comment
+
+begin_comment
 comment|// -----------------------------------------------------------------------------
 end_comment
 

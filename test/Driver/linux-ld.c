@@ -2560,6 +2560,166 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Check openSUSE Tumbleweed on armv6hl
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=armv6hl-suse-linux-gnueabi \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/opensuse_tumbleweed_armv6hl_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-OPENSUSE-TW-ARMV6HL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=armv6hl-suse-linux-gnueabi \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/opensuse_tumbleweed_armv6hl_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-OPENSUSE-TW-ARMV6HL %s
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV6HL: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV6HL: "{{.*}}/usr/lib/gcc/armv6hl-suse-linux-gnueabi/5/../../../../lib{{/|\\\\}}crt1.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV6HL: "{{.*}}/usr/lib/gcc/armv6hl-suse-linux-gnueabi/5/../../../../lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV6HL: "{{.*}}/usr/lib/gcc/armv6hl-suse-linux-gnueabi/5{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV6HL: "-L[[SYSROOT]]/usr/lib/gcc/armv6hl-suse-linux-gnueabi/5"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV6HL: "-L[[SYSROOT]]/usr/lib/gcc/armv6hl-suse-linux-gnueabi/5/../../../../lib"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV6HL: "{{.*}}/usr/lib/gcc/armv6hl-suse-linux-gnueabi/5{{/|\\\\}}crtend.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV6HL: "{{.*}}/usr/lib/gcc/armv6hl-suse-linux-gnueabi/5/../../../../lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Check openSUSE Tumbleweed on armv7hl
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=armv7hl-suse-linux-gnueabi \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/opensuse_tumbleweed_armv7hl_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-OPENSUSE-TW-ARMV7HL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=armv7hl-suse-linux-gnueabi \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/opensuse_tumbleweed_armv7hl_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-OPENSUSE-TW-ARMV7HL %s
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV7HL: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV7HL: "{{.*}}/usr/lib/gcc/armv7hl-suse-linux-gnueabi/5/../../../../lib{{/|\\\\}}crt1.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV7HL: "{{.*}}/usr/lib/gcc/armv7hl-suse-linux-gnueabi/5/../../../../lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV7HL: "{{.*}}/usr/lib/gcc/armv7hl-suse-linux-gnueabi/5{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV7HL: "-L[[SYSROOT]]/usr/lib/gcc/armv7hl-suse-linux-gnueabi/5"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV7HL: "-L[[SYSROOT]]/usr/lib/gcc/armv7hl-suse-linux-gnueabi/5/../../../../lib"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV7HL: "{{.*}}/usr/lib/gcc/armv7hl-suse-linux-gnueabi/5{{/|\\\\}}crtend.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-TW-ARMV7HL: "{{.*}}/usr/lib/gcc/armv7hl-suse-linux-gnueabi/5/../../../../lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// Check dynamic-linker for different archs
 end_comment
 

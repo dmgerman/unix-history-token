@@ -8149,6 +8149,9 @@ name|DeclGroupPtrTy
 name|ActOnModuleDecl
 parameter_list|(
 name|SourceLocation
+name|StartLoc
+parameter_list|,
+name|SourceLocation
 name|ModuleLoc
 parameter_list|,
 name|ModuleDeclKind
@@ -39126,6 +39129,35 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// Push new OpenMP function region for non-capturing function.
+end_comment
+
+begin_function_decl
+name|void
+name|pushOpenMPFunctionRegion
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Pop OpenMP function region for non-capturing function.
+end_comment
+
+begin_decl_stmt
+name|void
+name|popOpenMPFunctionRegion
+argument_list|(
+specifier|const
+name|sema
+operator|::
+name|FunctionScopeInfo
+operator|*
+name|OldFSI
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Checks if a type or a declaration is disabled due to the owning extension

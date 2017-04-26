@@ -30,9 +30,50 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_decl_stmt
 name|END
-end_macro
+name|namespace
+name|DeferredLookup
+block|{
+name|namespace
+name|Indirect
+block|{
+name|template
+operator|<
+name|typename
+operator|,
+name|bool
+operator|=
+name|true
+operator|>
+expr|struct
+name|A
+block|{}
+expr_stmt|;
+name|template
+operator|<
+name|typename
+operator|>
+expr|struct
+name|B
+block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|using
+name|C
+operator|=
+name|A
+operator|<
+name|T
+operator|>
+block|; }
+expr_stmt|;
+block|}
+block|}
+end_decl_stmt
 
 end_unit
 

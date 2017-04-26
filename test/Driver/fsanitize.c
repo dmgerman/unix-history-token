@@ -1068,6 +1068,62 @@ comment|// CHECK-ASAN-OPENBSD: unsupported option '-fsanitize=address' for targe
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-LSAN-X86-64-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-X86-64-DARWIN-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-iossimulator -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-LSAN-X86-64-IOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-X86-64-IOSSIMULATOR-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-tvossimulator -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-LSAN-X86-64-TVOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-X86-64-TVOSSIMULATOR-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-darwin -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-LSAN-I386-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-I386-DARWIN-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-apple-ios -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-LSAN-ARM-IOS
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-ARM-IOS-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-iossimulator -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-LSAN-I386-IOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-I386-IOSSIMULATOR-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-tvossimulator -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-LSAN-I386-TVOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-I386-TVOSSIMULATOR-NOT: unsupported option
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target i686-linux-gnu -fsanitize=efficiency-cache-frag %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-X86
 end_comment
 

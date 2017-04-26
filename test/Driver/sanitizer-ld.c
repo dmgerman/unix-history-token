@@ -1508,6 +1508,38 @@ comment|// CHECK-ASAN-DARWIN106-CXX-NOT: -lc++abi
 end_comment
 
 begin_comment
+comment|// RUN: %clangxx -fsanitize=leak %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -mmacosx-version-min=10.6 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-apple-darwin13.4.0 -fuse-ld=ld -stdlib=platform \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LSAN-DARWIN106-CXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-DARWIN106-CXX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-DARWIN106-CXX: libclang_rt.lsan_osx_dynamic.dylib
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-DARWIN106-CXX-NOT: -lc++abi
+end_comment
+
+begin_comment
 comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 

@@ -249,6 +249,13 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|unsigned
+name|getOptimizationLevel
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|HexagonToolChain
@@ -278,6 +285,16 @@ block|;
 operator|~
 name|HexagonToolChain
 argument_list|()
+name|override
+block|;
+name|void
+name|addClangTargetOptions
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
 name|override
 block|;
 name|void

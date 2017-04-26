@@ -757,6 +757,13 @@ name|bool
 name|isFunctionPointerVarDecl
 parameter_list|()
 function_decl|;
+comment|/// \returns \c true if the declaration that this comment is attached to
+comment|/// declares a variable or a field whose type is a function or a block
+comment|/// pointer.
+name|bool
+name|isFunctionOrBlockPointerVarLikeDecl
+parameter_list|()
+function_decl|;
 name|bool
 name|isFunctionOrMethodVariadic
 parameter_list|()

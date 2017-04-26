@@ -285,6 +285,23 @@ comment|/// \brief The location of the module definition.
 name|SourceLocation
 name|DefinitionLoc
 decl_stmt|;
+enum|enum
+name|ModuleKind
+block|{
+comment|/// \brief This is a module that was defined by a module map and built out
+comment|/// of header files.
+name|ModuleMapModule
+block|,
+comment|/// \brief This is a C++ Modules TS module interface unit.
+name|ModuleInterfaceUnit
+block|}
+enum|;
+comment|/// \brief The kind of this module.
+name|ModuleKind
+name|Kind
+init|=
+name|ModuleMapModule
+decl_stmt|;
 comment|/// \brief The parent of this module. This will be NULL for the top-level
 comment|/// module.
 name|Module

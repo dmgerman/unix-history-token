@@ -164,7 +164,7 @@ block|}
 end_function
 
 begin_comment
-comment|// Checks if icp is invoked by normal compile, but not thinlto compile.
+comment|// Check that icp is not invoked (both -O2 and ThinLTO).
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ comment|// THINLTO-LABEL: define void @icp
 end_comment
 
 begin_comment
-comment|// O2: if.true.direct_targ
+comment|// O2-NOT: if.true.direct_targ
 end_comment
 
 begin_comment

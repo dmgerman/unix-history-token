@@ -126,11 +126,7 @@ name|u
 union|;
 comment|// CHECK-COMMON:      %[[I8PTR:.*]] = bitcast i32* %[[PTR:.*]] to i8*
 comment|// CHECK-COMMON-NEXT: %[[SIZE:.*]] = call i64 @llvm.objectsize.i64.p0i8(i8* %[[I8PTR]], i1 false, i1 false)
-comment|// CHECK-COMMON-NEXT: %[[CHECK0:.*]] = icmp uge i64 %[[SIZE]], 4
-comment|// CHECK-COMMON:      %[[PTRTOINT:.*]] = ptrtoint {{.*}}* %[[PTR]] to i64
-comment|// CHECK-COMMON-NEXT: %[[MISALIGN:.*]] = and i64 %[[PTRTOINT]], 3
-comment|// CHECK-COMMON-NEXT: %[[CHECK1:.*]] = icmp eq i64 %[[MISALIGN]], 0
-comment|// CHECK-COMMON:       %[[OK:.*]] = and i1 %[[CHECK0]], %[[CHECK1]]
+comment|// CHECK-COMMON-NEXT: %[[OK:.*]] = icmp uge i64 %[[SIZE]], 4
 comment|// CHECK-UBSAN: br i1 %[[OK]], {{.*}} !prof ![[WEIGHT_MD:.*]], !nosanitize
 comment|// CHECK-TRAP:  br i1 %[[OK]], {{.*}}
 comment|// CHECK-UBSAN:      %[[ARG:.*]] = ptrtoint {{.*}} %[[PTR]] to i64

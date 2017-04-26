@@ -653,6 +653,16 @@ specifier|const
 block|;
 name|virtual
 name|void
+name|AddFuzzerLinkArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
 name|addStartObjectFileArgs
 argument_list|(
 argument|const llvm::opt::ArgList&Args

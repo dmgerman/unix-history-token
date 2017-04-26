@@ -2326,6 +2326,27 @@ argument_list|,
 argument|const FormatStyle&Style
 argument_list|)
 expr_stmt|;
+comment|/// \brief Represents the status of a formatting attempt.
+struct|struct
+name|FormattingAttemptStatus
+block|{
+comment|/// \brief A value of ``false`` means that any of the affected ranges were not
+comment|/// formatted due to a non-recoverable syntax error.
+name|bool
+name|FormatComplete
+init|=
+name|true
+decl_stmt|;
+comment|/// \brief If ``FormatComplete`` is false, ``Line`` records a one-based
+comment|/// original line number at which a syntax error might have occurred. This is
+comment|/// based on a best-effort analysis and could be imprecise.
+name|unsigned
+name|Line
+init|=
+literal|0
+decl_stmt|;
+block|}
+struct|;
 comment|/// \brief Reformats the given \p Ranges in \p Code.
 comment|///
 comment|/// Each range is extended on either end to its next bigger logic unit, i.e.
@@ -2335,9 +2356,8 @@ comment|///
 comment|/// Returns the ``Replacements`` necessary to make all \p Ranges comply with
 comment|/// \p Style.
 comment|///
-comment|/// If ``IncompleteFormat`` is non-null, its value will be set to true if any
-comment|/// of the affected ranges were not formatted due to a non-recoverable syntax
-comment|/// error.
+comment|/// If ``Status`` is non-null, its value will be populated with the status of
+comment|/// this formatting attempt. See \c FormattingAttemptStatus.
 name|tooling
 operator|::
 name|Replacements
@@ -2352,7 +2372,26 @@ argument_list|,
 argument|StringRef FileName =
 literal|"<stdin>"
 argument_list|,
-argument|bool *IncompleteFormat = nullptr
+argument|FormattingAttemptStatus *Status = nullptr
+argument_list|)
+expr_stmt|;
+comment|/// \brief Same as above, except if ``IncompleteFormat`` is non-null, its value
+comment|/// will be set to true if any of the affected ranges were not formatted due to
+comment|/// a non-recoverable syntax error.
+name|tooling
+operator|::
+name|Replacements
+name|reformat
+argument_list|(
+argument|const FormatStyle&Style
+argument_list|,
+argument|StringRef Code
+argument_list|,
+argument|ArrayRef<tooling::Range> Ranges
+argument_list|,
+argument|StringRef FileName
+argument_list|,
+argument|bool *IncompleteFormat
 argument_list|)
 expr_stmt|;
 comment|/// \brief Clean up any erroneous/redundant code in the given \p Ranges in \p

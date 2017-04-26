@@ -143,6 +143,8 @@ name|ObjC
 operator|,
 name|CXX
 operator|,
+name|Swift
+operator|,
 block|}
 empty_stmt|;
 comment|/// Language specific sub-kinds.

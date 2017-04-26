@@ -15493,6 +15493,12 @@ case|:
 return|return
 literal|"C++"
 return|;
+case|case
+name|CXIdxEntityLang_Swift
+case|:
+return|return
+literal|"Swift"
+return|;
 block|}
 name|assert
 argument_list|(

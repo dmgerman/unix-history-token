@@ -8411,6 +8411,20 @@ operator|->
 name|getType
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+name|isArrow
+operator|&&
+operator|!
+name|BaseType
+operator|->
+name|isPointerType
+argument_list|()
+condition|)
+return|return
+name|ExprError
+argument_list|()
+return|;
 comment|// FIXME: this involves duplicating earlier analysis in a lot of
 comment|// cases; we should avoid this when possible.
 name|LookupResult
