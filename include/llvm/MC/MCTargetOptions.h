@@ -178,6 +178,11 @@ operator|::
 name|string
 name|ABIName
 expr_stmt|;
+name|std
+operator|::
+name|string
+name|SplitDwarfFile
+expr_stmt|;
 comment|/// Additional paths to search for `.include` directives when using the
 comment|/// integrated assembler.
 name|std

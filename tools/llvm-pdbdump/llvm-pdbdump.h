@@ -76,9 +76,7 @@ name|None
 operator|,
 name|Layout
 operator|,
-name|Graphical
-operator|,
-name|Standard
+name|All
 block|}
 empty_stmt|;
 name|enum
@@ -92,6 +90,12 @@ operator|,
 name|Size
 operator|,
 name|Padding
+operator|,
+name|PaddingPct
+operator|,
+name|PaddingImmediate
+operator|,
+name|PaddingPctImmediate
 block|}
 empty_stmt|;
 extern|extern llvm::cl::opt<bool> Compilands;
@@ -112,7 +116,9 @@ extern|extern llvm::cl::list<std::string> IncludeCompilands;
 extern|extern llvm::cl::opt<ClassSortMode> ClassOrder;
 extern|extern llvm::cl::opt<uint32_t> SizeThreshold;
 extern|extern llvm::cl::opt<uint32_t> PaddingThreshold;
+extern|extern llvm::cl::opt<uint32_t> ImmediatePaddingThreshold;
 extern|extern llvm::cl::opt<ClassDefinitionFormat> ClassFormat;
+extern|extern llvm::cl::opt<uint32_t> ClassRecursionDepth;
 block|}
 name|namespace
 name|raw
@@ -148,6 +154,7 @@ extern|extern llvm::cl::opt<bool> DumpIpiRecords;
 extern|extern llvm::cl::opt<bool> DumpIpiRecordBytes;
 extern|extern llvm::cl::opt<bool> DumpModules;
 extern|extern llvm::cl::opt<bool> DumpModuleFiles;
+extern|extern llvm::cl::opt<bool> DumpModuleLines;
 extern|extern llvm::cl::opt<bool> DumpModuleSyms;
 extern|extern llvm::cl::opt<bool> DumpPublics;
 extern|extern llvm::cl::opt<bool> DumpSectionContribs;
@@ -176,6 +183,7 @@ extern|extern llvm::cl::opt<bool> DbiStream;
 extern|extern llvm::cl::opt<bool> DbiModuleInfo;
 extern|extern llvm::cl::opt<bool> DbiModuleSyms;
 extern|extern llvm::cl::opt<bool> DbiModuleSourceFileInfo;
+extern|extern llvm::cl::opt<bool> DbiModuleSourceLineInfo;
 extern|extern llvm::cl::opt<bool> TpiStream;
 extern|extern llvm::cl::opt<bool> IpiStream;
 extern|extern llvm::cl::list<std::string> InputFilename;

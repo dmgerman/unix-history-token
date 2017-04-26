@@ -888,6 +888,26 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// Return the type for operands of fence.
+comment|/// TODO: Let fence operands be of i32 type and remove this.
+name|virtual
+name|MVT
+name|getFenceOperandTy
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+block|{
+return|return
+name|getPointerTy
+argument_list|(
+name|DL
+argument_list|)
+return|;
+block|}
 comment|/// EVT is not used in-tree, but is used by out-of-tree target.
 comment|/// A documentation for this function would be nice...
 name|virtual
@@ -7497,8 +7517,13 @@ name|bool
 name|isLegalRC
 argument_list|(
 specifier|const
+name|TargetRegisterInfo
+operator|&
+name|TRI
+argument_list|,
+specifier|const
 name|TargetRegisterClass
-operator|*
+operator|&
 name|RC
 argument_list|)
 decl|const
@@ -7884,6 +7909,8 @@ return|return
 name|true
 return|;
 block|}
+expr|}
+block|;
 comment|/// Check to see if the specified operand of the specified instruction is a
 comment|/// constant integer.  If so, check to see if there are any bits set in the
 comment|/// constant that are not demanded.  If so, shrink the constant and return
@@ -7894,8 +7921,30 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|const APInt&Demanded
+argument_list|,
+argument|TargetLoweringOpt&TLO
 argument_list|)
+specifier|const
 block|;
+comment|// Target hook to do target-specific const optimization, which is called by
+comment|// ShrinkDemandedConstant. This function should return true if the target
+comment|// doesn't want ShrinkDemandedConstant to further optimize the constant.
+name|virtual
+name|bool
+name|targetShrinkDemandedConstant
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|const APInt&Demanded
+argument_list|,
+argument|TargetLoweringOpt&TLO
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Convert x+y to (VT)((SmallVT)x+(SmallVT)y) if the casts are free.  This
 comment|/// uses isZExtFree and ZERO_EXTEND for the widening cast, but it could be
 comment|/// generalized for targets with other types of implicit widening casts.
@@ -7908,16 +7957,17 @@ argument|unsigned BitWidth
 argument_list|,
 argument|const APInt&Demanded
 argument_list|,
-argument|const SDLoc&dl
+argument|TargetLoweringOpt&TLO
 argument_list|)
+specifier|const
 block|;
 comment|/// Helper for SimplifyDemandedBits that can simplify an operation with
-comment|/// multiple uses.  This function uses TLI.SimplifyDemandedBits to
-comment|/// simplify Operand \p OpIdx of \p User and then updated \p User with
-comment|/// the simplified version.  No other uses of \p OpIdx are updated.
-comment|/// If \p User is the only user of \p OpIdx, this function behaves exactly
-comment|/// like TLI.SimplifyDemandedBits except that it also updates the DAG by
-comment|/// calling DCI.CommitTargetLoweringOpt.
+comment|/// multiple uses.  This function simplifies operand \p OpIdx of \p User and
+comment|/// then updates \p User with the simplified version. No other uses of
+comment|/// \p OpIdx are updated. If \p User is the only user of \p OpIdx, this
+comment|/// function behaves exactly like function SimplifyDemandedBits declared
+comment|/// below except that it also updates the DAG by calling
+comment|/// DCI.CommitTargetLoweringOpt.
 name|bool
 name|SimplifyDemandedBits
 argument_list|(
@@ -7928,8 +7978,10 @@ argument_list|,
 argument|const APInt&Demanded
 argument_list|,
 argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|TargetLoweringOpt&TLO
 argument_list|)
-block|;   }
+specifier|const
 block|;
 comment|/// Look at Op.  At this point, we know that only the DemandedMask bits of the
 comment|/// result of Op are ever used downstream.  If we can use this information to
@@ -9814,218 +9866,90 @@ operator|::
 name|Constraint_Unknown
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Try to replace an X constraint, which matches anything, with another that
-end_comment
-
-begin_comment
 comment|/// has more specific requirements based on the type of the corresponding
-end_comment
-
-begin_comment
 comment|/// operand.  This returns null if there is no replacement to make.
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|char
-modifier|*
+operator|*
 name|LowerXConstraint
 argument_list|(
-name|EVT
-name|ConstraintVT
+argument|EVT ConstraintVT
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Lower the specified operand into the Ops vector.  If it is invalid, don't
-end_comment
-
-begin_comment
 comment|/// add anything to Ops.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|LowerAsmOperandForConstraint
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|Constraint
+argument|std::string&Constraint
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Ops
+argument|std::vector<SDValue>&Ops
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Div utility functions
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|BuildSDIV
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Divisor
+argument|const APInt&Divisor
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|bool
-name|IsAfterLegalization
+argument|bool IsAfterLegalization
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SDNode
-operator|*
-operator|>
-operator|*
-name|Created
+argument|std::vector<SDNode *> *Created
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
+block|;
 name|SDValue
 name|BuildUDIV
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Divisor
+argument|const APInt&Divisor
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|bool
-name|IsAfterLegalization
+argument|bool IsAfterLegalization
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SDNode
-operator|*
-operator|>
-operator|*
-name|Created
+argument|std::vector<SDNode *> *Created
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Targets may override this function to provide custom SDIV lowering for
-end_comment
-
-begin_comment
 comment|/// power-of-2 denominators.  If the target returns an empty SDValue, LLVM
-end_comment
-
-begin_comment
 comment|/// assumes SDIV is expensive and replaces it with a series of other integer
-end_comment
-
-begin_comment
 comment|/// operations.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|SDValue
 name|BuildSDIVPow2
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Divisor
+argument|const APInt&Divisor
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SDNode
-operator|*
-operator|>
-operator|*
-name|Created
+argument|std::vector<SDNode *> *Created
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Indicate whether this target prefers to combine FDIVs with the same
-end_comment
-
-begin_comment
 comment|/// divisor. If the transform should never be done, return zero. If the
-end_comment
-
-begin_comment
 comment|/// transform should be done, return the minimum number of divisor uses
-end_comment
-
-begin_comment
 comment|/// that must exist.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|unsigned
 name|combineRepeatedFPDivisors
@@ -10036,492 +9960,200 @@ return|return
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Hooks for building estimates in place of slower divisions and square
-end_comment
-
-begin_comment
 comment|/// roots.
-end_comment
-
-begin_comment
 comment|/// Return either a square root or its reciprocal estimate value for the input
-end_comment
-
-begin_comment
 comment|/// operand.
-end_comment
-
-begin_comment
 comment|/// \p Enabled is a ReciprocalEstimate enum with value either 'Unspecified' or
-end_comment
-
-begin_comment
 comment|/// 'Enabled' as set by a potential default override attribute.
-end_comment
-
-begin_comment
 comment|/// If \p RefinementSteps is 'Unspecified', the number of Newton-Raphson
-end_comment
-
-begin_comment
 comment|/// refinement iterations required to generate a sufficient (though not
-end_comment
-
-begin_comment
 comment|/// necessarily IEEE-754 compliant) estimate is returned in that parameter.
-end_comment
-
-begin_comment
 comment|/// The boolean UseOneConstNR output is used to select a Newton-Raphson
-end_comment
-
-begin_comment
 comment|/// algorithm implementation that uses either one or two constants.
-end_comment
-
-begin_comment
 comment|/// The boolean Reciprocal is used to select whether the estimate is for the
-end_comment
-
-begin_comment
 comment|/// square root of the input operand or the reciprocal of its square root.
-end_comment
-
-begin_comment
 comment|/// A target may choose to implement its own refinement within this function.
-end_comment
-
-begin_comment
 comment|/// If that's true, then return '0' as the number of RefinementSteps to avoid
-end_comment
-
-begin_comment
 comment|/// any further refinement of the estimate.
-end_comment
-
-begin_comment
 comment|/// An empty SDValue return means no estimate sequence can be created.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|SDValue
 name|getSqrtEstimate
 argument_list|(
-name|SDValue
-name|Operand
+argument|SDValue Operand
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|int
-name|Enabled
+argument|int Enabled
 argument_list|,
-name|int
-operator|&
-name|RefinementSteps
+argument|int&RefinementSteps
 argument_list|,
-name|bool
-operator|&
-name|UseOneConstNR
+argument|bool&UseOneConstNR
 argument_list|,
-name|bool
-name|Reciprocal
+argument|bool Reciprocal
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|SDValue
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return a reciprocal estimate value for the input operand.
-end_comment
-
-begin_comment
 comment|/// \p Enabled is a ReciprocalEstimate enum with value either 'Unspecified' or
-end_comment
-
-begin_comment
 comment|/// 'Enabled' as set by a potential default override attribute.
-end_comment
-
-begin_comment
 comment|/// If \p RefinementSteps is 'Unspecified', the number of Newton-Raphson
-end_comment
-
-begin_comment
 comment|/// refinement iterations required to generate a sufficient (though not
-end_comment
-
-begin_comment
 comment|/// necessarily IEEE-754 compliant) estimate is returned in that parameter.
-end_comment
-
-begin_comment
 comment|/// A target may choose to implement its own refinement within this function.
-end_comment
-
-begin_comment
 comment|/// If that's true, then return '0' as the number of RefinementSteps to avoid
-end_comment
-
-begin_comment
 comment|/// any further refinement of the estimate.
-end_comment
-
-begin_comment
 comment|/// An empty SDValue return means no estimate sequence can be created.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|SDValue
 name|getRecipEstimate
 argument_list|(
-name|SDValue
-name|Operand
+argument|SDValue Operand
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|int
-name|Enabled
+argument|int Enabled
 argument_list|,
-name|int
-operator|&
-name|RefinementSteps
+argument|int&RefinementSteps
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|SDValue
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Legalization utility functions
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|/// Expand a MUL or [US]MUL_LOHI of n-bit values into two or four nodes,
-end_comment
-
-begin_comment
 comment|/// respectively, each computing an n/2-bit part of the result.
-end_comment
-
-begin_comment
 comment|/// \param Result A vector that will be filled with the parts of the result
-end_comment
-
-begin_comment
 comment|///        in little-endian order.
-end_comment
-
-begin_comment
 comment|/// \param LL Low bits of the LHS of the MUL.  You can use this parameter
-end_comment
-
-begin_comment
 comment|///        if you want to control how low bits are extracted from the LHS.
-end_comment
-
-begin_comment
 comment|/// \param LH High bits of the LHS of the MUL.  See LL for meaning.
-end_comment
-
-begin_comment
 comment|/// \param RL Low bits of the RHS of the MUL.  See LL for meaning
-end_comment
-
-begin_comment
 comment|/// \param RH High bits of the RHS of the MUL.  See LL for meaning.
-end_comment
-
-begin_comment
 comment|/// \returns true if the node has been expanded, false if it has not
-end_comment
-
-begin_decl_stmt
 name|bool
 name|expandMUL_LOHI
 argument_list|(
-name|unsigned
-name|Opcode
+argument|unsigned Opcode
 argument_list|,
-name|EVT
-name|VT
+argument|EVT VT
 argument_list|,
-name|SDLoc
-name|dl
+argument|SDLoc dl
 argument_list|,
-name|SDValue
-name|LHS
+argument|SDValue LHS
 argument_list|,
-name|SDValue
-name|RHS
+argument|SDValue RHS
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Result
+argument|SmallVectorImpl<SDValue>&Result
 argument_list|,
-name|EVT
-name|HiLoVT
+argument|EVT HiLoVT
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|MulExpansionKind
-name|Kind
+argument|MulExpansionKind Kind
 argument_list|,
-name|SDValue
-name|LL
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue LL = SDValue()
 argument_list|,
-name|SDValue
-name|LH
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue LH = SDValue()
 argument_list|,
-name|SDValue
-name|RL
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue RL = SDValue()
 argument_list|,
-name|SDValue
-name|RH
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue RH = SDValue()
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Expand a MUL into two nodes.  One that computes the high bits of
-end_comment
-
-begin_comment
 comment|/// the result and one that computes the low bits.
-end_comment
-
-begin_comment
 comment|/// \param HiLoVT The value type to use for the Lo and Hi nodes.
-end_comment
-
-begin_comment
 comment|/// \param LL Low bits of the LHS of the MUL.  You can use this parameter
-end_comment
-
-begin_comment
 comment|///        if you want to control how low bits are extracted from the LHS.
-end_comment
-
-begin_comment
 comment|/// \param LH High bits of the LHS of the MUL.  See LL for meaning.
-end_comment
-
-begin_comment
 comment|/// \param RL Low bits of the RHS of the MUL.  See LL for meaning
-end_comment
-
-begin_comment
 comment|/// \param RH High bits of the RHS of the MUL.  See LL for meaning.
-end_comment
-
-begin_comment
 comment|/// \returns true if the node has been expanded. false if it has not
-end_comment
-
-begin_decl_stmt
 name|bool
 name|expandMUL
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SDValue
-operator|&
-name|Lo
+argument|SDValue&Lo
 argument_list|,
-name|SDValue
-operator|&
-name|Hi
+argument|SDValue&Hi
 argument_list|,
-name|EVT
-name|HiLoVT
+argument|EVT HiLoVT
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|MulExpansionKind
-name|Kind
+argument|MulExpansionKind Kind
 argument_list|,
-name|SDValue
-name|LL
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue LL = SDValue()
 argument_list|,
-name|SDValue
-name|LH
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue LH = SDValue()
 argument_list|,
-name|SDValue
-name|RL
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue RL = SDValue()
 argument_list|,
-name|SDValue
-name|RH
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue RH = SDValue()
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Expand float(f32) to SINT(i64) conversion
-end_comment
-
-begin_comment
 comment|/// \param N Node to expand
-end_comment
-
-begin_comment
 comment|/// \param Result output after conversion
-end_comment
-
-begin_comment
 comment|/// \returns True, if the expansion was successful, false otherwise
-end_comment
-
-begin_decl_stmt
 name|bool
 name|expandFP_TO_SINT
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SDValue
-operator|&
-name|Result
+argument|SDValue&Result
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Turn load of vector type into a load of the individual elements.
-end_comment
-
-begin_comment
 comment|/// \param LD load to expand
-end_comment
-
-begin_comment
 comment|/// \returns MERGE_VALUEs of the scalar loads with their chains.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|scalarizeVectorLoad
 argument_list|(
-name|LoadSDNode
-operator|*
-name|LD
+argument|LoadSDNode *LD
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|// Turn a store of a vector type into stores of the individual elements.
-end_comment
-
-begin_comment
 comment|/// \param ST Store with a vector value type
-end_comment
-
-begin_comment
 comment|/// \returns MERGE_VALUs of the individual store chains.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|scalarizeVectorStore
 argument_list|(
-name|StoreSDNode
-operator|*
-name|ST
+argument|StoreSDNode *ST
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Expands an unaligned load to 2 half-size loads for an integer, and
-end_comment
-
-begin_comment
 comment|/// possibly more for vectors.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
 operator|<
 name|SDValue
-operator|,
+block|,
 name|SDValue
 operator|>
 name|expandUnalignedLoad
@@ -10531,231 +10163,97 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// Expands an unaligned store to 2 half-size stores for integer values, and
-end_comment
-
-begin_comment
 comment|/// possibly more for vectors.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|expandUnalignedStore
 argument_list|(
-name|StoreSDNode
-operator|*
-name|ST
+argument|StoreSDNode *ST
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Increments memory address \p Addr according to the type of the value
-end_comment
-
-begin_comment
 comment|/// \p DataVT that should be stored. If the data is stored in compressed
-end_comment
-
-begin_comment
 comment|/// form, the memory address should be incremented according to the number of
-end_comment
-
-begin_comment
 comment|/// the stored elements. This number is equal to the number of '1's bits
-end_comment
-
-begin_comment
 comment|/// in the \p Mask.
-end_comment
-
-begin_comment
 comment|/// \p DataVT is a vector type. \p Mask is a vector value.
-end_comment
-
-begin_comment
 comment|/// \p DataVT and \p Mask have the same number of vector elements.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|IncrementMemoryAddress
 argument_list|(
-name|SDValue
-name|Addr
+argument|SDValue Addr
 argument_list|,
-name|SDValue
-name|Mask
+argument|SDValue Mask
 argument_list|,
-specifier|const
-name|SDLoc
-operator|&
-name|DL
+argument|const SDLoc&DL
 argument_list|,
-name|EVT
-name|DataVT
+argument|EVT DataVT
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|bool
-name|IsCompressedMemory
+argument|bool IsCompressedMemory
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Get a pointer to vector element \p Idx located in memory for a vector of
-end_comment
-
-begin_comment
 comment|/// type \p VecVT starting at a base address of \p VecPtr. If \p Idx is out of
-end_comment
-
-begin_comment
 comment|/// bounds the returned pointer is unspecified, but will be within the vector
-end_comment
-
-begin_comment
 comment|/// bounds.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|getVectorElementPointer
 argument_list|(
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|SDValue
-name|VecPtr
+argument|SDValue VecPtr
 argument_list|,
-name|EVT
-name|VecVT
+argument|EVT VecVT
 argument_list|,
-name|SDValue
-name|Idx
+argument|SDValue Idx
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Instruction Emitting Hooks
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|/// This method should be implemented by targets that mark instructions with
-end_comment
-
-begin_comment
 comment|/// the 'usesCustomInserter' flag.  These instructions are special in various
-end_comment
-
-begin_comment
 comment|/// ways, which require special support to insert.  The specified MachineInstr
-end_comment
-
-begin_comment
 comment|/// is created but not inserted into any basic blocks, and this method is
-end_comment
-
-begin_comment
 comment|/// called to expand it into a sequence of instructions, potentially also
-end_comment
-
-begin_comment
 comment|/// creating new basic blocks and control flow.
-end_comment
-
-begin_comment
 comment|/// As long as the returned basic block is different (i.e., we created a new
-end_comment
-
-begin_comment
 comment|/// one), the custom inserter is free to modify the rest of \p MBB.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-name|MachineInstr
-operator|&
-name|MI
+argument|MachineInstr&MI
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|MBB
+argument|MachineBasicBlock *MBB
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// This method should be implemented by targets that mark instructions with
-end_comment
-
-begin_comment
 comment|/// the 'hasPostISelHook' flag. These instructions must be adjusted after
-end_comment
-
-begin_comment
 comment|/// instruction selection by target hooks.  e.g. To fill in optional defs for
-end_comment
-
-begin_comment
 comment|/// ARM 's' setting instructions.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|AdjustInstrPostInstrSelection
 argument_list|(
-name|MachineInstr
-operator|&
-name|MI
+argument|MachineInstr&MI
 argument_list|,
-name|SDNode
-operator|*
-name|Node
+argument|SDNode *Node
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// If this function returns true, SelectionDAGBuilder emits a
-end_comment
-
-begin_comment
 comment|/// LOAD_STACK_GUARD node when it is lowering Intrinsic::stackprotector.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|bool
 name|useLoadStackGuardNode
@@ -10766,99 +10264,53 @@ return|return
 name|false
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Lower TLS global address SDNode for target independent emulated TLS model.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|SDValue
 name|LowerToTLSEmulatedModel
 argument_list|(
-specifier|const
-name|GlobalAddressSDNode
-operator|*
-name|GA
+argument|const GlobalAddressSDNode *GA
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|// seteq(x, 0) -> truncate(srl(ctlz(zext(x)), log2(#bits)))
-end_comment
-
-begin_comment
 comment|// If we're comparing for equality to zero and isCtlzFast is true, expose the
-end_comment
-
-begin_comment
 comment|// fact that this can be implemented as a ctlz/srl pair, so that the dag
-end_comment
-
-begin_comment
 comment|// combiner can fold the new nodes.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|lowerCmpEqZeroToCtlzSrl
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_label
+specifier|const
+block|;
 name|private
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 name|SDValue
 name|simplifySetCCWithAnd
 argument_list|(
-name|EVT
-name|VT
+argument|EVT VT
 argument_list|,
-name|SDValue
-name|N0
+argument|SDValue N0
 argument_list|,
-name|SDValue
-name|N1
+argument|SDValue N1
 argument_list|,
-name|ISD
-operator|::
-name|CondCode
-name|Cond
+argument|ISD::CondCode Cond
 argument_list|,
-name|DAGCombinerInfo
-operator|&
-name|DCI
+argument|DAGCombinerInfo&DCI
 argument_list|,
-specifier|const
-name|SDLoc
-operator|&
-name|DL
+argument|const SDLoc&DL
 argument_list|)
-decl|const
+specifier|const
+block|; }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|};
 comment|/// Given an LLVM IR type and return type attributes, compute the return value
 end_comment
 

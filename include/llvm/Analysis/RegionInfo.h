@@ -3526,11 +3526,6 @@ name|TopLevelRegion
 decl_stmt|;
 end_decl_stmt
 
-begin_label
-name|private
-label|:
-end_label
-
 begin_comment
 comment|/// Map every BB to the smallest region, that contains BB.
 end_comment
@@ -3541,7 +3536,80 @@ name|BBtoRegion
 decl_stmt|;
 end_decl_stmt
 
+begin_label
+name|protected
+label|:
+end_label
+
 begin_comment
+comment|/// \brief Update refences to a RegionInfoT held by the RegionT managed here
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is a post-move helper. Regions hold references to the owning
+end_comment
+
+begin_comment
+comment|/// RegionInfo object. After a move these need to be fixed.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|TheRegionT
+operator|>
+name|void
+name|updateRegionTree
+argument_list|(
+argument|RegionInfoT&RI
+argument_list|,
+argument|TheRegionT *R
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|R
+condition|)
+return|return;
+name|R
+operator|->
+name|RI
+operator|=
+operator|&
+name|RI
+expr_stmt|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
+name|auto
+operator|&
+name|SubR
+operator|:
+operator|*
+name|R
+control|)
+name|updateRegionTree
+argument_list|(
+name|RI
+argument_list|,
+name|SubR
+operator|.
+name|get
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_for
+
+begin_comment
+unit|}  private:
 comment|/// \brief Wipe this region tree's state without releasing any resources.
 end_comment
 
@@ -4452,7 +4520,15 @@ name|Base
 argument_list|(
 argument|std::move(static_cast<Base&>(Arg))
 argument_list|)
-block|{}
+block|{
+name|updateRegionTree
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|TopLevelRegion
+argument_list|)
+block|;   }
 name|RegionInfo
 operator|&
 name|operator
@@ -4482,6 +4558,14 @@ name|RHS
 operator|)
 argument_list|)
 operator|)
+block|;
+name|updateRegionTree
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|TopLevelRegion
+argument_list|)
 block|;
 return|return
 operator|*

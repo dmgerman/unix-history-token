@@ -342,9 +342,11 @@ name|AMD
 block|,
 name|Mesa
 block|,
+name|SUSE
+block|,
 name|LastVendorType
 init|=
-name|Mesa
+name|SUSE
 block|}
 enum|;
 enum|enum

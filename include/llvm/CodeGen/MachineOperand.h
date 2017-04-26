@@ -201,9 +201,6 @@ comment|///< Intrinsic ID for ISel
 name|MO_Predicate
 block|,
 comment|///< Generic predicate for ISel
-name|MO_Placeholder
-block|,
-comment|///< Placeholder for GlobalISel ComplexPattern result.
 block|}
 enum|;
 name|private
@@ -3077,23 +3074,6 @@ name|Pred
 operator|=
 name|Pred
 expr_stmt|;
-return|return
-name|Op
-return|;
-block|}
-specifier|static
-name|MachineOperand
-name|CreatePlaceholder
-parameter_list|()
-block|{
-name|MachineOperand
-name|Op
-argument_list|(
-name|MachineOperand
-operator|::
-name|MO_Placeholder
-argument_list|)
-decl_stmt|;
 return|return
 name|Op
 return|;

@@ -797,6 +797,7 @@ for|for
 control|(
 specifier|const
 specifier|auto
+modifier|&
 name|Succ
 range|:
 name|children

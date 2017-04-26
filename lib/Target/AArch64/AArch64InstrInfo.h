@@ -751,7 +751,7 @@ specifier|const
 name|override
 block|;
 name|void
-name|getNoopForMachoTarget
+name|getNoop
 argument_list|(
 argument|MCInst&NopInst
 argument_list|)

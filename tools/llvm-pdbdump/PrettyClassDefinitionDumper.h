@@ -154,14 +154,14 @@ operator|&
 name|Class
 argument_list|)
 block|;
+name|LinePrinter
+operator|&
+name|Printer
+block|;
 name|bool
 name|DumpedAnything
 operator|=
 name|false
-block|;
-name|LinePrinter
-operator|&
-name|Printer
 block|; }
 decl_stmt|;
 block|}

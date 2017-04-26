@@ -389,7 +389,7 @@ name|Generator
 modifier|&
 name|DG
 decl_stmt|;
-name|DIEUnit
+name|BasicDIEUnit
 name|DU
 decl_stmt|;
 name|public

@@ -313,6 +313,19 @@ specifier|const
 name|override
 block|;
 name|int
+name|getFrameIndexReferenceSP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned&SPReg
+argument_list|,
+argument|int Adjustment
+argument_list|)
+specifier|const
+block|;
+name|int
 name|getFrameIndexReferencePreferSP
 argument_list|(
 argument|const MachineFunction&MF

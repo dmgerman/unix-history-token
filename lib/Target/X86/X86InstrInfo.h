@@ -1882,7 +1882,7 @@ decl|const
 name|override
 decl_stmt|;
 name|void
-name|getNoopForMachoTarget
+name|getNoop
 argument_list|(
 name|MCInst
 operator|&

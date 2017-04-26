@@ -1109,7 +1109,7 @@ block|}
 comment|/// \brief Retrieve the attribute set node for the given "slot" in the
 comment|/// AttrNode list.
 name|AttributeSet
-name|getSlotNode
+name|getSlotAttributes
 argument_list|(
 argument|unsigned Slot
 argument_list|)
@@ -1122,31 +1122,6 @@ name|Slot
 argument_list|)
 operator|->
 name|second
-return|;
-block|}
-comment|/// \brief Retrieve the attributes for the given "slot" in the AttrNode list.
-comment|/// \p Slot is an index into the AttrNodes list, not the index of the return /
-comment|/// parameter/ function which the attributes apply to.
-name|AttributeList
-name|getSlotAttributes
-argument_list|(
-argument|unsigned Slot
-argument_list|)
-specifier|const
-block|{
-return|return
-name|AttributeList
-operator|::
-name|get
-argument_list|(
-name|Context
-argument_list|,
-operator|*
-name|getSlotPair
-argument_list|(
-name|Slot
-argument_list|)
-argument_list|)
 return|;
 block|}
 comment|/// \brief Return true if the AttributeSet or the FunctionIndex has an
@@ -1185,7 +1160,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|getSlotNode
+name|getSlotAttributes
 argument_list|(
 name|Slot
 argument_list|)
@@ -1202,7 +1177,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|getSlotNode
+name|getSlotAttributes
 argument_list|(
 name|Slot
 argument_list|)

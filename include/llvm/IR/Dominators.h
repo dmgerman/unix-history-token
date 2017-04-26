@@ -855,6 +855,34 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|// Pop up a GraphViz/gv window with the Dominator Tree rendered using `dot`.
+end_comment
+
+begin_function_decl
+name|void
+name|viewGraph
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Title
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|viewGraph
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 unit|};
 comment|//===-------------------------------------
 end_comment

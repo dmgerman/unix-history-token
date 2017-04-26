@@ -1708,7 +1708,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// \brief Return the attributes at the given slot.
-name|AttributeList
+name|AttributeSet
 name|getSlotAttributes
 argument_list|(
 argument|unsigned Slot

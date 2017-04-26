@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -236,6 +242,11 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|offset_ptr
+parameter_list|,
+specifier|const
+name|RelocAddrMap
+modifier|&
+name|Relocs
 parameter_list|)
 function_decl|;
 specifier|const

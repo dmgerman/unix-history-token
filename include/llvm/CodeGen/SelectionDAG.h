@@ -3334,6 +3334,44 @@ name|Ops
 argument_list|)
 return|;
 block|}
+comment|/// Return an ISD::BUILD_VECTOR node. The number of elements in VT,
+comment|/// which must be a vector type, must match the number of operands in Ops.
+comment|/// The operands must have the same type as (or, for integers, a type wider
+comment|/// than) VT's element type.
+name|SDValue
+name|getBuildVector
+argument_list|(
+name|EVT
+name|VT
+argument_list|,
+specifier|const
+name|SDLoc
+operator|&
+name|DL
+argument_list|,
+name|ArrayRef
+operator|<
+name|SDUse
+operator|>
+name|Ops
+argument_list|)
+block|{
+comment|// VerifySDNode (via InsertNode) checks BUILD_VECTOR later.
+return|return
+name|getNode
+argument_list|(
+name|ISD
+operator|::
+name|BUILD_VECTOR
+argument_list|,
+name|DL
+argument_list|,
+name|VT
+argument_list|,
+name|Ops
+argument_list|)
+return|;
+block|}
 comment|/// Return a splat ISD::BUILD_VECTOR node, consisting of Op splatted to all
 comment|/// elements. VT must be a vector type. Op's type must be the same as (or,
 comment|/// for integers, a type wider than) VT's element type.

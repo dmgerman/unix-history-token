@@ -108,6 +108,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/GlobalValue.h"
 end_include
 
@@ -123,6 +135,30 @@ directive|include
 file|"llvm/Support/Endian.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -136,12 +172,13 @@ block|{
 comment|// The data structures in this namespace define the low-level serialization
 comment|// format. Clients that just want to read a symbol table should use the
 comment|// irsymtab::Reader class.
-typedef|typedef
+name|using
+name|Word
+init|=
 name|support
 operator|::
 name|ulittle32_t
-name|Word
-expr_stmt|;
+decl_stmt|;
 comment|/// A reference to a string in the string table.
 struct|struct
 name|Str
@@ -352,6 +389,7 @@ name|Str
 name|COFFLinkerOpts
 block|; }
 block|;  }
+comment|// end namespace storage
 comment|/// Fills in Symtab and Strtab with a valid symbol and string table for Mods.
 name|Error
 name|build
@@ -889,7 +927,9 @@ operator|.
 name|Uncommons
 argument_list|)
 block|;   }
-typedef|typedef
+name|using
+name|symbol_range
+operator|=
 name|iterator_range
 operator|<
 name|object
@@ -898,7 +938,6 @@ name|content_iterator
 operator|<
 name|SymbolRef
 operator|>>
-name|symbol_range
 expr_stmt|;
 comment|/// Returns the symbol table for the entire bitcode file.
 comment|/// The symbols enumerated by this method are ephemeral, but they can be
@@ -1381,11 +1420,24 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+unit|}
+comment|// end namespace irsymtab
+end_comment
+
+begin_comment
+unit|}
+comment|// end namespace llvm
+end_comment
+
 begin_endif
-unit|}  }
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECT_IRSYMTAB_H
+end_comment
 
 end_unit
 

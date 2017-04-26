@@ -98,9 +98,9 @@ operator|&
 name|STI
 argument_list|)
 block|;
-comment|/// getNoopForMachoTarget - Return the noop instruction to use for a noop.
+comment|/// Return the noop instruction to use for a noop.
 name|void
-name|getNoopForMachoTarget
+name|getNoop
 argument_list|(
 argument|MCInst&NopInst
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RelocVisitor.h - Visitor for object file relocations -*- C++ -*-===//
+comment|//===- RelocVisitor.h - Visitor for object file relocations -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/COFF.h"
 end_include
 
@@ -94,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Debug.h"
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
@@ -106,13 +112,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MachO.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -128,12 +152,21 @@ block|{
 comment|// The computed value after applying the relevant relocations.
 name|int64_t
 name|Value
+init|=
+literal|0
 decl_stmt|;
 comment|// The width of the value; how many bytes to touch when applying the
 comment|// relocation.
 name|char
 name|Width
+init|=
+literal|0
 decl_stmt|;
+name|RelocToApply
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|RelocToApply
 argument_list|(
 argument|int64_t Value
@@ -149,19 +182,6 @@ operator|,
 name|Width
 argument_list|(
 argument|Width
-argument_list|)
-block|{}
-name|RelocToApply
-argument_list|()
-operator|:
-name|Value
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Width
-argument_list|(
-literal|0
 argument_list|)
 block|{}
 block|}
@@ -183,12 +203,7 @@ argument_list|)
 operator|:
 name|ObjToVisit
 argument_list|(
-name|Obj
-argument_list|)
-operator|,
-name|HasError
-argument_list|(
-argument|false
+argument|Obj
 argument_list|)
 block|{}
 comment|// TODO: Should handle multiple applied relocations via either passing in the
@@ -291,6 +306,8 @@ name|ObjToVisit
 decl_stmt|;
 name|bool
 name|HasError
+init|=
+name|false
 decl_stmt|;
 name|RelocToApply
 name|visitELF
@@ -335,8 +352,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_X86_64_NONE
@@ -348,8 +363,6 @@ name|R
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_X86_64_64
@@ -363,8 +376,6 @@ name|Value
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_X86_64_PC32
@@ -378,8 +389,6 @@ name|Value
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_X86_64_32
@@ -393,8 +402,6 @@ name|Value
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_X86_64_32S
@@ -433,8 +440,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_AARCH64_ABS32
@@ -448,8 +453,6 @@ name|Value
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_AARCH64_ABS64
@@ -488,8 +491,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_BPF_64_64
@@ -503,8 +504,6 @@ name|Value
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_BPF_64_32
@@ -543,8 +542,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_MIPS_32
@@ -558,8 +555,6 @@ name|Value
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_MIPS_64
@@ -598,8 +593,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_PPC64_ADDR32
@@ -613,8 +606,6 @@ name|Value
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_PPC64_ADDR64
@@ -648,8 +639,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_390_32
@@ -663,8 +652,6 @@ name|Value
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_390_64
@@ -698,15 +685,11 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_SPARC_32
 case|:
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_SPARC_UA32
@@ -720,15 +703,11 @@ name|Value
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_SPARC_64
 case|:
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_SPARC_UA64
@@ -762,8 +741,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_AMDGPU_ABS32
@@ -777,8 +754,6 @@ name|Value
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_AMDGPU_ABS64
@@ -843,8 +818,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_386_NONE
@@ -856,8 +829,6 @@ name|R
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_386_32
@@ -871,8 +842,6 @@ name|Value
 argument_list|)
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_386_PC32
@@ -906,8 +875,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_PPC_ADDR32
@@ -955,8 +922,6 @@ name|RelocToApply
 argument_list|()
 return|;
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_ARM_ABS32
@@ -981,8 +946,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_LANAI_32
@@ -1021,8 +984,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_MIPS_32
@@ -1056,15 +1017,11 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_SPARC_32
 case|:
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_SPARC_UA32
@@ -1098,8 +1055,6 @@ name|RelocType
 condition|)
 block|{
 case|case
-name|llvm
-operator|::
 name|ELF
 operator|::
 name|R_HEX_32
@@ -2440,11 +2395,23 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
+comment|// end namespace object
+end_comment
+
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECT_RELOCVISITOR_H
+end_comment
 
 end_unit
 

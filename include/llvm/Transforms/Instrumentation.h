@@ -443,6 +443,11 @@ name|bool
 name|Recover
 init|=
 name|false
+parameter_list|,
+name|bool
+name|UseGlobalsGC
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|// Insert MemorySanitizer instrumentation (detection of uninitialized reads)

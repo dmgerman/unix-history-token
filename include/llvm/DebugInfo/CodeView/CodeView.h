@@ -1938,7 +1938,7 @@ decl_stmt|;
 enum|enum
 name|LineFlags
 enum|:
-name|uint32_t
+name|uint16_t
 block|{
 name|HaveColumns
 init|=

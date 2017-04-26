@@ -1636,6 +1636,45 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|/// \brief Strip off pointer casts, all-zero GEPs, aliases and barriers.
+comment|///
+comment|/// Returns the original uncasted value.  If this is called on a non-pointer
+comment|/// value, it returns 'this'. This function should be used only in
+comment|/// Alias analysis.
+specifier|const
+name|Value
+operator|*
+name|stripPointerCastsAndBarriers
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Value
+modifier|*
+name|stripPointerCastsAndBarriers
+parameter_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|stripPointerCastsAndBarriers
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// \brief Strip off pointer casts and all-zero GEPs.
 comment|///
 comment|/// Returns the original uncasted value.  If this is called on a non-pointer

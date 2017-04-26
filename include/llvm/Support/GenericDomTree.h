@@ -1544,6 +1544,7 @@ for|for
 control|(
 specifier|const
 specifier|auto
+modifier|&
 name|Pred
 range|:
 name|children
@@ -1589,6 +1590,7 @@ for|for
 control|(
 specifier|const
 specifier|auto
+modifier|&
 name|Pred
 range|:
 name|children

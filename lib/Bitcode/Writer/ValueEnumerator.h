@@ -187,6 +187,19 @@ operator|>
 expr|>
 name|ValueList
 expr_stmt|;
+comment|/// Attribute groups as encoded in bitcode are almost AttributeSets, but they
+comment|/// include the AttributeList index, so we have to track that in our map.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|AttributeSet
+operator|>
+name|IndexAndAttrSet
+expr_stmt|;
 name|UseListOrderStack
 name|UseListOrders
 decl_stmt|;
@@ -418,7 +431,7 @@ decl_stmt|;
 typedef|typedef
 name|DenseMap
 operator|<
-name|AttributeList
+name|IndexAndAttrSet
 operator|,
 name|unsigned
 operator|>
@@ -431,7 +444,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|AttributeList
+name|IndexAndAttrSet
 operator|>
 name|AttributeGroups
 expr_stmt|;
@@ -442,10 +455,10 @@ name|AttributeList
 operator|,
 name|unsigned
 operator|>
-name|AttributeMapType
+name|AttributeListMapType
 expr_stmt|;
-name|AttributeMapType
-name|AttributeMap
+name|AttributeListMapType
+name|AttributeListMap
 decl_stmt|;
 name|std
 operator|::
@@ -453,7 +466,7 @@ name|vector
 operator|<
 name|AttributeList
 operator|>
-name|Attribute
+name|AttributeLists
 expr_stmt|;
 comment|/// GlobalBasicBlockIDs - This map memoizes the basic block ID's referenced by
 comment|/// the "getGlobalBasicBlockID" method.
@@ -738,7 +751,7 @@ name|I
 parameter_list|)
 function_decl|;
 name|unsigned
-name|getAttributeID
+name|getAttributeListID
 argument_list|(
 name|AttributeList
 name|PAL
@@ -756,12 +769,12 @@ return|return
 literal|0
 return|;
 comment|// Null maps to zero.
-name|AttributeMapType
+name|AttributeListMapType
 operator|::
 name|const_iterator
 name|I
 operator|=
-name|AttributeMap
+name|AttributeListMap
 operator|.
 name|find
 argument_list|(
@@ -772,7 +785,7 @@ name|assert
 argument_list|(
 name|I
 operator|!=
-name|AttributeMap
+name|AttributeListMap
 operator|.
 name|end
 argument_list|()
@@ -789,16 +802,19 @@ block|}
 name|unsigned
 name|getAttributeGroupID
 argument_list|(
-name|AttributeList
-name|PAL
+name|IndexAndAttrSet
+name|Group
 argument_list|)
 decl|const
 block|{
 if|if
 condition|(
-name|PAL
+operator|!
+name|Group
 operator|.
-name|isEmpty
+name|second
+operator|.
+name|hasAttributes
 argument_list|()
 condition|)
 return|return
@@ -814,7 +830,7 @@ name|AttributeGroupMap
 operator|.
 name|find
 argument_list|(
-name|PAL
+name|Group
 argument_list|)
 expr_stmt|;
 name|assert
@@ -975,12 +991,12 @@ operator|<
 name|AttributeList
 operator|>
 operator|&
-name|getAttributes
+name|getAttributeLists
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Attribute
+name|AttributeLists
 return|;
 block|}
 specifier|const
@@ -988,7 +1004,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|AttributeList
+name|IndexAndAttrSet
 operator|>
 operator|&
 name|getAttributeGroups

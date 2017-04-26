@@ -121,11 +121,14 @@ operator|&
 name|Ins
 argument_list|,
 specifier|const
-name|TargetLowering
-operator|::
-name|CallLoweringInfo
-operator|&
-name|CLI
+name|Type
+operator|*
+name|RetTy
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Func
 argument_list|)
 block|;
 comment|/// Identify lowered values that originated from f128 arguments and record
@@ -171,9 +174,9 @@ operator|&
 name|FuncArgs
 argument_list|,
 specifier|const
-name|SDNode
+name|char
 operator|*
-name|CallNode
+name|Func
 argument_list|)
 block|;
 comment|/// Identify lowered values that originated from f128 arguments and record
@@ -269,7 +272,7 @@ argument|CCAssignFn Fn
 argument_list|,
 argument|std::vector<TargetLowering::ArgListEntry>&FuncArgs
 argument_list|,
-argument|const SDNode *CallNode
+argument|const char *Func
 argument_list|)
 block|{
 name|PreAnalyzeCallOperands
@@ -278,7 +281,7 @@ name|Outs
 argument_list|,
 name|FuncArgs
 argument_list|,
-name|CallNode
+name|Func
 argument_list|)
 block|;
 name|CCState
@@ -369,14 +372,18 @@ argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
 argument|CCAssignFn Fn
 argument_list|,
-argument|const TargetLowering::CallLoweringInfo&CLI
+argument|const Type *RetTy
+argument_list|,
+argument|const char *Func
 argument_list|)
 block|{
 name|PreAnalyzeCallResultForF128
 argument_list|(
 name|Ins
 argument_list|,
-name|CLI
+name|RetTy
+argument_list|,
+name|Func
 argument_list|)
 block|;
 name|CCState

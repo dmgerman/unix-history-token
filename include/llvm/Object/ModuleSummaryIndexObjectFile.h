@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModuleSummaryIndexObjectFile.h - Summary index file implementation -=//
+comment|//===- ModuleSummaryIndexObjectFile.h - Summary index file implementation -===//
 end_comment
 
 begin_comment
@@ -62,7 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DiagnosticInfo.h"
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/Binary.h"
 end_include
 
 begin_include
@@ -71,15 +77,48 @@ directive|include
 file|"llvm/Object/SymbolicFile.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|ModuleSummaryIndex
-decl_stmt|;
-name|class
-name|Module
 decl_stmt|;
 name|namespace
 name|object
@@ -315,6 +354,7 @@ argument_list|)
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace object
 comment|/// Parse the module summary index out of an IR file and return the module
 comment|/// summary index object if found, or nullptr if not. If Identifier is
 comment|/// non-empty, it is used as the module ID (module path) in the resulting
@@ -339,10 +379,18 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECT_MODULESUMMARYINDEXOBJECTFILE_H
+end_comment
 
 end_unit
 

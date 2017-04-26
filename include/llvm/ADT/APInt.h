@@ -205,6 +205,17 @@ operator|*
 name|CHAR_BIT
 block|}
 enum_decl|;
+specifier|static
+specifier|const
+name|WordType
+name|WORD_MAX
+init|=
+operator|~
+name|WordType
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 comment|/// This union is used to store the integer value. When the
@@ -230,6 +241,10 @@ name|friend
 struct_decl|struct
 name|DenseMapAPIntKeyInfo
 struct_decl|;
+name|friend
+name|class
+name|APSInt
+decl_stmt|;
 comment|/// \brief Fast internal constructor
 comment|///
 comment|/// This constructor is used only internally for speed of construction of
@@ -336,35 +351,30 @@ parameter_list|()
 block|{
 comment|// Compute how many bits are used in the final word
 name|unsigned
-name|wordBits
+name|WordBits
 init|=
+operator|(
+operator|(
 name|BitWidth
+operator|-
+literal|1
+operator|)
 operator|%
 name|APINT_BITS_PER_WORD
+operator|)
+operator|+
+literal|1
 decl_stmt|;
-if|if
-condition|(
-name|wordBits
-operator|==
-literal|0
-condition|)
-comment|// If all bits are used, we want to leave the value alone. This also
-comment|// avoids the undefined behavior of>> when the shift is the same size as
-comment|// the word size (64).
-return|return
-operator|*
-name|this
-return|;
 comment|// Mask out the high bits.
 name|uint64_t
 name|mask
 init|=
-name|UINT64_MAX
+name|WORD_MAX
 operator|>>
 operator|(
 name|APINT_BITS_PER_WORD
 operator|-
-name|wordBits
+name|WordBits
 operator|)
 decl_stmt|;
 if|if
@@ -525,6 +535,14 @@ name|unsigned
 name|ShiftAmt
 parameter_list|)
 function_decl|;
+comment|/// out-of-line slow case for ashr.
+name|void
+name|ashrSlowCase
+parameter_list|(
+name|unsigned
+name|ShiftAmt
+parameter_list|)
+function_decl|;
 comment|/// out-of-line slow case for operator=
 name|void
 name|AssignSlowCase
@@ -638,6 +656,32 @@ modifier|&
 name|RHS
 parameter_list|)
 function_decl|;
+comment|/// Unsigned comparison. Returns -1, 0, or 1 if this APInt is less than, equal
+comment|/// to, or greater than RHS.
+name|int
+name|compare
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|)
+decl|const
+name|LLVM_READONLY
+decl_stmt|;
+comment|/// Signed comparison. Returns -1, 0, or 1 if this APInt is less than, equal
+comment|/// to, or greater than RHS.
+name|int
+name|compareSigned
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|)
+decl|const
+name|LLVM_READONLY
+decl_stmt|;
 name|public
 label|:
 comment|/// \name Constructors
@@ -978,7 +1022,7 @@ condition|)
 return|return
 name|VAL
 operator|==
-name|UINT64_MAX
+name|WORD_MAX
 operator|>>
 operator|(
 name|APINT_BITS_PER_WORD
@@ -1295,7 +1339,7 @@ return|return
 name|VAL
 operator|==
 operator|(
-name|UINT64_MAX
+name|WORD_MAX
 operator|>>
 operator|(
 name|APINT_BITS_PER_WORD
@@ -1641,7 +1685,7 @@ name|APInt
 argument_list|(
 name|numBits
 argument_list|,
-name|UINT64_MAX
+name|WORD_MAX
 argument_list|,
 name|true
 argument_list|)
@@ -3490,11 +3534,103 @@ name|APInt
 name|ashr
 argument_list|(
 name|unsigned
-name|shiftAmt
+name|ShiftAmt
 argument_list|)
 decl|const
+block|{
+name|APInt
+name|R
+argument_list|(
+operator|*
+name|this
+argument_list|)
 decl_stmt|;
+name|R
+operator|.
+name|ashrInPlace
+argument_list|(
+name|ShiftAmt
+argument_list|)
+expr_stmt|;
+return|return
+name|R
+return|;
+block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Arithmetic right-shift this APInt by ShiftAmt in place.
+end_comment
+
+begin_function
+name|void
+name|ashrInPlace
+parameter_list|(
+name|unsigned
+name|ShiftAmt
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|ShiftAmt
+operator|<=
+name|BitWidth
+operator|&&
+literal|"Invalid shift amount"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+block|{
+name|int64_t
+name|SExtVAL
+init|=
+name|SignExtend64
+argument_list|(
+name|VAL
+argument_list|,
+name|BitWidth
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|ShiftAmt
+operator|==
+name|BitWidth
+condition|)
+name|VAL
+operator|=
+name|SExtVAL
+operator|>>
+operator|(
+name|APINT_BITS_PER_WORD
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+comment|// Fill with sign bit.
+else|else
+name|VAL
+operator|=
+name|SExtVAL
+operator|>>
+name|ShiftAmt
+expr_stmt|;
+name|clearUnusedBits
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+name|ashrSlowCase
+argument_list|(
+name|ShiftAmt
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Logical right-shift function.
@@ -3676,11 +3812,45 @@ argument_list|(
 specifier|const
 name|APInt
 operator|&
-name|shiftAmt
+name|ShiftAmt
 argument_list|)
 decl|const
+block|{
+name|APInt
+name|R
+argument_list|(
+operator|*
+name|this
+argument_list|)
 decl_stmt|;
+name|R
+operator|.
+name|ashrInPlace
+argument_list|(
+name|ShiftAmt
+argument_list|)
+expr_stmt|;
+return|return
+name|R
+return|;
+block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Arithmetic right-shift this APInt by shiftAmt in place.
+end_comment
+
+begin_function_decl
+name|void
+name|ashrInPlace
+parameter_list|(
+specifier|const
+name|APInt
+modifier|&
+name|shiftAmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Logical right-shift function.
@@ -4588,8 +4758,16 @@ operator|&
 name|RHS
 argument_list|)
 decl|const
-name|LLVM_READONLY
-decl_stmt|;
+block|{
+return|return
+name|compare
+argument_list|(
+name|RHS
+argument_list|)
+operator|<
+literal|0
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -4679,8 +4857,16 @@ operator|&
 name|RHS
 argument_list|)
 decl|const
-name|LLVM_READONLY
-decl_stmt|;
+block|{
+return|return
+name|compareSigned
+argument_list|(
+name|RHS
+argument_list|)
+operator|<
+literal|0
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -4775,15 +4961,12 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|ult
+name|compare
 argument_list|(
 name|RHS
 argument_list|)
-operator|||
-name|eq
-argument_list|(
-name|RHS
-argument_list|)
+operator|<=
+literal|0
 return|;
 block|}
 end_decl_stmt
@@ -4867,15 +5050,12 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|slt
+name|compareSigned
 argument_list|(
 name|RHS
 argument_list|)
-operator|||
-name|eq
-argument_list|(
-name|RHS
-argument_list|)
+operator|<=
+literal|0
 return|;
 block|}
 end_decl_stmt
@@ -4960,13 +5140,7 @@ decl|const
 block|{
 return|return
 operator|!
-name|ult
-argument_list|(
-name|RHS
-argument_list|)
-operator|&&
-operator|!
-name|eq
+name|ule
 argument_list|(
 name|RHS
 argument_list|)
@@ -5065,13 +5239,7 @@ decl|const
 block|{
 return|return
 operator|!
-name|slt
-argument_list|(
-name|RHS
-argument_list|)
-operator|&&
-operator|!
-name|eq
+name|sle
 argument_list|(
 name|RHS
 argument_list|)
@@ -5660,7 +5828,7 @@ argument_list|()
 condition|)
 name|VAL
 operator|=
-name|UINT64_MAX
+name|WORD_MAX
 expr_stmt|;
 else|else
 comment|// Set all the bits in all the words.
@@ -5800,7 +5968,7 @@ block|{
 name|uint64_t
 name|mask
 init|=
-name|UINT64_MAX
+name|WORD_MAX
 operator|>>
 operator|(
 name|APINT_BITS_PER_WORD
@@ -5991,7 +6159,7 @@ condition|)
 block|{
 name|VAL
 operator|^=
-name|UINT64_MAX
+name|WORD_MAX
 expr_stmt|;
 name|clearUnusedBits
 argument_list|()
@@ -7384,7 +7552,7 @@ argument_list|()
 specifier|const
 block|{
 comment|// Special case when we have a bitwidth of 1. If VAL is 1, then we
-comment|// get 0. If VAL is 0, we get UINT64_MAX which gets truncated to
+comment|// get 0. If VAL is 0, we get WORD_MAX which gets truncated to
 comment|// UINT32_MAX.
 if|if
 condition|(

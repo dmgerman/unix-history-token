@@ -313,32 +313,6 @@ return|return
 name|INSTR_PROF_VALUE_RANGE_PROF_FUNC_STR
 return|;
 block|}
-comment|/// Return the name of the section containing function coverage mapping
-comment|/// data.
-name|std
-operator|::
-name|string
-name|getInstrProfCoverageSectionName
-argument_list|(
-specifier|const
-name|Module
-operator|*
-name|M
-operator|=
-name|nullptr
-argument_list|)
-expr_stmt|;
-comment|/// Similar to the above, but used by host tool (e.g, coverage) which has
-comment|/// object format information. The section name returned is not prefixed
-comment|/// with segment name.
-name|std
-operator|::
-name|string
-name|getInstrProfCoverageSectionNameInObject
-argument_list|(
-argument|bool isCoff
-argument_list|)
-expr_stmt|;
 comment|/// Return the name prefix of variables containing instrumented function names.
 specifier|inline
 name|StringRef

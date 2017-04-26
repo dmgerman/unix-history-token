@@ -354,6 +354,12 @@ block|{
 return|return
 name|Merge
 argument_list|(
+name|std
+operator|::
+name|set
+operator|<
+name|uint32_t
+operator|>
 block|{}
 argument_list|,
 name|NewFiles
