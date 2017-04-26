@@ -269,6 +269,13 @@ end_decl_stmt
 begin_decl_stmt
 name|friend
 name|class
+name|SBTrace
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
 name|SBTarget
 decl_stmt|;
 end_decl_stmt

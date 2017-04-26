@@ -55,6 +55,24 @@ name|b
 argument_list|)
 expr_stmt|;
 comment|//% self.expect("expression b", DATA_TYPES_DISPLAYED_CORRECTLY, substrs = ["42"])
+block|{
+name|int
+name|c
+init|=
+name|b
+operator|*
+literal|2
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"c=%d\n"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+comment|//% self.expect("expression b", DATA_TYPES_DISPLAYED_CORRECTLY, substrs = ["42"])
+comment|//% self.expect("expression c", DATA_TYPES_DISPLAYED_CORRECTLY, substrs = ["84"])
+block|}
 block|}
 end_function
 
