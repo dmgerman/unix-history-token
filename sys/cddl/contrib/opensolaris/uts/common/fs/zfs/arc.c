@@ -15235,7 +15235,7 @@ argument_list|,
 name|VMEM_MAXFREE
 argument_list|)
 operator|<
-name|zfs_max_recordsize
+name|SPA_MAXBLOCKSIZE
 operator|)
 condition|?
 operator|-
