@@ -554,12 +554,6 @@ literal|"secondary"
 block|}
 block|,
 block|{
-name|UMA_ZONE_REFCNT
-block|,
-literal|"refcnt"
-block|}
-block|,
-block|{
 name|UMA_ZONE_MAXBUCKET
 block|,
 literal|"maxbucket"
