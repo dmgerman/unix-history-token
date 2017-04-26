@@ -9296,11 +9296,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|nfscl_cleanclient
-argument_list|(
-name|clp
-argument_list|)
-expr_stmt|;
 name|NFSLOCKCLSTATE
 argument_list|()
 expr_stmt|;
@@ -9310,8 +9305,6 @@ name|nfsc_flags
 operator|&=
 operator|~
 operator|(
-name|NFSCLFLAGS_HASCLIENTID
-operator||
 name|NFSCLFLAGS_RECOVER
 operator||
 name|NFSCLFLAGS_RECVRINPROG
@@ -11052,12 +11045,6 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 		 * Clear out any state. 		 */
-name|nfscl_cleanclient
-argument_list|(
-name|clp
-argument_list|)
-expr_stmt|;
 name|NFSLOCKCLSTATE
 argument_list|()
 expr_stmt|;
@@ -11066,11 +11053,7 @@ operator|->
 name|nfsc_flags
 operator|&=
 operator|~
-operator|(
-name|NFSCLFLAGS_HASCLIENTID
-operator||
 name|NFSCLFLAGS_RECOVER
-operator|)
 expr_stmt|;
 block|}
 else|else
