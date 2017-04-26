@@ -402,7 +402,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-fjtv] [-P pidfile] [-s<set_scriptname>] [ifnet0 ... | any]\n"
+literal|"usage: %s [-efjtv] [-P pidfile] [-s<set_scriptname>] [ifnet0 ... | any]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -463,6 +463,11 @@ index|[
 literal|2048
 index|]
 decl_stmt|;
+name|int
+name|log_stderr
+init|=
+literal|0
+decl_stmt|;
 name|logmask
 operator|=
 name|LOG_UPTO
@@ -481,7 +486,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fjP:s:tv"
+literal|"efjP:s:tv"
 argument_list|)
 operator|)
 operator|!=
@@ -493,6 +498,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'e'
+case|:
+name|log_stderr
+operator|=
+name|LOG_PERROR
+expr_stmt|;
+break|break;
 case|case
 literal|'f'
 case|:
@@ -650,6 +663,8 @@ name|openlog
 argument_list|(
 literal|"wlanwds"
 argument_list|,
+name|log_stderr
+operator||
 name|LOG_PID
 operator||
 name|LOG_CONS
