@@ -9479,6 +9479,10 @@ condition|(
 name|error
 operator|!=
 name|NFSERR_NOGRACE
+operator|&&
+name|error
+operator|!=
+name|NFSERR_BADSESSION
 condition|)
 block|{
 comment|/* Search for a delegation to reclaim with the open */
@@ -9925,12 +9929,6 @@ name|lop
 operator|->
 name|nfslo_first
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-name|NFSERR_NOGRACE
-condition|)
 name|error
 operator|=
 name|nfscl_trylock
@@ -10015,8 +10013,17 @@ name|nlp
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
+block|}
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|error
+operator|!=
+name|NFSERR_BADSESSION
+condition|)
 name|nfscl_freeopen
 argument_list|(
 name|op
@@ -10024,8 +10031,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|op
 operator|=
 name|nop
@@ -10160,6 +10165,10 @@ condition|(
 name|error
 operator|!=
 name|NFSERR_NOGRACE
+operator|&&
+name|error
+operator|!=
+name|NFSERR_BADSESSION
 condition|)
 block|{
 name|MALLOC
