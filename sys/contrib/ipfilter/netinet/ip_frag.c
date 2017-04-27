@@ -2386,7 +2386,7 @@ argument_list|)
 expr_stmt|;
 name|KFREE
 argument_list|(
-name|fra
+name|fran
 argument_list|)
 expr_stmt|;
 return|return
