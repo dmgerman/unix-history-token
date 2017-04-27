@@ -3910,6 +3910,16 @@ parameter_list|)
 value|((n)->nm_state& NFSSTA_PNFS)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSHASONEOPENOWN
+parameter_list|(
+name|n
+parameter_list|)
+value|(((n)->nm_flag& NFSMNT_ONEOPENOWN) != 0&&	\ 				    (n)->nm_minorvers> 0)
+end_define
+
 begin_comment
 comment|/*  * Gets the stats field out of the mount structure.  */
 end_comment
