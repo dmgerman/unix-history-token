@@ -988,7 +988,7 @@ argument_list|(
 name|kdb_why
 argument_list|)
 argument_list|,
-literal|"watchdog %s timeout"
+literal|"watchdog %s-timeout"
 argument_list|,
 name|type
 argument_list|)
@@ -1018,7 +1018,7 @@ name|log
 argument_list|(
 name|LOG_EMERG
 argument_list|,
-literal|"watchdog %s-timeout, WD_SOFT_LOG"
+literal|"watchdog %s-timeout, WD_SOFT_LOG\n"
 argument_list|,
 name|type
 argument_list|)
@@ -1173,7 +1173,7 @@ name|timeout_ticks
 argument_list|,
 name|wd_timeout_cb
 argument_list|,
-literal|"pre-timeout"
+literal|"pre"
 argument_list|)
 expr_stmt|;
 name|wd_pretimeout
