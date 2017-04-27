@@ -1803,8 +1803,50 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC225
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0225)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC231
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0231)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC233
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0233)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC234
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0234)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC235
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0235)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC255
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0255)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC256
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0256)
 end_define
 
 begin_define
@@ -1866,6 +1908,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC274
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0274)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC275
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0275)
 end_define
@@ -1875,6 +1924,104 @@ define|#
 directive|define
 name|HDA_CODEC_ALC276
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0276)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC280
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0280)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC282
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0282)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC283
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0283)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC284
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0284)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC285
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0285)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC286
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0286)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC288
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0288)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC290
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0290)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC292
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0292)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC293
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0293)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC294
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0294)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC295
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0295)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC298
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0298)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC299
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0299)
 end_define
 
 begin_define
@@ -1929,8 +2076,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC671
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0671)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC680
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0680)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC700
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0700)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC701
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0701)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC703
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0703)
 end_define
 
 begin_define
@@ -2015,6 +2190,13 @@ define|#
 directive|define
 name|HDA_CODEC_ALC1150
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0900)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC1220
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x1220)
 end_define
 
 begin_define
@@ -3150,6 +3332,83 @@ define|#
 directive|define
 name|HDA_CODEC_CX20665
 value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x50b9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX21722
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x50f1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20722
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x50f2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX21724
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x50f3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20724
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x50f4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20751
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x510f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20751_2
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5110)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20753
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5111)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20755
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5113)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20756
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5114)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20757
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5115)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20952
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x51d7)
 end_define
 
 begin_define

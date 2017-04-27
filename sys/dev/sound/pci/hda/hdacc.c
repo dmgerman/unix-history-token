@@ -228,11 +228,59 @@ literal|"Realtek ALC221"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC225
+block|,
+literal|0
+block|,
+literal|"Realtek ALC225"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC231
+block|,
+literal|0
+block|,
+literal|"Realtek ALC231"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC233
 block|,
 literal|0
 block|,
 literal|"Realtek ALC233"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC234
+block|,
+literal|0
+block|,
+literal|"Realtek ALC234"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC235
+block|,
+literal|0
+block|,
+literal|"Realtek ALC235"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC255
+block|,
+literal|0
+block|,
+literal|"Realtek ALC255"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC256
+block|,
+literal|0
+block|,
+literal|"Realtek ALC256"
 block|}
 block|,
 block|{
@@ -300,6 +348,14 @@ literal|"Realtek ALC273"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC274
+block|,
+literal|0
+block|,
+literal|"Realtek ALC274"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC275
 block|,
 literal|0
@@ -329,6 +385,118 @@ block|,
 literal|0
 block|,
 literal|"Realtek ALC295"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC280
+block|,
+literal|0
+block|,
+literal|"Realtek ALC280"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC282
+block|,
+literal|0
+block|,
+literal|"Realtek ALC282"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC283
+block|,
+literal|0
+block|,
+literal|"Realtek ALC283"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC284
+block|,
+literal|0
+block|,
+literal|"Realtek ALC284"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC285
+block|,
+literal|0
+block|,
+literal|"Realtek ALC285"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC286
+block|,
+literal|0
+block|,
+literal|"Realtek ALC286"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC288
+block|,
+literal|0
+block|,
+literal|"Realtek ALC288"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC290
+block|,
+literal|0
+block|,
+literal|"Realtek ALC290"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC292
+block|,
+literal|0
+block|,
+literal|"Realtek ALC292"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC293
+block|,
+literal|0
+block|,
+literal|"Realtek ALC293"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC294
+block|,
+literal|0
+block|,
+literal|"Realtek ALC294"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC295
+block|,
+literal|0
+block|,
+literal|"Realtek ALC295"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC298
+block|,
+literal|0
+block|,
+literal|"Realtek ALC298"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC299
+block|,
+literal|0
+block|,
+literal|"Realtek ALC299"
 block|}
 block|,
 block|{
@@ -380,11 +548,43 @@ literal|"Realtek ALC670"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC671
+block|,
+literal|0
+block|,
+literal|"Realtek ALC671"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC680
 block|,
 literal|0
 block|,
 literal|"Realtek ALC680"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC700
+block|,
+literal|0
+block|,
+literal|"Realtek ALC700"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC701
+block|,
+literal|0
+block|,
+literal|"Realtek ALC701"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC703
+block|,
+literal|0
+block|,
+literal|"Realtek ALC703"
 block|}
 block|,
 block|{
@@ -513,6 +713,14 @@ block|,
 literal|0
 block|,
 literal|"Realtek ALC1150"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC1220
+block|,
+literal|0
+block|,
+literal|"Realtek ALC1220"
 block|}
 block|,
 block|{
@@ -1593,6 +1801,94 @@ block|,
 literal|0
 block|,
 literal|"Conexant CX20665"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX21722
+block|,
+literal|0
+block|,
+literal|"Conexant CX21722"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20722
+block|,
+literal|0
+block|,
+literal|"Conexant CX20722"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX21724
+block|,
+literal|0
+block|,
+literal|"Conexant CX21724"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20724
+block|,
+literal|0
+block|,
+literal|"Conexant CX20724"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20751
+block|,
+literal|0
+block|,
+literal|"Conexant CX20751/2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20751_2
+block|,
+literal|0
+block|,
+literal|"Conexant CX20751/2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20753
+block|,
+literal|0
+block|,
+literal|"Conexant CX20753/4"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20755
+block|,
+literal|0
+block|,
+literal|"Conexant CX20755"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20756
+block|,
+literal|0
+block|,
+literal|"Conexant CX20756"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20757
+block|,
+literal|0
+block|,
+literal|"Conexant CX20757"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20952
+block|,
+literal|0
+block|,
+literal|"Conexant CX20952"
 block|}
 block|,
 block|{
