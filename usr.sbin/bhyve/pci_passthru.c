@@ -3391,6 +3391,14 @@ argument_list|,
 name|CAP_IOCTL
 argument_list|)
 expr_stmt|;
+name|cap_rights_set
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_MMAP_RW
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cap_rights_limit
