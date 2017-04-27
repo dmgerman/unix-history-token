@@ -592,9 +592,7 @@ name|void
 parameter_list|)
 block|{
 name|setinteractive
-argument_list|(
-name|iflag
-argument_list|)
+argument_list|()
 expr_stmt|;
 ifndef|#
 directive|ifndef

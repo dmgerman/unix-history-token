@@ -5314,7 +5314,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|CACHE_LINE_SIZE
+name|UMA_ALIGN_CACHE
 argument_list|,
 literal|0
 argument_list|)

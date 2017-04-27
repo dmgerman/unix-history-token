@@ -84,6 +84,9 @@ parameter_list|,
 name|boolean_t
 name|large_block_ok
 parameter_list|,
+name|boolean_t
+name|compressok
+parameter_list|,
 name|int
 name|outfd
 parameter_list|,
@@ -144,6 +147,9 @@ name|dsl_dataset
 modifier|*
 name|fromds
 parameter_list|,
+name|boolean_t
+name|stream_compressed
+parameter_list|,
 name|uint64_t
 modifier|*
 name|sizep
@@ -162,6 +168,9 @@ name|ds
 parameter_list|,
 name|uint64_t
 name|fromtxg
+parameter_list|,
+name|boolean_t
+name|stream_compressed
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -190,6 +199,9 @@ name|embedok
 parameter_list|,
 name|boolean_t
 name|large_block_ok
+parameter_list|,
+name|boolean_t
+name|compressok
 parameter_list|,
 ifdef|#
 directive|ifdef

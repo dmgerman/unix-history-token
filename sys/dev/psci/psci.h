@@ -63,7 +63,7 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|psci_system_reset
+name|psci_reset
 parameter_list|(
 name|void
 parameter_list|)

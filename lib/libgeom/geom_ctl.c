@@ -6,7 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -24,13 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|<paths.h>
 end_include
 
 begin_include
@@ -42,13 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -60,13 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<unistd.h>
 end_include
 
 begin_define
@@ -83,7 +83,7 @@ file|<libgeom.h>
 end_include
 
 begin_comment
-comment|/*   * Global pointer to a string that is used to avoid an errorneous free in  * gctl_free.  */
+comment|/*  * Global pointer to a string that is used to avoid an errorneous free in  * gctl_free.  */
 end_comment
 
 begin_decl_stmt

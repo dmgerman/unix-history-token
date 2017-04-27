@@ -6424,6 +6424,37 @@ operator|->
 name|ypixel
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|scp
+operator|->
+name|sc
+operator|->
+name|adp
+operator|->
+name|va_type
+operator|==
+name|KD_VGA
+condition|)
+block|{
+name|outw
+argument_list|(
+name|GDCIDX
+argument_list|,
+literal|0x0305
+argument_list|)
+expr_stmt|;
+comment|/* read mode 0, write mode 3 */
+name|outw
+argument_list|(
+name|GDCIDX
+argument_list|,
+literal|0xff08
+argument_list|)
+expr_stmt|;
+comment|/* bit mask */
+block|}
+else|else
 name|outw
 argument_list|(
 name|GDCIDX
@@ -6436,7 +6467,15 @@ name|outw
 argument_list|(
 name|GDCIDX
 argument_list|,
-literal|0x0001
+literal|0x0003
+argument_list|)
+expr_stmt|;
+comment|/* data rotate/function select */
+name|outw
+argument_list|(
+name|GDCIDX
+argument_list|,
+literal|0x0f01
 argument_list|)
 expr_stmt|;
 comment|/* set/reset enable */
@@ -6444,18 +6483,16 @@ name|outw
 argument_list|(
 name|GDCIDX
 argument_list|,
-literal|0xff08
+operator|(
+literal|0
+operator|<<
+literal|8
+operator|)
+operator||
+literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/* bit mask */
-name|outw
-argument_list|(
-name|GDCIDX
-argument_list|,
-literal|0x0803
-argument_list|)
-expr_stmt|;
-comment|/* data rotate/function select (and) */
+comment|/* set/reset */
 name|p
 operator|=
 name|scp
@@ -6497,8 +6534,6 @@ control|)
 block|{
 name|m
 operator|=
-operator|~
-operator|(
 name|mdp
 operator|->
 name|md_border
@@ -6509,7 +6544,6 @@ operator|<<
 literal|8
 operator|>>
 name|xoff
-operator|)
 expr_stmt|;
 for|for
 control|(
@@ -6543,7 +6577,7 @@ if|if
 condition|(
 name|m1
 operator|!=
-literal|0xff
+literal|0
 operator|&&
 name|x
 operator|+
@@ -6563,6 +6597,18 @@ operator|+
 name|k
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|scp
+operator|->
+name|sc
+operator|->
+name|adp
+operator|->
+name|va_type
+operator|==
+name|KD_VGA
+condition|)
 name|writeb
 argument_list|(
 name|p
@@ -6572,6 +6618,32 @@ argument_list|,
 name|m1
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* bit mask: */
+name|outw
+argument_list|(
+name|GDCIDX
+argument_list|,
+operator|(
+name|m1
+operator|<<
+literal|8
+operator|)
+operator||
+literal|0x08
+argument_list|)
+expr_stmt|;
+name|writeb
+argument_list|(
+name|p
+operator|+
+name|k
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 name|p
@@ -6583,10 +6655,16 @@ name|outw
 argument_list|(
 name|GDCIDX
 argument_list|,
-literal|0x1003
+operator|(
+literal|15
+operator|<<
+literal|8
+operator|)
+operator||
+literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/* data rotate/function select (or) */
+comment|/* set/reset */
 name|p
 operator|=
 name|scp
@@ -6691,6 +6769,18 @@ operator|+
 name|k
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|scp
+operator|->
+name|sc
+operator|->
+name|adp
+operator|->
+name|va_type
+operator|==
+name|KD_VGA
+condition|)
 name|writeb
 argument_list|(
 name|p
@@ -6700,6 +6790,32 @@ argument_list|,
 name|m1
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* bit mask: */
+name|outw
+argument_list|(
+name|GDCIDX
+argument_list|,
+operator|(
+name|m1
+operator|<<
+literal|8
+operator|)
+operator||
+literal|0x08
+argument_list|)
+expr_stmt|;
+name|writeb
+argument_list|(
+name|p
+operator|+
+name|k
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 name|p
@@ -6707,14 +6823,51 @@ operator|+=
 name|line_width
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|scp
+operator|->
+name|sc
+operator|->
+name|adp
+operator|->
+name|va_type
+operator|==
+name|KD_VGA
+condition|)
 name|outw
 argument_list|(
 name|GDCIDX
 argument_list|,
-literal|0x0003
+literal|0x0005
 argument_list|)
 expr_stmt|;
-comment|/* data rotate/function select */
+comment|/* read mode 0, write mode 0 */
+else|else
+name|outw
+argument_list|(
+name|GDCIDX
+argument_list|,
+literal|0xff08
+argument_list|)
+expr_stmt|;
+comment|/* bit mask */
+name|outw
+argument_list|(
+name|GDCIDX
+argument_list|,
+literal|0x0000
+argument_list|)
+expr_stmt|;
+comment|/* set/reset */
+name|outw
+argument_list|(
+name|GDCIDX
+argument_list|,
+literal|0x0001
+argument_list|)
+expr_stmt|;
+comment|/* set/reset enable */
 block|}
 end_function
 

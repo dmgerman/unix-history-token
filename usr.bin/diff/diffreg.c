@@ -6869,6 +6869,8 @@ name|int
 name|i
 decl_stmt|,
 name|nc
+decl_stmt|,
+name|f
 decl_stmt|;
 specifier|const
 name|char
@@ -7619,13 +7621,17 @@ literal|"---\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|f
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|diff_format
 operator|!=
 name|D_GFORMAT
 condition|)
-name|i
+name|f
 operator|=
 name|fetch
 argument_list|(
@@ -7653,7 +7659,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|f
 operator|!=
 literal|0
 operator|&&
@@ -7674,7 +7680,7 @@ literal|"%ds/.//\n"
 argument_list|,
 name|a
 operator|+
-name|i
+name|f
 operator|-
 literal|1
 argument_list|)
@@ -7683,7 +7689,7 @@ name|b
 operator|=
 name|a
 operator|+
-name|i
+name|f
 operator|-
 literal|1
 expr_stmt|;
@@ -7695,7 +7701,7 @@ literal|1
 expr_stmt|;
 name|c
 operator|+=
-name|i
+name|f
 expr_stmt|;
 goto|goto
 name|restart

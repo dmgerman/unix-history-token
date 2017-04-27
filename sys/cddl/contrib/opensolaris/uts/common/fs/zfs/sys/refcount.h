@@ -409,6 +409,7 @@ name|current_holder
 parameter_list|,
 name|new_holder
 parameter_list|)
+value|(void)0
 define|#
 directive|define
 name|refcount_held

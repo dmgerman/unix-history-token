@@ -485,23 +485,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOATM
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"atm.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -639,20 +622,6 @@ block|}
 block|,
 endif|#
 directive|endif
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|NOATM
-comment|/* Ditto for ATM devices */
-block|{
-name|atm_Create
-block|,
-name|atm_iov2device
-block|,
-name|atm_DeviceSize
-block|}
-block|,
 endif|#
 directive|endif
 block|{

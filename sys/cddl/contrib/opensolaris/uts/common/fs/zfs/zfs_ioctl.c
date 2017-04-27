@@ -19509,6 +19509,17 @@ operator|&
 literal|0x2
 operator|)
 decl_stmt|;
+name|boolean_t
+name|compressok
+init|=
+operator|(
+name|zc
+operator|->
+name|zc_flags
+operator|&
+literal|0x4
+operator|)
+decl_stmt|;
 if|if
 condition|(
 name|zc
@@ -19765,6 +19776,8 @@ name|tosnap
 argument_list|,
 name|fromsnap
 argument_list|,
+name|compressok
+argument_list|,
 operator|&
 name|zc
 operator|->
@@ -19883,6 +19896,8 @@ argument_list|,
 name|embedok
 argument_list|,
 name|large_block_ok
+argument_list|,
+name|compressok
 argument_list|,
 ifdef|#
 directive|ifdef
@@ -24169,7 +24184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * innvl: {  *     "fd" -> file descriptor to write stream to (int32)  *     (optional) "fromsnap" -> full snap name to send an incremental from  *     (optional) "largeblockok" -> (value ignored)  *         indicates that blocks> 128KB are permitted  *     (optional) "embedok" -> (value ignored)  *         presence indicates DRR_WRITE_EMBEDDED records are permitted  *     (optional) "resume_object" and "resume_offset" -> (uint64)  *         if present, resume send stream from specified object and offset.  * }  *  * outnvl is unused  */
+comment|/*  * innvl: {  *     "fd" -> file descriptor to write stream to (int32)  *     (optional) "fromsnap" -> full snap name to send an incremental from  *     (optional) "largeblockok" -> (value ignored)  *         indicates that blocks> 128KB are permitted  *     (optional) "embedok" -> (value ignored)  *         presence indicates DRR_WRITE_EMBEDDED records are permitted  *     (optional) "compressok" -> (value ignored)  *         presence indicates compressed DRR_WRITE records are permitted  *     (optional) "resume_object" and "resume_offset" -> (uint64)  *         if present, resume send stream from specified object and offset.  * }  *  * outnvl is unused  */
 end_comment
 
 begin_comment
@@ -24222,6 +24237,9 @@ name|largeblockok
 decl_stmt|;
 name|boolean_t
 name|embedok
+decl_stmt|;
+name|boolean_t
+name|compressok
 decl_stmt|;
 name|uint64_t
 name|resumeobj
@@ -24288,6 +24306,15 @@ argument_list|(
 name|innvl
 argument_list|,
 literal|"embedok"
+argument_list|)
+expr_stmt|;
+name|compressok
+operator|=
+name|nvlist_exists
+argument_list|(
+name|innvl
+argument_list|,
+literal|"compressok"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -24382,11 +24409,13 @@ name|embedok
 argument_list|,
 name|largeblockok
 argument_list|,
-name|fd
+name|compressok
 argument_list|,
 ifdef|#
 directive|ifdef
 name|illumos
+name|fd
+argument_list|,
 name|resumeobj
 argument_list|,
 name|resumeoff
@@ -24401,6 +24430,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|fd
+operator|,
 name|resumeobj
 operator|,
 name|resumeoff
@@ -24490,7 +24521,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * Determine approximately how large a zfs send stream will be -- the number  * of bytes that will be written to the fd supplied to zfs_ioc_send_new().  *  * innvl: {  *     (optional) "from" -> full snap or bookmark name to send an incremental  *                          from  * }  *  * outnvl: {  *     "space" -> bytes of space (uint64)  * }  */
+comment|/*  * Determine approximately how large a zfs send stream will be -- the number  * of bytes that will be written to the fd supplied to zfs_ioc_send_new().  *  * innvl: {  *     (optional) "from" -> full snap or bookmark name to send an incremental  *                          from  *     (optional) "largeblockok" -> (value ignored)  *         indicates that blocks> 128KB are permitted  *     (optional) "embedok" -> (value ignored)  *         presence indicates DRR_WRITE_EMBEDDED records are permitted  *     (optional) "compressok" -> (value ignored)  *         presence indicates compressed DRR_WRITE records are permitted  * }  *  * outnvl: {  *     "space" -> bytes of space (uint64)  * }  */
 end_comment
 
 begin_function
@@ -24526,6 +24557,17 @@ decl_stmt|;
 name|char
 modifier|*
 name|fromname
+decl_stmt|;
+comment|/* LINTED E_FUNC_SET_NOT_USED */
+name|boolean_t
+name|largeblockok
+decl_stmt|;
+comment|/* LINTED E_FUNC_SET_NOT_USED */
+name|boolean_t
+name|embedok
+decl_stmt|;
+name|boolean_t
+name|compressok
 decl_stmt|;
 name|uint64_t
 name|space
@@ -24587,6 +24629,33 @@ name|error
 operator|)
 return|;
 block|}
+name|largeblockok
+operator|=
+name|nvlist_exists
+argument_list|(
+name|innvl
+argument_list|,
+literal|"largeblockok"
+argument_list|)
+expr_stmt|;
+name|embedok
+operator|=
+name|nvlist_exists
+argument_list|(
+name|innvl
+argument_list|,
+literal|"embedok"
+argument_list|)
+expr_stmt|;
+name|compressok
+operator|=
+name|nvlist_exists
+argument_list|(
+name|innvl
+argument_list|,
+literal|"compressok"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|nvlist_lookup_string
@@ -24654,6 +24723,8 @@ name|tosnap
 argument_list|,
 name|fromsnap
 argument_list|,
+name|compressok
+argument_list|,
 operator|&
 name|space
 argument_list|)
@@ -24716,6 +24787,8 @@ name|frombm
 operator|.
 name|zbm_creation_txg
 argument_list|,
+name|compressok
+argument_list|,
 operator|&
 name|space
 argument_list|)
@@ -24746,6 +24819,8 @@ argument_list|(
 name|tosnap
 argument_list|,
 name|NULL
+argument_list|,
+name|compressok
 argument_list|,
 operator|&
 name|space

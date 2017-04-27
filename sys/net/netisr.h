@@ -84,13 +84,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NETISR_NATM
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
 name|NETISR_EPAIR
 value|8
 end_define

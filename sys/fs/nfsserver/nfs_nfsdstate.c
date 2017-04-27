@@ -292,6 +292,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|nfsrv_allowreadforwriteopen
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfsd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|allowreadforwriteopen
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfsrv_allowreadforwriteopen
+argument_list|,
+literal|0
+argument_list|,
+literal|"Allow Reads to be done with Write Access StateIDs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Hash lists for nfs V4.  */
 end_comment
@@ -9317,6 +9347,10 @@ name|ls_flags
 operator|&
 name|NFSLCK_READACCESS
 operator|)
+operator|&&
+name|nfsrv_allowreadforwriteopen
+operator|==
+literal|0
 operator|)
 operator|||
 operator|(

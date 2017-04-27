@@ -4224,11 +4224,6 @@ name|BHND_NVRAM_VAL_BORROW_DATA
 argument_list|)
 operator|)
 return|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 end_function
 

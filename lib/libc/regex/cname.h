@@ -12,6 +12,7 @@ specifier|static
 struct|struct
 name|cname
 block|{
+specifier|const
 name|char
 modifier|*
 name|name

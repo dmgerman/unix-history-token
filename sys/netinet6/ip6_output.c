@@ -820,7 +820,7 @@ name|u_char
 name|nextproto
 parameter_list|,
 name|int
-name|mtu
+name|fraglen
 parameter_list|,
 name|uint32_t
 name|id
@@ -869,7 +869,7 @@ decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
-name|mtu
+name|fraglen
 operator|%
 literal|8
 operator|==
@@ -915,7 +915,7 @@ name|tlen
 condition|;
 name|off
 operator|+=
-name|mtu
+name|fraglen
 control|)
 block|{
 name|m
@@ -1054,11 +1054,11 @@ if|if
 condition|(
 name|off
 operator|+
-name|mtu
+name|fraglen
 operator|>=
 name|tlen
 condition|)
-name|mtu
+name|fraglen
 operator|=
 name|tlen
 operator|-
@@ -1081,7 +1081,7 @@ call|(
 name|u_short
 call|)
 argument_list|(
-name|mtu
+name|fraglen
 operator|+
 name|hlen
 operator|+
@@ -1110,7 +1110,7 @@ name|m0
 argument_list|,
 name|off
 argument_list|,
-name|mtu
+name|fraglen
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1143,7 +1143,7 @@ name|m_pkthdr
 operator|.
 name|len
 operator|=
-name|mtu
+name|fraglen
 operator|+
 name|hlen
 operator|+

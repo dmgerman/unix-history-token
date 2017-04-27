@@ -36057,6 +36057,9 @@ operator|->
 name|ip_len
 argument_list|)
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|ntohs
 argument_list|(
 name|icmp
@@ -36828,9 +36831,6 @@ name|type
 argument_list|,
 name|code
 argument_list|,
-operator|(
-name|uint16_t
-operator|)
 name|ntohl
 argument_list|(
 name|ip6cp

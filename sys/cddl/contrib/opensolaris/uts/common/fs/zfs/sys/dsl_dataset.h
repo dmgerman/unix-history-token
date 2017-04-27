@@ -174,8 +174,16 @@ name|DS_FIELD_RESUME_BYTES
 value|"com.delphix:resume_bytes"
 define|#
 directive|define
+name|DS_FIELD_RESUME_LARGEBLOCK
+value|"com.delphix:resume_largeblockok"
+define|#
+directive|define
 name|DS_FIELD_RESUME_EMBEDOK
 value|"com.delphix:resume_embedok"
+define|#
+directive|define
+name|DS_FIELD_RESUME_COMPRESSOK
+value|"com.delphix:resume_compressok"
 comment|/*  * DS_FLAG_CI_DATASET is set if the dataset contains a file system whose  * name lookups should be performed case-insensitively.  */
 define|#
 directive|define

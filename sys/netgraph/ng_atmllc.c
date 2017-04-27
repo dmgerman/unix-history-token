@@ -79,16 +79,6 @@ begin_comment
 comment|/* for M_HASFCS and ETHER_HDR_LEN */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<net/if_atm.h>
-end_include
-
-begin_comment
-comment|/* for struct atmllc */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -147,6 +137,54 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|atmllc
+block|{
+name|uint8_t
+name|llchdr
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* aa.aa.03.00.00.00 */
+name|uint8_t
+name|type
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* "ethernet" type */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ATM_LLC macros: note type code in host byte order */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_LLC_TYPE
+parameter_list|(
+name|X
+parameter_list|)
+value|(((X)->type[0]<< 8) | ((X)->type[1]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATM_LLC_SETTYPE
+parameter_list|(
+name|X
+parameter_list|,
+name|V
+parameter_list|)
+value|do {		\ 	(X)->type[0] = ((V)>> 8)& 0xff;	\ 	(X)->type[1] = ((V)& 0xff);		\     } while (0)
+end_define
 
 begin_comment
 comment|/* Netgraph methods. */
