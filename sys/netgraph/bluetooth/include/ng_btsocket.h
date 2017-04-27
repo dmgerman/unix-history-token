@@ -627,27 +627,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|BDADDR_BREDR
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|BDADDR_LE_PUBLIC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|BDADDR_LE_RANDOM
-value|2
-end_define
-
 begin_struct
 struct|struct
 name|sockaddr_l2cap

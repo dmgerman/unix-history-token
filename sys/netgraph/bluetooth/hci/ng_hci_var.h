@@ -670,6 +670,15 @@ name|u_int16_t
 name|clock_offset
 decl_stmt|;
 comment|/* clock offset */
+name|uint8_t
+name|extinq_size
+decl_stmt|;
+name|uint8_t
+name|extinq_data
+index|[
+name|NG_HCI_EXTINQ_MAX
+index|]
+decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|ng_hci_neighbor

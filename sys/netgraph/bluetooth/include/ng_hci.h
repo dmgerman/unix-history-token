@@ -211,6 +211,17 @@ begin_comment
 comment|/*Command list BMP size*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NG_HCI_EXTINQ_MAX
+value|240
+end_define
+
+begin_comment
+comment|/**/
+end_comment
+
 begin_comment
 comment|/* HCI specification */
 end_comment
@@ -2609,6 +2620,19 @@ name|NG_HCI_FEATURES_SIZE
 index|]
 decl_stmt|;
 comment|/* features */
+name|uint8_t
+name|addrtype
+decl_stmt|;
+name|uint8_t
+name|extinq_size
+decl_stmt|;
+comment|/* MAX 240*/
+name|uint8_t
+name|extinq_data
+index|[
+name|NG_HCI_EXTINQ_MAX
+index|]
+decl_stmt|;
 block|}
 name|ng_hci_node_neighbor_cache_entry_ep
 typedef|;
