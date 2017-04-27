@@ -45,7 +45,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	bnez	t0, cerror; 					\ 	ret;							\ END(__sys_##name)
+value|ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	bnez	t0, 1f; 					\ 	ret;							\ 1:	la	t1, cerror;					\ 	jr	t1;						\ END(__sys_##name)
 end_define
 
 begin_define
@@ -56,7 +56,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, name);			\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	bnez	t0, cerror; 					\ 	ret;							\ END(__sys_##name)
+value|ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, name);			\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	bnez	t0, 1f; 					\ 	ret;							\ 1:	la	t1, cerror;					\ 	jr	t1;						\ END(__sys_##name)
 end_define
 
 end_unit
