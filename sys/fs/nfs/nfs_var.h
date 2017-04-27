@@ -5349,6 +5349,10 @@ name|void
 name|nfscl_ownerrelease
 parameter_list|(
 name|struct
+name|nfsmount
+modifier|*
+parameter_list|,
+name|struct
 name|nfsclowner
 modifier|*
 parameter_list|,
@@ -5365,6 +5369,10 @@ begin_function_decl
 name|void
 name|nfscl_openrelease
 parameter_list|(
+name|struct
+name|nfsmount
+modifier|*
+parameter_list|,
 name|struct
 name|nfsclopen
 modifier|*
