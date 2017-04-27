@@ -1688,7 +1688,7 @@ operator|->
 name|aqmcfg
 condition|)
 block|{
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ep
 operator|->
@@ -1697,6 +1697,13 @@ argument_list|,
 name|codel_desc
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ep
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ccfg
