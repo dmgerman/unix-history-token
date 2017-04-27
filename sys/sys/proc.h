@@ -601,14 +601,19 @@ name|lwpid_t
 name|td_tid
 decl_stmt|;
 comment|/* (b) Thread ID. */
-name|sigqueue_t
-name|td_sigqueue
+name|uint64_t
+name|padding1
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* (c) Sigs arrived, not delivered. */
-define|#
-directive|define
-name|td_siglist
-value|td_sigqueue.sq_signals
+name|void
+modifier|*
+name|padding2
+index|[
+literal|4
+index|]
+decl_stmt|;
 name|u_char
 name|td_lend_user_pri
 decl_stmt|;
@@ -1086,6 +1091,14 @@ name|sbintime_t
 name|td_sleeptimo
 decl_stmt|;
 comment|/* (t) Sleep timeout. */
+name|sigqueue_t
+name|td_sigqueue
+decl_stmt|;
+comment|/* (c) Sigs arrived, not delivered. */
+define|#
+directive|define
+name|td_siglist
+value|td_sigqueue.sq_signals
 block|}
 struct|;
 end_struct
