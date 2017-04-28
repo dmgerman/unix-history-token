@@ -1608,12 +1608,6 @@ name|fsc_pi
 operator|=
 name|pi
 expr_stmt|;
-name|sc
-operator|->
-name|rfb_port
-operator|=
-literal|5900
-expr_stmt|;
 name|error
 operator|=
 name|pci_fbuf_parse_opts
