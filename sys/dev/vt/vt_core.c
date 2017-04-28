@@ -5818,7 +5818,7 @@ operator|.
 name|tp_row
 init|;
 name|y
-operator|<=
+operator|<
 name|vda
 operator|->
 name|tr_end
@@ -5872,8 +5872,6 @@ operator|->
 name|tr_end
 operator|.
 name|tp_col
-operator|+
-literal|1
 init|;
 name|x
 operator|<
@@ -5910,8 +5908,6 @@ operator|->
 name|tr_end
 operator|.
 name|tp_row
-operator|+
-literal|1
 init|;
 name|y
 operator|<
