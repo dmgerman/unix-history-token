@@ -193,7 +193,7 @@ name|f
 parameter_list|,
 name|func
 parameter_list|)
-value|do {						\ 	char *b = NULL;							\ 	if (havewidth)							\ 		if (haveprec)						\ 			(void)asprintf(&b, f, fieldwidth, precision, func); \ 		else							\ 			(void)asprintf(&b, f, fieldwidth, func);	\ 	else if (haveprec)						\ 		(void)asprintf(&b, f, precision, func);			\ 	else								\ 		(void)asprintf(&b, f, func);				\ 	if (b) {							\ 		(void)fputs(b, stdout);					\ 		free(b);						\ 	}								\ } while (0)
+value|do {						\ 	if (havewidth)							\ 		if (haveprec)						\ 			(void)printf(f, fieldwidth, precision, func);	\ 		else							\ 			(void)printf(f, fieldwidth, func);		\ 	else if (haveprec)						\ 		(void)printf(f, precision, func);			\ 	else								\ 		(void)printf(f, func);					\ } while (0)
 end_define
 
 begin_function_decl
@@ -1590,6 +1590,12 @@ operator|=
 name|getchr
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+literal|'\0'
+condition|)
 name|PF
 argument_list|(
 name|start
