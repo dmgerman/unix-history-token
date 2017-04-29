@@ -18963,8 +18963,6 @@ name|vp
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|cred
-argument_list|,
 name|p
 argument_list|,
 literal|1

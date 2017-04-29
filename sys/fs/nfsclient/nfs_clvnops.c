@@ -3380,8 +3380,6 @@ name|vp
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|cred
-argument_list|,
 name|ap
 operator|->
 name|a_td
@@ -3428,8 +3426,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
-argument_list|,
-name|cred
 argument_list|,
 name|ap
 operator|->
@@ -14386,8 +14382,6 @@ name|ap
 operator|->
 name|a_waitfor
 argument_list|,
-name|NULL
-argument_list|,
 name|ap
 operator|->
 name|a_td
@@ -14416,11 +14410,6 @@ name|vp
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-name|cred
 parameter_list|,
 name|struct
 name|thread
@@ -16113,8 +16102,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
-argument_list|,
-name|cred
 argument_list|,
 name|td
 argument_list|,
@@ -17933,8 +17920,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
-argument_list|,
-name|NULL
 argument_list|,
 name|curthread
 argument_list|,
