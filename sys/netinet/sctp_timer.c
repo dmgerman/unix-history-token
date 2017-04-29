@@ -3169,6 +3169,12 @@ name|sent
 operator|=
 name|SCTP_DATAGRAM_RESEND
 expr_stmt|;
+name|chk
+operator|->
+name|flags
+operator||=
+name|CHUNK_FLAGS_FRAGMENT_OK
+expr_stmt|;
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_markedretrans
@@ -3545,6 +3551,12 @@ operator|->
 name|sent
 operator|=
 name|SCTP_DATAGRAM_RESEND
+expr_stmt|;
+name|chk
+operator|->
+name|flags
+operator||=
+name|CHUNK_FLAGS_FRAGMENT_OK
 expr_stmt|;
 name|sctp_ucount_incr
 argument_list|(
@@ -5151,6 +5163,12 @@ name|sent
 operator|=
 name|SCTP_DATAGRAM_RESEND
 expr_stmt|;
+name|cookie
+operator|->
+name|flags
+operator||=
+name|CHUNK_FLAGS_FRAGMENT_OK
+expr_stmt|;
 comment|/* 	 * Now call the output routine to kick out the cookie again, Note we 	 * don't mark any chunks for retran so that FR will need to kick in 	 * to move these (or a send timer). 	 */
 return|return
 operator|(
@@ -5380,6 +5398,12 @@ name|sent
 operator|=
 name|SCTP_DATAGRAM_RESEND
 expr_stmt|;
+name|chk
+operator|->
+name|flags
+operator||=
+name|CHUNK_FLAGS_FRAGMENT_OK
+expr_stmt|;
 name|sctp_ucount_incr
 argument_list|(
 name|stcb
@@ -5452,6 +5476,12 @@ operator|->
 name|sent
 operator|=
 name|SCTP_DATAGRAM_RESEND
+expr_stmt|;
+name|strrst
+operator|->
+name|flags
+operator||=
+name|CHUNK_FLAGS_FRAGMENT_OK
 expr_stmt|;
 comment|/* restart the timer */
 name|sctp_timer_start
@@ -5747,6 +5777,12 @@ name|sent
 operator|=
 name|SCTP_DATAGRAM_RESEND
 expr_stmt|;
+name|chk
+operator|->
+name|flags
+operator||=
+name|CHUNK_FLAGS_FRAGMENT_OK
+expr_stmt|;
 name|sctp_ucount_incr
 argument_list|(
 name|stcb
@@ -5840,6 +5876,12 @@ name|sent
 operator|=
 name|SCTP_DATAGRAM_RESEND
 expr_stmt|;
+name|chk
+operator|->
+name|flags
+operator||=
+name|CHUNK_FLAGS_FRAGMENT_OK
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5885,6 +5927,12 @@ operator|->
 name|sent
 operator|=
 name|SCTP_DATAGRAM_RESEND
+expr_stmt|;
+name|asconf
+operator|->
+name|flags
+operator||=
+name|CHUNK_FLAGS_FRAGMENT_OK
 expr_stmt|;
 comment|/* send another ASCONF if any and we can do */
 name|sctp_send_asconf
