@@ -4784,11 +4784,46 @@ name|sc
 operator|->
 name|sc_ifp
 argument_list|,
-literal|"error setting interface capabilities on %s\n"
+literal|"error setting capabilities on %s: %d\n"
 argument_list|,
 name|ifp
 operator|->
 name|if_xname
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+operator|~
+name|set
+operator|)
+operator|!=
+literal|0
+condition|)
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_ifp
+argument_list|,
+literal|"can't disable some capabilities on %s: 0x%x\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|,
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+operator|~
+name|set
 argument_list|)
 expr_stmt|;
 block|}
