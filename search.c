@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"less.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pattern.h"
 end_include
 
 begin_include
@@ -122,7 +116,6 @@ begin_decl_stmt
 specifier|extern
 name|void
 modifier|*
-name|constant
 name|ml_search
 decl_stmt|;
 end_decl_stmt
@@ -384,11 +377,9 @@ begin_struct
 struct|struct
 name|pattern_info
 block|{
-name|DEFINE_PATTERN
-argument_list|(
+name|PATTERN_TYPE
 name|compiled
-argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|char
 modifier|*
 name|text
@@ -4499,6 +4490,16 @@ name|filter_anchor
 argument_list|,
 operator|&
 name|hl
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cline
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|chpos
 argument_list|)
 expr_stmt|;
 continue|continue;

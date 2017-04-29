@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -606,16 +606,13 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|char
 name|v
 decl_stmt|;
@@ -817,7 +814,6 @@ name|name
 parameter_list|,
 name|no_error
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|name
@@ -826,13 +822,11 @@ name|int
 name|no_error
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|charset
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|cs_alias
 modifier|*
@@ -998,7 +992,6 @@ name|void
 name|ilocale
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -1991,6 +1984,7 @@ name|utf_len
 parameter_list|(
 name|ch
 parameter_list|)
+name|unsigned
 name|char
 name|ch
 decl_stmt|;
@@ -2089,14 +2083,13 @@ name|public
 name|int
 name|is_utf8_well_formed
 parameter_list|(
-name|s
+name|ss
 parameter_list|,
 name|slen
 parameter_list|)
-name|unsigned
 name|char
 modifier|*
-name|s
+name|ss
 decl_stmt|;
 name|int
 name|slen
@@ -2107,6 +2100,18 @@ name|i
 decl_stmt|;
 name|int
 name|len
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|s
+init|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|ss
 decl_stmt|;
 if|if
 condition|(
@@ -2127,9 +2132,6 @@ name|len
 operator|=
 name|utf_len
 argument_list|(
-operator|(
-name|char
-operator|)
 name|s
 index|[
 literal|0
@@ -2283,7 +2285,6 @@ name|data
 parameter_list|,
 name|len
 parameter_list|)
-name|unsigned
 name|char
 modifier|*
 name|data
@@ -2321,6 +2322,8 @@ name|utf_len
 argument_list|(
 operator|*
 name|data
+operator|&
+literal|0377
 argument_list|)
 decl_stmt|;
 name|data
@@ -2358,6 +2361,8 @@ name|IS_UTF8_LEAD
 argument_list|(
 operator|*
 name|data
+operator|&
+literal|0377
 argument_list|)
 condition|)
 do|;
@@ -2382,6 +2387,7 @@ name|get_wchar
 parameter_list|(
 name|p
 parameter_list|)
+name|constant
 name|char
 modifier|*
 name|p
@@ -3287,6 +3293,7 @@ name|signed
 name|int
 name|dir
 decl_stmt|;
+name|constant
 name|char
 modifier|*
 name|limit
@@ -3389,6 +3396,10 @@ literal|0
 expr_stmt|;
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|limit
 expr_stmt|;
 block|}

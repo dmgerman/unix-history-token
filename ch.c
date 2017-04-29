@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -516,27 +516,22 @@ name|int
 name|ch_get
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|buf
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|struct
 name|bufnode
 modifier|*
 name|bn
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|int
 name|slept
 decl_stmt|;
-specifier|register
 name|int
 name|h
 decl_stmt|;
@@ -1384,13 +1379,11 @@ name|void
 name|sync_logfile
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|buf
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|struct
 name|bufnode
 modifier|*
@@ -1528,19 +1521,16 @@ name|BLOCKNUM
 name|block
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|buf
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|struct
 name|bufnode
 modifier|*
 name|bn
 decl_stmt|;
-specifier|register
 name|int
 name|h
 decl_stmt|;
@@ -1598,7 +1588,6 @@ name|ch_seek
 parameter_list|(
 name|pos
 parameter_list|)
-specifier|register
 name|POSITION
 name|pos
 decl_stmt|;
@@ -1831,13 +1820,11 @@ name|int
 name|ch_end_buffer_seek
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|buf
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|struct
 name|bufnode
 modifier|*
@@ -1929,13 +1916,11 @@ name|int
 name|ch_beg_seek
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|bufnode
 modifier|*
 name|bn
 decl_stmt|;
-specifier|register
 name|struct
 name|bufnode
 modifier|*
@@ -2123,7 +2108,6 @@ name|int
 name|ch_forw_get
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -2335,7 +2319,6 @@ name|void
 name|ch_flush
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|bufnode
 modifier|*
@@ -2467,13 +2450,11 @@ name|int
 name|ch_addbuf
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|buf
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|struct
 name|bufnode
 modifier|*
@@ -2556,7 +2537,6 @@ name|void
 name|init_hashtbl
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|h
 decl_stmt|;
@@ -2616,7 +2596,6 @@ name|void
 name|ch_delbufs
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|bufnode
 modifier|*

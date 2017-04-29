@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -215,7 +215,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|constant
 modifier|*
 name|ml_search
 decl_stmt|;
@@ -224,7 +223,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|constant
 modifier|*
 name|ml_examine
 decl_stmt|;
@@ -241,7 +239,6 @@ end_if
 begin_decl_stmt
 specifier|extern
 name|void
-name|constant
 modifier|*
 name|ml_shell
 decl_stmt|;
@@ -546,7 +543,6 @@ name|char
 modifier|*
 name|prompt
 decl_stmt|;
-name|constant
 name|void
 modifier|*
 name|mlist
@@ -880,7 +876,6 @@ name|void
 name|exec_mca
 parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|cbuf
@@ -2311,7 +2306,6 @@ name|void
 name|prompt
 parameter_list|()
 block|{
-specifier|register
 name|constant
 name|char
 modifier|*
@@ -2724,7 +2718,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2784,7 +2777,6 @@ name|int
 name|silent
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|nomore
 decl_stmt|;
@@ -3109,15 +3101,12 @@ name|void
 name|commands
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|action
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cbuf

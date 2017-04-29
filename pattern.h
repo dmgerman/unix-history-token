@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_if
@@ -25,11 +25,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|DEFINE_PATTERN
-parameter_list|(
-name|name
-parameter_list|)
-value|struct re_pattern_buffer *name
+name|PATTERN_TYPE
+value|struct re_pattern_buffer *
 end_define
 
 begin_define
@@ -92,11 +89,8 @@ end_endif
 begin_define
 define|#
 directive|define
-name|DEFINE_PATTERN
-parameter_list|(
-name|name
-parameter_list|)
-value|regex_t *name
+name|PATTERN_TYPE
+value|regex_t *
 end_define
 
 begin_define
@@ -129,11 +123,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|DEFINE_PATTERN
-parameter_list|(
-name|name
-parameter_list|)
-value|pcre *name
+name|PATTERN_TYPE
+value|pcre *
 end_define
 
 begin_define
@@ -175,11 +166,8 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|DEFINE_PATTERN
-parameter_list|(
-name|name
-parameter_list|)
-value|int name
+name|PATTERN_TYPE
+value|int
 end_define
 
 begin_define
@@ -230,11 +218,8 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|DEFINE_PATTERN
-parameter_list|(
-name|name
-parameter_list|)
-value|char *name
+name|PATTERN_TYPE
+value|char **
 end_define
 
 begin_define
@@ -274,11 +259,8 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|DEFINE_PATTERN
-parameter_list|(
-name|name
-parameter_list|)
-value|struct regexp *name
+name|PATTERN_TYPE
+value|struct regexp *
 end_define
 
 begin_define
@@ -305,10 +287,8 @@ end_if
 begin_define
 define|#
 directive|define
-name|DEFINE_PATTERN
-parameter_list|(
-name|name
-parameter_list|)
+name|PATTERN_TYPE
+value|void *
 end_define
 
 begin_define

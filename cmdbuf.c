@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -352,7 +352,6 @@ begin_decl_stmt
 name|public
 name|void
 modifier|*
-name|constant
 name|ml_search
 init|=
 operator|(
@@ -390,7 +389,6 @@ begin_decl_stmt
 name|public
 name|void
 modifier|*
-name|constant
 name|ml_examine
 init|=
 operator|(
@@ -436,7 +434,6 @@ begin_decl_stmt
 name|public
 name|void
 modifier|*
-name|constant
 name|ml_shell
 init|=
 operator|(
@@ -470,7 +467,6 @@ begin_decl_stmt
 name|public
 name|void
 modifier|*
-name|constant
 name|ml_search
 init|=
 operator|(
@@ -485,7 +481,6 @@ begin_decl_stmt
 name|public
 name|void
 modifier|*
-name|constant
 name|ml_examine
 init|=
 operator|(
@@ -508,7 +503,6 @@ begin_decl_stmt
 name|public
 name|void
 modifier|*
-name|constant
 name|ml_shell
 init|=
 operator|(
@@ -661,6 +655,7 @@ name|cmd_putstr
 parameter_list|(
 name|s
 parameter_list|)
+name|constant
 name|char
 modifier|*
 name|s
@@ -674,6 +669,7 @@ decl_stmt|;
 name|LWCHAR
 name|ch
 decl_stmt|;
+name|constant
 name|char
 modifier|*
 name|endline
@@ -697,6 +693,10 @@ name|char
 modifier|*
 name|ns
 init|=
+operator|(
+name|char
+operator|*
+operator|)
 name|s
 decl_stmt|;
 name|int
@@ -1189,6 +1189,7 @@ name|cmd_repaint
 parameter_list|(
 name|old_cp
 parameter_list|)
+name|constant
 name|char
 modifier|*
 name|old_cp
@@ -1385,10 +1386,12 @@ name|void
 name|cmd_lshift
 parameter_list|()
 block|{
+name|constant
 name|char
 modifier|*
 name|s
 decl_stmt|;
+name|constant
 name|char
 modifier|*
 name|save_cp
@@ -1455,6 +1458,7 @@ block|{
 name|int
 name|width
 decl_stmt|;
+name|constant
 name|char
 modifier|*
 name|ns
@@ -1520,10 +1524,12 @@ name|void
 name|cmd_rshift
 parameter_list|()
 block|{
+name|constant
 name|char
 modifier|*
 name|s
 decl_stmt|;
+name|constant
 name|char
 modifier|*
 name|save_cp
@@ -1987,7 +1993,6 @@ name|int
 name|cmd_erase
 parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
@@ -2430,6 +2435,7 @@ name|int
 name|action
 decl_stmt|;
 block|{
+name|constant
 name|char
 modifier|*
 name|s
@@ -2624,6 +2630,7 @@ name|mlist
 modifier|*
 name|mlist
 decl_stmt|;
+name|constant
 name|char
 modifier|*
 name|cmd
@@ -3334,6 +3341,7 @@ name|meta_quoted
 init|=
 literal|0
 decl_stmt|;
+name|constant
 name|char
 modifier|*
 name|esc

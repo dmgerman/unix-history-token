@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -1538,14 +1538,12 @@ name|skipcond
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|constant
 name|char
 modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|iflevel
 decl_stmt|;
@@ -1775,13 +1773,11 @@ name|int
 name|maxwidth
 decl_stmt|;
 block|{
-specifier|register
 name|constant
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_include
@@ -200,27 +200,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|TAG_END
-value|((struct tag *)&taglist)
-end_define
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|taglist
-name|taglist
-init|=
-block|{
-name|TAG_END
-block|,
-name|TAG_END
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|tag
@@ -255,6 +234,27 @@ comment|/* True if the pattern includes '$' */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TAG_END
+value|((struct tag *)&taglist)
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|taglist
+name|taglist
+init|=
+block|{
+name|TAG_END
+block|,
+name|TAG_END
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -297,7 +297,6 @@ name|void
 name|cleantags
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|tag
 modifier|*
@@ -381,7 +380,6 @@ name|int
 name|endline
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tag
 modifier|*
@@ -629,7 +627,6 @@ name|findtag
 parameter_list|(
 name|tag
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|tag
@@ -895,7 +892,6 @@ name|findctag
 parameter_list|(
 name|tag
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|tag
@@ -905,12 +901,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|f
 decl_stmt|;
-specifier|register
 name|int
 name|taglen
 decl_stmt|;

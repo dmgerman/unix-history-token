@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -122,19 +122,16 @@ modifier|*
 name|donemsg
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|inp
 decl_stmt|;
 if|#
 directive|if
 name|HAVE_SHELL
-specifier|register
 name|char
 modifier|*
 name|shell
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -898,12 +895,10 @@ name|POSITION
 name|epos
 decl_stmt|;
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|f
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;

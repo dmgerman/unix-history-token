@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -168,7 +168,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|jump_sline_fraction
 decl_stmt|;
 end_decl_stmt
@@ -182,7 +182,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|shift_count_fraction
 decl_stmt|;
 end_decl_stmt
@@ -694,7 +694,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|".%06d"
+literal|".%06ld"
 argument_list|,
 name|jump_sline_fraction
 argument_list|)
@@ -937,7 +937,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|".%06d"
+literal|".%06ld"
 argument_list|,
 name|shift_count_fraction
 argument_list|)
@@ -1327,7 +1327,6 @@ parameter_list|)
 name|int
 name|type
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
@@ -1400,13 +1399,11 @@ parameter_list|)
 name|int
 name|type
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -1820,7 +1817,7 @@ argument_list|)
 expr_stmt|;
 name|putstr
 argument_list|(
-literal|"Copyright (C) 1984-2016  Mark Nudelman\n\n"
+literal|"Copyright (C) 1984-2017  Mark Nudelman\n\n"
 argument_list|)
 expr_stmt|;
 name|putstr
@@ -2199,7 +2196,6 @@ parameter_list|)
 name|int
 name|type
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
@@ -2488,7 +2484,6 @@ parameter_list|)
 name|int
 name|type
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s

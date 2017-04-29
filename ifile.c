@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -144,7 +144,6 @@ name|p
 parameter_list|,
 name|incr
 parameter_list|)
-specifier|register
 name|struct
 name|ifile
 modifier|*
@@ -345,7 +344,6 @@ modifier|*
 name|prev
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ifile
 modifier|*
@@ -435,7 +433,6 @@ name|IFILE
 name|h
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ifile
 modifier|*
@@ -509,7 +506,6 @@ name|IFILE
 name|h
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ifile
 modifier|*
@@ -573,7 +569,6 @@ name|IFILE
 name|h
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ifile
 modifier|*
@@ -720,7 +715,6 @@ modifier|*
 name|filename
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ifile
 modifier|*
@@ -792,7 +786,6 @@ name|IFILE
 name|prev
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ifile
 modifier|*
@@ -1140,7 +1133,7 @@ literal|0
 end_if
 
 begin_endif
-unit|public void if_dump() { 	register struct ifile *p;  	for (p = anchor.h_next;  p !=&anchor;  p = p->h_next) 	{ 		printf("%x: %d.<%s> pos %d,%x\n",  			p, p->h_index, p->h_filename,  			p->h_scrpos.ln, p->h_scrpos.pos); 		ch_dump(p->h_filestate); 	} }
+unit|public void if_dump() { 	struct ifile *p;  	for (p = anchor.h_next;  p !=&anchor;  p = p->h_next) 	{ 		printf("%x: %d.<%s> pos %d,%x\n",  			p, p->h_index, p->h_filename,  			p->h_scrpos.ln, p->h_scrpos.pos); 		ch_dump(p->h_filestate); 	} }
 endif|#
 directive|endif
 end_endif

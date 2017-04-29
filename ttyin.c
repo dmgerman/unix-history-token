@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -391,6 +391,11 @@ operator|)
 return|;
 else|#
 directive|else
+block|{
+name|unsigned
+name|char
+name|uc
+decl_stmt|;
 name|result
 operator|=
 name|iread
@@ -398,7 +403,7 @@ argument_list|(
 name|tty
 argument_list|,
 operator|&
-name|c
+name|uc
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -406,6 +411,14 @@ name|char
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|c
+operator|=
+operator|(
+name|char
+operator|)
+name|uc
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|result

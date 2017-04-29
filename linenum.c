@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -166,7 +166,6 @@ name|void
 name|clr_linenum
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|linenum_info
 modifier|*
@@ -272,7 +271,6 @@ name|calcgap
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|linenum_info
 modifier|*
@@ -334,31 +332,26 @@ name|POSITION
 name|pos
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|linenum_info
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|linenum_info
 modifier|*
 name|new
 decl_stmt|;
-specifier|register
 name|struct
 name|linenum_info
 modifier|*
 name|nextp
 decl_stmt|;
-specifier|register
 name|struct
 name|linenum_info
 modifier|*
 name|prevp
 decl_stmt|;
-specifier|register
 name|POSITION
 name|mingap
 decl_stmt|;
@@ -743,13 +736,11 @@ name|POSITION
 name|pos
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|linenum_info
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|LINENUM
 name|linenum
 decl_stmt|;
@@ -1111,7 +1102,6 @@ name|LINENUM
 name|linenum
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|linenum_info
 modifier|*

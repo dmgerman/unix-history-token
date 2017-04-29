@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -233,13 +233,11 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|loption
 modifier|*
 name|o
 decl_stmt|;
-specifier|register
 name|int
 name|optc
 decl_stmt|;
@@ -975,7 +973,6 @@ name|int
 name|how_toggle
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|num
 decl_stmt|;
@@ -1813,12 +1810,10 @@ modifier|*
 name|validchars
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|out
@@ -2060,16 +2055,13 @@ modifier|*
 name|errp
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|int
 name|neg
 decl_stmt|;
@@ -2213,7 +2205,6 @@ modifier|*
 name|errp
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|s

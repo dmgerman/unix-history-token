@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -1293,16 +1293,13 @@ name|int
 name|xlate
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 name|ch
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1641,6 +1638,8 @@ default|default:
 name|error
 argument_list|(
 literal|"illegal char after \\k"
+argument_list|,
+name|NULL_PARG
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1877,7 +1876,6 @@ name|skipsp
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
@@ -1918,7 +1916,6 @@ name|skipnsp
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
@@ -1968,7 +1965,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2079,6 +2075,8 @@ block|{
 name|error
 argument_list|(
 literal|"too many commands"
+argument_list|,
+name|NULL_PARG
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2479,6 +2477,8 @@ return|;
 name|error
 argument_list|(
 literal|"unknown action"
+argument_list|,
+name|NULL_PARG
 argument_list|)
 expr_stmt|;
 return|return
@@ -2494,10 +2494,16 @@ name|void
 name|error
 parameter_list|(
 name|s
+parameter_list|,
+name|parg
 parameter_list|)
 name|char
 modifier|*
 name|s
+decl_stmt|;
+name|PARG
+modifier|*
+name|parg
 decl_stmt|;
 block|{
 name|fprintf
@@ -2513,6 +2519,11 @@ argument_list|)
 expr_stmt|;
 name|errors
 operator|++
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|parg
 expr_stmt|;
 block|}
 end_function
@@ -2581,6 +2592,8 @@ condition|)
 name|error
 argument_list|(
 literal|"command too long"
+argument_list|,
+name|NULL_PARG
 argument_list|)
 expr_stmt|;
 else|else
@@ -2633,6 +2646,8 @@ block|{
 name|error
 argument_list|(
 literal|"missing action"
+argument_list|,
+name|NULL_PARG
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2811,6 +2826,8 @@ block|{
 name|error
 argument_list|(
 literal|"missing ="
+argument_list|,
+name|NULL_PARG
 argument_list|)
 expr_stmt|;
 return|return;

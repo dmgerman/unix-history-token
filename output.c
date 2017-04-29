@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -205,11 +205,9 @@ name|void
 name|put_line
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -318,11 +316,9 @@ name|void
 name|flush
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|int
 name|fd
 decl_stmt|;
@@ -1455,7 +1451,7 @@ name|putstr
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
+name|constant
 name|char
 modifier|*
 name|s
@@ -1492,7 +1488,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|void funcname(num, buf) \ 	type num; \ 	char *buf; \ { \ 	int neg = (num< 0); \ 	char tbuf[INT_STRLEN_BOUND(num)+2]; \ 	register char *s = tbuf + sizeof(tbuf); \ 	if (neg) num = -num; \ 	*--s = '\0'; \ 	do { \ 		*--s = (num % 10) + '0'; \ 	} while ((num /= 10) != 0); \ 	if (neg) *--s = '-'; \ 	strcpy(buf, s); \ }
+value|void funcname(num, buf) \ 	type num; \ 	char *buf; \ { \ 	int neg = (num< 0); \ 	char tbuf[INT_STRLEN_BOUND(num)+2]; \ 	char *s = tbuf + sizeof(tbuf); \ 	if (neg) num = -num; \ 	*--s = '\0'; \ 	do { \ 		*--s = (num % 10) + '0'; \ 	} while ((num /= 10) != 0); \ 	if (neg) *--s = '-'; \ 	strcpy(buf, s); \ }
 end_define
 
 begin_macro
@@ -1635,7 +1631,6 @@ name|fmt
 parameter_list|,
 name|parg
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|fmt
@@ -1645,12 +1640,10 @@ modifier|*
 name|parg
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|int
 name|col
 decl_stmt|;
@@ -2071,7 +2064,6 @@ modifier|*
 name|parg
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;

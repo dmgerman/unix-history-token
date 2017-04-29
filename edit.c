@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_include
@@ -117,7 +117,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|constant
 modifier|*
 name|ml_examine
 decl_stmt|;
@@ -2306,7 +2305,6 @@ name|void
 name|cat_file
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -2354,11 +2352,9 @@ modifier|*
 name|filename
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|exists
 decl_stmt|;
-specifier|register
 name|int
 name|answer
 decl_stmt|;

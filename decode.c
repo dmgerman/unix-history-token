@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -1462,17 +1462,14 @@ name|int
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|fm
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|to
 decl_stmt|;
-specifier|register
 name|int
 name|a
 decl_stmt|;
@@ -1752,7 +1749,6 @@ name|int
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tablelist
 modifier|*
@@ -2020,17 +2016,14 @@ modifier|*
 name|sp
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|q
 decl_stmt|;
-specifier|register
 name|int
 name|a
 decl_stmt|;
@@ -2264,13 +2257,11 @@ modifier|*
 name|sp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tablelist
 modifier|*
 name|t
 decl_stmt|;
-specifier|register
 name|int
 name|action
 init|=
@@ -2661,11 +2652,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -2849,20 +2838,16 @@ name|int
 name|sysvar
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-specifier|register
 name|POSITION
 name|len
 decl_stmt|;
-specifier|register
 name|long
 name|n
 decl_stmt|;
-specifier|register
 name|int
 name|f
 decl_stmt|;

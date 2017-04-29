@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -364,7 +364,6 @@ name|only_last
 parameter_list|,
 name|nblank
 parameter_list|)
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -781,7 +780,6 @@ name|force
 parameter_list|,
 name|only_last
 parameter_list|)
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -1258,6 +1256,62 @@ literal|10000
 operator|)
 return|;
 comment|/* infinity */
+block|}
+end_function
+
+begin_comment
+comment|/*  * Get line count of file up to the screen height + 1 char  */
+end_comment
+
+begin_function
+name|public
+name|int
+name|get_line_count
+parameter_list|()
+block|{
+name|int
+name|nlines
+decl_stmt|;
+name|POSITION
+name|pos
+decl_stmt|;
+name|pos
+operator|=
+name|ch_zero
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|nlines
+operator|=
+literal|0
+init|;
+name|nlines
+operator|<=
+name|sc_height
+condition|;
+name|nlines
+operator|++
+control|)
+block|{
+name|pos
+operator|=
+name|forw_line
+argument_list|(
+name|pos
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pos
+operator|==
+name|NULL_POSITION
+condition|)
+break|break;
+block|}
+return|return
+name|nlines
+return|;
 block|}
 end_function
 

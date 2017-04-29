@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -268,6 +268,13 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+name|public
+name|int
+name|line_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|less_is_more
@@ -292,6 +299,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|pr_type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|quit_if_one_screen
 decl_stmt|;
 end_decl_stmt
 
@@ -1105,6 +1119,15 @@ argument_list|(
 name|QUIT_ERROR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|quit_if_one_screen
+condition|)
+name|line_count
+operator|=
+name|get_line_count
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1119,6 +1142,31 @@ argument_list|(
 name|QUIT_ERROR
 argument_list|)
 expr_stmt|;
+comment|/* 		 * In case that we have only one file and -F, have to get a line 		 * count fot init(). If the line count is less then a height of a term, 		 * the content of the file is printed out and then less quits. Otherwise 		 * -F can not be used 		 */
+if|if
+condition|(
+name|quit_if_one_screen
+condition|)
+block|{
+if|if
+condition|(
+name|nifile
+argument_list|()
+operator|==
+literal|1
+condition|)
+name|line_count
+operator|=
+name|get_line_count
+argument_list|()
+expr_stmt|;
+else|else
+comment|/* In case more than one file, -F can not be used */
+name|quit_if_one_screen
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 block|}
 name|init
 argument_list|()
@@ -1152,12 +1200,12 @@ name|save
 parameter_list|(
 name|s
 parameter_list|)
+name|constant
 name|char
 modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1219,7 +1267,6 @@ name|int
 name|size
 decl_stmt|;
 block|{
-specifier|register
 name|VOID_POINTER
 name|p
 decl_stmt|;
@@ -1279,7 +1326,6 @@ name|skipsp
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
@@ -1335,15 +1381,12 @@ name|int
 name|uppercase
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|sc
 decl_stmt|;
-specifier|register
 name|int
 name|len
 init|=

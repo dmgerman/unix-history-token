@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2016  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -1152,6 +1152,13 @@ name|binattr
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|line_count
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -1318,6 +1325,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|top_scroll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|quit_if_one_screen
 decl_stmt|;
 end_decl_stmt
 
@@ -2928,7 +2942,6 @@ name|void
 name|scrsize
 parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
@@ -4624,7 +4637,6 @@ name|char
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|t1
@@ -6187,8 +6199,23 @@ operator|!
 name|MSDOS_COMPILER
 if|if
 condition|(
+name|quit_if_one_screen
+operator|&&
+name|line_count
+operator|>=
+name|sc_height
+condition|)
+name|quit_if_one_screen
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|no_init
+operator|&&
+operator|!
+name|quit_if_one_screen
 condition|)
 name|tputs
 argument_list|(
@@ -6315,6 +6342,9 @@ if|if
 condition|(
 operator|!
 name|no_init
+operator|&&
+operator|!
+name|quit_if_one_screen
 condition|)
 name|tputs
 argument_list|(
@@ -7668,7 +7698,6 @@ directive|if
 name|MSDOS_COMPILER
 operator|==
 name|BORLANDC
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -7727,7 +7756,6 @@ directive|if
 name|MSDOS_COMPILER
 operator|==
 name|WIN32C
-specifier|register
 name|int
 name|n
 decl_stmt|;
