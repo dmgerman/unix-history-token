@@ -4333,12 +4333,12 @@ operator|(
 name|pin
 operator|)
 return|;
-comment|/* 	 * Guess the INO; we always assume that this is a non-OBIO 	 * device, and that pin is a "real" intpin number.  Determine 	 * the mapping register to be used by the slot number. 	 * We only need to do this on E450s, it seems; here, the slot numbers 	 * for bus A are one-based, while those for bus B seemingly have an 	 * offset of 2 (hence the factor of 3 below). 	 */
+comment|/* 	 * Guess the INO; we always assume that this is a non-OBIO device, 	 * and that pin is a "real" intpin number.  Determine the mapping 	 * register to be used by the slot number. 	 * We only need to do this on E450s and U30s, though; here, the 	 * slot numbers for bus A are one-based, while those for bus B 	 * seemingly have an offset of 2 (hence the factor of 3 below). 	 */
 name|sc
 operator|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|bridge
 argument_list|)
 expr_stmt|;
 name|intrmap
