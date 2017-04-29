@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|ENABLE_BACKTRACES
-value|1
+value|0
 end_define
 
 begin_comment
