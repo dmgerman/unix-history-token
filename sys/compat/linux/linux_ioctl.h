@@ -4581,6 +4581,31 @@ comment|/* 0x40049409 */
 end_comment
 
 begin_comment
+comment|/*  * Linux evdev ioctl min and max  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_IOCTL_EVDEV_MIN
+value|0x4500
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_IOCTL_EVDEV_MAX
+value|0x45ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_IOCTL_EVDEV_CLK
+value|LINUX_CLOCK_REALTIME |	\ 	    LINUX_CLOCK_MONOTONIC |LINUX_CLOCK_BOOTTIME
+end_define
+
+begin_comment
 comment|/*  * Pluggable ioctl handlers  */
 end_comment
 
