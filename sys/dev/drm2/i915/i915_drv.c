@@ -2288,6 +2288,15 @@ block|,
 comment|/* GT2 desktop */
 name|INTEL_VGA_DEVICE
 argument_list|(
+literal|0x041e
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* GT2 desktop */
+name|INTEL_VGA_DEVICE
+argument_list|(
 literal|0x0422
 argument_list|,
 operator|&
