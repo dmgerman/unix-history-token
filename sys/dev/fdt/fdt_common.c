@@ -1857,8 +1857,7 @@ argument_list|)
 operator|<
 name|cell_size
 condition|)
-operator|*
-name|addr_cells
+name|cell
 operator|=
 literal|2
 expr_stmt|;
