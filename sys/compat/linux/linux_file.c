@@ -4273,7 +4273,7 @@ name|args
 operator|->
 name|newdfd
 expr_stmt|;
-name|LCONVPATHEXIST_AT
+name|LCONVPATHEXIST
 argument_list|(
 name|td
 argument_list|,
@@ -4283,8 +4283,6 @@ name|oldname
 argument_list|,
 operator|&
 name|path
-argument_list|,
-name|dfd
 argument_list|)
 expr_stmt|;
 comment|/* Expand LCONVPATHCREATE so that `path' can be freed on errors */
