@@ -4889,10 +4889,7 @@ name|NULL
 argument_list|,
 name|size
 argument_list|,
-name|BP_GET_PSIZE
-argument_list|(
-name|bp
-argument_list|)
+name|size
 argument_list|,
 name|NULL
 argument_list|,
