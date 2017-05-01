@@ -5370,7 +5370,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|->
-name|isp_scratch
+name|isp_scanscratch
 expr_stmt|;
 name|ISP_SNPRINTF
 argument_list|(
@@ -6012,7 +6012,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|->
-name|isp_scratch
+name|isp_scanscratch
 expr_stmt|;
 name|ISP_SNPRINTF
 argument_list|(
