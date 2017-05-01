@@ -66,6 +66,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|clock_nanosleep
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|close
 end_undef
 

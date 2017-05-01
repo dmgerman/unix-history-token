@@ -6387,13 +6387,16 @@ block|}
 block|,
 comment|/* 243 = ffclock_getestimate */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|clock_nanosleep_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|sys_clock_nanosleep
 block|,
 name|AUE_NULL
 block|,
@@ -6405,10 +6408,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_ABSENT
+name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 244 = nosys */
+comment|/* 244 = clock_nanosleep */
 block|{
 literal|0
 block|,

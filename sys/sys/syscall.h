@@ -1326,6 +1326,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYS_clock_nanosleep
+value|244
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYS_clock_getcpuclockid2
 value|247
 end_define

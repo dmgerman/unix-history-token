@@ -838,10 +838,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* XXX missing: clock_nanosleep() */
-end_comment
-
 begin_function_decl
 name|int
 name|nanosleep
@@ -882,6 +878,26 @@ parameter_list|(
 name|pid_t
 parameter_list|,
 name|clockid_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|clock_nanosleep
+parameter_list|(
+name|clockid_t
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|struct
+name|timespec
+modifier|*
+parameter_list|,
+name|struct
+name|timespec
 modifier|*
 parameter_list|)
 function_decl|;
