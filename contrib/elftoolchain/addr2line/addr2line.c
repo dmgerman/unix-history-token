@@ -90,7 +90,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: addr2line.c 3446 2016-05-03 01:31:17Z emaste $"
+literal|"$Id: addr2line.c 3499 2016-11-25 16:06:29Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3417,6 +3417,18 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|setvbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -3433,7 +3445,6 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-block|{
 name|translate
 argument_list|(
 name|dbg
@@ -3441,11 +3452,6 @@ argument_list|,
 name|e
 argument_list|,
 name|line
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
 argument_list|)
 expr_stmt|;
 block|}

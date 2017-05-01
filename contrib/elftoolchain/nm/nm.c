@@ -138,7 +138,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: nm.c 3472 2016-05-17 20:11:16Z emaste $"
+literal|"$Id: nm.c 3504 2016-12-17 15:33:16Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6056,10 +6056,7 @@ literal|"%s: %s"
 argument_list|,
 name|OBJNAME
 argument_list|,
-name|elf_errmsg
-argument_list|(
-name|e_err
-argument_list|)
+literal|"File format not recognized"
 argument_list|)
 expr_stmt|;
 else|else
