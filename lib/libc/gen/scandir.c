@@ -313,10 +313,9 @@ init|=
 name|NULL
 decl_stmt|;
 name|size_t
-name|numitems
-decl_stmt|;
-name|long
 name|arraysz
+decl_stmt|,
+name|numitems
 decl_stmt|;
 name|DIR
 modifier|*
