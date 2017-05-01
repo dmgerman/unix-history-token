@@ -737,14 +737,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|cd9660_defaults_set
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/** * Set default values for cd9660 extension to makefs */
 end_comment
@@ -965,10 +957,6 @@ name|system_id
 argument_list|,
 literal|"FreeBSD"
 argument_list|)
-expr_stmt|;
-name|cd9660_defaults_set
-operator|=
-literal|1
 expr_stmt|;
 comment|/* Boot support: Initially disabled */
 name|diskStructure
