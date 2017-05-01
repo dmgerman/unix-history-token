@@ -2274,13 +2274,9 @@ name|EfiResetCold
 argument_list|,
 name|EFI_SUCCESS
 argument_list|,
-literal|23
+literal|0
 argument_list|,
-operator|(
-name|CHAR16
-operator|*
-operator|)
-literal|"Reboot from the loader"
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
