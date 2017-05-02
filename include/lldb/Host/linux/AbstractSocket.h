@@ -64,8 +64,6 @@ operator|:
 name|AbstractSocket
 argument_list|(
 argument|bool child_processes_inherit
-argument_list|,
-argument|Error&error
 argument_list|)
 block|;
 name|protected

@@ -63,9 +63,9 @@ name|public
 operator|:
 name|DomainSocket
 argument_list|(
-argument|bool child_processes_inherit
+argument|bool should_close
 argument_list|,
-argument|Error&error
+argument|bool child_processes_inherit
 argument_list|)
 block|;
 name|Error
@@ -87,10 +87,6 @@ block|;
 name|Error
 name|Accept
 argument_list|(
-argument|llvm::StringRef name
-argument_list|,
-argument|bool child_processes_inherit
-argument_list|,
 argument|Socket *&socket
 argument_list|)
 name|override
@@ -102,8 +98,6 @@ argument_list|(
 argument|SocketProtocol protocol
 argument_list|,
 argument|bool child_processes_inherit
-argument_list|,
-argument|Error&error
 argument_list|)
 block|;
 name|virtual
@@ -124,6 +118,8 @@ operator|:
 name|DomainSocket
 argument_list|(
 argument|NativeSocket socket
+argument_list|,
+argument|const DomainSocket&listen_socket
 argument_list|)
 block|; }
 decl_stmt|;

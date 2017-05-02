@@ -74,6 +74,20 @@ name|HAVE_SYS_EVENT_H
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAVE_PPOLL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGACTION
+value|1
+end_define
+
 begin_else
 else|#
 directive|else

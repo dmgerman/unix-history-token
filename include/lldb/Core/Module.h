@@ -1354,6 +1354,10 @@ name|m_symfile_spec
 return|;
 block|}
 name|void
+name|PreloadSymbols
+parameter_list|()
+function_decl|;
+name|void
 name|SetSymbolFileFileSpec
 parameter_list|(
 specifier|const

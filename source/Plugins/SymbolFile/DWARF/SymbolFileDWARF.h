@@ -999,6 +999,11 @@ argument|const lldb_private::CompilerDeclContext *parent_decl_ctx
 argument_list|)
 name|override
 expr_stmt|;
+name|void
+name|PreloadSymbols
+argument_list|()
+name|override
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------

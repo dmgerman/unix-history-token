@@ -519,9 +519,9 @@ argument_list|(
 argument|lldb::user_id_t id
 argument_list|)
 block|;
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 name|StripLinkerSymbolAnnotations
 argument_list|(
 argument|llvm::StringRef symbol_name

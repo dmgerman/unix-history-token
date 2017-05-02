@@ -220,23 +220,15 @@ expr_stmt|;
 name|virtual
 name|Error
 name|Accept
-block|(
-name|llvm
-block|::
-name|StringRef
-name|name
-block|,
-name|bool
-name|child_processes_inherit
-block|,
+parameter_list|(
 name|Socket
 modifier|*
 modifier|&
 name|socket
-block|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 comment|// Initialize a Tcp Socket object in listening mode.  listen and accept are
 comment|// implemented
 comment|// separately because the caller may wish to manipulate or query the socket
@@ -513,11 +505,11 @@ name|protected
 label|:
 name|Socket
 argument_list|(
-argument|NativeSocket socket
-argument_list|,
 argument|SocketProtocol protocol
 argument_list|,
 argument|bool should_close
+argument_list|,
+argument|bool m_child_process_inherit
 argument_list|)
 empty_stmt|;
 name|virtual
@@ -596,6 +588,9 @@ name|m_protocol
 block|;
 name|NativeSocket
 name|m_socket
+block|;
+name|bool
+name|m_child_processes_inherit
 block|;
 block|}
 enum|;

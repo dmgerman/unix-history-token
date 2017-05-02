@@ -511,62 +511,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// in some cases, compilers will output different names for one same type.
-end_comment
-
-begin_comment
-comment|// when that happens, it might be impossible
-end_comment
-
-begin_comment
-comment|// to construct SBType objects for a valid type, because the name that is
-end_comment
-
-begin_comment
-comment|// available is not the same as the name that
-end_comment
-
-begin_comment
-comment|// can be used as a search key in FindTypes(). the equivalents map here is
-end_comment
-
-begin_comment
-comment|// meant to return possible alternative names
-end_comment
-
-begin_comment
-comment|// for a type through which a search can be conducted. Currently, this is only
-end_comment
-
-begin_comment
-comment|// enabled for C++ but can be extended
-end_comment
-
-begin_comment
-comment|// to ObjC or other languages if necessary
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|uint32_t
-name|FindEquivalentNames
-argument_list|(
-name|ConstString
-name|type_name
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|ConstString
-operator|>
-operator|&
-name|equivalents
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Given a mangled function name, calculates some alternative manglings since
 end_comment
 
