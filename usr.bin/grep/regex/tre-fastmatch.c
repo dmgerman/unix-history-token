@@ -1265,7 +1265,7 @@ condition|(
 name|fg
 operator|->
 name|escmap
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
