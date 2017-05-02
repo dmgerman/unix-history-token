@@ -99,6 +99,13 @@ name|WasmVersion
 init|=
 literal|0x1
 decl_stmt|;
+comment|// Wasm uses a 64k page size
+specifier|const
+name|uint32_t
+name|WasmPageSize
+init|=
+literal|65536
+decl_stmt|;
 struct|struct
 name|WasmObjectHeader
 block|{
@@ -315,7 +322,7 @@ name|uint64_t
 name|Offset
 decl_stmt|;
 comment|// Offset from the start of the section.
-name|uint64_t
+name|int64_t
 name|Addend
 decl_stmt|;
 comment|// A value to add to the symbol.

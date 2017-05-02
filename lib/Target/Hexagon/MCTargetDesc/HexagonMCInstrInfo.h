@@ -1007,6 +1007,20 @@ modifier|&
 name|MCI
 parameter_list|)
 function_decl|;
+name|bool
+name|isCVINew
+parameter_list|(
+name|MCInstrInfo
+specifier|const
+modifier|&
+name|MCII
+parameter_list|,
+name|MCInst
+specifier|const
+modifier|&
+name|MCI
+parameter_list|)
+function_decl|;
 comment|// Is this double register suitable for use in a duplex subinst
 name|bool
 name|isDblRegForSubInst

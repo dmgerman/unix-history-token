@@ -842,19 +842,6 @@ operator|&
 name|Die
 argument_list|,
 specifier|const
-name|DINamespace
-operator|*
-name|NS
-argument_list|)
-block|;
-name|void
-name|addSourceLine
-argument_list|(
-name|DIE
-operator|&
-name|Die
-argument_list|,
-specifier|const
 name|DIObjCProperty
 operator|*
 name|Ty
@@ -978,6 +965,15 @@ argument_list|(
 argument|DIE&Buffer
 argument_list|,
 argument|DINodeArray TParams
+argument_list|)
+block|;
+comment|/// Add thrown types.
+name|void
+name|addThrownTypes
+argument_list|(
+argument|DIE&Die
+argument_list|,
+argument|DINodeArray ThrownTypes
 argument_list|)
 block|;
 comment|// FIXME: Should be reformulated in terms of addComplexAddress.

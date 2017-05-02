@@ -273,7 +273,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|OperandBundleCallSites
 expr_stmt|;
@@ -649,7 +649,7 @@ comment|/// InlinedCalls - InlineFunction fills this in with callsites that were
 comment|/// inlined from the callee.  This is only filled in if CG is non-null.
 name|SmallVector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|,
 literal|8
 operator|>

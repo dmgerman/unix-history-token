@@ -221,13 +221,9 @@ name|MDNode
 modifier|&
 name|Ranges
 parameter_list|,
-name|APInt
+name|KnownBits
 modifier|&
-name|KnownZero
-parameter_list|,
-name|APInt
-modifier|&
-name|KnownOne
+name|Known
 parameter_list|)
 function_decl|;
 comment|/// Return true if LHS and RHS have no common bits set.
@@ -1444,7 +1440,7 @@ comment|///
 comment|/// Note that this currently only considers the basic block that is
 comment|/// the parent of I.
 name|bool
-name|isKnownNotFullPoison
+name|programUndefinedIfFullPoison
 parameter_list|(
 specifier|const
 name|Instruction

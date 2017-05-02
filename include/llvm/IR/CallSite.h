@@ -1951,11 +1951,23 @@ name|Kind
 argument_list|)
 argument_list|)
 block|;   }
+comment|/// Extract the alignment of the return value.
+name|unsigned
+name|getRetAlignment
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getRetAlignment
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// Extract the alignment for a call or parameter (0=unknown).
-name|uint16_t
+name|unsigned
 name|getParamAlignment
 argument_list|(
-argument|uint16_t i
+argument|unsigned ArgNo
 argument_list|)
 specifier|const
 block|{
@@ -1963,7 +1975,7 @@ name|CALLSITE_DELEGATE_GETTER
 argument_list|(
 name|getParamAlignment
 argument_list|(
-name|i
+name|ArgNo
 argument_list|)
 argument_list|)
 block|;   }
@@ -1972,7 +1984,7 @@ comment|/// (0=unknown).
 name|uint64_t
 name|getDereferenceableBytes
 argument_list|(
-argument|uint16_t i
+argument|unsigned i
 argument_list|)
 specifier|const
 block|{
@@ -1989,7 +2001,7 @@ comment|/// parameter (0=unknown).
 name|uint64_t
 name|getDereferenceableOrNullBytes
 argument_list|(
-argument|uint16_t i
+argument|unsigned i
 argument_list|)
 specifier|const
 block|{
@@ -2738,7 +2750,9 @@ if|if
 condition|(
 name|getDereferenceableBytes
 argument_list|(
-literal|0
+name|AttributeList
+operator|::
+name|ReturnIndex
 argument_list|)
 operator|>
 literal|0

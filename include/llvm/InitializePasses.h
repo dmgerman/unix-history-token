@@ -2072,6 +2072,13 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
+name|initializeSimpleLoopUnswitchLegacyPassPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
 name|initializeSingleLoopExtractorPass
 parameter_list|(
 name|PassRegistry

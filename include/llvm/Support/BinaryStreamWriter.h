@@ -117,6 +117,7 @@ name|BinaryStreamWriter
 block|{
 name|public
 label|:
+comment|// FIXME: We should be able to slice and drop_front etc on Writers / Readers.
 name|BinaryStreamWriter
 argument_list|()
 operator|=

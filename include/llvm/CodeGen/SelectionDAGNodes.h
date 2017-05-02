@@ -1440,6 +1440,14 @@ name|SDNodeFlags
 block|{
 name|private
 label|:
+comment|// This bit is used to determine if the flags are in a defined state.
+comment|// Flag bits can only be masked out during intersection if the masking flags
+comment|// are defined.
+name|bool
+name|AnyDefined
+range|:
+literal|1
+decl_stmt|;
 name|bool
 name|NoUnsignedWrap
 range|:
@@ -1496,6 +1504,11 @@ comment|/// Default constructor turns off all optimization flags.
 name|SDNodeFlags
 argument_list|()
 operator|:
+name|AnyDefined
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|NoUnsignedWrap
 argument_list|(
 name|false
@@ -1546,107 +1559,176 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
+comment|/// Sets the state of the flags to the defined state.
+name|void
+name|setDefined
+argument_list|()
+block|{
+name|AnyDefined
+operator|=
+name|true
+block|; }
+comment|/// Returns true if the flags are in a defined state.
+name|bool
+name|isDefined
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AnyDefined
+return|;
+block|}
 comment|// These are mutators for each flag.
 name|void
 name|setNoUnsignedWrap
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
+name|setDefined
+argument_list|()
+expr_stmt|;
 name|NoUnsignedWrap
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setNoSignedWrap
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
+name|setDefined
+argument_list|()
+expr_stmt|;
 name|NoSignedWrap
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setExact
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
+name|setDefined
+argument_list|()
+expr_stmt|;
 name|Exact
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setUnsafeAlgebra
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
+name|setDefined
+argument_list|()
+expr_stmt|;
 name|UnsafeAlgebra
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setNoNaNs
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
+name|setDefined
+argument_list|()
+expr_stmt|;
 name|NoNaNs
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setNoInfs
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
+name|setDefined
+argument_list|()
+expr_stmt|;
 name|NoInfs
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setNoSignedZeros
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
+name|setDefined
+argument_list|()
+expr_stmt|;
 name|NoSignedZeros
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setAllowReciprocal
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
+name|setDefined
+argument_list|()
+expr_stmt|;
 name|AllowReciprocal
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setVectorReduction
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
+name|setDefined
+argument_list|()
+expr_stmt|;
 name|VectorReduction
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setAllowContract
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
+name|setDefined
+argument_list|()
+expr_stmt|;
 name|AllowContract
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
 comment|// These are accessors for each flag.
 name|bool
 name|hasNoUnsignedWrap
@@ -1739,73 +1821,82 @@ name|AllowContract
 return|;
 block|}
 comment|/// Clear any flags in this flag set that aren't also set in Flags.
+comment|/// If the given Flags are undefined then don't do anything.
 name|void
 name|intersectWith
 parameter_list|(
 specifier|const
 name|SDNodeFlags
-modifier|*
 name|Flags
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|Flags
+operator|.
+name|isDefined
+argument_list|()
+condition|)
+return|return;
 name|NoUnsignedWrap
 operator|&=
 name|Flags
-operator|->
+operator|.
 name|NoUnsignedWrap
 expr_stmt|;
 name|NoSignedWrap
 operator|&=
 name|Flags
-operator|->
+operator|.
 name|NoSignedWrap
 expr_stmt|;
 name|Exact
 operator|&=
 name|Flags
-operator|->
+operator|.
 name|Exact
 expr_stmt|;
 name|UnsafeAlgebra
 operator|&=
 name|Flags
-operator|->
+operator|.
 name|UnsafeAlgebra
 expr_stmt|;
 name|NoNaNs
 operator|&=
 name|Flags
-operator|->
+operator|.
 name|NoNaNs
 expr_stmt|;
 name|NoInfs
 operator|&=
 name|Flags
-operator|->
+operator|.
 name|NoInfs
 expr_stmt|;
 name|NoSignedZeros
 operator|&=
 name|Flags
-operator|->
+operator|.
 name|NoSignedZeros
 expr_stmt|;
 name|AllowReciprocal
 operator|&=
 name|Flags
-operator|->
+operator|.
 name|AllowReciprocal
 expr_stmt|;
 name|VectorReduction
 operator|&=
 name|Flags
-operator|->
+operator|.
 name|VectorReduction
 expr_stmt|;
 name|AllowContract
 operator|&=
 name|Flags
-operator|->
+operator|.
 name|AllowContract
 expr_stmt|;
 block|}
@@ -2209,6 +2300,9 @@ name|EVT
 name|VT
 parameter_list|)
 function_decl|;
+name|SDNodeFlags
+name|Flags
+decl_stmt|;
 name|public
 label|:
 comment|/// Unique and persistent id per SDNode in the DAG.
@@ -3539,27 +3633,40 @@ name|nullptr
 return|;
 end_return
 
-begin_comment
-unit|}
-comment|/// This could be defined as a virtual function and implemented more simply
-end_comment
-
-begin_comment
-comment|/// and directly, but it is not to avoid creating a vtable for this class.
-end_comment
-
 begin_expr_stmt
-unit|const
+unit|}    const
 name|SDNodeFlags
-operator|*
 name|getFlags
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|Flags
+return|;
+block|}
 end_expr_stmt
+
+begin_function
+name|void
+name|setFlags
+parameter_list|(
+name|SDNodeFlags
+name|NewFlags
+parameter_list|)
+block|{
+name|Flags
+operator|=
+name|NewFlags
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// Clear any flags in this node that aren't also set in Flags.
+end_comment
+
+begin_comment
+comment|/// If Flags is not in a defined state then this has no effect.
 end_comment
 
 begin_function_decl
@@ -3568,7 +3675,6 @@ name|intersectFlagsWith
 parameter_list|(
 specifier|const
 name|SDNodeFlags
-modifier|*
 name|Flags
 parameter_list|)
 function_decl|;
@@ -4836,188 +4942,42 @@ end_if
 
 begin_comment
 unit|}
-comment|/// Returns true if the opcode is a binary operation with flags.
-end_comment
-
-begin_function
-unit|static
-name|bool
-name|isBinOpWithFlags
-parameter_list|(
-name|unsigned
-name|Opcode
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|Opcode
-condition|)
-block|{
-case|case
-name|ISD
-operator|::
-name|SDIV
-case|:
-case|case
-name|ISD
-operator|::
-name|UDIV
-case|:
-case|case
-name|ISD
-operator|::
-name|SRA
-case|:
-case|case
-name|ISD
-operator|::
-name|SRL
-case|:
-case|case
-name|ISD
-operator|::
-name|MUL
-case|:
-case|case
-name|ISD
-operator|::
-name|ADD
-case|:
-case|case
-name|ISD
-operator|::
-name|SUB
-case|:
-case|case
-name|ISD
-operator|::
-name|SHL
-case|:
-case|case
-name|ISD
-operator|::
-name|FADD
-case|:
-case|case
-name|ISD
-operator|::
-name|FDIV
-case|:
-case|case
-name|ISD
-operator|::
-name|FMUL
-case|:
-case|case
-name|ISD
-operator|::
-name|FREM
-case|:
-case|case
-name|ISD
-operator|::
-name|FSUB
-case|:
-return|return
-name|true
-return|;
-default|default:
-return|return
-name|false
-return|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/// This class is an extension of BinarySDNode
+comment|/// This class is used to form a handle around another node that
 end_comment
 
 begin_comment
-comment|/// used from those opcodes that have associated extra flags.
+comment|/// is persistent and is updated across invocations of replaceAllUsesWith on its
 end_comment
+
+begin_comment
+comment|/// operand.  This node should be directly created by end-users and not added to
+end_comment
+
+begin_comment
+comment|/// the AllNodes list.
+end_comment
+
+begin_label
+unit|class
+name|HandleSDNode
+label|:
+end_label
 
 begin_decl_stmt
-name|class
-name|BinaryWithFlagsSDNode
-range|:
-name|public
-name|SDNode
-block|{
-name|public
-operator|:
-name|SDNodeFlags
-name|Flags
-block|;
-name|BinaryWithFlagsSDNode
-argument_list|(
-argument|unsigned Opc
-argument_list|,
-argument|unsigned Order
-argument_list|,
-argument|const DebugLoc&dl
-argument_list|,
-argument|SDVTList VTs
-argument_list|,
-argument|const SDNodeFlags&NodeFlags
-argument_list|)
-operator|:
-name|SDNode
-argument_list|(
-name|Opc
-argument_list|,
-name|Order
-argument_list|,
-name|dl
-argument_list|,
-name|VTs
-argument_list|)
-block|,
-name|Flags
-argument_list|(
-argument|NodeFlags
-argument_list|)
-block|{}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const SDNode *N
-argument_list|)
-block|{
-return|return
-name|isBinOpWithFlags
-argument_list|(
-name|N
-operator|->
-name|getOpcode
-argument_list|()
-argument_list|)
-return|;
-block|}
-expr|}
-block|;
-comment|/// This class is used to form a handle around another node that
-comment|/// is persistent and is updated across invocations of replaceAllUsesWith on its
-comment|/// operand.  This node should be directly created by end-users and not added to
-comment|/// the AllNodes list.
-name|class
-name|HandleSDNode
-operator|:
 name|public
 name|SDNode
 block|{
 name|SDUse
 name|Op
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|explicit
 name|HandleSDNode
 argument_list|(
 argument|SDValue X
 argument_list|)
-operator|:
+block|:
 name|SDNode
 argument_list|(
 argument|ISD::HANDLENODE
@@ -5034,7 +4994,7 @@ comment|// auto-numbered. Use ID 65535 as a sentinel.
 name|PersistentId
 operator|=
 literal|0xffff
-block|;
+expr_stmt|;
 comment|// Manually set up the operand list. This node type is special in that it's
 comment|// always stack allocated and SelectionDAG does not manage its operands.
 comment|// TODO: This should either (a) not be in the SDNode hierarchy, or (b) not
@@ -5045,27 +5005,28 @@ name|setUser
 argument_list|(
 name|this
 argument_list|)
-block|;
+expr_stmt|;
 name|Op
 operator|.
 name|setInitial
 argument_list|(
 name|X
 argument_list|)
-block|;
+expr_stmt|;
 name|NumOperands
 operator|=
 literal|1
-block|;
+expr_stmt|;
 name|OperandList
 operator|=
 operator|&
 name|Op
-block|;   }
+expr_stmt|;
+block|}
 operator|~
 name|HandleSDNode
 argument_list|()
-block|;
+expr_stmt|;
 specifier|const
 name|SDValue
 operator|&
@@ -5077,11 +5038,17 @@ return|return
 name|Op
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|class
 name|AddrSpaceCastSDNode
-operator|:
+range|:
 name|public
 name|SDNode
 block|{

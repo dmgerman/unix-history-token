@@ -154,6 +154,16 @@ name|uint32_t
 name|Type
 parameter_list|)
 function_decl|;
+name|StringRef
+name|getELFSectionTypeName
+parameter_list|(
+name|uint32_t
+name|Machine
+parameter_list|,
+name|uint32_t
+name|Type
+parameter_list|)
+function_decl|;
 comment|// Subclasses of ELFFile may need this for template instantiation
 specifier|inline
 name|std

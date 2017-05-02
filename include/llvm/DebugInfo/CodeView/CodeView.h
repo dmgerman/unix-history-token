@@ -968,7 +968,7 @@ name|ModifierOptions
 argument_list|)
 expr|enum
 name|class
-name|ModuleSubstreamKind
+name|ModuleDebugFragmentKind
 operator|:
 name|uint32_t
 block|{
@@ -1940,7 +1940,11 @@ name|LineFlags
 enum|:
 name|uint16_t
 block|{
-name|HaveColumns
+name|LF_None
+init|=
+literal|0
+block|,
+name|LF_HaveColumns
 init|=
 literal|1
 block|,

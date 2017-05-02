@@ -2300,7 +2300,9 @@ name|Fn
 operator|->
 name|doesNotAlias
 argument_list|(
-literal|0
+name|AttributeList
+operator|::
+name|ReturnIndex
 argument_list|)
 condition|)
 comment|// No need to call addNode() since we've added Inst at the

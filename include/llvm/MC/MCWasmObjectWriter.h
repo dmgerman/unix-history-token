@@ -121,7 +121,7 @@ modifier|*
 name|Symbol
 decl_stmt|;
 comment|// The symbol to relocate with.
-name|uint64_t
+name|int64_t
 name|Addend
 decl_stmt|;
 comment|// A value to add to the symbol.
@@ -140,7 +140,7 @@ argument|uint64_t Offset
 argument_list|,
 argument|const MCSymbolWasm *Symbol
 argument_list|,
-argument|uint64_t Addend
+argument|int64_t Addend
 argument_list|,
 argument|unsigned Type
 argument_list|,

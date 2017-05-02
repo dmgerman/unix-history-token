@@ -157,6 +157,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+struct_decl|struct
+name|KnownBits
+struct_decl|;
 name|class
 name|MachineConstantPoolValue
 decl_stmt|;
@@ -3499,6 +3502,23 @@ modifier|&
 name|SV
 parameter_list|)
 function_decl|;
+comment|/// Convert Op, which must be of float type, to the
+comment|/// float type VT, by either extending or rounding (by truncation).
+name|SDValue
+name|getFPExtendOrRound
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+specifier|const
+name|SDLoc
+modifier|&
+name|DL
+parameter_list|,
+name|EVT
+name|VT
+parameter_list|)
+function_decl|;
 comment|/// Convert Op, which must be of integer type, to the
 comment|/// integer type VT, by either any-extending or truncating it.
 name|SDValue
@@ -3932,10 +3952,10 @@ name|Ops
 argument_list|,
 specifier|const
 name|SDNodeFlags
-operator|*
 name|Flags
 operator|=
-name|nullptr
+name|SDNodeFlags
+argument_list|()
 argument_list|)
 decl_stmt|;
 name|SDValue
@@ -4015,6 +4035,13 @@ name|VT
 parameter_list|,
 name|SDValue
 name|N
+parameter_list|,
+specifier|const
+name|SDNodeFlags
+name|Flags
+init|=
+name|SDNodeFlags
+argument_list|()
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -4039,10 +4066,10 @@ name|N2
 parameter_list|,
 specifier|const
 name|SDNodeFlags
-modifier|*
 name|Flags
 init|=
-name|nullptr
+name|SDNodeFlags
+argument_list|()
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -6412,10 +6439,10 @@ name|Ops
 argument_list|,
 specifier|const
 name|SDNodeFlags
-operator|*
 name|Flags
 operator|=
-name|nullptr
+name|SDNodeFlags
+argument_list|()
 argument_list|)
 decl_stmt|;
 comment|/// Creates a SDDbgValue node.
@@ -7133,10 +7160,10 @@ name|Ops
 argument_list|,
 specifier|const
 name|SDNodeFlags
-operator|*
 name|Flags
 operator|=
-name|nullptr
+name|SDNodeFlags
+argument_list|()
 argument_list|)
 decl_stmt|;
 comment|/// Constant fold a setcc to true or false.
@@ -7200,8 +7227,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Determine which bits of Op are known to be either zero or one and return
-comment|/// them in the KnownZero/KnownOne bitsets. For vectors, the known bits are
-comment|/// those that are shared by every vector element.
+comment|/// them in Known. For vectors, the known bits are those that are shared by
+comment|/// every vector element.
 comment|/// Targets can implement the computeKnownBitsForTargetNode method in the
 comment|/// TargetLowering class to allow target nodes to be understood.
 name|void
@@ -7210,13 +7237,9 @@ argument_list|(
 name|SDValue
 name|Op
 argument_list|,
-name|APInt
+name|KnownBits
 operator|&
-name|KnownZero
-argument_list|,
-name|APInt
-operator|&
-name|KnownOne
+name|Known
 argument_list|,
 name|unsigned
 name|Depth
@@ -7226,9 +7249,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Determine which bits of Op are known to be either zero or one and return
-comment|/// them in the KnownZero/KnownOne bitsets. The DemandedElts argument allows
-comment|/// us to only collect the known bits that are shared by the requested vector
-comment|/// elements.
+comment|/// them in Known. The DemandedElts argument allows us to only collect the
+comment|/// known bits that are shared by the requested vector elements.
 comment|/// Targets can implement the computeKnownBitsForTargetNode method in the
 comment|/// TargetLowering class to allow target nodes to be understood.
 name|void
@@ -7237,13 +7259,9 @@ argument_list|(
 name|SDValue
 name|Op
 argument_list|,
-name|APInt
+name|KnownBits
 operator|&
-name|KnownZero
-argument_list|,
-name|APInt
-operator|&
-name|KnownOne
+name|Known
 argument_list|,
 specifier|const
 name|APInt
@@ -7776,35 +7794,6 @@ function_decl|;
 name|void
 name|allnodes_clear
 parameter_list|()
-function_decl|;
-name|SDNode
-modifier|*
-name|GetBinarySDNode
-parameter_list|(
-name|unsigned
-name|Opcode
-parameter_list|,
-specifier|const
-name|SDLoc
-modifier|&
-name|DL
-parameter_list|,
-name|SDVTList
-name|VTs
-parameter_list|,
-name|SDValue
-name|N1
-parameter_list|,
-name|SDValue
-name|N2
-parameter_list|,
-specifier|const
-name|SDNodeFlags
-modifier|*
-name|Flags
-init|=
-name|nullptr
-parameter_list|)
 function_decl|;
 comment|/// Look up the node specified by ID in CSEMap.  If it exists, return it.  If
 comment|/// not, return the insertion token that will make insertion faster.  This

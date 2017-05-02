@@ -134,6 +134,9 @@ name|class
 name|MCOperand
 decl_stmt|;
 name|class
+name|SISubtarget
+decl_stmt|;
+name|class
 name|AMDGPUAsmPrinter
 name|final
 range|:
@@ -142,7 +145,57 @@ name|AsmPrinter
 block|{
 name|private
 operator|:
+comment|// Track resource usage for callee functions.
 expr|struct
+name|SIFunctionResourceInfo
+block|{
+comment|// Track the number of explicitly used VGPRs. Special registers reserved at
+comment|// the end are tracked separately.
+name|int32_t
+name|NumVGPR
+operator|=
+literal|0
+block|;
+name|int32_t
+name|NumExplicitSGPR
+operator|=
+literal|0
+block|;
+name|uint32_t
+name|PrivateSegmentSize
+operator|=
+literal|0
+block|;
+name|bool
+name|UsesVCC
+operator|=
+name|false
+block|;
+name|bool
+name|UsesFlatScratch
+operator|=
+name|false
+block|;
+name|bool
+name|HasDynamicallySizedStack
+operator|=
+name|false
+block|;
+name|bool
+name|HasRecursion
+operator|=
+name|false
+block|;
+name|int32_t
+name|getTotalNumSGPRs
+argument_list|(
+argument|const SISubtarget&ST
+argument_list|)
+specifier|const
+block|;   }
+block|;
+comment|// Track resource usage for kernels / entry functions.
+block|struct
 name|SIProgramInfo
 block|{
 comment|// Fields set in PGM_RSRC1 pm4 packet.
@@ -289,6 +342,13 @@ operator|::
 name|max
 argument_list|()
 block|;
+comment|// Whether there is recursion, dynamic allocas, indirect calls or some other
+comment|// reason there may be statically unknown stack usage.
+name|bool
+name|DynamicCallStack
+operator|=
+name|false
+block|;
 comment|// Bonus information for debugging.
 name|bool
 name|VCCUsed
@@ -301,8 +361,28 @@ operator|=
 expr|default
 block|;   }
 block|;
+name|SIProgramInfo
+name|CurrentProgramInfo
+block|;
+name|DenseMap
+operator|<
+specifier|const
+name|Function
+operator|*
+block|,
+name|SIFunctionResourceInfo
+operator|>
+name|CallGraphResourceInfo
+block|;
 name|uint64_t
 name|getFunctionCodeSize
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|SIFunctionResourceInfo
+name|analyzeResourceUsage
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -311,11 +391,15 @@ block|;
 name|void
 name|getSIProgramInfo
 argument_list|(
-argument|SIProgramInfo&Out
+name|SIProgramInfo
+operator|&
+name|Out
 argument_list|,
-argument|const MachineFunction&MF
-argument_list|)
 specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
 block|;
 name|void
 name|getAmdKernelCode
@@ -364,6 +448,18 @@ operator|&
 name|KernelInfo
 argument_list|)
 block|;
+name|void
+name|emitCommonFunctionComments
+argument_list|(
+argument|uint32_t NumVGPR
+argument_list|,
+argument|uint32_t NumSGPR
+argument_list|,
+argument|uint32_t ScratchSize
+argument_list|,
+argument|uint64_t CodeSize
+argument_list|)
+block|;
 name|public
 operator|:
 name|explicit
@@ -400,6 +496,13 @@ operator|&
 name|getTargetStreamer
 argument_list|()
 specifier|const
+block|;
+name|bool
+name|doFinalization
+argument_list|(
+argument|Module&M
+argument_list|)
+name|override
 block|;
 name|bool
 name|runOnMachineFunction

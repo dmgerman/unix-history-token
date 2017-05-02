@@ -342,6 +342,8 @@ name|kw_cxx_fast_tlscc
 block|,
 name|kw_amdgpu_vs
 block|,
+name|kw_amdgpu_hs
+block|,
 name|kw_amdgpu_gs
 block|,
 name|kw_amdgpu_ps
@@ -428,6 +430,8 @@ block|,
 name|kw_returns_twice
 block|,
 name|kw_signext
+block|,
+name|kw_speculatable
 block|,
 name|kw_ssp
 block|,

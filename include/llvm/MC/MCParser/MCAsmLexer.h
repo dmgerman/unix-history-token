@@ -620,6 +620,9 @@ name|CommentConsumer
 init|=
 name|nullptr
 decl_stmt|;
+name|bool
+name|AltMacroMode
+decl_stmt|;
 name|MCAsmLexer
 argument_list|()
 expr_stmt|;
@@ -681,6 +684,26 @@ operator|~
 name|MCAsmLexer
 argument_list|()
 expr_stmt|;
+name|bool
+name|IsaAltMacroMode
+parameter_list|()
+block|{
+return|return
+name|AltMacroMode
+return|;
+block|}
+name|void
+name|SetAltMacroMode
+parameter_list|(
+name|bool
+name|AltMacroSet
+parameter_list|)
+block|{
+name|AltMacroMode
+operator|=
+name|AltMacroSet
+expr_stmt|;
+block|}
 comment|/// Consume the next token from the input stream and return it.
 comment|///
 comment|/// The lexer will continuosly return the end-of-file token once the end of

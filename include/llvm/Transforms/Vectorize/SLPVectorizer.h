@@ -178,11 +178,11 @@ expr_stmt|;
 typedef|typedef
 name|SmallVector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|,
 literal|8
 operator|>
-name|WeakVHList
+name|WeakTrackingVHList
 expr_stmt|;
 typedef|typedef
 name|MapVector
@@ -190,9 +190,9 @@ operator|<
 name|Value
 operator|*
 operator|,
-name|WeakVHList
+name|WeakTrackingVHList
 operator|>
-name|WeakVHListMap
+name|WeakTrackingVHListMap
 expr_stmt|;
 name|ScalarEvolution
 modifier|*
@@ -503,7 +503,7 @@ name|StoreListMap
 name|Stores
 decl_stmt|;
 comment|/// The getelementptr instructions in a basic block organized by base pointer.
-name|WeakVHListMap
+name|WeakTrackingVHListMap
 name|GEPs
 decl_stmt|;
 block|}

@@ -216,14 +216,6 @@ operator|~
 name|InstructionSelector
 argument_list|()
 block|{}
-comment|/// This is executed before selecting a function.
-name|virtual
-name|void
-name|beginFunction
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-block|{}
 comment|/// Select the (possibly generic) instruction \p I to only use target-specific
 comment|/// opcodes. It is OK to insert multiple instructions, but they cannot be
 comment|/// generic pre-isel instructions.

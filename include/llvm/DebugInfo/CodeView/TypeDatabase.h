@@ -144,6 +144,14 @@ name|Index
 argument_list|)
 decl|const
 decl_stmt|;
+name|CVType
+modifier|&
+name|getTypeRecord
+parameter_list|(
+name|TypeIndex
+name|Index
+parameter_list|)
+function_decl|;
 name|bool
 name|containsTypeIndex
 argument_list|(

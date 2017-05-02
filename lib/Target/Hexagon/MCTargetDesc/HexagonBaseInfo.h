@@ -496,6 +496,14 @@ block|,
 name|CofMax1Mask
 init|=
 literal|0x1
+block|,
+name|CVINewPos
+init|=
+literal|61
+block|,
+name|CVINewMask
+init|=
+literal|0x1
 block|}
 enum|;
 comment|// *** The code above must match HexagonInstrFormat*.td *** //

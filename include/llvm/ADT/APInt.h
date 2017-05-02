@@ -1001,9 +1001,8 @@ name|isNonNegative
 argument_list|()
 operator|&&
 operator|!
-operator|!
-operator|*
-name|this
+name|isNullValue
+argument_list|()
 return|;
 block|}
 comment|/// \brief Determine if all bits are set
@@ -1035,6 +1034,21 @@ name|countPopulationSlowCase
 argument_list|()
 operator|==
 name|BitWidth
+return|;
+block|}
+comment|/// \brief Determine if all bits are clear
+comment|///
+comment|/// This checks to see if the value has all bits of the APInt are clear or
+comment|/// not.
+name|bool
+name|isNullValue
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+operator|*
+name|this
 return|;
 block|}
 comment|/// \brief Determine if this is the largest unsigned value.
@@ -1083,9 +1097,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-operator|*
-name|this
+name|isNullValue
+argument_list|()
 return|;
 block|}
 comment|/// \brief Determine if this is the smallest signed value.
@@ -2117,7 +2130,7 @@ begin_comment
 comment|/// \brief Return a value containing V broadcasted over NewLen bits.
 end_comment
 
-begin_function
+begin_function_decl
 specifier|static
 name|APInt
 name|getSplat
@@ -2130,58 +2143,8 @@ name|APInt
 modifier|&
 name|V
 parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|NewLen
-operator|>=
-name|V
-operator|.
-name|getBitWidth
-argument_list|()
-operator|&&
-literal|"Can't splat to smaller bit width!"
-argument_list|)
-expr_stmt|;
-name|APInt
-name|Val
-init|=
-name|V
-operator|.
-name|zextOrSelf
-argument_list|(
-name|NewLen
-argument_list|)
-decl_stmt|;
-for|for
-control|(
-name|unsigned
-name|I
-init|=
-name|V
-operator|.
-name|getBitWidth
-argument_list|()
-init|;
-name|I
-operator|<
-name|NewLen
-condition|;
-name|I
-operator|<<=
-literal|1
-control|)
-name|Val
-operator||=
-name|Val
-operator|<<
-name|I
-expr_stmt|;
-return|return
-name|Val
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Determine if two APInts have the same value, after zero-extending
@@ -2504,16 +2467,29 @@ operator|(
 operator|)
 specifier|const
 block|{
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
 return|return
-operator|*
-name|this
+name|VAL
 operator|==
 literal|0
 return|;
-block|}
 end_expr_stmt
 
+begin_return
+return|return
+name|countLeadingZerosSlowCase
+argument_list|()
+operator|==
+name|BitWidth
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/// @}
 end_comment
 
@@ -2537,11 +2513,11 @@ begin_comment
 comment|/// \returns *this after assignment of RHS.
 end_comment
 
-begin_decl_stmt
-name|APInt
-modifier|&
+begin_expr_stmt
+unit|APInt
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|APInt
@@ -2583,7 +2559,7 @@ argument_list|(
 name|RHS
 argument_list|)
 expr_stmt|;
-end_decl_stmt
+end_expr_stmt
 
 begin_return
 return|return
@@ -3413,6 +3389,40 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Left-shift assignment function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Shifts *this left by shiftAmt and assigns the result to *this.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns *this after shifting left by ShiftAmt
+end_comment
+
+begin_expr_stmt
+unit|APInt
+operator|&
+name|operator
+operator|<<=
+operator|(
+specifier|const
+name|APInt
+operator|&
+name|ShiftAmt
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// @}
 end_comment
 
@@ -3436,22 +3446,19 @@ begin_comment
 comment|/// Multiplies this APInt by RHS and returns the result.
 end_comment
 
-begin_macro
-unit|APInt
+begin_decl_stmt
+name|APInt
 name|operator
-end_macro
-
-begin_expr_stmt
-operator|*
-operator|(
+modifier|*
+argument_list|(
 specifier|const
 name|APInt
 operator|&
 name|RHS
-operator|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Left logical shift operator.
@@ -3930,10 +3937,25 @@ argument_list|(
 specifier|const
 name|APInt
 operator|&
-name|shiftAmt
+name|ShiftAmt
 argument_list|)
 decl|const
+block|{
+name|APInt
+name|R
+argument_list|(
+operator|*
+name|this
+argument_list|)
 decl_stmt|;
+name|R
+operator|<<=
+name|ShiftAmt
+expr_stmt|;
+return|return
+name|R
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -5864,15 +5886,53 @@ begin_comment
 comment|/// Set the given bit to 1 whose position is given as "bitPosition".
 end_comment
 
-begin_function_decl
+begin_function
 name|void
 name|setBit
 parameter_list|(
 name|unsigned
-name|bitPosition
+name|BitPosition
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|assert
+argument_list|(
+name|BitPosition
+operator|<=
+name|BitWidth
+operator|&&
+literal|"BitPosition out of range"
+argument_list|)
+expr_stmt|;
+name|WordType
+name|Mask
+init|=
+name|maskBit
+argument_list|(
+name|BitPosition
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+name|VAL
+operator||=
+name|Mask
+expr_stmt|;
+else|else
+name|pVal
+index|[
+name|whichWord
+argument_list|(
+name|BitPosition
+argument_list|)
+index|]
+operator||=
+name|Mask
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// Set the sign bit to 1.
@@ -5926,6 +5986,15 @@ operator|&&
 literal|"loBit out of range"
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|loBit
+operator|<=
+name|hiBit
+operator|&&
+literal|"loBit greater than hiBit"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|loBit
@@ -5933,27 +6002,6 @@ operator|==
 name|hiBit
 condition|)
 return|return;
-if|if
-condition|(
-name|loBit
-operator|>
-name|hiBit
-condition|)
-block|{
-name|setLowBits
-argument_list|(
-name|hiBit
-argument_list|)
-expr_stmt|;
-name|setHighBits
-argument_list|(
-name|BitWidth
-operator|-
-name|loBit
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|loBit
@@ -6132,15 +6180,73 @@ begin_comment
 comment|/// Set the given bit to 0 whose position is given as "bitPosition".
 end_comment
 
-begin_function_decl
+begin_function
 name|void
 name|clearBit
 parameter_list|(
 name|unsigned
-name|bitPosition
+name|BitPosition
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|assert
+argument_list|(
+name|BitPosition
+operator|<=
+name|BitWidth
+operator|&&
+literal|"BitPosition out of range"
+argument_list|)
+expr_stmt|;
+name|WordType
+name|Mask
+init|=
+operator|~
+name|maskBit
+argument_list|(
+name|BitPosition
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+name|VAL
+operator|&=
+name|Mask
+expr_stmt|;
+else|else
+name|pVal
+index|[
+name|whichWord
+argument_list|(
+name|BitPosition
+argument_list|)
+index|]
+operator|&=
+name|Mask
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Set the sign bit to 0.
+end_comment
+
+begin_function
+name|void
+name|clearSignBit
+parameter_list|()
+block|{
+name|clearBit
+argument_list|(
+name|BitWidth
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Toggle every bit to its opposite value.
@@ -7574,8 +7680,7 @@ end_comment
 begin_if
 if|if
 condition|(
-operator|!
-name|getBoolValue
+name|isNullValue
 argument_list|()
 condition|)
 return|return

@@ -91,31 +91,13 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
-name|DataLayout
-decl_stmt|;
-name|class
-name|TargetRegisterClass
-decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
-name|class
 name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
-name|TargetFrameLowering
-decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
-name|class
 name|BitVector
-decl_stmt|;
-name|class
-name|Value
 decl_stmt|;
 name|class
 name|AllocaInst
@@ -499,7 +481,8 @@ comment|/// It is only valid during and after prolog/epilog code insertion.
 name|unsigned
 name|MaxCallFrameSize
 init|=
-literal|0
+operator|~
+literal|0u
 decl_stmt|;
 comment|/// The prolog/epilog code inserter fills in this vector with each
 comment|/// callee saved register saved in the frame.  Beyond its use by the prolog/
@@ -1765,8 +1748,31 @@ name|getMaxCallFrameSize
 argument_list|()
 specifier|const
 block|{
+comment|// TODO: Enable this assert when targets are fixed.
+comment|//assert(isMaxCallFrameSizeComputed()&& "MaxCallFrameSize not computed yet");
+if|if
+condition|(
+operator|!
+name|isMaxCallFrameSizeComputed
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
 return|return
 name|MaxCallFrameSize
+return|;
+block|}
+name|bool
+name|isMaxCallFrameSizeComputed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxCallFrameSize
+operator|!=
+operator|~
+literal|0u
 return|;
 block|}
 name|void
@@ -2390,11 +2396,14 @@ argument_list|)
 decl|const
 decl_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

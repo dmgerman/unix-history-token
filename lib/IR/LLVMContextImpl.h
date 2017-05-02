@@ -3517,6 +3517,10 @@ name|Metadata
 operator|*
 name|Variables
 block|;
+name|Metadata
+operator|*
+name|ThrownTypes
+block|;
 name|MDNodeKeyImpl
 argument_list|(
 argument|Metadata *Scope
@@ -3556,6 +3560,8 @@ argument_list|,
 argument|Metadata *Declaration
 argument_list|,
 argument|Metadata *Variables
+argument_list|,
+argument|Metadata *ThrownTypes
 argument_list|)
 operator|:
 name|Scope
@@ -3650,7 +3656,12 @@ argument_list|)
 block|,
 name|Variables
 argument_list|(
-argument|Variables
+name|Variables
+argument_list|)
+block|,
+name|ThrownTypes
+argument_list|(
+argument|ThrownTypes
 argument_list|)
 block|{}
 name|MDNodeKeyImpl
@@ -3807,7 +3818,15 @@ argument_list|)
 block|,
 name|Variables
 argument_list|(
-argument|N->getRawVariables()
+name|N
+operator|->
+name|getRawVariables
+argument_list|()
+argument_list|)
+block|,
+name|ThrownTypes
+argument_list|(
+argument|N->getRawThrownTypes()
 argument_list|)
 block|{}
 name|bool
@@ -3949,6 +3968,13 @@ operator|==
 name|RHS
 operator|->
 name|getRawVariables
+argument_list|()
+operator|&&
+name|ThrownTypes
+operator|==
+name|RHS
+operator|->
+name|getRawThrownTypes
 argument_list|()
 return|;
 block|}
@@ -4531,16 +4557,9 @@ name|Metadata
 operator|*
 name|Scope
 block|;
-name|Metadata
-operator|*
-name|File
-block|;
 name|MDString
 operator|*
 name|Name
-block|;
-name|unsigned
-name|Line
 block|;
 name|bool
 name|ExportSymbols
@@ -4549,11 +4568,7 @@ name|MDNodeKeyImpl
 argument_list|(
 argument|Metadata *Scope
 argument_list|,
-argument|Metadata *File
-argument_list|,
 argument|MDString *Name
-argument_list|,
-argument|unsigned Line
 argument_list|,
 argument|bool ExportSymbols
 argument_list|)
@@ -4563,19 +4578,9 @@ argument_list|(
 name|Scope
 argument_list|)
 block|,
-name|File
-argument_list|(
-name|File
-argument_list|)
-block|,
 name|Name
 argument_list|(
 name|Name
-argument_list|)
-block|,
-name|Line
-argument_list|(
-name|Line
 argument_list|)
 block|,
 name|ExportSymbols
@@ -4599,27 +4604,11 @@ name|getRawScope
 argument_list|()
 argument_list|)
 block|,
-name|File
-argument_list|(
-name|N
-operator|->
-name|getRawFile
-argument_list|()
-argument_list|)
-block|,
 name|Name
 argument_list|(
 name|N
 operator|->
 name|getRawName
-argument_list|()
-argument_list|)
-block|,
-name|Line
-argument_list|(
-name|N
-operator|->
-name|getLine
 argument_list|()
 argument_list|)
 block|,
@@ -4643,25 +4632,11 @@ operator|->
 name|getRawScope
 argument_list|()
 operator|&&
-name|File
-operator|==
-name|RHS
-operator|->
-name|getRawFile
-argument_list|()
-operator|&&
 name|Name
 operator|==
 name|RHS
 operator|->
 name|getRawName
-argument_list|()
-operator|&&
-name|Line
-operator|==
-name|RHS
-operator|->
-name|getLine
 argument_list|()
 operator|&&
 name|ExportSymbols
@@ -4682,11 +4657,7 @@ name|hash_combine
 argument_list|(
 name|Scope
 argument_list|,
-name|File
-argument_list|,
 name|Name
-argument_list|,
-name|Line
 argument_list|)
 return|;
 block|}

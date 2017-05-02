@@ -341,8 +341,10 @@ comment|/// \brief The name for a symbol.
 comment|/// MCSymbol contains a uint64_t so is probably aligned to 8.  On a 32-bit
 comment|/// system, the name is a pointer so isn't going to satisfy the 8 byte
 comment|/// alignment of uint64_t.  Account for that here.
-typedef|typedef
-union|union
+name|using
+name|NameEntryStorageTy
+init|=
+expr|union
 block|{
 specifier|const
 name|StringMapEntry
@@ -351,13 +353,11 @@ name|bool
 operator|>
 operator|*
 name|NameEntry
-expr_stmt|;
+block|;
 name|uint64_t
 name|AlignmentPadding
+block|;   }
 decl_stmt|;
-block|}
-name|NameEntryStorageTy
-typedef|;
 name|MCSymbol
 argument_list|(
 argument|SymbolKind Kind

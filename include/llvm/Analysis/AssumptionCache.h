@@ -146,7 +146,7 @@ comment|/// \brief Vector of weak value handles to calls of the @llvm.assume
 comment|/// intrinsic.
 name|SmallVector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|,
 literal|4
 operator|>
@@ -225,7 +225,7 @@ name|AffectedValueCallbackVH
 decl_stmt|,
 name|SmallVector
 decl|<
-name|WeakVH
+name|WeakTrackingVH
 decl_stmt|, 1>,
 name|AffectedValueCallbackVH
 decl|::
@@ -238,7 +238,7 @@ decl_stmt|;
 comment|/// Get the vector of assumptions which affect a value from the cache.
 name|SmallVector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|,
 literal|1
 operator|>
@@ -366,7 +366,7 @@ comment|/// when we can write that to filter out the null values. Then caller co
 comment|/// will become simpler.
 name|MutableArrayRef
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|assumptions
 argument_list|()
@@ -386,7 +386,7 @@ block|}
 comment|/// \brief Access the list of assumptions which affect this value.
 name|MutableArrayRef
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|assumptionsFor
 argument_list|(
@@ -430,7 +430,7 @@ condition|)
 return|return
 name|MutableArrayRef
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 operator|(
 operator|)

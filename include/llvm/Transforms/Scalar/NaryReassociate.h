@@ -662,7 +662,7 @@ operator|*
 block|,
 name|SmallVector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 block|,
 literal|2
 operator|>>

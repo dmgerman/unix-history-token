@@ -1354,16 +1354,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// Return true if the MachineFunction contains a COPY which would imply
-comment|/// HasOpaqueSPAdjustment.
-name|bool
-name|hasCopyImplyingStackAdjustment
-argument_list|(
-argument|MachineFunction *MF
-argument_list|)
-specifier|const
-name|override
-block|;
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -1557,13 +1547,9 @@ specifier|const
 name|SDValue
 name|Op
 argument_list|,
-name|APInt
+name|KnownBits
 operator|&
-name|KnownZero
-argument_list|,
-name|APInt
-operator|&
-name|KnownOne
+name|Known
 argument_list|,
 specifier|const
 name|APInt
@@ -2468,6 +2454,16 @@ name|Indices
 argument_list|,
 name|unsigned
 name|Factor
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|void
+name|finalizeLowering
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
 argument_list|)
 decl|const
 name|override

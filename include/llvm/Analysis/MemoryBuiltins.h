@@ -933,9 +933,9 @@ name|std
 operator|::
 name|pair
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|,
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|WeakEvalType
 expr_stmt|;

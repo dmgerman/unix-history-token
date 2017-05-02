@@ -4271,44 +4271,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// @brief Determine if Pred1 implies Pred2 is true when two compares have
-comment|/// matching operands.
-name|bool
-name|isImpliedTrueByMatchingCmp
-argument_list|(
-argument|Predicate Pred2
-argument_list|)
-specifier|const
-block|{
-return|return
-name|isImpliedTrueByMatchingCmp
-argument_list|(
-name|getPredicate
-argument_list|()
-argument_list|,
-name|Pred2
-argument_list|)
-return|;
-block|}
-comment|/// @brief Determine if Pred1 implies Pred2 is false when two compares have
-comment|/// matching operands.
-name|bool
-name|isImpliedFalseByMatchingCmp
-argument_list|(
-argument|Predicate Pred2
-argument_list|)
-specifier|const
-block|{
-return|return
-name|isImpliedFalseByMatchingCmp
-argument_list|(
-name|getPredicate
-argument_list|()
-argument_list|,
-name|Pred2
-argument_list|)
-return|;
-block|}
 comment|/// @returns true if the predicate is unsigned, false otherwise.
 comment|/// @brief Determine if the predicate is an unsigned operation.
 specifier|static

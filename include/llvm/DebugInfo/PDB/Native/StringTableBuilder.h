@@ -108,6 +108,13 @@ name|S
 parameter_list|)
 function_decl|;
 name|uint32_t
+name|getStringIndex
+parameter_list|(
+name|StringRef
+name|S
+parameter_list|)
+function_decl|;
+name|uint32_t
 name|finalize
 parameter_list|()
 function_decl|;

@@ -888,11 +888,12 @@ expr_stmt|;
 name|Value
 operator||=
 operator|(
-operator|(
+name|int64_t
+argument_list|(
 name|Byte
 operator|&
 literal|0x7f
-operator|)
+argument_list|)
 operator|<<
 name|Shift
 operator|)

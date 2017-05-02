@@ -727,10 +727,6 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|// namespace fuzzer
 end_comment

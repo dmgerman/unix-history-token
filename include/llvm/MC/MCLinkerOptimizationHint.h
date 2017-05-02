@@ -421,14 +421,15 @@ decl|const
 decl_stmt|;
 name|public
 label|:
-typedef|typedef
+name|using
+name|LOHArgs
+init|=
 name|SmallVectorImpl
 operator|<
 name|MCSymbol
 operator|*
 operator|>
-name|LOHArgs
-expr_stmt|;
+decl_stmt|;
 name|MCLOHDirective
 argument_list|(
 argument|MCLOHType Kind
@@ -534,13 +535,14 @@ name|Directives
 expr_stmt|;
 name|public
 label|:
-typedef|typedef
+name|using
+name|LOHDirectives
+init|=
 name|SmallVectorImpl
 operator|<
 name|MCLOHDirective
 operator|>
-name|LOHDirectives
-expr_stmt|;
+decl_stmt|;
 name|MCLOHContainer
 argument_list|()
 operator|=
@@ -686,18 +688,20 @@ block|}
 block|}
 empty_stmt|;
 comment|// Add types for specialized template using MCSymbol.
-typedef|typedef
+name|using
+name|MCLOHArgs
+init|=
 name|MCLOHDirective
 operator|::
 name|LOHArgs
-name|MCLOHArgs
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|MCLOHDirectives
+init|=
 name|MCLOHContainer
 operator|::
 name|LOHDirectives
-name|MCLOHDirectives
-expr_stmt|;
+decl_stmt|;
 block|}
 end_decl_stmt
 

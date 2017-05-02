@@ -478,6 +478,15 @@ argument|bool SummarizeTypes = false
 argument_list|)
 name|override
 block|;
+name|bool
+name|verify
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|DIDumpType DumpType = DIDT_All
+argument_list|)
+name|override
+block|;
 typedef|typedef
 name|DWARFUnitSection
 operator|<

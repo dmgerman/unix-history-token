@@ -910,7 +910,7 @@ block|{
 return|return
 name|getParamAlignment
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 return|;
 block|}
@@ -922,7 +922,7 @@ block|{
 return|return
 name|getParamAlignment
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 return|;
 block|}

@@ -815,6 +815,10 @@ argument_list|,
 argument|U>&Array
 argument_list|,
 argument|uint32_t Size
+argument_list|,
+argument|typename VarStreamArray<T
+argument_list|,
+argument|U>::ContextType *Context = nullptr
 argument_list|)
 block|{
 name|BinaryStreamRef
@@ -846,10 +850,7 @@ operator|>
 operator|(
 name|S
 operator|,
-name|Array
-operator|.
-name|getExtractor
-argument_list|()
+name|Context
 operator|)
 expr_stmt|;
 end_expr_stmt

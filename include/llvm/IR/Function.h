@@ -1226,7 +1226,7 @@ name|unsigned
 name|getParamAlignment
 argument_list|(
 name|unsigned
-name|i
+name|ArgNo
 argument_list|)
 decl|const
 block|{
@@ -1235,12 +1235,13 @@ name|AttributeSets
 operator|.
 name|getParamAlignment
 argument_list|(
-name|i
+name|ArgNo
 argument_list|)
 return|;
 block|}
 comment|/// @brief Extract the number of dereferenceable bytes for a call or
 comment|/// parameter (0=unknown).
+comment|/// @param i AttributeList index, referring to a return value or argument.
 name|uint64_t
 name|getDereferenceableBytes
 argument_list|(
@@ -1260,6 +1261,7 @@ return|;
 block|}
 comment|/// @brief Extract the number of dereferenceable_or_null bytes for a call or
 comment|/// parameter (0=unknown).
+comment|/// @param i AttributeList index, referring to a return value or argument.
 name|uint64_t
 name|getDereferenceableOrNullBytes
 argument_list|(
@@ -1568,6 +1570,33 @@ name|Convergent
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// @brief Determine if the call has sideeffects.
+name|bool
+name|isSpeculatable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasFnAttribute
+argument_list|(
+name|Attribute
+operator|::
+name|Speculatable
+argument_list|)
+return|;
+block|}
+name|void
+name|setSpeculatable
+parameter_list|()
+block|{
+name|addFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|Speculatable
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// Determine if the function is known not to recurse, directly or
 comment|/// indirectly.
 name|bool
@@ -1640,7 +1669,7 @@ argument_list|()
 return|;
 block|}
 comment|/// @brief Determine if the function returns a structure through first
-comment|/// pointer argument.
+comment|/// or second pointer argument.
 name|bool
 name|hasStructRetAttr
 argument_list|()
@@ -1649,9 +1678,9 @@ block|{
 return|return
 name|AttributeSets
 operator|.
-name|hasAttribute
+name|hasParamAttribute
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|Attribute
 operator|::
@@ -1660,9 +1689,9 @@ argument_list|)
 operator|||
 name|AttributeSets
 operator|.
-name|hasAttribute
+name|hasParamAttribute
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 name|Attribute
 operator|::

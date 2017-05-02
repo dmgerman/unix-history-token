@@ -1240,15 +1240,27 @@ name|DefaultProb
 decl_stmt|;
 block|}
 struct|;
-comment|/// Check whether a range of clusters is dense enough for a jump table.
-name|bool
-name|isDense
+comment|/// Return the range of value in [First..Last].
+name|uint64_t
+name|getJumpTableRange
 argument_list|(
 specifier|const
 name|CaseClusterVector
 operator|&
 name|Clusters
 argument_list|,
+name|unsigned
+name|First
+argument_list|,
+name|unsigned
+name|Last
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return the number of cases in [First..Last].
+name|uint64_t
+name|getJumpTableNumCases
+argument_list|(
 specifier|const
 name|SmallVectorImpl
 operator|<
@@ -1262,9 +1274,6 @@ name|First
 argument_list|,
 name|unsigned
 name|Last
-argument_list|,
-name|unsigned
-name|MinDensity
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1314,43 +1323,6 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|DefaultMBB
-parameter_list|)
-function_decl|;
-comment|/// Check whether the range [Low,High] fits in a machine word.
-name|bool
-name|rangeFitsInWord
-parameter_list|(
-specifier|const
-name|APInt
-modifier|&
-name|Low
-parameter_list|,
-specifier|const
-name|APInt
-modifier|&
-name|High
-parameter_list|)
-function_decl|;
-comment|/// Check whether these clusters are suitable for lowering with bit tests based
-comment|/// on the number of destinations, comparison metric, and range.
-name|bool
-name|isSuitableForBitTests
-parameter_list|(
-name|unsigned
-name|NumDests
-parameter_list|,
-name|unsigned
-name|NumCmps
-parameter_list|,
-specifier|const
-name|APInt
-modifier|&
-name|Low
-parameter_list|,
-specifier|const
-name|APInt
-modifier|&
-name|High
 parameter_list|)
 function_decl|;
 comment|/// Build a bit test cluster from Clusters[First..Last]. Returns false if it
@@ -2676,6 +2648,26 @@ name|bool
 name|ForceVoidReturnTy
 parameter_list|)
 function_decl|;
+comment|/// Returns the type of FrameIndex and TargetFrameIndex nodes.
+name|MVT
+name|getFrameIndexTy
+parameter_list|()
+block|{
+return|return
+name|DAG
+operator|.
+name|getTargetLoweringInfo
+argument_list|()
+operator|.
+name|getFrameIndexTy
+argument_list|(
+name|DAG
+operator|.
+name|getDataLayout
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|private
 label|:
 comment|// Terminator instructions.

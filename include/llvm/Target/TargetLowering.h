@@ -339,6 +339,9 @@ decl_stmt|;
 name|class
 name|IntrinsicInst
 decl_stmt|;
+struct_decl|struct
+name|KnownBits
+struct_decl|;
 name|class
 name|MachineBasicBlock
 decl_stmt|;
@@ -2596,6 +2599,290 @@ name|Custom
 operator|)
 return|;
 block|}
+comment|/// Return true if lowering to a jump table is allowed.
+name|bool
+name|areJTsAllowed
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|Fn
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|Fn
+operator|->
+name|getFnAttribute
+argument_list|(
+literal|"no-jump-tables"
+argument_list|)
+operator|.
+name|getValueAsString
+argument_list|()
+operator|==
+literal|"true"
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|isOperationLegalOrCustom
+argument_list|(
+name|ISD
+operator|::
+name|BR_JT
+argument_list|,
+name|MVT
+operator|::
+name|Other
+argument_list|)
+operator|||
+name|isOperationLegalOrCustom
+argument_list|(
+name|ISD
+operator|::
+name|BRIND
+argument_list|,
+name|MVT
+operator|::
+name|Other
+argument_list|)
+return|;
+block|}
+comment|/// Check whether the range [Low,High] fits in a machine word.
+name|bool
+name|rangeFitsInWord
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|Low
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|High
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+block|{
+comment|// FIXME: Using the pointer type doesn't seem ideal.
+name|uint64_t
+name|BW
+init|=
+name|DL
+operator|.
+name|getPointerSizeInBits
+argument_list|()
+decl_stmt|;
+name|uint64_t
+name|Range
+init|=
+operator|(
+name|High
+operator|-
+name|Low
+operator|)
+operator|.
+name|getLimitedValue
+argument_list|(
+name|UINT64_MAX
+operator|-
+literal|1
+argument_list|)
+operator|+
+literal|1
+decl_stmt|;
+return|return
+name|Range
+operator|<=
+name|BW
+return|;
+block|}
+comment|/// Return true if lowering to a jump table is suitable for a set of case
+comment|/// clusters which may contain \p NumCases cases, \p Range range of values.
+comment|/// FIXME: This function check the maximum table size and density, but the
+comment|/// minimum size is not checked. It would be nice if the the minimum size is
+comment|/// also combined within this function. Currently, the minimum size check is
+comment|/// performed in findJumpTable() in SelectionDAGBuiler and
+comment|/// getEstimatedNumberOfCaseClusters() in BasicTTIImpl.
+name|bool
+name|isSuitableForJumpTable
+argument_list|(
+specifier|const
+name|SwitchInst
+operator|*
+name|SI
+argument_list|,
+name|uint64_t
+name|NumCases
+argument_list|,
+name|uint64_t
+name|Range
+argument_list|)
+decl|const
+block|{
+specifier|const
+name|bool
+name|OptForSize
+init|=
+name|SI
+operator|->
+name|getParent
+argument_list|()
+operator|->
+name|getParent
+argument_list|()
+operator|->
+name|optForSize
+argument_list|()
+decl_stmt|;
+specifier|const
+name|unsigned
+name|MinDensity
+init|=
+name|getMinimumJumpTableDensity
+argument_list|(
+name|OptForSize
+argument_list|)
+decl_stmt|;
+specifier|const
+name|unsigned
+name|MaxJumpTableSize
+init|=
+name|OptForSize
+operator|||
+name|getMaximumJumpTableSize
+argument_list|()
+operator|==
+literal|0
+condition|?
+name|UINT_MAX
+else|:
+name|getMaximumJumpTableSize
+argument_list|()
+decl_stmt|;
+comment|// Check whether a range of clusters is dense enough for a jump table.
+if|if
+condition|(
+name|Range
+operator|<=
+name|MaxJumpTableSize
+operator|&&
+operator|(
+name|NumCases
+operator|*
+literal|100
+operator|>=
+name|Range
+operator|*
+name|MinDensity
+operator|)
+condition|)
+block|{
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+comment|/// Return true if lowering to a bit test is suitable for a set of case
+comment|/// clusters which contains \p NumDests unique destinations, \p Low and
+comment|/// \p High as its lowest and highest case values, and expects \p NumCmps
+comment|/// case value comparisons. Check if the number of destinations, comparison
+comment|/// metric, and range are all suitable.
+name|bool
+name|isSuitableForBitTests
+argument_list|(
+name|unsigned
+name|NumDests
+argument_list|,
+name|unsigned
+name|NumCmps
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|Low
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|High
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+block|{
+comment|// FIXME: I don't think NumCmps is the correct metric: a single case and a
+comment|// range of cases both require only one branch to lower. Just looking at the
+comment|// number of clusters and destinations should be enough to decide whether to
+comment|// build bit tests.
+comment|// To lower a range with bit tests, the range must fit the bitwidth of a
+comment|// machine word.
+if|if
+condition|(
+operator|!
+name|rangeFitsInWord
+argument_list|(
+name|Low
+argument_list|,
+name|High
+argument_list|,
+name|DL
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+comment|// Decide whether it's profitable to lower this range with bit tests. Each
+comment|// destination requires a bit test and branch, and there is an overall range
+comment|// check branch. For a small number of clusters, separate comparisons might
+comment|// be cheaper, and for many destinations, splitting the range might be
+comment|// better.
+return|return
+operator|(
+name|NumDests
+operator|==
+literal|1
+operator|&&
+name|NumCmps
+operator|>=
+literal|3
+operator|)
+operator|||
+operator|(
+name|NumDests
+operator|==
+literal|2
+operator|&&
+name|NumCmps
+operator|>=
+literal|5
+operator|)
+operator|||
+operator|(
+name|NumDests
+operator|==
+literal|3
+operator|&&
+name|NumCmps
+operator|>=
+literal|6
+operator|)
+return|;
+block|}
 comment|/// Return true if the specified operation is illegal on this target or
 comment|/// unlikely to be made legal with custom lowering. This is used to help guide
 comment|/// high-level lowering decisions.
@@ -4381,6 +4668,15 @@ name|getMinimumJumpTableEntries
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Return lower limit of the density in a jump table.
+name|unsigned
+name|getMinimumJumpTableDensity
+argument_list|(
+name|bool
+name|OptForSize
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Return upper limit for number of entries in a jump table.
 comment|/// Zero if no limit.
 name|unsigned
@@ -7035,6 +7331,20 @@ name|Call
 index|]
 return|;
 block|}
+comment|/// Execute target specific actions to finalize target lowering.
+comment|/// This is used to set extra flags in MachineFrameInformation and freezing
+comment|/// the set of reserved registers.
+comment|/// The default implementation just freezes the set of reserved registers.
+name|virtual
+name|void
+name|finalizeLowering
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 specifier|const
@@ -8003,9 +8313,7 @@ argument|SDValue Op
 argument_list|,
 argument|const APInt&DemandedMask
 argument_list|,
-argument|APInt&KnownZero
-argument_list|,
-argument|APInt&KnownOne
+argument|KnownBits&Known
 argument_list|,
 argument|TargetLoweringOpt&TLO
 argument_list|,
@@ -8038,9 +8346,7 @@ name|computeKnownBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
-argument|APInt&KnownZero
-argument_list|,
-argument|APInt&KnownOne
+argument|KnownBits&Known
 argument_list|,
 argument|const APInt&DemandedElts
 argument_list|,
@@ -8417,20 +8723,6 @@ comment|/// machine function is handled explicitly via copies.
 name|virtual
 name|bool
 name|supportSplitCSR
-argument_list|(
-argument|MachineFunction *MF
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// Return true if the MachineFunction contains a COPY which would imply
-comment|/// HasCopyImplyingStackAdjustment.
-name|virtual
-name|bool
-name|hasCopyImplyingStackAdjustment
 argument_list|(
 argument|MachineFunction *MF
 argument_list|)

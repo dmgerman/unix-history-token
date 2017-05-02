@@ -7080,11 +7080,24 @@ argument|Attribute::AttrKind Kind
 argument_list|)
 specifier|const
 block|;
+comment|/// Extract the alignment of the return value.
+name|unsigned
+name|getRetAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Attrs
+operator|.
+name|getRetAlignment
+argument_list|()
+return|;
+block|}
 comment|/// Extract the alignment for a call or parameter (0=unknown).
 name|unsigned
 name|getParamAlignment
 argument_list|(
-argument|unsigned i
+argument|unsigned ArgNo
 argument_list|)
 specifier|const
 block|{
@@ -7093,7 +7106,7 @@ name|Attrs
 operator|.
 name|getParamAlignment
 argument_list|(
-name|i
+name|ArgNo
 argument_list|)
 return|;
 block|}
@@ -16178,12 +16191,25 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Extract the alignment of the return value.
+name|unsigned
+name|getRetAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Attrs
+operator|.
+name|getRetAlignment
+argument_list|()
+return|;
+block|}
 comment|/// Extract the alignment for a call or parameter (0=unknown).
 name|unsigned
 name|getParamAlignment
 argument_list|(
 name|unsigned
-name|i
+name|ArgNo
 argument_list|)
 decl|const
 block|{
@@ -16192,7 +16218,7 @@ name|Attrs
 operator|.
 name|getParamAlignment
 argument_list|(
-name|i
+name|ArgNo
 argument_list|)
 return|;
 block|}

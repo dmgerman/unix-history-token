@@ -290,6 +290,25 @@ operator|&
 name|DeadComdatFunctions
 argument_list|)
 decl_stmt|;
+comment|/// \brief Produce a unique identifier for this module by taking the MD5 sum of
+comment|/// the names of the module's strong external symbols.
+comment|///
+comment|/// This identifier is normally guaranteed to be unique, or the program would
+comment|/// fail to link due to multiply defined symbols.
+comment|///
+comment|/// If the module has no strong external symbols (such a module may still have a
+comment|/// semantic effect if it performs global initialization), we cannot produce a
+comment|/// unique identifier for this module, so we return the empty string.
+name|std
+operator|::
+name|string
+name|getUniqueModuleId
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

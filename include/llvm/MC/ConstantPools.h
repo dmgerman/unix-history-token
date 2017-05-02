@@ -167,15 +167,13 @@ comment|// implement the ldr-pseudo.
 name|class
 name|ConstantPool
 block|{
-typedef|typedef
+name|using
+name|EntryVecTy
+init|=
 name|SmallVector
 operator|<
 name|ConstantPoolEntry
-operator|,
-literal|4
-operator|>
-name|EntryVecTy
-expr_stmt|;
+decl_stmt|, 4>;
 name|EntryVecTy
 name|Entries
 decl_stmt|;
@@ -256,16 +254,17 @@ comment|// the sections at the end of the parse. We need to iterate over the
 comment|// sections in a stable order to ensure that we have print the
 comment|// constant pools in a deterministic order when printing an assembly
 comment|// file.
-typedef|typedef
+name|using
+name|ConstantPoolMapTy
+init|=
 name|MapVector
 operator|<
 name|MCSection
 operator|*
-operator|,
+decl_stmt|,
 name|ConstantPool
-operator|>
-name|ConstantPoolMapTy
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|ConstantPoolMapTy
 name|ConstantPools
 decl_stmt|;

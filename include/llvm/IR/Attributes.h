@@ -1540,11 +1540,17 @@ argument|StringRef Kind
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Return the alignment of the return value.
+name|unsigned
+name|getRetAlignment
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Return the alignment for the specified function parameter.
 name|unsigned
 name|getParamAlignment
 argument_list|(
-argument|unsigned Index
+argument|unsigned ArgNo
 argument_list|)
 specifier|const
 block|;

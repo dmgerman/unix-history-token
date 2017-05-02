@@ -1313,13 +1313,9 @@ specifier|const
 name|SDValue
 name|Op
 argument_list|,
-name|APInt
+name|KnownBits
 operator|&
-name|KnownZero
-argument_list|,
-name|APInt
-operator|&
-name|KnownOne
+name|Known
 argument_list|,
 specifier|const
 name|APInt

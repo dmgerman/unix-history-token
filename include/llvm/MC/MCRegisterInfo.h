@@ -109,28 +109,31 @@ name|llvm
 block|{
 comment|/// An unsigned integer type large enough to represent all physical registers,
 comment|/// but not necessarily virtual registers.
-typedef|typedef
-name|uint16_t
+name|using
 name|MCPhysReg
-typedef|;
+init|=
+name|uint16_t
+decl_stmt|;
 comment|/// MCRegisterClass - Base class of TargetRegisterClass.
 name|class
 name|MCRegisterClass
 block|{
 name|public
 label|:
-typedef|typedef
-specifier|const
-name|MCPhysReg
-modifier|*
+name|using
 name|iterator
-typedef|;
-typedef|typedef
+init|=
 specifier|const
 name|MCPhysReg
-modifier|*
+operator|*
+decl_stmt|;
+name|using
 name|const_iterator
-typedef|;
+init|=
+specifier|const
+name|MCPhysReg
+operator|*
+decl_stmt|;
 specifier|const
 name|iterator
 name|RegsBegin
@@ -416,12 +419,13 @@ name|MCRegisterInfo
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|regclass_iterator
+init|=
 specifier|const
 name|MCRegisterClass
-modifier|*
-name|regclass_iterator
-typedef|;
+operator|*
+decl_stmt|;
 comment|/// DwarfLLVMRegPair - Emitted by tablegen so Dwarf<->LLVM reg mappings can be
 comment|/// performed with a binary search.
 struct|struct

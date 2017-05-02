@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/InstructionSimplify.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/LoopInfo.h"
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Analysis/ValueTracking.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DIBuilder.h"
 end_include
 
 begin_include
@@ -138,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Transforms/InstCombine/InstCombineWorklist.h"
 end_include
 
@@ -145,18 +163,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Transforms/Utils/Local.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Dwarf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/DIBuilder.h"
 end_include
 
 begin_define
@@ -769,6 +775,10 @@ name|DataLayout
 modifier|&
 name|DL
 decl_stmt|;
+specifier|const
+name|SimplifyQuery
+name|SQ
+decl_stmt|;
 comment|// Optional analyses. When non-null, these can both be used to do better
 comment|// combining and will be updated to reflect any changes.
 name|LoopInfo
@@ -846,6 +856,20 @@ operator|,
 name|DL
 argument_list|(
 name|DL
+argument_list|)
+operator|,
+name|SQ
+argument_list|(
+name|DL
+argument_list|,
+operator|&
+name|TLI
+argument_list|,
+operator|&
+name|DT
+argument_list|,
+operator|&
+name|AC
 argument_list|)
 operator|,
 name|LI
@@ -2788,6 +2812,37 @@ modifier|&
 name|I
 parameter_list|)
 function_decl|;
+comment|/// This tries to simplify binary operations by factorizing out common terms
+comment|/// (e. g. "(A*B)+(A*C)" -> "A*(B+C)").
+name|Value
+modifier|*
+name|tryFactorization
+argument_list|(
+name|InstCombiner
+operator|::
+name|BuilderTy
+operator|*
+argument_list|,
+name|BinaryOperator
+operator|&
+argument_list|,
+name|Instruction
+operator|::
+name|BinaryOps
+argument_list|,
+name|Value
+operator|*
+argument_list|,
+name|Value
+operator|*
+argument_list|,
+name|Value
+operator|*
+argument_list|,
+name|Value
+operator|*
+argument_list|)
+decl_stmt|;
 comment|/// \brief Attempts to replace V with a simpler value based on the demanded
 comment|/// bits.
 name|Value

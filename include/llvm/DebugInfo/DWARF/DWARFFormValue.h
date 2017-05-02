@@ -198,6 +198,17 @@ return|return
 name|Form
 return|;
 block|}
+name|uint64_t
+name|getRawUValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+operator|.
+name|uval
+return|;
+block|}
 name|void
 name|setForm
 argument_list|(

@@ -634,7 +634,7 @@ name|std
 operator|::
 name|pair
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|,
 name|CallGraphNode
 operator|*

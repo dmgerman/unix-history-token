@@ -143,79 +143,144 @@ operator|>
 expr|struct
 name|VarStreamArrayExtractor
 block|{
+typedef|typedef
+name|void
+name|Context
+typedef|;
 comment|// Method intentionally deleted.  You must provide an explicit specialization
 comment|// with the following method implemented.
+specifier|static
 name|Error
-name|operator
-argument_list|()
-operator|(
-name|BinaryStreamRef
-name|Stream
-operator|,
-name|uint32_t
-operator|&
-name|Len
-operator|,
-name|T
-operator|&
-name|Item
-operator|)
-specifier|const
+name|extract
+argument_list|(
+argument|BinaryStreamRef Stream
+argument_list|,
+argument|uint32_t&Len
+argument_list|,
+argument|T&Item
+argument_list|,
+argument|Context *Ctx
+argument_list|)
 operator|=
 name|delete
-block|; }
 expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// VarStreamArray represents an array of variable length records backed by a
+end_comment
+
+begin_comment
 comment|/// stream.  This could be a contiguous sequence of bytes in memory, it could
+end_comment
+
+begin_comment
 comment|/// be a file on disk, or it could be a PDB stream where bytes are stored as
+end_comment
+
+begin_comment
 comment|/// discontiguous blocks in a file.  Usually it is desirable to treat arrays
+end_comment
+
+begin_comment
 comment|/// as contiguous blocks of memory, but doing so with large PDB files, for
+end_comment
+
+begin_comment
 comment|/// example, could mean allocating huge amounts of memory just to allow
+end_comment
+
+begin_comment
 comment|/// re-ordering of stream data to be contiguous before iterating over it.  By
+end_comment
+
+begin_comment
 comment|/// abstracting this out, we need not duplicate this memory, and we can
+end_comment
+
+begin_comment
 comment|/// iterate over arrays in arbitrarily formatted streams.  Elements are parsed
+end_comment
+
+begin_comment
 comment|/// lazily on iteration, so there is no upfront cost associated with building
+end_comment
+
+begin_comment
 comment|/// or copying a VarStreamArray, no matter how large it may be.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// You create a VarStreamArray by specifying a ValueType and an Extractor type.
+end_comment
+
+begin_comment
 comment|/// If you do not specify an Extractor type, you are expected to specialize
+end_comment
+
+begin_comment
 comment|/// VarStreamArrayExtractor<T> for your ValueType.
+end_comment
+
+begin_comment
 comment|///
-comment|/// By default an Extractor is default constructed in the class, but in some
-comment|/// cases you might find it useful for an Extractor to maintain state across
-comment|/// extractions.  In this case you can provide your own Extractor through a
-comment|/// secondary constructor.  The following examples show various ways of
-comment|/// creating a VarStreamArray.
+end_comment
+
+begin_comment
+comment|/// The default extractor type is stateless, but by specializing
+end_comment
+
+begin_comment
+comment|/// VarStreamArrayExtractor or defining your own custom extractor type and
+end_comment
+
+begin_comment
+comment|/// adding the appropriate ContextType typedef to the class, you can pass a
+end_comment
+
+begin_comment
+comment|/// context field during construction of the VarStreamArray that will be
+end_comment
+
+begin_comment
+comment|/// passed to each call to extract.
+end_comment
+
+begin_comment
 comment|///
-comment|///       // Will use VarStreamArrayExtractor<MyType> as the extractor.
-comment|///       VarStreamArray<MyType> MyTypeArray;
-comment|///
-comment|///       // Will use a default-constructed MyExtractor as the extractor.
-comment|///       VarStreamArray<MyType, MyExtractor> MyTypeArray2;
-comment|///
-comment|///       // Will use the specific instance of MyExtractor provided.
-comment|///       // MyExtractor need not be default-constructible in this case.
-comment|///       MyExtractor E(SomeContext);
-comment|///       VarStreamArray<MyType, MyExtractor> MyTypeArray3(E);
-comment|///
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|ValueType
 operator|,
 name|typename
-name|Extractor
+name|ExtractorType
 operator|>
 name|class
 name|VarStreamArrayIterator
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|ValueType
 operator|,
 name|typename
-name|Extractor
+name|ExtractorType
 operator|=
 name|VarStreamArrayExtractor
 operator|<
@@ -224,71 +289,66 @@ operator|>>
 name|class
 name|VarStreamArray
 block|{
-name|friend
-name|class
-name|VarStreamArrayIterator
-operator|<
-name|ValueType
-block|,
-name|Extractor
-operator|>
-block|;
 name|public
 operator|:
+typedef|typedef
+name|typename
+name|ExtractorType
+operator|::
+name|ContextType
+name|ContextType
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|VarStreamArrayIterator
 operator|<
 name|ValueType
 operator|,
-name|Extractor
+name|ExtractorType
 operator|>
 name|Iterator
 expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|friend
+name|Iterator
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|VarStreamArray
 argument_list|()
 operator|=
-block|default
+expr|default
 expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|explicit
-name|VarStreamArray
-argument_list|(
-specifier|const
-name|Extractor
-operator|&
-name|E
-argument_list|)
-operator|:
-name|E
-argument_list|(
-argument|E
-argument_list|)
-block|{}
-name|explicit
-name|VarStreamArray
-argument_list|(
-argument|BinaryStreamRef Stream
-argument_list|)
-operator|:
-name|Stream
-argument_list|(
-argument|Stream
-argument_list|)
-block|{}
+end_macro
+
+begin_macro
 name|VarStreamArray
 argument_list|(
 argument|BinaryStreamRef Stream
 argument_list|,
-argument|const Extractor&E
+argument|ContextType *Context = nullptr
 argument_list|)
-operator|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|Stream
 argument_list|(
 name|Stream
 argument_list|)
 operator|,
-name|E
+name|Context
 argument_list|(
-argument|E
+argument|Context
 argument_list|)
 block|{}
 name|VarStreamArray
@@ -298,7 +358,7 @@ name|VarStreamArray
 operator|<
 name|ValueType
 argument_list|,
-name|Extractor
+name|ExtractorType
 operator|>
 operator|&
 name|Other
@@ -311,9 +371,9 @@ operator|.
 name|Stream
 argument_list|)
 operator|,
-name|E
+name|Context
 argument_list|(
-argument|Other.E
+argument|Other.Context
 argument_list|)
 block|{}
 name|Iterator
@@ -323,41 +383,111 @@ argument|bool *HadError = nullptr
 argument_list|)
 specifier|const
 block|{
+if|if
+condition|(
+name|empty
+argument_list|()
+condition|)
+return|return
+name|end
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|Iterator
 argument_list|(
 operator|*
 name|this
 argument_list|,
-name|E
+name|Context
 argument_list|,
 name|HadError
 argument_list|)
 return|;
-block|}
-name|Iterator
+end_return
+
+begin_macro
+unit|}    Iterator
 name|end
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
+block|{
+return|return
+name|Iterator
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Stream
+operator|.
+name|getLength
+argument_list|()
+operator|==
+literal|0
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief given an offset into the array's underlying stream, return an
+end_comment
+
+begin_comment
+comment|/// iterator to the record at that offset.  This is considered unsafe
+end_comment
+
+begin_comment
+comment|/// since the behavior is undefined if \p Offset does not refer to the
+end_comment
+
+begin_comment
+comment|/// beginning of a valid record.
+end_comment
+
+begin_decl_stmt
+name|Iterator
+name|at
+argument_list|(
+name|uint32_t
+name|Offset
+argument_list|)
+decl|const
 block|{
 return|return
 name|Iterator
 argument_list|(
-name|E
+operator|*
+name|this
+argument_list|,
+name|Context
+argument_list|,
+name|Stream
+operator|.
+name|drop_front
+argument_list|(
+name|Offset
+argument_list|)
+argument_list|,
+name|nullptr
 argument_list|)
 return|;
 block|}
-specifier|const
-name|Extractor
-operator|&
-name|getExtractor
-argument_list|()
-specifier|const
-block|{
-return|return
-name|E
-return|;
-block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|BinaryStreamRef
 name|getUnderlyingStream
 argument_list|()
@@ -367,29 +497,37 @@ return|return
 name|Stream
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_decl_stmt
 name|BinaryStreamRef
 name|Stream
 decl_stmt|;
-name|Extractor
-name|E
-decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+name|ContextType
+modifier|*
+name|Context
+init|=
+name|nullptr
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
 name|ValueType
 operator|,
 name|typename
-name|Extractor
+name|ExtractorType
 operator|>
 name|class
 name|VarStreamArrayIterator
@@ -401,7 +539,7 @@ name|VarStreamArrayIterator
 operator|<
 name|ValueType
 operator|,
-name|Extractor
+name|ExtractorType
 operator|>
 operator|,
 name|std
@@ -412,15 +550,25 @@ name|ValueType
 operator|>
 block|{
 typedef|typedef
+name|typename
+name|ExtractorType
+operator|::
+name|ContextType
+name|ContextType
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
 name|VarStreamArrayIterator
 operator|<
 name|ValueType
 operator|,
-name|Extractor
+name|ExtractorType
 operator|>
 name|IterType
 expr_stmt|;
-end_expr_stmt
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -428,7 +576,7 @@ name|VarStreamArray
 operator|<
 name|ValueType
 operator|,
-name|Extractor
+name|ExtractorType
 operator|>
 name|ArrayType
 expr_stmt|;
@@ -439,33 +587,31 @@ name|public
 label|:
 end_label
 
-begin_expr_stmt
+begin_macro
 name|VarStreamArrayIterator
 argument_list|(
-specifier|const
-name|ArrayType
-operator|&
-name|Array
+argument|const ArrayType&Array
 argument_list|,
-specifier|const
-name|Extractor
-operator|&
-name|E
+argument|ContextType *Context
 argument_list|,
-name|bool
-operator|*
-name|HadError
-operator|=
-name|nullptr
+argument|BinaryStreamRef Stream
+argument_list|,
+argument|bool *HadError = nullptr
 argument_list|)
-operator|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|IterRef
 argument_list|(
-name|Array
-operator|.
 name|Stream
 argument_list|)
 operator|,
+name|Context
+argument_list|(
+name|Context
+argument_list|)
+operator|,
 name|Array
 argument_list|(
 operator|&
@@ -474,12 +620,7 @@ argument_list|)
 operator|,
 name|HadError
 argument_list|(
-name|HadError
-argument_list|)
-operator|,
-name|Extract
-argument_list|(
-argument|E
+argument|HadError
 argument_list|)
 block|{
 if|if
@@ -499,13 +640,17 @@ block|{
 name|auto
 name|EC
 init|=
-name|Extract
+name|ExtractorType
+operator|::
+name|extract
 argument_list|(
 name|IterRef
 argument_list|,
 name|ThisLen
 argument_list|,
 name|ThisValue
+argument_list|,
+name|Context
 argument_list|)
 decl_stmt|;
 if|if
@@ -532,30 +677,42 @@ end_expr_stmt
 begin_expr_stmt
 unit|}   }
 name|VarStreamArrayIterator
+argument_list|(
+specifier|const
+name|ArrayType
+operator|&
+name|Array
+argument_list|,
+name|ContextType
+operator|*
+name|Context
+argument_list|,
+name|bool
+operator|*
+name|HadError
+operator|=
+name|nullptr
+argument_list|)
+operator|:
+name|VarStreamArrayIterator
+argument_list|(
+argument|Array
+argument_list|,
+argument|Context
+argument_list|,
+argument|Array.Stream
+argument_list|,
+argument|HadError
+argument_list|)
+block|{}
+name|VarStreamArrayIterator
 argument_list|()
 operator|=
 expr|default
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
-name|explicit
-end_macro
-
 begin_expr_stmt
-name|VarStreamArrayIterator
-argument_list|(
-specifier|const
-name|Extractor
-operator|&
-name|E
-argument_list|)
-operator|:
-name|Extract
-argument_list|(
-argument|E
-argument_list|)
-block|{}
 operator|~
 name|VarStreamArrayIterator
 argument_list|()
@@ -741,13 +898,17 @@ comment|// There is some data after the current record.
 name|auto
 name|EC
 init|=
-name|Extract
+name|ExtractorType
+operator|::
+name|extract
 argument_list|(
 name|IterRef
 argument_list|,
 name|ThisLen
 argument_list|,
 name|ThisValue
+argument_list|,
+name|Context
 argument_list|)
 decl_stmt|;
 if|if
@@ -848,6 +1009,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|ContextType
+modifier|*
+name|Context
+block|{
+name|nullptr
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 specifier|const
 name|ArrayType
 modifier|*
@@ -897,12 +1071,6 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_decl_stmt
-name|Extractor
-name|Extract
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 unit|};

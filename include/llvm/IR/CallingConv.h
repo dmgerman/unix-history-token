@@ -325,6 +325,12 @@ name|X86_RegCall
 init|=
 literal|92
 block|,
+comment|/// Calling convention used for Mesa hull shaders. (= tessellation control
+comment|/// shaders)
+name|AMDGPU_HS
+init|=
+literal|93
+block|,
 comment|/// The highest possible calling convention ID. Must be some 2^k - 1.
 name|MaxID
 init|=

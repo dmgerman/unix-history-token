@@ -117,9 +117,9 @@ name|Assert
 block|,
 name|Callback
 block|,
-name|Tracking
-block|,
 name|Weak
+block|,
+name|WeakTracking
 block|}
 enum|;
 name|ValueHandleBase
@@ -156,16 +156,17 @@ argument_list|(
 name|nullptr
 argument_list|)
 operator|,
-name|V
+name|Val
 argument_list|(
-argument|RHS.V
+argument|RHS.getValPtr()
 argument_list|)
 block|{
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|AddToExistingUseList
@@ -197,8 +198,21 @@ name|Next
 decl_stmt|;
 name|Value
 modifier|*
-name|V
+name|Val
 decl_stmt|;
+name|void
+name|setValPtr
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+block|{
+name|Val
+operator|=
+name|V
+expr_stmt|;
+block|}
 name|public
 label|:
 name|explicit
@@ -219,7 +233,7 @@ argument_list|(
 name|nullptr
 argument_list|)
 operator|,
-name|V
+name|Val
 argument_list|(
 argument|nullptr
 argument_list|)
@@ -243,7 +257,7 @@ argument_list|(
 name|nullptr
 argument_list|)
 operator|,
-name|V
+name|Val
 argument_list|(
 argument|V
 argument_list|)
@@ -252,7 +266,8 @@ if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|AddToUseList
@@ -267,7 +282,8 @@ if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|RemoveFromUseList
@@ -286,7 +302,8 @@ operator|)
 block|{
 if|if
 condition|(
-name|V
+name|getValPtr
+argument_list|()
 operator|==
 name|RHS
 condition|)
@@ -297,21 +314,24 @@ if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|RemoveFromUseList
 argument_list|()
 expr_stmt|;
-name|V
-operator|=
+name|setValPtr
+argument_list|(
 name|RHS
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|AddToUseList
@@ -334,38 +354,45 @@ operator|)
 block|{
 if|if
 condition|(
-name|V
+name|getValPtr
+argument_list|()
 operator|==
 name|RHS
 operator|.
-name|V
+name|getValPtr
+argument_list|()
 condition|)
 return|return
 name|RHS
 operator|.
-name|V
+name|getValPtr
+argument_list|()
 return|;
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|RemoveFromUseList
 argument_list|()
 expr_stmt|;
-name|V
-operator|=
+name|setValPtr
+argument_list|(
 name|RHS
 operator|.
-name|V
+name|getValPtr
+argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|AddToExistingUseList
@@ -377,7 +404,8 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 return|return
-name|V
+name|getValPtr
+argument_list|()
 return|;
 block|}
 end_decl_stmt
@@ -395,7 +423,8 @@ unit|)
 specifier|const
 block|{
 return|return
-name|V
+name|getValPtr
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -411,7 +440,8 @@ specifier|const
 block|{
 return|return
 operator|*
-name|V
+name|getValPtr
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -429,7 +459,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|V
+name|Val
 return|;
 block|}
 end_expr_stmt
@@ -504,9 +534,10 @@ name|void
 name|clearValPtr
 parameter_list|()
 block|{
-name|V
-operator|=
+name|setValPtr
+argument_list|(
 name|nullptr
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -665,7 +696,7 @@ end_function_decl
 
 begin_comment
 unit|};
-comment|/// \brief Value handle that is nullable, but tries to track the Value.
+comment|/// \brief A nullable Value handle that is nullable.
 end_comment
 
 begin_comment
@@ -673,23 +704,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This is a value handle that tries hard to point to a Value, even across
+comment|/// This is a value handle that points to a value, and nulls itself
 end_comment
 
 begin_comment
-comment|/// RAUW operations, but will null itself out if the value is destroyed.  this
-end_comment
-
-begin_comment
-comment|/// is useful for advisory sorts of information, but should not be used as the
-end_comment
-
-begin_comment
-comment|/// key of a map (since the map would have to rearrange itself when the pointer
-end_comment
-
-begin_comment
-comment|/// changes).
+comment|/// out if that value is deleted.
 end_comment
 
 begin_decl_stmt
@@ -855,6 +874,198 @@ name|SimpleType
 name|getSimplifiedValue
 argument_list|(
 argument|const WeakVH&WVH
+argument_list|)
+block|{
+return|return
+name|WVH
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Value handle that is nullable, but tries to track the Value.
+comment|///
+comment|/// This is a value handle that tries hard to point to a Value, even across
+comment|/// RAUW operations, but will null itself out if the value is destroyed.  this
+comment|/// is useful for advisory sorts of information, but should not be used as the
+comment|/// key of a map (since the map would have to rearrange itself when the pointer
+comment|/// changes).
+name|class
+name|WeakTrackingVH
+operator|:
+name|public
+name|ValueHandleBase
+block|{
+name|public
+operator|:
+name|WeakTrackingVH
+argument_list|()
+operator|:
+name|ValueHandleBase
+argument_list|(
+argument|WeakTracking
+argument_list|)
+block|{}
+name|WeakTrackingVH
+argument_list|(
+name|Value
+operator|*
+name|P
+argument_list|)
+operator|:
+name|ValueHandleBase
+argument_list|(
+argument|WeakTracking
+argument_list|,
+argument|P
+argument_list|)
+block|{}
+name|WeakTrackingVH
+argument_list|(
+specifier|const
+name|WeakTrackingVH
+operator|&
+name|RHS
+argument_list|)
+operator|:
+name|ValueHandleBase
+argument_list|(
+argument|WeakTracking
+argument_list|,
+argument|RHS
+argument_list|)
+block|{}
+name|WeakTrackingVH
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|WeakTrackingVH
+operator|&
+name|RHS
+operator|)
+operator|=
+expr|default
+block|;
+name|Value
+operator|*
+name|operator
+operator|=
+operator|(
+name|Value
+operator|*
+name|RHS
+operator|)
+block|{
+return|return
+name|ValueHandleBase
+operator|::
+name|operator
+operator|=
+operator|(
+name|RHS
+operator|)
+return|;
+block|}
+name|Value
+operator|*
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueHandleBase
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+name|ValueHandleBase
+operator|::
+name|operator
+operator|=
+operator|(
+name|RHS
+operator|)
+return|;
+block|}
+name|operator
+name|Value
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|getValPtr
+argument_list|()
+return|;
+block|}
+name|bool
+name|pointsToAliveValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ValueHandleBase
+operator|::
+name|isValid
+argument_list|(
+name|getValPtr
+argument_list|()
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|// Specialize simplify_type to allow WeakTrackingVH to participate in
+comment|// dyn_cast, isa, etc.
+name|template
+operator|<
+operator|>
+expr|struct
+name|simplify_type
+operator|<
+name|WeakTrackingVH
+operator|>
+block|{
+typedef|typedef
+name|Value
+modifier|*
+name|SimpleType
+typedef|;
+specifier|static
+name|SimpleType
+name|getSimplifiedValue
+argument_list|(
+argument|WeakTrackingVH&WVH
+argument_list|)
+block|{
+return|return
+name|WVH
+return|;
+block|}
+expr|}
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|simplify_type
+operator|<
+specifier|const
+name|WeakTrackingVH
+operator|>
+block|{
+typedef|typedef
+name|Value
+modifier|*
+name|SimpleType
+typedef|;
+specifier|static
+name|SimpleType
+name|getSimplifiedValue
+argument_list|(
+argument|const WeakTrackingVH&WVH
 argument_list|)
 block|{
 return|return
@@ -1359,11 +1570,16 @@ comment|/// TrackingVH is designed for situations where a client needs to hold a
 comment|/// to a Value (or subclass) across some operations which may move that value,
 comment|/// but should never destroy it or replace it with some unacceptable type.
 comment|///
-comment|/// It is an error to do anything with a TrackingVH whose value has been
-comment|/// destroyed, except to destruct it.
-comment|///
 comment|/// It is an error to attempt to replace a value with one of a type which is
 comment|/// incompatible with any of its outstanding TrackingVHs.
+comment|///
+comment|/// It is an error to read from a TrackingVH that does not point to a valid
+comment|/// value.  A TrackingVH is said to not point to a valid value if either it
+comment|/// hasn't yet been assigned a value yet or because the value it was tracking
+comment|/// has since been deleted.
+comment|///
+comment|/// Assigning a value to a TrackingVH is always allowed, even if said TrackingVH
+comment|/// no longer points to a valid value.
 name|template
 operator|<
 name|typename
@@ -1371,44 +1587,26 @@ name|ValueTy
 operator|>
 name|class
 name|TrackingVH
-operator|:
-name|public
-name|ValueHandleBase
 block|{
-name|void
-name|CheckValidity
+name|WeakTrackingVH
+name|InnerHandle
+block|;
+name|public
+operator|:
+name|ValueTy
+operator|*
+name|getValPtr
 argument_list|()
 specifier|const
 block|{
-name|Value
-operator|*
-name|VP
-operator|=
-name|ValueHandleBase
-operator|::
-name|getValPtr
-argument_list|()
-block|;
-comment|// Null is always ok.
-if|if
-condition|(
-operator|!
-name|VP
-condition|)
-return|return;
-comment|// Check that this value is valid (i.e., it hasn't been deleted). We
-comment|// explicitly delay this check until access to avoid requiring clients to be
-comment|// unnecessarily careful w.r.t. destruction.
 name|assert
 argument_list|(
-name|ValueHandleBase
-operator|::
-name|isValid
-argument_list|(
-name|VP
-argument_list|)
+name|InnerHandle
+operator|.
+name|pointsToAliveValue
+argument_list|()
 operator|&&
-literal|"Tracked Value was deleted!"
+literal|"TrackingVH must be non-null and valid on dereference!"
 argument_list|)
 block|;
 comment|// Check that the value is a member of the correct subclass. We would like
@@ -1422,30 +1620,20 @@ operator|<
 name|ValueTy
 operator|>
 operator|(
-name|VP
+name|InnerHandle
 operator|)
 operator|&&
 literal|"Tracked Value was replaced by one with an invalid type!"
 argument_list|)
-block|;   }
-name|ValueTy
-operator|*
-name|getValPtr
-argument_list|()
-specifier|const
-block|{
-name|CheckValidity
-argument_list|()
 block|;
 return|return
-operator|(
+name|cast
+operator|<
 name|ValueTy
-operator|*
+operator|>
+operator|(
+name|InnerHandle
 operator|)
-name|ValueHandleBase
-operator|::
-name|getValPtr
-argument_list|()
 return|;
 block|}
 name|void
@@ -1454,19 +1642,14 @@ argument_list|(
 argument|ValueTy *P
 argument_list|)
 block|{
-name|CheckValidity
-argument_list|()
-block|;
-name|ValueHandleBase
-operator|::
-name|operator
+comment|// Assigning to non-valid TrackingVH's are fine so we just unconditionally
+comment|// assign here.
+name|InnerHandle
 operator|=
-operator|(
 name|GetAsValue
 argument_list|(
 name|P
 argument_list|)
-operator|)
 block|;   }
 comment|// Convert a ValueTy*, which may be const, to the type the base
 comment|// class expects.
@@ -1505,26 +1688,17 @@ name|public
 operator|:
 name|TrackingVH
 argument_list|()
-operator|:
-name|ValueHandleBase
-argument_list|(
-argument|Tracking
-argument_list|)
 block|{}
 name|TrackingVH
 argument_list|(
-name|ValueTy
-operator|*
+argument|ValueTy *P
+argument_list|)
+block|{
+name|setValPtr
+argument_list|(
 name|P
 argument_list|)
-operator|:
-name|ValueHandleBase
-argument_list|(
-argument|Tracking
-argument_list|,
-argument|GetAsValue(P)
-argument_list|)
-block|{}
+block|; }
 name|operator
 name|ValueTy
 operator|*
@@ -1687,7 +1861,8 @@ comment|/// \brief Callback for Value destruction.
 comment|///
 comment|/// Called when this->getValPtr() is destroyed, inside ~Value(), so you
 comment|/// may call any non-virtual Value method on getValPtr(), but no subclass
-comment|/// methods.  If WeakVH were implemented as a CallbackVH, it would use this
+comment|/// methods.  If WeakTrackingVH were implemented as a CallbackVH, it would use
+comment|/// this
 comment|/// method to call setValPtr(NULL).  AssertingVH would use this method to
 comment|/// cause an assertion failure.
 comment|///
@@ -1706,7 +1881,8 @@ block|; }
 comment|/// \brief Callback for Value RAUW.
 comment|///
 comment|/// Called when this->getValPtr()->replaceAllUsesWith(new_value) is called,
-comment|/// _before_ any of the uses have actually been replaced.  If WeakVH were
+comment|/// _before_ any of the uses have actually been replaced.  If WeakTrackingVH
+comment|/// were
 comment|/// implemented as a CallbackVH, it would use this method to call
 comment|/// setValPtr(new_value).  AssertingVH would do nothing in this method.
 name|virtual
