@@ -337,15 +337,6 @@ literal|0
 block|;
 name|protected
 operator|:
-name|bool
-name|BeginSourceFileAction
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
-argument_list|)
-name|override
-block|;
 name|std
 operator|::
 name|unique_ptr
@@ -387,26 +378,6 @@ operator|:
 name|public
 name|GenerateModuleAction
 block|{
-name|clang
-operator|::
-name|Module
-operator|*
-name|Module
-operator|=
-name|nullptr
-block|;
-specifier|const
-name|FileEntry
-operator|*
-name|ModuleMapForUniquing
-operator|=
-name|nullptr
-block|;
-name|bool
-name|IsSystem
-operator|=
-name|false
-block|;
 name|private
 operator|:
 name|bool
@@ -431,30 +402,7 @@ argument_list|,
 argument|StringRef InFile
 argument_list|)
 name|override
-block|;
-name|public
-operator|:
-name|GenerateModuleFromModuleMapAction
-argument_list|()
-block|{}
-name|GenerateModuleFromModuleMapAction
-argument_list|(
-argument|const FileEntry *ModuleMap
-argument_list|,
-argument|bool IsSystem
-argument_list|)
-operator|:
-name|ModuleMapForUniquing
-argument_list|(
-name|ModuleMap
-argument_list|)
-block|,
-name|IsSystem
-argument_list|(
-argument|IsSystem
-argument_list|)
-block|{}
-block|}
+block|; }
 block|;
 name|class
 name|GenerateModuleInterfaceAction

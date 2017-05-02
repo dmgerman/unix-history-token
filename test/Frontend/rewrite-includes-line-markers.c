@@ -24,6 +24,12 @@ return|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"empty.h"
+end_include
+
 begin_comment
 comment|// GNU: {{^}}# 1 "{{.*}}rewrite-includes-line-markers.c"
 end_comment
@@ -57,6 +63,18 @@ comment|// GNU: {{^}}int f() { return x; }
 end_comment
 
 begin_comment
+comment|// GNU: {{^}}
+end_comment
+
+begin_comment
+comment|// GNU: {{^}}# 1 "{{.*}}empty.h" 1
+end_comment
+
+begin_comment
+comment|// GNU: {{^}}# 7 "{{.*}}rewrite-includes-line-markers.c" 2
+end_comment
+
+begin_comment
 comment|// LINE: {{^}}#line 1 "{{.*}}rewrite-includes-line-markers.c"
 end_comment
 
@@ -86,6 +104,18 @@ end_comment
 
 begin_comment
 comment|// LINE: {{^}}int f() { return x; }
+end_comment
+
+begin_comment
+comment|// LINE: {{^}}
+end_comment
+
+begin_comment
+comment|// LINE: {{^}}#line 1 "{{.*}}empty.h"
+end_comment
+
+begin_comment
+comment|// LINE: {{^}}#line 7 "{{.*}}rewrite-includes-line-markers.c"
 end_comment
 
 end_unit

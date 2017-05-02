@@ -596,6 +596,9 @@ name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever a macro \#undef is seen.
+comment|/// \param MacroNameTok The active Token
+comment|/// \param MD A MacroDefinition for the named macro.
+comment|/// \param Undef New MacroDirective if the macro was defined, null otherwise.
 comment|///
 comment|/// MD is released immediately following this callback.
 name|virtual
@@ -611,6 +614,11 @@ specifier|const
 name|MacroDefinition
 modifier|&
 name|MD
+parameter_list|,
+specifier|const
+name|MacroDirective
+modifier|*
+name|Undef
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever the 'defined' operator is seen.
@@ -1464,6 +1472,8 @@ argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroDefinition&MD
+argument_list|,
+argument|const MacroDirective *Undef
 argument_list|)
 name|override
 block|{
@@ -1474,6 +1484,8 @@ argument_list|(
 name|MacroNameTok
 argument_list|,
 name|MD
+argument_list|,
+name|Undef
 argument_list|)
 block|;
 name|Second
@@ -1483,6 +1495,8 @@ argument_list|(
 name|MacroNameTok
 argument_list|,
 name|MD
+argument_list|,
+name|Undef
 argument_list|)
 block|;   }
 name|void

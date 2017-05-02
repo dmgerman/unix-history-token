@@ -38374,5 +38374,125 @@ return|;
 block|}
 end_function
 
+begin_function
+name|__m512d
+name|test_mm512_zextpd128_pd512
+parameter_list|(
+name|__m128d
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm512_zextpd128_pd512
+comment|// CHECK: store<2 x double> zeroinitializer
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 2, i32 3, i32 2, i32 3>
+return|return
+name|_mm512_zextpd128_pd512
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512d
+name|test_mm512_zextpd256_pd512
+parameter_list|(
+name|__m256d
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm512_zextpd256_pd512
+comment|// CHECK: store<4 x double> zeroinitializer
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm512_zextpd256_pd512
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512
+name|test_mm512_zextps128_ps512
+parameter_list|(
+name|__m128
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm512_zextps128_ps512
+comment|// CHECK: store<4 x float> zeroinitializer
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 4, i32 5, i32 6, i32 7, i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm512_zextps128_ps512
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512
+name|test_mm512_zextps256_ps512
+parameter_list|(
+name|__m256
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm512_zextps256_ps512
+comment|// CHECK: store<8 x float> zeroinitializer
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+return|return
+name|_mm512_zextps256_ps512
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_zextsi128_si512
+parameter_list|(
+name|__m128i
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm512_zextsi128_si512
+comment|// CHECK: store<2 x i64> zeroinitializer
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 2, i32 3, i32 2, i32 3>
+return|return
+name|_mm512_zextsi128_si512
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_zextsi256_si512
+parameter_list|(
+name|__m256i
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm512_zextsi256_si512
+comment|// CHECK: store<4 x i64> zeroinitializer
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm512_zextsi256_si512
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

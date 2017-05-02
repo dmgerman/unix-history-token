@@ -12,11 +12,15 @@ comment|// print out supported values with short description.
 end_comment
 
 begin_comment
-comment|// RUN: not %clang %s -std=foobar -c 2>&1 | \
+comment|// RUN: not %clang %s -std=foobar -c 2>&1 | FileCheck --match-full-lines %s
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck --match-full-lines %s
+comment|// RUN: not %clang -x objective-c %s -std=foobar -c 2>&1 | FileCheck --match-full-lines %s
+end_comment
+
+begin_comment
+comment|// RUN: not %clang -x renderscript %s -std=foobar -c 2>&1 | FileCheck --match-full-lines %s
 end_comment
 
 begin_comment
@@ -24,15 +28,7 @@ comment|// CHECK: error: invalid value 'foobar' in '-std=foobar'
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: note: use 'c89' for 'ISO C 1990' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'c90' for 'ISO C 1990' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'iso9899:1990' for 'ISO C 1990' standard
+comment|// CHECK-NEXT: note: use 'c89', 'c90', or 'iso9899:1990' for 'ISO C 1990' standard
 end_comment
 
 begin_comment
@@ -40,27 +36,11 @@ comment|// CHECK-NEXT: note: use 'iso9899:199409' for 'ISO C 1990 with amendment
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: note: use 'gnu89' for 'ISO C 1990 with GNU extensions' standard
+comment|// CHECK-NEXT: note: use 'gnu89' or 'gnu90' for 'ISO C 1990 with GNU extensions' standard
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: note: use 'gnu90' for 'ISO C 1990 with GNU extensions' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'c99' for 'ISO C 1999' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'c9x' for 'ISO C 1999' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'iso9899:1999' for 'ISO C 1999' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'iso9899:199x' for 'ISO C 1999' standard
+comment|// CHECK-NEXT: note: use 'c99' or 'iso9899:1999' for 'ISO C 1999' standard
 end_comment
 
 begin_comment
@@ -68,47 +48,11 @@ comment|// CHECK-NEXT: note: use 'gnu99' for 'ISO C 1999 with GNU extensions' st
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: note: use 'gnu9x' for 'ISO C 1999 with GNU extensions' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'c11' for 'ISO C 2011' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'c1x' for 'ISO C 2011' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'iso9899:2011' for 'ISO C 2011' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'iso9899:201x' for 'ISO C 2011' standard
+comment|// CHECK-NEXT: note: use 'c11' or 'iso9899:2011' for 'ISO C 2011' standard
 end_comment
 
 begin_comment
 comment|// CHECK-NEXT: note: use 'gnu11' for 'ISO C 2011 with GNU extensions' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'gnu1x' for 'ISO C 2011 with GNU extensions' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'cl' for 'OpenCL 1.0' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'cl1.1' for 'OpenCL 1.1' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'cl1.2' for 'OpenCL 1.2' standard
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: note: use 'cl2.0' for 'OpenCL 2.0' standard
 end_comment
 
 begin_comment

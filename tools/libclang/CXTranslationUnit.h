@@ -146,6 +146,17 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|CXTargetInfoImpl
+block|{
+name|CXTranslationUnit
+name|TranslationUnit
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 name|namespace
 name|clang

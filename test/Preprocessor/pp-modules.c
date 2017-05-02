@@ -19,7 +19,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: @import Module; /* clang -E: implicit import for "{{.*Headers[/\\]Module.h}}" */
+comment|// CHECK: #pragma clang module import Module /* clang -E: implicit import for #include<Module/Module.h> */{{$}}
 end_comment
 
 begin_include
@@ -40,7 +40,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: @import Module; /* clang -E: implicit import for "{{.*Headers[/\\]Module.h}}" */
+comment|// CHECK: #pragma clang module import Module /* clang -E: implicit import for #include<Module/Module.h> */{{$}}
 end_comment
 
 begin_include
@@ -60,7 +60,7 @@ comment|// CHECK: # 1 "{{.*}}pp-modules.h" 1
 end_comment
 
 begin_comment
-comment|// CHECK: @import Module; /* clang -E: implicit import for "{{.*}}Module.h" */{{$}}
+comment|// CHECK: #pragma clang module import Module /* clang -E: implicit import for #include<Module/Module.h> */{{$}}
 end_comment
 
 begin_comment

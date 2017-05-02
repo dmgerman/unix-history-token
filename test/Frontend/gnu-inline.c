@@ -20,7 +20,15 @@ comment|// RUN: not %clang_cc1 -fgnu89-inline -fsyntax-only -x c++ %s 2>&1 | Fil
 end_comment
 
 begin_comment
-comment|// CXX: '-fgnu89-inline' not allowed with 'C++/ObjC++'
+comment|// RUN: not %clang_cc1 -fgnu89-inline -fsyntax-only -x objective-c++ %s 2>&1 | FileCheck --check-prefix=OBJCXX %s
+end_comment
+
+begin_comment
+comment|// CXX: '-fgnu89-inline' not allowed with 'C++'
+end_comment
+
+begin_comment
+comment|// OBJCXX: '-fgnu89-inline' not allowed with 'Objective-C++'
 end_comment
 
 begin_comment

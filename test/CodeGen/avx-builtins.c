@@ -5087,6 +5087,66 @@ block|}
 end_function
 
 begin_function
+name|__m256d
+name|test_mm256_zextpd128_pd256
+parameter_list|(
+name|__m128d
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm256_zextpd128_pd256
+comment|// CHECK: store<2 x double> zeroinitializer
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> %{{.*}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+return|return
+name|_mm256_zextpd128_pd256
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256
+name|test_mm256_zextps128_ps256
+parameter_list|(
+name|__m128
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm256_zextps128_ps256
+comment|// CHECK: store<4 x float> zeroinitializer
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm256_zextps128_ps256
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_zextsi128_si256
+parameter_list|(
+name|__m128i
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm256_zextsi128_si256
+comment|// CHECK: store<2 x i64> zeroinitializer
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+return|return
+name|_mm256_zextsi128_si256
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|double
 name|test_mm256_cvtsd_f64
 parameter_list|(

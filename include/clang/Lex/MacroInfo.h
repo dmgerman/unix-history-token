@@ -305,6 +305,7 @@ comment|/// \brief Get length in characters of the macro definition.
 name|unsigned
 name|getDefinitionLength
 argument_list|(
+specifier|const
 name|SourceManager
 operator|&
 name|SM
@@ -993,6 +994,7 @@ label|:
 name|unsigned
 name|getDefinitionLengthSlow
 argument_list|(
+specifier|const
 name|SourceManager
 operator|&
 name|SM

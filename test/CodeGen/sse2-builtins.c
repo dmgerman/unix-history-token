@@ -3330,6 +3330,26 @@ end_function
 
 begin_function
 name|__m128d
+name|test_mm_set_pd1
+parameter_list|(
+name|double
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_set_pd1
+comment|// CHECK: insertelement<2 x double> undef, double %{{.*}}, i32 0
+comment|// CHECK: insertelement<2 x double> %{{.*}}, double %{{.*}}, i32 1
+return|return
+name|_mm_set_pd1
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128d
 name|test_mm_set_sd
 parameter_list|(
 name|double

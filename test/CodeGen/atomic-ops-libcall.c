@@ -3,6 +3,14 @@ begin_comment
 comment|// RUN: %clang_cc1< %s -triple armv5e-none-linux-gnueabi -emit-llvm -O1 | FileCheck %s
 end_comment
 
+begin_comment
+comment|// FIXME: This file should not be checking -O1 output.
+end_comment
+
+begin_comment
+comment|// Ie, it is testing many IR optimizer passes as part of front-end verification.
+end_comment
+
 begin_enum
 enum|enum
 name|memory_order
@@ -441,8 +449,9 @@ parameter_list|)
 block|{
 comment|// CHECK: test_atomic_nand_fetch
 comment|// CHECK: [[CALL:%[^ ]*]] = tail call i32 @__atomic_fetch_nand_4(i8* {{%[0-9]+}}, i32 55, i32 5)
-comment|// CHECK: [[OR:%[^ ]*]] = or i32 [[CALL]], -56
-comment|// CHECK: {{%[^ ]*}} = xor i32 [[OR]], 55
+comment|// FIXME: We should not be checking optimized IR. It changes independently of clang.
+comment|// FIXME-CHECK: [[AND:%[^ ]*]] = and i32 [[CALL]], 55
+comment|// FIXME-CHECK: {{%[^ ]*}} = xor i32 [[AND]], -1
 return|return
 name|__atomic_nand_fetch
 argument_list|(

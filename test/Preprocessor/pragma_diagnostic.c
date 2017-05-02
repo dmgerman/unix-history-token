@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wno-undef %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wno-undef -Wno-unknown-warning-option -DAVOID_UNKNOWN_WARNING %s
+end_comment
+
+begin_comment
 comment|// rdar://2362963
 end_comment
 
@@ -164,9 +168,20 @@ name|error
 literal|"-Winvalid-name"
 end_pragma
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AVOID_UNKNOWN_WARNING
+end_ifndef
+
 begin_comment
-comment|// expected-warning {{unknown warning group '-Winvalid-name', ignored}}
+comment|// expected-warning@-2 {{unknown warning group '-Winvalid-name', ignored}}
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// Testing pragma clang diagnostic with -Weverything

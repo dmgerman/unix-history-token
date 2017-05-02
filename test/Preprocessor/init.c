@@ -38595,5 +38595,33 @@ begin_comment
 comment|// MSVC-X86-NOT:#define __GCC_ATOMIC{{.*}}
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding                \
+end_comment
+
+begin_comment
+comment|// RUN:   -triple=aarch64-apple-ios9< /dev/null        \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=DARWIN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding                \
+end_comment
+
+begin_comment
+comment|// RUN:   -triple=aarch64-apple-macosx10.12< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=DARWIN %s
+end_comment
+
+begin_comment
+comment|// DARWIN:#define __STDC_NO_THREADS__ 1
+end_comment
+
 end_unit
 

@@ -40,6 +40,14 @@ comment|// C_P: "-C"
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /d1reportAllClassLayout -### -- %s 2>&1 | FileCheck -check-prefix=d1reportAllClassLayout %s
+end_comment
+
+begin_comment
+comment|// d1reportAllClassLayout: -fdump-record-layouts
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl /Dfoo=bar /D bar=baz /DMYDEF#value /DMYDEF2=foo#bar /DMYDEF3#a=b /DMYDEF4# \
 end_comment
 

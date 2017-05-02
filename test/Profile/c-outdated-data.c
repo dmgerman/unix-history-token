@@ -16,11 +16,27 @@ comment|// RUN: llvm-profdata merge %S/Inputs/c-outdated-data.proftext -o %t.pro
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-outdated-data.c %s -o /dev/null -emit-llvm -fprofile-instrument-use-path=%t.profdata -Wprofile-instr-dropped 2>&1 | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-outdated-data.c %s -o /dev/null -emit-llvm -fprofile-instrument-use-path=%t.profdata 2>&1 | FileCheck %s -check-prefix=NO_MISSING
 end_comment
 
 begin_comment
-comment|// CHECK: warning: profile data may be out of date: of 3 functions, 1 has no data and 1 has mismatched data that will be ignored
+comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-outdated-data.c %s -o /dev/null -emit-llvm -Wprofile-instr-missing -fprofile-instrument-use-path=%t.profdata 2>&1 | FileCheck %s -check-prefix=WITH_MISSING
+end_comment
+
+begin_comment
+comment|// NO_MISSING: warning: profile data may be out of date: of 3 functions, 1 has mismatched data that will be ignored
+end_comment
+
+begin_comment
+comment|// NO_MISSING-NOT: 1 has no data
+end_comment
+
+begin_comment
+comment|// WITH_MISSING: warning: profile data may be out of date: of 3 functions, 1 has mismatched data that will be ignored
+end_comment
+
+begin_comment
+comment|// WITH_MISSING: warning: profile data may be incomplete: of 3 functions, 1 has no data
 end_comment
 
 begin_function
@@ -38,24 +54,8 @@ condition|(
 name|i
 condition|)
 block|{}
-ifdef|#
-directive|ifdef
-name|GENERATE_OUTDATED_DATA
-if|if
-condition|(
-name|i
-condition|)
-block|{}
-endif|#
-directive|endif
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GENERATE_OUTDATED_DATA
-end_ifndef
 
 begin_function
 name|void
@@ -63,11 +63,6 @@ name|no_data
 parameter_list|()
 block|{ }
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int

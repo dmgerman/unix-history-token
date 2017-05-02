@@ -5872,6 +5872,29 @@ block|}
 end_function
 
 begin_comment
+comment|/// Enter an annotation token into the token stream.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EnterAnnotationToken
+argument_list|(
+name|SourceRange
+name|Range
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|Kind
+argument_list|,
+name|void
+operator|*
+name|AnnotationVal
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Update the current token to represent the provided
 end_comment
 
@@ -7501,6 +7524,18 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|diagnoseMissingHeaderInUmbrellaDir
+parameter_list|(
+specifier|const
+name|Module
+modifier|&
+name|Mod
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|public
 label|:
@@ -7919,6 +7954,10 @@ operator|::
 name|KnownHeader
 operator|*
 name|SuggestedModule
+argument_list|,
+name|bool
+operator|*
+name|IsMapped
 argument_list|,
 name|bool
 name|SkipCache
@@ -9457,6 +9496,17 @@ parameter_list|(
 name|Token
 modifier|&
 name|DependencyTok
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|HandlePragmaModuleImport
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
 parameter_list|)
 function_decl|;
 end_function_decl

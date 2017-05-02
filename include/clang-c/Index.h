@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|37
+value|38
 end_define
 
 begin_define
@@ -133,6 +133,13 @@ typedef|typedef
 name|void
 modifier|*
 name|CXIndex
+typedef|;
+comment|/**  * \brief An opaque type representing target information for a given translation  * unit.  */
+typedef|typedef
+name|struct
+name|CXTargetInfoImpl
+modifier|*
+name|CXTargetInfo
 typedef|;
 comment|/**  * \brief A single translation unit, which resides in an index.  */
 typedef|typedef
@@ -1547,6 +1554,42 @@ name|clang_disposeCXTUResourceUsage
 parameter_list|(
 name|CXTUResourceUsage
 name|usage
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Get target information for this translation unit.  *  * The CXTargetInfo object cannot outlive the CXTranslationUnit object.  */
+name|CINDEX_LINKAGE
+name|CXTargetInfo
+name|clang_getTranslationUnitTargetInfo
+parameter_list|(
+name|CXTranslationUnit
+name|CTUnit
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Destroy the CXTargetInfo object.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_TargetInfo_dispose
+parameter_list|(
+name|CXTargetInfo
+name|Info
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Get the normalized target triple as a string.  *  * Returns the empty string in case of any error.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_TargetInfo_getTriple
+parameter_list|(
+name|CXTargetInfo
+name|Info
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Get the pointer width of the target in bits.  *  * Returns -1 in case of error.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_TargetInfo_getPointerWidth
+parameter_list|(
+name|CXTargetInfo
+name|Info
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -4385,7 +4428,7 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Given a cursor pointing to an Objective-C message, returns the CXType  * of the receiver.  */
+comment|/**  * \brief Given a cursor pointing to an Objective-C message or property  * reference, or C++ method call, returns the CXType of the receiver.  */
 name|CINDEX_LINKAGE
 name|CXType
 name|clang_Cursor_getReceiverType

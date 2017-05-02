@@ -3427,6 +3427,604 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Constructs a 512-bit floating-point vector of [8 x double] from a
+end_comment
+
+begin_comment
+comment|///    128-bit floating-point vector of [2 x double]. The lower 128 bits
+end_comment
+
+begin_comment
+comment|///    contain the value of the source vector. The upper 384 bits are set
+end_comment
+
+begin_comment
+comment|///    to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 512-bit floating-point vector of [8 x double]. The lower 128 bits
+end_comment
+
+begin_comment
+comment|///    contain the value of the parameter. The upper 384 bits are set to zero.
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|__m512d
+name|__DEFAULT_FN_ATTRS
+name|_mm512_zextpd128_pd512
+parameter_list|(
+name|__m128d
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_shufflevector
+argument_list|(
+operator|(
+name|__v2df
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|__v2df
+operator|)
+name|_mm_setzero_pd
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Constructs a 512-bit floating-point vector of [8 x double] from a
+end_comment
+
+begin_comment
+comment|///    256-bit floating-point vector of [4 x double]. The lower 256 bits
+end_comment
+
+begin_comment
+comment|///    contain the value of the source vector. The upper 256 bits are set
+end_comment
+
+begin_comment
+comment|///    to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 512-bit floating-point vector of [8 x double]. The lower 256 bits
+end_comment
+
+begin_comment
+comment|///    contain the value of the parameter. The upper 256 bits are set to zero.
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|__m512d
+name|__DEFAULT_FN_ATTRS
+name|_mm512_zextpd256_pd512
+parameter_list|(
+name|__m256d
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_shufflevector
+argument_list|(
+operator|(
+name|__v4df
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|__v4df
+operator|)
+name|_mm256_setzero_pd
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|4
+argument_list|,
+literal|5
+argument_list|,
+literal|6
+argument_list|,
+literal|7
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Constructs a 512-bit floating-point vector of [16 x float] from a
+end_comment
+
+begin_comment
+comment|///    128-bit floating-point vector of [4 x float]. The lower 128 bits contain
+end_comment
+
+begin_comment
+comment|///    the value of the source vector. The upper 384 bits are set to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 512-bit floating-point vector of [16 x float]. The lower 128 bits
+end_comment
+
+begin_comment
+comment|///    contain the value of the parameter. The upper 384 bits are set to zero.
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|__m512
+name|__DEFAULT_FN_ATTRS
+name|_mm512_zextps128_ps512
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_shufflevector
+argument_list|(
+operator|(
+name|__v4sf
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|__v4sf
+operator|)
+name|_mm_setzero_ps
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|4
+argument_list|,
+literal|5
+argument_list|,
+literal|6
+argument_list|,
+literal|7
+argument_list|,
+literal|4
+argument_list|,
+literal|5
+argument_list|,
+literal|6
+argument_list|,
+literal|7
+argument_list|,
+literal|4
+argument_list|,
+literal|5
+argument_list|,
+literal|6
+argument_list|,
+literal|7
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Constructs a 512-bit floating-point vector of [16 x float] from a
+end_comment
+
+begin_comment
+comment|///    256-bit floating-point vector of [8 x float]. The lower 256 bits contain
+end_comment
+
+begin_comment
+comment|///    the value of the source vector. The upper 256 bits are set to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 512-bit floating-point vector of [16 x float]. The lower 256 bits
+end_comment
+
+begin_comment
+comment|///    contain the value of the parameter. The upper 256 bits are set to zero.
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|__m512
+name|__DEFAULT_FN_ATTRS
+name|_mm512_zextps256_ps512
+parameter_list|(
+name|__m256
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_shufflevector
+argument_list|(
+operator|(
+name|__v8sf
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|__v8sf
+operator|)
+name|_mm256_setzero_ps
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|4
+argument_list|,
+literal|5
+argument_list|,
+literal|6
+argument_list|,
+literal|7
+argument_list|,
+literal|8
+argument_list|,
+literal|9
+argument_list|,
+literal|10
+argument_list|,
+literal|11
+argument_list|,
+literal|12
+argument_list|,
+literal|13
+argument_list|,
+literal|14
+argument_list|,
+literal|15
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Constructs a 512-bit integer vector from a 128-bit integer vector.
+end_comment
+
+begin_comment
+comment|///    The lower 128 bits contain the value of the source vector. The upper
+end_comment
+
+begin_comment
+comment|///    384 bits are set to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 512-bit integer vector. The lower 128 bits contain the value of
+end_comment
+
+begin_comment
+comment|///    the parameter. The upper 384 bits are set to zero.
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|__m512i
+name|__DEFAULT_FN_ATTRS
+name|_mm512_zextsi128_si512
+parameter_list|(
+name|__m128i
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_shufflevector
+argument_list|(
+operator|(
+name|__v2di
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|__v2di
+operator|)
+name|_mm_setzero_si128
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Constructs a 512-bit integer vector from a 256-bit integer vector.
+end_comment
+
+begin_comment
+comment|///    The lower 256 bits contain the value of the source vector. The upper
+end_comment
+
+begin_comment
+comment|///    256 bits are set to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 512-bit integer vector. The lower 256 bits contain the value of
+end_comment
+
+begin_comment
+comment|///    the parameter. The upper 256 bits are set to zero.
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|__m512i
+name|__DEFAULT_FN_ATTRS
+name|_mm512_zextsi256_si512
+parameter_list|(
+name|__m256i
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_shufflevector
+argument_list|(
+operator|(
+name|__v4di
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|__v4di
+operator|)
+name|_mm256_setzero_si256
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|4
+argument_list|,
+literal|5
+argument_list|,
+literal|6
+argument_list|,
+literal|7
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Bitwise operators */
 end_comment
 

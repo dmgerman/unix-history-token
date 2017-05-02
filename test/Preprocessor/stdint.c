@@ -120,11 +120,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:typedef int32_t intptr_t;
+comment|// ARM:typedef long int intptr_t;
 end_comment
 
 begin_comment
-comment|// ARM:typedef uint32_t uintptr_t;
+comment|// ARM:typedef long unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -304,15 +304,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:INTPTR_MIN_ (-2147483647 -1)
+comment|// ARM:INTPTR_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// ARM:INTPTR_MAX_ 2147483647
+comment|// ARM:INTPTR_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// ARM:UINTPTR_MAX_ 4294967295U
+comment|// ARM:UINTPTR_MAX_ 4294967295UL
 end_comment
 
 begin_comment
@@ -552,11 +552,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:typedef int32_t intptr_t;
+comment|// I386:typedef int intptr_t;
 end_comment
 
 begin_comment
-comment|// I386:typedef uint32_t uintptr_t;
+comment|// I386:typedef unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -980,11 +980,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS:typedef int32_t intptr_t;
+comment|// MIPS:typedef long int intptr_t;
 end_comment
 
 begin_comment
-comment|// MIPS:typedef uint32_t uintptr_t;
+comment|// MIPS:typedef long unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -1164,15 +1164,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS:INTPTR_MIN_ (-2147483647 -1)
+comment|// MIPS:INTPTR_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// MIPS:INTPTR_MAX_ 2147483647
+comment|// MIPS:INTPTR_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// MIPS:UINTPTR_MAX_ 4294967295U
+comment|// MIPS:UINTPTR_MAX_ 4294967295UL
 end_comment
 
 begin_comment
@@ -1408,11 +1408,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS64:typedef int64_t intptr_t;
+comment|// MIPS64:typedef long int intptr_t;
 end_comment
 
 begin_comment
-comment|// MIPS64:typedef uint64_t uintptr_t;
+comment|// MIPS64:typedef long unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -1808,11 +1808,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:typedef int16_t intptr_t;
+comment|// MSP430:typedef int intptr_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef uint16_t uintptr_t;
+comment|// MSP430:typedef unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -2236,11 +2236,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:typedef int64_t intptr_t;
+comment|// PPC64:typedef long int intptr_t;
 end_comment
 
 begin_comment
-comment|// PPC64:typedef uint64_t uintptr_t;
+comment|// PPC64:typedef long unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -2664,11 +2664,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64-NETBSD:typedef int64_t intptr_t;
+comment|// PPC64-NETBSD:typedef long int intptr_t;
 end_comment
 
 begin_comment
-comment|// PPC64-NETBSD:typedef uint64_t uintptr_t;
+comment|// PPC64-NETBSD:typedef long unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -2848,27 +2848,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64-NETBSD:INTPTR_MIN_ (-9223372036854775807LL -1)
+comment|// PPC64-NETBSD:INTPTR_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// PPC64-NETBSD:INTPTR_MAX_ 9223372036854775807LL
+comment|// PPC64-NETBSD:INTPTR_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// PPC64-NETBSD:UINTPTR_MAX_ 18446744073709551615ULL
+comment|// PPC64-NETBSD:UINTPTR_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// PPC64-NETBSD:PTRDIFF_MIN_ (-9223372036854775807LL -1)
+comment|// PPC64-NETBSD:PTRDIFF_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// PPC64-NETBSD:PTRDIFF_MAX_ 9223372036854775807LL
+comment|// PPC64-NETBSD:PTRDIFF_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// PPC64-NETBSD:SIZE_MAX_ 18446744073709551615ULL
+comment|// PPC64-NETBSD:SIZE_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -3096,11 +3096,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:typedef int32_t intptr_t;
+comment|// PPC:typedef long int intptr_t;
 end_comment
 
 begin_comment
-comment|// PPC:typedef uint32_t uintptr_t;
+comment|// PPC:typedef long unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -3280,27 +3280,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:INTPTR_MIN_ (-2147483647 -1)
+comment|// PPC:INTPTR_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// PPC:INTPTR_MAX_ 2147483647
+comment|// PPC:INTPTR_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// PPC:UINTPTR_MAX_ 4294967295U
+comment|// PPC:UINTPTR_MAX_ 4294967295UL
 end_comment
 
 begin_comment
-comment|// PPC:PTRDIFF_MIN_ (-2147483647 -1)
+comment|// PPC:PTRDIFF_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// PPC:PTRDIFF_MAX_ 2147483647
+comment|// PPC:PTRDIFF_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// PPC:SIZE_MAX_ 4294967295U
+comment|// PPC:SIZE_MAX_ 4294967295UL
 end_comment
 
 begin_comment
@@ -3524,11 +3524,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef int64_t intptr_t;
+comment|// S390X:typedef long int intptr_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef uint64_t uintptr_t;
+comment|// S390X:typedef long unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -3952,11 +3952,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:typedef int32_t intptr_t;
+comment|// SPARC:typedef int intptr_t;
 end_comment
 
 begin_comment
-comment|// SPARC:typedef uint32_t uintptr_t;
+comment|// SPARC:typedef unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -4352,11 +4352,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// TCE:typedef int32_t intptr_t;
+comment|// TCE:typedef int intptr_t;
 end_comment
 
 begin_comment
-comment|// TCE:typedef uint32_t uintptr_t;
+comment|// TCE:typedef unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -4564,15 +4564,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// TCE:INTMAX_MIN_ (-2147483647 -1)
+comment|// TCE:INTMAX_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// TCE:INTMAX_MAX_ 2147483647
+comment|// TCE:INTMAX_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// TCE:UINTMAX_MAX_ 4294967295U
+comment|// TCE:UINTMAX_MAX_ 4294967295UL
 end_comment
 
 begin_comment
@@ -4784,11 +4784,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:typedef int64_t intptr_t;
+comment|// X86_64:typedef long int intptr_t;
 end_comment
 
 begin_comment
-comment|// X86_64:typedef uint64_t uintptr_t;
+comment|// X86_64:typedef long unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -5264,11 +5264,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// XCORE:typedef int32_t intptr_t;
+comment|// XCORE:typedef int intptr_t;
 end_comment
 
 begin_comment
-comment|// XCORE:typedef uint32_t uintptr_t;
+comment|// XCORE:typedef unsigned int uintptr_t;
 end_comment
 
 begin_comment
@@ -5600,15 +5600,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E -ffreestanding -U__UINTMAX_TYPE__ -U__INTMAX_TYPE__ -Dint=a -Duint=b -D_t=c -DINT=d -DUINT=e -D_MIN=f -D_MAX=g '-D_C(v)=h' -triple=i386-none-none %s | FileCheck -check-prefix JOIN %s
+comment|// RUN: %clang_cc1 -E -ffreestanding                                 \
 end_comment
 
 begin_comment
-comment|// JOIN:typedef int32_t intptr_t;
+comment|// RUN:   -U__UINTPTR_TYPE__ -U__INTPTR_TYPE__                       \
 end_comment
 
 begin_comment
-comment|// JOIN:typedef uint32_t uintptr_t;
+comment|// RUN:   -U__UINTMAX_TYPE__ -U__INTMAX_TYPE__                       \
+end_comment
+
+begin_comment
+comment|// RUN:   -Dint=a -Duint=b -D_t=c -DINT=d -DUINT=e -D_MIN=f -D_MAX=g \
+end_comment
+
+begin_comment
+comment|// RUN:   '-D_C(v)=h' -triple=i386-none-none %s                      \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix JOIN %s
+end_comment
+
+begin_comment
+comment|// JOIN:typedef __INTPTR_TYPE__ intptr_t;
+end_comment
+
+begin_comment
+comment|// JOIN:typedef __UINTPTR_TYPE__ uintptr_t;
 end_comment
 
 begin_comment

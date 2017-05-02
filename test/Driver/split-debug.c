@@ -132,6 +132,30 @@ comment|// CHECK-GMLT-WITH-SPLIT: "-split-dwarf-file"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux-gnu -g -fno-split-dwarf-inlining -S -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-NOINLINE-WITHOUT-SPLIT< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-NOINLINE-WITHOUT-SPLIT-NOT: "-enable-split-dwarf"
+end_comment
+
+begin_comment
+comment|// CHECK-NOINLINE-WITHOUT-SPLIT: "-fno-split-dwarf-inlining"
+end_comment
+
+begin_comment
+comment|// CHECK-NOINLINE-WITHOUT-SPLIT: "-debug-info-kind=limited"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gmlt -gsplit-dwarf -fno-split-dwarf-inlining -S -### %s 2> %t
 end_comment
 

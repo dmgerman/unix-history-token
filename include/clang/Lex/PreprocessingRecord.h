@@ -1639,6 +1639,8 @@ argument_list|(
 argument|const Token&Id
 argument_list|,
 argument|const MacroDefinition&MD
+argument_list|,
+argument|const MacroDirective *Undef
 argument_list|)
 name|override
 block|;

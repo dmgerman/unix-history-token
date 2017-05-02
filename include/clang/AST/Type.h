@@ -6426,7 +6426,7 @@ comment|/// regparm and the calling convention.
 name|unsigned
 name|ExtInfo
 operator|:
-literal|10
+literal|11
 block|;
 comment|/// Used only by FunctionProtoType, put here to pack with the
 comment|/// other bitfields.
@@ -11798,11 +11798,11 @@ comment|// * Codegen
 name|class
 name|ExtInfo
 block|{
-comment|// Feel free to rearrange or add bits, but if you go over 10,
+comment|// Feel free to rearrange or add bits, but if you go over 11,
 comment|// you'll need to adjust both the Bits field below and
 comment|// Type::FunctionTypeBitfields.
-comment|//   |  CC  |noreturn|produces|regparm|
-comment|//   |0 .. 4|   5    |    6   | 7 .. 9|
+comment|//   |  CC  |noreturn|produces|nocallersavedregs|regparm|
+comment|//   |0 .. 4|   5    |    6   |       7         |8 .. 10|
 comment|//
 comment|// regparm is either 0 (no regparm attribute) or the regparm value+1.
 block|enum
@@ -11825,6 +11825,12 @@ literal|0x40
 block|}
 block|;     enum
 block|{
+name|NoCallerSavedRegsMask
+operator|=
+literal|0x80
+block|}
+block|;     enum
+block|{
 name|RegParmMask
 operator|=
 operator|~
@@ -11834,11 +11840,13 @@ operator||
 name|NoReturnMask
 operator||
 name|ProducesResultMask
+operator||
+name|NoCallerSavedRegsMask
 operator|)
 block|,
 name|RegParmOffset
 operator|=
-literal|7
+literal|8
 block|}
 block|;
 comment|// Assumed to be the last field
@@ -11874,6 +11882,8 @@ argument_list|,
 argument|CallingConv cc
 argument_list|,
 argument|bool producesResult
+argument_list|,
+argument|bool noCallerSavedRegs
 argument_list|)
 block|{
 name|assert
@@ -11911,6 +11921,14 @@ operator|(
 name|producesResult
 condition|?
 name|ProducesResultMask
+else|:
+literal|0
+operator|)
+operator||
+operator|(
+name|noCallerSavedRegs
+condition|?
+name|NoCallerSavedRegsMask
 else|:
 literal|0
 operator|)
@@ -11973,6 +11991,17 @@ return|return
 name|Bits
 operator|&
 name|ProducesResultMask
+return|;
+block|}
+name|bool
+name|getNoCallerSavedRegs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Bits
+operator|&
+name|NoCallerSavedRegsMask
 return|;
 block|}
 name|bool
@@ -12122,6 +12151,36 @@ name|Bits
 operator|&
 operator|~
 name|ProducesResultMask
+argument_list|)
+return|;
+block|}
+name|ExtInfo
+name|withNoCallerSavedRegs
+argument_list|(
+argument|bool noCallerSavedRegs
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|noCallerSavedRegs
+condition|)
+return|return
+name|ExtInfo
+argument_list|(
+name|Bits
+operator||
+name|NoCallerSavedRegsMask
+argument_list|)
+return|;
+else|else
+return|return
+name|ExtInfo
+argument_list|(
+name|Bits
+operator|&
+operator|~
+name|NoCallerSavedRegsMask
 argument_list|)
 return|;
 block|}
