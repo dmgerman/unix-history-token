@@ -3706,6 +3706,11 @@ name|NULL
 condition|)
 comment|/* XXX what to do */
 return|return;
+name|if_ref
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|llq
 operator|->
 name|llq_ifp
@@ -3896,6 +3901,11 @@ argument_list|(
 name|llq
 argument_list|,
 name|llq_entries
+argument_list|)
+expr_stmt|;
+name|if_rele
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|free
@@ -4237,6 +4247,11 @@ operator|->
 name|if_output
 operator|=
 name|lagg_port_output
+expr_stmt|;
+name|if_ref
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 name|lp
 operator|->
@@ -4941,6 +4956,13 @@ argument_list|,
 name|llq_entries
 argument_list|)
 expr_stmt|;
+name|if_rele
+argument_list|(
+name|llq
+operator|->
+name|llq_ifp
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|llq
@@ -4966,6 +4988,11 @@ argument_list|,
 literal|"%s: lp_ifflags unclean\n"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|if_rele
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|free
@@ -7121,7 +7148,7 @@ operator|||
 operator|(
 name|tpif
 operator|=
-name|ifunit
+name|ifunit_ref
 argument_list|(
 name|rp
 operator|->
@@ -7182,6 +7209,11 @@ operator|&
 name|tracker
 argument_list|)
 expr_stmt|;
+name|if_rele
+argument_list|(
+name|tpif
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|lagg_port2req
@@ -7197,6 +7229,11 @@ name|sc
 argument_list|,
 operator|&
 name|tracker
+argument_list|)
+expr_stmt|;
+name|if_rele
+argument_list|(
+name|tpif
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7231,7 +7268,7 @@ operator|||
 operator|(
 name|tpif
 operator|=
-name|ifunit
+name|ifunit_ref
 argument_list|(
 name|rp
 operator|->
@@ -7302,6 +7339,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|if_rele
+argument_list|(
+name|tpif
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SIOCSLAGGDELPORT
@@ -7334,7 +7376,7 @@ operator|||
 operator|(
 name|tpif
 operator|=
-name|ifunit
+name|ifunit_ref
 argument_list|(
 name|rp
 operator|->
@@ -7389,6 +7431,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|if_rele
+argument_list|(
+name|tpif
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|error
@@ -7403,6 +7450,11 @@ expr_stmt|;
 name|LAGG_WUNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|if_rele
+argument_list|(
+name|tpif
 argument_list|)
 expr_stmt|;
 break|break;
