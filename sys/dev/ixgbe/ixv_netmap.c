@@ -32,7 +32,7 @@ file|"ixv.h"
 end_include
 
 begin_comment
-comment|/*  * device-specific sysctl variables:  *  * ix_crcstrip: 0: keep CRC in rx frames (default), 1: strip it.  *	During regular operations the CRC is stripped, but on some  *	hardware reception of frames not multiple of 64 is slower,  *	so using crcstrip=0 helps in benchmarks.  *  * ix_rx_miss, ix_rx_miss_bufs:  *	count packets that might be missed due to lost interrupts.  */
+comment|/*  * device-specific sysctl variables:  *  * ixv_crcstrip: 0: keep CRC in rx frames (default), 1: strip it.  *	During regular operations the CRC is stripped, but on some  *	hardware reception of frames not multiple of 64 is slower,  *	so using crcstrip=0 helps in benchmarks.  *  * ixv_rx_miss, ixv_rx_miss_bufs:  *	count packets that might be missed due to lost interrupts.  */
 end_comment
 
 begin_expr_stmt
@@ -46,15 +46,15 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ix_rx_miss
+name|ixv_rx_miss
 decl_stmt|,
-name|ix_rx_miss_bufs
+name|ixv_rx_miss_bufs
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ix_crcstrip
+name|ixv_crcstrip
 decl_stmt|;
 end_decl_stmt
 
@@ -65,12 +65,12 @@ name|_dev_netmap
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ix_crcstrip
+name|ixv_crcstrip
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|ix_crcstrip
+name|ixv_crcstrip
 argument_list|,
 literal|0
 argument_list|,
@@ -86,12 +86,12 @@ name|_dev_netmap
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ix_rx_miss
+name|ixv_rx_miss
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|ix_rx_miss
+name|ixv_rx_miss
 argument_list|,
 literal|0
 argument_list|,
@@ -107,12 +107,12 @@ name|_dev_netmap
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ix_rx_miss_bufs
+name|ixv_rx_miss_bufs
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|ix_rx_miss_bufs
+name|ixv_rx_miss_bufs
 argument_list|,
 literal|0
 argument_list|,
@@ -193,7 +193,7 @@ condition|(
 name|onoff
 operator|&&
 operator|!
-name|ix_crcstrip
+name|ixv_crcstrip
 condition|)
 block|{
 comment|/* keep the crc. Fast rx */
@@ -267,7 +267,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ixgbe_netmap_reg
+name|ixv_netmap_reg
 parameter_list|(
 name|struct
 name|netmap_adapter
@@ -385,7 +385,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ixgbe_netmap_txsync
+name|ixv_netmap_txsync
 parameter_list|(
 name|struct
 name|netmap_kring
@@ -1046,7 +1046,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ixgbe_netmap_rxsync
+name|ixv_netmap_rxsync
 parameter_list|(
 name|struct
 name|netmap_kring
@@ -1197,7 +1197,7 @@ name|int
 name|crclen
 init|=
 operator|(
-name|ix_crcstrip
+name|ixv_crcstrip
 operator|)
 condition|?
 literal|0
@@ -1361,10 +1361,10 @@ name|force_update
 condition|)
 block|{
 comment|/* diagnostics */
-name|ix_rx_miss
+name|ixv_rx_miss
 operator|++
 expr_stmt|;
-name|ix_rx_miss_bufs
+name|ixv_rx_miss_bufs
 operator|+=
 name|n
 expr_stmt|;
@@ -1652,7 +1652,7 @@ end_comment
 
 begin_function
 name|void
-name|ixgbe_netmap_attach
+name|ixv_netmap_attach
 parameter_list|(
 name|struct
 name|adapter
@@ -1709,19 +1709,19 @@ name|na
 operator|.
 name|nm_txsync
 operator|=
-name|ixgbe_netmap_txsync
+name|ixv_netmap_txsync
 expr_stmt|;
 name|na
 operator|.
 name|nm_rxsync
 operator|=
-name|ixgbe_netmap_rxsync
+name|ixv_netmap_rxsync
 expr_stmt|;
 name|na
 operator|.
 name|nm_register
 operator|=
-name|ixgbe_netmap_reg
+name|ixv_netmap_reg
 expr_stmt|;
 name|na
 operator|.

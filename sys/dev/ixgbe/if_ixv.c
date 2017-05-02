@@ -2345,7 +2345,7 @@ name|feat_en
 operator|&
 name|IXGBE_FEATURE_NETMAP
 condition|)
-name|ixgbe_netmap_attach
+name|ixv_netmap_attach
 argument_list|(
 name|adapter
 argument_list|)

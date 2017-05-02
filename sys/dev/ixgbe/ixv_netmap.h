@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_IXGBE_NETMAP_H_
+name|_IXV_NETMAP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_IXGBE_NETMAP_H_
+name|_IXV_NETMAP_H_
 end_define
 
 begin_ifdef
@@ -46,7 +46,7 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|int
-name|ix_crcstrip
+name|ixv_crcstrip
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +56,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|ixgbe_netmap_attach
+name|ixv_netmap_attach
 parameter_list|(
 name|struct
 name|adapter
@@ -74,7 +74,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|ixgbe_netmap_attach
+name|ixv_netmap_attach
 parameter_list|(
 name|a
 parameter_list|)
@@ -104,7 +104,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _IXGBE_NETMAP_H_ */
+comment|/* _IXV_NETMAP_H_ */
 end_comment
 
 end_unit
