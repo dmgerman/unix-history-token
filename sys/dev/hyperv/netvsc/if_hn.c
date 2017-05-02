@@ -2925,7 +2925,7 @@ specifier|static
 name|u_int
 name|hn_lro_mbufq_depth
 init|=
-literal|0
+literal|512
 decl_stmt|;
 end_decl_stmt
 
