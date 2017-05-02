@@ -202,7 +202,8 @@ name|flags
 parameter_list|)
 function_decl|;
 comment|// Annotate destruction of a mutex.
-comment|// Supported flags: none.
+comment|// Supported flags:
+comment|//   - __tsan_mutex_linker_init
 name|void
 name|__tsan_mutex_destroy
 parameter_list|(

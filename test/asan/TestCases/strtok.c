@@ -16,7 +16,7 @@ comment|// RUN:    FileCheck %s --check-prefix=CHECK1
 end_comment
 
 begin_comment
-comment|// RUN: %env_asan_opts=intercept_strtok=false%run %t test1 2>&1
+comment|// RUN: %env_asan_opts=intercept_strtok=false %run %t test1 2>&1
 end_comment
 
 begin_comment

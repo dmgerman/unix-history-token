@@ -162,9 +162,10 @@ name|Xorshift128Plus
 block|{
 name|public
 label|:
-name|Xorshift128Plus
-argument_list|()
-expr_stmt|;
+name|void
+name|initFromURandom
+parameter_list|()
+function_decl|;
 name|u64
 name|getNext
 parameter_list|()

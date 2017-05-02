@@ -28,6 +28,10 @@ comment|// REQUIRES: osx-ld64-live_support
 end_comment
 
 begin_comment
+comment|// UNSUPPORTED: ios
+end_comment
+
+begin_comment
 comment|// RUN: %clang_asan -mmacosx-version-min=10.11 -Xlinker -dead_strip -o %t %s
 end_comment
 
