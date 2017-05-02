@@ -143,17 +143,6 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-name|std
-operator|::
-name|vector
-operator|<
-name|MemoryBufferRef
-operator|>
-name|getArchiveMembers
-argument_list|(
-argument|MemoryBufferRef MB
-argument_list|)
-expr_stmt|;
 name|void
 name|readConfigs
 argument_list|(

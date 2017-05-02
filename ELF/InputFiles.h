@@ -628,13 +628,13 @@ operator|>
 name|getLocalSymbols
 argument_list|()
 expr_stmt|;
-name|explicit
 name|ObjectFile
-parameter_list|(
-name|MemoryBufferRef
-name|M
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|MemoryBufferRef M
+argument_list|,
+argument|StringRef ArchiveName
+argument_list|)
+empty_stmt|;
 name|void
 name|parse
 argument_list|(

@@ -678,6 +678,12 @@ name|ImpSym
 operator|=
 name|nullptr
 block|;
+name|DefinedImportData
+operator|*
+name|ConstSym
+operator|=
+name|nullptr
+block|;
 name|DefinedImportThunk
 operator|*
 name|ThunkSym
