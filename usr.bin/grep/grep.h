@@ -512,18 +512,7 @@ specifier|extern
 name|bool
 name|file_err
 decl_stmt|,
-name|first
-decl_stmt|,
 name|matchall
-decl_stmt|,
-name|prev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tail
 decl_stmt|;
 end_decl_stmt
 
@@ -712,7 +701,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|printline
+name|grep_printline
 parameter_list|(
 name|struct
 name|str
@@ -721,13 +710,6 @@ name|line
 parameter_list|,
 name|int
 name|sep
-parameter_list|,
-name|regmatch_t
-modifier|*
-name|matches
-parameter_list|,
-name|int
-name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -737,7 +719,7 @@ comment|/* queue.c */
 end_comment
 
 begin_function_decl
-name|void
+name|bool
 name|enqueue
 parameter_list|(
 name|struct

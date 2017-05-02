@@ -233,7 +233,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Shortcut for matching all cases like empty regex */
+comment|/* XXX TODO: Get rid of this flag.  * matchall is a gross hack that means that an empty pattern was passed to us.  * It is a necessary evil at the moment because our regex(3) implementation  * does not allow for empty patterns, as supported by POSIX's definition of  * grammar for BREs/EREs. When libregex becomes available, it would be wise  * to remove this and let regex(3) handle the dirty details of empty patterns.  */
 end_comment
 
 begin_decl_stmt
@@ -741,38 +741,6 @@ end_function_decl
 
 begin_comment
 comment|/* Housekeeping */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|first
-init|=
-name|true
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flag whether we are processing the first match */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|prev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flag whether or not the previous line matched */
-end_comment
-
-begin_decl_stmt
-name|int
-name|tail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* lines left to print */
 end_comment
 
 begin_decl_stmt
@@ -3761,6 +3729,13 @@ name|r_pattern
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Don't process any patterns if we have a blank one */
+if|if
+condition|(
+operator|!
+name|matchall
+condition|)
+block|{
 comment|/* Check if cheating is allowed (always is for fgrep). */
 for|for
 control|(
@@ -3779,7 +3754,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|WITHOUT_FASTMATCH
-comment|/* Attempt compilation with fastmatch regex and fallback to 		   regex(3) if it fails. */
+comment|/* 			 * Attempt compilation with fastmatch regex and 			 * fallback to regex(3) if it fails. 			 */
 if|if
 condition|(
 name|fastncomp
@@ -3863,6 +3838,7 @@ argument_list|,
 name|re_error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if

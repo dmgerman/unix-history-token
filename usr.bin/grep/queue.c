@@ -114,8 +114,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Enqueue another line; return true if we've dequeued a line as a result  */
+end_comment
+
 begin_function
-name|void
+name|bool
 name|enqueue
 parameter_list|(
 name|struct
@@ -252,7 +256,17 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|true
+operator|)
+return|;
 block|}
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 end_function
 
@@ -333,7 +347,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printline
+name|grep_printline
 argument_list|(
 operator|&
 name|item
@@ -341,10 +355,6 @@ operator|->
 name|data
 argument_list|,
 literal|'-'
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|free
