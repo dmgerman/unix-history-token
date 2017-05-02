@@ -3137,6 +3137,13 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|lp
+operator|->
+name|lp_detaching
+operator|=
+name|LAGG_CLONE_DESTROY
+expr_stmt|;
 name|lagg_port_destroy
 argument_list|(
 name|lp
@@ -3144,6 +3151,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Unhook the aggregation protocol */
 name|lagg_proto_detach
 argument_list|(
@@ -3153,6 +3161,16 @@ expr_stmt|;
 name|LAGG_UNLOCK_ASSERT
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_swi
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_lladdr_task
 argument_list|)
 expr_stmt|;
 name|ifmedia_removeall
@@ -3190,16 +3208,6 @@ argument_list|)
 expr_stmt|;
 name|LAGG_LIST_UNLOCK
 argument_list|()
-expr_stmt|;
-name|taskqueue_drain
-argument_list|(
-name|taskqueue_swi
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_lladdr_task
-argument_list|)
 expr_stmt|;
 name|LAGG_LOCK_DESTROY
 argument_list|(
@@ -4658,10 +4666,11 @@ expr_stmt|;
 comment|/* 	 * Remove multicast addresses and interface flags from this port and 	 * reset the MAC address, skip if the interface is being detached. 	 */
 if|if
 condition|(
-operator|!
 name|lp
 operator|->
 name|lp_detaching
+operator|==
+literal|0
 condition|)
 block|{
 name|lagg_ether_cmdmulti
@@ -4849,6 +4858,14 @@ name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|lp
+operator|->
+name|lp_detaching
+operator|!=
+name|LAGG_CLONE_DESTROY
+condition|)
 name|lagg_lladdr
 argument_list|(
 name|sc
@@ -4888,6 +4905,8 @@ condition|(
 name|lp
 operator|->
 name|lp_detaching
+operator|!=
+literal|0
 condition|)
 block|{
 name|SLIST_FOREACH
@@ -5582,7 +5601,7 @@ name|lp
 operator|->
 name|lp_detaching
 operator|=
-literal|1
+name|LAGG_PORT_DETACH
 expr_stmt|;
 name|lagg_port_destroy
 argument_list|(
@@ -7880,10 +7899,11 @@ name|mc
 operator|->
 name|mc_ifma
 operator|&&
-operator|!
 name|lp
 operator|->
 name|lp_detaching
+operator|==
+literal|0
 condition|)
 name|if_delmulti_ifma
 argument_list|(

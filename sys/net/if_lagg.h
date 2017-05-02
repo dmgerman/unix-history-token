@@ -958,6 +958,16 @@ name|int
 name|lp_detaching
 decl_stmt|;
 comment|/* ifnet is detaching */
+define|#
+directive|define
+name|LAGG_PORT_DETACH
+value|0x01
+comment|/* detach lagg port */
+define|#
+directive|define
+name|LAGG_CLONE_DESTROY
+value|0x02
+comment|/* destroy lagg clone */
 name|SLIST_HEAD
 argument_list|(
 argument|__mclhd
