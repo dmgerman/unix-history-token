@@ -303,17 +303,6 @@ parameter_list|)
 function_decl|;
 name|std
 operator|::
-name|vector
-operator|<
-name|uint8_t
-operator|>
-name|parseHexstring
-argument_list|(
-argument|StringRef S
-argument_list|)
-expr_stmt|;
-name|std
-operator|::
 name|string
 name|createResponseFile
 argument_list|(
