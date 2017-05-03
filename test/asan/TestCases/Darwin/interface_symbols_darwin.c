@@ -123,6 +123,10 @@ begin_comment
 comment|// RUN: diff %t.imports-sorted %t.exports-sorted
 end_comment
 
+begin_comment
+comment|// UNSUPPORTED: ios
+end_comment
+
 begin_function
 name|int
 name|main

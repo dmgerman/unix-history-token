@@ -304,6 +304,9 @@ label|:
 name|ReportType
 name|typ
 decl_stmt|;
+name|uptr
+name|tag
+decl_stmt|;
 name|Vector
 operator|<
 name|ReportStack
