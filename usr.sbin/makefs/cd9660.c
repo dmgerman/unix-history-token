@@ -6207,6 +6207,7 @@ comment|/*  * Be a little more memory conservative:  * instead of having the TAI
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|ptq_entry
 block|{

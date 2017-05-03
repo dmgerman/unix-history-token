@@ -87,16 +87,14 @@ directive|include
 file|"buf.h"
 end_include
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument|buftailhead
 argument_list|,
 argument|buf
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|buftail
 expr_stmt|;
 end_expr_stmt

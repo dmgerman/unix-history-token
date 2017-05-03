@@ -150,7 +150,7 @@ specifier|static
 name|void
 name|initcg
 parameter_list|(
-name|int
+name|uint32_t
 parameter_list|,
 name|time_t
 parameter_list|,
@@ -203,6 +203,7 @@ value|(((num)& ((num) - 1)) == 0)
 end_define
 
 begin_union
+specifier|static
 union|union
 block|{
 name|struct
@@ -227,15 +228,8 @@ name|sblock
 value|fsun.fs
 end_define
 
-begin_decl_stmt
-name|struct
-name|csum
-modifier|*
-name|fscs
-decl_stmt|;
-end_decl_stmt
-
 begin_union
+specifier|static
 union|union
 block|{
 name|struct
@@ -261,6 +255,7 @@ value|cgun.cg
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|iobuf
@@ -268,12 +263,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|iobufsize
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|writebuf
 index|[
@@ -486,11 +483,12 @@ decl_stmt|,
 name|lastminfpg
 decl_stmt|;
 name|int32_t
-name|cylno
-decl_stmt|,
+name|csfrags
+decl_stmt|;
+name|uint32_t
 name|i
 decl_stmt|,
-name|csfrags
+name|cylno
 decl_stmt|;
 name|long
 name|long
@@ -3117,8 +3115,6 @@ name|fsopts
 parameter_list|)
 block|{
 name|int
-name|cylno
-decl_stmt|,
 name|size
 decl_stmt|,
 name|blks
@@ -3126,6 +3122,9 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|saveflag
+decl_stmt|;
+name|uint32_t
+name|cylno
 decl_stmt|;
 name|void
 modifier|*
@@ -3402,7 +3401,7 @@ specifier|static
 name|void
 name|initcg
 parameter_list|(
-name|int
+name|uint32_t
 name|cylno
 parameter_list|,
 name|time_t
@@ -3420,6 +3419,9 @@ decl_stmt|,
 name|dmax
 decl_stmt|;
 name|int32_t
+name|blkno
+decl_stmt|;
+name|uint32_t
 name|i
 decl_stmt|,
 name|j
@@ -3429,8 +3431,6 @@ decl_stmt|,
 name|dlower
 decl_stmt|,
 name|dupper
-decl_stmt|,
-name|blkno
 decl_stmt|;
 name|struct
 name|ufs1_dinode
@@ -3891,6 +3891,9 @@ name|acg
 operator|.
 name|cg_nextfreeoff
 operator|>
+operator|(
+name|uint32_t
+operator|)
 name|sblock
 operator|.
 name|fs_cgsize
