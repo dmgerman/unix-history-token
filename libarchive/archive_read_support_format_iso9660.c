@@ -14310,6 +14310,12 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|heap
+operator|->
+name|allocated
+condition|)
 name|memcpy
 argument_list|(
 name|new_pending_files

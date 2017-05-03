@@ -1268,9 +1268,17 @@ expr_stmt|;
 comment|/* Simply asserting min_time - 1> 0 breaks with some compiler optimizations. */
 name|t
 operator|=
+call|(
+name|time_t
+call|)
+argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|min_time
 operator|-
 literal|1
+argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(

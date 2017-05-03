@@ -4810,7 +4810,8 @@ name|DSTMODE
 name|DSTmode
 parameter_list|)
 block|{
-name|int
+name|signed
+name|char
 name|DaysInMonth
 index|[
 literal|12

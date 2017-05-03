@@ -930,6 +930,7 @@ name|links_entry
 modifier|*
 name|previous
 decl_stmt|;
+name|unsigned
 name|int
 name|links
 decl_stmt|;

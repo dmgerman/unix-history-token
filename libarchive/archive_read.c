@@ -4222,6 +4222,10 @@ name|len
 operator|=
 name|s
 expr_stmt|;
+if|if
+condition|(
+name|len
+condition|)
 name|memcpy
 argument_list|(
 name|dest

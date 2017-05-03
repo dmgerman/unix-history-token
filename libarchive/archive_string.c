@@ -1278,6 +1278,10 @@ operator|(
 name|NULL
 operator|)
 return|;
+if|if
+condition|(
+name|s
+condition|)
 name|memmove
 argument_list|(
 name|as

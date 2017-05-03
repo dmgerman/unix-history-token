@@ -5502,6 +5502,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Make sure to store the original path, since 			 * truncation to ustar limit happened already. 			 */
 name|add_pax_attr
 argument_list|(
 operator|&
@@ -5513,9 +5514,7 @@ operator|)
 argument_list|,
 literal|"GNU.sparse.name"
 argument_list|,
-name|entry_name
-operator|.
-name|s
+name|path
 argument_list|)
 expr_stmt|;
 name|add_pax_attr_int
@@ -7146,7 +7145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * GNU PAX Format 1.0 requires the special name, which pattern is:  *<dir>/GNUSparseFile.<pid>/<original file name>  *  * This function is used for only Sparse file, a file type of which  * is regular file.  */
+comment|/*  * GNU PAX Format 1.0 requires the special name, which pattern is:  *<dir>/GNUSparseFile.<pid>/<original file name>  *  * Since reproducable archives are more important, use 0 as pid.  *  * This function is used for only Sparse file, a file type of which  * is regular file.  */
 end_comment
 
 begin_function
@@ -7165,12 +7164,6 @@ modifier|*
 name|src
 parameter_list|)
 block|{
-name|char
-name|buff
-index|[
-literal|64
-index|]
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -7272,34 +7265,6 @@ continue|continue;
 block|}
 break|break;
 block|}
-if|#
-directive|if
-name|HAVE_GETPID
-operator|&&
-literal|0
-comment|/* Disable this as pax attribute name. */
-name|sprintf
-argument_list|(
-name|buff
-argument_list|,
-literal|"GNUSparseFile.%d"
-argument_list|,
-name|getpid
-argument_list|()
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* If the platform can't fetch the pid, don't include it. */
-name|strcpy
-argument_list|(
-name|buff
-argument_list|,
-literal|"GNUSparseFile"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* General case: build a ustar-compatible name adding 	 * "/GNUSparseFile/". */
 name|build_ustar_entry_name
 argument_list|(
@@ -7311,7 +7276,7 @@ name|p
 operator|-
 name|src
 argument_list|,
-name|buff
+literal|"GNUSparseFile.0"
 argument_list|)
 expr_stmt|;
 return|return

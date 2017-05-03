@@ -98,8 +98,18 @@ literal|"This version of bsdcpio was compiled "
 literal|"without xz support"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|failure
 argument_list|(
 literal|"--xz option is broken"
@@ -114,6 +124,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Check that the archive file has an xz signature. */
 name|p
 operator|=
@@ -139,6 +154,11 @@ argument_list|,
 literal|"\xFD\x37\x7A\x58\x5A\x00"
 argument_list|,
 literal|6
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
