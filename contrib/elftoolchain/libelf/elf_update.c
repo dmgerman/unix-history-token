@@ -2898,6 +2898,13 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
+name|msz
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
 name|d
 operator|->
 name|d_size
