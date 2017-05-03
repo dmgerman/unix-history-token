@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/sctp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/tcp.h>
 end_include
 
@@ -3080,6 +3086,22 @@ operator|(
 name|lookup_value
 argument_list|(
 name|sockoptip
+argument_list|,
+name|optname
+argument_list|)
+operator|)
+return|;
+if|if
+condition|(
+name|level
+operator|==
+name|IPPROTO_SCTP
+condition|)
+return|return
+operator|(
+name|lookup_value
+argument_list|(
+name|sockoptsctp
 argument_list|,
 name|optname
 argument_list|)
