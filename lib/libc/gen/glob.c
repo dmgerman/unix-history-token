@@ -4692,9 +4692,6 @@ condition|)
 goto|goto
 name|fail
 goto|;
-if|if
-condition|(
-operator|(
 name|negate_range
 operator|=
 operator|(
@@ -4707,7 +4704,10 @@ operator|)
 operator|==
 name|M_NOT
 operator|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|negate_range
 operator|!=
 literal|0
 condition|)
