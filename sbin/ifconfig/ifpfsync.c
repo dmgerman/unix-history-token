@@ -710,6 +710,11 @@ argument_list|,
 literal|"SIOCSETPFSYNC"
 argument_list|)
 expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|peerres
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
