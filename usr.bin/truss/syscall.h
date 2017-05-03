@@ -153,6 +153,8 @@ name|Madvice
 block|,
 name|Socklent
 block|,
+name|Sockprotocol
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
