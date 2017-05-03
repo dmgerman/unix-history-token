@@ -4057,7 +4057,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|ns8250_drain
+name|lpc_ns8250_drain
 argument_list|(
 name|bas
 argument_list|,
