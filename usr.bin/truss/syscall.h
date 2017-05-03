@@ -159,6 +159,8 @@ name|Sockoptlevel
 block|,
 name|Sockoptname
 block|,
+name|Msgflags
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
