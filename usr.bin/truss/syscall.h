@@ -155,6 +155,10 @@ name|Socklent
 block|,
 name|Sockprotocol
 block|,
+name|Sockoptlevel
+block|,
+name|Sockoptname
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
