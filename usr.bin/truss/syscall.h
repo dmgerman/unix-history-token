@@ -151,6 +151,8 @@ name|Sizet
 block|,
 name|Madvice
 block|,
+name|Socklent
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
