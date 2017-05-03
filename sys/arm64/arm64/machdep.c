@@ -5186,7 +5186,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"Physical address reg (read):  0x%016lx\n"
+literal|"EL1 physical address reg (read):  0x%016lx\n"
 argument_list|,
 name|phys
 argument_list|)
@@ -5200,7 +5200,35 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"Physical address reg (write): 0x%016lx\n"
+literal|"EL1 physical address reg (write): 0x%016lx\n"
+argument_list|,
+name|phys
+argument_list|)
+expr_stmt|;
+name|phys
+operator|=
+name|arm64_address_translate_s1e0r
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"EL0 physical address reg (read):  0x%016lx\n"
+argument_list|,
+name|phys
+argument_list|)
+expr_stmt|;
+name|phys
+operator|=
+name|arm64_address_translate_s1e0w
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"EL0 physical address reg (write): 0x%016lx\n"
 argument_list|,
 name|phys
 argument_list|)
