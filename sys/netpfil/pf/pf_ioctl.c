@@ -1053,7 +1053,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|pf_unload
 parameter_list|(
 name|void
@@ -20631,17 +20631,12 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|pf_unload
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -20717,11 +20712,6 @@ operator|&
 name|pf_end_lock
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 end_function
 
@@ -20775,6 +20765,22 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|SYSUNINIT
+argument_list|(
+name|pf_unload
+argument_list|,
+name|SI_SUB_PROTO_FIREWALL
+argument_list|,
+name|SI_ORDER_SECOND
+argument_list|,
+name|pf_unload
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|VNET_SYSUNINIT
@@ -20839,11 +20845,7 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-name|error
-operator|=
-name|pf_unload
-argument_list|()
-expr_stmt|;
+comment|/* Handled in SYSUNINIT(pf_unload) to ensure it's done after 		 * the vnet_pf_uninit()s */
 break|break;
 default|default:
 name|error
