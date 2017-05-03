@@ -194,13 +194,6 @@ name|Frag
 decl_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
-name|VarStreamArray
-operator|<
-name|ModuleDebugFragmentRecord
-operator|>
-name|ModuleDebugFragmentArray
-expr_stmt|;
 block|}
 comment|// namespace codeview
 name|template
@@ -227,8 +220,6 @@ argument_list|,
 argument|uint32_t&Length
 argument_list|,
 argument|codeview::ModuleDebugFragmentRecord&Info
-argument_list|,
-argument|void *Ctx
 argument_list|)
 block|{
 if|if
@@ -266,8 +257,23 @@ return|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+unit|};
+name|namespace
+name|codeview
+block|{
+typedef|typedef
+name|VarStreamArray
+operator|<
+name|ModuleDebugFragmentRecord
+operator|>
+name|ModuleDebugFragmentArray
+expr_stmt|;
+block|}
+end_decl_stmt
+
 begin_comment
-unit|}; }
+unit|}
 comment|// namespace llvm
 end_comment
 

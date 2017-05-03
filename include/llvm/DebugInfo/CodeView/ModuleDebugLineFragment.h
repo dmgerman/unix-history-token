@@ -80,6 +80,12 @@ block|{
 name|namespace
 name|codeview
 block|{
+name|class
+name|ModuleDebugFileChecksumFragment
+decl_stmt|;
+name|class
+name|StringTable
+decl_stmt|;
 comment|// Corresponds to the `CV_DebugSLinesHeader_t` structure.
 struct|struct
 name|LineFragmentHeader
@@ -205,6 +211,7 @@ label|:
 typedef|typedef
 specifier|const
 name|LineFragmentHeader
+modifier|*
 name|ContextType
 typedef|;
 specifier|static
@@ -225,7 +232,7 @@ parameter_list|,
 specifier|const
 name|LineFragmentHeader
 modifier|*
-name|Header
+name|Ctx
 parameter_list|)
 function_decl|;
 block|}
@@ -385,7 +392,15 @@ block|;
 name|public
 operator|:
 name|ModuleDebugLineFragment
-argument_list|()
+argument_list|(
+name|ModuleDebugFileChecksumFragment
+operator|&
+name|Checksums
+argument_list|,
+name|StringTable
+operator|&
+name|Strings
+argument_list|)
 block|;
 specifier|static
 name|bool
@@ -408,7 +423,7 @@ block|}
 name|void
 name|createBlock
 argument_list|(
-argument|uint32_t ChecksumBufferOffset
+argument|StringRef FileName
 argument_list|)
 block|;
 name|void
@@ -470,6 +485,10 @@ specifier|const
 block|;
 name|private
 operator|:
+name|ModuleDebugFileChecksumFragment
+operator|&
+name|Checksums
+block|;
 name|uint16_t
 name|RelocOffset
 operator|=

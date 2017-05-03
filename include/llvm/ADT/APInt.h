@@ -232,6 +232,7 @@ name|pVal
 decl_stmt|;
 comment|///< Used to store the>64 bits integer value.
 block|}
+name|U
 union|;
 name|unsigned
 name|BitWidth
@@ -256,16 +257,18 @@ argument_list|,
 argument|unsigned bits
 argument_list|)
 block|:
-name|pVal
-argument_list|(
-name|val
-argument_list|)
-operator|,
 name|BitWidth
 argument_list|(
 argument|bits
 argument_list|)
-block|{}
+block|{
+name|U
+operator|.
+name|pVal
+operator|=
+name|val
+expr_stmt|;
+block|}
 comment|/// \brief Determine if this APInt just has one word to store value.
 comment|///
 comment|/// \returns true if the number of bits<= 64, false otherwise.
@@ -382,11 +385,15 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|&=
 name|mask
 expr_stmt|;
 else|else
+name|U
+operator|.
 name|pVal
 index|[
 name|getNumWords
@@ -416,8 +423,12 @@ return|return
 name|isSingleWord
 argument_list|()
 condition|?
+name|U
+operator|.
 name|VAL
 else|:
+name|U
+operator|.
 name|pVal
 index|[
 name|whichWord
@@ -723,6 +734,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|=
 name|val
@@ -812,9 +825,13 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 name|that
+operator|.
+name|U
 operator|.
 name|VAL
 expr_stmt|;
@@ -833,18 +850,27 @@ operator|&&
 name|that
 argument_list|)
 operator|:
-name|VAL
-argument_list|(
-name|that
-operator|.
-name|VAL
-argument_list|)
-operator|,
 name|BitWidth
 argument_list|(
 argument|that.BitWidth
 argument_list|)
 block|{
+name|memcpy
+argument_list|(
+operator|&
+name|U
+argument_list|,
+operator|&
+name|that
+operator|.
+name|U
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|U
+argument_list|)
+argument_list|)
+block|;
 name|that
 operator|.
 name|BitWidth
@@ -863,6 +889,8 @@ argument_list|()
 condition|)
 name|delete
 index|[]
+name|U
+operator|.
 name|pVal
 decl_stmt|;
 block|}
@@ -875,16 +903,17 @@ name|explicit
 name|APInt
 argument_list|()
 operator|:
-name|VAL
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|BitWidth
 argument_list|(
 literal|1
 argument_list|)
-block|{}
+block|{
+name|U
+operator|.
+name|VAL
+operator|=
+literal|0
+block|; }
 comment|/// \brief Returns whether this instance allocated memory.
 name|bool
 name|needsCleanup
@@ -1019,6 +1048,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
+name|U
+operator|.
 name|VAL
 operator|==
 name|WORD_MAX
@@ -1180,6 +1211,8 @@ condition|)
 return|return
 name|isPowerOf2_64
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 return|;
@@ -1349,6 +1382,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
+name|U
+operator|.
 name|VAL
 operator|==
 operator|(
@@ -1414,6 +1449,8 @@ condition|)
 return|return
 name|isMask_64
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 return|;
@@ -1472,6 +1509,8 @@ condition|)
 return|return
 name|isShiftedMask_64
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 return|;
@@ -2272,6 +2311,8 @@ argument_list|()
 condition|)
 return|return
 operator|&
+name|U
+operator|.
 name|VAL
 return|;
 end_expr_stmt
@@ -2279,6 +2320,8 @@ end_expr_stmt
 begin_return
 return|return
 operator|&
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -2473,6 +2516,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
+name|U
+operator|.
 name|VAL
 operator|==
 literal|0
@@ -2537,9 +2582,13 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|=
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 expr_stmt|;
@@ -2602,6 +2651,8 @@ argument_list|()
 condition|)
 name|delete
 index|[]
+name|U
+operator|.
 name|pVal
 decl_stmt|;
 comment|// Use memcpy so that type based alias analysis sees both VAL and pVal
@@ -2609,16 +2660,16 @@ comment|// as modified.
 name|memcpy
 argument_list|(
 operator|&
-name|VAL
+name|U
 argument_list|,
 operator|&
 name|that
 operator|.
-name|VAL
+name|U
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|uint64_t
+name|U
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2694,6 +2745,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|=
 name|RHS
@@ -2707,6 +2760,8 @@ end_expr_stmt
 begin_else
 else|else
 block|{
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -2716,6 +2771,8 @@ name|RHS
 expr_stmt|;
 name|memset
 argument_list|(
+name|U
+operator|.
 name|pVal
 operator|+
 literal|1
@@ -2795,9 +2852,13 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|&=
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 expr_stmt|;
@@ -2853,6 +2914,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|&=
 name|RHS
@@ -2862,6 +2925,8 @@ operator|*
 name|this
 return|;
 block|}
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -2874,6 +2939,8 @@ end_expr_stmt
 begin_expr_stmt
 name|memset
 argument_list|(
+name|U
+operator|.
 name|pVal
 operator|+
 literal|1
@@ -2952,9 +3019,13 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator||=
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 expr_stmt|;
@@ -3010,6 +3081,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator||=
 name|RHS
@@ -3023,6 +3096,8 @@ end_expr_stmt
 begin_else
 else|else
 block|{
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -3093,9 +3168,13 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|^=
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 expr_stmt|;
@@ -3151,6 +3230,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|^=
 name|RHS
@@ -3164,6 +3245,8 @@ end_expr_stmt
 begin_else
 else|else
 block|{
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -3359,11 +3442,15 @@ name|ShiftAmt
 operator|==
 name|BitWidth
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 literal|0
 expr_stmt|;
 else|else
+name|U
+operator|.
 name|VAL
 operator|<<=
 name|ShiftAmt
@@ -3597,6 +3684,8 @@ name|SExtVAL
 init|=
 name|SignExtend64
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|,
 name|BitWidth
@@ -3608,6 +3697,8 @@ name|ShiftAmt
 operator|==
 name|BitWidth
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 name|SExtVAL
@@ -3620,6 +3711,8 @@ operator|)
 expr_stmt|;
 comment|// Fill with sign bit.
 else|else
+name|U
+operator|.
 name|VAL
 operator|=
 name|SExtVAL
@@ -3713,11 +3806,15 @@ name|ShiftAmt
 operator|==
 name|BitWidth
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 literal|0
 expr_stmt|;
 else|else
+name|U
+operator|.
 name|VAL
 operator|>>=
 name|ShiftAmt
@@ -4408,8 +4505,12 @@ operator|(
 name|isSingleWord
 argument_list|()
 condition|?
+name|U
+operator|.
 name|VAL
 else|:
+name|U
+operator|.
 name|pVal
 index|[
 name|whichWord
@@ -4482,9 +4583,13 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
+name|U
+operator|.
 name|VAL
 operator|==
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 return|;
@@ -5539,9 +5644,13 @@ argument_list|()
 condition|)
 return|return
 operator|(
+name|U
+operator|.
 name|VAL
 operator|&
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 operator|)
@@ -5590,10 +5699,14 @@ argument_list|()
 condition|)
 return|return
 operator|(
+name|U
+operator|.
 name|VAL
 operator|&
 operator|~
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 operator|)
@@ -5848,6 +5961,8 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 name|WORD_MAX
@@ -5856,6 +5971,8 @@ else|else
 comment|// Set all the bits in all the words.
 name|memset
 argument_list|(
+name|U
+operator|.
 name|pVal
 argument_list|,
 operator|-
@@ -5916,11 +6033,15 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator||=
 name|Mask
 expr_stmt|;
 else|else
+name|U
+operator|.
 name|pVal
 index|[
 name|whichWord
@@ -6037,11 +6158,15 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator||=
 name|mask
 expr_stmt|;
 else|else
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -6148,6 +6273,8 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 literal|0
@@ -6155,6 +6282,8 @@ expr_stmt|;
 else|else
 name|memset
 argument_list|(
+name|U
+operator|.
 name|pVal
 argument_list|,
 literal|0
@@ -6211,11 +6340,15 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|&=
 name|Mask
 expr_stmt|;
 else|else
+name|U
+operator|.
 name|pVal
 index|[
 name|whichWord
@@ -6263,6 +6396,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|^=
 name|WORD_MAX
@@ -6634,6 +6769,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
+name|U
+operator|.
 name|VAL
 return|;
 name|assert
@@ -6650,6 +6787,8 @@ end_expr_stmt
 
 begin_return
 return|return
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -6695,6 +6834,8 @@ condition|)
 return|return
 name|SignExtend64
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|,
 name|BitWidth
@@ -6716,6 +6857,8 @@ begin_return
 return|return
 name|int64_t
 argument_list|(
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -6811,6 +6954,8 @@ name|llvm
 operator|::
 name|countLeadingZeros
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 operator|-
@@ -6987,6 +7132,8 @@ name|llvm
 operator|::
 name|countTrailingOnes
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 return|;
@@ -7043,6 +7190,8 @@ name|llvm
 operator|::
 name|countPopulation
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 return|;
@@ -7356,8 +7505,12 @@ operator|(
 name|isSingleWord
 argument_list|()
 condition|?
+name|U
+operator|.
 name|VAL
 else|:
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -7418,8 +7571,12 @@ operator|(
 name|isSingleWord
 argument_list|()
 condition|?
+name|U
+operator|.
 name|VAL
 else|:
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -7667,6 +7824,8 @@ operator|==
 literal|1
 condition|)
 return|return
+name|U
+operator|.
 name|VAL
 operator|-
 literal|1

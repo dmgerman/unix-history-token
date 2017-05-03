@@ -270,8 +270,6 @@ argument_list|,
 argument|uint32_t&Length
 argument_list|,
 argument|pdb::DbiModuleDescriptor&Info
-argument_list|,
-argument|void *Ctx
 argument_list|)
 block|{
 if|if

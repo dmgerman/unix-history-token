@@ -359,26 +359,6 @@ name|unsigned
 operator|>
 name|SoftDefs
 expr_stmt|;
-comment|/// Set of current definitions committed to the register file.
-typedef|typedef
-name|std
-operator|::
-name|set
-operator|<
-name|unsigned
-operator|>
-operator|::
-name|iterator
-name|CurDefsIterator
-expr_stmt|;
-name|std
-operator|::
-name|set
-operator|<
-name|unsigned
-operator|>
-name|CurDefs
-expr_stmt|;
 comment|/// Set of temporary definitions not committed to the register file.
 typedef|typedef
 name|std
@@ -533,6 +513,13 @@ modifier|&
 name|isTrue
 parameter_list|)
 function_decl|;
+name|bool
+name|registerUsed
+parameter_list|(
+name|unsigned
+name|Register
+parameter_list|)
+function_decl|;
 comment|// Checks performed.
 name|bool
 name|checkBranches
@@ -555,6 +542,14 @@ name|checkRegistersReadOnly
 parameter_list|()
 function_decl|;
 name|bool
+name|checkEndloopBranches
+parameter_list|()
+function_decl|;
+name|void
+name|checkRegisterCurDefs
+parameter_list|()
+function_decl|;
+name|bool
 name|checkSolo
 parameter_list|()
 function_decl|;
@@ -564,6 +559,10 @@ parameter_list|()
 function_decl|;
 name|bool
 name|checkSlots
+parameter_list|()
+function_decl|;
+name|bool
+name|checkAXOK
 parameter_list|()
 function_decl|;
 specifier|static

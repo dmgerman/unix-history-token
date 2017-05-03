@@ -1784,6 +1784,24 @@ argument_list|)
 argument_list|)
 block|;   }
 name|void
+name|addParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|addParamAttr
+argument_list|(
+name|ArgNo
+argument_list|,
+name|Kind
+argument_list|)
+argument_list|)
+block|;   }
+name|void
 name|removeAttribute
 argument_list|(
 argument|unsigned i
@@ -1814,6 +1832,24 @@ argument_list|(
 name|removeAttribute
 argument_list|(
 name|i
+argument_list|,
+name|Kind
+argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|removeParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|removeParamAttr
+argument_list|(
+name|ArgNo
 argument_list|,
 name|Kind
 argument_list|)
@@ -2013,22 +2049,16 @@ name|i
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// Determine if the parameter or return value is marked with NoAlias
-comment|/// attribute.
-comment|/// @param n The parameter to check. 1 is the first parameter, 0 is the return
+comment|/// Determine if the return value is marked with NoAlias attribute.
 name|bool
-name|doesNotAlias
-argument_list|(
-argument|unsigned n
-argument_list|)
+name|returnDoesNotAlias
+argument_list|()
 specifier|const
 block|{
 name|CALLSITE_DELEGATE_GETTER
 argument_list|(
-name|doesNotAlias
-argument_list|(
-name|n
-argument_list|)
+name|returnDoesNotAlias
+argument_list|()
 argument_list|)
 block|;   }
 comment|/// Return true if the call should not be treated as a call to a builtin.

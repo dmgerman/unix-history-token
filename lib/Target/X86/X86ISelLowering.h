@@ -866,6 +866,9 @@ name|CVTPS2PH
 block|,
 name|CVTPH2PS
 block|,
+comment|// LWP insert record.
+name|LWPINS
+block|,
 comment|// Compare and swap.
 name|LCMPXCHG_DAG
 init|=

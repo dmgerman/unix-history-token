@@ -314,6 +314,10 @@ comment|/// Target has TBM instructions.
 name|bool
 name|HasTBM
 block|;
+comment|/// Target has LWP instructions
+name|bool
+name|HasLWP
+block|;
 comment|/// True if the processor has the MOVBE instruction.
 name|bool
 name|HasMOVBE
@@ -1208,6 +1212,15 @@ specifier|const
 block|{
 return|return
 name|HasTBM
+return|;
+block|}
+name|bool
+name|hasLWP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasLWP
 return|;
 block|}
 name|bool

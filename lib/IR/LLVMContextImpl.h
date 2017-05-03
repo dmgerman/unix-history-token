@@ -239,6 +239,8 @@ argument_list|)
 decl_stmt|;
 name|V
 operator|.
+name|U
+operator|.
 name|VAL
 operator|=
 literal|0
@@ -262,6 +264,8 @@ literal|0
 argument_list|)
 decl_stmt|;
 name|V
+operator|.
+name|U
 operator|.
 name|VAL
 operator|=

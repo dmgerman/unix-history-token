@@ -93,6 +93,13 @@ operator|*
 operator|>
 name|IgnoreDepMIs
 block|;
+comment|// Set to true if the packet contains an instruction that stalls with an
+comment|// instruction from the previous packet.
+name|bool
+name|PacketStalls
+operator|=
+name|false
+block|;
 name|protected
 operator|:
 comment|/// \brief A handle to the branch probability pass.

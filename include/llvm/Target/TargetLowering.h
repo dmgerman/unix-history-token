@@ -7203,6 +7203,51 @@ return|return
 name|false
 return|;
 block|}
+comment|// Return true if the instruction that performs a<< b actually performs
+comment|// a<< (b % (sizeof(a) * 8)).
+name|virtual
+name|bool
+name|supportsModuloShift
+argument_list|(
+name|ISD
+operator|::
+name|NodeType
+name|Inst
+argument_list|,
+name|EVT
+name|ReturnType
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Inst
+operator|==
+name|ISD
+operator|::
+name|SHL
+operator|||
+name|Inst
+operator|==
+name|ISD
+operator|::
+name|SRA
+operator|||
+name|Inst
+operator|==
+name|ISD
+operator|::
+name|SRL
+operator|)
+operator|&&
+literal|"Expect a shift instruction"
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Runtime Library hooks
 comment|//

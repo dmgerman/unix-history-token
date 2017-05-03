@@ -83,6 +83,12 @@ block|{
 name|class
 name|ModuleDebugInlineeLineFragmentRef
 decl_stmt|;
+name|class
+name|ModuleDebugFileChecksumFragment
+decl_stmt|;
+name|class
+name|StringTable
+decl_stmt|;
 name|enum
 name|class
 name|InlineeLinesSignature
@@ -151,11 +157,9 @@ name|InlineeSourceLine
 operator|>
 block|{
 typedef|typedef
-name|codeview
-operator|::
-name|ModuleDebugInlineeLineFragmentRef
+name|bool
 name|ContextType
-expr_stmt|;
+typedef|;
 specifier|static
 name|Error
 name|extract
@@ -166,7 +170,7 @@ argument|uint32_t&Len
 argument_list|,
 argument|codeview::InlineeSourceLine&Item
 argument_list|,
-argument|ContextType *Fragment
+argument|bool HasExtraFiles
 argument_list|)
 expr_stmt|;
 block|}
@@ -290,9 +294,10 @@ name|ModuleDebugFragment
 block|{
 name|public
 operator|:
-name|explicit
 name|ModuleDebugInlineeLineFragment
 argument_list|(
+argument|ModuleDebugFileChecksumFragment&Checksums
+argument_list|,
 argument|bool HasExtraFiles
 argument_list|)
 block|;
@@ -331,7 +336,7 @@ name|addInlineSite
 argument_list|(
 argument|TypeIndex FuncId
 argument_list|,
-argument|uint32_t FileOffset
+argument|StringRef FileName
 argument_list|,
 argument|uint32_t SourceLine
 argument_list|)
@@ -339,11 +344,15 @@ block|;
 name|void
 name|addExtraFile
 argument_list|(
-argument|uint32_t FileOffset
+argument|StringRef FileName
 argument_list|)
 block|;
 name|private
 operator|:
+name|ModuleDebugFileChecksumFragment
+operator|&
+name|Checksums
+block|;
 name|bool
 name|HasExtraFiles
 operator|=

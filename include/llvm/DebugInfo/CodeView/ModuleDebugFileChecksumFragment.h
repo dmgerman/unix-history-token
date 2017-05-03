@@ -92,6 +92,9 @@ block|{
 name|namespace
 name|codeview
 block|{
+name|class
+name|StringTable
+decl_stmt|;
 struct|struct
 name|FileChecksumEntry
 block|{
@@ -146,8 +149,6 @@ argument_list|,
 argument|uint32_t&Len
 argument_list|,
 argument|codeview::FileChecksumEntry&Item
-argument_list|,
-argument|void *Ctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -226,8 +227,7 @@ parameter_list|)
 function_decl|;
 name|Iterator
 name|begin
-argument_list|()
-specifier|const
+parameter_list|()
 block|{
 return|return
 name|Checksums
@@ -238,8 +238,7 @@ return|;
 block|}
 name|Iterator
 name|end
-argument_list|()
-specifier|const
+parameter_list|()
 block|{
 return|return
 name|Checksums
@@ -275,8 +274,13 @@ name|ModuleDebugFragment
 block|{
 name|public
 operator|:
+name|explicit
 name|ModuleDebugFileChecksumFragment
-argument_list|()
+argument_list|(
+name|StringTable
+operator|&
+name|Strings
+argument_list|)
 block|;
 specifier|static
 name|bool
@@ -299,7 +303,7 @@ block|}
 name|void
 name|addChecksum
 argument_list|(
-argument|uint32_t StringTableOffset
+argument|StringRef FileName
 argument_list|,
 argument|FileChecksumKind Kind
 argument_list|,
@@ -321,12 +325,16 @@ block|;
 name|uint32_t
 name|mapChecksumOffset
 argument_list|(
-argument|uint32_t StringTableOffset
+argument|StringRef FileName
 argument_list|)
 specifier|const
 block|;
 name|private
 operator|:
+name|StringTable
+operator|&
+name|Strings
+block|;
 name|DenseMap
 operator|<
 name|uint32_t

@@ -513,6 +513,18 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
+comment|/// Check if a Stream is valid.
+name|bool
+name|valid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Stream
+operator|!=
+name|nullptr
+return|;
+block|}
 comment|/// Given an Offset into this StreamRef and a Size, return a reference to a
 comment|/// buffer owned by the stream.
 comment|///

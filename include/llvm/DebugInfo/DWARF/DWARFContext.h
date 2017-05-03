@@ -713,6 +713,14 @@ name|get
 argument_list|()
 return|;
 block|}
+comment|/// Get a DIE given an exact offset.
+name|DWARFDie
+name|getDIEForOffset
+parameter_list|(
+name|uint32_t
+name|Offset
+parameter_list|)
+function_decl|;
 specifier|const
 name|DWARFUnitIndex
 modifier|&

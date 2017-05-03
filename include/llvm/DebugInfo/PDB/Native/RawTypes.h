@@ -835,28 +835,31 @@ block|}
 struct|;
 comment|/// The header preceeding the /names stream.
 struct|struct
-name|StringTableHeader
+name|PDBStringTableHeader
 block|{
 name|support
 operator|::
 name|ulittle32_t
 name|Signature
 expr_stmt|;
+comment|// PDBStringTableSignature
 name|support
 operator|::
 name|ulittle32_t
 name|HashVersion
 expr_stmt|;
+comment|// 1 or 2
 name|support
 operator|::
 name|ulittle32_t
 name|ByteSize
 expr_stmt|;
+comment|// Number of bytes of names buffer.
 block|}
 struct|;
 specifier|const
 name|uint32_t
-name|StringTableSignature
+name|PDBStringTableSignature
 init|=
 literal|0xEFFEEFFE
 decl_stmt|;

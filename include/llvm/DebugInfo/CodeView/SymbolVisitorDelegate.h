@@ -66,6 +66,9 @@ name|namespace
 name|codeview
 block|{
 name|class
+name|StringTableRef
+decl_stmt|;
+name|class
 name|SymbolVisitorDelegate
 block|{
 name|public
@@ -98,7 +101,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|StringRef
+name|StringTableRef
 name|getStringTable
 parameter_list|()
 init|=

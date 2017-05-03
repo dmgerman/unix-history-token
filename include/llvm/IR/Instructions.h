@@ -6918,6 +6918,15 @@ argument_list|,
 argument|Attribute Attr
 argument_list|)
 block|;
+comment|/// Adds the attribute to the indicated argument
+name|void
+name|addParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+block|;
 comment|/// removes the attribute from the list of attributes.
 name|void
 name|removeAttribute
@@ -6934,6 +6943,15 @@ argument_list|(
 argument|unsigned i
 argument_list|,
 argument|StringRef Kind
+argument_list|)
+block|;
+comment|/// Removes the attribute from the given argument
+name|void
+name|removeParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
 argument_list|)
 block|;
 comment|/// adds the dereferenceable attribute to the list of attributes.
@@ -7146,14 +7164,10 @@ name|i
 argument_list|)
 return|;
 block|}
-comment|/// @brief Determine if the parameter or return value is marked with NoAlias
-comment|/// attribute.
-comment|/// @param n The parameter to check. 1 is the first parameter, 0 is the return
+comment|/// @brief Determine if the return value is marked with NoAlias attribute.
 name|bool
-name|doesNotAlias
-argument_list|(
-argument|unsigned n
-argument_list|)
+name|returnDoesNotAlias
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -7161,7 +7175,9 @@ name|Attrs
 operator|.
 name|hasAttribute
 argument_list|(
-name|n
+name|AttributeList
+operator|::
+name|ReturnIndex
 argument_list|,
 name|Attribute
 operator|::
@@ -15997,6 +16013,19 @@ name|Attribute
 name|Attr
 parameter_list|)
 function_decl|;
+comment|/// Adds the attribute to the indicated argument
+name|void
+name|addParamAttr
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl_stmt|;
 comment|/// removes the attribute from the list of attributes.
 name|void
 name|removeAttribute
@@ -16021,6 +16050,19 @@ name|StringRef
 name|Kind
 parameter_list|)
 function_decl|;
+comment|/// Removes the attribute from the given argument
+name|void
+name|removeParamAttr
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl_stmt|;
 comment|/// adds the dereferenceable attribute to the list of attributes.
 name|void
 name|addDereferenceableAttr
@@ -16260,23 +16302,20 @@ name|i
 argument_list|)
 return|;
 block|}
-comment|/// @brief Determine if the parameter or return value is marked with NoAlias
-comment|/// attribute.
-comment|/// @param n The parameter to check. 1 is the first parameter, 0 is the return
+comment|/// @brief Determine if the return value is marked with NoAlias attribute.
 name|bool
-name|doesNotAlias
-argument_list|(
-name|unsigned
-name|n
-argument_list|)
-decl|const
+name|returnDoesNotAlias
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Attrs
 operator|.
 name|hasAttribute
 argument_list|(
-name|n
+name|AttributeList
+operator|::
+name|ReturnIndex
 argument_list|,
 name|Attribute
 operator|::

@@ -79,6 +79,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|EXPECT_EXPECTED_EQ
+parameter_list|(
+name|Val
+parameter_list|,
+name|Exp
+parameter_list|)
+define|\
+value|{                                                                            \     auto Result = Exp;                                                         \     auto E = Result.takeError();                                               \     EXPECT_FALSE(static_cast<bool>(E));                                        \     if (E) {                                                                   \       consumeError(std::move(E));                                              \       return;                                                                  \     }                                                                          \     EXPECT_EQ(Val, *Result);                                                   \   }
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXPECT_UNEXPECTED
 parameter_list|(
 name|Exp

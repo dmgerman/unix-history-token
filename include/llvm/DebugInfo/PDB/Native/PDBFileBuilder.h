@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/Native/RawConstants.h"
+file|"llvm/DebugInfo/PDB/Native/PDBStringTableBuilder.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/Native/StringTableBuilder.h"
+file|"llvm/DebugInfo/PDB/Native/RawConstants.h"
 end_include
 
 begin_include
@@ -206,7 +206,7 @@ modifier|&
 name|getIpiBuilder
 parameter_list|()
 function_decl|;
-name|StringTableBuilder
+name|PDBStringTableBuilder
 modifier|&
 name|getStringTableBuilder
 parameter_list|()
@@ -218,8 +218,16 @@ name|StringRef
 name|Filename
 parameter_list|)
 function_decl|;
-name|private
-label|:
+name|Expected
+operator|<
+name|uint32_t
+operator|>
+name|getNamedStreamIndex
+argument_list|(
+argument|StringRef Name
+argument_list|)
+specifier|const
+expr_stmt|;
 name|Error
 name|addNamedStream
 parameter_list|(
@@ -230,6 +238,8 @@ name|uint32_t
 name|Size
 parameter_list|)
 function_decl|;
+name|private
+label|:
 name|Expected
 operator|<
 name|msf
@@ -285,7 +295,7 @@ name|TpiStreamBuilder
 operator|>
 name|Ipi
 expr_stmt|;
-name|StringTableBuilder
+name|PDBStringTableBuilder
 name|Strings
 decl_stmt|;
 name|NamedStreamMap

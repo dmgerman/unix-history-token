@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/PDB/Native/PDBStringTable.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/PDB/Native/RawConstants.h"
 end_include
 
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/PDB/Native/RawTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo/PDB/Native/StringTable.h"
 end_include
 
 begin_include
@@ -367,7 +367,7 @@ name|ModuleInfoEx
 operator|>
 name|ModuleInfos
 expr_stmt|;
-name|StringTable
+name|PDBStringTable
 name|ECNames
 decl_stmt|;
 name|BinaryStreamRef

@@ -257,8 +257,6 @@ argument_list|,
 argument|uint32_t&Len
 argument_list|,
 argument|codeview::CVRecord<Kind>&Item
-argument_list|,
-argument|void *Ctx
 argument_list|)
 block|{
 name|using

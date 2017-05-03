@@ -118,12 +118,11 @@ argument_list|()
 operator|=
 expr|default
 block|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Name
 operator|=
-name|nullptr
+name|StringRef
+argument_list|()
 block|;
 name|uint64_t
 name|DirIdx
@@ -155,6 +154,14 @@ decl_stmt|;
 comment|/// Version identifier for the statement information format.
 name|uint16_t
 name|Version
+decl_stmt|;
+comment|/// In v5, size in bytes of an address (or segment offset).
+name|uint8_t
+name|AddressSize
+decl_stmt|;
+comment|/// In v5, size in bytes of a segment selector.
+name|uint8_t
+name|SegSelectorSize
 decl_stmt|;
 comment|/// The number of bytes following the prologue_length field to the beginning
 comment|/// of the first byte of the statement program itself.
@@ -200,9 +207,7 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|char
-operator|*
+name|StringRef
 operator|>
 name|IncludeDirectories
 expr_stmt|;
@@ -356,6 +361,15 @@ name|OS
 argument_list|)
 decl|const
 decl_stmt|;
+specifier|static
+name|void
+name|dumpTableHeader
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 specifier|static
 name|bool
 name|orderByAddress

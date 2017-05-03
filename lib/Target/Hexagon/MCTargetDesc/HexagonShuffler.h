@@ -497,8 +497,6 @@ argument_list|,
 argument|MCInst const *Extender
 argument_list|,
 argument|unsigned s
-argument_list|,
-argument|bool x = false
 argument_list|)
 block|:
 name|ID
@@ -527,6 +525,7 @@ argument_list|,
 argument|id
 argument_list|)
 block|{}
+expr_stmt|;
 name|MCInst
 specifier|const
 operator|&

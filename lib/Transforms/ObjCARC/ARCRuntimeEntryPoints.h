@@ -750,11 +750,11 @@ name|Attr
 operator|=
 name|Attr
 operator|.
-name|addAttribute
+name|addParamAttribute
 argument_list|(
 name|C
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|Attribute
 operator|::
