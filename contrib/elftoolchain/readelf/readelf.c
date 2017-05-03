@@ -36339,7 +36339,7 @@ argument_list|()
 expr_stmt|;
 name|name
 operator|=
-literal|"ERROR"
+literal|"<no-name>"
 expr_stmt|;
 block|}
 if|if
@@ -36367,6 +36367,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"elf_ndxscn failed: %s"
@@ -36378,6 +36379,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 if|if
 condition|(
