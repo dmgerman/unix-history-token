@@ -97,6 +97,12 @@ directive|include
 file|<fs/ext2fs/ext2_extern.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_extattr.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -2484,6 +2490,11 @@ operator|<=
 literal|0
 condition|)
 block|{
+name|ext2_extattr_free
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ext2_truncate

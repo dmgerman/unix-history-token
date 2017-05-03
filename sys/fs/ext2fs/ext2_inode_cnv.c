@@ -137,7 +137,7 @@ expr_stmt|;
 name|printf
 argument_list|(
 comment|/* "Inode: %5d" */
-literal|" Type: %10s Mode: 0x%o Flags: 0x%x  Version: %d\n"
+literal|" Type: %10s Mode: 0x%o Flags: 0x%x  Version: %d acl: 0x%llx\n"
 argument_list|,
 literal|"n/a"
 argument_list|,
@@ -152,6 +152,10 @@ argument_list|,
 name|in
 operator|->
 name|i_gen
+argument_list|,
+name|in
+operator|->
+name|i_facl
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1056,6 +1060,28 @@ operator|=
 name|ip
 operator|->
 name|i_blocks
+operator|>>
+literal|32
+operator|&
+literal|0xffff
+expr_stmt|;
+name|ei
+operator|->
+name|e2di_facl
+operator|=
+name|ip
+operator|->
+name|i_facl
+operator|&
+literal|0xffffffff
+expr_stmt|;
+name|ei
+operator|->
+name|e2di_facl_high
+operator|=
+name|ip
+operator|->
+name|i_facl
 operator|>>
 literal|32
 operator|&
