@@ -547,6 +547,23 @@ name|Arguments
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \return The estimated number of case clusters when lowering \p 'SI'.
+comment|/// \p JTSize Set a jump table size only when \p SI is suitable for a jump
+comment|/// table.
+name|unsigned
+name|getEstimatedNumberOfCaseClusters
+argument_list|(
+specifier|const
+name|SwitchInst
+operator|&
+name|SI
+argument_list|,
+name|unsigned
+operator|&
+name|JTSize
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Estimate the cost of a given IR user when lowered.
 comment|///
 comment|/// This can estimate the cost of either a ConstantExpr or Instruction when
@@ -2135,6 +2152,22 @@ argument_list|,
 argument|Type *RetTy
 argument_list|,
 argument|ArrayRef<const Value *> Arguments
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getEstimatedNumberOfCaseClusters
+argument_list|(
+specifier|const
+name|SwitchInst
+operator|&
+name|SI
+argument_list|,
+name|unsigned
+operator|&
+name|JTSize
 argument_list|)
 operator|=
 literal|0
@@ -4033,6 +4066,26 @@ operator|.
 name|getMaxInterleaveFactor
 argument_list|(
 name|VF
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getEstimatedNumberOfCaseClusters
+argument_list|(
+argument|const SwitchInst&SI
+argument_list|,
+argument|unsigned&JTSize
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getEstimatedNumberOfCaseClusters
+argument_list|(
+name|SI
+argument_list|,
+name|JTSize
 argument_list|)
 return|;
 block|}

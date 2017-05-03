@@ -599,29 +599,9 @@ name|AllExtensionsSilenced
 decl_stmt|;
 comment|// Used by __extension__
 name|bool
-name|IgnoreAllWarnings
+name|SuppressAfterFatalError
 decl_stmt|;
-comment|// Ignore all warnings: -w
-name|bool
-name|WarningsAsErrors
-decl_stmt|;
-comment|// Treat warnings like errors.
-name|bool
-name|EnableAllWarnings
-decl_stmt|;
-comment|// Enable all warnings.
-name|bool
-name|ErrorsAsFatal
-decl_stmt|;
-comment|// Treat errors like fatal errors.
-name|bool
-name|FatalsAsError
-decl_stmt|;
-comment|// Treat fatal errors like errors.
-name|bool
-name|SuppressSystemWarnings
-decl_stmt|;
-comment|// Suppress warnings in system headers.
+comment|// Suppress diagnostics after a fatal error?
 name|bool
 name|SuppressAllDiagnostics
 decl_stmt|;
@@ -656,12 +636,6 @@ name|ConstexprBacktraceLimit
 decl_stmt|;
 comment|// Cap on depth of constexpr evaluation
 comment|// backtrace stack, 0 -> no limit.
-name|diag
-operator|::
-name|Severity
-name|ExtBehavior
-expr_stmt|;
-comment|// Map extensions to warnings or errors?
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticIDs
@@ -716,6 +690,76 @@ name|DiagMap
 expr_stmt|;
 name|public
 label|:
+comment|// "Global" configuration state that can actually vary between modules.
+name|unsigned
+name|IgnoreAllWarnings
+range|:
+literal|1
+decl_stmt|;
+comment|// Ignore all warnings: -w
+name|unsigned
+name|EnableAllWarnings
+range|:
+literal|1
+decl_stmt|;
+comment|// Enable all warnings.
+name|unsigned
+name|WarningsAsErrors
+range|:
+literal|1
+decl_stmt|;
+comment|// Treat warnings like errors.
+name|unsigned
+name|ErrorsAsFatal
+range|:
+literal|1
+decl_stmt|;
+comment|// Treat errors like fatal errors.
+name|unsigned
+name|SuppressSystemWarnings
+range|:
+literal|1
+decl_stmt|;
+comment|// Suppress warnings in system headers.
+name|diag
+operator|::
+name|Severity
+name|ExtBehavior
+expr_stmt|;
+comment|// Map extensions to warnings or errors?
+name|DiagState
+argument_list|()
+operator|:
+name|IgnoreAllWarnings
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|EnableAllWarnings
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|WarningsAsErrors
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ErrorsAsFatal
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|SuppressSystemWarnings
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ExtBehavior
+argument_list|(
+argument|diag::Severity::Ignored
+argument_list|)
+block|{}
 typedef|typedef
 name|llvm
 operator|::
@@ -1602,6 +1646,9 @@ name|bool
 name|Val
 parameter_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|IgnoreAllWarnings
 operator|=
 name|Val
@@ -1613,6 +1660,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|IgnoreAllWarnings
 return|;
 block|}
@@ -1627,6 +1677,9 @@ name|bool
 name|Val
 parameter_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|EnableAllWarnings
 operator|=
 name|Val
@@ -1638,6 +1691,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|EnableAllWarnings
 return|;
 block|}
@@ -1649,6 +1705,9 @@ name|bool
 name|Val
 parameter_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|WarningsAsErrors
 operator|=
 name|Val
@@ -1660,6 +1719,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|WarningsAsErrors
 return|;
 block|}
@@ -1671,6 +1733,9 @@ name|bool
 name|Val
 parameter_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|ErrorsAsFatal
 operator|=
 name|Val
@@ -1682,32 +1747,25 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|ErrorsAsFatal
 return|;
 block|}
-comment|/// \brief When set to true, any fatal error reported is made an error.
-comment|///
-comment|/// This setting takes precedence over the setErrorsAsFatal setting above.
+comment|/// \brief When set to true (the default), suppress further diagnostics after
+comment|/// a fatal error.
 name|void
-name|setFatalsAsError
+name|setSuppressAfterFatalError
 parameter_list|(
 name|bool
 name|Val
 parameter_list|)
 block|{
-name|FatalsAsError
+name|SuppressAfterFatalError
 operator|=
 name|Val
 expr_stmt|;
-block|}
-name|bool
-name|getFatalsAsError
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FatalsAsError
-return|;
 block|}
 comment|/// \brief When set to true mask warnings that come from system headers.
 name|void
@@ -1717,6 +1775,9 @@ name|bool
 name|Val
 parameter_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|SuppressSystemWarnings
 operator|=
 name|Val
@@ -1728,6 +1789,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|SuppressSystemWarnings
 return|;
 block|}
@@ -1910,6 +1974,9 @@ name|Severity
 name|H
 argument_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|ExtBehavior
 operator|=
 name|H
@@ -1923,6 +1990,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|ExtBehavior
 return|;
 block|}

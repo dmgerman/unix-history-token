@@ -3143,6 +3143,22 @@ literal|4
 operator|>
 name|SpecialMembersBeingDeclared
 expr_stmt|;
+comment|/// The function definitions which were renamed as part of typo-correction
+comment|/// to match their respective declarations. We want to keep track of them
+comment|/// to ensure that we don't emit a "redefinition" error if we encounter a
+comment|/// correctly named definition after the renamed definition.
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+specifier|const
+name|NamedDecl
+operator|*
+operator|,
+literal|4
+operator|>
+name|TypoCorrectedFunctionDefinitions
+expr_stmt|;
 name|void
 name|ReadMethodPool
 parameter_list|(
@@ -14325,6 +14341,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|MarkTypoCorrectedFunctionDefinition
+parameter_list|(
+specifier|const
+name|NamedDecl
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|void
 name|FindAssociatedClassesAndNamespaces
@@ -14654,6 +14682,18 @@ end_function_decl
 begin_function_decl
 name|bool
 name|CheckNoReturnAttr
+parameter_list|(
+specifier|const
+name|AttributeList
+modifier|&
+name|attr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|CheckNoCallerSavedRegsAttr
 parameter_list|(
 specifier|const
 name|AttributeList
@@ -48644,30 +48684,11 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|SemaBuiltinVAStartImpl
-parameter_list|(
-name|CallExpr
-modifier|*
-name|TheCall
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
 name|SemaBuiltinVAStart
 parameter_list|(
-name|CallExpr
-modifier|*
-name|TheCall
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
-name|SemaBuiltinMSVAStart
-parameter_list|(
+name|unsigned
+name|BuiltinID
+parameter_list|,
 name|CallExpr
 modifier|*
 name|TheCall
@@ -49274,17 +49295,6 @@ name|E
 parameter_list|,
 name|SourceLocation
 name|CC
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|CheckForIntOverflow
-parameter_list|(
-name|Expr
-modifier|*
-name|E
 parameter_list|)
 function_decl|;
 end_function_decl

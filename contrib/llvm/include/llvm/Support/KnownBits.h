@@ -73,7 +73,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// For now this is a simple wrapper around two APInts.
+comment|// Struct for tracking the known zeros and ones of a value.
 struct|struct
 name|KnownBits
 block|{
@@ -134,6 +134,72 @@ operator|.
 name|getBitWidth
 argument_list|()
 return|;
+block|}
+comment|/// Returns true if this value is known to be negative.
+name|bool
+name|isNegative
+argument_list|()
+specifier|const
+block|{
+return|return
+name|One
+operator|.
+name|isSignBitSet
+argument_list|()
+return|;
+block|}
+comment|/// Returns true if this value is known to be non-negative.
+name|bool
+name|isNonNegative
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Zero
+operator|.
+name|isSignBitSet
+argument_list|()
+return|;
+block|}
+comment|/// Make this value negative.
+name|void
+name|makeNegative
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isNonNegative
+argument_list|()
+operator|&&
+literal|"Can't make a non-negative value negative"
+argument_list|)
+expr_stmt|;
+name|One
+operator|.
+name|setSignBit
+argument_list|()
+expr_stmt|;
+block|}
+comment|/// Make this value negative.
+name|void
+name|makeNonNegative
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isNegative
+argument_list|()
+operator|&&
+literal|"Can't make a negative value non-negative"
+argument_list|)
+expr_stmt|;
+name|Zero
+operator|.
+name|setSignBit
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 struct|;

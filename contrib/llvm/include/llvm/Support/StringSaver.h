@@ -137,6 +137,7 @@ block|}
 name|StringRef
 name|save
 argument_list|(
+specifier|const
 name|std
 operator|::
 name|string

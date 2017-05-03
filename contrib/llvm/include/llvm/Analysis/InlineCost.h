@@ -475,6 +475,20 @@ name|unsigned
 name|SizeOptLevel
 parameter_list|)
 function_decl|;
+comment|/// Return the cost associated with a callsite, including paramater passing
+comment|/// and the call/return instruction.
+name|int
+name|getCallsiteCost
+parameter_list|(
+name|CallSite
+name|CS
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|)
+function_decl|;
 comment|/// \brief Get an InlineCost object representing the cost of inlining this
 comment|/// callsite.
 comment|///

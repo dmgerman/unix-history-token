@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleSubstream.h"
+file|"llvm/DebugInfo/CodeView/ModuleDebugFragment.h"
 end_include
 
 begin_include
@@ -58,7 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/Native/ModInfo.h"
+file|"llvm/DebugInfo/PDB/Native/DbiModuleDescriptor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/Native/PDBStringTable.h"
 end_include
 
 begin_include
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/PDB/Native/RawTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo/PDB/Native/StringTable.h"
 end_include
 
 begin_include
@@ -367,7 +367,7 @@ name|ModuleInfoEx
 operator|>
 name|ModuleInfos
 expr_stmt|;
-name|StringTable
+name|PDBStringTable
 name|ECNames
 decl_stmt|;
 name|BinaryStreamRef

@@ -154,15 +154,11 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|//===----------------------------------------------------------------------===//
-comment|// ConvergingVLIWScheduler - Implementation of the standard
-comment|// MachineSchedStrategy.
-comment|//===----------------------------------------------------------------------===//
 name|class
 name|VLIWResourceModel
 block|{
 comment|/// ResourcesModel - Represents VLIW state.
-comment|/// Not limited to VLIW targets per say, but assumes
+comment|/// Not limited to VLIW targets per se, but assumes
 comment|/// definition of DFA by a target.
 name|DFAPacketizer
 modifier|*
@@ -409,6 +405,10 @@ argument_list|()
 name|override
 block|; }
 decl_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|// ConvergingVLIWScheduler - Implementation of the standard
+comment|// MachineSchedStrategy.
+comment|//===----------------------------------------------------------------------===//
 comment|/// ConvergingVLIWScheduler shrinks the unscheduled zone using heuristics
 comment|/// to balance the schedule.
 name|class

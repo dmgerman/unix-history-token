@@ -1087,6 +1087,10 @@ name|R_00B228_SPI_SHADER_PGM_RSRC1_GS
 value|0x00B228
 define|#
 directive|define
+name|R_00B428_SPI_SHADER_PGM_RSRC1_HS
+value|0x00B428
+define|#
+directive|define
 name|R_00B848_COMPUTE_PGM_RSRC1
 value|0x00B848
 define|#

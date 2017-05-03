@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/Native/ModInfo.h"
+file|"llvm/DebugInfo/PDB/Native/DbiModuleDescriptor.h"
 end_include
 
 begin_include

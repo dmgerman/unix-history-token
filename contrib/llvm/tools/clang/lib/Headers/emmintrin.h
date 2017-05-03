@@ -7602,6 +7602,74 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double], with each
+end_comment
+
+begin_comment
+comment|///    of the two double-precision floating-point vector elements set to the
+end_comment
+
+begin_comment
+comment|///    specified double-precision floating-point value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVDDUP / MOVLHPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __w
+end_comment
+
+begin_comment
+comment|///    A double-precision floating-point value used to initialize each vector
+end_comment
+
+begin_comment
+comment|///    element of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit floating-point vector of [2 x double].
+end_comment
+
+begin_function
+specifier|static
+name|__inline__
+name|__m128d
+name|__DEFAULT_FN_ATTRS
+name|_mm_set_pd1
+parameter_list|(
+name|double
+name|__w
+parameter_list|)
+block|{
+return|return
+name|_mm_set1_pd
+argument_list|(
+name|__w
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double]
 end_comment
 

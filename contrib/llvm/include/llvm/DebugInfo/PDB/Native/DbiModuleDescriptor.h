@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModInfo.h - PDB module information -----------------------*- C++ -*-===//
+comment|//===- DbiModuleDescriptor.h - PDB module information -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_PDB_RAW_MODINFO_H
+name|LLVM_DEBUGINFO_PDB_RAW_DBIMODULEDESCRIPTOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_PDB_RAW_MODINFO_H
+name|LLVM_DEBUGINFO_PDB_RAW_DBIMODULEDESCRIPTOR_H
 end_define
 
 begin_include
@@ -93,7 +93,7 @@ name|namespace
 name|pdb
 block|{
 name|class
-name|ModInfo
+name|DbiModuleDescriptor
 block|{
 name|friend
 name|class
@@ -101,19 +101,19 @@ name|DbiStreamBuilder
 decl_stmt|;
 name|public
 label|:
-name|ModInfo
+name|DbiModuleDescriptor
 argument_list|()
 expr_stmt|;
-name|ModInfo
+name|DbiModuleDescriptor
 argument_list|(
 specifier|const
-name|ModInfo
+name|DbiModuleDescriptor
 operator|&
 name|Info
 argument_list|)
 expr_stmt|;
 operator|~
-name|ModInfo
+name|DbiModuleDescriptor
 argument_list|()
 expr_stmt|;
 specifier|static
@@ -123,7 +123,7 @@ parameter_list|(
 name|BinaryStreamRef
 name|Stream
 parameter_list|,
-name|ModInfo
+name|DbiModuleDescriptor
 modifier|&
 name|Info
 parameter_list|)
@@ -149,7 +149,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|uint32_t
-name|getLineInfoByteSize
+name|getC11LineInfoByteSize
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -211,7 +211,7 @@ block|{
 name|ModuleInfoEx
 argument_list|(
 specifier|const
-name|ModInfo
+name|DbiModuleDescriptor
 operator|&
 name|Info
 argument_list|)
@@ -231,7 +231,7 @@ argument_list|)
 operator|=
 expr|default
 expr_stmt|;
-name|ModInfo
+name|DbiModuleDescriptor
 name|Info
 decl_stmt|;
 name|std
@@ -254,27 +254,23 @@ name|VarStreamArrayExtractor
 operator|<
 name|pdb
 operator|::
-name|ModInfo
+name|DbiModuleDescriptor
 operator|>
 block|{
+typedef|typedef
+name|void
+name|ContextType
+typedef|;
+specifier|static
 name|Error
-name|operator
-argument_list|()
-operator|(
-name|BinaryStreamRef
-name|Stream
-operator|,
-name|uint32_t
-operator|&
-name|Length
-operator|,
-name|pdb
-operator|::
-name|ModInfo
-operator|&
-name|Info
-operator|)
-specifier|const
+name|extract
+argument_list|(
+argument|BinaryStreamRef Stream
+argument_list|,
+argument|uint32_t&Length
+argument_list|,
+argument|pdb::DbiModuleDescriptor&Info
+argument_list|)
 block|{
 if|if
 condition|(
@@ -283,7 +279,7 @@ name|EC
 init|=
 name|pdb
 operator|::
-name|ModInfo
+name|DbiModuleDescriptor
 operator|::
 name|initialize
 argument_list|(
@@ -301,7 +297,7 @@ name|Info
 operator|.
 name|getRecordLength
 argument_list|()
-block|;
+expr_stmt|;
 return|return
 name|Error
 operator|::
@@ -309,15 +305,10 @@ name|success
 argument_list|()
 return|;
 block|}
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace llvm
 end_comment
 
@@ -327,7 +318,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_DEBUGINFO_PDB_RAW_MODINFO_H
+comment|// LLVM_DEBUGINFO_PDB_RAW_DBIMODULEDESCRIPTOR_H
 end_comment
 
 end_unit

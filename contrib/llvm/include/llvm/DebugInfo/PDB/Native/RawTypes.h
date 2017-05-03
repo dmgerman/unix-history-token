@@ -554,7 +554,7 @@ struct|;
 struct|struct
 name|ModInfoFlags
 block|{
-comment|///  uint16_t fWritten : 1;   // True if ModInfo is dirty
+comment|///  uint16_t fWritten : 1;   // True if DbiModuleDescriptor is dirty
 comment|///  uint16_t fECEnabled : 1; // Is EC symbolic info present?  (What is EC?)
 comment|///  uint16_t unused : 6;     // Reserved
 comment|///  uint16_t iTSM : 8;       // Type Server Index for this module
@@ -617,11 +617,11 @@ operator|::
 name|ulittle32_t
 name|SymBytes
 expr_stmt|;
-comment|/// Size of line number debug info in above stream
+comment|/// Size of C11 line number info in above stream
 name|support
 operator|::
 name|ulittle32_t
-name|LineBytes
+name|C11Bytes
 expr_stmt|;
 comment|/// Size of C13 line number info in above stream
 name|support
@@ -835,28 +835,31 @@ block|}
 struct|;
 comment|/// The header preceeding the /names stream.
 struct|struct
-name|StringTableHeader
+name|PDBStringTableHeader
 block|{
 name|support
 operator|::
 name|ulittle32_t
 name|Signature
 expr_stmt|;
+comment|// PDBStringTableSignature
 name|support
 operator|::
 name|ulittle32_t
 name|HashVersion
 expr_stmt|;
+comment|// 1 or 2
 name|support
 operator|::
 name|ulittle32_t
 name|ByteSize
 expr_stmt|;
+comment|// Number of bytes of names buffer.
 block|}
 struct|;
 specifier|const
 name|uint32_t
-name|StringTableSignature
+name|PDBStringTableSignature
 init|=
 literal|0xEFFEEFFE
 decl_stmt|;

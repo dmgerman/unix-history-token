@@ -347,6 +347,35 @@ argument_list|()
 block|}
 return|;
 block|}
+specifier|inline
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|toArrayRef
+argument_list|(
+argument|StringRef S
+argument_list|)
+block|{
+return|return
+block|{
+operator|(
+specifier|const
+name|uint8_t
+operator|*
+operator|)
+name|S
+operator|.
+name|data
+argument_list|()
+block|,
+name|S
+operator|.
+name|size
+argument_list|()
+block|}
+return|;
+block|}
 block|}
 end_decl_stmt
 

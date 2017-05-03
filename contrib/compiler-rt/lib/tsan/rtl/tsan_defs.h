@@ -647,6 +647,31 @@ operator|==
 literal|16
 argument_list|)
 expr_stmt|;
+enum|enum
+name|ExternalTag
+enum|:
+name|uptr
+block|{
+name|kExternalTagNone
+init|=
+literal|0
+block|,
+name|kExternalTagSwiftModifyingAccess
+init|=
+literal|1
+block|,
+name|kExternalTagFirstUserAvailable
+init|=
+literal|2
+block|,
+name|kExternalTagMax
+init|=
+literal|1024
+block|,
+comment|// Don't set kExternalTagMax over 65,536, since MBlock only stores tags
+comment|// as 16-bit values, see tsan_defs.h.
+block|}
+enum|;
 block|}
 end_decl_stmt
 

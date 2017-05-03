@@ -140,9 +140,6 @@ block|,
 name|ID_IR
 block|,
 comment|// LLVM IR
-name|ID_ModuleSummaryIndex
-block|,
-comment|// Module summary index
 comment|// Object and children.
 name|ID_StartObjects
 block|,
@@ -413,17 +410,6 @@ return|return
 name|TypeID
 operator|==
 name|ID_IR
-return|;
-block|}
-name|bool
-name|isModuleSummaryIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TypeID
-operator|==
-name|ID_ModuleSummaryIndex
 return|;
 block|}
 name|bool

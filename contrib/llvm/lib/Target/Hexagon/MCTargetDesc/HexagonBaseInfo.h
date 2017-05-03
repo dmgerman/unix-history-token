@@ -408,15 +408,6 @@ name|ExtentAlignMask
 init|=
 literal|0x3
 block|,
-comment|// Valid subtargets
-name|validSubTargetPos
-init|=
-literal|35
-block|,
-name|validSubTargetMask
-init|=
-literal|0x3f
-block|,
 comment|// Addressing mode for load/store instructions.
 name|AddrModePos
 init|=
@@ -494,6 +485,14 @@ init|=
 literal|60
 block|,
 name|CofMax1Mask
+init|=
+literal|0x1
+block|,
+name|CVINewPos
+init|=
+literal|61
+block|,
+name|CVINewMask
 init|=
 literal|0x1
 block|}

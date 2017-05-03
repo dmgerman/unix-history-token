@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_REVISION
-value|"svn-r301441"
+value|"svn-r302069"
 end_define
 
 end_unit

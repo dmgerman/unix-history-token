@@ -1665,8 +1665,10 @@ comment|// TODO: Serialize FunctionContextIdx
 name|unsigned
 name|MaxCallFrameSize
 operator|=
-literal|0
+operator|~
+literal|0u
 block|;
+comment|///< ~0u means: not computed yet.
 name|bool
 name|HasOpaqueSPAdjustment
 operator|=
@@ -1830,6 +1832,9 @@ argument_list|,
 name|MFI
 operator|.
 name|MaxCallFrameSize
+argument_list|,
+operator|~
+literal|0u
 argument_list|)
 block|;
 name|YamlIO

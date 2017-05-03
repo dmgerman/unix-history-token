@@ -216,6 +216,9 @@ name|class
 name|MCSectionWasm
 decl_stmt|;
 name|class
+name|MCStreamer
+decl_stmt|;
+name|class
 name|MCSymbol
 decl_stmt|;
 name|class
@@ -227,6 +230,9 @@ decl_stmt|;
 name|class
 name|SMLoc
 decl_stmt|;
+name|class
+name|SourceMgr
+decl_stmt|;
 comment|/// Context object for machine code objects.  This class owns all of the
 comment|/// sections that it creates.
 comment|///
@@ -235,17 +241,18 @@ name|MCContext
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|SymbolTable
+init|=
 name|StringMap
 operator|<
 name|MCSymbol
 operator|*
-operator|,
+decl_stmt|,
 name|BumpPtrAllocator
-operator|&
-operator|>
-name|SymbolTable
-expr_stmt|;
+modifier|&
+decl|>
+decl_stmt|;
 name|private
 label|:
 comment|/// The SourceMgr for this object, if any.

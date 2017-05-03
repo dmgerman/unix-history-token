@@ -1110,18 +1110,6 @@ operator|*
 name|V
 argument_list|)
 decl_stmt|;
-comment|/// Constants for \p replaceDbgDeclare and friends.
-enum|enum
-block|{
-name|NoDeref
-init|=
-name|false
-block|,
-name|WithDeref
-init|=
-name|true
-block|}
-enum|;
 comment|/// Replaces llvm.dbg.declare instruction when the address it describes
 comment|/// is replaced with a new value. If Deref is true, an additional DW_OP_deref is
 comment|/// prepended to the expression. If Offset is non-zero, a constant displacement

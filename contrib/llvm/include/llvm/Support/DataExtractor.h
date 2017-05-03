@@ -176,6 +176,35 @@ name|offset_ptr
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Extract a C string from \a *OffsetPtr.
+comment|///
+comment|/// Returns a StringRef for the C String from the data at the offset
+comment|/// pointed to by \a OffsetPtr. A variable length NULL terminated C
+comment|/// string will be extracted and the \a OffsetPtr will be
+comment|/// updated with the offset of the byte that follows the NULL
+comment|/// terminator byte.
+comment|///
+comment|/// \param[in,out] OffsetPtr
+comment|///     A pointer to an offset within the data that will be advanced
+comment|///     by the appropriate number of bytes if the value is extracted
+comment|///     correctly. If the offset is out of bounds or there are not
+comment|///     enough bytes to extract this value, the offset will be left
+comment|///     unmodified.
+comment|///
+comment|/// \return
+comment|///     A StringRef for the C string value in the data. If the offset
+comment|///     pointed to by \a OffsetPtr is out of bounds, or if the
+comment|///     offset plus the length of the C string is out of bounds,
+comment|///     a default-initialized StringRef will be returned.
+name|StringRef
+name|getCStrRef
+argument_list|(
+name|uint32_t
+operator|*
+name|OffsetPtr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Extract an unsigned integer of size \a byte_size from \a
 comment|/// *offset_ptr.
 comment|///

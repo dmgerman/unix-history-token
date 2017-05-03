@@ -1936,6 +1936,13 @@ name|SANITIZER_INTERCEPT_MALLOC_USABLE_SIZE
 value|(!SI_MAC)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_MCHECK_MPROBE
+value|SI_LINUX_NOT_ANDROID
+end_define
+
 begin_endif
 endif|#
 directive|endif

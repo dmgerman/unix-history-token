@@ -313,12 +313,6 @@ comment|/// Remove attributes from an argument.
 name|void
 name|removeAttr
 argument_list|(
-argument|AttributeList AS
-argument_list|)
-block|;
-name|void
-name|removeAttr
-argument_list|(
 argument|Attribute::AttrKind Kind
 argument_list|)
 block|;

@@ -248,12 +248,12 @@ name|Symb
 operator|.
 name|p
 operator|=
-name|isCode
+name|isData
 argument_list|()
 condition|?
-literal|2
-else|:
 literal|1
+else|:
+literal|2
 block|;
 return|return
 name|BasicSymbolRef
@@ -291,7 +291,7 @@ block|}
 name|private
 label|:
 name|bool
-name|isCode
+name|isData
 argument_list|()
 specifier|const
 block|{
@@ -304,7 +304,7 @@ argument_list|()
 operator|==
 name|COFF
 operator|::
-name|IMPORT_CODE
+name|IMPORT_DATA
 return|;
 block|}
 block|}

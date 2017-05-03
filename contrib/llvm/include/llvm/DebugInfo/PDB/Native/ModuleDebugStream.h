@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModStream.h - PDB Module Info Stream Access ------------------------===//
+comment|//===- ModuleDebugStream.h - PDB Module Info Stream Access ----------------===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_PDB_RAW_MODSTREAM_H
+name|LLVM_DEBUGINFO_PDB_RAW_MODULEDEBUGSTREAM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_PDB_RAW_MODSTREAM_H
+name|LLVM_DEBUGINFO_PDB_RAW_MODULEDEBUGSTREAM_H
 end_define
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleSubstream.h"
+file|"llvm/DebugInfo/CodeView/ModuleDebugFragmentRecord.h"
 end_include
 
 begin_include
@@ -102,17 +102,25 @@ name|class
 name|PDBFile
 decl_stmt|;
 name|class
-name|ModInfo
+name|DbiModuleDescriptor
 decl_stmt|;
 name|class
-name|ModStream
+name|ModuleDebugStreamRef
 block|{
+typedef|typedef
+name|codeview
+operator|::
+name|ModuleDebugFragmentArray
+operator|::
+name|Iterator
+name|LinesAndChecksumsIterator
+expr_stmt|;
 name|public
 label|:
-name|ModStream
+name|ModuleDebugStreamRef
 argument_list|(
 specifier|const
-name|ModInfo
+name|DbiModuleDescriptor
 operator|&
 name|Module
 argument_list|,
@@ -128,7 +136,7 @@ name|Stream
 argument_list|)
 expr_stmt|;
 operator|~
-name|ModStream
+name|ModuleDebugStreamRef
 argument_list|()
 expr_stmt|;
 name|Error
@@ -158,18 +166,14 @@ argument|bool *HadError
 argument_list|)
 specifier|const
 expr_stmt|;
+name|llvm
+operator|::
 name|iterator_range
 operator|<
-name|codeview
-operator|::
-name|ModuleSubstreamArray
-operator|::
-name|Iterator
+name|LinesAndChecksumsIterator
 operator|>
-name|lines
-argument_list|(
-argument|bool *HadError
-argument_list|)
+name|linesAndChecksums
+argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
@@ -184,7 +188,7 @@ function_decl|;
 name|private
 label|:
 specifier|const
-name|ModInfo
+name|DbiModuleDescriptor
 modifier|&
 name|Mod
 decl_stmt|;
@@ -207,7 +211,7 @@ name|CVSymbolArray
 name|SymbolsSubstream
 expr_stmt|;
 name|BinaryStreamRef
-name|LinesSubstream
+name|C11LinesSubstream
 decl_stmt|;
 name|BinaryStreamRef
 name|C13LinesSubstream
@@ -217,8 +221,8 @@ name|GlobalRefsSubstream
 decl_stmt|;
 name|codeview
 operator|::
-name|ModuleSubstreamArray
-name|LineInfo
+name|ModuleDebugFragmentArray
+name|LinesAndChecksums
 expr_stmt|;
 block|}
 empty_stmt|;

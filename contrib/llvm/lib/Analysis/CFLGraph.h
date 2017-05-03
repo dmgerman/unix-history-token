@@ -2298,10 +2298,8 @@ operator|||
 operator|!
 name|Fn
 operator|->
-name|doesNotAlias
-argument_list|(
-literal|0
-argument_list|)
+name|returnDoesNotAlias
+argument_list|()
 condition|)
 comment|// No need to call addNode() since we've added Inst at the
 comment|// beginning of this function and we know it is not a global.

@@ -371,6 +371,19 @@ operator|>>
 name|getSummary
 argument_list|()
 expr_stmt|;
+comment|/// Parse the specified bitcode buffer and merge its module summary index
+comment|/// into CombinedIndex.
+name|Error
+name|readSummary
+parameter_list|(
+name|ModuleSummaryIndex
+modifier|&
+name|CombinedIndex
+parameter_list|,
+name|unsigned
+name|ModuleId
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -600,6 +613,59 @@ operator|>>
 name|getModuleSummaryIndex
 argument_list|(
 argument|MemoryBufferRef Buffer
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Parse the specified bitcode buffer and merge the index into CombinedIndex.
+end_comment
+
+begin_function_decl
+name|Error
+name|readModuleSummaryIndex
+parameter_list|(
+name|MemoryBufferRef
+name|Buffer
+parameter_list|,
+name|ModuleSummaryIndex
+modifier|&
+name|CombinedIndex
+parameter_list|,
+name|unsigned
+name|ModuleId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Parse the module summary index out of an IR file and return the module
+end_comment
+
+begin_comment
+comment|/// summary index object if found, or an empty summary if not. If Path refers
+end_comment
+
+begin_comment
+comment|/// to an empty file and the -ignore-empty-index-file cl::opt flag is passed
+end_comment
+
+begin_comment
+comment|/// this function will return nullptr.
+end_comment
+
+begin_expr_stmt
+name|Expected
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ModuleSummaryIndex
+operator|>>
+name|getModuleSummaryIndexForFile
+argument_list|(
+argument|StringRef Path
 argument_list|)
 expr_stmt|;
 end_expr_stmt

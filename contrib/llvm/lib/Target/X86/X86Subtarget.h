@@ -314,6 +314,10 @@ comment|/// Target has TBM instructions.
 name|bool
 name|HasTBM
 block|;
+comment|/// Target has LWP instructions
+name|bool
+name|HasLWP
+block|;
 comment|/// True if the processor has the MOVBE instruction.
 name|bool
 name|HasMOVBE
@@ -591,6 +595,12 @@ block|;
 name|X86FrameLowering
 name|FrameLowering
 block|;
+name|bool
+name|OptForSize
+block|;
+name|bool
+name|OptForMinSize
+block|;
 name|public
 operator|:
 comment|/// This constructor initializes the data members to match that
@@ -607,6 +617,10 @@ argument_list|,
 argument|const X86TargetMachine&TM
 argument_list|,
 argument|unsigned StackAlignOverride
+argument_list|,
+argument|bool OptForSize
+argument_list|,
+argument|bool OptForMinSize
 argument_list|)
 block|;
 comment|/// This object will take onwership of \p GISelAccessor.
@@ -1201,6 +1215,15 @@ name|HasTBM
 return|;
 block|}
 name|bool
+name|hasLWP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasLWP
+return|;
+block|}
+name|bool
 name|hasMOVBE
 argument_list|()
 specifier|const
@@ -1663,6 +1686,24 @@ specifier|const
 block|{
 return|return
 name|UseSoftFloat
+return|;
+block|}
+name|bool
+name|getOptForSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OptForSize
+return|;
+block|}
+name|bool
+name|getOptForMinSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OptForMinSize
 return|;
 block|}
 comment|/// Use mfence if we have SSE2 or we're on x86-64 (even if we asked for

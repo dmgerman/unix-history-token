@@ -352,7 +352,7 @@ expr_stmt|;
 name|std
 operator|::
 name|string
-name|RPath
+name|Rpath
 expr_stmt|;
 name|std
 operator|::

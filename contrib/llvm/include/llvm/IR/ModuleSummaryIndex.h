@@ -2744,40 +2744,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// Add the given per-module index into this module index/summary,
-end_comment
-
-begin_comment
-comment|/// assigning it the given module ID. Each module merged in should have
-end_comment
-
-begin_comment
-comment|/// a unique ID, necessary for consistent renaming of promoted
-end_comment
-
-begin_comment
-comment|/// static (local) variables.
-end_comment
-
-begin_decl_stmt
-name|void
-name|mergeFrom
-argument_list|(
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|ModuleSummaryIndex
-operator|>
-name|Other
-argument_list|,
-name|uint64_t
-name|NextModuleId
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Convenience method for creating a promoted global name
 end_comment
 
@@ -3057,33 +3023,6 @@ name|second
 return|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|/// Remove entries in the GlobalValueMap that have empty summaries due to the
-end_comment
-
-begin_comment
-comment|/// eager nature of map entry creation during VST parsing. These would
-end_comment
-
-begin_comment
-comment|/// also be suppressed during combined index generation in mergeFrom(),
-end_comment
-
-begin_comment
-comment|/// but if there was only one module or this was the first module we might
-end_comment
-
-begin_comment
-comment|/// not invoke mergeFrom.
-end_comment
-
-begin_function_decl
-name|void
-name|removeEmptySummaryEntries
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/// Collect for the given module the list of function it defines

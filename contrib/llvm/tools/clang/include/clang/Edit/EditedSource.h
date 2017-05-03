@@ -297,6 +297,11 @@ parameter_list|(
 name|EditsReceiver
 modifier|&
 name|receiver
+parameter_list|,
+name|bool
+name|adjustRemovals
+init|=
+name|true
 parameter_list|)
 function_decl|;
 name|void

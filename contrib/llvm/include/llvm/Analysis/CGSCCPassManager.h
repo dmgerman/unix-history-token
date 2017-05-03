@@ -2462,7 +2462,7 @@ block|;
 comment|// Collect value handles for all of the indirect call sites.
 name|SmallVector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 block|,
 literal|8
 operator|>
@@ -2495,7 +2495,7 @@ name|C
 operator|,
 name|SmallVectorImpl
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 operator|&
 name|CallHandles
@@ -2601,7 +2601,7 @@ name|CallHandles
 operator|.
 name|push_back
 argument_list|(
-name|WeakVH
+name|WeakTrackingVH
 argument_list|(
 operator|&
 name|I
@@ -2753,7 +2753,7 @@ index|[
 operator|&
 index|]
 operator|(
-name|WeakVH
+name|WeakTrackingVH
 operator|&
 name|CallH
 operator|)

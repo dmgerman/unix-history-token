@@ -319,6 +319,9 @@ comment|/// Carry-setting nodes for multiple precision addition and subtraction.
 comment|/// These nodes take two operands of the same value type, and produce two
 comment|/// results.  The first result is the normal add or sub result, the second
 comment|/// result is the carry flag result.
+comment|/// FIXME: These nodes are deprecated in favor of ADDCARRY and SUBCARRY.
+comment|/// They are kept around for now to provide a smooth transition path
+comment|/// toward the use of ADDCARRY/SUBCARRY and will eventually be removed.
 name|ADDC
 block|,
 name|SUBC
@@ -333,6 +336,18 @@ comment|/// values.
 name|ADDE
 block|,
 name|SUBE
+block|,
+comment|/// Carry-using nodes for multiple precision addition and subtraction.
+comment|/// These nodes take three operands: The first two are the normal lhs and
+comment|/// rhs to the add or sub, and the third is a boolean indicating if there
+comment|/// is an incoming carry. These nodes produce two results: the normal
+comment|/// result of the add or sub, and the output carry so they can be chained
+comment|/// together. The use of this opcode is preferable to adde/sube if the
+comment|/// target supports it, as the carry is a regular value rather than a
+comment|/// glue, which allows further optimisation.
+name|ADDCARRY
+block|,
+name|SUBCARRY
 block|,
 comment|/// RESULT, BOOL = [SU]ADDO(LHS, RHS) - Overflow-aware nodes for addition.
 comment|/// These nodes take two operands: the normal LHS and RHS to the add. They

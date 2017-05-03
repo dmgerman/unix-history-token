@@ -1842,6 +1842,7 @@ comment|/// \param Flags         e.g. is this function prototyped or not.
 comment|///                      These flags are used to emit dwarf attributes.
 comment|/// \param isOptimized   True if optimization is ON.
 comment|/// \param TParams       Function template parameters.
+comment|/// \param ThrownTypes   Exception types this function may throw.
 name|DISubprogram
 modifier|*
 name|createFunction
@@ -1898,6 +1899,11 @@ argument_list|,
 name|DISubprogram
 operator|*
 name|Decl
+operator|=
+name|nullptr
+argument_list|,
+name|DITypeArray
+name|ThrownTypes
 operator|=
 name|nullptr
 argument_list|)
@@ -1962,6 +1968,11 @@ operator|*
 name|Decl
 operator|=
 name|nullptr
+argument_list|,
+name|DITypeArray
+name|ThrownTypes
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// Create a new descriptor for the specified C++ method.
@@ -1986,6 +1997,7 @@ comment|/// \param Flags         e.g. is this function prototyped or not.
 comment|///                      This flags are used to emit dwarf attributes.
 comment|/// \param isOptimized   True if optimization is ON.
 comment|/// \param TParams       Function template parameters.
+comment|/// \param ThrownTypes   Exception types this function may throw.
 name|DISubprogram
 modifier|*
 name|createMethod
@@ -2056,14 +2068,17 @@ name|DITemplateParameterArray
 name|TParams
 operator|=
 name|nullptr
+argument_list|,
+name|DITypeArray
+name|ThrownTypes
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// This creates new descriptor for a namespace with the specified
 comment|/// parent scope.
 comment|/// \param Scope       Namespace scope
 comment|/// \param Name        Name of this namespace
-comment|/// \param File        Source file
-comment|/// \param LineNo      Line number
 comment|/// \param ExportSymbols True for C++ inline namespaces.
 name|DINamespace
 modifier|*
@@ -2075,13 +2090,6 @@ name|Scope
 parameter_list|,
 name|StringRef
 name|Name
-parameter_list|,
-name|DIFile
-modifier|*
-name|File
-parameter_list|,
-name|unsigned
-name|LineNo
 parameter_list|,
 name|bool
 name|ExportSymbols

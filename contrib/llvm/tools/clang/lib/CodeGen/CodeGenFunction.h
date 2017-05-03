@@ -18687,6 +18687,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|Destroyer
+name|emitARCIntrinsicUse
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitObjCAutoreleasePoolPop
 argument_list|(
@@ -19271,14 +19278,13 @@ name|pair
 operator|<
 name|llvm
 operator|::
-name|WeakVH
+name|WeakTrackingVH
 argument_list|,
 name|llvm
 operator|::
 name|Constant
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|&
 name|DtorsAndObjects
 argument_list|)

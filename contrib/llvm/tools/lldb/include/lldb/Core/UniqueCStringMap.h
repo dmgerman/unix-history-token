@@ -74,13 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/RegularExpression.h"
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"lldb/Utility/RegularExpression.h"
 end_include
 
 begin_decl_stmt
@@ -114,7 +114,7 @@ argument_list|()
 block|{}
 name|Entry
 argument_list|(
-argument|llvm::StringRef cstr
+argument|ConstString cstr
 argument_list|)
 operator|:
 name|cstring
@@ -127,7 +127,7 @@ argument_list|()
 block|{}
 name|Entry
 argument_list|(
-argument|llvm::StringRef cstr
+argument|ConstString cstr
 argument_list|,
 argument|const T&v
 argument_list|)
@@ -142,6 +142,8 @@ argument_list|(
 argument|v
 argument_list|)
 block|{}
+comment|// This is only for uniqueness, not lexicographical ordering, so we can
+comment|// just compare pointers.
 name|bool
 name|operator
 operator|<
@@ -155,15 +157,19 @@ specifier|const
 block|{
 return|return
 name|cstring
+operator|.
+name|GetCString
+argument_list|()
 operator|<
 name|rhs
 operator|.
 name|cstring
+operator|.
+name|GetCString
+argument_list|()
 return|;
 block|}
-name|llvm
-operator|::
-name|StringRef
+name|ConstString
 name|cstring
 block|;
 name|T
@@ -178,7 +184,7 @@ comment|//------------------------------------------------------------------
 name|void
 name|Append
 argument_list|(
-argument|llvm::StringRef unique_cstr
+argument|ConstString unique_cstr
 argument_list|,
 argument|const T&value
 argument_list|)
@@ -219,7 +225,7 @@ comment|//------------------------------------------------------------------
 name|void
 name|Insert
 argument_list|(
-argument|llvm::StringRef unique_cstr
+argument|ConstString unique_cstr
 argument_list|,
 argument|const T&value
 argument_list|)
@@ -334,9 +340,7 @@ return|return
 name|false
 return|;
 block|}
-name|llvm
-operator|::
-name|StringRef
+name|ConstString
 name|GetCStringAtIndexUnchecked
 argument_list|(
 argument|uint32_t idx
@@ -390,9 +394,7 @@ operator|.
 name|value
 return|;
 block|}
-name|llvm
-operator|::
-name|StringRef
+name|ConstString
 name|GetCStringAtIndex
 argument_list|(
 argument|uint32_t idx
@@ -417,9 +419,7 @@ index|]
 operator|.
 name|cstring
 operator|:
-name|llvm
-operator|::
-name|StringRef
+name|ConstString
 argument_list|()
 operator|)
 return|;
@@ -435,7 +435,7 @@ comment|//------------------------------------------------------------------
 name|T
 name|Find
 argument_list|(
-argument|llvm::StringRef unique_cstr
+argument|ConstString unique_cstr
 argument_list|,
 argument|T fail_value
 argument_list|)
@@ -509,7 +509,7 @@ name|Entry
 operator|*
 name|FindFirstValueForName
 argument_list|(
-argument|llvm::StringRef unique_cstr
+argument|ConstString unique_cstr
 argument_list|)
 specifier|const
 block|{
@@ -549,20 +549,10 @@ condition|(
 name|pos
 operator|!=
 name|end
-condition|)
-block|{
-name|llvm
-operator|::
-name|StringRef
-name|pos_cstr
-operator|=
+operator|&&
 name|pos
 operator|->
 name|cstring
-expr_stmt|;
-if|if
-condition|(
-name|pos_cstr
 operator|==
 name|unique_cstr
 condition|)
@@ -573,7 +563,6 @@ operator|*
 name|pos
 operator|)
 return|;
-block|}
 return|return
 name|nullptr
 return|;
@@ -588,12 +577,15 @@ comment|// not change during while using the returned pointer.
 comment|//------------------------------------------------------------------
 specifier|const
 name|Entry
-operator|*
+modifier|*
 name|FindNextValueForName
 argument_list|(
-argument|const Entry *entry_ptr
-argument_list|)
 specifier|const
+name|Entry
+operator|*
+name|entry_ptr
+argument_list|)
+decl|const
 block|{
 if|if
 condition|(
@@ -669,37 +661,45 @@ block|}
 name|size_t
 name|GetValues
 argument_list|(
-argument|llvm::StringRef unique_cstr
+name|ConstString
+name|unique_cstr
 argument_list|,
-argument|std::vector<T>&values
+name|std
+operator|::
+name|vector
+operator|<
+name|T
+operator|>
+operator|&
+name|values
 argument_list|)
-specifier|const
+decl|const
 block|{
 specifier|const
 name|size_t
 name|start_size
-operator|=
+init|=
 name|values
 operator|.
 name|size
 argument_list|()
-block|;
+decl_stmt|;
 name|Entry
 name|search_entry
-argument_list|(
+parameter_list|(
 name|unique_cstr
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|const_iterator
 name|pos
-block|,
+decl_stmt|,
 name|end
-operator|=
+init|=
 name|m_map
 operator|.
 name|end
 argument_list|()
-block|;
+decl_stmt|;
 for|for
 control|(
 name|pos
@@ -758,31 +758,41 @@ block|}
 name|size_t
 name|GetValues
 argument_list|(
-argument|const RegularExpression&regex
-argument_list|,
-argument|std::vector<T>&values
-argument_list|)
 specifier|const
+name|RegularExpression
+operator|&
+name|regex
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|T
+operator|>
+operator|&
+name|values
+argument_list|)
+decl|const
 block|{
 specifier|const
 name|size_t
 name|start_size
-operator|=
+init|=
 name|values
 operator|.
 name|size
 argument_list|()
-block|;
+decl_stmt|;
 name|const_iterator
 name|pos
-block|,
+decl_stmt|,
 name|end
-operator|=
+init|=
 name|m_map
 operator|.
 name|end
 argument_list|()
-block|;
+decl_stmt|;
 for|for
 control|(
 name|pos
@@ -809,6 +819,9 @@ argument_list|(
 name|pos
 operator|->
 name|cstring
+operator|.
+name|GetCString
+argument_list|()
 argument_list|)
 condition|)
 name|values
@@ -868,9 +881,10 @@ comment|// call to UniqueCStringMap::Sort()) or to UniqueCStringMap::Insert().
 comment|//------------------------------------------------------------------
 name|void
 name|Reserve
-argument_list|(
-argument|size_t n
-argument_list|)
+parameter_list|(
+name|size_t
+name|n
+parameter_list|)
 block|{
 name|m_map
 operator|.
@@ -878,7 +892,8 @@ name|reserve
 argument_list|(
 name|n
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 comment|//------------------------------------------------------------------
 comment|// Sort the unsorted contents in this map. A typical code flow would
 comment|// be:
@@ -893,7 +908,7 @@ comment|// my_map.Sort();
 comment|//------------------------------------------------------------------
 name|void
 name|Sort
-argument_list|()
+parameter_list|()
 block|{
 name|std
 operator|::
@@ -909,7 +924,8 @@ operator|.
 name|end
 argument_list|()
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 comment|//------------------------------------------------------------------
 comment|// Since we are using a vector to contain our items it will always
 comment|// double its memory consumption as things are added to the vector,
@@ -920,7 +936,7 @@ comment|// part of the finalization of the string map.
 comment|//------------------------------------------------------------------
 name|void
 name|SizeToFit
-argument_list|()
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -960,40 +976,41 @@ block|}
 block|}
 name|size_t
 name|Erase
-argument_list|(
-argument|llvm::StringRef unique_cstr
-argument_list|)
+parameter_list|(
+name|ConstString
+name|unique_cstr
+parameter_list|)
 block|{
 name|size_t
 name|num_removed
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|Entry
 name|search_entry
 argument_list|(
 name|unique_cstr
 argument_list|)
-block|;
+decl_stmt|;
 name|iterator
 name|end
-operator|=
+init|=
 name|m_map
 operator|.
 name|end
 argument_list|()
-block|;
+decl_stmt|;
 name|iterator
 name|begin
-operator|=
+init|=
 name|m_map
 operator|.
 name|begin
 argument_list|()
-block|;
+decl_stmt|;
 name|iterator
 name|lower_pos
-operator|=
+init|=
 name|std
 operator|::
 name|lower_bound
@@ -1004,7 +1021,7 @@ name|end
 argument_list|,
 name|search_entry
 argument_list|)
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|lower_pos
@@ -1084,7 +1101,7 @@ name|num_removed
 return|;
 block|}
 name|protected
-operator|:
+label|:
 typedef|typedef
 name|std
 operator|::

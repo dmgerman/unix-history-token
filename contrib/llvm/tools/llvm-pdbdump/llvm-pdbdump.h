@@ -140,7 +140,7 @@ expr_stmt|;
 block|}
 struct|;
 extern|extern llvm::Optional<BlockRange> DumpBlockRange;
-extern|extern llvm::cl::list<uint32_t> DumpStreamData;
+extern|extern llvm::cl::list<std::string> DumpStreamData;
 extern|extern llvm::cl::opt<bool> CompactRecords;
 extern|extern llvm::cl::opt<bool> DumpGlobals;
 extern|extern llvm::cl::opt<bool> DumpHeaders;

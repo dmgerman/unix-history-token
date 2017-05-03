@@ -277,7 +277,7 @@ argument_list|,
 specifier|const
 name|SymbolizableModule
 operator|*
-name|ModInfo
+name|DbiModuleDescriptor
 argument_list|)
 expr_stmt|;
 name|private

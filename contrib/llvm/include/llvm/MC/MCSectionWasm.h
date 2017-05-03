@@ -104,6 +104,8 @@ range|:
 name|public
 name|MCSection
 block|{
+name|private
+operator|:
 comment|/// This is the name of the section.  The referenced memory is owned by
 comment|/// TargetLoweringObjectFileWasm's WasmUniqueMap.
 name|StringRef
@@ -125,12 +127,12 @@ name|MCSymbolWasm
 operator|*
 name|Group
 block|;
-comment|// The offset of the MC function section in the wasm code section.
+comment|// The offset of the MC function/data section in the wasm code/data section.
+comment|// For data relocations the offset is relative to start of the data payload
+comment|// itself and does not include the size of the section header.
 name|uint64_t
 name|SectionOffset
 block|;
-name|private
-operator|:
 name|friend
 name|class
 name|MCContext

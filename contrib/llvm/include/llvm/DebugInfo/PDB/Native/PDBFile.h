@@ -124,7 +124,7 @@ name|class
 name|InfoStream
 decl_stmt|;
 name|class
-name|StringTable
+name|PDBStringTable
 decl_stmt|;
 name|class
 name|PDBFileBuilder
@@ -421,7 +421,7 @@ argument_list|()
 block|;
 name|Expected
 operator|<
-name|StringTable
+name|PDBStringTable
 operator|&
 operator|>
 name|getStringTable
@@ -468,7 +468,7 @@ argument_list|()
 specifier|const
 block|;
 name|bool
-name|hasStringTable
+name|hasPDBStringTable
 argument_list|()
 block|;
 name|private
@@ -603,7 +603,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|StringTable
+name|PDBStringTable
 operator|>
 name|Strings
 block|; }

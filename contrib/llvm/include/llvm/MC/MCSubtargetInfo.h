@@ -278,7 +278,9 @@ name|virtual
 operator|~
 name|MCSubtargetInfo
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// getTargetTriple - Return the target triple string.
 specifier|const
 name|Triple
@@ -697,10 +699,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|std
-operator|::
-name|string
-argument_list|()
+block|{}
 return|;
 block|}
 name|virtual
@@ -714,10 +713,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|std
-operator|::
-name|string
-argument_list|()
+block|{}
 return|;
 block|}
 block|}

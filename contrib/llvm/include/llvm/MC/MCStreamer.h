@@ -193,9 +193,6 @@ name|class
 name|MCSymbolRefExpr
 decl_stmt|;
 name|class
-name|MCSymbolWasm
-decl_stmt|;
-name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
@@ -204,20 +201,20 @@ decl_stmt|;
 name|class
 name|Twine
 decl_stmt|;
-typedef|typedef
+name|using
+name|MCSectionSubPair
+init|=
 name|std
 operator|::
 name|pair
 operator|<
 name|MCSection
 operator|*
-operator|,
-specifier|const
+decl_stmt|, const
 name|MCExpr
-operator|*
-operator|>
-name|MCSectionSubPair
-expr_stmt|;
+modifier|*
+decl|>
+decl_stmt|;
 comment|/// Target specific streamer interface. This is used so that targets can
 comment|/// implement support for target specific assembly directives.
 comment|///

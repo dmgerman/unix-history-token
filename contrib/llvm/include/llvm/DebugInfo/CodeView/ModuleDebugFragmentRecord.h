@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModuleSubstream.h ----------------------------------------*- C++ -*-===//
+comment|//===- ModuleDebugFragment.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_CODEVIEW_MODULESUBSTREAM_H
+name|LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGFRAGMENTRECORD_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_CODEVIEW_MODULESUBSTREAM_H
+name|LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGFRAGMENTRECORD_H
 end_define
 
 begin_include
@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/BinaryStreamWriter.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Endian.h"
 end_include
 
@@ -80,16 +86,19 @@ block|{
 name|namespace
 name|codeview
 block|{
+name|class
+name|ModuleDebugFragment
+decl_stmt|;
 comment|// Corresponds to the `CV_DebugSSubsectionHeader_t` structure.
 struct|struct
-name|ModuleSubsectionHeader
+name|ModuleDebugFragmentHeader
 block|{
 name|support
 operator|::
 name|ulittle32_t
 name|Kind
 expr_stmt|;
-comment|// codeview::ModuleSubstreamKind enum
+comment|// codeview::ModuleDebugFragmentKind enum
 name|support
 operator|::
 name|ulittle32_t
@@ -98,109 +107,17 @@ expr_stmt|;
 comment|// number of bytes occupied by this record.
 block|}
 struct|;
-comment|// Corresponds to the `CV_DebugSLinesHeader_t` structure.
-struct|struct
-name|LineSubstreamHeader
-block|{
-name|support
-operator|::
-name|ulittle32_t
-name|RelocOffset
-expr_stmt|;
-comment|// Code offset of line contribution.
-name|support
-operator|::
-name|ulittle16_t
-name|RelocSegment
-expr_stmt|;
-comment|// Code segment of line contribution.
-name|support
-operator|::
-name|ulittle16_t
-name|Flags
-expr_stmt|;
-comment|// See LineFlags enumeration.
-name|support
-operator|::
-name|ulittle32_t
-name|CodeSize
-expr_stmt|;
-comment|// Code size of this line contribution.
-block|}
-struct|;
-comment|// Corresponds to the `CV_DebugSLinesFileBlockHeader_t` structure.
-struct|struct
-name|LineFileBlockHeader
-block|{
-name|support
-operator|::
-name|ulittle32_t
-name|NameIndex
-expr_stmt|;
-comment|// Index in DBI name buffer of filename.
-name|support
-operator|::
-name|ulittle32_t
-name|NumLines
-expr_stmt|;
-comment|// Number of lines
-name|support
-operator|::
-name|ulittle32_t
-name|BlockSize
-expr_stmt|;
-comment|// Code size of block, in bytes.
-comment|// The following two variable length arrays appear immediately after the
-comment|// header.  The structure definitions follow.
-comment|// LineNumberEntry   Lines[NumLines];
-comment|// ColumnNumberEntry Columns[NumLines];
-block|}
-struct|;
-comment|// Corresponds to `CV_Line_t` structure
-struct|struct
-name|LineNumberEntry
-block|{
-name|support
-operator|::
-name|ulittle32_t
-name|Offset
-expr_stmt|;
-comment|// Offset to start of code bytes for line number
-name|support
-operator|::
-name|ulittle32_t
-name|Flags
-expr_stmt|;
-comment|// Start:24, End:7, IsStatement:1
-block|}
-struct|;
-comment|// Corresponds to `CV_Column_t` structure
-struct|struct
-name|ColumnNumberEntry
-block|{
-name|support
-operator|::
-name|ulittle16_t
-name|StartColumn
-expr_stmt|;
-name|support
-operator|::
-name|ulittle16_t
-name|EndColumn
-expr_stmt|;
-block|}
-struct|;
 name|class
-name|ModuleSubstream
+name|ModuleDebugFragmentRecord
 block|{
 name|public
 label|:
-name|ModuleSubstream
+name|ModuleDebugFragmentRecord
 argument_list|()
 expr_stmt|;
-name|ModuleSubstream
+name|ModuleDebugFragmentRecord
 argument_list|(
-argument|ModuleSubstreamKind Kind
+argument|ModuleDebugFragmentKind Kind
 argument_list|,
 argument|BinaryStreamRef Data
 argument_list|)
@@ -212,7 +129,7 @@ parameter_list|(
 name|BinaryStreamRef
 name|Stream
 parameter_list|,
-name|ModuleSubstream
+name|ModuleDebugFragmentRecord
 modifier|&
 name|Info
 parameter_list|)
@@ -222,8 +139,8 @@ name|getRecordLength
 argument_list|()
 specifier|const
 expr_stmt|;
-name|ModuleSubstreamKind
-name|getSubstreamKind
+name|ModuleDebugFragmentKind
+name|kind
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -234,7 +151,7 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
-name|ModuleSubstreamKind
+name|ModuleDebugFragmentKind
 name|Kind
 decl_stmt|;
 name|BinaryStreamRef
@@ -242,13 +159,41 @@ name|Data
 decl_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
-name|VarStreamArray
-operator|<
-name|ModuleSubstream
-operator|>
-name|ModuleSubstreamArray
-expr_stmt|;
+name|class
+name|ModuleDebugFragmentRecordBuilder
+block|{
+name|public
+label|:
+name|ModuleDebugFragmentRecordBuilder
+argument_list|(
+argument|ModuleDebugFragmentKind Kind
+argument_list|,
+argument|ModuleDebugFragment&Frag
+argument_list|)
+empty_stmt|;
+name|uint32_t
+name|calculateSerializedLength
+parameter_list|()
+function_decl|;
+name|Error
+name|commit
+parameter_list|(
+name|BinaryStreamWriter
+modifier|&
+name|Writer
+parameter_list|)
+function_decl|;
+name|private
+label|:
+name|ModuleDebugFragmentKind
+name|Kind
+decl_stmt|;
+name|ModuleDebugFragment
+modifier|&
+name|Frag
+decl_stmt|;
+block|}
+empty_stmt|;
 block|}
 comment|// namespace codeview
 name|template
@@ -259,27 +204,23 @@ name|VarStreamArrayExtractor
 operator|<
 name|codeview
 operator|::
-name|ModuleSubstream
+name|ModuleDebugFragmentRecord
 operator|>
 block|{
+typedef|typedef
+name|void
+name|ContextType
+typedef|;
+specifier|static
 name|Error
-name|operator
-argument_list|()
-operator|(
-name|BinaryStreamRef
-name|Stream
-operator|,
-name|uint32_t
-operator|&
-name|Length
-operator|,
-name|codeview
-operator|::
-name|ModuleSubstream
-operator|&
-name|Info
-operator|)
-specifier|const
+name|extract
+argument_list|(
+argument|BinaryStreamRef Stream
+argument_list|,
+argument|uint32_t&Length
+argument_list|,
+argument|codeview::ModuleDebugFragmentRecord&Info
+argument_list|)
 block|{
 if|if
 condition|(
@@ -288,7 +229,7 @@ name|EC
 init|=
 name|codeview
 operator|::
-name|ModuleSubstream
+name|ModuleDebugFragmentRecord
 operator|::
 name|initialize
 argument_list|(
@@ -306,7 +247,7 @@ name|Info
 operator|.
 name|getRecordLength
 argument_list|()
-block|;
+expr_stmt|;
 return|return
 name|Error
 operator|::
@@ -314,12 +255,22 @@ name|success
 argument_list|()
 return|;
 block|}
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+unit|};
+name|namespace
+name|codeview
+block|{
+typedef|typedef
+name|VarStreamArray
+operator|<
+name|ModuleDebugFragmentRecord
+operator|>
+name|ModuleDebugFragmentArray
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_comment
 unit|}
@@ -332,7 +283,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_DEBUGINFO_CODEVIEW_MODULESUBSTREAM_H
+comment|// LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGFRAGMENTRECORD_H
 end_comment
 
 end_unit

@@ -115,7 +115,9 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
-typedef|typedef
+name|using
+name|OperandVector
+init|=
 name|SmallVectorImpl
 operator|<
 name|std
@@ -124,8 +126,7 @@ name|unique_ptr
 operator|<
 name|MCParsedAsmOperand
 operator|>>
-name|OperandVector
-expr_stmt|;
+decl_stmt|;
 enum|enum
 name|AsmRewriteKind
 block|{

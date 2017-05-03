@@ -175,7 +175,7 @@ name|LI
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 operator|&
 name|Dead
@@ -210,7 +210,7 @@ name|LI
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 operator|&
 name|Dead

@@ -2030,6 +2030,17 @@ argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Retrieve the version of the target platform in which this
+comment|/// declaration was introduced.
+comment|///
+comment|/// \returns An empty version tuple if this declaration has no 'introduced'
+comment|/// availability attributes, or the version tuple that's specified in the
+comment|/// attribute otherwise.
+name|VersionTuple
+name|getVersionIntroduced
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Determine whether this declaration is marked 'deprecated'.
 comment|///
 comment|/// \param Message If non-NULL and the declaration is deprecated,

@@ -101,17 +101,18 @@ decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
-typedef|typedef
+name|using
+name|SectionAddrMap
+init|=
 name|DenseMap
 operator|<
 specifier|const
 name|MCSection
 operator|*
-operator|,
+decl_stmt|,
 name|uint64_t
-operator|>
-name|SectionAddrMap
-expr_stmt|;
+decl|>
+decl_stmt|;
 comment|/// \brief Base class for the full range of assembler expressions which are
 comment|/// needed for parsing.
 name|class

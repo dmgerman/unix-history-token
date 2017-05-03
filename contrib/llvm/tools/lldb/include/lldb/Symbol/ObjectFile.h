@@ -1666,9 +1666,9 @@ return|;
 block|}
 comment|// Strip linker annotations (such as @@VERSION) from symbol names.
 name|virtual
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 name|StripLinkerSymbolAnnotations
 argument_list|(
 argument|llvm::StringRef symbol_name
@@ -1677,9 +1677,6 @@ specifier|const
 block|{
 return|return
 name|symbol_name
-operator|.
-name|str
-argument_list|()
 return|;
 block|}
 specifier|static

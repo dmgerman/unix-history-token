@@ -524,9 +524,7 @@ name|computeKnownBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
-argument|APInt&KnownZero
-argument_list|,
-argument|APInt&KnownOne
+argument|KnownBits&Known
 argument_list|,
 argument|const APInt&DemandedElts
 argument_list|,

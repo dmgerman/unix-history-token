@@ -255,6 +255,11 @@ parameter_list|()
 block|{ }
 name|virtual
 name|void
+name|printCOFFResources
+parameter_list|()
+block|{}
+name|virtual
+name|void
 name|printCodeViewDebugInfo
 parameter_list|()
 block|{ }

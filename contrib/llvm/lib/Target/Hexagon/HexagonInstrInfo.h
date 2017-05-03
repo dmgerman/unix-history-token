@@ -1389,6 +1389,13 @@ argument_list|)
 specifier|const
 block|;
 name|int
+name|getNonDotCurOp
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+name|int
 name|getDotNewOp
 argument_list|(
 argument|const MachineInstr&MI
@@ -1540,13 +1547,6 @@ name|unsigned
 name|getUnits
 argument_list|(
 argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getValidSubTargets
-argument_list|(
-argument|const unsigned Opcode
 argument_list|)
 specifier|const
 block|;

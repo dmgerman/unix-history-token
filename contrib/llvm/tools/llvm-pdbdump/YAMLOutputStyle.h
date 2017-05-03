@@ -81,7 +81,7 @@ name|namespace
 name|pdb
 block|{
 name|class
-name|ModStream
+name|ModuleDebugStreamRef
 decl_stmt|;
 name|class
 name|YAMLOutputStyle
@@ -122,7 +122,7 @@ argument_list|(
 specifier|const
 name|pdb
 operator|::
-name|ModStream
+name|ModuleDebugStreamRef
 operator|&
 name|ModS
 argument_list|)

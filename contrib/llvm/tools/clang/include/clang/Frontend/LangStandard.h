@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/FrontendOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -73,20 +79,12 @@ operator|<<
 literal|0
 operator|)
 block|,
-name|C89
-init|=
-operator|(
-literal|1
-operator|<<
-literal|1
-operator|)
-block|,
 name|C99
 init|=
 operator|(
 literal|1
 operator|<<
-literal|2
+literal|1
 operator|)
 block|,
 name|C11
@@ -94,7 +92,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|3
+literal|2
 operator|)
 block|,
 name|CPlusPlus
@@ -102,7 +100,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|4
+literal|3
 operator|)
 block|,
 name|CPlusPlus11
@@ -110,7 +108,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|5
+literal|4
 operator|)
 block|,
 name|CPlusPlus14
@@ -118,7 +116,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|6
+literal|5
 operator|)
 block|,
 name|CPlusPlus1z
@@ -126,7 +124,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|7
+literal|6
 operator|)
 block|,
 name|Digraphs
@@ -134,7 +132,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|8
+literal|7
 operator|)
 block|,
 name|GNUMode
@@ -142,7 +140,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|9
+literal|8
 operator|)
 block|,
 name|HexFloat
@@ -150,7 +148,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|10
+literal|9
 operator|)
 block|,
 name|ImplicitInt
@@ -158,7 +156,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|11
+literal|10
 operator|)
 block|,
 name|OpenCL
@@ -166,7 +164,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|12
+literal|11
 operator|)
 block|}
 enum|;
@@ -186,6 +184,8 @@ parameter_list|(
 name|id
 parameter_list|,
 name|name
+parameter_list|,
+name|lang
 parameter_list|,
 name|desc
 parameter_list|,
@@ -212,6 +212,11 @@ decl_stmt|;
 name|unsigned
 name|Flags
 decl_stmt|;
+name|InputKind
+operator|::
+name|Language
+name|Language
+expr_stmt|;
 name|public
 label|:
 comment|/// getName - Get the name of this standard.
@@ -238,6 +243,18 @@ return|return
 name|Description
 return|;
 block|}
+comment|/// Get the language that this standard describes.
+name|InputKind
+operator|::
+name|Language
+name|getLanguage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Language
+return|;
+block|}
 comment|/// Language supports '//' comments.
 name|bool
 name|hasLineComments
@@ -250,20 +267,6 @@ operator|&
 name|frontend
 operator|::
 name|LineComment
-return|;
-block|}
-comment|/// isC89 - Language is a superset of C89.
-name|bool
-name|isC89
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Flags
-operator|&
-name|frontend
-operator|::
-name|C89
 return|;
 block|}
 comment|/// isC99 - Language is a superset of C99.

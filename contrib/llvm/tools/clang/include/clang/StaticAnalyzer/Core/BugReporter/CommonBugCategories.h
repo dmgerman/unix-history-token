@@ -83,6 +83,13 @@ specifier|const
 name|char
 modifier|*
 specifier|const
+name|MemoryError
+decl_stmt|;
+specifier|extern
+specifier|const
+name|char
+modifier|*
+specifier|const
 name|UnixAPI
 decl_stmt|;
 block|}

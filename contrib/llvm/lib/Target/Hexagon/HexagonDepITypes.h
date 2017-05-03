@@ -85,10 +85,6 @@ name|TypeCVI_VINLANESAT
 init|=
 literal|18
 block|,
-name|TypeCVI_VM_CUR_LD
-init|=
-literal|19
-block|,
 name|TypeCVI_VM_LD
 init|=
 literal|20

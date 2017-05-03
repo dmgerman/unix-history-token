@@ -294,6 +294,17 @@ argument|lldb::DynamicValueType d
 argument_list|)
 block|;
 name|bool
+name|GetPreloadSymbols
+argument_list|()
+specifier|const
+block|;
+name|void
+name|SetPreloadSymbols
+argument_list|(
+argument|bool b
+argument_list|)
+block|;
+name|bool
 name|GetDisableASLR
 argument_list|()
 specifier|const

@@ -103,6 +103,12 @@ directive|include
 file|<type_traits>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -541,6 +547,21 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// Splits the Writer into two Writers at a given offset.
+name|std
+operator|::
+name|pair
+operator|<
+name|BinaryStreamWriter
+operator|,
+name|BinaryStreamWriter
+operator|>
+name|split
+argument_list|(
+argument|uint32_t Off
+argument_list|)
+specifier|const
+expr_stmt|;
 name|void
 name|setOffset
 parameter_list|(

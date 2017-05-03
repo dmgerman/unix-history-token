@@ -478,6 +478,15 @@ argument|bool SummarizeTypes = false
 argument_list|)
 name|override
 block|;
+name|bool
+name|verify
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|DIDumpType DumpType = DIDT_All
+argument_list|)
+name|override
+block|;
 typedef|typedef
 name|DWARFUnitSection
 operator|<
@@ -704,6 +713,14 @@ name|get
 argument_list|()
 return|;
 block|}
+comment|/// Get a DIE given an exact offset.
+name|DWARFDie
+name|getDIEForOffset
+parameter_list|(
+name|uint32_t
+name|Offset
+parameter_list|)
+function_decl|;
 specifier|const
 name|DWARFUnitIndex
 modifier|&

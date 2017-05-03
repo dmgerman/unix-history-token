@@ -1047,7 +1047,11 @@ name|FunctionIndex
 operator|=
 operator|~
 literal|0U
-block|}
+block|,
+name|FirstArgIndex
+operator|=
+literal|1
+block|,   }
 block|;
 name|private
 operator|:
@@ -1239,6 +1243,32 @@ argument_list|,
 argument|const AttrBuilder&B
 argument_list|)
 block|;
+comment|/// Add an argument attribute to the list. Returns a new list because
+comment|/// attribute lists are immutable.
+name|AttributeList
+name|addParamAttribute
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|{
+return|return
+name|addAttribute
+argument_list|(
+name|C
+argument_list|,
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
 comment|/// \brief Add an attribute to the attribute set at the given index. Because
 comment|/// attribute sets are immutable, this returns a new set.
 name|AttributeList
@@ -1289,17 +1319,6 @@ argument|LLVMContext&C
 argument_list|,
 argument|unsigned Index
 argument_list|,
-argument|AttributeList Attrs
-argument_list|)
-specifier|const
-block|;
-name|AttributeList
-name|addAttributes
-argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|unsigned Index
-argument_list|,
 argument|const AttrBuilder&B
 argument_list|)
 specifier|const
@@ -1342,21 +1361,7 @@ argument|LLVMContext&C
 argument_list|,
 argument|unsigned Index
 argument_list|,
-argument|AttributeList Attrs
-argument_list|)
-specifier|const
-block|;
-comment|/// \brief Remove the specified attributes at the specified index from this
-comment|/// attribute list. Because attribute lists are immutable, this returns the
-comment|/// new list.
-name|AttributeList
-name|removeAttributes
-argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|unsigned Index
-argument_list|,
-argument|const AttrBuilder&Attrs
+argument|const AttrBuilder&AttrsToRemove
 argument_list|)
 specifier|const
 block|;
@@ -1498,7 +1503,7 @@ argument|StringRef Kind
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Equivalent to hasAttribute(ArgNo + 1, Kind).
+comment|/// \brief Equivalent to hasAttribute(ArgNo + FirstArgIndex, Kind).
 name|bool
 name|hasParamAttribute
 argument_list|(
@@ -1540,11 +1545,17 @@ argument|StringRef Kind
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Return the alignment of the return value.
+name|unsigned
+name|getRetAlignment
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Return the alignment for the specified function parameter.
 name|unsigned
 name|getParamAlignment
 argument_list|(
-argument|unsigned Index
+argument|unsigned ArgNo
 argument_list|)
 specifier|const
 block|;

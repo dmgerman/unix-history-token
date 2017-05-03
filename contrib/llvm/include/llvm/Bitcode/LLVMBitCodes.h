@@ -1638,6 +1638,10 @@ block|,
 name|ATTR_KIND_WRITEONLY
 init|=
 literal|52
+block|,
+name|ATTR_KIND_SPECULATABLE
+init|=
+literal|53
 block|}
 enum|;
 enum|enum

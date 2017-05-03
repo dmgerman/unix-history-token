@@ -447,6 +447,113 @@ name|uptr
 parameter_list|)
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|SANITIZER_ANDROID
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+define|#
+directive|define
+name|__get_tls
+parameter_list|()
+define|\
+value|({ void** __v; __asm__("mrs %0, tpidr_el0" : "=r"(__v)); __v; })
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+define|#
+directive|define
+name|__get_tls
+parameter_list|()
+define|\
+value|({ void** __v; __asm__("mrc p15, 0, %0, c13, c0, 3" : "=r"(__v)); __v; })
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+comment|// On mips32r1, this goes via a kernel illegal instruction trap that's
+comment|// optimized for v1.
+define|#
+directive|define
+name|__get_tls
+parameter_list|()
+define|\
+value|({ register void** __v asm("v1"); \        __asm__(".set    push\n" \                ".set    mips32r2\n" \                "rdhwr   %0,$29\n" \                ".set    pop\n" : "=r"(__v)); \        __v; })
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+define|#
+directive|define
+name|__get_tls
+parameter_list|()
+define|\
+value|({ void** __v; __asm__("movl %%gs:0, %0" : "=r"(__v)); __v; })
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+define|#
+directive|define
+name|__get_tls
+parameter_list|()
+define|\
+value|({ void** __v; __asm__("mov %%fs:0, %0" : "=r"(__v)); __v; })
+else|#
+directive|else
+error|#
+directive|error
+literal|"Unsupported architecture."
+endif|#
+directive|endif
+comment|// The Android Bionic team has allocated a TLS slot for TSan starting with N,
+comment|// given that Android currently doesn't support ELF TLS. It is used to store
+comment|// Sanitizers thread specific data.
+specifier|static
+specifier|const
+name|int
+name|TLS_SLOT_TSAN
+init|=
+literal|8
+decl_stmt|;
+name|ALWAYS_INLINE
+name|uptr
+modifier|*
+name|get_android_tls_ptr
+parameter_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|uptr
+operator|*
+operator|>
+operator|(
+operator|&
+name|__get_tls
+argument_list|()
+index|[
+name|TLS_SLOT_TSAN
+index|]
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|// SANITIZER_ANDROID
 block|}
 end_decl_stmt
 

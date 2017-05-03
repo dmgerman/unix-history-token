@@ -150,7 +150,7 @@ name|symbolName
 parameter_list|)
 function_decl|;
 comment|/// This function permanently loads the dynamic library at the given path.
-comment|/// The library will only be unloaded when the program terminates.
+comment|/// The library will only be unloaded when llvm_shutdown() is called.
 comment|/// This returns a valid DynamicLibrary instance on success and an invalid
 comment|/// instance on failure (see isValid()). \p *errMsg will only be modified
 comment|/// if the library fails to load.
@@ -178,7 +178,8 @@ decl_stmt|;
 comment|/// Registers an externally loaded library. The library will be unloaded
 comment|/// when the program terminates.
 comment|///
-comment|/// It is safe to call this function multiple times for the same library.
+comment|/// It is safe to call this function multiple times for the same library,
+comment|/// though ownership is only taken if there was no error.
 comment|///
 comment|/// \returns An empty \p DynamicLibrary if the library was already loaded.
 specifier|static
@@ -292,6 +293,9 @@ modifier|*
 name|symbolValue
 parameter_list|)
 function_decl|;
+name|class
+name|HandleSet
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

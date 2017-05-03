@@ -232,12 +232,16 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Encodes an immediate value with a given fixup.
+comment|/// \tparam Offset The offset into the instruction for the fixup.
 name|template
 operator|<
 name|AVR
 operator|::
 name|Fixups
 name|Fixup
+block|,
+name|unsigned
+name|Offset
 operator|>
 name|unsigned
 name|encodeImm

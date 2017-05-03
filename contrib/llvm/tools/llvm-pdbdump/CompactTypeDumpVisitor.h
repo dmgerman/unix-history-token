@@ -103,6 +103,15 @@ operator|*
 name|W
 argument_list|)
 block|;
+name|CompactTypeDumpVisitor
+argument_list|(
+argument|codeview::TypeDatabase&TypeDB
+argument_list|,
+argument|codeview::TypeIndex FirstTI
+argument_list|,
+argument|ScopedPrinter *W
+argument_list|)
+block|;
 comment|/// Paired begin/end actions for all types. Receives all record data,
 comment|/// including the fixed-length record prefix.
 name|Error

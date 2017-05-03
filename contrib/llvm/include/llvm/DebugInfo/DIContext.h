@@ -632,6 +632,25 @@ init|=
 literal|0
 function_decl|;
 name|virtual
+name|bool
+name|verify
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|DIDumpType
+name|DumpType
+init|=
+name|DIDT_All
+parameter_list|)
+block|{
+comment|// No verifier? Just say things went well.
+return|return
+name|true
+return|;
+block|}
+name|virtual
 name|DILineInfo
 name|getLineInfoForAddress
 parameter_list|(

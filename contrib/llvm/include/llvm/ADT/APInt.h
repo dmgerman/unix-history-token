@@ -232,6 +232,7 @@ name|pVal
 decl_stmt|;
 comment|///< Used to store the>64 bits integer value.
 block|}
+name|U
 union|;
 name|unsigned
 name|BitWidth
@@ -256,16 +257,18 @@ argument_list|,
 argument|unsigned bits
 argument_list|)
 block|:
-name|pVal
-argument_list|(
-name|val
-argument_list|)
-operator|,
 name|BitWidth
 argument_list|(
 argument|bits
 argument_list|)
-block|{}
+block|{
+name|U
+operator|.
+name|pVal
+operator|=
+name|val
+expr_stmt|;
+block|}
 comment|/// \brief Determine if this APInt just has one word to store value.
 comment|///
 comment|/// \returns true if the number of bits<= 64, false otherwise.
@@ -382,11 +385,15 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|&=
 name|mask
 expr_stmt|;
 else|else
+name|U
+operator|.
 name|pVal
 index|[
 name|getNumWords
@@ -416,8 +423,12 @@ return|return
 name|isSingleWord
 argument_list|()
 condition|?
+name|U
+operator|.
 name|VAL
 else|:
+name|U
+operator|.
 name|pVal
 index|[
 name|whichWord
@@ -723,6 +734,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|=
 name|val
@@ -812,9 +825,13 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 name|that
+operator|.
+name|U
 operator|.
 name|VAL
 expr_stmt|;
@@ -833,18 +850,27 @@ operator|&&
 name|that
 argument_list|)
 operator|:
-name|VAL
-argument_list|(
-name|that
-operator|.
-name|VAL
-argument_list|)
-operator|,
 name|BitWidth
 argument_list|(
 argument|that.BitWidth
 argument_list|)
 block|{
+name|memcpy
+argument_list|(
+operator|&
+name|U
+argument_list|,
+operator|&
+name|that
+operator|.
+name|U
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|U
+argument_list|)
+argument_list|)
+block|;
 name|that
 operator|.
 name|BitWidth
@@ -863,6 +889,8 @@ argument_list|()
 condition|)
 name|delete
 index|[]
+name|U
+operator|.
 name|pVal
 decl_stmt|;
 block|}
@@ -875,16 +903,17 @@ name|explicit
 name|APInt
 argument_list|()
 operator|:
-name|VAL
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|BitWidth
 argument_list|(
 literal|1
 argument_list|)
-block|{}
+block|{
+name|U
+operator|.
+name|VAL
+operator|=
+literal|0
+block|; }
 comment|/// \brief Returns whether this instance allocated memory.
 name|bool
 name|needsCleanup
@@ -1001,9 +1030,8 @@ name|isNonNegative
 argument_list|()
 operator|&&
 operator|!
-operator|!
-operator|*
-name|this
+name|isNullValue
+argument_list|()
 return|;
 block|}
 comment|/// \brief Determine if all bits are set
@@ -1020,6 +1048,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
+name|U
+operator|.
 name|VAL
 operator|==
 name|WORD_MAX
@@ -1035,6 +1065,21 @@ name|countPopulationSlowCase
 argument_list|()
 operator|==
 name|BitWidth
+return|;
+block|}
+comment|/// \brief Determine if all bits are clear
+comment|///
+comment|/// This checks to see if the value has all bits of the APInt are clear or
+comment|/// not.
+name|bool
+name|isNullValue
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+operator|*
+name|this
 return|;
 block|}
 comment|/// \brief Determine if this is the largest unsigned value.
@@ -1083,9 +1128,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-operator|*
-name|this
+name|isNullValue
+argument_list|()
 return|;
 block|}
 comment|/// \brief Determine if this is the smallest signed value.
@@ -1167,6 +1211,8 @@ condition|)
 return|return
 name|isPowerOf2_64
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 return|;
@@ -1336,6 +1382,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
+name|U
+operator|.
 name|VAL
 operator|==
 operator|(
@@ -1401,6 +1449,8 @@ condition|)
 return|return
 name|isMask_64
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 return|;
@@ -1459,6 +1509,8 @@ condition|)
 return|return
 name|isShiftedMask_64
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 return|;
@@ -2117,7 +2169,7 @@ begin_comment
 comment|/// \brief Return a value containing V broadcasted over NewLen bits.
 end_comment
 
-begin_function
+begin_function_decl
 specifier|static
 name|APInt
 name|getSplat
@@ -2130,58 +2182,8 @@ name|APInt
 modifier|&
 name|V
 parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|NewLen
-operator|>=
-name|V
-operator|.
-name|getBitWidth
-argument_list|()
-operator|&&
-literal|"Can't splat to smaller bit width!"
-argument_list|)
-expr_stmt|;
-name|APInt
-name|Val
-init|=
-name|V
-operator|.
-name|zextOrSelf
-argument_list|(
-name|NewLen
-argument_list|)
-decl_stmt|;
-for|for
-control|(
-name|unsigned
-name|I
-init|=
-name|V
-operator|.
-name|getBitWidth
-argument_list|()
-init|;
-name|I
-operator|<
-name|NewLen
-condition|;
-name|I
-operator|<<=
-literal|1
-control|)
-name|Val
-operator||=
-name|Val
-operator|<<
-name|I
-expr_stmt|;
-return|return
-name|Val
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Determine if two APInts have the same value, after zero-extending
@@ -2309,6 +2311,8 @@ argument_list|()
 condition|)
 return|return
 operator|&
+name|U
+operator|.
 name|VAL
 return|;
 end_expr_stmt
@@ -2316,6 +2320,8 @@ end_expr_stmt
 begin_return
 return|return
 operator|&
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -2504,16 +2510,31 @@ operator|(
 operator|)
 specifier|const
 block|{
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
 return|return
-operator|*
-name|this
+name|U
+operator|.
+name|VAL
 operator|==
 literal|0
 return|;
-block|}
 end_expr_stmt
 
+begin_return
+return|return
+name|countLeadingZerosSlowCase
+argument_list|()
+operator|==
+name|BitWidth
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/// @}
 end_comment
 
@@ -2537,11 +2558,11 @@ begin_comment
 comment|/// \returns *this after assignment of RHS.
 end_comment
 
-begin_decl_stmt
-name|APInt
-modifier|&
+begin_expr_stmt
+unit|APInt
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|APInt
@@ -2561,9 +2582,13 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|=
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 expr_stmt|;
@@ -2583,7 +2608,7 @@ argument_list|(
 name|RHS
 argument_list|)
 expr_stmt|;
-end_decl_stmt
+end_expr_stmt
 
 begin_return
 return|return
@@ -2626,6 +2651,8 @@ argument_list|()
 condition|)
 name|delete
 index|[]
+name|U
+operator|.
 name|pVal
 decl_stmt|;
 comment|// Use memcpy so that type based alias analysis sees both VAL and pVal
@@ -2633,16 +2660,16 @@ comment|// as modified.
 name|memcpy
 argument_list|(
 operator|&
-name|VAL
+name|U
 argument_list|,
 operator|&
 name|that
 operator|.
-name|VAL
+name|U
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|uint64_t
+name|U
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2718,6 +2745,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|=
 name|RHS
@@ -2731,6 +2760,8 @@ end_expr_stmt
 begin_else
 else|else
 block|{
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -2740,6 +2771,8 @@ name|RHS
 expr_stmt|;
 name|memset
 argument_list|(
+name|U
+operator|.
 name|pVal
 operator|+
 literal|1
@@ -2819,9 +2852,13 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|&=
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 expr_stmt|;
@@ -2877,6 +2914,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|&=
 name|RHS
@@ -2886,6 +2925,8 @@ operator|*
 name|this
 return|;
 block|}
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -2898,6 +2939,8 @@ end_expr_stmt
 begin_expr_stmt
 name|memset
 argument_list|(
+name|U
+operator|.
 name|pVal
 operator|+
 literal|1
@@ -2976,9 +3019,13 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator||=
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 expr_stmt|;
@@ -3034,6 +3081,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator||=
 name|RHS
@@ -3047,6 +3096,8 @@ end_expr_stmt
 begin_else
 else|else
 block|{
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -3117,9 +3168,13 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|^=
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 expr_stmt|;
@@ -3175,6 +3230,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|^=
 name|RHS
@@ -3188,6 +3245,8 @@ end_expr_stmt
 begin_else
 else|else
 block|{
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -3383,11 +3442,15 @@ name|ShiftAmt
 operator|==
 name|BitWidth
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 literal|0
 expr_stmt|;
 else|else
+name|U
+operator|.
 name|VAL
 operator|<<=
 name|ShiftAmt
@@ -3413,6 +3476,40 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Left-shift assignment function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Shifts *this left by shiftAmt and assigns the result to *this.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns *this after shifting left by ShiftAmt
+end_comment
+
+begin_expr_stmt
+unit|APInt
+operator|&
+name|operator
+operator|<<=
+operator|(
+specifier|const
+name|APInt
+operator|&
+name|ShiftAmt
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// @}
 end_comment
 
@@ -3436,22 +3533,19 @@ begin_comment
 comment|/// Multiplies this APInt by RHS and returns the result.
 end_comment
 
-begin_macro
-unit|APInt
+begin_decl_stmt
+name|APInt
 name|operator
-end_macro
-
-begin_expr_stmt
-operator|*
-operator|(
+modifier|*
+argument_list|(
 specifier|const
 name|APInt
 operator|&
 name|RHS
-operator|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Left logical shift operator.
@@ -3590,6 +3684,8 @@ name|SExtVAL
 init|=
 name|SignExtend64
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|,
 name|BitWidth
@@ -3601,6 +3697,8 @@ name|ShiftAmt
 operator|==
 name|BitWidth
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 name|SExtVAL
@@ -3613,6 +3711,8 @@ operator|)
 expr_stmt|;
 comment|// Fill with sign bit.
 else|else
+name|U
+operator|.
 name|VAL
 operator|=
 name|SExtVAL
@@ -3706,11 +3806,15 @@ name|ShiftAmt
 operator|==
 name|BitWidth
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 literal|0
 expr_stmt|;
 else|else
+name|U
+operator|.
 name|VAL
 operator|>>=
 name|ShiftAmt
@@ -3930,10 +4034,25 @@ argument_list|(
 specifier|const
 name|APInt
 operator|&
-name|shiftAmt
+name|ShiftAmt
 argument_list|)
 decl|const
+block|{
+name|APInt
+name|R
+argument_list|(
+operator|*
+name|this
+argument_list|)
 decl_stmt|;
+name|R
+operator|<<=
+name|ShiftAmt
+expr_stmt|;
+return|return
+name|R
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -4386,8 +4505,12 @@ operator|(
 name|isSingleWord
 argument_list|()
 condition|?
+name|U
+operator|.
 name|VAL
 else|:
+name|U
+operator|.
 name|pVal
 index|[
 name|whichWord
@@ -4460,9 +4583,13 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
+name|U
+operator|.
 name|VAL
 operator|==
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 return|;
@@ -5517,9 +5644,13 @@ argument_list|()
 condition|)
 return|return
 operator|(
+name|U
+operator|.
 name|VAL
 operator|&
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 operator|)
@@ -5568,10 +5699,14 @@ argument_list|()
 condition|)
 return|return
 operator|(
+name|U
+operator|.
 name|VAL
 operator|&
 operator|~
 name|RHS
+operator|.
+name|U
 operator|.
 name|VAL
 operator|)
@@ -5826,6 +5961,8 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 name|WORD_MAX
@@ -5834,6 +5971,8 @@ else|else
 comment|// Set all the bits in all the words.
 name|memset
 argument_list|(
+name|U
+operator|.
 name|pVal
 argument_list|,
 operator|-
@@ -5864,15 +6003,57 @@ begin_comment
 comment|/// Set the given bit to 1 whose position is given as "bitPosition".
 end_comment
 
-begin_function_decl
+begin_function
 name|void
 name|setBit
 parameter_list|(
 name|unsigned
-name|bitPosition
+name|BitPosition
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|assert
+argument_list|(
+name|BitPosition
+operator|<=
+name|BitWidth
+operator|&&
+literal|"BitPosition out of range"
+argument_list|)
+expr_stmt|;
+name|WordType
+name|Mask
+init|=
+name|maskBit
+argument_list|(
+name|BitPosition
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+name|U
+operator|.
+name|VAL
+operator||=
+name|Mask
+expr_stmt|;
+else|else
+name|U
+operator|.
+name|pVal
+index|[
+name|whichWord
+argument_list|(
+name|BitPosition
+argument_list|)
+index|]
+operator||=
+name|Mask
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// Set the sign bit to 1.
@@ -5926,6 +6107,15 @@ operator|&&
 literal|"loBit out of range"
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|loBit
+operator|<=
+name|hiBit
+operator|&&
+literal|"loBit greater than hiBit"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|loBit
@@ -5933,27 +6123,6 @@ operator|==
 name|hiBit
 condition|)
 return|return;
-if|if
-condition|(
-name|loBit
-operator|>
-name|hiBit
-condition|)
-block|{
-name|setLowBits
-argument_list|(
-name|hiBit
-argument_list|)
-expr_stmt|;
-name|setHighBits
-argument_list|(
-name|BitWidth
-operator|-
-name|loBit
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|loBit
@@ -5989,11 +6158,15 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator||=
 name|mask
 expr_stmt|;
 else|else
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -6100,6 +6273,8 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
+name|U
+operator|.
 name|VAL
 operator|=
 literal|0
@@ -6107,6 +6282,8 @@ expr_stmt|;
 else|else
 name|memset
 argument_list|(
+name|U
+operator|.
 name|pVal
 argument_list|,
 literal|0
@@ -6132,15 +6309,77 @@ begin_comment
 comment|/// Set the given bit to 0 whose position is given as "bitPosition".
 end_comment
 
-begin_function_decl
+begin_function
 name|void
 name|clearBit
 parameter_list|(
 name|unsigned
-name|bitPosition
+name|BitPosition
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|assert
+argument_list|(
+name|BitPosition
+operator|<=
+name|BitWidth
+operator|&&
+literal|"BitPosition out of range"
+argument_list|)
+expr_stmt|;
+name|WordType
+name|Mask
+init|=
+operator|~
+name|maskBit
+argument_list|(
+name|BitPosition
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+name|U
+operator|.
+name|VAL
+operator|&=
+name|Mask
+expr_stmt|;
+else|else
+name|U
+operator|.
+name|pVal
+index|[
+name|whichWord
+argument_list|(
+name|BitPosition
+argument_list|)
+index|]
+operator|&=
+name|Mask
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Set the sign bit to 0.
+end_comment
+
+begin_function
+name|void
+name|clearSignBit
+parameter_list|()
+block|{
+name|clearBit
+argument_list|(
+name|BitWidth
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Toggle every bit to its opposite value.
@@ -6157,6 +6396,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 block|{
+name|U
+operator|.
 name|VAL
 operator|^=
 name|WORD_MAX
@@ -6528,6 +6769,8 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
+name|U
+operator|.
 name|VAL
 return|;
 name|assert
@@ -6544,6 +6787,8 @@ end_expr_stmt
 
 begin_return
 return|return
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -6589,6 +6834,8 @@ condition|)
 return|return
 name|SignExtend64
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|,
 name|BitWidth
@@ -6610,6 +6857,8 @@ begin_return
 return|return
 name|int64_t
 argument_list|(
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -6705,6 +6954,8 @@ name|llvm
 operator|::
 name|countLeadingZeros
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 operator|-
@@ -6881,6 +7132,8 @@ name|llvm
 operator|::
 name|countTrailingOnes
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 return|;
@@ -6937,6 +7190,8 @@ name|llvm
 operator|::
 name|countPopulation
 argument_list|(
+name|U
+operator|.
 name|VAL
 argument_list|)
 return|;
@@ -7250,8 +7505,12 @@ operator|(
 name|isSingleWord
 argument_list|()
 condition|?
+name|U
+operator|.
 name|VAL
 else|:
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -7312,8 +7571,12 @@ operator|(
 name|isSingleWord
 argument_list|()
 condition|?
+name|U
+operator|.
 name|VAL
 else|:
+name|U
+operator|.
 name|pVal
 index|[
 literal|0
@@ -7561,6 +7824,8 @@ operator|==
 literal|1
 condition|)
 return|return
+name|U
+operator|.
 name|VAL
 operator|-
 literal|1
@@ -7574,8 +7839,7 @@ end_comment
 begin_if
 if|if
 condition|(
-operator|!
-name|getBoolValue
+name|isNullValue
 argument_list|()
 condition|)
 return|return

@@ -63,9 +63,9 @@ name|public
 operator|:
 name|UDPSocket
 argument_list|(
-argument|bool child_processes_inherit
+argument|bool should_close
 argument_list|,
-argument|Error&error
+argument|bool child_processes_inherit
 argument_list|)
 block|;
 specifier|static
@@ -84,6 +84,8 @@ operator|:
 name|UDPSocket
 argument_list|(
 argument|NativeSocket socket
+argument_list|,
+argument|const UDPSocket&listen_socket
 argument_list|)
 block|;
 name|size_t
@@ -114,13 +116,13 @@ block|;
 name|Error
 name|Accept
 argument_list|(
-argument|llvm::StringRef name
-argument_list|,
-argument|bool child_processes_inherit
-argument_list|,
 argument|Socket *&socket
 argument_list|)
 name|override
+block|;
+name|Error
+name|CreateSocket
+argument_list|()
 block|;
 name|SocketAddress
 name|m_sockaddr

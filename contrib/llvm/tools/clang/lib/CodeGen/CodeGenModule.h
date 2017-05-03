@@ -1180,68 +1180,25 @@ name|DeferredDecls
 expr_stmt|;
 comment|/// This is a list of deferred decls which we have seen that *are* actually
 comment|/// referenced. These get code generated when the module is done.
-struct|struct
-name|DeferredGlobal
-block|{
-name|DeferredGlobal
-argument_list|(
-argument|llvm::GlobalValue *GV
-argument_list|,
-argument|GlobalDecl GD
-argument_list|)
-block|:
-name|GV
-argument_list|(
-name|GV
-argument_list|)
-operator|,
-name|GD
-argument_list|(
-argument|GD
-argument_list|)
-block|{}
-name|llvm
-operator|::
-name|TrackingVH
-operator|<
-name|llvm
-operator|::
-name|GlobalValue
-operator|>
-name|GV
-expr_stmt|;
-name|GlobalDecl
-name|GD
-decl_stmt|;
-block|}
-struct|;
 name|std
 operator|::
 name|vector
 operator|<
-name|DeferredGlobal
+name|GlobalDecl
 operator|>
 name|DeferredDeclsToEmit
 expr_stmt|;
 name|void
 name|addDeferredDeclToEmit
-argument_list|(
-name|llvm
-operator|::
-name|GlobalValue
-operator|*
-name|GV
-argument_list|,
+parameter_list|(
 name|GlobalDecl
 name|GD
-argument_list|)
+parameter_list|)
 block|{
 name|DeferredDeclsToEmit
 operator|.
 name|emplace_back
 argument_list|(
-name|GV
-argument_list|,
 name|GD
 argument_list|)
 expr_stmt|;
@@ -1332,7 +1289,7 @@ name|vector
 operator|<
 name|llvm
 operator|::
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|LLVMUsed
 expr_stmt|;
@@ -1342,7 +1299,7 @@ name|vector
 operator|<
 name|llvm
 operator|::
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|LLVMCompilerUsed
 expr_stmt|;
@@ -1668,14 +1625,13 @@ name|pair
 operator|<
 name|llvm
 operator|::
-name|WeakVH
+name|WeakTrackingVH
 operator|,
 name|llvm
 operator|::
 name|Constant
 operator|*
-operator|>
-expr|>
+operator|>>
 name|CXXGlobalDtors
 expr_stmt|;
 comment|/// \brief The complete set of modules that has been imported.
@@ -1723,7 +1679,7 @@ comment|/// Cached reference to the class for constant strings. This value has t
 comment|/// int * but is actually an Obj-C class pointer.
 name|llvm
 operator|::
-name|WeakVH
+name|WeakTrackingVH
 name|CFConstantStringClassRef
 expr_stmt|;
 comment|/// \brief The type used to describe the state of a fast enumeration in

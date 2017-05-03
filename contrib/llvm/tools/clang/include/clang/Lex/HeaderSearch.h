@@ -1124,6 +1124,9 @@ comment|///
 comment|/// \param SuggestedModule If non-null, and the file found is semantically
 comment|/// part of a known module, this will be set to the module that should
 comment|/// be imported instead of preprocessing/parsing the file found.
+comment|///
+comment|/// \param IsMapped If non-null, and the search involved header maps, set to
+comment|/// true.
 specifier|const
 name|FileEntry
 modifier|*
@@ -1188,6 +1191,10 @@ operator|::
 name|KnownHeader
 operator|*
 name|SuggestedModule
+argument_list|,
+name|bool
+operator|*
+name|IsMapped
 argument_list|,
 name|bool
 name|SkipCache

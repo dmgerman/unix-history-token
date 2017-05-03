@@ -125,7 +125,7 @@ struct_decl|struct
 name|DbiStreamHeader
 struct_decl|;
 name|class
-name|ModInfoBuilder
+name|DbiModuleDescriptorBuilder
 decl_stmt|;
 name|class
 name|PDBFile
@@ -261,7 +261,7 @@ specifier|const
 expr_stmt|;
 name|Expected
 operator|<
-name|ModInfoBuilder
+name|DbiModuleDescriptorBuilder
 operator|&
 operator|>
 name|addModuleInfo
@@ -279,6 +279,15 @@ name|StringRef
 name|File
 parameter_list|)
 function_decl|;
+name|Expected
+operator|<
+name|uint32_t
+operator|>
+name|getSourceFileNameIndex
+argument_list|(
+argument|StringRef FileName
+argument_list|)
+expr_stmt|;
 name|Error
 name|finalizeMsfLayout
 parameter_list|()
@@ -445,7 +454,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|ModInfoBuilder
+name|DbiModuleDescriptorBuilder
 operator|>>
 name|ModiMap
 expr_stmt|;
@@ -453,7 +462,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|ModInfoBuilder
+name|DbiModuleDescriptorBuilder
 operator|*
 operator|>
 name|ModiList

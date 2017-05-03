@@ -98,7 +98,7 @@ specifier|const
 name|Value
 operator|*
 operator|,
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|ValueToValueMapTy
 expr_stmt|;

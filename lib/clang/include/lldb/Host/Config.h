@@ -61,7 +61,21 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_EVENT_H
-value|0
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_PPOLL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGACTION
+value|1
 end_define
 
 begin_endif

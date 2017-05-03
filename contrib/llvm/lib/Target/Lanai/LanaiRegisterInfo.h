@@ -151,14 +151,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|bool
-name|canRealignStack
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|// Debug information queries.
 name|unsigned
 name|getRARegister

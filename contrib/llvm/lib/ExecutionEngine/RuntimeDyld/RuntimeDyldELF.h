@@ -237,6 +237,20 @@ argument_list|,
 argument|int64_t Addend
 argument_list|)
 block|;
+name|void
+name|resolveBPFRelocation
+argument_list|(
+argument|const SectionEntry&Section
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|uint64_t Value
+argument_list|,
+argument|uint32_t Type
+argument_list|,
+argument|int64_t Addend
+argument_list|)
+block|;
 name|unsigned
 name|getMaxStubSize
 argument_list|()
