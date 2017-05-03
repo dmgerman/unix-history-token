@@ -2530,7 +2530,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -2587,7 +2587,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -2644,7 +2644,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -2701,7 +2701,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -2762,7 +2762,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -2823,7 +2823,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -2884,7 +2884,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -2945,7 +2945,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3002,7 +3002,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3059,7 +3059,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3116,7 +3116,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3173,7 +3173,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3234,7 +3234,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3295,7 +3295,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3356,7 +3356,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3417,7 +3417,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3474,7 +3474,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3531,7 +3531,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3588,7 +3588,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3645,7 +3645,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3706,7 +3706,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3767,7 +3767,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3828,7 +3828,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3889,7 +3889,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -3946,7 +3946,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4003,7 +4003,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4060,7 +4060,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4117,7 +4117,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4178,7 +4178,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4239,7 +4239,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4300,7 +4300,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4361,7 +4361,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4418,7 +4418,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4466,7 +4466,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4514,7 +4514,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4562,7 +4562,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4614,7 +4614,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4666,7 +4666,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4718,7 +4718,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4770,7 +4770,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4818,7 +4818,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4866,7 +4866,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4914,7 +4914,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -4962,7 +4962,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -5014,7 +5014,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -5066,7 +5066,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -5118,7 +5118,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -5170,7 +5170,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -5222,11 +5222,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -5283,11 +5283,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -5348,11 +5348,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -5413,11 +5413,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -5474,11 +5474,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -5535,11 +5535,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -5600,11 +5600,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -5665,11 +5665,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -5722,7 +5722,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -5774,7 +5774,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -5826,7 +5826,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -5878,7 +5878,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -5934,7 +5934,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -5990,7 +5990,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6046,7 +6046,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6102,7 +6102,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6154,7 +6154,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6206,7 +6206,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6258,7 +6258,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6310,7 +6310,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6362,7 +6362,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6414,7 +6414,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6466,7 +6466,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6518,7 +6518,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6930,7 +6930,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -6978,7 +6978,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -7026,7 +7026,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x double> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -7074,7 +7074,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -7122,7 +7122,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -7170,7 +7170,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x double> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9352,7 +9352,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9409,7 +9409,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9466,7 +9466,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9523,7 +9523,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9584,7 +9584,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9645,7 +9645,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9706,7 +9706,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9767,7 +9767,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9824,7 +9824,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9881,7 +9881,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9938,7 +9938,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -9995,7 +9995,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10056,7 +10056,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10117,7 +10117,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10178,7 +10178,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10239,7 +10239,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10296,7 +10296,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10353,7 +10353,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10410,7 +10410,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10467,7 +10467,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10528,7 +10528,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10589,7 +10589,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10650,7 +10650,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10711,7 +10711,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10768,7 +10768,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10825,7 +10825,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10882,7 +10882,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -10939,7 +10939,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11000,7 +11000,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11061,7 +11061,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11122,7 +11122,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11183,7 +11183,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11240,7 +11240,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11288,7 +11288,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11336,7 +11336,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11384,7 +11384,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11436,7 +11436,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11488,7 +11488,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11540,7 +11540,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11592,7 +11592,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11640,7 +11640,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11688,7 +11688,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11736,7 +11736,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11784,7 +11784,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11836,7 +11836,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11888,7 +11888,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11940,7 +11940,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -11992,7 +11992,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -12044,11 +12044,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -12105,11 +12105,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -12170,11 +12170,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -12235,11 +12235,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -12296,11 +12296,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -12357,11 +12357,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -12422,11 +12422,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -12487,11 +12487,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -12544,7 +12544,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -12596,7 +12596,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -12648,7 +12648,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -12700,7 +12700,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -12756,7 +12756,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -12812,7 +12812,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -12868,7 +12868,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -12924,7 +12924,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -12976,7 +12976,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13028,7 +13028,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13080,7 +13080,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13132,7 +13132,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13184,7 +13184,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13236,7 +13236,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13284,7 +13284,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13336,7 +13336,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13644,7 +13644,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13692,7 +13692,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13740,7 +13740,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x double> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13788,7 +13788,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13836,7 +13836,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13884,7 +13884,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x double> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -13948,7 +13948,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
+comment|// CHECK:   [[VMULL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]])
 end_comment
 
 begin_comment
@@ -14002,7 +14002,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
+comment|// CHECK:   [[VMULL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]])
 end_comment
 
 begin_comment
@@ -14064,7 +14064,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
+comment|// CHECK:   [[VMULL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]])
 end_comment
 
 begin_comment
@@ -14118,7 +14118,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
+comment|// CHECK:   [[VMULL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]])
 end_comment
 
 begin_comment
@@ -14180,7 +14180,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
+comment|// CHECK:   [[VQDMULL_V5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]])
 end_comment
 
 begin_comment
@@ -14238,7 +14238,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
+comment|// CHECK:   [[VQDMULL_V3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]])
 end_comment
 
 begin_comment
@@ -14304,7 +14304,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]])
 end_comment
 
 begin_comment
@@ -14367,7 +14367,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]])
 end_comment
 
 begin_comment
@@ -14438,7 +14438,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]])
 end_comment
 
 begin_comment
@@ -14501,7 +14501,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]])
 end_comment
 
 begin_comment
@@ -14576,11 +14576,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
+comment|// CHECK:   [[VQDMLAL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V6_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V6_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I_I]])
 end_comment
 
 begin_comment
@@ -14643,11 +14643,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
+comment|// CHECK:   [[VQDMLAL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V4_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V4_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I_I]])
 end_comment
 
 begin_comment
@@ -14714,7 +14714,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]])
 end_comment
 
 begin_comment
@@ -14777,7 +14777,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]])
 end_comment
 
 begin_comment
@@ -14848,7 +14848,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]])
 end_comment
 
 begin_comment
@@ -14911,7 +14911,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]])
 end_comment
 
 begin_comment
@@ -14986,11 +14986,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
+comment|// CHECK:   [[VQDMLAL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V6_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V6_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I_I]])
 end_comment
 
 begin_comment
@@ -15053,11 +15053,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
+comment|// CHECK:   [[VQDMLAL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V4_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V4_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I_I]])
 end_comment
 
 begin_comment
@@ -15250,7 +15250,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x float> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> %b,<2 x float> [[VECINIT1_I]],<2 x float> %a) #2
+comment|// CHECK:   [[TMP3:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> %b,<2 x float> [[VECINIT1_I]],<2 x float> %a)
 end_comment
 
 begin_comment
@@ -15317,7 +15317,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x float> [[VECINIT3_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> %b,<4 x float> [[VECINIT3_I]],<4 x float> %a) #2
+comment|// CHECK:   [[TMP3:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> %b,<4 x float> [[VECINIT3_I]],<4 x float> %a)
 end_comment
 
 begin_comment
@@ -15380,7 +15380,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x float> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> [[SUB_I]],<2 x float> [[VECINIT1_I]],<2 x float> %a) #2
+comment|// CHECK:   [[TMP3:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> [[SUB_I]],<2 x float> [[VECINIT1_I]],<2 x float> %a)
 end_comment
 
 begin_comment
@@ -15451,7 +15451,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x float> [[VECINIT3_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> [[SUB_I]],<4 x float> [[VECINIT3_I]],<4 x float> %a) #2
+comment|// CHECK:   [[TMP3:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> [[SUB_I]],<4 x float> [[VECINIT3_I]],<4 x float> %a)
 end_comment
 
 begin_comment
@@ -15930,7 +15930,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -15980,7 +15980,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #2
+comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -16038,7 +16038,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -16088,7 +16088,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #2
+comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -16146,7 +16146,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VQDMULL_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -16200,7 +16200,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -16262,7 +16262,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V5_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VQDMULH_V5_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -16340,7 +16340,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[VECINIT7_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[VECINIT7_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[VECINIT7_I]])
 end_comment
 
 begin_comment
@@ -16394,7 +16394,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #2
+comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -16456,7 +16456,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[VECINIT3_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -16518,7 +16518,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V5_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V5_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -16596,7 +16596,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[VECINIT7_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[VECINIT7_I]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[VECINIT7_I]])
 end_comment
 
 begin_comment
@@ -16650,7 +16650,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -16712,7 +16712,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[VECINIT3_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -17262,7 +17262,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -17321,7 +17321,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -17388,7 +17388,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -17447,7 +17447,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -17518,11 +17518,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V6_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V6_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I]])
 end_comment
 
 begin_comment
@@ -17581,11 +17581,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
+comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V4_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V4_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I]])
 end_comment
 
 begin_comment
@@ -18136,7 +18136,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -18195,7 +18195,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -18262,7 +18262,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -18321,7 +18321,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -18392,11 +18392,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
+comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V6_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V6_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I]])
 end_comment
 
 begin_comment
@@ -18455,11 +18455,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
+comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V4_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V4_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I]])
 end_comment
 
 begin_comment
@@ -18906,11 +18906,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -18967,11 +18967,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -19032,11 +19032,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -19097,11 +19097,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -19550,11 +19550,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -19611,11 +19611,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -19676,11 +19676,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -19741,11 +19741,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -19798,7 +19798,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -19850,7 +19850,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -19902,7 +19902,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -19954,7 +19954,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -20006,7 +20006,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -20058,7 +20058,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -20110,7 +20110,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -20162,7 +20162,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -20610,11 +20610,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -20671,11 +20671,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -20736,11 +20736,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -20801,11 +20801,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -21254,11 +21254,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -21315,11 +21315,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -21380,11 +21380,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -21445,11 +21445,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -21502,7 +21502,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -21554,7 +21554,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -21606,7 +21606,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -21658,7 +21658,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -21710,7 +21710,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -21762,7 +21762,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -21814,7 +21814,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -21866,7 +21866,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment

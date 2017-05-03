@@ -121,7 +121,7 @@ block|}
 end_function
 
 begin_comment
-comment|// stdarg: PR3075
+comment|// stdarg: PR3075 and PR2531
 end_comment
 
 begin_function

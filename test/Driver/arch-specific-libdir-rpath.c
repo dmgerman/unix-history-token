@@ -332,7 +332,7 @@ comment|// RPATH-AArch64:   "-rpath" "[[RESDIR]]{{(/|\\\\)lib(/|\\\\)linux(/|\\\
 end_comment
 
 begin_comment
-comment|// NO-LIBPATH-NOT:  -L{{.*Inputs(/|\\\\)resource_dir}}
+comment|// NO-LIBPATH-NOT:  "-L{{[^"]*Inputs(/|\\\\)resource_dir}}"
 end_comment
 
 begin_comment

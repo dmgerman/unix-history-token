@@ -268,7 +268,7 @@ comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<2 x float> [[TMP1]], i32 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULXS_F32_I:%.*]] = call float @llvm.aarch64.neon.fmulx.f32(float %a, float [[VGET_LANE]]) #2
+comment|// CHECK:   [[VMULXS_F32_I:%.*]] = call float @llvm.aarch64.neon.fmulx.f32(float %a, float [[VGET_LANE]])
 end_comment
 
 begin_comment
@@ -316,7 +316,7 @@ comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<4 x float> [[TMP1]], i32
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULXS_F32_I:%.*]] = call float @llvm.aarch64.neon.fmulx.f32(float %a, float [[VGETQ_LANE]]) #2
+comment|// CHECK:   [[VMULXS_F32_I:%.*]] = call float @llvm.aarch64.neon.fmulx.f32(float %a, float [[VGETQ_LANE]])
 end_comment
 
 begin_comment
@@ -364,7 +364,7 @@ comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<1 x double> [[TMP1]], i32
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double %a, double [[VGET_LANE]]) #2
+comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double %a, double [[VGET_LANE]])
 end_comment
 
 begin_comment
@@ -412,7 +412,7 @@ comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<2 x double> [[TMP1]], i3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double %a, double [[VGETQ_LANE]]) #2
+comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double %a, double [[VGETQ_LANE]])
 end_comment
 
 begin_comment
@@ -472,7 +472,7 @@ comment|// CHECK:   [[VGET_LANE6:%.*]] = extractelement<1 x double> [[TMP3]], i3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double [[VGET_LANE]], double [[VGET_LANE6]]) #2
+comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double [[VGET_LANE]], double [[VGET_LANE6]])
 end_comment
 
 begin_comment
@@ -544,7 +544,7 @@ comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<2 x double> [[TMP3]], i3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double [[VGET_LANE]], double [[VGETQ_LANE]]) #2
+comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double [[VGET_LANE]], double [[VGETQ_LANE]])
 end_comment
 
 begin_comment
@@ -616,7 +616,7 @@ comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<2 x double> [[TMP3]], i3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double [[VGET_LANE]], double [[VGETQ_LANE]]) #2
+comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double [[VGET_LANE]], double [[VGETQ_LANE]])
 end_comment
 
 begin_comment
@@ -1192,7 +1192,7 @@ comment|// CHECK:   [[TMP3:%.*]] = insertelement<4 x i16> undef, i16 [[VGET_LANE
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULLH_S16_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]]) #2
+comment|// CHECK:   [[VQDMULLH_S16_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]])
 end_comment
 
 begin_comment
@@ -1244,7 +1244,7 @@ comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<2 x i32> [[TMP1]], i32 1
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULLS_S32_I:%.*]] = call i64 @llvm.aarch64.neon.sqdmulls.scalar(i32 %a, i32 [[VGET_LANE]]) #2
+comment|// CHECK:   [[VQDMULLS_S32_I:%.*]] = call i64 @llvm.aarch64.neon.sqdmulls.scalar(i32 %a, i32 [[VGET_LANE]])
 end_comment
 
 begin_comment
@@ -1300,7 +1300,7 @@ comment|// CHECK:   [[TMP3:%.*]] = insertelement<4 x i16> undef, i16 [[VGETQ_LAN
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULLH_S16_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]]) #2
+comment|// CHECK:   [[VQDMULLH_S16_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]])
 end_comment
 
 begin_comment
@@ -1352,7 +1352,7 @@ comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<4 x i32> [[TMP1]], i32 3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULLS_S32_I:%.*]] = call i64 @llvm.aarch64.neon.sqdmulls.scalar(i32 %a, i32 [[VGETQ_LANE]]) #2
+comment|// CHECK:   [[VQDMULLS_S32_I:%.*]] = call i64 @llvm.aarch64.neon.sqdmulls.scalar(i32 %a, i32 [[VGETQ_LANE]])
 end_comment
 
 begin_comment
@@ -1408,7 +1408,7 @@ comment|// CHECK:   [[TMP3:%.*]] = insertelement<4 x i16> undef, i16 [[VGET_LANE
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHH_S16_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]]) #2
+comment|// CHECK:   [[VQDMULHH_S16_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]])
 end_comment
 
 begin_comment
@@ -1460,7 +1460,7 @@ comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<2 x i32> [[TMP1]], i32 1
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHS_S32_I:%.*]] = call i32 @llvm.aarch64.neon.sqdmulh.i32(i32 %a, i32 [[VGET_LANE]]) #2
+comment|// CHECK:   [[VQDMULHS_S32_I:%.*]] = call i32 @llvm.aarch64.neon.sqdmulh.i32(i32 %a, i32 [[VGET_LANE]])
 end_comment
 
 begin_comment
@@ -1516,7 +1516,7 @@ comment|// CHECK:   [[TMP3:%.*]] = insertelement<4 x i16> undef, i16 [[VGETQ_LAN
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHH_S16_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]]) #2
+comment|// CHECK:   [[VQDMULHH_S16_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]])
 end_comment
 
 begin_comment
@@ -1568,7 +1568,7 @@ comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<4 x i32> [[TMP1]], i32 3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHS_S32_I:%.*]] = call i32 @llvm.aarch64.neon.sqdmulh.i32(i32 %a, i32 [[VGETQ_LANE]]) #2
+comment|// CHECK:   [[VQDMULHS_S32_I:%.*]] = call i32 @llvm.aarch64.neon.sqdmulh.i32(i32 %a, i32 [[VGETQ_LANE]])
 end_comment
 
 begin_comment
@@ -1624,7 +1624,7 @@ comment|// CHECK:   [[TMP3:%.*]] = insertelement<4 x i16> undef, i16 [[VGET_LANE
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHH_S16_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]]) #2
+comment|// CHECK:   [[VQRDMULHH_S16_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]])
 end_comment
 
 begin_comment
@@ -1676,7 +1676,7 @@ comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<2 x i32> [[TMP1]], i32 1
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHS_S32_I:%.*]] = call i32 @llvm.aarch64.neon.sqrdmulh.i32(i32 %a, i32 [[VGET_LANE]]) #2
+comment|// CHECK:   [[VQRDMULHS_S32_I:%.*]] = call i32 @llvm.aarch64.neon.sqrdmulh.i32(i32 %a, i32 [[VGET_LANE]])
 end_comment
 
 begin_comment
@@ -1732,7 +1732,7 @@ comment|// CHECK:   [[TMP3:%.*]] = insertelement<4 x i16> undef, i16 [[VGETQ_LAN
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHH_S16_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]]) #2
+comment|// CHECK:   [[VQRDMULHH_S16_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> [[TMP2]],<4 x i16> [[TMP3]])
 end_comment
 
 begin_comment
@@ -1784,7 +1784,7 @@ comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<4 x i32> [[TMP1]], i32 3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHS_S32_I:%.*]] = call i32 @llvm.aarch64.neon.sqrdmulh.i32(i32 %a, i32 [[VGETQ_LANE]]) #2
+comment|// CHECK:   [[VQRDMULHS_S32_I:%.*]] = call i32 @llvm.aarch64.neon.sqrdmulh.i32(i32 %a, i32 [[VGETQ_LANE]])
 end_comment
 
 begin_comment
@@ -2356,7 +2356,7 @@ comment|// CHECK:   [[VGET_LANE7:%.*]] = extractelement<1 x double> [[TMP5]], i3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double [[VGET_LANE]], double [[VGET_LANE7]]) #2
+comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double [[VGET_LANE]], double [[VGET_LANE7]])
 end_comment
 
 begin_comment
@@ -2474,7 +2474,7 @@ comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<2 x double> [[TMP5]], i3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double [[VGET_LANE]], double [[VGETQ_LANE]]) #2
+comment|// CHECK:   [[VMULXD_F64_I:%.*]] = call double @llvm.aarch64.neon.fmulx.f64(double [[VGET_LANE]], double [[VGETQ_LANE]])
 end_comment
 
 begin_comment

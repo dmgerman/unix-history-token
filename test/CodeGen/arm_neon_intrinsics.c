@@ -26,7 +26,7 @@ comment|// CHECK-LABEL: @test_vaba_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabds.v8i8(<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VABD_V_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabds.v8i8(<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -77,7 +77,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabds.v4i16(<4 x i16> %b,<4 x i16> %c) #4
+comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabds.v4i16(<4 x i16> %b,<4 x i16> %c)
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabds.v2i32(<2 x i32> %b,<2 x i32> %c) #4
+comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabds.v2i32(<2 x i32> %b,<2 x i32> %c)
 end_comment
 
 begin_comment
@@ -179,7 +179,7 @@ comment|// CHECK-LABEL: @test_vaba_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabdu.v8i8(<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VABD_V_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabdu.v8i8(<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabdu.v4i16(<4 x i16> %b,<4 x i16> %c) #4
+comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabdu.v4i16(<4 x i16> %b,<4 x i16> %c)
 end_comment
 
 begin_comment
@@ -285,7 +285,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabdu.v2i32(<2 x i32> %b,<2 x i32> %c) #4
+comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabdu.v2i32(<2 x i32> %b,<2 x i32> %c)
 end_comment
 
 begin_comment
@@ -332,7 +332,7 @@ comment|// CHECK-LABEL: @test_vabaq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V_I_I:%.*]] = call<16 x i8> @llvm.arm.neon.vabds.v16i8(<16 x i8> %b,<16 x i8> %c) #4
+comment|// CHECK:   [[VABDQ_V_I_I:%.*]] = call<16 x i8> @llvm.arm.neon.vabds.v16i8(<16 x i8> %b,<16 x i8> %c)
 end_comment
 
 begin_comment
@@ -383,7 +383,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V2_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vabds.v8i16(<8 x i16> %b,<8 x i16> %c) #4
+comment|// CHECK:   [[VABDQ_V2_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vabds.v8i16(<8 x i16> %b,<8 x i16> %c)
 end_comment
 
 begin_comment
@@ -438,7 +438,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vabds.v4i32(<4 x i32> %b,<4 x i32> %c) #4
+comment|// CHECK:   [[VABDQ_V2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vabds.v4i32(<4 x i32> %b,<4 x i32> %c)
 end_comment
 
 begin_comment
@@ -485,7 +485,7 @@ comment|// CHECK-LABEL: @test_vabaq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V_I_I:%.*]] = call<16 x i8> @llvm.arm.neon.vabdu.v16i8(<16 x i8> %b,<16 x i8> %c) #4
+comment|// CHECK:   [[VABDQ_V_I_I:%.*]] = call<16 x i8> @llvm.arm.neon.vabdu.v16i8(<16 x i8> %b,<16 x i8> %c)
 end_comment
 
 begin_comment
@@ -536,7 +536,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V2_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vabdu.v8i16(<8 x i16> %b,<8 x i16> %c) #4
+comment|// CHECK:   [[VABDQ_V2_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vabdu.v8i16(<8 x i16> %b,<8 x i16> %c)
 end_comment
 
 begin_comment
@@ -591,7 +591,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vabdu.v4i32(<4 x i32> %b,<4 x i32> %c) #4
+comment|// CHECK:   [[VABDQ_V2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vabdu.v4i32(<4 x i32> %b,<4 x i32> %c)
 end_comment
 
 begin_comment
@@ -638,7 +638,7 @@ comment|// CHECK-LABEL: @test_vabal_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V_I_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabds.v8i8(<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VABD_V_I_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabds.v8i8(<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -693,7 +693,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabds.v4i16(<4 x i16> %b,<4 x i16> %c) #4
+comment|// CHECK:   [[VABD_V2_I_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabds.v4i16(<4 x i16> %b,<4 x i16> %c)
 end_comment
 
 begin_comment
@@ -756,7 +756,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabds.v2i32(<2 x i32> %b,<2 x i32> %c) #4
+comment|// CHECK:   [[VABD_V2_I_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabds.v2i32(<2 x i32> %b,<2 x i32> %c)
 end_comment
 
 begin_comment
@@ -811,7 +811,7 @@ comment|// CHECK-LABEL: @test_vabal_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V_I_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabdu.v8i8(<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VABD_V_I_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabdu.v8i8(<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -866,7 +866,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabdu.v4i16(<4 x i16> %b,<4 x i16> %c) #4
+comment|// CHECK:   [[VABD_V2_I_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabdu.v4i16(<4 x i16> %b,<4 x i16> %c)
 end_comment
 
 begin_comment
@@ -929,7 +929,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabdu.v2i32(<2 x i32> %b,<2 x i32> %c) #4
+comment|// CHECK:   [[VABD_V2_I_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabdu.v2i32(<2 x i32> %b,<2 x i32> %c)
 end_comment
 
 begin_comment
@@ -984,7 +984,7 @@ comment|// CHECK-LABEL: @test_vabd_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabds.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VABD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabds.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -1026,7 +1026,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabds.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VABD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabds.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -1072,7 +1072,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabds.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VABD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabds.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -1110,7 +1110,7 @@ comment|// CHECK-LABEL: @test_vabd_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabdu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VABD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabdu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -1152,7 +1152,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabdu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VABD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabdu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -1198,7 +1198,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabdu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VABD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabdu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -1244,7 +1244,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vabds.v2f32(<2 x float> %a,<2 x float> %b) #4
+comment|// CHECK:   [[VABD_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vabds.v2f32(<2 x float> %a,<2 x float> %b)
 end_comment
 
 begin_comment
@@ -1282,7 +1282,7 @@ comment|// CHECK-LABEL: @test_vabdq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vabds.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VABDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vabds.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -1324,7 +1324,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vabds.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VABDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vabds.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -1370,7 +1370,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vabds.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VABDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vabds.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -1408,7 +1408,7 @@ comment|// CHECK-LABEL: @test_vabdq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vabdu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VABDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vabdu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -1450,7 +1450,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vabdu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VABDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vabdu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -1496,7 +1496,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vabdu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VABDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vabdu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -1542,7 +1542,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABDQ_V2_I:%.*]] = call<4 x float> @llvm.arm.neon.vabds.v4f32(<4 x float> %a,<4 x float> %b) #4
+comment|// CHECK:   [[VABDQ_V2_I:%.*]] = call<4 x float> @llvm.arm.neon.vabds.v4f32(<4 x float> %a,<4 x float> %b)
 end_comment
 
 begin_comment
@@ -1580,7 +1580,7 @@ comment|// CHECK-LABEL: @test_vabdl_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabds.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VABD_V_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabds.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -1626,7 +1626,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabds.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabds.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -1680,7 +1680,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabds.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabds.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -1726,7 +1726,7 @@ comment|// CHECK-LABEL: @test_vabdl_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabdu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VABD_V_I_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabdu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -1772,7 +1772,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabdu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabdu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -1826,7 +1826,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabdu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VABD_V2_I_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabdu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -1872,7 +1872,7 @@ comment|// CHECK-LABEL: @test_vabs_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabs.v8i8(<8 x i8> %a) #4
+comment|// CHECK:   [[VABS_I:%.*]] = call<8 x i8> @llvm.arm.neon.vabs.v8i8(<8 x i8> %a)
 end_comment
 
 begin_comment
@@ -1905,7 +1905,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabs.v4i16(<4 x i16> %a) #4
+comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vabs.v4i16(<4 x i16> %a)
 end_comment
 
 begin_comment
@@ -1938,7 +1938,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabs.v2i32(<2 x i32> %a) #4
+comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vabs.v2i32(<2 x i32> %a)
 end_comment
 
 begin_comment
@@ -1971,7 +1971,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x float> @llvm.fabs.v2f32(<2 x float> %a) #4
+comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x float> @llvm.fabs.v2f32(<2 x float> %a)
 end_comment
 
 begin_comment
@@ -2000,7 +2000,7 @@ comment|// CHECK-LABEL: @test_vabsq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS_I:%.*]] = call<16 x i8> @llvm.arm.neon.vabs.v16i8(<16 x i8> %a) #4
+comment|// CHECK:   [[VABS_I:%.*]] = call<16 x i8> @llvm.arm.neon.vabs.v16i8(<16 x i8> %a)
 end_comment
 
 begin_comment
@@ -2033,7 +2033,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vabs.v8i16(<8 x i16> %a) #4
+comment|// CHECK:   [[VABS1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vabs.v8i16(<8 x i16> %a)
 end_comment
 
 begin_comment
@@ -2066,7 +2066,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vabs.v4i32(<4 x i32> %a) #4
+comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vabs.v4i32(<4 x i32> %a)
 end_comment
 
 begin_comment
@@ -2099,7 +2099,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x float> @llvm.fabs.v4f32(<4 x float> %a) #4
+comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x float> @llvm.fabs.v4f32(<4 x float> %a)
 end_comment
 
 begin_comment
@@ -4720,7 +4720,7 @@ comment|// CHECK-LABEL: @test_vbsl_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -4771,7 +4771,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -4826,7 +4826,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -4881,7 +4881,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<1 x i64> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -4924,7 +4924,7 @@ comment|// CHECK-LABEL: @test_vbsl_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -4975,7 +4975,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5030,7 +5030,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5085,7 +5085,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<1 x i64> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5140,7 +5140,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x float> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5183,7 +5183,7 @@ comment|// CHECK-LABEL: @test_vbsl_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -5234,7 +5234,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP0]],<8 x i8> [[TMP1]],<8 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5277,7 +5277,7 @@ comment|// CHECK-LABEL: @test_vbslq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c) #4
+comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c)
 end_comment
 
 begin_comment
@@ -5328,7 +5328,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i16> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5383,7 +5383,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i32> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5438,7 +5438,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i64> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5481,7 +5481,7 @@ comment|// CHECK-LABEL: @test_vbslq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c) #4
+comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c)
 end_comment
 
 begin_comment
@@ -5532,7 +5532,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i16> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5587,7 +5587,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i32> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5642,7 +5642,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i64> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5697,7 +5697,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x float> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5740,7 +5740,7 @@ comment|// CHECK-LABEL: @test_vbslq_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c) #4
+comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c)
 end_comment
 
 begin_comment
@@ -5791,7 +5791,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i16> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]]) #4
+comment|// CHECK:   [[VBSLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vbsl.v16i8(<16 x i8> [[TMP0]],<16 x i8> [[TMP1]],<16 x i8> [[TMP2]])
 end_comment
 
 begin_comment
@@ -5842,7 +5842,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCAGE_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vacge.v2i32.v2f32(<2 x float> %a,<2 x float> %b) #4
+comment|// CHECK:   [[VCAGE_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vacge.v2i32.v2f32(<2 x float> %a,<2 x float> %b)
 end_comment
 
 begin_comment
@@ -5884,7 +5884,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCAGEQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vacge.v4i32.v4f32(<4 x float> %a,<4 x float> %b) #4
+comment|// CHECK:   [[VCAGEQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vacge.v4i32.v4f32(<4 x float> %a,<4 x float> %b)
 end_comment
 
 begin_comment
@@ -5926,7 +5926,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCAGT_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vacgt.v2i32.v2f32(<2 x float> %a,<2 x float> %b) #4
+comment|// CHECK:   [[VCAGT_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vacgt.v2i32.v2f32(<2 x float> %a,<2 x float> %b)
 end_comment
 
 begin_comment
@@ -5968,7 +5968,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCAGTQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vacgt.v4i32.v4f32(<4 x float> %a,<4 x float> %b) #4
+comment|// CHECK:   [[VCAGTQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vacgt.v4i32.v4f32(<4 x float> %a,<4 x float> %b)
 end_comment
 
 begin_comment
@@ -6010,7 +6010,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCALE_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vacge.v2i32.v2f32(<2 x float> %b,<2 x float> %a) #4
+comment|// CHECK:   [[VCALE_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vacge.v2i32.v2f32(<2 x float> %b,<2 x float> %a)
 end_comment
 
 begin_comment
@@ -6052,7 +6052,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCALEQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vacge.v4i32.v4f32(<4 x float> %b,<4 x float> %a) #4
+comment|// CHECK:   [[VCALEQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vacge.v4i32.v4f32(<4 x float> %b,<4 x float> %a)
 end_comment
 
 begin_comment
@@ -6094,7 +6094,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCALT_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vacgt.v2i32.v2f32(<2 x float> %b,<2 x float> %a) #4
+comment|// CHECK:   [[VCALT_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vacgt.v2i32.v2f32(<2 x float> %b,<2 x float> %a)
 end_comment
 
 begin_comment
@@ -6136,7 +6136,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCALTQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vacgt.v4i32.v4f32(<4 x float> %b,<4 x float> %a) #4
+comment|// CHECK:   [[VCALTQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vacgt.v4i32.v4f32(<4 x float> %b,<4 x float> %a)
 end_comment
 
 begin_comment
@@ -8374,7 +8374,7 @@ comment|// CHECK-LABEL: @test_vcls_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLS_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vcls.v8i8(<8 x i8> %a) #4
+comment|// CHECK:   [[VCLS_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vcls.v8i8(<8 x i8> %a)
 end_comment
 
 begin_comment
@@ -8407,7 +8407,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLS_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vcls.v4i16(<4 x i16> %a) #4
+comment|// CHECK:   [[VCLS_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vcls.v4i16(<4 x i16> %a)
 end_comment
 
 begin_comment
@@ -8444,7 +8444,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLS_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcls.v2i32(<2 x i32> %a) #4
+comment|// CHECK:   [[VCLS_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcls.v2i32(<2 x i32> %a)
 end_comment
 
 begin_comment
@@ -8477,7 +8477,7 @@ comment|// CHECK-LABEL: @test_vclsq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLSQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vcls.v16i8(<16 x i8> %a) #4
+comment|// CHECK:   [[VCLSQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vcls.v16i8(<16 x i8> %a)
 end_comment
 
 begin_comment
@@ -8510,7 +8510,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLSQ_V1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vcls.v8i16(<8 x i16> %a) #4
+comment|// CHECK:   [[VCLSQ_V1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vcls.v8i16(<8 x i16> %a)
 end_comment
 
 begin_comment
@@ -8547,7 +8547,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLSQ_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcls.v4i32(<4 x i32> %a) #4
+comment|// CHECK:   [[VCLSQ_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcls.v4i32(<4 x i32> %a)
 end_comment
 
 begin_comment
@@ -9112,7 +9112,7 @@ comment|// CHECK-LABEL: @test_vclz_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V_I:%.*]] = call<8 x i8> @llvm.ctlz.v8i8(<8 x i8> %a, i1 false) #4
+comment|// CHECK:   [[VCLZ_V_I:%.*]] = call<8 x i8> @llvm.ctlz.v8i8(<8 x i8> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9145,7 +9145,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> %a, i1 false) #4
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9182,7 +9182,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> %a, i1 false) #4
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9215,7 +9215,7 @@ comment|// CHECK-LABEL: @test_vclz_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V_I:%.*]] = call<8 x i8> @llvm.ctlz.v8i8(<8 x i8> %a, i1 false) #4
+comment|// CHECK:   [[VCLZ_V_I:%.*]] = call<8 x i8> @llvm.ctlz.v8i8(<8 x i8> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9248,7 +9248,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> %a, i1 false) #4
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9285,7 +9285,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> %a, i1 false) #4
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9318,7 +9318,7 @@ comment|// CHECK-LABEL: @test_vclzq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZQ_V_I:%.*]] = call<16 x i8> @llvm.ctlz.v16i8(<16 x i8> %a, i1 false) #4
+comment|// CHECK:   [[VCLZQ_V_I:%.*]] = call<16 x i8> @llvm.ctlz.v16i8(<16 x i8> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9351,7 +9351,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> %a, i1 false) #4
+comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9388,7 +9388,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> %a, i1 false) #4
+comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9421,7 +9421,7 @@ comment|// CHECK-LABEL: @test_vclzq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZQ_V_I:%.*]] = call<16 x i8> @llvm.ctlz.v16i8(<16 x i8> %a, i1 false) #4
+comment|// CHECK:   [[VCLZQ_V_I:%.*]] = call<16 x i8> @llvm.ctlz.v16i8(<16 x i8> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9454,7 +9454,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> %a, i1 false) #4
+comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9491,7 +9491,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> %a, i1 false) #4
+comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> %a, i1 false)
 end_comment
 
 begin_comment
@@ -9524,7 +9524,7 @@ comment|// CHECK-LABEL: @test_vcnt_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCNT_V_I:%.*]] = call<8 x i8> @llvm.ctpop.v8i8(<8 x i8> %a) #4
+comment|// CHECK:   [[VCNT_V_I:%.*]] = call<8 x i8> @llvm.ctpop.v8i8(<8 x i8> %a)
 end_comment
 
 begin_comment
@@ -9553,7 +9553,7 @@ comment|// CHECK-LABEL: @test_vcnt_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCNT_V_I:%.*]] = call<8 x i8> @llvm.ctpop.v8i8(<8 x i8> %a) #4
+comment|// CHECK:   [[VCNT_V_I:%.*]] = call<8 x i8> @llvm.ctpop.v8i8(<8 x i8> %a)
 end_comment
 
 begin_comment
@@ -9582,7 +9582,7 @@ comment|// CHECK-LABEL: @test_vcnt_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCNT_V_I:%.*]] = call<8 x i8> @llvm.ctpop.v8i8(<8 x i8> %a) #4
+comment|// CHECK:   [[VCNT_V_I:%.*]] = call<8 x i8> @llvm.ctpop.v8i8(<8 x i8> %a)
 end_comment
 
 begin_comment
@@ -9611,7 +9611,7 @@ comment|// CHECK-LABEL: @test_vcntq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCNTQ_V_I:%.*]] = call<16 x i8> @llvm.ctpop.v16i8(<16 x i8> %a) #4
+comment|// CHECK:   [[VCNTQ_V_I:%.*]] = call<16 x i8> @llvm.ctpop.v16i8(<16 x i8> %a)
 end_comment
 
 begin_comment
@@ -9640,7 +9640,7 @@ comment|// CHECK-LABEL: @test_vcntq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCNTQ_V_I:%.*]] = call<16 x i8> @llvm.ctpop.v16i8(<16 x i8> %a) #4
+comment|// CHECK:   [[VCNTQ_V_I:%.*]] = call<16 x i8> @llvm.ctpop.v16i8(<16 x i8> %a)
 end_comment
 
 begin_comment
@@ -9669,7 +9669,7 @@ comment|// CHECK-LABEL: @test_vcntq_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCNTQ_V_I:%.*]] = call<16 x i8> @llvm.ctpop.v16i8(<16 x i8> %a) #4
+comment|// CHECK:   [[VCNTQ_V_I:%.*]] = call<16 x i8> @llvm.ctpop.v16i8(<16 x i8> %a)
 end_comment
 
 begin_comment
@@ -10110,7 +10110,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast i64 %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V_I:%.*]] = call<8 x i8> @llvm.ctlz.v8i8(<8 x i8> [[TMP0]], i1 false) #4
+comment|// CHECK:   [[VCLZ_V_I:%.*]] = call<8 x i8> @llvm.ctlz.v8i8(<8 x i8> [[TMP0]], i1 false)
 end_comment
 
 begin_comment
@@ -10150,7 +10150,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[TMP0]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> [[TMP0]], i1 false) #4
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> [[TMP0]], i1 false)
 end_comment
 
 begin_comment
@@ -10194,7 +10194,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[TMP0]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> [[TMP0]], i1 false) #4
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> [[TMP0]], i1 false)
 end_comment
 
 begin_comment
@@ -10292,7 +10292,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast i64 %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V_I:%.*]] = call<8 x i8> @llvm.ctlz.v8i8(<8 x i8> [[TMP0]], i1 false) #4
+comment|// CHECK:   [[VCLZ_V_I:%.*]] = call<8 x i8> @llvm.ctlz.v8i8(<8 x i8> [[TMP0]], i1 false)
 end_comment
 
 begin_comment
@@ -10332,7 +10332,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[TMP0]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> [[TMP0]], i1 false) #4
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> [[TMP0]], i1 false)
 end_comment
 
 begin_comment
@@ -10376,7 +10376,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[TMP0]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> [[TMP0]], i1 false) #4
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> [[TMP0]], i1 false)
 end_comment
 
 begin_comment
@@ -10459,7 +10459,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast i64 %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCNT_V_I:%.*]] = call<8 x i8> @llvm.ctpop.v8i8(<8 x i8> [[TMP0]]) #4
+comment|// CHECK:   [[VCNT_V_I:%.*]] = call<8 x i8> @llvm.ctpop.v8i8(<8 x i8> [[TMP0]])
 end_comment
 
 begin_comment
@@ -10507,7 +10507,7 @@ comment|// CHECK:   [[TMP3:%.*]] = bitcast<4 x i16> [[TMP0]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<8 x i8> [[TMP3]]) #4
+comment|// CHECK:   [[VBSL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vbsl.v8i8(<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<8 x i8> [[TMP3]])
 end_comment
 
 begin_comment
@@ -10599,7 +10599,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVT_F16_F321_I:%.*]] = call<4 x i16> @llvm.arm.neon.vcvtfp2hf(<4 x float> %a) #4
+comment|// CHECK:   [[VCVT_F16_F321_I:%.*]] = call<4 x i16> @llvm.arm.neon.vcvtfp2hf(<4 x float> %a)
 end_comment
 
 begin_comment
@@ -10776,7 +10776,7 @@ comment|// CHECK:   [[VCVT_F32_F16_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVT_F32_F161_I:%.*]] = call<4 x float> @llvm.arm.neon.vcvthf2fp(<4 x i16> [[VCVT_F32_F16_I]]) #4
+comment|// CHECK:   [[VCVT_F32_F161_I:%.*]] = call<4 x float> @llvm.arm.neon.vcvthf2fp(<4 x i16> [[VCVT_F32_F16_I]])
 end_comment
 
 begin_comment
@@ -14783,7 +14783,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x float> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> %b,<2 x float> %c,<2 x float> %a) #4
+comment|// CHECK:   [[TMP3:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> %b,<2 x float> %c,<2 x float> %a)
 end_comment
 
 begin_comment
@@ -14834,7 +14834,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x float> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> %b,<4 x float> %c,<4 x float> %a) #4
+comment|// CHECK:   [[TMP3:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> %b,<4 x float> %c,<4 x float> %a)
 end_comment
 
 begin_comment
@@ -14889,7 +14889,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x float> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> [[SUB_I]],<2 x float> %c,<2 x float> %a) #4
+comment|// CHECK:   [[TMP3:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> [[SUB_I]],<2 x float> %c,<2 x float> %a)
 end_comment
 
 begin_comment
@@ -14944,7 +14944,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x float> %c to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> [[SUB_I]],<4 x float> %c,<4 x float> %a) #4
+comment|// CHECK:   [[TMP3:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> [[SUB_I]],<4 x float> %c,<4 x float> %a)
 end_comment
 
 begin_comment
@@ -16639,7 +16639,7 @@ comment|// CHECK-LABEL: @test_vhadd_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vhadds.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VHADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vhadds.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -16681,7 +16681,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vhadds.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VHADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vhadds.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -16727,7 +16727,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vhadds.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VHADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vhadds.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -16765,7 +16765,7 @@ comment|// CHECK-LABEL: @test_vhadd_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vhaddu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VHADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vhaddu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -16807,7 +16807,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vhaddu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VHADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vhaddu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -16853,7 +16853,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vhaddu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VHADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vhaddu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -16891,7 +16891,7 @@ comment|// CHECK-LABEL: @test_vhaddq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vhadds.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VHADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vhadds.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -16933,7 +16933,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vhadds.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VHADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vhadds.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -16979,7 +16979,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vhadds.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VHADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vhadds.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -17017,7 +17017,7 @@ comment|// CHECK-LABEL: @test_vhaddq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vhaddu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VHADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vhaddu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -17059,7 +17059,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vhaddu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VHADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vhaddu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -17105,7 +17105,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vhaddu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VHADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vhaddu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -17143,7 +17143,7 @@ comment|// CHECK-LABEL: @test_vhsub_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUB_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vhsubs.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VHSUB_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vhsubs.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -17185,7 +17185,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUB_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vhsubs.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VHSUB_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vhsubs.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -17231,7 +17231,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUB_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vhsubs.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VHSUB_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vhsubs.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -17269,7 +17269,7 @@ comment|// CHECK-LABEL: @test_vhsub_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUB_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vhsubu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VHSUB_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vhsubu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -17311,7 +17311,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUB_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vhsubu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VHSUB_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vhsubu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -17357,7 +17357,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUB_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vhsubu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VHSUB_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vhsubu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -17395,7 +17395,7 @@ comment|// CHECK-LABEL: @test_vhsubq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUBQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vhsubs.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VHSUBQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vhsubs.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -17437,7 +17437,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUBQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vhsubs.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VHSUBQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vhsubs.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -17483,7 +17483,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUBQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vhsubs.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VHSUBQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vhsubs.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -17521,7 +17521,7 @@ comment|// CHECK-LABEL: @test_vhsubq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUBQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vhsubu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VHSUBQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vhsubu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -17563,7 +17563,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUBQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vhsubu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VHSUBQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vhsubu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -17609,7 +17609,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VHSUBQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vhsubu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VHSUBQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vhsubu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -31519,7 +31519,7 @@ comment|// CHECK-LABEL: @test_vmax_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAX_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vmaxs.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VMAX_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vmaxs.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -31561,7 +31561,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAX_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vmaxs.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VMAX_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vmaxs.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -31607,7 +31607,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAX_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vmaxs.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VMAX_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vmaxs.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -31645,7 +31645,7 @@ comment|// CHECK-LABEL: @test_vmax_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAX_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vmaxu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VMAX_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vmaxu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -31687,7 +31687,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAX_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vmaxu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VMAX_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vmaxu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -31733,7 +31733,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAX_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vmaxu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VMAX_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vmaxu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -31779,7 +31779,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAX_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vmaxs.v2f32(<2 x float> %a,<2 x float> %b) #4
+comment|// CHECK:   [[VMAX_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vmaxs.v2f32(<2 x float> %a,<2 x float> %b)
 end_comment
 
 begin_comment
@@ -31817,7 +31817,7 @@ comment|// CHECK-LABEL: @test_vmaxq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAXQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vmaxs.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VMAXQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vmaxs.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -31859,7 +31859,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAXQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmaxs.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VMAXQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmaxs.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -31905,7 +31905,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAXQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmaxs.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VMAXQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmaxs.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -31943,7 +31943,7 @@ comment|// CHECK-LABEL: @test_vmaxq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAXQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vmaxu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VMAXQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vmaxu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -31985,7 +31985,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAXQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmaxu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VMAXQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmaxu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -32031,7 +32031,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAXQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmaxu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VMAXQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmaxu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -32077,7 +32077,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMAXQ_V2_I:%.*]] = call<4 x float> @llvm.arm.neon.vmaxs.v4f32(<4 x float> %a,<4 x float> %b) #4
+comment|// CHECK:   [[VMAXQ_V2_I:%.*]] = call<4 x float> @llvm.arm.neon.vmaxs.v4f32(<4 x float> %a,<4 x float> %b)
 end_comment
 
 begin_comment
@@ -32115,7 +32115,7 @@ comment|// CHECK-LABEL: @test_vmin_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMIN_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vmins.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VMIN_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vmins.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -32157,7 +32157,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMIN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vmins.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VMIN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vmins.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -32203,7 +32203,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMIN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vmins.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VMIN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vmins.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -32241,7 +32241,7 @@ comment|// CHECK-LABEL: @test_vmin_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMIN_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vminu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VMIN_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vminu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -32283,7 +32283,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMIN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vminu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VMIN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vminu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -32329,7 +32329,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMIN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vminu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VMIN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vminu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -32375,7 +32375,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMIN_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vmins.v2f32(<2 x float> %a,<2 x float> %b) #4
+comment|// CHECK:   [[VMIN_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vmins.v2f32(<2 x float> %a,<2 x float> %b)
 end_comment
 
 begin_comment
@@ -32413,7 +32413,7 @@ comment|// CHECK-LABEL: @test_vminq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMINQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vmins.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VMINQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vmins.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -32455,7 +32455,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMINQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmins.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VMINQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmins.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -32501,7 +32501,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMINQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmins.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VMINQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmins.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -32539,7 +32539,7 @@ comment|// CHECK-LABEL: @test_vminq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMINQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vminu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VMINQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vminu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -32581,7 +32581,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMINQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vminu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VMINQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vminu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -32627,7 +32627,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMINQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vminu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VMINQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vminu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -32673,7 +32673,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMINQ_V2_I:%.*]] = call<4 x float> @llvm.arm.neon.vmins.v4f32(<4 x float> %a,<4 x float> %b) #4
+comment|// CHECK:   [[VMINQ_V2_I:%.*]] = call<4 x float> @llvm.arm.neon.vmins.v4f32(<4 x float> %a,<4 x float> %b)
 end_comment
 
 begin_comment
@@ -33313,7 +33313,7 @@ comment|// CHECK-LABEL: @test_vmlal_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmulls.v8i16(<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VMULL_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmulls.v8i16(<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -33364,7 +33364,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> %c) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> %c)
 end_comment
 
 begin_comment
@@ -33415,7 +33415,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> %c) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> %c)
 end_comment
 
 begin_comment
@@ -33458,7 +33458,7 @@ comment|// CHECK-LABEL: @test_vmlal_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmullu.v8i16(<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VMULL_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmullu.v8i16(<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -33509,7 +33509,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> %c) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> %c)
 end_comment
 
 begin_comment
@@ -33560,7 +33560,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> %c) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> %c)
 end_comment
 
 begin_comment
@@ -33615,7 +33615,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -33672,7 +33672,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -33729,7 +33729,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -33786,7 +33786,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -33855,7 +33855,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -33914,7 +33914,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -33981,7 +33981,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -34040,7 +34040,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -35773,7 +35773,7 @@ comment|// CHECK-LABEL: @test_vmlsl_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmulls.v8i16(<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VMULL_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmulls.v8i16(<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -35824,7 +35824,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> %c) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> %c)
 end_comment
 
 begin_comment
@@ -35875,7 +35875,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> %c) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> %c)
 end_comment
 
 begin_comment
@@ -35918,7 +35918,7 @@ comment|// CHECK-LABEL: @test_vmlsl_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmullu.v8i16(<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VMULL_I_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmullu.v8i16(<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -35969,7 +35969,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> %c) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> %c)
 end_comment
 
 begin_comment
@@ -36020,7 +36020,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> %c) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> %c)
 end_comment
 
 begin_comment
@@ -36075,7 +36075,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -36132,7 +36132,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -36189,7 +36189,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -36246,7 +36246,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -36315,7 +36315,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -36374,7 +36374,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -36441,7 +36441,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -36500,7 +36500,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #4
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -39711,7 +39711,7 @@ comment|// CHECK-LABEL: @test_vmull_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmulls.v8i16(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VMULL_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmulls.v8i16(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -39753,7 +39753,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -39795,7 +39795,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -39829,7 +39829,7 @@ comment|// CHECK-LABEL: @test_vmull_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmullu.v8i16(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VMULL_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmullu.v8i16(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -39871,7 +39871,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -39913,7 +39913,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -39947,7 +39947,7 @@ comment|// CHECK-LABEL: @test_vmull_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmullp.v8i16(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VMULL_I:%.*]] = call<8 x i16> @llvm.arm.neon.vmullp.v8i16(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -39993,7 +39993,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -40041,7 +40041,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -40089,7 +40089,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -40137,7 +40137,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -40197,7 +40197,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmulls.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -40247,7 +40247,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #4
+comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmulls.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -40305,7 +40305,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vmullu.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -40355,7 +40355,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #4
+comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vmullu.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -40389,7 +40389,7 @@ comment|// CHECK-LABEL: @test_vmul_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMUL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vmulp.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VMUL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vmulp.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -40423,7 +40423,7 @@ comment|// CHECK-LABEL: @test_vmulq_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vmulp.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VMULQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vmulp.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -43159,7 +43159,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpadals.v4i16.v8i8(<4 x i16> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VPADAL_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpadals.v4i16.v8i8(<4 x i16> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -43201,7 +43201,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpadals.v2i32.v4i16(<2 x i32> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VPADAL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpadals.v2i32.v4i16(<2 x i32> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -43243,7 +43243,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vpadals.v1i64.v2i32(<1 x i64> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VPADAL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vpadals.v1i64.v2i32(<1 x i64> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -43281,7 +43281,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpadalu.v4i16.v8i8(<4 x i16> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VPADAL_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpadalu.v4i16.v8i8(<4 x i16> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -43323,7 +43323,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpadalu.v2i32.v4i16(<2 x i32> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VPADAL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpadalu.v2i32.v4i16(<2 x i32> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -43365,7 +43365,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vpadalu.v1i64.v2i32(<1 x i64> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VPADAL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vpadalu.v1i64.v2i32(<1 x i64> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -43403,7 +43403,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADALQ_V1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vpadals.v8i16.v16i8(<8 x i16> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VPADALQ_V1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vpadals.v8i16.v16i8(<8 x i16> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -43445,7 +43445,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADALQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vpadals.v4i32.v8i16(<4 x i32> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VPADALQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vpadals.v4i32.v8i16(<4 x i32> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -43487,7 +43487,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADALQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vpadals.v2i64.v4i32(<2 x i64> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VPADALQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vpadals.v2i64.v4i32(<2 x i64> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -43525,7 +43525,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADALQ_V1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vpadalu.v8i16.v16i8(<8 x i16> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VPADALQ_V1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vpadalu.v8i16.v16i8(<8 x i16> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -43567,7 +43567,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADALQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vpadalu.v4i32.v8i16(<4 x i32> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VPADALQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vpadalu.v4i32.v8i16(<4 x i32> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -43609,7 +43609,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADALQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vpadalu.v2i64.v4i32(<2 x i64> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VPADALQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vpadalu.v2i64.v4i32(<2 x i64> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -43643,7 +43643,7 @@ comment|// CHECK-LABEL: @test_vpadd_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpadd.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VPADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpadd.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -43685,7 +43685,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpadd.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VPADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpadd.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -43731,7 +43731,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpadd.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VPADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpadd.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -43769,7 +43769,7 @@ comment|// CHECK-LABEL: @test_vpadd_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpadd.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VPADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpadd.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -43811,7 +43811,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpadd.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VPADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpadd.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -43857,7 +43857,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpadd.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VPADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpadd.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -43903,7 +43903,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADD_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vpadd.v2f32(<2 x float> %a,<2 x float> %b) #4
+comment|// CHECK:   [[VPADD_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vpadd.v2f32(<2 x float> %a,<2 x float> %b)
 end_comment
 
 begin_comment
@@ -43941,7 +43941,7 @@ comment|// CHECK-LABEL: @test_vpaddl_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpaddls.v4i16.v8i8(<8 x i8> %a) #4
+comment|// CHECK:   [[VPADDL_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpaddls.v4i16.v8i8(<8 x i8> %a)
 end_comment
 
 begin_comment
@@ -43974,7 +43974,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpaddls.v2i32.v4i16(<4 x i16> %a) #4
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpaddls.v2i32.v4i16(<4 x i16> %a)
 end_comment
 
 begin_comment
@@ -44007,7 +44007,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<1 x i64> @llvm.arm.neon.vpaddls.v1i64.v2i32(<2 x i32> %a) #4
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<1 x i64> @llvm.arm.neon.vpaddls.v1i64.v2i32(<2 x i32> %a)
 end_comment
 
 begin_comment
@@ -44036,7 +44036,7 @@ comment|// CHECK-LABEL: @test_vpaddl_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpaddlu.v4i16.v8i8(<8 x i8> %a) #4
+comment|// CHECK:   [[VPADDL_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpaddlu.v4i16.v8i8(<8 x i8> %a)
 end_comment
 
 begin_comment
@@ -44069,7 +44069,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpaddlu.v2i32.v4i16(<4 x i16> %a) #4
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpaddlu.v2i32.v4i16(<4 x i16> %a)
 end_comment
 
 begin_comment
@@ -44102,7 +44102,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<1 x i64> @llvm.arm.neon.vpaddlu.v1i64.v2i32(<2 x i32> %a) #4
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<1 x i64> @llvm.arm.neon.vpaddlu.v1i64.v2i32(<2 x i32> %a)
 end_comment
 
 begin_comment
@@ -44131,7 +44131,7 @@ comment|// CHECK-LABEL: @test_vpaddlq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = call<8 x i16> @llvm.arm.neon.vpaddls.v8i16.v16i8(<16 x i8> %a) #4
+comment|// CHECK:   [[VPADDL_I:%.*]] = call<8 x i16> @llvm.arm.neon.vpaddls.v8i16.v16i8(<16 x i8> %a)
 end_comment
 
 begin_comment
@@ -44164,7 +44164,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vpaddls.v4i32.v8i16(<8 x i16> %a) #4
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vpaddls.v4i32.v8i16(<8 x i16> %a)
 end_comment
 
 begin_comment
@@ -44197,7 +44197,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i64> @llvm.arm.neon.vpaddls.v2i64.v4i32(<4 x i32> %a) #4
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i64> @llvm.arm.neon.vpaddls.v2i64.v4i32(<4 x i32> %a)
 end_comment
 
 begin_comment
@@ -44226,7 +44226,7 @@ comment|// CHECK-LABEL: @test_vpaddlq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = call<8 x i16> @llvm.arm.neon.vpaddlu.v8i16.v16i8(<16 x i8> %a) #4
+comment|// CHECK:   [[VPADDL_I:%.*]] = call<8 x i16> @llvm.arm.neon.vpaddlu.v8i16.v16i8(<16 x i8> %a)
 end_comment
 
 begin_comment
@@ -44259,7 +44259,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vpaddlu.v4i32.v8i16(<8 x i16> %a) #4
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vpaddlu.v4i32.v8i16(<8 x i16> %a)
 end_comment
 
 begin_comment
@@ -44292,7 +44292,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i64> @llvm.arm.neon.vpaddlu.v2i64.v4i32(<4 x i32> %a) #4
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i64> @llvm.arm.neon.vpaddlu.v2i64.v4i32(<4 x i32> %a)
 end_comment
 
 begin_comment
@@ -44321,7 +44321,7 @@ comment|// CHECK-LABEL: @test_vpmax_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMAX_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpmaxs.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VPMAX_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpmaxs.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -44363,7 +44363,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMAX_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpmaxs.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VPMAX_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpmaxs.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -44409,7 +44409,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMAX_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpmaxs.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VPMAX_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpmaxs.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -44447,7 +44447,7 @@ comment|// CHECK-LABEL: @test_vpmax_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMAX_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpmaxu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VPMAX_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpmaxu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -44489,7 +44489,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMAX_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpmaxu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VPMAX_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpmaxu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -44535,7 +44535,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMAX_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpmaxu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VPMAX_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpmaxu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -44581,7 +44581,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMAX_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vpmaxs.v2f32(<2 x float> %a,<2 x float> %b) #4
+comment|// CHECK:   [[VPMAX_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vpmaxs.v2f32(<2 x float> %a,<2 x float> %b)
 end_comment
 
 begin_comment
@@ -44619,7 +44619,7 @@ comment|// CHECK-LABEL: @test_vpmin_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMIN_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpmins.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VPMIN_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpmins.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -44661,7 +44661,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMIN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpmins.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VPMIN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpmins.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -44707,7 +44707,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMIN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpmins.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VPMIN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpmins.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -44745,7 +44745,7 @@ comment|// CHECK-LABEL: @test_vpmin_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMIN_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpminu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VPMIN_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vpminu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -44787,7 +44787,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMIN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpminu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VPMIN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vpminu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -44833,7 +44833,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMIN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpminu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VPMIN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vpminu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -44879,7 +44879,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPMIN_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vpmins.v2f32(<2 x float> %a,<2 x float> %b) #4
+comment|// CHECK:   [[VPMIN_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vpmins.v2f32(<2 x float> %a,<2 x float> %b)
 end_comment
 
 begin_comment
@@ -44917,7 +44917,7 @@ comment|// CHECK-LABEL: @test_vqabs_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQABS_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqabs.v8i8(<8 x i8> %a) #4
+comment|// CHECK:   [[VQABS_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqabs.v8i8(<8 x i8> %a)
 end_comment
 
 begin_comment
@@ -44950,7 +44950,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQABS_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqabs.v4i16(<4 x i16> %a) #4
+comment|// CHECK:   [[VQABS_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqabs.v4i16(<4 x i16> %a)
 end_comment
 
 begin_comment
@@ -44987,7 +44987,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQABS_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqabs.v2i32(<2 x i32> %a) #4
+comment|// CHECK:   [[VQABS_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqabs.v2i32(<2 x i32> %a)
 end_comment
 
 begin_comment
@@ -45020,7 +45020,7 @@ comment|// CHECK-LABEL: @test_vqabsq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQABSQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqabs.v16i8(<16 x i8> %a) #4
+comment|// CHECK:   [[VQABSQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqabs.v16i8(<16 x i8> %a)
 end_comment
 
 begin_comment
@@ -45053,7 +45053,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQABSQ_V1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqabs.v8i16(<8 x i16> %a) #4
+comment|// CHECK:   [[VQABSQ_V1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqabs.v8i16(<8 x i16> %a)
 end_comment
 
 begin_comment
@@ -45090,7 +45090,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQABSQ_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqabs.v4i32(<4 x i32> %a) #4
+comment|// CHECK:   [[VQABSQ_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqabs.v4i32(<4 x i32> %a)
 end_comment
 
 begin_comment
@@ -45123,7 +45123,7 @@ comment|// CHECK-LABEL: @test_vqadd_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqadds.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VQADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqadds.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -45165,7 +45165,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqadds.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqadds.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -45211,7 +45211,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqadds.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqadds.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -45257,7 +45257,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqadds.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqadds.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -45295,7 +45295,7 @@ comment|// CHECK-LABEL: @test_vqadd_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqaddu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VQADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqaddu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -45337,7 +45337,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqaddu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqaddu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -45383,7 +45383,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqaddu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqaddu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -45429,7 +45429,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqaddu.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VQADD_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqaddu.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -45467,7 +45467,7 @@ comment|// CHECK-LABEL: @test_vqaddq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqadds.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VQADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqadds.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -45509,7 +45509,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqadds.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqadds.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -45555,7 +45555,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqadds.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqadds.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -45601,7 +45601,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqadds.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqadds.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -45639,7 +45639,7 @@ comment|// CHECK-LABEL: @test_vqaddq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqaddu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VQADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqaddu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -45681,7 +45681,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqaddu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqaddu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -45727,7 +45727,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqaddu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqaddu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -45773,7 +45773,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqaddu.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VQADDQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqaddu.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -45823,11 +45823,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> %c) #4
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> %c)
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqadds.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #4
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqadds.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -45878,11 +45878,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> %c) #4
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> %c)
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqadds.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #4
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqadds.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -45937,11 +45937,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqadds.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #4
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqadds.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -45998,11 +45998,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqadds.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #4
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqadds.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -46071,11 +46071,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V6_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqadds.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I]]) #4
+comment|// CHECK:   [[VQDMLAL_V6_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqadds.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I]])
 end_comment
 
 begin_comment
@@ -46134,11 +46134,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #4
+comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_V4_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqadds.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I]]) #4
+comment|// CHECK:   [[VQDMLAL_V4_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqadds.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I]])
 end_comment
 
 begin_comment
@@ -46189,11 +46189,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> %c) #4
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> %c)
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqsubs.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #4
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqsubs.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -46244,11 +46244,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> %c to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> %c) #4
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> %c)
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqsubs.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #4
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqsubs.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -46303,11 +46303,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqsubs.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #4
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqsubs.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -46364,11 +46364,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqsubs.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #4
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqsubs.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]])
 end_comment
 
 begin_comment
@@ -46437,11 +46437,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V6_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqsubs.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I]]) #4
+comment|// CHECK:   [[VQDMLSL_V6_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqsubs.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I]])
 end_comment
 
 begin_comment
@@ -46500,11 +46500,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #4
+comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLSL_V4_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqsubs.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I]]) #4
+comment|// CHECK:   [[VQDMLSL_V4_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqsubs.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I]])
 end_comment
 
 begin_comment
@@ -46551,7 +46551,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqdmulh.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqdmulh.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -46597,7 +46597,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqdmulh.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqdmulh.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -46643,7 +46643,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqdmulh.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqdmulh.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -46689,7 +46689,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmulh.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmulh.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -46739,7 +46739,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -46791,7 +46791,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -46843,7 +46843,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -46895,7 +46895,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -46959,7 +46959,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V5_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VQDMULH_V5_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -47013,7 +47013,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #4
+comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -47091,7 +47091,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[VECINIT7_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[VECINIT7_I]]) #4
+comment|// CHECK:   [[VQDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[VECINIT7_I]])
 end_comment
 
 begin_comment
@@ -47153,7 +47153,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[VECINIT3_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VQDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -47199,7 +47199,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -47245,7 +47245,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -47295,7 +47295,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -47347,7 +47347,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -47411,7 +47411,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VQDMULL_V5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqdmull.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -47465,7 +47465,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #4
+comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqdmull.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -47507,7 +47507,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqmovns.v8i8(<8 x i16> %a) #4
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqmovns.v8i8(<8 x i16> %a)
 end_comment
 
 begin_comment
@@ -47540,7 +47540,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqmovns.v4i16(<4 x i32> %a) #4
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqmovns.v4i16(<4 x i32> %a)
 end_comment
 
 begin_comment
@@ -47577,7 +47577,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqmovns.v2i32(<2 x i64> %a) #4
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqmovns.v2i32(<2 x i64> %a)
 end_comment
 
 begin_comment
@@ -47614,7 +47614,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqmovnu.v8i8(<8 x i16> %a) #4
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqmovnu.v8i8(<8 x i16> %a)
 end_comment
 
 begin_comment
@@ -47647,7 +47647,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqmovnu.v4i16(<4 x i32> %a) #4
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqmovnu.v4i16(<4 x i32> %a)
 end_comment
 
 begin_comment
@@ -47684,7 +47684,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqmovnu.v2i32(<2 x i64> %a) #4
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqmovnu.v2i32(<2 x i64> %a)
 end_comment
 
 begin_comment
@@ -47721,7 +47721,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqmovnsu.v8i8(<8 x i16> %a) #4
+comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqmovnsu.v8i8(<8 x i16> %a)
 end_comment
 
 begin_comment
@@ -47754,7 +47754,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqmovnsu.v4i16(<4 x i32> %a) #4
+comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqmovnsu.v4i16(<4 x i32> %a)
 end_comment
 
 begin_comment
@@ -47791,7 +47791,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqmovnsu.v2i32(<2 x i64> %a) #4
+comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqmovnsu.v2i32(<2 x i64> %a)
 end_comment
 
 begin_comment
@@ -47824,7 +47824,7 @@ comment|// CHECK-LABEL: @test_vqneg_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQNEG_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqneg.v8i8(<8 x i8> %a) #4
+comment|// CHECK:   [[VQNEG_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqneg.v8i8(<8 x i8> %a)
 end_comment
 
 begin_comment
@@ -47857,7 +47857,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQNEG_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqneg.v4i16(<4 x i16> %a) #4
+comment|// CHECK:   [[VQNEG_V1_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqneg.v4i16(<4 x i16> %a)
 end_comment
 
 begin_comment
@@ -47894,7 +47894,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQNEG_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqneg.v2i32(<2 x i32> %a) #4
+comment|// CHECK:   [[VQNEG_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqneg.v2i32(<2 x i32> %a)
 end_comment
 
 begin_comment
@@ -47927,7 +47927,7 @@ comment|// CHECK-LABEL: @test_vqnegq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQNEGQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqneg.v16i8(<16 x i8> %a) #4
+comment|// CHECK:   [[VQNEGQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqneg.v16i8(<16 x i8> %a)
 end_comment
 
 begin_comment
@@ -47960,7 +47960,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQNEGQ_V1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqneg.v8i16(<8 x i16> %a) #4
+comment|// CHECK:   [[VQNEGQ_V1_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqneg.v8i16(<8 x i16> %a)
 end_comment
 
 begin_comment
@@ -47997,7 +47997,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQNEGQ_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqneg.v4i32(<4 x i32> %a) #4
+comment|// CHECK:   [[VQNEGQ_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqneg.v4i32(<4 x i32> %a)
 end_comment
 
 begin_comment
@@ -48038,7 +48038,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqrdmulh.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqrdmulh.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -48084,7 +48084,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqrdmulh.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqrdmulh.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -48130,7 +48130,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqrdmulh.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqrdmulh.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -48176,7 +48176,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqrdmulh.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqrdmulh.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -48226,7 +48226,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -48278,7 +48278,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -48330,7 +48330,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -48382,7 +48382,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #4
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]])
 end_comment
 
 begin_comment
@@ -48446,7 +48446,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V5_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VQRDMULH_V5_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -48500,7 +48500,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #4
+comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[VECINIT1_I]])
 end_comment
 
 begin_comment
@@ -48578,7 +48578,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[VECINIT7_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[VECINIT7_I]]) #4
+comment|// CHECK:   [[VQRDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[VECINIT7_I]])
 end_comment
 
 begin_comment
@@ -48640,7 +48640,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[VECINIT3_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[VECINIT3_I]]) #4
+comment|// CHECK:   [[VQRDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[VECINIT3_I]])
 end_comment
 
 begin_comment
@@ -48678,7 +48678,7 @@ comment|// CHECK-LABEL: @test_vqrshl_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqrshifts.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VQRSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqrshifts.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -48720,7 +48720,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqrshifts.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqrshifts.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -48766,7 +48766,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqrshifts.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqrshifts.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -48812,7 +48812,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqrshifts.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqrshifts.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -48850,7 +48850,7 @@ comment|// CHECK-LABEL: @test_vqrshl_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqrshiftu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VQRSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqrshiftu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -48892,7 +48892,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqrshiftu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqrshiftu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -48938,7 +48938,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqrshiftu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqrshiftu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -48984,7 +48984,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqrshiftu.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VQRSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqrshiftu.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -49022,7 +49022,7 @@ comment|// CHECK-LABEL: @test_vqrshlq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqrshifts.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VQRSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqrshifts.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -49064,7 +49064,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqrshifts.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqrshifts.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -49110,7 +49110,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqrshifts.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqrshifts.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -49156,7 +49156,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqrshifts.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqrshifts.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -49194,7 +49194,7 @@ comment|// CHECK-LABEL: @test_vqrshlq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqrshiftu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VQRSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqrshiftu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -49236,7 +49236,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqrshiftu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqrshiftu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -49282,7 +49282,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqrshiftu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqrshiftu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -49328,7 +49328,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqrshiftu.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VQRSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqrshiftu.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -49717,7 +49717,7 @@ comment|// CHECK-LABEL: @test_vqshl_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqshifts.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VQSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqshifts.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -49759,7 +49759,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqshifts.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqshifts.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -49805,7 +49805,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqshifts.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqshifts.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -49851,7 +49851,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqshifts.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqshifts.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -49889,7 +49889,7 @@ comment|// CHECK-LABEL: @test_vqshl_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqshiftu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VQSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqshiftu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -49931,7 +49931,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqshiftu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqshiftu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -49977,7 +49977,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqshiftu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqshiftu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -50023,7 +50023,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqshiftu.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VQSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqshiftu.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -50061,7 +50061,7 @@ comment|// CHECK-LABEL: @test_vqshlq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqshifts.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VQSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqshifts.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -50103,7 +50103,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqshifts.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqshifts.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -50149,7 +50149,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqshifts.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqshifts.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -50195,7 +50195,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqshifts.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqshifts.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -50233,7 +50233,7 @@ comment|// CHECK-LABEL: @test_vqshlq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqshiftu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VQSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqshiftu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -50275,7 +50275,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqshiftu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqshiftu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -50321,7 +50321,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqshiftu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqshiftu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -50367,7 +50367,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqshiftu.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VQSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqshiftu.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -51644,7 +51644,7 @@ comment|// CHECK-LABEL: @test_vqsub_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUB_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqsubs.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VQSUB_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqsubs.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -51686,7 +51686,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqsubs.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqsubs.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -51732,7 +51732,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqsubs.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqsubs.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -51778,7 +51778,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqsubs.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqsubs.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -51816,7 +51816,7 @@ comment|// CHECK-LABEL: @test_vqsub_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUB_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqsubu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VQSUB_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vqsubu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -51858,7 +51858,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqsubu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vqsubu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -51904,7 +51904,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqsubu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vqsubu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -51950,7 +51950,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqsubu.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VQSUB_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vqsubu.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -51988,7 +51988,7 @@ comment|// CHECK-LABEL: @test_vqsubq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUBQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqsubs.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VQSUBQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqsubs.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -52030,7 +52030,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqsubs.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqsubs.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -52076,7 +52076,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqsubs.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqsubs.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -52122,7 +52122,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqsubs.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqsubs.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -52160,7 +52160,7 @@ comment|// CHECK-LABEL: @test_vqsubq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUBQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqsubu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VQSUBQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vqsubu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -52202,7 +52202,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqsubu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vqsubu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -52248,7 +52248,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqsubu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vqsubu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -52294,7 +52294,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqsubu.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VQSUBQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vqsubu.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -52340,7 +52340,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vraddhn.v8i8(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vraddhn.v8i8(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -52382,7 +52382,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vraddhn.v4i16(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vraddhn.v4i16(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -52428,7 +52428,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vraddhn.v2i32(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vraddhn.v2i32(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -52474,7 +52474,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vraddhn.v8i8(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vraddhn.v8i8(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -52516,7 +52516,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vraddhn.v4i16(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vraddhn.v4i16(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -52562,7 +52562,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vraddhn.v2i32(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VRADDHN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vraddhn.v2i32(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -52604,7 +52604,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRECPE_V1_I:%.*]] = call<2 x float> @llvm.arm.neon.vrecpe.v2f32(<2 x float> %a) #4
+comment|// CHECK:   [[VRECPE_V1_I:%.*]] = call<2 x float> @llvm.arm.neon.vrecpe.v2f32(<2 x float> %a)
 end_comment
 
 begin_comment
@@ -52637,7 +52637,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRECPE_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrecpe.v2i32(<2 x i32> %a) #4
+comment|// CHECK:   [[VRECPE_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrecpe.v2i32(<2 x i32> %a)
 end_comment
 
 begin_comment
@@ -52670,7 +52670,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRECPEQ_V1_I:%.*]] = call<4 x float> @llvm.arm.neon.vrecpe.v4f32(<4 x float> %a) #4
+comment|// CHECK:   [[VRECPEQ_V1_I:%.*]] = call<4 x float> @llvm.arm.neon.vrecpe.v4f32(<4 x float> %a)
 end_comment
 
 begin_comment
@@ -52703,7 +52703,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRECPEQ_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrecpe.v4i32(<4 x i32> %a) #4
+comment|// CHECK:   [[VRECPEQ_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrecpe.v4i32(<4 x i32> %a)
 end_comment
 
 begin_comment
@@ -52740,7 +52740,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRECPS_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vrecps.v2f32(<2 x float> %a,<2 x float> %b) #4
+comment|// CHECK:   [[VRECPS_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vrecps.v2f32(<2 x float> %a,<2 x float> %b)
 end_comment
 
 begin_comment
@@ -52786,7 +52786,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRECPSQ_V2_I:%.*]] = call<4 x float> @llvm.arm.neon.vrecps.v4f32(<4 x float> %a,<4 x float> %b) #4
+comment|// CHECK:   [[VRECPSQ_V2_I:%.*]] = call<4 x float> @llvm.arm.neon.vrecps.v4f32(<4 x float> %a,<4 x float> %b)
 end_comment
 
 begin_comment
@@ -61396,7 +61396,7 @@ comment|// CHECK-LABEL: @test_vrhadd_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrhadds.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VRHADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrhadds.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -61438,7 +61438,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrhadds.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VRHADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrhadds.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -61484,7 +61484,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrhadds.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VRHADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrhadds.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -61522,7 +61522,7 @@ comment|// CHECK-LABEL: @test_vrhadd_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrhaddu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VRHADD_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrhaddu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -61564,7 +61564,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrhaddu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VRHADD_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrhaddu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -61610,7 +61610,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrhaddu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VRHADD_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrhaddu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -61648,7 +61648,7 @@ comment|// CHECK-LABEL: @test_vrhaddq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vrhadds.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VRHADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vrhadds.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -61690,7 +61690,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vrhadds.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VRHADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vrhadds.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -61736,7 +61736,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrhadds.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VRHADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrhadds.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -61774,7 +61774,7 @@ comment|// CHECK-LABEL: @test_vrhaddq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vrhaddu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VRHADDQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vrhaddu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -61816,7 +61816,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vrhaddu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VRHADDQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vrhaddu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -61862,7 +61862,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRHADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrhaddu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VRHADDQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrhaddu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -61900,7 +61900,7 @@ comment|// CHECK-LABEL: @test_vrshl_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrshifts.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VRSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrshifts.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -61942,7 +61942,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrshifts.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrshifts.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -61988,7 +61988,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrshifts.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrshifts.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -62034,7 +62034,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vrshifts.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vrshifts.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -62072,7 +62072,7 @@ comment|// CHECK-LABEL: @test_vrshl_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrshiftu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VRSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrshiftu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -62114,7 +62114,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrshiftu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrshiftu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -62160,7 +62160,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrshiftu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrshiftu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -62206,7 +62206,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vrshiftu.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VRSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vrshiftu.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -62244,7 +62244,7 @@ comment|// CHECK-LABEL: @test_vrshlq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vrshifts.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VRSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vrshifts.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -62286,7 +62286,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vrshifts.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vrshifts.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -62332,7 +62332,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrshifts.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrshifts.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -62378,7 +62378,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vrshifts.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vrshifts.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -62416,7 +62416,7 @@ comment|// CHECK-LABEL: @test_vrshlq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vrshiftu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VRSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vrshiftu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -62458,7 +62458,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vrshiftu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vrshiftu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -62504,7 +62504,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrshiftu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrshiftu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -62550,7 +62550,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vrshiftu.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VRSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vrshiftu.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -63418,7 +63418,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSQRTE_V1_I:%.*]] = call<2 x float> @llvm.arm.neon.vrsqrte.v2f32(<2 x float> %a) #4
+comment|// CHECK:   [[VRSQRTE_V1_I:%.*]] = call<2 x float> @llvm.arm.neon.vrsqrte.v2f32(<2 x float> %a)
 end_comment
 
 begin_comment
@@ -63451,7 +63451,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSQRTE_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrsqrte.v2i32(<2 x i32> %a) #4
+comment|// CHECK:   [[VRSQRTE_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrsqrte.v2i32(<2 x i32> %a)
 end_comment
 
 begin_comment
@@ -63484,7 +63484,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSQRTEQ_V1_I:%.*]] = call<4 x float> @llvm.arm.neon.vrsqrte.v4f32(<4 x float> %a) #4
+comment|// CHECK:   [[VRSQRTEQ_V1_I:%.*]] = call<4 x float> @llvm.arm.neon.vrsqrte.v4f32(<4 x float> %a)
 end_comment
 
 begin_comment
@@ -63517,7 +63517,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSQRTEQ_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrsqrte.v4i32(<4 x i32> %a) #4
+comment|// CHECK:   [[VRSQRTEQ_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vrsqrte.v4i32(<4 x i32> %a)
 end_comment
 
 begin_comment
@@ -63554,7 +63554,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSQRTS_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vrsqrts.v2f32(<2 x float> %a,<2 x float> %b) #4
+comment|// CHECK:   [[VRSQRTS_V2_I:%.*]] = call<2 x float> @llvm.arm.neon.vrsqrts.v2f32(<2 x float> %a,<2 x float> %b)
 end_comment
 
 begin_comment
@@ -63600,7 +63600,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSQRTSQ_V2_I:%.*]] = call<4 x float> @llvm.arm.neon.vrsqrts.v4f32(<4 x float> %a,<4 x float> %b) #4
+comment|// CHECK:   [[VRSQRTSQ_V2_I:%.*]] = call<4 x float> @llvm.arm.neon.vrsqrts.v4f32(<4 x float> %a,<4 x float> %b)
 end_comment
 
 begin_comment
@@ -64478,7 +64478,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrsubhn.v8i8(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrsubhn.v8i8(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -64520,7 +64520,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrsubhn.v4i16(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrsubhn.v4i16(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -64566,7 +64566,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrsubhn.v2i32(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrsubhn.v2i32(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -64612,7 +64612,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrsubhn.v8i8(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vrsubhn.v8i8(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -64654,7 +64654,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrsubhn.v4i16(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vrsubhn.v4i16(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -64700,7 +64700,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrsubhn.v2i32(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VRSUBHN_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vrsubhn.v2i32(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -65854,7 +65854,7 @@ comment|// CHECK-LABEL: @test_vshl_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vshifts.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vshifts.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -65896,7 +65896,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vshifts.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vshifts.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -65942,7 +65942,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vshifts.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vshifts.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -65988,7 +65988,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vshifts.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vshifts.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -66026,7 +66026,7 @@ comment|// CHECK-LABEL: @test_vshl_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vshiftu.v8i8(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VSHL_V_I:%.*]] = call<8 x i8> @llvm.arm.neon.vshiftu.v8i8(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -66068,7 +66068,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vshiftu.v4i16(<4 x i16> %a,<4 x i16> %b) #4
+comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<4 x i16> @llvm.arm.neon.vshiftu.v4i16(<4 x i16> %a,<4 x i16> %b)
 end_comment
 
 begin_comment
@@ -66114,7 +66114,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vshiftu.v2i32(<2 x i32> %a,<2 x i32> %b) #4
+comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<2 x i32> @llvm.arm.neon.vshiftu.v2i32(<2 x i32> %a,<2 x i32> %b)
 end_comment
 
 begin_comment
@@ -66160,7 +66160,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<1 x i64> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vshiftu.v1i64(<1 x i64> %a,<1 x i64> %b) #4
+comment|// CHECK:   [[VSHL_V2_I:%.*]] = call<1 x i64> @llvm.arm.neon.vshiftu.v1i64(<1 x i64> %a,<1 x i64> %b)
 end_comment
 
 begin_comment
@@ -66198,7 +66198,7 @@ comment|// CHECK-LABEL: @test_vshlq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vshifts.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vshifts.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -66240,7 +66240,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vshifts.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vshifts.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -66286,7 +66286,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vshifts.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vshifts.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -66332,7 +66332,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vshifts.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vshifts.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -66370,7 +66370,7 @@ comment|// CHECK-LABEL: @test_vshlq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vshiftu.v16i8(<16 x i8> %a,<16 x i8> %b) #4
+comment|// CHECK:   [[VSHLQ_V_I:%.*]] = call<16 x i8> @llvm.arm.neon.vshiftu.v16i8(<16 x i8> %a,<16 x i8> %b)
 end_comment
 
 begin_comment
@@ -66412,7 +66412,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vshiftu.v8i16(<8 x i16> %a,<8 x i16> %b) #4
+comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<8 x i16> @llvm.arm.neon.vshiftu.v8i16(<8 x i16> %a,<8 x i16> %b)
 end_comment
 
 begin_comment
@@ -66458,7 +66458,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vshiftu.v4i32(<4 x i32> %a,<4 x i32> %b) #4
+comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<4 x i32> @llvm.arm.neon.vshiftu.v4i32(<4 x i32> %a,<4 x i32> %b)
 end_comment
 
 begin_comment
@@ -66504,7 +66504,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vshiftu.v2i64(<2 x i64> %a,<2 x i64> %b) #4
+comment|// CHECK:   [[VSHLQ_V2_I:%.*]] = call<2 x i64> @llvm.arm.neon.vshiftu.v2i64(<2 x i64> %a,<2 x i64> %b)
 end_comment
 
 begin_comment
@@ -89214,7 +89214,7 @@ comment|// CHECK-LABEL: @test_vtbl1_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl1(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl1(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -89248,7 +89248,7 @@ comment|// CHECK-LABEL: @test_vtbl1_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl1(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl1(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -89282,7 +89282,7 @@ comment|// CHECK-LABEL: @test_vtbl1_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl1(<8 x i8> %a,<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl1(<8 x i8> %a,<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -89384,7 +89384,7 @@ comment|// CHECK:   [[TMP5:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl2(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl2(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -89486,7 +89486,7 @@ comment|// CHECK:   [[TMP5:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl2(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl2(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -89588,7 +89588,7 @@ comment|// CHECK:   [[TMP5:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl2(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl2(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -89702,7 +89702,7 @@ comment|// CHECK:   [[TMP6:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl3(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl3(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -89816,7 +89816,7 @@ comment|// CHECK:   [[TMP6:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl3(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl3(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -89930,7 +89930,7 @@ comment|// CHECK:   [[TMP6:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl3(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl3(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -90056,7 +90056,7 @@ comment|// CHECK:   [[TMP7:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl4(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl4(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -90182,7 +90182,7 @@ comment|// CHECK:   [[TMP7:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl4(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl4(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -90308,7 +90308,7 @@ comment|// CHECK:   [[TMP7:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBL4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl4(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %b) #4
+comment|// CHECK:   [[VTBL4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbl4(<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %b)
 end_comment
 
 begin_comment
@@ -90342,7 +90342,7 @@ comment|// CHECK-LABEL: @test_vtbx1_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx1(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx1(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -90381,7 +90381,7 @@ comment|// CHECK-LABEL: @test_vtbx1_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx1(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx1(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -90420,7 +90420,7 @@ comment|// CHECK-LABEL: @test_vtbx1_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx1(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX1_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx1(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -90527,7 +90527,7 @@ comment|// CHECK:   [[TMP5:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx2(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx2(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -90634,7 +90634,7 @@ comment|// CHECK:   [[TMP5:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx2(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx2(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -90741,7 +90741,7 @@ comment|// CHECK:   [[TMP5:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx2(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX2_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx2(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -90860,7 +90860,7 @@ comment|// CHECK:   [[TMP6:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx3(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx3(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -90979,7 +90979,7 @@ comment|// CHECK:   [[TMP6:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx3(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx3(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -91098,7 +91098,7 @@ comment|// CHECK:   [[TMP6:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx3(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX3_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx3(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -91229,7 +91229,7 @@ comment|// CHECK:   [[TMP7:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx4(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx4(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -91360,7 +91360,7 @@ comment|// CHECK:   [[TMP7:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx4(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx4(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -91491,7 +91491,7 @@ comment|// CHECK:   [[TMP7:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VTBX4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx4(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %c) #4
+comment|// CHECK:   [[VTBX4_I:%.*]] = call<8 x i8> @llvm.arm.neon.vtbx4(<8 x i8> %a,<8 x i8> [[TMP4]],<8 x i8> [[TMP5]],<8 x i8> [[TMP6]],<8 x i8> [[TMP7]],<8 x i8> %c)
 end_comment
 
 begin_comment
@@ -91570,7 +91570,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.int8x8x2_t* [[__RET_I]] to i8
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -91652,7 +91652,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int16x4x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -91734,7 +91734,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int32x2x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -91808,7 +91808,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.uint8x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -91890,7 +91890,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint16x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -91972,7 +91972,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint32x2x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92054,7 +92054,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.float32x2x2_t* [[__RET_I]] to
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92128,7 +92128,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.poly8x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92210,7 +92210,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.poly16x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92284,7 +92284,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.int8x16x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -92366,7 +92366,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int16x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -92448,7 +92448,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int32x4x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -92522,7 +92522,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.uint8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -92604,7 +92604,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -92686,7 +92686,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint32x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -92768,7 +92768,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.float32x4x2_t* [[__RET_I]] to
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -92842,7 +92842,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.poly8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -92924,7 +92924,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.poly16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -93750,7 +93750,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.int8x8x2_t* [[__RET_I]] to i8
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -93832,7 +93832,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int16x4x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -93914,7 +93914,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int32x2x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -93988,7 +93988,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.uint8x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94070,7 +94070,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint16x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94152,7 +94152,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint32x2x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94234,7 +94234,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.float32x2x2_t* [[__RET_I]] to
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94308,7 +94308,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.poly8x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94390,7 +94390,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.poly16x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94464,7 +94464,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.int8x16x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -94546,7 +94546,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int16x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -94628,7 +94628,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int32x4x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -94702,7 +94702,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.uint8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -94784,7 +94784,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -94866,7 +94866,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint32x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -94948,7 +94948,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.float32x4x2_t* [[__RET_I]] to
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -95022,7 +95022,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.poly8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -95104,7 +95104,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.poly16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -95178,7 +95178,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.int8x8x2_t* [[__RET_I]] to i8
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95260,7 +95260,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int16x4x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95342,7 +95342,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int32x2x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95416,7 +95416,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.uint8x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95498,7 +95498,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint16x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95580,7 +95580,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint32x2x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95662,7 +95662,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.float32x2x2_t* [[__RET_I]] to
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95736,7 +95736,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.poly8x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95818,7 +95818,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.poly16x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 16, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95892,7 +95892,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.int8x16x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -95974,7 +95974,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int16x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -96056,7 +96056,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int32x4x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -96130,7 +96130,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.uint8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -96212,7 +96212,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -96294,7 +96294,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint32x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -96376,7 +96376,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.float32x4x2_t* [[__RET_I]] to
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -96450,7 +96450,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.poly8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment
@@ -96532,7 +96532,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.poly16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false) #4
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
 end_comment
 
 begin_comment

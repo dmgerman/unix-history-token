@@ -446,7 +446,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-YES: attributes [[NUW_RN]] = { nounwind readnone }
+comment|// CHECK-YES: attributes [[NUW_RN]] = { nounwind readnone speculatable }
 end_comment
 
 begin_comment
@@ -454,7 +454,7 @@ comment|// CHECK-NO: attributes [[NUW_RN]] = { nounwind readnone{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-NO: attributes [[NUW_RNI]] = { nounwind readnone }
+comment|// CHECK-NO: attributes [[NUW_RNI]] = { nounwind readnone speculatable }
 end_comment
 
 end_unit

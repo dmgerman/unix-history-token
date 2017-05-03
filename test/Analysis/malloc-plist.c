@@ -1861,7 +1861,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -2521,7 +2521,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -4073,7 +4073,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -5681,7 +5681,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -8025,7 +8025,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Use of memory after it is fr
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -10273,7 +10273,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -11357,7 +11357,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -12753,7 +12753,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Use of memory after it is fr
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -13413,7 +13413,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -14245,7 +14245,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -15077,7 +15077,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -16297,7 +16297,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -17517,7 +17517,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -18349,7 +18349,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -19181,7 +19181,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential leak of memory poi
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -20129,7 +20129,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential memory leak</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -21077,7 +21077,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential memory leak</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
@@ -22161,7 +22161,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Potential memory leak</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Memory Error</string>
+comment|// CHECK-NEXT:<key>category</key><string>Memory error</string>
 end_comment
 
 begin_comment
