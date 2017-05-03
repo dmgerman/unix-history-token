@@ -11617,6 +11617,8 @@ name|re
 parameter_list|)
 block|{
 name|size_t
+name|phnum
+decl_stmt|,
 name|shnum
 decl_stmt|,
 name|shstrndx
@@ -11933,7 +11935,7 @@ expr_stmt|;
 comment|/* e_phnum. */
 name|printf
 argument_list|(
-literal|"%-37s%u\n"
+literal|"%-37s%u"
 argument_list|,
 literal|"  Number of program headers:"
 argument_list|,
@@ -11942,6 +11944,43 @@ operator|->
 name|ehdr
 operator|.
 name|e_phnum
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|re
+operator|->
+name|ehdr
+operator|.
+name|e_phnum
+operator|==
+name|PN_XNUM
+condition|)
+block|{
+comment|/* Extended program header numbering is in use. */
+if|if
+condition|(
+name|elf_getphnum
+argument_list|(
+name|re
+operator|->
+name|elf
+argument_list|,
+operator|&
+name|phnum
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" (%zu)"
+argument_list|,
+name|phnum
+argument_list|)
+expr_stmt|;
+block|}
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 comment|/* e_shentsize. */
