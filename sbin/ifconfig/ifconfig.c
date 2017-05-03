@@ -6974,22 +6974,12 @@ condition|)
 return|return;
 block|}
 block|}
-comment|/* not present, we should try to load it */
-if|if
-condition|(
+comment|/* 	 * Try to load the module.  But ignore failures, because ifconfig can't 	 * infer the names of all drivers (eg mlx4en(4)). 	 */
+operator|(
+name|void
+operator|)
 name|kldload
 argument_list|(
-name|ifkind
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"kldload(%s)"
-argument_list|,
 name|ifkind
 argument_list|)
 expr_stmt|;
