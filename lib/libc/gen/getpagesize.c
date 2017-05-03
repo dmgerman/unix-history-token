@@ -199,8 +199,7 @@ literal|1
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|PAGE_SIZE
 operator|)
 return|;
 return|return
