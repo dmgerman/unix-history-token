@@ -30296,6 +30296,15 @@ name|min_pressure
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Adjust palm width to nearly match synaptics w=10 */
+name|sc
+operator|->
+name|syninfo
+operator|.
+name|max_width
+operator|=
+literal|7
+expr_stmt|;
 comment|/* Elans often report double& triple taps as single event */
 name|sc
 operator|->
