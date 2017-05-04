@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/udplite.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nfsserver/nfs.h>
 end_include
 
@@ -3150,6 +3156,22 @@ operator|(
 name|lookup_value
 argument_list|(
 name|sockoptudp
+argument_list|,
+name|optname
+argument_list|)
+operator|)
+return|;
+if|if
+condition|(
+name|level
+operator|==
+name|IPPROTO_UDPLITE
+condition|)
+return|return
+operator|(
+name|lookup_value
+argument_list|(
+name|sockoptudplite
 argument_list|,
 name|optname
 argument_list|)
