@@ -433,6 +433,28 @@ begin_comment
 comment|/* Specifies a NUMA domain id. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CPU_WHICH_INTRHANDLER
+value|7
+end_define
+
+begin_comment
+comment|/* Specifies an irq # (not ithread). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_WHICH_ITHREAD
+value|8
+end_define
+
+begin_comment
+comment|/* Specifies an irq's ithread. */
+end_comment
+
 begin_comment
 comment|/*  * Reserved cpuset identifiers.  */
 end_comment

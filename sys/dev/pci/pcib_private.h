@@ -1087,6 +1087,20 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pcib_request_feature
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|enum
+name|pci_feature
+name|feature
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pcib_request_feature_allow
 parameter_list|(
 name|device_t

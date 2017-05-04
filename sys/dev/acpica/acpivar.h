@@ -1081,6 +1081,38 @@ value|do {			\     if (acpi_get_verbose(acpi_sc))				\ 	device_printf(dev, x);		
 end_define
 
 begin_comment
+comment|/* Values for the first status word returned by _OSC. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSC_FAILURE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSC_BAD_UUID
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSC_BAD_REVISION
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSC_CAPS_MASKED
+value|(1<< 4)
+end_define
+
+begin_comment
 comment|/* Values for the device _STA (status) method. */
 end_comment
 

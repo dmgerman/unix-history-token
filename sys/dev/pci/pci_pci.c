@@ -362,7 +362,7 @@ end_endif
 begin_function_decl
 specifier|static
 name|int
-name|pcib_request_feature
+name|pcib_request_feature_default
 parameter_list|(
 name|device_t
 name|pcib
@@ -629,7 +629,7 @@ name|DEVMETHOD
 argument_list|(
 name|pcib_request_feature
 argument_list|,
-name|pcib_request_feature
+name|pcib_request_feature_default
 argument_list|)
 block|,
 name|DEVMETHOD_END
@@ -5049,14 +5049,6 @@ if|if
 condition|(
 name|pcib_request_feature
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|PCI_FEATURE_HP
@@ -13604,6 +13596,34 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|pcib_request_feature
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|enum
+name|pci_feature
+name|feature
+parameter_list|)
+block|{
+comment|/* 	 * Invoke PCIB_REQUEST_FEATURE of this bridge first in case 	 * the firmware overrides the method of PCI-PCI bridges. 	 */
+return|return
+operator|(
+name|PCIB_REQUEST_FEATURE
+argument_list|(
+name|dev
+argument_list|,
+name|dev
+argument_list|,
+name|feature
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Pass the request to use this PCI feature up the tree. Either there's a  * firmware like ACPI that's using this feature that will approve (or deny) the  * request to take it over, or the platform has no such firmware, in which case  * the request will be approved. If the request is approved, the OS is expected  * to make use of the feature or render it harmless.  */
 end_comment
@@ -13611,7 +13631,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pcib_request_feature
+name|pcib_request_feature_default
 parameter_list|(
 name|device_t
 name|pcib

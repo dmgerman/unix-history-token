@@ -33676,7 +33676,7 @@ name|uint64_t
 operator|)
 literal|0
 argument_list|,
-name|INT64_MAX
+name|UINT64_MAX
 argument_list|,
 operator|(
 name|uint64_t
@@ -33784,7 +33784,7 @@ name|iomode
 argument_list|,
 name|off
 argument_list|,
-name|INT64_MAX
+name|UINT64_MAX
 argument_list|,
 operator|(
 name|uint64_t

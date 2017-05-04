@@ -9571,7 +9571,7 @@ index|]
 operator|||
 name|v
 index|[
-literal|1
+literal|0
 index|]
 operator|>=
 name|DN_MAX_ID

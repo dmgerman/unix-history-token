@@ -944,8 +944,8 @@ name|p
 argument_list|,
 name|ofp
 argument_list|)
-operator|==
-literal|0
+operator|!=
+name|EOF
 condition|)
 empty_stmt|;
 if|if
@@ -1890,8 +1890,8 @@ name|p
 argument_list|,
 name|ofp
 argument_list|)
-operator|!=
-literal|0
+operator|==
+name|EOF
 condition|)
 break|break;
 if|if
@@ -2215,8 +2215,8 @@ name|p
 argument_list|,
 name|ofp
 argument_list|)
-operator|!=
-literal|0
+operator|==
+name|EOF
 condition|)
 break|break;
 block|}

@@ -357,6 +357,11 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
+name|d_flags
+operator|=
+name|D_NEEDGIANT
+block|,
+operator|.
 name|d_ioctl
 operator|=
 name|nandsim_ioctl
@@ -3193,7 +3198,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
 argument_list|,
-literal|0666
+literal|0600
 argument_list|,
 literal|"nandsim.ioctl"
 argument_list|)

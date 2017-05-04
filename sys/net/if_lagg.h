@@ -728,55 +728,6 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|LAGG_LLQTYPE_PHYS
-init|=
-literal|0
-block|,
-comment|/* Task related to physical (underlying) port */
-name|LAGG_LLQTYPE_VIRT
-block|,
-comment|/* Task related to lagg interface itself */
-block|}
-name|lagg_llqtype
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* List of interfaces to have the MAC address modified */
-end_comment
-
-begin_struct
-struct|struct
-name|lagg_llq
-block|{
-name|struct
-name|ifnet
-modifier|*
-name|llq_ifp
-decl_stmt|;
-name|uint8_t
-name|llq_lladdr
-index|[
-name|ETHER_ADDR_LEN
-index|]
-decl_stmt|;
-name|lagg_llqtype
-name|llq_type
-decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|lagg_llq
-argument_list|)
-name|llq_entries
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|lagg_counters
@@ -804,6 +755,10 @@ comment|/* virtual interface */
 name|struct
 name|rmlock
 name|sc_mtx
+decl_stmt|;
+name|struct
+name|sx
+name|sc_sx
 decl_stmt|;
 name|int
 name|sc_proto
@@ -844,6 +799,10 @@ comment|/* sequence counter */
 name|uint32_t
 name|sc_flags
 decl_stmt|;
+name|int
+name|sc_destroying
+decl_stmt|;
+comment|/* destroying lagg */
 name|SLIST_HEAD
 argument_list|(
 argument|__tplhd
@@ -859,19 +818,6 @@ argument|lagg_softc
 argument_list|)
 name|sc_entries
 expr_stmt|;
-name|struct
-name|task
-name|sc_lladdr_task
-decl_stmt|;
-name|SLIST_HEAD
-argument_list|(
-argument|__llqhd
-argument_list|,
-argument|lagg_llq
-argument_list|)
-name|sc_llq_head
-expr_stmt|;
-comment|/* interfaces to program 							   the lladdr on */
 name|eventhandler_tag
 name|vlan_attach
 decl_stmt|;
@@ -944,6 +890,10 @@ name|int
 name|lp_ifflags
 decl_stmt|;
 comment|/* saved ifp flags */
+name|int
+name|lp_ifcapenable
+decl_stmt|;
+comment|/* saved ifp capenable */
 name|void
 modifier|*
 name|lh_cookie
@@ -958,16 +908,6 @@ name|int
 name|lp_detaching
 decl_stmt|;
 comment|/* ifnet is detaching */
-define|#
-directive|define
-name|LAGG_PORT_DETACH
-value|0x01
-comment|/* detach lagg port */
-define|#
-directive|define
-name|LAGG_CLONE_DESTROY
-value|0x02
-comment|/* destroy lagg clone */
 name|SLIST_HEAD
 argument_list|(
 argument|__mclhd
@@ -1124,6 +1064,96 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|rm_assert(&(_sc)->sc_mtx, RA_UNLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_SX_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_init(&(_sc)->sc_sx, "if_lagg sx")
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_SX_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_destroy(&(_sc)->sc_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_SLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_slock(&(_sc)->sc_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_XLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_xlock(&(_sc)->sc_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_SUNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_sunlock(&(_sc)->sc_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_XUNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_xunlock(&(_sc)->sc_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_SXLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_assert(&(_sc)->sc_sx, SA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_SLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_assert(&(_sc)->sc_sx, SA_SLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_XLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_assert(&(_sc)->sc_sx, SA_XLOCKED)
 end_define
 
 begin_function_decl

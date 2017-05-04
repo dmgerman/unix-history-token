@@ -66,12 +66,10 @@ argument_list|,
 literal|"archive.err"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
 name|p
-index|[
-name|s
-index|]
-operator|=
-literal|'\0'
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -106,9 +104,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+return|return;
 block|}
 name|assertTextFileContents
 argument_list|(
@@ -118,11 +114,6 @@ literal|"archive.err"
 argument_list|)
 expr_stmt|;
 comment|/* Check that the archive file has a bzip2 signature. */
-name|free
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|p
 operator|=
 name|slurpfile
@@ -149,8 +140,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|done
-label|:
 name|free
 argument_list|(
 name|p

@@ -326,10 +326,12 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|subtree
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|specfile

@@ -759,17 +759,6 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|c
-operator|==
-literal|'\n'
-condition|)
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{

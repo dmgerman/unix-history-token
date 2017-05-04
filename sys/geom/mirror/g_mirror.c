@@ -11377,6 +11377,27 @@ name|G_MIRROR_DISK_FLAG_SYNCHRONIZING
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|g_mirror_ndisks
+argument_list|(
+name|sc
+argument_list|,
+name|G_MIRROR_DISK_STATE_ACTIVE
+argument_list|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|disk
+operator|->
+name|d_flags
+operator|&
+name|G_MIRROR_DISK_FLAG_DIRTY
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* Disk does not need synchronization. */

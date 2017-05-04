@@ -455,6 +455,15 @@ name|PVID
 argument_list|(
 name|BROADCOM_VENDOR_ID
 argument_list|,
+name|BCM57454
+argument_list|,
+literal|"Broadcom BCM57454 NetXtreme-E 10Gb/25Gb/40Gb/50Gb/100Gb Ethernet"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
 name|BCM58700
 argument_list|,
 literal|"Broadcom BCM58700 Nitro 1Gb/2.5Gb/10Gb Ethernet"

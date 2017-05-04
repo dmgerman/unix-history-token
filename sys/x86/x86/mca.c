@@ -2777,6 +2777,10 @@ parameter_list|(
 name|enum
 name|scan_mode
 name|mode
+parameter_list|,
+name|int
+modifier|*
+name|recoverablep
 parameter_list|)
 block|{
 name|struct
@@ -2988,14 +2992,19 @@ condition|)
 name|mca_fill_freelist
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|recoverablep
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|recoverablep
+operator|=
+name|recoverable
+expr_stmt|;
 return|return
 operator|(
-name|mode
-operator|==
-name|MCE
-condition|?
-name|recoverable
-else|:
 name|count
 operator|)
 return|;
@@ -3072,6 +3081,8 @@ operator|+=
 name|mca_scan
 argument_list|(
 name|POLLED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|thread_lock
@@ -4838,9 +4849,9 @@ name|uint64_t
 name|mcg_status
 decl_stmt|;
 name|int
-name|old_count
-decl_stmt|,
 name|recoverable
+decl_stmt|,
+name|count
 decl_stmt|;
 if|if
 condition|(
@@ -4881,15 +4892,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Scan the banks and check for any non-recoverable errors. */
-name|old_count
-operator|=
-name|mca_count
-expr_stmt|;
-name|recoverable
+name|count
 operator|=
 name|mca_scan
 argument_list|(
 name|MCE
+argument_list|,
+operator|&
+name|recoverable
 argument_list|)
 expr_stmt|;
 name|mcg_status
@@ -4918,12 +4928,12 @@ operator|!
 name|recoverable
 condition|)
 block|{
-comment|/* 		 * Wait for at least one error to be logged before 		 * panic'ing.  Some errors will assert a machine check 		 * on all CPUs, but only certain CPUs will find a valid 		 * bank to log. 		 */
+comment|/* 		 * Only panic if the error was detected local to this CPU. 		 * Some errors will assert a machine check on all CPUs, but 		 * only certain CPUs will find a valid bank to log. 		 */
 while|while
 condition|(
-name|mca_count
+name|count
 operator|==
-name|old_count
+literal|0
 condition|)
 name|cpu_spinwait
 argument_list|()
@@ -4979,6 +4989,8 @@ operator|=
 name|mca_scan
 argument_list|(
 name|CMCI
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* If we found anything, log them to the console. */

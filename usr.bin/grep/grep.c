@@ -205,6 +205,9 @@ literal|"Binary file %s matches\n"
 block|,
 comment|/* 9*/
 literal|"%s (BSD grep) %s\n"
+block|,
+comment|/* 10*/
+literal|"%s (BSD grep, GNU compatible) %s\n"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -230,7 +233,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Shortcut for matching all cases like empty regex */
+comment|/* XXX TODO: Get rid of this flag.  * matchall is a gross hack that means that an empty pattern was passed to us.  * It is a necessary evil at the moment because our regex(3) implementation  * does not allow for empty patterns, as supported by POSIX's definition of  * grammar for BREs/EREs. When libregex becomes available, it would be wise  * to remove this and let regex(3) handle the dirty details of empty patterns.  */
 end_comment
 
 begin_decl_stmt
@@ -738,38 +741,6 @@ end_function_decl
 
 begin_comment
 comment|/* Housekeeping */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|first
-init|=
-name|true
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flag whether we are processing the first match */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|prev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flag whether or not the previous line matched */
-end_comment
-
-begin_decl_stmt
-name|int
-name|tail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* lines left to print */
 end_comment
 
 begin_decl_stmt
@@ -3170,6 +3141,24 @@ break|break;
 case|case
 literal|'V'
 case|:
+ifdef|#
+directive|ifdef
+name|WITH_GNU
+name|printf
+argument_list|(
+name|getstr
+argument_list|(
+literal|10
+argument_list|)
+argument_list|,
+name|getprogname
+argument_list|()
+argument_list|,
+name|VERSION
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 name|getstr
@@ -3183,6 +3172,8 @@ argument_list|,
 name|VERSION
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|0
@@ -3687,11 +3678,37 @@ break|break;
 case|case
 name|GREP_FIXED
 case|:
-comment|/* XXX: header mess, REG_LITERAL not defined in gnu/regex.h */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|REG_NOSPEC
+argument_list|)
 name|cflags
 operator||=
-literal|0020
+name|REG_NOSPEC
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|REG_LITERAL
+argument_list|)
+name|cflags
+operator||=
+name|REG_LITERAL
+expr_stmt|;
+else|#
+directive|else
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"literal expressions not supported at compile time"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|GREP_EXTENDED
@@ -3738,6 +3755,13 @@ name|r_pattern
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Don't process any patterns if we have a blank one */
+if|if
+condition|(
+operator|!
+name|matchall
+condition|)
+block|{
 comment|/* Check if cheating is allowed (always is for fgrep). */
 for|for
 control|(
@@ -3756,7 +3780,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|WITHOUT_FASTMATCH
-comment|/* Attempt compilation with fastmatch regex and fallback to 		   regex(3) if it fails. */
+comment|/* 			 * Attempt compilation with fastmatch regex and 			 * fallback to regex(3) if it fails. 			 */
 if|if
 condition|(
 name|fastncomp
@@ -3840,6 +3864,7 @@ argument_list|,
 name|re_error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if

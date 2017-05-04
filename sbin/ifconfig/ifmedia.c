@@ -1664,7 +1664,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**********************************************************************  * A good chunk of this is duplicated from sys/net/ifmedia.c  **********************************************************************/
+comment|/**********************************************************************  * A good chunk of this is duplicated from sys/net/if_media.c  **********************************************************************/
 end_comment
 
 begin_decl_stmt

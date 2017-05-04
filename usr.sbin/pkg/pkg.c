@@ -4357,6 +4357,11 @@ name|ret
 decl_stmt|,
 name|c
 decl_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|getchar

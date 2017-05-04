@@ -82,8 +82,7 @@ decl_stmt|;
 name|int
 name|b_fd
 decl_stmt|;
-name|struct
-name|fs
+name|void
 modifier|*
 name|b_fs
 decl_stmt|;

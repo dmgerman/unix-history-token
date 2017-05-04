@@ -3049,6 +3049,8 @@ name|intr_setaffinity
 argument_list|(
 name|irq
 argument_list|,
+name|CPU_WHICH_IRQ
+argument_list|,
 operator|&
 name|mask
 argument_list|)
@@ -3157,6 +3159,8 @@ argument_list|(
 name|gtask
 operator|->
 name|gt_irq
+argument_list|,
+name|CPU_WHICH_IRQ
 argument_list|,
 operator|&
 name|mask
@@ -3464,6 +3468,8 @@ name|intr_setaffinity
 argument_list|(
 name|irq
 argument_list|,
+name|CPU_WHICH_IRQ
+argument_list|,
 operator|&
 name|mask
 argument_list|)
@@ -3677,6 +3683,8 @@ condition|)
 name|intr_setaffinity
 argument_list|(
 name|irq
+argument_list|,
+name|CPU_WHICH_IRQ
 argument_list|,
 operator|&
 name|mask

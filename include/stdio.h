@@ -1663,6 +1663,10 @@ directive|if
 name|__POSIX_VISIBLE
 operator|>=
 literal|200112
+operator|||
+name|__XSI_VISIBLE
+operator|>=
+literal|500
 end_if
 
 begin_function_decl

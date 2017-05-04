@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netgraph/bluetooth/include/ng_bluetooth.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/bluetooth/include/ng_hci.h>
 end_include
 

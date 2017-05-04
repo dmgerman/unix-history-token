@@ -295,9 +295,6 @@ name|test_create
 argument_list|()
 expr_stmt|;
 comment|/* Sanity check; verify that atimes really do get modified. */
-name|assert
-argument_list|(
-operator|(
 name|p
 operator|=
 name|slurpfile
@@ -306,7 +303,10 @@ name|NULL
 argument_list|,
 literal|"f0"
 argument_list|)
-operator|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|p
 operator|!=
 name|NULL
 argument_list|)
