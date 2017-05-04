@@ -24004,7 +24004,7 @@ name|syninfo
 operator|.
 name|min_pressure
 operator|=
-literal|16
+literal|32
 expr_stmt|;
 name|SYSCTL_ADD_PROC
 argument_list|(
