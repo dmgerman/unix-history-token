@@ -80,12 +80,10 @@ argument_list|,
 literal|"archive.err"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
 name|p
-index|[
-name|s
-index|]
-operator|=
-literal|'\0'
+argument_list|)
 expr_stmt|;
 comment|/* Check that the archive file has an grzip signature. */
 name|p
@@ -112,6 +110,11 @@ argument_list|,
 literal|"GRZipII\x00\x02\x04:)"
 argument_list|,
 literal|12
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

@@ -83,6 +83,11 @@ argument_list|,
 literal|9
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Archive it with uuencode only. */
 name|assertEqualInt
 argument_list|(
@@ -121,6 +126,11 @@ argument_list|,
 literal|"begin 644"
 argument_list|,
 literal|9
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

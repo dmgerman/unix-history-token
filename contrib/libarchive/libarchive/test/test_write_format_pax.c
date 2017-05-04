@@ -351,7 +351,7 @@ literal|9
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * "file3" is sparse file and has hole size of which is 	 * 1024000 bytes, and has 8 bytes data after the hole. 	 */
+comment|/* 	 * "file3" is sparse file and has hole size of which is 	 * 1024000 bytes, and has 8 bytes data after the hole. 	 * 	 * Pad the filename to make it larger than the ustar limit. 	 * It should still read back correctly. 	 */
 name|assert
 argument_list|(
 operator|(
@@ -405,6 +405,9 @@ argument_list|(
 name|ae
 argument_list|,
 literal|"file3"
+literal|"_123456789_123456789_123456789_123456789_123456789"
+literal|"_123456789_123456789_123456789_123456789_123456789"
+literal|"_123456789_123456789_123456789_123456789_123456789"
 argument_list|)
 expr_stmt|;
 name|archive_entry_set_mode
@@ -1032,6 +1035,9 @@ expr_stmt|;
 name|assertEqualString
 argument_list|(
 literal|"file3"
+literal|"_123456789_123456789_123456789_123456789_123456789"
+literal|"_123456789_123456789_123456789_123456789_123456789"
+literal|"_123456789_123456789_123456789_123456789_123456789"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(

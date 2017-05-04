@@ -98,6 +98,11 @@ literal|"This version of bsdcpio was compiled "
 literal|"without compress support"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|failure
@@ -112,9 +117,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|free
 argument_list|(
@@ -148,8 +156,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|done
-label|:
 name|free
 argument_list|(
 name|p

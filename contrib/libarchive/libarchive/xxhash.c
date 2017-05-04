@@ -594,16 +594,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|A32
-parameter_list|(
-name|x
-parameter_list|)
-value|(((const U32_S *)(x))->v)
-end_define
-
 begin_comment
 comment|/**************************************** ** Compiler-specific Functions and Macros *****************************************/
 end_comment
@@ -612,8 +602,59 @@ begin_define
 define|#
 directive|define
 name|GCC_VERSION
-value|(__GNUC__ * 100 + __GNUC_MINOR__)
+value|((__GNUC__-0) * 100 + (__GNUC_MINOR__ - 0))
 end_define
+
+begin_if
+if|#
+directive|if
+name|GCC_VERSION
+operator|>=
+literal|409
+end_if
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(__no_sanitize_undefined__)
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|U32
+name|A32
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|x
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+operator|(
+specifier|const
+name|U32_S
+operator|*
+operator|)
+operator|(
+name|x
+operator|)
+operator|)
+operator|->
+name|v
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Note : although _rotl exists for minGW (GCC under windows), performance seems poor */
