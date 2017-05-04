@@ -30296,6 +30296,15 @@ name|min_pressure
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Elans often report double& triple taps as single event */
+name|sc
+operator|->
+name|syninfo
+operator|.
+name|tap_min_queue
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Use full area of touchpad */
 name|sc
 operator|->
