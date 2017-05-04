@@ -1013,6 +1013,13 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|map
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|n
 operator|->
 name|n_map
@@ -4717,6 +4724,26 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|map
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"missing map name "
+literal|"at %s, line %d"
+argument_list|,
+name|master
+argument_list|,
+name|lineno
+argument_list|)
+expr_stmt|;
+block|}
 comment|//log_debugx("adding map for %s", mountpoint);
 name|node_new_map
 argument_list|(
