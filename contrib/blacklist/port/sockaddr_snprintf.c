@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: sockaddr_snprintf.c,v 1.10 2016/04/05 12:28:57 christos Exp $	*/
+comment|/*	$NetBSD: sockaddr_snprintf.c,v 1.11 2016/06/01 22:57:51 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: sockaddr_snprintf.c,v 1.10 2016/04/05 12:28:57 christos Exp $"
+literal|"$NetBSD: sockaddr_snprintf.c,v 1.11 2016/06/01 22:57:51 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1284,7 +1284,7 @@ literal|':'
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: blacklistctl.c,v 1.20 2016/04/04 15:52:56 christos Exp $	*/
+comment|/*	$NetBSD: blacklistctl.c,v 1.21 2016/11/02 03:15:07 jnemeth Exp $	*/
 end_comment
 
 begin_comment
@@ -33,7 +33,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: blacklistctl.c,v 1.20 2016/04/04 15:52:56 christos Exp $"
+literal|"$NetBSD: blacklistctl.c,v 1.21 2016/11/02 03:15:07 jnemeth Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
