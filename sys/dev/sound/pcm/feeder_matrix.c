@@ -3533,6 +3533,10 @@ name|i
 operator|=
 literal|0
 init|;
+name|i
+operator|<
+name|SND_CHN_OSS_MAX
+operator|&&
 name|m
 operator|->
 name|map
@@ -3543,10 +3547,6 @@ operator|.
 name|type
 operator|!=
 name|SND_CHN_T_MAX
-operator|&&
-name|i
-operator|<
-name|SND_CHN_OSS_MAX
 condition|;
 name|i
 operator|++

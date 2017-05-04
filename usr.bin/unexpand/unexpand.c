@@ -516,6 +516,10 @@ name|n
 operator|=
 literal|0
 init|;
+name|n
+operator|<
+name|nstops
+operator|&&
 name|tabstops
 index|[
 name|n
@@ -524,10 +528,6 @@ operator|-
 literal|1
 operator|<
 name|dcol
-operator|&&
-name|n
-operator|<
-name|nstops
 condition|;
 name|n
 operator|++
@@ -644,6 +644,10 @@ name|n
 operator|=
 literal|0
 init|;
+name|n
+operator|<
+name|nstops
+operator|&&
 name|tabstops
 index|[
 name|n
@@ -652,10 +656,6 @@ operator|-
 literal|1
 operator|<
 name|ocol
-operator|&&
-name|n
-operator|<
-name|nstops
 condition|;
 name|n
 operator|++
