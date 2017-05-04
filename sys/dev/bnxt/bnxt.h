@@ -312,6 +312,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCM57454
+value|0x1614
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCM58700
 value|0x16cd
 end_define
