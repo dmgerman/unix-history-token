@@ -506,12 +506,12 @@ decl_stmt|;
 name|char
 name|lstr
 index|[
-literal|5
+literal|8
 index|]
 decl_stmt|,
 name|rstr
 index|[
-literal|5
+literal|8
 index|]
 decl_stmt|;
 name|char
