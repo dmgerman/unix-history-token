@@ -2273,7 +2273,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_sigqueue
+name|FREEBSD32_SYS_freebsd32_sigqueue
 value|456
 end_define
 

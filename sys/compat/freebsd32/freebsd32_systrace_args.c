@@ -12478,13 +12478,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* sigqueue */
+comment|/* freebsd32_sigqueue */
 case|case
 literal|456
 case|:
 block|{
 name|struct
-name|sigqueue_args
+name|freebsd32_sigqueue_args
 modifier|*
 name|p
 init|=
@@ -12510,19 +12510,16 @@ operator|->
 name|signum
 expr_stmt|;
 comment|/* int */
-name|uarg
+name|iarg
 index|[
 literal|2
 index|]
 operator|=
-operator|(
-name|intptr_t
-operator|)
 name|p
 operator|->
 name|value
 expr_stmt|;
-comment|/* void * */
+comment|/* int */
 operator|*
 name|n_args
 operator|=
@@ -27246,7 +27243,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* sigqueue */
+comment|/* freebsd32_sigqueue */
 case|case
 literal|456
 case|:
@@ -27276,7 +27273,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"userland void *"
+literal|"int"
 expr_stmt|;
 break|break;
 default|default:
@@ -36734,7 +36731,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* sigqueue */
+comment|/* freebsd32_sigqueue */
 case|case
 literal|456
 case|:
