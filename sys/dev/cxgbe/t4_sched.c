@@ -1831,12 +1831,6 @@ control|)
 block|{
 name|tc
 operator|->
-name|flags
-operator|=
-name|TX_CLRL_REFRESH
-expr_stmt|;
-name|tc
-operator|->
 name|refcount
 operator|=
 literal|0
@@ -1885,6 +1879,8 @@ operator|=
 name|ETHERMTU
 expr_stmt|;
 comment|/* XXX */
+if|if
+condition|(
 name|t4_sched_params_cl_rl_kbps
 argument_list|(
 name|sc
@@ -1909,6 +1905,21 @@ name|pktsize
 argument_list|,
 literal|1
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|tc
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|tc
+operator|->
+name|flags
+operator|=
+name|TX_CLRL_ERROR
 expr_stmt|;
 block|}
 block|}
