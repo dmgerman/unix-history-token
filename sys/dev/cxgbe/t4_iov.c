@@ -390,7 +390,7 @@ comment|/* 4 x 10/25G */
 block|{
 literal|0x6004
 block|,
-literal|"Chelsio T6425-CR"
+literal|"Chelsio T6425-SO-CR"
 block|}
 block|,
 comment|/* 4 x 10/25G, nomem */
