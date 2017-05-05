@@ -229,14 +229,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<execinfo.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_EXECINFO_H */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
 end_comment
 
@@ -1317,6 +1309,17 @@ end_comment
 begin_comment
 comment|/* #undef LLVM_VERSION_INFO */
 end_comment
+
+begin_comment
+comment|/* Whether tools show host and target info when invoked with --version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_VERSION_PRINTER_SHOW_HOST_TARGET_INFO
+value|1
+end_define
 
 begin_comment
 comment|/* Major version of the LLVM API */
