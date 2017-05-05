@@ -2907,18 +2907,26 @@ expr_stmt|;
 comment|/* Reserved for MODE SELECT command. */
 name|mh
 operator|->
-name|dev_spec
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Clear device-specific parameters. */
-name|mh
-operator|->
 name|blk_desc_len
 operator|=
 literal|0
 expr_stmt|;
 comment|/* No block descriptors. */
+comment|/* 	 * Tape drives include write protect (WP), Buffered Mode and Speed 	 * settings in the device-specific parameter.  Clearing this 	 * parameter on a mode select can have the effect of turning off 	 * write protect or buffered mode, or changing the speed setting of 	 * the tape drive. 	 * 	 * Disks report DPO/FUA support via the device specific parameter 	 * for MODE SENSE, but the bit is reserved for MODE SELECT.  So we 	 * clear this for disks (and other non-tape devices) to avoid 	 * potential errors from the target device. 	 */
+if|if
+condition|(
+name|device
+operator|->
+name|pd_type
+operator|!=
+name|T_SEQUENTIAL
+condition|)
+name|mh
+operator|->
+name|dev_spec
+operator|=
+literal|0
+expr_stmt|;
 name|mph
 operator|=
 name|MODE_PAGE_HEADER
