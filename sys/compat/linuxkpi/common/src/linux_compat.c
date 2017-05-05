@@ -2245,6 +2245,26 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* 	 * The same VM object might be shared by multiple processes 	 * and the mm_struct is usually freed when a process exits. 	 * 	 * The atomic reference below makes sure the mm_struct is 	 * available as long as the vmap is in the linux_vma_head. 	 */
+if|if
+condition|(
+name|atomic_inc_not_zero
+argument_list|(
+operator|&
+name|vmap
+operator|->
+name|vm_mm
+operator|->
+name|mm_users
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"linuxkpi: mm_users is zero\n"
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -2307,6 +2327,14 @@ name|rw_wunlock
 argument_list|(
 operator|&
 name|linux_vma_lock
+argument_list|)
+expr_stmt|;
+comment|/* Drop reference on mm_struct */
+name|mmput
+argument_list|(
+name|vmap
+operator|->
+name|vm_mm
 argument_list|)
 expr_stmt|;
 name|kfree
