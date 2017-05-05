@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -110,9 +110,11 @@ name|public
 name|POSITION
 name|forw_line
 parameter_list|(
-name|POSITION
 name|curr_pos
 parameter_list|)
+name|POSITION
+name|curr_pos
+decl_stmt|;
 block|{
 name|POSITION
 name|base_pos
@@ -711,9 +713,11 @@ name|public
 name|POSITION
 name|back_line
 parameter_list|(
-name|POSITION
 name|curr_pos
 parameter_list|)
+name|POSITION
+name|curr_pos
+decl_stmt|;
 block|{
 name|POSITION
 name|new_pos
@@ -1233,9 +1237,11 @@ name|public
 name|void
 name|set_attnpos
 parameter_list|(
-name|POSITION
 name|pos
 parameter_list|)
+name|POSITION
+name|pos
+decl_stmt|;
 block|{
 name|int
 name|c

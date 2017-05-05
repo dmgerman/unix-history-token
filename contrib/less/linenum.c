@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -164,9 +164,7 @@ begin_function
 name|public
 name|void
 name|clr_linenum
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|linenum_info
@@ -271,11 +269,13 @@ specifier|static
 name|void
 name|calcgap
 parameter_list|(
+name|p
+parameter_list|)
 name|struct
 name|linenum_info
 modifier|*
 name|p
-parameter_list|)
+decl_stmt|;
 block|{
 comment|/* 	 * Don't bother to compute a gap for the anchor. 	 * Also don't compute a gap for the last one in the list. 	 * The gap for that last one should be considered infinite, 	 * but we never look at it anyway. 	 */
 if|if
@@ -321,12 +321,16 @@ name|public
 name|void
 name|add_lnum
 parameter_list|(
-name|LINENUM
 name|linenum
 parameter_list|,
-name|POSITION
 name|pos
 parameter_list|)
+name|LINENUM
+name|linenum
+decl_stmt|;
+name|POSITION
+name|pos
+decl_stmt|;
 block|{
 name|struct
 name|linenum_info
@@ -572,9 +576,7 @@ begin_function
 specifier|static
 name|void
 name|longloopmessage
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|ierror
 argument_list|(
@@ -615,9 +617,7 @@ begin_function
 specifier|static
 name|void
 name|longish
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 if|#
 directive|if
@@ -694,9 +694,7 @@ begin_function
 specifier|static
 name|void
 name|abort_long
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -732,9 +730,11 @@ name|public
 name|LINENUM
 name|find_linenum
 parameter_list|(
-name|POSITION
 name|pos
 parameter_list|)
+name|POSITION
+name|pos
+decl_stmt|;
 block|{
 name|struct
 name|linenum_info
@@ -1096,9 +1096,11 @@ name|public
 name|POSITION
 name|find_pos
 parameter_list|(
-name|LINENUM
 name|linenum
 parameter_list|)
+name|LINENUM
+name|linenum
+decl_stmt|;
 block|{
 name|struct
 name|linenum_info
@@ -1384,9 +1386,11 @@ name|public
 name|LINENUM
 name|currline
 parameter_list|(
-name|int
 name|where
 parameter_list|)
+name|int
+name|where
+decl_stmt|;
 block|{
 name|POSITION
 name|pos

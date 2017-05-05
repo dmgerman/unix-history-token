@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -112,9 +112,11 @@ specifier|static
 name|RETSIGTYPE
 name|u_interrupt
 parameter_list|(
-name|int
 name|type
 parameter_list|)
+name|int
+name|type
+decl_stmt|;
 block|{
 name|bell
 argument_list|()
@@ -197,9 +199,11 @@ specifier|static
 name|RETSIGTYPE
 name|stop
 parameter_list|(
-name|int
 name|type
 parameter_list|)
+name|int
+name|type
+decl_stmt|;
 block|{
 name|LSIGNAL
 argument_list|(
@@ -246,9 +250,11 @@ name|public
 name|RETSIGTYPE
 name|winch
 parameter_list|(
-name|int
 name|type
 parameter_list|)
+name|int
+name|type
+decl_stmt|;
 block|{
 name|LSIGNAL
 argument_list|(
@@ -295,9 +301,11 @@ name|public
 name|RETSIGTYPE
 name|winch
 parameter_list|(
-name|int
 name|type
 parameter_list|)
+name|int
+name|type
+decl_stmt|;
 block|{
 name|LSIGNAL
 argument_list|(
@@ -354,9 +362,11 @@ name|BOOL
 name|WINAPI
 name|wbreak_handler
 parameter_list|(
-name|DWORD
 name|dwCtrlType
 parameter_list|)
+name|DWORD
+name|dwCtrlType
+decl_stmt|;
 block|{
 switch|switch
 condition|(
@@ -403,9 +413,11 @@ name|public
 name|void
 name|init_signals
 parameter_list|(
-name|int
 name|on
 parameter_list|)
+name|int
+name|on
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -597,9 +609,7 @@ begin_function
 name|public
 name|void
 name|psignals
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|tsignals

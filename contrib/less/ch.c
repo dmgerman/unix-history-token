@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -514,9 +514,7 @@ end_comment
 begin_function
 name|int
 name|ch_get
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|buf
@@ -1258,9 +1256,11 @@ name|public
 name|void
 name|ch_ungetchar
 parameter_list|(
-name|int
 name|c
 parameter_list|)
+name|int
+name|c
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1302,9 +1302,7 @@ begin_function
 name|public
 name|void
 name|end_logfile
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 specifier|static
 name|int
@@ -1379,9 +1377,7 @@ begin_function
 name|public
 name|void
 name|sync_logfile
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|buf
@@ -1519,9 +1515,11 @@ specifier|static
 name|int
 name|buffered
 parameter_list|(
-name|BLOCKNUM
 name|block
 parameter_list|)
+name|BLOCKNUM
+name|block
+decl_stmt|;
 block|{
 name|struct
 name|buf
@@ -1588,9 +1586,11 @@ name|public
 name|int
 name|ch_seek
 parameter_list|(
-name|POSITION
 name|pos
 parameter_list|)
+name|POSITION
+name|pos
+decl_stmt|;
 block|{
 name|BLOCKNUM
 name|new_block
@@ -1736,9 +1736,7 @@ begin_function
 name|public
 name|int
 name|ch_end_seek
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|POSITION
 name|len
@@ -1820,9 +1818,7 @@ begin_function
 name|public
 name|int
 name|ch_end_buffer_seek
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|buf
@@ -1918,9 +1914,7 @@ begin_function
 name|public
 name|int
 name|ch_beg_seek
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|bufnode
@@ -2019,9 +2013,7 @@ begin_function
 name|public
 name|POSITION
 name|ch_length
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -2081,9 +2073,7 @@ begin_function
 name|public
 name|POSITION
 name|ch_tell
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -2116,9 +2106,7 @@ begin_function
 name|public
 name|int
 name|ch_forw_get
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|c
@@ -2187,9 +2175,7 @@ begin_function
 name|public
 name|int
 name|ch_back_get
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -2274,9 +2260,11 @@ name|public
 name|void
 name|ch_setbufspace
 parameter_list|(
-name|int
 name|bufspace
 parameter_list|)
+name|int
+name|bufspace
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2329,9 +2317,7 @@ begin_function
 name|public
 name|void
 name|ch_flush
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|bufnode
@@ -2462,9 +2448,7 @@ begin_function
 specifier|static
 name|int
 name|ch_addbuf
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|buf
@@ -2551,9 +2535,7 @@ begin_function
 specifier|static
 name|void
 name|init_hashtbl
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|h
@@ -2612,9 +2594,7 @@ begin_function
 specifier|static
 name|void
 name|ch_delbufs
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|bufnode
@@ -2665,9 +2645,11 @@ name|public
 name|int
 name|seekable
 parameter_list|(
-name|int
 name|f
 parameter_list|)
+name|int
+name|f
+decl_stmt|;
 block|{
 if|#
 directive|if
@@ -2726,9 +2708,7 @@ begin_function
 name|public
 name|void
 name|ch_set_eof
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|ch_fsize
 operator|=
@@ -2746,12 +2726,16 @@ name|public
 name|void
 name|ch_init
 parameter_list|(
-name|int
 name|f
 parameter_list|,
-name|int
 name|flags
 parameter_list|)
+name|int
+name|f
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
 block|{
 comment|/* 	 * See if we already have a filestate for this file. 	 */
 name|thisfile
@@ -2917,9 +2901,7 @@ begin_function
 name|public
 name|void
 name|ch_close
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|keepstate
@@ -3035,9 +3017,7 @@ begin_function
 name|public
 name|int
 name|ch_getflags
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(

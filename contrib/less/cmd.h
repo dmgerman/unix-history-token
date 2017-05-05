@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_define
@@ -407,6 +407,20 @@ define|#
 directive|define
 name|A_GOEND_BUF
 value|57
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_LLSHIFT
+value|58
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_RRSHIFT
+value|59
 end_define
 
 begin_define

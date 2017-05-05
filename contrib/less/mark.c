@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_include
@@ -71,9 +71,7 @@ begin_function
 name|public
 name|void
 name|init_mark
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|i
@@ -116,9 +114,11 @@ name|mark
 modifier|*
 name|getumark
 parameter_list|(
-name|int
 name|c
 parameter_list|)
+name|int
+name|c
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -190,9 +190,11 @@ name|mark
 modifier|*
 name|getmark
 parameter_list|(
-name|int
 name|c
 parameter_list|)
+name|int
+name|c
+decl_stmt|;
 block|{
 name|struct
 name|mark
@@ -392,9 +394,11 @@ name|public
 name|int
 name|badmark
 parameter_list|(
-name|int
 name|c
 parameter_list|)
+name|int
+name|c
+decl_stmt|;
 block|{
 return|return
 operator|(
@@ -418,9 +422,11 @@ name|public
 name|void
 name|setmark
 parameter_list|(
-name|int
 name|c
 parameter_list|)
+name|int
+name|c
+decl_stmt|;
 block|{
 name|struct
 name|mark
@@ -474,9 +480,7 @@ begin_function
 name|public
 name|void
 name|lastmark
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|scrpos
@@ -535,9 +539,11 @@ name|public
 name|void
 name|gomark
 parameter_list|(
-name|int
 name|c
 parameter_list|)
+name|int
+name|c
+decl_stmt|;
 block|{
 name|struct
 name|mark
@@ -657,9 +663,11 @@ name|public
 name|POSITION
 name|markpos
 parameter_list|(
-name|int
 name|c
 parameter_list|)
+name|int
+name|c
+decl_stmt|;
 block|{
 name|struct
 name|mark
@@ -727,9 +735,11 @@ name|public
 name|void
 name|unmark
 parameter_list|(
-name|IFILE
 name|ifile
 parameter_list|)
+name|IFILE
+name|ifile
+decl_stmt|;
 block|{
 name|int
 name|i

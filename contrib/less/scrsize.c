@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -40,21 +40,29 @@ specifier|static
 name|int
 name|get_winsize
 parameter_list|(
+name|dpy
+parameter_list|,
+name|window
+parameter_list|,
+name|p_width
+parameter_list|,
+name|p_height
+parameter_list|)
 name|Display
 modifier|*
 name|dpy
-parameter_list|,
+decl_stmt|;
 name|Window
 name|window
-parameter_list|,
+decl_stmt|;
 name|int
 modifier|*
 name|p_width
-parameter_list|,
+decl_stmt|;
 name|int
 modifier|*
 name|p_height
-parameter_list|)
+decl_stmt|;
 block|{
 name|XWindowAttributes
 name|win_attributes
@@ -226,14 +234,18 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
 name|argc
 parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
 index|[]
-parameter_list|)
+decl_stmt|;
 block|{
 name|char
 modifier|*

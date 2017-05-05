@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -95,9 +95,7 @@ begin_function
 specifier|static
 name|void
 name|pr_usage
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -113,9 +111,7 @@ begin_function
 specifier|static
 name|void
 name|pr_version
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -205,10 +201,12 @@ specifier|static
 name|void
 name|pr_error
 parameter_list|(
+name|s
+parameter_list|)
 name|char
 modifier|*
 name|s
-parameter_list|)
+decl_stmt|;
 block|{
 name|fprintf
 argument_list|(
@@ -232,18 +230,24 @@ specifier|static
 name|long
 name|lstrtol
 parameter_list|(
+name|s
+parameter_list|,
+name|radix
+parameter_list|,
+name|pend
+parameter_list|)
 name|char
 modifier|*
 name|s
-parameter_list|,
+decl_stmt|;
 name|int
 name|radix
-parameter_list|,
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|pend
-parameter_list|)
+decl_stmt|;
 block|{
 name|int
 name|v

@@ -2246,15 +2246,15 @@ literal|' '
 block|,
 literal|' '
 block|,
-literal|'L'
+literal|'R'
 block|,
-literal|'e'
+literal|'i'
 block|,
-literal|'f'
+literal|'g'
+block|,
+literal|'h'
 block|,
 literal|'t'
-block|,
-literal|' '
 block|,
 literal|' '
 block|,
@@ -2388,15 +2388,15 @@ literal|' '
 block|,
 literal|' '
 block|,
-literal|'R'
+literal|'L'
 block|,
-literal|'i'
+literal|'e'
 block|,
-literal|'g'
-block|,
-literal|'h'
+literal|'f'
 block|,
 literal|'t'
+block|,
+literal|' '
 block|,
 literal|' '
 block|,
@@ -2479,6 +2479,208 @@ block|,
 literal|'s'
 block|,
 literal|')'
+block|,
+literal|'.'
+block|,
+literal|'\n'
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|'E'
+block|,
+literal|'S'
+block|,
+literal|'C'
+block|,
+literal|'-'
+block|,
+literal|'}'
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|'^'
+block|,
+literal|'R'
+block|,
+literal|'i'
+block|,
+literal|'g'
+block|,
+literal|'h'
+block|,
+literal|'t'
+block|,
+literal|'A'
+block|,
+literal|'r'
+block|,
+literal|'r'
+block|,
+literal|'o'
+block|,
+literal|'w'
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|'R'
+block|,
+literal|'i'
+block|,
+literal|'g'
+block|,
+literal|'h'
+block|,
+literal|'t'
+block|,
+literal|' '
+block|,
+literal|'t'
+block|,
+literal|'o'
+block|,
+literal|' '
+block|,
+literal|'l'
+block|,
+literal|'a'
+block|,
+literal|'s'
+block|,
+literal|'t'
+block|,
+literal|' '
+block|,
+literal|'c'
+block|,
+literal|'o'
+block|,
+literal|'l'
+block|,
+literal|'u'
+block|,
+literal|'m'
+block|,
+literal|'n'
+block|,
+literal|' '
+block|,
+literal|'d'
+block|,
+literal|'i'
+block|,
+literal|'s'
+block|,
+literal|'p'
+block|,
+literal|'l'
+block|,
+literal|'a'
+block|,
+literal|'y'
+block|,
+literal|'e'
+block|,
+literal|'d'
+block|,
+literal|'.'
+block|,
+literal|'\n'
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|'E'
+block|,
+literal|'S'
+block|,
+literal|'C'
+block|,
+literal|'-'
+block|,
+literal|'{'
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|'^'
+block|,
+literal|'L'
+block|,
+literal|'e'
+block|,
+literal|'f'
+block|,
+literal|'t'
+block|,
+literal|'A'
+block|,
+literal|'r'
+block|,
+literal|'r'
+block|,
+literal|'o'
+block|,
+literal|'w'
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|'L'
+block|,
+literal|'e'
+block|,
+literal|'f'
+block|,
+literal|'t'
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|'t'
+block|,
+literal|'o'
+block|,
+literal|' '
+block|,
+literal|'f'
+block|,
+literal|'i'
+block|,
+literal|'r'
+block|,
+literal|'s'
+block|,
+literal|'t'
+block|,
+literal|' '
+block|,
+literal|'c'
+block|,
+literal|'o'
+block|,
+literal|'l'
+block|,
+literal|'u'
+block|,
+literal|'m'
+block|,
+literal|'n'
 block|,
 literal|'.'
 block|,
@@ -11169,6 +11371,112 @@ block|,
 literal|'n'
 block|,
 literal|'d'
+block|,
+literal|'.'
+block|,
+literal|'\n'
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|'s'
+block|,
+literal|' '
+block|,
+literal|'_'
+block|,
+literal|'\b'
+block|,
+literal|'f'
+block|,
+literal|'_'
+block|,
+literal|'\b'
+block|,
+literal|'i'
+block|,
+literal|'_'
+block|,
+literal|'\b'
+block|,
+literal|'l'
+block|,
+literal|'_'
+block|,
+literal|'\b'
+block|,
+literal|'e'
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|'S'
+block|,
+literal|'a'
+block|,
+literal|'v'
+block|,
+literal|'e'
+block|,
+literal|' '
+block|,
+literal|'i'
+block|,
+literal|'n'
+block|,
+literal|'p'
+block|,
+literal|'u'
+block|,
+literal|'t'
+block|,
+literal|' '
+block|,
+literal|'t'
+block|,
+literal|'o'
+block|,
+literal|' '
+block|,
+literal|'a'
+block|,
+literal|' '
+block|,
+literal|'f'
+block|,
+literal|'i'
+block|,
+literal|'l'
+block|,
+literal|'e'
 block|,
 literal|'.'
 block|,
