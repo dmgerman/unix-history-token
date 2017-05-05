@@ -738,7 +738,9 @@ condition|)
 block|{
 name|hv_kbd_read_channel
 argument_list|(
-name|NULL
+name|sc
+operator|->
+name|hs_chan
 argument_list|,
 name|sc
 argument_list|)
