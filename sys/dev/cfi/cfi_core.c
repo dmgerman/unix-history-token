@@ -541,6 +541,42 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * This is same workaound as NetBSD sys/dev/nor/cfi.c cfi_reset_default()  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|cfi_reset_default
+parameter_list|(
+name|struct
+name|cfi_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|cfi_write
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|CFI_BCS_READ_ARRAY2
+argument_list|)
+expr_stmt|;
+name|cfi_write
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|CFI_BCS_READ_ARRAY
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|uint8_t
 name|cfi_read_qry
@@ -583,13 +619,9 @@ operator|->
 name|sc_width
 argument_list|)
 expr_stmt|;
-name|cfi_write
+name|cfi_reset_default
 argument_list|(
 name|sc
-argument_list|,
-literal|0
-argument_list|,
-name|CFI_BCS_READ_ARRAY
 argument_list|)
 expr_stmt|;
 return|return
@@ -3744,13 +3776,9 @@ block|}
 comment|/* error is 0. */
 name|out
 label|:
-name|cfi_write
+name|cfi_reset_default
 argument_list|(
 name|sc
-argument_list|,
-literal|0
-argument_list|,
-name|CFI_BCS_READ_ARRAY
 argument_list|)
 expr_stmt|;
 comment|/* Relock Intel flash */

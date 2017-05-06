@@ -407,6 +407,13 @@ name|CFI_BCS_READ_ARRAY
 value|0xff
 end_define
 
+begin_define
+define|#
+directive|define
+name|CFI_BCS_READ_ARRAY2
+value|0xf0
+end_define
+
 begin_comment
 comment|/* Intel commands. */
 end_comment
