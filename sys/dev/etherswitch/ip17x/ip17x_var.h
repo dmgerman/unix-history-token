@@ -85,6 +85,9 @@ modifier|*
 modifier|*
 name|miibus
 decl_stmt|;
+name|int
+name|miipoll
+decl_stmt|;
 name|etherswitch_info_t
 name|info
 decl_stmt|;
