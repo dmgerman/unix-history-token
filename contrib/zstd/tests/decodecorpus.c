@@ -402,6 +402,10 @@ index|[
 name|i
 index|]
 operator|=
+call|(
+name|BYTE
+call|)
+argument_list|(
 name|RAND
 argument_list|(
 name|seed
@@ -412,6 +416,7 @@ name|maxSymb
 operator|+
 literal|1
 operator|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -605,16 +610,25 @@ decl_stmt|;
 name|BYTE
 name|symb
 init|=
+call|(
+name|BYTE
+call|)
+argument_list|(
 name|RAND
 argument_list|(
 name|seed
 argument_list|)
 operator|%
 literal|256
+argument_list|)
 decl_stmt|;
 name|BYTE
 name|step
 init|=
+call|(
+name|BYTE
+call|)
+argument_list|(
 operator|(
 name|RAND
 argument_list|(
@@ -625,6 +639,7 @@ literal|256
 operator|)
 operator||
 literal|1
+argument_list|)
 decl_stmt|;
 comment|/* force it to be odd so it's relatively prime to 256 */
 while|while
@@ -1215,6 +1230,10 @@ literal|8
 decl_stmt|;
 name|windowByte
 operator|=
+call|(
+name|BYTE
+call|)
+argument_list|(
 operator|(
 name|exponent
 operator|<<
@@ -1222,6 +1241,7 @@ literal|3
 operator|)
 operator||
 name|mantissa
+argument_list|)
 expr_stmt|;
 name|fh
 operator|.
@@ -1377,6 +1397,9 @@ name|fh
 operator|.
 name|windowSize
 operator|=
+operator|(
+name|U32
+operator|)
 name|fh
 operator|.
 name|contentSize
@@ -1488,6 +1511,10 @@ name|BYTE
 specifier|const
 name|frameHeaderDescriptor
 init|=
+call|(
+name|BYTE
+call|)
+argument_list|(
 operator|(
 name|fcsCode
 operator|<<
@@ -1505,6 +1532,7 @@ literal|1
 operator|<<
 literal|2
 operator|)
+argument_list|)
 decl_stmt|;
 name|op
 index|[
@@ -1551,6 +1579,9 @@ name|pos
 operator|++
 index|]
 operator|=
+operator|(
+name|BYTE
+operator|)
 name|fh
 operator|.
 name|contentSize
@@ -1565,11 +1596,16 @@ name|op
 operator|+
 name|pos
 argument_list|,
+call|(
+name|U16
+call|)
+argument_list|(
 name|fh
 operator|.
 name|contentSize
 operator|-
 literal|256
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pos
@@ -1586,6 +1622,9 @@ name|op
 operator|+
 name|pos
 argument_list|,
+operator|(
+name|U32
+operator|)
 name|fh
 operator|.
 name|contentSize
@@ -1605,6 +1644,9 @@ name|op
 operator|+
 name|pos
 argument_list|,
+operator|(
+name|U64
+operator|)
 name|fh
 operator|.
 name|contentSize
@@ -1621,8 +1663,11 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|2
 argument_list|,
-literal|" frame content size:\t%zu\n"
+literal|" frame content size:\t%u\n"
 argument_list|,
+operator|(
+name|U32
+operator|)
 name|fh
 operator|.
 name|contentSize
@@ -2027,12 +2072,17 @@ name|BYTE
 specifier|const
 name|symb
 init|=
+call|(
+name|BYTE
+call|)
+argument_list|(
 name|RAND
 argument_list|(
 name|seed
 argument_list|)
 operator|%
 literal|256
+argument_list|)
 decl_stmt|;
 name|DISPLAYLEVEL
 argument_list|(
@@ -2850,8 +2900,11 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|5
 argument_list|,
-literal|"    regenerated size: %zu\n"
+literal|"    regenerated size: %u\n"
 argument_list|,
+operator|(
+name|U32
+operator|)
 name|litSize
 argument_list|)
 expr_stmt|;
@@ -2859,8 +2912,11 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|5
 argument_list|,
-literal|"    compressed size: %zu\n"
+literal|"    compressed size: %u\n"
 argument_list|,
+operator|(
+name|U32
+operator|)
 name|compressedSize
 argument_list|)
 expr_stmt|;
@@ -3286,8 +3342,11 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|5
 argument_list|,
-literal|"    total match lengths: %zu\n"
+literal|"    total match lengths: %u\n"
 argument_list|,
+operator|(
+name|U32
+operator|)
 name|remainingMatch
 argument_list|)
 expr_stmt|;
@@ -3374,6 +3433,9 @@ decl_stmt|;
 comment|/* bounds checks */
 name|matchLen
 operator|=
+operator|(
+name|U32
+operator|)
 name|MIN
 argument_list|(
 name|matchLen
@@ -3389,6 +3451,9 @@ name|MIN
 argument_list|(
 name|literalLen
 argument_list|,
+operator|(
+name|U32
+operator|)
 name|literalsSize
 argument_list|)
 expr_stmt|;
@@ -3424,6 +3489,9 @@ name|matchLen
 operator|=
 name|MIN_SEQ_LEN
 operator|+
+operator|(
+name|U32
+operator|)
 name|excessMatch
 expr_stmt|;
 name|memcpy
@@ -3711,8 +3779,12 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|7
 argument_list|,
-literal|" srcPos: %8tu seqNb: %3u"
+literal|" srcPos: %8u seqNb: %3u"
 argument_list|,
+call|(
+name|U32
+call|)
+argument_list|(
 operator|(
 name|BYTE
 operator|*
@@ -3726,6 +3798,7 @@ operator|)
 name|frame
 operator|->
 name|srcStart
+argument_list|)
 argument_list|,
 name|i
 argument_list|)
@@ -3804,8 +3877,11 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|6
 argument_list|,
-literal|"      excess literals: %5zu"
+literal|"      excess literals: %5u"
 argument_list|,
+operator|(
+name|U32
+operator|)
 name|literalsSize
 argument_list|)
 expr_stmt|;
@@ -3813,8 +3889,12 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|7
 argument_list|,
-literal|" srcPos: %8tu"
+literal|" srcPos: %8u"
 argument_list|,
+call|(
+name|U32
+call|)
+argument_list|(
 operator|(
 name|BYTE
 operator|*
@@ -3828,6 +3908,7 @@ operator|)
 name|frame
 operator|->
 name|srcStart
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|DISPLAYLEVEL
@@ -5767,8 +5848,11 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|4
 argument_list|,
-literal|"   literals size: %zu\n"
+literal|"   literals size: %u\n"
 argument_list|,
+operator|(
+name|U32
+operator|)
 name|literalsSize
 argument_list|)
 expr_stmt|;
@@ -5789,8 +5873,11 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|4
 argument_list|,
-literal|"   number of sequences: %zu\n"
+literal|"   number of sequences: %u\n"
 argument_list|,
+operator|(
+name|U32
+operator|)
 name|nbSeq
 argument_list|)
 expr_stmt|;
@@ -5877,8 +5964,11 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|3
 argument_list|,
-literal|"  block content size: %zu\n"
+literal|"  block content size: %u\n"
 argument_list|,
+operator|(
+name|U32
+operator|)
 name|contentSize
 argument_list|)
 expr_stmt|;
@@ -6106,8 +6196,11 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|3
 argument_list|,
-literal|"  block size field: %zu\n"
+literal|"  block size field: %u\n"
 argument_list|,
+operator|(
+name|U32
+operator|)
 name|blockSize
 argument_list|)
 expr_stmt|;
@@ -6116,6 +6209,10 @@ index|[
 literal|0
 index|]
 operator|=
+call|(
+name|BYTE
+call|)
+argument_list|(
 operator|(
 name|lastBlock
 operator||
@@ -6133,6 +6230,7 @@ operator|)
 operator|)
 operator|&
 literal|0xff
+argument_list|)
 expr_stmt|;
 name|MEM_writeLE16
 argument_list|(
@@ -6140,9 +6238,14 @@ name|header
 operator|+
 literal|1
 argument_list|,
+call|(
+name|U16
+call|)
+argument_list|(
 name|blockSize
 operator|>>
 literal|5
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|frame
@@ -7567,6 +7670,9 @@ block|{
 name|U32
 name|t
 init|=
+operator|(
+name|U32
+operator|)
 name|time
 argument_list|(
 name|NULL

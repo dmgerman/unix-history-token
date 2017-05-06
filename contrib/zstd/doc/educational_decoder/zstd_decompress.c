@@ -121,6 +121,10 @@ begin_comment
 comment|/// advance
 end_comment
 
+begin_comment
+comment|/// Returns -1 if the size can't be determined
+end_comment
+
 begin_function_decl
 name|size_t
 name|ZSTD_get_decompressed_size
@@ -143,11 +147,11 @@ comment|/******* UTILITY MACROS AND TYPES **************************************
 end_comment
 
 begin_comment
-comment|// Max block size decompressed size is 128 KB and literal blocks must be smaller
+comment|// Max block size decompressed size is 128 KB and literal blocks can't be
 end_comment
 
 begin_comment
-comment|// than that
+comment|// larger than their block
 end_comment
 
 begin_define
@@ -180,6 +184,14 @@ name|b
 parameter_list|)
 value|((a)< (b) ? (a) : (b))
 end_define
+
+begin_comment
+comment|/// This decoder calls exit(1) when it encounters an error, however a production
+end_comment
+
+begin_comment
+comment|/// library should propagate error codes
+end_comment
 
 begin_define
 define|#
@@ -314,15 +326,19 @@ comment|/*** IO STREAM OPERATIONS *************/
 end_comment
 
 begin_comment
-comment|/// These structs are the interface for IO, and do bounds checking on all
+comment|/// ostream_t/istream_t are used to wrap the pointers/length data passed into
 end_comment
 
 begin_comment
-comment|/// operations.  They should be used opaquely to ensure safety.
+comment|/// ZSTD_decompress, so that all IO operations are safely bounds checked
 end_comment
 
 begin_comment
-comment|/// Output is always done byte-by-byte
+comment|/// They are written/read forward, and reads are treated as little-endian
+end_comment
+
+begin_comment
+comment|/// They should be used opaquely to ensure safety
 end_comment
 
 begin_typedef
@@ -341,10 +357,6 @@ name|ostream_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/// Input often reads a few bits at a time, so maintain an internal offset
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -354,11 +366,12 @@ name|u8
 modifier|*
 name|ptr
 decl_stmt|;
-name|int
-name|bit_offset
-decl_stmt|;
 name|size_t
 name|len
+decl_stmt|;
+comment|// Input often reads a few bits at a time, so maintain an internal offset
+name|int
+name|bit_offset
 decl_stmt|;
 block|}
 name|istream_t
@@ -390,13 +403,13 @@ name|in
 parameter_list|,
 specifier|const
 name|int
-name|num
+name|num_bits
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Rewinds the stream by `num` bits
+comment|/// Backs-up the stream by `num` bits so they can be read again
 end_comment
 
 begin_function_decl
@@ -412,7 +425,7 @@ name|in
 parameter_list|,
 specifier|const
 name|int
-name|num
+name|num_bits
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -484,11 +497,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Returns a pointer where `len` bytes can be read, and advances the internal
+comment|/// Advances the stream by `len` bytes, and returns a pointer to the chunk that
 end_comment
 
 begin_comment
-comment|/// state.  The stream must be byte aligned.
+comment|/// was skipped.  The stream must be byte aligned.
 end_comment
 
 begin_function_decl
@@ -511,11 +524,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Returns a pointer where `len` bytes can be written, and advances the internal
+comment|/// Advances the stream by `len` bytes, and returns a pointer to the chunk that
 end_comment
 
 begin_comment
-comment|/// state.  The stream must be byte aligned.
+comment|/// was skipped so it can be written to.
 end_comment
 
 begin_function_decl
@@ -558,7 +571,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Returns an `ostream_t` constructed from the given pointer and length
+comment|/// Returns an `ostream_t` constructed from the given pointer and length.
 end_comment
 
 begin_function_decl
@@ -578,7 +591,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Returns an `istream_t` constructed from the given pointer and length
+comment|/// Returns an `istream_t` constructed from the given pointer and length.
 end_comment
 
 begin_function_decl
@@ -599,15 +612,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Returns an `istream_t` with the same base as `in`, and length `len`
+comment|/// Returns an `istream_t` with the same base as `in`, and length `len`.
 end_comment
 
 begin_comment
-comment|/// Then, advance `in` to account for the consumed bytes
+comment|/// Then, advance `in` to account for the consumed bytes.
 end_comment
 
 begin_comment
-comment|/// `in` must be byte aligned
+comment|/// `in` must be byte aligned.
 end_comment
 
 begin_function_decl
@@ -636,7 +649,11 @@ comment|/*** BITSTREAM OPERATIONS *************/
 end_comment
 
 begin_comment
-comment|/// Read `num` bits (up to 64) from `src + offset`, where `offset` is in bits
+comment|/// Read `num` bits (up to 64) from `src + offset`, where `offset` is in bits,
+end_comment
+
+begin_comment
+comment|/// and return them interpreted as a little-endian unsigned integer.
 end_comment
 
 begin_function_decl
@@ -652,7 +669,7 @@ name|src
 parameter_list|,
 specifier|const
 name|int
-name|num
+name|num_bits
 parameter_list|,
 specifier|const
 name|size_t
@@ -709,18 +726,14 @@ comment|/*** BIT COUNTING OPERATIONS **********/
 end_comment
 
 begin_comment
-comment|/// Returns `x`, where `2^x` is the largest power of 2 less than or equal to
-end_comment
-
-begin_comment
-comment|/// `num`, or `-1` if `num == 0`.
+comment|/// Returns the index of the highest set bit in `num`, or `-1` if `num == 0`
 end_comment
 
 begin_function_decl
 specifier|static
 specifier|inline
 name|int
-name|log2inf
+name|highest_set_bit
 parameter_list|(
 specifier|const
 name|u64
@@ -1918,31 +1931,22 @@ block|}
 name|istream_t
 name|in
 init|=
-block|{
-operator|(
-specifier|const
-name|u8
-operator|*
-operator|)
+name|IO_make_istream
+argument_list|(
 name|src
-block|,
-literal|0
-block|,
+argument_list|,
 name|src_len
-block|}
+argument_list|)
 decl_stmt|;
 name|ostream_t
 name|out
 init|=
-block|{
-operator|(
-name|u8
-operator|*
-operator|)
+name|IO_make_ostream
+argument_list|(
 name|dst
-block|,
+argument_list|,
 name|dst_len
-block|}
+argument_list|)
 decl_stmt|;
 comment|// "A content compressed by Zstandard is transformed into a Zstandard frame.
 comment|// Multiple frames can be appended into a single file or stream. A frame is
@@ -2972,6 +2976,7 @@ operator|->
 name|ml_dtable
 argument_list|)
 expr_stmt|;
+comment|// Copy the repeated offsets
 name|memcpy
 argument_list|(
 name|ctx
@@ -3108,7 +3113,6 @@ argument_list|,
 name|block_len
 argument_list|)
 decl_stmt|;
-comment|//
 comment|// Copy the raw data into the output
 name|memcpy
 argument_list|(
@@ -3159,7 +3163,7 @@ argument_list|,
 name|block_len
 argument_list|)
 decl_stmt|;
-comment|// Copy `block_len` copies of `streams->src[0]` to the output
+comment|// Copy `block_len` copies of `read_ptr[0]` to the output
 name|memset
 argument_list|(
 name|write_ptr
@@ -3429,15 +3433,15 @@ specifier|static
 name|void
 name|decode_huf_table
 parameter_list|(
-name|istream_t
-modifier|*
-specifier|const
-name|in
-parameter_list|,
 name|HUF_dtable
 modifier|*
 specifier|const
 name|dtable
+parameter_list|,
+name|istream_t
+modifier|*
+specifier|const
+name|in
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3970,7 +3974,7 @@ operator|==
 literal|2
 condition|)
 block|{
-comment|// Decode provided Huffman table
+comment|// Decode the provided Huffman table
 comment|// "This section is only present when Literals_Block_Type type is
 comment|// Compressed_Literals_Block (2)."
 name|HUF_free_dtable
@@ -3984,12 +3988,12 @@ expr_stmt|;
 name|decode_huf_table
 argument_list|(
 operator|&
-name|huf_stream
-argument_list|,
-operator|&
 name|ctx
 operator|->
 name|literals_dtable
+argument_list|,
+operator|&
+name|huf_stream
 argument_list|)
 expr_stmt|;
 block|}
@@ -4083,17 +4087,20 @@ specifier|static
 name|void
 name|decode_huf_table
 parameter_list|(
-name|istream_t
-modifier|*
-specifier|const
-name|in
-parameter_list|,
 name|HUF_dtable
 modifier|*
 specifier|const
 name|dtable
+parameter_list|,
+name|istream_t
+modifier|*
+specifier|const
+name|in
 parameter_list|)
 block|{
+comment|// "All literal values from zero (included) to last present one (excluded)
+comment|// are represented by Weight with values from 0 to Max_Number_of_Bits."
+comment|// "This is a single byte value (0-255), which describes how to decode the list of weights."
 specifier|const
 name|u8
 name|header
@@ -4105,9 +4112,6 @@ argument_list|,
 literal|8
 argument_list|)
 decl_stmt|;
-comment|// "All literal values from zero (included) to last present one (excluded)
-comment|// are represented by Weight with values from 0 to Max_Number_of_Bits."
-comment|// "This is a single byte value (0-255), which describes how to decode the list of weights."
 name|u8
 name|weights
 index|[
@@ -4385,7 +4389,7 @@ name|u16
 name|ml_state
 decl_stmt|;
 block|}
-name|sequence_state_t
+name|sequence_states_t
 typedef|;
 end_typedef
 
@@ -5204,7 +5208,7 @@ specifier|static
 name|sequence_command_t
 name|decode_sequence
 parameter_list|(
-name|sequence_state_t
+name|sequence_states_t
 modifier|*
 specifier|const
 name|state
@@ -5228,15 +5232,15 @@ specifier|static
 name|void
 name|decode_seq_table
 parameter_list|(
-name|istream_t
-modifier|*
-specifier|const
-name|in
-parameter_list|,
 name|FSE_dtable
 modifier|*
 specifier|const
 name|table
+parameter_list|,
+name|istream_t
+modifier|*
+specifier|const
+name|in
 parameter_list|,
 specifier|const
 name|seq_part_t
@@ -5487,12 +5491,12 @@ comment|// Match Lengths"
 comment|// Update the tables we have stored in the context
 name|decode_seq_table
 argument_list|(
-name|in
-argument_list|,
 operator|&
 name|ctx
 operator|->
 name|ll_dtable
+argument_list|,
+name|in
 argument_list|,
 name|seq_literal_length
 argument_list|,
@@ -5507,12 +5511,12 @@ argument_list|)
 expr_stmt|;
 name|decode_seq_table
 argument_list|(
-name|in
-argument_list|,
 operator|&
 name|ctx
 operator|->
 name|of_dtable
+argument_list|,
+name|in
 argument_list|,
 name|seq_offset
 argument_list|,
@@ -5527,12 +5531,12 @@ argument_list|)
 expr_stmt|;
 name|decode_seq_table
 argument_list|(
-name|in
-argument_list|,
 operator|&
 name|ctx
 operator|->
 name|ml_dtable
+argument_list|,
+name|in
 argument_list|,
 name|seq_match_length
 argument_list|,
@@ -5545,93 +5549,37 @@ operator|&
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// Check to make sure none of the tables are uninitialized
-if|if
-condition|(
-operator|!
-name|ctx
-operator|->
-name|ll_dtable
-operator|.
-name|symbols
-operator|||
-operator|!
-name|ctx
-operator|->
-name|of_dtable
-operator|.
-name|symbols
-operator|||
-operator|!
-name|ctx
-operator|->
-name|ml_dtable
-operator|.
-name|symbols
-condition|)
-block|{
-name|CORRUPTION
-argument_list|()
-expr_stmt|;
-block|}
-name|sequence_state_t
-name|state
+name|sequence_states_t
+name|states
 decl_stmt|;
-comment|// Copy the context's tables into the local state
-name|memcpy
-argument_list|(
-operator|&
-name|state
+comment|// Initialize the decoding tables
+block|{
+name|states
 operator|.
 name|ll_table
-argument_list|,
-operator|&
+operator|=
 name|ctx
 operator|->
 name|ll_dtable
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|FSE_dtable
-argument_list|)
-argument_list|)
 expr_stmt|;
-name|memcpy
-argument_list|(
-operator|&
-name|state
+name|states
 operator|.
 name|of_table
-argument_list|,
-operator|&
+operator|=
 name|ctx
 operator|->
 name|of_dtable
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|FSE_dtable
-argument_list|)
-argument_list|)
 expr_stmt|;
-name|memcpy
-argument_list|(
-operator|&
-name|state
+name|states
 operator|.
 name|ml_table
-argument_list|,
-operator|&
+operator|=
 name|ctx
 operator|->
 name|ml_dtable
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|FSE_dtable
-argument_list|)
-argument_list|)
 expr_stmt|;
+block|}
+specifier|const
 name|size_t
 name|len
 init|=
@@ -5661,7 +5609,7 @@ name|padding
 init|=
 literal|8
 operator|-
-name|log2inf
+name|highest_set_bit
 argument_list|(
 name|src
 index|[
@@ -5671,8 +5619,9 @@ literal|1
 index|]
 argument_list|)
 decl_stmt|;
+comment|// The offset starts at the end because FSE streams are read backwards
 name|i64
-name|offset
+name|bit_offset
 init|=
 name|len
 operator|*
@@ -5689,55 +5638,55 @@ comment|// Match_Length_State."
 name|FSE_init_state
 argument_list|(
 operator|&
-name|state
+name|states
 operator|.
 name|ll_table
 argument_list|,
 operator|&
-name|state
+name|states
 operator|.
 name|ll_state
 argument_list|,
 name|src
 argument_list|,
 operator|&
-name|offset
+name|bit_offset
 argument_list|)
 expr_stmt|;
 name|FSE_init_state
 argument_list|(
 operator|&
-name|state
+name|states
 operator|.
 name|of_table
 argument_list|,
 operator|&
-name|state
+name|states
 operator|.
 name|of_state
 argument_list|,
 name|src
 argument_list|,
 operator|&
-name|offset
+name|bit_offset
 argument_list|)
 expr_stmt|;
 name|FSE_init_state
 argument_list|(
 operator|&
-name|state
+name|states
 operator|.
 name|ml_table
 argument_list|,
 operator|&
-name|state
+name|states
 operator|.
 name|ml_state
 argument_list|,
 name|src
 argument_list|,
 operator|&
-name|offset
+name|bit_offset
 argument_list|)
 expr_stmt|;
 for|for
@@ -5764,18 +5713,18 @@ operator|=
 name|decode_sequence
 argument_list|(
 operator|&
-name|state
+name|states
 argument_list|,
 name|src
 argument_list|,
 operator|&
-name|offset
+name|bit_offset
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|offset
+name|bit_offset
 operator|!=
 literal|0
 condition|)
@@ -5784,7 +5733,6 @@ name|CORRUPTION
 argument_list|()
 expr_stmt|;
 block|}
-comment|// Don't free tables so they can be used in the next block
 block|}
 end_function
 
@@ -5797,10 +5745,10 @@ specifier|static
 name|sequence_command_t
 name|decode_sequence
 parameter_list|(
-name|sequence_state_t
+name|sequence_states_t
 modifier|*
 specifier|const
-name|state
+name|states
 parameter_list|,
 specifier|const
 name|u8
@@ -5825,11 +5773,11 @@ init|=
 name|FSE_peek_symbol
 argument_list|(
 operator|&
-name|state
+name|states
 operator|->
 name|of_table
 argument_list|,
-name|state
+name|states
 operator|->
 name|of_state
 argument_list|)
@@ -5841,11 +5789,11 @@ init|=
 name|FSE_peek_symbol
 argument_list|(
 operator|&
-name|state
+name|states
 operator|->
 name|ll_table
 argument_list|,
-name|state
+name|states
 operator|->
 name|ll_state
 argument_list|)
@@ -5857,11 +5805,11 @@ init|=
 name|FSE_peek_symbol
 argument_list|(
 operator|&
-name|state
+name|states
 operator|->
 name|ml_table
 argument_list|,
-name|state
+name|states
 operator|->
 name|ml_state
 argument_list|)
@@ -5974,12 +5922,12 @@ block|{
 name|FSE_update_state
 argument_list|(
 operator|&
-name|state
+name|states
 operator|->
 name|ll_table
 argument_list|,
 operator|&
-name|state
+name|states
 operator|->
 name|ll_state
 argument_list|,
@@ -5991,12 +5939,12 @@ expr_stmt|;
 name|FSE_update_state
 argument_list|(
 operator|&
-name|state
+name|states
 operator|->
 name|ml_table
 argument_list|,
 operator|&
-name|state
+name|states
 operator|->
 name|ml_state
 argument_list|,
@@ -6008,12 +5956,12 @@ expr_stmt|;
 name|FSE_update_state
 argument_list|(
 operator|&
-name|state
+name|states
 operator|->
 name|of_table
 argument_list|,
 operator|&
-name|state
+name|states
 operator|->
 name|of_state
 argument_list|,
@@ -6033,20 +5981,24 @@ begin_comment
 comment|/// Given a sequence part and table mode, decode the FSE distribution
 end_comment
 
+begin_comment
+comment|/// Errors if the mode is `seq_repeat` without a pre-existing table in `table`
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|decode_seq_table
 parameter_list|(
-name|istream_t
-modifier|*
-specifier|const
-name|in
-parameter_list|,
 name|FSE_dtable
 modifier|*
 specifier|const
 name|table
+parameter_list|,
+name|istream_t
+modifier|*
+specifier|const
+name|in
 parameter_list|,
 specifier|const
 name|seq_part_t
@@ -6231,6 +6183,19 @@ case|:
 comment|// "Repeat_Mode : re-use distribution table from previous compressed
 comment|// block."
 comment|// Nothing to do here, table will be unchanged
+if|if
+condition|(
+operator|!
+name|table
+operator|->
+name|symbols
+condition|)
+block|{
+comment|// This mode is invalid if we don't already have a table
+name|CORRUPTION
+argument_list|()
+expr_stmt|;
+block|}
 break|break;
 default|default:
 comment|// Impossible, as mode is from 0-3
@@ -6337,6 +6302,8 @@ name|i
 index|]
 decl_stmt|;
 block|{
+comment|// If the sequence asks for more literals than are left, the
+comment|// sequence must be corrupted
 if|if
 condition|(
 name|seq
@@ -6485,7 +6452,8 @@ index|]
 operator|-
 literal|1
 expr_stmt|;
-comment|// If idx == 1 we don't need to modify offset_hist[2]
+comment|// If idx == 1 we don't need to modify offset_hist[2], since
+comment|// we're using the second-most recent code
 if|if
 condition|(
 name|idx
@@ -6525,6 +6493,8 @@ block|}
 block|}
 else|else
 block|{
+comment|// When it's not a repeat offset:
+comment|// "if (Offset_Value> 3) offset = Offset_Value - 3;"
 name|offset
 operator|=
 name|seq
@@ -6724,6 +6694,7 @@ operator|.
 name|match_length
 expr_stmt|;
 block|}
+comment|// Copy any leftover literals
 block|{
 name|size_t
 name|len
@@ -6760,7 +6731,6 @@ argument_list|,
 name|len
 argument_list|)
 decl_stmt|;
-comment|// Copy any leftover literals
 name|memcpy
 argument_list|(
 name|write_ptr
@@ -7275,23 +7245,23 @@ comment|// a value< dictionary size."
 name|decode_huf_table
 argument_list|(
 operator|&
-name|in
-argument_list|,
-operator|&
 name|dict
 operator|->
 name|literals_dtable
+argument_list|,
+operator|&
+name|in
 argument_list|)
 expr_stmt|;
 name|decode_seq_table
 argument_list|(
 operator|&
-name|in
-argument_list|,
-operator|&
 name|dict
 operator|->
 name|of_dtable
+argument_list|,
+operator|&
+name|in
 argument_list|,
 name|seq_offset
 argument_list|,
@@ -7301,12 +7271,12 @@ expr_stmt|;
 name|decode_seq_table
 argument_list|(
 operator|&
-name|in
-argument_list|,
-operator|&
 name|dict
 operator|->
 name|ml_dtable
+argument_list|,
+operator|&
+name|in
 argument_list|,
 name|seq_match_length
 argument_list|,
@@ -7316,12 +7286,12 @@ expr_stmt|;
 name|decode_seq_table
 argument_list|(
 operator|&
-name|in
-argument_list|,
-operator|&
 name|dict
 operator|->
 name|ll_dtable
+argument_list|,
+operator|&
+name|in
 argument_list|,
 name|seq_literal_length
 argument_list|,
@@ -7606,16 +7576,16 @@ name|in
 parameter_list|,
 specifier|const
 name|int
-name|num
+name|num_bits
 parameter_list|)
 block|{
 if|if
 condition|(
-name|num
+name|num_bits
 operator|>
 literal|64
 operator|||
-name|num
+name|num_bits
 operator|<=
 literal|0
 condition|)
@@ -7631,7 +7601,7 @@ name|size_t
 name|bytes
 init|=
 operator|(
-name|num
+name|num_bits
 operator|+
 name|in
 operator|->
@@ -7647,7 +7617,7 @@ name|size_t
 name|full_bytes
 init|=
 operator|(
-name|num
+name|num_bits
 operator|+
 name|in
 operator|->
@@ -7679,7 +7649,7 @@ name|in
 operator|->
 name|ptr
 argument_list|,
-name|num
+name|num_bits
 argument_list|,
 name|in
 operator|->
@@ -7691,7 +7661,7 @@ operator|->
 name|bit_offset
 operator|=
 operator|(
-name|num
+name|num_bits
 operator|+
 name|in
 operator|->
@@ -7738,12 +7708,12 @@ specifier|const
 name|in
 parameter_list|,
 name|int
-name|num
+name|num_bits
 parameter_list|)
 block|{
 if|if
 condition|(
-name|num
+name|num_bits
 operator|<
 literal|0
 condition|)
@@ -7754,6 +7724,7 @@ literal|"Attempting to rewind stream by a negative number of bits"
 argument_list|)
 expr_stmt|;
 block|}
+comment|// move the offset back by `num_bits` bits
 specifier|const
 name|int
 name|new_offset
@@ -7762,12 +7733,15 @@ name|in
 operator|->
 name|bit_offset
 operator|-
-name|num
+name|num_bits
 decl_stmt|;
+comment|// determine the number of whole bytes we have to rewind, rounding up to an
+comment|// integer number (e.g. if `new_offset == -5`, `bytes == 1`)
 specifier|const
 name|i64
 name|bytes
 init|=
+operator|-
 operator|(
 name|new_offset
 operator|-
@@ -7779,15 +7753,17 @@ decl_stmt|;
 name|in
 operator|->
 name|ptr
-operator|+=
+operator|-=
 name|bytes
 expr_stmt|;
 name|in
 operator|->
 name|len
-operator|-=
+operator|+=
 name|bytes
 expr_stmt|;
+comment|// make sure the resulting `bit_offset` is positive, as mod in C does not
+comment|// convert numbers from negative to positive (e.g. -22 % 8 == -6)
 name|in
 operator|->
 name|bit_offset
@@ -8208,9 +8184,9 @@ operator|)
 block|{
 name|in
 block|,
-literal|0
-block|,
 name|len
+block|,
+literal|0
 block|}
 return|;
 block|}
@@ -8243,62 +8219,28 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-if|if
-condition|(
-name|len
-operator|>
-name|in
-operator|->
-name|len
-condition|)
-block|{
-name|INP_SIZE
-argument_list|()
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|in
-operator|->
-name|bit_offset
-operator|!=
-literal|0
-condition|)
-block|{
-name|UNALIGNED
-argument_list|()
-expr_stmt|;
-block|}
+comment|// Consume `len` bytes of the parent stream
 specifier|const
-name|istream_t
-name|sub
+name|u8
+modifier|*
+specifier|const
+name|ptr
 init|=
-block|{
+name|IO_read_bytes
+argument_list|(
 name|in
-operator|->
-name|ptr
-block|,
-name|in
-operator|->
-name|bit_offset
-block|,
+argument_list|,
 name|len
-block|}
+argument_list|)
 decl_stmt|;
-name|in
-operator|->
-name|ptr
-operator|+=
-name|len
-expr_stmt|;
-name|in
-operator|->
-name|len
-operator|-=
-name|len
-expr_stmt|;
+comment|// Make a substream using the pointer to those `len` bytes
 return|return
-name|sub
+name|IO_make_istream
+argument_list|(
+name|ptr
+argument_list|,
+name|len
+argument_list|)
 return|;
 block|}
 end_function
@@ -8328,7 +8270,7 @@ name|src
 parameter_list|,
 specifier|const
 name|int
-name|num
+name|num_bits
 parameter_list|,
 specifier|const
 name|size_t
@@ -8337,7 +8279,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|num
+name|num_bits
 operator|>
 literal|64
 condition|)
@@ -8375,7 +8317,7 @@ decl_stmt|;
 name|int
 name|left
 init|=
-name|num
+name|num_bits
 decl_stmt|;
 while|while
 condition|(
@@ -8406,7 +8348,7 @@ operator|-
 literal|1
 operator|)
 decl_stmt|;
-comment|// Dead the next byte, shift it to account for the offset, and then mask
+comment|// Read the next byte, shift it to account for the offset, and then mask
 comment|// out the top part if we don't need all the bits
 name|res
 operator|+=
@@ -8593,7 +8535,7 @@ begin_function
 specifier|static
 specifier|inline
 name|int
-name|log2inf
+name|highest_set_bit
 parameter_list|(
 specifier|const
 name|u64
@@ -8877,7 +8819,7 @@ name|padding
 init|=
 literal|8
 operator|-
-name|log2inf
+name|highest_set_bit
 argument_list|(
 name|src
 index|[
@@ -8887,8 +8829,9 @@ literal|1
 index|]
 argument_list|)
 decl_stmt|;
+comment|// Offset starts at the end because HUF streams are read backwards
 name|i64
-name|offset
+name|bit_offset
 init|=
 name|len
 operator|*
@@ -8909,7 +8852,7 @@ argument_list|,
 name|src
 argument_list|,
 operator|&
-name|offset
+name|bit_offset
 argument_list|)
 expr_stmt|;
 name|size_t
@@ -8919,7 +8862,7 @@ literal|0
 decl_stmt|;
 while|while
 condition|(
-name|offset
+name|bit_offset
 operator|>
 operator|-
 name|dtable
@@ -8942,7 +8885,7 @@ argument_list|,
 name|src
 argument_list|,
 operator|&
-name|offset
+name|bit_offset
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8961,7 +8904,7 @@ comment|// Therefore `offset`, the edge to start reading new bits at, should be
 comment|// dtable->max_bits before the start of the stream
 if|if
 condition|(
-name|offset
+name|bit_offset
 operator|!=
 operator|-
 name|dtable
@@ -9654,7 +9597,7 @@ specifier|const
 name|int
 name|max_bits
 init|=
-name|log2inf
+name|highest_set_bit
 argument_list|(
 name|weight_sum
 argument_list|)
@@ -9698,7 +9641,7 @@ specifier|const
 name|int
 name|last_weight
 init|=
-name|log2inf
+name|highest_set_bit
 argument_list|(
 name|left_over
 argument_list|)
@@ -10249,7 +10192,7 @@ name|padding
 init|=
 literal|8
 operator|-
-name|log2inf
+name|highest_set_bit
 argument_list|(
 name|src
 index|[
@@ -10805,7 +10748,7 @@ call|)
 argument_list|(
 name|accuracy_log
 operator|-
-name|log2inf
+name|highest_set_bit
 argument_list|(
 name|next_state_desc
 argument_list|)
@@ -10963,7 +10906,7 @@ comment|// Log of the number of possible values we could read
 name|int
 name|bits
 init|=
-name|log2inf
+name|highest_set_bit
 argument_list|(
 name|remaining
 operator|+

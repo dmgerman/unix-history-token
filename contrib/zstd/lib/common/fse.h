@@ -572,6 +572,23 @@ parameter_list|(
 name|maxTableLog
 parameter_list|)
 value|(1 + (1<<maxTableLog))
+comment|/* or use the size to malloc() space directly. Pay attention to alignment restrictions though */
+define|#
+directive|define
+name|FSE_CTABLE_SIZE
+parameter_list|(
+name|maxTableLog
+parameter_list|,
+name|maxSymbolValue
+parameter_list|)
+value|(FSE_CTABLE_SIZE_U32(maxTableLog, maxSymbolValue) * sizeof(FSE_CTable))
+define|#
+directive|define
+name|FSE_DTABLE_SIZE
+parameter_list|(
+name|maxTableLog
+parameter_list|)
+value|(FSE_DTABLE_SIZE_U32(maxTableLog) * sizeof(FSE_DTable))
 comment|/* ***************************************** *  FSE advanced API *******************************************/
 comment|/* FSE_count_wksp() :  * Same as FSE_count(), but using an externally provided scratch buffer.  * `workSpace` size must be table of>= `1024` unsigned  */
 name|size_t
@@ -691,7 +708,7 @@ name|maxTableLog
 parameter_list|,
 name|maxSymbolValue
 parameter_list|)
-value|( FSE_CTABLE_SIZE_U32(maxTableLog, maxSymbolValue) + (1<<((maxTableLog>2)?(maxTableLog-2):0)) )
+value|( FSE_CTABLE_SIZE_U32(maxTableLog, maxSymbolValue) + ((maxTableLog> 12) ? (1<< (maxTableLog - 2)) : 1024) )
 name|size_t
 name|FSE_compress_wksp
 parameter_list|(
@@ -1220,8 +1237,8 @@ name|U32
 name|symbol
 parameter_list|)
 block|{
-specifier|const
 name|FSE_symbolCompressionTransform
+specifier|const
 name|symbolTT
 init|=
 operator|(
@@ -1258,6 +1275,7 @@ name|stateTable
 operator|)
 decl_stmt|;
 name|U32
+specifier|const
 name|nbBitsOut
 init|=
 call|(

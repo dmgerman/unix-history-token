@@ -35,8 +35,79 @@ include|#
 directive|include
 file|<stddef.h>
 comment|/* size_t */
+comment|/* *** library symbols visibility *** */
+comment|/* Note : when linking with -fvisibility=hidden on gcc, or by default on Visual,  *        HUF symbols remain "private" (internal symbols for library only).  *        Set macro FSE_DLL_EXPORT to 1 if you want HUF symbols visible on DLL interface */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FSE_DLL_EXPORT
+argument_list|)
+operator|&&
+operator|(
+name|FSE_DLL_EXPORT
+operator|==
+literal|1
+operator|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|(
+name|__GNUC__
+operator|>=
+literal|4
+operator|)
+define|#
+directive|define
+name|HUF_PUBLIC_API
+value|__attribute__ ((visibility ("default")))
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|FSE_DLL_EXPORT
+argument_list|)
+operator|&&
+operator|(
+name|FSE_DLL_EXPORT
+operator|==
+literal|1
+operator|)
+comment|/* Visual expected */
+define|#
+directive|define
+name|HUF_PUBLIC_API
+value|__declspec(dllexport)
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|FSE_DLL_IMPORT
+argument_list|)
+operator|&&
+operator|(
+name|FSE_DLL_IMPORT
+operator|==
+literal|1
+operator|)
+define|#
+directive|define
+name|HUF_PUBLIC_API
+value|__declspec(dllimport)
+comment|/* not required, just to generate faster code (saves a function pointer load from IAT and an indirect jump) */
+else|#
+directive|else
+define|#
+directive|define
+name|HUF_PUBLIC_API
+endif|#
+directive|endif
 comment|/* *** simple functions *** */
 comment|/** HUF_compress() :     Compress content from buffer 'src', of size 'srcSize', into buffer 'dst'.     'dst' buffer must be already allocated.     Compression runs faster if `dstCapacity`>= HUF_compressBound(srcSize).     `srcSize` must be<= `HUF_BLOCKSIZE_MAX` == 128 KB.     @return : size of compressed data (<= `dstCapacity`).     Special values : if return == 0, srcData is not compressible => Nothing is stored within dst !!!                      if return == 1, srcData is a single repeated byte symbol (RLE compression).                      if HUF_isError(return), compression failed (more details using HUF_getErrorName()) */
+name|HUF_PUBLIC_API
 name|size_t
 name|HUF_compress
 parameter_list|(
@@ -57,6 +128,7 @@ name|srcSize
 parameter_list|)
 function_decl|;
 comment|/** HUF_decompress() :     Decompress HUF data from buffer 'cSrc', of size 'cSrcSize',     into already allocated buffer 'dst', of minimum size 'dstSize'.     `originalSize` : **must** be the ***exact*** size of original (uncompressed) data.     Note : in contrast with FSE, HUF_decompress can regenerate            RLE (cSrcSize==1) and uncompressed (cSrcSize==dstSize) data,            because it knows size to regenerate.     @return : size of regenerated data (== originalSize),               or an error code, which can be tested using HUF_isError() */
+name|HUF_PUBLIC_API
 name|size_t
 name|HUF_decompress
 parameter_list|(
@@ -82,6 +154,7 @@ directive|define
 name|HUF_BLOCKSIZE_MAX
 value|(128 * 1024)
 comment|/**< maximum input size for a single block compressed with HUF_compress */
+name|HUF_PUBLIC_API
 name|size_t
 name|HUF_compressBound
 parameter_list|(
@@ -91,6 +164,7 @@ parameter_list|)
 function_decl|;
 comment|/**< maximum compressed size (worst case) */
 comment|/* Error Management */
+name|HUF_PUBLIC_API
 name|unsigned
 name|HUF_isError
 parameter_list|(
@@ -99,6 +173,7 @@ name|code
 parameter_list|)
 function_decl|;
 comment|/**< tells if a return value is an error code */
+name|HUF_PUBLIC_API
 specifier|const
 name|char
 modifier|*
@@ -110,7 +185,8 @@ parameter_list|)
 function_decl|;
 comment|/**< provides error code string (useful for debugging) */
 comment|/* ***   Advanced function   *** */
-comment|/** HUF_compress2() :  *   Same as HUF_compress(), but offers direct control over `maxSymbolValue` and `tableLog` .  *   `tableLog` must be `<= HUF_TABLELOG_MAX` . */
+comment|/** HUF_compress2() :  *  Same as HUF_compress(), but offers direct control over `maxSymbolValue` and `tableLog`.  *  `tableLog` must be `<= HUF_TABLELOG_MAX` . */
+name|HUF_PUBLIC_API
 name|size_t
 name|HUF_compress2
 parameter_list|(
@@ -119,7 +195,7 @@ modifier|*
 name|dst
 parameter_list|,
 name|size_t
-name|dstSize
+name|dstCapacity
 parameter_list|,
 specifier|const
 name|void
@@ -136,7 +212,16 @@ name|unsigned
 name|tableLog
 parameter_list|)
 function_decl|;
-comment|/** HUF_compress4X_wksp() : *   Same as HUF_compress2(), but uses externally allocated `workSpace`, which must be a table of>= 1024 unsigned */
+comment|/** HUF_compress4X_wksp() :  *  Same as HUF_compress2(), but uses externally allocated `workSpace`.  *  `workspace` must have minimum alignment of 4, and be at least as large as following macro */
+define|#
+directive|define
+name|HUF_WORKSPACE_SIZE
+value|(6<< 10)
+define|#
+directive|define
+name|HUF_WORKSPACE_SIZE_U32
+value|(HUF_WORKSPACE_SIZE / sizeof(U32))
+name|HUF_PUBLIC_API
 name|size_t
 name|HUF_compress4X_wksp
 parameter_list|(
@@ -145,7 +230,7 @@ modifier|*
 name|dst
 parameter_list|,
 name|size_t
-name|dstSize
+name|dstCapacity
 parameter_list|,
 specifier|const
 name|void
@@ -169,7 +254,7 @@ name|size_t
 name|wkspSize
 parameter_list|)
 function_decl|;
-comment|/**< `workSpace` must be a table of at least HUF_WORKSPACE_SIZE_U32 unsigned */
+comment|/* ******************************************************************  *  WARNING !!  *  The following section contains advanced and experimental definitions  *  which shall never be used in the context of dll  *  because they are not guaranteed to remain stable in the future.  *  Only consider them in association with static linking.  *******************************************************************/
 ifdef|#
 directive|ifdef
 name|HUF_STATIC_LINKING_ONLY
@@ -223,7 +308,7 @@ parameter_list|(
 name|size
 parameter_list|)
 value|(size + (size>>8) + 8)
-comment|/* only true if incompressible pre-filtered with fast heuristic */
+comment|/* only true when incompressible is pre-filtered with fast heuristic */
 define|#
 directive|define
 name|HUF_COMPRESSBOUND
@@ -235,6 +320,21 @@ comment|/* Macro version, useful for static allocation */
 comment|/* static allocation of HUF's Compression Table */
 define|#
 directive|define
+name|HUF_CTABLE_SIZE_U32
+parameter_list|(
+name|maxSymbolValue
+parameter_list|)
+value|((maxSymbolValue)+1)
+comment|/* Use tables of U32, for proper alignment */
+define|#
+directive|define
+name|HUF_CTABLE_SIZE
+parameter_list|(
+name|maxSymbolValue
+parameter_list|)
+value|(HUF_CTABLE_SIZE_U32(maxSymbolValue) * sizeof(U32))
+define|#
+directive|define
 name|HUF_CREATE_STATIC_CTABLE
 parameter_list|(
 name|name
@@ -242,7 +342,7 @@ parameter_list|,
 name|maxSymbolValue
 parameter_list|)
 define|\
-value|U32 name##hb[maxSymbolValue+1]; \     void* name##hv =&(name##hb); \     HUF_CElt* name = (HUF_CElt*)(name##hv)
+value|U32 name##hb[HUF_CTABLE_SIZE_U32(maxSymbolValue)]; \     void* name##hv =&(name##hb); \     HUF_CElt* name = (HUF_CElt*)(name##hv)
 comment|/* no final ; */
 comment|/* static allocation of HUF's DTable */
 typedef|typedef
@@ -276,15 +376,6 @@ name|maxTableLog
 parameter_list|)
 define|\
 value|HUF_DTable DTable[HUF_DTABLE_SIZE(maxTableLog)] = { ((U32)(maxTableLog) * 0x01000001) }
-comment|/* The workspace must have alignment at least 4 and be at least this large */
-define|#
-directive|define
-name|HUF_WORKSPACE_SIZE
-value|(6<< 10)
-define|#
-directive|define
-name|HUF_WORKSPACE_SIZE_U32
-value|(HUF_WORKSPACE_SIZE / sizeof(U32))
 comment|/* **************************************** *  Advanced decompression functions ******************************************/
 name|size_t
 name|HUF_decompress4X2
