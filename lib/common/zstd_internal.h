@@ -53,6 +53,21 @@ name|warning
 name|(
 name|disable
 name|:
+name|4100
+name|)
+end_pragma
+
+begin_comment
+comment|/* disable: C4100: unreferenced formal parameter */
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|disable
+name|:
 name|4127
 name|)
 end_pragma
@@ -74,21 +89,6 @@ end_pragma
 
 begin_comment
 comment|/* disable: C4324: padded structure */
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4100
-name|)
-end_pragma
-
-begin_comment
-comment|/* disable: C4100: unreferenced formal parameter */
 end_comment
 
 begin_else
@@ -289,6 +289,18 @@ end_comment
 begin_comment
 comment|/*-************************************* *  shared macros ***************************************/
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|MIN
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MAX
+end_undef
 
 begin_define
 define|#
@@ -633,13 +645,6 @@ define|#
 directive|define
 name|MINMATCH
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|EQUAL_READ32
-value|4
 end_define
 
 begin_define

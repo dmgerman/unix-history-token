@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ******************************************************************    bitstream    Part of FSE library    header file (to include)    Copyright (C) 2013-2016, Yann Collet.     BSD 2-Clause License (http://www.opensource.org/licenses/bsd-license.php)     Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are    met:         * Redistributions of source code must retain the above copyright    notice, this list of conditions and the following disclaimer.        * Redistributions in binary form must reproduce the above    copyright notice, this list of conditions and the following disclaimer    in the documentation and/or other materials provided with the    distribution.     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT    OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT    LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.     You can contact the author at :    - Source repository : https://github.com/Cyan4973/FiniteStateEntropy ****************************************************************** */
+comment|/* ******************************************************************    bitstream    Part of FSE library    header file (to include)    Copyright (C) 2013-2017, Yann Collet.     BSD 2-Clause License (http://www.opensource.org/licenses/bsd-license.php)     Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are    met:         * Redistributions of source code must retain the above copyright    notice, this list of conditions and the following disclaimer.        * Redistributions in binary form must reproduce the above    copyright notice, this list of conditions and the following disclaimer    in the documentation and/or other materials provided with the    distribution.     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT    OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT    LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.     You can contact the author at :    - Source repository : https://github.com/Cyan4973/FiniteStateEntropy ****************************************************************** */
 end_comment
 
 begin_ifndef
@@ -40,6 +40,33 @@ include|#
 directive|include
 file|"error_private.h"
 comment|/* error codes and messages */
+comment|/*-************************************* *  Debug ***************************************/
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BIT_DEBUG
+argument_list|)
+operator|&&
+operator|(
+name|BIT_DEBUG
+operator|>=
+literal|1
+operator|)
+include|#
+directive|include
+file|<assert.h>
+else|#
+directive|else
+define|#
+directive|define
+name|assert
+parameter_list|(
+name|condition
+parameter_list|)
+value|((void)0)
+endif|#
+directive|endif
 comment|/*========================================= *  Target specific =========================================*/
 if|#
 directive|if
@@ -78,7 +105,7 @@ block|{
 name|size_t
 name|bitContainer
 decl_stmt|;
-name|int
+name|unsigned
 name|bitPos
 decl_stmt|;
 name|char
@@ -165,6 +192,11 @@ specifier|const
 name|char
 modifier|*
 name|start
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|limitPtr
 decl_stmt|;
 block|}
 name|BIT_DStream_t
@@ -534,7 +566,7 @@ block|}
 decl_stmt|;
 comment|/* up to 26 bits */
 comment|/*-************************************************************** *  bitStream encoding ****************************************************************/
-comment|/*! BIT_initCStream() :  *  `dstCapacity` must be> sizeof(void*)  *  @return : 0 if success,               otherwise an error code (can be tested using ERR_isError() ) */
+comment|/*! BIT_initCStream() :  *  `dstCapacity` must be> sizeof(size_t)  *  @return : 0 if success,               otherwise an error code (can be tested using ERR_isError() ) */
 name|MEM_STATIC
 name|size_t
 name|BIT_initCStream
@@ -595,7 +627,7 @@ sizeof|sizeof
 argument_list|(
 name|bitC
 operator|->
-name|ptr
+name|bitContainer
 argument_list|)
 expr_stmt|;
 if|if
@@ -606,7 +638,7 @@ sizeof|sizeof
 argument_list|(
 name|bitC
 operator|->
-name|ptr
+name|bitContainer
 argument_list|)
 condition|)
 return|return
@@ -675,6 +707,17 @@ name|unsigned
 name|nbBits
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|(
+name|value
+operator|>>
+name|nbBits
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 name|bitC
 operator|->
 name|bitContainer
@@ -692,7 +735,7 @@ operator|+=
 name|nbBits
 expr_stmt|;
 block|}
-comment|/*! BIT_flushBitsFast() :  *  unsafe version; does not check buffer overflow */
+comment|/*! BIT_flushBitsFast() :  *  assumption : bitContainer has not overflowed  *  unsafe version; does not check buffer overflow */
 name|MEM_STATIC
 name|void
 name|BIT_flushBitsFast
@@ -712,6 +755,24 @@ name|bitPos
 operator|>>
 literal|3
 decl_stmt|;
+name|assert
+argument_list|(
+name|bitC
+operator|->
+name|bitPos
+operator|<=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|bitC
+operator|->
+name|bitContainer
+argument_list|)
+operator|*
+literal|8
+operator|)
+argument_list|)
+expr_stmt|;
 name|MEM_writeLEST
 argument_list|(
 name|bitC
@@ -729,6 +790,17 @@ name|ptr
 operator|+=
 name|nbBytes
 expr_stmt|;
+name|assert
+argument_list|(
+name|bitC
+operator|->
+name|ptr
+operator|<=
+name|bitC
+operator|->
+name|endPtr
+argument_list|)
+expr_stmt|;
 name|bitC
 operator|->
 name|bitPos
@@ -743,9 +815,8 @@ name|nbBytes
 operator|*
 literal|8
 expr_stmt|;
-comment|/* if bitPos>= sizeof(bitContainer)*8 --> undefined behavior */
 block|}
-comment|/*! BIT_flushBits() :  *  safe version; check for buffer overflow, and prevents it.  *  note : does not signal buffer overflow. This will be revealed later on using BIT_closeCStream() */
+comment|/*! BIT_flushBits() :  *  assumption : bitContainer has not overflowed  *  safe version; check for buffer overflow, and prevents it.  *  note : does not signal buffer overflow.  *  overflow will be revealed later on using BIT_closeCStream() */
 name|MEM_STATIC
 name|void
 name|BIT_flushBits
@@ -765,6 +836,24 @@ name|bitPos
 operator|>>
 literal|3
 decl_stmt|;
+name|assert
+argument_list|(
+name|bitC
+operator|->
+name|bitPos
+operator|<=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|bitC
+operator|->
+name|bitContainer
+argument_list|)
+operator|*
+literal|8
+operator|)
+argument_list|)
+expr_stmt|;
 name|MEM_writeLEST
 argument_list|(
 name|bitC
@@ -814,7 +903,6 @@ name|nbBytes
 operator|*
 literal|8
 expr_stmt|;
-comment|/* if bitPos>= sizeof(bitContainer)*8 --> undefined behavior */
 block|}
 comment|/*! BIT_closeCStream() :  *  @return : size of CStream, in bytes,               or 0 if it could not fit into dstBuffer */
 name|MEM_STATIC
@@ -854,7 +942,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* doesn't fit within authorized budget : cancel */
+comment|/* overflow detected */
 return|return
 operator|(
 name|bitC
@@ -921,6 +1009,32 @@ name|srcSize_wrong
 argument_list|)
 return|;
 block|}
+name|bitD
+operator|->
+name|start
+operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|srcBuffer
+expr_stmt|;
+name|bitD
+operator|->
+name|limitPtr
+operator|=
+name|bitD
+operator|->
+name|start
+operator|+
+sizeof|sizeof
+argument_list|(
+name|bitD
+operator|->
+name|bitContainer
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|srcSize
@@ -934,17 +1048,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* normal case */
-name|bitD
-operator|->
-name|start
-operator|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-name|srcBuffer
-expr_stmt|;
 name|bitD
 operator|->
 name|ptr
@@ -1028,17 +1131,6 @@ block|}
 block|}
 else|else
 block|{
-name|bitD
-operator|->
-name|start
-operator|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-name|srcBuffer
-expr_stmt|;
 name|bitD
 operator|->
 name|ptr
@@ -1532,7 +1624,7 @@ else|#
 directive|else
 name|U32
 specifier|const
-name|bitMask
+name|regMask
 init|=
 sizeof|sizeof
 argument_list|(
@@ -1557,7 +1649,7 @@ name|bitD
 operator|->
 name|bitsConsumed
 operator|&
-name|bitMask
+name|regMask
 operator|)
 operator|)
 operator|>>
@@ -1566,18 +1658,18 @@ operator|)
 operator|>>
 operator|(
 operator|(
-name|bitMask
+name|regMask
 operator|-
 name|nbBits
 operator|)
 operator|&
-name|bitMask
+name|regMask
 operator|)
 return|;
 endif|#
 directive|endif
 block|}
-comment|/*! BIT_lookBitsFast() : *   unsafe version; only works only if nbBits>= 1 */
+comment|/*! BIT_lookBitsFast() :  *  unsafe version; only works if nbBits>= 1 */
 name|MEM_STATIC
 name|size_t
 name|BIT_lookBitsFast
@@ -1593,7 +1685,7 @@ parameter_list|)
 block|{
 name|U32
 specifier|const
-name|bitMask
+name|regMask
 init|=
 sizeof|sizeof
 argument_list|(
@@ -1606,6 +1698,13 @@ literal|8
 operator|-
 literal|1
 decl_stmt|;
+name|assert
+argument_list|(
+name|nbBits
+operator|>=
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|bitD
@@ -1617,14 +1716,14 @@ name|bitD
 operator|->
 name|bitsConsumed
 operator|&
-name|bitMask
+name|regMask
 operator|)
 operator|)
 operator|>>
 operator|(
 operator|(
 operator|(
-name|bitMask
+name|regMask
 operator|+
 literal|1
 operator|)
@@ -1632,7 +1731,7 @@ operator|-
 name|nbBits
 operator|)
 operator|&
-name|bitMask
+name|regMask
 operator|)
 return|;
 block|}
@@ -1714,6 +1813,13 @@ argument_list|,
 name|nbBits
 argument_list|)
 decl_stmt|;
+name|assert
+argument_list|(
+name|nbBits
+operator|>=
+literal|1
+argument_list|)
+expr_stmt|;
 name|BIT_skipBits
 argument_list|(
 name|bitD
@@ -1752,7 +1858,7 @@ operator|*
 literal|8
 operator|)
 condition|)
-comment|/* should not happen => corruption detected */
+comment|/* overflow detected, like end of stream */
 return|return
 name|BIT_DStream_overflow
 return|;
@@ -1764,14 +1870,7 @@ name|ptr
 operator|>=
 name|bitD
 operator|->
-name|start
-operator|+
-sizeof|sizeof
-argument_list|(
-name|bitD
-operator|->
-name|bitContainer
-argument_list|)
+name|limitPtr
 condition|)
 block|{
 name|bitD
@@ -1838,6 +1937,7 @@ return|return
 name|BIT_DStream_completed
 return|;
 block|}
+comment|/* start< ptr< limitPtr */
 block|{
 name|U32
 name|nbBytes
@@ -1912,7 +2012,7 @@ operator|->
 name|ptr
 argument_list|)
 expr_stmt|;
-comment|/* reminder : srcSize> sizeof(bitD) */
+comment|/* reminder : srcSize> sizeof(bitD->bitContainer), otherwise bitD->ptr == bitD->start */
 return|return
 name|result
 return|;

@@ -292,6 +292,42 @@ parameter_list|)
 value|fprintf(stderr, __VA_ARGS__)
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|MIN
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MAX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|( (a)< (b) ? (a) : (b) )
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|( (a)> (b) ? (a) : (b) )
+end_define
+
 begin_comment
 comment|/*-************************************ *  Benchmark Parameters **************************************/
 end_comment
@@ -553,17 +589,39 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|U32
 name|FUZ_rotl32
 parameter_list|(
+name|U32
 name|x
 parameter_list|,
+name|U32
 name|r
 parameter_list|)
-value|((x<< r) | (x>> (32 - r)))
-end_define
+block|{
+return|return
+operator|(
+operator|(
+name|x
+operator|<<
+name|r
+operator|)
+operator||
+operator|(
+name|x
+operator|>>
+operator|(
+literal|32
+operator|-
+name|r
+operator|)
+operator|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|U32
@@ -636,6 +694,7 @@ decl_stmt|;
 name|double
 name|cSpeed
 decl_stmt|;
+comment|/* bytes / sec */
 name|double
 name|dSpeed
 decl_stmt|;
@@ -677,18 +736,6 @@ block|}
 name|blockParam_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|( (a)< (b) ? (a) : (b) )
-end_define
 
 begin_function
 specifier|static
@@ -865,6 +912,25 @@ decl_stmt|;
 name|U64
 name|crcOrig
 decl_stmt|;
+comment|/* init result for early exit */
+name|resultPtr
+operator|->
+name|cSize
+operator|=
+name|srcSize
+expr_stmt|;
+name|resultPtr
+operator|->
+name|cSpeed
+operator|=
+literal|0.
+expr_stmt|;
+name|resultPtr
+operator|->
+name|dSpeed
+operator|=
+literal|0.
+expr_stmt|;
 comment|/* Memory allocation& restrictions */
 name|snprintf
 argument_list|(
@@ -1112,11 +1178,6 @@ name|ratio
 init|=
 literal|0.
 decl_stmt|;
-name|U64
-name|crcCheck
-init|=
-literal|0
-decl_stmt|;
 name|clock_t
 specifier|const
 name|benchStart
@@ -1345,6 +1406,18 @@ index|]
 operator|.
 name|cSize
 expr_stmt|;
+name|ratio
+operator|=
+operator|(
+name|double
+operator|)
+name|srcSize
+operator|/
+operator|(
+name|double
+operator|)
+name|cSize
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1370,18 +1443,6 @@ name|CLOCKS_PER_SEC
 operator|)
 operator|/
 name|nbLoops
-expr_stmt|;
-name|ratio
-operator|=
-operator|(
-name|double
-operator|)
-name|srcSize
-operator|/
-operator|(
-name|double
-operator|)
-name|cSize
 expr_stmt|;
 name|DISPLAY
 argument_list|(
@@ -1640,8 +1701,11 @@ operator|/
 name|fastestD
 expr_stmt|;
 comment|/* CRC Checking */
+block|{
+name|U64
+specifier|const
 name|crcCheck
-operator|=
+init|=
 name|XXH64
 argument_list|(
 name|resultBuffer
@@ -1650,7 +1714,7 @@ name|srcSize
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|crcOrig
@@ -1752,6 +1816,7 @@ break|break;
 block|}
 block|}
 break|break;
+block|}
 block|}
 endif|#
 directive|endif
@@ -3195,18 +3260,6 @@ define|\
 value|g_alreadyTested[(XXH64(sanitizeParams(p), sizeof(p), 0)>> 3)& PARAMTABLEMASK]
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|( (a)> (b) ? (a) : (b) )
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -4396,6 +4449,60 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|BMK_translateAdvancedParams
+parameter_list|(
+name|ZSTD_compressionParameters
+name|params
+parameter_list|)
+block|{
+name|DISPLAY
+argument_list|(
+literal|"--zstd=windowLog=%u,chainLog=%u,hashLog=%u,searchLog=%u,searchLength=%u,targetLength=%u,strategy=%u \n"
+argument_list|,
+name|params
+operator|.
+name|windowLog
+argument_list|,
+name|params
+operator|.
+name|chainLog
+argument_list|,
+name|params
+operator|.
+name|hashLog
+argument_list|,
+name|params
+operator|.
+name|searchLog
+argument_list|,
+name|params
+operator|.
+name|searchLength
+argument_list|,
+name|params
+operator|.
+name|targetLength
+argument_list|,
+call|(
+name|U32
+call|)
+argument_list|(
+name|params
+operator|.
+name|strategy
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* optimizeForSize():  * targetSpeed : expressed in MB/s */
+end_comment
+
+begin_function
 name|int
 name|optimizeForSize
 parameter_list|(
@@ -4487,22 +4594,23 @@ name|benchedSize
 operator|<
 name|inFileSize
 condition|)
+block|{
 name|DISPLAY
 argument_list|(
-literal|"Not enough memory for '%s' full size; testing %i MB only...\n"
+literal|"Not enough memory for '%s' \n"
 argument_list|,
 name|inFileName
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-name|benchedSize
-operator|>>
-literal|20
-argument_list|)
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|inFile
+argument_list|)
+expr_stmt|;
+return|return
+literal|11
+return|;
+block|}
 comment|/* Alloc */
 name|origBuff
 operator|=
@@ -4603,7 +4711,7 @@ argument_list|)
 expr_stmt|;
 name|targetSpeed
 operator|*=
-literal|1000
+literal|1000000
 expr_stmt|;
 block|{
 name|ZSTD_CCtx
@@ -4613,9 +4721,6 @@ name|ctx
 init|=
 name|ZSTD_createCCtx
 argument_list|()
-decl_stmt|;
-name|ZSTD_compressionParameters
-name|params
 decl_stmt|;
 name|winnerInfo_t
 name|winner
@@ -4712,8 +4817,10 @@ name|i
 operator|++
 control|)
 block|{
-name|params
-operator|=
+name|ZSTD_compressionParameters
+specifier|const
+name|CParams
+init|=
 name|ZSTD_getCParams
 argument_list|(
 name|i
@@ -4722,7 +4829,7 @@ name|blockSize
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|BMK_benchParam
 argument_list|(
 operator|&
@@ -4734,7 +4841,7 @@ name|benchedSize
 argument_list|,
 name|ctx
 argument_list|,
-name|params
+name|CParams
 argument_list|)
 expr_stmt|;
 if|if
@@ -4791,7 +4898,7 @@ name|winner
 operator|.
 name|params
 operator|=
-name|params
+name|CParams
 expr_stmt|;
 name|winner
 operator|.
@@ -4836,6 +4943,13 @@ argument_list|,
 name|benchedSize
 argument_list|)
 expr_stmt|;
+name|BMK_translateAdvancedParams
+argument_list|(
+name|winner
+operator|.
+name|params
+argument_list|)
+expr_stmt|;
 comment|/* start tests */
 block|{
 name|time_t
@@ -4849,12 +4963,13 @@ argument_list|)
 decl_stmt|;
 do|do
 block|{
+name|ZSTD_compressionParameters
 name|params
-operator|=
+init|=
 name|winner
 operator|.
 name|params
-expr_stmt|;
+decl_stmt|;
 name|paramVariation
 argument_list|(
 operator|&
@@ -4870,7 +4985,7 @@ operator|&
 name|g_rand
 argument_list|)
 operator|&
-literal|15
+literal|31
 operator|)
 operator|==
 literal|3
@@ -4879,6 +4994,18 @@ name|params
 operator|=
 name|randomParams
 argument_list|()
+expr_stmt|;
+comment|/* totally random config to improve search space */
+name|params
+operator|=
+name|ZSTD_adjustCParams
+argument_list|(
+name|params
+argument_list|,
+name|blockSize
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* exclude faster if already played set of params */
 if|if
@@ -5003,6 +5130,13 @@ operator|.
 name|params
 argument_list|,
 name|benchedSize
+argument_list|)
+expr_stmt|;
+name|BMK_translateAdvancedParams
+argument_list|(
+name|winner
+operator|.
+name|params
 argument_list|)
 expr_stmt|;
 block|}
@@ -5135,7 +5269,7 @@ argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|" -O#    : find Optimized parameters for # target speed (default : 0) \n"
+literal|" -O#    : find Optimized parameters for # MB/s compression speed (default : 0) \n"
 argument_list|)
 expr_stmt|;
 name|DISPLAY

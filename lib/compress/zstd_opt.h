@@ -2516,6 +2516,9 @@ name|minMatchLen
 argument_list|)
 return|;
 case|case
+literal|7
+case|:
+case|case
 literal|6
 case|:
 return|return
@@ -2741,6 +2744,9 @@ argument_list|,
 name|minMatchLen
 argument_list|)
 return|;
+case|case
+literal|7
+case|:
 case|case
 literal|6
 case|:

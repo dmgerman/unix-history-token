@@ -879,32 +879,6 @@ comment|/* no need to copy workspace */
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* deprecated */
-end_comment
-
-begin_comment
-unit|static void ZSTD_refDCtx(ZSTD_DCtx* dstDCtx, const ZSTD_DCtx* srcDCtx) {     ZSTD_decompressBegin(dstDCtx);
-comment|/* init */
-end_comment
-
-begin_comment
-unit|if (srcDCtx) {
-comment|/* support refDCtx on NULL */
-end_comment
-
-begin_endif
-unit|dstDCtx->dictEnd = srcDCtx->dictEnd;         dstDCtx->vBase = srcDCtx->vBase;         dstDCtx->base = srcDCtx->base;         dstDCtx->previousDstEnd = srcDCtx->previousDstEnd;         dstDCtx->dictID = srcDCtx->dictID;         dstDCtx->litEntropy = srcDCtx->litEntropy;         dstDCtx->fseEntropy = srcDCtx->fseEntropy;         dstDCtx->LLTptr = srcDCtx->entropy.LLTable;         dstDCtx->MLTptr = srcDCtx->entropy.MLTable;         dstDCtx->OFTptr = srcDCtx->entropy.OFTable;         dstDCtx->HUFptr = srcDCtx->entropy.hufTable;         dstDCtx->entropy.rep[0] = srcDCtx->entropy.rep[0];         dstDCtx->entropy.rep[1] = srcDCtx->entropy.rep[1];         dstDCtx->entropy.rep[2] = srcDCtx->entropy.rep[2];     } }
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -3142,6 +3116,10 @@ name|FSE_decode_t4
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Default FSE distribution table for Literal Lengths */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -3169,6 +3147,7 @@ block|}
 block|}
 block|,
 comment|/* header : tableLog, fastMode, fastMode */
+comment|/* base, symbol, bits */
 block|{
 block|{
 literal|0
@@ -3179,7 +3158,6 @@ literal|4
 block|}
 block|}
 block|,
-comment|/* 0 : base, symbol, bits */
 block|{
 block|{
 literal|16
@@ -3817,6 +3795,10 @@ begin_comment
 comment|/* LL_defaultDTable */
 end_comment
 
+begin_comment
+comment|/* Default FSE distribution table for Match Lengths */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -3844,6 +3826,7 @@ block|}
 block|}
 block|,
 comment|/* header : tableLog, fastMode, fastMode */
+comment|/* base, symbol, bits */
 block|{
 block|{
 literal|0
@@ -3854,7 +3837,6 @@ literal|6
 block|}
 block|}
 block|,
-comment|/* 0 : base, symbol, bits */
 block|{
 block|{
 literal|0
@@ -4492,6 +4474,10 @@ begin_comment
 comment|/* ML_defaultDTable */
 end_comment
 
+begin_comment
+comment|/* Default FSE distribution table for Offset Codes */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -4519,6 +4505,7 @@ block|}
 block|}
 block|,
 comment|/* header : tableLog, fastMode, fastMode */
+comment|/* base, symbol, bits */
 block|{
 block|{
 literal|0
@@ -4529,7 +4516,6 @@ literal|5
 block|}
 block|}
 block|,
-comment|/* 0 : base, symbol, bits */
 block|{
 block|{
 literal|0
@@ -6855,7 +6841,7 @@ name|base
 argument_list|)
 condition|)
 block|{
-comment|/* offset beyond prefix */
+comment|/* offset beyond prefix -> go into extDict */
 if|if
 condition|(
 name|sequence
@@ -10377,7 +10363,7 @@ argument_list|(
 name|src
 argument_list|)
 operator|&
-literal|0xFFFFFFFF0U
+literal|0xFFFFFFF0U
 operator|)
 operator|==
 name|ZSTD_MAGIC_SKIPPABLE_START
@@ -14117,7 +14103,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*! ZSTD_getDictID_fromFrame() :  *  Provides the dictID required to decompressed the frame stored within `src`.  *  If @return == 0, the dictID could not be decoded.  *  This could for one of the following reasons :  *  - The frame does not require a dictionary to be decoded (most common case).  *  - The frame was built with dictID intentionally removed. Whatever dictionary is necessary is a hidden information.  *    Note : this use case also happens when using a non-conformant dictionary.  *  - `srcSize` is too small, and as a result, the frame header could not be decoded (only possible if `srcSize< ZSTD_FRAMEHEADERSIZE_MAX`).  *  - This is not a Zstandard frame.  *  When identifying the exact failure cause, it's possible to used ZSTD_getFrameParams(), which will provide a more precise error code. */
+comment|/*! ZSTD_getDictID_fromFrame() :  *  Provides the dictID required to decompresse frame stored within `src`.  *  If @return == 0, the dictID could not be decoded.  *  This could for one of the following reasons :  *  - The frame does not require a dictionary (most common case).  *  - The frame was built with dictID intentionally removed.  *    Needed dictionary is a hidden information.  *    Note : this use case also happens when using a non-conformant dictionary.  *  - `srcSize` is too small, and as a result, frame header could not be decoded.  *    Note : possible if `srcSize< ZSTD_FRAMEHEADERSIZE_MAX`.  *  - This is not a Zstandard frame.  *  When identifying the exact failure cause, it's possible to use  *  ZSTD_getFrameParams(), which will provide a more precise error code. */
 end_comment
 
 begin_function
@@ -14541,12 +14527,24 @@ operator|->
 name|dctx
 argument_list|)
 expr_stmt|;
+name|zds
+operator|->
+name|dctx
+operator|=
+name|NULL
+expr_stmt|;
 name|ZSTD_freeDDict
 argument_list|(
 name|zds
 operator|->
 name|ddictLocal
 argument_list|)
+expr_stmt|;
+name|zds
+operator|->
+name|ddictLocal
+operator|=
+name|NULL
 expr_stmt|;
 name|ZSTD_free
 argument_list|(
@@ -14557,6 +14555,12 @@ argument_list|,
 name|cMem
 argument_list|)
 expr_stmt|;
+name|zds
+operator|->
+name|inBuff
+operator|=
+name|NULL
+expr_stmt|;
 name|ZSTD_free
 argument_list|(
 name|zds
@@ -14565,6 +14569,12 @@ name|outBuff
 argument_list|,
 name|cMem
 argument_list|)
+expr_stmt|;
+name|zds
+operator|->
+name|outBuff
+operator|=
+name|NULL
 expr_stmt|;
 if|#
 directive|if
@@ -14781,6 +14791,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ZSTD_initDStream_usingDDict() :  * ddict will just be referenced, and must outlive decompression session */
+end_comment
+
 begin_function
 name|size_t
 name|ZSTD_initDStream_usingDDict
@@ -14794,7 +14808,6 @@ name|ZSTD_DDict
 modifier|*
 name|ddict
 parameter_list|)
-comment|/**< note : ddict will just be referenced, and must outlive decompression session */
 block|{
 name|size_t
 specifier|const
@@ -14941,7 +14954,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* support sizeof on NULL */
+comment|/* support sizeof NULL */
 return|return
 sizeof|sizeof
 argument_list|(
@@ -15779,7 +15792,7 @@ name|zds
 operator|->
 name|inBuffSize
 operator|=
-name|blockSize
+literal|0
 expr_stmt|;
 name|zds
 operator|->
@@ -15812,6 +15825,12 @@ argument_list|(
 name|memory_allocation
 argument_list|)
 return|;
+name|zds
+operator|->
+name|inBuffSize
+operator|=
+name|blockSize
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -15837,7 +15856,7 @@ name|zds
 operator|->
 name|outBuffSize
 operator|=
-name|neededOutSize
+literal|0
 expr_stmt|;
 name|zds
 operator|->
@@ -15870,6 +15889,12 @@ argument_list|(
 name|memory_allocation
 argument_list|)
 return|;
+name|zds
+operator|->
+name|outBuffSize
+operator|=
+name|neededOutSize
+expr_stmt|;
 block|}
 block|}
 name|zds

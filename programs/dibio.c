@@ -258,7 +258,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|unsigned
+name|int
 name|g_displayLevel
 init|=
 literal|0
@@ -278,7 +278,7 @@ name|l
 parameter_list|,
 modifier|...
 parameter_list|)
-value|if (g_displayLevel>=l) { \             if ((DIB_clockSpan(g_time)> refreshRate) || (g_displayLevel>=4)) \             { g_time = clock(); DISPLAY(__VA_ARGS__); \             if (g_displayLevel>=4) fflush(stdout); } }
+value|if (g_displayLevel>=l) { \             if ((DIB_clockSpan(g_time)> refreshRate) || (g_displayLevel>=4)) \             { g_time = clock(); DISPLAY(__VA_ARGS__); \             if (g_displayLevel>=4) fflush(stderr); } }
 end_define
 
 begin_decl_stmt
@@ -407,6 +407,12 @@ return|;
 block|}
 end_function
 
+begin_undef
+undef|#
+directive|undef
+name|MIN
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -416,7 +422,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|( (a)< (b) ? (a) : (b) )
+value|((a)< (b) ? (a) : (b))
 end_define
 
 begin_comment

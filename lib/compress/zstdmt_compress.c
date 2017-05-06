@@ -136,7 +136,7 @@ file|<sys/times.h>
 end_include
 
 begin_define
-unit|static unsigned g_debugLevel = 3;
+unit|static unsigned g_debugLevel = 5;
 define|#
 directive|define
 name|DEBUGLOGRAW
@@ -175,7 +175,7 @@ value|{ \     unsigned debug_u;                   \     for (debug_u=0; debug_u<
 end_define
 
 begin_define
-unit|static unsigned long long GetCurrentClockTimeMicroseconds() {    static clock_t _ticksPerSecond = 0;    if (_ticksPerSecond<= 0) _ticksPerSecond = sysconf(_SC_CLK_TCK);     struct tms junk; clock_t newTicks = (clock_t) times(&junk);    return ((((unsigned long long)newTicks)*(1000000))/_ticksPerSecond); }
+unit|static unsigned long long GetCurrentClockTimeMicroseconds(void) {    static clock_t _ticksPerSecond = 0;    if (_ticksPerSecond<= 0) _ticksPerSecond = sysconf(_SC_CLK_TCK);     { struct tms junk; clock_t newTicks = (clock_t) times(&junk);      return ((((unsigned long long)newTicks)*(1000000))/_ticksPerSecond); } }
 define|#
 directive|define
 name|MUTEX_WAIT_TIME_DLEVEL
@@ -190,9 +190,9 @@ parameter_list|(
 name|mutex
 parameter_list|)
 define|\
-value|if (g_debugLevel>=MUTEX_WAIT_TIME_DLEVEL) { \    unsigned long long beforeTime = GetCurrentClockTimeMicroseconds(); \    pthread_mutex_lock(mutex); \    unsigned long long afterTime = GetCurrentClockTimeMicroseconds(); \    unsigned long long elapsedTime = (afterTime-beforeTime); \    if (elapsedTime> 1000) {
+value|if (g_debugLevel>=MUTEX_WAIT_TIME_DLEVEL) { \     unsigned long long const beforeTime = GetCurrentClockTimeMicroseconds(); \     pthread_mutex_lock(mutex); \     {   unsigned long long const afterTime = GetCurrentClockTimeMicroseconds(); \         unsigned long long const elapsedTime = (afterTime-beforeTime); \         if (elapsedTime> 1000) {
 comment|/* or whatever threshold you like; I'm using 1 millisecond here */
-value|\       DEBUGLOG(MUTEX_WAIT_TIME_DLEVEL, "Thread took %llu microseconds to acquire mutex %s \n", \                elapsedTime, #mutex); \   } \ } else pthread_mutex_lock(mutex);
+value|\             DEBUGLOG(MUTEX_WAIT_TIME_DLEVEL, "Thread took %llu microseconds to acquire mutex %s \n", \                elapsedTime, #mutex); \     }   } \ } else pthread_mutex_lock(mutex);
 end_define
 
 begin_else
@@ -1090,7 +1090,7 @@ name|size_t
 specifier|const
 name|initError
 init|=
-name|ZSTD_compressBegin_usingCDict
+name|ZSTD_compressBegin_usingCDict_advanced
 argument_list|(
 name|job
 operator|->
@@ -1099,6 +1099,12 @@ argument_list|,
 name|job
 operator|->
 name|cdict
+argument_list|,
+name|job
+operator|->
+name|params
+operator|.
+name|fParams
 argument_list|,
 name|job
 operator|->
@@ -1140,6 +1146,25 @@ block|}
 else|else
 block|{
 comment|/* srcStart points at reloaded section */
+if|if
+condition|(
+operator|!
+name|job
+operator|->
+name|firstChunk
+condition|)
+name|job
+operator|->
+name|params
+operator|.
+name|fParams
+operator|.
+name|contentSizeFlag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ensure no srcSize control */
+block|{
 name|size_t
 specifier|const
 name|dictModeError
@@ -1178,7 +1203,9 @@ name|job
 operator|->
 name|params
 argument_list|,
-literal|0
+name|job
+operator|->
+name|fullFrameSize
 argument_list|)
 decl_stmt|;
 if|if
@@ -1215,6 +1242,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1371,6 +1399,27 @@ argument_list|,
 name|job
 operator|->
 name|lastChunk
+argument_list|)
+expr_stmt|;
+name|DEBUGLOG
+argument_list|(
+literal|5
+argument_list|,
+literal|"dstBuff.size : %u ; => %s"
+argument_list|,
+operator|(
+name|U32
+operator|)
+name|dstBuff
+operator|.
+name|size
+argument_list|,
+name|ZSTD_getErrorName
+argument_list|(
+name|job
+operator|->
+name|cSize
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|_endJob
@@ -2164,6 +2213,40 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
+name|U32
+specifier|const
+name|overlapLog
+init|=
+operator|(
+name|compressionLevel
+operator|>=
+name|ZSTD_maxCLevel
+argument_list|()
+operator|)
+condition|?
+literal|0
+else|:
+literal|3
+decl_stmt|;
+name|size_t
+specifier|const
+name|overlapSize
+init|=
+operator|(
+name|size_t
+operator|)
+literal|1
+operator|<<
+operator|(
+name|params
+operator|.
+name|cParams
+operator|.
+name|windowLog
+operator|-
+name|overlapLog
+operator|)
+decl_stmt|;
 name|size_t
 specifier|const
 name|chunkTargetSize
@@ -2196,12 +2279,7 @@ operator|/
 name|chunkTargetSize
 argument_list|)
 operator|+
-operator|(
-name|srcSize
-operator|<
-name|chunkTargetSize
-operator|)
-comment|/* min 1 */
+literal|1
 decl_stmt|;
 name|unsigned
 name|nbChunks
@@ -2270,8 +2348,40 @@ operator|*
 operator|)
 name|src
 decl_stmt|;
+name|unsigned
+specifier|const
+name|compressWithinDst
+init|=
+operator|(
+name|dstCapacity
+operator|>=
+name|ZSTD_compressBound
+argument_list|(
+name|srcSize
+argument_list|)
+operator|)
+condition|?
+name|nbChunks
+else|:
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|dstCapacity
+operator|/
+name|ZSTD_compressBound
+argument_list|(
+name|avgChunkSize
+argument_list|)
+argument_list|)
+decl_stmt|;
+comment|/* presumes avgChunkSize>= 256 KB, which should be the case */
 name|size_t
 name|frameStartPos
+init|=
+literal|0
+decl_stmt|,
+name|dstBufferPos
 init|=
 literal|0
 decl_stmt|;
@@ -2387,23 +2497,25 @@ name|size_t
 specifier|const
 name|dstBufferCapacity
 init|=
-name|u
-condition|?
 name|ZSTD_compressBound
 argument_list|(
 name|chunkSize
 argument_list|)
-else|:
-name|dstCapacity
 decl_stmt|;
 name|buffer_t
 specifier|const
 name|dstAsBuffer
 init|=
 block|{
+operator|(
+name|char
+operator|*
+operator|)
 name|dst
+operator|+
+name|dstBufferPos
 block|,
-name|dstCapacity
+name|dstBufferCapacity
 block|}
 decl_stmt|;
 name|buffer_t
@@ -2411,7 +2523,11 @@ specifier|const
 name|dstBuffer
 init|=
 name|u
+operator|<
+name|compressWithinDst
 condition|?
+name|dstAsBuffer
+else|:
 name|ZSTDMT_getBuffer
 argument_list|(
 name|mtctx
@@ -2420,8 +2536,6 @@ name|buffPool
 argument_list|,
 name|dstBufferCapacity
 argument_list|)
-else|:
-name|dstAsBuffer
 decl_stmt|;
 name|ZSTD_CCtx
 modifier|*
@@ -2434,6 +2548,15 @@ name|mtctx
 operator|->
 name|cctxPool
 argument_list|)
+decl_stmt|;
+name|size_t
+name|dictSize
+init|=
+name|u
+condition|?
+name|overlapSize
+else|:
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -2499,6 +2622,19 @@ operator|=
 name|srcStart
 operator|+
 name|frameStartPos
+operator|-
+name|dictSize
+expr_stmt|;
+name|mtctx
+operator|->
+name|jobs
+index|[
+name|u
+index|]
+operator|.
+name|dictSize
+operator|=
+name|dictSize
 expr_stmt|;
 name|mtctx
 operator|->
@@ -2676,6 +2812,10 @@ expr_stmt|;
 name|frameStartPos
 operator|+=
 name|chunkSize
+expr_stmt|;
+name|dstBufferPos
+operator|+=
+name|dstBufferCapacity
 expr_stmt|;
 name|remainingSrcSize
 operator|-=
@@ -2878,7 +3018,7 @@ condition|(
 operator|!
 name|error
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|char
@@ -2902,6 +3042,14 @@ argument_list|,
 name|cSize
 argument_list|)
 expr_stmt|;
+comment|/* may overlap if chunk decompressed within dst */
+if|if
+condition|(
+name|chunkID
+operator|>=
+name|compressWithinDst
+condition|)
+comment|/* otherwise, it decompresses within dst */
 name|ZSTDMT_releaseBuffer
 argument_list|(
 name|mtctx
@@ -3223,6 +3371,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|params
+operator|.
+name|cParams
 argument_list|,
 name|cmem
 argument_list|)

@@ -146,6 +146,8 @@ name|ZSTD_error_dictionary_corrupted
 block|,
 name|ZSTD_error_dictionary_wrong
 block|,
+name|ZSTD_error_dictionaryCreation_failed
+block|,
 name|ZSTD_error_maxCode
 block|}
 name|ZSTD_ErrorCode
