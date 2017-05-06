@@ -1307,14 +1307,9 @@ name|inostathead
 operator|=
 name|Calloc
 argument_list|(
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|sblock
 operator|.
 name|fs_ncg
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1393,9 +1388,6 @@ operator|*
 operator|)
 name|Calloc
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|listmax
 argument_list|,
 sizeof|sizeof
@@ -1416,9 +1408,6 @@ operator|*
 operator|)
 name|Calloc
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|numdirs
 argument_list|,
 sizeof|sizeof

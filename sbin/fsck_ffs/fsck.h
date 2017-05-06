@@ -946,13 +946,19 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|long
-name|numdirs
-decl_stmt|,
 name|dirhash
 decl_stmt|,
-name|listmax
-decl_stmt|,
 name|inplast
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|long
+name|numdirs
+decl_stmt|,
+name|listmax
 decl_stmt|;
 end_decl_stmt
 
