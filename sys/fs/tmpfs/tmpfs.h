@@ -642,6 +642,10 @@ decl_stmt|;
 name|uma_zone_t
 name|tm_node_pool
 decl_stmt|;
+comment|/* Read-only status. */
+name|int
+name|tm_ronly
+decl_stmt|;
 block|}
 struct|;
 end_struct
