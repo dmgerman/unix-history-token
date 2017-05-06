@@ -136,7 +136,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|ssize_t
 name|ofwn_get
 parameter_list|(
 name|struct
@@ -145,8 +145,7 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
-parameter_list|,
-name|size_t
+modifier|*
 parameter_list|,
 name|time_t
 parameter_list|)
@@ -155,7 +154,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|ssize_t
 name|ofwn_put
 parameter_list|(
 name|struct
@@ -221,7 +220,7 @@ name|struct
 name|netif_stats
 name|ofwn_stats
 index|[
-name|NENTS
+name|nitems
 argument_list|(
 name|ofwn_ifs
 argument_list|)
@@ -259,7 +258,7 @@ comment|/* netif_end */
 name|ofwn_ifs
 block|,
 comment|/* netif_ifs */
-name|NENTS
+name|nitems
 argument_list|(
 argument|ofwn_ifs
 argument_list|)
@@ -327,7 +326,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|ofwn_put
 parameter_list|(
 name|struct
@@ -496,7 +495,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|ofwn_get
 parameter_list|(
 name|struct
@@ -506,10 +505,8 @@ name|desc
 parameter_list|,
 name|void
 modifier|*
+modifier|*
 name|pkt
-parameter_list|,
-name|size_t
-name|len
 parameter_list|,
 name|time_t
 name|timeout
@@ -518,8 +515,18 @@ block|{
 name|time_t
 name|t
 decl_stmt|;
-name|int
+name|ssize_t
 name|length
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|,
+modifier|*
+name|ptr
 decl_stmt|;
 if|#
 directive|if
@@ -529,17 +536,47 @@ name|NETIF_DEBUG
 argument_list|)
 name|printf
 argument_list|(
-literal|"netif_get: pkt=%p, maxlen=%d, timeout=%d\n"
+literal|"netif_get: pkt=%p, timeout=%d\n"
 argument_list|,
 name|pkt
-argument_list|,
-name|len
 argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * We should read the "max-frame-size" int property instead, 	 * but at this time the iodesc does not have mtu, so we will take 	 * a small shortcut here. 	 */
+name|len
+operator|=
+name|ETHER_MAX_LEN
+expr_stmt|;
+name|buf
+operator|=
+name|malloc
+argument_list|(
+name|len
+operator|+
+name|ETHER_ALIGN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|ptr
+operator|=
+name|buf
+operator|+
+name|ETHER_ALIGN
+expr_stmt|;
 name|t
 operator|=
 name|getsecs
@@ -553,7 +590,7 @@ name|OF_read
 argument_list|(
 name|netinstance
 argument_list|,
-name|pkt
+name|ptr
 argument_list|,
 name|len
 argument_list|)
@@ -605,10 +642,19 @@ name|length
 operator|<
 literal|12
 condition|)
+block|{
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
+block|}
 if|#
 directive|if
 name|defined
@@ -620,7 +666,7 @@ name|char
 modifier|*
 name|ch
 init|=
-name|pkt
+name|ptr
 decl_stmt|;
 name|int
 name|i
@@ -692,7 +738,7 @@ name|ether_header
 modifier|*
 name|eh
 init|=
-name|pkt
+name|ptr
 decl_stmt|;
 name|printf
 argument_list|(
@@ -732,8 +778,15 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+operator|*
+name|pkt
+operator|=
+name|buf
+expr_stmt|;
 return|return
+operator|(
 name|length
+operator|)
 return|;
 block|}
 end_function

@@ -25,16 +25,6 @@ directive|include
 file|"iodesc.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|NENTS
-parameter_list|(
-name|x
-parameter_list|)
-value|sizeof(x)/sizeof(x[0])
-end_define
-
 begin_struct
 struct|struct
 name|netif_driver
@@ -86,7 +76,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|ssize_t
 function_decl|(
 modifier|*
 name|netif_get
@@ -98,13 +88,12 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
-parameter_list|,
-name|size_t
+modifier|*
 parameter_list|,
 name|time_t
 parameter_list|)
 function_decl|;
-name|int
+name|ssize_t
 function_decl|(
 modifier|*
 name|netif_put
@@ -324,8 +313,7 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
-parameter_list|,
-name|size_t
+modifier|*
 parameter_list|,
 name|time_t
 parameter_list|)

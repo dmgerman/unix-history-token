@@ -589,6 +589,26 @@ begin_comment
 comment|/* Subnet mask field contains valid data */
 end_comment
 
+begin_comment
+comment|/* cached bootp response/dhcp ack */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|bootp
+modifier|*
+name|bootp_response
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|bootp_response_size
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|dhcp_try_rfc1048
