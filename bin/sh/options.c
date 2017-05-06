@@ -611,7 +611,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process shell options.  The global variable argptr contains a pointer  * to the argument list; we advance it past the options.  */
+comment|/*  * Process shell options.  The global variable argptr contains a pointer  * to the argument list; we advance it past the options.  * If cmdline is true, process the shell's argv; otherwise, process arguments  * to the set special builtin.  */
 end_comment
 
 begin_function
@@ -1718,7 +1718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The set command builtin.  */
+comment|/*  * The set builtin command.  */
 end_comment
 
 begin_function
@@ -2574,7 +2574,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Standard option processing (a la getopt) for builtin routines.  The  * only argument that is passed to nextopt is the option string; the  * other arguments are unnecessary.  It return the character, or '\0' on  * end of input.  */
+comment|/*  * Standard option processing (a la getopt) for builtin routines.  The  * only argument that is passed to nextopt is the option string; the  * other arguments are unnecessary.  It returns the option, or '\0' on  * end of input.  */
 end_comment
 
 begin_function

@@ -1485,7 +1485,7 @@ name|cd
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If name is in the table, and not invalidated by cd, we're done */
+comment|/* If name is in the table, we're done */
 if|if
 condition|(
 operator|(
@@ -2155,7 +2155,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Clear out command entries.  The argument specifies the first entry in  * PATH which has changed.  */
+comment|/*  * Clear out cached utility locations.  */
 end_comment
 
 begin_function
