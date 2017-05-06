@@ -243,6 +243,11 @@ name|SourceMgr
 modifier|*
 name|SrcMgr
 decl_stmt|;
+comment|/// The SourceMgr for inline assembly, if any.
+name|SourceMgr
+modifier|*
+name|InlineSrcMgr
+decl_stmt|;
 comment|/// The MCAsmInfo for this target.
 specifier|const
 name|MCAsmInfo
@@ -883,6 +888,22 @@ name|SrcMgr
 return|;
 block|}
 end_expr_stmt
+
+begin_function
+name|void
+name|setInlineSourceManager
+parameter_list|(
+name|SourceMgr
+modifier|*
+name|SM
+parameter_list|)
+block|{
+name|InlineSrcMgr
+operator|=
+name|SM
+expr_stmt|;
+block|}
+end_function
 
 begin_expr_stmt
 specifier|const

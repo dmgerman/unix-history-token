@@ -109,6 +109,12 @@ directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SourceMgr.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -437,6 +443,43 @@ operator|,
 literal|1
 operator|>
 name|Handlers
+expr_stmt|;
+name|public
+label|:
+struct|struct
+name|SrcMgrDiagInfo
+block|{
+name|SourceMgr
+name|SrcMgr
+decl_stmt|;
+specifier|const
+name|MDNode
+modifier|*
+name|LocInfo
+decl_stmt|;
+name|LLVMContext
+operator|::
+name|InlineAsmDiagHandlerTy
+name|DiagHandler
+expr_stmt|;
+name|void
+modifier|*
+name|DiagContext
+decl_stmt|;
+block|}
+struct|;
+name|private
+label|:
+comment|/// Structure for generating diagnostics for inline assembly. Only initialised
+comment|/// when necessary.
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SrcMgrDiagInfo
+operator|>
+name|DiagInfo
 expr_stmt|;
 comment|/// If the target supports dwarf debug info, this pointer is non-null.
 name|DwarfDebug
