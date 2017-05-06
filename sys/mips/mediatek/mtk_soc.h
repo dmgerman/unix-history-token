@@ -21,6 +21,8 @@ name|mtk_soc_id
 block|{
 name|MTK_SOC_UNKNOWN
 block|,
+name|MTK_SOC_RT2880
+block|,
 name|MTK_SOC_RT3050
 block|,
 name|MTK_SOC_RT3052
@@ -49,6 +51,20 @@ name|MTK_SOC_MAX
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|RT2880_CPU_CLKSEL_OFF
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2880_CPU_CLKSEL_MSK
+value|0x3
+end_define
 
 begin_define
 define|#
@@ -329,8 +345,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|MTK_CPU_CLK_233MHZ
+value|233333333
+end_define
+
+begin_define
+define|#
+directive|define
 name|MTK_CPU_CLK_250MHZ
 value|250000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTK_CPU_CLK_266MHZ
+value|266666666
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTK_CPU_CLK_280MHZ
+value|280000000
 end_define
 
 begin_define
@@ -443,6 +480,13 @@ define|#
 directive|define
 name|MTK_DEFAULT_BASE
 value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTK_RT2880_BASE
+value|0x00300000
 end_define
 
 begin_define
