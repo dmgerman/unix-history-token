@@ -19,6 +19,12 @@ directive|define
 name|BLACKLIST_CLIENT_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BLACKLIST_API_ENUM
+end_ifndef
+
 begin_enum
 enum|enum
 block|{
@@ -30,6 +36,11 @@ name|BLACKLIST_AUTH_FAIL
 block|}
 enum|;
 end_enum
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -54,6 +65,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
