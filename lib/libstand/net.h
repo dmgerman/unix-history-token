@@ -298,14 +298,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|in_addr
-name|tftpip
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|n_long
 name|netmask
 decl_stmt|;
