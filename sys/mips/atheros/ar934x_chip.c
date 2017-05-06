@@ -1154,6 +1154,26 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
+name|ar71xx_device_stop
+argument_list|(
+name|AR934X_RESET_ETH_SWITCH_ANALOG
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+name|ar71xx_device_start
+argument_list|(
+name|AR934X_RESET_ETH_SWITCH_ANALOG
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
