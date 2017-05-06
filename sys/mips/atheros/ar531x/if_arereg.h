@@ -86,6 +86,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARE_MIN_FRAMELEN
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARE_RING_ALIGN
 value|sizeof(struct are_desc)
 end_define
