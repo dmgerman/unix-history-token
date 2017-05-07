@@ -274,6 +274,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint64_t
+name|ntb_transport_link_speed
+parameter_list|(
+name|struct
+name|ntb_transport_qp
+modifier|*
+name|qp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|unsigned
 name|int
 name|ntb_transport_tx_free_entry
