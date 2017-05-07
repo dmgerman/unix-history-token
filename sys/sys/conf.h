@@ -1886,6 +1886,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GID_NOGROUP
+value|65533
+end_define
+
+begin_define
+define|#
+directive|define
 name|GID_NOBODY
 value|65534
 end_define
