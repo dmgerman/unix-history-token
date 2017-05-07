@@ -1154,12 +1154,17 @@ name|retries
 operator|=
 name|INT_MAX
 expr_stmt|;
+comment|/* cred == NULL for DS connects. */
 if|if
 condition|(
 name|NFSHASNFSV4N
 argument_list|(
 name|nmp
 argument_list|)
+operator|&&
+name|cred
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 			 * Make sure the nfscbd_pool doesn't get destroyed 			 * while doing this. 			 */
