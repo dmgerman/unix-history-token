@@ -7029,6 +7029,14 @@ operator|=
 name|NFSERR_NOTSUPP
 expr_stmt|;
 block|}
+else|else
+name|NFSSETBIT_ATTRBIT
+argument_list|(
+name|attrbitp
+argument_list|,
+name|NFSATTRBIT_TIMEACCESS
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
