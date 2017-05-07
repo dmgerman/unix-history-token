@@ -136,7 +136,7 @@ name|fd
 decl_stmt|,
 name|cnt
 decl_stmt|,
-name|err
+name|error
 decl_stmt|;
 name|char
 name|data
@@ -150,7 +150,7 @@ name|then
 decl_stmt|,
 name|now
 decl_stmt|;
-name|err
+name|error
 operator|=
 literal|0
 expr_stmt|;
@@ -265,7 +265,7 @@ name|query
 argument_list|)
 condition|)
 block|{
-name|err
+name|error
 operator|=
 literal|1
 expr_stmt|;
@@ -363,7 +363,7 @@ argument_list|(
 literal|"timeout reading from terminal"
 argument_list|)
 expr_stmt|;
-name|err
+name|error
 operator|=
 literal|1
 expr_stmt|;
@@ -378,7 +378,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|err
+name|error
 operator|=
 literal|1
 expr_stmt|;
@@ -416,7 +416,7 @@ argument_list|(
 literal|"response too long"
 argument_list|)
 expr_stmt|;
-name|err
+name|error
 operator|=
 literal|1
 expr_stmt|;
@@ -448,7 +448,7 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|err
+name|error
 operator|=
 literal|1
 expr_stmt|;
@@ -477,7 +477,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|error
 operator|=
 literal|1
 expr_stmt|;
@@ -501,7 +501,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|err
+name|error
 argument_list|)
 expr_stmt|;
 block|}
