@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -352,22 +358,9 @@ operator|>=
 literal|2
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"\n\n\nTimeout reading from terminal\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Read %d bytes, %s\n"
-argument_list|,
-name|cnt
-argument_list|,
-name|data
+literal|"timeout reading from terminal"
 argument_list|)
 expr_stmt|;
 name|err
@@ -418,11 +411,9 @@ operator|-
 literal|2
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Response too long\n"
+literal|"response too long"
 argument_list|)
 expr_stmt|;
 name|err
@@ -461,11 +452,9 @@ name|err
 operator|=
 literal|1
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unable to parse response\n"
+literal|"unable to parse response"
 argument_list|)
 expr_stmt|;
 goto|goto
