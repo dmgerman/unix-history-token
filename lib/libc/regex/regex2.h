@@ -36,6 +36,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|unsigned
 name|long
 name|sopno
 typedef|;
@@ -358,6 +359,7 @@ name|wctype_t
 modifier|*
 name|types
 decl_stmt|;
+name|unsigned
 name|int
 name|ntypes
 decl_stmt|;
@@ -365,6 +367,7 @@ name|wint_t
 modifier|*
 name|wides
 decl_stmt|;
+name|unsigned
 name|int
 name|nwides
 decl_stmt|;
@@ -372,6 +375,7 @@ name|crange
 modifier|*
 name|ranges
 decl_stmt|;
+name|unsigned
 name|int
 name|nranges
 decl_stmt|;
@@ -399,6 +403,7 @@ name|wint_t
 name|ch
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -705,6 +710,7 @@ modifier|*
 name|strip
 decl_stmt|;
 comment|/* malloced area for strip */
+name|unsigned
 name|int
 name|ncsets
 decl_stmt|;

@@ -111,6 +111,7 @@ endif|#
 directive|endif
 comment|/* === regerror.c === */
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|regatoi
@@ -152,10 +153,12 @@ block|{
 name|int
 name|code
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|explain
@@ -358,6 +361,7 @@ operator|&
 operator|~
 name|REG_ITOA
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -545,6 +549,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|regatoi

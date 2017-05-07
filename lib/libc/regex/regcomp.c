@@ -137,11 +137,13 @@ begin_struct
 struct|struct
 name|parse
 block|{
+specifier|const
 name|char
 modifier|*
 name|next
 decl_stmt|;
 comment|/* next character in RE */
+specifier|const
 name|char
 modifier|*
 name|end
@@ -1177,10 +1179,6 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|pattern
 argument_list|)
 expr_stmt|;
@@ -1348,10 +1346,6 @@ name|p
 operator|->
 name|next
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|pattern
 expr_stmt|;
 comment|/* convenience; we do not modify it */
@@ -4408,6 +4402,7 @@ modifier|*
 name|cs
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|sp
@@ -4663,6 +4658,7 @@ name|endc
 parameter_list|)
 comment|/* name ended by endc,']' */
 block|{
+specifier|const
 name|char
 modifier|*
 name|sp
@@ -4676,9 +4672,6 @@ name|cname
 modifier|*
 name|cp
 decl_stmt|;
-name|int
-name|len
-decl_stmt|;
 name|mbstate_t
 name|mbs
 decl_stmt|;
@@ -4687,6 +4680,8 @@ name|wc
 decl_stmt|;
 name|size_t
 name|clen
+decl_stmt|,
+name|len
 decl_stmt|;
 while|while
 condition|(
@@ -4937,6 +4932,7 @@ name|wint_t
 name|ch
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|oldnext
@@ -4945,6 +4941,7 @@ name|p
 operator|->
 name|next
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|oldend
@@ -5211,6 +5208,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|oldnext
@@ -5219,6 +5217,7 @@ name|p
 operator|->
 name|next
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|oldend

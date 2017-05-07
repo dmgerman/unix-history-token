@@ -123,6 +123,7 @@ name|re_guts
 modifier|*
 name|g
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
