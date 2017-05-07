@@ -2889,7 +2889,7 @@ name|gl_flags
 operator||=
 name|GLOB_MAGCHAR
 expr_stmt|;
-comment|/* collapse adjacent stars to one, 			 * to avoid exponential behavior 			 */
+comment|/* collapse adjacent stars to one, 			 * to ensure "**" at the end continues to match the 			 * empty string 			 */
 if|if
 condition|(
 name|bufnext
