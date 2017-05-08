@@ -137,8 +137,6 @@ decl_stmt|,
 name|cnt
 decl_stmt|,
 name|error
-decl_stmt|,
-name|what
 decl_stmt|;
 name|char
 name|data
@@ -248,22 +246,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Discard input received so far */
-name|what
-operator|=
-name|FREAD
-operator||
-name|FWRITE
-expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|tcflush
 argument_list|(
 name|fd
 argument_list|,
-name|TIOCFLUSH
-argument_list|,
-operator|&
-name|what
+name|TCIOFLUSH
 argument_list|)
 expr_stmt|;
 if|if
@@ -274,7 +263,7 @@ literal|0
 condition|)
 name|warn
 argument_list|(
-literal|"ioctl"
+literal|"tcflush"
 argument_list|)
 expr_stmt|;
 if|if
