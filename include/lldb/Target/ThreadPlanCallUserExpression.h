@@ -152,6 +152,11 @@ argument_list|)
 name|override
 block|;
 name|void
+name|DidPush
+argument_list|()
+name|override
+block|;
+name|void
 name|WillPop
 argument_list|()
 name|override
@@ -189,6 +194,13 @@ return|;
 block|}
 name|protected
 operator|:
+name|void
+name|DoTakedown
+argument_list|(
+argument|bool success
+argument_list|)
+name|override
+block|;
 name|private
 operator|:
 name|lldb

@@ -183,6 +183,10 @@ name|bool
 name|HasDelaySlot
 parameter_list|()
 function_decl|;
+name|bool
+name|CanSetBreakpoint
+parameter_list|()
+function_decl|;
 name|void
 name|Print
 parameter_list|(
