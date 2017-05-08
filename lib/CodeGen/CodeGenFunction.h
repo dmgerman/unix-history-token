@@ -6498,43 +6498,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Add a kernel metadata node to the named metadata node 'opencl.kernels'.
+comment|/// Add OpenCL kernel arg metadata and the kernel attribute meatadata to
 end_comment
 
 begin_comment
-comment|/// In the kernel metadata node, reference the kernel function and metadata
-end_comment
-
-begin_comment
-comment|/// nodes for its optional attribute qualifiers (OpenCL 1.1 6.7.2):
-end_comment
-
-begin_comment
-comment|/// - A node for the vec_type_hint(<type>) qualifier contains string
-end_comment
-
-begin_comment
-comment|///   "vec_type_hint", an undefined value of the<type> data type,
-end_comment
-
-begin_comment
-comment|///   and a Boolean that is true if the<type> is integer and signed.
-end_comment
-
-begin_comment
-comment|/// - A node for the work_group_size_hint(X,Y,Z) qualifier contains string
-end_comment
-
-begin_comment
-comment|///   "work_group_size_hint", and three 32-bit integers X, Y and Z.
-end_comment
-
-begin_comment
-comment|/// - A node for the reqd_work_group_size(X,Y,Z) qualifier contains string
-end_comment
-
-begin_comment
-comment|///   "reqd_work_group_size", and three 32-bit integers X, Y and Z.
+comment|/// the function metadata.
 end_comment
 
 begin_decl_stmt

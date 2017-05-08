@@ -47,25 +47,25 @@ comment|// CHECK: store i32 %1, i32* %6, align 4
 comment|// CHECK: store i32 %2, i32* %7, align 4
 comment|// CHECK: store i8* %3, i8** %8, align 4
 comment|// CHECK: call void asm sideeffect inteldialect
-comment|// CHECK: mov edx,dword ptr $1
-comment|// CHECK: test edx,edx
-comment|// CHECK: jz {{[^_]*}}__MSASMLABEL_.${:uid}__noparams
-comment|//             ^ Can't use {{.*}} here because the matching is greedy.
-comment|// CHECK: mov eax,edx
-comment|// CHECK: shl eax,$$3
-comment|// CHECK: sub esp,eax
-comment|// CHECK: mov ecx,esp
-comment|// CHECK: push dword ptr $0
-comment|// CHECK: call dword ptr $2
-comment|// CHECK: {{.*}}__MSASMLABEL_.${:uid}__noparams:
-comment|// CHECK: mov ecx,dword ptr $3
-comment|// CHECK: push ecx
-comment|// CHECK: mov edx,[ecx]
-comment|// CHECK: mov eax,dword ptr $4
-comment|// CHECK: call dword ptr[edx+eax*$$4]
-comment|// CHECK: mov esp,ebp
-comment|// CHECK: pop ebp
-comment|// CHECK: ret
+comment|// CHECK-SAME: mov edx,$1
+comment|// CHECK-SAME: test edx,edx
+comment|// CHECK-SAME: jz {{[^_]*}}__MSASMLABEL_.${:uid}__noparams
+comment|//                ^ Can't use {{.*}} here because the matching is greedy.
+comment|// CHECK-SAME: mov eax,edx
+comment|// CHECK-SAME: shl eax,$$3
+comment|// CHECK-SAME: sub esp,eax
+comment|// CHECK-SAME: mov ecx,esp
+comment|// CHECK-SAME: push $0
+comment|// CHECK-SAME: call dword ptr $2
+comment|// CHECK-SAME: {{.*}}__MSASMLABEL_.${:uid}__noparams:
+comment|// CHECK-SAME: mov ecx,$3
+comment|// CHECK-SAME: push ecx
+comment|// CHECK-SAME: mov edx,[ecx]
+comment|// CHECK-SAME: mov eax,$4
+comment|// CHECK-SAME: call dword ptr[edx+eax*$$4]
+comment|// CHECK-SAME: mov esp,ebp
+comment|// CHECK-SAME: pop ebp
+comment|// CHECK-SAME: ret
 comment|// CHECK: "=*m,*m,*m,*m,*m,~{eax},~{ebp},~{ecx},~{edx},~{flags},~{esp},~{dirflag},~{fpsr},~{flags}"
 comment|// CHECK: (i8** %8, i32* %7, void (...)* bitcast (void ()* @invoke_copy_to_stack to void (...)*), i8** %5, i32* %6)
 comment|// CHECK: ret void

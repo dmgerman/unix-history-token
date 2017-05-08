@@ -288,7 +288,7 @@ name|defined
 argument_list|(
 name|WARN_PARTIAL
 argument_list|)
-comment|// expected-warning@+2 {{is only available on macOS 10.8 or newer}} expected-note@+2 {{enclose 'PartiallyAvailable' in an @available check to silence this warning}}
+comment|// expected-warning@+2 {{is only available on macOS 10.8 or newer}} expected-note@+2 {{enclose 'PartiallyAvailable' in a __builtin_available check to silence this warning}}
 endif|#
 directive|endif
 name|PartiallyAvailable

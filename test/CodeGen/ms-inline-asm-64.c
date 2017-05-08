@@ -24,7 +24,9 @@ name|address
 name|of
 name|myvar
 comment|// CHECK: t1
-comment|// CHECK: call void asm sideeffect inteldialect "mov rax, $0", "r,~{rax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
+comment|// CHECK: call void asm sideeffect inteldialect
+comment|// CHECK-SAME: mov rax, $0
+comment|// CHECK-SAME: "r,~{rax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
 block|}
 end_function
 
@@ -40,7 +42,9 @@ literal|10
 decl_stmt|;
 asm|__asm mov [eax], offset var
 comment|// CHECK: t2
-comment|// CHECK: call void asm sideeffect inteldialect "mov [eax], $0", "r,~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
+comment|// CHECK: call void asm sideeffect inteldialect
+comment|// CHECK-SAME: mov [eax], $0
+comment|// CHECK-SAME: "r,~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
 block|}
 end_function
 
@@ -89,7 +93,11 @@ operator|.
 name|b
 return|;
 comment|// CHECK: t3
-comment|// CHECK: call void asm sideeffect inteldialect "lea ebx, qword ptr $0\0A\09mov eax, [ebx].0\0A\09mov [ebx].4, ecx", "*m,~{eax},~{ebx},~{dirflag},~{fpsr},~{flags}"(%struct.t3_type* %{{.*}})
+comment|// CHECK: call void asm sideeffect inteldialect
+comment|// CHECK-SAME: lea ebx, $0
+comment|// CHECK-SAME: mov eax, [ebx].0
+comment|// CHECK-SAME: mov [ebx].4, ecx
+comment|// CHECK-SAME: "*m,~{eax},~{ebx},~{dirflag},~{fpsr},~{flags}"(%struct.t3_type* %{{.*}})
 block|}
 end_function
 
@@ -127,7 +135,11 @@ operator|.
 name|b
 return|;
 comment|// CHECK: t4
-comment|// CHECK: call void asm sideeffect inteldialect "lea ebx, qword ptr $0\0A\09mov eax, [ebx].0\0A\09mov [ebx].4, ecx", "*m,~{eax},~{ebx},~{dirflag},~{fpsr},~{flags}"(%struct.t3_type* %{{.*}})
+comment|// CHECK: call void asm sideeffect inteldialect
+comment|// CHECK-SAME: lea ebx, $0
+comment|// CHECK-SAME: mov eax, [ebx].0
+comment|// CHECK-SAME: mov [ebx].4, ecx
+comment|// CHECK-SAME: "*m,~{eax},~{ebx},~{dirflag},~{fpsr},~{flags}"(%struct.t3_type* %{{.*}})
 block|}
 end_function
 

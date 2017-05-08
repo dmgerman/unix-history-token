@@ -124,11 +124,27 @@ comment|// RUN:   FileCheck --check-prefix=CHECK-VERSION-OSX10 %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-apple-macosx -mmacos-version-min=10.10 -c %s -### 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --check-prefix=CHECK-VERSION-OSX10 %s
+end_comment
+
+begin_comment
 comment|// CHECK-VERSION-OSX10: "x86_64-apple-macosx10.10.0"
 end_comment
 
 begin_comment
 comment|// RUN: %clang -target x86_64-apple-macosx -mmacosx-version-min= -c %s -### 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --check-prefix=CHECK-VERSION-MISSING %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-macosx -mmacos-version-min= -c %s -### 2>&1 | \
 end_comment
 
 begin_comment

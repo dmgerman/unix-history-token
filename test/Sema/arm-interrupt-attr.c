@@ -1,18 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple arm-apple-darwin -verify -fsyntax-only
+comment|// RUN: %clang_cc1 %s -triple arm-apple-darwin  -target-feature +vfp2 -verify -fsyntax-only
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple thumb-apple-darwin -verify -fsyntax-only
+comment|// RUN: %clang_cc1 %s -triple thumb-apple-darwin  -target-feature +vfp3 -verify -fsyntax-only
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple armeb-none-eabi -verify -fsyntax-only
+comment|// RUN: %clang_cc1 %s -triple armeb-none-eabi  -target-feature +vfp4 -verify -fsyntax-only
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple thumbeb-none-eabi -verify -fsyntax-only
+comment|// RUN: %clang_cc1 %s -triple thumbeb-none-eabi  -target-feature +neon -verify -fsyntax-only
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple thumbeb-none-eabi -target-feature +neon -target-feature +soft-float -DSOFT -verify -fsyntax-only
 end_comment
 
 begin_macro
@@ -236,6 +240,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOFT
+end_ifndef
+
 begin_macro
 name|__attribute__
 argument_list|(
@@ -290,6 +300,69 @@ expr_stmt|;
 comment|// expected-warning {{call to function without interrupt attribute could clobber interruptee's VFP registers}}
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(interrupt(
+literal|"IRQ"
+argument|))
+argument_list|)
+end_macro
+
+begin_function
+name|void
+name|caller2
+parameter_list|()
+block|{
+name|callee1
+argument_list|()
+expr_stmt|;
+name|callee2
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|callee3
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(interrupt(
+literal|"IRQ"
+argument|))
+argument_list|)
+end_macro
+
+begin_function
+name|void
+name|caller3
+parameter_list|()
+block|{
+name|callee3
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

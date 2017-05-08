@@ -1143,6 +1143,21 @@ name|LangOpts
 argument_list|)
 return|;
 block|}
+comment|/// Returns the leading whitespace for line that corresponds to the given
+comment|/// location \p Loc.
+specifier|static
+name|StringRef
+name|getIndentationForLine
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|SourceManager
+modifier|&
+name|SM
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Internal implementation interfaces.
 name|private

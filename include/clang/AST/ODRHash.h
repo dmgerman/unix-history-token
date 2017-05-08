@@ -108,7 +108,7 @@ name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
-name|NestedNameSpecifer
+name|NestedNameSpecifier
 decl_stmt|;
 name|class
 name|Stmt

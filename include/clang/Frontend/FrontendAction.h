@@ -431,6 +431,12 @@ operator|*
 name|CurrentASTUnit
 return|;
 block|}
+name|Module
+operator|*
+name|getCurrentModule
+argument_list|()
+specifier|const
+expr_stmt|;
 name|std
 operator|::
 name|unique_ptr
