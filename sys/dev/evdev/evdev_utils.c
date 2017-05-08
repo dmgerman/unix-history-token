@@ -932,11 +932,11 @@ name|NONE
 block|,
 name|NONE
 block|,
-name|NONE
-block|,
 name|KEY_KPENTER
 block|,
 name|KEY_RIGHTCTRL
+block|,
+name|NONE
 block|,
 name|NONE
 block|,

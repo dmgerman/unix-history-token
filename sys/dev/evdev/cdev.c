@@ -727,7 +727,6 @@ name|client
 decl_stmt|;
 name|struct
 name|input_event
-modifier|*
 name|event
 decl_stmt|;
 name|int
@@ -902,8 +901,11 @@ operator|>
 literal|0
 condition|)
 block|{
+name|memcpy
+argument_list|(
+operator|&
 name|event
-operator|=
+argument_list|,
 operator|&
 name|client
 operator|->
@@ -913,6 +915,13 @@ name|client
 operator|->
 name|ec_buffer_head
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|input_event
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|client
 operator|->
@@ -942,6 +951,7 @@ name|ret
 operator|=
 name|uiomove
 argument_list|(
+operator|&
 name|event
 argument_list|,
 sizeof|sizeof
