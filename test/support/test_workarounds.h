@@ -68,6 +68,12 @@ directive|define
 name|TEST_WORKAROUND_C1XX_BROKEN_NULLPTR_CONVERSION_OPERATOR
 end_define
 
+begin_define
+define|#
+directive|define
+name|TEST_WORKAROUND_C1XX_BROKEN_IS_TRIVIALLY_COPYABLE
+end_define
+
 begin_endif
 endif|#
 directive|endif

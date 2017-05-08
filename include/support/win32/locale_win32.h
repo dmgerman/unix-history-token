@@ -50,6 +50,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<__config>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"support/win32/support.h"
 end_include
 
@@ -619,6 +625,7 @@ value|_vsnprintf_l( __s, __n, __f, __l, __VA_ARGS__ )
 end_define
 
 begin_function_decl
+name|_LIBCPP_FUNC_VIS
 name|int
 name|snprintf_l
 parameter_list|(
@@ -643,6 +650,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|_LIBCPP_FUNC_VIS
 name|int
 name|asprintf_l
 parameter_list|(
@@ -665,6 +673,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|_LIBCPP_FUNC_VIS
 name|int
 name|vasprintf_l
 parameter_list|(
