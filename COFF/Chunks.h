@@ -806,7 +806,7 @@ name|Other
 argument_list|)
 block|;
 name|uint32_t
-name|Color
+name|Class
 index|[
 literal|2
 index|]

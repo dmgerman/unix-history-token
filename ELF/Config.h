@@ -266,6 +266,11 @@ name|FirstElf
 init|=
 name|nullptr
 decl_stmt|;
+name|bool
+name|HasStaticTlsModel
+init|=
+name|false
+decl_stmt|;
 name|uint8_t
 name|OSABI
 init|=
@@ -428,11 +433,6 @@ name|BuildIdVector
 expr_stmt|;
 name|bool
 name|AllowMultipleDefinition
-decl_stmt|;
-name|bool
-name|ArchiveWithoutSymbolsSeen
-init|=
-name|false
 decl_stmt|;
 name|bool
 name|AsNeeded
