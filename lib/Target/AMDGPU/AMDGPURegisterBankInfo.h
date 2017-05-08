@@ -130,9 +130,11 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|const
 name|RegisterBankInfo
 operator|::
 name|InstructionMapping
+operator|&
 name|getInstrMappingForLoad
 argument_list|(
 argument|const MachineInstr&MI
@@ -179,7 +181,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|const
 name|InstructionMapping
+operator|&
 name|getInstrMapping
 argument_list|(
 argument|const MachineInstr&MI

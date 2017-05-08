@@ -115,7 +115,7 @@ name|unsigned
 specifier|const
 name|TypeCVI_LAST
 init|=
-name|TypeCVI_VX_DV
+name|TypeCVI_VX_LATE
 decl_stmt|;
 enum|enum
 name|SubTarget

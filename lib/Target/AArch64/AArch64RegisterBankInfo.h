@@ -303,15 +303,14 @@ comment|/// \pre MI.getNumOperands()<= 3
 comment|///
 comment|/// \return An InstructionMappings with a statically allocated
 comment|/// OperandsMapping.
-specifier|static
+specifier|const
 name|InstructionMapping
+operator|&
 name|getSameKindOfOperandsMapping
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|&
-name|MI
+argument|const MachineInstr&MI
 argument_list|)
+specifier|const
 block|;
 name|public
 operator|:
@@ -353,7 +352,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|const
 name|InstructionMapping
+operator|&
 name|getInstrMapping
 argument_list|(
 argument|const MachineInstr&MI

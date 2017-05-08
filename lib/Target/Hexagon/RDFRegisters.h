@@ -664,6 +664,17 @@ operator|.
 name|Units
 return|;
 block|}
+name|RegisterRef
+name|mapTo
+argument_list|(
+name|RegisterRef
+name|RR
+argument_list|,
+name|unsigned
+name|R
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|const
 name|TargetRegisterInfo
 operator|&

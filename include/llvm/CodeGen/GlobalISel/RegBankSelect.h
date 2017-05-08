@@ -1073,7 +1073,7 @@ comment|/// Mark this repairing placement as impossible.
 name|Impossible
 block|}
 enum|;
-comment|/// Convenient types for a list of insertion points.
+comment|/// \name Convenient types for a list of insertion points.
 comment|/// @{
 typedef|typedef
 name|SmallVector
@@ -1150,7 +1150,7 @@ argument_list|,
 argument|RepairingKind Kind = RepairingKind::Insert
 argument_list|)
 empty_stmt|;
-comment|/// Getters.
+comment|/// \name Getters.
 comment|/// @{
 name|RepairingKind
 name|getKind
@@ -1188,7 +1188,7 @@ name|HasSplit
 return|;
 block|}
 comment|/// @}
-comment|/// Overloaded methods to add an insertion point.
+comment|/// \name Overloaded methods to add an insertion point.
 comment|/// @{
 comment|/// Add a MBBInsertionPoint to the list of InsertPoints.
 name|void
@@ -1238,7 +1238,7 @@ name|Point
 parameter_list|)
 function_decl|;
 comment|/// @}
-comment|/// Accessors related to the insertion points.
+comment|/// \name Accessors related to the insertion points.
 comment|/// @{
 name|insertpt_iterator
 name|begin
@@ -2031,6 +2031,7 @@ comment|/// \return a reference on the best mapping in \p PossibleMappings.
 end_comment
 
 begin_expr_stmt
+specifier|const
 name|RegisterBankInfo
 operator|::
 name|InstructionMapping

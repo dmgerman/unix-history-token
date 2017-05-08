@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -105,6 +111,12 @@ name|override
 block|;
 name|private
 operator|:
+name|Error
+name|buildTypeDatabase
+argument_list|(
+argument|uint32_t SN
+argument_list|)
+block|;
 name|Error
 name|dumpFileHeaders
 argument_list|()
@@ -190,14 +202,20 @@ block|;
 name|ScopedPrinter
 name|P
 block|;
+name|Optional
+operator|<
 name|codeview
 operator|::
 name|TypeDatabase
+operator|>
 name|TypeDB
 block|;
+name|Optional
+operator|<
 name|codeview
 operator|::
 name|TypeDatabase
+operator|>
 name|ItemDB
 block|;
 name|SmallVector

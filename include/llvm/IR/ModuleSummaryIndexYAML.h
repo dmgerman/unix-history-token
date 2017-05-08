@@ -1132,6 +1132,8 @@ argument_list|)
 expr_stmt|;
 name|Elem
 operator|.
+name|SummaryList
+operator|.
 name|push_back
 argument_list|(
 name|llvm
@@ -1243,6 +1245,8 @@ operator|:
 name|P
 operator|.
 name|second
+operator|.
+name|SummaryList
 control|)
 block|{
 if|if

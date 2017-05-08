@@ -132,6 +132,26 @@ block|;
 name|void
 name|setLegalizerInfoSSE2
 argument_list|()
+block|;
+name|void
+name|setLegalizerInfoSSE41
+argument_list|()
+block|;
+name|void
+name|setLegalizerInfoAVX2
+argument_list|()
+block|;
+name|void
+name|setLegalizerInfoAVX512
+argument_list|()
+block|;
+name|void
+name|setLegalizerInfoAVX512DQ
+argument_list|()
+block|;
+name|void
+name|setLegalizerInfoAVX512BW
+argument_list|()
 block|; }
 decl_stmt|;
 block|}

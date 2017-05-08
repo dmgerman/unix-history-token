@@ -1158,12 +1158,13 @@ begin_comment
 comment|/// call site.
 end_comment
 
-begin_typedef
-typedef|typedef
-name|IterTy
+begin_decl_stmt
+name|using
 name|arg_iterator
-typedef|;
-end_typedef
+init|=
+name|IterTy
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|iterator_range
@@ -1308,12 +1309,13 @@ begin_comment
 comment|/// (see below).
 end_comment
 
-begin_typedef
-typedef|typedef
-name|IterTy
+begin_decl_stmt
+name|using
 name|data_operand_iterator
-typedef|;
-end_typedef
+init|=
+name|IterTy
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// data_operands_begin/data_operands_end - Return iterators iterating over

@@ -1754,7 +1754,6 @@ return|;
 block|}
 comment|/// @brief Determine if the parameter or return value is marked with NoAlias
 comment|/// attribute.
-comment|/// @param n The parameter to check. 1 is the first parameter, 0 is the return
 name|bool
 name|returnDoesNotAlias
 argument_list|()

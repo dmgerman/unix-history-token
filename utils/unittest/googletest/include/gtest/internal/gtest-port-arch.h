@@ -495,6 +495,20 @@ begin_elif
 elif|#
 directive|elif
 name|defined
+name|__NetBSD__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|GTEST_OS_NETBSD
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
 name|__OpenBSD__
 end_elif
 

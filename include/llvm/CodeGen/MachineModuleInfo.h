@@ -363,7 +363,7 @@ name|AddrLabelSymbols
 block|;
 comment|// TODO: Ideally, what we'd like is to have a switch that allows emitting
 comment|// synchronous (precise at call-sites only) CFA into .eh_frame. However,
-comment|// even under this switch, we'd like .debug_frame to be precise when using.
+comment|// even under this switch, we'd like .debug_frame to be precise when using
 comment|// -g. At this moment, there's no way to specify that some CFI directives
 comment|// go into .eh_frame only, while others go into .debug_frame only.
 comment|/// True if debugging information is available in this module.

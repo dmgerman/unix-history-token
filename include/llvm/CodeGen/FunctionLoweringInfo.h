@@ -849,15 +849,8 @@ literal|1
 operator|&&
 name|Known
 operator|.
-name|Zero
-operator|==
-literal|0
-operator|&&
-name|Known
-operator|.
-name|One
-operator|==
-literal|0
+name|isUnknown
+argument_list|()
 condition|)
 return|return;
 name|LiveOutRegInfo

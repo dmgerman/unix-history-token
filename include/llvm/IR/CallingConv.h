@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CallingConv.h - LLVM Calling Conventions -----------*- C++ -*-===//
+comment|//===- llvm/CallingConv.h - LLVM Calling Conventions ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,10 +70,11 @@ name|namespace
 name|CallingConv
 block|{
 comment|/// LLVM IR allows to use arbitrary numbers as calling convention identifiers.
-typedef|typedef
-name|unsigned
+name|using
 name|ID
-typedef|;
+init|=
+name|unsigned
+decl_stmt|;
 comment|/// A set of enums which specify the assigned numeric values for known llvm
 comment|/// calling conventions.
 comment|/// @brief LLVM Calling Convention Representation
@@ -338,18 +339,22 @@ literal|1023
 block|}
 enum|;
 block|}
-comment|// End CallingConv namespace
+comment|// end namespace CallingConv
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_CALLINGCONV_H
+end_comment
 
 end_unit
 

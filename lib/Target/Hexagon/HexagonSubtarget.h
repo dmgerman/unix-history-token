@@ -481,6 +481,11 @@ name|UseLongCalls
 return|;
 block|}
 name|bool
+name|usePredicatedCalls
+argument_list|()
+specifier|const
+block|;
+name|bool
 name|useBSBScheduling
 argument_list|()
 specifier|const
@@ -623,14 +628,18 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|changeLatency
+name|restoreLatency
 argument_list|(
 argument|SUnit *Src
 argument_list|,
-argument|SmallVector<SDep
-argument_list|,
-literal|4
-argument|>&Deps
+argument|SUnit *Dst
+argument_list|)
+specifier|const
+block|;
+name|void
+name|changeLatency
+argument_list|(
+argument|SUnit *Src
 argument_list|,
 argument|SUnit *Dst
 argument_list|,
@@ -646,17 +655,16 @@ argument_list|,
 argument|SUnit *Dst
 argument_list|,
 argument|const HexagonInstrInfo *TII
-argument_list|)
-specifier|const
-block|;
-name|void
-name|changePhiLatency
-argument_list|(
-argument|MachineInstr&SrcInst
 argument_list|,
-argument|SUnit *Dst
+argument|SmallSet<SUnit*
 argument_list|,
-argument|SDep&Dep
+literal|4
+argument|>&ExclSrc
+argument_list|,
+argument|SmallSet<SUnit*
+argument_list|,
+literal|4
+argument|>&ExclDst
 argument_list|)
 specifier|const
 block|; }

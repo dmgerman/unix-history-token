@@ -3813,6 +3813,8 @@ operator|||
 name|GTEST_OS_QNX
 operator|||
 name|GTEST_OS_FREEBSD
+operator|||
+name|GTEST_OS_NETBSD
 operator|)
 end_if
 

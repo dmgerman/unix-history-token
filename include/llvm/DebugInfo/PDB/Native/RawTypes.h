@@ -582,7 +582,7 @@ decl_stmt|;
 block|}
 struct|;
 comment|/// The header preceeding each entry in the Module Info substream of the DBI
-comment|/// stream.
+comment|/// stream.  Corresponds to the type MODI in the reference implementation.
 struct|struct
 name|ModuleInfoHeader
 block|{
@@ -642,9 +642,12 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/// Array of [0..NumFiles) DBI name buffer offsets.  This field is a pointer
-comment|/// in the reference implementation, but as with `Mod`, we ignore it for now
-comment|/// since it is unused.
+comment|/// Array of [0..NumFiles) DBI name buffer offsets.  In the reference
+comment|/// implementation this field is a pointer.  But since you can't portably
+comment|/// serialize a pointer, on 64-bit platforms they copy all the values except
+comment|/// this one into the 32-bit version of the struct and use that for
+comment|/// serialization.  Regardless, this field is unused, it is only there to
+comment|/// store a pointer that can be accessed at runtime.
 name|support
 operator|::
 name|ulittle32_t

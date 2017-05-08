@@ -159,7 +159,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|uint32_t
-name|NumTypeRecords
+name|getNumTypeRecords
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -179,7 +179,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|uint32_t
-name|NumHashBuckets
+name|getNumHashBuckets
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -221,10 +221,6 @@ parameter_list|()
 function_decl|;
 name|private
 label|:
-name|Error
-name|verifyHashValues
-parameter_list|()
-function_decl|;
 specifier|const
 name|PDBFile
 modifier|&

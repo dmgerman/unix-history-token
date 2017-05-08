@@ -256,7 +256,7 @@ name|int
 operator|>
 name|FrameIndices
 expr_stmt|;
-comment|/// Methods for translating form LLVM IR to MachineInstr.
+comment|/// \name Methods for translating form LLVM IR to MachineInstr.
 comment|/// \see ::translate for general information on the translate methods.
 comment|/// @{
 comment|/// Translate \p Inst into its corresponding MachineInstr instruction(s).

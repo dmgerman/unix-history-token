@@ -143,7 +143,7 @@ comment|/// Debug location to be set to any instruction we create.
 name|DebugLoc
 name|DL
 decl_stmt|;
-comment|/// Fields describing the insertion point.
+comment|/// \name Fields describing the insertion point.
 comment|/// @{
 name|MachineBasicBlock
 modifier|*
@@ -264,7 +264,7 @@ name|II
 argument_list|)
 decl_stmt|;
 comment|/// @}
-comment|/// Setters for the insertion point.
+comment|/// \name Setters for the insertion point.
 comment|/// @{
 comment|/// Set the MachineFunction where to build instructions.
 name|void
@@ -295,7 +295,7 @@ name|MI
 parameter_list|)
 function_decl|;
 comment|/// @}
-comment|/// Control where instructions we create are recorded (typically for
+comment|/// \name Control where instructions we create are recorded (typically for
 comment|/// visiting again later during legalization).
 comment|/// @{
 name|void

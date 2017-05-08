@@ -1216,10 +1216,13 @@ end_comment
 begin_expr_stmt
 name|Copy
 operator|&=
-operator|~
-literal|0UL
-operator|<<
+name|maskTrailingZeros
+operator|<
+name|BitWord
+operator|>
+operator|(
 name|BitPos
+operator|)
 expr_stmt|;
 end_expr_stmt
 
@@ -1300,7 +1303,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// find_next_unset - Returns the index of the next usnet bit following the
+comment|/// find_next_unset - Returns the index of the next unset bit following the
 end_comment
 
 begin_comment
@@ -1461,23 +1464,168 @@ end_return
 
 begin_comment
 unit|}
-comment|/// clear - Clear all bits.
+comment|/// find_prev - Returns the index of the first set bit that precedes the
+end_comment
+
+begin_comment
+comment|/// the bit at \p PriorTo.  Returns -1 if all previous bits are unset.
 end_comment
 
 begin_macro
-unit|void
-name|clear
-argument_list|()
+unit|int
+name|find_prev
+argument_list|(
+argument|unsigned PriorTo
+argument_list|)
 end_macro
 
 begin_block
+block|{
+if|if
+condition|(
+name|PriorTo
+operator|==
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+operator|--
+name|PriorTo
+expr_stmt|;
+name|unsigned
+name|WordPos
+init|=
+name|PriorTo
+operator|/
+name|BITWORD_SIZE
+decl_stmt|;
+name|unsigned
+name|BitPos
+init|=
+name|PriorTo
+operator|%
+name|BITWORD_SIZE
+decl_stmt|;
+name|BitWord
+name|Copy
+init|=
+name|Bits
+index|[
+name|WordPos
+index|]
+decl_stmt|;
+comment|// Mask off next bits.
+name|Copy
+operator|&=
+name|maskTrailingOnes
+operator|<
+name|BitWord
+operator|>
+operator|(
+name|BitPos
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|Copy
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|WordPos
+operator|+
+literal|1
+operator|)
+operator|*
+name|BITWORD_SIZE
+operator|-
+name|countLeadingZeros
+argument_list|(
+name|Copy
+argument_list|)
+operator|-
+literal|1
+return|;
+comment|// Check previous words.
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|1
+init|;
+name|i
+operator|<=
+name|WordPos
+condition|;
+operator|++
+name|i
+control|)
+block|{
+name|unsigned
+name|Index
+init|=
+name|WordPos
+operator|-
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|Bits
+index|[
+name|Index
+index|]
+operator|==
+literal|0
+condition|)
+continue|continue;
+return|return
+operator|(
+name|Index
+operator|+
+literal|1
+operator|)
+operator|*
+name|BITWORD_SIZE
+operator|-
+name|countLeadingZeros
+argument_list|(
+name|Bits
+index|[
+name|Index
+index|]
+argument_list|)
+operator|-
+literal|1
+return|;
+block|}
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/// clear - Removes all bits from the bitvector. Does not change capacity.
+end_comment
+
+begin_function
+name|void
+name|clear
+parameter_list|()
 block|{
 name|Size
 operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/// resize - Grow or shrink the bitvector.

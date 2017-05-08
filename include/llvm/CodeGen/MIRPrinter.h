@@ -68,6 +68,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MachineBasicBlock
+decl_stmt|;
+name|class
 name|MachineFunction
 decl_stmt|;
 name|class
@@ -76,6 +79,14 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 comment|/// Print LLVM IR using the MIR serialization format to the given output stream.
 name|void
 name|printMIR
@@ -105,6 +116,34 @@ modifier|&
 name|MF
 parameter_list|)
 function_decl|;
+comment|/// Determine a possible list of successors of a basic block based on the
+comment|/// basic block machine operand being used inside the block. This should give
+comment|/// you the correct list of successor blocks in most cases except for things
+comment|/// like jump tables where the basic block references can't easily be found.
+comment|/// The MIRPRinter will skip printing successors if they match the result of
+comment|/// this funciton and the parser will use this function to construct a list if
+comment|/// it is missing.
+name|void
+name|guessSuccessors
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|&
+name|Successors
+argument_list|,
+name|bool
+operator|&
+name|IsFallthrough
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

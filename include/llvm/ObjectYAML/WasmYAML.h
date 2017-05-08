@@ -314,6 +314,17 @@ expr_stmt|;
 block|}
 struct|;
 struct|struct
+name|NameEntry
+block|{
+name|uint32_t
+name|Index
+decl_stmt|;
+name|StringRef
+name|Name
+decl_stmt|;
+block|}
+struct|;
+struct|struct
 name|Signature
 block|{
 name|Signature
@@ -411,6 +422,17 @@ name|yaml
 operator|::
 name|BinaryRef
 name|Payload
+block|;
+comment|// The follow is used by the "name" custom section.
+comment|// TODO(sbc): Add support for more then just functions names.  The wasm
+comment|// name section can support multiple sub-sections.
+name|std
+operator|::
+name|vector
+operator|<
+name|NameEntry
+operator|>
+name|FunctionNames
 block|; }
 decl_stmt|;
 name|struct
@@ -958,6 +980,13 @@ argument_list|)
 end_macro
 
 begin_macro
+name|LLVM_YAML_IS_SEQUENCE_VECTOR
+argument_list|(
+argument|llvm::WasmYAML::NameEntry
+argument_list|)
+end_macro
+
+begin_macro
 name|LLVM_YAML_IS_FLOW_SEQUENCE_VECTOR
 argument_list|(
 argument|uint32_t
@@ -1301,6 +1330,33 @@ operator|::
 name|Relocation
 operator|&
 name|Relocation
+argument_list|)
+block|; }
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|MappingTraits
+operator|<
+name|WasmYAML
+operator|::
+name|NameEntry
+operator|>
+block|{
+specifier|static
+name|void
+name|mapping
+argument_list|(
+name|IO
+operator|&
+name|IO
+argument_list|,
+name|WasmYAML
+operator|::
+name|NameEntry
+operator|&
+name|NameEntry
 argument_list|)
 block|; }
 expr_stmt|;

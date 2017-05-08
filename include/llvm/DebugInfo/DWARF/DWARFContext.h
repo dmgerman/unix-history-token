@@ -1331,6 +1331,18 @@ argument_list|(
 argument|StringRef Name
 argument_list|)
 block|;
+comment|/// If Sec is compressed section, decompresses and updates its contents
+comment|/// provided by Data. Otherwise leaves it unchanged.
+name|Error
+name|maybeDecompress
+argument_list|(
+argument|const object::SectionRef&Sec
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|StringRef&Data
+argument_list|)
+block|;
 name|public
 operator|:
 name|DWARFContextInMemory

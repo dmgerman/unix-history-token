@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm-c/Types.h"
 end_include
 
@@ -136,7 +142,13 @@ name|class
 name|LLVMContext
 decl_stmt|;
 name|class
+name|Module
+decl_stmt|;
+name|class
 name|TerminatorInst
+decl_stmt|;
+name|class
+name|ValueSymbolTable
 decl_stmt|;
 comment|/// \brief LLVM Basic Block Representation
 comment|///
@@ -170,13 +182,14 @@ decl|>
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|InstListType
+init|=
 name|SymbolTableList
 operator|<
 name|Instruction
 operator|>
-name|InstListType
-expr_stmt|;
+decl_stmt|;
 name|private
 label|:
 name|friend
@@ -273,30 +286,34 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// Instruction iterators...
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|InstListType
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_iterator
+init|=
 name|InstListType
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|reverse_iterator
+init|=
 name|InstListType
 operator|::
 name|reverse_iterator
-name|reverse_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_reverse_iterator
+init|=
 name|InstListType
 operator|::
 name|const_reverse_iterator
-name|const_reverse_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// \brief Creates a new BasicBlock.
 comment|///
 comment|/// If the Parent parameter is specified, the basic block is automatically

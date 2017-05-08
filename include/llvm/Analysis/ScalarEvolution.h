@@ -2586,7 +2586,7 @@ argument|const SCEV *S
 argument_list|,
 argument|RangeSignHint Hint
 argument_list|,
-argument|const ConstantRange&CR
+argument|ConstantRange&&CR
 argument_list|)
 block|{
 name|DenseMap
@@ -2613,13 +2613,16 @@ name|Pair
 operator|=
 name|Cache
 operator|.
-name|insert
+name|try_emplace
 argument_list|(
-block|{
 name|S
-block|,
+argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|CR
-block|}
+argument_list|)
 argument_list|)
 block|;
 if|if
@@ -2635,7 +2638,12 @@ name|first
 operator|->
 name|second
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|CR
+argument_list|)
 expr_stmt|;
 return|return
 name|Pair
@@ -2739,6 +2747,25 @@ parameter_list|(
 name|PHINode
 modifier|*
 name|PN
+parameter_list|)
+function_decl|;
+comment|/// A helper function for createAddRecFromPHI to handle simple cases.
+specifier|const
+name|SCEV
+modifier|*
+name|createSimpleAffineAddRec
+parameter_list|(
+name|PHINode
+modifier|*
+name|PN
+parameter_list|,
+name|Value
+modifier|*
+name|BEValueV
+parameter_list|,
+name|Value
+modifier|*
+name|StartValueV
 parameter_list|)
 function_decl|;
 comment|/// Helper function called from createNodeForPHI.
@@ -5845,7 +5872,6 @@ name|SCEV
 operator|*
 name|ElementSize
 argument_list|)
-decl|const
 decl_stmt|;
 name|void
 name|print
