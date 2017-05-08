@@ -83,6 +83,10 @@ file|<stdio.h>
 end_include
 
 begin_comment
+comment|// UNSUPPORTED: mips
+end_comment
+
+begin_comment
 comment|// REQUIRES: c99-complex
 end_comment
 

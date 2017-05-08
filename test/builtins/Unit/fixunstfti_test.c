@@ -57,6 +57,10 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_comment
+comment|// UNSUPPORTED: mips
+end_comment
+
 begin_if
 if|#
 directive|if

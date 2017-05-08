@@ -285,13 +285,45 @@ init|=
 operator|~
 literal|0ULL
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+operator|&&
+name|SANITIZER_ANDROID
+specifier|const
+name|uptr
+name|AllocatorSize
+init|=
+literal|0x4000000000ULL
+decl_stmt|;
+comment|// 256G.
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+specifier|const
+name|uptr
+name|AllocatorSize
+init|=
+literal|0x10000000000ULL
+decl_stmt|;
+comment|// 1T.
+else|#
+directive|else
 specifier|const
 name|uptr
 name|AllocatorSize
 init|=
 literal|0x40000000000ULL
 decl_stmt|;
-comment|// 4TB.
+comment|// 4T.
+endif|#
+directive|endif
 typedef|typedef
 name|DefaultSizeClassMap
 name|SizeClassMap

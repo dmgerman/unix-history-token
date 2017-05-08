@@ -471,7 +471,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<Windows.h>
+file|<windows.h>
 end_include
 
 begin_include

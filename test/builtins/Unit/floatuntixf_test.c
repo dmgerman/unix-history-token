@@ -12,6 +12,10 @@ comment|// test fails for aarch64 (see pr32260)
 end_comment
 
 begin_comment
+comment|// UNSUPPORTED: mips
+end_comment
+
+begin_comment
 comment|//===-- floatuntixf.c - Test __floatuntixf --------------------------------===//
 end_comment
 
