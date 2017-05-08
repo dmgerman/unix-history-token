@@ -1738,6 +1738,21 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+comment|/// Computes the maximum size of a callframe and the AdjustsStack property.
+comment|/// This only works for targets defining
+comment|/// TargetInstrInfo::getCallFrameSetupOpcode(), getCallFrameDestroyOpcode(),
+comment|/// and getFrameSize().
+comment|/// This is usually computed by the prologue epilogue inserter but some
+comment|/// targets may call this to compute it earlier.
+name|void
+name|computeMaxCallFrameSize
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|)
+function_decl|;
 comment|/// Return the maximum size of a call frame that must be
 comment|/// allocated for an outgoing function call.  This is only available if
 comment|/// CallFrameSetup/Destroy pseudo instructions are used by the target, and

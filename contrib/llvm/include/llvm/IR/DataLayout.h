@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--------- llvm/DataLayout.h - Data size& alignment info ---*- C++ -*-===//
+comment|//===- llvm/DataLayout.h - Data size& alignment info -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,6 +86,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -93,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -116,7 +128,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_comment
@@ -127,24 +169,27 @@ begin_comment
 comment|// decl.
 end_comment
 
-begin_typedef
-typedef|typedef
-name|struct
-name|LLVMOpaqueTargetData
-modifier|*
+begin_decl_stmt
+name|using
 name|LLVMTargetDataRef
-typedef|;
-end_typedef
+init|= struct
+name|LLVMOpaqueTargetData
+operator|*
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|Value
+name|GlobalVariable
 decl_stmt|;
 name|class
-name|StructType
+name|LLVMContext
+decl_stmt|;
+name|class
+name|Module
 decl_stmt|;
 name|class
 name|StructLayout
@@ -153,19 +198,8 @@ name|class
 name|Triple
 decl_stmt|;
 name|class
-name|GlobalVariable
+name|Value
 decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|ArrayRef
-expr_stmt|;
 comment|/// Enum used to categorize the alignment types stored by LayoutAlignElem
 enum|enum
 name|AlignTypeEnum
@@ -359,15 +393,13 @@ name|LegalIntWidths
 expr_stmt|;
 comment|/// \brief Primitive type alignment data. This is sorted by type and bit
 comment|/// width during construction.
-typedef|typedef
+name|using
+name|AlignmentsTy
+init|=
 name|SmallVector
 operator|<
 name|LayoutAlignElem
-operator|,
-literal|16
-operator|>
-name|AlignmentsTy
-expr_stmt|;
+decl_stmt|, 16>;
 name|AlignmentsTy
 name|Alignments
 decl_stmt|;
@@ -416,15 +448,13 @@ operator|::
 name|string
 name|StringRepresentation
 expr_stmt|;
-typedef|typedef
+name|using
+name|PointersTy
+init|=
 name|SmallVector
 operator|<
 name|PointerAlignElem
-operator|,
-literal|8
-operator|>
-name|PointersTy
-expr_stmt|;
+decl_stmt|, 8>;
 name|PointersTy
 name|Pointers
 decl_stmt|;
@@ -466,6 +496,8 @@ name|mutable
 name|void
 modifier|*
 name|LayoutMap
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// Pointers in these address spaces are non-integral, and don't have a
 comment|/// well-defined bitwise representation.
@@ -559,14 +591,10 @@ label|:
 comment|/// Constructs a DataLayout from a specification string. See reset().
 name|explicit
 name|DataLayout
-argument_list|(
-argument|StringRef LayoutDescription
-argument_list|)
-block|:
-name|LayoutMap
-argument_list|(
-argument|nullptr
-argument_list|)
+parameter_list|(
+name|StringRef
+name|LayoutDescription
+parameter_list|)
 block|{
 name|reset
 argument_list|(
@@ -584,37 +612,26 @@ modifier|*
 name|M
 parameter_list|)
 function_decl|;
-name|void
-name|init
-parameter_list|(
-specifier|const
-name|Module
-modifier|*
-name|M
-parameter_list|)
-function_decl|;
 name|DataLayout
 argument_list|(
-specifier|const
-name|DataLayout
-operator|&
-name|DL
-argument_list|)
-operator|:
-name|LayoutMap
-argument_list|(
-argument|nullptr
+argument|const DataLayout&DL
 argument_list|)
 block|{
 operator|*
 name|this
 operator|=
 name|DL
-block|; }
+expr_stmt|;
+block|}
+operator|~
 name|DataLayout
-operator|&
+argument_list|()
+expr_stmt|;
+comment|// Not virtual, do not subclass this class
+name|DataLayout
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|DataLayout
@@ -717,11 +734,15 @@ name|Other
 operator|)
 return|;
 block|}
-operator|~
-name|DataLayout
-argument_list|()
-expr_stmt|;
-comment|// Not virtual, do not subclass this class
+name|void
+name|init
+parameter_list|(
+specifier|const
+name|Module
+modifier|*
+name|M
+parameter_list|)
+function_decl|;
 comment|/// Parse a data layout string (with fallback to default values).
 name|void
 name|reset
@@ -2047,13 +2068,17 @@ end_expr_stmt
 
 begin_comment
 unit|} }  }
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_DATALAYOUT_H
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/InstrTypes.h - Important Instruction subclasses ----*- C++ -*-===//
+comment|//===- llvm/InstrTypes.h - Important Instruction subclasses -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -148,7 +148,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/User.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
 end_include
 
 begin_include
@@ -484,7 +496,9 @@ name|BB
 operator|*
 operator|>
 block|{
-typedef|typedef
+name|using
+name|super
+operator|=
 name|std
 operator|::
 name|iterator
@@ -492,59 +506,60 @@ operator|<
 name|std
 operator|::
 name|random_access_iterator_tag
-operator|,
+block|,
 name|BB
-operator|,
+block|,
 name|int
-operator|,
+block|,
 name|BB
 operator|*
-operator|,
+block|,
 name|BB
 operator|*
 operator|>
-name|super
-expr_stmt|;
+block|;
 name|public
 operator|:
-typedef|typedef
+name|using
+name|pointer
+operator|=
 name|typename
 name|super
 operator|::
 name|pointer
-name|pointer
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|reference
+operator|=
 name|typename
 name|super
 operator|::
 name|reference
-name|reference
-expr_stmt|;
+block|;
 name|private
-label|:
+operator|:
 name|Term
 name|TermInst
-decl_stmt|;
+block|;
 name|unsigned
 name|idx
-decl_stmt|;
-typedef|typedef
+block|;
+name|using
+name|Self
+operator|=
 name|SuccIterator
 operator|<
 name|Term
-operator|,
+block|,
 name|BB
 operator|>
-name|Self
-expr_stmt|;
+block|;
 specifier|inline
 name|bool
 name|index_is_valid
-parameter_list|(
-name|unsigned
-name|idx
-parameter_list|)
+argument_list|(
+argument|unsigned idx
+argument_list|)
 block|{
 return|return
 name|idx
@@ -561,9 +576,9 @@ name|SuccessorProxy
 block|{
 name|Self
 name|it
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|explicit
 name|SuccessorProxy
 argument_list|(
@@ -586,11 +601,11 @@ operator|&
 argument_list|)
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|SuccessorProxy
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 name|SuccessorProxy
 name|r
@@ -610,9 +625,9 @@ name|this
 return|;
 block|}
 name|SuccessorProxy
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 name|reference
 name|r
@@ -646,10 +661,10 @@ operator|*
 name|it
 return|;
 block|}
-block|}
-empty_stmt|;
+expr|}
+block|;
 name|public
-label|:
+operator|:
 comment|// begin iterator
 name|explicit
 specifier|inline
@@ -662,7 +677,7 @@ name|TermInst
 argument_list|(
 name|T
 argument_list|)
-operator|,
+block|,
 name|idx
 argument_list|(
 literal|0
@@ -780,7 +795,7 @@ name|operator
 operator|->
 expr|(
 block|)
-decl|const
+specifier|const
 block|{
 return|return
 name|operator
@@ -789,9 +804,6 @@ operator|(
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 specifier|inline
 name|Self
 operator|&
@@ -808,13 +820,7 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Preincrement
-end_comment
-
-begin_expr_stmt
 specifier|inline
 name|Self
 name|operator
@@ -838,9 +844,6 @@ return|return
 name|tmp
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|Self
 operator|&
@@ -857,13 +860,7 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Predecrement
-end_comment
-
-begin_expr_stmt
 specifier|inline
 name|Self
 name|operator
@@ -887,9 +884,6 @@ return|return
 name|tmp
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -921,9 +915,6 @@ operator|.
 name|idx
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -955,9 +946,6 @@ operator|.
 name|idx
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -989,9 +977,6 @@ operator|.
 name|idx
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -1023,9 +1008,6 @@ operator|.
 name|idx
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|Self
 operator|&
@@ -1062,9 +1044,6 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|Self
 name|operator
@@ -1089,9 +1068,6 @@ return|return
 name|tmp
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|Self
 operator|&
@@ -1111,9 +1087,6 @@ name|Right
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|Self
 name|operator
@@ -1133,9 +1106,6 @@ name|Right
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|int
 name|operator
@@ -1172,28 +1142,25 @@ return|return
 name|distance
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|inline
 name|SuccessorProxy
 name|operator
-function|[]
-parameter_list|(
+index|[]
+operator|(
 name|int
 name|offset
-parameter_list|)
+operator|)
 block|{
 name|Self
 name|tmp
-init|=
+operator|=
 operator|*
 name|this
-decl_stmt|;
+block|;
 name|tmp
 operator|+=
 name|offset
-expr_stmt|;
+block|;
 return|return
 name|SuccessorProxy
 argument_list|(
@@ -1201,18 +1168,12 @@ name|tmp
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Get the source BB of this iterator.
-end_comment
-
-begin_function
 specifier|inline
 name|BB
-modifier|*
+operator|*
 name|getSource
-parameter_list|()
+argument_list|()
 block|{
 name|assert
 argument_list|(
@@ -1220,7 +1181,7 @@ name|TermInst
 operator|&&
 literal|"Source not available, if basic block was malformed"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|TermInst
 operator|->
@@ -1228,67 +1189,54 @@ name|getParent
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_typedef
-unit|};
-typedef|typedef
-name|SuccIterator
-operator|<
-name|TerminatorInst
-operator|*
-operator|,
-name|BasicBlock
-operator|>
+expr|}
+block|;
+name|using
 name|succ_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+operator|=
 name|SuccIterator
 operator|<
-specifier|const
 name|TerminatorInst
 operator|*
-operator|,
-specifier|const
+block|,
 name|BasicBlock
 operator|>
+block|;
+name|using
 name|succ_const_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|iterator_range
+operator|=
+name|SuccIterator
 operator|<
-name|succ_iterator
+specifier|const
+name|TerminatorInst
+operator|*
+block|,
+specifier|const
+name|BasicBlock
 operator|>
+block|;
+name|using
 name|succ_range
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+operator|=
+name|iterator_range
+operator|<
+name|succ_iterator
+operator|>
+block|;
+name|using
+name|succ_const_range
+operator|=
 name|iterator_range
 operator|<
 name|succ_const_iterator
 operator|>
-name|succ_const_range
-expr_stmt|;
-end_typedef
-
-begin_label
+block|;
 name|private
-label|:
-end_label
-
-begin_function
+operator|:
 specifier|inline
 name|succ_iterator
 name|succ_begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|succ_iterator
@@ -1297,9 +1245,6 @@ name|this
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|inline
 name|succ_const_iterator
 name|succ_begin
@@ -1313,13 +1258,10 @@ name|this
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|inline
 name|succ_iterator
 name|succ_end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|succ_iterator
@@ -1330,9 +1272,6 @@ name|true
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|inline
 name|succ_const_iterator
 name|succ_end
@@ -1348,18 +1287,12 @@ name|true
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_label
 name|public
-label|:
-end_label
-
-begin_function
+operator|:
 specifier|inline
 name|succ_range
 name|successors
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|succ_range
@@ -1372,9 +1305,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|inline
 name|succ_const_range
 name|successors
@@ -1392,25 +1322,14 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//                          UnaryInstruction Class
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_decl_stmt
 name|class
 name|UnaryInstruction
-range|:
+operator|:
 name|public
 name|Instruction
 block|{
@@ -1662,12 +1581,6 @@ name|Instruction
 block|{
 name|protected
 operator|:
-name|void
-name|init
-argument_list|(
-argument|BinaryOps iType
-argument_list|)
-block|;
 name|BinaryOperator
 argument_list|(
 argument|BinaryOps iType
@@ -1696,6 +1609,12 @@ argument_list|,
 argument|const Twine&Name
 argument_list|,
 argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|;
+name|void
+name|init
+argument_list|(
+argument|BinaryOps iType
 argument_list|)
 block|;
 comment|// Note: Instruction needs to be a friend here to call cloneImpl.
@@ -4514,26 +4433,6 @@ name|Instruction
 block|{
 name|private
 operator|:
-name|void
-name|init
-argument_list|(
-name|Value
-operator|*
-name|ParentPad
-argument_list|,
-name|ArrayRef
-operator|<
-name|Value
-operator|*
-operator|>
-name|Args
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
-argument_list|)
-block|;
 name|FuncletPadInst
 argument_list|(
 specifier|const
@@ -4572,6 +4471,26 @@ argument_list|,
 argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|;
+name|void
+name|init
+argument_list|(
+name|Value
+operator|*
+name|ParentPad
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|Args
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|)
 block|;
 name|protected
@@ -5085,7 +5004,9 @@ return|return
 name|Inputs
 return|;
 block|}
-typedef|typedef
+name|using
+name|input_iterator
+operator|=
 name|typename
 name|std
 operator|::
@@ -5095,8 +5016,7 @@ name|InputTy
 operator|>
 operator|::
 name|const_iterator
-name|input_iterator
-expr_stmt|;
+block|;
 name|size_t
 name|input_size
 argument_list|()
@@ -5144,23 +5064,25 @@ return|;
 block|}
 expr|}
 block|;
-typedef|typedef
+name|using
+name|OperandBundleDef
+operator|=
 name|OperandBundleDefT
 operator|<
 name|Value
 operator|*
 operator|>
-name|OperandBundleDef
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|ConstOperandBundleDef
+operator|=
 name|OperandBundleDefT
 operator|<
 specifier|const
 name|Value
 operator|*
 operator|>
-name|ConstOperandBundleDef
-expr_stmt|;
+block|;
 comment|/// \brief A mixin to add operand bundle functionality to llvm instruction
 comment|/// classes.
 comment|///
@@ -5499,25 +5421,10 @@ return|return
 name|Count
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Return an operand bundle by name, if present.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// It is an error to call this for operand bundle types that may have
-end_comment
-
-begin_comment
 comment|/// multiple instances of them on the same instruction.
-end_comment
-
-begin_expr_stmt
 name|Optional
 operator|<
 name|OperandBundleUse
@@ -5581,33 +5488,15 @@ return|return
 name|U
 return|;
 block|}
-end_expr_stmt
-
-begin_return
 return|return
 name|None
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Return an operand bundle by tag ID, if present.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// It is an error to call this for operand bundle types that may have
-end_comment
-
-begin_comment
 comment|/// multiple instances of them on the same instruction.
-end_comment
-
-begin_expr_stmt
-unit|Optional
+name|Optional
 operator|<
 name|OperandBundleUse
 operator|>
@@ -5670,52 +5559,22 @@ return|return
 name|U
 return|;
 block|}
-end_expr_stmt
-
-begin_return
 return|return
 name|None
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Return the list of operand bundles attached to this instruction as
-end_comment
-
-begin_comment
 comment|/// a vector of OperandBundleDefs.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This function copies the OperandBundeUse instances associated with this
-end_comment
-
-begin_comment
 comment|/// OperandBundleUser to a vector of OperandBundleDefs.  Note:
-end_comment
-
-begin_comment
 comment|/// OperandBundeUses and OperandBundleDefs are non-trivially *different*
-end_comment
-
-begin_comment
 comment|/// representations of operand bundles (see documentation above).
-end_comment
-
-begin_macro
-unit|void
+name|void
 name|getOperandBundlesAsDefs
 argument_list|(
 argument|SmallVectorImpl<OperandBundleDef>&Defs
 argument_list|)
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 for|for
@@ -5748,32 +5607,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Return the operand bundle for the operand at index OpIdx.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// It is an error to call this with an OpIdx that does not correspond to an
-end_comment
-
-begin_comment
 comment|/// bundle operand.
-end_comment
-
-begin_decl_stmt
 name|OperandBundleUse
 name|getOperandBundleForOperand
 argument_list|(
-name|unsigned
-name|OpIdx
+argument|unsigned OpIdx
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|operandBundleFromBundleOpInfo
@@ -5785,17 +5628,8 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Return true if this operand bundle user has operand bundles that
-end_comment
-
-begin_comment
 comment|/// may read from the heap.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasReadingOperandBundles
 argument_list|()
@@ -5809,17 +5643,8 @@ name|hasOperandBundles
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Return true if this operand bundle user has operand bundles that
-end_comment
-
-begin_comment
 comment|/// may write to the heap.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasClobberingOperandBundles
 argument_list|()
@@ -5864,34 +5689,19 @@ return|return
 name|true
 return|;
 block|}
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Return true if the bundle operand at index \p OpIdx has the
-end_comment
-
-begin_comment
 comment|/// attribute \p A.
-end_comment
-
-begin_macro
-unit|bool
+name|bool
 name|bundleOperandHasAttr
 argument_list|(
 argument|unsigned OpIdx
 argument_list|,
 argument|Attribute::AttrKind A
 argument_list|)
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 name|auto
@@ -5926,35 +5736,17 @@ name|A
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Return true if \p Other has the same sequence of operand bundle
-end_comment
-
-begin_comment
 comment|/// tags with the same number of operands on each one of them as this
-end_comment
-
-begin_comment
 comment|/// OperandBundleUser.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|hasIdenticalOperandBundleSchema
 argument_list|(
-specifier|const
-name|OperandBundleUser
-operator|<
-name|InstrTy
+argument|const OperandBundleUser<InstrTy
 argument_list|,
-name|OpIteratorTy
-operator|>
-operator|&
-name|Other
+argument|OpIteratorTy>&Other
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -5987,27 +5779,14 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Return true if this operand bundle user contains operand bundles
-end_comment
-
-begin_comment
 comment|/// with tags other than those specified in \p IDs.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|hasOperandBundlesOtherThan
 argument_list|(
-name|ArrayRef
-operator|<
-name|uint32_t
-operator|>
-name|IDs
+argument|ArrayRef<uint32_t> IDs
 argument_list|)
-decl|const
+specifier|const
 block|{
 for|for
 control|(
@@ -6058,29 +5837,16 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_label
 name|protected
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|/// \brief Is the function attribute S disallowed by some operand bundle on
-end_comment
-
-begin_comment
 comment|/// this operand bundle user?
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isFnAttrDisallowedByOpBundle
 argument_list|(
-name|StringRef
-name|S
+argument|StringRef S
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|// Operand bundles only possibly disallow readnone, readonly and argmenonly
 comment|// attributes.  All String attributes are fine.
@@ -6088,26 +5854,14 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Is the function attribute A disallowed by some operand bundle on
-end_comment
-
-begin_comment
 comment|/// this operand bundle user?
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isFnAttrDisallowedByOpBundle
 argument_list|(
-name|Attribute
-operator|::
-name|AttrKind
-name|A
+argument|Attribute::AttrKind A
 argument_list|)
-decl|const
+specifier|const
 block|{
 switch|switch
 condition|(
@@ -6152,18 +5906,9 @@ literal|"switch has a default case!"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Used to keep track of an operand bundle.  See the main comment on
-end_comment
-
-begin_comment
 comment|/// OperandBundleUser above.
-end_comment
-
-begin_struct
-struct|struct
+expr|struct
 name|BundleOpInfo
 block|{
 comment|/// \brief The operand bundle tag, interned by
@@ -6174,17 +5919,17 @@ name|uint32_t
 operator|>
 operator|*
 name|Tag
-expr_stmt|;
+block|;
 comment|/// \brief The index in the Use& vector where operands for this operand
 comment|/// bundle starts.
 name|uint32_t
 name|Begin
-decl_stmt|;
+block|;
 comment|/// \brief The index in the Use& vector where operands for this operand
 comment|/// bundle ends.
 name|uint32_t
 name|End
-decl_stmt|;
+block|;
 name|bool
 name|operator
 operator|==
@@ -6216,32 +5961,20 @@ operator|.
 name|End
 return|;
 block|}
-block|}
-struct|;
-end_struct
-
-begin_comment
+expr|}
+block|;
 comment|/// \brief Simple helper function to map a BundleOpInfo to an
-end_comment
-
-begin_comment
 comment|/// OperandBundleUse.
-end_comment
-
-begin_decl_stmt
 name|OperandBundleUse
 name|operandBundleFromBundleOpInfo
 argument_list|(
-specifier|const
-name|BundleOpInfo
-operator|&
-name|BOI
+argument|const BundleOpInfo&BOI
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|auto
 name|op_begin
-init|=
+operator|=
 name|static_cast
 operator|<
 specifier|const
@@ -6254,7 +5987,7 @@ operator|)
 operator|->
 name|op_begin
 argument_list|()
-decl_stmt|;
+block|;
 name|ArrayRef
 operator|<
 name|Use
@@ -6273,7 +6006,7 @@ name|BOI
 operator|.
 name|End
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|OperandBundleUse
 argument_list|(
@@ -6285,37 +6018,24 @@ name|Inputs
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|BundleOpInfo
-modifier|*
+name|using
 name|bundle_op_iterator
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+operator|=
+name|BundleOpInfo
+operator|*
+block|;
+name|using
+name|const_bundle_op_iterator
+operator|=
 specifier|const
 name|BundleOpInfo
-modifier|*
-name|const_bundle_op_iterator
-typedef|;
-end_typedef
-
-begin_comment
+operator|*
+block|;
 comment|/// \brief Return the start of the list of BundleOpInfo instances associated
-end_comment
-
-begin_comment
 comment|/// with this OperandBundleUser.
-end_comment
-
-begin_function
 name|bundle_op_iterator
 name|bundle_op_info_begin
-parameter_list|()
+argument_list|()
 block|{
 if|if
 condition|(
@@ -6336,9 +6056,9 @@ return|return
 name|nullptr
 return|;
 name|uint8_t
-modifier|*
+operator|*
 name|BytesBegin
-init|=
+operator|=
 name|static_cast
 operator|<
 name|InstrTy
@@ -6353,7 +6073,7 @@ argument_list|()
 operator|.
 name|begin
 argument_list|()
-decl_stmt|;
+block|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -6364,17 +6084,8 @@ name|BytesBegin
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Return the start of the list of BundleOpInfo instances associated
-end_comment
-
-begin_comment
 comment|/// with this OperandBundleUser.
-end_comment
-
-begin_expr_stmt
 name|const_bundle_op_iterator
 name|bundle_op_info_begin
 argument_list|()
@@ -6405,20 +6116,11 @@ name|bundle_op_info_begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Return the end of the list of BundleOpInfo instances associated
-end_comment
-
-begin_comment
 comment|/// with this OperandBundleUser.
-end_comment
-
-begin_function
 name|bundle_op_iterator
 name|bundle_op_info_end
-parameter_list|()
+argument_list|()
 block|{
 if|if
 condition|(
@@ -6439,9 +6141,9 @@ return|return
 name|nullptr
 return|;
 name|uint8_t
-modifier|*
+operator|*
 name|BytesEnd
-init|=
+operator|=
 name|static_cast
 operator|<
 name|InstrTy
@@ -6456,7 +6158,7 @@ argument_list|()
 operator|.
 name|end
 argument_list|()
-decl_stmt|;
+block|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -6467,17 +6169,8 @@ name|BytesEnd
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Return the end of the list of BundleOpInfo instances associated
-end_comment
-
-begin_comment
 comment|/// with this OperandBundleUser.
-end_comment
-
-begin_expr_stmt
 name|const_bundle_op_iterator
 name|bundle_op_info_end
 argument_list|()
@@ -6508,13 +6201,7 @@ name|bundle_op_info_end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Return the range [\p bundle_op_info_begin, \p bundle_op_info_end).
-end_comment
-
-begin_expr_stmt
 name|iterator_range
 operator|<
 name|bundle_op_iterator
@@ -6533,13 +6220,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Return the range [\p bundle_op_info_begin, \p bundle_op_info_end).
-end_comment
-
-begin_expr_stmt
 name|iterator_range
 operator|<
 name|const_bundle_op_iterator
@@ -6559,50 +6240,23 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Populate the BundleOpInfo instances and the Use& vector from \p
-end_comment
-
-begin_comment
 comment|/// Bundles.  Return the op_iterator pointing to the Use& one past the last
-end_comment
-
-begin_comment
 comment|/// last bundle operand use.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Each \p OperandBundleDef instance is tracked by a OperandBundleInfo
-end_comment
-
-begin_comment
 comment|/// instance allocated in this User's descriptor.
-end_comment
-
-begin_decl_stmt
 name|OpIteratorTy
 name|populateBundleOperandInfos
 argument_list|(
-name|ArrayRef
-operator|<
-name|OperandBundleDef
-operator|>
-name|Bundles
+argument|ArrayRef<OperandBundleDef> Bundles
 argument_list|,
-specifier|const
-name|unsigned
-name|BeginIndex
+argument|const unsigned BeginIndex
 argument_list|)
 block|{
 name|auto
 name|It
-init|=
+operator|=
 name|static_cast
 operator|<
 name|InstrTy
@@ -6616,7 +6270,7 @@ name|op_begin
 argument_list|()
 operator|+
 name|BeginIndex
-decl_stmt|;
+block|;
 for|for
 control|(
 name|auto
@@ -6661,20 +6315,20 @@ name|getContext
 argument_list|()
 operator|.
 name|pImpl
-expr_stmt|;
+block|;
 name|auto
 name|BI
-init|=
+operator|=
 name|Bundles
 operator|.
 name|begin
 argument_list|()
-decl_stmt|;
+block|;
 name|unsigned
 name|CurrentIndex
-init|=
+operator|=
 name|BeginIndex
-decl_stmt|;
+block|;
 for|for
 control|(
 name|auto
@@ -6754,34 +6408,18 @@ return|return
 name|It
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Return the BundleOpInfo for the operand at index OpIdx.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// It is an error to call this with an OpIdx that does not correspond to an
-end_comment
-
-begin_comment
 comment|/// bundle operand.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|BundleOpInfo
-modifier|&
+operator|&
 name|getBundleOpInfoForOperand
 argument_list|(
-name|unsigned
-name|OpIdx
+argument|unsigned OpIdx
 argument_list|)
-decl|const
+specifier|const
 block|{
 for|for
 control|(
@@ -6813,31 +6451,20 @@ name|llvm_unreachable
 argument_list|(
 literal|"Did not find operand bundle for operand!"
 argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
+block|;   }
 comment|/// \brief Return the total number of values used in \p Bundles.
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|unsigned
 name|CountBundleInputs
 argument_list|(
-name|ArrayRef
-operator|<
-name|OperandBundleDef
-operator|>
-name|Bundles
+argument|ArrayRef<OperandBundleDef> Bundles
 argument_list|)
 block|{
 name|unsigned
 name|Total
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 for|for
 control|(
 name|auto
@@ -6861,7 +6488,7 @@ end_decl_stmt
 
 begin_comment
 unit|};  }
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif

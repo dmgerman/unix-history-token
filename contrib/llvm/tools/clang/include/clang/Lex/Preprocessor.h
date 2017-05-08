@@ -935,7 +935,7 @@ comment|/// \brief If the current lexer is for a submodule that is being built, 
 comment|/// is that submodule.
 name|Module
 modifier|*
-name|CurSubmodule
+name|CurLexerSubmodule
 decl_stmt|;
 comment|/// \brief Keeps track of the stack of files currently
 comment|/// \#included, and macros currently being expanded from, not counting
@@ -1935,6 +1935,8 @@ argument|Module *M
 argument_list|,
 argument|SourceLocation ImportLoc
 argument_list|,
+argument|bool IsPragma
+argument_list|,
 argument|SubmoduleState *OuterSubmoduleState
 argument_list|,
 argument|unsigned OuterPendingModuleMacroNames
@@ -1948,6 +1950,11 @@ operator|,
 name|ImportLoc
 argument_list|(
 name|ImportLoc
+argument_list|)
+operator|,
+name|IsPragma
+argument_list|(
+name|IsPragma
 argument_list|)
 operator|,
 name|OuterSubmoduleState
@@ -1968,6 +1975,10 @@ expr_stmt|;
 comment|/// The location at which the module was included.
 name|SourceLocation
 name|ImportLoc
+decl_stmt|;
+comment|/// Whether we entered this submodule via a pragma.
+name|bool
+name|IsPragma
 decl_stmt|;
 comment|/// The previous SubmoduleState.
 name|SubmoduleState
@@ -3247,18 +3258,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Return the submodule owning the file being lexed.
+comment|/// \brief Return the submodule owning the file being lexed. This may not be
+end_comment
+
+begin_comment
+comment|/// the current module if we have changed modules since entering the file.
 end_comment
 
 begin_expr_stmt
 name|Module
 operator|*
-name|getCurrentSubmodule
+name|getCurrentLexerSubmodule
 argument_list|()
 specifier|const
 block|{
 return|return
-name|CurSubmodule
+name|CurLexerSubmodule
 return|;
 block|}
 end_expr_stmt
@@ -8123,6 +8138,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|EnterSubmodule
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|,
+name|SourceLocation
+name|ImportLoc
+parameter_list|,
+name|bool
+name|ForPragma
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Module
+modifier|*
+name|LeaveSubmodule
+parameter_list|(
+name|bool
+name|ForPragma
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|private
 label|:
@@ -8148,7 +8191,7 @@ name|emplace_back
 argument_list|(
 name|CurLexerKind
 argument_list|,
-name|CurSubmodule
+name|CurLexerSubmodule
 argument_list|,
 name|std
 operator|::
@@ -8248,7 +8291,7 @@ argument_list|()
 operator|.
 name|TheDirLookup
 expr_stmt|;
-name|CurSubmodule
+name|CurLexerSubmodule
 operator|=
 name|IncludeMacroStack
 operator|.
@@ -8282,27 +8325,6 @@ name|Token
 modifier|&
 name|Result
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|EnterSubmodule
-parameter_list|(
-name|Module
-modifier|*
-name|M
-parameter_list|,
-name|SourceLocation
-name|ImportLoc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|LeaveSubmodule
-parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -9496,17 +9518,6 @@ parameter_list|(
 name|Token
 modifier|&
 name|DependencyTok
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|HandlePragmaModuleImport
-parameter_list|(
-name|Token
-modifier|&
-name|Tok
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -765,6 +765,10 @@ block|,
 name|LOG_ARGS_ENTER
 operator|=
 literal|3
+block|,
+name|CUSTOM_EVENT
+operator|=
+literal|4
 block|,   }
 decl_stmt|;
 comment|// The table will contain these structs that point to the sled, the function
@@ -812,11 +816,11 @@ decl_stmt|;
 block|}
 struct|;
 comment|// All the sleds to be emitted.
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|XRayFunctionEntry
+operator|,
+literal|4
 operator|>
 name|Sleds
 expr_stmt|;

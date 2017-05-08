@@ -510,12 +510,12 @@ argument_list|,
 argument|llvm::dwarf::DwarfFormat Format
 argument_list|)
 expr_stmt|;
-comment|/// Skip a form in \p debug_info_data at offset specified by \p offset_ptr.
+comment|/// Skip a form in \p DebugInfoData at offset specified by \p OffsetPtr.
 comment|///
 comment|/// Skips the bytes for this form in the debug info and updates the offset.
 comment|///
-comment|/// \param debug_info_data the .debug_info data to use to skip the value.
-comment|/// \param offset_ptr a reference to the offset that will be updated.
+comment|/// \param DebugInfoData the .debug_info data to use to skip the value.
+comment|/// \param OffsetPtr a reference to the offset that will be updated.
 comment|/// \param U the DWARFUnit to use when skipping the form in case the form
 comment|/// size differs according to data in the DWARFUnit.
 comment|/// \returns true on success, false if the form was not skipped.
@@ -523,11 +523,11 @@ name|bool
 name|skipValue
 argument_list|(
 name|DataExtractor
-name|debug_info_data
+name|DebugInfoData
 argument_list|,
 name|uint32_t
 operator|*
-name|offset_ptr
+name|OffsetPtr
 argument_list|,
 specifier|const
 name|DWARFUnit
@@ -536,13 +536,13 @@ name|U
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Skip a form in \p debug_info_data at offset specified by \p offset_ptr.
+comment|/// Skip a form in \p DebugInfoData at offset specified by \p OffsetPtr.
 comment|///
 comment|/// Skips the bytes for this form in the debug info and updates the offset.
 comment|///
-comment|/// \param form the DW_FORM enumeration that indicates the form to skip.
-comment|/// \param debug_info_data the .debug_info data to use to skip the value.
-comment|/// \param offset_ptr a reference to the offset that will be updated.
+comment|/// \param Form the DW_FORM enumeration that indicates the form to skip.
+comment|/// \param DebugInfoData the .debug_info data to use to skip the value.
+comment|/// \param OffsetPtr a reference to the offset that will be updated.
 comment|/// \param U the DWARFUnit to use when skipping the form in case the form
 comment|/// size differs according to data in the DWARFUnit.
 comment|/// \returns true on success, false if the form was not skipped.
@@ -553,14 +553,14 @@ argument_list|(
 name|dwarf
 operator|::
 name|Form
-name|form
+name|Form
 argument_list|,
 name|DataExtractor
-name|debug_info_data
+name|DebugInfoData
 argument_list|,
 name|uint32_t
 operator|*
-name|offset_ptr
+name|OffsetPtr
 argument_list|,
 specifier|const
 name|DWARFUnit
@@ -568,13 +568,13 @@ operator|*
 name|U
 argument_list|)
 decl_stmt|;
-comment|/// Skip a form in \p debug_info_data at offset specified by \p offset_ptr.
+comment|/// Skip a form in \p DebugInfoData at offset specified by \p OffsetPtr.
 comment|///
 comment|/// Skips the bytes for this form in the debug info and updates the offset.
 comment|///
-comment|/// \param form the DW_FORM enumeration that indicates the form to skip.
-comment|/// \param debug_info_data the .debug_info data to use to skip the value.
-comment|/// \param offset_ptr a reference to the offset that will be updated.
+comment|/// \param Form the DW_FORM enumeration that indicates the form to skip.
+comment|/// \param DebugInfoData the .debug_info data to use to skip the value.
+comment|/// \param OffsetPtr a reference to the offset that will be updated.
 comment|/// \param Version DWARF version number.
 comment|/// \param AddrSize size of an address in bytes.
 comment|/// \param Format enum value from llvm::dwarf::DwarfFormat.
@@ -586,14 +586,14 @@ argument_list|(
 name|dwarf
 operator|::
 name|Form
-name|form
+name|Form
 argument_list|,
 name|DataExtractor
-name|debug_info_data
+name|DebugInfoData
 argument_list|,
 name|uint32_t
 operator|*
-name|offset_ptr
+name|OffsetPtr
 argument_list|,
 name|uint16_t
 name|Version
@@ -639,7 +639,7 @@ operator|*
 operator|>
 name|toString
 argument_list|(
-argument|const Optional<DWARFFormValue>& V
+argument|const Optional<DWARFFormValue>&V
 argument_list|)
 block|{
 if|if
@@ -706,7 +706,7 @@ name|uint64_t
 operator|>
 name|toUnsigned
 argument_list|(
-argument|const Optional<DWARFFormValue>& V
+argument|const Optional<DWARFFormValue>&V
 argument_list|)
 block|{
 if|if
@@ -808,7 +808,7 @@ name|uint64_t
 operator|>
 name|toReference
 argument_list|(
-argument|const Optional<DWARFFormValue>& V
+argument|const Optional<DWARFFormValue>&V
 argument_list|)
 block|{
 if|if
@@ -913,7 +913,7 @@ name|int64_t
 operator|>
 name|toSigned
 argument_list|(
-argument|const Optional<DWARFFormValue>& V
+argument|const Optional<DWARFFormValue>&V
 argument_list|)
 block|{
 if|if
@@ -1018,7 +1018,7 @@ name|uint64_t
 operator|>
 name|toAddress
 argument_list|(
-argument|const Optional<DWARFFormValue>& V
+argument|const Optional<DWARFFormValue>&V
 argument_list|)
 block|{
 if|if
@@ -1123,7 +1123,7 @@ name|uint64_t
 operator|>
 name|toSectionOffset
 argument_list|(
-argument|const Optional<DWARFFormValue>& V
+argument|const Optional<DWARFFormValue>&V
 argument_list|)
 block|{
 if|if
@@ -1230,7 +1230,7 @@ name|uint8_t
 operator|>>
 name|toBlock
 argument_list|(
-argument|const Optional<DWARFFormValue>& V
+argument|const Optional<DWARFFormValue>&V
 argument_list|)
 block|{
 if|if

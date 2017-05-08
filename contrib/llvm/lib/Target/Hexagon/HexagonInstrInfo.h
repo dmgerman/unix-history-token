@@ -694,6 +694,30 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// getOperandLatency - Compute and return the use operand latency of a given
+comment|/// pair of def and use.
+comment|/// In most cases, the static scheduling itinerary was enough to determine the
+comment|/// operand latency. But it may not be possible for instructions with variable
+comment|/// number of defs / uses.
+comment|///
+comment|/// This is a raw interface to the itinerary that may be directly overriden by
+comment|/// a target. Use computeOperandLatency to get the best estimate of latency.
+name|int
+name|getOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr&DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr&UseMI
+argument_list|,
+argument|unsigned UseIdx
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
 name|isTailCall
 argument_list|(
@@ -1124,7 +1148,7 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|isV60VectorInstruction
+name|isHVXVec
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|)

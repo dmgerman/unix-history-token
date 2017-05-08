@@ -164,6 +164,10 @@ argument_list|(
 argument|StringRef Name
 argument_list|,
 argument|SymbolType Type
+argument_list|,
+argument|uint32_t Section
+argument_list|,
+argument|uint32_t ElementIndex
 argument_list|)
 block|:
 name|Name
@@ -173,7 +177,17 @@ argument_list|)
 operator|,
 name|Type
 argument_list|(
-argument|Type
+name|Type
+argument_list|)
+operator|,
+name|Section
+argument_list|(
+name|Section
+argument_list|)
+operator|,
+name|ElementIndex
+argument_list|(
+argument|ElementIndex
 argument_list|)
 block|{}
 name|StringRef
@@ -181,6 +195,12 @@ name|Name
 expr_stmt|;
 name|SymbolType
 name|Type
+decl_stmt|;
+name|uint32_t
+name|Section
+decl_stmt|;
+name|uint32_t
+name|ElementIndex
 decl_stmt|;
 block|}
 empty_stmt|;

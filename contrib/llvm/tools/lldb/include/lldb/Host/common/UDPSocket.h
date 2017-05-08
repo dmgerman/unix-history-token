@@ -84,8 +84,6 @@ operator|:
 name|UDPSocket
 argument_list|(
 argument|NativeSocket socket
-argument_list|,
-argument|const UDPSocket&listen_socket
 argument_list|)
 block|;
 name|size_t
@@ -119,10 +117,6 @@ argument_list|(
 argument|Socket *&socket
 argument_list|)
 name|override
-block|;
-name|Error
-name|CreateSocket
-argument_list|()
 block|;
 name|SocketAddress
 name|m_sockaddr

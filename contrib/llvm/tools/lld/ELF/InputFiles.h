@@ -906,19 +906,33 @@ name|InputFile
 block|{
 name|public
 operator|:
-name|explicit
 name|LazyObjectFile
 argument_list|(
 argument|MemoryBufferRef M
+argument_list|,
+argument|StringRef ArchiveName
+argument_list|,
+argument|uint64_t OffsetInArchive
 argument_list|)
 operator|:
 name|InputFile
 argument_list|(
-argument|LazyObjectKind
+name|LazyObjectKind
 argument_list|,
-argument|M
+name|M
 argument_list|)
-block|{}
+block|,
+name|OffsetInArchive
+argument_list|(
+argument|OffsetInArchive
+argument_list|)
+block|{
+name|this
+operator|->
+name|ArchiveName
+operator|=
+name|ArchiveName
+block|;   }
 specifier|static
 name|bool
 name|classof
@@ -946,6 +960,11 @@ argument_list|()
 block|;
 name|MemoryBufferRef
 name|getBuffer
+argument_list|()
+block|;
+name|InputFile
+operator|*
+name|fetch
 argument_list|()
 block|;
 name|private
@@ -986,6 +1005,9 @@ name|bool
 name|Seen
 operator|=
 name|false
+block|;
+name|uint64_t
+name|OffsetInArchive
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1006,16 +1028,16 @@ operator|:
 name|explicit
 name|ArchiveFile
 argument_list|(
-argument|MemoryBufferRef M
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Archive
+operator|>
+operator|&&
+name|File
 argument_list|)
-operator|:
-name|InputFile
-argument_list|(
-argument|ArchiveKind
-argument_list|,
-argument|M
-argument_list|)
-block|{}
+block|;
 specifier|static
 name|bool
 name|classof

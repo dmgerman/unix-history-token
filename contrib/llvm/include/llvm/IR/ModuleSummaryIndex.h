@@ -203,104 +203,104 @@ expr_stmt|;
 block|}
 block|}
 struct|;
-comment|/// Struct to hold value either by GUID or GlobalValue*. Values in combined
-comment|/// indexes as well as indirect calls are GUIDs, all others are GlobalValues.
-struct|struct
-name|ValueInfo
-block|{
-comment|/// The value representation used in this instance.
-enum|enum
-name|ValueInfoKind
-block|{
-name|VI_GUID
-block|,
-name|VI_Value
-block|,   }
-enum|;
-comment|/// Union of the two possible value types.
-union|union
-name|ValueUnion
-block|{
-name|GlobalValue
+name|class
+name|GlobalValueSummary
+decl_stmt|;
+typedef|typedef
+name|std
 operator|::
-name|GUID
-name|Id
+name|vector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|GlobalValueSummary
+operator|>>
+name|GlobalValueSummaryList
 expr_stmt|;
+struct|struct
+name|GlobalValueSummaryInfo
+block|{
+comment|/// The GlobalValue corresponding to this summary. This is only used in
+comment|/// per-module summaries.
 specifier|const
 name|GlobalValue
 modifier|*
 name|GV
+init|=
+name|nullptr
 decl_stmt|;
-name|ValueUnion
-argument_list|(
-argument|GlobalValue::GUID Id
-argument_list|)
-block|:
-name|Id
-argument_list|(
-argument|Id
-argument_list|)
-block|{}
-name|ValueUnion
-argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
-argument_list|)
-operator|:
-name|GV
-argument_list|(
-argument|GV
-argument_list|)
-block|{}
+comment|/// List of global value summary structures for a particular value held
+comment|/// in the GlobalValueMap. Requires a vector in the case of multiple
+comment|/// COMDAT values of the same name.
+name|GlobalValueSummaryList
+name|SummaryList
+decl_stmt|;
 block|}
-union|;
-comment|/// The value being represented.
-name|ValueUnion
-name|TheValue
-decl_stmt|;
-comment|/// The value representation.
-name|ValueInfoKind
-name|Kind
-decl_stmt|;
-comment|/// Constructor for a GUID value
-name|ValueInfo
-argument_list|(
-argument|GlobalValue::GUID Id =
-literal|0
-argument_list|)
-block|:
-name|TheValue
-argument_list|(
-name|Id
-argument_list|)
+struct|;
+comment|/// Map from global value GUID to corresponding summary structures. Use a
+comment|/// std::map rather than a DenseMap so that pointers to the map's value_type
+comment|/// (which are used by ValueInfo) are not invalidated by insertion. Also it will
+comment|/// likely incur less overhead, as the value type is not very small and the size
+comment|/// of the map is unknown, resulting in inefficiencies due to repeated
+comment|/// insertions and resizing.
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|GlobalValue
+operator|::
+name|GUID
 operator|,
-name|Kind
-argument_list|(
-argument|VI_GUID
-argument_list|)
-block|{}
-comment|/// Constructor for a GlobalValue* value
+name|GlobalValueSummaryInfo
+operator|>
+name|GlobalValueSummaryMapTy
+expr_stmt|;
+comment|/// Struct that holds a reference to a particular GUID in a global value
+comment|/// summary.
+struct|struct
+name|ValueInfo
+block|{
+specifier|const
+name|GlobalValueSummaryMapTy
+operator|::
+name|value_type
+operator|*
+name|Ref
+operator|=
+name|nullptr
+expr_stmt|;
+name|ValueInfo
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|ValueInfo
 argument_list|(
 specifier|const
-name|GlobalValue
+name|GlobalValueSummaryMapTy
+operator|::
+name|value_type
 operator|*
-name|V
+name|Ref
 argument_list|)
 operator|:
-name|TheValue
+name|Ref
 argument_list|(
-name|V
-argument_list|)
-operator|,
-name|Kind
-argument_list|(
-argument|VI_Value
+argument|Ref
 argument_list|)
 block|{}
-comment|/// Accessor for GUID value
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Ref
+return|;
+block|}
 name|GlobalValue
 operator|::
 name|GUID
@@ -308,22 +308,12 @@ name|getGUID
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|Kind
-operator|==
-name|VI_GUID
-operator|&&
-literal|"Not a GUID type"
-argument_list|)
-block|;
 return|return
-name|TheValue
-operator|.
-name|Id
+name|Ref
+operator|->
+name|first
 return|;
 block|}
-comment|/// Accessor for GlobalValue* value
 specifier|const
 name|GlobalValue
 operator|*
@@ -331,30 +321,32 @@ name|getValue
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|Kind
-operator|==
-name|VI_Value
-operator|&&
-literal|"Not a Value type"
-argument_list|)
-block|;
 return|return
-name|TheValue
+name|Ref
+operator|->
+name|second
 operator|.
 name|GV
 return|;
 block|}
-name|bool
-name|isGUID
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|GlobalValueSummary
+operator|>>
+name|getSummaryList
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Kind
-operator|==
-name|VI_GUID
+name|Ref
+operator|->
+name|second
+operator|.
+name|SummaryList
 return|;
 block|}
 block|}
@@ -378,7 +370,9 @@ return|return
 name|ValueInfo
 argument_list|(
 operator|(
-name|GlobalValue
+name|GlobalValueSummaryMapTy
+operator|::
+name|value_type
 operator|*
 operator|)
 operator|-
@@ -396,7 +390,9 @@ return|return
 name|ValueInfo
 argument_list|(
 operator|(
-name|GlobalValue
+name|GlobalValueSummaryMapTy
+operator|::
+name|value_type
 operator|*
 operator|)
 operator|-
@@ -413,105 +409,45 @@ argument_list|,
 argument|ValueInfo R
 argument_list|)
 block|{
-if|if
-condition|(
-name|L
-operator|.
-name|isGUID
-argument_list|()
-operator|!=
-name|R
-operator|.
-name|isGUID
-argument_list|()
-condition|)
-return|return
-name|false
-return|;
 return|return
 name|L
 operator|.
-name|isGUID
-argument_list|()
-condition|?
-operator|(
-name|L
-operator|.
-name|getGUID
-argument_list|()
+name|Ref
 operator|==
 name|R
 operator|.
-name|getGUID
-argument_list|()
-operator|)
-else|:
-operator|(
-name|L
-operator|.
-name|getValue
-argument_list|()
-operator|==
-name|R
-operator|.
-name|getValue
-argument_list|()
-operator|)
+name|Ref
 return|;
 block|}
 specifier|static
 name|unsigned
 name|getHashValue
-parameter_list|(
-name|ValueInfo
-name|I
-parameter_list|)
+argument_list|(
+argument|ValueInfo I
+argument_list|)
 block|{
 return|return
-name|I
-operator|.
-name|isGUID
-argument_list|()
-condition|?
-name|I
-operator|.
-name|getGUID
-argument_list|()
-else|:
 operator|(
 name|uintptr_t
 operator|)
 name|I
 operator|.
-name|getValue
-argument_list|()
+name|Ref
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|/// \brief Function and variable summary information to aid decisions and
-end_comment
-
-begin_comment
 comment|/// implementation of importing.
-end_comment
-
-begin_decl_stmt
 name|class
 name|GlobalValueSummary
 block|{
 name|public
-label|:
+operator|:
 comment|/// \brief Sububclass discriminator (for dyn_cast<> et al.)
-enum|enum
+expr|enum
 name|SummaryKind
-enum|:
+operator|:
 name|unsigned
 block|{
 name|AliasKind
@@ -520,9 +456,9 @@ name|FunctionKind
 block|,
 name|GlobalVarKind
 block|}
-enum|;
+block|;
 comment|/// Group flags (Linkage, NotEligibleToImport, etc.) as a bitfield.
-struct|struct
+block|struct
 name|GVFlags
 block|{
 comment|/// \brief The linkage type of the associated global value.
@@ -534,66 +470,61 @@ comment|/// In the future this will be used to update and optimize linkage
 comment|/// types based on global summary-based analysis.
 name|unsigned
 name|Linkage
-range|:
+operator|:
 literal|4
-decl_stmt|;
+block|;
 comment|/// Indicate if the global value cannot be imported (e.g. it cannot
 comment|/// be renamed or references something that can't be renamed).
 name|unsigned
 name|NotEligibleToImport
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// Indicate that the global value must be considered a live root for
 comment|/// index-based liveness analysis. Used for special LLVM values such as
 comment|/// llvm.global_ctors that the linker does not know about.
 name|unsigned
 name|LiveRoot
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// Convenience Constructors
 name|explicit
 name|GVFlags
 argument_list|(
-name|GlobalValue
-operator|::
-name|LinkageTypes
-name|Linkage
+argument|GlobalValue::LinkageTypes Linkage
 argument_list|,
-name|bool
-name|NotEligibleToImport
+argument|bool NotEligibleToImport
 argument_list|,
-name|bool
-name|LiveRoot
+argument|bool LiveRoot
 argument_list|)
-range|:
+operator|:
 name|Linkage
 argument_list|(
 name|Linkage
 argument_list|)
-decl_stmt|,
+block|,
 name|NotEligibleToImport
 argument_list|(
 name|NotEligibleToImport
 argument_list|)
-decl_stmt|,
+block|,
 name|LiveRoot
 argument_list|(
-name|LiveRoot
+argument|LiveRoot
 argument_list|)
 block|{}
 block|}
-struct|;
+block|;
 name|private
-label|:
+operator|:
 comment|/// Kind of summary for use in dyn_cast<> et al.
 name|SummaryKind
 name|Kind
-decl_stmt|;
+block|;
 name|GVFlags
 name|Flags
-decl_stmt|;
+block|;
 comment|/// This is the hash of the name of the symbol in the original file. It is
 comment|/// identical to the GUID for global symbols, but differs for local since the
 comment|/// GUID includes the module level id in the hash.
@@ -601,7 +532,7 @@ name|GlobalValue
 operator|::
 name|GUID
 name|OriginalName
-expr_stmt|;
+block|;
 comment|/// \brief Path of module IR containing value's definition, used to locate
 comment|/// module during importing.
 comment|///
@@ -611,7 +542,7 @@ comment|/// not during writing of the per-module index which doesn't contain a
 comment|/// module path string table.
 name|StringRef
 name|ModulePath
-decl_stmt|;
+block|;
 comment|/// List of values referenced by this global value's definition
 comment|/// (either by the initializer of a global variable, or referenced
 comment|/// from within a function). This does not include functions called, which
@@ -623,9 +554,9 @@ operator|<
 name|ValueInfo
 operator|>
 name|RefEdgeList
-expr_stmt|;
+block|;
 name|protected
-label|:
+operator|:
 name|GlobalValueSummary
 argument_list|(
 argument|SummaryKind K
@@ -634,22 +565,22 @@ argument|GVFlags Flags
 argument_list|,
 argument|std::vector<ValueInfo> Refs
 argument_list|)
-block|:
+operator|:
 name|Kind
 argument_list|(
 name|K
 argument_list|)
-operator|,
+block|,
 name|Flags
 argument_list|(
 name|Flags
 argument_list|)
-operator|,
+block|,
 name|OriginalName
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|RefEdgeList
 argument_list|(
 argument|std::move(Refs)
@@ -663,7 +594,7 @@ name|GlobalValueSummary
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 comment|/// Returns the hash of the original name, it is identical to the GUID for
 comment|/// externally visible symbols, but not for local ones.
 name|GlobalValue
@@ -680,17 +611,13 @@ comment|/// Initialize the original name hash in this summary.
 name|void
 name|setOriginalName
 argument_list|(
-name|GlobalValue
-operator|::
-name|GUID
-name|Name
+argument|GlobalValue::GUID Name
 argument_list|)
 block|{
 name|OriginalName
 operator|=
 name|Name
-expr_stmt|;
-block|}
+block|; }
 comment|/// Which kind of summary subclass this is.
 name|SummaryKind
 name|getSummaryKind
@@ -705,16 +632,14 @@ comment|/// Set the path to the module containing this function, for use in
 comment|/// the combined index.
 name|void
 name|setModulePath
-parameter_list|(
-name|StringRef
-name|ModPath
-parameter_list|)
+argument_list|(
+argument|StringRef ModPath
+argument_list|)
 block|{
 name|ModulePath
 operator|=
 name|ModPath
-expr_stmt|;
-block|}
+block|; }
 comment|/// Get the path to the module containing this function.
 name|StringRef
 name|modulePath
@@ -728,7 +653,7 @@ block|}
 comment|/// Get the flags for this GlobalValue (see \p struct GVFlags).
 name|GVFlags
 name|flags
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Flags
@@ -761,10 +686,7 @@ comment|/// optimization. Will be applied in the ThinLTO backends.
 name|void
 name|setLinkage
 argument_list|(
-name|GlobalValue
-operator|::
-name|LinkageTypes
-name|Linkage
+argument|GlobalValue::LinkageTypes Linkage
 argument_list|)
 block|{
 name|Flags
@@ -772,8 +694,7 @@ operator|.
 name|Linkage
 operator|=
 name|Linkage
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Return true if this global value can't be imported.
 name|bool
 name|notEligibleToImport
@@ -803,27 +724,25 @@ comment|/// Flag that this global value must be considered a root for live
 comment|/// value analysis on the index.
 name|void
 name|setLiveRoot
-parameter_list|()
+argument_list|()
 block|{
 name|Flags
 operator|.
 name|LiveRoot
 operator|=
 name|true
-expr_stmt|;
-block|}
+block|; }
 comment|/// Flag that this global value cannot be imported.
 name|void
 name|setNotEligibleToImport
-parameter_list|()
+argument_list|()
 block|{
 name|Flags
 operator|.
 name|NotEligibleToImport
 operator|=
 name|true
-expr_stmt|;
-block|}
+block|; }
 comment|/// Return the list of values referenced by this global value definition.
 name|ArrayRef
 operator|<
@@ -837,21 +756,12 @@ return|return
 name|RefEdgeList
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|/// \brief Alias summary information.
-end_comment
-
-begin_decl_stmt
 name|class
 name|AliasSummary
-range|:
+operator|:
 name|public
 name|GlobalValueSummary
 block|{
@@ -1270,21 +1180,9 @@ return|return
 block|{}
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns the list of virtual calls made by this function using
-end_comment
-
-begin_comment
 comment|/// llvm.assume(llvm.type.test) intrinsics that do not have all constant
-end_comment
-
-begin_comment
 comment|/// integer arguments.
-end_comment
-
-begin_expr_stmt
 name|ArrayRef
 operator|<
 name|VFuncId
@@ -1302,29 +1200,14 @@ name|TIdInfo
 operator|->
 name|TypeTestAssumeVCalls
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 block|{}
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// Returns the list of virtual calls made by this function using
-end_comment
-
-begin_comment
 comment|/// llvm.type.checked.load intrinsics that do not have all constant integer
-end_comment
-
-begin_comment
 comment|/// arguments.
-end_comment
-
-begin_expr_stmt
-unit|ArrayRef
+name|ArrayRef
 operator|<
 name|VFuncId
 operator|>
@@ -1341,29 +1224,14 @@ name|TIdInfo
 operator|->
 name|TypeCheckedLoadVCalls
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 block|{}
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// Returns the list of virtual calls made by this function using
-end_comment
-
-begin_comment
 comment|/// llvm.assume(llvm.type.test) intrinsics with all constant integer
-end_comment
-
-begin_comment
 comment|/// arguments.
-end_comment
-
-begin_expr_stmt
-unit|ArrayRef
+name|ArrayRef
 operator|<
 name|ConstVCall
 operator|>
@@ -1380,16 +1248,13 @@ name|TIdInfo
 operator|->
 name|TypeTestAssumeConstVCalls
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 block|{}
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// Returns the list of virtual calls made by this function using
 end_comment
 
@@ -1398,7 +1263,7 @@ comment|/// llvm.type.checked.load intrinsics with all constant integer argument
 end_comment
 
 begin_expr_stmt
-unit|ArrayRef
+name|ArrayRef
 operator|<
 name|ConstVCall
 operator|>
@@ -1916,70 +1781,6 @@ expr_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// List of global value summary structures for a particular value held
-end_comment
-
-begin_comment
-comment|/// in the GlobalValueMap. Requires a vector in the case of multiple
-end_comment
-
-begin_comment
-comment|/// COMDAT values of the same name.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|GlobalValueSummary
-operator|>>
-name|GlobalValueSummaryList
-expr_stmt|;
-end_typedef
-
-begin_comment
-comment|/// Map from global value GUID to corresponding summary structures.
-end_comment
-
-begin_comment
-comment|/// Use a std::map rather than a DenseMap since it will likely incur
-end_comment
-
-begin_comment
-comment|/// less overhead, as the value type is not very small and the size
-end_comment
-
-begin_comment
-comment|/// of the map is unknown, resulting in inefficiencies due to repeated
-end_comment
-
-begin_comment
-comment|/// insertions and resizing.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|map
-operator|<
-name|GlobalValue
-operator|::
-name|GUID
-operator|,
-name|GlobalValueSummaryList
-operator|>
-name|GlobalValueSummaryMapTy
-expr_stmt|;
-end_typedef
-
-begin_comment
 comment|/// Type used for iterating through the global value summary map.
 end_comment
 
@@ -2117,6 +1918,31 @@ operator|<
 name|ModuleSummaryIndex
 operator|>
 expr_stmt|;
+name|GlobalValueSummaryMapTy
+operator|::
+name|value_type
+operator|*
+name|getOrInsertValuePtr
+argument_list|(
+argument|GlobalValue::GUID GUID
+argument_list|)
+block|{
+return|return
+operator|&
+operator|*
+name|GlobalValueMap
+operator|.
+name|emplace
+argument_list|(
+name|GUID
+argument_list|,
+name|GlobalValueSummaryInfo
+block|{}
+argument_list|)
+operator|.
+name|first
+return|;
+block|}
 name|public
 label|:
 name|gvsummary_iterator
@@ -2177,70 +2003,98 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// Get the list of global value summary objects for a given value name.
-specifier|const
-name|GlobalValueSummaryList
-modifier|&
-name|getGlobalValueSummaryList
-parameter_list|(
-name|StringRef
-name|ValueName
-parameter_list|)
-block|{
-return|return
-name|GlobalValueMap
-index|[
-name|GlobalValue
-operator|::
-name|getGUID
-argument_list|(
-name|ValueName
-argument_list|)
-index|]
-return|;
-block|}
-comment|/// Get the list of global value summary objects for a given value name.
-specifier|const
-name|const_gvsummary_iterator
-name|findGlobalValueSummaryList
-argument_list|(
-name|StringRef
-name|ValueName
-argument_list|)
-decl|const
-block|{
-return|return
-name|GlobalValueMap
-operator|.
-name|find
-argument_list|(
-name|GlobalValue
-operator|::
-name|getGUID
-argument_list|(
-name|ValueName
-argument_list|)
-argument_list|)
-return|;
-block|}
-comment|/// Get the list of global value summary objects for a given value GUID.
-specifier|const
-name|const_gvsummary_iterator
-name|findGlobalValueSummaryList
+comment|/// Return a ValueInfo for GUID if it exists, otherwise return ValueInfo().
+name|ValueInfo
+name|getValueInfo
 argument_list|(
 name|GlobalValue
 operator|::
 name|GUID
-name|ValueGUID
+name|GUID
 argument_list|)
 decl|const
 block|{
-return|return
+name|auto
+name|I
+init|=
 name|GlobalValueMap
 operator|.
 name|find
 argument_list|(
-name|ValueGUID
+name|GUID
+argument_list|)
+decl_stmt|;
+return|return
+name|ValueInfo
+argument_list|(
+name|I
+operator|==
+name|GlobalValueMap
+operator|.
+name|end
+argument_list|()
+condition|?
+name|nullptr
+else|:
+operator|&
+operator|*
+name|I
+argument_list|)
+return|;
+block|}
+comment|/// Return a ValueInfo for \p GUID.
+name|ValueInfo
+name|getOrInsertValueInfo
+argument_list|(
+name|GlobalValue
+operator|::
+name|GUID
+name|GUID
+argument_list|)
+block|{
+return|return
+name|ValueInfo
+argument_list|(
+name|getOrInsertValuePtr
+argument_list|(
+name|GUID
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// Return a ValueInfo for \p GV and mark it as belonging to GV.
+name|ValueInfo
+name|getOrInsertValueInfo
+parameter_list|(
+specifier|const
+name|GlobalValue
+modifier|*
+name|GV
+parameter_list|)
+block|{
+name|auto
+name|VP
+init|=
+name|getOrInsertValuePtr
+argument_list|(
+name|GV
+operator|->
+name|getGUID
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|VP
+operator|->
+name|second
+operator|.
+name|GV
+operator|=
+name|GV
+expr_stmt|;
+return|return
+name|ValueInfo
+argument_list|(
+name|VP
 argument_list|)
 return|;
 block|}
@@ -2296,33 +2150,18 @@ operator|>
 name|Summary
 argument_list|)
 block|{
-name|addOriginalName
+name|addGlobalValueSummary
+argument_list|(
+name|getOrInsertValueInfo
 argument_list|(
 name|GlobalValue
 operator|::
 name|getGUID
 argument_list|(
 name|ValueName
+argument_list|)
 argument_list|)
 argument_list|,
-name|Summary
-operator|->
-name|getOriginalName
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|GlobalValueMap
-index|[
-name|GlobalValue
-operator|::
-name|getGUID
-argument_list|(
-name|ValueName
-argument_list|)
-index|]
-operator|.
-name|push_back
-argument_list|(
 name|std
 operator|::
 name|move
@@ -2332,14 +2171,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Add a global value summary for a value of the given GUID.
+comment|/// Add a global value summary for the given ValueInfo.
 name|void
 name|addGlobalValueSummary
 argument_list|(
-name|GlobalValue
-operator|::
-name|GUID
-name|ValueGUID
+name|ValueInfo
+name|VI
 argument_list|,
 name|std
 operator|::
@@ -2352,7 +2189,10 @@ argument_list|)
 block|{
 name|addOriginalName
 argument_list|(
-name|ValueGUID
+name|VI
+operator|.
+name|getGUID
+argument_list|()
 argument_list|,
 name|Summary
 operator|->
@@ -2360,10 +2200,24 @@ name|getOriginalName
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|GlobalValueMap
-index|[
-name|ValueGUID
-index|]
+comment|// Here we have a notionally const VI, but the value it points to is owned
+comment|// by the non-const *this.
+name|const_cast
+operator|<
+name|GlobalValueSummaryMapTy
+operator|::
+name|value_type
+operator|*
+operator|>
+operator|(
+name|VI
+operator|.
+name|Ref
+operator|)
+operator|->
+name|second
+operator|.
+name|SummaryList
 operator|.
 name|push_back
 argument_list|(
@@ -2451,19 +2305,17 @@ argument_list|)
 decl|const
 block|{
 name|auto
-name|CalleeInfoList
+name|CalleeInfo
 init|=
-name|findGlobalValueSummaryList
+name|getValueInfo
 argument_list|(
 name|ValueGUID
 argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|CalleeInfoList
-operator|==
-name|end
-argument_list|()
+operator|!
+name|CalleeInfo
 condition|)
 block|{
 return|return
@@ -2478,9 +2330,10 @@ name|llvm
 operator|::
 name|find_if
 argument_list|(
-name|CalleeInfoList
-operator|->
-name|second
+name|CalleeInfo
+operator|.
+name|getSummaryList
+argument_list|()
 argument_list|,
 index|[
 operator|&
@@ -2512,9 +2365,10 @@ if|if
 condition|(
 name|Summary
 operator|==
-name|CalleeInfoList
-operator|->
-name|second
+name|CalleeInfo
+operator|.
+name|getSummaryList
+argument_list|()
 operator|.
 name|end
 argument_list|()

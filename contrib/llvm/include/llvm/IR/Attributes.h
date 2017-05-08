@@ -853,12 +853,13 @@ argument|bool InAttrGrp = false
 argument_list|)
 specifier|const
 expr_stmt|;
-typedef|typedef
+name|using
+name|iterator
+init|=
 specifier|const
 name|Attribute
-modifier|*
-name|iterator
-typedef|;
+operator|*
+decl_stmt|;
 name|iterator
 name|begin
 argument_list|()
@@ -1613,15 +1614,16 @@ argument|bool InAttrGrp = false
 argument_list|)
 specifier|const
 block|;
-typedef|typedef
+name|using
+name|iterator
+operator|=
 name|ArrayRef
 operator|<
 name|Attribute
 operator|>
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
+block|;
 name|iterator
 name|begin
 argument_list|(
@@ -1731,7 +1733,7 @@ name|dump
 argument_list|()
 specifier|const
 block|; }
-expr_stmt|;
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// \class
 comment|/// \brief Provide DenseMapInfo for AttributeList.
@@ -2245,7 +2247,9 @@ argument_list|()
 return|;
 block|}
 comment|// Iterators for target-dependent attributes.
-typedef|typedef
+name|using
+name|td_type
+operator|=
 name|std
 operator|::
 name|pair
@@ -2253,14 +2257,15 @@ operator|<
 name|std
 operator|::
 name|string
-operator|,
+block|,
 name|std
 operator|::
 name|string
 operator|>
-name|td_type
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|td_iterator
+operator|=
 name|std
 operator|::
 name|map
@@ -2268,16 +2273,17 @@ operator|<
 name|std
 operator|::
 name|string
-operator|,
+block|,
 name|std
 operator|::
 name|string
 operator|>
 operator|::
 name|iterator
-name|td_iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|td_const_iterator
+operator|=
 name|std
 operator|::
 name|map
@@ -2285,32 +2291,33 @@ operator|<
 name|std
 operator|::
 name|string
-operator|,
+block|,
 name|std
 operator|::
 name|string
 operator|>
 operator|::
 name|const_iterator
-name|td_const_iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|td_range
+operator|=
 name|iterator_range
 operator|<
 name|td_iterator
 operator|>
-name|td_range
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|td_const_range
+operator|=
 name|iterator_range
 operator|<
 name|td_const_iterator
 operator|>
-name|td_const_range
-expr_stmt|;
+block|;
 name|td_iterator
 name|td_begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|TargetDepAttrs
@@ -2321,7 +2328,7 @@ return|;
 block|}
 name|td_iterator
 name|td_end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|TargetDepAttrs
@@ -2356,7 +2363,7 @@ return|;
 block|}
 name|td_range
 name|td_attrs
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|td_range
@@ -2406,7 +2413,7 @@ name|AttrBuilder
 operator|&
 name|B
 operator|)
-expr_stmt|;
+block|;
 name|bool
 name|operator
 operator|!=
@@ -2427,65 +2434,55 @@ name|B
 operator|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
+expr|}
+block|;
 name|namespace
 name|AttributeFuncs
 block|{
 comment|/// \brief Which attributes cannot be applied to a type.
 name|AttrBuilder
 name|typeIncompatible
-parameter_list|(
+argument_list|(
 name|Type
-modifier|*
+operator|*
 name|Ty
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \returns Return true if the two functions have compatible target-independent
 comment|/// attributes for inlining purposes.
 name|bool
 name|areInlineCompatible
-parameter_list|(
+argument_list|(
 specifier|const
 name|Function
-modifier|&
+operator|&
 name|Caller
-parameter_list|,
+argument_list|,
 specifier|const
 name|Function
-modifier|&
+operator|&
 name|Callee
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Merge caller's and callee's attributes.
 name|void
 name|mergeAttributesForInlining
-parameter_list|(
+argument_list|(
 name|Function
-modifier|&
+operator|&
 name|Caller
-parameter_list|,
+argument_list|,
 specifier|const
 name|Function
-modifier|&
+operator|&
 name|Callee
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;  }
+comment|// end AttributeFuncs namespace
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end AttributeFuncs namespace
-end_comment
-
-begin_comment
-unit|}
 comment|// end llvm namespace
 end_comment
 

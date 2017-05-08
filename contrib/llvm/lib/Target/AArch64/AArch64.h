@@ -175,11 +175,6 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
-name|createAArch64AddressTypePromotionPass
-parameter_list|()
-function_decl|;
-name|FunctionPass
-modifier|*
 name|createAArch64A57FPLoadBalancing
 parameter_list|()
 function_decl|;
@@ -222,13 +217,6 @@ parameter_list|)
 function_decl|;
 name|void
 name|initializeAArch64A57FPLoadBalancingPass
-parameter_list|(
-name|PassRegistry
-modifier|&
-parameter_list|)
-function_decl|;
-name|void
-name|initializeAArch64AddressTypePromotionPass
 parameter_list|(
 name|PassRegistry
 modifier|&

@@ -206,6 +206,11 @@ name|Size
 block|;
 name|unsigned
 name|ModeSize
+block|;
+comment|/// If the memory operand is unsized and there are multiple instruction
+comment|/// matches, prefer the one with this size.
+name|unsigned
+name|FrontendSize
 block|;   }
 block|;
 expr|union
@@ -546,6 +551,26 @@ return|return
 name|Mem
 operator|.
 name|ModeSize
+return|;
+block|}
+name|unsigned
+name|getMemFrontendSize
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|Memory
+operator|&&
+literal|"Invalid access!"
+argument_list|)
+block|;
+return|return
+name|Mem
+operator|.
+name|FrontendSize
 return|;
 block|}
 name|bool
@@ -3281,6 +3306,9 @@ argument_list|,
 argument|StringRef SymName = StringRef()
 argument_list|,
 argument|void *OpDecl = nullptr
+argument_list|,
+argument|unsigned FrontendSize =
+literal|0
 argument_list|)
 block|{
 name|auto
@@ -3358,6 +3386,14 @@ name|ModeSize
 block|;
 name|Res
 operator|->
+name|Mem
+operator|.
+name|FrontendSize
+operator|=
+name|FrontendSize
+block|;
+name|Res
+operator|->
 name|SymName
 operator|=
 name|SymName
@@ -3416,6 +3452,9 @@ argument_list|,
 argument|StringRef SymName = StringRef()
 argument_list|,
 argument|void *OpDecl = nullptr
+argument_list|,
+argument|unsigned FrontendSize =
+literal|0
 argument_list|)
 block|{
 comment|// We should never just have a displacement, that should be parsed as an
@@ -3531,6 +3570,14 @@ operator|.
 name|ModeSize
 operator|=
 name|ModeSize
+block|;
+name|Res
+operator|->
+name|Mem
+operator|.
+name|FrontendSize
+operator|=
+name|FrontendSize
 block|;
 name|Res
 operator|->

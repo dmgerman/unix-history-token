@@ -72,14 +72,9 @@ name|public
 operator|:
 name|NativeCompilandSymbol
 argument_list|(
-name|NativeSession
-operator|&
-name|Session
+argument|NativeSession&Session
 argument_list|,
-specifier|const
-name|ModuleInfoEx
-operator|&
-name|MI
+argument|DbiModuleDescriptor MI
 argument_list|)
 block|;
 name|PDB_SymType
@@ -118,7 +113,7 @@ name|override
 block|;
 name|private
 operator|:
-name|ModuleInfoEx
+name|DbiModuleDescriptor
 name|Module
 block|; }
 decl_stmt|;

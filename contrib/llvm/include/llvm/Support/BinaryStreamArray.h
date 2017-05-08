@@ -244,6 +244,9 @@ argument_list|,
 argument|BinaryStreamRef Stream
 argument_list|,
 argument|bool *HadError = nullptr
+argument_list|,
+argument|uint32_t Offset =
+literal|0
 argument_list|)
 block|:
 name|IterRef
@@ -261,6 +264,11 @@ name|Array
 argument_list|(
 operator|&
 name|Array
+argument_list|)
+operator|,
+name|AbsOffset
+argument_list|(
+name|Offset
 argument_list|)
 operator|,
 name|HadError
@@ -511,6 +519,10 @@ control|)
 block|{
 comment|// We are done with the current record, discard it so that we are
 comment|// positioned at the next record.
+name|AbsOffset
+operator|+=
+name|ThisLen
+expr_stmt|;
 name|IterRef
 operator|=
 name|IterRef
@@ -602,8 +614,27 @@ name|this
 expr_stmt|;
 end_expr_stmt
 
+begin_macro
+unit|}    uint32_t
+name|offset
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+return|return
+name|AbsOffset
+return|;
+block|}
+end_expr_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
 begin_function
-unit|}  private:
 name|void
 name|moveToEnd
 parameter_list|()
@@ -688,6 +719,18 @@ end_empty_stmt
 begin_decl_stmt
 name|uint32_t
 name|ThisLen
+block|{
+literal|0
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|AbsOffset
 block|{
 literal|0
 block|}
@@ -1155,6 +1198,8 @@ name|Offset
 argument_list|)
 argument_list|,
 name|nullptr
+argument_list|,
+name|Offset
 argument_list|)
 return|;
 block|}
@@ -1825,6 +1870,7 @@ name|std
 operator|::
 name|random_access_iterator_tag
 operator|,
+specifier|const
 name|T
 operator|>
 block|{
@@ -1898,6 +1944,23 @@ index|]
 return|;
 block|}
 end_expr_stmt
+
+begin_function
+specifier|const
+name|T
+modifier|&
+name|operator
+modifier|*
+parameter_list|()
+block|{
+return|return
+name|Array
+index|[
+name|Index
+index|]
+return|;
+block|}
+end_function
 
 begin_expr_stmt
 name|bool

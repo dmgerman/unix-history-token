@@ -1536,6 +1536,11 @@ comment|///
 comment|/// \param HomeDir The directory in which relative paths within this module
 comment|///        map file will be resolved.
 comment|///
+comment|/// \param ID The FileID of the file to process, if we've already entered it.
+comment|///
+comment|/// \param Offset [inout] On input the offset at which to start parsing. On
+comment|///        output, the offset at which the module map terminated.
+comment|///
 comment|/// \param ExternModuleLoc The location of the "extern module" declaration
 comment|///        that caused us to load this module map file, if any.
 comment|///
@@ -1555,6 +1560,18 @@ specifier|const
 name|DirectoryEntry
 modifier|*
 name|HomeDir
+parameter_list|,
+name|FileID
+name|ID
+init|=
+name|FileID
+argument_list|()
+parameter_list|,
+name|unsigned
+modifier|*
+name|Offset
+init|=
+name|nullptr
 parameter_list|,
 name|SourceLocation
 name|ExternModuleLoc

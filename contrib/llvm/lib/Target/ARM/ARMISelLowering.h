@@ -474,6 +474,18 @@ comment|// 64-bit signed accumulate multiply top, bottom 16
 name|SMLALTT
 block|,
 comment|// 64-bit signed accumulate multiply top, top 16
+name|SMLALD
+block|,
+comment|// Signed multiply accumulate long dual
+name|SMLALDX
+block|,
+comment|// Signed multiply accumulate long dual exchange
+name|SMLSLD
+block|,
+comment|// Signed multiply subtract long dual
+name|SMLSLDX
+block|,
+comment|// Signed multiply subtract long dual exchange
 comment|// Operands of the standard BUILD_VECTOR node are not legalized, which
 comment|// is fine if BUILD_VECTORs are always lowered to shuffles or other
 comment|// operations, but for ARM some BUILD_VECTORs are legal as-is and their
@@ -1593,6 +1605,14 @@ argument_list|,
 argument|const DataLayout&DL
 argument_list|)
 specifier|const
+block|;
+name|void
+name|finalizeLowering
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
 block|;
 name|protected
 operator|:

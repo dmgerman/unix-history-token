@@ -91,14 +91,13 @@ name|TypeDatabase
 block|{
 name|public
 label|:
+name|explicit
 name|TypeDatabase
-argument_list|()
-operator|:
-name|TypeNameStorage
-argument_list|(
-argument|Allocator
-argument_list|)
-block|{}
+parameter_list|(
+name|uint32_t
+name|ExpectedSize
+parameter_list|)
+function_decl|;
 comment|/// Gets the type index for the next type record.
 name|TypeIndex
 name|getNextTypeIndex

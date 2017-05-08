@@ -2670,6 +2670,28 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/// \brief Matches C++ initializer list expressions.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   std::vector<int> a({ 1, 2, 3 });
+comment|///   std::vector<int> b = { 4, 5 };
+comment|///   int c[] = { 6, 7 };
+comment|///   std::pair<int, int> d = { 8, 9 };
+comment|/// \endcode
+comment|/// cxxStdInitializerListExpr()
+comment|///   matches "{ 1, 2, 3 }" and "{ 4, 5 }"
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Stmt
+operator|,
+name|CXXStdInitializerListExpr
+operator|>
+name|cxxStdInitializerListExpr
+expr_stmt|;
 comment|/// \brief Matches implicit initializers of init list expressions.
 comment|///
 comment|/// Given

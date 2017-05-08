@@ -157,14 +157,16 @@ operator|:
 comment|/// Get an instruction mapping.
 comment|/// \return An InstructionMappings with a statically allocated
 comment|/// OperandsMapping.
-specifier|static
+specifier|const
 name|InstructionMapping
+operator|&
 name|getSameOperandsMapping
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|,
 argument|bool isFP
 argument_list|)
+specifier|const
 block|;
 comment|/// Track the bank of each instruction operand(register)
 specifier|static
@@ -246,7 +248,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|const
 name|InstructionMapping
+operator|&
 name|getInstrMapping
 argument_list|(
 argument|const MachineInstr&MI

@@ -1212,11 +1212,15 @@ argument_list|,
 name|VisitSet
 argument_list|)
 block|;
-comment|// Keep track of the number of BBs visited.
-name|unsigned
-name|NumVisited
-operator|=
-literal|0
+comment|// Keep track of the BBs visited.
+name|SmallPtrSet
+operator|<
+name|BlockT
+operator|*
+block|,
+literal|8
+operator|>
+name|VisitedBBs
 block|;
 comment|// Check the individual blocks.
 for|for
@@ -1550,18 +1554,66 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|NumVisited
-operator|++
+name|VisitedBBs
+operator|.
+name|insert
+argument_list|(
+name|BB
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}    assert
+unit|}    if
 operator|(
-name|NumVisited
-operator|==
+name|VisitedBBs
+operator|.
+name|size
+argument_list|()
+operator|!=
 name|getNumBlocks
 argument_list|()
+operator|)
+block|{
+name|dbgs
+argument_list|()
+operator|<<
+literal|"The following blocks are unreachable in the loop: "
+block|;
+for|for
+control|(
+name|auto
+name|BB
+range|:
+name|Blocks
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|VisitedBBs
+operator|.
+name|count
+argument_list|(
+name|BB
+argument_list|)
+condition|)
+block|{
+name|dbgs
+argument_list|()
+operator|<<
+operator|*
+name|BB
+operator|<<
+literal|"\n"
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|}     assert
+operator|(
+name|false
 operator|&&
 literal|"Unreachable block in loop"
 operator|)
@@ -1569,31 +1621,38 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+unit|}
 comment|// Check the subloops.
 end_comment
 
-begin_for
-for|for
-control|(
+begin_expr_stmt
+unit|for
+operator|(
 name|iterator
 name|I
-init|=
+operator|=
 name|begin
 argument_list|()
-init|,
+operator|,
 name|E
-init|=
+operator|=
 name|end
 argument_list|()
-init|;
+expr|;
 name|I
 operator|!=
 name|E
-condition|;
+expr|;
 operator|++
 name|I
-control|)
+operator|)
+end_expr_stmt
+
+begin_comment
 comment|// Each block in each subloop should be contained within this loop.
+end_comment
+
+begin_for
 for|for
 control|(
 name|block_iterator

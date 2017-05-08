@@ -69,6 +69,9 @@ name|namespace
 name|pdb
 block|{
 name|class
+name|DbiModuleList
+decl_stmt|;
+name|class
 name|NativeSession
 decl_stmt|;
 name|class
@@ -82,12 +85,11 @@ operator|>
 block|{
 name|public
 operator|:
-name|explicit
 name|NativeEnumModules
 argument_list|(
 argument|NativeSession&Session
 argument_list|,
-argument|ArrayRef<ModuleInfoEx> Modules
+argument|const DbiModuleList&Modules
 argument_list|,
 argument|uint32_t Index =
 literal|0
@@ -140,10 +142,9 @@ name|NativeSession
 operator|&
 name|Session
 block|;
-name|ArrayRef
-operator|<
-name|ModuleInfoEx
-operator|>
+specifier|const
+name|DbiModuleList
+operator|&
 name|Modules
 block|;
 name|uint32_t

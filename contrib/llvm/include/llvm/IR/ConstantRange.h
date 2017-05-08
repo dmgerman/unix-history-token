@@ -158,6 +158,7 @@ name|MDNode
 decl_stmt|;
 comment|/// This class represents a range of values.
 name|class
+name|LLVM_NODISCARD
 name|ConstantRange
 block|{
 name|APInt
@@ -492,12 +493,27 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|isSizeStrictlySmallerThanOf
+name|isSizeStrictlySmallerThan
 argument_list|(
 specifier|const
 name|ConstantRange
 operator|&
 name|CR
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Compare set size of this range with Value.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isSizeLargerThan
+argument_list|(
+name|uint64_t
+name|MaxSize
 argument_list|)
 decl|const
 decl_stmt|;

@@ -267,6 +267,36 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|// \brief Returns a FixItHint to replace \p Destination by \p Source.
+name|template
+operator|<
+name|typename
+name|D
+operator|>
+name|FixItHint
+name|createReplacement
+argument_list|(
+argument|const D&Destination
+argument_list|,
+argument|StringRef Source
+argument_list|)
+block|{
+return|return
+name|FixItHint
+operator|::
+name|CreateReplacement
+argument_list|(
+name|internal
+operator|::
+name|getSourceRange
+argument_list|(
+name|Destination
+argument_list|)
+argument_list|,
+name|Source
+argument_list|)
+return|;
+block|}
 block|}
 comment|// end namespace fixit
 block|}

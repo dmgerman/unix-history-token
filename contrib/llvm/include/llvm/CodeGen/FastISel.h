@@ -2058,6 +2058,15 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
+name|bool
+name|selectXRayCustomEvent
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|*
+name|II
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|/// \brief Handle PHI nodes in successor blocks.

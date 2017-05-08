@@ -17970,6 +17970,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// Warn when implicitly casting 0 to nullptr.
+end_comment
+
+begin_function_decl
+name|void
+name|diagnoseZeroToNullptrConversion
+parameter_list|(
+name|CastKind
+name|Kind
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|ParsingDeclState
 name|PushParsingDeclaration

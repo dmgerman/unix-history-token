@@ -607,6 +607,10 @@ name|bool
 name|HasDelaySlot
 parameter_list|()
 function_decl|;
+name|bool
+name|CanSetBreakpoint
+parameter_list|()
+function_decl|;
 name|virtual
 name|size_t
 name|Decode

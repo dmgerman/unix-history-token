@@ -161,6 +161,21 @@ endif|#
 directive|endif
 block|}
 struct|;
+struct|struct
+name|XRayFunctionSledIndex
+block|{
+specifier|const
+name|XRaySledEntry
+modifier|*
+name|Begin
+decl_stmt|;
+specifier|const
+name|XRaySledEntry
+modifier|*
+name|End
+decl_stmt|;
+block|}
+struct|;
 block|}
 end_extern
 
@@ -178,6 +193,14 @@ name|Sleds
 decl_stmt|;
 name|size_t
 name|Entries
+decl_stmt|;
+specifier|const
+name|XRayFunctionSledIndex
+modifier|*
+name|SledsIndex
+decl_stmt|;
+name|size_t
+name|Functions
 decl_stmt|;
 block|}
 struct|;

@@ -215,6 +215,26 @@ argument_list|(
 argument|std::move(Arg.Summary)
 argument_list|)
 block|{}
+comment|/// Handle the invalidation of this information.
+comment|///
+comment|/// When used as a result of \c ProfileSummaryAnalysis this method will be
+comment|/// called when the module this was computed for changes. Since profile
+comment|/// summary is immutable after it is annotated on the module, we return false
+comment|/// here.
+name|bool
+name|invalidate
+argument_list|(
+argument|Module&
+argument_list|,
+argument|const PreservedAnalyses&
+argument_list|,
+argument|ModuleAnalysisManager::Invalidator&
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Returns the profile count for \p CallInst.
 specifier|static
 name|Optional

@@ -622,6 +622,11 @@ name|TracePCGuard
 init|=
 name|false
 decl_stmt|;
+name|bool
+name|NoPrune
+init|=
+name|false
+decl_stmt|;
 name|SanitizerCoverageOptions
 argument_list|()
 operator|=

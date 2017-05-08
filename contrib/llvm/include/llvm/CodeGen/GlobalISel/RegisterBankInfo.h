@@ -681,7 +681,9 @@ comment|/// \todo When we move to TableGen this should be an array ref.
 typedef|typedef
 name|SmallVector
 operator|<
+specifier|const
 name|InstructionMapping
+operator|*
 operator|,
 literal|4
 operator|>
@@ -806,7 +808,7 @@ operator|&
 name|MRI
 argument_list|)
 expr_stmt|;
-comment|/// Getters.
+comment|/// \name Getters.
 comment|/// @{
 comment|/// The MachineInstr being remapped.
 name|MachineInstr
@@ -978,8 +980,7 @@ name|unique_ptr
 operator|<
 specifier|const
 name|ValueMapping
-operator|>
-expr|>
+operator|>>
 name|MapOfValueMappings
 expr_stmt|;
 comment|/// Keep dynamically allocated array of ValueMapping in a separate map.
@@ -997,6 +998,22 @@ name|ValueMapping
 index|[]
 operator|>>
 name|MapOfOperandsMappings
+expr_stmt|;
+comment|/// Keep dynamically allocated InstructionMapping in a separate map.
+comment|/// This shouldn't be needed when everything gets TableGen'ed.
+name|mutable
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+specifier|const
+name|InstructionMapping
+operator|>>
+name|MapOfInstructionMappings
 expr_stmt|;
 comment|/// Create a RegisterBankInfo that can accomodate up to \p NumRegBanks
 comment|/// RegisterBank instances.
@@ -1066,7 +1083,9 @@ comment|/// - Copies and phis if at least one of the operands has been assigned 
 comment|///   register, a register class, or a register bank.
 comment|/// In other words, this method will likely fail to find a mapping for
 comment|/// any generic opcode that has not been lowered by target specific code.
+specifier|const
 name|InstructionMapping
+modifier|&
 name|getInstrMappingImpl
 argument_list|(
 specifier|const
@@ -1096,7 +1115,7 @@ name|RegBank
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Methods to get a uniquely generated ValueMapping.
+comment|/// \name Methods to get a uniquely generated ValueMapping.
 comment|/// @{
 comment|/// The most common ValueMapping consists of a single PartialMapping.
 comment|/// Feature a method for that.
@@ -1135,7 +1154,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// @}
-comment|/// Methods to get a uniquely generated array of ValueMapping.
+comment|/// \name Methods to get a uniquely generated array of ValueMapping.
 comment|/// @{
 comment|/// Get the uniquely generated array of ValueMapping for the
 comment|/// elements of between \p Begin and \p End.
@@ -1207,6 +1226,100 @@ name|OpdsMapping
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// @}
+comment|/// \name Methods to get a uniquely generated InstructionMapping.
+comment|/// @{
+name|private
+label|:
+comment|/// Method to get a uniquely generated InstructionMapping.
+specifier|const
+name|InstructionMapping
+modifier|&
+name|getInstructionMappingImpl
+argument_list|(
+name|bool
+name|IsInvalid
+argument_list|,
+name|unsigned
+name|ID
+operator|=
+name|InvalidMappingID
+argument_list|,
+name|unsigned
+name|Cost
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|ValueMapping
+operator|*
+name|OperandsMapping
+operator|=
+name|nullptr
+argument_list|,
+name|unsigned
+name|NumOperands
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+name|public
+label|:
+comment|/// Method to get a uniquely generated InstructionMapping.
+specifier|const
+name|InstructionMapping
+modifier|&
+name|getInstructionMapping
+argument_list|(
+name|unsigned
+name|ID
+argument_list|,
+name|unsigned
+name|Cost
+argument_list|,
+specifier|const
+name|ValueMapping
+operator|*
+name|OperandsMapping
+argument_list|,
+name|unsigned
+name|NumOperands
+argument_list|)
+decl|const
+block|{
+return|return
+name|getInstructionMappingImpl
+argument_list|(
+comment|/*IsInvalid*/
+name|false
+argument_list|,
+name|ID
+argument_list|,
+name|Cost
+argument_list|,
+name|OperandsMapping
+argument_list|,
+name|NumOperands
+argument_list|)
+return|;
+block|}
+comment|/// Method to get a uniquely generated invalid InstructionMapping.
+specifier|const
+name|InstructionMapping
+operator|&
+name|getInvalidInstructionMapping
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getInstructionMappingImpl
+argument_list|(
+comment|/*IsInvalid*/
+name|true
+argument_list|)
+return|;
+block|}
 comment|/// @}
 comment|/// Get the register bank for the \p OpIdx-th operand of \p MI form
 comment|/// the encoding constraints, if any.
@@ -1484,7 +1597,9 @@ comment|///
 comment|/// \note If returnedVal does not verify MI, this would probably mean
 comment|/// that the target does not support that instruction.
 name|virtual
+specifier|const
 name|InstructionMapping
+modifier|&
 name|getInstrMapping
 argument_list|(
 specifier|const

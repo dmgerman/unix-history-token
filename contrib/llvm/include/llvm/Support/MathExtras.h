@@ -1262,6 +1262,84 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Create a bitmask with the N right-most bits set to 0, and all other
+end_comment
+
+begin_comment
+comment|/// bits set to 1.  Only unsigned types are allowed.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+name|maskTrailingZeros
+argument_list|(
+argument|unsigned N
+argument_list|)
+block|{
+return|return
+name|maskLeadingOnes
+operator|<
+name|T
+operator|>
+operator|(
+name|CHAR_BIT
+operator|*
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|-
+name|N
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Create a bitmask with the N left-most bits set to 0, and all other
+end_comment
+
+begin_comment
+comment|/// bits set to 1.  Only unsigned types are allowed.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+name|maskLeadingZeros
+argument_list|(
+argument|unsigned N
+argument_list|)
+block|{
+return|return
+name|maskTrailingOnes
+operator|<
+name|T
+operator|>
+operator|(
+name|CHAR_BIT
+operator|*
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|-
+name|N
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Get the index of the last set bit starting from the least
 end_comment
 
