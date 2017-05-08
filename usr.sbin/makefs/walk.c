@@ -258,6 +258,9 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
+operator|(
+name|size_t
+operator|)
 name|snprintf
 argument_list|(
 name|path

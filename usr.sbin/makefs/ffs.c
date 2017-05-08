@@ -4558,6 +4558,9 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|snprintf
 argument_list|(
 name|path
