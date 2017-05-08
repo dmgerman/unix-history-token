@@ -1120,7 +1120,7 @@ name|PXENV_UNDI_ISR_OUT_TRANSMIT
 value|2
 define|#
 directive|define
-name|PXENV_UNDI_ISR_OUT_RECIEVE
+name|PXENV_UNDI_ISR_OUT_RECEIVE
 value|3
 define|#
 directive|define

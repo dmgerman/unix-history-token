@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -109,14 +109,18 @@ name|public
 name|void
 name|lsystem
 parameter_list|(
+name|cmd
+parameter_list|,
+name|donemsg
+parameter_list|)
 name|char
 modifier|*
 name|cmd
-parameter_list|,
+decl_stmt|;
 name|char
 modifier|*
 name|donemsg
-parameter_list|)
+decl_stmt|;
 block|{
 name|int
 name|inp
@@ -729,13 +733,17 @@ name|public
 name|int
 name|pipe_mark
 parameter_list|(
-name|int
 name|c
 parameter_list|,
+name|cmd
+parameter_list|)
+name|int
+name|c
+decl_stmt|;
 name|char
 modifier|*
 name|cmd
-parameter_list|)
+decl_stmt|;
 block|{
 name|POSITION
 name|mpos
@@ -870,16 +878,22 @@ name|public
 name|int
 name|pipe_data
 parameter_list|(
+name|cmd
+parameter_list|,
+name|spos
+parameter_list|,
+name|epos
+parameter_list|)
 name|char
 modifier|*
 name|cmd
-parameter_list|,
+decl_stmt|;
 name|POSITION
 name|spos
-parameter_list|,
+decl_stmt|;
 name|POSITION
 name|epos
-parameter_list|)
+decl_stmt|;
 block|{
 name|FILE
 modifier|*

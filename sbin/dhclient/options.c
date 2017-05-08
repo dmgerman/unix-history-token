@@ -3317,7 +3317,7 @@ name|op
 argument_list|,
 name|opleft
 argument_list|,
-literal|"%ld"
+literal|"%lu"
 argument_list|,
 operator|(
 name|unsigned
@@ -3405,7 +3405,7 @@ name|op
 argument_list|,
 name|opleft
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 name|getUShort
 argument_list|(

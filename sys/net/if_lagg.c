@@ -3168,6 +3168,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|LAGG_XUNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifmedia_removeall
 argument_list|(
 operator|&
@@ -3203,11 +3208,6 @@ argument_list|)
 expr_stmt|;
 name|LAGG_LIST_UNLOCK
 argument_list|()
-expr_stmt|;
-name|LAGG_XUNLOCK
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 name|LAGG_SX_DESTROY
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -58,9 +58,11 @@ name|public
 name|POSITION
 name|position
 parameter_list|(
-name|int
 name|where
 parameter_list|)
+name|int
+name|where
+decl_stmt|;
 block|{
 switch|switch
 condition|(
@@ -121,9 +123,11 @@ name|public
 name|void
 name|add_forw_pos
 parameter_list|(
-name|POSITION
 name|pos
 parameter_list|)
+name|POSITION
+name|pos
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -175,9 +179,11 @@ name|public
 name|void
 name|add_back_pos
 parameter_list|(
-name|POSITION
 name|pos
 parameter_list|)
+name|POSITION
+name|pos
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -228,9 +234,7 @@ begin_function
 name|public
 name|void
 name|pos_clear
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|i
@@ -266,9 +270,7 @@ begin_function
 name|public
 name|void
 name|pos_init
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|scrpos
@@ -368,9 +370,11 @@ name|public
 name|int
 name|onscreen
 parameter_list|(
-name|POSITION
 name|pos
 parameter_list|)
+name|POSITION
+name|pos
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -436,9 +440,7 @@ begin_function
 name|public
 name|int
 name|empty_screen
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -460,12 +462,16 @@ name|public
 name|int
 name|empty_lines
 parameter_list|(
-name|int
 name|s
 parameter_list|,
-name|int
 name|e
 parameter_list|)
+name|int
+name|s
+decl_stmt|;
+name|int
+name|e
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -521,11 +527,13 @@ name|public
 name|void
 name|get_scrpos
 parameter_list|(
+name|scrpos
+parameter_list|)
 name|struct
 name|scrpos
 modifier|*
 name|scrpos
-parameter_list|)
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -592,9 +600,11 @@ name|public
 name|int
 name|adjsline
 parameter_list|(
-name|int
 name|sline
 parameter_list|)
+name|int
+name|sline
+decl_stmt|;
 block|{
 comment|/* 	 * Negative screen line number means 	 * relative to the bottom of the screen. 	 */
 if|if

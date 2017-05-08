@@ -532,6 +532,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|int
+name|sectorsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX: for buf.c::getblk() */
+end_comment
+
 begin_comment
 comment|/* publicly visible functions */
 end_comment
@@ -2139,6 +2149,13 @@ name|inodes
 argument_list|)
 expr_stmt|;
 block|}
+name|sectorsize
+operator|=
+name|fsopts
+operator|->
+name|sectorsize
+expr_stmt|;
+comment|/* XXX - see earlier */
 comment|/* now check calculated sizes vs requested sizes */
 if|if
 condition|(
@@ -3131,7 +3148,7 @@ operator|==
 name|S_IFLNK
 condition|)
 block|{
-name|int
+name|size_t
 name|slen
 decl_stmt|;
 name|slen
@@ -3249,7 +3266,7 @@ modifier|*
 name|fsopts
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|slen
 decl_stmt|;
 name|void
@@ -3589,7 +3606,7 @@ modifier|*
 name|fsopts
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|slen
 decl_stmt|;
 name|void
@@ -4558,6 +4575,9 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|snprintf
 argument_list|(
 name|path

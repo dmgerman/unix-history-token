@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2016 Hiroki Mori  * Copyright (c) 2013 Luiz Otavio 
 end_comment
 
 begin_comment
-comment|/*  * This is Infineon ADM6996FC/M/MX driver code on etherswitch framework.  * Support PORT and DOT1Q VLAN.  * This code suppose ADM6996FC SDC/SDIO connect to SOC network interface  * MDC/MDIO.  * This code development on Netgear WGR614Cv7.  */
+comment|/*  * This is Infineon ADM6996FC/M/MX driver code on etherswitch framework.  * Support PORT and DOT1Q VLAN.  * This code suppose ADM6996FC SDC/SDIO connect to SOC network interface  * MDC/MDIO.  * This code development on Netgear WGR614Cv7.  * etherswitchcfg command port option support addtag.  */
 end_comment
 
 begin_include
@@ -2370,13 +2370,6 @@ name|es_flags
 operator||=
 name|ETHERSWITCH_PORT_ADDTAG
 expr_stmt|;
-else|else
-name|p
-operator|->
-name|es_flags
-operator||=
-name|ETHERSWITCH_PORT_STRIPTAG
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -2705,6 +2698,30 @@ literal|0xf
 operator|)
 operator|<<
 name|ADM6996FC_PVID_SHIFT
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|es_flags
+operator|&
+name|ETHERSWITCH_PORT_ADDTAG
+condition|)
+name|data
+operator||=
+literal|1
+operator|<<
+name|ADM6996FC_OPTE_SHIFT
+expr_stmt|;
+else|else
+name|data
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+name|ADM6996FC_OPTE_SHIFT
+operator|)
 expr_stmt|;
 name|ADM6996FC_WRITEREG
 argument_list|(
@@ -3651,21 +3668,6 @@ operator|(
 literal|1
 operator|<<
 literal|10
-operator|)
-expr_stmt|;
-comment|/* Output Packet Tagging Enable */
-if|if
-condition|(
-name|i
-operator|==
-literal|5
-condition|)
-name|data
-operator||=
-operator|(
-literal|1
-operator|<<
-literal|4
 operator|)
 expr_stmt|;
 name|ADM6996FC_WRITEREG

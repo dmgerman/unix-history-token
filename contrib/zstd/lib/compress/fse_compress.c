@@ -1621,7 +1621,7 @@ condition|)
 return|return
 name|ERROR
 argument_list|(
-name|GENERIC
+name|tableLog_tooLarge
 argument_list|)
 return|;
 comment|/* Unsupported */
@@ -4976,7 +4976,7 @@ name|CHECK_V_F
 argument_list|(
 name|maxCount
 argument_list|,
-name|FSE_count
+name|FSE_count_wksp
 argument_list|(
 name|count
 argument_list|,
@@ -4986,6 +4986,12 @@ argument_list|,
 name|src
 argument_list|,
 name|srcSize
+argument_list|,
+operator|(
+name|unsigned
+operator|*
+operator|)
+name|scratchBuffer
 argument_list|)
 argument_list|)
 expr_stmt|;

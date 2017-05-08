@@ -213,17 +213,6 @@ comment|/* gateway ip address */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|in_addr
-name|tftpip
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* TFTP ip address */
-end_comment
-
-begin_decl_stmt
 name|n_long
 name|netmask
 init|=

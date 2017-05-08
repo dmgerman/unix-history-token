@@ -559,6 +559,10 @@ name|int
 name|tid
 decl_stmt|;
 comment|/* Connection identifier */
+name|int
+name|tc_idx
+decl_stmt|;
+comment|/* traffic class that this tid is bound to */
 comment|/* tx credit handling */
 name|u_int
 name|tx_total

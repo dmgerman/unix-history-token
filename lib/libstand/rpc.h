@@ -99,8 +99,11 @@ name|size_t
 parameter_list|,
 name|void
 modifier|*
+modifier|*
 parameter_list|,
-name|size_t
+name|void
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

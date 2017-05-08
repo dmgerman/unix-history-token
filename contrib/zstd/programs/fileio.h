@@ -90,6 +90,10 @@ define|#
 directive|define
 name|ZSTD_EXTENSION
 value|".zst"
+define|#
+directive|define
+name|LZ4_EXTENSION
+value|".lz4"
 comment|/*-************************************* *  Types ***************************************/
 typedef|typedef
 enum|enum
@@ -101,6 +105,8 @@ block|,
 name|FIO_xzCompression
 block|,
 name|FIO_lzmaCompression
+block|,
+name|FIO_lz4Compression
 block|}
 name|FIO_compressionType_t
 typedef|;

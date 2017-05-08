@@ -724,6 +724,12 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
+name|u_int
+name|cache_size
+index|[
+literal|4
+index|]
+decl_stmt|;
 name|int
 name|fqmhz
 decl_stmt|,
@@ -731,6 +737,8 @@ name|fqkhz
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 comment|/* 	 * We default the flags to include all non-conflicting flags, 	 * and the Intel versions of conflicting flags. 	 */
 specifier|static
@@ -805,6 +813,40 @@ block|,
 literal|"3dnow"
 block|}
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|power_flags
+index|[]
+init|=
+block|{
+literal|"ts"
+block|,
+literal|"fid"
+block|,
+literal|"vid"
+block|,
+literal|"ttp"
+block|,
+literal|"tm"
+block|,
+literal|"stc"
+block|,
+literal|"100mhzsteps"
+block|,
+literal|"hwpstate"
+block|,
+literal|""
+block|,
+literal|"cpb"
+block|,
+literal|"eff_freq_ro"
+block|,
+literal|"proc_feedback"
+block|,
+literal|"acc_power"
+block|, 	}
+decl_stmt|;
 name|hw_model
 index|[
 literal|0
@@ -867,61 +909,6 @@ argument_list|,
 literal|"unknown"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|mp_ncpus
-condition|;
-operator|++
-name|i
-control|)
-block|{
-name|sbuf_printf
-argument_list|(
-name|sb
-argument_list|,
-literal|"processor\t: %d\n"
-literal|"vendor_id\t: %.20s\n"
-literal|"cpu family\t: %u\n"
-literal|"model\t\t: %u\n"
-literal|"model name\t: %s\n"
-literal|"stepping\t: %u\n\n"
-argument_list|,
-name|i
-argument_list|,
-name|cpu_vendor
-argument_list|,
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
-argument_list|,
-name|CPUID_TO_MODEL
-argument_list|(
-name|cpu_id
-argument_list|)
-argument_list|,
-name|model
-argument_list|,
-name|cpu_id
-operator|&
-name|CPUID_STEPPING
-argument_list|)
-expr_stmt|;
-comment|/* XXX per-cpu vendor / class / model / id? */
-block|}
-name|sbuf_cat
-argument_list|(
-name|sb
-argument_list|,
-literal|"flags\t\t:"
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__i386__
@@ -961,6 +948,13 @@ break|break;
 block|}
 endif|#
 directive|endif
+name|do_cpuid
+argument_list|(
+literal|0x80000006
+argument_list|,
+name|cache_size
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -969,39 +963,19 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
+name|mp_ncpus
 condition|;
-name|i
 operator|++
+name|i
 control|)
-if|if
-condition|(
-name|cpu_feature
-operator|&
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-condition|)
-name|sbuf_printf
-argument_list|(
-name|sb
-argument_list|,
-literal|" %s"
-argument_list|,
-name|flags
-index|[
-name|i
-index|]
-argument_list|)
+block|{
+name|fqmhz
+operator|=
+literal|0
 expr_stmt|;
-name|sbuf_cat
-argument_list|(
-name|sb
-argument_list|,
-literal|"\n"
-argument_list|)
+name|fqkhz
+operator|=
+literal|0
 expr_stmt|;
 name|freq
 operator|=
@@ -1042,23 +1016,266 @@ operator|)
 operator|%
 literal|100
 expr_stmt|;
+block|}
 name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
+literal|"processor\t: %d\n"
+literal|"vendor_id\t: %.20s\n"
+literal|"cpu family\t: %u\n"
+literal|"model\t\t: %u\n"
+literal|"model name\t: %s\n"
+literal|"stepping\t: %u\n"
 literal|"cpu MHz\t\t: %d.%02d\n"
-literal|"bogomips\t: %d.%02d\n"
+literal|"cache size\t: %d KB\n"
+literal|"physical id\t: %d\n"
+literal|"siblings\t: %d\n"
+literal|"core id\t\t: %d\n"
+literal|"cpu cores\t: %d\n"
+literal|"apicid\t\t: %d\n"
+literal|"initial apicid\t: %d\n"
+literal|"fpu\t\t: %s\n"
+literal|"fpu_exception\t: %s\n"
+literal|"cpuid level\t: %d\n"
+literal|"wp\t\t: %s\n"
+argument_list|,
+name|i
+argument_list|,
+name|cpu_vendor
+argument_list|,
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+argument_list|,
+name|CPUID_TO_MODEL
+argument_list|(
+name|cpu_id
+argument_list|)
+argument_list|,
+name|model
+argument_list|,
+name|cpu_id
+operator|&
+name|CPUID_STEPPING
 argument_list|,
 name|fqmhz
 argument_list|,
 name|fqkhz
 argument_list|,
-name|fqmhz
+operator|(
+name|cache_size
+index|[
+literal|2
+index|]
+operator|>>
+literal|16
+operator|)
 argument_list|,
-name|fqkhz
+literal|0
+argument_list|,
+name|mp_ncpus
+argument_list|,
+name|i
+argument_list|,
+name|mp_ncpus
+argument_list|,
+name|i
+argument_list|,
+name|i
+argument_list|,
+comment|/*cpu_id& CPUID_LOCAL_APIC_ID ??*/
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_FPU
+operator|)
+condition|?
+literal|"yes"
+else|:
+literal|"no"
+argument_list|,
+literal|"yes"
+argument_list|,
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+argument_list|,
+literal|"yes"
 argument_list|)
 expr_stmt|;
+name|sbuf_cat
+argument_list|(
+name|sb
+argument_list|,
+literal|"flags\t\t:"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|nitems
+argument_list|(
+name|flags
+argument_list|)
+condition|;
+name|j
+operator|++
+control|)
+if|if
+condition|(
+name|cpu_feature
+operator|&
+operator|(
+literal|1
+operator|<<
+name|j
+operator|)
+condition|)
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|" %s"
+argument_list|,
+name|flags
+index|[
+name|j
+index|]
+argument_list|)
+expr_stmt|;
+name|sbuf_cat
+argument_list|(
+name|sb
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"bugs\t\t: %s\n"
+literal|"bogomips\t: %d.%02d\n"
+literal|"clflush size\t: %d\n"
+literal|"cache_alignment\t: %d\n"
+literal|"address sizes\t: %d bits physical, %d bits virtual\n"
+argument_list|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_F00F_HACK
+argument_list|)
+operator|(
+name|has_f00f_bug
+operator|)
+condition|?
+literal|"Intel F00F"
+else|:
+literal|""
+argument_list|,
+else|#
+directive|else
+literal|""
+argument_list|,
+endif|#
+directive|endif
+name|fqmhz
+argument_list|,
+name|fqkhz
+argument_list|,
+name|cpu_clflush_line_size
+argument_list|,
+name|cpu_clflush_line_size
+argument_list|,
+name|cpu_maxphyaddr
+argument_list|,
+operator|(
+name|cpu_maxphyaddr
+operator|>
+literal|32
+operator|)
+condition|?
+literal|48
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+name|sbuf_cat
+argument_list|(
+name|sb
+argument_list|,
+literal|"power management: "
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|nitems
+argument_list|(
+name|power_flags
+argument_list|)
+condition|;
+name|j
+operator|++
+control|)
+if|if
+condition|(
+name|amd_pminfo
+operator|&
+operator|(
+literal|1
+operator|<<
+name|j
+operator|)
+condition|)
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|" %s"
+argument_list|,
+name|power_flags
+index|[
+name|j
+index|]
+argument_list|)
+expr_stmt|;
+name|sbuf_cat
+argument_list|(
+name|sb
+argument_list|,
+literal|"\n\n"
+argument_list|)
+expr_stmt|;
+comment|/* XXX per-cpu vendor / class / model / id? */
 block|}
+name|sbuf_cat
+argument_list|(
+name|sb
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

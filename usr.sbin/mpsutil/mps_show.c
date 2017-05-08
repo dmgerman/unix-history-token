@@ -1085,6 +1085,121 @@ return|;
 block|}
 name|printf
 argument_list|(
+literal|"          MsgVersion: %02d.%02d\n"
+argument_list|,
+name|facts
+operator|->
+name|MsgVersion
+operator|>>
+literal|8
+argument_list|,
+name|facts
+operator|->
+name|MsgVersion
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"           MsgLength: %d\n"
+argument_list|,
+name|facts
+operator|->
+name|MsgLength
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"            Function: 0x%x\n"
+argument_list|,
+name|facts
+operator|->
+name|Function
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"       HeaderVersion: %02d,%02d\n"
+argument_list|,
+name|facts
+operator|->
+name|HeaderVersion
+operator|>>
+literal|8
+argument_list|,
+name|facts
+operator|->
+name|HeaderVersion
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"           IOCNumber: %d\n"
+argument_list|,
+name|facts
+operator|->
+name|IOCNumber
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"            MsgFlags: 0x%x\n"
+argument_list|,
+name|facts
+operator|->
+name|MsgFlags
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"               VP_ID: %d\n"
+argument_list|,
+name|facts
+operator|->
+name|VP_ID
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"               VF_ID: %d\n"
+argument_list|,
+name|facts
+operator|->
+name|VF_ID
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"       IOCExceptions: %d\n"
+argument_list|,
+name|facts
+operator|->
+name|IOCExceptions
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"           IOCStatus: %d\n"
+argument_list|,
+name|facts
+operator|->
+name|IOCStatus
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"          IOCLogInfo: 0x%x\n"
+argument_list|,
+name|facts
+operator|->
+name|IOCLogInfo
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"       MaxChainDepth: %d\n"
 argument_list|,
 name|facts

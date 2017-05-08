@@ -329,7 +329,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|U32
+name|int
 name|g_displayLevel
 init|=
 literal|2
@@ -349,7 +349,7 @@ name|l
 parameter_list|,
 modifier|...
 parameter_list|)
-value|if (g_displayLevel>=l) { \             if ((clock() - g_time> refreshRate) || (g_displayLevel>=4)) \             { g_time = clock(); DISPLAY(__VA_ARGS__); \             if (g_displayLevel>=4) fflush(stdout); } }
+value|if (g_displayLevel>=l) { \             if ((clock() - g_time> refreshRate) || (g_displayLevel>=4)) \             { g_time = clock(); DISPLAY(__VA_ARGS__); \             if (g_displayLevel>=4) fflush(stderr); } }
 end_define
 
 begin_decl_stmt
@@ -417,7 +417,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|{                                                                         \     DEBUGOUTPUT("Error defined at %s, line %i : \n", __FILE__, __LINE__); \     DISPLAYLEVEL(1, "Error %i : ", error);                                \     DISPLAYLEVEL(1, __VA_ARGS__);                                         \     DISPLAYLEVEL(1, " \n");                                               \     exit(error);                                                          \ }
+value|{                                                                         \     DEBUGOUTPUT("%s: %i: \n", __FILE__, __LINE__); \     DISPLAYLEVEL(1, "Error %i : ", error);                                \     DISPLAYLEVEL(1, __VA_ARGS__);                                         \     DISPLAYLEVEL(1, " \n");                                               \     exit(error);                                                          \ }
 end_define
 
 begin_comment
@@ -648,6 +648,18 @@ name|blockParam_t
 typedef|;
 end_typedef
 
+begin_undef
+undef|#
+directive|undef
+name|MIN
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MAX
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -657,7 +669,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a)<(b) ? (a) : (b))
+value|((a)< (b) ? (a) : (b))
 end_define
 
 begin_define
@@ -669,7 +681,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a)>(b) ? (a) : (b))
+value|((a)> (b) ? (a) : (b))
 end_define
 
 begin_function
@@ -709,6 +721,7 @@ parameter_list|,
 name|size_t
 name|dictBufferSize
 parameter_list|,
+specifier|const
 name|ZSTD_compressionParameters
 modifier|*
 name|comprParams
@@ -745,7 +758,7 @@ name|avgSize
 init|=
 name|MIN
 argument_list|(
-name|g_blockSize
+name|blockSize
 argument_list|,
 operator|(
 name|srcSize
@@ -923,7 +936,7 @@ argument_list|)
 operator|-
 literal|17
 expr_stmt|;
-comment|/* can only display 17 characters */
+comment|/* display last 17 characters */
 name|UTIL_initTimer
 argument_list|(
 operator|&
@@ -935,6 +948,7 @@ condition|(
 name|g_decodeOnly
 condition|)
 block|{
+comment|/* benchmark only decompression : source must be already compressed */
 specifier|const
 name|char
 modifier|*
@@ -948,7 +962,7 @@ operator|)
 name|srcBuffer
 decl_stmt|;
 name|U64
-name|dSize64
+name|totalDSize64
 init|=
 literal|0
 decl_stmt|;
@@ -996,7 +1010,7 @@ argument_list|,
 literal|"Impossible to determine original size "
 argument_list|)
 expr_stmt|;
-name|dSize64
+name|totalDSize64
 operator|+=
 name|fSize64
 expr_stmt|;
@@ -1016,11 +1030,11 @@ init|=
 operator|(
 name|size_t
 operator|)
-name|dSize64
+name|totalDSize64
 decl_stmt|;
 if|if
 condition|(
-name|dSize64
+name|totalDSize64
 operator|>
 name|decodedSize
 condition|)
@@ -1031,19 +1045,7 @@ argument_list|,
 literal|"original size is too large"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|decodedSize
-operator|==
-literal|0
-condition|)
-name|EXM_THROW
-argument_list|(
-literal|32
-argument_list|,
-literal|"Impossible to determine original size "
-argument_list|)
-expr_stmt|;
+comment|/* size_t overflow */
 name|free
 argument_list|(
 name|resultBuffer
@@ -1571,18 +1573,6 @@ name|cCompleted
 condition|)
 block|{
 comment|/* still some time to do compression tests */
-name|ZSTD_parameters
-name|zparams
-init|=
-name|ZSTD_getParams
-argument_list|(
-name|cLevel
-argument_list|,
-name|avgSize
-argument_list|,
-name|dictBufferSize
-argument_list|)
-decl_stmt|;
 name|ZSTD_customMem
 specifier|const
 name|cmem
@@ -1596,6 +1586,7 @@ name|NULL
 block|}
 decl_stmt|;
 name|U64
+specifier|const
 name|clockLoop
 init|=
 name|g_nbSeconds
@@ -1609,37 +1600,22 @@ name|nbLoops
 init|=
 literal|0
 decl_stmt|;
-name|ZSTD_CDict
-modifier|*
-specifier|const
-name|cdict
+name|ZSTD_parameters
+name|zparams
 init|=
-name|ZSTD_createCDict_advanced
+name|ZSTD_getParams
 argument_list|(
-name|dictBuffer
+name|cLevel
+argument_list|,
+name|avgSize
 argument_list|,
 name|dictBufferSize
-argument_list|,
-literal|1
-argument_list|,
-name|zparams
-argument_list|,
-name|cmem
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+name|ZSTD_CDict
+modifier|*
 name|cdict
-operator|==
-name|NULL
-condition|)
-name|EXM_THROW
-argument_list|(
-literal|1
-argument_list|,
-literal|"ZSTD_createCDict_advanced() allocation failure"
-argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|comprParams
@@ -1757,6 +1733,36 @@ operator|->
 name|strategy
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|cdict
+operator|=
+name|ZSTD_createCDict_advanced
+argument_list|(
+name|dictBuffer
+argument_list|,
+name|dictBufferSize
+argument_list|,
+literal|1
+argument_list|,
+name|zparams
+operator|.
+name|cParams
+argument_list|,
+name|cmem
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cdict
+operator|==
+name|NULL
+condition|)
+name|EXM_THROW
+argument_list|(
+literal|1
+argument_list|,
+literal|"ZSTD_createCDict_advanced() allocation failure"
 argument_list|)
 expr_stmt|;
 do|do

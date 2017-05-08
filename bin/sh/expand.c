@@ -1284,7 +1284,7 @@ value|p = stputs_split((data), syntax, flag, p, dst)
 end_define
 
 begin_comment
-comment|/*  * Perform expansions on an argument, placing the resulting list of arguments  * in arglist.  Parameter expansion, command substitution and arithmetic  * expansion are always performed; additional expansions can be requested  * via flag (EXP_*).  * The result is left in the stack string.  * When arglist is NULL, perform here document expansion.  *  * Caution: this function uses global state and is not reentrant.  * However, a new invocation after an interrupted invocation is safe  * and will reset the global state for the new call.  */
+comment|/*  * Perform expansions on an argument, placing the resulting list of arguments  * in arglist.  Parameter expansion, command substitution and arithmetic  * expansion are always performed; additional expansions can be requested  * via flag (EXP_*).  * The result is left in the stack string.  * When arglist is NULL, perform here document expansion.  *  * When doing something that may cause this to be re-entered, make sure  * the stack string is empty via grabstackstr() and do not assume expdest  * remains valid.  */
 end_comment
 
 begin_function
@@ -2560,7 +2560,7 @@ name|ifs
 operator|=
 literal|""
 expr_stmt|;
-comment|/* Don't copy trailing newlines */
+comment|/* Remove trailing newlines */
 for|for
 control|(
 init|;
@@ -4315,7 +4315,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test whether a specialized variable is set.  */
+comment|/*  * Test whether a special or positional parameter is set.  */
 end_comment
 
 begin_function
@@ -4852,7 +4852,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add the value of a specialized variable to the stack string.  */
+comment|/*  * Add the value of a special or positional parameter to the stack string.  */
 end_comment
 
 begin_function

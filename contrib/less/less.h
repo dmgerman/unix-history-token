@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2017  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_define
@@ -100,6 +100,42 @@ end_comment
 begin_if
 if|#
 directive|if
+name|HAVE_ANSI_PROTOS
+end_if
+
+begin_define
+define|#
+directive|define
+name|LESSPARAMS
+parameter_list|(
+name|a
+parameter_list|)
+value|a
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LESSPARAMS
+parameter_list|(
+name|a
+parameter_list|)
+value|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|HAVE_VOID
 end_if
 
@@ -108,6 +144,13 @@ define|#
 directive|define
 name|VOID_POINTER
 value|void *
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOID_PARAM
+value|void
 end_define
 
 begin_else
@@ -120,6 +163,12 @@ define|#
 directive|define
 name|VOID_POINTER
 value|char *
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOID_PARAM
 end_define
 
 begin_define
@@ -2419,6 +2468,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|mlist
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|loption
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|hilite_tree
+struct_decl|;
+end_struct_decl
+
+begin_include
+include|#
+directive|include
+file|"pattern.h"
+end_include
+
 begin_include
 include|#
 directive|include
@@ -2432,42 +2505,21 @@ end_comment
 begin_function_decl
 name|void
 name|postoa
-parameter_list|(
-name|POSITION
-name|num
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|linenumtoa
-parameter_list|(
-name|LINENUM
-name|num
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|inttoa
-parameter_list|(
-name|int
-name|num
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 

@@ -34,13 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"blacklist_client.h"
+file|<blacklist.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<blacklist.h>
+file|"blacklist_client.h"
 end_include
 
 begin_decl_stmt
@@ -88,6 +88,7 @@ parameter_list|,
 name|int
 name|fd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg

@@ -348,7 +348,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|U32
+name|int
 name|g_displayLevel
 init|=
 name|DEFAULT_DISPLAY_LEVEL
@@ -376,7 +376,7 @@ name|l
 parameter_list|,
 modifier|...
 parameter_list|)
-value|if (g_displayLevel>=l) { \             if ((clock() - g_time> refreshRate) || (g_displayLevel>=4)) \             { g_time = clock(); DISPLAY(__VA_ARGS__); \             if (g_displayLevel>=4) fflush(stdout); } }
+value|if (g_displayLevel>=l) { \             if ((clock() - g_time> refreshRate) || (g_displayLevel>=4)) \             { g_time = clock(); DISPLAY(__VA_ARGS__); \             if (g_displayLevel>=4) fflush(displayOut); } }
 end_define
 
 begin_decl_stmt
@@ -566,6 +566,42 @@ begin_comment
 comment|/* ******************************************************** *  Bench functions **********************************************************/
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|MIN
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MAX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)<(b) ? (a) : (b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)>(b) ? (a) : (b))
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -623,30 +659,6 @@ block|}
 name|BMK_compressor
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)<(b) ? (a) : (b))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)>(b) ? (a) : (b))
-end_define
 
 begin_function
 specifier|static
@@ -1348,6 +1360,7 @@ block|}
 decl_stmt|;
 name|ZSTD_CDict
 modifier|*
+specifier|const
 name|cdict
 init|=
 name|ZSTD_createCDict_advanced
@@ -1359,6 +1372,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|zparams
+operator|.
+name|cParams
 argument_list|,
 name|cmem
 argument_list|)
@@ -6326,6 +6341,8 @@ name|fileNamesBuf
 argument_list|,
 operator|&
 name|fileNamesNb
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

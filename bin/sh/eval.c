@@ -5890,7 +5890,7 @@ return|return
 literal|127
 return|;
 block|}
-comment|/* 	 * Preserve exitstatus of a previous possible redirection 	 * as POSIX mandates 	 */
+comment|/* 	 * Preserve exitstatus of a previous possible command substitution 	 * as POSIX mandates 	 */
 return|return
 name|exitstatus
 return|;

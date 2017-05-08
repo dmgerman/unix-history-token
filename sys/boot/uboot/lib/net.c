@@ -154,7 +154,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|ssize_t
 name|net_get
 parameter_list|(
 name|struct
@@ -163,8 +163,7 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
-parameter_list|,
-name|size_t
+modifier|*
 parameter_list|,
 name|time_t
 parameter_list|)
@@ -173,7 +172,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|ssize_t
 name|net_put
 parameter_list|(
 name|struct
@@ -239,7 +238,7 @@ name|struct
 name|netif_stats
 name|net_stats
 index|[
-name|NENTS
+name|nitems
 argument_list|(
 name|net_ifs
 argument_list|)
@@ -277,7 +276,7 @@ comment|/* netif_end */
 name|net_ifs
 block|,
 comment|/* netif_ifs */
-name|NENTS
+name|nitems
 argument_list|(
 argument|net_ifs
 argument_list|)
@@ -819,7 +818,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|net_put
 parameter_list|(
 name|struct
@@ -1019,7 +1018,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|net_get
 parameter_list|(
 name|struct
@@ -1029,10 +1028,8 @@ name|desc
 parameter_list|,
 name|void
 modifier|*
+modifier|*
 name|pkt
-parameter_list|,
-name|size_t
-name|len
 parameter_list|,
 name|time_t
 name|timeout
@@ -1064,6 +1061,13 @@ name|err
 decl_stmt|,
 name|rlen
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -1072,11 +1076,9 @@ name|NETIF_DEBUG
 argument_list|)
 name|printf
 argument_list|(
-literal|"net_get: pkt %p, len %d, timeout %d\n"
+literal|"net_get: pkt %p, timeout %d\n"
 argument_list|,
 name|pkt
-argument_list|,
-name|len
 argument_list|,
 name|timeout
 argument_list|)
@@ -1087,6 +1089,15 @@ name|t
 operator|=
 name|getsecs
 argument_list|()
+expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_rxbuf
+argument_list|)
 expr_stmt|;
 do|do
 block|{
@@ -1176,49 +1187,50 @@ operator|>
 literal|0
 condition|)
 block|{
+name|buf
+operator|=
+name|malloc
+argument_list|(
+name|rlen
+operator|+
+name|ETHER_ALIGN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|memcpy
 argument_list|(
-name|pkt
+name|buf
+operator|+
+name|ETHER_ALIGN
 argument_list|,
 name|sc
 operator|->
 name|sc_rxbuf
 argument_list|,
-name|MIN
-argument_list|(
-name|len
-argument_list|,
-name|rlen
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rlen
-operator|!=
-name|len
-condition|)
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NETIF_DEBUG
-argument_list|)
-name|printf
-argument_list|(
-literal|"net_get: len %x, rlen %x\n"
-argument_list|,
-name|len
-argument_list|,
 name|rlen
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-block|}
+operator|*
+name|pkt
+operator|=
+name|buf
+expr_stmt|;
 return|return
 operator|(
+operator|(
+name|ssize_t
+operator|)
 name|rlen
 operator|)
 return|;

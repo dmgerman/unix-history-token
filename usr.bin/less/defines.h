@@ -243,6 +243,17 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * HAVE_ANSI_PROTOS	is 1 if your compiler supports ANSI function prototypes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ANSI_PROTOS
+value|1
+end_define
+
+begin_comment
 comment|/*  * HAVE_SYS_TYPES_H is 1 if your system has<sys/types.h>.  */
 end_comment
 

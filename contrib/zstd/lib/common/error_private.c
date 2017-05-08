@@ -161,7 +161,7 @@ name|srcSize_wrong
 argument_list|)
 case|:
 return|return
-literal|"Src size incorrect"
+literal|"Src size is incorrect"
 return|;
 case|case
 name|PREFIX
@@ -225,6 +225,15 @@ argument_list|)
 case|:
 return|return
 literal|"Dictionary mismatch"
+return|;
+case|case
+name|PREFIX
+argument_list|(
+name|dictionaryCreation_failed
+argument_list|)
+case|:
+return|return
+literal|"Cannot create Dictionary from provided samples"
 return|;
 case|case
 name|PREFIX

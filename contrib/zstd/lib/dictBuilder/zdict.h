@@ -221,7 +221,7 @@ name|ZDICT_params_t
 name|parameters
 parameter_list|)
 function_decl|;
-comment|/*! COVER_params_t :     For all values 0 means default.     kMin and d are the only required parameters. */
+comment|/*! COVER_params_t :     For all values 0 means default.     k and d are the only required parameters. */
 typedef|typedef
 struct|struct
 block|{
@@ -315,15 +315,15 @@ modifier|*
 name|parameters
 parameter_list|)
 function_decl|;
-comment|/*! ZDICT_finalizeDictionary() :      Given a custom content as a basis for dictionary, and a set of samples,     finalize dictionary by adding headers and statistics.      Samples must be stored concatenated in a flat buffer `samplesBuffer`,     supplied with an array of sizes `samplesSizes`, providing the size of each sample in order.      dictContentSize must be> ZDICT_CONTENTSIZE_MIN bytes.     maxDictSize must be>= dictContentSize, and must be> ZDICT_DICTSIZE_MIN bytes.      @return : size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`),               or an error code, which can be tested by ZDICT_isError().     note : ZDICT_finalizeDictionary() will push notifications into stderr if instructed to, using notificationLevel>0.     note 2 : dictBuffer and customDictContent can overlap */
+comment|/*! ZDICT_finalizeDictionary() :      Given a custom content as a basis for dictionary, and a set of samples,     finalize dictionary by adding headers and statistics.      Samples must be stored concatenated in a flat buffer `samplesBuffer`,     supplied with an array of sizes `samplesSizes`, providing the size of each sample in order.      dictContentSize must be>= ZDICT_CONTENTSIZE_MIN bytes.     maxDictSize must be>= dictContentSize, and must be>= ZDICT_DICTSIZE_MIN bytes.      @return : size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`),               or an error code, which can be tested by ZDICT_isError().     note : ZDICT_finalizeDictionary() will push notifications into stderr if instructed to, using notificationLevel>0.     note 2 : dictBuffer and dictContent can overlap */
 define|#
 directive|define
 name|ZDICT_CONTENTSIZE_MIN
-value|256
+value|128
 define|#
 directive|define
 name|ZDICT_DICTSIZE_MIN
-value|512
+value|256
 name|ZDICTLIB_API
 name|size_t
 name|ZDICT_finalizeDictionary
@@ -338,7 +338,7 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|customDictContent
+name|dictContent
 parameter_list|,
 name|size_t
 name|dictContentSize

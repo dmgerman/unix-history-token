@@ -291,7 +291,7 @@ name|l
 parameter_list|,
 modifier|...
 parameter_list|)
-value|if (g_displayLevel>=l) { \             if ((FUZ_GetClockSpan(g_displayClock)> g_refreshRate) || (g_displayLevel>=4)) \             { g_displayClock = clock(); DISPLAY(__VA_ARGS__); \             if (g_displayLevel>=4) fflush(stdout); } }
+value|if (g_displayLevel>=l) { \             if ((FUZ_GetClockSpan(g_displayClock)> g_refreshRate) || (g_displayLevel>=4)) \             { g_displayClock = clock(); DISPLAY(__VA_ARGS__); \             if (g_displayLevel>=4) fflush(stderr); } }
 end_define
 
 begin_decl_stmt

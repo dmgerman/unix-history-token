@@ -836,7 +836,7 @@ block|{
 return|return
 name|time
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 return|;
 block|}

@@ -1968,7 +1968,7 @@ parameter_list|,
 name|lbn
 parameter_list|)
 define|\
-value|(((lbn)>= UFS_NDADDR || (ip)->i_size>= smalllblktosize(fs, (lbn) + 1)) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (ip)->i_size))))
+value|(((lbn)>= UFS_NDADDR || (ip)->i_size>= \ 	    (uint64_t)smalllblktosize(fs, (lbn) + 1)) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (ip)->i_size))))
 end_define
 
 begin_define
