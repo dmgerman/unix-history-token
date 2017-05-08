@@ -981,16 +981,9 @@ operator|*
 operator|)
 name|arg1
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|QLA_LOCK
 argument_list|(
 name|ha
-argument_list|,
-name|__func__
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|qla_stop_pegs
@@ -1001,8 +994,6 @@ expr_stmt|;
 name|QLA_UNLOCK
 argument_list|(
 name|ha
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 block|}
