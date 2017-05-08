@@ -8084,9 +8084,8 @@ literal|0x20
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EPERM
 argument_list|,
-comment|/* XXX TBD */
 literal|"Access denied - no access rights"
 argument_list|)
 block|}
