@@ -1927,6 +1927,14 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
+name|toomuch
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|errx
 argument_list|(
 literal|1
@@ -1936,6 +1944,7 @@ argument_list|,
 name|re
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ofs
