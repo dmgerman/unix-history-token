@@ -3131,7 +3131,7 @@ operator|==
 name|S_IFLNK
 condition|)
 block|{
-name|int
+name|size_t
 name|slen
 decl_stmt|;
 name|slen
@@ -3249,7 +3249,7 @@ modifier|*
 name|fsopts
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|slen
 decl_stmt|;
 name|void
@@ -3589,7 +3589,7 @@ modifier|*
 name|fsopts
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|slen
 decl_stmt|;
 name|void

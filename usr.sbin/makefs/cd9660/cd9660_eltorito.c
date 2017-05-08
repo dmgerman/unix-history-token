@@ -911,7 +911,7 @@ name|char
 modifier|*
 name|csptr
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|entry
