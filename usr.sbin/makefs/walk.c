@@ -237,10 +237,11 @@ decl_stmt|,
 modifier|*
 name|rp
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 name|int
 name|dot
-decl_stmt|,
-name|len
 decl_stmt|;
 name|assert
 argument_list|(
@@ -258,9 +259,6 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-operator|(
-name|size_t
-operator|)
 name|snprintf
 argument_list|(
 name|path
@@ -281,9 +279,6 @@ if|if
 condition|(
 name|len
 operator|>=
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|path
@@ -484,6 +479,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|snprintf
 argument_list|(
 name|path
@@ -502,9 +500,6 @@ argument_list|,
 name|name
 argument_list|)
 operator|>=
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|path
@@ -2037,6 +2032,9 @@ break|break;
 block|}
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|snprintf
 argument_list|(
 name|path
