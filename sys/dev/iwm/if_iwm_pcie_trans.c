@@ -1500,6 +1500,11 @@ argument_list|,
 name|IWM_OSC_CLK
 argument_list|)
 expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 name|iwm_set_bits_prph
 argument_list|(
@@ -1532,6 +1537,11 @@ argument_list|,
 name|IWM_OSC_CLK
 argument_list|)
 expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Enable DMA clock and wait for it to stabilize. 	 * 	 * Write to "CLK_EN_REG"; "1" bits enable clocks, while "0" bits 	 * do not disable clocks.  This preserves any hardware bits already 	 * set by default in "CLK_CTRL_REG" after reset. 	 */
@@ -1561,6 +1571,11 @@ argument_list|,
 name|IWM_APMG_CLK_EN_REG
 argument_list|,
 name|IWM_APMG_CLK_VAL_DMA_CLK_RQT
+argument_list|)
+expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -1595,6 +1610,11 @@ argument_list|,
 name|IWM_APMG_RTC_INT_STT_REG
 argument_list|,
 name|IWM_APMG_RTC_INT_STT_RFKILL
+argument_list|)
+expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

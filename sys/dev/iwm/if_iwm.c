@@ -6806,6 +6806,11 @@ argument_list|,
 name|IWM_APMG_CLK_VAL_DMA_CLK_RQT
 argument_list|)
 expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 name|DELAY
 argument_list|(
@@ -12421,6 +12426,11 @@ argument_list|,
 name|IWM_LMPM_SECURE_CPU2_HDR_MEM_SPACE
 argument_list|)
 expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* load to FW the binary sections of CPU2 */
 name|ret
@@ -12524,6 +12534,11 @@ argument_list|,
 name|IWM_RELEASE_CPU_RESET
 argument_list|,
 name|IWM_RELEASE_CPU_RESET_BIT
+argument_list|)
+expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -13750,6 +13765,11 @@ argument_list|(
 name|sc
 argument_list|,
 name|IWM_SB_CPU_2_STATUS
+argument_list|)
+expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
