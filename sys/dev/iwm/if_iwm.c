@@ -6636,6 +6636,14 @@ operator|~
 name|IWM_FLAG_USE_ICT
 expr_stmt|;
 comment|/* stop tx and rx.  tx and rx bits, as usual, are from if_iwn */
+if|if
+condition|(
+name|iwm_nic_lock
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 name|iwm_write_prph
 argument_list|(
 name|sc
@@ -6645,14 +6653,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|iwm_nic_lock
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-block|{
 comment|/* Stop each Tx DMA channel */
 for|for
 control|(
@@ -6789,6 +6789,14 @@ name|IWM_DEVICE_FAMILY_7000
 condition|)
 block|{
 comment|/* Power-down device's busmaster DMA clocks */
+if|if
+condition|(
+name|iwm_nic_lock
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 name|iwm_write_prph
 argument_list|(
 name|sc
@@ -6798,6 +6806,7 @@ argument_list|,
 name|IWM_APMG_CLK_VAL_DMA_CLK_RQT
 argument_list|)
 expr_stmt|;
+block|}
 name|DELAY
 argument_list|(
 literal|5
@@ -7948,11 +7957,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|iwm_nic_unlock
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|scd_base_addr
@@ -7995,6 +7999,11 @@ name|scd_base_addr
 argument_list|)
 expr_stmt|;
 block|}
+name|iwm_nic_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* reset context data, TX status and translation data */
 name|error
 operator|=
@@ -12395,6 +12404,14 @@ name|is_dual_cpus
 condition|)
 block|{
 comment|/* set CPU2 header address */
+if|if
+condition|(
+name|iwm_nic_lock
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 name|iwm_write_prph
 argument_list|(
 name|sc
@@ -12404,6 +12421,7 @@ argument_list|,
 name|IWM_LMPM_SECURE_CPU2_HDR_MEM_SPACE
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* load to FW the binary sections of CPU2 */
 name|ret
 operator|=
@@ -12491,6 +12509,14 @@ argument_list|)
 expr_stmt|;
 comment|/* configure the ucode to be ready to get the secured image */
 comment|/* release CPU reset */
+if|if
+condition|(
+name|iwm_nic_lock
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 name|iwm_write_prph
 argument_list|(
 name|sc
@@ -12500,6 +12526,7 @@ argument_list|,
 name|IWM_RELEASE_CPU_RESET_BIT
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* load to FW the binary Secured sections of CPU1 */
 name|ret
 operator|=
@@ -13690,6 +13717,42 @@ operator|==
 name|IWM_DEVICE_FAMILY_8000
 condition|)
 block|{
+name|uint32_t
+name|a
+init|=
+literal|0x5a5a5a5a
+decl_stmt|,
+name|b
+init|=
+literal|0x5a5a5a5a
+decl_stmt|;
+if|if
+condition|(
+name|iwm_nic_lock
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
+name|a
+operator|=
+name|iwm_read_prph
+argument_list|(
+name|sc
+argument_list|,
+name|IWM_SB_CPU_1_STATUS
+argument_list|)
+expr_stmt|;
+name|b
+operator|=
+name|iwm_read_prph
+argument_list|(
+name|sc
+argument_list|,
+name|IWM_SB_CPU_2_STATUS
+argument_list|)
+expr_stmt|;
+block|}
 name|device_printf
 argument_list|(
 name|sc
@@ -13698,19 +13761,9 @@ name|sc_dev
 argument_list|,
 literal|"SecBoot CPU1 Status: 0x%x, CPU2 Status: 0x%x\n"
 argument_list|,
-name|iwm_read_prph
-argument_list|(
-name|sc
+name|a
 argument_list|,
-name|IWM_SB_CPU_1_STATUS
-argument_list|)
-argument_list|,
-name|iwm_read_prph
-argument_list|(
-name|sc
-argument_list|,
-name|IWM_SB_CPU_2_STATUS
-argument_list|)
+name|b
 argument_list|)
 expr_stmt|;
 block|}
