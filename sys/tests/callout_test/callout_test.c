@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpuctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -45,6 +51,18 @@ begin_include
 include|#
 directive|include
 file|<sys/ioccom.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/libkern.h>
 end_include
 
 begin_include
@@ -63,6 +81,18 @@ begin_include
 include|#
 directive|include
 file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/pmckern.h>
 end_include
 
 begin_include
@@ -92,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/smp.h>
 end_include
 
 begin_include
@@ -104,37 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/libkern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pcpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pmckern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cpuctl.h>
 end_include
 
 begin_include
