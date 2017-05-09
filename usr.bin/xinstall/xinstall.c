@@ -3292,6 +3292,9 @@ condition|)
 block|{
 name|char
 modifier|*
+name|to_name_copy
+decl_stmt|,
+modifier|*
 name|cp
 decl_stmt|,
 modifier|*
@@ -3358,11 +3361,33 @@ name|from_name
 argument_list|)
 expr_stmt|;
 comment|/* 		 * The last component of to_name may be a symlink, 		 * so use realpath to resolve only the directory. 		 */
+name|to_name_copy
+operator|=
+name|strdup
+argument_list|(
+name|to_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|to_name_copy
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"%s: strdup"
+argument_list|,
+name|to_name
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 name|dirname
 argument_list|(
-name|to_name
+name|to_name_copy
 argument_list|)
 expr_stmt|;
 if|if
@@ -3425,11 +3450,18 @@ literal|"resolved pathname too long"
 argument_list|)
 expr_stmt|;
 block|}
+name|strcpy
+argument_list|(
+name|to_name_copy
+argument_list|,
+name|to_name
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 name|basename
 argument_list|(
-name|to_name
+name|to_name_copy
 argument_list|)
 expr_stmt|;
 if|if
@@ -3456,6 +3488,11 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"resolved pathname too long"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|to_name_copy
 argument_list|)
 expr_stmt|;
 comment|/* Trim common path components. */
