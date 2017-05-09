@@ -438,9 +438,9 @@ name|SYSINIT
 argument_list|(
 name|linux_rcu_runtime
 argument_list|,
-name|SI_SUB_LOCK
+name|SI_SUB_CPU
 argument_list|,
-name|SI_ORDER_SECOND
+name|SI_ORDER_ANY
 argument_list|,
 name|linux_rcu_runtime_init
 argument_list|,
