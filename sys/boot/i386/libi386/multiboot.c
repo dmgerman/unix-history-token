@@ -1094,7 +1094,7 @@ name|e_entry
 operator|&
 literal|0xffffff
 expr_stmt|;
-comment|/* 	 * Prepare the multiboot module list, Xen assumes the first 	 * module is the Dom0 kernel, and the second one is the initramfs. 	 * This is not optimal for FreeBSD, that doesn't have a initramfs 	 * but instead loads modules dynamically and creates the metadata 	 * info on-the-fly. 	 * 	 * As expected, the first multiboot module is going to be the 	 * FreeBSD kernel loaded as a raw file. The second module is going 	 * to contain the metadata info and the loaded modules. 	 * 	 * On native FreeBSD loads all the modules and then places the 	 * metadata info at the end, but this is painful when running on Xen, 	 * because it relocates the second multiboot module wherever it 	 * likes. In order to workaround this limitation the metadata 	 * information is placed at the start of the second module and 	 * the original modulep value is saved together with the other 	 * metadata, so we can relocate everything. 	 */
+comment|/* 	 * Prepare the multiboot module list, Xen assumes the first 	 * module is the Dom0 kernel, and the second one is the initramfs. 	 * This is not optimal for FreeBSD, that doesn't have a initramfs 	 * but instead loads modules dynamically and creates the metadata 	 * info on-the-fly. 	 * 	 * As expected, the first multiboot module is going to be the 	 * FreeBSD kernel loaded as a raw file. The second module is going 	 * to contain the metadata info and the loaded modules. 	 * 	 * On native FreeBSD loads all the modules and then places the 	 * metadata info at the end, but this is painful when running on Xen, 	 * because it relocates the second multiboot module wherever it 	 * likes. In order to workaround this limitation the metadata 	 * information is placed at the start of the second module and 	 * the original modulep value is saved together with the other 	 * metadata, so we can relocate everything. 	 * 	 * Native layout: 	 *           fp->f_addr + fp->f_size 	 * +---------+----------------+------------+ 	 * |         |                |            | 	 * | Kernel  |    Modules     |  Metadata  | 	 * |         |                |            | 	 * +---------+----------------+------------+ 	 * fp->f_addr                 modulep      kernend 	 * 	 * Xen layout: 	 * 	 * Initial: 	 *                      fp->f_addr + fp->f_size 	 * +---------+----------+----------------+------------+ 	 * |         |          |                |            | 	 * | Kernel  | Reserved |    Modules     |  Metadata  | 	 * |         |          |                |  dry run   | 	 * +---------+----------+----------------+------------+ 	 * fp->f_addr 	 * 	 * After metadata polacement (ie: final): 	 *                                  fp->f_addr + fp->f_size 	 * +-----------+---------+----------+----------------+ 	 * |           |         |          |                | 	 * |  Kernel   |  Free   | Metadata |    Modules     | 	 * |           |         |          |                | 	 * +-----------+---------+----------+----------------+ 	 * fp->f_addr            modulep                     kernend 	 * \__________/          \__________________________/ 	 *  Multiboot module 0    Multiboot module 1 	 */
 name|fp
 operator|=
 name|file_findfile
@@ -1114,6 +1114,28 @@ block|{
 name|printf
 argument_list|(
 literal|"No FreeBSD kernel provided, aborting\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
+if|if
+condition|(
+name|fp
+operator|->
+name|f_metadata
+operator|!=
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"FreeBSD kernel already contains metadata, aborting\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1258,6 +1280,12 @@ goto|goto
 name|error
 goto|;
 block|}
+comment|/* Clean the metadata added to the kernel in the bi_load64 dry run */
+name|file_removemetadata
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * This is the position where the second multiboot module 	 * will be placed. 	 */
 name|module_start
 operator|=

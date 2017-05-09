@@ -1170,6 +1170,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|file_removemetadata
+parameter_list|(
+name|struct
+name|preloaded_file
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* MI module loaders */
 end_comment
