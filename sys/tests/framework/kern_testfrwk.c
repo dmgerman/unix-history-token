@@ -20,18 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -51,12 +39,6 @@ begin_include
 include|#
 directive|include
 file|<sys/callout.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
 end_include
 
 begin_include
@@ -86,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -98,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -105,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|<sys/taskqueue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/smp.h>
 end_include
 
 begin_include
