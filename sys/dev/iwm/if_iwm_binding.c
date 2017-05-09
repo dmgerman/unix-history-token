@@ -301,9 +301,9 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|iwm_node
+name|iwm_vap
 modifier|*
-name|in
+name|ivp
 parameter_list|,
 name|uint32_t
 name|action
@@ -318,9 +318,9 @@ name|iwm_mvm_phy_ctxt
 modifier|*
 name|phyctxt
 init|=
-name|in
+name|ivp
 operator|->
-name|in_phyctxt
+name|phy_ctxt
 decl_stmt|;
 name|int
 name|i
@@ -522,9 +522,9 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|iwm_node
+name|iwm_vap
 modifier|*
-name|in
+name|ivp
 parameter_list|)
 block|{
 return|return
@@ -532,7 +532,7 @@ name|iwm_mvm_binding_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|in
+name|ivp
 argument_list|,
 name|IWM_FW_CTXT_ACTION_MODIFY
 argument_list|)
@@ -550,9 +550,9 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|iwm_node
+name|iwm_vap
 modifier|*
-name|in
+name|ivp
 parameter_list|)
 block|{
 return|return
@@ -560,7 +560,7 @@ name|iwm_mvm_binding_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|in
+name|ivp
 argument_list|,
 name|IWM_FW_CTXT_ACTION_ADD
 argument_list|)

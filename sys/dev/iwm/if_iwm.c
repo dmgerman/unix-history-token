@@ -2015,7 +2015,7 @@ name|iwm_softc
 modifier|*
 parameter_list|,
 name|struct
-name|iwm_node
+name|iwm_vap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -6620,6 +6620,12 @@ argument_list|(
 name|vap
 argument_list|)
 decl_stmt|;
+name|iv
+operator|->
+name|phy_ctxt
+operator|=
+name|NULL
+expr_stmt|;
 name|iv
 operator|->
 name|is_uploaded
@@ -19198,9 +19204,9 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|iwm_node
+name|iwm_vap
 modifier|*
-name|in
+name|ivp
 parameter_list|)
 block|{
 name|struct
@@ -19269,14 +19275,14 @@ expr_stmt|;
 comment|/* currently, PHY ID == binding ID */
 if|if
 condition|(
-name|in
+name|ivp
 condition|)
 block|{
 name|id
 operator|=
-name|in
+name|ivp
 operator|->
-name|in_phyctxt
+name|phy_ctxt
 operator|->
 name|id
 expr_stmt|;
@@ -19296,9 +19302,9 @@ index|[
 name|id
 index|]
 operator|=
-name|in
+name|ivp
 operator|->
-name|in_phyctxt
+name|phy_ctxt
 operator|->
 name|color
 expr_stmt|;
@@ -19806,9 +19812,9 @@ goto|goto
 name|out
 goto|;
 block|}
-name|in
+name|iv
 operator|->
-name|in_phyctxt
+name|phy_ctxt
 operator|=
 operator|&
 name|sc
@@ -19827,7 +19833,7 @@ name|iwm_mvm_binding_update
 argument_list|(
 name|sc
 argument_list|,
-name|in
+name|iv
 argument_list|)
 operator|)
 operator|!=
@@ -19994,9 +20000,9 @@ goto|goto
 name|out
 goto|;
 block|}
-name|in
+name|iv
 operator|->
-name|in_phyctxt
+name|phy_ctxt
 operator|=
 operator|&
 name|sc
@@ -20015,7 +20021,7 @@ name|iwm_mvm_binding_add_vif
 argument_list|(
 name|sc
 argument_list|,
-name|in
+name|iv
 argument_list|)
 operator|)
 operator|!=
@@ -21418,7 +21424,7 @@ name|iwm_mvm_update_quotas
 argument_list|(
 name|sc
 argument_list|,
-name|in
+name|ivp
 argument_list|)
 expr_stmt|;
 name|iwm_setrates
@@ -26811,7 +26817,6 @@ operator|->
 name|iv_state
 argument_list|)
 expr_stmt|;
-comment|/* XXX TODO: turn this into a callout/taskqueue */
 name|ieee80211_restart_all
 argument_list|(
 name|ic

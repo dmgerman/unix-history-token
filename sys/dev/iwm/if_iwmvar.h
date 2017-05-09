@@ -879,6 +879,11 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|struct
+name|iwm_mvm_phy_ctxt
+modifier|*
+name|phy_ctxt
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -900,11 +905,6 @@ block|{
 name|struct
 name|ieee80211_node
 name|in_ni
-decl_stmt|;
-name|struct
-name|iwm_mvm_phy_ctxt
-modifier|*
-name|in_phyctxt
 decl_stmt|;
 comment|/* status "bits" */
 name|int
