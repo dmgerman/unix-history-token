@@ -180,6 +180,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|boolean_t
+name|iwm_mvm_rx_diversity_allowed
+parameter_list|(
+name|struct
+name|iwm_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|uint8_t
 name|iwm_ridx2rate
 parameter_list|(
