@@ -342,6 +342,17 @@ value|(1<< 27)
 end_define
 
 begin_comment
+comment|/* Controller does not support or the support for ACMD12 is broken. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_BROKEN_AUTO_STOP
+value|(1<< 28)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 
