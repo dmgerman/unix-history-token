@@ -1484,6 +1484,15 @@ literal|3
 operator|)
 block|,
 comment|/* open for business */
+name|EQ_QFLUSH
+init|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+block|,
+comment|/* if_qflush in progress */
 block|}
 enum|;
 end_enum
