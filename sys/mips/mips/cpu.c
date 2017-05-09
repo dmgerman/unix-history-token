@@ -618,6 +618,20 @@ name|mips_rd_config3
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Save FP implementation revision if FP is present. */
+if|if
+condition|(
+name|cfg1
+operator|&
+name|MIPS_CONFIG1_FP
+condition|)
+name|cpuinfo
+operator|->
+name|fpu_id
+operator|=
+name|MipsFPID
+argument_list|()
+expr_stmt|;
 comment|/* Check to see if UserLocal register is implemented. */
 if|if
 condition|(
@@ -2003,6 +2017,34 @@ argument_list|,
 name|cfg1
 argument_list|,
 literal|"\20\7COP2\6MDMX\5PerfCount\4WatchRegs\3MIPS16\2EJTAG\1FPU"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|fpu_id
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"  FPU ID=0x%b\n"
+argument_list|,
+name|cpuinfo
+operator|.
+name|fpu_id
+argument_list|,
+literal|"\020"
+literal|"\020S"
+literal|"\021D"
+literal|"\022PS"
+literal|"\0233D"
+literal|"\024W"
+literal|"\025L"
+literal|"\026F64"
+literal|"\0272008"
+literal|"\034UFRP"
 argument_list|)
 expr_stmt|;
 comment|/* If config register selection 2 does not exist, exit. */

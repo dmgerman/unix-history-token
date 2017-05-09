@@ -290,7 +290,7 @@ name|register_t
 name|fsr
 decl_stmt|;
 name|register_t
-name|fdummy
+name|fir
 decl_stmt|;
 block|}
 struct|;
