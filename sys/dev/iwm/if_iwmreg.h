@@ -10212,7 +10212,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * enum iwm_device_power_flags - masks for device power command flags  * @DEVIC_POWER_FLAGS_POWER_SAVE_ENA_MSK: '1' Allow to save power by turning off  *	receiver and transmitter. '0' - does not allow. This flag should be  *	always set to '1' unless one need to disable actual power down for debug  *	purposes.  * @IWM_DEVICE_POWER_FLAGS_CAM_MSK: '1' CAM (Continuous Active Mode) is set, meaning  *	that power management is disabled. '0' Power management is enabled, one  *	of power schemes is applied. */
+comment|/**  * enum iwm_device_power_flags - masks for device power command flags  * @IWM_DEVICE_POWER_FLAGS_POWER_SAVE_ENA_MSK: '1' Allow to save power by turning off  *	receiver and transmitter. '0' - does not allow.  */
 end_comment
 
 begin_enum
@@ -10225,14 +10225,6 @@ operator|(
 literal|1
 operator|<<
 literal|0
-operator|)
-block|,
-name|IWM_DEVICE_POWER_FLAGS_CAM_MSK
-init|=
-operator|(
-literal|1
-operator|<<
-literal|13
 operator|)
 block|, }
 enum|;
@@ -16098,6 +16090,10 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_comment
+comment|/**  * enum iwm_power_scheme  * @IWM_POWER_LEVEL_CAM - Continuously Active Mode  * @IWM_POWER_LEVEL_BPS - Balanced Power Save (default)  * @IWM_POWER_LEVEL_LP  - Low Power  */
+end_comment
 
 begin_enum
 enum|enum

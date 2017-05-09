@@ -1316,6 +1316,10 @@ decl_stmt|;
 name|boolean_t
 name|last_ebs_successful
 decl_stmt|;
+comment|/* Indicate if device power save is allowed */
+name|boolean_t
+name|sc_ps_disabled
+decl_stmt|;
 block|}
 struct|;
 end_struct
