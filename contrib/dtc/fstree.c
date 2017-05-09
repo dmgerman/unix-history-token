@@ -101,7 +101,7 @@ condition|)
 block|{
 name|char
 modifier|*
-name|tmpnam
+name|tmpname
 decl_stmt|;
 if|if
 condition|(
@@ -124,7 +124,7 @@ literal|".."
 argument_list|)
 condition|)
 continue|continue;
-name|tmpnam
+name|tmpname
 operator|=
 name|join_path
 argument_list|(
@@ -139,7 +139,7 @@ if|if
 condition|(
 name|lstat
 argument_list|(
-name|tmpnam
+name|tmpname
 argument_list|,
 operator|&
 name|st
@@ -151,7 +151,7 @@ name|die
 argument_list|(
 literal|"stat(%s): %s\n"
 argument_list|,
-name|tmpnam
+name|tmpname
 argument_list|,
 name|strerror
 argument_list|(
@@ -182,9 +182,9 @@ name|pfile
 operator|=
 name|fopen
 argument_list|(
-name|tmpnam
+name|tmpname
 argument_list|,
-literal|"r"
+literal|"rb"
 argument_list|)
 expr_stmt|;
 if|if
@@ -199,7 +199,7 @@ name|stderr
 argument_list|,
 literal|"WARNING: Cannot open %s: %s\n"
 argument_list|,
-name|tmpnam
+name|tmpname
 argument_list|,
 name|strerror
 argument_list|(
@@ -265,7 +265,7 @@ name|newchild
 operator|=
 name|read_fstree
 argument_list|(
-name|tmpnam
+name|tmpname
 argument_list|)
 expr_stmt|;
 name|newchild
@@ -292,7 +292,7 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
-name|tmpnam
+name|tmpname
 argument_list|)
 expr_stmt|;
 block|}
@@ -309,7 +309,7 @@ end_function
 
 begin_function
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
 name|dt_from_fs
 parameter_list|(
@@ -341,8 +341,10 @@ literal|""
 argument_list|)
 expr_stmt|;
 return|return
-name|build_boot_info
+name|build_dt_info
 argument_list|(
+name|DTSF_V1
+argument_list|,
 name|NULL
 argument_list|,
 name|tree

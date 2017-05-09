@@ -231,10 +231,7 @@ name|data_grow_for
 argument_list|(
 name|empty_data
 argument_list|,
-name|strlen
-argument_list|(
-name|s
-argument_list|)
+name|len
 operator|+
 literal|1
 argument_list|)

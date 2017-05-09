@@ -72,7 +72,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|dirname
+name|get_dirname
 parameter_list|(
 specifier|const
 name|char
@@ -252,7 +252,7 @@ name|fopen
 argument_list|(
 name|fullname
 argument_list|,
-literal|"r"
+literal|"rb"
 argument_list|)
 expr_stmt|;
 if|if
@@ -546,7 +546,7 @@ name|srcfile
 operator|->
 name|dir
 operator|=
-name|dirname
+name|get_dirname
 argument_list|(
 name|srcfile
 operator|->
@@ -927,85 +927,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|srcpos_dump
-parameter_list|(
-name|struct
-name|srcpos
-modifier|*
-name|pos
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"file        : \"%s\"\n"
-argument_list|,
-name|pos
-operator|->
-name|file
-condition|?
-operator|(
-name|char
-operator|*
-operator|)
-name|pos
-operator|->
-name|file
-else|:
-literal|"<no file>"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"first_line  : %d\n"
-argument_list|,
-name|pos
-operator|->
-name|first_line
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"first_column: %d\n"
-argument_list|,
-name|pos
-operator|->
-name|first_column
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"last_line   : %d\n"
-argument_list|,
-name|pos
-operator|->
-name|last_line
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"last_column : %d\n"
-argument_list|,
-name|pos
-operator|->
-name|last_column
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"file        : %s\n"
-argument_list|,
-name|pos
-operator|->
-name|file
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|char
 modifier|*
 name|srcpos_string
@@ -1027,12 +948,17 @@ name|char
 modifier|*
 name|pos_str
 decl_stmt|;
-name|int
-name|rc
-decl_stmt|;
 if|if
 condition|(
 name|pos
+operator|->
+name|file
+operator|&&
+name|pos
+operator|->
+name|file
+operator|->
+name|name
 condition|)
 name|fname
 operator|=
@@ -1052,9 +978,7 @@ name|pos
 operator|->
 name|last_line
 condition|)
-name|rc
-operator|=
-name|asprintf
+name|xasprintf
 argument_list|(
 operator|&
 name|pos_str
@@ -1091,9 +1015,7 @@ name|pos
 operator|->
 name|last_column
 condition|)
-name|rc
-operator|=
-name|asprintf
+name|xasprintf
 argument_list|(
 operator|&
 name|pos_str
@@ -1116,9 +1038,7 @@ name|last_column
 argument_list|)
 expr_stmt|;
 else|else
-name|rc
-operator|=
-name|asprintf
+name|xasprintf
 argument_list|(
 operator|&
 name|pos_str
@@ -1134,18 +1054,6 @@ argument_list|,
 name|pos
 operator|->
 name|first_column
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rc
-operator|==
-operator|-
-literal|1
-condition|)
-name|die
-argument_list|(
-literal|"Couldn't allocate in srcpos string"
 argument_list|)
 expr_stmt|;
 return|return

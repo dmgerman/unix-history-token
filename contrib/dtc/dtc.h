@@ -104,12 +104,9 @@ define|#
 directive|define
 name|debug
 parameter_list|(
-name|fmt
-parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-value|printf(fmt, ##args)
+value|printf(__VA_ARGS__)
 end_define
 
 begin_else
@@ -122,9 +119,6 @@ define|#
 directive|define
 name|debug
 parameter_list|(
-name|fmt
-parameter_list|,
-name|args
 modifier|...
 parameter_list|)
 end_define
@@ -192,12 +186,56 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|alignsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Additional padding to blob accroding to the alignsize */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|phandle_format
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Use linux,phandle or phandle properties */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|generate_symbols
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* generate symbols for nodes with labels */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|generate_fixups
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* generate fixups */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|auto_label_aliases
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* auto generate labels -> aliases */
 end_comment
 
 begin_define
@@ -331,7 +369,7 @@ begin_define
 define|#
 directive|define
 name|empty_data
-value|((struct data){
+value|((struct data){ 0
 comment|/* all .members = 0 or NULL */
 value|})
 end_define
@@ -1110,6 +1148,30 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|append_to_property
+parameter_list|(
+name|struct
+name|node
+modifier|*
+name|node
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -1413,12 +1475,19 @@ end_function_decl
 
 begin_struct
 struct|struct
-name|boot_info
+name|dt_info
 block|{
+name|unsigned
+name|int
+name|dtsflags
+decl_stmt|;
 name|struct
 name|reserve_info
 modifier|*
 name|reservelist
+decl_stmt|;
+name|uint32_t
+name|boot_cpuid_phys
 decl_stmt|;
 name|struct
 name|node
@@ -1426,19 +1495,52 @@ modifier|*
 name|dt
 decl_stmt|;
 comment|/* the device tree */
-name|uint32_t
-name|boot_cpuid_phys
+specifier|const
+name|char
+modifier|*
+name|outname
 decl_stmt|;
+comment|/* filename being written to, "-" for stdout */
 block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* DTS version flags definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTSF_V1
+value|0x0001
+end_define
+
+begin_comment
+comment|/* /dts-v1/ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTSF_PLUGIN
+value|0x0002
+end_define
+
+begin_comment
+comment|/* /plugin/ */
+end_comment
+
 begin_function_decl
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
-name|build_boot_info
+name|build_dt_info
 parameter_list|(
+name|unsigned
+name|int
+name|dtsflags
+parameter_list|,
 name|struct
 name|reserve_info
 modifier|*
@@ -1460,9 +1562,60 @@ name|void
 name|sort_tree
 parameter_list|(
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
-name|bi
+name|dti
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|generate_label_tree
+parameter_list|(
+name|struct
+name|dt_info
+modifier|*
+name|dti
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|bool
+name|allocph
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|generate_fixups_tree
+parameter_list|(
+name|struct
+name|dt_info
+modifier|*
+name|dti
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|generate_local_fixups_tree
+parameter_list|(
+name|struct
+name|dt_info
+modifier|*
+name|dti
+parameter_list|,
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1484,7 +1637,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|optarg
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1497,9 +1650,9 @@ name|bool
 name|force
 parameter_list|,
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
-name|bi
+name|dti
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1517,9 +1670,9 @@ modifier|*
 name|f
 parameter_list|,
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
-name|bi
+name|dti
 parameter_list|,
 name|int
 name|version
@@ -1536,9 +1689,9 @@ modifier|*
 name|f
 parameter_list|,
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
-name|bi
+name|dti
 parameter_list|,
 name|int
 name|version
@@ -1548,7 +1701,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
 name|dt_from_blob
 parameter_list|(
@@ -1573,16 +1726,16 @@ modifier|*
 name|f
 parameter_list|,
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
-name|bi
+name|dti
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
 name|dt_from_source
 parameter_list|(
@@ -1600,7 +1753,7 @@ end_comment
 
 begin_function_decl
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
 name|dt_from_fs
 parameter_list|(
