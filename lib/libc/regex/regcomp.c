@@ -2284,6 +2284,15 @@ argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
 default|default:
+if|if
+condition|(
+name|p
+operator|->
+name|error
+operator|!=
+literal|0
+condition|)
+return|return;
 name|p
 operator|->
 name|next
@@ -3348,6 +3357,20 @@ argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
 default|default:
+if|if
+condition|(
+name|p
+operator|->
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* Definitely not $... */
 name|p
 operator|->
 name|next
