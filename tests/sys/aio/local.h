@@ -146,7 +146,7 @@ define|#
 directive|define
 name|ATF_REQUIRE_UNSAFE_AIO
 parameter_list|()
-value|do {						\ 	switch (is_unsafe_aio_enabled()) {					\ 	case -1:								\ 		atf_libc_error(errno, "Failed to read %s", sysctl_oid_name);	\ 		break;								\ 	case 0:									\ 		atf_tc_skip("Unsafe AIO is disabled");				\ 		break;								\ 	default:								\ 		break;								\ 	}									\ } while (0)
+value|do {						\ 	switch (is_unsafe_aio_enabled()) {					\ 	case -1:								\ 		atf_libc_error(errno, "Failed to read %s", sysctl_oid_name);	\ 		break;								\ 	case 0:									\ 		atf_tc_skip("Unsafe AIO is disabled");				\ 		break;								\ 	default:								\ 		printf("Unsafe AIO is enabled\n");				\ 		break;								\ 	}									\ } while (0)
 end_define
 
 begin_define
@@ -156,7 +156,7 @@ name|PLAIN_REQUIRE_UNSAFE_AIO
 parameter_list|(
 name|_exit_code
 parameter_list|)
-value|do {				\ 	switch (is_unsafe_aio_enabled()) {					\ 	case -1:								\ 		printf("Failed to read %s", sysctl_oid_name);			\ 		_exit(_exit_code);						\ 		break;								\ 	case 0:									\ 		printf("Unsafe AIO is disabled\n");				\ 		_exit(_exit_code);						\ 		break;								\ 	default:								\ 		break;								\ 	}									\ } while (0)
+value|do {				\ 	switch (is_unsafe_aio_enabled()) {					\ 	case -1:								\ 		printf("Failed to read %s", sysctl_oid_name);			\ 		_exit(_exit_code);						\ 		break;								\ 	case 0:									\ 		printf("Unsafe AIO is disabled\n");				\ 		_exit(_exit_code);						\ 		break;								\ 	default:								\ 		printf("Unsafe AIO is enabled\n");				\ 		break;								\ 	}									\ } while (0)
 end_define
 
 begin_endif
