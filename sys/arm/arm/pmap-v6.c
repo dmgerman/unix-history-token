@@ -1880,6 +1880,64 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Remap one vm_meattr class to another one. This can be useful as  * workaround for SOC errata, e.g. if devices must be accessed using  * SO memory class.   */
+end_comment
+
+begin_function
+name|void
+name|pmap_remap_vm_attr
+parameter_list|(
+name|vm_memattr_t
+name|old_attr
+parameter_list|,
+name|vm_memattr_t
+name|new_attr
+parameter_list|)
+block|{
+name|int
+name|old_idx
+decl_stmt|,
+name|new_idx
+decl_stmt|;
+comment|/* Map VM memattrs to indexes to tex_class table. */
+name|old_idx
+operator|=
+name|pte2_attr_tab
+index|[
+operator|(
+name|int
+operator|)
+name|old_attr
+index|]
+expr_stmt|;
+name|new_idx
+operator|=
+name|pte2_attr_tab
+index|[
+operator|(
+name|int
+operator|)
+name|new_attr
+index|]
+expr_stmt|;
+comment|/* Replace TEX attribute and apply it. */
+name|tex_class
+index|[
+name|old_idx
+index|]
+operator|=
+name|tex_class
+index|[
+name|new_idx
+index|]
+expr_stmt|;
+name|pmap_set_tex
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * KERNBASE must be multiple of NPT2_IN_PG * PTE1_SIZE. In other words,  * KERNBASE is mapped by first L2 page table in L2 page table page. It  * meets same constrain due to PT2MAP being placed just under KERNBASE.  */
 end_comment
 
