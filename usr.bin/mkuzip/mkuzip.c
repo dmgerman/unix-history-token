@@ -759,7 +759,9 @@ argument_list|()
 expr_stmt|;
 comment|/* Not reached */
 block|}
-name|strcpy
+name|assert
+argument_list|(
+name|strlcpy
 argument_list|(
 name|hdr
 operator|.
@@ -770,6 +772,21 @@ operator|.
 name|handler
 operator|->
 name|magic
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hdr
+operator|.
+name|magic
+argument_list|)
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|hdr
+operator|.
+name|magic
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
