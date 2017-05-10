@@ -1083,6 +1083,13 @@ begin_comment
 comment|/* index control register (R/W) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|REG_ICR
+value|com_icr
+end_define
+
 begin_comment
 comment|/*  * 16950 register #7.  It is the same as com_scr except it has a different  * abbreviation in the manufacturer's data sheet and it also serves as an  * index into the Indexed Control register set.  */
 end_comment
@@ -1119,6 +1126,13 @@ end_define
 begin_comment
 comment|/* additional control register (R/W) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_ACR
+value|com_acr
+end_define
 
 begin_define
 define|#
