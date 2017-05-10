@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -2673,13 +2679,30 @@ argument_list|,
 literal|"crypt(3) failure"
 argument_list|)
 expr_stmt|;
-return|return
-name|strcpy
+name|assert
+argument_list|(
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 name|cryptpw
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
 argument_list|)
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|buf
+operator|)
 return|;
 block|}
 end_function
