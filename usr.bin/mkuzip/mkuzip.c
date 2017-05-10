@@ -442,6 +442,8 @@ name|size_t
 name|ncpusz
 decl_stmt|,
 name|ncpu
+decl_stmt|,
+name|magiclen
 decl_stmt|;
 name|double
 name|st
@@ -759,8 +761,8 @@ argument_list|()
 expr_stmt|;
 comment|/* Not reached */
 block|}
-name|assert
-argument_list|(
+name|magiclen
+operator|=
 name|strlcpy
 argument_list|(
 name|hdr
@@ -780,6 +782,10 @@ operator|.
 name|magic
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|magiclen
 operator|<
 sizeof|sizeof
 argument_list|(

@@ -2618,6 +2618,9 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|size_t
+name|pwlen
+decl_stmt|;
 comment|/* 	 * Calculate a salt value 	 */
 for|for
 control|(
@@ -2679,8 +2682,8 @@ argument_list|,
 literal|"crypt(3) failure"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+name|pwlen
+operator|=
 name|strlcpy
 argument_list|(
 name|buf
@@ -2692,6 +2695,10 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|pwlen
 operator|<
 sizeof|sizeof
 argument_list|(
