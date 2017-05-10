@@ -591,6 +591,7 @@ name|readether
 argument_list|(
 name|d
 argument_list|,
+operator|&
 name|ptr
 argument_list|,
 operator|(
