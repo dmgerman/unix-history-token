@@ -17488,6 +17488,10 @@ condition|(
 name|error
 operator|==
 literal|0
+operator|||
+name|error
+operator|==
+name|NFSERR_REPLYFROMCACHE
 condition|)
 block|{
 name|gotseq_ok
@@ -17501,6 +17505,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 					 * Handle a reply for a retried 					 * callback.  The reply will be 					 * re-inserted in the session cache 					 * by the nfsv4_seqsess_cacherep() call 					 * after out: 					 */
+name|KASSERT
+argument_list|(
+name|error
+operator|==
+name|NFSERR_REPLYFROMCACHE
+argument_list|,
+operator|(
+literal|"cbsequence: non-NULL rep"
+operator|)
+argument_list|)
+expr_stmt|;
 name|NFSCL_DEBUG
 argument_list|(
 literal|4
