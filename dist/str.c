@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: str.c,v 1.37 2017/04/11 17:30:13 sjg Exp $	*/
+comment|/*	$NetBSD: str.c,v 1.38 2017/04/21 22:15:44 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: str.c,v 1.37 2017/04/11 17:30:13 sjg Exp $"
+literal|"$NetBSD: str.c,v 1.38 2017/04/21 22:15:44 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: str.c,v 1.37 2017/04/11 17:30:13 sjg Exp $"
+literal|"$NetBSD: str.c,v 1.38 2017/04/21 22:15:44 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1073,11 +1073,18 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|nomatch
+condition|)
+break|break;
 return|return
 operator|(
-name|nomatch
+literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|*
@@ -1163,6 +1170,20 @@ block|}
 if|if
 condition|(
 name|nomatch
+operator|&&
+operator|(
+operator|*
+name|pattern
+operator|!=
+literal|']'
+operator|)
+operator|&&
+operator|(
+operator|*
+name|pattern
+operator|!=
+literal|0
+operator|)
 condition|)
 return|return
 literal|0
