@@ -8696,6 +8696,54 @@ comment|/* FW 8.10.5.0 requires us to configure MSG_INFO in PRS. 	 * This would 
 block|if (IS_MF_SI(p_hwfn)) { 		u8 pf_id = 0; 		u32 val;  		if (ecore_hw_init_first_eth(p_hwfn, p_ptt,&pf_id) == 		    ECORE_SUCCESS) { 			if (p_hwfn->rel_pf_id == pf_id) { 				DP_VERBOSE(p_hwfn, ECORE_MSG_IFUP, 					   "PF[%d] is first ETH on engine\n", 					   pf_id); 				val = 1; 			} 			ecore_wr(p_hwfn, p_ptt, PRS_REG_MSG_INFO, val); 		} 	}
 endif|#
 directive|endif
+comment|/* Add an LLH filter with the primary MAC address.  */
+if|if
+condition|(
+name|p_hwfn
+operator|->
+name|p_dev
+operator|->
+name|num_hwfns
+operator|>
+literal|1
+operator|&&
+name|IS_LEAD_HWFN
+argument_list|(
+name|p_hwfn
+argument_list|)
+condition|)
+block|{
+name|rc
+operator|=
+name|ecore_llh_add_mac_filter
+argument_list|(
+name|p_hwfn
+argument_list|,
+name|p_ptt
+argument_list|,
+name|p_hwfn
+operator|->
+name|hw_info
+operator|.
+name|hw_mac_addr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+name|ECORE_SUCCESS
+condition|)
+name|DP_NOTICE
+argument_list|(
+name|p_hwfn
+argument_list|,
+name|false
+argument_list|,
+literal|"Failed to add an LLH filter with the primary MAC\n"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|b_hw_start
@@ -10746,6 +10794,35 @@ name|ECORE_UNKNOWN_ERROR
 expr_stmt|;
 block|}
 block|}
+comment|/* remove the LLH filter with the primary MAC addres */
+if|if
+condition|(
+name|p_hwfn
+operator|->
+name|p_dev
+operator|->
+name|num_hwfns
+operator|>
+literal|1
+operator|&&
+name|IS_LEAD_HWFN
+argument_list|(
+name|p_hwfn
+argument_list|)
+condition|)
+name|ecore_llh_remove_mac_filter
+argument_list|(
+name|p_hwfn
+argument_list|,
+name|p_ptt
+argument_list|,
+name|p_hwfn
+operator|->
+name|hw_info
+operator|.
+name|hw_mac_addr
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* hwfn loop */
 if|if
@@ -19919,7 +19996,7 @@ name|p_hwfn
 argument_list|,
 name|ECORE_MSG_HW
 argument_list|,
-literal|"MAC: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx is added at %d\n"
+literal|"MAC: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx is added at LLH entry %d\n"
 argument_list|,
 name|p_filter
 index|[
@@ -20374,7 +20451,7 @@ name|p_hwfn
 argument_list|,
 name|ECORE_MSG_HW
 argument_list|,
-literal|"MAC: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx was removed from %d\n"
+literal|"MAC: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx was removed from LLH entry %d\n"
 argument_list|,
 name|p_filter
 index|[
@@ -20869,7 +20946,7 @@ name|p_hwfn
 argument_list|,
 name|ECORE_MSG_HW
 argument_list|,
-literal|"ETH type %x is added at %d\n"
+literal|"ETH type %x is added at LLH entry %d\n"
 argument_list|,
 name|source_port_or_eth_type
 argument_list|,
@@ -20886,7 +20963,7 @@ name|p_hwfn
 argument_list|,
 name|ECORE_MSG_HW
 argument_list|,
-literal|"TCP src port %x is added at %d\n"
+literal|"TCP src port %x is added at LLH entry %d\n"
 argument_list|,
 name|source_port_or_eth_type
 argument_list|,
@@ -20903,7 +20980,7 @@ name|p_hwfn
 argument_list|,
 name|ECORE_MSG_HW
 argument_list|,
-literal|"UDP src port %x is added at %d\n"
+literal|"UDP src port %x is added at LLH entry %d\n"
 argument_list|,
 name|source_port_or_eth_type
 argument_list|,
@@ -20920,7 +20997,7 @@ name|p_hwfn
 argument_list|,
 name|ECORE_MSG_HW
 argument_list|,
-literal|"TCP dst port %x is added at %d\n"
+literal|"TCP dst port %x is added at LLH entry %d\n"
 argument_list|,
 name|dest_port
 argument_list|,
@@ -20937,7 +21014,7 @@ name|p_hwfn
 argument_list|,
 name|ECORE_MSG_HW
 argument_list|,
-literal|"UDP dst port %x is added at %d\n"
+literal|"UDP dst port %x is added at LLH entry %d\n"
 argument_list|,
 name|dest_port
 argument_list|,
@@ -20954,7 +21031,7 @@ name|p_hwfn
 argument_list|,
 name|ECORE_MSG_HW
 argument_list|,
-literal|"TCP src/dst ports %x/%x are added at %d\n"
+literal|"TCP src/dst ports %x/%x are added at LLH entry %d\n"
 argument_list|,
 name|source_port_or_eth_type
 argument_list|,
@@ -20973,7 +21050,7 @@ name|p_hwfn
 argument_list|,
 name|ECORE_MSG_HW
 argument_list|,
-literal|"UDP src/dst ports %x/%x are added at %d\n"
+literal|"UDP src/dst ports %x/%x are added at LLH entry %d\n"
 argument_list|,
 name|source_port_or_eth_type
 argument_list|,
@@ -21528,7 +21605,7 @@ name|p_hwfn
 argument_list|,
 name|ECORE_MSG_HW
 argument_list|,
-literal|"Protocol filter [type %d, source_port_or_eth_type 0x%x, dest_port 0x%x] was removed from %d\n"
+literal|"Protocol filter [type %d, source_port_or_eth_type 0x%x, dest_port 0x%x] was removed from LLH entry %d\n"
 argument_list|,
 name|type
 argument_list|,
