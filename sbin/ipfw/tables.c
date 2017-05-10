@@ -8381,6 +8381,24 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|co
+operator|.
+name|use_set
+operator|==
+literal|0
+operator|||
+name|info
+operator|->
+name|set
+operator|==
+name|co
+operator|.
+name|use_set
+operator|-
+literal|1
+condition|)
 name|error
 operator|=
 name|f
@@ -8390,7 +8408,6 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-comment|/* Ignore errors for now */
 name|info
 operator|=
 operator|(
