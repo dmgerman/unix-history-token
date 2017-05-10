@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -140,6 +146,13 @@ name|LONGOPT_VERSION
 value|0x01000003
 end_define
 
+begin_define
+define|#
+directive|define
+name|LONGOPT_CAPACITY
+value|0x01000004
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -179,6 +192,16 @@ name|LONGOPT_VERSION
 block|}
 block|,
 block|{
+literal|"capacity"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|LONGOPT_CAPACITY
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
@@ -194,7 +217,18 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uint64_t
-name|capacity
+name|min_capacity
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uint64_t
+name|max_capacity
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -634,7 +668,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-c<num>\t-  capacity (in bytes) of the disk\n"
+literal|"\t-c<num>\t-  minimum capacity (in bytes) of the disk\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-C<num>\t-  maximum capacity (in bytes) of the disk\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1730,12 +1771,26 @@ name|end
 parameter_list|)
 block|{
 name|lba_t
-name|capsz
+name|min_capsz
+decl_stmt|,
+name|max_capsz
 decl_stmt|;
-name|capsz
+name|min_capsz
 operator|=
 operator|(
-name|capacity
+name|min_capacity
+operator|+
+name|secsz
+operator|-
+literal|1
+operator|)
+operator|/
+name|secsz
+expr_stmt|;
+name|max_capsz
+operator|=
+operator|(
+name|max_capacity
 operator|+
 name|secsz
 operator|-
@@ -1746,9 +1801,24 @@ name|secsz
 expr_stmt|;
 if|if
 condition|(
+name|max_capsz
+operator|!=
+literal|0
+operator|&&
+name|end
+operator|>
+name|max_capsz
+condition|)
+return|return
+operator|(
+name|ENOSPC
+operator|)
+return|;
+if|if
+condition|(
 name|end
 operator|>=
-name|capsz
+name|min_capsz
 condition|)
 return|return
 operator|(
@@ -1759,7 +1829,7 @@ return|return
 operator|(
 name|image_set_size
 argument_list|(
-name|capsz
+name|min_capsz
 argument_list|)
 operator|)
 return|;
@@ -2247,7 +2317,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:c:f:o:p:s:vyH:P:S:T:"
+literal|"a:b:c:C:f:o:p:s:vyH:P:S:T:"
 argument_list|,
 name|longopts
 argument_list|,
@@ -2343,13 +2413,13 @@ break|break;
 case|case
 literal|'c'
 case|:
-comment|/* CAPACITY */
+comment|/* MINIMUM CAPACITY */
 name|error
 operator|=
 name|parse_uint64
 argument_list|(
 operator|&
-name|capacity
+name|min_capacity
 argument_list|,
 literal|1
 argument_list|,
@@ -2368,7 +2438,39 @@ name|EX_DATAERR
 argument_list|,
 name|error
 argument_list|,
-literal|"capacity in bytes"
+literal|"minimum capacity in bytes"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+comment|/* MAXIMUM CAPACITY */
+name|error
+operator|=
+name|parse_uint64
+argument_list|(
+operator|&
+name|max_capacity
+argument_list|,
+literal|1
+argument_list|,
+name|INT64_MAX
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|errc
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+name|error
+argument_list|,
+literal|"maximum capacity in bytes"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2742,6 +2844,41 @@ name|EX_OK
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
+case|case
+name|LONGOPT_CAPACITY
+case|:
+name|error
+operator|=
+name|parse_uint64
+argument_list|(
+operator|&
+name|min_capacity
+argument_list|,
+literal|1
+argument_list|,
+name|INT64_MAX
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|errc
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+name|error
+argument_list|,
+literal|"capacity in bytes"
+argument_list|)
+expr_stmt|;
+name|max_capacity
+operator|=
+name|min_capacity
+expr_stmt|;
+break|break;
 default|default:
 name|usage
 argument_list|(
@@ -2783,13 +2920,28 @@ name|nparts
 operator|==
 literal|0
 operator|&&
-name|capacity
+name|min_capacity
 operator|==
 literal|0
 condition|)
 name|usage
 argument_list|(
 literal|"no partitions"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|max_capacity
+operator|!=
+literal|0
+operator|&&
+name|min_capacity
+operator|>
+name|max_capacity
+condition|)
+name|usage
+argument_list|(
+literal|"minimum capacity cannot be larger than the maximum one"
 argument_list|)
 expr_stmt|;
 if|if
