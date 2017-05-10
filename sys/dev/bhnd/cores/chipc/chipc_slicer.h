@@ -65,6 +65,11 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|provider
+parameter_list|,
 name|struct
 name|flash_slice
 modifier|*
@@ -83,6 +88,11 @@ name|chipc_slicer_cfi
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|provider
 parameter_list|,
 name|struct
 name|flash_slice
