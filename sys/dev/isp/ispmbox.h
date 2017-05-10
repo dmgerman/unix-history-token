@@ -6838,6 +6838,21 @@ begin_comment
 comment|/*  * Port Database Changed Async Event information for 24XX cards  */
 end_comment
 
+begin_comment
+comment|/* N-Port Handle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDB24XX_AE_GLOBAL
+value|0xFFFF
+end_define
+
+begin_comment
+comment|/* Reason Codes */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -6974,7 +6989,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PDB24XX_AE_PRLI_DONJE
+name|PDB24XX_AE_PRLI_DONE
 value|0x13
 end_define
 
