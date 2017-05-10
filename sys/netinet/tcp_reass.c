@@ -405,7 +405,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Set the zone limit and read back the effective value. */
