@@ -15421,9 +15421,9 @@ name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-name|ISP_LOGDEBUG1
+name|ISP_LOGDEBUG0
 argument_list|,
-literal|"Chan %d handle 0x%x Port 0x%06x flags 0x%x curstate %x"
+literal|"Chan %d handle 0x%x Port 0x%06x flags 0x%x curstate %x laststate %x"
 argument_list|,
 name|chan
 argument_list|,
@@ -15444,6 +15444,12 @@ operator|.
 name|bill
 operator|.
 name|pdb_curstate
+argument_list|,
+name|un
+operator|.
+name|bill
+operator|.
+name|pdb_laststate
 argument_list|)
 expr_stmt|;
 if|if

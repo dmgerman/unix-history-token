@@ -1834,6 +1834,35 @@ parameter_list|)
 value|((x) == TOPO_FL_PORT || (x) == TOPO_F_PORT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|FCP_AL_DA_ALL
+value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_AL_PA
+parameter_list|(
+name|fcp
+parameter_list|)
+value|((uint8_t)(fcp->isp_portid))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_IS_DEST_ALPD
+parameter_list|(
+name|fcp
+parameter_list|,
+name|alpd
+parameter_list|)
+value|(FCP_AL_PA((fcp)) == FCP_AL_DA_ALL || FCP_AL_PA((fcp)) == alpd)
+end_define
+
 begin_comment
 comment|/*  * Soft Structure per host adapter  */
 end_comment
