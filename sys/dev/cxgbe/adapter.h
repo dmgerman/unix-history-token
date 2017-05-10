@@ -2490,7 +2490,7 @@ comment|/* total # of Ethernet rx queues */
 name|int
 name|ntxq
 decl_stmt|;
-comment|/* total # of Ethernet tx tx queues */
+comment|/* total # of Ethernet tx queues */
 name|int
 name|nofldrxq
 decl_stmt|;
