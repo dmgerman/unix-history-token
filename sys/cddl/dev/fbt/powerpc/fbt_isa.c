@@ -463,8 +463,6 @@ name|fbt_excluded
 argument_list|(
 name|name
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
