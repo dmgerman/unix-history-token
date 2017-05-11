@@ -15,8 +15,14 @@ directive|define
 name|DEV_MMC_BRIDGE_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
 begin_comment
-comment|/*  * This file defines interfaces for the mmc bridge.  The names chosen  * are similar to or the same as the names used in Linux to allow for  * easy porting of what Linux calls mmc host drivers.  I use the  * FreeBSD terminology of bridge and bus for consistancy with other  * drivers in the system.  This file corresponds roughly to the Linux  * linux/mmc/host.h file.  *  * A mmc bridge is a chipset that can have one or more mmc and/or sd  * cards attached to it.  mmc cards are attached on a bus topology,  * while sd and sdio cards are attached using a star topology (meaning  * in practice each sd card has its own, independent slot).  Each  * mmcbr is assumed to be derived from the mmcbr.  This is done to  * allow for easier addition of bridges (as each bridge does not need  * to be added to the mmcbus file).  *  * Attached to the mmc bridge is an mmcbus.  The mmcbus is described  * in dev/mmc/bus.h.  */
+comment|/*  * This file defines interfaces for the mmc bridge.  The names chosen  * are similar to or the same as the names used in Linux to allow for  * easy porting of what Linux calls mmc host drivers.  I use the  * FreeBSD terminology of bridge and bus for consistency with other  * drivers in the system.  This file corresponds roughly to the Linux  * linux/mmc/host.h file.  *  * A mmc bridge is a chipset that can have one or more mmc and/or sd  * cards attached to it.  mmc cards are attached on a bus topology,  * while sd and sdio cards are attached using a star topology (meaning  * in practice each sd card has its own, independent slot).  Each  * mmcbr is assumed to be derived from the mmcbr.  This is done to  * allow for easier addition of bridges (as each bridge does not need  * to be added to the mmcbus file).  *  * Attached to the mmc bridge is an mmcbus.  The mmcbus is described  * in dev/mmc/mmcbus_if.m.  */
 end_comment
 
 begin_comment
@@ -167,7 +173,7 @@ name|enum
 name|mmc_vdd
 name|vdd
 decl_stmt|;
-comment|/* Voltage to apply to the power pins/ */
+comment|/* Voltage to apply to the power pins */
 name|enum
 name|mmc_bus_mode
 name|bus_mode
@@ -225,18 +231,28 @@ decl_stmt|;
 define|#
 directive|define
 name|MMC_CAP_4_BIT_DATA
-value|(1<< 0)
+value|(1<<  0)
 comment|/* Can do 4-bit data transfers */
 define|#
 directive|define
 name|MMC_CAP_8_BIT_DATA
-value|(1<< 1)
+value|(1<<  1)
 comment|/* Can do 8-bit data transfers */
 define|#
 directive|define
 name|MMC_CAP_HSPEED
-value|(1<< 2)
+value|(1<<  2)
 comment|/* Can do High Speed transfers */
+define|#
+directive|define
+name|MMC_CAP_BOOT_NOACC
+value|(1<<  4)
+comment|/* Cannot access boot partitions */
+define|#
+directive|define
+name|MMC_CAP_WAIT_WHILE_BUSY
+value|(1<<  5)
+comment|/* Host waits for busy responses */
 name|enum
 name|mmc_card_mode
 name|mode
@@ -249,6 +265,49 @@ comment|/* Current state of the host */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|driver_t
+name|mmc_driver
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|mmc_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MMC_VERSION
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMC_DECLARE_BRIDGE
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|DRIVER_MODULE(mmc, name, mmc_driver, mmc_devclass, NULL, NULL);	\     MODULE_DEPEND(name, mmc, MMC_VERSION, MMC_VERSION, MMC_VERSION);
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMC_DEPEND
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|MODULE_DEPEND(name, mmc, MMC_VERSION, MMC_VERSION, MMC_VERSION);
+end_define
 
 begin_endif
 endif|#

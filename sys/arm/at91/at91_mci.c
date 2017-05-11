@@ -38,19 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
 end_include
 
 begin_include
@@ -63,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kthread.h>
 end_include
 
 begin_include
@@ -98,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/resource.h>
 end_include
 
@@ -117,24 +93,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/timetc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/watchdog.h>
 end_include
 
 begin_include
@@ -189,12 +147,6 @@ begin_include
 include|#
 directive|include
 file|<dev/mmc/bridge.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mmc/mmcreg.h>
 end_include
 
 begin_include
@@ -5569,6 +5521,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|MMC_DECLARE_BRIDGE
+argument_list|(
+name|at91_mci
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

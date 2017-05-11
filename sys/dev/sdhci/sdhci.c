@@ -493,6 +493,10 @@ begin_comment
 comment|/*  * Broadcom BCM577xx Controller Constants  */
 end_comment
 
+begin_comment
+comment|/* Maximum divider supported by the default clock source. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -501,7 +505,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* Maximum divider supported by the default clock source. */
+comment|/* Alternative clock's base frequency. */
 end_comment
 
 begin_define
@@ -510,10 +514,6 @@ directive|define
 name|BCM577XX_ALT_CLOCK_BASE
 value|63000000
 end_define
-
-begin_comment
-comment|/* Alternative clock's base frequency. */
-end_comment
 
 begin_define
 define|#
@@ -929,6 +929,9 @@ block|{
 name|int
 name|timeout
 decl_stmt|;
+name|uint32_t
+name|clock
+decl_stmt|;
 if|if
 condition|(
 name|slot
@@ -972,9 +975,6 @@ name|SDHCI_QUIRK_CLOCK_BEFORE_RESET
 operator|)
 condition|)
 block|{
-name|uint32_t
-name|clock
-decl_stmt|;
 comment|/* This is to force an update */
 name|clock
 operator|=
@@ -1034,7 +1034,7 @@ operator|&
 name|SDHCI_QUIRK_WAITFOR_RESET_ASSERTED
 condition|)
 block|{
-comment|/* 		 * Resets on TI OMAPs and AM335x are incompatible with SDHCI 		 * specification.  The reset bit has internal propagation delay, 		 * so a fast read after write returns 0 even if reset process is 		 * in progress. The workaround is to poll for 1 before polling 		 * for 0.  In the worst case, if we miss seeing it asserted the 		 * time we spent waiting is enough to ensure the reset finishes. 		 */
+comment|/* 		 * Resets on TI OMAPs and AM335x are incompatible with SDHCI 		 * specification.  The reset bit has internal propagation delay, 		 * so a fast read after write returns 0 even if reset process is 		 * in progress.  The workaround is to poll for 1 before polling 		 * for 0.  In the worst case, if we miss seeing it asserted the 		 * time we spent waiting is enough to ensure the reset finishes. 		 */
 name|timeout
 operator|=
 literal|10000
@@ -1300,7 +1300,7 @@ operator|~
 name|SDHCI_CLOCK_CARD_EN
 argument_list|)
 expr_stmt|;
-comment|/* If no clock requested - left it so. */
+comment|/* If no clock requested - leave it so. */
 if|if
 condition|(
 name|clock
@@ -1335,7 +1335,7 @@ argument_list|)
 operator|&
 name|BCM577XX_CTRL_CLKSEL_MASK
 expr_stmt|;
-comment|/* Select clock source appropriate for the requested frequency. */
+comment|/* 		 * Select clock source appropriate for the requested frequency. 		 */
 if|if
 condition|(
 operator|(
@@ -1449,7 +1449,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Version 3.0 divisors are multiples of two up to 1023*2 */
+comment|/* Version 3.0 divisors are multiples of two up to 1023 * 2 */
 if|if
 condition|(
 name|clock
@@ -1679,7 +1679,7 @@ argument_list|,
 name|pwr
 argument_list|)
 expr_stmt|;
-comment|/* If power down requested - left it so. */
+comment|/* If power down requested - leave it so. */
 if|if
 condition|(
 name|power
@@ -2327,6 +2327,7 @@ name|arg
 parameter_list|,
 name|int
 name|pending
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2335,6 +2336,9 @@ modifier|*
 name|slot
 init|=
 name|arg
+decl_stmt|;
+name|device_t
+name|d
 decl_stmt|;
 name|SDHCI_LOCK
 argument_list|(
@@ -2446,13 +2450,12 @@ argument_list|,
 literal|"Card removed\n"
 argument_list|)
 expr_stmt|;
-name|device_t
 name|d
-init|=
+operator|=
 name|slot
 operator|->
 name|dev
-decl_stmt|;
+expr_stmt|;
 name|slot
 operator|->
 name|dev
@@ -3213,6 +3216,38 @@ name|caps
 operator||=
 name|MMC_CAP_HSPEED
 expr_stmt|;
+if|if
+condition|(
+name|slot
+operator|->
+name|quirks
+operator|&
+name|SDHCI_QUIRK_BOOT_NOACC
+condition|)
+name|slot
+operator|->
+name|host
+operator|.
+name|caps
+operator||=
+name|MMC_CAP_BOOT_NOACC
+expr_stmt|;
+if|if
+condition|(
+name|slot
+operator|->
+name|quirks
+operator|&
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+condition|)
+name|slot
+operator|->
+name|host
+operator|.
+name|caps
+operator||=
+name|MMC_CAP_WAIT_WHILE_BUSY
+expr_stmt|;
 comment|/* Decide if we have usable DMA. */
 if|if
 condition|(
@@ -3269,7 +3304,7 @@ name|opt
 operator||=
 name|SDHCI_NON_REMOVABLE
 expr_stmt|;
-comment|/*  	 * Use platform-provided transfer backend 	 * with PIO as a fallback mechanism 	 */
+comment|/* 	 * Use platform-provided transfer backend 	 * with PIO as a fallback mechanism 	 */
 if|if
 condition|(
 name|slot
@@ -3753,6 +3788,7 @@ name|sdhci_generic_min_freq
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|struct
 name|sdhci_slot
@@ -3796,6 +3832,7 @@ name|sdhci_generic_get_card_present
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|struct
 name|sdhci_slot
@@ -4392,7 +4429,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Do not issue command if there is no card, clock or power. 	 * Controller will not detect timeout without clock active. */
+comment|/* 	 * Do not issue command if there is no card, clock or power. 	 * Controller will not detect timeout without clock active. 	 */
 if|if
 condition|(
 operator|!
@@ -4633,7 +4670,7 @@ operator|->
 name|data
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Interrupt aggregation: To reduce total number of interrupts 	 * group response interrupt with data interrupt when possible. 	 * If there going to be data interrupt, mask response one. 	 */
+comment|/* 	 * Interrupt aggregation: To reduce total number of interrupts 	 * group response interrupt with data interrupt when possible. 	 * If there going to be data interrupt, mask response one. 	 */
 if|if
 condition|(
 name|slot
@@ -4738,13 +4775,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|uint32_t
+name|val
+decl_stmt|;
+name|uint8_t
+name|extra
+decl_stmt|;
 name|slot
 operator|->
 name|cmd_done
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Interrupt aggregation: Restore command interrupt. 	 * Main restore point for the case when command interrupt 	 * happened first. */
+comment|/* 	 * Interrupt aggregation: Restore command interrupt. 	 * Main restore point for the case when command interrupt 	 * happened first. 	 */
 name|WR4
 argument_list|(
 name|slot
@@ -4813,11 +4856,10 @@ name|MMC_RSP_136
 condition|)
 block|{
 comment|/* CRC is stripped so we need one byte shift. */
-name|uint8_t
 name|extra
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4832,9 +4874,8 @@ name|i
 operator|++
 control|)
 block|{
-name|uint32_t
 name|val
-init|=
+operator|=
 name|RD4
 argument_list|(
 name|slot
@@ -4845,7 +4886,7 @@ name|i
 operator|*
 literal|4
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|slot
@@ -5348,6 +5389,9 @@ name|curcmd
 operator|->
 name|data
 decl_stmt|;
+name|size_t
+name|left
+decl_stmt|;
 comment|/* Interrupt aggregation: Restore command interrupt. 	 * Auxiliary restore point for the case when data interrupt 	 * happened first. */
 if|if
 condition|(
@@ -5397,9 +5441,8 @@ operator|&
 name|MMC_DATA_READ
 condition|)
 block|{
-name|size_t
 name|left
-init|=
+operator|=
 name|data
 operator|->
 name|len
@@ -5407,7 +5450,7 @@ operator|-
 name|slot
 operator|->
 name|offset
-decl_stmt|;
+expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|slot
@@ -5643,6 +5686,7 @@ name|sdhci_generic_request
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|device_t
 name|reqdev
@@ -5822,6 +5866,7 @@ name|sdhci_generic_get_ro
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|device_t
 name|reqdev
@@ -5878,6 +5923,7 @@ name|sdhci_generic_acquire_host
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|device_t
 name|reqdev
@@ -5963,6 +6009,7 @@ name|sdhci_generic_release_host
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|device_t
 name|reqdev
@@ -6130,6 +6177,14 @@ name|uint32_t
 name|intmask
 parameter_list|)
 block|{
+name|struct
+name|mmc_data
+modifier|*
+name|data
+decl_stmt|;
+name|size_t
+name|left
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -6355,21 +6410,15 @@ operator|&
 name|SDHCI_INT_DMA_END
 condition|)
 block|{
-name|struct
-name|mmc_data
-modifier|*
 name|data
-init|=
+operator|=
 name|slot
 operator|->
 name|curcmd
 operator|->
 name|data
-decl_stmt|;
-name|size_t
-name|left
-decl_stmt|;
-comment|/* Unload DMA buffer... */
+expr_stmt|;
+comment|/* Unload DMA buffer ... */
 name|left
 operator|=
 name|data
@@ -6665,7 +6714,6 @@ argument_list|(
 name|slot
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 block|}
 end_function
@@ -6945,7 +6993,7 @@ operator|&
 name|SDHCI_INT_DATA_MASK
 argument_list|)
 expr_stmt|;
-comment|/* Dont call data_irq in case of errored command */
+comment|/* Don't call data_irq in case of errored command. */
 if|if
 condition|(
 operator|(
@@ -7307,6 +7355,16 @@ operator|=
 literal|65535
 expr_stmt|;
 break|break;
+case|case
+name|MMCBR_IVAR_MAX_BUSY_TIMEOUT
+case|:
+comment|/* 		 * Currently, sdhci_start_data() hardcodes 1 s for all CMDs. 		 */
+operator|*
+name|result
+operator|=
+literal|1000000
+expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
@@ -7342,6 +7400,14 @@ name|device_get_ivars
 argument_list|(
 name|child
 argument_list|)
+decl_stmt|;
+name|uint32_t
+name|clock
+decl_stmt|,
+name|max_clock
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 switch|switch
 condition|(
@@ -7406,15 +7472,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|uint32_t
-name|max_clock
-decl_stmt|;
-name|uint32_t
-name|clock
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|max_clock
 operator|=
 name|slot

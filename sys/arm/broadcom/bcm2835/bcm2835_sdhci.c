@@ -122,13 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mmc/mmcbrvar.h>
+file|<dev/sdhci/sdhci.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/sdhci/sdhci.h>
+file|"mmcbr_if.h"
 end_include
 
 begin_include
@@ -3050,13 +3050,6 @@ argument_list|,
 name|sdhci_generic_write_ivar
 argument_list|)
 block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
 comment|/* MMC bridge interface */
 name|DEVMETHOD
 argument_list|(
@@ -3172,11 +3165,7 @@ argument_list|,
 name|bcm_sdhci_write_multi_4
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3218,9 +3207,9 @@ name|bcm_sdhci_driver
 argument_list|,
 name|bcm_sdhci_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3237,6 +3226,14 @@ argument_list|,
 literal|1
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MMC_DECLARE_BRIDGE
+argument_list|(
+name|sdhci_bcm
 argument_list|)
 expr_stmt|;
 end_expr_stmt
