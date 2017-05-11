@@ -3976,6 +3976,14 @@ operator|->
 name|if_addrlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_hw_addr
+operator|!=
+name|NULL
+condition|)
 name|bcopy
 argument_list|(
 name|lla
