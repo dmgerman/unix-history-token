@@ -8229,6 +8229,24 @@ decl_stmt|;
 name|bool
 name|locked
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|powerof2
+argument_list|(
+name|align
+operator|+
+literal|1
+argument_list|)
+argument_list|,
+operator|(
+literal|"invalid zone alignment %d for \"%s\""
+operator|,
+name|align
+operator|,
+name|name
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* This stuff is essential for the zone ctor */
 name|memset
 argument_list|(
