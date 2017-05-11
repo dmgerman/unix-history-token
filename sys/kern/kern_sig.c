@@ -12340,6 +12340,15 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|MPASS
+argument_list|(
+name|sending
+operator|||
+name|td
+operator|==
+name|curthread
+argument_list|)
+expr_stmt|;
 name|wakeup_swapper
 operator|=
 literal|0
@@ -12416,10 +12425,7 @@ name|TD_SBDRY_INTR
 argument_list|(
 name|td2
 argument_list|)
-operator|&&
-name|sending
 condition|)
-block|{
 name|wakeup_swapper
 operator||=
 name|sleepq_abort
@@ -12432,7 +12438,6 @@ name|td2
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
