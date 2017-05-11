@@ -196,15 +196,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|free
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|failure
 argument_list|(
 literal|"--lz4 option is broken: %s"
 argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
