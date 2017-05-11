@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_CLOCK_BEFORE_RESET
-value|(1<<0)
+value|(1<< 0)
 end_define
 
 begin_comment
@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_FORCE_DMA
-value|(1<<1)
+value|(1<< 1)
 end_define
 
 begin_comment
@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_BROKEN_DMA
-value|(1<<2)
+value|(1<< 2)
 end_define
 
 begin_comment
@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_NO_CARD_NO_RESET
-value|(1<<3)
+value|(1<< 3)
 end_define
 
 begin_comment
@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_RESET_ON_IOS
-value|(1<<4)
+value|(1<< 4)
 end_define
 
 begin_comment
@@ -96,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_32BIT_DMA_SIZE
-value|(1<<5)
+value|(1<< 5)
 end_define
 
 begin_comment
@@ -107,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_RESET_AFTER_REQUEST
-value|(1<<6)
+value|(1<< 6)
 end_define
 
 begin_comment
@@ -118,7 +118,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_INCR_TIMEOUT_CONTROL
-value|(1<<7)
+value|(1<< 7)
 end_define
 
 begin_comment
@@ -129,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_BROKEN_TIMINGS
-value|(1<<8)
+value|(1<< 8)
 end_define
 
 begin_comment
@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_LOWER_FREQUENCY
-value|(1<<9)
+value|(1<< 9)
 end_define
 
 begin_comment
@@ -151,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK
-value|(1<<10)
+value|(1<< 10)
 end_define
 
 begin_comment
@@ -162,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
-value|(1<<11)
+value|(1<< 11)
 end_define
 
 begin_comment
@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_MISSING_CAPS
-value|(1<<12)
+value|(1<< 12)
 end_define
 
 begin_comment
@@ -184,7 +184,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_DONT_SHIFT_RESPONSE
-value|(1<<13)
+value|(1<< 13)
 end_define
 
 begin_comment
@@ -195,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_WAITFOR_RESET_ASSERTED
-value|(1<<14)
+value|(1<< 14)
 end_define
 
 begin_comment
@@ -206,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_DONT_SET_HISPD_BIT
-value|(1<<15)
+value|(1<< 15)
 end_define
 
 begin_comment
@@ -217,7 +217,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_BCM577XX_400KHZ_CLKSRC
-value|(1<<16)
+value|(1<< 16)
 end_define
 
 begin_comment
@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_POLL_CARD_PRESENT
-value|(1<<17)
+value|(1<< 17)
 end_define
 
 begin_comment
@@ -239,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
-value|(1<<18)
+value|(1<< 18)
 end_define
 
 begin_comment
@@ -250,7 +250,7 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
-value|(1<<19)
+value|(1<< 19)
 end_define
 
 begin_comment
@@ -261,7 +261,29 @@ begin_define
 define|#
 directive|define
 name|SDHCI_QUIRK_DATA_TIMEOUT_1MHZ
-value|(1<<20)
+value|(1<< 20)
+end_define
+
+begin_comment
+comment|/* Controller doesn't allow access boot partitions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_BOOT_NOACC
+value|(1<< 21)
+end_define
+
+begin_comment
+comment|/* Controller waits for busy responses. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+value|(1<< 22)
 end_define
 
 begin_comment
@@ -1568,7 +1590,7 @@ define|#
 directive|define
 name|PLATFORM_DATA_STARTED
 value|8
-comment|/* Data transfer is handled by platform */
+comment|/* Data xfer is handled by platform */
 name|struct
 name|mtx
 name|mtx

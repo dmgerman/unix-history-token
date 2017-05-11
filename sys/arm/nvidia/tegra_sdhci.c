@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/callout.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -108,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -151,12 +139,6 @@ begin_include
 include|#
 directive|include
 file|<dev/mmc/bridge.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mmc/mmcreg.h>
 end_include
 
 begin_include
@@ -2218,35 +2200,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|MMC_DECLARE_BRIDGE
 argument_list|(
-name|mmc
-argument_list|,
 name|sdhci
-argument_list|,
-name|mmc_driver
-argument_list|,
-name|mmc_devclass
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|sdhci_tegra
-argument_list|,
-name|mmc
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -104,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
@@ -128,19 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mmc/mmcreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mmc/mmcbrvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sdhci.h"
+file|<dev/sdhci/sdhci.h>
 end_include
 
 begin_include
@@ -187,11 +163,13 @@ literal|"80860F14"
 block|,
 literal|1
 block|,
-literal|"Intel Bay Trail SD Host Controller"
+literal|"Intel Bay Trail eMMC 4.5 Controller"
 block|,
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+operator||
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -199,9 +177,9 @@ literal|"80860F14"
 block|,
 literal|3
 block|,
-literal|"Intel Bay Trail SD Host Controller"
+literal|"Intel Bay Trail SDXC Controller"
 block|,
-name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -209,9 +187,9 @@ literal|"80860F16"
 block|,
 literal|0
 block|,
-literal|"Intel Bay Trail SD Host Controller"
+literal|"Intel Bay Trail SDXC Controller"
 block|,
-literal|0
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -312,6 +290,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -367,6 +346,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -426,6 +406,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -481,6 +462,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -540,6 +522,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -595,6 +578,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -654,6 +638,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -704,6 +689,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -887,11 +873,13 @@ operator|)
 condition|)
 continue|continue;
 return|return
+operator|(
 operator|&
 name|sdhci_acpi_devices
 index|[
 name|i
 index|]
+operator|)
 return|;
 block|}
 return|return
@@ -1698,35 +1686,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|mmc
-argument_list|,
-name|sdhci_acpi
-argument_list|,
-name|mmc_driver
-argument_list|,
-name|mmc_devclass
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DEPEND
+name|MMC_DECLARE_BRIDGE
 argument_list|(
 name|sdhci_acpi
-argument_list|,
-name|mmc
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

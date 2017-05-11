@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -121,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|<dev/mmc/bridge.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mmc/mmcreg.h>
 end_include
 
 begin_include
@@ -4686,9 +4674,9 @@ name|aml8726_mmc_driver
 argument_list|,
 name|aml8726_mmc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4710,35 +4698,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|mmc
-argument_list|,
-name|aml8726_mmc
-argument_list|,
-name|mmc_driver
-argument_list|,
-name|mmc_devclass
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DEPEND
+name|MMC_DECLARE_BRIDGE
 argument_list|(
 name|aml8726_mmc
-argument_list|,
-name|mmc
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

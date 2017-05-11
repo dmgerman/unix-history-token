@@ -2318,6 +2318,15 @@ name|quirks
 operator||=
 name|SDHCI_QUIRK_WAITFOR_RESET_ASSERTED
 expr_stmt|;
+comment|/* 	 * The controller waits for busy responses. 	 */
+name|sc
+operator|->
+name|slot
+operator|.
+name|quirks
+operator||=
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+expr_stmt|;
 comment|/* 	 * DMA is not really broken, I just haven't implemented it yet. 	 */
 name|sc
 operator|->
@@ -2640,13 +2649,6 @@ argument_list|,
 name|sdhci_generic_write_ivar
 argument_list|)
 block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
 comment|/* MMC bridge interface */
 name|DEVMETHOD
 argument_list|(
@@ -2789,9 +2791,9 @@ name|ti_sdhci_driver
 argument_list|,
 name|ti_sdhci_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2813,35 +2815,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|mmc
-argument_list|,
-name|sdhci_ti
-argument_list|,
-name|mmc_driver
-argument_list|,
-name|mmc_devclass
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DEPEND
+name|MMC_DECLARE_BRIDGE
 argument_list|(
 name|sdhci_ti
-argument_list|,
-name|mmc
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

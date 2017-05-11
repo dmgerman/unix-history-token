@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -116,31 +110,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/mmc/bridge.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/mmc/mmcreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mmc/mmcbrvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sdhci.h"
+file|<dev/sdhci/sdhci.h>
 end_include
 
 begin_include
@@ -403,6 +379,18 @@ block|,
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+operator||
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+block|}
+block|,
+block|{
+literal|0x0f158086
+block|,
+literal|0xffff
+block|,
+literal|"Intel Bay Trail SDXC Controller"
+block|,
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -415,6 +403,8 @@ block|,
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+operator||
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -429,6 +419,28 @@ operator||
 name|SDHCI_QUIRK_DATA_TIMEOUT_1MHZ
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+operator||
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+block|}
+block|,
+block|{
+literal|0x22968086
+block|,
+literal|0xffff
+block|,
+literal|"Intel Braswell SDXC Controller"
+block|,
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+block|}
+block|,
+block|{
+literal|0x5aca8086
+block|,
+literal|0xffff
+block|,
+literal|"Intel Apollo Lake SDXC Controller"
+block|,
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -441,6 +453,8 @@ block|,
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+operator||
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -549,6 +563,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -614,6 +629,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -683,6 +699,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -748,6 +765,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -817,6 +835,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -882,6 +901,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -951,6 +971,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -1006,6 +1027,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -1469,6 +1491,11 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+decl_stmt|;
 name|uint32_t
 name|model
 decl_stmt|;
@@ -1748,11 +1775,8 @@ name|i
 operator|++
 control|)
 block|{
-name|struct
-name|sdhci_slot
-modifier|*
 name|slot
-init|=
+operator|=
 operator|&
 name|sc
 operator|->
@@ -1762,7 +1786,7 @@ name|sc
 operator|->
 name|num_slots
 index|]
-decl_stmt|;
+expr_stmt|;
 comment|/* Allocate memory. */
 name|rid
 operator|=
@@ -1913,12 +1937,8 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-name|struct
-name|sdhci_slot
-modifier|*
-name|slot
-init|=
+name|sdhci_start_slot
+argument_list|(
 operator|&
 name|sc
 operator|->
@@ -1926,13 +1946,8 @@ name|slots
 index|[
 name|i
 index|]
-decl_stmt|;
-name|sdhci_start_slot
-argument_list|(
-name|slot
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -2015,11 +2030,8 @@ name|i
 operator|++
 control|)
 block|{
-name|struct
-name|sdhci_slot
-modifier|*
-name|slot
-init|=
+name|sdhci_cleanup_slot
+argument_list|(
 operator|&
 name|sc
 operator|->
@@ -2027,10 +2039,6 @@ name|slots
 index|[
 name|i
 index|]
-decl_stmt|;
-name|sdhci_cleanup_slot
-argument_list|(
-name|slot
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -2320,12 +2328,8 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-name|struct
-name|sdhci_slot
-modifier|*
-name|slot
-init|=
+name|sdhci_generic_intr
+argument_list|(
 operator|&
 name|sc
 operator|->
@@ -2333,13 +2337,8 @@ name|slots
 index|[
 name|i
 index|]
-decl_stmt|;
-name|sdhci_generic_intr
-argument_list|(
-name|slot
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -2567,35 +2566,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|mmc
-argument_list|,
-name|sdhci_pci
-argument_list|,
-name|mmc_driver
-argument_list|,
-name|mmc_devclass
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DEPEND
+name|MMC_DECLARE_BRIDGE
 argument_list|(
 name|sdhci_pci
-argument_list|,
-name|mmc
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
