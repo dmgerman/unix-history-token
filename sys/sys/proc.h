@@ -2895,7 +2895,7 @@ comment|/* End area that is copied on creation. */
 define|#
 directive|define
 name|p_endcopy
-value|p_xsig
+value|p_pgrp
 name|struct
 name|pgrp
 modifier|*
@@ -3020,6 +3020,14 @@ name|u_int
 name|p_ptevents
 decl_stmt|;
 comment|/* (c) ptrace() event mask. */
+name|uint16_t
+name|p_elf_machine
+decl_stmt|;
+comment|/* (x) ELF machine type */
+name|uint64_t
+name|p_elf_flags
+decl_stmt|;
+comment|/* (x) ELF flags */
 block|}
 struct|;
 end_struct
