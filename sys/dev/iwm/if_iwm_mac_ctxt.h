@@ -31,6 +31,15 @@ directive|define
 name|__IF_IWM_MAC_CTXT_H__
 end_define
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|uint8_t
+name|iwm_mvm_ac_to_tx_fifo
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|int
