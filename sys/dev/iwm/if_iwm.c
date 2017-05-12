@@ -18845,6 +18845,8 @@ return|;
 switch|switch
 condition|(
 name|status
+operator|&
+name|IWM_ADD_STA_STATUS_MASK
 condition|)
 block|{
 case|case
@@ -19059,6 +19061,8 @@ return|;
 switch|switch
 condition|(
 name|status
+operator|&
+name|IWM_ADD_STA_STATUS_MASK
 condition|)
 block|{
 case|case
