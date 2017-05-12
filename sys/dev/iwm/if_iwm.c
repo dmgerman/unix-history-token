@@ -20697,7 +20697,7 @@ name|iwm_mvm_enable_beacon_filter
 argument_list|(
 name|sc
 argument_list|,
-name|in
+name|ivp
 argument_list|)
 expr_stmt|;
 name|iwm_mvm_power_update_mac

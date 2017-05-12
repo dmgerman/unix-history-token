@@ -77,9 +77,9 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|iwm_node
+name|iwm_vap
 modifier|*
-name|in
+name|ivp
 parameter_list|)
 function_decl|;
 end_function_decl
