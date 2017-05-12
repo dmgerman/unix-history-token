@@ -25334,7 +25334,12 @@ case|case
 name|IWM_LQ_CMD
 case|:
 case|case
+name|IWM_WIDE_ID
+argument_list|(
+name|IWM_ALWAYS_LONG_GROUP
+argument_list|,
 name|IWM_FW_PAGING_BLOCK_CMD
+argument_list|)
 case|:
 case|case
 name|IWM_BT_CONFIG
