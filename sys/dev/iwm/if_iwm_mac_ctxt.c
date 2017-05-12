@@ -733,6 +733,14 @@ comment|/* 	 * Default to 2ghz if no node information is given. 	 */
 if|if
 condition|(
 name|in
+operator|&&
+name|in
+operator|->
+name|in_ni
+operator|.
+name|ni_chan
+operator|!=
+name|IEEE80211_CHAN_ANYC
 condition|)
 block|{
 name|is2ghz
