@@ -884,6 +884,12 @@ name|iwm_mvm_phy_ctxt
 modifier|*
 name|phy_ctxt
 decl_stmt|;
+name|uint16_t
+name|id
+decl_stmt|;
+name|uint16_t
+name|color
+decl_stmt|;
 block|}
 struct|;
 end_struct

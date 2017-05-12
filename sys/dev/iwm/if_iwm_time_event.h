@@ -42,9 +42,9 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|iwm_node
+name|iwm_vap
 modifier|*
-name|in
+name|ivp
 parameter_list|,
 name|uint32_t
 name|duration

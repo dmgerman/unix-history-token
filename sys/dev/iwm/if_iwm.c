@@ -19829,7 +19829,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|iwm_mvm_binding_update
+name|iwm_mvm_binding_add_vif
 argument_list|(
 name|sc
 argument_list|,
@@ -20085,7 +20085,7 @@ name|iwm_mvm_protect_session
 argument_list|(
 name|sc
 argument_list|,
-name|in
+name|iv
 argument_list|,
 name|duration
 argument_list|,
@@ -20241,7 +20241,7 @@ block|{
 name|uint32_t
 name|tfd_msk
 decl_stmt|;
-comment|/* 	 * Ok, so *technically* the proper set of calls for going 	 * from RUN back to SCAN is: 	 * 	 * iwm_mvm_power_mac_disable(sc, in); 	 * iwm_mvm_mac_ctxt_changed(sc, in); 	 * iwm_mvm_rm_sta(sc, in); 	 * iwm_mvm_update_quotas(sc, NULL); 	 * iwm_mvm_mac_ctxt_changed(sc, in); 	 * iwm_mvm_binding_remove_vif(sc, in); 	 * iwm_mvm_mac_ctxt_remove(sc, in); 	 * 	 * However, that freezes the device not matter which permutations 	 * and modifications are attempted.  Obviously, this driver is missing 	 * something since it works in the Linux driver, but figuring out what 	 * is missing is a little more complicated.  Now, since we're going 	 * back to nothing anyway, we'll just do a complete device reset. 	 * Up your's, device! 	 */
+comment|/* 	 * Ok, so *technically* the proper set of calls for going 	 * from RUN back to SCAN is: 	 * 	 * iwm_mvm_power_mac_disable(sc, in); 	 * iwm_mvm_mac_ctxt_changed(sc, in); 	 * iwm_mvm_rm_sta(sc, in); 	 * iwm_mvm_update_quotas(sc, NULL); 	 * iwm_mvm_mac_ctxt_changed(sc, in); 	 * iwm_mvm_binding_remove_vif(sc, IWM_VAP(in->in_ni.ni_vap)); 	 * iwm_mvm_mac_ctxt_remove(sc, in); 	 * 	 * However, that freezes the device not matter which permutations 	 * and modifications are attempted.  Obviously, this driver is missing 	 * something since it works in the Linux driver, but figuring out what 	 * is missing is a little more complicated.  Now, since we're going 	 * back to nothing anyway, we'll just do a complete device reset. 	 * Up your's, device! 	 */
 comment|/* 	 * Just using 0xf for the queues mask is fine as long as we only 	 * get here from RUN state. 	 */
 name|tfd_msk
 operator|=
@@ -20292,7 +20292,7 @@ return|;
 if|#
 directive|if
 literal|0
-block|int error;  	iwm_mvm_power_mac_disable(sc, in);  	if ((error = iwm_mvm_mac_ctxt_changed(sc, in)) != 0) { 		device_printf(sc->sc_dev, "mac ctxt change fail 1 %d\n", error); 		return error; 	}  	if ((error = iwm_mvm_rm_sta(sc, in)) != 0) { 		device_printf(sc->sc_dev, "sta remove fail %d\n", error); 		return error; 	} 	error = iwm_mvm_rm_sta(sc, in); 	in->in_assoc = 0; 	iwm_mvm_update_quotas(sc, NULL); 	if ((error = iwm_mvm_mac_ctxt_changed(sc, in)) != 0) { 		device_printf(sc->sc_dev, "mac ctxt change fail 2 %d\n", error); 		return error; 	} 	iwm_mvm_binding_remove_vif(sc, in);  	iwm_mvm_mac_ctxt_remove(sc, in);  	return error;
+block|int error;  	iwm_mvm_power_mac_disable(sc, in);  	if ((error = iwm_mvm_mac_ctxt_changed(sc, in)) != 0) { 		device_printf(sc->sc_dev, "mac ctxt change fail 1 %d\n", error); 		return error; 	}  	if ((error = iwm_mvm_rm_sta(sc, in)) != 0) { 		device_printf(sc->sc_dev, "sta remove fail %d\n", error); 		return error; 	} 	error = iwm_mvm_rm_sta(sc, in); 	in->in_assoc = 0; 	iwm_mvm_update_quotas(sc, NULL); 	if ((error = iwm_mvm_mac_ctxt_changed(sc, in)) != 0) { 		device_printf(sc->sc_dev, "mac ctxt change fail 2 %d\n", error); 		return error; 	} 	iwm_mvm_binding_remove_vif(sc, IWM_VAP(in->in_ni.ni_vap));  	iwm_mvm_mac_ctxt_remove(sc, in);  	return error;
 endif|#
 directive|endif
 block|}
@@ -29424,6 +29424,18 @@ operator|->
 name|iv_newstate
 operator|=
 name|iwm_newstate
+expr_stmt|;
+name|ivp
+operator|->
+name|id
+operator|=
+name|IWM_DEFAULT_MACID
+expr_stmt|;
+name|ivp
+operator|->
+name|color
+operator|=
+name|IWM_DEFAULT_COLOR
 expr_stmt|;
 name|ieee80211_ratectl_init
 argument_list|(
