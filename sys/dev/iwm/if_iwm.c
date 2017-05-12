@@ -25302,7 +25302,12 @@ name|IWM_SCAN_REQ_UMAC
 argument_list|)
 case|:
 case|case
+name|IWM_WIDE_ID
+argument_list|(
+name|IWM_ALWAYS_LONG_GROUP
+argument_list|,
 name|IWM_SCAN_ABORT_UMAC
+argument_list|)
 case|:
 case|case
 name|IWM_SCAN_OFFLOAD_REQUEST_CMD
