@@ -315,7 +315,7 @@ else|else
 block|{
 name|PRINTF
 argument_list|(
-literal|"\tAddress: family: %d"
+literal|"\tAddress: family: %d\n"
 argument_list|,
 name|np
 operator|->
