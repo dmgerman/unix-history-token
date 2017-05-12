@@ -907,6 +907,10 @@ index|[
 name|WME_NUM_AC
 index|]
 struct|;
+comment|/* indicates that this interface requires PS to be disabled */
+name|boolean_t
+name|ps_disabled
+decl_stmt|;
 block|}
 struct|;
 end_struct
