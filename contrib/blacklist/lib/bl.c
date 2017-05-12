@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: bl.c,v 1.27 2015/12/30 16:42:48 christos Exp $	*/
+comment|/*	$NetBSD: bl.c,v 1.28 2016/07/29 17:13:09 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -33,7 +33,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: bl.c,v 1.27 2015/12/30 16:42:48 christos Exp $"
+literal|"$NetBSD: bl.c,v 1.28 2016/07/29 17:13:09 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
