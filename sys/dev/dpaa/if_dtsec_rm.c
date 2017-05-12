@@ -373,13 +373,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|-
-literal|1
+name|UMA_ALIGN_PTR
 argument_list|,
 literal|0
 argument_list|)
