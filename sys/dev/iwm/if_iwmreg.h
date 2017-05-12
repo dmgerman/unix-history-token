@@ -15886,7 +15886,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * From Linux commit ab02165ccec4c78162501acedeef1a768acdb811:  *   As the firmware is slowly running out of command IDs and grouping of  *   commands is desirable anyway, the firmware is extending the command  *   header from 4 bytes to 8 bytes to introduce a group (in place of the  *   former flags field, since that's always 0 on commands and thus can  *   be easily used to distinguish between the two).  *  * These functions retrieve specific information from the id field in  * the iwm_host_cmd struct which contains the command id, the group id,  * and the version of the command. */
+comment|/*  * These functions retrieve specific information from the id field in  * the iwm_host_cmd struct which contains the command id, the group id,  * and the version of the command and vice versa. */
 end_comment
 
 begin_function
@@ -15922,7 +15922,7 @@ operator|(
 operator|(
 name|cmdid
 operator|&
-literal|0Xff00
+literal|0xff00
 operator|)
 operator|>>
 literal|8
@@ -16190,6 +16190,20 @@ define|#
 directive|define
 name|IWM_FH_RSCSR_FRAME_SIZE_MSK
 value|0x00003fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_FH_RSCSR_FRAME_INVALID
+value|0x55550000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_FH_RSCSR_FRAME_ALIGN
+value|0x40
 end_define
 
 begin_function

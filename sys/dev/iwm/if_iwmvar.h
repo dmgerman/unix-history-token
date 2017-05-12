@@ -624,13 +624,6 @@ name|IWM_RX_RING_COUNT
 value|256
 end_define
 
-begin_define
-define|#
-directive|define
-name|IWM_RBUF_COUNT
-value|(IWM_RX_RING_COUNT + 32)
-end_define
-
 begin_comment
 comment|/* Linux driver optionally uses 8k buffer */
 end_comment
