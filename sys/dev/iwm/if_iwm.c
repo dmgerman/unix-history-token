@@ -20399,15 +20399,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|in
-operator|=
-name|IWM_NODE
-argument_list|(
-name|vap
-operator|->
-name|iv_bss
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|iwm_mvm_rm_sta
@@ -20416,7 +20407,7 @@ name|sc
 argument_list|,
 name|vap
 argument_list|,
-name|in
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
