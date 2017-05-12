@@ -5144,6 +5144,9 @@ name|node
 init|=
 name|ptr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_INET6
 if|if
 condition|(
 name|node
@@ -5154,6 +5157,8 @@ name|adf_family
 operator|==
 name|AF_INET
 condition|)
+endif|#
+directive|endif
 name|node
 operator|->
 name|ipn_addr
