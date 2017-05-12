@@ -1375,7 +1375,7 @@ name|iwm_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint8_t
+name|uint32_t
 name|id
 parameter_list|,
 name|uint32_t
@@ -1627,7 +1627,7 @@ name|iwm_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint8_t
+name|uint32_t
 name|id
 parameter_list|,
 name|uint16_t
