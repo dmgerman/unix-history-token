@@ -11670,14 +11670,14 @@ comment|/* 455 = freebsd32_thr_new */
 block|{
 name|AS
 argument_list|(
-name|sigqueue_args
+name|freebsd32_sigqueue_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sys_sigqueue
+name|freebsd32_sigqueue
 block|,
 name|AUE_NULL
 block|,
@@ -11687,12 +11687,12 @@ literal|0
 block|,
 literal|0
 block|,
-name|SYF_CAPENABLED
+literal|0
 block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 456 = sigqueue */
+comment|/* 456 = freebsd32_sigqueue */
 block|{
 name|AS
 argument_list|(

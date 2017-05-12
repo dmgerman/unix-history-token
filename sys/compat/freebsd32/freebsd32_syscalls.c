@@ -1403,9 +1403,9 @@ comment|/* 454 = freebsd32_umtx_op */
 literal|"freebsd32_thr_new"
 block|,
 comment|/* 455 = freebsd32_thr_new */
-literal|"sigqueue"
+literal|"freebsd32_sigqueue"
 block|,
-comment|/* 456 = sigqueue */
+comment|/* 456 = freebsd32_sigqueue */
 literal|"freebsd32_kmq_open"
 block|,
 comment|/* 457 = freebsd32_kmq_open */
