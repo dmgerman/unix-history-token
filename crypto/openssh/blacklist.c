@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"blacklist_client.h"
+file|<blacklist.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<blacklist.h>
+file|"blacklist_client.h"
 end_include
 
 begin_decl_stmt
@@ -250,6 +250,11 @@ name|blacklist_notify
 parameter_list|(
 name|int
 name|action
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
 parameter_list|)
 block|{
 if|if
@@ -273,7 +278,7 @@ argument_list|,
 name|packet_get_connection_in
 argument_list|()
 argument_list|,
-literal|"ssh"
+name|msg
 argument_list|)
 expr_stmt|;
 block|}

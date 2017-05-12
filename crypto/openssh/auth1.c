@@ -1352,6 +1352,8 @@ decl_stmt|;
 name|BLACKLIST_NOTIFY
 argument_list|(
 name|BLACKLIST_AUTH_FAIL
+argument_list|,
+literal|"ssh"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1466,6 +1468,13 @@ condition|(
 name|authenticated
 condition|)
 return|return;
+name|BLACKLIST_NOTIFY
+argument_list|(
+name|BLACKLIST_AUTH_FAIL
+argument_list|,
+literal|"ssh"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|++
@@ -1631,7 +1640,9 @@ argument_list|()
 expr_stmt|;
 name|BLACKLIST_NOTIFY
 argument_list|(
-name|BLACKLIST_AUTH_FAIL
+name|BLACKLIST_BAD_USER
+argument_list|,
+name|user
 argument_list|)
 expr_stmt|;
 block|}
