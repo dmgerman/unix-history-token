@@ -14,13 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -32,7 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_decl_stmt
