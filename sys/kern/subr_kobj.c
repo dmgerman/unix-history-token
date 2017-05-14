@@ -721,18 +721,6 @@ name|kobj_method_t
 modifier|*
 name|ce
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KOBJ_STATS
-comment|/* 	 * Correct for the 'hit' assumption in KOBJOPLOOKUP and record 	 * a 'miss'. 	 */
-name|kobj_lookup_hits
-operator|--
-expr_stmt|;
-name|kobj_lookup_misses
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 name|ce
 operator|=
 name|kobj_lookup_method_mi
@@ -754,6 +742,10 @@ name|desc
 operator|->
 name|deflt
 expr_stmt|;
+if|if
+condition|(
+name|cep
+condition|)
 operator|*
 name|cep
 operator|=
