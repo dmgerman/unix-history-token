@@ -1344,9 +1344,6 @@ decl_stmt|;
 name|u_int
 name|iolen
 decl_stmt|;
-name|int
-name|spl
-decl_stmt|;
 name|caddr_t
 name|udata
 decl_stmt|;
@@ -1571,11 +1568,6 @@ block|}
 block|}
 block|}
 block|}
-name|spl
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|bwait
 argument_list|(
 name|bp
@@ -1583,11 +1575,6 @@ argument_list|,
 name|PRIBIO
 argument_list|,
 literal|"rawrd"
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|spl
 argument_list|)
 expr_stmt|;
 name|vunmapbuf
@@ -1885,11 +1872,6 @@ name|NULL
 condition|)
 block|{
 comment|/* Run down readahead buffer */
-name|spl
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|bwait
 argument_list|(
 name|nbp
@@ -1897,11 +1879,6 @@ argument_list|,
 name|PRIBIO
 argument_list|,
 literal|"rawrd"
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|spl
 argument_list|)
 expr_stmt|;
 name|vunmapbuf
