@@ -1441,8 +1441,7 @@ block|,
 operator|(
 name|uid_t
 operator|)
-operator|-
-literal|2
+literal|65534
 block|,
 literal|1
 block|,
@@ -1450,8 +1449,7 @@ block|{
 operator|(
 name|gid_t
 operator|)
-operator|-
-literal|2
+literal|65533
 block|}
 block|,
 name|NULL
@@ -14614,8 +14612,7 @@ name|cr
 operator|->
 name|cr_uid
 operator|=
-operator|-
-literal|2
+literal|65534
 expr_stmt|;
 name|cr
 operator|->
@@ -14624,8 +14621,7 @@ index|[
 literal|0
 index|]
 operator|=
-operator|-
-literal|2
+literal|65533
 expr_stmt|;
 name|cr
 operator|->
