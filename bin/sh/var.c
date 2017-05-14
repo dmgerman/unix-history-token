@@ -2359,7 +2359,7 @@ expr_stmt|;
 name|updatecharset
 argument_list|()
 expr_stmt|;
-return|return;
+break|break;
 block|}
 block|}
 name|INTON
