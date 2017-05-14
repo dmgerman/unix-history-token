@@ -1485,6 +1485,10 @@ operator|->
 name|addr6
 operator|)
 decl_stmt|;
+name|char
+modifier|*
+name|oav
+decl_stmt|;
 comment|/* 	 * Needed for multiple address. 	 * Note d[1] points to struct in6_add r mask6 of cmd 	 */
 name|cmd
 operator|->
@@ -1697,6 +1701,8 @@ literal|1
 operator|)
 return|;
 block|}
+name|oav
+operator|=
 name|av
 operator|=
 name|strdup
@@ -1990,7 +1996,7 @@ literal|1
 expr_stmt|;
 name|free
 argument_list|(
-name|av
+name|oav
 argument_list|)
 expr_stmt|;
 return|return
