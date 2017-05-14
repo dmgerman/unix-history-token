@@ -2614,8 +2614,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|errf
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|widemsg
 argument_list|)
 expr_stmt|;
@@ -2682,7 +2684,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errf
+name|warn
 argument_list|(
 literal|"out of memory"
 argument_list|)
