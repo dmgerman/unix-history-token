@@ -441,7 +441,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
 name|long
 name|long
 name|Aflag

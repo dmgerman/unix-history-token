@@ -766,6 +766,10 @@ name|struct
 name|parsec
 name|pc
 decl_stmt|;
+name|long
+name|long
+name|tail
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -789,8 +793,6 @@ decl_stmt|,
 name|last_outed
 decl_stmt|,
 name|t
-decl_stmt|,
-name|tail
 decl_stmt|;
 name|bool
 name|doctx
