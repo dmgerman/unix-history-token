@@ -31056,7 +31056,14 @@ operator|=
 name|tc_idx
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|tc_idx
+operator|!=
+operator|-
+literal|1
+condition|)
 block|{
 name|tc
 operator|=
