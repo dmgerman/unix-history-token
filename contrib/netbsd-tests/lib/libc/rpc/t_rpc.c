@@ -1716,14 +1716,6 @@ argument_list|,
 literal|"fails with SIGSEGV only on ^/stable/10 -- bug # 216954"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|atf_tc_expect_fail
-argument_list|(
-literal|"fails with: clnt_call: "
-literal|"RPC: Can't decode result -- PR # 211804"
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 endif|#
