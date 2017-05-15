@@ -1137,6 +1137,38 @@ comment|/*  * in_pcb.c: manage the Protocol Control Blocks.  *  * NOTE: It is as
 end_comment
 
 begin_comment
+comment|/*  * Different protocols initialize their inpcbs differently - giving  * different name to the lock.  But they all are disposed the same.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|inpcb_fini
+parameter_list|(
+name|void
+modifier|*
+name|mem
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+block|{
+name|struct
+name|inpcb
+modifier|*
+name|inp
+init|=
+name|mem
+decl_stmt|;
+name|INP_LOCK_DESTROY
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize an inpcbinfo -- we should be able to reduce the number of  * arguments in time.  */
 end_comment
 
@@ -1171,12 +1203,6 @@ name|inpcbzone_name
 parameter_list|,
 name|uma_init
 name|inpcbzone_init
-parameter_list|,
-name|uma_fini
-name|inpcbzone_fini
-parameter_list|,
-name|uint32_t
-name|inpcbzone_flags
 parameter_list|,
 name|u_int
 name|hashfields
@@ -1300,11 +1326,11 @@ name|NULL
 argument_list|,
 name|inpcbzone_init
 argument_list|,
-name|inpcbzone_fini
+name|inpcb_fini
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|inpcbzone_flags
+literal|0
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
