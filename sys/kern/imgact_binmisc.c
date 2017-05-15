@@ -399,7 +399,7 @@ if|if
 condition|(
 operator|++
 name|len
-operator|>
+operator|>=
 name|IBE_INTERP_LEN_MAX
 condition|)
 break|break;
