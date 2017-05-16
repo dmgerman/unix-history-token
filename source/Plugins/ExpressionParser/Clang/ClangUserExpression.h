@@ -449,7 +449,7 @@ name|ScanContext
 argument_list|(
 argument|ExecutionContext&exe_ctx
 argument_list|,
-argument|lldb_private::Error&err
+argument|lldb_private::Status&err
 argument_list|)
 name|override
 block|;

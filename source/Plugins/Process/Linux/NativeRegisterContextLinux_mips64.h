@@ -138,7 +138,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|Error
+name|Status
 name|ReadRegister
 argument_list|(
 argument|const RegisterInfo *reg_info
@@ -147,7 +147,7 @@ argument|RegisterValue&reg_value
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|WriteRegister
 argument_list|(
 argument|const RegisterInfo *reg_info
@@ -156,25 +156,25 @@ argument|const RegisterValue&reg_value
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ReadAllRegisterValues
 argument_list|(
 argument|lldb::DataBufferSP&data_sp
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|WriteAllRegisterValues
 argument_list|(
 argument|const lldb::DataBufferSP&data_sp
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ReadCP1
 argument_list|()
 block|;
-name|Error
+name|Status
 name|WriteCP1
 argument_list|()
 block|;
@@ -187,7 +187,7 @@ argument_list|,
 argument|uint32_t byte_offset
 argument_list|)
 block|;
-name|Error
+name|Status
 name|IsWatchpointHit
 argument_list|(
 argument|uint32_t wp_index
@@ -196,7 +196,7 @@ argument|bool&is_hit
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|GetWatchpointHitIndex
 argument_list|(
 argument|uint32_t&wp_index
@@ -205,7 +205,7 @@ argument|lldb::addr_t trap_addr
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|IsWatchpointVacant
 argument_list|(
 argument|uint32_t wp_index
@@ -221,12 +221,12 @@ argument|uint32_t wp_index
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ClearAllHardwareWatchpoints
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|SetHardwareWatchpointWithIndex
 argument_list|(
 argument|lldb::addr_t addr
@@ -270,7 +270,7 @@ argument_list|()
 block|;
 name|protected
 operator|:
-name|Error
+name|Status
 name|Read_SR_Config
 argument_list|(
 argument|uint32_t offset
@@ -282,7 +282,7 @@ argument_list|,
 argument|RegisterValue&value
 argument_list|)
 block|;
-name|Error
+name|Status
 name|ReadRegisterRaw
 argument_list|(
 argument|uint32_t reg_index
@@ -291,7 +291,7 @@ argument|RegisterValue&value
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|WriteRegisterRaw
 argument_list|(
 argument|uint32_t reg_index
@@ -300,7 +300,7 @@ argument|const RegisterValue&value
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DoReadWatchPointRegisterValue
 argument_list|(
 argument|lldb::tid_t tid
@@ -308,7 +308,7 @@ argument_list|,
 argument|void *watch_readback
 argument_list|)
 block|;
-name|Error
+name|Status
 name|DoWriteWatchPointRegisterValue
 argument_list|(
 argument|lldb::tid_t tid

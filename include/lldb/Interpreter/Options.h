@@ -131,7 +131,7 @@ comment|///
 comment|/// Options is designed to be subclassed to contain all needed
 comment|/// options for a given command. The options can be parsed by calling:
 comment|/// \code
-comment|///     Error Args::ParseOptions (Options&);
+comment|///     Status Args::ParseOptions (Options&);
 comment|/// \endcode
 comment|///
 comment|/// The options are specified using the format defined for the libc
@@ -155,11 +155,11 @@ comment|///         GetLongOptions() {
 comment|///             return g_options;
 comment|///         }
 comment|///
-comment|///         virtual Error
+comment|///         virtual Status
 comment|///         SetOptionValue (uint32_t option_idx, int option_val, const char
 comment|///         *option_arg)
 comment|///         {
-comment|///             Error error;
+comment|///             Status error;
 comment|///             switch (option_val)
 comment|///             {
 comment|///             case 'g': debug = true; break;
@@ -350,7 +350,7 @@ modifier|*
 name|execution_context
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|NotifyOptionParsingFinished
 parameter_list|(
 name|ExecutionContext
@@ -378,7 +378,7 @@ comment|/// @see Args::ParseOptions (Options&)
 comment|/// @see man getopt_long_only
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 name|uint32_t
@@ -682,7 +682,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|OptionParsingFinished
 parameter_list|(
 name|ExecutionContext
@@ -692,7 +692,7 @@ parameter_list|)
 block|{
 comment|// If subclasses need to know when the options are done being parsed
 comment|// they can implement this function to do extra checking
-name|Error
+name|Status
 name|error
 decl_stmt|;
 return|return
@@ -731,7 +731,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 name|uint32_t
@@ -761,7 +761,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|OptionParsingFinished
 parameter_list|(
 name|ExecutionContext
@@ -771,7 +771,7 @@ parameter_list|)
 block|{
 comment|// If subclasses need to know when the options are done being parsed
 comment|// they can implement this function to do extra checking
-name|Error
+name|Status
 name|error
 decl_stmt|;
 return|return
@@ -874,7 +874,7 @@ return|return
 name|m_did_finalize
 return|;
 block|}
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
@@ -892,7 +892,7 @@ argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|OptionParsingFinished
 argument_list|(
 argument|ExecutionContext *execution_context

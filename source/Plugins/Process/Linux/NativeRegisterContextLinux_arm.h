@@ -123,7 +123,7 @@ argument_list|()
 specifier|const
 name|override
 block|;
-name|Error
+name|Status
 name|ReadRegister
 argument_list|(
 argument|const RegisterInfo *reg_info
@@ -132,7 +132,7 @@ argument|RegisterValue&reg_value
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|WriteRegister
 argument_list|(
 argument|const RegisterInfo *reg_info
@@ -141,14 +141,14 @@ argument|const RegisterValue&reg_value
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ReadAllRegisterValues
 argument_list|(
 argument|lldb::DataBufferSP&data_sp
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|WriteAllRegisterValues
 argument_list|(
 argument|const lldb::DataBufferSP&data_sp
@@ -179,12 +179,12 @@ argument|uint32_t hw_idx
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ClearAllHardwareBreakpoints
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|GetHardwareBreakHitIndex
 argument_list|(
 argument|uint32_t&bp_index
@@ -216,12 +216,12 @@ argument|uint32_t hw_index
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ClearAllHardwareWatchpoints
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|GetWatchpointHitIndex
 argument_list|(
 argument|uint32_t&wp_index
@@ -273,7 +273,7 @@ block|}
 block|;
 name|protected
 operator|:
-name|Error
+name|Status
 name|DoReadRegisterValue
 argument_list|(
 argument|uint32_t offset
@@ -286,7 +286,7 @@ argument|RegisterValue&value
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DoWriteRegisterValue
 argument_list|(
 argument|uint32_t offset
@@ -297,7 +297,7 @@ argument|const RegisterValue&value
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DoReadGPR
 argument_list|(
 argument|void *buf
@@ -306,7 +306,7 @@ argument|size_t buf_size
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DoWriteGPR
 argument_list|(
 argument|void *buf
@@ -315,7 +315,7 @@ argument|size_t buf_size
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DoReadFPR
 argument_list|(
 argument|void *buf
@@ -324,7 +324,7 @@ argument|size_t buf_size
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DoWriteFPR
 argument_list|(
 argument|void *buf
@@ -522,11 +522,11 @@ argument|unsigned reg
 argument_list|)
 specifier|const
 block|;
-name|Error
+name|Status
 name|ReadHardwareDebugInfo
 argument_list|()
 block|;
-name|Error
+name|Status
 name|WriteHardwareDebugRegs
 argument_list|(
 argument|int hwbType

@@ -66,7 +66,7 @@ name|LaunchProcess
 argument_list|(
 argument|const ProcessLaunchInfo&launch_info
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|; }

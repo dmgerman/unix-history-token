@@ -110,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -439,7 +439,7 @@ name|Scalar
 modifier|&
 name|value
 parameter_list|,
-name|Error
+name|Status
 modifier|*
 name|error_ptr
 parameter_list|)
@@ -460,7 +460,7 @@ name|DWARFExpression
 modifier|*
 name|GetFrameBaseExpression
 parameter_list|(
-name|Error
+name|Status
 modifier|*
 name|error_ptr
 parameter_list|)
@@ -602,7 +602,7 @@ argument|uint32_t options
 argument_list|,
 argument|lldb::VariableSP&var_sp
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -992,7 +992,7 @@ decl_stmt|;
 name|Scalar
 name|m_frame_base
 decl_stmt|;
-name|Error
+name|Status
 name|m_frame_base_error
 decl_stmt|;
 name|bool

@@ -537,7 +537,7 @@ name|dst_size
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -563,7 +563,7 @@ name|src_len
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -593,7 +593,7 @@ name|reply
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -619,7 +619,7 @@ name|dst_size
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -646,7 +646,7 @@ name|src_size
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

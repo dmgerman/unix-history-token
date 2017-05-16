@@ -176,7 +176,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|CanLoadImage
 argument_list|()
 name|override

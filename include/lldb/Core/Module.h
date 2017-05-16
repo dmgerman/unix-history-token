@@ -100,18 +100,18 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
-
-begin_comment
-comment|// for Error
-end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/FileSpec.h"
+file|"lldb/Utility/Status.h"
 end_include
+
+begin_comment
+comment|// for Status
+end_comment
 
 begin_include
 include|#
@@ -1457,7 +1457,7 @@ name|Target
 modifier|*
 name|target
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|,
@@ -1596,7 +1596,7 @@ operator|::
 name|addr_t
 name|header_addr
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -2419,7 +2419,7 @@ comment|//------------------------------------------------------------------
 end_comment
 
 begin_function_decl
-name|Error
+name|Status
 name|LoadInMemory
 parameter_list|(
 name|Target

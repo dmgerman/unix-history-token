@@ -46,18 +46,18 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_comment
 comment|// for FileSpec
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
+end_include
 
 begin_include
 include|#
@@ -873,7 +873,7 @@ name|initial_function
 parameter_list|)
 function_decl|;
 specifier|static
-name|Error
+name|Status
 name|Parse
 argument_list|(
 specifier|const
@@ -889,7 +889,7 @@ name|entry
 argument_list|)
 decl_stmt|;
 specifier|static
-name|Error
+name|Status
 name|ExtractVariableInfo
 argument_list|(
 name|llvm
@@ -970,7 +970,7 @@ decl_stmt|;
 name|protected
 label|:
 specifier|static
-name|Error
+name|Status
 name|ParseInternal
 argument_list|(
 name|llvm

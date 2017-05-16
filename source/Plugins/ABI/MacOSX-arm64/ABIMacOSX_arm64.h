@@ -344,7 +344,7 @@ end_expr_stmt
 begin_expr_stmt
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|SetReturnValueObject
 argument_list|(
 argument|lldb::StackFrameSP&frame_sp

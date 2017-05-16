@@ -150,10 +150,10 @@ comment|/// @param[in] argc
 comment|///     The number of elements in the args array of cstring pointers.
 comment|///
 comment|/// @return
-comment|///     An Error object indicating the success or failure of making
+comment|///     An Status object indicating the success or failure of making
 comment|///     the setting.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|SetLaunchArguments
 parameter_list|(
 specifier|const
@@ -174,10 +174,10 @@ comment|/// @param[in] launch_flags
 comment|///     The launch flags to use when launching this process.
 comment|///
 comment|/// @return
-comment|///     An Error object indicating the success or failure of making
+comment|///     An Status object indicating the success or failure of making
 comment|///     the setting.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|SetLaunchFlags
 parameter_list|(
 name|unsigned
@@ -193,10 +193,10 @@ comment|/// server in a situation where the startup code has been provided
 comment|/// with all the information for a child process to be launched.
 comment|///
 comment|/// @return
-comment|///     An Error object indicating the success or failure of the
+comment|///     An Status object indicating the success or failure of the
 comment|///     launch.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|()
 name|override
@@ -208,10 +208,10 @@ comment|/// This method supports attaching llgs to a process accessible via the
 comment|/// configured Platform.
 comment|///
 comment|/// @return
-comment|///     An Error object indicating the success or failure of the
+comment|///     An Status object indicating the success or failure of the
 comment|///     attach operation.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|AttachToProcess
 argument_list|(
 name|lldb
@@ -255,7 +255,7 @@ name|process
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|InitializeConnection
 argument_list|(
 name|std
@@ -708,7 +708,7 @@ return|return
 name|m_continue_tid
 return|;
 block|}
-name|Error
+name|Status
 name|SetSTDIOFileDescriptor
 parameter_list|(
 name|int

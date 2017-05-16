@@ -467,9 +467,10 @@ name|Success
 operator|,
 comment|// The line that was just edited if good and should be added to the
 comment|// lines
-name|Error
+name|Status
 operator|,
-comment|// There is an error with the current line and it needs to be re-edited
+comment|// There is an error with the current line and it needs to be
+comment|// re-edited
 comment|// before it can be accepted
 name|Done
 comment|// Lines are complete

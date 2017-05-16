@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -581,7 +581,7 @@ name|Value
 operator|&
 name|result
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)
@@ -629,7 +629,7 @@ name|Value
 operator|&
 name|result
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)
@@ -760,7 +760,7 @@ name|Value
 operator|&
 name|result
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)

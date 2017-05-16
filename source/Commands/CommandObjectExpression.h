@@ -142,7 +142,7 @@ name|GetDefinitions
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx

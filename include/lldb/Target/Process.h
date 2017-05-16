@@ -248,13 +248,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/NameMatches.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/NameMatches.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -1251,7 +1251,7 @@ name|override
 operator|=
 expr|default
 block|;
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
@@ -3073,7 +3073,7 @@ comment|///     An error object. Call GetID() to get the process ID if
 comment|///     the error object is success.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|Launch
 parameter_list|(
 name|ProcessLaunchInfo
@@ -3082,16 +3082,16 @@ name|launch_info
 parameter_list|)
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|LoadCore
 parameter_list|()
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|DoLoadCore
 parameter_list|()
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -3214,7 +3214,7 @@ comment|///     Returns \a pid if attaching was successful, or
 comment|///     LLDB_INVALID_PROCESS_ID if attaching fails.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|Attach
 parameter_list|(
 name|ProcessAttachInfo
@@ -3237,7 +3237,7 @@ comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|ConnectRemote
 argument_list|(
 name|Stream
@@ -3404,11 +3404,11 @@ comment|/// @see Thread:Resume()
 comment|/// @see Thread:Step()
 comment|/// @see Thread:Suspend()
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Resume
 parameter_list|()
 function_decl|;
-name|Error
+name|Status
 name|ResumeSynchronous
 parameter_list|(
 name|Stream
@@ -3436,7 +3436,7 @@ comment|///     Returns an error object.  If the error is empty, the process is
 comment|///     halted.
 comment|///     otherwise the halt has failed.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Halt
 parameter_list|(
 name|bool
@@ -3462,7 +3462,7 @@ comment|///
 comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Detach
 parameter_list|(
 name|bool
@@ -3487,7 +3487,7 @@ comment|///
 comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Destroy
 parameter_list|(
 name|bool
@@ -3503,7 +3503,7 @@ comment|///
 comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Signal
 parameter_list|(
 name|int
@@ -3541,7 +3541,7 @@ comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|WillAttachToProcessWithID
 argument_list|(
 name|lldb
@@ -3551,7 +3551,7 @@ name|pid
 argument_list|)
 block|{
 return|return
-name|Error
+name|Status
 argument_list|()
 return|;
 block|}
@@ -3565,7 +3565,7 @@ comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|WillAttachToProcessWithName
 parameter_list|(
 specifier|const
@@ -3578,7 +3578,7 @@ name|wait_for_launch
 parameter_list|)
 block|{
 return|return
-name|Error
+name|Status
 argument_list|()
 return|;
 block|}
@@ -3597,7 +3597,7 @@ comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|DoConnectRemote
 argument_list|(
 name|Stream
@@ -3610,7 +3610,7 @@ name|StringRef
 name|remote_url
 argument_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -3635,13 +3635,13 @@ comment|///     Information on how to do the attach. For example, GetUserID()
 comment|///     will return the uid to attach as.
 comment|///
 comment|/// @return
-comment|///     Returns a successful Error attaching was successful, or
+comment|///     Returns a successful Status attaching was successful, or
 comment|///     an appropriate (possibly platform-specific) error code if
 comment|///     attaching fails.
 comment|/// hanming : need flag
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|DoAttachToProcessWithID
 argument_list|(
 name|lldb
@@ -3655,7 +3655,7 @@ operator|&
 name|attach_info
 argument_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -3686,12 +3686,12 @@ comment|///     Information on how to do the attach. For example, GetUserID()
 comment|///     will return the uid to attach as.
 comment|///
 comment|/// @return
-comment|///     Returns a successful Error attaching was successful, or
+comment|///     Returns a successful Status attaching was successful, or
 comment|///     an appropriate (possibly platform-specific) error code if
 comment|///     attaching fails.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|DoAttachToProcessWithName
 parameter_list|(
 specifier|const
@@ -3705,7 +3705,7 @@ modifier|&
 name|attach_info
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -3777,7 +3777,7 @@ comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|WillLaunch
 parameter_list|(
 name|Module
@@ -3786,7 +3786,7 @@ name|module
 parameter_list|)
 block|{
 return|return
-name|Error
+name|Status
 argument_list|()
 return|;
 block|}
@@ -3806,11 +3806,11 @@ comment|///     Details (e.g. arguments, stdio redirection, etc.) for the
 comment|///     requested launch.
 comment|///
 comment|/// @return
-comment|///     An Error instance indicating success or failure of the
+comment|///     An Status instance indicating success or failure of the
 comment|///     operation.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|DoLaunch
 parameter_list|(
 name|Module
@@ -3822,7 +3822,7 @@ modifier|&
 name|launch_info
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -3863,12 +3863,12 @@ comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|WillResume
 parameter_list|()
 block|{
 return|return
-name|Error
+name|Status
 argument_list|()
 return|;
 block|}
@@ -3890,11 +3890,11 @@ comment|/// @see Thread:Step()
 comment|/// @see Thread:Suspend()
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|DoResume
 parameter_list|()
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -3935,12 +3935,12 @@ comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|WillHalt
 parameter_list|()
 block|{
 return|return
-name|Error
+name|Status
 argument_list|()
 return|;
 block|}
@@ -3965,7 +3965,7 @@ comment|///     Returns \b true if the process successfully halts, \b false
 comment|///     otherwise.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|DoHalt
 parameter_list|(
 name|bool
@@ -3973,7 +3973,7 @@ modifier|&
 name|caused_stop
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -4014,12 +4014,12 @@ comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|WillDetach
 parameter_list|()
 block|{
 return|return
-name|Error
+name|Status
 argument_list|()
 return|;
 block|}
@@ -4031,14 +4031,14 @@ comment|///     Returns \b true if the process successfully detaches, \b
 comment|///     false otherwise.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|DoDetach
 parameter_list|(
 name|bool
 name|keep_stopped
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -4090,12 +4090,12 @@ comment|///     Process::DoSignal(int), otherwise an error describing what
 comment|///     prevents the signal from being sent.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|WillSignal
 parameter_list|()
 block|{
 return|return
-name|Error
+name|Status
 argument_list|()
 return|;
 block|}
@@ -4106,14 +4106,14 @@ comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|DoSignal
 parameter_list|(
 name|int
 name|signal
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -4134,17 +4134,17 @@ name|error
 return|;
 block|}
 name|virtual
-name|Error
+name|Status
 name|WillDestroy
 parameter_list|()
 block|{
 return|return
-name|Error
+name|Status
 argument_list|()
 return|;
 block|}
 name|virtual
-name|Error
+name|Status
 name|DoDestroy
 parameter_list|()
 init|=
@@ -4772,7 +4772,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -4824,7 +4824,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -4873,7 +4873,7 @@ argument_list|,
 name|size_t
 name|max_bytes
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -4907,7 +4907,7 @@ argument_list|,
 name|size_t
 name|cstr_max_len
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -4926,7 +4926,7 @@ name|string
 operator|&
 name|out_str
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -4946,7 +4946,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -4992,7 +4992,7 @@ argument_list|,
 name|uint64_t
 name|fail_value
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -5011,7 +5011,7 @@ argument_list|,
 name|int64_t
 name|fail_value
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -5023,7 +5023,7 @@ name|ReadPointerFromMemory
 argument_list|(
 argument|lldb::addr_t vm_addr
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 name|bool
@@ -5039,7 +5039,7 @@ operator|::
 name|addr_t
 name|ptr_value
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -5081,7 +5081,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -5151,7 +5151,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -5174,7 +5174,7 @@ name|Scalar
 operator|&
 name|scalar
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -5221,7 +5221,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -5250,7 +5250,7 @@ argument|size_t size
 argument_list|,
 argument|uint32_t permissions
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|{
 name|error
@@ -5302,7 +5302,7 @@ argument|size_t size
 argument_list|,
 argument|uint32_t permissions
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -5338,7 +5338,7 @@ argument|size_t size
 argument_list|,
 argument|uint32_t permissions
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -5365,7 +5365,7 @@ name|Address
 operator|*
 name|address
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -5397,7 +5397,7 @@ comment|/// @return
 comment|///     An error value.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|GetMemoryRegionInfo
 argument_list|(
 name|lldb
@@ -5410,7 +5410,7 @@ operator|&
 name|range_info
 argument_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -5435,7 +5435,7 @@ comment|/// @return
 comment|///     An error value.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|GetMemoryRegions
 argument_list|(
 name|std
@@ -5451,7 +5451,7 @@ name|region_list
 argument_list|)
 decl_stmt|;
 name|virtual
-name|Error
+name|Status
 name|GetWatchpointSupportInfo
 parameter_list|(
 name|uint32_t
@@ -5459,7 +5459,7 @@ modifier|&
 name|num
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|num
@@ -5478,7 +5478,7 @@ name|error
 return|;
 block|}
 name|virtual
-name|Error
+name|Status
 name|GetWatchpointSupportInfo
 parameter_list|(
 name|uint32_t
@@ -5490,7 +5490,7 @@ modifier|&
 name|after
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|num
@@ -5647,7 +5647,7 @@ comment|/// @return
 comment|///     \btrue if the memory was deallocated, \bfalse otherwise.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|DoDeallocateMemory
 argument_list|(
 name|lldb
@@ -5656,7 +5656,7 @@ name|addr_t
 name|ptr
 argument_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -5689,7 +5689,7 @@ comment|///
 comment|/// @return
 comment|///     \btrue if the memory was deallocated, \bfalse otherwise.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|DeallocateMemory
 argument_list|(
 name|lldb
@@ -5739,7 +5739,7 @@ parameter_list|,
 name|size_t
 name|buf_size
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -5785,7 +5785,7 @@ parameter_list|,
 name|size_t
 name|buf_size
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -5823,7 +5823,7 @@ parameter_list|,
 name|size_t
 name|buf_size
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -5865,7 +5865,7 @@ parameter_list|,
 name|size_t
 name|buf_size
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -5882,7 +5882,7 @@ name|bp_site
 parameter_list|)
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|EnableBreakpointSite
 parameter_list|(
 name|BreakpointSite
@@ -5890,7 +5890,7 @@ modifier|*
 name|bp_site
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -5911,7 +5911,7 @@ name|error
 return|;
 block|}
 name|virtual
-name|Error
+name|Status
 name|DisableBreakpointSite
 parameter_list|(
 name|BreakpointSite
@@ -5919,7 +5919,7 @@ modifier|*
 name|bp_site
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -5944,7 +5944,7 @@ comment|// don't need to implement this function unless the standard flow of
 comment|// read existing opcode, write breakpoint opcode, verify breakpoint opcode
 comment|// doesn't work for a specific process plug-in.
 name|virtual
-name|Error
+name|Status
 name|EnableSoftwareBreakpoint
 parameter_list|(
 name|BreakpointSite
@@ -5957,7 +5957,7 @@ comment|// don't need to implement this function unless the standard flow of
 comment|// restoring original opcode in memory and verifying the restored opcode
 comment|// doesn't work for a specific process plug-in.
 name|virtual
-name|Error
+name|Status
 name|DisableSoftwareBreakpoint
 parameter_list|(
 name|BreakpointSite
@@ -5981,7 +5981,7 @@ name|void
 name|DisableAllBreakpointSites
 parameter_list|()
 function_decl|;
-name|Error
+name|Status
 name|ClearBreakpointSiteByID
 argument_list|(
 name|lldb
@@ -6000,7 +6000,7 @@ argument_list|,
 argument|bool use_hardware
 argument_list|)
 expr_stmt|;
-name|Error
+name|Status
 name|DisableBreakpointSiteByID
 argument_list|(
 name|lldb
@@ -6009,7 +6009,7 @@ name|user_id_t
 name|break_id
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|EnableBreakpointSiteByID
 argument_list|(
 name|lldb
@@ -6044,7 +6044,7 @@ comment|//----------------------------------------------------------------------
 comment|// Process Watchpoints (optional)
 comment|//----------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|EnableWatchpoint
 parameter_list|(
 name|Watchpoint
@@ -6058,7 +6058,7 @@ name|true
 parameter_list|)
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|DisableWatchpoint
 parameter_list|(
 name|Watchpoint
@@ -6710,7 +6710,7 @@ name|GetRunLock
 parameter_list|()
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|SendEventData
 parameter_list|(
 specifier|const
@@ -6719,7 +6719,7 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|return_error
 argument_list|(
 literal|"Sending an event is not supported for this process."
@@ -6821,7 +6821,7 @@ comment|///     The load address of the file if it is loaded into the
 comment|///     processes address space, LLDB_INVALID_ADDRESS otherwise.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|GetFileLoadAddress
 argument_list|(
 specifier|const
@@ -6841,7 +6841,7 @@ name|load_addr
 argument_list|)
 block|{
 return|return
-name|Error
+name|Status
 argument_list|(
 literal|"Not supported"
 argument_list|)
@@ -6933,7 +6933,7 @@ comment|/// @return
 comment|///     Returns the result of attempting to configure the feature.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|ConfigureStructuredData
 argument_list|(
 specifier|const
@@ -7025,7 +7025,7 @@ name|StartTrace
 argument_list|(
 argument|lldb::TraceOptionsSP&options
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|{
 name|error
@@ -7062,7 +7062,7 @@ operator|::
 name|tid_t
 name|thread_id
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -7097,7 +7097,7 @@ operator|::
 name|tid_t
 name|thread_id
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -7142,7 +7142,7 @@ operator|::
 name|tid_t
 name|thread_id
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -7188,7 +7188,7 @@ operator|::
 name|user_id_t
 name|uid
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -7231,9 +7231,9 @@ comment|/// The "private" side of resuming a process.  This doesn't alter the
 comment|/// state of m_run_lock, but just causes the process to resume.
 comment|///
 comment|/// @return
-comment|///     An Error object describing the success or failure of the resume.
+comment|///     An Status object describing the success or failure of the resume.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|PrivateResume
 parameter_list|()
 function_decl|;
@@ -8941,7 +8941,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|Error
+name|Status
 name|HaltPrivate
 parameter_list|()
 function_decl|;
@@ -9052,7 +9052,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -9163,7 +9163,7 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
-name|Error
+name|Status
 name|StopForDestroyOrDetach
 argument_list|(
 name|lldb
@@ -9177,7 +9177,7 @@ end_decl_stmt
 
 begin_function_decl
 name|virtual
-name|Error
+name|Status
 name|UpdateAutomaticSignalFiltering
 parameter_list|()
 function_decl|;

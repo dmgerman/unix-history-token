@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -932,7 +932,7 @@ expr_stmt|;
 name|uint64_t
 name|GetValueByteSize
 parameter_list|(
-name|Error
+name|Status
 modifier|*
 name|error_ptr
 parameter_list|,
@@ -941,7 +941,7 @@ modifier|*
 name|exe_ctx
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|GetValueAsData
 parameter_list|(
 name|ExecutionContext

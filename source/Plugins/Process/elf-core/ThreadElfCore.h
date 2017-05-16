@@ -200,7 +200,7 @@ argument_list|()
 expr_stmt|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|Parse
 argument_list|(
 name|lldb_private
@@ -269,7 +269,7 @@ argument_list|()
 expr_stmt|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|Parse
 argument_list|(
 name|lldb_private
@@ -396,7 +396,7 @@ argument_list|()
 expr_stmt|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|Parse
 argument_list|(
 name|lldb_private

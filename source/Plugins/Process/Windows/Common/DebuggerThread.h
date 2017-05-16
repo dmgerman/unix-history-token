@@ -118,7 +118,7 @@ operator|~
 name|DebuggerThread
 argument_list|()
 block|;
-name|Error
+name|Status
 name|DebugLaunch
 argument_list|(
 specifier|const
@@ -127,7 +127,7 @@ operator|&
 name|launch_info
 argument_list|)
 block|;
-name|Error
+name|Status
 name|DebugAttach
 argument_list|(
 argument|lldb::pid_t pid
@@ -166,7 +166,7 @@ return|return
 name|m_active_exception
 return|;
 block|}
-name|Error
+name|Status
 name|StopDebugging
 argument_list|(
 argument|bool terminate

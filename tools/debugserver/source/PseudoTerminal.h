@@ -97,7 +97,7 @@ literal|1
 block|}
 enum|;
 enum|enum
-name|Error
+name|Status
 block|{
 name|success
 init|=
@@ -177,14 +177,14 @@ name|void
 name|CloseSlave
 parameter_list|()
 function_decl|;
-name|Error
+name|Status
 name|OpenFirstAvailableMaster
 parameter_list|(
 name|int
 name|oflag
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|OpenSlave
 parameter_list|(
 name|int
@@ -259,7 +259,7 @@ expr_stmt|;
 name|pid_t
 name|Fork
 parameter_list|(
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)

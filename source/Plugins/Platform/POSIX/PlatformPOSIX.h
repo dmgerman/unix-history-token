@@ -155,7 +155,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|PutFile
 argument_list|(
 argument|const lldb_private::FileSpec&source
@@ -179,7 +179,7 @@ argument|uint32_t flags
 argument_list|,
 argument|uint32_t mode
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -188,7 +188,7 @@ name|CloseFile
 argument_list|(
 argument|lldb::user_id_t fd
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -203,7 +203,7 @@ argument|void *dst
 argument_list|,
 argument|uint64_t dst_len
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -218,7 +218,7 @@ argument|const void *src
 argument_list|,
 argument|uint64_t src_len
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -233,7 +233,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|CreateSymlink
 argument_list|(
 argument|const lldb_private::FileSpec&src
@@ -244,7 +244,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetFile
 argument_list|(
 argument|const lldb_private::FileSpec&source
@@ -317,7 +317,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|RunShellCommand
 argument_list|(
 argument|const char *command
@@ -345,7 +345,7 @@ block|;
 comment|// Timeout in seconds to wait for shell program to finish
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|ResolveExecutable
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
@@ -358,7 +358,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetFileWithUUID
 argument_list|(
 argument|const lldb_private::FileSpec&platform_file
@@ -389,7 +389,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|MakeDirectory
 argument_list|(
 argument|const lldb_private::FileSpec&file_spec
@@ -400,7 +400,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetFilePermissions
 argument_list|(
 argument|const lldb_private::FileSpec&file_spec
@@ -411,7 +411,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|SetFilePermissions
 argument_list|(
 argument|const lldb_private::FileSpec&file_spec
@@ -429,7 +429,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|Unlink
 argument_list|(
 argument|const lldb_private::FileSpec&file_spec
@@ -438,7 +438,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|(
 argument|lldb_private::ProcessLaunchInfo&launch_info
@@ -447,7 +447,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|KillProcess
 argument_list|(
 argument|const lldb::pid_t pid
@@ -469,7 +469,7 @@ comment|// Can be nullptr, if
 comment|// nullptr create a new
 comment|// target, else use
 comment|// existing one
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -489,7 +489,7 @@ comment|// if nullptr
 comment|// create a new
 comment|// target, else use
 comment|// existing one
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -518,7 +518,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|ConnectRemote
 argument_list|(
 argument|lldb_private::Args&args
@@ -527,7 +527,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DisconnectRemote
 argument_list|()
 name|override
@@ -539,13 +539,13 @@ argument|lldb_private::Process *process
 argument_list|,
 argument|const lldb_private::FileSpec&remote_file
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|UnloadImage
 argument_list|(
 argument|lldb_private::Process *process
@@ -567,7 +567,7 @@ argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -576,7 +576,7 @@ name|ConnectToWaitingProcesses
 argument_list|(
 argument|lldb_private::Debugger&debugger
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -649,7 +649,7 @@ comment|// Allow multiple ways to connect to a
 comment|// remote POSIX-compliant OS
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|EvaluateLibdlExpression
 argument_list|(
 name|lldb_private

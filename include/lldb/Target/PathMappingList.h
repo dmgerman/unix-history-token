@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_comment

@@ -139,7 +139,7 @@ name|GetRegisterContext
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|SetWatchpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -152,14 +152,14 @@ argument|bool hardware
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|RemoveWatchpoint
 argument_list|(
 argument|lldb::addr_t addr
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -168,7 +168,7 @@ argument|size_t size
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|RemoveHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -182,7 +182,7 @@ comment|// Interface for friend classes
 comment|// ---------------------------------------------------------------------
 comment|/// Resumes the thread.  If @p signo is anything but
 comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
-name|Error
+name|Status
 name|Resume
 argument_list|(
 argument|uint32_t signo
@@ -190,7 +190,7 @@ argument_list|)
 block|;
 comment|/// Single steps the thread.  If @p signo is anything but
 comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
-name|Error
+name|Status
 name|SingleStep
 argument_list|(
 argument|uint32_t signo
@@ -249,7 +249,7 @@ name|void
 name|SetExited
 argument_list|()
 block|;
-name|Error
+name|Status
 name|RequestStop
 argument_list|()
 block|;

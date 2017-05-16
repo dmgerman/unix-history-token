@@ -176,7 +176,7 @@ block|;
 name|void
 name|OnDebuggerError
 argument_list|(
-argument|const Error&error
+argument|const Status&error
 argument_list|,
 argument|uint32_t type
 argument_list|)

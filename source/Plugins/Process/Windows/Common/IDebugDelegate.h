@@ -72,7 +72,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 name|class
 name|HostThread
@@ -204,7 +204,7 @@ name|void
 name|OnDebuggerError
 parameter_list|(
 specifier|const
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|,

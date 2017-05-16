@@ -79,7 +79,7 @@ argument_list|()
 block|;
 name|protected
 operator|:
-name|Error
+name|Status
 name|DoWriteLock
 argument_list|(
 argument|const uint64_t start
@@ -88,7 +88,7 @@ argument|const uint64_t len
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DoTryWriteLock
 argument_list|(
 argument|const uint64_t start
@@ -97,7 +97,7 @@ argument|const uint64_t len
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DoReadLock
 argument_list|(
 argument|const uint64_t start
@@ -106,7 +106,7 @@ argument|const uint64_t len
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DoTryReadLock
 argument_list|(
 argument|const uint64_t start
@@ -115,7 +115,7 @@ argument|const uint64_t len
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DoUnlock
 argument_list|()
 name|override

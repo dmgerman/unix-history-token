@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -76,7 +76,7 @@ name|IsLocked
 argument_list|()
 specifier|const
 expr_stmt|;
-name|Error
+name|Status
 name|WriteLock
 parameter_list|(
 specifier|const
@@ -88,7 +88,7 @@ name|uint64_t
 name|len
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|TryWriteLock
 parameter_list|(
 specifier|const
@@ -100,7 +100,7 @@ name|uint64_t
 name|len
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|ReadLock
 parameter_list|(
 specifier|const
@@ -112,7 +112,7 @@ name|uint64_t
 name|len
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|TryReadLock
 parameter_list|(
 specifier|const
@@ -124,7 +124,7 @@ name|uint64_t
 name|len
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|Unlock
 parameter_list|()
 function_decl|;
@@ -137,7 +137,7 @@ name|std
 operator|::
 name|function
 operator|<
-name|Error
+name|Status
 argument_list|(
 specifier|const
 name|uint64_t
@@ -159,7 +159,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|virtual
-name|Error
+name|Status
 name|DoWriteLock
 parameter_list|(
 specifier|const
@@ -174,7 +174,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|DoTryWriteLock
 parameter_list|(
 specifier|const
@@ -189,7 +189,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|DoReadLock
 parameter_list|(
 specifier|const
@@ -204,7 +204,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|DoTryReadLock
 parameter_list|(
 specifier|const
@@ -219,13 +219,13 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|DoUnlock
 parameter_list|()
 init|=
 literal|0
 function_decl|;
-name|Error
+name|Status
 name|DoLock
 parameter_list|(
 specifier|const

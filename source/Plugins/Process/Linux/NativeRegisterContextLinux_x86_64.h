@@ -124,7 +124,7 @@ argument_list|()
 specifier|const
 name|override
 block|;
-name|Error
+name|Status
 name|ReadRegister
 argument_list|(
 argument|const RegisterInfo *reg_info
@@ -133,7 +133,7 @@ argument|RegisterValue&reg_value
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|WriteRegister
 argument_list|(
 argument|const RegisterInfo *reg_info
@@ -142,21 +142,21 @@ argument|const RegisterValue&reg_value
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ReadAllRegisterValues
 argument_list|(
 argument|lldb::DataBufferSP&data_sp
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|WriteAllRegisterValues
 argument_list|(
 argument|const lldb::DataBufferSP&data_sp
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|IsWatchpointHit
 argument_list|(
 argument|uint32_t wp_index
@@ -165,7 +165,7 @@ argument|bool&is_hit
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|GetWatchpointHitIndex
 argument_list|(
 argument|uint32_t&wp_index
@@ -174,7 +174,7 @@ argument|lldb::addr_t trap_addr
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|IsWatchpointVacant
 argument_list|(
 argument|uint32_t wp_index
@@ -190,12 +190,12 @@ argument|uint32_t wp_index
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ClearAllHardwareWatchpoints
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|SetHardwareWatchpointWithIndex
 argument_list|(
 argument|lldb::addr_t addr
@@ -256,12 +256,12 @@ name|GetFPRSize
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|ReadFPR
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|WriteFPR
 argument_list|()
 name|override

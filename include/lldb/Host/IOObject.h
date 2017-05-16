@@ -122,7 +122,7 @@ name|IOObject
 argument_list|()
 block|{}
 name|virtual
-name|Error
+name|Status
 name|Read
 argument_list|(
 name|void
@@ -137,7 +137,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|Error
+name|Status
 name|Write
 parameter_list|(
 specifier|const
@@ -161,7 +161,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|Error
+name|Status
 name|Close
 parameter_list|()
 init|=

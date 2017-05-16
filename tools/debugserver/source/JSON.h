@@ -1347,7 +1347,7 @@ name|Token
 block|{
 name|Invalid
 block|,
-name|Error
+name|Status
 block|,
 name|ObjectStart
 block|,

@@ -159,7 +159,7 @@ name|function
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -202,7 +202,7 @@ name|execution_unit
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -237,7 +237,7 @@ name|llvm_function
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|err
 argument_list|)

@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -188,7 +188,7 @@ argument|bool plugin_specified_by_name
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DoLoadCore
 argument_list|()
 name|override
@@ -209,7 +209,7 @@ name|GetPluginVersion
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|DoDestroy
 argument_list|()
 name|override
@@ -239,7 +239,7 @@ argument|void *buf
 argument_list|,
 argument|size_t size
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -252,7 +252,7 @@ argument|void *buf
 argument_list|,
 argument|size_t size
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -260,7 +260,7 @@ name|ArchSpec
 name|GetArchitecture
 argument_list|()
 block|;
-name|Error
+name|Status
 name|GetMemoryRegionInfo
 argument_list|(
 argument|lldb::addr_t load_addr

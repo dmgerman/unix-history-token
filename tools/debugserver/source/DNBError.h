@@ -182,7 +182,7 @@ argument_list|()
 expr_stmt|;
 block|}
 name|ValueType
-name|Error
+name|Status
 argument_list|()
 specifier|const
 block|{

@@ -165,7 +165,7 @@ block|;
 name|virtual
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|WillResume
 argument_list|()
 name|override
@@ -208,7 +208,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|WillLaunch
 argument_list|(
 argument|lldb_private::Module *module
@@ -217,7 +217,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DoAttachToProcessWithID
 argument_list|(
 argument|lldb::pid_t pid
@@ -228,7 +228,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DoLaunch
 argument_list|(
 argument|lldb_private::Module *exe_module
@@ -244,14 +244,14 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DoResume
 argument_list|()
 name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DoHalt
 argument_list|(
 argument|bool&caused_stop
@@ -260,7 +260,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DoDetach
 argument_list|(
 argument|bool keep_stopped
@@ -269,7 +269,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DoSignal
 argument_list|(
 argument|int signal
@@ -278,7 +278,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DoDestroy
 argument_list|()
 name|override
@@ -307,7 +307,7 @@ argument|void *buf
 argument_list|,
 argument|size_t size
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -320,7 +320,7 @@ argument|const void *buf
 argument_list|,
 argument|size_t size
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -333,13 +333,13 @@ argument|size_t size
 argument_list|,
 argument|uint32_t permissions
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DoDeallocateMemory
 argument_list|(
 argument|lldb::addr_t ptr
@@ -359,7 +359,7 @@ argument_list|)
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|EnableBreakpointSite
 argument_list|(
 argument|lldb_private::BreakpointSite *bp_site
@@ -368,7 +368,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DisableBreakpointSite
 argument_list|(
 argument|lldb_private::BreakpointSite *bp_site
@@ -377,7 +377,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|EnableWatchpoint
 argument_list|(
 argument|lldb_private::Watchpoint *wp
@@ -388,7 +388,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DisableWatchpoint
 argument_list|(
 argument|lldb_private::Watchpoint *wp
@@ -399,7 +399,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetWatchpointSupportInfo
 argument_list|(
 argument|uint32_t&num
@@ -408,7 +408,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetWatchpointSupportInfo
 argument_list|(
 argument|uint32_t&num
@@ -453,7 +453,7 @@ argument|const char *buf
 argument_list|,
 argument|size_t len
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -561,7 +561,7 @@ argument_list|)
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|SetupSoftwareSingleStepping
 argument_list|(
 argument|lldb::tid_t tid
@@ -569,7 +569,7 @@ argument_list|)
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|SetSoftwareSingleStepBreakpoint
 argument_list|(
 argument|lldb::tid_t tid

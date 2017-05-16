@@ -797,7 +797,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|Error
+name|Status
 name|LaunchProcessPosixSpawn
 argument_list|(
 specifier|const
@@ -837,7 +837,7 @@ name|Log
 modifier|*
 name|log
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -863,7 +863,7 @@ end_expr_stmt
 
 begin_function_decl
 specifier|static
-name|Error
+name|Status
 name|LaunchProcess
 parameter_list|(
 name|ProcessLaunchInfo
@@ -903,7 +903,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|Error
+name|Status
 name|ShellExpandArguments
 parameter_list|(
 name|ProcessLaunchInfo
@@ -919,7 +919,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|Error
+name|Status
 name|RunShellCommand
 argument_list|(
 specifier|const
@@ -966,7 +966,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|Error
+name|Status
 name|RunShellCommand
 argument_list|(
 specifier|const

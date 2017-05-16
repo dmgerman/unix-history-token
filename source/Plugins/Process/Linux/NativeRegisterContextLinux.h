@@ -114,7 +114,7 @@ argument_list|()
 specifier|const
 block|;
 name|virtual
-name|Error
+name|Status
 name|ReadRegisterRaw
 argument_list|(
 argument|uint32_t reg_index
@@ -123,7 +123,7 @@ argument|RegisterValue&reg_value
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|WriteRegisterRaw
 argument_list|(
 argument|uint32_t reg_index
@@ -132,7 +132,7 @@ argument|const RegisterValue&reg_value
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|ReadRegisterSet
 argument_list|(
 argument|void *buf
@@ -143,7 +143,7 @@ argument|unsigned int regset
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|WriteRegisterSet
 argument_list|(
 argument|void *buf
@@ -154,22 +154,22 @@ argument|unsigned int regset
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|ReadGPR
 argument_list|()
 block|;
 name|virtual
-name|Error
+name|Status
 name|WriteGPR
 argument_list|()
 block|;
 name|virtual
-name|Error
+name|Status
 name|ReadFPR
 argument_list|()
 block|;
 name|virtual
-name|Error
+name|Status
 name|WriteFPR
 argument_list|()
 block|;
@@ -219,7 +219,7 @@ comment|// The Do*** functions are executed on the privileged thread and can per
 comment|// ptrace
 comment|// operations directly.
 name|virtual
-name|Error
+name|Status
 name|DoReadRegisterValue
 argument_list|(
 argument|uint32_t offset
@@ -232,7 +232,7 @@ argument|RegisterValue&value
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|DoWriteRegisterValue
 argument_list|(
 argument|uint32_t offset
@@ -243,7 +243,7 @@ argument|const RegisterValue&value
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|DoReadGPR
 argument_list|(
 argument|void *buf
@@ -252,7 +252,7 @@ argument|size_t buf_size
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|DoWriteGPR
 argument_list|(
 argument|void *buf
@@ -261,7 +261,7 @@ argument|size_t buf_size
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|DoReadFPR
 argument_list|(
 argument|void *buf
@@ -270,7 +270,7 @@ argument|size_t buf_size
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|DoWriteFPR
 argument_list|(
 argument|void *buf

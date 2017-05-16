@@ -102,7 +102,7 @@ name|public
 name|NativeProcessProtocol
 block|{
 name|friend
-name|Error
+name|Status
 name|NativeProcessProtocol
 operator|::
 name|Launch
@@ -125,7 +125,7 @@ name|process_sp
 argument_list|)
 block|;
 name|friend
-name|Error
+name|Status
 name|NativeProcessProtocol
 operator|::
 name|Attach
@@ -144,36 +144,36 @@ operator|:
 comment|// ---------------------------------------------------------------------
 comment|// NativeProcessProtocol Interface
 comment|// ---------------------------------------------------------------------
-name|Error
+name|Status
 name|Resume
 argument_list|(
 argument|const ResumeActionList&resume_actions
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|Halt
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|Detach
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|Signal
 argument_list|(
 argument|int signo
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|Kill
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|GetMemoryRegionInfo
 argument_list|(
 argument|lldb::addr_t load_addr
@@ -182,7 +182,7 @@ argument|MemoryRegionInfo&range_info
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ReadMemory
 argument_list|(
 argument|lldb::addr_t addr
@@ -195,7 +195,7 @@ argument|size_t&bytes_read
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ReadMemoryWithoutTrap
 argument_list|(
 argument|lldb::addr_t addr
@@ -208,7 +208,7 @@ argument|size_t&bytes_read
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|WriteMemory
 argument_list|(
 argument|lldb::addr_t addr
@@ -221,7 +221,7 @@ argument|size_t&bytes_written
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|AllocateMemory
 argument_list|(
 argument|size_t size
@@ -232,7 +232,7 @@ argument|lldb::addr_t&addr
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DeallocateMemory
 argument_list|(
 argument|lldb::addr_t addr
@@ -259,7 +259,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|Error
+name|Status
 name|SetBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -270,7 +270,7 @@ argument|bool hardware
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|GetLoadedModuleFileSpec
 argument_list|(
 argument|const char *module_path
@@ -279,7 +279,7 @@ argument|FileSpec&file_spec
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|GetFileLoadAddress
 argument_list|(
 argument|const llvm::StringRef&file_name
@@ -309,7 +309,7 @@ comment|// ---------------------------------------------------------------------
 comment|// Interface used by NativeRegisterContext-derived classes.
 comment|// ---------------------------------------------------------------------
 specifier|static
-name|Error
+name|Status
 name|PtraceWrapper
 argument_list|(
 argument|int req
@@ -329,7 +329,7 @@ operator|:
 comment|// ---------------------------------------------------------------------
 comment|// NativeProcessProtocol protected interface
 comment|// ---------------------------------------------------------------------
-name|Error
+name|Status
 name|GetSoftwareBreakpointTrapOpcode
 argument_list|(
 argument|size_t trap_opcode_size_hint
@@ -379,7 +379,7 @@ argument_list|(
 argument|lldb::tid_t thread_id
 argument_list|)
 block|;
-name|Error
+name|Status
 name|LaunchInferior
 argument_list|(
 name|MainLoop
@@ -398,7 +398,7 @@ argument|MainLoop&mainloop
 argument_list|,
 argument|lldb::pid_t pid
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|;
 name|void
@@ -439,7 +439,7 @@ argument_list|,
 argument|int signal
 argument_list|)
 block|;
-name|Error
+name|Status
 name|GetSoftwareBreakpointPCOffset
 argument_list|(
 name|uint32_t
@@ -447,7 +447,7 @@ operator|&
 name|actual_opcode_size
 argument_list|)
 block|;
-name|Error
+name|Status
 name|FixupBreakpointPCAsNeeded
 argument_list|(
 name|NativeThreadNetBSD
@@ -455,7 +455,7 @@ operator|&
 name|thread
 argument_list|)
 block|;
-name|Error
+name|Status
 name|PopulateMemoryRegionCache
 argument_list|()
 block|;
@@ -469,10 +469,10 @@ name|Attach
 argument_list|(
 argument|lldb::pid_t pid
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|;
-name|Error
+name|Status
 name|ReinitializeThreads
 argument_list|()
 block|; }

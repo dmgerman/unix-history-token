@@ -97,9 +97,9 @@ argument|lldb_private::Process&process
 argument_list|,
 argument|lldb::tid_t tid
 argument_list|,
-argument|const char *name
+argument|llvm::StringRef name
 argument_list|,
-argument|const char *queue
+argument|llvm::StringRef queue
 argument_list|,
 argument|lldb::addr_t register_data_addr
 argument_list|)

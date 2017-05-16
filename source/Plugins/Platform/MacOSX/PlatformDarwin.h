@@ -119,7 +119,7 @@ comment|// lldb_private::Platform functions
 comment|//------------------------------------------------------------
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|ResolveSymbolFile
 argument_list|(
 argument|lldb_private::Target&target
@@ -145,7 +145,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetSharedModule
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
@@ -259,7 +259,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|(
 argument|lldb_private::ProcessLaunchInfo&launch_info
@@ -311,7 +311,7 @@ block|;
 name|virtual
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetSharedModuleWithLocalCache
 argument_list|(
 specifier|const

@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -162,7 +162,7 @@ argument_list|,
 name|size_t
 name|buf_size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -178,7 +178,7 @@ argument_list|,
 name|size_t
 name|buf_size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -195,7 +195,7 @@ argument_list|,
 name|size_t
 name|buf_size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -212,7 +212,7 @@ name|GetPluginVersion
 argument_list|()
 name|override
 expr_stmt|;
-name|Error
+name|Status
 name|EnableBreakpointSite
 argument_list|(
 name|BreakpointSite
@@ -221,7 +221,7 @@ name|bp_site
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DisableBreakpointSite
 argument_list|(
 name|BreakpointSite
@@ -230,7 +230,7 @@ name|bp_site
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DoDetach
 argument_list|(
 name|bool
@@ -238,7 +238,7 @@ name|keep_stopped
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DoLaunch
 argument_list|(
 name|Module
@@ -251,7 +251,7 @@ name|launch_info
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DoAttachToProcessWithID
 argument_list|(
 name|lldb
@@ -268,17 +268,17 @@ name|attach_info
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DoResume
 argument_list|()
 name|override
 expr_stmt|;
-name|Error
+name|Status
 name|DoDestroy
 argument_list|()
 name|override
 expr_stmt|;
-name|Error
+name|Status
 name|DoHalt
 argument_list|(
 name|bool
@@ -363,7 +363,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -385,13 +385,13 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|GetMemoryRegionInfo
 argument_list|(
 name|lldb
@@ -508,7 +508,7 @@ name|void
 name|OnDebuggerError
 argument_list|(
 specifier|const
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -519,7 +519,7 @@ name|override
 decl_stmt|;
 name|private
 label|:
-name|Error
+name|Status
 name|WaitForDebuggerConnection
 parameter_list|(
 name|DebuggerThreadSP

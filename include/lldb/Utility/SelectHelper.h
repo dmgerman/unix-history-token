@@ -46,11 +46,11 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_comment
-comment|// for Error
+comment|// for Status
 end_comment
 
 begin_include
@@ -179,7 +179,7 @@ comment|// timeout provided in a call the SelectHelper::SetTimeout(),
 comment|// or infinite wait if no timeout was set.
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|Select
 argument_list|()
 expr_stmt|;

@@ -155,7 +155,7 @@ return|;
 block|}
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetSharedModule
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
@@ -189,7 +189,7 @@ return|;
 block|}
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetSymbolFile
 argument_list|(
 specifier|const
@@ -215,7 +215,7 @@ argument_list|)
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetFile
 argument_list|(
 argument|const lldb_private::FileSpec&source
@@ -237,7 +237,7 @@ return|;
 block|}
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetFileWithUUID
 argument_list|(
 argument|const lldb_private::FileSpec&platform_file

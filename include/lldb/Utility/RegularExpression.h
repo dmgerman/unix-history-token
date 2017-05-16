@@ -712,7 +712,7 @@ comment|///< A copy of the original regular expression text
 name|int
 name|m_comp_err
 decl_stmt|;
-comment|///< Error code for the regular expression compilation
+comment|///< Status code for the regular expression compilation
 name|regex_t
 name|m_preg
 decl_stmt|;

@@ -79,7 +79,7 @@ name|ProcessLaunchInfo
 operator|&
 name|launch_info
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

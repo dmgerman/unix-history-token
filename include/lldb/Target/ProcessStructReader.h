@@ -82,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -331,7 +331,7 @@ literal|0
 argument|)
 argument_list|)
 expr_stmt|;
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|process

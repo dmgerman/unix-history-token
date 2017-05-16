@@ -167,14 +167,14 @@ block|}
 comment|//------------------------------------------------------------
 comment|// lldb_private::Platform functions
 comment|//------------------------------------------------------------
-name|Error
+name|Status
 name|ConnectRemote
 argument_list|(
 argument|Args&args
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|GetFile
 argument_list|(
 argument|const FileSpec&source
@@ -183,7 +183,7 @@ argument|const FileSpec&destination
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|PutFile
 argument_list|(
 argument|const FileSpec&source
@@ -205,7 +205,7 @@ name|GetRemoteOSVersion
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|DisconnectRemote
 argument_list|()
 name|override
@@ -224,7 +224,7 @@ name|GetCacheHostname
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|DownloadModuleSlice
 argument_list|(
 argument|const FileSpec&src_file_spec
@@ -237,7 +237,7 @@ argument|const FileSpec&dst_file_spec
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DownloadSymbolFile
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
@@ -262,7 +262,7 @@ name|SyncService
 operator|*
 name|GetSyncService
 argument_list|(
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

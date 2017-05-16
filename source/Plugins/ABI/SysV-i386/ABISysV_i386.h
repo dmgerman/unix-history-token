@@ -128,7 +128,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|SetReturnValueObject
 argument_list|(
 argument|lldb::StackFrameSP&frame_sp

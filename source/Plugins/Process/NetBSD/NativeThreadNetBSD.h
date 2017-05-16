@@ -121,7 +121,7 @@ name|GetRegisterContext
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|SetWatchpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -134,14 +134,14 @@ argument|bool hardware
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|RemoveWatchpoint
 argument_list|(
 argument|lldb::addr_t addr
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -150,7 +150,7 @@ argument|size_t size
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|RemoveHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr

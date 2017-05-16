@@ -134,7 +134,7 @@ name|StringExtractorGDBRemote
 operator|&
 name|packet
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -185,7 +185,7 @@ name|micro
 operator|>
 name|timeout
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,

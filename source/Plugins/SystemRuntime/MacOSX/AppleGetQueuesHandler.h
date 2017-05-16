@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -273,7 +273,7 @@ name|page_to_free_size
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

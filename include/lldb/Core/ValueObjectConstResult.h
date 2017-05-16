@@ -88,11 +88,11 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_comment
-comment|// for Error
+comment|// for Status
 end_comment
 
 begin_include
@@ -325,7 +325,7 @@ operator|*
 name|exe_scope
 argument_list|,
 specifier|const
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -376,7 +376,7 @@ operator|::
 name|ValueObjectSP
 name|Dereference
 argument_list|(
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -412,7 +412,7 @@ operator|::
 name|ValueObjectSP
 name|AddressOf
 argument_list|(
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -610,7 +610,7 @@ operator|*
 name|exe_scope
 argument_list|,
 specifier|const
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

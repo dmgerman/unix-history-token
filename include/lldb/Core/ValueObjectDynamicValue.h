@@ -190,7 +190,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -396,7 +396,7 @@ name|char
 operator|*
 name|value_str
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -409,7 +409,7 @@ name|DataExtractor
 operator|&
 name|data
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

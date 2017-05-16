@@ -114,14 +114,14 @@ name|PlatformAndroidRemoteGDBServer
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|ConnectRemote
 argument_list|(
 argument|Args&args
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DisconnectRemote
 argument_list|()
 name|override
@@ -139,7 +139,7 @@ argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -194,7 +194,7 @@ argument_list|(
 argument|lldb::pid_t pid
 argument_list|)
 block|;
-name|Error
+name|Status
 name|MakeConnectURL
 argument_list|(
 argument|const lldb::pid_t pid

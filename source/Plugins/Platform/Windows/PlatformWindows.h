@@ -159,7 +159,7 @@ argument|lldb_private::ModuleSpec&module_spec
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ResolveExecutable
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
@@ -220,7 +220,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|ConnectRemote
 argument_list|(
 argument|lldb_private::Args&args
@@ -229,7 +229,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DisconnectRemote
 argument_list|()
 name|override
@@ -279,7 +279,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|(
 argument|lldb_private::ProcessLaunchInfo&launch_info
@@ -297,7 +297,7 @@ argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -312,13 +312,13 @@ argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetFileWithUUID
 argument_list|(
 argument|const lldb_private::FileSpec&platform_file
@@ -331,7 +331,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetSharedModule
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec

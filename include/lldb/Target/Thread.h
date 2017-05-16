@@ -1172,7 +1172,7 @@ name|GetCurrentInlinedDepth
 argument_list|()
 return|;
 block|}
-name|Error
+name|Status
 name|ReturnFromFrameWithIndex
 argument_list|(
 name|uint32_t
@@ -1189,7 +1189,7 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|ReturnFromFrame
 argument_list|(
 name|lldb
@@ -1208,7 +1208,7 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|JumpToLine
 argument_list|(
 specifier|const
@@ -1460,7 +1460,7 @@ comment|/// @return
 comment|///     An error that describes anything that went wrong
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|StepIn
 parameter_list|(
 name|bool
@@ -1491,7 +1491,7 @@ comment|/// @return
 comment|///     An error that describes anything that went wrong
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|StepOver
 parameter_list|(
 name|bool
@@ -1513,7 +1513,7 @@ comment|/// @return
 comment|///     An error that describes anything that went wrong
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|StepOut
 parameter_list|()
 function_decl|;
@@ -2085,7 +2085,7 @@ comment|///
 comment|/// @return
 comment|///     An error if the thread plan could not be unwound.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|UnwindInnermostExpression
 parameter_list|()
 function_decl|;

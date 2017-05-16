@@ -140,7 +140,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -188,7 +188,7 @@ operator|::
 name|ValueObjectSP
 name|Dereference
 argument_list|(
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -236,7 +236,7 @@ operator|::
 name|ValueObjectSP
 name|AddressOf
 argument_list|(
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;

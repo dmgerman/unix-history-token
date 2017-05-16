@@ -1106,7 +1106,7 @@ comment|///     The maximum number of host bytes to read in the buffer passed
 comment|///     into this call
 comment|///
 comment|/// @param[out] error
-comment|///     Error information is written here if the memory read fails.
+comment|///     Status information is written here if the memory read fails.
 comment|///
 comment|/// @return
 comment|///     The amount of data read in host bytes.

@@ -92,7 +92,7 @@ argument|bool owns
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|Join
 argument_list|(
 name|lldb
@@ -103,7 +103,7 @@ name|result
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|Cancel
 argument_list|()
 block|;

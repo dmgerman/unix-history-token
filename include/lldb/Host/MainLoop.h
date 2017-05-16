@@ -146,7 +146,7 @@ name|Callback
 operator|&
 name|callback
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -170,12 +170,12 @@ name|Callback
 modifier|&
 name|callback
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|Run
 argument_list|()
 name|override

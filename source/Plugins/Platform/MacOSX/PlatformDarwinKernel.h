@@ -219,7 +219,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetSharedModule
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
@@ -535,7 +535,7 @@ end_decl_stmt
 begin_expr_stmt
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|ExamineKextForMatchingUUID
 argument_list|(
 specifier|const

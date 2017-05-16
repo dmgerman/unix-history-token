@@ -124,7 +124,7 @@ argument_list|()
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|(
 argument|lldb_private::ProcessLaunchInfo&launch_info
@@ -140,7 +140,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|ConnectRemote
 argument_list|(
 argument|lldb_private::Args&args
@@ -149,7 +149,7 @@ name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DisconnectRemote
 argument_list|()
 name|override
@@ -165,7 +165,7 @@ argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;

@@ -105,7 +105,7 @@ comment|// lldb_private::Platform functions
 comment|//------------------------------------------------------------
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|ResolveExecutable
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
@@ -126,7 +126,7 @@ block|;
 name|virtual
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetSymbolFile
 argument_list|(
 specifier|const
@@ -152,7 +152,7 @@ argument_list|)
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetSharedModule
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec

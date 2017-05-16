@@ -68,14 +68,14 @@ argument_list|,
 argument|bool child_processes_inherit
 argument_list|)
 block|;
-name|Error
+name|Status
 name|Connect
 argument_list|(
 argument|llvm::StringRef name
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|Listen
 argument_list|(
 argument|llvm::StringRef name
@@ -84,7 +84,7 @@ argument|int backlog
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|Accept
 argument_list|(
 argument|Socket *&socket

@@ -89,12 +89,12 @@ argument_list|(
 argument|bool owns
 argument_list|)
 block|;
-name|Error
+name|Status
 name|Terminate
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|GetMainModule
 argument_list|(
 argument|FileSpec&file_spec

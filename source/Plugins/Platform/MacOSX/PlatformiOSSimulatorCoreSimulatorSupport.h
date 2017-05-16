@@ -138,7 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -183,7 +183,7 @@ return|;
 block|}
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetError
 argument_list|()
 block|{
@@ -200,14 +200,14 @@ argument_list|)
 empty_stmt|;
 name|Process
 argument_list|(
-argument|lldb_private::Error error
+argument|lldb_private::Status error
 argument_list|)
 empty_stmt|;
 name|Process
 argument_list|(
 argument|lldb::pid_t p
 argument_list|,
-argument|lldb_private::Error error
+argument|lldb_private::Status error
 argument_list|)
 empty_stmt|;
 name|lldb
@@ -217,7 +217,7 @@ name|m_pid
 expr_stmt|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|m_error
 expr_stmt|;
 name|friend
@@ -607,7 +607,7 @@ name|Boot
 argument_list|(
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|err
 argument_list|)
@@ -617,7 +617,7 @@ name|Shutdown
 argument_list|(
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|err
 argument_list|)

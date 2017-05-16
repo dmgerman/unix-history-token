@@ -56,18 +56,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_comment
 comment|// for FileSpec
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
+end_include
 
 begin_include
 include|#
@@ -449,7 +449,7 @@ comment|///     \b true if it is currently ok to try and load a shared
 comment|///     library into the process, \b false otherwise.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|CanLoadImage
 argument_list|()
 operator|=

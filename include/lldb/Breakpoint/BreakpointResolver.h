@@ -298,7 +298,7 @@ name|Dictionary
 operator|&
 name|resolver_dict
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -470,10 +470,7 @@ specifier|static
 name|ResolverTy
 name|NameToResolverTy
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
+argument|llvm::StringRef name
 argument_list|)
 block|;
 name|virtual

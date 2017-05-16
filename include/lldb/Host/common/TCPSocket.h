@@ -132,14 +132,14 @@ name|int
 name|SetOptionReuseAddress
 argument_list|()
 block|;
-name|Error
+name|Status
 name|Connect
 argument_list|(
 argument|llvm::StringRef name
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|Listen
 argument_list|(
 argument|llvm::StringRef name
@@ -148,14 +148,14 @@ argument|int backlog
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|Accept
 argument_list|(
 argument|Socket *&conn_socket
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|CreateSocket
 argument_list|(
 argument|int domain

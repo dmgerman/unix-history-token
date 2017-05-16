@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -106,7 +106,7 @@ argument_list|()
 name|override
 block|;
 name|virtual
-name|Error
+name|Status
 name|Signal
 argument_list|(
 argument|int signo
@@ -114,7 +114,7 @@ argument_list|)
 specifier|const
 block|;
 specifier|static
-name|Error
+name|Status
 name|Signal
 argument_list|(
 argument|lldb::process_t process
@@ -122,12 +122,12 @@ argument_list|,
 argument|int signo
 argument_list|)
 block|;
-name|Error
+name|Status
 name|Terminate
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|GetMainModule
 argument_list|(
 argument|FileSpec&file_spec

@@ -66,7 +66,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 name|class
 name|ConnectionGenericFile
@@ -106,7 +106,7 @@ name|Connect
 argument_list|(
 argument|llvm::StringRef s
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 name|override
 block|;
@@ -115,7 +115,7 @@ operator|::
 name|ConnectionStatus
 name|Disconnect
 argument_list|(
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 name|override
 block|;
@@ -130,7 +130,7 @@ argument|const Timeout<std::micro>&timeout
 argument_list|,
 argument|lldb::ConnectionStatus&status
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 name|override
 block|;
@@ -143,7 +143,7 @@ argument|size_t src_len
 argument_list|,
 argument|lldb::ConnectionStatus&status
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 name|override
 block|;

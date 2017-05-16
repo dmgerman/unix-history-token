@@ -1663,7 +1663,7 @@ comment|// this bucket is terminated, search no more
 name|eResultError
 init|=
 literal|3u
-comment|// Error parsing the hash data, abort
+comment|// Status parsing the hash data, abort
 block|}
 enum|;
 end_enum
@@ -2130,7 +2130,7 @@ return|;
 case|case
 name|eResultError
 case|:
-comment|// Error parsing the hash data, abort
+comment|// Status parsing the hash data, abort
 return|return
 name|false
 return|;

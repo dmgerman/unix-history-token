@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -194,7 +194,7 @@ comment|///     An error code indicating the success or failure of the operation
 comment|///     Test with Success().
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|PrepareForExecution
 argument_list|(
 name|lldb

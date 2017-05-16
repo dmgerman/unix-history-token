@@ -162,7 +162,7 @@ operator|::
 name|REPLSP
 name|Create
 argument_list|(
-argument|Error&Error
+argument|Status&Status
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
@@ -224,7 +224,7 @@ name|IOHandlerSP
 name|GetIOHandler
 argument_list|()
 block|;
-name|Error
+name|Status
 name|RunLoop
 argument_list|()
 block|;
@@ -346,7 +346,7 @@ comment|//----------------------------------------------------------------------
 comment|// Subclasses should override these functions to implement a functional REPL.
 comment|//----------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|DoInitialization
 argument_list|()
 operator|=

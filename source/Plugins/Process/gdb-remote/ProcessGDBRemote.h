@@ -152,7 +152,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -301,7 +301,7 @@ expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Creating a new process, or attaching to an existing one
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|WillLaunch
 argument_list|(
 name|Module
@@ -310,7 +310,7 @@ name|module
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DoLaunch
 argument_list|(
 name|Module
@@ -328,7 +328,7 @@ name|DidLaunch
 argument_list|()
 name|override
 expr_stmt|;
-name|Error
+name|Status
 name|WillAttachToProcessWithID
 argument_list|(
 name|lldb
@@ -338,7 +338,7 @@ name|pid
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|WillAttachToProcessWithName
 argument_list|(
 specifier|const
@@ -351,7 +351,7 @@ name|wait_for_launch
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DoConnectRemote
 argument_list|(
 name|Stream
@@ -365,11 +365,11 @@ name|remote_url
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|WillLaunchOrAttach
 parameter_list|()
 function_decl|;
-name|Error
+name|Status
 name|DoAttachToProcessWithID
 argument_list|(
 name|lldb
@@ -384,7 +384,7 @@ name|attach_info
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DoAttachToProcessWithName
 argument_list|(
 specifier|const
@@ -424,17 +424,17 @@ expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Process Control
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|WillResume
 argument_list|()
 name|override
 expr_stmt|;
-name|Error
+name|Status
 name|DoResume
 argument_list|()
 name|override
 expr_stmt|;
-name|Error
+name|Status
 name|DoHalt
 argument_list|(
 name|bool
@@ -443,7 +443,7 @@ name|caused_stop
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DoDetach
 argument_list|(
 name|bool
@@ -460,7 +460,7 @@ return|return
 name|true
 return|;
 block|}
-name|Error
+name|Status
 name|DoSignal
 argument_list|(
 name|int
@@ -468,7 +468,7 @@ name|signal
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DoDestroy
 argument_list|()
 name|override
@@ -527,7 +527,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -549,7 +549,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -564,11 +564,11 @@ argument|size_t size
 argument_list|,
 argument|uint32_t permissions
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 expr_stmt|;
-name|Error
+name|Status
 name|GetMemoryRegionInfo
 argument_list|(
 name|lldb
@@ -582,7 +582,7 @@ name|region_info
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DoDeallocateMemory
 argument_list|(
 name|lldb
@@ -606,7 +606,7 @@ argument_list|,
 name|size_t
 name|buf_size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -615,7 +615,7 @@ decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Process Breakpoints
 comment|//----------------------------------------------------------------------
-name|Error
+name|Status
 name|EnableBreakpointSite
 argument_list|(
 name|BreakpointSite
@@ -624,7 +624,7 @@ name|bp_site
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DisableBreakpointSite
 argument_list|(
 name|BreakpointSite
@@ -636,7 +636,7 @@ decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Process Watchpoints
 comment|//----------------------------------------------------------------------
-name|Error
+name|Status
 name|EnableWatchpoint
 argument_list|(
 name|Watchpoint
@@ -650,7 +650,7 @@ name|true
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|DisableWatchpoint
 argument_list|(
 name|Watchpoint
@@ -664,7 +664,7 @@ name|true
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|GetWatchpointSupportInfo
 argument_list|(
 name|uint32_t
@@ -673,7 +673,7 @@ name|num
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|GetWatchpointSupportInfo
 argument_list|(
 name|uint32_t
@@ -705,7 +705,7 @@ return|return
 name|m_gdb_comm
 return|;
 block|}
-name|Error
+name|Status
 name|SendEventData
 argument_list|(
 specifier|const
@@ -800,7 +800,7 @@ name|LoadModules
 argument_list|()
 name|override
 expr_stmt|;
-name|Error
+name|Status
 name|GetFileLoadAddress
 argument_list|(
 specifier|const
@@ -840,7 +840,7 @@ argument|lldb::addr_t image_count
 argument_list|)
 name|override
 expr_stmt|;
-name|Error
+name|Status
 name|ConfigureStructuredData
 argument_list|(
 specifier|const
@@ -1255,7 +1255,7 @@ name|new_thread_list
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|EstablishConnectionIfNeeded
 parameter_list|(
 specifier|const
@@ -1264,7 +1264,7 @@ modifier|&
 name|process_info
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|LaunchAndConnectToDebugserver
 parameter_list|(
 specifier|const
@@ -1497,7 +1497,7 @@ modifier|&
 name|process_arch
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|ConnectToDebugserver
 argument_list|(
 name|llvm
@@ -1539,7 +1539,7 @@ name|arch
 parameter_list|)
 function_decl|;
 comment|// Query remote GDBServer for a detailed loaded library list
-name|Error
+name|Status
 name|GetLoadedModuleList
 parameter_list|(
 name|LoadedModuleInfoList
@@ -1560,7 +1560,7 @@ argument_list|,
 argument|bool value_is_offset
 argument_list|)
 expr_stmt|;
-name|Error
+name|Status
 name|UpdateAutomaticSignalFiltering
 argument_list|()
 name|override

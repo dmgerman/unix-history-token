@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -133,7 +133,7 @@ operator|~
 name|SyncService
 argument_list|()
 expr_stmt|;
-name|Error
+name|Status
 name|PullFile
 parameter_list|(
 specifier|const
@@ -147,7 +147,7 @@ modifier|&
 name|local_file
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|PushFile
 parameter_list|(
 specifier|const
@@ -161,7 +161,7 @@ modifier|&
 name|remote_file
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|Stat
 parameter_list|(
 specifier|const
@@ -202,7 +202,7 @@ operator|&&
 name|conn
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|SendSyncRequest
 parameter_list|(
 specifier|const
@@ -220,7 +220,7 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|ReadSyncHeader
 argument_list|(
 name|std
@@ -234,7 +234,7 @@ operator|&
 name|data_len
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|PullFileChunk
 argument_list|(
 name|std
@@ -251,7 +251,7 @@ operator|&
 name|eof
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|ReadAllBytes
 parameter_list|(
 name|void
@@ -262,7 +262,7 @@ name|size_t
 name|size
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|internalPullFile
 parameter_list|(
 specifier|const
@@ -276,7 +276,7 @@ modifier|&
 name|local_file
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|internalPushFile
 parameter_list|(
 specifier|const
@@ -290,7 +290,7 @@ modifier|&
 name|remote_file
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|internalStat
 parameter_list|(
 specifier|const
@@ -311,7 +311,7 @@ modifier|&
 name|mtime
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|executeCommand
 argument_list|(
 specifier|const
@@ -319,7 +319,7 @@ name|std
 operator|::
 name|function
 operator|<
-name|Error
+name|Status
 argument_list|()
 operator|>
 operator|&
@@ -337,7 +337,7 @@ expr_stmt|;
 block|}
 empty_stmt|;
 specifier|static
-name|Error
+name|Status
 name|CreateByDeviceID
 argument_list|(
 specifier|const
@@ -379,7 +379,7 @@ name|GetDeviceID
 argument_list|()
 specifier|const
 expr_stmt|;
-name|Error
+name|Status
 name|GetDevices
 parameter_list|(
 name|DeviceIDList
@@ -387,7 +387,7 @@ modifier|&
 name|device_list
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|SetPortForwarding
 parameter_list|(
 specifier|const
@@ -399,7 +399,7 @@ name|uint16_t
 name|remote_port
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|SetPortForwarding
 argument_list|(
 specifier|const
@@ -416,7 +416,7 @@ name|UnixSocketNamespace
 name|socket_namespace
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|DeletePortForwarding
 parameter_list|(
 specifier|const
@@ -424,7 +424,7 @@ name|uint16_t
 name|local_port
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|Shell
 argument_list|(
 specifier|const
@@ -446,7 +446,7 @@ operator|*
 name|output
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|ShellToFile
 argument_list|(
 specifier|const
@@ -475,18 +475,18 @@ name|SyncService
 operator|>
 name|GetSyncService
 argument_list|(
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
 expr_stmt|;
-name|Error
+name|Status
 name|SwitchDeviceTransport
 parameter_list|()
 function_decl|;
 name|private
 label|:
-name|Error
+name|Status
 name|Connect
 parameter_list|()
 function_decl|;
@@ -501,7 +501,7 @@ operator|&
 name|device_id
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|SendMessage
 argument_list|(
 specifier|const
@@ -518,7 +518,7 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|SendDeviceMessage
 argument_list|(
 specifier|const
@@ -529,7 +529,7 @@ operator|&
 name|packet
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|ReadMessage
 argument_list|(
 name|std
@@ -542,7 +542,7 @@ operator|&
 name|message
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|ReadMessageStream
 argument_list|(
 name|std
@@ -562,7 +562,7 @@ name|milliseconds
 name|timeout
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|GetResponseError
 parameter_list|(
 specifier|const
@@ -571,19 +571,19 @@ modifier|*
 name|response_id
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|ReadResponseStatus
 parameter_list|()
 function_decl|;
-name|Error
+name|Status
 name|Sync
 parameter_list|()
 function_decl|;
-name|Error
+name|Status
 name|StartSync
 parameter_list|()
 function_decl|;
-name|Error
+name|Status
 name|internalShell
 argument_list|(
 specifier|const
@@ -608,7 +608,7 @@ operator|&
 name|output_buf
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|ReadAllBytes
 parameter_list|(
 name|void

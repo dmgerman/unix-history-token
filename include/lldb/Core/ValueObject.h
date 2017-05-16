@@ -102,13 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/SharedCluster.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/SharedCluster.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -1406,7 +1406,7 @@ name|char
 operator|*
 name|value_str
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1459,7 +1459,7 @@ comment|//------------------------------------------------------------------
 comment|// The functions below should NOT be modified by subclasses
 comment|//------------------------------------------------------------------
 specifier|const
-name|Error
+name|Status
 operator|&
 name|GetError
 argument_list|()
@@ -1631,7 +1631,7 @@ name|virtual
 name|bool
 name|IsLogicalTrue
 argument_list|(
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1971,7 +1971,7 @@ operator|::
 name|ValueObjectSP
 name|Dereference
 argument_list|(
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1998,7 +1998,7 @@ operator|::
 name|ValueObjectSP
 name|AddressOf
 argument_list|(
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -2260,7 +2260,7 @@ name|ReadPointedString
 argument_list|(
 argument|lldb::DataBufferSP&buffer_sp
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|,
 argument|uint32_t max_length =
 literal|0
@@ -2291,7 +2291,7 @@ name|DataExtractor
 operator|&
 name|data
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -2304,7 +2304,7 @@ name|DataExtractor
 operator|&
 name|data
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -2911,7 +2911,7 @@ comment|// A data extractor that can be used to extract the value.
 name|Value
 name|m_value
 decl_stmt|;
-name|Error
+name|Status
 name|m_error
 decl_stmt|;
 comment|// An error object that can describe any errors that occur when
