@@ -10087,11 +10087,19 @@ comment|///    specified by the most significant bit in the corresponding elemen
 end_comment
 
 begin_comment
-comment|///    second 64-bit integer vector operand. To minimize caching, the data is
+comment|///    second 64-bit integer vector operand.
 end_comment
 
 begin_comment
-comment|///    flagged as non-temporal (unlikely to be used again soon).
+comment|///
+end_comment
+
+begin_comment
+comment|///    To minimize caching, the data is flagged as non-temporal
+end_comment
+
+begin_comment
+comment|///    (unlikely to be used again soon).
 end_comment
 
 begin_comment
@@ -11861,23 +11869,27 @@ comment|///    floating-point vector of [4 x float] into a 16-bit signed integer
 end_comment
 
 begin_comment
-comment|///    packs the results into a 64-bit integer vector of [4 x i16]. If the
+comment|///    packs the results into a 64-bit integer vector of [4 x i16].
 end_comment
 
 begin_comment
-comment|///    floating-point element is NaN or infinity, or if the floating-point
+comment|///
 end_comment
 
 begin_comment
-comment|///    element is greater than 0x7FFFFFFF or less than -0x8000, it is converted
+comment|///    If the floating-point element is NaN or infinity, or if the
 end_comment
 
 begin_comment
-comment|///    to 0x8000. Otherwise if the floating-point element is greater than
+comment|///    floating-point element is greater than 0x7FFFFFFF or less than -0x8000,
 end_comment
 
 begin_comment
-comment|///    0x7FFF, it is converted to 0x7FFF.
+comment|///    it is converted to 0x8000. Otherwise if the floating-point element is
+end_comment
+
+begin_comment
+comment|///    greater than 0x7FFF, it is converted to 0x7FFF.
 end_comment
 
 begin_comment
@@ -11983,23 +11995,27 @@ comment|///    packs the results into the lower 32 bits of a 64-bit integer vect
 end_comment
 
 begin_comment
-comment|///    [8 x i8]. The upper 32 bits of the vector are set to 0. If the
+comment|///    [8 x i8]. The upper 32 bits of the vector are set to 0.
 end_comment
 
 begin_comment
-comment|///    floating-point element is NaN or infinity, or if the floating-point
+comment|///
 end_comment
 
 begin_comment
-comment|///    element is greater than 0x7FFFFFFF or less than -0x80, it is converted
+comment|///    If the floating-point element is NaN or infinity, or if the
 end_comment
 
 begin_comment
-comment|///    to 0x80. Otherwise if the floating-point element is greater than 0x7F,
+comment|///    floating-point element is greater than 0x7FFFFFFF or less than -0x80, it
 end_comment
 
 begin_comment
-comment|///    it is converted to 0x7F.
+comment|///    is converted to 0x80. Otherwise if the floating-point element is greater
+end_comment
+
+begin_comment
+comment|///    than 0x7F, it is converted to 0x7F.
 end_comment
 
 begin_comment

@@ -6392,6 +6392,10 @@ comment|// CHECK_BDVER1_M32: #define __FMA4__ 1
 end_comment
 
 begin_comment
+comment|// CHECK_BDVER1_M32: #define __LWP__ 1
+end_comment
+
+begin_comment
 comment|// CHECK_BDVER1_M32: #define __LZCNT__ 1
 end_comment
 
@@ -6505,6 +6509,10 @@ end_comment
 
 begin_comment
 comment|// CHECK_BDVER1_M64: #define __FMA4__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BDVER1_M64: #define __LWP__ 1
 end_comment
 
 begin_comment
@@ -6644,6 +6652,10 @@ comment|// CHECK_BDVER2_M32: #define __FMA__ 1
 end_comment
 
 begin_comment
+comment|// CHECK_BDVER2_M32: #define __LWP__ 1
+end_comment
+
+begin_comment
 comment|// CHECK_BDVER2_M32: #define __LZCNT__ 1
 end_comment
 
@@ -6773,6 +6785,10 @@ end_comment
 
 begin_comment
 comment|// CHECK_BDVER2_M64: #define __FMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BDVER2_M64: #define __LWP__ 1
 end_comment
 
 begin_comment
@@ -6920,6 +6936,10 @@ comment|// CHECK_BDVER3_M32: #define __FSGSBASE__ 1
 end_comment
 
 begin_comment
+comment|// CHECK_BDVER3_M32: #define __LWP__ 1
+end_comment
+
+begin_comment
 comment|// CHECK_BDVER3_M32: #define __LZCNT__ 1
 end_comment
 
@@ -7057,6 +7077,10 @@ end_comment
 
 begin_comment
 comment|// CHECK_BDVER3_M64: #define __FSGSBASE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BDVER3_M64: #define __LWP__ 1
 end_comment
 
 begin_comment
@@ -7216,6 +7240,10 @@ comment|// CHECK_BDVER4_M32: #define __FSGSBASE__ 1
 end_comment
 
 begin_comment
+comment|// CHECK_BDVER4_M32: #define __LWP__ 1
+end_comment
+
+begin_comment
 comment|// CHECK_BDVER4_M32: #define __LZCNT__ 1
 end_comment
 
@@ -7357,6 +7385,10 @@ end_comment
 
 begin_comment
 comment|// CHECK_BDVER4_M64: #define __FSGSBASE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BDVER4_M64: #define __LWP__ 1
 end_comment
 
 begin_comment

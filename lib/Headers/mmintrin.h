@@ -2574,19 +2574,23 @@ comment|///    integer vector of [8 x i8] from the corresponding 8-bit unsigned 
 end_comment
 
 begin_comment
-comment|///    element of the first 64-bit integer vector of [8 x i8]. If an element of
+comment|///    element of the first 64-bit integer vector of [8 x i8].
 end_comment
 
 begin_comment
-comment|///    the first vector is less than the corresponding element of the second
+comment|///
 end_comment
 
 begin_comment
-comment|///    vector, the result is saturated to 0. The results are packed into a
+comment|///    If an element of the first vector is less than the corresponding element
 end_comment
 
 begin_comment
-comment|///    64-bit integer vector of [8 x i8].
+comment|///    of the second vector, the result is saturated to 0. The results are
+end_comment
+
+begin_comment
+comment|///    packed into a 64-bit integer vector of [8 x i8].
 end_comment
 
 begin_comment
@@ -2676,19 +2680,23 @@ comment|///    integer vector of [4 x i16] from the corresponding 16-bit unsigne
 end_comment
 
 begin_comment
-comment|///    integer element of the first 64-bit integer vector of [4 x i16]. If an
+comment|///    integer element of the first 64-bit integer vector of [4 x i16].
 end_comment
 
 begin_comment
-comment|///    element of the first vector is less than the corresponding element of the
+comment|///
 end_comment
 
 begin_comment
-comment|///    second vector, the result is saturated to 0. The results are packed into
+comment|///    If an element of the first vector is less than the corresponding element
 end_comment
 
 begin_comment
-comment|///    a 64-bit integer vector of [4 x i16].
+comment|///    of the second vector, the result is saturated to 0. The results are
+end_comment
+
+begin_comment
+comment|///    packed into a 64-bit integer vector of [4 x i16].
 end_comment
 
 begin_comment
@@ -2790,15 +2798,23 @@ comment|///    The lower 32 bits of these two sums are packed into a 64-bit inte
 end_comment
 
 begin_comment
-comment|///    vector of [2 x i32]. For example, bits [15:0] of both parameters are
+comment|///    vector of [2 x i32].
 end_comment
 
 begin_comment
-comment|///    multiplied, bits [31:16] of both parameters are multiplied, and the sum
+comment|///
 end_comment
 
 begin_comment
-comment|///    of both results is written to bits [31:0] of the result.
+comment|///    For example, bits [15:0] of both parameters are multiplied, bits [31:16]
+end_comment
+
+begin_comment
+comment|///    of both parameters are multiplied, and the sum of both results is written
+end_comment
+
+begin_comment
+comment|///    to bits [31:0] of the result.
 end_comment
 
 begin_comment
@@ -3638,19 +3654,23 @@ comment|///    which is a 64-bit integer vector of [4 x i16], by the number of b
 end_comment
 
 begin_comment
-comment|///    specified by the second parameter, which is a 64-bit integer. High-order
+comment|///    specified by the second parameter, which is a 64-bit integer.
 end_comment
 
 begin_comment
-comment|///    bits are filled with the sign bit of the initial value of each 16-bit
+comment|///
 end_comment
 
 begin_comment
-comment|///    element. The 16-bit results are packed into a 64-bit integer vector of
+comment|///    High-order bits are filled with the sign bit of the initial value of each
 end_comment
 
 begin_comment
-comment|///    [4 x i16].
+comment|///    16-bit element. The 16-bit results are packed into a 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [4 x i16].
 end_comment
 
 begin_comment
@@ -3734,6 +3754,10 @@ end_comment
 
 begin_comment
 comment|///    of [4 x i16] by the number of bits specified by a 32-bit integer.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -3832,19 +3856,23 @@ comment|///    which is a 64-bit integer vector of [2 x i32], by the number of b
 end_comment
 
 begin_comment
-comment|///    specified by the second parameter, which is a 64-bit integer. High-order
+comment|///    specified by the second parameter, which is a 64-bit integer.
 end_comment
 
 begin_comment
-comment|///    bits are filled with the sign bit of the initial value of each 32-bit
+comment|///
 end_comment
 
 begin_comment
-comment|///    element. The 32-bit results are packed into a 64-bit integer vector of
+comment|///    High-order bits are filled with the sign bit of the initial value of each
 end_comment
 
 begin_comment
-comment|///    [2 x i32].
+comment|///    32-bit element. The 32-bit results are packed into a 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [2 x i32].
 end_comment
 
 begin_comment
@@ -3928,6 +3956,10 @@ end_comment
 
 begin_comment
 comment|///    of [2 x i32] by the number of bits specified by a 32-bit integer.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -4026,15 +4058,19 @@ comment|///    which is a 64-bit integer vector of [4 x i16], by the number of b
 end_comment
 
 begin_comment
-comment|///    specified by the second parameter, which is a 64-bit integer. High-order
+comment|///    specified by the second parameter, which is a 64-bit integer.
 end_comment
 
 begin_comment
-comment|///    bits are cleared. The 16-bit results are packed into a 64-bit integer
+comment|///
 end_comment
 
 begin_comment
-comment|///    vector of [4 x i16].
+comment|///    High-order bits are cleared. The 16-bit results are packed into a 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [4 x i16].
 end_comment
 
 begin_comment
@@ -4118,6 +4154,10 @@ end_comment
 
 begin_comment
 comment|///    of [4 x i16] by the number of bits specified by a 32-bit integer.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -4212,15 +4252,19 @@ comment|///    which is a 64-bit integer vector of [2 x i32], by the number of b
 end_comment
 
 begin_comment
-comment|///    specified by the second parameter, which is a 64-bit integer. High-order
+comment|///    specified by the second parameter, which is a 64-bit integer.
 end_comment
 
 begin_comment
-comment|///    bits are cleared. The 32-bit results are packed into a 64-bit integer
+comment|///
 end_comment
 
 begin_comment
-comment|///    vector of [2 x i32].
+comment|///    High-order bits are cleared. The 32-bit results are packed into a 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [2 x i32].
 end_comment
 
 begin_comment
@@ -4304,6 +4348,10 @@ end_comment
 
 begin_comment
 comment|///    of [2 x i32] by the number of bits specified by a 32-bit integer.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -4394,11 +4442,15 @@ comment|/// \brief Right-shifts the first 64-bit integer parameter by the number
 end_comment
 
 begin_comment
-comment|///    specified by the second 64-bit integer parameter. High-order bits are
+comment|///    specified by the second 64-bit integer parameter.
 end_comment
 
 begin_comment
-comment|///    cleared.
+comment|///
+end_comment
+
+begin_comment
+comment|///    High-order bits are cleared.
 end_comment
 
 begin_comment
@@ -4481,7 +4533,15 @@ comment|///    number of bits specified by the second parameter, which is a 32-b
 end_comment
 
 begin_comment
-comment|///    integer. High-order bits are cleared.
+comment|///    integer.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    High-order bits are cleared.
 end_comment
 
 begin_comment
@@ -4892,11 +4952,15 @@ comment|///    [8 x i8] to determine if the element of the first vector is equal
 end_comment
 
 begin_comment
-comment|///    corresponding element of the second vector. The comparison yields 0 for
+comment|///    corresponding element of the second vector.
 end_comment
 
 begin_comment
-comment|///    false, 0xFF for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 0xFF for true.
 end_comment
 
 begin_comment
@@ -4986,11 +5050,15 @@ comment|///    [4 x i16] to determine if the element of the first vector is equa
 end_comment
 
 begin_comment
-comment|///    corresponding element of the second vector. The comparison yields 0 for
+comment|///    corresponding element of the second vector.
 end_comment
 
 begin_comment
-comment|///    false, 0xFFFF for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 0xFFFF for true.
 end_comment
 
 begin_comment
@@ -5080,11 +5148,15 @@ comment|///    [2 x i32] to determine if the element of the first vector is equa
 end_comment
 
 begin_comment
-comment|///    corresponding element of the second vector. The comparison yields 0 for
+comment|///    corresponding element of the second vector.
 end_comment
 
 begin_comment
-comment|///    false, 0xFFFFFFFF for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 0xFFFFFFFF for true.
 end_comment
 
 begin_comment
@@ -5174,11 +5246,15 @@ comment|///    [8 x i8] to determine if the element of the first vector is great
 end_comment
 
 begin_comment
-comment|///    the corresponding element of the second vector. The comparison yields 0
+comment|///    the corresponding element of the second vector.
 end_comment
 
 begin_comment
-comment|///    for false, 0xFF for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 0xFF for true.
 end_comment
 
 begin_comment
@@ -5268,11 +5344,15 @@ comment|///    [4 x i16] to determine if the element of the first vector is grea
 end_comment
 
 begin_comment
-comment|///    the corresponding element of the second vector. The comparison yields 0
+comment|///    the corresponding element of the second vector.
 end_comment
 
 begin_comment
-comment|///    for false, 0xFFFF for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 0xFFFF for true.
 end_comment
 
 begin_comment
@@ -5362,11 +5442,15 @@ comment|///    [2 x i32] to determine if the element of the first vector is grea
 end_comment
 
 begin_comment
-comment|///    the corresponding element of the second vector. The comparison yields 0
+comment|///    the corresponding element of the second vector.
 end_comment
 
 begin_comment
-comment|///    for false, 0xFFFFFFFF for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 0xFFFFFFFF for true.
 end_comment
 
 begin_comment

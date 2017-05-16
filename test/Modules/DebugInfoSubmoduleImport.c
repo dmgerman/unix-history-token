@@ -15,6 +15,26 @@ begin_comment
 comment|// RUN:     %s -emit-llvm -debugger-tuning=lldb -o - | FileCheck %s
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fmodules -fmodule-format=obj -debug-info-kind=limited -dwarf-ext-refs \
+end_comment
+
+begin_comment
+comment|// RUN:     -fimplicit-module-maps -x c -fmodules-cache-path=%t -I %S/Inputs \
+end_comment
+
+begin_comment
+comment|// RUN:     -fmodules-local-submodule-visibility \
+end_comment
+
+begin_comment
+comment|// RUN:     %s -emit-llvm -debugger-tuning=lldb -o - | FileCheck %s
+end_comment
+
 begin_include
 include|#
 directive|include

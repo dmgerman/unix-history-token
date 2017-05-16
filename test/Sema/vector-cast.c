@@ -441,17 +441,16 @@ block|,
 literal|1.0
 block|}
 decl_stmt|;
-comment|// FIXME: These diagnostics are inaccurate: should complain that 'double' to vector 'float2' involves truncation
 name|f2
 operator|+=
 name|d
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('float2' (vector of 2 'float' values) and 'double')}}
+comment|// expected-error {{cannot convert between scalar type 'double' and vector type 'float2' (vector of 2 'float' values) as implicit conversion would cause truncation}}
 name|d
 operator|+=
 name|f2
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size}}
+comment|// expected-error {{assigning to 'double' from incompatible type 'float2' (vector of 2 'float' values)}}
 name|a
 operator|=
 literal|3.0

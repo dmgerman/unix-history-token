@@ -2559,33 +2559,6 @@ name|MIChainHead
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|DeserializedMacroInfoChain
-block|{
-name|MacroInfo
-name|MI
-decl_stmt|;
-name|unsigned
-name|OwningModuleID
-decl_stmt|;
-comment|// MUST be immediately after the MacroInfo object
-comment|// so it can be accessed by MacroInfo::getOwningModuleID().
-name|DeserializedMacroInfoChain
-modifier|*
-name|Next
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-name|DeserializedMacroInfoChain
-modifier|*
-name|DeserialMIChainHead
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|void
 name|updateOutOfDateIdentifier
@@ -7836,24 +7809,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Allocate a new MacroInfo object loaded from an AST file.
-end_comment
-
-begin_function_decl
-name|MacroInfo
-modifier|*
-name|AllocateDeserializedMacroInfo
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|,
-name|unsigned
-name|SubModuleID
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Turn the specified lexer token into a fully checked and spelled
 end_comment
 
@@ -8365,18 +8320,6 @@ name|ModuleMacroInfo
 modifier|&
 name|Info
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Allocate a new MacroInfo object.
-end_comment
-
-begin_function_decl
-name|MacroInfo
-modifier|*
-name|AllocateMacroInfo
-parameter_list|()
 function_decl|;
 end_function_decl
 

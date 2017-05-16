@@ -3726,6 +3726,26 @@ argument_list|()
 operator|==
 name|SC_None
 condition|)
+block|{
+comment|// OpenCL v1.2 s6.5.3: The __constant or constant address space name is
+comment|// used to describe variables allocated in global memory and which are
+comment|// accessed inside a kernel(s) as read-only variables. As such, variables
+comment|// in constant address space cannot have local storage.
+if|if
+condition|(
+name|getType
+argument_list|()
+operator|.
+name|getAddressSpace
+argument_list|()
+operator|==
+name|LangAS
+operator|::
+name|opencl_constant
+condition|)
+return|return
+name|false
+return|;
 comment|// Second check is for C++11 [dcl.stc]p4.
 return|return
 operator|!
@@ -3737,6 +3757,7 @@ argument_list|()
 operator|==
 name|TSCS_unspecified
 return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -9692,7 +9713,7 @@ name|VLAType
 parameter_list|)
 function_decl|;
 comment|/// getParent - Returns the parent of this field declaration, which
-comment|/// is the struct in which this method is defined.
+comment|/// is the struct in which this field is defined.
 specifier|const
 name|RecordDecl
 operator|*

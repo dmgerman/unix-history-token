@@ -1266,56 +1266,52 @@ name|sc
 operator|+
 name|sc_scalar
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|sc
 operator|+
 name|uc_scalar
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
+comment|// expected-error {{cannot convert between scalar type 'unsigned char' and vector type '__vector signed char' (vector of 16 'signed char' values) as implicit conversion would cause truncation}}
 name|sc
 operator|=
 name|sc_scalar
 operator|+
 name|sc
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|uc_scalar
 operator|+
 name|sc
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
+comment|// expected-error {{cannot convert between scalar type 'unsigned char' and vector type '__vector signed char' (vector of 16 'signed char' values) as implicit conversion would cause truncation}}
 name|uc
 operator|=
 name|uc
 operator|+
 name|sc_scalar
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
+comment|// expected-error {{implicit conversion changes signedness: 'signed char' to '__vector unsigned char' (vector of 16 'unsigned char' values)}}
 name|uc
 operator|=
 name|uc
 operator|+
 name|uc_scalar
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|sc_scalar
 operator|+
 name|uc
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
+comment|// expected-error {{implicit conversion changes signedness: 'signed char' to '__vector unsigned char' (vector of 16 'unsigned char' values)}}
 name|uc
 operator|=
 name|uc_scalar
 operator|+
 name|uc
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
 name|ss
 operator|=
 name|ss
@@ -1458,22 +1454,20 @@ name|sc
 operator|+=
 name|sc_scalar
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
 name|sc
 operator|+=
 name|uc_scalar
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
+comment|// expected-error {{cannot convert between scalar type 'unsigned char' and vector type '__vector signed char' (vector of 16 'signed char' values) as implicit conversion would cause truncation}}
 name|uc
 operator|+=
 name|sc_scalar
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
+comment|// expected-error {{implicit conversion changes signedness: 'signed char' to '__vector unsigned char' (vector of 16 'unsigned char' values)}}
 name|uc
 operator|+=
 name|uc_scalar
 expr_stmt|;
-comment|// expected-error {{cannot convert}}
 name|ss
 operator|+=
 name|ss2

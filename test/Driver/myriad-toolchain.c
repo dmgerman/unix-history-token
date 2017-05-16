@@ -184,7 +184,11 @@ comment|// RUN: -fno-inline-functions-called-once -Os -Wall -MF dep.d -fno-split
 end_comment
 
 begin_comment
-comment|// RUN: -ffunction-sections 2>&1 | FileCheck %s -check-prefix=PASSTHRU_OPTIONS
+comment|// RUN: -ffunction-sections -Xclang -xclangflag -mllvm -llvm-flag 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=PASSTHRU_OPTIONS
 end_comment
 
 begin_comment
@@ -193,6 +197,10 @@ end_comment
 
 begin_comment
 comment|// PASSTHRU_OPTIONS: "-Os" "-Wall" "-MF" "dep.d" "-ffunction-sections"
+end_comment
+
+begin_comment
+comment|// PASSTHRU_OPTIONS: "-Xclang" "-xclangflag" "-mllvm" "-llvm-flag"
 end_comment
 
 begin_comment

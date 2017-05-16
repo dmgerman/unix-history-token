@@ -29,7 +29,7 @@ block|{
 name|function
 argument_list|()
 expr_stmt|;
-comment|// CHECK: fix-it:{{.*}}:{[[@LINE-1]]:3-[[@LINE-1]]:3}:"if (__builtin_available(macos 10.12, *)) {\n      "
+comment|// CHECK: fix-it:{{.*}}:{[[@LINE-1]]:3-[[@LINE-1]]:3}:"if (__builtin_available(macOS 10.12, *)) {\n      "
 comment|// CHECK-NEXT: fix-it:{{.*}}:{[[@LINE-2]]:14-[[@LINE-2]]:14}:"\n  } else {\n      // Fallback on earlier versions\n  }"
 block|}
 end_function

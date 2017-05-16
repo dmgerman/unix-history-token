@@ -2311,7 +2311,15 @@ comment|///    and returns it in the elements of the 128-bit result vector of
 end_comment
 
 begin_comment
-comment|///    [4 x float]. The immediate integer operand controls which input elements
+comment|///    [4 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The immediate integer operand controls which input elements
 end_comment
 
 begin_comment
@@ -2445,7 +2453,15 @@ comment|///    and returns it in the elements of the 128-bit result vector of
 end_comment
 
 begin_comment
-comment|///    [2 x double]. The immediate integer operand controls which input
+comment|///    [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The immediate integer operand controls which input
 end_comment
 
 begin_comment

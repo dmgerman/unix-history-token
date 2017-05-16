@@ -91,8 +91,7 @@ name|TargetOptions
 block|{
 name|public
 label|:
-comment|/// If given, the name of the target triple to compile for. If not given the
-comment|/// target will be selected to match the host.
+comment|/// The name of the target triple to compile for.
 name|std
 operator|::
 name|string

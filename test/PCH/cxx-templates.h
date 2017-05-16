@@ -1760,6 +1760,22 @@ name|some
 argument_list|)
 block|;   }
 block|}
+name|namespace
+name|MemberSpecializationLocation
+block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|A
+block|{
+specifier|static
+name|int
+name|n
+block|; }
+block|; }
 end_decl_stmt
 
 end_unit

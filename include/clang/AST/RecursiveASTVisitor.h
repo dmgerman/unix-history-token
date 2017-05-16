@@ -6676,7 +6676,7 @@ argument|LambdaExpr
 argument_list|,
 argument|{   for (unsigned I =
 literal|0
-argument|, N = S->capture_size(); I != N; ++I) {     const LambdaCapture *C = S->capture_begin() + I;     if (C->isExplicit() || getDerived().shouldVisitImplicitCode()) {       TRY_TO(TraverseLambdaCapture(S, C, S->capture_init_begin()[I]));     }   }    TypeLoc TL = S->getCallOperator()->getTypeSourceInfo()->getTypeLoc();   FunctionProtoTypeLoc Proto = TL.castAs<FunctionProtoTypeLoc>();    if (S->hasExplicitParameters()&& S->hasExplicitResultType()) {
+argument|, N = S->capture_size(); I != N; ++I) {     const LambdaCapture *C = S->capture_begin() + I;     if (C->isExplicit() || getDerived().shouldVisitImplicitCode()) {       TRY_TO(TraverseLambdaCapture(S, C, S->capture_init_begin()[I]));     }   }    TypeLoc TL = S->getCallOperator()->getTypeSourceInfo()->getTypeLoc();   FunctionProtoTypeLoc Proto = TL.getAsAdjusted<FunctionProtoTypeLoc>();    if (S->hasExplicitParameters()&& S->hasExplicitResultType()) {
 comment|// Visit the whole type.
 argument|TRY_TO(TraverseTypeLoc(TL));   } else {     if (S->hasExplicitParameters()) {
 comment|// Visit parameters.

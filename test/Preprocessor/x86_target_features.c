@@ -864,6 +864,22 @@ comment|// AESNOSSE2-NOT: #define __SSE3__ 1
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=pentiumpro -mlwp -x c -E -dM -o - %s | FileCheck -match-full-lines --check-prefix=LWP %s
+end_comment
+
+begin_comment
+comment|// LWP: #define __LWP__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=bdver1 -mno-lwp -x c -E -dM -o - %s | FileCheck -match-full-lines --check-prefix=NOLWP %s
+end_comment
+
+begin_comment
+comment|// NOLWP-NOT: #define __LWP__ 1
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target i386-unknown-unknown -march=pentiumpro -msha -x c -E -dM -o - %s | FileCheck -match-full-lines --check-prefix=SHA %s
 end_comment
 

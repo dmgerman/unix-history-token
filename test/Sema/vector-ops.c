@@ -95,7 +95,7 @@ operator|==
 name|v2sa
 operator|)
 expr_stmt|;
-comment|// expected-warning{{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-warning{{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values}}
 name|v2sa
 operator|=
 operator|(
@@ -111,7 +111,7 @@ index|[
 name|v2ua
 index|]
 decl_stmt|;
-comment|// expected-error{{size of array has non-integer type 'v2u' (vector of 2 'unsigned int' values)}}
+comment|// expected-error{{size of array has non-integer type 'v2u' (vector of 2 'unsigned int' values}}
 name|int
 name|array2
 index|[
@@ -169,200 +169,210 @@ name|v2ua
 operator|&&
 name|v2ua
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2u'}}
 name|v2ua
 operator|=
 name|v2ua
 operator|||
 name|v2ua
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2u'}}
 name|v2ua
 operator|=
 name|v2sa
 operator|&&
 name|v2ua
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2u' (vector of 2 'unsigned int' values)}}
 name|v2ua
 operator|=
 name|v2sa
 operator|||
 name|v2ua
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2u' (vector of 2 'unsigned int' values)}}
 name|v2ua
 operator|=
 name|v2ua
 operator|&&
 name|v2fa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2ua
 operator|=
 name|v2ua
 operator|||
 name|v2fa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2ua
 operator|=
 name|v2sa
 operator|&&
 name|v2fa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2ua
 operator|=
 name|v2sa
 operator|||
 name|v2fa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2sa
 operator|=
 name|v2sa
 operator|&&
 name|v2sa
 expr_stmt|;
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2s'}}
 name|v2sa
 operator|=
 name|v2sa
 operator|||
 name|v2sa
 expr_stmt|;
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2s'}}
 name|v2sa
 operator|=
 name|v2ua
 operator|&&
 name|v2ua
 expr_stmt|;
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2u'}}
 name|v2sa
 operator|=
 name|v2ua
 operator|||
 name|v2ua
 expr_stmt|;
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2u'}}
 name|v2sa
 operator|=
 name|v2sa
 operator|&&
 name|v2ua
 expr_stmt|;
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2u' (vector of 2 'unsigned int' values)}}
 name|v2sa
 operator|=
 name|v2sa
 operator|||
 name|v2ua
 expr_stmt|;
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2u' (vector of 2 'unsigned int' values)}}
 name|v2sa
 operator|=
 name|v2sa
 operator|&&
 name|v2fa
 expr_stmt|;
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2sa
 operator|=
 name|v2sa
 operator|||
 name|v2fa
 expr_stmt|;
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2sa
 operator|=
 name|v2ua
 operator|&&
 name|v2fa
 expr_stmt|;
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2sa
 operator|=
 name|v2ua
 operator|||
 name|v2fa
 expr_stmt|;
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2fa
 operator|=
 name|v2fa
 operator|&&
 name|v2fa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2f' (vector of 2 'float' values) and 'v2f'}}
 name|v2fa
 operator|=
 name|v2fa
 operator|||
 name|v2fa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2f' (vector of 2 'float' values) and 'v2f'}}
 name|v2fa
 operator|=
 name|v2sa
 operator|&&
 name|v2fa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2fa
 operator|=
 name|v2sa
 operator|||
 name|v2fa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2fa
 operator|=
 name|v2ua
 operator|&&
 name|v2fa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2fa
 operator|=
 name|v2ua
 operator|||
 name|v2fa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2f' (vector of 2 'float' values)}}
 name|v2fa
 operator|=
 name|v2ua
 operator|&&
 name|v2ua
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2u'}}
 name|v2fa
 operator|=
 name|v2ua
 operator|||
 name|v2ua
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2u' (vector of 2 'unsigned int' values) and 'v2u'}}
 name|v2fa
 operator|=
 name|v2sa
 operator|&&
 name|v2sa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2s'}}
 name|v2fa
 operator|=
 name|v2sa
 operator|||
 name|v2sa
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2s'}}
 name|v2fa
 operator|=
 name|v2sa
 operator|&&
 name|v2ua
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2u' (vector of 2 'unsigned int' values)}}
 name|v2fa
 operator|=
 name|v2sa
 operator|||
 name|v2ua
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from '__attribute__((__vector_size__(2 * sizeof(int)))) int' (vector of 2 'int' values)}}
+comment|// expected-error {{logical expression with vector types 'v2s' (vector of 2 'int' values) and 'v2u' (vector of 2 'unsigned int' values)}}
 block|}
 end_function
 
@@ -389,84 +399,84 @@ name|v2ua
 operator|&&
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'unsigned int')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'unsigned int' is only supported in C++}}
 name|v2ua
 operator|=
 name|v2ua
 operator|||
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'unsigned int')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'unsigned int' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2sa
 operator|&&
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'unsigned int')}}
+comment|// expected-error {{cannot convert between scalar type 'unsigned int' and vector type 'v2s' (vector of 2 'int' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'unsigned int')}}
 name|v2sa
 operator|=
 name|v2sa
 operator|||
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'unsigned int')}}
+comment|// expected-error {{cannot convert between scalar type 'unsigned int' and vector type 'v2s' (vector of 2 'int' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'unsigned int')}}
 name|v2ua
 operator|=
 name|v2sa
 operator|&&
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'unsigned int')}}
+comment|// expected-error {{cannot convert between scalar type 'unsigned int' and vector type 'v2s' (vector of 2 'int' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'unsigned int')}}
 name|v2ua
 operator|=
 name|v2sa
 operator|||
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'unsigned int')}}
+comment|// expected-error {{cannot convert between scalar type 'unsigned int' and vector type 'v2s' (vector of 2 'int' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'unsigned int')}}
 name|v2sa
 operator|=
 name|v2ua
 operator|&&
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'unsigned int')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'unsigned int' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2ua
 operator|||
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'unsigned int')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'unsigned int' is only supported in C++}}
 name|v2ua
 operator|=
 name|v2fa
 operator|&&
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'unsigned int')}}
+comment|// expected-error {{cannot convert between scalar type 'unsigned int' and vector type 'v2f' (vector of 2 'float' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'unsigned int')}}
 name|v2ua
 operator|=
 name|v2fa
 operator|||
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'unsigned int')}}
+comment|// expected-error {{cannot convert between scalar type 'unsigned int' and vector type 'v2f' (vector of 2 'float' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'unsigned int')}}
 name|v2sa
 operator|=
 name|v2fa
 operator|&&
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'unsigned int')}}
+comment|// expected-error {{cannot convert between scalar type 'unsigned int' and vector type 'v2f' (vector of 2 'float' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'unsigned int')}}
 name|v2sa
 operator|=
 name|v2fa
 operator|||
 name|u1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'unsigned int')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'unsigned int')}}
+comment|// expected-error {{cannot convert between scalar type 'unsigned int' and vector type 'v2f' (vector of 2 'float' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'unsigned int')}}
 name|int
 name|s1
 decl_stmt|;
@@ -476,84 +486,84 @@ name|v2ua
 operator|&&
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'int')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'int' is only supported in C++}}
 name|v2ua
 operator|=
 name|v2ua
 operator|||
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'int')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'int' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2sa
 operator|&&
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'int')}}
+comment|// expected-error {{logical expression with vector type 'v2s' (vector of 2 'int' values) and non-vector type 'int' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2sa
 operator|||
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'int')}}
+comment|// expected-error {{logical expression with vector type 'v2s' (vector of 2 'int' values) and non-vector type 'int' is only supported in C++}}
 name|v2ua
 operator|=
 name|v2sa
 operator|&&
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'int')}}
+comment|// expected-error {{logical expression with vector type 'v2s' (vector of 2 'int' values) and non-vector type 'int' is only supported in C++}}
 name|v2ua
 operator|=
 name|v2sa
 operator|||
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'int')}}
+comment|// expected-error {{logical expression with vector type 'v2s' (vector of 2 'int' values) and non-vector type 'int' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2ua
 operator|&&
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'int')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'int' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2ua
 operator|||
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'int')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'int' is only supported in C++}}
 name|v2ua
 operator|=
 name|v2fa
 operator|&&
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'int')}}
+comment|// expected-error {{cannot convert between scalar type 'int' and vector type 'v2f' (vector of 2 'float' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'int'}}
 name|v2ua
 operator|=
 name|v2fa
 operator|||
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'int')}}
+comment|// expected-error {{cannot convert between scalar type 'int' and vector type 'v2f' (vector of 2 'float' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'int'}}
 name|v2sa
 operator|=
 name|v2fa
 operator|&&
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'int')}}
+comment|// expected-error {{cannot convert between scalar type 'int' and vector type 'v2f' (vector of 2 'float' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'int'}}
 name|v2sa
 operator|=
 name|v2fa
 operator|||
 name|s1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'int')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'int')}}
+comment|// expected-error {{cannot convert between scalar type 'int' and vector type 'v2f' (vector of 2 'float' values) as implicit conversion would cause truncation}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'int'}}
 name|float
 name|f1
 decl_stmt|;
@@ -563,84 +573,84 @@ name|v2ua
 operator|&&
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'float' is only supported in C++}}
 name|v2ua
 operator|=
 name|v2ua
 operator|||
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'float' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2sa
 operator|&&
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2s' (vector of 2 'int' values) and non-vector type 'float' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2sa
 operator|||
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2s' (vector of 2 'int' values) and non-vector type 'float' is only supported in C++}}
 name|v2ua
 operator|=
 name|v2sa
 operator|&&
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2s' (vector of 2 'int' values) and non-vector type 'float' is only supported in C++}}
 name|v2ua
 operator|=
 name|v2sa
 operator|||
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2s' (vector of 2 'int' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2s' (vector of 2 'int' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2s' (vector of 2 'int' values) and non-vector type 'float' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2ua
 operator|&&
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'float' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2ua
 operator|||
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2u' (vector of 2 'unsigned int' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2u' (vector of 2 'unsigned int' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2u' (vector of 2 'unsigned int' values) and non-vector type 'float' is only supported in C++}}
 name|v2ua
 operator|=
 name|v2fa
 operator|&&
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2f' (vector of 2 'float' values) and non-vector type 'float' is only supported in C++}}
 name|v2ua
 operator|=
 name|v2fa
 operator|||
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2f' (vector of 2 'float' values) and non-vector type 'float' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2fa
 operator|&&
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2f' (vector of 2 'float' values) and non-vector type 'float' is only supported in C++}}
 name|v2sa
 operator|=
 name|v2fa
 operator|||
 name|f1
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size ('v2f' (vector of 2 'float' values) and 'float')}} expected-error {{invalid operands to binary expression ('v2f' (vector of 2 'float' values) and 'float')}}
+comment|// expected-error {{logical expression with vector type 'v2f' (vector of 2 'float' values) and non-vector type 'float' is only supported in C++}}
 block|}
 end_function
 

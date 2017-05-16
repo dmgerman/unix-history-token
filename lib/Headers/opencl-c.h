@@ -174676,6 +174676,14 @@ begin_comment
 comment|// OpenCL Extension v2.0 s9.18 - Mipmaps
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__OPENCL_C_VERSION__
+operator|>=
+name|CL_VERSION_2_0
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -175862,6 +175870,15 @@ end_endif
 
 begin_comment
 comment|//cl_khr_mipmap_image
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|//__OPENCL_C_VERSION__>= CL_VERSION_2_0
 end_comment
 
 begin_comment
@@ -177022,6 +177039,14 @@ begin_comment
 comment|//cl_khr_gl_msaa_sharing
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__OPENCL_C_VERSION__
+operator|>=
+name|CL_VERSION_2_0
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -178208,6 +178233,15 @@ end_endif
 
 begin_comment
 comment|//cl_khr_mipmap_image
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|//__OPENCL_C_VERSION__>= CL_VERSION_2_0
 end_comment
 
 begin_comment
@@ -178728,6 +178762,14 @@ begin_comment
 comment|// OpenCL Extension v2.0 s9.18 - Mipmaps
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__OPENCL_C_VERSION__
+operator|>=
+name|CL_VERSION_2_0
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -179109,6 +179151,15 @@ end_endif
 
 begin_comment
 comment|//cl_khr_mipmap_image
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|//__OPENCL_C_VERSION__>= CL_VERSION_2_0
 end_comment
 
 begin_comment
@@ -179647,6 +179698,14 @@ begin_comment
 comment|//cl_khr_depth_images
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__OPENCL_C_VERSION__
+operator|>=
+name|CL_VERSION_2_0
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -180028,6 +180087,15 @@ end_endif
 
 begin_comment
 comment|//cl_khr_mipmap_image
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|//__OPENCL_C_VERSION__>= CL_VERSION_2_0
 end_comment
 
 begin_comment
@@ -181356,6 +181424,14 @@ begin_comment
 comment|// OpenCL Extension v2.0 s9.18 - Mipmaps
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__OPENCL_C_VERSION__
+operator|>=
+name|CL_VERSION_2_0
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -181449,14 +181525,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__OPENCL_C_VERSION__
-operator|>=
-name|CL_VERSION_2_0
-end_if
-
 begin_function_decl
 name|int
 name|__ovld
@@ -181493,15 +181561,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|//__OPENCL_C_VERSION__>= CL_VERSION_2_0
-end_comment
-
 begin_function_decl
 name|int
 name|__ovld
@@ -181598,14 +181657,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__OPENCL_C_VERSION__
-operator|>=
-name|CL_VERSION_2_0
-end_if
-
 begin_function_decl
 name|int
 name|__ovld
@@ -181653,15 +181704,6 @@ name|image
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|//__OPENCL_C_VERSION__>= CL_VERSION_2_0
-end_comment
 
 begin_endif
 endif|#
@@ -181670,6 +181712,15 @@ end_endif
 
 begin_comment
 comment|//cl_khr_mipmap_image
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|//__OPENCL_C_VERSION__>= CL_VERSION_2_0
 end_comment
 
 begin_comment

@@ -33,12 +33,12 @@ name|y
 decl_stmt|,
 name|z
 decl_stmt|;
-comment|// RECOVER: uadd.with.overflow.i32
-comment|// RECOVER: ubsan_handle_add_overflow(
+comment|// RECOVER: uadd.with.overflow.i32{{.*}}, !nosanitize
+comment|// RECOVER: ubsan_handle_add_overflow({{.*}}, !nosanitize
 comment|// RECOVER-NOT: unreachable
-comment|// ABORT: uadd.with.overflow.i32
-comment|// ABORT: ubsan_handle_add_overflow_abort(
-comment|// ABORT: unreachable
+comment|// ABORT: uadd.with.overflow.i32{{.*}}, !nosanitize
+comment|// ABORT: ubsan_handle_add_overflow_abort({{.*}}, !nosanitize
+comment|// ABORT: unreachable{{.*}}, !nosanitize
 name|x
 operator|=
 name|y
