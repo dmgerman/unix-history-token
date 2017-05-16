@@ -197,6 +197,9 @@ block|;
 name|unsigned
 name|SectionIndex
 block|;
+name|unsigned
+name|SortRank
+block|;
 name|uint32_t
 name|getPhdrFlags
 argument_list|()

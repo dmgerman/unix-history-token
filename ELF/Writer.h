@@ -117,20 +117,15 @@ name|void
 name|markLive
 argument_list|()
 expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|bool
 name|isRelroSection
-argument_list|(
+parameter_list|(
 specifier|const
 name|OutputSection
-operator|*
+modifier|*
 name|Sec
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|// This describes a program header entry.
 comment|// Each contains type, access flags and range of output sections that will be
 comment|// placed in it.
