@@ -122,7 +122,7 @@ begin_define
 define|#
 directive|define
 name|NFSREAD_MAX_SIZE
-value|4096
+value|16384
 end_define
 
 begin_comment
