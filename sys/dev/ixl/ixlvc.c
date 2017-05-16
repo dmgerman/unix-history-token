@@ -625,18 +625,31 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Unable to send opcode %d to PF, "
-literal|"error %d, aq status %d\n"
+literal|"Unable to send opcode %s to PF, "
+literal|"status %s, aq error %s\n"
 argument_list|,
+name|ixl_vc_opcode_str
+argument_list|(
 name|op
+argument_list|)
+argument_list|,
+name|i40e_stat_str
+argument_list|(
+name|hw
 argument_list|,
 name|err
+argument_list|)
+argument_list|,
+name|i40e_aq_str
+argument_list|(
+name|hw
 argument_list|,
 name|hw
 operator|->
 name|aq
 operator|.
 name|asq_last_status
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3838,7 +3851,7 @@ name|hena
 operator|.
 name|hena
 operator|=
-name|IXL_DEFAULT_RSS_HENA
+name|IXL_DEFAULT_RSS_HENA_X722
 expr_stmt|;
 name|ixlv_send_pf_msg
 argument_list|(
@@ -4251,13 +4264,24 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s: AQ returned error %d to our request %d!\n"
+literal|"%s: AQ returned error %s to our request %s!\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|v_retval
+name|i40e_stat_str
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|hw
 argument_list|,
+name|v_retval
+argument_list|)
+argument_list|,
+name|ixl_vc_opcode_str
+argument_list|(
 name|v_opcode
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4578,11 +4602,14 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s: Received unexpected message %d from PF.\n"
+literal|"%s: Received unexpected message %s from PF.\n"
 argument_list|,
 name|__func__
 argument_list|,
+name|ixl_vc_opcode_str
+argument_list|(
 name|v_opcode
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#

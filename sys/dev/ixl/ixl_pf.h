@@ -160,11 +160,28 @@ decl_stmt|;
 name|int
 name|msix
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IXL_IW
+name|int
+name|iw_msix
+decl_stmt|;
+name|bool
+name|iw_enabled
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|if_flags
 decl_stmt|;
 name|int
 name|state
+decl_stmt|;
+name|bool
+name|init_in_progress
+decl_stmt|;
+name|u8
+name|supported_speeds
 decl_stmt|;
 name|struct
 name|ixl_pf_qmgr
@@ -234,6 +251,9 @@ comment|/* link flow ctrl setting */
 name|enum
 name|ixl_dbg_mask
 name|dbg_mask
+decl_stmt|;
+name|bool
+name|has_i2c
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|u64
@@ -306,7 +326,7 @@ define|#
 directive|define
 name|IXL_SYSCTL_HELP_SET_ADVERTISE
 define|\
-value|"\nControl advertised link speed.\n"	\ "Flags:\n"				\ "\t 0x1 - advertise 100M\n"		\ "\t 0x2 - advertise 1G\n"		\ "\t 0x4 - advertise 10G\n"		\ "\t 0x8 - advertise 20G\n"		\ "\t0x10 - advertise 40G\n\n"		\ "Set to 0 to disable link."
+value|"\nControl advertised link speed.\n"	\ "Flags:\n"				\ "\t 0x1 - advertise 100M\n"		\ "\t 0x2 - advertise 1G\n"		\ "\t 0x4 - advertise 10G\n"		\ "\t 0x8 - advertise 20G\n"		\ "\t0x10 - advertise 25G\n"		\ "\t0x20 - advertise 40G\n\n"		\ "Set to 0 to disable link.\n"		\ "Use \"sysctl -x\" to view flags properly."
 end_define
 
 begin_define
@@ -357,19 +377,23 @@ begin_comment
 comment|/*** Functions / Macros ***/
 end_comment
 
+begin_comment
+comment|/* Adjust the level here to 10 or over to print stats messages */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|I40E_VC_DEBUG
 parameter_list|(
-name|pf
+name|p
 parameter_list|,
 name|level
 parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do { \ 		if ((pf)->vc_debug_lvl>= (level)) \ 			device_printf((pf)->dev, __VA_ARGS__); \ 	} while (0)
+value|do {							\ 		if (level< 10)					\ 			ixl_dbg(p, IXL_DBG_IOV_VC, ##__VA_ARGS__); \ 	} while (0)
 end_define
 
 begin_define
@@ -443,6 +467,45 @@ value|mtx_assert(&(_sc)->pf_mtx, MA_OWNED)
 end_define
 
 begin_comment
+comment|/* Debug printing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ixl_dbg
+parameter_list|(
+name|p
+parameter_list|,
+name|m
+parameter_list|,
+name|s
+parameter_list|,
+modifier|...
+parameter_list|)
+value|ixl_debug_core(p, m, s, ##__VA_ARGS__)
+end_define
+
+begin_function_decl
+name|void
+name|ixl_debug_core
+parameter_list|(
+name|struct
+name|ixl_pf
+modifier|*
+parameter_list|,
+name|enum
+name|ixl_dbg_mask
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* For stats sysctl naming */
 end_comment
 
@@ -454,12 +517,35 @@ value|32
 end_define
 
 begin_comment
+comment|/* For netmap(4) compatibility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ixl_disable_intr
+parameter_list|(
+name|vsi
+parameter_list|)
+value|ixl_disable_rings_intr(vsi)
+end_define
+
+begin_comment
 comment|/*  * PF-only function declarations  */
 end_comment
 
 begin_function_decl
 name|void
 name|ixl_set_busmaster
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ixl_set_msix_enable
 parameter_list|(
 name|device_t
 parameter_list|)
@@ -488,6 +574,17 @@ parameter_list|,
 name|struct
 name|i40e_nvm_access
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|ixl_aq_speed_to_str
+parameter_list|(
+name|enum
+name|i40e_aq_link_speed
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -722,41 +819,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixl_enable_adminq
-parameter_list|(
-name|struct
-name|i40e_hw
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ixl_get_bus_info
-parameter_list|(
-name|struct
-name|i40e_hw
-modifier|*
-parameter_list|,
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ixl_disable_adminq
-parameter_list|(
-name|struct
-name|i40e_hw
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ixl_enable_queue
 parameter_list|(
 name|struct
@@ -783,7 +845,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixl_enable_legacy
+name|ixl_enable_intr0
 parameter_list|(
 name|struct
 name|i40e_hw
@@ -794,7 +856,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixl_disable_legacy
+name|ixl_disable_intr0
 parameter_list|(
 name|struct
 name|i40e_hw
@@ -905,6 +967,17 @@ end_function_decl
 begin_function_decl
 name|int
 name|ixl_get_hw_capabilities
+parameter_list|(
+name|struct
+name|ixl_pf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ixl_link_up_msg
 parameter_list|(
 name|struct
 name|ixl_pf
@@ -1102,7 +1175,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ixl_assign_vsi_legacy
+name|ixl_setup_legacy
 parameter_list|(
 name|struct
 name|ixl_pf
@@ -1274,19 +1347,27 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixl_dbg
+name|ixl_get_bus_info
+parameter_list|(
+name|struct
+name|ixl_pf
+modifier|*
+name|pf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ixl_aq_get_link_status
 parameter_list|(
 name|struct
 name|ixl_pf
 modifier|*
 parameter_list|,
-name|enum
-name|ixl_dbg_mask
-parameter_list|,
-name|char
+name|struct
+name|i40e_aqc_get_link_status
 modifier|*
-parameter_list|,
-modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1535,17 +1616,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixl_disable_intr
-parameter_list|(
-name|struct
-name|ixl_vsi
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ixl_cap_txcsum_tso
 parameter_list|(
 name|struct
@@ -1580,7 +1650,7 @@ name|struct
 name|ixl_vsi
 modifier|*
 parameter_list|,
-name|u32
+name|u64
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1796,6 +1866,64 @@ parameter_list|(
 name|struct
 name|ixl_vsi
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * I2C Function prototypes  */
+end_comment
+
+begin_function_decl
+name|int
+name|ixl_find_i2c_interface
+parameter_list|(
+name|struct
+name|ixl_pf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|ixl_read_i2c_byte
+parameter_list|(
+name|struct
+name|ixl_pf
+modifier|*
+name|pf
+parameter_list|,
+name|u8
+name|byte_offset
+parameter_list|,
+name|u8
+name|dev_addr
+parameter_list|,
+name|u8
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|ixl_write_i2c_byte
+parameter_list|(
+name|struct
+name|ixl_pf
+modifier|*
+name|pf
+parameter_list|,
+name|u8
+name|byte_offset
+parameter_list|,
+name|u8
+name|dev_addr
+parameter_list|,
+name|u8
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl

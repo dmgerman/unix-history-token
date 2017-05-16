@@ -29,7 +29,14 @@ begin_define
 define|#
 directive|define
 name|IXLV_AQ_MAX_ERR
-value|200
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXLV_MAX_INIT_WAIT
+value|120
 end_define
 
 begin_define

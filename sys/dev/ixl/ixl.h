@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ixl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -101,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -750,6 +762,10 @@ name|IXL_DBG_SWITCH_INFO
 init|=
 literal|0x00010000
 block|,
+name|IXL_DBG_I2C
+init|=
+literal|0x00020000
+block|,
 name|IXL_DBG_ALL
 init|=
 literal|0xFFFFFFFF
@@ -768,7 +784,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_RING
+name|IXL_DEFAULT_RING
 value|1024
 end_define
 
@@ -868,7 +884,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXL_BAR
+name|IXL_MSIX_BAR
 value|3
 end_define
 
@@ -968,6 +984,13 @@ define|#
 directive|define
 name|IXL_QUEUE_HUNG
 value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_MIN_TSO_MSS
+value|64
 end_define
 
 begin_define
@@ -1077,14 +1100,14 @@ value|(0xf<< IXL_NVM_VERSION_HI_SHIFT)
 end_define
 
 begin_comment
-comment|/*  * Interrupt Moderation parameters   */
+comment|/*  * Interrupt Moderation parameters  * Multiply ITR values by 2 for real ITR value  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IXL_MAX_ITR
-value|0x07FF
+value|0x0FF0
 end_define
 
 begin_define
@@ -1113,6 +1136,13 @@ define|#
 directive|define
 name|IXL_ITR_4K
 value|0x007A
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_ITR_1K
+value|0x01F4
 end_define
 
 begin_define
@@ -1355,8 +1385,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXL_DEFAULT_RSS_HENA
+name|IXL_DEFAULT_RSS_HENA_BASE
 value|(\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV4_UDP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV4_TCP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV4_SCTP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV4_OTHER) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_FRAG_IPV4) |		\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV6_UDP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV6_TCP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV6_SCTP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV6_OTHER) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_FRAG_IPV6) |		\ 	BIT_ULL(I40E_FILTER_PCTYPE_L2_PAYLOAD))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_DEFAULT_RSS_HENA_XL710
+value|IXL_DEFAULT_RSS_HENA_BASE
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_DEFAULT_RSS_HENA_X722
+value|(\ 	IXL_DEFAULT_RSS_HENA_BASE |			\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_UNICAST_IPV4_UDP) | \ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_MULTICAST_IPV4_UDP) | \ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_UNICAST_IPV6_UDP) | \ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_MULTICAST_IPV6_UDP) | \ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV4_TCP_SYN_NO_ACK) | \ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV6_TCP_SYN_NO_ACK))
 end_define
 
 begin_define
@@ -1943,6 +1987,9 @@ name|buf_ring
 modifier|*
 name|br
 decl_stmt|;
+name|s32
+name|watchdog_timer
+decl_stmt|;
 comment|/* Used for Dynamic ITR calculation */
 name|u32
 name|packets
@@ -2102,9 +2149,6 @@ name|int
 name|num_desc
 decl_stmt|;
 comment|/* both tx and rx */
-name|int
-name|busy
-decl_stmt|;
 name|struct
 name|tx_ring
 name|txr
@@ -2147,6 +2191,9 @@ name|tx_dmamap_failed
 decl_stmt|;
 name|u64
 name|dropped_pkts
+decl_stmt|;
+name|u64
+name|mss_too_small
 decl_stmt|;
 block|}
 struct|;
@@ -2309,9 +2356,6 @@ name|u64
 name|hw_filters_add
 decl_stmt|;
 comment|/* Misc. */
-name|u64
-name|active_queues
-decl_stmt|;
 name|u64
 name|flags
 decl_stmt|;

@@ -5218,26 +5218,6 @@ condition|(
 name|NULL
 operator|==
 name|hmc_info
-condition|)
-block|{
-name|ret_code
-operator|=
-name|I40E_ERR_BAD_PTR
-expr_stmt|;
-name|DEBUGOUT
-argument_list|(
-literal|"i40e_hmc_get_object_va: bad hmc_info ptr\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|exit
-goto|;
-block|}
-if|if
-condition|(
-name|NULL
-operator|==
-name|hmc_info
 operator|->
 name|hmc_obj
 condition|)

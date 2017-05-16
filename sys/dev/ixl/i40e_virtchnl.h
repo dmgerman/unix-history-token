@@ -316,6 +316,20 @@ name|I40E_VIRTCHNL_VF_OFFLOAD_RSS_PF
 value|0X00080000
 end_define
 
+begin_define
+define|#
+directive|define
+name|I40E_VIRTCHNL_VF_OFFLOAD_ENCAP_CSUM
+value|0X00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_VF_BASE_MODE_OFFLOADS
+value|(I40E_VIRTCHNL_VF_OFFLOAD_L2 | \ 				    I40E_VIRTCHNL_VF_OFFLOAD_VLAN | \ 				    I40E_VIRTCHNL_VF_OFFLOAD_RSS_PF)
+end_define
+
 begin_struct
 struct|struct
 name|i40e_virtchnl_vf_resource
