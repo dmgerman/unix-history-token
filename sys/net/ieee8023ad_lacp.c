@@ -5826,6 +5826,9 @@ case|:
 case|case
 name|IFM_10G_SFI
 case|:
+case|case
+name|IFM_10G_AOC
+case|:
 name|key
 operator|=
 name|IFM_10G_LR
@@ -5891,6 +5894,15 @@ name|IFM_25G_KR
 case|:
 case|case
 name|IFM_25G_SR
+case|:
+case|case
+name|IFM_25G_LR
+case|:
+case|case
+name|IFM_25G_ACC
+case|:
+case|case
+name|IFM_25G_AOC
 case|:
 name|key
 operator|=
