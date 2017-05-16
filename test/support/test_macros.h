@@ -305,9 +305,24 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__clang__
+name|__EDG__
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|TEST_COMPILER_EDG
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_elif
 
 begin_define
 define|#

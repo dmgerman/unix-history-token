@@ -184,7 +184,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_LIBCPP_MSVC
+name|_LIBCPP_WARNING
 argument_list|)
 end_if
 

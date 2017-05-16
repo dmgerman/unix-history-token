@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|//===--------------------- support/win32/limits_win32.h -------------------===//
+comment|//===------------------ support/win32/limits_msvc_win32.h -----------------===//
 end_comment
 
 begin_comment
@@ -38,13 +38,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LIBCPP_SUPPORT_WIN32_LIMITS_WIN32_H
+name|_LIBCPP_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LIBCPP_SUPPORT_WIN32_LIMITS_WIN32_H
+name|_LIBCPP_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H
 end_define
 
 begin_if
@@ -63,10 +63,30 @@ directive|error
 literal|"This header complements the Microsoft C Runtime library, and should not be included otherwise."
 end_error
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"This header should only be included when using Microsofts C1XX frontend"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -88,15 +108,25 @@ begin_comment
 comment|// limit constants
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__clang__
-argument_list|)
-end_if
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
+begin_comment
+comment|// HUGE_VAL
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<ymath.h>
+end_include
+
+begin_comment
+comment|// internal MSVC header providing the needed functionality
+end_comment
 
 begin_define
 define|#
@@ -352,42 +382,6 @@ begin_comment
 comment|// __builtin replacements/workarounds
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<math.h>
-end_include
-
-begin_comment
-comment|// HUGE_VAL
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<ymath.h>
-end_include
-
-begin_comment
-comment|// internal MSVC header providing the needed functionality
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__builtin_huge_val
-parameter_list|()
-value|HUGE_VAL
-end_define
-
-begin_define
-define|#
-directive|define
-name|__builtin_huge_valf
-parameter_list|()
-value|_FInf._Float
-end_define
-
 begin_define
 define|#
 directive|define
@@ -399,51 +393,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|__builtin_nan
-parameter_list|(
-name|__dummy
-parameter_list|)
-value|_Nan._Double
-end_define
-
-begin_define
-define|#
-directive|define
-name|__builtin_nanf
-parameter_list|(
-name|__dummy
-parameter_list|)
-value|_FNan._Float
-end_define
-
-begin_define
-define|#
-directive|define
 name|__builtin_nanl
 parameter_list|(
 name|__dummmy
 parameter_list|)
 value|_LNan._Long_double
-end_define
-
-begin_define
-define|#
-directive|define
-name|__builtin_nans
-parameter_list|(
-name|__dummy
-parameter_list|)
-value|_Snan._Double
-end_define
-
-begin_define
-define|#
-directive|define
-name|__builtin_nansf
-parameter_list|(
-name|__dummy
-parameter_list|)
-value|_FSnan._Float
 end_define
 
 begin_define
@@ -462,25 +416,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// ! defined(__clang__)
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// _LIBCPP_MSVCRT
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// _LIBCPP_SUPPORT_WIN32_LIMITS_WIN32_H
+comment|// _LIBCPP_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H
 end_comment
 
 end_unit
