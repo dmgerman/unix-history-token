@@ -852,7 +852,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|parse_libdir
+name|parse_integer
 parameter_list|(
 specifier|const
 name|char
@@ -15669,7 +15669,7 @@ control|)
 block|{
 name|dirfd
 operator|=
-name|parse_libdir
+name|parse_integer
 argument_list|(
 name|fdstr
 argument_list|)
@@ -15680,7 +15680,16 @@ name|dirfd
 operator|<
 literal|0
 condition|)
+block|{
+name|_rtld_error
+argument_list|(
+literal|"failed to parse directory FD: '%s'"
+argument_list|,
+name|fdstr
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|fd
 operator|=
 name|__sys_openat
@@ -26797,7 +26806,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|parse_libdir
+name|parse_integer
 parameter_list|(
 specifier|const
 name|char
@@ -26819,7 +26828,7 @@ modifier|*
 name|orig
 decl_stmt|;
 name|int
-name|fd
+name|n
 decl_stmt|;
 name|char
 name|c
@@ -26828,7 +26837,7 @@ name|orig
 operator|=
 name|str
 expr_stmt|;
-name|fd
+name|n
 operator|=
 literal|0
 expr_stmt|;
@@ -26866,11 +26875,11 @@ operator|-
 literal|1
 operator|)
 return|;
-name|fd
+name|n
 operator|*=
 name|RADIX
 expr_stmt|;
-name|fd
+name|n
 operator|+=
 name|c
 operator|-
@@ -26884,24 +26893,15 @@ name|str
 operator|==
 name|orig
 condition|)
-block|{
-name|_rtld_error
-argument_list|(
-literal|"failed to parse directory FD from '%s'"
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 return|return
 operator|(
-name|fd
+name|n
 operator|)
 return|;
 block|}
