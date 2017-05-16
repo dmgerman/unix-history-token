@@ -505,6 +505,9 @@ name|buf_ring
 modifier|*
 name|tx_br
 decl_stmt|;
+name|uint32_t
+name|tx_ring_full
+decl_stmt|;
 name|struct
 name|task
 name|fp_task
@@ -1018,6 +1021,12 @@ name|uint32_t
 name|dbg_level
 decl_stmt|;
 name|uint32_t
+name|dbg_trace_lro_cnt
+decl_stmt|;
+name|uint32_t
+name|dbg_trace_tso_pkt_len
+decl_stmt|;
+name|uint32_t
 name|dp_level
 decl_stmt|;
 name|uint32_t
@@ -1085,10 +1094,6 @@ comment|/* tx related */
 name|struct
 name|callout
 name|tx_callout
-decl_stmt|;
-name|struct
-name|mtx
-name|tx_lock
 decl_stmt|;
 name|uint32_t
 name|txr_idx
