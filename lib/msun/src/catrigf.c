@@ -82,7 +82,7 @@ define|#
 directive|define
 name|raise_inexact
 parameter_list|()
-value|do { volatile float junk = 1 + tiny; } while(0)
+value|do { volatile float junk __unused = 1 + tiny; } while(0)
 end_define
 
 begin_undef
