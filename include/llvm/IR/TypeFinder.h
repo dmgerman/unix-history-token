@@ -163,7 +163,9 @@ name|void
 name|clear
 parameter_list|()
 function_decl|;
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|std
 operator|::
 name|vector
@@ -173,9 +175,10 @@ operator|*
 operator|>
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_iterator
+init|=
 name|std
 operator|::
 name|vector
@@ -185,8 +188,7 @@ operator|*
 operator|>
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
+decl_stmt|;
 name|iterator
 name|begin
 parameter_list|()

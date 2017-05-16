@@ -1558,6 +1558,18 @@ name|isAtomic
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Return true if this atomic instruction loads from memory.
+name|bool
+name|hasAtomicLoad
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Return true if this atomic instruction stores to memory.
+name|bool
+name|hasAtomicStore
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Return true if this instruction may throw an exception.
 name|bool
 name|mayThrow

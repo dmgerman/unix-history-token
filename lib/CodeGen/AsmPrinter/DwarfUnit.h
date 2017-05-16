@@ -433,6 +433,18 @@ operator|&
 name|SPDie
 argument_list|)
 block|;
+name|bool
+name|shareAcrossDWOCUs
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isShareableAcrossCUs
+argument_list|(
+argument|const DINode *D
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 comment|// Accessors.

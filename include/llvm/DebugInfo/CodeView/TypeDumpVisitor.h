@@ -180,6 +180,15 @@ argument_list|)
 name|override
 block|;
 name|Error
+name|visitTypeBegin
+argument_list|(
+argument|CVType&Record
+argument_list|,
+argument|TypeIndex Index
+argument_list|)
+name|override
+block|;
+name|Error
 name|visitTypeEnd
 argument_list|(
 argument|CVType&Record

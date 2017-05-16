@@ -3978,6 +3978,90 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief traits class for checking whether type T is a base class for all
+end_comment
+
+begin_comment
+comment|///  the given types in the variadic list.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+operator|...
+name|Ts
+operator|>
+expr|struct
+name|are_base_of
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|U
+operator|,
+name|typename
+operator|...
+name|Ts
+operator|>
+expr|struct
+name|are_base_of
+operator|<
+name|T
+operator|,
+name|U
+operator|,
+name|Ts
+operator|...
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|std
+operator|::
+name|is_base_of
+operator|<
+name|T
+block|,
+name|U
+operator|>
+operator|::
+name|value
+operator|&&
+name|are_base_of
+operator|<
+name|T
+block|,
+name|Ts
+operator|...
+operator|>
+operator|::
+name|value
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -6265,7 +6349,7 @@ comment|/// for (auto X : enumerate(Items)) {
 end_comment
 
 begin_comment
-comment|///   printf("Item %d - %c\n", X.Index, X.Value);
+comment|///   printf("Item %d - %c\n", X.index(), X.value());
 end_comment
 
 begin_comment

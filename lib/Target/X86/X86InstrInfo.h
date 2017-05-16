@@ -210,6 +210,21 @@ name|CondCode
 name|CC
 parameter_list|)
 function_decl|;
+comment|/// \brief Return a pair of condition code for the given predicate and whether
+comment|/// the instruction operands should be swaped to match the condition code.
+name|std
+operator|::
+name|pair
+operator|<
+name|CondCode
+operator|,
+name|bool
+operator|>
+name|getX86ConditionCode
+argument_list|(
+argument|CmpInst::Predicate Predicate
+argument_list|)
+expr_stmt|;
 comment|/// \brief Return a set opcode for the given condition and whether it has
 comment|/// a memory operand.
 name|unsigned
@@ -808,6 +823,24 @@ name|I
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isFrameSetup
+argument_list|(
+name|I
+argument_list|)
+condition|)
+return|return
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|2
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+return|;
 return|return
 name|I
 operator|.
@@ -842,6 +875,26 @@ name|I
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isFrameSetup
+argument_list|(
+name|I
+argument_list|)
+condition|)
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|2
+argument_list|)
+operator|.
+name|setImm
+argument_list|(
+name|V
+argument_list|)
+expr_stmt|;
+else|else
 name|I
 operator|.
 name|getOperand

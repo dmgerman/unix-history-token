@@ -106,6 +106,9 @@ decl_stmt|;
 name|class
 name|Twine
 decl_stmt|;
+name|class
+name|ConstantFP
+decl_stmt|;
 comment|/// Try to constrain Reg so that it is usable by argument OpIdx of the
 comment|/// provided MCInstrDesc \p II. If this fails, create a new virtual
 comment|/// register in the correct class and insert a COPY before \p InsertPt.
@@ -235,6 +238,20 @@ argument_list|,
 argument|const MachineRegisterInfo&MRI
 argument_list|)
 expr_stmt|;
+specifier|const
+name|ConstantFP
+modifier|*
+name|getConstantFPVRegVal
+parameter_list|(
+name|unsigned
+name|VReg
+parameter_list|,
+specifier|const
+name|MachineRegisterInfo
+modifier|&
+name|MRI
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

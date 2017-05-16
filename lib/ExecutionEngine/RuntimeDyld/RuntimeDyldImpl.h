@@ -2198,7 +2198,6 @@ name|void
 name|registerEHFrames
 parameter_list|()
 function_decl|;
-name|virtual
 name|void
 name|deregisterEHFrames
 parameter_list|()

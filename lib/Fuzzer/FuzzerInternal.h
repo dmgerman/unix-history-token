@@ -466,6 +466,10 @@ name|CrashCallback
 parameter_list|()
 function_decl|;
 name|void
+name|CrashOnOverwrittenData
+parameter_list|()
+function_decl|;
+name|void
 name|InterruptCallback
 parameter_list|()
 function_decl|;

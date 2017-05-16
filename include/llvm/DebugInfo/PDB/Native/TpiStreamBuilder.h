@@ -319,6 +319,8 @@ name|std
 operator|::
 name|vector
 operator|<
+name|codeview
+operator|::
 name|TypeIndexOffset
 operator|>
 name|TypeIndexOffsets

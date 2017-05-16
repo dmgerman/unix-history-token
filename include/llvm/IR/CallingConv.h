@@ -332,6 +332,12 @@ name|AMDGPU_HS
 init|=
 literal|93
 block|,
+comment|/// Calling convention used for special MSP430 rtlib functions
+comment|/// which have an "optimized" convention using additional registers.
+name|MSP430_BUILTIN
+init|=
+literal|94
+block|,
 comment|/// The highest possible calling convention ID. Must be some 2^k - 1.
 name|MaxID
 init|=

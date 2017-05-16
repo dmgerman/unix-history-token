@@ -122,13 +122,43 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/APFloat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/APInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/CallSite.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Constant.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Constants.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InstrTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Instruction.h"
 end_include
 
 begin_include
@@ -147,6 +177,24 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Operator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -7252,18 +7300,18 @@ operator|<
 name|T0
 operator|>
 block|{
-typedef|typedef
+name|using
+name|Ty
+operator|=
 name|match_combine_and
 operator|<
 name|IntrinsicID_match
-operator|,
+block|,
 name|Argument_match
 operator|<
 name|T0
 operator|>>
-name|Ty
-expr_stmt|;
-block|}
+block|; }
 block|;
 name|template
 operator|<
@@ -7281,7 +7329,9 @@ block|,
 name|T1
 operator|>
 block|{
-typedef|typedef
+name|using
+name|Ty
+operator|=
 name|match_combine_and
 operator|<
 name|typename
@@ -7291,14 +7341,12 @@ name|T0
 operator|>
 operator|::
 name|Ty
-operator|,
+block|,
 name|Argument_match
 operator|<
 name|T1
 operator|>>
-name|Ty
-expr_stmt|;
-block|}
+block|; }
 block|;
 name|template
 operator|<
@@ -7321,26 +7369,26 @@ block|,
 name|T2
 operator|>
 block|{
-typedef|typedef
+name|using
+name|Ty
+operator|=
 name|match_combine_and
 operator|<
 name|typename
 name|m_Intrinsic_Ty
 operator|<
 name|T0
-operator|,
+block|,
 name|T1
 operator|>
 operator|::
 name|Ty
-operator|,
+block|,
 name|Argument_match
 operator|<
 name|T2
 operator|>>
-name|Ty
-expr_stmt|;
-block|}
+block|; }
 block|;
 name|template
 operator|<
@@ -7368,28 +7416,28 @@ block|,
 name|T3
 operator|>
 block|{
-typedef|typedef
+name|using
+name|Ty
+operator|=
 name|match_combine_and
 operator|<
 name|typename
 name|m_Intrinsic_Ty
 operator|<
 name|T0
-operator|,
+block|,
 name|T1
-operator|,
+block|,
 name|T2
 operator|>
 operator|::
 name|Ty
-operator|,
+block|,
 name|Argument_match
 operator|<
 name|T3
 operator|>>
-name|Ty
-expr_stmt|;
-block|}
+block|; }
 block|;
 comment|/// \brief Match intrinsic calls like this:
 comment|/// m_Intrinsic<Intrinsic::fabs>(m_Value(X))
@@ -8592,6 +8640,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_PATTERNMATCH_H
+end_comment
 
 end_unit
 

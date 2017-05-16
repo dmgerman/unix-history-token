@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/TypeDatabase.h"
 end_include
 
@@ -93,7 +99,7 @@ argument_list|)
 operator|:
 name|TypeDB
 argument_list|(
-argument|TypeDB
+argument|&TypeDB
 argument_list|)
 block|{}
 comment|/// Paired begin/end actions for all types. Receives all record data,
@@ -102,6 +108,15 @@ name|Error
 name|visitTypeBegin
 argument_list|(
 argument|CVType&Record
+argument_list|)
+name|override
+block|;
+name|Error
+name|visitTypeBegin
+argument_list|(
+argument|CVType&Record
+argument_list|,
+argument|TypeIndex Index
 argument_list|)
 name|override
 block|;
@@ -179,6 +194,19 @@ directive|include
 file|"TypeRecords.def"
 name|private
 operator|:
+name|StringRef
+name|getTypeName
+argument_list|(
+argument|TypeIndex Index
+argument_list|)
+specifier|const
+block|;
+name|StringRef
+name|saveTypeName
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|;
 name|bool
 name|IsInFieldList
 operator|=
@@ -188,8 +216,16 @@ comment|/// Name of the current type. Only valid before visitTypeEnd.
 name|StringRef
 name|Name
 block|;
+comment|/// Current type index.  Only valid before visitTypeEnd, and if we are
+comment|/// visiting a random access type database.
+name|Optional
+operator|<
+name|TypeIndex
+operator|>
+name|CurrentTypeIndex
+block|;
 name|TypeDatabase
-operator|&
+operator|*
 name|TypeDB
 block|; }
 decl_stmt|;

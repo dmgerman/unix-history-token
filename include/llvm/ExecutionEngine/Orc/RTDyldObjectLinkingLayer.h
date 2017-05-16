@@ -496,6 +496,16 @@ operator|->
 name|Objects
 argument_list|)
 block|;     }
+operator|~
+name|ConcreteLinkedObjectSet
+argument_list|()
+name|override
+block|{
+name|MemMgr
+operator|->
+name|deregisterEHFrames
+argument_list|()
+block|;     }
 name|void
 name|setHandle
 argument_list|(

@@ -647,8 +647,52 @@ name|Output
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/// \brief Convert the string \p S to an integer of the specified type using
+end_comment
+
+begin_comment
+comment|/// the radix \p Base.  If \p Base is 0, auto-detects the radix.
+end_comment
+
+begin_comment
+comment|/// Returns true if the number was successfully converted, false otherwise.
+end_comment
+
 begin_expr_stmt
-unit|}  static
+unit|template
+operator|<
+name|typename
+name|N
+operator|>
+name|bool
+name|to_integer
+argument_list|(
+argument|StringRef S
+argument_list|,
+argument|N&Num
+argument_list|,
+argument|unsigned Base =
+literal|0
+argument_list|)
+block|{
+return|return
+operator|!
+name|S
+operator|.
+name|getAsInteger
+argument_list|(
+name|Base
+argument_list|,
+name|Num
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
 specifier|inline
 name|std
 operator|::

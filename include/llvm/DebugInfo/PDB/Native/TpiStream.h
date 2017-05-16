@@ -195,6 +195,8 @@ specifier|const
 expr_stmt|;
 name|FixedStreamArray
 operator|<
+name|codeview
+operator|::
 name|TypeIndexOffset
 operator|>
 name|getTypeIndexOffsets
@@ -259,6 +261,8 @@ name|HashValues
 expr_stmt|;
 name|FixedStreamArray
 operator|<
+name|codeview
+operator|::
 name|TypeIndexOffset
 operator|>
 name|TypeIndexOffsets

@@ -206,6 +206,13 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+comment|/// createScalarizeMaskedMemIntrinPass - Replace masked load, store, gather
+comment|/// and scatter intrinsics with scalar code when target doesn't support them.
+name|FunctionPass
+modifier|*
+name|createScalarizeMaskedMemIntrinPass
+parameter_list|()
+function_decl|;
 comment|/// AtomicExpandID -- Lowers atomic operations in terms of either cmpxchg
 comment|/// load-linked/store-conditional loops.
 specifier|extern
@@ -317,6 +324,13 @@ specifier|extern
 name|char
 modifier|&
 name|ShrinkWrapID
+decl_stmt|;
+comment|/// LiveRangeShrink pass. Move instruction close to its definition to shrink
+comment|/// the definition's live range.
+specifier|extern
+name|char
+modifier|&
+name|LiveRangeShrinkID
 decl_stmt|;
 comment|/// Greedy register allocator.
 specifier|extern
@@ -888,6 +902,13 @@ comment|/// printing assembly.
 name|ModulePass
 modifier|*
 name|createMachineOutlinerPass
+parameter_list|()
+function_decl|;
+comment|/// This pass expands the experimental reduction intrinsics into sequences of
+comment|/// shuffles.
+name|FunctionPass
+modifier|*
+name|createExpandReductionsPass
 parameter_list|()
 function_decl|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/User.h - User class definition ---------------------*- C++ -*-===//
+comment|//===- llvm/User.h - User class definition ----------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -872,34 +872,38 @@ block|;   }
 comment|// ---------------------------------------------------------------------------
 comment|// Operand Iterator interface...
 comment|//
-typedef|typedef
-name|Use
-modifier|*
+name|using
 name|op_iterator
-typedef|;
-typedef|typedef
+operator|=
+name|Use
+operator|*
+block|;
+name|using
+name|const_op_iterator
+operator|=
 specifier|const
 name|Use
-modifier|*
-name|const_op_iterator
-typedef|;
-typedef|typedef
+operator|*
+block|;
+name|using
+name|op_range
+operator|=
 name|iterator_range
 operator|<
 name|op_iterator
 operator|>
-name|op_range
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_op_range
+operator|=
 name|iterator_range
 operator|<
 name|const_op_iterator
 operator|>
-name|const_op_range
-expr_stmt|;
+block|;
 name|op_iterator
 name|op_begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|getOperandList
@@ -918,7 +922,7 @@ return|;
 block|}
 name|op_iterator
 name|op_end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|getOperandList
@@ -941,7 +945,7 @@ return|;
 block|}
 name|op_range
 name|operands
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|op_range
@@ -971,30 +975,30 @@ argument_list|)
 return|;
 block|}
 comment|/// \brief Iterator for directly iterating over the operand Values.
-name|struct
+expr|struct
 name|value_op_iterator
-range|:
+operator|:
 name|iterator_adaptor_base
 operator|<
 name|value_op_iterator
-decl_stmt|,
+block|,
 name|op_iterator
-decl_stmt|,
+block|,
 name|std
-decl|::
+operator|::
 name|random_access_iterator_tag
-decl_stmt|,
+block|,
 name|Value
-modifier|*
-decl_stmt|,
+operator|*
+block|,
 name|ptrdiff_t
-decl_stmt|,
+block|,
 name|Value
-modifier|*
-decl_stmt|,
+operator|*
+block|,
 name|Value
-modifier|*
-decl|>
+operator|*
+operator|>
 block|{
 name|explicit
 name|value_op_iterator
@@ -1030,7 +1034,7 @@ name|operator
 operator|->
 expr|(
 block|)
-decl|const
+specifier|const
 block|{
 return|return
 name|operator
@@ -1039,17 +1043,11 @@ operator|(
 operator|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_function
+expr|}
+block|;
 name|value_op_iterator
 name|value_op_begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|value_op_iterator
@@ -1059,12 +1057,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|value_op_iterator
 name|value_op_end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|value_op_iterator
@@ -1074,9 +1069,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|iterator_range
 operator|<
 name|value_op_iterator
@@ -1095,33 +1087,33 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
-name|struct
+expr|struct
 name|const_value_op_iterator
-range|:
+operator|:
 name|iterator_adaptor_base
 operator|<
 name|const_value_op_iterator
-decl_stmt|,
+block|,
 name|const_op_iterator
-decl_stmt|,
+block|,
 name|std
-decl|::
+operator|::
 name|random_access_iterator_tag
-decl_stmt|, const
+block|,
+specifier|const
 name|Value
-modifier|*
-decl_stmt|,
+operator|*
+block|,
 name|ptrdiff_t
-decl_stmt|, const
+block|,
+specifier|const
 name|Value
-modifier|*
-decl_stmt|, const
+operator|*
+block|,
+specifier|const
 name|Value
-modifier|*
-decl|>
+operator|*
+operator|>
 block|{
 name|explicit
 name|const_value_op_iterator
@@ -1160,7 +1152,7 @@ name|operator
 operator|->
 expr|(
 block|)
-decl|const
+specifier|const
 block|{
 return|return
 name|operator
@@ -1169,10 +1161,8 @@ operator|(
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|const_value_op_iterator
 name|value_op_begin
 argument_list|()
@@ -1186,9 +1176,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|const_value_op_iterator
 name|value_op_end
 argument_list|()
@@ -1202,9 +1189,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|iterator_range
 operator|<
 name|const_value_op_iterator
@@ -1224,44 +1208,17 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Drop all references to operands.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This function is in charge of "letting go" of all objects that this User
-end_comment
-
-begin_comment
 comment|/// refers to.  This allows one to 'delete' a whole class at a time, even
-end_comment
-
-begin_comment
 comment|/// though there may be circular references...  First all references are
-end_comment
-
-begin_comment
 comment|/// dropped, and all use counts go to zero.  Then everything is deleted for
-end_comment
-
-begin_comment
 comment|/// real.  Note that no operations are valid on an object that has "dropped
-end_comment
-
-begin_comment
 comment|/// all references", except operator delete.
-end_comment
-
-begin_function
 name|void
 name|dropAllReferences
-parameter_list|()
+argument_list|()
 block|{
 for|for
 control|(
@@ -1280,54 +1237,30 @@ name|nullptr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Replace uses of one Value with another.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Replaces all references to the "From" definition with references to the
-end_comment
-
-begin_comment
 comment|/// "To" definition.
-end_comment
-
-begin_function_decl
 name|void
 name|replaceUsesOfWith
-parameter_list|(
+argument_list|(
 name|Value
-modifier|*
+operator|*
 name|From
-parameter_list|,
+argument_list|,
 name|Value
-modifier|*
+operator|*
 name|To
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|)
+block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|const Value *V
+argument_list|)
 block|{
 return|return
 name|isa
@@ -1347,14 +1280,9 @@ name|V
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|// Either Use objects, or a Use pointer can be prepended to User.
-end_comment
-
-begin_expr_stmt
 name|static_assert
 argument_list|(
 name|alignof
@@ -1369,10 +1297,7 @@ argument_list|)
 argument_list|,
 literal|"Alignment is insufficient after objects prepended to User"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|static_assert
 argument_list|(
 name|alignof
@@ -1388,10 +1313,7 @@ argument_list|)
 argument_list|,
 literal|"Alignment is insufficient after objects prepended to User"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 operator|>
@@ -1403,11 +1325,12 @@ operator|::
 name|op_iterator
 operator|>
 block|{
-typedef|typedef
-name|Value
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|Value
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -1422,14 +1345,8 @@ name|get
 argument_list|()
 return|;
 block|}
-block|}
-end_expr_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -1441,12 +1358,13 @@ operator|::
 name|const_op_iterator
 operator|>
 block|{
-typedef|typedef
+name|using
+name|SimpleType
+operator|=
 comment|/*const*/
 name|Value
-modifier|*
-name|SimpleType
-typedef|;
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -1461,15 +1379,11 @@ name|get
 argument_list|()
 return|;
 block|}
-block|}
-end_expr_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+expr|}
+block|;  }
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

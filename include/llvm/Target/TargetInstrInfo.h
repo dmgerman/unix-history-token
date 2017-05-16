@@ -515,6 +515,8 @@ name|isFrameInstr
 argument_list|(
 name|I
 argument_list|)
+operator|&&
+literal|"Not a frame instruction"
 argument_list|)
 block|;
 name|assert
@@ -542,6 +544,65 @@ argument_list|)
 operator|.
 name|getImm
 argument_list|()
+return|;
+block|}
+comment|/// Returns the total frame size, which is made up of the space set up inside
+comment|/// the pair of frame start-stop instructions and the space that is set up
+comment|/// prior to the pair.
+name|int64_t
+name|getFrameTotalSize
+argument_list|(
+argument|const MachineInstr&I
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|isFrameSetup
+argument_list|(
+name|I
+argument_list|)
+condition|)
+block|{
+name|assert
+argument_list|(
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+operator|>=
+literal|0
+operator|&&
+literal|"Frame size must not be negative"
+argument_list|)
+expr_stmt|;
+return|return
+name|getFrameSize
+argument_list|(
+name|I
+argument_list|)
+operator|+
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+return|;
+block|}
+return|return
+name|getFrameSize
+argument_list|(
+name|I
+argument_list|)
 return|;
 block|}
 name|unsigned

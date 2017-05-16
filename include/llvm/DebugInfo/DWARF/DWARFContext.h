@@ -215,26 +215,6 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|// In place of applying the relocations to the data we've read from disk we use
-comment|// a separate mapping table to the side and checking that at locations in the
-comment|// dwarf where we expect relocated values. This adds a bit of complexity to the
-comment|// dwarf parsing/extraction at the benefit of not allocating memory for the
-comment|// entire size of the debug info sections.
-typedef|typedef
-name|DenseMap
-operator|<
-name|uint64_t
-operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|uint8_t
-operator|,
-name|int64_t
-operator|>>
-name|RelocAddrMap
-expr_stmt|;
 comment|/// Reads a value from data extractor and applies a relocation to the result if
 comment|/// one exists for the given offset.
 name|uint64_t

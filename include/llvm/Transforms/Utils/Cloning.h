@@ -176,6 +176,9 @@ name|class
 name|Module
 decl_stmt|;
 name|class
+name|ProfileSummaryInfo
+decl_stmt|;
+name|class
 name|ReturnInst
 decl_stmt|;
 comment|/// Return an exact copy of the specified module
@@ -574,6 +577,12 @@ name|GetAssumptionCache
 operator|=
 name|nullptr
 argument_list|,
+name|ProfileSummaryInfo
+operator|*
+name|PSI
+operator|=
+name|nullptr
+argument_list|,
 name|BlockFrequencyInfo
 operator|*
 name|CallerBFI
@@ -595,6 +604,11 @@ decl_stmt|,
 name|GetAssumptionCache
 argument_list|(
 name|GetAssumptionCache
+argument_list|)
+decl_stmt|,
+name|PSI
+argument_list|(
+name|PSI
 argument_list|)
 decl_stmt|,
 name|CallerBFI
@@ -627,6 +641,10 @@ operator|>
 operator|*
 name|GetAssumptionCache
 expr_stmt|;
+name|ProfileSummaryInfo
+modifier|*
+name|PSI
+decl_stmt|;
 name|BlockFrequencyInfo
 modifier|*
 name|CallerBFI

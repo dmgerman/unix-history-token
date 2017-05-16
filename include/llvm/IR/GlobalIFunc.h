@@ -201,19 +201,34 @@ modifier|*
 name|Parent
 parameter_list|)
 function_decl|;
+name|void
+name|copyAttributesFrom
+parameter_list|(
+specifier|const
+name|GlobalIFunc
+modifier|*
+name|Src
+parameter_list|)
+block|{
+name|GlobalValue
+operator|::
+name|copyAttributesFrom
+argument_list|(
+name|Src
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// This method unlinks 'this' from the containing module, but does not
 comment|/// delete it.
 name|void
 name|removeFromParent
-argument_list|()
-name|final
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// This method unlinks 'this' from the containing module and deletes it.
 name|void
 name|eraseFromParent
-argument_list|()
-name|final
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// These methods retrieve and set ifunc resolver function.
 name|void
 name|setResolver

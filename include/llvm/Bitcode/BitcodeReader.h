@@ -647,7 +647,7 @@ comment|/// summary index object if found, or an empty summary if not. If Path r
 end_comment
 
 begin_comment
-comment|/// to an empty file and the -ignore-empty-index-file cl::opt flag is passed
+comment|/// to an empty file and IgnoreEmptyThinLTOIndexFile is true, then
 end_comment
 
 begin_comment
@@ -666,6 +666,8 @@ operator|>>
 name|getModuleSummaryIndexForFile
 argument_list|(
 argument|StringRef Path
+argument_list|,
+argument|bool IgnoreEmptyThinLTOIndexFile = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt

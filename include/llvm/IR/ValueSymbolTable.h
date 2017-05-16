@@ -189,28 +189,31 @@ comment|/// @{
 name|public
 label|:
 comment|/// @brief A mapping of names to values.
-typedef|typedef
+name|using
+name|ValueMap
+init|=
 name|StringMap
 operator|<
 name|Value
 operator|*
 operator|>
-name|ValueMap
-expr_stmt|;
+decl_stmt|;
 comment|/// @brief An iterator over a ValueMap.
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|ValueMap
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// @brief A const_iterator over a ValueMap.
-typedef|typedef
+name|using
+name|const_iterator
+init|=
 name|ValueMap
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// @}
 comment|/// @name Constructors
 comment|/// @{

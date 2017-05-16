@@ -279,7 +279,16 @@ name|WasmSymbol
 operator|&
 name|getWasmSymbol
 argument_list|(
-argument|DataRefImpl Symb
+argument|const DataRefImpl&Symb
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|WasmSymbol
+operator|&
+name|getWasmSymbol
+argument_list|(
+argument|const SymbolRef&Symbol
 argument_list|)
 specifier|const
 block|;
@@ -439,6 +448,18 @@ specifier|const
 block|{
 return|return
 name|Exports
+return|;
+block|}
+name|uint32_t
+name|getNumberOfSymbols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Symbols
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 specifier|const

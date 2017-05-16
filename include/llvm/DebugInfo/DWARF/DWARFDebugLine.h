@@ -120,9 +120,6 @@ expr|default
 block|;
 name|StringRef
 name|Name
-operator|=
-name|StringRef
-argument_list|()
 block|;
 name|uint64_t
 name|DirIdx

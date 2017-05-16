@@ -1843,22 +1843,7 @@ name|SCEV
 operator|*
 name|E
 argument_list|)
-operator|:
-name|ExactNotTaken
-argument_list|(
-name|E
-argument_list|)
-block|,
-name|MaxNotTaken
-argument_list|(
-name|E
-argument_list|)
-block|,
-name|MaxOrZero
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+block|;
 name|ExitLimit
 argument_list|(
 argument|const SCEV *E
@@ -1869,69 +1854,7 @@ argument|bool MaxOrZero
 argument_list|,
 argument|ArrayRef<const SmallPtrSetImpl<const SCEVPredicate *> *> PredSetList
 argument_list|)
-operator|:
-name|ExactNotTaken
-argument_list|(
-name|E
-argument_list|)
-block|,
-name|MaxNotTaken
-argument_list|(
-name|M
-argument_list|)
-block|,
-name|MaxOrZero
-argument_list|(
-argument|MaxOrZero
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|isa
-operator|<
-name|SCEVCouldNotCompute
-operator|>
-operator|(
-name|ExactNotTaken
-operator|)
-operator|||
-operator|!
-name|isa
-operator|<
-name|SCEVCouldNotCompute
-operator|>
-operator|(
-name|MaxNotTaken
-operator|)
-operator|)
-operator|&&
-literal|"Exact is not allowed to be less precise than Max"
-argument_list|)
 block|;
-for|for
-control|(
-name|auto
-operator|*
-name|PredSet
-operator|:
-name|PredSetList
-control|)
-for|for
-control|(
-name|auto
-operator|*
-name|P
-operator|:
-operator|*
-name|PredSet
-control|)
-name|addPredicate
-argument_list|(
-name|P
-argument_list|)
-expr_stmt|;
-block|}
 name|ExitLimit
 argument_list|(
 argument|const SCEV *E
@@ -1942,18 +1865,7 @@ argument|bool MaxOrZero
 argument_list|,
 argument|const SmallPtrSetImpl<const SCEVPredicate *>&PredSet
 argument_list|)
-operator|:
-name|ExitLimit
-argument_list|(
-argument|E
-argument_list|,
-argument|M
-argument_list|,
-argument|MaxOrZero
-argument_list|,
-argument|{&PredSet}
-argument_list|)
-block|{}
+block|;
 name|ExitLimit
 argument_list|(
 argument|const SCEV *E
@@ -1962,18 +1874,7 @@ argument|const SCEV *M
 argument_list|,
 argument|bool MaxOrZero
 argument_list|)
-operator|:
-name|ExitLimit
-argument_list|(
-argument|E
-argument_list|,
-argument|M
-argument_list|,
-argument|MaxOrZero
-argument_list|,
-argument|None
-argument_list|)
-block|{}
+block|;
 comment|/// Test whether this ExitLimit contains any computed information, or
 comment|/// whether it's all SCEVCouldNotCompute values.
 name|bool
@@ -2586,7 +2487,7 @@ argument|const SCEV *S
 argument_list|,
 argument|RangeSignHint Hint
 argument_list|,
-argument|ConstantRange&&CR
+argument|ConstantRange CR
 argument_list|)
 block|{
 name|DenseMap

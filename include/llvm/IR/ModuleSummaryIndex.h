@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/ModuleSummaryIndex.h - Module Summary Index --------*- C++ -*-===//
+comment|//===- llvm/ModuleSummaryIndex.h - Module Summary Index ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,25 +70,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
+file|"llvm/ADT/SmallString.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallString.h"
 end_include
 
 begin_include
@@ -106,13 +106,79 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Module.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/IR/GlobalValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<array>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -131,6 +197,7 @@ expr|struct
 name|MappingTraits
 expr_stmt|;
 block|}
+comment|// end namespace yaml
 comment|/// \brief Class to accumulate and hold information about a callee.
 struct|struct
 name|CalleeInfo
@@ -206,7 +273,9 @@ struct|;
 name|class
 name|GlobalValueSummary
 decl_stmt|;
-typedef|typedef
+name|using
+name|GlobalValueSummaryList
+init|=
 name|std
 operator|::
 name|vector
@@ -217,8 +286,7 @@ name|unique_ptr
 operator|<
 name|GlobalValueSummary
 operator|>>
-name|GlobalValueSummaryList
-expr_stmt|;
+decl_stmt|;
 struct|struct
 name|GlobalValueSummaryInfo
 block|{
@@ -245,7 +313,9 @@ comment|/// (which are used by ValueInfo) are not invalidated by insertion. Also
 comment|/// likely incur less overhead, as the value type is not very small and the size
 comment|/// of the map is unknown, resulting in inefficiencies due to repeated
 comment|/// insertions and resizing.
-typedef|typedef
+name|using
+name|GlobalValueSummaryMapTy
+init|=
 name|std
 operator|::
 name|map
@@ -253,11 +323,10 @@ operator|<
 name|GlobalValue
 operator|::
 name|GUID
-operator|,
+decl_stmt|,
 name|GlobalValueSummaryInfo
-operator|>
-name|GlobalValueSummaryMapTy
-expr_stmt|;
+decl|>
+decl_stmt|;
 comment|/// Struct that holds a reference to a particular GUID in a global value
 comment|/// summary.
 struct|struct
@@ -532,6 +601,8 @@ name|GlobalValue
 operator|::
 name|GUID
 name|OriginalName
+operator|=
+literal|0
 block|;
 comment|/// \brief Path of module IR containing value's definition, used to locate
 comment|/// module during importing.
@@ -574,11 +645,6 @@ block|,
 name|Flags
 argument_list|(
 name|Flags
-argument_list|)
-block|,
-name|OriginalName
-argument_list|(
-literal|0
 argument_list|)
 block|,
 name|RefEdgeList
@@ -873,17 +939,18 @@ block|{
 name|public
 operator|:
 comment|///<CalleeValueInfo, CalleeInfo> call edge pair.
-typedef|typedef
+name|using
+name|EdgeTy
+operator|=
 name|std
 operator|::
 name|pair
 operator|<
 name|ValueInfo
-operator|,
+block|,
 name|CalleeInfo
 operator|>
-name|EdgeTy
-expr_stmt|;
+block|;
 comment|/// An "identifier" for a virtual function. This contains the type identifier
 comment|/// represented as a GUID and the offset from the address point to the virtual
 comment|/// function pointer, where "address point" is as defined in the Itanium ABI:
@@ -1252,17 +1319,8 @@ return|return
 block|{}
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns the list of virtual calls made by this function using
-end_comment
-
-begin_comment
 comment|/// llvm.type.checked.load intrinsics with all constant integer arguments.
-end_comment
-
-begin_expr_stmt
 name|ArrayRef
 operator|<
 name|ConstVCall
@@ -1280,16 +1338,13 @@ name|TIdInfo
 operator|->
 name|TypeCheckedLoadConstVCalls
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 block|{}
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// Add a type test to the summary. This is used by WholeProgramDevirt if we
 end_comment
 
@@ -1297,15 +1352,15 @@ begin_comment
 comment|/// were unable to devirtualize a checked call.
 end_comment
 
-begin_macro
-unit|void
+begin_decl_stmt
+name|void
 name|addTypeTest
 argument_list|(
-argument|GlobalValue::GUID Guid
+name|GlobalValue
+operator|::
+name|GUID
+name|Guid
 argument_list|)
-end_macro
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1333,7 +1388,7 @@ name|Guid
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_decl_stmt
 
 begin_expr_stmt
 unit|};
@@ -1767,55 +1822,39 @@ name|WPDRes
 block|; }
 block|;
 comment|/// 160 bits SHA1
-typedef|typedef
+name|using
+name|ModuleHash
+operator|=
 name|std
 operator|::
 name|array
 operator|<
 name|uint32_t
-operator|,
+block|,
 literal|5
 operator|>
-name|ModuleHash
-expr_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// Type used for iterating through the global value summary map.
-end_comment
-
-begin_typedef
-typedef|typedef
+name|using
+name|const_gvsummary_iterator
+operator|=
 name|GlobalValueSummaryMapTy
 operator|::
 name|const_iterator
-name|const_gvsummary_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|gvsummary_iterator
+operator|=
 name|GlobalValueSummaryMapTy
 operator|::
 name|iterator
-name|gvsummary_iterator
-expr_stmt|;
-end_typedef
-
-begin_comment
+block|;
 comment|/// String table to hold/own module path strings, which additionally holds the
-end_comment
-
-begin_comment
 comment|/// module ID assigned to each module during the plugin step, as well as a hash
-end_comment
-
-begin_comment
 comment|/// of the module. The StringMap makes a copy of and owns inserted strings.
-end_comment
-
-begin_typedef
-typedef|typedef
+name|using
+name|ModulePathStringTableTy
+operator|=
 name|StringMap
 operator|<
 name|std
@@ -1823,23 +1862,15 @@ operator|::
 name|pair
 operator|<
 name|uint64_t
-operator|,
+block|,
 name|ModuleHash
 operator|>>
-name|ModulePathStringTableTy
-expr_stmt|;
-end_typedef
-
-begin_comment
+block|;
 comment|/// Map of global value GUID to its summary, used to identify values defined in
-end_comment
-
-begin_comment
 comment|/// a particular module, and provide efficient access to their summary.
-end_comment
-
-begin_typedef
-typedef|typedef
+name|using
+name|GVSummaryMapTy
+operator|=
 name|std
 operator|::
 name|map
@@ -1847,37 +1878,27 @@ operator|<
 name|GlobalValue
 operator|::
 name|GUID
-operator|,
+block|,
 name|GlobalValueSummary
 operator|*
 operator|>
-name|GVSummaryMapTy
-expr_stmt|;
-end_typedef
-
-begin_comment
+block|;
 comment|/// Class to hold module path string table and global value map,
-end_comment
-
-begin_comment
 comment|/// and encapsulate methods for operating on them.
-end_comment
-
-begin_decl_stmt
 name|class
 name|ModuleSummaryIndex
 block|{
 name|private
-label|:
+operator|:
 comment|/// Map from value name to list of summary instances for values of that
 comment|/// name (may be duplicates in the COMDAT case, e.g.).
 name|GlobalValueSummaryMapTy
 name|GlobalValueMap
-decl_stmt|;
+block|;
 comment|/// Holds strings for combined index, mapping to the corresponding module ID.
 name|ModulePathStringTableTy
 name|ModulePathStringTable
-decl_stmt|;
+block|;
 comment|/// Mapping from type identifiers to summary information for that type
 comment|/// identifier.
 comment|// FIXME: Add bitcode read/write support for this field.
@@ -1888,11 +1909,11 @@ operator|<
 name|std
 operator|::
 name|string
-operator|,
+block|,
 name|TypeIdSummary
 operator|>
 name|TypeIdMap
-expr_stmt|;
+block|;
 comment|/// Mapping from original ID to GUID. If original ID can map to multiple
 comment|/// GUIDs, it will be mapped to 0.
 name|std
@@ -1902,13 +1923,13 @@ operator|<
 name|GlobalValue
 operator|::
 name|GUID
-operator|,
+block|,
 name|GlobalValue
 operator|::
 name|GUID
 operator|>
 name|OidGuidMap
-expr_stmt|;
+block|;
 comment|// YAML I/O support.
 name|friend
 name|yaml
@@ -1917,7 +1938,7 @@ name|MappingTraits
 operator|<
 name|ModuleSummaryIndex
 operator|>
-expr_stmt|;
+block|;
 name|GlobalValueSummaryMapTy
 operator|::
 name|value_type
@@ -1944,10 +1965,10 @@ name|first
 return|;
 block|}
 name|public
-label|:
+operator|:
 name|gvsummary_iterator
 name|begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|GlobalValueMap
@@ -1970,7 +1991,7 @@ return|;
 block|}
 name|gvsummary_iterator
 name|end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|GlobalValueMap
@@ -2007,23 +2028,20 @@ comment|/// Return a ValueInfo for GUID if it exists, otherwise return ValueInfo
 name|ValueInfo
 name|getValueInfo
 argument_list|(
-name|GlobalValue
-operator|::
-name|GUID
-name|GUID
+argument|GlobalValue::GUID GUID
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|auto
 name|I
-init|=
+operator|=
 name|GlobalValueMap
 operator|.
 name|find
 argument_list|(
 name|GUID
 argument_list|)
-decl_stmt|;
+block|;
 return|return
 name|ValueInfo
 argument_list|(
@@ -2046,10 +2064,7 @@ comment|/// Return a ValueInfo for \p GUID.
 name|ValueInfo
 name|getOrInsertValueInfo
 argument_list|(
-name|GlobalValue
-operator|::
-name|GUID
-name|GUID
+argument|GlobalValue::GUID GUID
 argument_list|)
 block|{
 return|return
@@ -2065,16 +2080,13 @@ block|}
 comment|/// Return a ValueInfo for \p GV and mark it as belonging to GV.
 name|ValueInfo
 name|getOrInsertValueInfo
-parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
-name|GV
-parameter_list|)
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|)
 block|{
 name|auto
 name|VP
-init|=
+operator|=
 name|getOrInsertValuePtr
 argument_list|(
 name|GV
@@ -2082,7 +2094,7 @@ operator|->
 name|getGUID
 argument_list|()
 argument_list|)
-decl_stmt|;
+block|;
 name|VP
 operator|->
 name|second
@@ -2090,7 +2102,7 @@ operator|.
 name|GV
 operator|=
 name|GV
-expr_stmt|;
+block|;
 return|return
 name|ValueInfo
 argument_list|(
@@ -2138,16 +2150,9 @@ comment|/// Add a global value summary for a value of the given name.
 name|void
 name|addGlobalValueSummary
 argument_list|(
-name|StringRef
-name|ValueName
+argument|StringRef ValueName
 argument_list|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|GlobalValueSummary
-operator|>
-name|Summary
+argument|std::unique_ptr<GlobalValueSummary> Summary
 argument_list|)
 block|{
 name|addGlobalValueSummary
@@ -2169,22 +2174,14 @@ argument_list|(
 name|Summary
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Add a global value summary for the given ValueInfo.
 name|void
 name|addGlobalValueSummary
 argument_list|(
-name|ValueInfo
-name|VI
+argument|ValueInfo VI
 argument_list|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|GlobalValueSummary
-operator|>
-name|Summary
+argument|std::unique_ptr<GlobalValueSummary> Summary
 argument_list|)
 block|{
 name|addOriginalName
@@ -2199,7 +2196,7 @@ operator|->
 name|getOriginalName
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 comment|// Here we have a notionally const VI, but the value it points to is owned
 comment|// by the non-const *this.
 name|const_cast
@@ -2228,21 +2225,14 @@ argument_list|(
 name|Summary
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Add an original name for the value of the given GUID.
 name|void
 name|addOriginalName
 argument_list|(
-name|GlobalValue
-operator|::
-name|GUID
-name|ValueGUID
+argument|GlobalValue::GUID ValueGUID
 argument_list|,
-name|GlobalValue
-operator|::
-name|GUID
-name|OrigGUID
+argument|GlobalValue::GUID OrigGUID
 argument_list|)
 block|{
 if|if
@@ -2291,27 +2281,23 @@ block|}
 comment|/// Find the summary for global \p GUID in module \p ModuleId, or nullptr if
 comment|/// not found.
 name|GlobalValueSummary
-modifier|*
+operator|*
 name|findSummaryInModule
 argument_list|(
-name|GlobalValue
-operator|::
-name|GUID
-name|ValueGUID
+argument|GlobalValue::GUID ValueGUID
 argument_list|,
-name|StringRef
-name|ModuleId
+argument|StringRef ModuleId
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|auto
 name|CalleeInfo
-init|=
+operator|=
 name|getValueInfo
 argument_list|(
 name|ValueGUID
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -2359,7 +2345,7 @@ operator|==
 name|ModuleId
 return|;
 block|}
-block|)
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -2376,16 +2362,19 @@ condition|)
 return|return
 name|nullptr
 return|;
+end_decl_stmt
+
+begin_return
 return|return
 name|Summary
 operator|->
 name|get
 argument_list|()
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// Returns the first GlobalValueSummary for \p GV, asserting that there
 end_comment
 
@@ -2393,22 +2382,16 @@ begin_comment
 comment|/// is only one if \p PerModuleIndex.
 end_comment
 
-begin_decl_stmt
-name|GlobalValueSummary
-modifier|*
+begin_expr_stmt
+unit|GlobalValueSummary
+operator|*
 name|getGlobalValueSummary
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|&
-name|GV
+argument|const GlobalValue&GV
 argument_list|,
-name|bool
-name|PerModuleIndex
-operator|=
-name|true
+argument|bool PerModuleIndex = true
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -2419,7 +2402,7 @@ argument_list|()
 operator|&&
 literal|"Can't get GlobalValueSummary for GV with no name"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|getGlobalValueSummary
 argument_list|(
@@ -2437,7 +2420,7 @@ name|PerModuleIndex
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
 comment|/// Returns the first GlobalValueSummary for \p ValueGUID, asserting that
@@ -2926,13 +2909,17 @@ end_decl_stmt
 
 begin_comment
 unit|};  }
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_MODULESUMMARYINDEX_H
+end_comment
 
 end_unit
 

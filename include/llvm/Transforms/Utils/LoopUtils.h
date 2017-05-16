@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/TargetTransformInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Dominators.h"
 end_include
 
@@ -176,6 +182,9 @@ name|SCEV
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
+decl_stmt|;
+name|class
+name|TargetTransformInfo
 decl_stmt|;
 comment|/// \brief Captures loop safety information.
 comment|/// It keep information for loop& its header may throw exception.
@@ -1657,6 +1666,152 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+comment|/// Generates a vector reduction using shufflevectors to reduce the value.
+name|Value
+modifier|*
+name|getShuffleReduction
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|Value
+operator|*
+name|Src
+argument_list|,
+name|unsigned
+name|Op
+argument_list|,
+name|RecurrenceDescriptor
+operator|::
+name|MinMaxRecurrenceKind
+name|MinMaxKind
+operator|=
+name|RecurrenceDescriptor
+operator|::
+name|MRK_Invalid
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|RedOps
+operator|=
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/// Create a target reduction of the given vector. The reduction operation
+comment|/// is described by the \p Opcode parameter. min/max reductions require
+comment|/// additional information supplied in \p Flags.
+comment|/// The target is queried to determine if intrinsics or shuffle sequences are
+comment|/// required to implement the reduction.
+name|Value
+modifier|*
+name|createSimpleTargetReduction
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|,
+specifier|const
+name|TargetTransformInfo
+operator|*
+name|TTI
+argument_list|,
+name|unsigned
+name|Opcode
+argument_list|,
+name|Value
+operator|*
+name|Src
+argument_list|,
+name|TargetTransformInfo
+operator|::
+name|ReductionFlags
+name|Flags
+operator|=
+name|TargetTransformInfo
+operator|::
+name|ReductionFlags
+argument_list|()
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|RedOps
+operator|=
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/// Create a generic target reduction using a recurrence descriptor \p Desc
+comment|/// The target is queried to determine if intrinsics or shuffle sequences are
+comment|/// required to implement the reduction.
+name|Value
+modifier|*
+name|createTargetReduction
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|,
+specifier|const
+name|TargetTransformInfo
+operator|*
+name|TTI
+argument_list|,
+name|RecurrenceDescriptor
+operator|&
+name|Desc
+argument_list|,
+name|Value
+operator|*
+name|Src
+argument_list|,
+name|bool
+name|NoNaN
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+comment|/// Get the intersection (logical and) of all of the potential IR flags
+comment|/// of each scalar operation (VL) that will be converted into a vector (I).
+comment|/// Flag set: NSW, NUW, exact, and all of fast-math.
+name|void
+name|propagateIRFlags
+argument_list|(
+name|Value
+operator|*
+name|I
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|VL
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

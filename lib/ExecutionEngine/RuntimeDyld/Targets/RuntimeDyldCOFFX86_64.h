@@ -838,16 +838,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|deregisterEHFrames
-parameter_list|()
-function|override
-block|{
-comment|// Stub
-block|}
-end_function
-
-begin_function
 name|Error
 name|finalizeLoad
 parameter_list|(

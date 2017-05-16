@@ -482,6 +482,12 @@ comment|/// True if the LEA instruction with certain arguments is slow
 name|bool
 name|SlowLEA
 block|;
+comment|/// True if the LEA instruction has all three source operands: base, index,
+comment|/// and offset or if the LEA instruction uses base and index registers where
+comment|/// the base is EBP, RBP,or R13
+name|bool
+name|Slow3OpsLEA
+block|;
 comment|/// True if INC and DEC instructions are slow when writing to flags
 name|bool
 name|SlowIncDec
@@ -1554,6 +1560,15 @@ specifier|const
 block|{
 return|return
 name|SlowLEA
+return|;
+block|}
+name|bool
+name|slow3OpsLEA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Slow3OpsLEA
 return|;
 block|}
 name|bool

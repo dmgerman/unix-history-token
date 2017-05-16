@@ -124,9 +124,6 @@ name|class
 name|AnalysisManager
 expr_stmt|;
 name|class
-name|Invalidator
-decl_stmt|;
-name|class
 name|PreservedAnalyses
 decl_stmt|;
 comment|/// \brief Implementation details of the pass manager interfaces.
@@ -427,11 +424,11 @@ operator|>
 name|class
 name|ResultHasInvalidateMethod
 block|{
-typedef|typedef
-name|char
+name|using
 name|EnabledType
-typedef|;
-block|struct
+operator|=
+name|char
+block|;   struct
 name|DisabledType
 block|{
 name|char
@@ -439,7 +436,7 @@ name|a
 block|,
 name|b
 block|;   }
-expr_stmt|;
+block|;
 comment|// Purely to help out MSVC which fails to disable the below specialization,
 comment|// explicitly enable using the result type's invalidate routine if we can
 comment|// successfully call that routine.
@@ -451,12 +448,12 @@ operator|>
 expr|struct
 name|Nonce
 block|{
-typedef|typedef
-name|EnabledType
+name|using
 name|Type
-typedef|;
-block|}
-empty_stmt|;
+operator|=
+name|EnabledType
+block|; }
+block|;
 name|template
 operator|<
 name|typename
@@ -509,7 +506,7 @@ operator|<
 literal|2
 operator|>
 argument_list|)
-expr_stmt|;
+block|;
 comment|// First we define an overload that can only be taken if there is no
 comment|// invalidate member. We do this by taking the address of an invalidate
 comment|// member in an adjacent base class of a derived class. This would be
@@ -518,7 +515,7 @@ name|template
 operator|<
 name|typename
 name|T
-operator|,
+block|,
 name|typename
 name|U
 operator|>
@@ -528,15 +525,13 @@ name|NonceFunction
 argument_list|(
 argument|T U::*
 argument_list|)
-expr_stmt|;
-struct|struct
+block|;   struct
 name|CheckerBase
 block|{
 name|int
 name|invalidate
-decl_stmt|;
-block|}
-struct|;
+block|; }
+block|;
 name|template
 operator|<
 name|typename
@@ -546,10 +541,10 @@ expr|struct
 name|Checker
 operator|:
 name|CheckerBase
-operator|,
+block|,
 name|T
 block|{}
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|typename
@@ -567,7 +562,7 @@ operator|<
 literal|1
 operator|>
 argument_list|)
-expr_stmt|;
+block|;
 comment|// Now we have the fallback that will only be reached when there is an
 comment|// invalidate member, and enables the trait.
 name|template
@@ -584,13 +579,13 @@ operator|<
 literal|0
 operator|>
 argument_list|)
-expr_stmt|;
+block|;
 name|public
-label|:
-enum|enum
+operator|:
+expr|enum
 block|{
 name|Value
-init|=
+operator|=
 sizeof|sizeof
 argument_list|(
 name|check
@@ -612,9 +607,8 @@ operator|(
 name|EnabledType
 operator|)
 block|}
-enum|;
-block|}
-empty_stmt|;
+block|; }
+expr_stmt|;
 comment|/// \brief Wrapper to model the analysis result concept.
 comment|///
 comment|/// By default, this will implement the invalidate method with a trivial
@@ -1195,24 +1189,25 @@ name|this
 return|;
 block|}
 comment|// FIXME: Replace PassT::Result with type traits when we use C++11.
-typedef|typedef
+name|using
+name|ResultModelT
+operator|=
 name|AnalysisResultModel
 operator|<
 name|IRUnitT
-operator|,
+block|,
 name|PassT
-operator|,
+block|,
 name|typename
 name|PassT
 operator|::
 name|Result
-operator|,
+block|,
 name|PreservedAnalysesT
-operator|,
+block|,
 name|InvalidatorT
 operator|>
-name|ResultModelT
-expr_stmt|;
+block|;
 comment|/// \brief The model delegates to the \c PassT::run method.
 comment|///
 comment|/// The return is wrapped in an \c AnalysisResultModel.
@@ -1223,9 +1218,9 @@ operator|<
 name|AnalysisResultConcept
 operator|<
 name|IRUnitT
-operator|,
+block|,
 name|PreservedAnalysesT
-operator|,
+block|,
 name|InvalidatorT
 operator|>>
 name|run
@@ -1279,21 +1274,14 @@ return|;
 block|}
 name|PassT
 name|Pass
+block|; }
 expr_stmt|;
+block|}
+comment|// end namespace detail
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
-comment|// end namespace detail
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

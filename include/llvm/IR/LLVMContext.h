@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/LLVMContext.h - Class for managing "global" state --*- C++ -*-===//
+comment|//===- llvm/LLVMContext.h - Class for managing "global" state ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -459,63 +459,66 @@ name|void
 name|disableDebugTypeODRUniquing
 parameter_list|()
 function_decl|;
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|InlineAsmDiagHandlerTy
-function_decl|)
-parameter_list|(
+init|=
+name|void
+argument_list|(
+argument|*
+argument_list|)
+operator|(
 specifier|const
 name|SMDiagnostic
-modifier|&
-parameter_list|,
+operator|&
+expr|,
 name|void
-modifier|*
+operator|*
 name|Context
-parameter_list|,
+expr|,
 name|unsigned
 name|LocCookie
-parameter_list|)
-function_decl|;
+operator|)
+decl_stmt|;
 comment|/// Defines the type of a diagnostic handler.
 comment|/// \see LLVMContext::setDiagnosticHandler.
 comment|/// \see LLVMContext::diagnose.
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|DiagnosticHandlerTy
-function_decl|)
-parameter_list|(
+init|=
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
 specifier|const
 name|DiagnosticInfo
-modifier|&
+operator|&
 name|DI
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|Context
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Defines the type of a yield callback.
 comment|/// \see LLVMContext::setYieldCallback.
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|YieldCallbackTy
-function_decl|)
-parameter_list|(
-name|LLVMContext
-modifier|*
-name|Context
-parameter_list|,
+init|=
 name|void
-modifier|*
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|LLVMContext
+operator|*
+name|Context
+argument_list|,
+name|void
+operator|*
 name|OpaqueHandle
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// setInlineAsmDiagnosticHandler - This method sets a handler that is invoked
 comment|/// when problems with inline asm are detected by the backend.  The first
 comment|/// argument is a function pointer and the second is a context pointer that

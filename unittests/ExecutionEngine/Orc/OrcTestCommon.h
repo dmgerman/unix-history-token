@@ -429,8 +429,6 @@ name|get
 argument_list|(
 name|Context
 argument_list|)
-argument_list|,
-name|nullptr
 argument_list|)
 return|;
 block|}

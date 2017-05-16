@@ -1894,6 +1894,150 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+comment|/// \brief Create a vector fadd reduction intrinsic of the source vector.
+comment|/// The first parameter is a scalar accumulator value for ordered reductions.
+name|CallInst
+modifier|*
+name|CreateFAddReduce
+parameter_list|(
+name|Value
+modifier|*
+name|Acc
+parameter_list|,
+name|Value
+modifier|*
+name|Src
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a vector fmul reduction intrinsic of the source vector.
+comment|/// The first parameter is a scalar accumulator value for ordered reductions.
+name|CallInst
+modifier|*
+name|CreateFMulReduce
+parameter_list|(
+name|Value
+modifier|*
+name|Acc
+parameter_list|,
+name|Value
+modifier|*
+name|Src
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a vector int add reduction intrinsic of the source vector.
+name|CallInst
+modifier|*
+name|CreateAddReduce
+parameter_list|(
+name|Value
+modifier|*
+name|Src
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a vector int mul reduction intrinsic of the source vector.
+name|CallInst
+modifier|*
+name|CreateMulReduce
+parameter_list|(
+name|Value
+modifier|*
+name|Src
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a vector int AND reduction intrinsic of the source vector.
+name|CallInst
+modifier|*
+name|CreateAndReduce
+parameter_list|(
+name|Value
+modifier|*
+name|Src
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a vector int OR reduction intrinsic of the source vector.
+name|CallInst
+modifier|*
+name|CreateOrReduce
+parameter_list|(
+name|Value
+modifier|*
+name|Src
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a vector int XOR reduction intrinsic of the source vector.
+name|CallInst
+modifier|*
+name|CreateXorReduce
+parameter_list|(
+name|Value
+modifier|*
+name|Src
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a vector integer max reduction intrinsic of the source
+comment|/// vector.
+name|CallInst
+modifier|*
+name|CreateIntMaxReduce
+parameter_list|(
+name|Value
+modifier|*
+name|Src
+parameter_list|,
+name|bool
+name|IsSigned
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a vector integer min reduction intrinsic of the source
+comment|/// vector.
+name|CallInst
+modifier|*
+name|CreateIntMinReduce
+parameter_list|(
+name|Value
+modifier|*
+name|Src
+parameter_list|,
+name|bool
+name|IsSigned
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a vector float max reduction intrinsic of the source
+comment|/// vector.
+name|CallInst
+modifier|*
+name|CreateFPMaxReduce
+parameter_list|(
+name|Value
+modifier|*
+name|Src
+parameter_list|,
+name|bool
+name|NoNaN
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a vector float min reduction intrinsic of the source
+comment|/// vector.
+name|CallInst
+modifier|*
+name|CreateFPMinReduce
+parameter_list|(
+name|Value
+modifier|*
+name|Src
+parameter_list|,
+name|bool
+name|NoNaN
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// \brief Create a lifetime.start intrinsic.
 comment|///
 comment|/// If the pointer isn't i8* it will be converted.

@@ -304,9 +304,55 @@ argument|int *BytesAdded = nullptr
 argument_list|)
 specifier|const
 name|override
-block|; }
-decl_stmt|;
+block|;
+name|int64_t
+name|getFramePoppedByCallee
+argument_list|(
+argument|const MachineInstr&I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isFrameInstr
+argument_list|(
+name|I
+argument_list|)
+operator|&&
+literal|"Not a frame instruction"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+operator|>=
+literal|0
+operator|&&
+literal|"Size must not be negative"
+argument_list|)
+block|;
+return|return
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_endif

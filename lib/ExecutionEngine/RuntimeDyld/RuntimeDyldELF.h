@@ -595,14 +595,6 @@ literal|2
 operator|>
 name|UnregisteredEHFrameSections
 expr_stmt|;
-name|SmallVector
-operator|<
-name|SID
-operator|,
-literal|2
-operator|>
-name|RegisteredEHFrameSections
-expr_stmt|;
 comment|// Map between GOT relocation value and corresponding GOT offset
 name|std
 operator|::
@@ -732,11 +724,6 @@ name|override
 decl_stmt|;
 name|void
 name|registerEHFrames
-argument_list|()
-name|override
-expr_stmt|;
-name|void
-name|deregisterEHFrames
 argument_list|()
 name|override
 expr_stmt|;

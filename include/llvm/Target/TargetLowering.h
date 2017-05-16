@@ -5129,7 +5129,10 @@ comment|/// Inserts in the IR a target-specific intrinsic specifying a fence.
 comment|/// It is called by AtomicExpandPass before expanding an
 comment|///   AtomicRMW/AtomicCmpXchg/AtomicStore/AtomicLoad
 comment|///   if shouldInsertFencesForAtomic returns true.
-comment|/// RMW and CmpXchg set both IsStore and IsLoad to true.
+comment|///
+comment|/// Inst is the original atomic instruction, prior to other expansions that
+comment|/// may be performed.
+comment|///
 comment|/// This function should either return a nullptr, or a pointer to an IR-level
 comment|///   Instruction*. Even complex fence sequences can be represented by a
 comment|///   single Instruction* through an intrinsic to be lowered later.
@@ -5166,14 +5169,12 @@ operator|>
 operator|&
 name|Builder
 argument_list|,
+name|Instruction
+operator|*
+name|Inst
+argument_list|,
 name|AtomicOrdering
 name|Ord
-argument_list|,
-name|bool
-name|IsStore
-argument_list|,
-name|bool
-name|IsLoad
 argument_list|)
 decl|const
 block|{
@@ -5184,7 +5185,10 @@ argument_list|(
 name|Ord
 argument_list|)
 operator|&&
-name|IsStore
+name|Inst
+operator|->
+name|hasAtomicStore
+argument_list|()
 condition|)
 return|return
 name|Builder
@@ -5210,14 +5214,12 @@ operator|>
 operator|&
 name|Builder
 argument_list|,
+name|Instruction
+operator|*
+name|Inst
+argument_list|,
 name|AtomicOrdering
 name|Ord
-argument_list|,
-name|bool
-name|IsStore
-argument_list|,
-name|bool
-name|IsLoad
 argument_list|)
 decl|const
 block|{
@@ -7199,51 +7201,6 @@ name|VecVT
 argument_list|)
 decl|const
 block|{
-return|return
-name|false
-return|;
-block|}
-comment|// Return true if the instruction that performs a<< b actually performs
-comment|// a<< (b % (sizeof(a) * 8)).
-name|virtual
-name|bool
-name|supportsModuloShift
-argument_list|(
-name|ISD
-operator|::
-name|NodeType
-name|Inst
-argument_list|,
-name|EVT
-name|ReturnType
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-operator|(
-name|Inst
-operator|==
-name|ISD
-operator|::
-name|SHL
-operator|||
-name|Inst
-operator|==
-name|ISD
-operator|::
-name|SRA
-operator|||
-name|Inst
-operator|==
-name|ISD
-operator|::
-name|SRL
-operator|)
-operator|&&
-literal|"Expect a shift instruction"
-argument_list|)
-expr_stmt|;
 return|return
 name|false
 return|;

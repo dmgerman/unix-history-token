@@ -483,6 +483,60 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|materializeImmediate
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|const DebugLoc&DL
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|int64_t Value
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getPreferredSelectRegClass
+argument_list|(
+argument|unsigned Size
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|insertNE
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|const DebugLoc&DL
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|int Value
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|insertEQ
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|const DebugLoc&DL
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|int Value
+argument_list|)
+specifier|const
+block|;
+name|void
 name|storeRegToStackSlot
 argument_list|(
 argument|MachineBasicBlock&MBB
@@ -640,7 +694,7 @@ argument|MachineBasicBlock *&FBB
 argument_list|,
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|,
-argument|bool AllowModify
+argument|bool AllowModify = false
 argument_list|)
 specifier|const
 name|override
@@ -720,6 +774,25 @@ argument|unsigned FalseReg
 argument_list|)
 specifier|const
 name|override
+block|;
+name|void
+name|insertVectorSelect
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|const DebugLoc&DL
+argument_list|,
+argument|unsigned DstReg
+argument_list|,
+argument|ArrayRef<MachineOperand> Cond
+argument_list|,
+argument|unsigned TrueReg
+argument_list|,
+argument|unsigned FalseReg
+argument_list|)
+specifier|const
 block|;
 name|bool
 name|areMemAccessesTriviallyDisjoint
@@ -3071,6 +3144,15 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|void
+name|insertReturn
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return the number of wait states that result from executing this
 comment|/// instruction.
 name|unsigned
@@ -3300,6 +3382,41 @@ specifier|const
 name|MachineInstr
 operator|&
 name|MI
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|isNonUniformBranchInstr
+argument_list|(
+name|MachineInstr
+operator|&
+name|Instr
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|convertNonUniformIfRegion
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|IfEntry
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|IfEnd
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|convertNonUniformLoopRegion
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|LoopEntry
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|LoopEnd
 argument_list|)
 decl|const
 decl_stmt|;

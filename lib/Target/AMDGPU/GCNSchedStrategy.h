@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"GCNRegPressure.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineScheduler.h"
 end_include
 
@@ -225,6 +231,10 @@ comment|// Scheduling stage number.
 name|unsigned
 name|Stage
 block|;
+comment|// Current region index.
+name|size_t
+name|RegionIdx
+block|;
 comment|// Vecor of regions recorder for later rescheduling
 name|SmallVector
 operator|<
@@ -245,43 +255,54 @@ literal|32
 operator|>
 name|Regions
 block|;
-comment|// Region live-ins.
-name|DenseMap
+comment|// Region live-in cache.
+name|SmallVector
 operator|<
-name|unsigned
+name|GCNRPTracker
+operator|::
+name|LiveRegSet
 block|,
-name|LaneBitmask
+literal|32
 operator|>
 name|LiveIns
 block|;
-comment|// Number of live-ins to the current region, first SGPR then VGPR.
-name|std
-operator|::
-name|pair
+comment|// Region pressure cache.
+name|SmallVector
 operator|<
-name|unsigned
+name|GCNRegPressure
 block|,
-name|unsigned
+literal|32
 operator|>
-name|LiveInPressure
+name|Pressure
 block|;
-comment|// Collect current region live-ins.
-name|void
-name|discoverLiveIns
-argument_list|()
-block|;
-comment|// Return current region pressure. First value is SGPR number, second is VGPR.
-name|std
-operator|::
-name|pair
+comment|// Temporary basic block live-in cache.
+name|DenseMap
 operator|<
-name|unsigned
+specifier|const
+name|MachineBasicBlock
+operator|*
 block|,
-name|unsigned
+name|GCNRPTracker
+operator|::
+name|LiveRegSet
 operator|>
+name|MBBLiveIns
+block|;
+comment|// Return current region pressure.
+name|GCNRegPressure
 name|getRealRegPressure
 argument_list|()
 specifier|const
+block|;
+comment|// Compute and cache live-ins and pressure for all regions in block.
+name|void
+name|computeBlockPressure
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
 block|;
 name|public
 operator|:

@@ -1809,7 +1809,7 @@ name|CombineLevel
 name|Level
 argument_list|,
 name|AliasAnalysis
-operator|&
+operator|*
 name|AA
 argument_list|,
 name|CodeGenOpt
@@ -3697,16 +3697,20 @@ name|EVT
 name|VT
 parameter_list|)
 function_decl|;
-comment|/// Return a new CALLSEQ_START node, which always must have a glue result
-comment|/// (to ensure it's not CSE'd).  CALLSEQ_START does not have a useful SDLoc.
+comment|/// Return a new CALLSEQ_START node, that starts new call frame, in which
+comment|/// InSize bytes are set up inside CALLSEQ_START..CALLSEQ_END sequence and
+comment|/// OutSize specifies part of the frame set up prior to the sequence.
 name|SDValue
 name|getCALLSEQ_START
 parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|SDValue
-name|Op
+name|uint64_t
+name|InSize
+parameter_list|,
+name|uint64_t
+name|OutSize
 parameter_list|,
 specifier|const
 name|SDLoc
@@ -3735,7 +3739,23 @@ init|=
 block|{
 name|Chain
 block|,
-name|Op
+name|getIntPtrConstant
+argument_list|(
+name|InSize
+argument_list|,
+name|DL
+argument_list|,
+name|true
+argument_list|)
+block|,
+name|getIntPtrConstant
+argument_list|(
+argument|OutSize
+argument_list|,
+argument|DL
+argument_list|,
+argument|true
+argument_list|)
 block|}
 decl_stmt|;
 return|return

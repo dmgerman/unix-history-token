@@ -544,13 +544,19 @@ argument_list|,
 argument|Metadata *TypeID
 argument_list|)
 block|;
+name|protected
+operator|:
 name|void
 name|copyAttributesFrom
 argument_list|(
-argument|const GlobalValue *Src
+specifier|const
+name|GlobalObject
+operator|*
+name|Src
 argument_list|)
-name|override
 block|;
+name|public
+operator|:
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

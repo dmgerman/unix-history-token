@@ -1082,20 +1082,6 @@ operator|>
 name|SymSize
 block|;
 comment|/// Collection of abstract variables.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-block|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|DbgVariable
-operator|>>
-name|AbstractVariables
-block|;
 name|SmallVector
 operator|<
 name|std
@@ -1348,64 +1334,26 @@ operator|::
 name|InlinedVariable
 name|InlinedVariable
 expr_stmt|;
-comment|/// Find abstract variable associated with Var.
-name|DbgVariable
-operator|*
-name|getExistingAbstractVariable
+name|void
+name|ensureAbstractVariableIsCreated
 argument_list|(
-argument|InlinedVariable IV
+argument|DwarfCompileUnit&CU
 argument_list|,
-argument|const DILocalVariable *&Cleansed
+argument|InlinedVariable Var
+argument_list|,
+argument|const MDNode *Scope
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|DbgVariable
-modifier|*
-name|getExistingAbstractVariable
-parameter_list|(
-name|InlinedVariable
-name|IV
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|createAbstractVariable
-parameter_list|(
-specifier|const
-name|DILocalVariable
-modifier|*
-name|DV
-parameter_list|,
-name|LexicalScope
-modifier|*
-name|Scope
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ensureAbstractVariableIsCreated
-parameter_list|(
-name|InlinedVariable
-name|Var
-parameter_list|,
-specifier|const
-name|MDNode
-modifier|*
-name|Scope
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ensureAbstractVariableIsCreatedIfScoped
 parameter_list|(
+name|DwarfCompileUnit
+modifier|&
+name|CU
+parameter_list|,
 name|InlinedVariable
 name|Var
 parameter_list|,
@@ -1422,6 +1370,10 @@ name|DbgVariable
 modifier|*
 name|createConcreteVariable
 parameter_list|(
+name|DwarfCompileUnit
+modifier|&
+name|TheCU
+parameter_list|,
 name|LexicalScope
 modifier|&
 name|Scope
@@ -1440,6 +1392,10 @@ begin_function_decl
 name|void
 name|constructAbstractSubprogramScopeDIE
 parameter_list|(
+name|DwarfCompileUnit
+modifier|&
+name|SrcCU
+parameter_list|,
 name|LexicalScope
 modifier|*
 name|Scope
@@ -2024,6 +1980,10 @@ begin_decl_stmt
 name|void
 name|collectVariableInfoFromMFTable
 argument_list|(
+name|DwarfCompileUnit
+operator|&
+name|TheCU
+argument_list|,
 name|DenseSet
 operator|<
 name|InlinedVariable
@@ -2378,6 +2338,14 @@ return|return
 name|HasSplitDwarf
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|shareAcrossDWOCUs
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment

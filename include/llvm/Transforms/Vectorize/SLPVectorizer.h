@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/OptimizationDiagnosticInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/ScalarEvolution.h"
 end_include
 
@@ -302,6 +308,10 @@ parameter_list|,
 name|DemandedBits
 modifier|*
 name|DB_
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE_
 parameter_list|)
 function_decl|;
 name|private

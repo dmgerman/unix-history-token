@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Module.h - C++ class to represent a VM module ------*- C++ -*-===//
+comment|//===- llvm/Module.h - C++ class to represent a VM module -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -72,6 +72,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Attributes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Comdat.h"
 end_include
 
@@ -114,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/SymbolTableListTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/CBindingWrapping.h"
 end_include
 
@@ -126,21 +156,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm-c/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|Optional
-expr_stmt|;
 name|class
 name|Error
 decl_stmt|;
@@ -159,9 +217,6 @@ decl_stmt|;
 name|class
 name|RandomNumberGenerator
 decl_stmt|;
-name|class
-name|StructType
-decl_stmt|;
 name|template
 operator|<
 name|class
@@ -170,6 +225,9 @@ operator|>
 name|class
 name|SmallPtrSetImpl
 expr_stmt|;
+name|class
+name|StructType
+decl_stmt|;
 comment|/// A Module instance is used to store all the information related to an
 comment|/// LLVM module. Modules are the top level container of all other LLVM
 comment|/// Intermediate Representation (IR) objects. Each module directly contains a
@@ -189,137 +247,155 @@ comment|/// @{
 name|public
 label|:
 comment|/// The type for the list of global variables.
-typedef|typedef
+name|using
+name|GlobalListType
+init|=
 name|SymbolTableList
 operator|<
 name|GlobalVariable
 operator|>
-name|GlobalListType
-expr_stmt|;
+decl_stmt|;
 comment|/// The type for the list of functions.
-typedef|typedef
+name|using
+name|FunctionListType
+init|=
 name|SymbolTableList
 operator|<
 name|Function
 operator|>
-name|FunctionListType
-expr_stmt|;
+decl_stmt|;
 comment|/// The type for the list of aliases.
-typedef|typedef
+name|using
+name|AliasListType
+init|=
 name|SymbolTableList
 operator|<
 name|GlobalAlias
 operator|>
-name|AliasListType
-expr_stmt|;
+decl_stmt|;
 comment|/// The type for the list of ifuncs.
-typedef|typedef
+name|using
+name|IFuncListType
+init|=
 name|SymbolTableList
 operator|<
 name|GlobalIFunc
 operator|>
-name|IFuncListType
-expr_stmt|;
+decl_stmt|;
 comment|/// The type for the list of named metadata.
-typedef|typedef
+name|using
+name|NamedMDListType
+init|=
 name|ilist
 operator|<
 name|NamedMDNode
 operator|>
-name|NamedMDListType
-expr_stmt|;
+decl_stmt|;
 comment|/// The type of the comdat "symbol" table.
-typedef|typedef
+name|using
+name|ComdatSymTabType
+init|=
 name|StringMap
 operator|<
 name|Comdat
 operator|>
-name|ComdatSymTabType
-expr_stmt|;
+decl_stmt|;
 comment|/// The Global Variable iterator.
-typedef|typedef
-name|GlobalListType
-operator|::
-name|iterator
+name|using
 name|global_iterator
-expr_stmt|;
+init|=
+name|GlobalListType
+operator|::
+name|iterator
+decl_stmt|;
 comment|/// The Global Variable constant iterator.
-typedef|typedef
+name|using
+name|const_global_iterator
+init|=
 name|GlobalListType
 operator|::
 name|const_iterator
-name|const_global_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Function iterators.
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|FunctionListType
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Function constant iterator
-typedef|typedef
+name|using
+name|const_iterator
+init|=
 name|FunctionListType
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Function reverse iterator.
-typedef|typedef
+name|using
+name|reverse_iterator
+init|=
 name|FunctionListType
 operator|::
 name|reverse_iterator
-name|reverse_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Function constant reverse iterator.
-typedef|typedef
+name|using
+name|const_reverse_iterator
+init|=
 name|FunctionListType
 operator|::
 name|const_reverse_iterator
-name|const_reverse_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Global Alias iterators.
-typedef|typedef
-name|AliasListType
-operator|::
-name|iterator
+name|using
 name|alias_iterator
-expr_stmt|;
+init|=
+name|AliasListType
+operator|::
+name|iterator
+decl_stmt|;
 comment|/// The Global Alias constant iterator
-typedef|typedef
+name|using
+name|const_alias_iterator
+init|=
 name|AliasListType
 operator|::
 name|const_iterator
-name|const_alias_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Global IFunc iterators.
-typedef|typedef
-name|IFuncListType
-operator|::
-name|iterator
+name|using
 name|ifunc_iterator
-expr_stmt|;
+init|=
+name|IFuncListType
+operator|::
+name|iterator
+decl_stmt|;
 comment|/// The Global IFunc constant iterator
-typedef|typedef
+name|using
+name|const_ifunc_iterator
+init|=
 name|IFuncListType
 operator|::
 name|const_iterator
-name|const_ifunc_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The named metadata iterators.
-typedef|typedef
+name|using
+name|named_metadata_iterator
+init|=
 name|NamedMDListType
 operator|::
 name|iterator
-name|named_metadata_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The named metadata constant iterators.
-typedef|typedef
+name|using
+name|const_named_metadata_iterator
+init|=
 name|NamedMDListType
 operator|::
 name|const_iterator
-name|const_named_metadata_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// This enumeration defines the supported behaviors of module flags.
 enum|enum
 name|ModFlagBehavior
@@ -2136,29 +2212,31 @@ block|}
 comment|/// @}
 comment|/// @name Convenience iterators
 comment|/// @{
-typedef|typedef
+name|using
+name|global_object_iterator
+init|=
 name|concat_iterator
 operator|<
 name|GlobalObject
-operator|,
+decl_stmt|,
 name|iterator
-operator|,
+decl_stmt|,
 name|global_iterator
-operator|>
-name|global_object_iterator
-expr_stmt|;
-typedef|typedef
+decl|>
+decl_stmt|;
+name|using
+name|const_global_object_iterator
+init|=
 name|concat_iterator
 operator|<
 specifier|const
 name|GlobalObject
-operator|,
+decl_stmt|,
 name|const_iterator
-operator|,
+decl_stmt|,
 name|const_global_iterator
-operator|>
-name|const_global_object_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|iterator_range
 operator|<
 name|global_object_iterator
@@ -2253,37 +2331,39 @@ name|end
 argument_list|()
 return|;
 block|}
-typedef|typedef
-name|concat_iterator
-operator|<
-name|GlobalValue
-operator|,
-name|iterator
-operator|,
-name|global_iterator
-operator|,
-name|alias_iterator
-operator|,
-name|ifunc_iterator
-operator|>
+name|using
 name|global_value_iterator
-expr_stmt|;
-typedef|typedef
+init|=
+name|concat_iterator
+operator|<
+name|GlobalValue
+decl_stmt|,
+name|iterator
+decl_stmt|,
+name|global_iterator
+decl_stmt|,
+name|alias_iterator
+decl_stmt|,
+name|ifunc_iterator
+decl|>
+decl_stmt|;
+name|using
+name|const_global_value_iterator
+init|=
 name|concat_iterator
 operator|<
 specifier|const
 name|GlobalValue
-operator|,
+decl_stmt|,
 name|const_iterator
-operator|,
+decl_stmt|,
 name|const_global_iterator
-operator|,
+decl_stmt|,
 name|const_alias_iterator
-operator|,
+decl_stmt|,
 name|const_ifunc_iterator
-operator|>
-name|const_global_value_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|iterator_range
 operator|<
 name|global_value_iterator
@@ -3017,13 +3097,17 @@ end_function
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_MODULE_H
+end_comment
 
 end_unit
 
