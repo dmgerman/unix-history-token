@@ -592,7 +592,7 @@ condition|(
 name|xep
 condition|)
 block|{
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -980,7 +980,7 @@ name|xei_version
 operator|=
 name|XO_ENCODER_VERSION
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 name|func

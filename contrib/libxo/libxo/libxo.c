@@ -1027,23 +1027,23 @@ name|mbstate_t
 name|xo_mbstate
 decl_stmt|;
 comment|/* Multi-byte character conversion state */
-name|unsigned
+name|ssize_t
 name|xo_anchor_offset
 decl_stmt|;
 comment|/* Start of anchored text */
-name|unsigned
+name|ssize_t
 name|xo_anchor_columns
 decl_stmt|;
 comment|/* Number of columns since the start anchor */
-name|int
+name|ssize_t
 name|xo_anchor_min_width
 decl_stmt|;
 comment|/* Desired width of anchored text */
-name|unsigned
+name|ssize_t
 name|xo_units_offset
 decl_stmt|;
 comment|/* Start of units insertion point */
-name|unsigned
+name|ssize_t
 name|xo_columns
 decl_stmt|;
 comment|/* Columns emitted during this xo_emit call */
@@ -1767,19 +1767,19 @@ modifier|*
 name|xfi_next
 decl_stmt|;
 comment|/* Next character in format string */
-name|unsigned
+name|ssize_t
 name|xfi_len
 decl_stmt|;
 comment|/* Length of field */
-name|unsigned
+name|ssize_t
 name|xfi_clen
 decl_stmt|;
 comment|/* Content length */
-name|unsigned
+name|ssize_t
 name|xfi_flen
 decl_stmt|;
 comment|/* Format length */
-name|unsigned
+name|ssize_t
 name|xfi_elen
 decl_stmt|;
 comment|/* Encoding length */
@@ -1881,7 +1881,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|ssize_t
 name|xo_transition
 parameter_list|(
 name|xo_handle_t
@@ -1924,7 +1924,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|ssize_t
 name|nlen
 parameter_list|,
 specifier|const
@@ -1932,7 +1932,7 @@ name|char
 modifier|*
 name|value
 parameter_list|,
-name|int
+name|ssize_t
 name|vlen
 parameter_list|,
 specifier|const
@@ -1940,7 +1940,7 @@ name|char
 modifier|*
 name|encoding
 parameter_list|,
-name|int
+name|ssize_t
 name|elen
 parameter_list|)
 function_decl|;
@@ -2000,7 +2000,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|xo_ssize_t
 name|xo_write_to_file
 parameter_list|(
 name|void
@@ -2978,24 +2978,24 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_escape_xml
 parameter_list|(
 name|xo_buffer_t
 modifier|*
 name|xbp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|xo_xff_flags_t
 name|flags
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|slen
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|delta
 init|=
 literal|0
@@ -3018,11 +3018,12 @@ decl_stmt|;
 name|int
 name|attr
 init|=
-operator|(
+name|XOF_BIT_ISSET
+argument_list|(
 name|flags
-operator|&
+argument_list|,
 name|XFF_ATTR
-operator|)
+argument_list|)
 decl_stmt|;
 for|for
 control|(
@@ -3272,14 +3273,14 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_escape_json
 parameter_list|(
 name|xo_buffer_t
 modifier|*
 name|xbp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|xo_xff_flags_t
@@ -3287,7 +3288,7 @@ name|flags
 name|UNUSED
 parameter_list|)
 block|{
-name|unsigned
+name|ssize_t
 name|delta
 init|=
 literal|0
@@ -3513,14 +3514,14 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_escape_sdparams
 parameter_list|(
 name|xo_buffer_t
 modifier|*
 name|xbp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|xo_xff_flags_t
@@ -3528,7 +3529,7 @@ name|flags
 name|UNUSED
 parameter_list|)
 block|{
-name|unsigned
+name|ssize_t
 name|delta
 init|=
 literal|0
@@ -3717,7 +3718,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|xo_xff_flags_t
@@ -3818,7 +3819,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_write
 parameter_list|(
 name|xo_handle_t
@@ -3826,7 +3827,7 @@ modifier|*
 name|xop
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -3916,7 +3917,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_vsnprintf
 parameter_list|(
 name|xo_handle_t
@@ -3939,10 +3940,10 @@ block|{
 name|va_list
 name|va_local
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 name|xbp
@@ -4124,7 +4125,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_printf_v
 parameter_list|(
 name|xo_handle_t
@@ -4149,7 +4150,7 @@ name|xop
 operator|->
 name|xo_data
 decl_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 name|xbp
@@ -4166,7 +4167,7 @@ operator|->
 name|xb_bufp
 operator|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -4292,7 +4293,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_printf
 parameter_list|(
 name|xo_handle_t
@@ -4307,7 +4308,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -4348,7 +4349,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|uint8_t
 name|xo_utf8_bits
 index|[
 literal|7
@@ -4394,7 +4395,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|int
+name|ssize_t
 name|xo_utf8_to_wc_len
 parameter_list|(
 specifier|const
@@ -4413,7 +4414,7 @@ operator|)
 operator|*
 name|buf
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 decl_stmt|;
 if|if
@@ -4519,7 +4520,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_buf_utf8_len
 parameter_list|(
 name|xo_handle_t
@@ -4531,7 +4532,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|ssize_t
 name|bufsiz
 parameter_list|)
 block|{
@@ -4545,7 +4546,7 @@ operator|)
 operator|*
 name|buf
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 decl_stmt|,
 name|i
@@ -4678,7 +4679,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -4699,7 +4700,7 @@ index|[
 literal|0
 index|]
 return|;
-name|int
+name|ssize_t
 name|i
 decl_stmt|;
 name|wchar_t
@@ -4789,14 +4790,14 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_utf8_emit_len
 parameter_list|(
 name|wchar_t
 name|wc
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|len
 decl_stmt|;
 if|if
@@ -4934,14 +4935,14 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|wchar_t
 name|wc
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|i
 decl_stmt|;
 if|if
@@ -5025,7 +5026,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_buf_append_locale_from_utf8
 parameter_list|(
 name|xo_handle_t
@@ -5041,14 +5042,14 @@ name|char
 modifier|*
 name|ibuf
 parameter_list|,
-name|int
+name|ssize_t
 name|ilen
 parameter_list|)
 block|{
 name|wchar_t
 name|wc
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 decl_stmt|;
 comment|/*      * Build our wide character from the input buffer; the number of      * bits we pull off the first character is dependent on the length,      * but we put 6 bits off all other bytes.      */
@@ -5230,7 +5231,7 @@ name|char
 modifier|*
 name|cp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -5248,7 +5249,7 @@ name|cp
 operator|+
 name|len
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|save_off
 init|=
 name|xbp
@@ -5259,7 +5260,7 @@ name|xbp
 operator|->
 name|xb_curp
 decl_stmt|;
-name|int
+name|ssize_t
 name|slen
 decl_stmt|;
 name|int
@@ -5448,7 +5449,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -5485,7 +5486,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -6147,7 +6148,7 @@ name|xo_retain_entry_t
 modifier|*
 name|xrep
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|sz
 init|=
 sizeof|sizeof
@@ -6336,7 +6337,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -6344,7 +6345,7 @@ argument_list|(
 name|fmt
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|plen
 init|=
 name|xo_program
@@ -6508,7 +6509,7 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 name|xbp
@@ -6525,7 +6526,7 @@ operator|->
 name|xb_bufp
 operator|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 name|vsnprintf
@@ -7179,7 +7180,7 @@ name|xo_buffer_t
 modifier|*
 name|xbp
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -7278,7 +7279,7 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 name|xbp
@@ -7523,7 +7524,7 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|ssize_t
 name|bufsiz
 init|=
 sizeof|sizeof
@@ -7531,7 +7532,7 @@ argument_list|(
 name|buf
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc2
 decl_stmt|;
 name|va_copy
@@ -8755,7 +8756,7 @@ name|char
 modifier|*
 name|value
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -8962,6 +8963,12 @@ block|{
 name|XOF_FLUSH
 block|,
 literal|"flush"
+block|}
+block|,
+block|{
+name|XOF_FLUSH_LINE
+block|,
+literal|"flush-line"
 block|}
 block|,
 block|{
@@ -9204,11 +9211,12 @@ literal|1
 decl_stmt|,
 name|new_style
 decl_stmt|,
-name|len
-decl_stmt|,
 name|rc
 init|=
 literal|0
+decl_stmt|;
+name|ssize_t
+name|len
 decl_stmt|;
 name|xo_xof_flags_t
 name|new_flag
@@ -9252,7 +9260,7 @@ operator|==
 literal|':'
 condition|)
 block|{
-name|int
+name|ssize_t
 name|sz
 decl_stmt|;
 for|for
@@ -9875,7 +9883,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -10504,7 +10512,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|ssize_t
 name|nlen
 parameter_list|)
 block|{
@@ -10711,7 +10719,7 @@ name|char
 modifier|*
 name|cp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|int
@@ -10734,21 +10742,23 @@ name|wc
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|ilen
 decl_stmt|,
 name|olen
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|width
 decl_stmt|;
 name|int
 name|attr
 init|=
-operator|(
+name|XOF_BIT_ISSET
+argument_list|(
 name|flags
-operator|&
+argument_list|,
 name|XFF_ATTR
-operator|)
+argument_list|)
 decl_stmt|;
 specifier|const
 name|char
@@ -11189,7 +11199,7 @@ name|xo_xml_quot
 expr_stmt|;
 else|else
 break|break;
-name|int
+name|ssize_t
 name|slen
 init|=
 name|strlen
@@ -11565,7 +11575,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_format_string
 parameter_list|(
 name|xo_handle_t
@@ -11610,9 +11620,10 @@ name|wcp
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|cols
 init|=
 literal|0
@@ -11621,7 +11632,7 @@ name|rc
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|off
 init|=
 name|xbp
@@ -12188,7 +12199,7 @@ name|xo_buffer_t
 modifier|*
 name|xbp
 parameter_list|,
-name|int
+name|ssize_t
 name|start_offset
 parameter_list|)
 block|{
@@ -12286,7 +12297,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_count_utf8_cols
 parameter_list|(
 specifier|const
@@ -12294,17 +12305,17 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|tlen
 decl_stmt|;
 name|wchar_t
 name|wc
 decl_stmt|;
-name|int
+name|ssize_t
 name|cols
 init|=
 literal|0
@@ -12377,7 +12388,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 	     * Find the width-in-columns of this character, which must be done 	     * in wide characters, since we lack a mbswidth() function. 	     */
-name|int
+name|ssize_t
 name|width
 init|=
 name|xo_wcwidth
@@ -12718,7 +12729,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_format_gettext
 parameter_list|(
 name|xo_handle_t
@@ -12728,10 +12739,10 @@ parameter_list|,
 name|xo_xff_flags_t
 name|flags
 parameter_list|,
-name|int
+name|ssize_t
 name|start_offset
 parameter_list|,
-name|int
+name|ssize_t
 name|cols
 parameter_list|,
 name|int
@@ -12780,7 +12791,7 @@ name|xb_bufp
 operator|+
 name|start_offset
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 init|=
 name|xbp
@@ -13007,7 +13018,7 @@ return|;
 block|}
 block|}
 comment|/*      * Since the new string string might be in gettext's buffer or      * in the buffer (as the plural form), we make a copy.      */
-name|int
+name|ssize_t
 name|nlen
 init|=
 name|strlen
@@ -13087,7 +13098,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|xo_xff_flags_t
@@ -13105,7 +13116,7 @@ argument_list|(
 name|xop
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|start_offset
 init|=
 name|xo_buf_offset
@@ -13252,14 +13263,14 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_trim_ws
 parameter_list|(
 name|xo_buffer_t
 modifier|*
 name|xbp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -13273,7 +13284,7 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-name|int
+name|ssize_t
 name|delta
 decl_stmt|;
 comment|/* First trim leading space */
@@ -13407,7 +13418,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_do_format_field
 parameter_list|(
 name|xo_handle_t
@@ -13423,7 +13434,7 @@ name|char
 modifier|*
 name|fmt
 parameter_list|,
-name|int
+name|ssize_t
 name|flen
 parameter_list|,
 name|xo_xff_flags_t
@@ -13449,7 +13460,7 @@ name|xp
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|,
 name|cols
@@ -13479,6 +13490,10 @@ name|flags
 operator|&
 name|XFF_NO_OUTPUT
 operator|)
+condition|?
+literal|1
+else|:
+literal|0
 decl_stmt|;
 name|int
 name|need_enc
@@ -13493,7 +13508,7 @@ name|real_need_enc
 init|=
 name|need_enc
 decl_stmt|;
-name|int
+name|ssize_t
 name|old_cols
 init|=
 name|xop
@@ -13524,7 +13539,7 @@ name|xop
 operator|->
 name|xo_data
 expr_stmt|;
-name|unsigned
+name|ssize_t
 name|start_offset
 init|=
 name|xo_buf_offset
@@ -14363,7 +14378,7 @@ name|xop
 operator|->
 name|xo_fmt
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 init|=
 name|cp
@@ -14527,7 +14542,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|int
+name|ssize_t
 name|columns
 init|=
 name|rc
@@ -15182,7 +15197,7 @@ name|XFF_GT_FLAGS
 condition|)
 block|{
 comment|/* 	 * Handle gettext()ing the field by looking up the value 	 * and then copying it in, while converting to locale, if 	 * needed. 	 */
-name|int
+name|ssize_t
 name|new_cols
 init|=
 name|xo_format_gettext
@@ -15386,14 +15401,14 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_humanize
 parameter_list|(
 name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|uint64_t
@@ -15486,15 +15501,15 @@ typedef|typedef
 struct|struct
 name|xo_humanize_save_s
 block|{
-name|unsigned
+name|ssize_t
 name|xhs_offset
 decl_stmt|;
 comment|/* Saved xo_offset */
-name|unsigned
+name|ssize_t
 name|xhs_columns
 decl_stmt|;
 comment|/* Saved xo_columns */
-name|unsigned
+name|ssize_t
 name|xhs_anchor_columns
 decl_stmt|;
 comment|/* Saved xo_anchor_columns */
@@ -15538,7 +15553,7 @@ name|XOF_NO_HUMANIZE
 argument_list|)
 condition|)
 return|return;
-name|unsigned
+name|ssize_t
 name|end_offset
 init|=
 name|xbp
@@ -15644,10 +15659,10 @@ name|savep
 operator|->
 name|xhs_offset
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 operator|(
@@ -15777,7 +15792,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|ssize_t
 name|nlen
 parameter_list|,
 specifier|const
@@ -15785,7 +15800,7 @@ name|char
 modifier|*
 name|value
 parameter_list|,
-name|int
+name|ssize_t
 name|vlen
 parameter_list|,
 specifier|const
@@ -15793,7 +15808,7 @@ name|char
 modifier|*
 name|encoding
 parameter_list|,
-name|int
+name|ssize_t
 name|elen
 parameter_list|)
 block|{
@@ -15918,6 +15933,10 @@ argument_list|,
 name|XOF_XPATH
 argument_list|)
 operator|)
+condition|?
+literal|1
+else|:
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -16079,7 +16098,7 @@ operator|->
 name|xo_depth
 index|]
 decl_stmt|;
-name|int
+name|ssize_t
 name|olen
 init|=
 name|xsp
@@ -16095,7 +16114,7 @@ argument_list|)
 else|:
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|dlen
 init|=
 name|pbp
@@ -16733,7 +16752,7 @@ name|xop
 operator|->
 name|xo_data
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|base_offset
 init|=
 name|xbp
@@ -16819,7 +16838,7 @@ index|[]
 init|=
 literal|"\" data-number=\""
 decl_stmt|;
-name|int
+name|ssize_t
 name|div_len
 init|=
 sizeof|sizeof
@@ -16829,7 +16848,7 @@ argument_list|)
 operator|-
 literal|1
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|end_offset
 init|=
 name|xbp
@@ -16840,7 +16859,7 @@ name|xbp
 operator|->
 name|xb_bufp
 decl_stmt|;
-name|int
+name|ssize_t
 name|olen
 init|=
 name|end_offset
@@ -16906,7 +16925,7 @@ name|olen
 argument_list|)
 condition|)
 block|{
-name|unsigned
+name|ssize_t
 name|new_offset
 init|=
 name|xbp
@@ -17030,7 +17049,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -17107,7 +17126,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|unsigned
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -17120,7 +17139,7 @@ name|xfip
 operator|->
 name|xfi_format
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|flen
 init|=
 name|xfip
@@ -17224,7 +17243,7 @@ name|xop
 operator|->
 name|xo_data
 decl_stmt|;
-name|int
+name|ssize_t
 name|start
 init|=
 name|xbp
@@ -17235,7 +17254,7 @@ name|xbp
 operator|->
 name|xb_bufp
 decl_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 name|xbp
@@ -17244,7 +17263,7 @@ name|xb_size
 operator|-
 name|start
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 if|if
@@ -17816,7 +17835,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|ssize_t
 name|nlen
 parameter_list|,
 specifier|const
@@ -17824,7 +17843,7 @@ name|char
 modifier|*
 name|format
 parameter_list|,
-name|int
+name|ssize_t
 name|flen
 parameter_list|,
 specifier|const
@@ -17832,7 +17851,7 @@ name|char
 modifier|*
 name|encoding
 parameter_list|,
-name|int
+name|ssize_t
 name|elen
 parameter_list|,
 name|xo_xff_flags_t
@@ -17923,7 +17942,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 name|xo_transition
@@ -18074,7 +18093,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 name|xo_transition
@@ -18181,7 +18200,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 name|xo_transition
@@ -18807,7 +18826,6 @@ block|}
 name|int
 name|first
 init|=
-operator|!
 operator|(
 name|xop
 operator|->
@@ -18822,6 +18840,10 @@ name|xs_flags
 operator|&
 name|XSF_NOT_FIRST
 operator|)
+condition|?
+literal|0
+else|:
+literal|1
 decl_stmt|;
 name|xo_format_prep
 argument_list|(
@@ -18878,7 +18900,7 @@ if|if
 condition|(
 name|strchr
 argument_list|(
-literal|"diouxXDOUeEfFgGaAcCp"
+literal|"diouDOUeEfFgG"
 argument_list|,
 name|format
 index|[
@@ -19002,7 +19024,7 @@ name|xop
 operator|->
 name|xo_data
 expr_stmt|;
-name|int
+name|ssize_t
 name|off
 init|=
 name|xbp
@@ -19032,8 +19054,8 @@ name|XOF_UNDERSCORES
 argument_list|)
 condition|)
 block|{
-name|int
-name|now
+name|ssize_t
+name|coff
 init|=
 name|xbp
 operator|->
@@ -19048,7 +19070,7 @@ control|(
 init|;
 name|off
 operator|<
-name|now
+name|coff
 condition|;
 name|off
 operator|++
@@ -19499,7 +19521,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|unsigned
+name|ssize_t
 name|name_offset
 init|=
 name|xo_buf_offset
@@ -19528,7 +19550,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|unsigned
+name|ssize_t
 name|value_offset
 init|=
 name|xo_buf_offset
@@ -19623,7 +19645,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|unsigned
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -19636,7 +19658,7 @@ name|xfip
 operator|->
 name|xfi_format
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|flen
 init|=
 name|xfip
@@ -19677,7 +19699,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|int
+name|ssize_t
 name|start_offset
 init|=
 operator|-
@@ -19722,7 +19744,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|end_offset
 init|=
 name|xop
@@ -19813,7 +19835,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 specifier|const
@@ -19821,7 +19843,7 @@ name|char
 modifier|*
 name|fmt
 parameter_list|,
-name|int
+name|ssize_t
 name|flen
 parameter_list|,
 name|xo_xff_flags_t
@@ -20319,7 +20341,7 @@ decl_stmt|,
 modifier|*
 name|xp
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -21317,7 +21339,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|unsigned
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -21330,7 +21352,7 @@ name|xfip
 operator|->
 name|xfi_format
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|flen
 init|=
 name|xfip
@@ -21553,7 +21575,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|unsigned
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -21566,7 +21588,7 @@ name|xfip
 operator|->
 name|xfi_format
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|flen
 init|=
 name|xfip
@@ -21635,14 +21657,14 @@ name|xop
 operator|->
 name|xo_data
 decl_stmt|;
-name|int
+name|ssize_t
 name|start
 init|=
 name|xop
 operator|->
 name|xo_units_offset
 decl_stmt|;
-name|int
+name|ssize_t
 name|stop
 init|=
 name|xbp
@@ -21738,7 +21760,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|now
 init|=
 name|xbp
@@ -21749,7 +21771,7 @@ name|xbp
 operator|->
 name|xb_bufp
 decl_stmt|;
-name|int
+name|ssize_t
 name|delta
 init|=
 name|now
@@ -21839,7 +21861,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_find_width
 parameter_list|(
 name|xo_handle_t
@@ -21855,7 +21877,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|unsigned
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -21868,7 +21890,7 @@ name|xfip
 operator|->
 name|xfi_format
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|flen
 init|=
 name|xfip
@@ -22090,7 +22112,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|unsigned
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -22198,7 +22220,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|unsigned
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -22246,7 +22268,7 @@ argument_list|,
 name|XOIF_UNITS_PENDING
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|width
 init|=
 name|xo_find_width
@@ -22291,14 +22313,14 @@ name|xop
 operator|->
 name|xo_data
 decl_stmt|;
-name|int
+name|ssize_t
 name|start
 init|=
 name|xop
 operator|->
 name|xo_anchor_offset
 decl_stmt|;
-name|int
+name|ssize_t
 name|stop
 init|=
 name|xbp
@@ -22309,7 +22331,7 @@ name|xbp
 operator|->
 name|xb_bufp
 decl_stmt|;
-name|int
+name|ssize_t
 name|abswidth
 init|=
 operator|(
@@ -22323,7 +22345,7 @@ else|:
 operator|-
 name|width
 decl_stmt|;
-name|int
+name|ssize_t
 name|blen
 init|=
 name|abswidth
@@ -22410,7 +22432,7 @@ comment|/* Already left justified */
 goto|goto
 name|done
 goto|;
-name|int
+name|ssize_t
 name|now
 init|=
 name|xbp
@@ -22421,7 +22443,7 @@ name|xbp
 operator|->
 name|xb_bufp
 decl_stmt|;
-name|int
+name|ssize_t
 name|delta
 init|=
 name|now
@@ -23231,7 +23253,7 @@ operator|==
 literal|','
 condition|)
 break|break;
-name|int
+name|ssize_t
 name|slen
 init|=
 name|np
@@ -24305,7 +24327,7 @@ name|format
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|ssize_t
 name|flen
 init|=
 literal|0
@@ -25152,6 +25174,9 @@ name|xfip
 operator|->
 name|xfi_ftype
 argument_list|,
+operator|(
+name|int
+operator|)
 name|xfip
 operator|->
 name|xfi_clen
@@ -25163,6 +25188,9 @@ condition|?
 else|:
 literal|""
 argument_list|,
+operator|(
+name|int
+operator|)
 name|xfip
 operator|->
 name|xfi_flen
@@ -25174,6 +25202,9 @@ condition|?
 else|:
 literal|""
 argument_list|,
+operator|(
+name|int
+operator|)
 name|xfip
 operator|->
 name|xfi_elen
@@ -26007,14 +26038,14 @@ name|xo_field_info_t
 modifier|*
 name|fields
 parameter_list|,
-name|unsigned
+name|ssize_t
 modifier|*
 name|fstart
 parameter_list|,
 name|unsigned
 name|min_fstart
 parameter_list|,
-name|unsigned
+name|ssize_t
 modifier|*
 name|fend
 parameter_list|,
@@ -26030,7 +26061,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|base
 init|=
 name|fstart
@@ -26038,7 +26069,7 @@ index|[
 name|min_fstart
 index|]
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|blen
 init|=
 name|fend
@@ -26102,15 +26133,16 @@ name|field
 init|=
 name|min_fstart
 decl_stmt|,
+name|len
+decl_stmt|,
+name|fnum
+decl_stmt|;
+name|ssize_t
 name|soff
 decl_stmt|,
 name|doff
 init|=
 name|base
-decl_stmt|,
-name|len
-decl_stmt|,
-name|fnum
 decl_stmt|;
 name|xo_field_info_t
 modifier|*
@@ -26342,7 +26374,7 @@ modifier|*
 name|fields
 name|UNUSED
 parameter_list|,
-name|unsigned
+name|ssize_t
 modifier|*
 name|fstart
 name|UNUSED
@@ -26351,7 +26383,7 @@ name|unsigned
 name|min_fstart
 name|UNUSED
 parameter_list|,
-name|unsigned
+name|ssize_t
 modifier|*
 name|fend
 name|UNUSED
@@ -26380,7 +26412,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_do_emit_fields
 parameter_list|(
 name|xo_handle_t
@@ -26434,7 +26466,7 @@ decl_stmt|;
 name|unsigned
 name|field
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -26507,7 +26539,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Highest recorded fend[] entry */
-name|unsigned
+name|ssize_t
 name|fstart
 index|[
 name|flimit
@@ -26528,7 +26560,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|unsigned
+name|ssize_t
 name|fend
 index|[
 name|flimit
@@ -26625,7 +26657,7 @@ name|xfip
 operator|->
 name|xfi_content
 decl_stmt|;
-name|int
+name|ssize_t
 name|clen
 init|=
 name|xfip
@@ -26972,7 +27004,7 @@ operator|=
 name|max_fields
 expr_stmt|;
 comment|/* Leave a blank slot at the beginning */
-name|int
+name|ssize_t
 name|sz
 init|=
 operator|(
@@ -27419,9 +27451,6 @@ operator|)
 condition|?
 name|rc
 else|:
-operator|(
-name|int
-operator|)
 name|xop
 operator|->
 name|xo_columns
@@ -27778,7 +27807,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_hv
 parameter_list|(
 name|xo_handle_t
@@ -27794,7 +27823,7 @@ name|va_list
 name|vap
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -27853,7 +27882,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_h
 parameter_list|(
 name|xo_handle_t
@@ -27868,7 +27897,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -27927,7 +27956,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit
 parameter_list|(
 specifier|const
@@ -27947,7 +27976,7 @@ argument_list|(
 name|NULL
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_start
@@ -27999,7 +28028,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_hvf
 parameter_list|(
 name|xo_handle_t
@@ -28018,7 +28047,7 @@ name|va_list
 name|vap
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -28077,7 +28106,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_hf
 parameter_list|(
 name|xo_handle_t
@@ -28095,7 +28124,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -28154,7 +28183,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_f
 parameter_list|(
 name|xo_emit_flags_t
@@ -28177,7 +28206,7 @@ argument_list|(
 name|NULL
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_start
@@ -28233,7 +28262,7 @@ comment|/*  * Emit a single field by providing the info information typically pr
 end_comment
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_field_hv
 parameter_list|(
 name|xo_handle_t
@@ -28264,7 +28293,7 @@ name|va_list
 name|vap
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -28463,7 +28492,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_field_h
 parameter_list|(
 name|xo_handle_t
@@ -28493,7 +28522,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -28535,7 +28564,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_field
 parameter_list|(
 specifier|const
@@ -28561,7 +28590,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -28603,7 +28632,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_attr_hv
 parameter_list|(
 name|xo_handle_t
@@ -28625,7 +28654,7 @@ name|vap
 parameter_list|)
 block|{
 specifier|const
-name|int
+name|ssize_t
 name|extra
 init|=
 literal|5
@@ -28638,12 +28667,12 @@ argument_list|(
 name|xop
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|nlen
 init|=
 name|strlen
@@ -28660,7 +28689,7 @@ name|xop
 operator|->
 name|xo_attrs
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|name_offset
 decl_stmt|,
 name|value_offset
@@ -28907,7 +28936,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_attr_h
 parameter_list|(
 name|xo_handle_t
@@ -28927,7 +28956,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -28965,7 +28994,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_attr
 parameter_list|(
 specifier|const
@@ -28981,7 +29010,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -29465,7 +29494,7 @@ specifier|static
 name|xo_xsf_flags_t
 name|xo_stack_flags
 parameter_list|(
-name|unsigned
+name|xo_xof_flags_t
 name|xflags
 parameter_list|)
 block|{
@@ -29568,7 +29597,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_do_open_container
 parameter_list|(
 name|xo_handle_t
@@ -29584,7 +29613,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -29921,7 +29950,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_container_h
 parameter_list|(
 name|xo_handle_t
@@ -29948,7 +29977,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_container
 parameter_list|(
 specifier|const
@@ -29971,7 +30000,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_container_hd
 parameter_list|(
 name|xo_handle_t
@@ -29998,7 +30027,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_container_d
 parameter_list|(
 specifier|const
@@ -30042,7 +30071,7 @@ argument_list|(
 name|xop
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -30102,7 +30131,7 @@ condition|(
 name|name
 condition|)
 block|{
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -30360,7 +30389,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_container_h
 parameter_list|(
 name|xo_handle_t
@@ -30389,7 +30418,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_container
 parameter_list|(
 specifier|const
@@ -30410,7 +30439,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_container_hd
 parameter_list|(
 name|xo_handle_t
@@ -30430,7 +30459,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_container_d
 parameter_list|(
 name|void
@@ -30465,7 +30494,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -30711,7 +30740,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_list_h
 parameter_list|(
 name|xo_handle_t
@@ -30738,7 +30767,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_list
 parameter_list|(
 specifier|const
@@ -30761,7 +30790,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_list_hd
 parameter_list|(
 name|xo_handle_t
@@ -30788,7 +30817,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_list_d
 parameter_list|(
 specifier|const
@@ -30825,7 +30854,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -30869,7 +30898,7 @@ condition|(
 name|name
 condition|)
 block|{
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -31102,7 +31131,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_list_h
 parameter_list|(
 name|xo_handle_t
@@ -31131,7 +31160,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_list
 parameter_list|(
 specifier|const
@@ -31152,7 +31181,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_list_hd
 parameter_list|(
 name|xo_handle_t
@@ -31172,7 +31201,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_list_d
 parameter_list|(
 name|void
@@ -31207,7 +31236,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -31456,7 +31485,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -31500,7 +31529,7 @@ condition|(
 name|name
 condition|)
 block|{
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -31741,7 +31770,7 @@ argument_list|(
 name|xop
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -32050,7 +32079,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_instance_h
 parameter_list|(
 name|xo_handle_t
@@ -32077,7 +32106,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_instance
 parameter_list|(
 specifier|const
@@ -32100,7 +32129,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_instance_hd
 parameter_list|(
 name|xo_handle_t
@@ -32127,7 +32156,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_instance_d
 parameter_list|(
 specifier|const
@@ -32171,7 +32200,7 @@ argument_list|(
 name|xop
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -32231,7 +32260,7 @@ condition|(
 name|name
 condition|)
 block|{
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -32473,7 +32502,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_instance_h
 parameter_list|(
 name|xo_handle_t
@@ -32502,7 +32531,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_instance
 parameter_list|(
 specifier|const
@@ -32523,7 +32552,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_instance_hd
 parameter_list|(
 name|xo_handle_t
@@ -32543,7 +32572,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_instance_d
 parameter_list|(
 name|void
@@ -32578,7 +32607,7 @@ name|xo_stack_t
 modifier|*
 name|xsp
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -32781,7 +32810,7 @@ name|limit
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xo_state_t
@@ -33015,7 +33044,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_transition
 parameter_list|(
 name|xo_handle_t
@@ -33038,8 +33067,10 @@ name|xo_stack_t
 modifier|*
 name|xsp
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|old_state
@@ -33052,10 +33083,6 @@ name|xo_default
 argument_list|(
 name|xop
 argument_list|)
-expr_stmt|;
-name|rc
-operator|=
-literal|0
 expr_stmt|;
 name|xsp
 operator|=
@@ -34185,7 +34212,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_marker_h
 parameter_list|(
 name|xo_handle_t
@@ -34238,7 +34265,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_marker
 parameter_list|(
 specifier|const
@@ -34259,7 +34286,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_marker_h
 parameter_list|(
 name|xo_handle_t
@@ -34293,7 +34320,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_marker
 parameter_list|(
 specifier|const
@@ -34396,7 +34423,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_flush_h
 parameter_list|(
 name|xo_handle_t
@@ -34404,7 +34431,7 @@ modifier|*
 name|xop
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -34478,7 +34505,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_flush
 parameter_list|(
 name|void
@@ -34494,7 +34521,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_finish_h
 parameter_list|(
 name|xo_handle_t
@@ -34623,7 +34650,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_finish
 parameter_list|(
 name|void
@@ -34689,7 +34716,7 @@ name|xop
 argument_list|)
 expr_stmt|;
 comment|/*      * If the format string doesn't end with a newline, we pop      * one on ourselves.      */
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -35519,7 +35546,7 @@ name|xo_attr_h
 argument_list|(
 name|xop
 argument_list|,
-literal|"__version"
+literal|"version"
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -35799,7 +35826,7 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
