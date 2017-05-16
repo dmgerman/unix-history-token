@@ -1520,12 +1520,19 @@ begin_comment
 comment|/*  * iflib shared context  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BNXT_DRIVER_VERSION
+value|"1.0.0.0"
+end_define
+
 begin_decl_stmt
 name|char
 name|bnxt_driver_version
 index|[]
 init|=
-literal|"FreeBSD base"
+name|BNXT_DRIVER_VERSION
 decl_stmt|;
 end_decl_stmt
 
