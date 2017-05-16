@@ -2878,14 +2878,6 @@ name|pid_t
 name|p_reapsubtree
 decl_stmt|;
 comment|/* (e) Pid of the direct child of the 					       reaper which spawned 					       our subtree. */
-name|u_int
-name|p_xexit
-decl_stmt|;
-comment|/* (c) Exit code. */
-name|u_int
-name|p_xsig
-decl_stmt|;
-comment|/* (c) Stop/kill sig. */
 name|uint16_t
 name|p_elf_machine
 decl_stmt|;
@@ -2898,7 +2890,15 @@ comment|/* End area that is copied on creation. */
 define|#
 directive|define
 name|p_endcopy
-value|p_elf_flags
+value|p_xexit
+name|u_int
+name|p_xexit
+decl_stmt|;
+comment|/* (c) Exit code. */
+name|u_int
+name|p_xsig
+decl_stmt|;
+comment|/* (c) Stop/kill sig. */
 name|struct
 name|pgrp
 modifier|*

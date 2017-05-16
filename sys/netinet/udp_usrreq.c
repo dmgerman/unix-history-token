@@ -862,10 +862,6 @@ literal|"udp_inpcb"
 argument_list|,
 name|udp_inpcb_init
 argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
 name|IPI_HASHFIELDS_2TUPLE
 argument_list|)
 expr_stmt|;
@@ -946,10 +942,6 @@ argument_list|,
 literal|"udplite_inpcb"
 argument_list|,
 name|udplite_inpcb_init
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|,
 name|IPI_HASHFIELDS_2TUPLE
 argument_list|)

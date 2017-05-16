@@ -955,14 +955,14 @@ name|u_int32_t
 name|keylen
 decl_stmt|;
 comment|/* cipher key */
-name|caddr_t
+name|c_caddr_t
 name|key
 decl_stmt|;
 name|int
 name|mackeylen
 decl_stmt|;
 comment|/* mac key */
-name|caddr_t
+name|c_caddr_t
 name|mackey
 decl_stmt|;
 name|u_int32_t
@@ -989,14 +989,14 @@ name|u_int32_t
 name|keylen
 decl_stmt|;
 comment|/* cipher key */
-name|caddr_t
+name|c_caddr_t
 name|key
 decl_stmt|;
 name|int
 name|mackeylen
 decl_stmt|;
 comment|/* mac key */
-name|caddr_t
+name|c_caddr_t
 name|mackey
 decl_stmt|;
 name|u_int32_t
@@ -1048,17 +1048,18 @@ comment|/* Batch op if possible */
 name|u_int
 name|len
 decl_stmt|;
-name|caddr_t
+name|c_caddr_t
 name|src
-decl_stmt|,
-name|dst
 decl_stmt|;
 comment|/* become iov[] inside kernel */
+name|caddr_t
+name|dst
+decl_stmt|;
 name|caddr_t
 name|mac
 decl_stmt|;
 comment|/* must be big enough for chosen MAC */
-name|caddr_t
+name|c_caddr_t
 name|iv
 decl_stmt|;
 block|}
@@ -1092,13 +1093,14 @@ decl_stmt|;
 name|u_int
 name|ivlen
 decl_stmt|;
-name|caddr_t
+name|c_caddr_t
 name|src
-decl_stmt|,
-name|dst
 decl_stmt|;
 comment|/* become iov[] inside kernel */
 name|caddr_t
+name|dst
+decl_stmt|;
+name|c_caddr_t
 name|aad
 decl_stmt|;
 comment|/* additional authenticated data */
@@ -1106,7 +1108,7 @@ name|caddr_t
 name|tag
 decl_stmt|;
 comment|/* must fit for chosen TAG length */
-name|caddr_t
+name|c_caddr_t
 name|iv
 decl_stmt|;
 block|}
@@ -2236,7 +2238,7 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
-name|caddr_t
+name|c_caddr_t
 name|cp
 parameter_list|)
 function_decl|;
@@ -2356,7 +2358,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|caddr_t
+name|c_caddr_t
 name|in
 parameter_list|)
 function_decl|;

@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -2612,6 +2618,9 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|size_t
+name|pwlen
+decl_stmt|;
 comment|/* 	 * Calculate a salt value 	 */
 for|for
 control|(
@@ -2673,13 +2682,34 @@ argument_list|,
 literal|"crypt(3) failure"
 argument_list|)
 expr_stmt|;
-return|return
-name|strcpy
+name|pwlen
+operator|=
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 name|cryptpw
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|pwlen
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|buf
+operator|)
 return|;
 block|}
 end_function

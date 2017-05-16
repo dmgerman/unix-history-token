@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_iwm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -261,6 +267,12 @@ begin_include
 include|#
 directive|include
 file|<dev/iwm/if_iwmvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/iwm/if_iwm_config.h>
 end_include
 
 begin_include
@@ -1363,7 +1375,7 @@ name|iwm_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint8_t
+name|uint32_t
 name|id
 parameter_list|,
 name|uint32_t
@@ -1615,7 +1627,7 @@ name|iwm_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint8_t
+name|uint32_t
 name|id
 parameter_list|,
 name|uint16_t
@@ -2108,6 +2120,38 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|boolean_t
+name|iwm_mvm_rx_diversity_allowed
+parameter_list|(
+name|struct
+name|iwm_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+if|if
+condition|(
+name|num_of_ant
+argument_list|(
+name|iwm_mvm_get_valid_rx_ant
+argument_list|(
+name|sc
+argument_list|)
+argument_list|)
+operator|==
+literal|1
+condition|)
+return|return
+name|FALSE
+return|;
+comment|/* 	 * XXX Also return FALSE when SMPS (Spatial Multiplexing Powersave) 	 *     is used on any vap (in the future). 	 */
+return|return
+name|TRUE
+return|;
 block|}
 end_function
 

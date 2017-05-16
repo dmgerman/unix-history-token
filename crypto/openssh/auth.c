@@ -1395,6 +1395,8 @@ condition|)
 name|BLACKLIST_NOTIFY
 argument_list|(
 name|BLACKLIST_AUTH_OK
+argument_list|,
+literal|"ssh"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3074,7 +3076,9 @@ condition|)
 block|{
 name|BLACKLIST_NOTIFY
 argument_list|(
-name|BLACKLIST_AUTH_FAIL
+name|BLACKLIST_BAD_USER
+argument_list|,
+name|user
 argument_list|)
 expr_stmt|;
 name|logit

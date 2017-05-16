@@ -2820,10 +2820,6 @@ modifier|*
 parameter_list|,
 name|uma_init
 parameter_list|,
-name|uma_fini
-parameter_list|,
-name|uint32_t
-parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;

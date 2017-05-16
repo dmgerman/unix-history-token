@@ -7528,7 +7528,7 @@ return|;
 block|}
 name|mprsas_log_command
 argument_list|(
-name|tm
+name|cm
 argument_list|,
 name|MPR_RECOVERY
 operator||
@@ -7713,9 +7713,9 @@ if|if
 condition|(
 name|err
 condition|)
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
@@ -7867,14 +7867,18 @@ name|cm
 argument_list|,
 name|MPR_ERROR
 argument_list|,
-literal|"command timeout cm %p ccb %p target "
+literal|"command timeout %d cm %p target "
 literal|"%u, handle(0x%04x)\n"
-argument_list|,
-name|cm
 argument_list|,
 name|cm
 operator|->
 name|cm_ccb
+operator|->
+name|ccb_h
+operator|.
+name|timeout
+argument_list|,
+name|cm
 argument_list|,
 name|targ
 operator|->

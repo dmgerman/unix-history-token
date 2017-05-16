@@ -448,6 +448,22 @@ literal|"Intel Panther Point USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0x22b58086
+case|:
+return|return
+operator|(
+literal|"Intel Braswell USB 3.0 controller"
+operator|)
+return|;
+case|case
+literal|0x5aa88086
+case|:
+return|return
+operator|(
+literal|"Intel Apollo Lake USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0x8c318086
 case|:
 return|return

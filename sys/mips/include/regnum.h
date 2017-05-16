@@ -738,13 +738,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|FSR_DUMMY
+name|FIR
 value|(FPBASE+33)
 end_define
-
-begin_comment
-comment|/* For 8 byte alignment */
-end_comment
 
 begin_define
 define|#
@@ -993,6 +989,13 @@ define|#
 directive|define
 name|FSR_NUM
 value|(32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIR_NUM
+value|(33)
 end_define
 
 begin_endif

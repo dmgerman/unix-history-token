@@ -6296,7 +6296,7 @@ condition|)
 return|return
 name|E1000_SUCCESS
 return|;
-comment|/* First we want to see if the MII Status Register reports 		 * link.  If so, then we want to get the current speed/duplex 		 * of the PHY. 		 */
+comment|/* First we want to see if the MII Status Register reports 	 * link.  If so, then we want to get the current speed/duplex 	 * of the PHY. 	 */
 name|ret_val
 operator|=
 name|e1000_phy_has_link_generic

@@ -522,9 +522,7 @@ name|OPS
 parameter_list|,
 name|OP
 parameter_list|)
-value|do {				\ 	kobjop_desc_t _desc =&OP##_##desc;			\ 	kobj_method_t **_cep =					\&OPS->cache[_desc->id& (KOBJ_CACHE_SIZE-1)];	\ 	kobj_method_t *_ce = *_cep;				\ 	kobj_lookup_hits++;
-comment|/* assume hit */
-value|\ 	if (_ce->desc != _desc)					\ 		_ce = kobj_lookup_method(OPS->cls,		\ 					 _cep, _desc);		\ 	_m = _ce->func;						\ } while(0)
+value|do {				\ 	kobjop_desc_t _desc =&OP##_##desc;			\ 	kobj_method_t **_cep =					\&OPS->cache[_desc->id& (KOBJ_CACHE_SIZE-1)];	\ 	kobj_method_t *_ce = *_cep;				\ 	if (_ce->desc != _desc) {				\ 		_ce = kobj_lookup_method(OPS->cls,		\ 					 _cep, _desc);		\ 		kobj_lookup_misses++;				\ 	} else							\ 		kobj_lookup_hits++;				\ 	_m = _ce->func;						\ } while(0)
 end_define
 
 begin_else

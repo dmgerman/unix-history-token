@@ -1873,7 +1873,7 @@ name|attr
 operator|=
 name|VM_MEMATTR_DEFAULT
 expr_stmt|;
-comment|/*  	 * XXX: 	 * (dmat->alignment<= dmat->maxsize) is just a quick hack; the exact 	 * alignment guarantees of malloc need to be nailed down, and the 	 * code below should be rewritten to take that into account. 	 * 	 * In the meantime, we'll warn the user if malloc gets it wrong. 	 */
+comment|/* 	 * Allocate the buffer from the malloc(9) allocator if... 	 *  - It's small enough to fit into a single power of two sized bucket. 	 *  - The alignment is less than or equal to the maximum size 	 *  - The low address requirement is fulfilled. 	 * else allocate non-contiguous pages if... 	 *  - The page count that could get allocated doesn't exceed 	 *    nsegments also when the maximum segment size is less 	 *    than PAGE_SIZE. 	 *  - The alignment constraint isn't larger than a page boundary. 	 *  - There are no boundary-crossing constraints. 	 * else allocate a block of contiguous pages because one or more of the 	 * constraints is something that only the contig allocator can fulfill. 	 * 	 * NOTE: The (dmat->common.alignment<= dmat->maxsize) check 	 * below is just a quick hack. The exact alignment guarantees 	 * of malloc(9) need to be nailed down, and the code below 	 * should be rewritten to take that into account. 	 * 	 * In the meantime warn the user if malloc gets it wrong. 	 */
 if|if
 condition|(
 operator|(
@@ -1945,13 +1945,24 @@ name|common
 operator|.
 name|nsegments
 operator|>=
-name|btoc
+name|howmany
 argument_list|(
 name|dmat
 operator|->
 name|common
 operator|.
 name|maxsize
+argument_list|,
+name|MIN
+argument_list|(
+name|dmat
+operator|->
+name|common
+operator|.
+name|maxsegsz
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
 argument_list|)
 operator|&&
 name|dmat
@@ -1968,21 +1979,11 @@ operator|->
 name|common
 operator|.
 name|boundary
+operator|%
+name|PAGE_SIZE
+operator|)
 operator|==
 literal|0
-operator|||
-name|dmat
-operator|->
-name|common
-operator|.
-name|boundary
-operator|>=
-name|dmat
-operator|->
-name|common
-operator|.
-name|lowaddr
-operator|)
 condition|)
 block|{
 comment|/* Page-based multi-segment allocations allowed */

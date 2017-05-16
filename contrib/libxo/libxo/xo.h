@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -94,13 +100,39 @@ name|defined
 argument_list|(
 name|NO_PRINTFLIKE
 argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__linux
+argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__linux__
+name|__printflike
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|__printflike
+parameter_list|(
+name|_x
+parameter_list|,
+name|_y
+parameter_list|)
+value|__attribute__((__format__ (__printf__, _x, _y)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -679,9 +711,59 @@ begin_comment
 comment|/* Handle for XO output */
 end_comment
 
+begin_comment
+comment|/*  * Early versions of the API used "int" instead of "size_t" for buffer  * sizes.  We want to fix this but allow for backwards compatibility  * where needed.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_INT_RETURN_CODES
+end_ifdef
+
 begin_typedef
 typedef|typedef
 name|int
+name|xo_ssize_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Buffer size */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* USE_INT_RETURN_CODES */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|ssize_t
+name|xo_ssize_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Buffer size */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_INT_RETURN_CODES */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|xo_ssize_t
 function_decl|(
 modifier|*
 name|xo_write_func_t
@@ -762,7 +844,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|xo_ssize_t
 function_decl|(
 modifier|*
 name|xo_formatter_t
@@ -774,7 +856,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|xo_ssize_t
 parameter_list|,
 specifier|const
 name|char
@@ -1054,7 +1136,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_emit_hv
 parameter_list|(
 name|xo_handle_t
@@ -1073,7 +1155,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_emit_h
 parameter_list|(
 name|xo_handle_t
@@ -1091,7 +1173,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_emit
 parameter_list|(
 specifier|const
@@ -1105,7 +1187,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_emit_hvf
 parameter_list|(
 name|xo_handle_t
@@ -1127,7 +1209,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_emit_hf
 parameter_list|(
 name|xo_handle_t
@@ -1148,7 +1230,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_emit_f
 parameter_list|(
 name|xo_emit_flags_t
@@ -1494,7 +1576,7 @@ block|}
 end_function
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_container_h
 parameter_list|(
 name|xo_handle_t
@@ -1510,7 +1592,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_container
 parameter_list|(
 specifier|const
@@ -1522,7 +1604,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_container_hd
 parameter_list|(
 name|xo_handle_t
@@ -1538,7 +1620,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_container_d
 parameter_list|(
 specifier|const
@@ -1550,7 +1632,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_container_h
 parameter_list|(
 name|xo_handle_t
@@ -1566,7 +1648,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_container
 parameter_list|(
 specifier|const
@@ -1578,7 +1660,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_container_hd
 parameter_list|(
 name|xo_handle_t
@@ -1589,7 +1671,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_container_d
 parameter_list|(
 name|void
@@ -1598,7 +1680,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_list_h
 parameter_list|(
 name|xo_handle_t
@@ -1614,7 +1696,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_list
 parameter_list|(
 specifier|const
@@ -1626,7 +1708,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_list_hd
 parameter_list|(
 name|xo_handle_t
@@ -1642,7 +1724,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_list_d
 parameter_list|(
 specifier|const
@@ -1654,7 +1736,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_list_h
 parameter_list|(
 name|xo_handle_t
@@ -1670,7 +1752,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_list
 parameter_list|(
 specifier|const
@@ -1682,7 +1764,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_list_hd
 parameter_list|(
 name|xo_handle_t
@@ -1693,7 +1775,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_list_d
 parameter_list|(
 name|void
@@ -1702,7 +1784,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_instance_h
 parameter_list|(
 name|xo_handle_t
@@ -1718,7 +1800,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_instance
 parameter_list|(
 specifier|const
@@ -1730,7 +1812,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_instance_hd
 parameter_list|(
 name|xo_handle_t
@@ -1746,7 +1828,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_instance_d
 parameter_list|(
 specifier|const
@@ -1758,7 +1840,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_instance_h
 parameter_list|(
 name|xo_handle_t
@@ -1774,7 +1856,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_instance
 parameter_list|(
 specifier|const
@@ -1786,7 +1868,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_instance_hd
 parameter_list|(
 name|xo_handle_t
@@ -1797,7 +1879,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_instance_d
 parameter_list|(
 name|void
@@ -1806,7 +1888,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_marker_h
 parameter_list|(
 name|xo_handle_t
@@ -1822,7 +1904,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_open_marker
 parameter_list|(
 specifier|const
@@ -1834,7 +1916,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_marker_h
 parameter_list|(
 name|xo_handle_t
@@ -1850,7 +1932,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_close_marker
 parameter_list|(
 specifier|const
@@ -1862,7 +1944,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_attr_h
 parameter_list|(
 name|xo_handle_t
@@ -1885,7 +1967,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_attr_hv
 parameter_list|(
 name|xo_handle_t
@@ -1909,7 +1991,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_attr
 parameter_list|(
 specifier|const
@@ -1979,7 +2061,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_flush_h
 parameter_list|(
 name|xo_handle_t
@@ -1990,7 +2072,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_flush
 parameter_list|(
 name|void
@@ -1999,7 +2081,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_finish_h
 parameter_list|(
 name|xo_handle_t
@@ -2010,7 +2092,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_finish
 parameter_list|(
 name|void
@@ -3354,7 +3436,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_emit_field_hv
 parameter_list|(
 name|xo_handle_t
@@ -3388,7 +3470,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_emit_field_h
 parameter_list|(
 name|xo_handle_t
@@ -3421,7 +3503,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|xo_ssize_t
 name|xo_emit_field
 parameter_list|(
 specifier|const

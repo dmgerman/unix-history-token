@@ -216,7 +216,7 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
-name|caddr_t
+name|c_caddr_t
 name|cp
 parameter_list|)
 block|{
@@ -604,7 +604,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|caddr_t
+name|c_caddr_t
 name|in
 parameter_list|)
 block|{

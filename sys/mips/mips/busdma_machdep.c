@@ -2887,7 +2887,7 @@ operator|->
 name|maxsize
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate the buffer from the uma(9) allocator if... 	 *  - It's small enough to be in the allocator (bufzone not NULL). 	 *  - The alignment constraint isn't larger than the allocation size 	 *    (the allocator aligns buffers to their size boundaries). 	 *  - There's no need to handle lowaddr/highaddr exclusion zones. 	 * else allocate non-contiguous pages if... 	 *  - The page count that could get allocated doesn't exceed nsegments. 	 *  - The alignment constraint isn't larger than a page boundary. 	 *  - There are no boundary-crossing constraints. 	 * else allocate a block of contiguous pages because one or more of the 	 * constraints is something that only the contig allocator can fulfill. 	 */
+comment|/* 	 * Allocate the buffer from the uma(9) allocator if... 	 *  - It's small enough to be in the allocator (bufzone not NULL). 	 *  - The alignment constraint isn't larger than the allocation size 	 *    (the allocator aligns buffers to their size boundaries). 	 *  - There's no need to handle lowaddr/highaddr exclusion zones. 	 * else allocate non-contiguous pages if... 	 *  - The page count that could get allocated doesn't exceed 	 *    nsegments also when the maximum segment size is less 	 *    than PAGE_SIZE. 	 *  - The alignment constraint isn't larger than a page boundary. 	 *  - There are no boundary-crossing constraints. 	 * else allocate a block of contiguous pages because one or more of the 	 * constraints is something that only the contig allocator can fulfill. 	 */
 if|if
 condition|(
 name|bufzone
@@ -2934,11 +2934,20 @@ name|dmat
 operator|->
 name|nsegments
 operator|>=
-name|btoc
+name|howmany
 argument_list|(
 name|dmat
 operator|->
 name|maxsize
+argument_list|,
+name|MIN
+argument_list|(
+name|dmat
+operator|->
+name|maxsegsz
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
 argument_list|)
 operator|&&
 name|dmat
@@ -2947,9 +2956,13 @@ name|alignment
 operator|<=
 name|PAGE_SIZE
 operator|&&
+operator|(
 name|dmat
 operator|->
 name|boundary
+operator|%
+name|PAGE_SIZE
+operator|)
 operator|==
 literal|0
 condition|)

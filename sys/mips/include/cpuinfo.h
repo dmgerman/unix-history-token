@@ -112,6 +112,9 @@ decl_stmt|;
 block|}
 name|l2
 struct|;
+name|u_int32_t
+name|fpu_id
+decl_stmt|;
 block|}
 struct|;
 end_struct

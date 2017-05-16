@@ -133,13 +133,6 @@ directive|include
 file|"local.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|PATH_TEMPLATE
-value|"aio.XXXXXXXXXX"
-end_define
-
 begin_comment
 comment|/*  * GLOBAL_MAX sets the largest usable buffer size to be read and written, as  * it sizes ac_buffer in the aio_context structure.  It is also the default  * size for file I/O.  For other types, we use smaller blocks or we risk  * blocking (and we run in a single process/thread so that would be bad).  */
 end_comment
@@ -3100,6 +3093,9 @@ name|ATF_REQUIRE_KERNEL_MODULE
 argument_list|(
 literal|"aio"
 argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE_UNSAFE_AIO
+argument_list|()
 expr_stmt|;
 name|mdctl_fd
 operator|=

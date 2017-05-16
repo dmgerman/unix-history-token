@@ -402,15 +402,11 @@ condition|)
 return|return
 name|NS_UNAVAIL
 return|;
-name|cp
-operator|=
-name|line
-expr_stmt|;
 while|while
 condition|(
 name|fgets
 argument_list|(
-name|cp
+name|line
 argument_list|,
 name|MAXPATHLEN
 operator|+
@@ -422,6 +418,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|cp
+operator|=
+name|line
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -483,7 +483,6 @@ operator|++
 expr_stmt|;
 operator|*
 name|cp
-operator|++
 operator|=
 literal|'\0'
 expr_stmt|;

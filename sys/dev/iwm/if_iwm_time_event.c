@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_iwm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -316,9 +322,9 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|iwm_node
+name|iwm_vap
 modifier|*
-name|in
+name|ivp
 parameter_list|,
 name|void
 modifier|*
@@ -407,9 +413,9 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|iwm_node
+name|iwm_vap
 modifier|*
-name|in
+name|ivp
 parameter_list|,
 name|uint32_t
 name|duration
@@ -441,9 +447,13 @@ name|htole32
 argument_list|(
 name|IWM_FW_CMD_ID_AND_COLOR
 argument_list|(
-name|IWM_DEFAULT_MACID
+name|ivp
+operator|->
+name|id
 argument_list|,
-name|IWM_DEFAULT_COLOR
+name|ivp
+operator|->
+name|color
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -522,7 +532,7 @@ name|iwm_mvm_time_event_send_add
 argument_list|(
 name|sc
 argument_list|,
-name|in
+name|ivp
 argument_list|,
 comment|/*te_data*/
 name|NULL

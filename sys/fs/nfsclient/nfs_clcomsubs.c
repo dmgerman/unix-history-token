@@ -2982,6 +2982,11 @@ name|flag
 operator|=
 literal|0
 expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+comment|/* Return ENXIO so *nfhpp isn't used. */
 block|}
 block|}
 if|if

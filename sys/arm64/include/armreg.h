@@ -2309,7 +2309,7 @@ begin_define
 define|#
 directive|define
 name|MAIR_NORMAL_WT
-value|0x88
+value|0xbb
 end_define
 
 begin_define

@@ -28114,7 +28114,7 @@ name|msi
 goto|;
 block|}
 block|}
-comment|/* 	 * bar == -1 => "trust me I know what I'm doing" 	 * https://www.youtube.com/watch?v=nnwWKkNau4I 	 * Some drivers are for hardware that is so shoddily 	 * documented that no one knows which bars are which 	 * so the developer has to map all bars. This hack 	 * allows shoddy garbage to use msix in this framework. 	 */
+comment|/* 	 * bar == -1 => "trust me I know what I'm doing" 	 * Some drivers are for hardware that is so shoddily 	 * documented that no one knows which bars are which 	 * so the developer has to map all bars. This hack 	 * allows shoddy garbage to use msix in this framework. 	 */
 if|if
 condition|(
 name|bar

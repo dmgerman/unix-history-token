@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_iwm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1472,6 +1478,14 @@ name|host_interrupt_operation_mode
 condition|)
 block|{
 comment|/* 		 * This is a bit of an abuse - This is needed for 7260 / 3160 		 * only check host_interrupt_operation_mode even if this is 		 * not related to host_interrupt_operation_mode. 		 * 		 * Enable the oscillator to count wake up time for L1 exit. This 		 * consumes slightly more power (100uA) - but allows to be sure 		 * that we wake up from L1 on time. 		 * 		 * This looks weird: read twice the same register, discard the 		 * value, set a bit, and yet again, read that same register 		 * just to discard the value. But that's the way the hardware 		 * seems to like it. 		 */
+if|if
+condition|(
+name|iwm_nic_lock
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 name|iwm_read_prph
 argument_list|(
 name|sc
@@ -1486,6 +1500,12 @@ argument_list|,
 name|IWM_OSC_CLK
 argument_list|)
 expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|iwm_set_bits_prph
 argument_list|(
 name|sc
@@ -1495,6 +1515,14 @@ argument_list|,
 name|IWM_OSC_CLK_FORCE_CONTROL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|iwm_nic_lock
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 name|iwm_read_prph
 argument_list|(
 name|sc
@@ -1509,6 +1537,12 @@ argument_list|,
 name|IWM_OSC_CLK
 argument_list|)
 expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Enable DMA clock and wait for it to stabilize. 	 * 	 * Write to "CLK_EN_REG"; "1" bits enable clocks, while "0" bits 	 * do not disable clocks.  This preserves any hardware bits already 	 * set by default in "CLK_CTRL_REG" after reset. 	 */
 if|if
@@ -1522,6 +1556,14 @@ operator|==
 name|IWM_DEVICE_FAMILY_7000
 condition|)
 block|{
+if|if
+condition|(
+name|iwm_nic_lock
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 name|iwm_write_prph
 argument_list|(
 name|sc
@@ -1531,6 +1573,12 @@ argument_list|,
 name|IWM_APMG_CLK_VAL_DMA_CLK_RQT
 argument_list|)
 expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|DELAY
 argument_list|(
 literal|20
@@ -1547,6 +1595,14 @@ name|IWM_APMG_PCIDEV_STT_VAL_L1_ACT_DIS
 argument_list|)
 expr_stmt|;
 comment|/* Clear the interrupt in APMG if the NIC is in RFKILL */
+if|if
+condition|(
+name|iwm_nic_lock
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 name|iwm_write_prph
 argument_list|(
 name|sc
@@ -1556,6 +1612,12 @@ argument_list|,
 name|IWM_APMG_RTC_INT_STT_RFKILL
 argument_list|)
 expr_stmt|;
+name|iwm_nic_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|out
 label|:

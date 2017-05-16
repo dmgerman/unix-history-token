@@ -2175,51 +2175,27 @@ name|iwm_ucode_tlv_api
 block|{
 name|IWM_UCODE_TLV_API_FRAGMENTED_SCAN
 init|=
-operator|(
-literal|1
-operator|<<
 literal|8
-operator|)
 block|,
 name|IWM_UCODE_TLV_API_WIFI_MCC_UPDATE
 init|=
-operator|(
-literal|1
-operator|<<
 literal|9
-operator|)
 block|,
 name|IWM_UCODE_TLV_API_WIDE_CMD_HDR
 init|=
-operator|(
-literal|1
-operator|<<
 literal|14
-operator|)
 block|,
 name|IWM_UCODE_TLV_API_LQ_SS_PARAMS
 init|=
-operator|(
-literal|1
-operator|<<
 literal|18
-operator|)
 block|,
 name|IWM_UCODE_TLV_API_EXT_SCAN_PRIORITY
 init|=
-operator|(
-literal|1
-operator|<<
 literal|24
-operator|)
 block|,
 name|IWM_UCODE_TLV_API_TX_POWER_CHAIN
 init|=
-operator|(
-literal|1
-operator|<<
 literal|27
-operator|)
 block|,
 name|IWM_NUM_UCODE_TLV_API
 init|=
@@ -10212,7 +10188,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * enum iwm_device_power_flags - masks for device power command flags  * @DEVIC_POWER_FLAGS_POWER_SAVE_ENA_MSK: '1' Allow to save power by turning off  *	receiver and transmitter. '0' - does not allow. This flag should be  *	always set to '1' unless one need to disable actual power down for debug  *	purposes.  * @IWM_DEVICE_POWER_FLAGS_CAM_MSK: '1' CAM (Continuous Active Mode) is set, meaning  *	that power management is disabled. '0' Power management is enabled, one  *	of power schemes is applied. */
+comment|/**  * enum iwm_device_power_flags - masks for device power command flags  * @IWM_DEVICE_POWER_FLAGS_POWER_SAVE_ENA_MSK: '1' Allow to save power by turning off  *	receiver and transmitter. '0' - does not allow.  */
 end_comment
 
 begin_enum
@@ -10225,14 +10201,6 @@ operator|(
 literal|1
 operator|<<
 literal|0
-operator|)
-block|,
-name|IWM_DEVICE_POWER_FLAGS_CAM_MSK
-init|=
-operator|(
-literal|1
-operator|<<
-literal|13
 operator|)
 block|, }
 enum|;
@@ -15918,7 +15886,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * From Linux commit ab02165ccec4c78162501acedeef1a768acdb811:  *   As the firmware is slowly running out of command IDs and grouping of  *   commands is desirable anyway, the firmware is extending the command  *   header from 4 bytes to 8 bytes to introduce a group (in place of the  *   former flags field, since that's always 0 on commands and thus can  *   be easily used to distinguish between the two).  *  * These functions retrieve specific information from the id field in  * the iwm_host_cmd struct which contains the command id, the group id,  * and the version of the command. */
+comment|/*  * These functions retrieve specific information from the id field in  * the iwm_host_cmd struct which contains the command id, the group id,  * and the version of the command and vice versa. */
 end_comment
 
 begin_function
@@ -15954,7 +15922,7 @@ operator|(
 operator|(
 name|cmdid
 operator|&
-literal|0Xff00
+literal|0xff00
 operator|)
 operator|>>
 literal|8
@@ -16099,6 +16067,10 @@ name|__packed
 struct|;
 end_struct
 
+begin_comment
+comment|/**  * enum iwm_power_scheme  * @IWM_POWER_LEVEL_CAM - Continuously Active Mode  * @IWM_POWER_LEVEL_BPS - Balanced Power Save (default)  * @IWM_POWER_LEVEL_LP  - Low Power  */
+end_comment
+
 begin_enum
 enum|enum
 name|iwm_power_scheme
@@ -16218,6 +16190,20 @@ define|#
 directive|define
 name|IWM_FH_RSCSR_FRAME_SIZE_MSK
 value|0x00003fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_FH_RSCSR_FRAME_INVALID
+value|0x55550000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_FH_RSCSR_FRAME_ALIGN
+value|0x40
 end_define
 
 begin_function

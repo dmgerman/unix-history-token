@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_iwm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -534,6 +540,28 @@ name|active_cnt
 operator|=
 name|chains_dynamic
 expr_stmt|;
+comment|/* In scenarios where we only ever use a single-stream rates, 	 * i.e. legacy 11b/g/a associations, single-stream APs or even 	 * static SMPS, enable both chains to get diversity, improving 	 * the case where we're far enough from the AP that attenuation 	 * between the two antennas is sufficiently different to impact 	 * performance. 	 */
+if|if
+condition|(
+name|active_cnt
+operator|==
+literal|1
+operator|&&
+name|iwm_mvm_rx_diversity_allowed
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
+name|idle_cnt
+operator|=
+literal|2
+expr_stmt|;
+name|active_cnt
+operator|=
+literal|2
+expr_stmt|;
+block|}
 name|cmd
 operator|->
 name|rxchain_info

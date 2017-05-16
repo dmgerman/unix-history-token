@@ -53,7 +53,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s %s\n"
+literal|"%s: %s\n"
 argument_list|,
 name|string
 argument_list|,

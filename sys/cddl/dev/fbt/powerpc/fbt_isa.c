@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|FBT_PATCHVAL
-value|0x7c810808
+value|0x7ffff808
 end_define
 
 begin_define
@@ -463,8 +463,6 @@ name|fbt_excluded
 argument_list|(
 name|name
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(

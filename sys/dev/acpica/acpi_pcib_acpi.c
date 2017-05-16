@@ -2506,6 +2506,11 @@ operator|->
 name|ap_prt
 argument_list|)
 expr_stmt|;
+name|bus_generic_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|device_add_child

@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpuinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/reg.h>
 end_include
 
@@ -1916,6 +1922,17 @@ expr|struct
 name|fpreg
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|fpregs
+operator|->
+name|r_regs
+index|[
+name|FIR_NUM
+index|]
+operator|=
+name|cpuinfo
+operator|.
+name|fpu_id
 expr_stmt|;
 return|return
 literal|0

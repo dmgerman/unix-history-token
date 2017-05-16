@@ -624,13 +624,6 @@ name|IWM_RX_RING_COUNT
 value|256
 end_define
 
-begin_define
-define|#
-directive|define
-name|IWM_RBUF_COUNT
-value|(IWM_RX_RING_COUNT + 32)
-end_define
-
 begin_comment
 comment|/* Linux driver optionally uses 8k buffer */
 end_comment
@@ -879,6 +872,45 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|struct
+name|iwm_mvm_phy_ctxt
+modifier|*
+name|phy_ctxt
+decl_stmt|;
+name|uint16_t
+name|id
+decl_stmt|;
+name|uint16_t
+name|color
+decl_stmt|;
+name|boolean_t
+name|have_wme
+decl_stmt|;
+comment|/* 	 * QoS data from net80211, need to store this here 	 * as net80211 has a separate callback but we need 	 * to have the data for the MAC context 	 */
+struct|struct
+block|{
+name|uint16_t
+name|cw_min
+decl_stmt|;
+name|uint16_t
+name|cw_max
+decl_stmt|;
+name|uint16_t
+name|edca_txop
+decl_stmt|;
+name|uint8_t
+name|aifsn
+decl_stmt|;
+block|}
+name|queue_params
+index|[
+name|WME_NUM_AC
+index|]
+struct|;
+comment|/* indicates that this interface requires PS to be disabled */
+name|boolean_t
+name|ps_disabled
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -900,11 +932,6 @@ block|{
 name|struct
 name|ieee80211_node
 name|in_ni
-decl_stmt|;
-name|struct
-name|iwm_mvm_phy_ctxt
-modifier|*
-name|in_phyctxt
 decl_stmt|;
 comment|/* status "bits" */
 name|int
@@ -1315,6 +1342,10 @@ name|num_of_pages_in_last_blk
 decl_stmt|;
 name|boolean_t
 name|last_ebs_successful
+decl_stmt|;
+comment|/* Indicate if device power save is allowed */
+name|boolean_t
+name|sc_ps_disabled
 decl_stmt|;
 block|}
 struct|;
