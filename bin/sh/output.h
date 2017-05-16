@@ -29,8 +29,9 @@ name|char
 modifier|*
 name|nextc
 decl_stmt|;
-name|int
-name|nleft
+name|char
+modifier|*
+name|bufend
 decl_stmt|;
 name|char
 modifier|*
@@ -420,7 +421,7 @@ name|c
 parameter_list|,
 name|file
 parameter_list|)
-value|(--(file)->nleft< 0? (emptyoutbuf(file), *(file)->nextc++ = (c)) : (*(file)->nextc++ = (c)))
+value|((file)->nextc == (file)->bufend ? (emptyoutbuf(file), *(file)->nextc++ = (c)) : (*(file)->nextc++ = (c)))
 end_define
 
 begin_define
