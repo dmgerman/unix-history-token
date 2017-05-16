@@ -120,7 +120,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -571,7 +571,7 @@ name|Dictionary
 operator|&
 name|data_dict
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -710,13 +710,13 @@ function_decl|;
 specifier|static
 name|FilterTy
 name|NameToFilterTy
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|name
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 comment|// Serialization of SearchFilter options:
@@ -974,7 +974,7 @@ name|Dictionary
 operator|&
 name|data_dict
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1138,7 +1138,7 @@ name|Dictionary
 operator|&
 name|data_dict
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1312,7 +1312,7 @@ name|Dictionary
 operator|&
 name|data_dict
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1478,7 +1478,7 @@ name|Dictionary
 operator|&
 name|data_dict
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

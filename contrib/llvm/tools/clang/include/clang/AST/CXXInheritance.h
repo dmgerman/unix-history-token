@@ -364,6 +364,11 @@ name|CXXRecordDecl
 operator|::
 name|BaseMatchesCallback
 name|BaseMatches
+argument_list|,
+name|bool
+name|LookupInDependent
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 name|public

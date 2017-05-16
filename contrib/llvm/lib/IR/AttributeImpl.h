@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- AttributeImpl.h - Attribute Internals -------------------*- C++ -*-===//
+comment|//===- AttributeImpl.h - Attribute Internals --------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -100,19 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<algorithm>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<climits>
 end_include
 
 begin_include
@@ -488,13 +476,13 @@ operator|:
 name|public
 name|EnumAttributeImpl
 block|{
+name|uint64_t
+name|Val
+block|;
 name|void
 name|anchor
 argument_list|()
 name|override
-block|;
-name|uint64_t
-name|Val
 block|;
 name|public
 operator|:
@@ -843,12 +831,13 @@ argument|bool InAttrGrp
 argument_list|)
 specifier|const
 block|;
-typedef|typedef
+name|using
+name|iterator
+operator|=
 specifier|const
 name|Attribute
-modifier|*
-name|iterator
-typedef|;
+operator|*
+block|;
 name|iterator
 name|begin
 argument_list|()
@@ -924,17 +913,18 @@ expr_stmt|;
 block|}
 expr|}
 block|;
-typedef|typedef
+name|using
+name|IndexAttrPair
+operator|=
 name|std
 operator|::
 name|pair
 operator|<
 name|unsigned
-operator|,
+block|,
 name|AttributeSet
 operator|>
-name|IndexAttrPair
-expr_stmt|;
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// \class
 comment|/// \brief This class represents a set of attributes that apply to the function,
@@ -1146,12 +1136,13 @@ operator|<<
 name|Kind
 return|;
 block|}
-typedef|typedef
+name|using
+name|iterator
+operator|=
 name|AttributeSet
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
+block|;
 name|iterator
 name|begin
 argument_list|(

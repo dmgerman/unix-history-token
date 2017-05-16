@@ -97,7 +97,11 @@ return|;
 block|}
 comment|/// Paired begin/end actions for all types. Receives all record data,
 comment|/// including the fixed-length record prefix.  visitTypeBegin() should return
-comment|/// the type of the Record, or an error if it cannot be determined.
+comment|/// the type of the Record, or an error if it cannot be determined.  Exactly
+comment|/// one of the two visitTypeBegin methods will be called, depending on whether
+comment|/// records are being visited sequentially or randomly.  An implementation
+comment|/// should be prepared to handle both (or assert if it can't handle random
+comment|/// access visitation).
 name|virtual
 name|Error
 name|visitTypeBegin
@@ -105,6 +109,25 @@ parameter_list|(
 name|CVType
 modifier|&
 name|Record
+parameter_list|)
+block|{
+return|return
+name|Error
+operator|::
+name|success
+argument_list|()
+return|;
+block|}
+name|virtual
+name|Error
+name|visitTypeBegin
+parameter_list|(
+name|CVType
+modifier|&
+name|Record
+parameter_list|,
+name|TypeIndex
+name|Index
 parameter_list|)
 block|{
 return|return

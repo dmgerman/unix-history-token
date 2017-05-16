@@ -38,15 +38,23 @@ comment|/// \brief Loads data from an unaligned memory location to elements in a
 end_comment
 
 begin_comment
-comment|///    vector. If the address of the data is not 16-byte aligned, the
+comment|///    vector.
 end_comment
 
 begin_comment
-comment|///    instruction may read two adjacent aligned blocks of memory to retrieve
+comment|///
 end_comment
 
 begin_comment
-comment|///    the requested data.
+comment|///    If the address of the data is not 16-byte aligned, the instruction may
+end_comment
+
+begin_comment
+comment|///    read two adjacent aligned blocks of memory to retrieve the requested
+end_comment
+
+begin_comment
+comment|///    data.
 end_comment
 
 begin_comment

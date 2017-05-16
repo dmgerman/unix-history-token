@@ -1684,7 +1684,7 @@ begin_expr_stmt
 specifier|static
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|RefineModuleDetailsFromNote
 argument_list|(
 name|lldb_private

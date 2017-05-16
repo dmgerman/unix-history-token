@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -170,7 +170,7 @@ name|dump_mask
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 name|llvm
@@ -185,7 +185,7 @@ name|eVarSetOperationAssign
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|SetValueFromString
 parameter_list|(
 specifier|const

@@ -159,6 +159,9 @@ name|class
 name|AttributeListImpl
 decl_stmt|;
 name|class
+name|AttributeList
+decl_stmt|;
+name|class
 name|AttributeSetNode
 decl_stmt|;
 name|template
@@ -758,11 +761,109 @@ name|O
 operator|)
 return|;
 block|}
+comment|/// Add an argument attribute. Because
+comment|/// attribute sets are immutable, this returns a new set.
+name|AttributeSet
+name|addAttribute
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Add a target-dependent attribute. Because
+comment|/// attribute sets are immutable, this returns a new set.
+name|AttributeSet
+name|addAttribute
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|StringRef
+name|Kind
+argument_list|,
+name|StringRef
+name|Value
+operator|=
+name|StringRef
+argument_list|()
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Add attributes to the attribute set. Because
+comment|/// attribute sets are immutable, this returns a new set.
+name|AttributeSet
+name|addAttributes
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|AttributeSet
+name|AS
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Remove the specified attribute from this set. Because
+comment|/// attribute sets are immutable, this returns a new set.
+name|AttributeSet
+name|removeAttribute
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Remove the specified attribute from this set. Because
+comment|/// attribute sets are immutable, this returns a new set.
+name|AttributeSet
+name|removeAttribute
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|StringRef
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Remove the specified attributes from this set. Because
+comment|/// attribute sets are immutable, this returns a new set.
+name|AttributeSet
+name|removeAttributes
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+specifier|const
+name|AttrBuilder
+operator|&
+name|AttrsToRemove
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return the number of attributes in this set.
 name|unsigned
 name|getNumAttributes
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Return true if attributes exists in this set.
 name|bool
 name|hasAttributes
 argument_list|()
@@ -774,6 +875,7 @@ operator|!=
 name|nullptr
 return|;
 block|}
+comment|/// Return true if the attribute exists in this set.
 name|bool
 name|hasAttribute
 argument_list|(
@@ -784,6 +886,7 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Return true if the attribute exists in this set.
 name|bool
 name|hasAttribute
 argument_list|(
@@ -792,6 +895,7 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Return the attribute object.
 name|Attribute
 name|getAttribute
 argument_list|(
@@ -802,6 +906,7 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Return the target-dependent attribute object.
 name|Attribute
 name|getAttribute
 argument_list|(
@@ -870,6 +975,25 @@ name|end
 argument_list|()
 specifier|const
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NDEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LLVM_ENABLE_DUMP
+argument_list|)
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//

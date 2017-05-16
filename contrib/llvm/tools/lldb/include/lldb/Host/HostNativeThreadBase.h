@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -114,7 +114,7 @@ name|HostNativeThreadBase
 argument_list|()
 block|{}
 name|virtual
-name|Error
+name|Status
 name|Join
 argument_list|(
 name|lldb
@@ -127,7 +127,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|Error
+name|Status
 name|Cancel
 parameter_list|()
 init|=

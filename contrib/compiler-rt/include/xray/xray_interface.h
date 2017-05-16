@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- xray_interface.h ----------------------------------------*- C++ -*-===//
+comment|//===- xray_interface.h -----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<cstdint>
+file|<cstddef>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stddef.h>
+file|<cstdint>
 end_include
 
 begin_extern
@@ -98,6 +98,10 @@ block|,
 name|LOG_ARGS_ENTRY
 init|=
 literal|3
+block|,
+name|CUSTOM_EVENT
+init|=
+literal|4
 block|, }
 enum|;
 comment|/// Provide a function to invoke for when instrumentation points are hit. This
@@ -172,6 +176,26 @@ name|int
 name|__xray_remove_handler_arg1
 parameter_list|()
 function_decl|;
+comment|/// Provide a function to invoke when XRay encounters a custom event.
+specifier|extern
+name|int
+name|__xray_set_customevent_handler
+argument_list|(
+name|void
+argument_list|(
+operator|*
+name|entry
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|,
+name|std
+operator|::
+name|size_t
+argument_list|)
+argument_list|)
+decl_stmt|;
 enum|enum
 name|XRayPatchingStatus
 block|{
@@ -247,10 +271,18 @@ function_decl|;
 block|}
 end_extern
 
+begin_comment
+comment|// end extern "C"
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// XRAY_XRAY_INTERFACE_H
+end_comment
 
 end_unit
 

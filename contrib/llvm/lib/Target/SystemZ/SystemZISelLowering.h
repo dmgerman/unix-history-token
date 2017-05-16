@@ -2107,6 +2107,17 @@ name|Opcode
 argument_list|)
 decl|const
 decl_stmt|;
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getRepRegClassFor
+argument_list|(
+name|MVT
+name|VT
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 block|}
 end_decl_stmt
 

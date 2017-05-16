@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Error.h -------------------------------------------------*- C++ -*-===//
+comment|//===-- Status.h -------------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -141,12 +145,12 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class Error Error.h "lldb/Utility/Error.h"
+comment|/// @class Status Status.h "lldb/Utility/Status.h"
 comment|/// @brief An error handling class.
 comment|///
 comment|/// This class is designed to be able to hold any error code that can be
 comment|/// encountered on a given platform. The errors are stored as a value
-comment|/// of type Error::ValueType. This value should be large enough to hold
+comment|/// of type Status::ValueType. This value should be large enough to hold
 comment|/// any and all errors that the class supports. Each error has an
 comment|/// associated type that is of type lldb::ErrorType. New types
 comment|/// can be added to support new error types, and architecture specific
@@ -161,7 +165,7 @@ comment|/// be cached until the error is cleared of the value of the error
 comment|/// changes.
 comment|//----------------------------------------------------------------------
 name|class
-name|Error
+name|Status
 block|{
 name|public
 label|:
@@ -184,11 +188,11 @@ comment|///
 comment|/// @param[in] type
 comment|///     The type for \a err.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 argument_list|()
 expr_stmt|;
 name|explicit
-name|Error
+name|Status
 argument_list|(
 name|ValueType
 name|err
@@ -204,13 +208,13 @@ name|eErrorTypeGeneric
 argument_list|)
 decl_stmt|;
 comment|/* implicit */
-name|Error
+name|Status
 argument_list|(
 argument|std::error_code EC
 argument_list|)
 empty_stmt|;
 name|explicit
-name|Error
+name|Status
 parameter_list|(
 specifier|const
 name|char
@@ -235,10 +239,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|Error
+name|Status
 argument_list|(
 specifier|const
-name|Error
+name|Status
 operator|&
 name|rhs
 argument_list|)
@@ -283,13 +287,13 @@ end_comment
 
 begin_decl_stmt
 specifier|const
-name|Error
+name|Status
 modifier|&
 name|operator
 init|=
 operator|(
 specifier|const
-name|Error
+name|Status
 operator|&
 name|rhs
 operator|)
@@ -342,7 +346,7 @@ end_comment
 
 begin_decl_stmt
 specifier|const
-name|Error
+name|Status
 modifier|&
 name|operator
 init|=
@@ -355,7 +359,7 @@ end_decl_stmt
 
 begin_expr_stmt
 operator|~
-name|Error
+name|Status
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -739,7 +743,7 @@ comment|/// Update the error value to be \c errno and update the type to
 end_comment
 
 begin_comment
-comment|/// be \c Error::POSIX.
+comment|/// be \c Status::POSIX.
 end_comment
 
 begin_comment
@@ -770,7 +774,7 @@ comment|/// Update the error value to be \c LLDB_GENERIC_ERROR and update the
 end_comment
 
 begin_comment
-comment|/// type to be \c Error::Generic.
+comment|/// type to be \c Status::Generic.
 end_comment
 
 begin_comment
@@ -1042,7 +1046,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< Error code as an integer value.
+comment|///< Status code as an integer value.
 end_comment
 
 begin_expr_stmt
@@ -1090,14 +1094,14 @@ name|format_provider
 operator|<
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|>
 block|{
 specifier|static
 name|void
 name|format
 argument_list|(
-argument|const lldb_private::Error&error
+argument|const lldb_private::Status&error
 argument_list|,
 argument|llvm::raw_ostream&OS
 argument_list|,

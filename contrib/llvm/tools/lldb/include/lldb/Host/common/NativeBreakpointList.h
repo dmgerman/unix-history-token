@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -118,7 +118,7 @@ name|std
 operator|::
 name|function
 operator|<
-name|Error
+name|Status
 argument_list|(
 argument|lldb::addr_t addr
 argument_list|,
@@ -134,7 +134,7 @@ expr_stmt|;
 name|NativeBreakpointList
 argument_list|()
 expr_stmt|;
-name|Error
+name|Status
 name|AddRef
 argument_list|(
 name|lldb
@@ -152,7 +152,7 @@ name|CreateBreakpointFunc
 name|create_func
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|DecRef
 argument_list|(
 name|lldb
@@ -161,7 +161,7 @@ name|addr_t
 name|addr
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|EnableBreakpoint
 argument_list|(
 name|lldb
@@ -170,7 +170,7 @@ name|addr_t
 name|addr
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|DisableBreakpoint
 argument_list|(
 name|lldb
@@ -179,7 +179,7 @@ name|addr_t
 name|addr
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|GetBreakpoint
 argument_list|(
 name|lldb
@@ -192,7 +192,7 @@ operator|&
 name|breakpoint_sp
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|RemoveTrapsFromBuffer
 argument_list|(
 name|lldb

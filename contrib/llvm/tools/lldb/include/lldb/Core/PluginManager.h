@@ -46,18 +46,18 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
-
-begin_comment
-comment|// for Error
-end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/FileSpec.h"
+file|"lldb/Utility/Status.h"
 end_include
+
+begin_comment
+comment|// for Status
+end_comment
 
 begin_include
 include|#
@@ -712,7 +712,7 @@ name|name
 parameter_list|)
 function_decl|;
 specifier|static
-name|Error
+name|Status
 name|SaveCore
 argument_list|(
 specifier|const

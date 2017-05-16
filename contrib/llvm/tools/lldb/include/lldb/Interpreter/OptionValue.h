@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -341,7 +341,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 name|llvm
@@ -415,7 +415,7 @@ argument|llvm::StringRef name
 argument_list|,
 argument|bool will_modify
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 specifier|const
 block|{
@@ -442,7 +442,7 @@ argument_list|()
 return|;
 block|}
 name|virtual
-name|Error
+name|Status
 name|SetSubValue
 argument_list|(
 specifier|const
@@ -701,7 +701,7 @@ argument|const char *value_cstr
 argument_list|,
 argument|uint32_t type_mask
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 comment|// Get this value as a uint64_t value if it is encoded as a boolean,

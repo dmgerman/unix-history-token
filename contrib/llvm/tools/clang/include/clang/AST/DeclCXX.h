@@ -4782,6 +4782,18 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param LookupInDependent can be set to true to extend the search to
+end_comment
+
+begin_comment
+comment|/// dependent base classes.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \returns true if there exists any path from this class to a base class
 end_comment
 
@@ -4799,6 +4811,11 @@ argument_list|,
 name|CXXBasePaths
 operator|&
 name|Paths
+argument_list|,
+name|bool
+name|LookupInDependent
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4997,6 +5014,50 @@ comment|/// \brief Base-class lookup callback that determines whether there exis
 end_comment
 
 begin_comment
+comment|/// a member with the given name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This callback can be used with \c lookupInBases() to find members
+end_comment
+
+begin_comment
+comment|/// of the given name within a C++ class hierarchy, including dependent
+end_comment
+
+begin_comment
+comment|/// classes.
+end_comment
+
+begin_function_decl
+specifier|static
+name|bool
+name|FindOrdinaryMemberInDependentClasses
+parameter_list|(
+specifier|const
+name|CXXBaseSpecifier
+modifier|*
+name|Specifier
+parameter_list|,
+name|CXXBasePath
+modifier|&
+name|Path
+parameter_list|,
+name|DeclarationName
+name|Name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Base-class lookup callback that determines whether there exists
+end_comment
+
+begin_comment
 comment|/// an OpenMP declare reduction member with the given name.
 end_comment
 
@@ -5115,6 +5176,55 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// Performs an imprecise lookup of a dependent name in this class.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This function does not follow strict semantic rules and should be used
+end_comment
+
+begin_comment
+comment|/// only when lookup rules can be relaxed, e.g. indexing.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|NamedDecl
+operator|*
+operator|>
+name|lookupDependentName
+argument_list|(
+specifier|const
+name|DeclarationName
+operator|&
+name|Name
+argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+specifier|const
+name|NamedDecl
+operator|*
+name|ND
+argument_list|)
+operator|>
+name|Filter
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Renders and displays an inheritance diagram

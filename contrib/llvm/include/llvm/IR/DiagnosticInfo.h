@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/None.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -350,7 +344,9 @@ literal|0
 decl_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
+name|using
+name|DiagnosticHandlerFunction
+init|=
 name|std
 operator|::
 name|function
@@ -362,8 +358,7 @@ name|DiagnosticInfo
 operator|&
 argument_list|)
 operator|>
-name|DiagnosticHandlerFunction
-expr_stmt|;
+decl_stmt|;
 comment|/// Diagnostic information for inline asm reporting.
 comment|/// This is basically a message and an optional location.
 name|class
@@ -377,6 +372,8 @@ operator|:
 comment|/// Optional line information. 0 if not set.
 name|unsigned
 name|LocCookie
+operator|=
+literal|0
 block|;
 comment|/// Message to be reported.
 specifier|const
@@ -389,6 +386,8 @@ specifier|const
 name|Instruction
 operator|*
 name|Instr
+operator|=
+name|nullptr
 block|;
 name|public
 operator|:
@@ -409,19 +408,9 @@ argument_list|,
 name|Severity
 argument_list|)
 block|,
-name|LocCookie
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|MsgStr
 argument_list|(
-name|MsgStr
-argument_list|)
-block|,
-name|Instr
-argument_list|(
-argument|nullptr
+argument|MsgStr
 argument_list|)
 block|{}
 comment|/// \p LocCookie if non-zero gives the line number for this report.
@@ -451,12 +440,7 @@ argument_list|)
 block|,
 name|MsgStr
 argument_list|(
-name|MsgStr
-argument_list|)
-block|,
-name|Instr
-argument_list|(
-argument|nullptr
+argument|MsgStr
 argument_list|)
 block|{}
 comment|/// \p Instr gives the original instruction that triggered the diagnostic.
@@ -990,11 +974,6 @@ argument_list|(
 name|FileName
 argument_list|)
 block|,
-name|LineNum
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|Msg
 argument_list|(
 argument|Msg
@@ -1012,11 +991,6 @@ argument_list|(
 name|DK_SampleProfile
 argument_list|,
 name|Severity
-argument_list|)
-block|,
-name|LineNum
-argument_list|(
-literal|0
 argument_list|)
 block|,
 name|Msg
@@ -1088,6 +1062,8 @@ comment|/// Line number where the diagnostic occurred. If 0, no line number will
 comment|/// be emitted in the message.
 name|unsigned
 name|LineNum
+operator|=
+literal|0
 block|;
 comment|/// Message to report.
 specifier|const
@@ -1213,7 +1189,9 @@ name|public
 operator|:
 name|DiagnosticLocation
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|DiagnosticLocation
 argument_list|(
 specifier|const
@@ -3355,7 +3333,7 @@ argument_list|)
 specifier|const
 name|override
 block|; }
-block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment

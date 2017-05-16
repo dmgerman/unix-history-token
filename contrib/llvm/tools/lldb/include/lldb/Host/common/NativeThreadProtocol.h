@@ -125,7 +125,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|ReadRegister
 argument_list|(
 argument|uint32_t reg
@@ -134,7 +134,7 @@ argument|RegisterValue&reg_value
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|WriteRegister
 argument_list|(
 argument|uint32_t reg
@@ -143,7 +143,7 @@ argument|const RegisterValue&reg_value
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|SaveAllRegisters
 argument_list|(
 name|lldb
@@ -154,7 +154,7 @@ name|data_sp
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|RestoreAllRegisters
 argument_list|(
 name|lldb
@@ -200,7 +200,7 @@ comment|// ---------------------------------------------------------------------
 comment|// Thread-specific watchpoints
 comment|// ---------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|SetWatchpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -215,7 +215,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|RemoveWatchpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -227,7 +227,7 @@ comment|// ---------------------------------------------------------------------
 comment|// Thread-specific Hardware Breakpoint routines
 comment|// ---------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|SetHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -238,7 +238,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|RemoveHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr

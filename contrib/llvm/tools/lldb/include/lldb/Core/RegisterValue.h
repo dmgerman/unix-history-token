@@ -58,11 +58,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_comment
-comment|// for Error
+comment|// for Status
 end_comment
 
 begin_include
@@ -427,7 +427,7 @@ operator|::
 name|ByteOrder
 name|dst_byte_order
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -454,7 +454,7 @@ operator|::
 name|ByteOrder
 name|src_byte_order
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -967,7 +967,7 @@ name|uint32_t
 name|sign_bitpos
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 specifier|const
@@ -981,7 +981,7 @@ name|StringRef
 name|value_str
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|SetValueFromString
 parameter_list|(
 specifier|const
@@ -997,7 +997,7 @@ parameter_list|)
 init|=
 name|delete
 function_decl|;
-name|Error
+name|Status
 name|SetValueFromData
 argument_list|(
 specifier|const

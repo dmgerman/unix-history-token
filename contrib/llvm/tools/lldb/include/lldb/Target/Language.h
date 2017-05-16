@@ -831,7 +831,7 @@ name|ValueObject
 modifier|&
 name|valobj
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)

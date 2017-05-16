@@ -105,12 +105,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getSGRPNum
+name|getSGPRNum
 argument_list|()
 operator|==
 literal|0
 operator|&&
-name|getVGRPNum
+name|getVGPRNum
 argument_list|()
 operator|==
 literal|0
@@ -141,7 +141,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|unsigned
-name|getSGRPNum
+name|getSGPRNum
 argument_list|()
 specifier|const
 block|{
@@ -153,7 +153,7 @@ index|]
 return|;
 block|}
 name|unsigned
-name|getVGRPNum
+name|getVGPRNum
 argument_list|()
 specifier|const
 block|{
@@ -207,7 +207,7 @@ name|ST
 operator|.
 name|getOccupancyWithNumSGPRs
 argument_list|(
-name|getSGRPNum
+name|getSGPRNum
 argument_list|()
 argument_list|)
 argument_list|,
@@ -215,7 +215,7 @@ name|ST
 operator|.
 name|getOccupancyWithNumVGPRs
 argument_list|(
-name|getVGRPNum
+name|getVGPRNum
 argument_list|()
 argument_list|)
 argument_list|)
@@ -496,6 +496,11 @@ name|LiveRegSet
 expr_stmt|;
 name|protected
 label|:
+specifier|const
+name|LiveIntervals
+modifier|&
+name|LIS
+decl_stmt|;
 name|LiveRegSet
 name|LiveRegs
 decl_stmt|;
@@ -520,8 +525,35 @@ init|=
 name|nullptr
 decl_stmt|;
 name|GCNRPTracker
-argument_list|()
+argument_list|(
+specifier|const
+name|LiveIntervals
+operator|&
+name|LIS_
+argument_list|)
+operator|:
+name|LIS
+argument_list|(
+argument|LIS_
+argument_list|)
 block|{}
+name|LaneBitmask
+name|getDefRegMask
+argument_list|(
+argument|const MachineOperand&MO
+argument_list|)
+specifier|const
+expr_stmt|;
+name|LaneBitmask
+name|getUsedRegMask
+argument_list|(
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 comment|// live regs for the current state
@@ -549,6 +581,16 @@ block|{
 return|return
 name|LastTrackedMI
 return|;
+block|}
+name|void
+name|clearMaxPressure
+parameter_list|()
+block|{
+name|MaxPressure
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 block|}
 comment|// returns MaxPressure, resetting it
 name|decltype
@@ -588,6 +630,25 @@ name|LiveRegs
 argument_list|)
 return|;
 block|}
+specifier|static
+name|void
+name|printLiveRegs
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+specifier|const
+name|LiveRegSet
+modifier|&
+name|LiveRegs
+parameter_list|,
+specifier|const
+name|MachineRegisterInfo
+modifier|&
+name|MRI
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 name|class
@@ -596,25 +657,6 @@ range|:
 name|public
 name|GCNRPTracker
 block|{
-specifier|const
-name|LiveIntervals
-operator|&
-name|LIS
-block|;
-name|LaneBitmask
-name|getDefRegMask
-argument_list|(
-argument|const MachineOperand&MO
-argument_list|)
-specifier|const
-block|;
-name|LaneBitmask
-name|getUsedRegMask
-argument_list|(
-argument|const MachineOperand&MO
-argument_list|)
-specifier|const
-block|;
 name|public
 operator|:
 name|GCNUpwardRPTracker
@@ -625,7 +667,7 @@ operator|&
 name|LIS_
 argument_list|)
 operator|:
-name|LIS
+name|GCNRPTracker
 argument_list|(
 argument|LIS_
 argument_list|)
@@ -639,6 +681,13 @@ specifier|const
 name|MachineInstr
 operator|&
 name|MI
+argument_list|,
+specifier|const
+name|LiveRegSet
+operator|*
+name|LiveRegs
+operator|=
+name|nullptr
 argument_list|)
 block|;
 comment|// move to the state just above the MI
@@ -657,6 +706,104 @@ name|bool
 name|isValid
 argument_list|()
 specifier|const
+block|; }
+decl_stmt|;
+name|class
+name|GCNDownwardRPTracker
+range|:
+name|public
+name|GCNRPTracker
+block|{
+comment|// Last position of reset or advanceBeforeNext
+name|MachineBasicBlock
+operator|::
+name|const_iterator
+name|NextMI
+block|;
+name|MachineBasicBlock
+operator|::
+name|const_iterator
+name|MBBEnd
+block|;
+name|public
+operator|:
+name|GCNDownwardRPTracker
+argument_list|(
+specifier|const
+name|LiveIntervals
+operator|&
+name|LIS_
+argument_list|)
+operator|:
+name|GCNRPTracker
+argument_list|(
+argument|LIS_
+argument_list|)
+block|{}
+specifier|const
+name|MachineBasicBlock
+operator|::
+name|const_iterator
+name|getNext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextMI
+return|;
+block|}
+comment|// Reset tracker to the point before the MI
+comment|// filling live regs upon this point using LIS.
+comment|// Returns false if block is empty except debug values.
+name|bool
+name|reset
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+specifier|const
+name|LiveRegSet
+operator|*
+name|LiveRegs
+operator|=
+name|nullptr
+argument_list|)
+block|;
+comment|// Move to the state right before the next MI. Returns false if reached
+comment|// end of the block.
+name|bool
+name|advanceBeforeNext
+argument_list|()
+block|;
+comment|// Move to the state at the MI, advanceBeforeNext has to be called first.
+name|void
+name|advanceToNext
+argument_list|()
+block|;
+comment|// Move to the state at the next MI. Returns false if reached end of block.
+name|bool
+name|advance
+argument_list|()
+block|;
+comment|// Advance instructions until before End.
+name|bool
+name|advance
+argument_list|(
+argument|MachineBasicBlock::const_iterator End
+argument_list|)
+block|;
+comment|// Reset to Begin and advance to End.
+name|bool
+name|advance
+argument_list|(
+argument|MachineBasicBlock::const_iterator Begin
+argument_list|,
+argument|MachineBasicBlock::const_iterator End
+argument_list|,
+argument|const LiveRegSet *LiveRegsCopy = nullptr
+argument_list|)
 block|; }
 decl_stmt|;
 name|LaneBitmask

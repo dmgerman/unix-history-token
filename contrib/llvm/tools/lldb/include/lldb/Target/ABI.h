@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -256,7 +256,7 @@ specifier|const
 block|;
 comment|// Set the Return value object in the current frame as though a function with
 name|virtual
-name|Error
+name|Status
 name|SetReturnValueObject
 argument_list|(
 name|lldb

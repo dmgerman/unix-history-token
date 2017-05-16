@@ -287,6 +287,24 @@ argument_list|,
 argument|uptr *protection
 argument_list|)
 expr_stmt|;
+name|void
+name|GetSegmentAddrRange
+parameter_list|(
+name|uptr
+modifier|*
+name|start
+parameter_list|,
+name|uptr
+modifier|*
+name|end
+parameter_list|,
+name|uptr
+name|vmaddr
+parameter_list|,
+name|uptr
+name|vmsize
+parameter_list|)
+function_decl|;
 name|int
 name|current_image_
 decl_stmt|;

@@ -1317,6 +1317,12 @@ name|Vector
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \return The width of the smallest vector register type.
+name|unsigned
+name|getMinVectorRegisterBitWidth
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \return True if it should be considered for address type promotion.
 comment|/// \p AllowPromotionWithoutCommonHeader Set true if promoting \p I is
 comment|/// profitable without finding other extensions fed by the same input.
@@ -1992,6 +1998,71 @@ name|VecTy
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Flags describing the kind of vector reduction.
+struct|struct
+name|ReductionFlags
+block|{
+name|ReductionFlags
+argument_list|()
+operator|:
+name|IsMaxOp
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSigned
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|NoNaN
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|bool
+name|IsMaxOp
+expr_stmt|;
+comment|///< If the op a min/max kind, true if it's a max operation.
+name|bool
+name|IsSigned
+decl_stmt|;
+comment|///< Whether the operation is a signed int reduction.
+name|bool
+name|NoNaN
+decl_stmt|;
+comment|///< If op is an fp min/max, whether NaNs may be present.
+block|}
+struct|;
+comment|/// \returns True if the target wants to handle the given reduction idiom in
+comment|/// the intrinsics form instead of the shuffle form.
+name|bool
+name|useReductionIntrinsic
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|ReductionFlags
+name|Flags
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns True if the target wants to expand the given reduction intrinsic
+comment|/// into a shuffle sequence.
+name|bool
+name|shouldExpandReduction
+argument_list|(
+specifier|const
+name|IntrinsicInst
+operator|*
+name|II
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 name|private
 label|:
@@ -2599,6 +2670,13 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|unsigned
+name|getMinVectorRegisterBitWidth
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
 name|bool
 name|shouldConsiderAddressTypePromotion
 argument_list|(
@@ -3064,6 +3142,30 @@ argument_list|,
 argument|unsigned ChainSizeInBytes
 argument_list|,
 argument|VectorType *VecTy
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|useReductionIntrinsic
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|ReductionFlags
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|shouldExpandReduction
+argument_list|(
+argument|const IntrinsicInst *II
 argument_list|)
 specifier|const
 operator|=
@@ -3985,6 +4087,18 @@ name|Vector
 argument_list|)
 return|;
 block|}
+name|unsigned
+name|getMinVectorRegisterBitWidth
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getMinVectorRegisterBitWidth
+argument_list|()
+return|;
+block|}
 name|bool
 name|shouldConsiderAddressTypePromotion
 argument_list|(
@@ -4795,6 +4909,48 @@ argument_list|,
 name|ChainSizeInBytes
 argument_list|,
 name|VecTy
+argument_list|)
+return|;
+block|}
+name|bool
+name|useReductionIntrinsic
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|ReductionFlags Flags
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|useReductionIntrinsic
+argument_list|(
+name|Opcode
+argument_list|,
+name|Ty
+argument_list|,
+name|Flags
+argument_list|)
+return|;
+block|}
+name|bool
+name|shouldExpandReduction
+argument_list|(
+argument|const IntrinsicInst *II
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|shouldExpandReduction
+argument_list|(
+name|II
 argument_list|)
 return|;
 block|}

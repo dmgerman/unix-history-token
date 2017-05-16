@@ -851,6 +851,13 @@ comment|/// CALLSEQ_START/CALLSEQ_END - These operators mark the beginning and e
 comment|/// of a call sequence, and carry arbitrary information that target might
 comment|/// want to know.  The first operand is a chain, the rest are specified by
 comment|/// the target and not touched by the DAG optimizers.
+comment|/// Targets that may use stack to pass call arguments define additional
+comment|/// operands:
+comment|/// - size of the call frame part that must be set up within the
+comment|///   CALLSEQ_START..CALLSEQ_END pair,
+comment|/// - part of the call frame prepared prior to CALLSEQ_START.
+comment|/// Both these parameters must be constants, their sum is the total call
+comment|/// frame size.
 comment|/// CALLSEQ_START..CALLSEQ_END pairs may not be nested.
 name|CALLSEQ_START
 block|,
@@ -1011,6 +1018,43 @@ comment|/// the most recent dynamic alloca. For most targets that would be 0, bu
 comment|/// for some others (e.g. PowerPC, PowerPC64) that would be compile-time
 comment|/// known nonzero constant. The only operand here is the chain.
 name|GET_DYNAMIC_AREA_OFFSET
+block|,
+comment|/// Generic reduction nodes. These nodes represent horizontal vector
+comment|/// reduction operations, producing a scalar result.
+comment|/// The STRICT variants perform reductions in sequential order. The first
+comment|/// operand is an initial scalar accumulator value, and the second operand
+comment|/// is the vector to reduce.
+name|VECREDUCE_STRICT_FADD
+block|,
+name|VECREDUCE_STRICT_FMUL
+block|,
+comment|/// These reductions are non-strict, and have a single vector operand.
+name|VECREDUCE_FADD
+block|,
+name|VECREDUCE_FMUL
+block|,
+name|VECREDUCE_ADD
+block|,
+name|VECREDUCE_MUL
+block|,
+name|VECREDUCE_AND
+block|,
+name|VECREDUCE_OR
+block|,
+name|VECREDUCE_XOR
+block|,
+name|VECREDUCE_SMAX
+block|,
+name|VECREDUCE_SMIN
+block|,
+name|VECREDUCE_UMAX
+block|,
+name|VECREDUCE_UMIN
+block|,
+comment|/// FMIN/FMAX nodes can have flags, for NaN/NoNaN variants.
+name|VECREDUCE_FMAX
+block|,
+name|VECREDUCE_FMIN
 block|,
 comment|/// BUILTIN_OP_END - This must be the last enum value in this list.
 comment|/// The target-specific pre-isel opcode values start here.

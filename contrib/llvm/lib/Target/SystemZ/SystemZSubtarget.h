@@ -164,6 +164,9 @@ name|bool
 name|HasPopulationCount
 block|;
 name|bool
+name|HasMessageSecurityAssist4
+block|;
+name|bool
 name|HasFastSerialization
 block|;
 name|bool
@@ -192,6 +195,9 @@ name|HasLoadStoreOnCond2
 block|;
 name|bool
 name|HasLoadAndZeroRightmostByte
+block|;
+name|bool
+name|HasMessageSecurityAssist5
 block|;
 name|private
 operator|:
@@ -407,6 +413,17 @@ return|return
 name|HasPopulationCount
 return|;
 block|}
+comment|// Return true if the target has the message-security-assist
+comment|// extension facility 4.
+name|bool
+name|hasMessageSecurityAssist4
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMessageSecurityAssist4
+return|;
+block|}
 comment|// Return true if the target has the fast-serialization facility.
 name|bool
 name|hasFastSerialization
@@ -485,6 +502,17 @@ specifier|const
 block|{
 return|return
 name|HasLoadAndZeroRightmostByte
+return|;
+block|}
+comment|// Return true if the target has the message-security-assist
+comment|// extension facility 5.
+name|bool
+name|hasMessageSecurityAssist5
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMessageSecurityAssist5
 return|;
 block|}
 comment|// Return true if the target has the vector facility.

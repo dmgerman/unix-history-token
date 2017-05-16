@@ -46,11 +46,11 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_comment
-comment|// for Error
+comment|// for Status
 end_comment
 
 begin_include
@@ -778,7 +778,7 @@ operator|::
 name|ByteOrder
 name|dst_byte_order
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1315,7 +1315,7 @@ literal|0.0
 argument_list|)
 decl|const
 decl_stmt|;
-name|Error
+name|Status
 name|SetValueFromCString
 argument_list|(
 specifier|const
@@ -1332,7 +1332,7 @@ name|size_t
 name|byte_size
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|SetValueFromData
 argument_list|(
 name|DataExtractor

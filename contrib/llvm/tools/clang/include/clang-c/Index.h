@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|38
+value|39
 end_define
 
 begin_define
@@ -4570,6 +4570,27 @@ name|clang_Cursor_isVariadic
 parameter_list|(
 name|CXCursor
 name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns non-zero if the given cursor points to a symbol marked with  * external_source_symbol attribute.  *  * \param language If non-NULL, and the attribute is present, will be set to  * the 'language' string from the attribute.  *  * \param definedIn If non-NULL, and the attribute is present, will be set to  * the 'definedIn' string from the attribute.  *  * \param isGenerated If non-NULL, and the attribute is present, will be set to  * non-zero if the 'generated_declaration' is set in the attribute.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Cursor_isExternalSymbol
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|,
+name|CXString
+modifier|*
+name|language
+parameter_list|,
+name|CXString
+modifier|*
+name|definedIn
+parameter_list|,
+name|unsigned
+modifier|*
+name|isGenerated
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Given a cursor that represents a declaration, return the associated  * comment's source range.  The range may include multiple consecutive comments  * with whitespace in between.  */

@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_decl_stmt
@@ -143,7 +143,7 @@ name|Callback
 operator|&
 name|callback
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -158,7 +158,7 @@ comment|// Waits for registered events and invoke the proper callbacks. Returns 
 comment|// all callbacks
 comment|// deregister themselves or when someone requests termination.
 name|virtual
-name|Error
+name|Status
 name|Run
 parameter_list|()
 block|{

@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/FileSpec.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -107,7 +107,7 @@ modifier|*
 name|PATH_CONVERSION_ERROR
 decl_stmt|;
 specifier|static
-name|Error
+name|Status
 name|Symlink
 parameter_list|(
 specifier|const
@@ -122,7 +122,7 @@ name|dst
 parameter_list|)
 function_decl|;
 specifier|static
-name|Error
+name|Status
 name|Readlink
 parameter_list|(
 specifier|const
@@ -136,7 +136,7 @@ name|dst
 parameter_list|)
 function_decl|;
 specifier|static
-name|Error
+name|Status
 name|ResolveSymbolicLink
 parameter_list|(
 specifier|const

@@ -247,23 +247,6 @@ expr_stmt|;
 comment|// Byte count of the segment or group.
 block|}
 struct|;
-comment|// Used for serialized hash table in TPI stream.
-comment|// In the reference, it is an array of TI and cbOff pair.
-struct|struct
-name|TypeIndexOffset
-block|{
-name|codeview
-operator|::
-name|TypeIndex
-name|Type
-expr_stmt|;
-name|support
-operator|::
-name|ulittle32_t
-name|Offset
-expr_stmt|;
-block|}
-struct|;
 comment|/// Some of the values are stored in bitfields.  Since this needs to be portable
 comment|/// across compilers and architectures (big / little endian in particular) we
 comment|/// can't use the actual structures below, but must instead do the shifting

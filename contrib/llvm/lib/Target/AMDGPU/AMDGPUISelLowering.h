@@ -694,6 +694,24 @@ return|;
 block|}
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|bool
+name|allUsesHaveSourceMods
+parameter_list|(
+specifier|const
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+name|CostThreshold
+init|=
+literal|4
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|bool
 name|isFAbsFree

@@ -412,7 +412,7 @@ name|var_list
 parameter_list|)
 function_decl|;
 specifier|static
-name|Error
+name|Status
 name|GetValuesForVariableExpressionPath
 argument_list|(
 name|llvm

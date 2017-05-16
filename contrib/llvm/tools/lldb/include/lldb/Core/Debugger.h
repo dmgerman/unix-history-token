@@ -154,21 +154,21 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
-end_include
-
-begin_comment
-comment|// for Error
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_comment
 comment|// for FileSpec
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
+end_include
+
+begin_comment
+comment|// for Status
 end_comment
 
 begin_include
@@ -944,7 +944,7 @@ block|,
 name|eStopDisassemblyTypeAlways
 block|}
 enum|;
-name|Error
+name|Status
 name|SetPropertyValue
 argument_list|(
 specifier|const
@@ -1198,7 +1198,7 @@ name|FileSpec
 modifier|&
 name|spec
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -1245,7 +1245,7 @@ name|IsJoinable
 argument_list|()
 return|;
 block|}
-name|Error
+name|Status
 name|RunREPL
 argument_list|(
 name|lldb

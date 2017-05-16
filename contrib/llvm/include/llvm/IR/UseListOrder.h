@@ -161,15 +161,16 @@ expr|default
 decl_stmt|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|UseListOrderStack
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|UseListOrder
 operator|>
-name|UseListOrderStack
-expr_stmt|;
+decl_stmt|;
 block|}
 end_decl_stmt
 

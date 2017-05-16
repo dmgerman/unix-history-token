@@ -361,7 +361,7 @@ name|ConstString
 operator|&
 name|name
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -381,7 +381,7 @@ name|ArchSpec
 operator|*
 name|platform_arch_ptr
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -436,7 +436,7 @@ comment|///     Returns \b true if this Platform plug-in was able to find
 comment|///     a suitable executable, \b false otherwise.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|ResolveExecutable
 argument_list|(
 specifier|const
@@ -504,7 +504,7 @@ comment|/// @return
 comment|///     Returns an error that describes success or failure.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|ResolveSymbolFile
 argument_list|(
 name|Target
@@ -774,7 +774,7 @@ comment|/// @return
 comment|///     An error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|GetFileWithUUID
 argument_list|(
 specifier|const
@@ -816,7 +816,7 @@ name|feedback_stream
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|GetSharedModule
 argument_list|(
 specifier|const
@@ -870,7 +870,7 @@ name|module_spec
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|ConnectRemote
 argument_list|(
 name|Args
@@ -879,7 +879,7 @@ name|args
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|DisconnectRemote
 argument_list|()
 block|;
@@ -927,7 +927,7 @@ comment|/// Launch a new process on a platform, not necessarily for
 comment|/// debugging, it could be just for running the process.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|(
 name|ProcessLaunchInfo
@@ -943,7 +943,7 @@ comment|//  argument magic the platform defines as part of its typical
 comment|//  user experience
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|ShellExpandArguments
 argument_list|(
 name|ProcessLaunchInfo
@@ -955,7 +955,7 @@ comment|//------------------------------------------------------------------
 comment|/// Kill process on a platform.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|KillProcess
 argument_list|(
 argument|const lldb::pid_t pid
@@ -1019,7 +1019,7 @@ name|target
 argument_list|,
 comment|// Can be nullptr, if nullptr create a new
 comment|// target, else use existing one
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1038,7 +1038,7 @@ argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -1080,7 +1080,7 @@ argument_list|,
 comment|// Can be nullptr, if nullptr
 comment|// create a new target, else
 comment|// use existing one
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1107,7 +1107,7 @@ comment|//------------------------------------------------------------------
 comment|//        virtual lldb::ProcessSP
 comment|//        Attach (const char *process_name,
 comment|//                bool wait_for_launch,
-comment|//                Error&error) = 0;
+comment|//                Status&error) = 0;
 comment|//------------------------------------------------------------------
 comment|// The base class Platform will take care of the host platform.
 comment|// Subclasses will need to fill in the remote case.
@@ -1372,7 +1372,7 @@ name|false
 return|;
 block|}
 name|virtual
-name|Error
+name|Status
 name|MakeDirectory
 argument_list|(
 argument|const FileSpec&file_spec
@@ -1381,7 +1381,7 @@ argument|uint32_t permissions
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|GetFilePermissions
 argument_list|(
 specifier|const
@@ -1395,7 +1395,7 @@ name|file_permissions
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|SetFilePermissions
 argument_list|(
 argument|const FileSpec&file_spec
@@ -1415,7 +1415,7 @@ argument|uint32_t flags
 argument_list|,
 argument|uint32_t mode
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|{
 return|return
@@ -1428,7 +1428,7 @@ name|CloseFile
 argument_list|(
 argument|lldb::user_id_t fd
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|{
 return|return
@@ -1460,7 +1460,7 @@ argument|void *dst
 argument_list|,
 argument|uint64_t dst_len
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|{
 name|error
@@ -1493,7 +1493,7 @@ argument|const void *src
 argument_list|,
 argument|uint64_t src_len
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|{
 name|error
@@ -1515,7 +1515,7 @@ literal|1
 return|;
 block|}
 name|virtual
-name|Error
+name|Status
 name|GetFile
 argument_list|(
 specifier|const
@@ -1530,7 +1530,7 @@ name|destination
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|PutFile
 argument_list|(
 argument|const FileSpec&source
@@ -1543,7 +1543,7 @@ argument|uint32_t gid = UINT32_MAX
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|CreateSymlink
 argument_list|(
 specifier|const
@@ -1584,7 +1584,7 @@ comment|/// @return
 comment|///     An error object that describes anything that went wrong.
 comment|//----------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|Install
 argument_list|(
 specifier|const
@@ -1620,7 +1620,7 @@ name|file_spec
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|Unlink
 argument_list|(
 specifier|const
@@ -1799,7 +1799,7 @@ block|}
 name|virtual
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|RunShellCommand
 argument_list|(
 argument|const char *command
@@ -2104,7 +2104,7 @@ name|remote_file
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -2128,13 +2128,13 @@ name|remote_file
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|UnloadImage
 argument_list|(
 argument|lldb_private::Process *process
@@ -2170,7 +2170,7 @@ name|debugger
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -2675,7 +2675,7 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
-name|Error
+name|Status
 name|GetCachedExecutable
 argument_list|(
 name|ModuleSpec
@@ -2699,7 +2699,7 @@ name|remote_platform
 argument_list|)
 decl_stmt|;
 name|virtual
-name|Error
+name|Status
 name|DownloadModuleSlice
 parameter_list|(
 specifier|const
@@ -2722,7 +2722,7 @@ name|dst_file_spec
 parameter_list|)
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|DownloadSymbolFile
 argument_list|(
 specifier|const
@@ -2752,7 +2752,7 @@ name|std
 operator|::
 name|function
 operator|<
-name|Error
+name|Status
 argument_list|(
 specifier|const
 name|ModuleSpec
@@ -2761,7 +2761,7 @@ argument_list|)
 operator|>
 name|ModuleResolver
 expr_stmt|;
-name|Error
+name|Status
 name|GetRemoteSharedModule
 argument_list|(
 specifier|const
@@ -2808,7 +2808,7 @@ operator|*
 name|did_create_ptr
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|LoadCachedExecutable
 argument_list|(
 specifier|const
@@ -3221,7 +3221,7 @@ expr|default
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
@@ -3309,7 +3309,7 @@ expr|default
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
@@ -3389,7 +3389,7 @@ expr|default
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx

@@ -149,11 +149,19 @@ comment|///    It is intended for use when the cache line will be written to sho
 end_comment
 
 begin_comment
-comment|///    after the prefetch is performed. Note that the effect of this intrinsic
+comment|///    after the prefetch is performed.
 end_comment
 
 begin_comment
-comment|///    is dependent on the processor implementation.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Note that the effect of this intrinsic is dependent on the processor
+end_comment
+
+begin_comment
+comment|///    implementation.
 end_comment
 
 begin_comment

@@ -202,8 +202,6 @@ name|FIXUPIMMS
 block|,
 name|FIXUPIMMS_MASKZ
 block|,
-name|CONVERT_MASK_TO_VEC
-block|,
 name|CONVERT_TO_MASK
 block|,
 name|GATHER_AVX2

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Type.h - Classes for handling data types -----------*- C++ -*-===//
+comment|//===- llvm/Type.h - Classes for handling data types ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -84,19 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CBindingWrapping.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/CBindingWrapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -105,31 +105,28 @@ directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|PointerType
-decl_stmt|;
-name|class
-name|IntegerType
-decl_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
-name|Module
-decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
-name|class
-name|LLVMContextImpl
-decl_stmt|;
-name|class
-name|StringRef
-decl_stmt|;
 name|template
 operator|<
 name|class
@@ -138,6 +135,21 @@ operator|>
 expr|struct
 name|GraphTraits
 expr_stmt|;
+name|class
+name|IntegerType
+decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
+name|class
+name|PointerType
+decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
 comment|/// The instances of the Type class are immutable: once they are created,
 comment|/// they are never changed.  Also note that only one instance of a particular
 comment|/// type is ever created.  Thus seeing if two types are equal is a matter of
@@ -267,16 +279,6 @@ name|SubclassData
 argument_list|(
 literal|0
 argument_list|)
-operator|,
-name|NumContainedTys
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ContainedTys
-argument_list|(
-argument|nullptr
-argument_list|)
 block|{}
 operator|~
 name|Type
@@ -319,6 +321,8 @@ block|}
 comment|/// Keeps track of how many Type*'s there are in the ContainedTys list.
 name|unsigned
 name|NumContainedTys
+init|=
+literal|0
 decl_stmt|;
 comment|/// A pointer to the array of Types contained by this Type. For example, this
 comment|/// includes the arguments of a function type, the elements of a structure,
@@ -330,6 +334,8 @@ modifier|*
 specifier|const
 modifier|*
 name|ContainedTys
+init|=
+name|nullptr
 decl_stmt|;
 specifier|static
 name|bool
@@ -1010,13 +1016,14 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Type Iteration support.
 comment|//
-typedef|typedef
-name|Type
-modifier|*
-specifier|const
-modifier|*
+name|using
 name|subtype_iterator
-typedef|;
+init|=
+name|Type
+operator|*
+specifier|const
+operator|*
+decl_stmt|;
 name|subtype_iterator
 name|subtype_begin
 argument_list|()
@@ -1059,15 +1066,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-typedef|typedef
+name|using
+name|subtype_reverse_iterator
+init|=
 name|std
 operator|::
 name|reverse_iterator
 operator|<
 name|subtype_iterator
 operator|>
-name|subtype_reverse_iterator
-expr_stmt|;
+decl_stmt|;
 name|subtype_reverse_iterator
 name|subtype_rbegin
 argument_list|()
@@ -1837,46 +1845,36 @@ name|Type
 operator|*
 operator|>
 block|{
-typedef|typedef
-name|Type
-modifier|*
+name|using
 name|NodeRef
-typedef|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+operator|=
+name|Type
+operator|*
+block|;
+name|using
+name|ChildIteratorType
+operator|=
 name|Type
 operator|::
 name|subtype_iterator
-name|ChildIteratorType
-expr_stmt|;
-end_typedef
-
-begin_function
+block|;
 specifier|static
 name|NodeRef
 name|getEntryNode
-parameter_list|(
-name|Type
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|Type *T
+argument_list|)
 block|{
 return|return
 name|T
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|ChildIteratorType
 name|child_begin
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
@@ -1885,7 +1883,7 @@ name|subtype_begin
 argument_list|()
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -1918,46 +1916,37 @@ name|Type
 operator|*
 operator|>
 block|{
-typedef|typedef
+name|using
+name|NodeRef
+operator|=
 specifier|const
 name|Type
-modifier|*
-name|NodeRef
-typedef|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+operator|*
+block|;
+name|using
+name|ChildIteratorType
+operator|=
 name|Type
 operator|::
 name|subtype_iterator
-name|ChildIteratorType
-expr_stmt|;
-end_typedef
-
-begin_function
+block|;
 specifier|static
 name|NodeRef
 name|getEntryNode
-parameter_list|(
-name|NodeRef
-name|T
-parameter_list|)
+argument_list|(
+argument|NodeRef T
+argument_list|)
 block|{
 return|return
 name|T
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|ChildIteratorType
 name|child_begin
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
@@ -1966,7 +1955,7 @@ name|subtype_begin
 argument_list|()
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -2065,13 +2054,17 @@ end_function
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_TYPE_H
+end_comment
 
 end_unit
 

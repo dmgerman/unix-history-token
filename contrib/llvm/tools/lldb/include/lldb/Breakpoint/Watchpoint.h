@@ -446,7 +446,7 @@ name|m_target
 return|;
 block|}
 specifier|const
-name|Error
+name|Status
 modifier|&
 name|GetError
 parameter_list|()
@@ -724,7 +724,7 @@ expr_stmt|;
 name|CompilerType
 name|m_type
 decl_stmt|;
-name|Error
+name|Status
 name|m_error
 decl_stmt|;
 comment|// An error object describing errors associated with this

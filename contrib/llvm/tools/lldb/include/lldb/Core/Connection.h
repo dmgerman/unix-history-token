@@ -114,7 +114,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -199,7 +199,7 @@ comment|///     \b True if the connect succeeded, \b false otherwise. The
 comment|///     internal error object should be filled in with an
 comment|///     appropriate value based on the result of this function.
 comment|///
-comment|/// @see Error& Communication::GetError ();
+comment|/// @see Status& Communication::GetError ();
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -209,7 +209,7 @@ name|Connect
 argument_list|(
 argument|llvm::StringRef url
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 operator|=
 literal|0
@@ -228,7 +228,7 @@ comment|///     \b True if the disconnect succeeded, \b false otherwise. The
 comment|///     internal error object should be filled in with an
 comment|///     appropriate value based on the result of this function.
 comment|///
-comment|/// @see Error& Communication::GetError ();
+comment|/// @see Status& Communication::GetError ();
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -236,7 +236,7 @@ operator|::
 name|ConnectionStatus
 name|Disconnect
 argument_list|(
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)
@@ -313,7 +313,7 @@ name|ConnectionStatus
 operator|&
 name|status
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)
@@ -360,7 +360,7 @@ name|ConnectionStatus
 operator|&
 name|status
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)

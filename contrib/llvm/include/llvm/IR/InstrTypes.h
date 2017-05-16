@@ -293,38 +293,6 @@ name|TerminatorInst
 argument_list|()
 name|override
 block|;
-comment|/// Virtual methods - Terminators should overload these and provide inline
-comment|/// overrides of non-V methods.
-name|virtual
-name|BasicBlock
-operator|*
-name|getSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-name|virtual
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-operator|=
-literal|0
-block|;
-name|virtual
-name|void
-name|setSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|,
-argument|BasicBlock *B
-argument_list|)
-operator|=
-literal|0
-block|;
 name|public
 operator|:
 comment|/// Return the number of successors that this terminator has.
@@ -332,12 +300,7 @@ name|unsigned
 name|getNumSuccessors
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getNumSuccessorsV
-argument_list|()
-return|;
-block|}
+block|;
 comment|/// Return the specified successor.
 name|BasicBlock
 operator|*
@@ -346,14 +309,7 @@ argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
-block|{
-return|return
-name|getSuccessorV
-argument_list|(
-name|idx
-argument_list|)
-return|;
-block|}
+block|;
 comment|/// Update the specified successor to point at the provided block.
 name|void
 name|setSuccessor
@@ -362,14 +318,7 @@ argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
-block|{
-name|setSuccessorV
-argument_list|(
-name|idx
-argument_list|,
-name|B
-argument_list|)
-block|;   }
+block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

@@ -77,21 +77,22 @@ directive|include
 file|"llvm/IR/Value.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|ValueHandleBase
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|From
-operator|>
-expr|struct
-name|simplify_type
-expr_stmt|;
 comment|/// \brief This is the common base class of value handles.
 comment|///
 comment|/// ValueHandle's are smart pointers to Value's that have special behavior when
@@ -151,11 +152,6 @@ argument_list|,
 name|Kind
 argument_list|)
 operator|,
-name|Next
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|Val
 argument_list|(
 argument|RHS.getValPtr()
@@ -195,10 +191,14 @@ expr_stmt|;
 name|ValueHandleBase
 modifier|*
 name|Next
+init|=
+name|nullptr
 decl_stmt|;
 name|Value
 modifier|*
 name|Val
+init|=
+name|nullptr
 decl_stmt|;
 name|void
 name|setValPtr
@@ -223,19 +223,9 @@ argument_list|)
 block|:
 name|PrevPair
 argument_list|(
-name|nullptr
-argument_list|,
-name|Kind
-argument_list|)
-operator|,
-name|Next
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Val
-argument_list|(
 argument|nullptr
+argument_list|,
+argument|Kind
 argument_list|)
 block|{}
 name|ValueHandleBase
@@ -244,17 +234,12 @@ argument|HandleBaseKind Kind
 argument_list|,
 argument|Value *V
 argument_list|)
-operator|:
+block|:
 name|PrevPair
 argument_list|(
 name|nullptr
 argument_list|,
 name|Kind
-argument_list|)
-operator|,
-name|Next
-argument_list|(
-name|nullptr
 argument_list|)
 operator|,
 name|Val
@@ -836,11 +821,12 @@ operator|<
 name|WeakVH
 operator|>
 block|{
-typedef|typedef
-name|Value
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|Value
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -864,11 +850,12 @@ specifier|const
 name|WeakVH
 operator|>
 block|{
-typedef|typedef
-name|Value
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|Value
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -1028,11 +1015,12 @@ operator|<
 name|WeakTrackingVH
 operator|>
 block|{
-typedef|typedef
-name|Value
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|Value
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -1056,11 +1044,12 @@ specifier|const
 name|WeakTrackingVH
 operator|>
 block|{
-typedef|typedef
-name|Value
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|Value
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -1112,8 +1101,7 @@ operator|<
 name|AssertingVH
 operator|<
 name|ValueTy
-operator|>
-expr|>
+operator|>>
 block|;
 ifndef|#
 directive|ifndef
@@ -1403,8 +1391,7 @@ operator|<
 name|AssertingVH
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 block|{
 specifier|static
 specifier|inline
@@ -1538,8 +1525,7 @@ operator|<
 name|AssertingVH
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 block|{
 ifdef|#
 directive|ifdef
@@ -1688,7 +1674,9 @@ name|public
 operator|:
 name|TrackingVH
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|TrackingVH
 argument_list|(
 argument|ValueTy *P
@@ -2446,13 +2434,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_VALUEHANDLE_H
+end_comment
 
 end_unit
 

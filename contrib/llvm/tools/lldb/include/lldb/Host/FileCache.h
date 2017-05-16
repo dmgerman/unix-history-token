@@ -70,13 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/FileSpec.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_decl_stmt
@@ -125,7 +125,7 @@ argument|uint32_t flags
 argument_list|,
 argument|uint32_t mode
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 name|bool
@@ -136,7 +136,7 @@ operator|::
 name|user_id_t
 name|fd
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -160,7 +160,7 @@ argument_list|,
 name|uint64_t
 name|src_len
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -183,7 +183,7 @@ argument_list|,
 name|uint64_t
 name|dst_len
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

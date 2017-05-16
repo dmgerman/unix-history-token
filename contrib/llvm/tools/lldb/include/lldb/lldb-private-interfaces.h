@@ -326,7 +326,7 @@ name|FileSpec
 operator|&
 name|outfile
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -425,7 +425,7 @@ name|process
 argument_list|)
 expr_stmt|;
 typedef|typedef
-name|Error
+name|Status
 function_decl|(
 modifier|*
 name|StructuredDataFilterLaunchInfo
@@ -733,7 +733,7 @@ argument_list|(
 argument|*REPLCreateInstance
 argument_list|)
 operator|(
-name|Error
+name|Status
 operator|&
 name|error
 operator|,

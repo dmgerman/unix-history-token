@@ -1462,7 +1462,7 @@ argument|lldb::TargetSP target
 argument_list|)
 block|;
 name|void
-name|Status
+name|DumpStatus
 argument_list|(
 argument|Stream&strm
 argument_list|)

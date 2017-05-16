@@ -108,7 +108,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 name|class
 name|Socket
@@ -221,7 +221,7 @@ name|Connect
 argument_list|(
 argument|llvm::StringRef s
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 name|override
 block|;
@@ -230,7 +230,7 @@ operator|::
 name|ConnectionStatus
 name|Disconnect
 argument_list|(
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 name|override
 block|;
@@ -245,7 +245,7 @@ argument|const Timeout<std::micro>&timeout
 argument_list|,
 argument|lldb::ConnectionStatus&status
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 name|override
 block|;
@@ -258,7 +258,7 @@ argument|size_t src_len
 argument_list|,
 argument|lldb::ConnectionStatus&status
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 name|override
 block|;
@@ -284,7 +284,7 @@ operator|>
 operator|&
 name|timeout
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)
@@ -339,7 +339,7 @@ name|SocketListenAndAccept
 argument_list|(
 argument|llvm::StringRef host_and_port
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 block|;
 name|lldb
@@ -349,7 +349,7 @@ name|ConnectTCP
 argument_list|(
 argument|llvm::StringRef host_and_port
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 block|;
 name|lldb
@@ -359,7 +359,7 @@ name|ConnectUDP
 argument_list|(
 argument|llvm::StringRef args
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 block|;
 name|lldb
@@ -369,7 +369,7 @@ name|NamedSocketConnect
 argument_list|(
 argument|llvm::StringRef socket_name
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 block|;
 name|lldb
@@ -379,7 +379,7 @@ name|NamedSocketAccept
 argument_list|(
 argument|llvm::StringRef socket_name
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 block|;
 name|lldb
@@ -389,7 +389,7 @@ name|UnixAbstractSocketConnect
 argument_list|(
 argument|llvm::StringRef socket_name
 argument_list|,
-argument|Error *error_ptr
+argument|Status *error_ptr
 argument_list|)
 block|;
 name|lldb

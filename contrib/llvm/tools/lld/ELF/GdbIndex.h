@@ -75,7 +75,7 @@ comment|// Struct represents single entry of address area of gdb index.
 struct|struct
 name|AddressEntry
 block|{
-name|InputSectionBase
+name|InputSection
 modifier|*
 name|Section
 decl_stmt|;

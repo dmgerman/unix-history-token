@@ -1703,7 +1703,7 @@ comment|///
 comment|/// @return
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|LoadInMemory
 parameter_list|(
 name|Target

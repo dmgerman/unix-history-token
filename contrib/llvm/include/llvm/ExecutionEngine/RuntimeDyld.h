@@ -542,13 +542,7 @@ block|;
 name|virtual
 name|void
 name|deregisterEHFrames
-argument_list|(
-argument|uint8_t *addr
-argument_list|,
-argument|uint64_t LoadAddr
-argument_list|,
-argument|size_t Size
-argument_list|)
+argument_list|()
 operator|=
 literal|0
 block|;

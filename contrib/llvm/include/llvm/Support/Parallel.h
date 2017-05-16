@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- lld/Core/Parallel.h - Parallel utilities ---------------------------===//
+comment|//===- llvm/Support/Parallel.h - Parallel algorithms ----------------------===//
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//                             The LLVM Linker
+comment|//                     The LLVM Compiler Infrastructure
 end_comment
 
 begin_comment
@@ -34,31 +34,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLD_CORE_PARALLEL_H
+name|LLVM_SUPPORT_PARALLEL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLD_CORE_PARALLEL_H
+name|LLVM_SUPPORT_PARALLEL_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"lld/Core/LLVM.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lld/Core/TaskGroup.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/MathExtras.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
@@ -70,7 +58,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<condition_variable>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mutex>
 end_include
 
 begin_if
@@ -84,6 +96,26 @@ operator|&&
 name|LLVM_ENABLE_THREADS
 end_if
 
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|push
+name|)
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|disable
+name|:
+name|4530
+name|)
+end_pragma
+
 begin_include
 include|#
 directive|include
@@ -96,6 +128,15 @@ directive|include
 file|<ppl.h>
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|pop
+name|)
+end_pragma
+
 begin_endif
 endif|#
 directive|endif
@@ -103,48 +144,231 @@ end_endif
 
 begin_decl_stmt
 name|namespace
-name|lld
+name|llvm
+block|{
+name|namespace
+name|parallel
+block|{
+struct|struct
+name|sequential_execution_policy
+block|{}
+struct|;
+struct|struct
+name|parallel_execution_policy
+block|{}
+struct|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|is_execution_policy
+operator|:
+name|public
+name|std
+operator|::
+name|integral_constant
+operator|<
+name|bool
+operator|,
+name|llvm
+operator|::
+name|is_one_of
+operator|<
+name|T
+operator|,
+name|sequential_execution_policy
+operator|,
+name|parallel_execution_policy
+operator|>
+operator|::
+name|value
+operator|>
+block|{}
+expr_stmt|;
+name|constexpr
+name|sequential_execution_policy
+name|seq
+block|{}
+empty_stmt|;
+name|constexpr
+name|parallel_execution_policy
+name|par
+block|{}
+empty_stmt|;
+name|namespace
+name|detail
 block|{
 if|#
 directive|if
-operator|!
 name|LLVM_ENABLE_THREADS
-name|template
-operator|<
 name|class
-name|RandomAccessIterator
-operator|,
-name|class
-name|Comparator
-operator|>
-name|void
-name|parallel_sort
+name|Latch
+block|{
+name|uint32_t
+name|Count
+decl_stmt|;
+name|mutable
+name|std
+operator|::
+name|mutex
+name|Mutex
+expr_stmt|;
+name|mutable
+name|std
+operator|::
+name|condition_variable
+name|Cond
+expr_stmt|;
+name|public
+label|:
+name|explicit
+name|Latch
 argument_list|(
-argument|RandomAccessIterator Start
-argument_list|,
-argument|RandomAccessIterator End
-argument_list|,
-argument|const Comparator&Comp = std::less<         typename std::iterator_traits<RandomAccessIterator>::value_type>()
+argument|uint32_t Count =
+literal|0
 argument_list|)
+block|:
+name|Count
+argument_list|(
+argument|Count
+argument_list|)
+block|{}
+operator|~
+name|Latch
+argument_list|()
+block|{
+name|sync
+argument_list|()
+block|; }
+name|void
+name|inc
+argument_list|()
 block|{
 name|std
 operator|::
-name|sort
+name|unique_lock
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|lock
 argument_list|(
-name|Start
-argument_list|,
-name|End
-argument_list|,
-name|Comp
+name|Mutex
 argument_list|)
+block|;
+operator|++
+name|Count
+block|;   }
+name|void
+name|dec
+argument_list|()
+block|{
+name|std
+operator|::
+name|unique_lock
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|lock
+argument_list|(
+name|Mutex
+argument_list|)
+block|;
+if|if
+condition|(
+operator|--
+name|Count
+operator|==
+literal|0
+condition|)
+name|Cond
+operator|.
+name|notify_all
+argument_list|()
+expr_stmt|;
+block|}
+name|void
+name|sync
+argument_list|()
+specifier|const
+block|{
+name|std
+operator|::
+name|unique_lock
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|lock
+argument_list|(
+name|Mutex
+argument_list|)
+block|;
+name|Cond
+operator|.
+name|wait
+argument_list|(
+name|lock
+argument_list|,
+index|[
+operator|&
+index|]
+block|{
+return|return
+name|Count
+operator|==
+literal|0
+return|;
+block|}
+argument_list|)
+block|;   }
+block|}
+empty_stmt|;
+name|class
+name|TaskGroup
+block|{
+name|Latch
+name|L
+decl_stmt|;
+name|public
+label|:
+name|void
+name|spawn
+argument_list|(
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|()
+operator|>
+name|f
+argument_list|)
+decl_stmt|;
+name|void
+name|sync
+argument_list|()
+specifier|const
+block|{
+name|L
+operator|.
+name|sync
+argument_list|()
 block|; }
-elif|#
-directive|elif
+block|}
+empty_stmt|;
+if|#
+directive|if
 name|defined
 argument_list|(
 name|_MSC_VER
 argument_list|)
-comment|// Use ppl parallel_sort on Windows.
 name|template
 operator|<
 name|class
@@ -160,7 +384,7 @@ argument|RandomAccessIterator Start
 argument_list|,
 argument|RandomAccessIterator End
 argument_list|,
-argument|const Comparator&Comp = std::less<         typename std::iterator_traits<RandomAccessIterator>::value_type>()
+argument|const Comparator&Comp
 argument_list|)
 block|{
 name|concurrency
@@ -174,23 +398,78 @@ argument_list|,
 name|Comp
 argument_list|)
 block|; }
+name|template
+operator|<
+name|class
+name|IterTy
+operator|,
+name|class
+name|FuncTy
+operator|>
+name|void
+name|parallel_for_each
+argument_list|(
+argument|IterTy Begin
+argument_list|,
+argument|IterTy End
+argument_list|,
+argument|FuncTy Fn
+argument_list|)
+block|{
+name|concurrency
+operator|::
+name|parallel_for_each
+argument_list|(
+name|Begin
+argument_list|,
+name|End
+argument_list|,
+name|Fn
+argument_list|)
+block|; }
+name|template
+operator|<
+name|class
+name|IndexTy
+operator|,
+name|class
+name|FuncTy
+operator|>
+name|void
+name|parallel_for_each_n
+argument_list|(
+argument|IndexTy Begin
+argument_list|,
+argument|IndexTy End
+argument_list|,
+argument|FuncTy Fn
+argument_list|)
+block|{
+name|concurrency
+operator|::
+name|parallel_for
+argument_list|(
+name|Begin
+argument_list|,
+name|End
+argument_list|,
+name|Fn
+argument_list|)
+block|; }
 else|#
 directive|else
-name|namespace
-name|detail
-block|{
 specifier|const
 name|ptrdiff_t
 name|MinParallelSize
 operator|=
 literal|1024
-block|;
+expr_stmt|;
 comment|/// \brief Inclusive median.
 name|template
 operator|<
 name|class
 name|RandomAccessIterator
-block|,
+operator|,
 name|class
 name|Comparator
 operator|>
@@ -309,7 +588,7 @@ name|template
 operator|<
 name|class
 name|RandomAccessIterator
-block|,
+operator|,
 name|class
 name|Comparator
 operator|>
@@ -389,7 +668,7 @@ argument_list|,
 operator|*
 name|Pivot
 argument_list|)
-block|;
+expr_stmt|;
 name|Pivot
 operator|=
 name|std
@@ -430,8 +709,8 @@ operator|)
 argument_list|)
 return|;
 block|}
-argument_list|)
-block|;
+block|)
+decl_stmt|;
 comment|// Move Pivot to middle of partition.
 name|std
 operator|::
@@ -447,7 +726,7 @@ operator|-
 literal|1
 operator|)
 argument_list|)
-block|;
+expr_stmt|;
 comment|// Recurse.
 name|TG
 operator|.
@@ -479,7 +758,7 @@ literal|1
 argument_list|)
 block|;   }
 argument_list|)
-block|;
+expr_stmt|;
 name|parallel_quick_sort
 argument_list|(
 name|Pivot
@@ -496,11 +775,8 @@ name|Depth
 operator|-
 literal|1
 argument_list|)
-block|; }
+expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -516,14 +792,12 @@ argument|RandomAccessIterator Start
 argument_list|,
 argument|RandomAccessIterator End
 argument_list|,
-argument|const Comparator&Comp = std::less<         typename std::iterator_traits<RandomAccessIterator>::value_type>()
+argument|const Comparator&Comp
 argument_list|)
 block|{
 name|TaskGroup
 name|TG
 block|;
-name|detail
-operator|::
 name|parallel_quick_sort
 argument_list|(
 name|Start
@@ -551,184 +825,6 @@ operator|+
 literal|1
 argument_list|)
 block|; }
-endif|#
-directive|endif
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|void
-name|parallel_sort
-argument_list|(
-argument|T *Start
-argument_list|,
-argument|T *End
-argument_list|)
-block|{
-name|parallel_sort
-argument_list|(
-name|Start
-argument_list|,
-name|End
-argument_list|,
-name|std
-operator|::
-name|less
-operator|<
-name|T
-operator|>
-operator|(
-operator|)
-argument_list|)
-block|; }
-if|#
-directive|if
-operator|!
-name|LLVM_ENABLE_THREADS
-name|template
-operator|<
-name|class
-name|IterTy
-operator|,
-name|class
-name|FuncTy
-operator|>
-name|void
-name|parallel_for_each
-argument_list|(
-argument|IterTy Begin
-argument_list|,
-argument|IterTy End
-argument_list|,
-argument|FuncTy Fn
-argument_list|)
-block|{
-name|std
-operator|::
-name|for_each
-argument_list|(
-name|Begin
-argument_list|,
-name|End
-argument_list|,
-name|Fn
-argument_list|)
-block|; }
-name|template
-operator|<
-name|class
-name|IndexTy
-operator|,
-name|class
-name|FuncTy
-operator|>
-name|void
-name|parallel_for
-argument_list|(
-argument|IndexTy Begin
-argument_list|,
-argument|IndexTy End
-argument_list|,
-argument|FuncTy Fn
-argument_list|)
-block|{
-for|for
-control|(
-name|IndexTy
-name|I
-init|=
-name|Begin
-init|;
-name|I
-operator|!=
-name|End
-condition|;
-operator|++
-name|I
-control|)
-name|Fn
-argument_list|(
-name|I
-argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-end_elif
-
-begin_comment
-comment|// Use ppl parallel_for_each on Windows.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|IterTy
-operator|,
-name|class
-name|FuncTy
-operator|>
-name|void
-name|parallel_for_each
-argument_list|(
-argument|IterTy Begin
-argument_list|,
-argument|IterTy End
-argument_list|,
-argument|FuncTy Fn
-argument_list|)
-block|{
-name|concurrency
-operator|::
-name|parallel_for_each
-argument_list|(
-name|Begin
-argument_list|,
-name|End
-argument_list|,
-name|Fn
-argument_list|)
-block|; }
-name|template
-operator|<
-name|class
-name|IndexTy
-operator|,
-name|class
-name|FuncTy
-operator|>
-name|void
-name|parallel_for
-argument_list|(
-argument|IndexTy Begin
-argument_list|,
-argument|IndexTy End
-argument_list|,
-argument|FuncTy Fn
-argument_list|)
-block|{
-name|concurrency
-operator|::
-name|parallel_for
-argument_list|(
-name|Begin
-argument_list|,
-name|End
-argument_list|,
-name|Fn
-argument_list|)
-block|; }
-else|#
-directive|else
 name|template
 operator|<
 name|class
@@ -778,9 +874,6 @@ expr_stmt|;
 name|TaskGroup
 name|TG
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 name|TaskSize
@@ -826,9 +919,6 @@ operator|+=
 name|TaskSize
 expr_stmt|;
 block|}
-end_while
-
-begin_expr_stmt
 name|TG
 operator|.
 name|spawn
@@ -853,10 +943,11 @@ argument_list|)
 block|; }
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_decl_stmt
 
 begin_expr_stmt
-unit|}  template
+name|template
 operator|<
 name|class
 name|IndexTy
@@ -865,7 +956,7 @@ name|class
 name|FuncTy
 operator|>
 name|void
-name|parallel_for
+name|parallel_for_each_n
 argument_list|(
 argument|IndexTy Begin
 argument_list|,
@@ -1009,9 +1100,331 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|Iter
+operator|>
+name|using
+name|DefComparator
+operator|=
+name|std
+operator|::
+name|less
+operator|<
+name|typename
+name|std
+operator|::
+name|iterator_traits
+operator|<
+name|Iter
+operator|>
+operator|::
+name|value_type
+operator|>
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 unit|}
-comment|// End namespace lld
+comment|// namespace detail
+end_comment
+
+begin_comment
+comment|// sequential algorithm implementations.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|class
+name|Policy
+operator|,
+name|class
+name|RandomAccessIterator
+operator|,
+name|class
+name|Comparator
+operator|=
+name|detail
+operator|::
+name|DefComparator
+operator|<
+name|RandomAccessIterator
+operator|>>
+name|void
+name|sort
+argument_list|(
+argument|Policy policy
+argument_list|,
+argument|RandomAccessIterator Start
+argument_list|,
+argument|RandomAccessIterator End
+argument_list|,
+argument|const Comparator&Comp = Comparator()
+argument_list|)
+block|{
+name|static_assert
+argument_list|(
+name|is_execution_policy
+operator|<
+name|Policy
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"Invalid execution policy!"
+argument_list|)
+block|;
+name|std
+operator|::
+name|sort
+argument_list|(
+name|Start
+argument_list|,
+name|End
+argument_list|,
+name|Comp
+argument_list|)
+block|; }
+name|template
+operator|<
+name|class
+name|Policy
+operator|,
+name|class
+name|IterTy
+operator|,
+name|class
+name|FuncTy
+operator|>
+name|void
+name|for_each
+argument_list|(
+argument|Policy policy
+argument_list|,
+argument|IterTy Begin
+argument_list|,
+argument|IterTy End
+argument_list|,
+argument|FuncTy Fn
+argument_list|)
+block|{
+name|static_assert
+argument_list|(
+name|is_execution_policy
+operator|<
+name|Policy
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"Invalid execution policy!"
+argument_list|)
+block|;
+name|std
+operator|::
+name|for_each
+argument_list|(
+name|Begin
+argument_list|,
+name|End
+argument_list|,
+name|Fn
+argument_list|)
+block|; }
+name|template
+operator|<
+name|class
+name|Policy
+operator|,
+name|class
+name|IndexTy
+operator|,
+name|class
+name|FuncTy
+operator|>
+name|void
+name|for_each_n
+argument_list|(
+argument|Policy policy
+argument_list|,
+argument|IndexTy Begin
+argument_list|,
+argument|IndexTy End
+argument_list|,
+argument|FuncTy Fn
+argument_list|)
+block|{
+name|static_assert
+argument_list|(
+name|is_execution_policy
+operator|<
+name|Policy
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"Invalid execution policy!"
+argument_list|)
+block|;
+for|for
+control|(
+name|IndexTy
+name|I
+init|=
+name|Begin
+init|;
+name|I
+operator|!=
+name|End
+condition|;
+operator|++
+name|I
+control|)
+name|Fn
+argument_list|(
+name|I
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Parallel algorithm implementations, only available when LLVM_ENABLE_THREADS
+end_comment
+
+begin_comment
+comment|// is true.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|LLVM_ENABLE_THREADS
+end_if
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|RandomAccessIterator
+operator|,
+name|class
+name|Comparator
+operator|=
+name|detail
+operator|::
+name|DefComparator
+operator|<
+name|RandomAccessIterator
+operator|>>
+name|void
+name|sort
+argument_list|(
+argument|parallel_execution_policy policy
+argument_list|,
+argument|RandomAccessIterator Start
+argument_list|,
+argument|RandomAccessIterator End
+argument_list|,
+argument|const Comparator&Comp = Comparator()
+argument_list|)
+block|{
+name|detail
+operator|::
+name|parallel_sort
+argument_list|(
+name|Start
+argument_list|,
+name|End
+argument_list|,
+name|Comp
+argument_list|)
+block|; }
+name|template
+operator|<
+name|class
+name|IterTy
+operator|,
+name|class
+name|FuncTy
+operator|>
+name|void
+name|for_each
+argument_list|(
+argument|parallel_execution_policy policy
+argument_list|,
+argument|IterTy Begin
+argument_list|,
+argument|IterTy End
+argument_list|,
+argument|FuncTy Fn
+argument_list|)
+block|{
+name|detail
+operator|::
+name|parallel_for_each
+argument_list|(
+name|Begin
+argument_list|,
+name|End
+argument_list|,
+name|Fn
+argument_list|)
+block|; }
+name|template
+operator|<
+name|class
+name|IndexTy
+operator|,
+name|class
+name|FuncTy
+operator|>
+name|void
+name|for_each_n
+argument_list|(
+argument|parallel_execution_policy policy
+argument_list|,
+argument|IndexTy Begin
+argument_list|,
+argument|IndexTy End
+argument_list|,
+argument|FuncTy Fn
+argument_list|)
+block|{
+name|detail
+operator|::
+name|parallel_for_each_n
+argument_list|(
+name|Begin
+argument_list|,
+name|End
+argument_list|,
+name|Fn
+argument_list|)
+block|; }
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+unit|}
+comment|// namespace parallel
+end_comment
+
+begin_comment
+unit|}
+comment|// namespace llvm
 end_comment
 
 begin_endif
@@ -1020,7 +1433,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLD_CORE_PARALLEL_H
+comment|// LLVM_SUPPORT_PARALLEL_H
 end_comment
 
 end_unit

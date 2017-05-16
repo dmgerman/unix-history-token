@@ -126,6 +126,7 @@ comment|/// @param AttrValue    The DWARF attribute value to check
 name|void
 name|verifyDebugInfoAttribute
 parameter_list|(
+specifier|const
 name|DWARFDie
 modifier|&
 name|Die
@@ -147,6 +148,7 @@ comment|/// @param AttrValue    The DWARF attribute value to check
 name|void
 name|verifyDebugInfoForm
 parameter_list|(
+specifier|const
 name|DWARFDie
 modifier|&
 name|Die
@@ -164,7 +166,7 @@ comment|/// offset matches. This helps to ensure if a DWARF link phase moved thi
 comment|/// around, that it doesn't create invalid references by failing to relocate
 comment|/// CU relative and absolute references.
 name|void
-name|veifyDebugInfoReferences
+name|verifyDebugInfoReferences
 parameter_list|()
 function_decl|;
 comment|/// Verify the the DW_AT_stmt_list encoding and value and ensure that no

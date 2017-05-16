@@ -6020,27 +6020,31 @@ comment|///    returning the two dot products in the lower and upper halves of t
 end_comment
 
 begin_comment
-comment|///    [8 x float] result. The immediate integer operand controls which input
+comment|///    [8 x float] result.
 end_comment
 
 begin_comment
-comment|///    elements will contribute to the dot product, and where the final results
+comment|///
 end_comment
 
 begin_comment
-comment|///    are returned. In general, for each dot product, the four corresponding
+comment|///    The immediate integer operand controls which input elements will
 end_comment
 
 begin_comment
-comment|///    elements of the input vectors are multiplied; the first two and second
+comment|///    contribute to the dot product, and where the final results are returned.
 end_comment
 
 begin_comment
-comment|///    two products are summed, then the two sums are added to form the final
+comment|///    In general, for each dot product, the four corresponding elements of the
 end_comment
 
 begin_comment
-comment|///    result.
+comment|///    input vectors are multiplied; the first two and second two products are
+end_comment
+
+begin_comment
+comment|///    summed, then the two sums are added to form the final result.
 end_comment
 
 begin_comment
@@ -6174,39 +6178,43 @@ comment|/// \brief Selects 8 float values from the 256-bit operands of [8 x floa
 end_comment
 
 begin_comment
-comment|///    specified by the immediate value operand. The four selected elements in
+comment|///    specified by the immediate value operand.
 end_comment
 
 begin_comment
-comment|///    each operand are copied to the destination according to the bits
+comment|///
 end_comment
 
 begin_comment
-comment|///    specified in the immediate operand. The selected elements from the first
+comment|///    The four selected elements in each operand are copied to the destination
 end_comment
 
 begin_comment
-comment|///    256-bit operand are copied to bits [63:0] and bits [191:128] of the
+comment|///    according to the bits specified in the immediate operand. The selected
 end_comment
 
 begin_comment
-comment|///    destination, and the selected elements from the second 256-bit operand
+comment|///    elements from the first 256-bit operand are copied to bits [63:0] and
 end_comment
 
 begin_comment
-comment|///    are copied to bits [127:64] and bits [255:192] of the destination. For
+comment|///    bits [191:128] of the destination, and the selected elements from the
 end_comment
 
 begin_comment
-comment|///    example, if bits [7:0] of the immediate operand contain a value of 0xFF,
+comment|///    second 256-bit operand are copied to bits [127:64] and bits [255:192] of
 end_comment
 
 begin_comment
-comment|///    the 256-bit destination vector would contain the following values: b[7],
+comment|///    the destination. For example, if bits [7:0] of the immediate operand
 end_comment
 
 begin_comment
-comment|///    b[7], a[7], a[7], b[3], b[3], a[3], a[3].
+comment|///    contain a value of 0xFF, the 256-bit destination vector would contain the
+end_comment
+
+begin_comment
+comment|///    following values: b[7], b[7], a[7], a[7], b[3], b[3], a[3], a[3].
 end_comment
 
 begin_comment
@@ -6380,31 +6388,35 @@ comment|/// \brief Selects four double-precision values from the 256-bit operand
 end_comment
 
 begin_comment
-comment|///    [4 x double], as specified by the immediate value operand. The selected
+comment|///    [4 x double], as specified by the immediate value operand.
 end_comment
 
 begin_comment
-comment|///    elements from the first 256-bit operand are copied to bits [63:0] and
+comment|///
 end_comment
 
 begin_comment
-comment|///    bits [191:128] in the destination, and the selected elements from the
+comment|///    The selected elements from the first 256-bit operand are copied to bits
 end_comment
 
 begin_comment
-comment|///    second 256-bit operand are copied to bits [127:64] and bits [255:192] in
+comment|///    [63:0] and bits [191:128] in the destination, and the selected elements
 end_comment
 
 begin_comment
-comment|///    the destination. For example, if bits [3:0] of the immediate operand
+comment|///    from the second 256-bit operand are copied to bits [127:64] and bits
 end_comment
 
 begin_comment
-comment|///    contain a value of 0xF, the 256-bit destination vector would contain the
+comment|///    [255:192] in the destination. For example, if bits [3:0] of the immediate
 end_comment
 
 begin_comment
-comment|///    following values: b[3], a[3], b[1], a[1].
+comment|///    operand contain a value of 0xF, the 256-bit destination vector would
+end_comment
+
+begin_comment
+comment|///    contain the following values: b[3], a[3], b[1], a[1].
 end_comment
 
 begin_comment
@@ -6918,15 +6930,23 @@ comment|///    128-bit vectors of [2 x double], using the operation specified by
 end_comment
 
 begin_comment
-comment|///    immediate integer operand. Returns a [2 x double] vector consisting of
+comment|///    immediate integer operand.
 end_comment
 
 begin_comment
-comment|///    two doubles corresponding to the two comparison results: zero if the
+comment|///
 end_comment
 
 begin_comment
-comment|///    comparison is false, and all 1's if the comparison is true.
+comment|///    Returns a [2 x double] vector consisting of two doubles corresponding to
+end_comment
+
+begin_comment
+comment|///    the two comparison results: zero if the comparison is false, and all 1's
+end_comment
+
+begin_comment
+comment|///    if the comparison is true.
 end_comment
 
 begin_comment
@@ -7148,15 +7168,23 @@ comment|///    [4 x float], using the operation specified by the immediate integ
 end_comment
 
 begin_comment
-comment|///    operand. Returns a [4 x float] vector consisting of four floats
+comment|///    operand.
 end_comment
 
 begin_comment
-comment|///    corresponding to the four comparison results: zero if the comparison is
+comment|///
 end_comment
 
 begin_comment
-comment|///    false, and all 1's if the comparison is true.
+comment|///    Returns a [4 x float] vector consisting of four floats corresponding to
+end_comment
+
+begin_comment
+comment|///    the four comparison results: zero if the comparison is false, and all 1's
+end_comment
+
+begin_comment
+comment|///    if the comparison is true.
 end_comment
 
 begin_comment
@@ -7378,15 +7406,23 @@ comment|///    256-bit vectors of [4 x double], using the operation specified by
 end_comment
 
 begin_comment
-comment|///    immediate integer operand. Returns a [4 x double] vector consisting of
+comment|///    immediate integer operand.
 end_comment
 
 begin_comment
-comment|///    four doubles corresponding to the four comparison results: zero if the
+comment|///
 end_comment
 
 begin_comment
-comment|///    comparison is false, and all 1's if the comparison is true.
+comment|///    Returns a [4 x double] vector consisting of four doubles corresponding to
+end_comment
+
+begin_comment
+comment|///    the four comparison results: zero if the comparison is false, and all 1's
+end_comment
+
+begin_comment
+comment|///    if the comparison is true.
 end_comment
 
 begin_comment
@@ -7608,15 +7644,23 @@ comment|///    [8 x float], using the operation specified by the immediate integ
 end_comment
 
 begin_comment
-comment|///    operand. Returns a [8 x float] vector consisting of eight floats
+comment|///    operand.
 end_comment
 
 begin_comment
-comment|///    corresponding to the eight comparison results: zero if the comparison is
+comment|///
 end_comment
 
 begin_comment
-comment|///    false, and all 1's if the comparison is true.
+comment|///    Returns a [8 x float] vector consisting of eight floats corresponding to
+end_comment
+
+begin_comment
+comment|///    the eight comparison results: zero if the comparison is false, and all
+end_comment
+
+begin_comment
+comment|///    1's if the comparison is true.
 end_comment
 
 begin_comment
@@ -7838,11 +7882,19 @@ comment|///    two 128-bit vectors of [2 x double], using the operation specifie
 end_comment
 
 begin_comment
-comment|///    immediate integer operand. If the result is true, all 64 bits of the
+comment|///    immediate integer operand.
 end_comment
 
 begin_comment
-comment|///    destination vector are set; otherwise they are cleared.
+comment|///
+end_comment
+
+begin_comment
+comment|///    If the result is true, all 64 bits of the destination vector are set;
+end_comment
+
+begin_comment
+comment|///    otherwise they are cleared.
 end_comment
 
 begin_comment
@@ -8064,11 +8116,19 @@ comment|///    vectors of [4 x float], using the operation specified by the imme
 end_comment
 
 begin_comment
-comment|///    integer operand. If the result is true, all 32 bits of the destination
+comment|///    integer operand.
 end_comment
 
 begin_comment
-comment|///    vector are set; otherwise they are cleared.
+comment|///
+end_comment
+
+begin_comment
+comment|///    If the result is true, all 32 bits of the destination vector are set;
+end_comment
+
+begin_comment
+comment|///    otherwise they are cleared.
 end_comment
 
 begin_comment
@@ -10734,7 +10794,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -10849,7 +10917,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -10964,7 +11040,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11083,7 +11167,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11198,7 +11290,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11313,7 +11413,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11432,7 +11540,15 @@ comment|///    first source vector and the corresponding elements in the second 
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11547,7 +11663,15 @@ comment|///    first source vector and the corresponding elements in the second 
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11662,7 +11786,15 @@ comment|///    first source vector and the corresponding elements in the second 
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11781,7 +11913,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11896,7 +12036,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -12011,7 +12159,15 @@ comment|///    first source vector and the corresponding elements in the second 
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -12122,7 +12278,15 @@ comment|/// \brief Given two 256-bit integer vectors, perform a bit-by-bit compa
 end_comment
 
 begin_comment
-comment|///    of the two source vectors and update the EFLAGS register as follows: \n
+comment|///    of the two source vectors.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -12225,7 +12389,15 @@ comment|/// \brief Given two 256-bit integer vectors, perform a bit-by-bit compa
 end_comment
 
 begin_comment
-comment|///    of the two source vectors and update the EFLAGS register as follows: \n
+comment|///    of the two source vectors.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -12328,7 +12500,15 @@ comment|/// \brief Given two 256-bit integer vectors, perform a bit-by-bit compa
 end_comment
 
 begin_comment
-comment|///    of the two source vectors and update the EFLAGS register as follows: \n
+comment|///    of the two source vectors.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -19456,15 +19636,19 @@ comment|/// \brief Constructs a 256-bit floating-point vector of [4 x double] fr
 end_comment
 
 begin_comment
-comment|///    128-bit floating-point vector of [2 x double]. The lower 128 bits
+comment|///    128-bit floating-point vector of [2 x double].
 end_comment
 
 begin_comment
-comment|///    contain the value of the source vector. The contents of the upper 128
+comment|///
 end_comment
 
 begin_comment
-comment|///    bits are undefined.
+comment|///    The lower 128 bits contain the value of the source vector. The contents
+end_comment
+
+begin_comment
+comment|///    of the upper 128 bits are undefined.
 end_comment
 
 begin_comment
@@ -19550,15 +19734,19 @@ comment|/// \brief Constructs a 256-bit floating-point vector of [8 x float] fro
 end_comment
 
 begin_comment
-comment|///    128-bit floating-point vector of [4 x float]. The lower 128 bits contain
+comment|///    128-bit floating-point vector of [4 x float].
 end_comment
 
 begin_comment
-comment|///    the value of the source vector. The contents of the upper 128 bits are
+comment|///
 end_comment
 
 begin_comment
-comment|///    undefined.
+comment|///    The lower 128 bits contain the value of the source vector. The contents
+end_comment
+
+begin_comment
+comment|///    of the upper 128 bits are undefined.
 end_comment
 
 begin_comment
@@ -19651,6 +19839,10 @@ end_function
 
 begin_comment
 comment|/// \brief Constructs a 256-bit integer vector from a 128-bit integer vector.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -20019,11 +20211,19 @@ comment|///    replacing either the upper or the lower 128 bits with the content
 end_comment
 
 begin_comment
-comment|///    128-bit vector of [4 x float] in the second parameter. The immediate
+comment|///    128-bit vector of [4 x float] in the second parameter.
 end_comment
 
 begin_comment
-comment|///    integer parameter determines between the upper or the lower 128 bits.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The immediate integer parameter determines between the upper or the lower
+end_comment
+
+begin_comment
+comment|///    128 bits.
 end_comment
 
 begin_comment
@@ -20161,11 +20361,19 @@ comment|///    replacing either the upper or the lower 128 bits with the content
 end_comment
 
 begin_comment
-comment|///    128-bit vector of [2 x double] in the second parameter. The immediate
+comment|///    128-bit vector of [2 x double] in the second parameter.
 end_comment
 
 begin_comment
-comment|///    integer parameter determines between the upper or the lower 128 bits.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The immediate integer parameter determines between the upper or the lower
+end_comment
+
+begin_comment
+comment|///    128 bits.
 end_comment
 
 begin_comment
@@ -20303,11 +20511,19 @@ comment|///    either the upper or the lower 128 bits with the contents of a 128
 end_comment
 
 begin_comment
-comment|///    integer vector in the second parameter. The immediate integer parameter
+comment|///    integer vector in the second parameter.
 end_comment
 
 begin_comment
-comment|///    determines between the upper or the lower 128 bits.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The immediate integer parameter determines between the upper or the lower
+end_comment
+
+begin_comment
+comment|///    128 bits.
 end_comment
 
 begin_comment

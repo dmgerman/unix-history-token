@@ -279,7 +279,7 @@ name|class
 name|EmulateInstruction
 decl_stmt|;
 name|class
-name|Error
+name|Status
 decl_stmt|;
 name|class
 name|EvaluateExpressionOptions

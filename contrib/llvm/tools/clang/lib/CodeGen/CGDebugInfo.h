@@ -618,7 +618,7 @@ name|llvm
 operator|::
 name|TrackingMDRef
 operator|>
-name|NameSpaceCache
+name|NamespaceCache
 expr_stmt|;
 name|llvm
 operator|::
@@ -1180,7 +1180,7 @@ name|llvm
 operator|::
 name|DINamespace
 operator|*
-name|getOrCreateNameSpace
+name|getOrCreateNamespace
 argument_list|(
 specifier|const
 name|NamespaceDecl

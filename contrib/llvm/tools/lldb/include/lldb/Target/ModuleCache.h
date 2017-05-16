@@ -64,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/FileSpec.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -132,7 +132,7 @@ name|std
 operator|::
 name|function
 operator|<
-name|Error
+name|Status
 argument_list|(
 specifier|const
 name|ModuleSpec
@@ -151,7 +151,7 @@ name|std
 operator|::
 name|function
 operator|<
-name|Error
+name|Status
 argument_list|(
 specifier|const
 name|lldb
@@ -165,7 +165,7 @@ operator|&
 argument_list|)
 operator|>
 decl_stmt|;
-name|Error
+name|Status
 name|GetAndPut
 argument_list|(
 specifier|const
@@ -206,7 +206,7 @@ argument_list|)
 decl_stmt|;
 name|private
 label|:
-name|Error
+name|Status
 name|Put
 parameter_list|(
 specifier|const
@@ -235,7 +235,7 @@ modifier|&
 name|target_file
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|Get
 argument_list|(
 specifier|const

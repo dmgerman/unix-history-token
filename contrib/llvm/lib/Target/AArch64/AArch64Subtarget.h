@@ -280,6 +280,12 @@ name|NegativeImmediates
 operator|=
 name|true
 block|;
+comment|// Enable 64-bit vectorization in SLP.
+name|unsigned
+name|MinVectorRegisterBitWidth
+operator|=
+literal|64
+block|;
 name|bool
 name|UseAA
 operator|=
@@ -392,6 +398,11 @@ literal|0
 block|;
 name|unsigned
 name|MaxJumpTableSize
+operator|=
+literal|0
+block|;
+name|unsigned
+name|WideningBaseCost
 operator|=
 literal|0
 block|;
@@ -687,6 +698,15 @@ return|return
 name|true
 return|;
 block|}
+name|unsigned
+name|getMinVectorRegisterBitWidth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MinVectorRegisterBitWidth
+return|;
+block|}
 name|bool
 name|isX18Reserved
 argument_list|()
@@ -937,6 +957,15 @@ specifier|const
 block|{
 return|return
 name|MaxJumpTableSize
+return|;
+block|}
+name|unsigned
+name|getWideningBaseCost
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WideningBaseCost
 return|;
 block|}
 comment|/// CPU has TBI (top byte of addresses is ignored during HW address

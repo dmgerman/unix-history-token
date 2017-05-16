@@ -1479,7 +1479,8 @@ argument|unsigned PriorTo
 argument_list|)
 end_macro
 
-begin_block
+begin_expr_stmt
+specifier|const
 block|{
 if|if
 condition|(
@@ -1494,6 +1495,9 @@ return|;
 operator|--
 name|PriorTo
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|unsigned
 name|WordPos
 init|=
@@ -1501,6 +1505,9 @@ name|PriorTo
 operator|/
 name|BITWORD_SIZE
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|BitPos
 init|=
@@ -1508,6 +1515,9 @@ name|PriorTo
 operator|%
 name|BITWORD_SIZE
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|BitWord
 name|Copy
 init|=
@@ -1516,7 +1526,13 @@ index|[
 name|WordPos
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Mask off next bits.
+end_comment
+
+begin_expr_stmt
 name|Copy
 operator|&=
 name|maskTrailingOnes
@@ -1529,6 +1545,9 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|Copy
@@ -1551,7 +1570,13 @@ argument_list|)
 operator|-
 literal|1
 return|;
+end_if
+
+begin_comment
 comment|// Check previous words.
+end_comment
+
+begin_for
 for|for
 control|(
 name|unsigned
@@ -1604,28 +1629,34 @@ operator|-
 literal|1
 return|;
 block|}
+end_for
+
+begin_return
 return|return
 operator|-
 literal|1
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
+unit|}
 comment|/// clear - Removes all bits from the bitvector. Does not change capacity.
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|clear
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|Size
 operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/// resize - Grow or shrink the bitvector.

@@ -157,6 +157,11 @@ init|=
 name|true
 decl_stmt|;
 name|bool
+name|AsanGlobalsDeadStripping
+init|=
+name|false
+decl_stmt|;
+name|bool
 name|LinkCXXRuntimes
 init|=
 name|false

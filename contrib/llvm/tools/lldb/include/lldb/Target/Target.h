@@ -1927,7 +1927,7 @@ name|ModuleSpec
 operator|&
 name|module_spec
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 operator|=
@@ -2025,7 +2025,7 @@ name|void
 name|Destroy
 parameter_list|()
 function_decl|;
-name|Error
+name|Status
 name|Launch
 parameter_list|(
 name|ProcessLaunchInfo
@@ -2038,7 +2038,7 @@ name|stream
 parameter_list|)
 function_decl|;
 comment|// Optional stream to receive first stop info
-name|Error
+name|Status
 name|Attach
 parameter_list|(
 name|ProcessAttachInfo
@@ -2253,7 +2253,7 @@ argument|bool internal
 argument_list|,
 argument|Args *additional_args = nullptr
 argument_list|,
-argument|Error *additional_args_error = nullptr
+argument|Status *additional_args_error = nullptr
 argument_list|)
 expr_stmt|;
 comment|// This is the same as the func_name breakpoint except that you can specify a
@@ -2343,7 +2343,7 @@ argument|const CompilerType *type
 argument_list|,
 argument|uint32_t kind
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -2502,7 +2502,7 @@ name|uint32_t
 name|ignore_count
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|SerializeBreakpointsToFile
 parameter_list|(
 specifier|const
@@ -2519,7 +2519,7 @@ name|bool
 name|append
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|CreateBreakpointsFromFile
 parameter_list|(
 specifier|const
@@ -2532,7 +2532,7 @@ modifier|&
 name|new_bps
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|CreateBreakpointsFromFile
 argument_list|(
 specifier|const
@@ -2740,7 +2740,7 @@ name|std
 operator|::
 name|list
 operator|<
-name|Error
+name|Status
 operator|>
 operator|&
 name|errors
@@ -2946,7 +2946,7 @@ parameter_list|,
 name|size_t
 name|dst_len
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -2979,7 +2979,7 @@ argument_list|,
 name|size_t
 name|dst_len
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -3006,7 +3006,7 @@ name|string
 operator|&
 name|out_str
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -3026,7 +3026,7 @@ parameter_list|,
 name|size_t
 name|dst_max_len
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|result_error
 parameter_list|)
@@ -3052,7 +3052,7 @@ name|Scalar
 modifier|&
 name|scalar
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -3074,7 +3074,7 @@ parameter_list|,
 name|uint64_t
 name|fail_value
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -3090,7 +3090,7 @@ parameter_list|,
 name|bool
 name|prefer_file_cache
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|,
@@ -3182,7 +3182,7 @@ name|TypeSystem
 modifier|*
 name|GetScratchTypeSystemForLanguage
 argument_list|(
-name|Error
+name|Status
 operator|*
 name|error
 argument_list|,
@@ -3240,7 +3240,7 @@ name|EvaluateExpressionOptions
 operator|&
 name|options
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -3282,7 +3282,7 @@ name|char
 operator|*
 name|name
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -3310,7 +3310,7 @@ name|char
 operator|*
 name|name
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -3335,7 +3335,7 @@ comment|//----------------------------------------------------------------------
 comment|// Install any files through the platform that need be to installed
 comment|// prior to launching or attaching.
 comment|//----------------------------------------------------------------------
-name|Error
+name|Status
 name|Install
 parameter_list|(
 name|ProcessLaunchInfo
@@ -3909,7 +3909,7 @@ operator|::
 name|REPLSP
 name|GetREPL
 argument_list|(
-argument|Error&err
+argument|Status&err
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,

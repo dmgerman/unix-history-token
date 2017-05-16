@@ -2004,6 +2004,11 @@ return|;
 block|}
 end_expr_stmt
 
+begin_label
+name|protected
+label|:
+end_label
+
 begin_comment
 comment|/// Copy all additional attributes (those not needed to create a GlobalValue)
 end_comment
@@ -2013,7 +2018,6 @@ comment|/// from the GlobalValue Src to this one.
 end_comment
 
 begin_function_decl
-name|virtual
 name|void
 name|copyAttributesFrom
 parameter_list|(
@@ -2025,22 +2029,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_label
+name|public
+label|:
+end_label
+
 begin_comment
-comment|/// If special LLVM prefix that is used to inform the asm printer to not emit
+comment|/// If the given string begins with the GlobalValue name mangling escape
 end_comment
 
 begin_comment
-comment|/// usual symbol prefix before the symbol name is used then return linkage
+comment|/// character '\1', drop it.
 end_comment
 
 begin_comment
-comment|/// name after skipping this special LLVM prefix.
+comment|///
+end_comment
+
+begin_comment
+comment|/// This function applies a specific mangling that is used in PGO profiles,
+end_comment
+
+begin_comment
+comment|/// among other things. If you're trying to get a symbol name for an
+end_comment
+
+begin_comment
+comment|/// arbitrary GlobalValue, this is not the function you're looking for; see
+end_comment
+
+begin_comment
+comment|/// Mangler.h.
 end_comment
 
 begin_function
 specifier|static
 name|StringRef
-name|getRealLinkageName
+name|dropLLVMManglingEscape
 parameter_list|(
 name|StringRef
 name|Name
@@ -2436,12 +2461,9 @@ comment|/// it.
 end_comment
 
 begin_function_decl
-name|virtual
 name|void
 name|removeFromParent
 parameter_list|()
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -2450,12 +2472,9 @@ comment|/// This method unlinks 'this' from the containing module and deletes it
 end_comment
 
 begin_function_decl
-name|virtual
 name|void
 name|eraseFromParent
 parameter_list|()
-init|=
-literal|0
 function_decl|;
 end_function_decl
 

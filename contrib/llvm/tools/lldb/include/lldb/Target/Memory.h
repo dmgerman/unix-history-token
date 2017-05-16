@@ -152,7 +152,7 @@ argument_list|,
 name|size_t
 name|dst_len
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -528,7 +528,7 @@ argument|size_t byte_size
 argument_list|,
 argument|uint32_t permissions
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 name|bool
@@ -563,7 +563,7 @@ parameter_list|,
 name|uint32_t
 name|chunk_size
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)

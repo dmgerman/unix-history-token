@@ -137,7 +137,7 @@ name|DidLaunch
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|CanLoadImage
 argument_list|()
 name|override

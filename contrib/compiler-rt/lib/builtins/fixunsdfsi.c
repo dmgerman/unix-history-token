@@ -28,15 +28,6 @@ directive|include
 file|"fp_fixuint_impl.inc"
 end_include
 
-begin_macro
-name|ARM_EABI_FNALIAS
-argument_list|(
-argument|d2uiz
-argument_list|,
-argument|fixunsdfsi
-argument_list|)
-end_macro
-
 begin_function
 name|COMPILER_RT_ABI
 name|su_int
@@ -54,6 +45,38 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+end_if
+
+begin_function
+name|AEABI_RTABI
+name|su_int
+name|__aeabi_d2uiz
+parameter_list|(
+name|fp_t
+name|a
+parameter_list|)
+block|{
+return|return
+name|__fixunsdfsi
+argument_list|(
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

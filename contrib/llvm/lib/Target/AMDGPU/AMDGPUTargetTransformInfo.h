@@ -537,6 +537,29 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|unsigned
+name|getShuffleCost
+argument_list|(
+name|TTI
+operator|::
+name|ShuffleKind
+name|Kind
+argument_list|,
+name|Type
+operator|*
+name|Tp
+argument_list|,
+name|int
+name|Index
+argument_list|,
+name|Type
+operator|*
+name|SubTp
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 unit|};  }
 comment|// end namespace llvm

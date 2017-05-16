@@ -174,7 +174,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -216,7 +216,7 @@ comment|/// In multi-threaded mode, a read thread is spawned that continually
 comment|/// reads data and caches any received bytes. To start the read thread
 comment|/// clients call:
 comment|///
-comment|///     bool Communication::StartReadThread (Error *);
+comment|///     bool Communication::StartReadThread (Status *);
 comment|///
 comment|/// If true is returned a read thread has been spawned that will
 comment|/// continually execute a call to the pure virtual DoRead function:
@@ -394,7 +394,7 @@ comment|///     \b True if the connect succeeded, \b false otherwise. The
 comment|///     internal error object should be filled in with an
 comment|///     appropriate value based on the result of this function.
 comment|///
-comment|/// @see Error& Communication::GetError ();
+comment|/// @see Status& Communication::GetError ();
 comment|/// @see bool Connection::Connect (const char *url);
 comment|//------------------------------------------------------------------
 name|lldb
@@ -407,7 +407,7 @@ name|char
 operator|*
 name|url
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)
@@ -421,7 +421,7 @@ comment|///     \b True if the disconnect succeeded, \b false otherwise. The
 comment|///     internal error object should be filled in with an
 comment|///     appropriate value based on the result of this function.
 comment|///
-comment|/// @see Error& Communication::GetError ();
+comment|/// @see Status& Communication::GetError ();
 comment|/// @see bool Connection::Disconnect ();
 comment|//------------------------------------------------------------------
 name|lldb
@@ -429,7 +429,7 @@ operator|::
 name|ConnectionStatus
 name|Disconnect
 argument_list|(
-name|Error
+name|Status
 operator|*
 name|error_ptr
 operator|=
@@ -523,7 +523,7 @@ name|ConnectionStatus
 operator|&
 name|status
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)
@@ -562,7 +562,7 @@ name|ConnectionStatus
 operator|&
 name|status
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)
@@ -618,7 +618,7 @@ name|virtual
 name|bool
 name|StartReadThread
 parameter_list|(
-name|Error
+name|Status
 modifier|*
 name|error_ptr
 init|=
@@ -636,7 +636,7 @@ name|virtual
 name|bool
 name|StopReadThread
 parameter_list|(
-name|Error
+name|Status
 modifier|*
 name|error_ptr
 init|=
@@ -647,7 +647,7 @@ name|virtual
 name|bool
 name|JoinReadThread
 parameter_list|(
-name|Error
+name|Status
 modifier|*
 name|error_ptr
 init|=
@@ -851,7 +851,7 @@ name|ConnectionStatus
 operator|&
 name|status
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)

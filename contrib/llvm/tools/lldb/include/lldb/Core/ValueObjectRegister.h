@@ -150,7 +150,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -503,7 +503,7 @@ name|SetValueFromCString
 argument_list|(
 argument|const char *value_str
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -512,7 +512,7 @@ name|SetData
 argument_list|(
 argument|DataExtractor&data
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;

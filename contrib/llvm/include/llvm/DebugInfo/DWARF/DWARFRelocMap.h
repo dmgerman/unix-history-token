@@ -65,19 +65,29 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+struct|struct
+name|RelocAddrEntry
+block|{
+name|uint8_t
+name|Width
+decl_stmt|;
+name|int64_t
+name|Value
+decl_stmt|;
+block|}
+struct|;
+comment|// In place of applying the relocations to the data we've read from disk we use
+comment|// a separate mapping table to the side and checking that at locations in the
+comment|// dwarf where we expect relocated values. This adds a bit of complexity to the
+comment|// dwarf parsing/extraction at the benefit of not allocating memory for the
+comment|// entire size of the debug info sections.
 typedef|typedef
 name|DenseMap
 operator|<
 name|uint64_t
 operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|uint8_t
-operator|,
-name|int64_t
-operator|>>
+name|RelocAddrEntry
+operator|>
 name|RelocAddrMap
 expr_stmt|;
 block|}

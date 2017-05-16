@@ -111,7 +111,7 @@ name|FileSpec
 operator|&
 name|spec
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

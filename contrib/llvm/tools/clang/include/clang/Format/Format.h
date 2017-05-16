@@ -237,8 +237,20 @@ comment|/// \endcode
 name|bool
 name|AlignConsecutiveDeclarations
 decl_stmt|;
-comment|/// \brief If ``true``, aligns escaped newlines as far left as possible.
-comment|/// Otherwise puts them into the right-most column.
+comment|/// \brief Different styles for aligning escaped newlines.
+enum|enum
+name|EscapedNewlineAlignmentStyle
+block|{
+comment|/// \brief Don't align escaped newlines.
+comment|/// \code
+comment|///   #define A \
+comment|///     int aaaa; \
+comment|///     int b; \
+comment|///     int dddddddddd;
+comment|/// \endcode
+name|ENAS_DontAlign
+block|,
+comment|/// \brief Align escaped newlines as far left as possible.
 comment|/// \code
 comment|///   true:
 comment|///   #define A   \
@@ -247,13 +259,22 @@ comment|///     int b;    \
 comment|///     int dddddddddd;
 comment|///
 comment|///   false:
+comment|/// \endcode
+name|ENAS_Left
+block|,
+comment|/// \brief Align escaped newlines in the right-most column.
+comment|/// \code
 comment|///   #define A                                                                      \
 comment|///     int aaaa;                                                                    \
 comment|///     int b;                                                                       \
 comment|///     int dddddddddd;
 comment|/// \endcode
-name|bool
-name|AlignEscapedNewlinesLeft
+name|ENAS_Right
+block|,   }
+enum|;
+comment|/// \brief Options for aligning backslashes in escaped newlines.
+name|EscapedNewlineAlignmentStyle
+name|AlignEscapedNewlines
 decl_stmt|;
 comment|/// \brief If ``true``, horizontally align operands of binary and ternary
 comment|/// expressions.
@@ -1739,11 +1760,11 @@ name|R
 operator|.
 name|AlignConsecutiveDeclarations
 operator|&&
-name|AlignEscapedNewlinesLeft
+name|AlignEscapedNewlines
 operator|==
 name|R
 operator|.
-name|AlignEscapedNewlinesLeft
+name|AlignEscapedNewlines
 operator|&&
 name|AlignOperands
 operator|==

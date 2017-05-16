@@ -66,16 +66,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
-end_include
-
-begin_comment
-comment|// for Error
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"lldb/Utility/FileSpec.h"
 end_include
 
@@ -88,6 +78,16 @@ include|#
 directive|include
 file|"lldb/Utility/Iterable.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
+end_include
+
+begin_comment
+comment|// for Status
+end_comment
 
 begin_include
 include|#
@@ -1333,7 +1333,7 @@ name|std
 operator|::
 name|list
 operator|<
-name|Error
+name|Status
 operator|>
 operator|&
 name|errors
@@ -1361,7 +1361,7 @@ name|module_ptr
 parameter_list|)
 function_decl|;
 specifier|static
-name|Error
+name|Status
 name|GetSharedModule
 argument_list|(
 specifier|const

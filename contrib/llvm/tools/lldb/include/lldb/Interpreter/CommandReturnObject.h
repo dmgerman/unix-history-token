@@ -726,7 +726,7 @@ name|void
 name|SetError
 argument_list|(
 specifier|const
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,

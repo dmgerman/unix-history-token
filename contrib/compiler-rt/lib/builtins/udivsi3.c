@@ -17,15 +17,6 @@ begin_comment
 comment|/* Translated from Figure 3-40 of The PowerPC Compiler Writer's Guide */
 end_comment
 
-begin_macro
-name|ARM_EABI_FNALIAS
-argument_list|(
-argument|uidiv
-argument_list|,
-argument|udivsi3
-argument_list|)
-end_macro
-
 begin_comment
 comment|/* This function should not call __divsi3! */
 end_comment
@@ -235,6 +226,43 @@ name|q
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+end_if
+
+begin_function
+name|AEABI_RTABI
+name|su_int
+name|__aeabi_uidiv
+parameter_list|(
+name|su_int
+name|n
+parameter_list|,
+name|su_int
+name|d
+parameter_list|)
+block|{
+return|return
+name|__udivsi3
+argument_list|(
+name|n
+argument_list|,
+name|d
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

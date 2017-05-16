@@ -184,65 +184,15 @@ operator|::
 name|error_code
 name|write
 argument_list|(
-argument|const StringMap<FunctionSamples>&ProfileMap
-argument_list|)
-block|{
-if|if
-condition|(
-name|std
-operator|::
-name|error_code
-name|EC
-operator|=
-name|writeHeader
-argument_list|(
-name|ProfileMap
-argument_list|)
-condition|)
-return|return
-name|EC
-return|;
-for|for
-control|(
 specifier|const
-specifier|auto
-modifier|&
-name|I
-range|:
-name|ProfileMap
-control|)
-block|{
-specifier|const
+name|StringMap
+operator|<
 name|FunctionSamples
-modifier|&
-name|Profile
-init|=
-name|I
-operator|.
-name|second
-decl_stmt|;
-if|if
-condition|(
-name|std
-operator|::
-name|error_code
-name|EC
-operator|=
-name|write
-argument_list|(
-name|Profile
+operator|>
+operator|&
+name|ProfileMap
 argument_list|)
-condition|)
-return|return
-name|EC
-return|;
-block|}
-return|return
-name|sampleprof_error
-operator|::
-name|success
-return|;
-block|}
+expr_stmt|;
 name|raw_ostream
 modifier|&
 name|getOutputStream
@@ -560,14 +510,11 @@ argument_list|)
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace sampleprof
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace sampleprof
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

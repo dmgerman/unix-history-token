@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -145,7 +145,7 @@ name|NativeProcessProtocol
 argument_list|()
 block|{}
 name|virtual
-name|Error
+name|Status
 name|Resume
 argument_list|(
 specifier|const
@@ -157,14 +157,14 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|Halt
 argument_list|()
 operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|Detach
 argument_list|()
 operator|=
@@ -177,7 +177,7 @@ comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|Signal
 argument_list|(
 argument|int signo
@@ -196,12 +196,12 @@ comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|Interrupt
 argument_list|()
 block|;
 name|virtual
-name|Error
+name|Status
 name|Kill
 argument_list|()
 operator|=
@@ -212,7 +212,7 @@ comment|// Tells a process not to stop the inferior on given signals
 comment|// and just reinject them back.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|IgnoreSignals
 argument_list|(
 name|llvm
@@ -228,7 +228,7 @@ comment|//----------------------------------------------------------------------
 comment|// Memory and memory region functions
 comment|//----------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|GetMemoryRegionInfo
 argument_list|(
 argument|lldb::addr_t load_addr
@@ -237,7 +237,7 @@ argument|MemoryRegionInfo&range_info
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|ReadMemory
 argument_list|(
 argument|lldb::addr_t addr
@@ -252,7 +252,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|ReadMemoryWithoutTrap
 argument_list|(
 argument|lldb::addr_t addr
@@ -267,7 +267,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|WriteMemory
 argument_list|(
 argument|lldb::addr_t addr
@@ -282,7 +282,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|AllocateMemory
 argument_list|(
 argument|size_t size
@@ -295,7 +295,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|DeallocateMemory
 argument_list|(
 argument|lldb::addr_t addr
@@ -339,7 +339,7 @@ comment|//----------------------------------------------------------------------
 comment|// Breakpoint functions
 comment|//----------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|SetBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -352,7 +352,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|RemoveBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -361,14 +361,14 @@ argument|bool hardware = false
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|EnableBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|DisableBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -386,7 +386,7 @@ argument_list|()
 specifier|const
 block|;
 name|virtual
-name|Error
+name|Status
 name|SetHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -395,7 +395,7 @@ argument|size_t size
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|RemoveHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -432,7 +432,7 @@ argument_list|()
 specifier|const
 block|;
 name|virtual
-name|Error
+name|Status
 name|SetWatchpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -445,7 +445,7 @@ argument|bool hardware
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|RemoveWatchpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -737,7 +737,7 @@ name|native_delegate
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|GetLoadedModuleFileSpec
 argument_list|(
 specifier|const
@@ -753,7 +753,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|GetFileLoadAddress
 argument_list|(
 specifier|const
@@ -801,7 +801,7 @@ comment|///     An error object indicating if the operation succeeded,
 comment|///     and if not, what error occurred.
 comment|//------------------------------------------------------------------
 specifier|static
-name|Error
+name|Status
 name|Launch
 argument_list|(
 name|ProcessLaunchInfo
@@ -850,7 +850,7 @@ comment|///     An error object indicating if the operation succeeded,
 comment|///     and if not, what error occurred.
 comment|//------------------------------------------------------------------
 specifier|static
-name|Error
+name|Status
 name|Attach
 argument_list|(
 argument|lldb::pid_t pid
@@ -988,7 +988,7 @@ block|;
 comment|// -----------------------------------------------------------
 comment|// Internal interface for software breakpoints
 comment|// -----------------------------------------------------------
-name|Error
+name|Status
 name|SetSoftwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -997,7 +997,7 @@ argument|uint32_t size_hint
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|GetSoftwareBreakpointTrapOpcode
 argument_list|(
 argument|size_t trap_opcode_size_hint
@@ -1029,7 +1029,7 @@ comment|// -----------------------------------------------------------
 comment|// Static helper methods for derived classes.
 comment|// -----------------------------------------------------------
 specifier|static
-name|Error
+name|Status
 name|ResolveProcessArchitecture
 argument_list|(
 argument|lldb::pid_t pid

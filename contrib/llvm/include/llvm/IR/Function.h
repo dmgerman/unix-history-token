@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Function.h - Class to represent a single function --*- C++ -*-===//
+comment|//===- llvm/Function.h - Class to represent a single function ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Argument.h"
 end_include
 
@@ -126,7 +132,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/DerivedTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/GlobalObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/GlobalValue.h"
 end_include
 
 begin_include
@@ -151,6 +169,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
@@ -193,6 +217,21 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|AssemblyAnnotationWriter
+decl_stmt|;
+name|class
+name|Constant
+decl_stmt|;
+name|class
+name|DISubprogram
+decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -202,16 +241,13 @@ name|class
 name|Optional
 expr_stmt|;
 name|class
-name|AssemblyAnnotationWriter
+name|raw_ostream
 decl_stmt|;
 name|class
-name|FunctionType
+name|Type
 decl_stmt|;
 name|class
-name|LLVMContext
-decl_stmt|;
-name|class
-name|DISubprogram
+name|User
 decl_stmt|;
 name|class
 name|Function
@@ -227,37 +263,42 @@ decl|>
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|BasicBlockListType
+init|=
 name|SymbolTableList
 operator|<
 name|BasicBlock
 operator|>
-name|BasicBlockListType
-expr_stmt|;
+decl_stmt|;
 comment|// BasicBlock iterators...
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|BasicBlockListType
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_iterator
+init|=
 name|BasicBlockListType
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
-typedef|typedef
-name|Argument
-modifier|*
+decl_stmt|;
+name|using
 name|arg_iterator
-typedef|;
-typedef|typedef
+init|=
+name|Argument
+operator|*
+decl_stmt|;
+name|using
+name|const_arg_iterator
+init|=
 specifier|const
 name|Argument
-modifier|*
-name|const_arg_iterator
-typedef|;
+operator|*
+decl_stmt|;
 name|private
 label|:
 comment|// Important things that make up a function!
@@ -269,6 +310,8 @@ name|mutable
 name|Argument
 modifier|*
 name|Arguments
+init|=
+name|nullptr
 decl_stmt|;
 comment|///< The formal arguments
 name|size_t
@@ -1827,14 +1870,13 @@ comment|/// copyAttributesFrom - copy all additional attributes (those not neede
 comment|/// create a Function) from the Function Src to this one.
 name|void
 name|copyAttributesFrom
-argument_list|(
+parameter_list|(
 specifier|const
-name|GlobalValue
-operator|*
+name|Function
+modifier|*
 name|Src
-argument_list|)
-name|override
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// deleteBody - This method deletes the body of the function, and converts
 comment|/// the linkage to external.
 comment|///
@@ -1856,17 +1898,15 @@ comment|/// but does not delete it.
 comment|///
 name|void
 name|removeFromParent
-argument_list|()
-name|override
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// eraseFromParent - This method unlinks 'this' from the containing module
 comment|/// and deletes it.
 comment|///
 name|void
 name|eraseFromParent
-argument_list|()
-name|override
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// Steal arguments from another function.
 comment|///
 comment|/// Drop this function's arguments and splice in the ones from \c Src.

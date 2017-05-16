@@ -98,7 +98,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -828,7 +828,7 @@ comment|///   not occur due to not having a platform.
 comment|///
 comment|/// @see class Options
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|ParseOptions
 argument_list|(
 name|Options
@@ -1067,7 +1067,7 @@ argument|llvm::StringRef s
 argument_list|,
 argument|lldb::addr_t fail_value
 argument_list|,
-argument|Error *error
+argument|Status *error
 argument_list|)
 expr_stmt|;
 specifier|static
@@ -1120,7 +1120,7 @@ argument_list|,
 name|int32_t
 name|fail_value
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1140,7 +1140,7 @@ argument_list|)
 expr_stmt|;
 comment|// TODO: Use StringRef
 specifier|static
-name|Error
+name|Status
 name|StringToFormat
 argument_list|(
 specifier|const

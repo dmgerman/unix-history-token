@@ -58,19 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Error.h"
+file|"lldb/Target/StructuredDataPlugin.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/Utility/Stream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/StructuredDataPlugin.h"
 end_include
 
 begin_include
@@ -197,7 +197,7 @@ name|reset
 argument_list|()
 expr_stmt|;
 block|}
-name|Error
+name|Status
 name|GetAsJSON
 argument_list|(
 name|Stream
@@ -206,7 +206,7 @@ name|stream
 argument_list|)
 decl|const
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 if|if
@@ -237,7 +237,7 @@ return|return
 name|error
 return|;
 block|}
-name|Error
+name|Status
 name|GetDescription
 argument_list|(
 name|Stream
@@ -246,7 +246,7 @@ name|stream
 argument_list|)
 decl|const
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 if|if

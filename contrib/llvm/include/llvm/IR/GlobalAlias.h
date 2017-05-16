@@ -274,22 +274,37 @@ modifier|*
 name|Aliasee
 parameter_list|)
 function_decl|;
+name|void
+name|copyAttributesFrom
+parameter_list|(
+specifier|const
+name|GlobalValue
+modifier|*
+name|Src
+parameter_list|)
+block|{
+name|GlobalValue
+operator|::
+name|copyAttributesFrom
+argument_list|(
+name|Src
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// removeFromParent - This method unlinks 'this' from the containing module,
 comment|/// but does not delete it.
 comment|///
 name|void
 name|removeFromParent
-argument_list|()
-name|override
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// eraseFromParent - This method unlinks 'this' from the containing module
 comment|/// and deletes it.
 comment|///
 name|void
 name|eraseFromParent
-argument_list|()
-name|override
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// These methods retrieve and set alias target.
 name|void
 name|setAliasee

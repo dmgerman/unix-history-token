@@ -1372,11 +1372,9 @@ name|emitLeadingFence
 argument_list|(
 argument|IRBuilder<>&Builder
 argument_list|,
+argument|Instruction *Inst
+argument_list|,
 argument|AtomicOrdering Ord
-argument_list|,
-argument|bool IsStore
-argument_list|,
-argument|bool IsLoad
 argument_list|)
 specifier|const
 name|override
@@ -1387,11 +1385,9 @@ name|emitTrailingFence
 argument_list|(
 argument|IRBuilder<>&Builder
 argument_list|,
+argument|Instruction *Inst
+argument_list|,
 argument|AtomicOrdering Ord
-argument_list|,
-argument|bool IsStore
-argument_list|,
-argument|bool IsLoad
 argument_list|)
 specifier|const
 name|override

@@ -171,7 +171,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|ReadRegister
 argument_list|(
 specifier|const
@@ -187,7 +187,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|WriteRegister
 argument_list|(
 specifier|const
@@ -204,7 +204,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|ReadAllRegisterValues
 argument_list|(
 name|lldb
@@ -217,7 +217,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|WriteAllRegisterValues
 argument_list|(
 specifier|const
@@ -264,12 +264,12 @@ argument|uint32_t hw_idx
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|ClearAllHardwareBreakpoints
 argument_list|()
 block|;
 name|virtual
-name|Error
+name|Status
 name|GetHardwareBreakHitIndex
 argument_list|(
 argument|uint32_t&bp_index
@@ -301,12 +301,12 @@ argument|uint32_t hw_index
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|ClearAllHardwareWatchpoints
 argument_list|()
 block|;
 name|virtual
-name|Error
+name|Status
 name|IsWatchpointHit
 argument_list|(
 argument|uint32_t wp_index
@@ -315,7 +315,7 @@ argument|bool&is_hit
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|GetWatchpointHitIndex
 argument_list|(
 argument|uint32_t&wp_index
@@ -324,7 +324,7 @@ argument|lldb::addr_t trap_addr
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|IsWatchpointVacant
 argument_list|(
 argument|uint32_t wp_index
@@ -370,7 +370,7 @@ argument|bool enable
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|ReadRegisterValueFromMemory
 argument_list|(
 argument|const lldb_private::RegisterInfo *reg_info
@@ -383,7 +383,7 @@ argument|RegisterValue&reg_value
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|WriteRegisterValueToMemory
 argument_list|(
 argument|const lldb_private::RegisterInfo *reg_info
@@ -454,7 +454,7 @@ argument_list|(
 argument|lldb::addr_t fail_value = LLDB_INVALID_ADDRESS
 argument_list|)
 block|;
-name|Error
+name|Status
 name|SetPC
 argument_list|(
 argument|lldb::addr_t pc
@@ -468,7 +468,7 @@ argument_list|(
 argument|lldb::addr_t fail_value = LLDB_INVALID_ADDRESS
 argument_list|)
 block|;
-name|Error
+name|Status
 name|SetSP
 argument_list|(
 argument|lldb::addr_t sp
@@ -482,7 +482,7 @@ argument_list|(
 argument|lldb::addr_t fail_value = LLDB_INVALID_ADDRESS
 argument_list|)
 block|;
-name|Error
+name|Status
 name|SetFP
 argument_list|(
 argument|lldb::addr_t fp
@@ -533,7 +533,7 @@ argument_list|,
 argument|lldb::addr_t fail_value
 argument_list|)
 block|;
-name|Error
+name|Status
 name|WriteRegisterFromUnsigned
 argument_list|(
 argument|uint32_t reg
@@ -541,7 +541,7 @@ argument_list|,
 argument|uint64_t uval
 argument_list|)
 block|;
-name|Error
+name|Status
 name|WriteRegisterFromUnsigned
 argument_list|(
 argument|const RegisterInfo *reg_info

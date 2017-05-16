@@ -1775,7 +1775,7 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
-name|Error
+name|Status
 name|PreprocessCommand
 argument_list|(
 name|std

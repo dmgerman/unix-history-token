@@ -266,11 +266,6 @@ name|FirstElf
 init|=
 name|nullptr
 decl_stmt|;
-name|bool
-name|HasStaticTlsModel
-init|=
-name|false
-decl_stmt|;
 name|uint8_t
 name|OSABI
 init|=

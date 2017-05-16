@@ -338,7 +338,7 @@ name|ExecutionContext
 modifier|&
 name|exe_ctx
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)

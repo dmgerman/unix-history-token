@@ -81,19 +81,6 @@ directive|if
 name|__ARM_EABI__
 end_if
 
-begin_define
-define|#
-directive|define
-name|ARM_EABI_FNALIAS
-parameter_list|(
-name|aeabi_name
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|void __aeabi_##aeabi_name() __attribute__((alias("__" #name)));
-end_define
-
 begin_if
 if|#
 directive|if
@@ -150,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|COMPILER_RT_ABI
-value|__attribute__((pcs("aapcs")))
+value|__attribute__((__pcs__("aapcs")))
 end_define
 
 begin_endif
@@ -166,17 +153,6 @@ end_else
 begin_define
 define|#
 directive|define
-name|ARM_EABI_FNALIAS
-parameter_list|(
-name|aeabi_name
-parameter_list|,
-name|name
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
 name|COMPILER_RT_ABI
 end_define
 
@@ -184,6 +160,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|AEABI_RTABI
+value|__attribute__((__pcs__("aapcs")))
+end_define
 
 begin_ifdef
 ifdef|#

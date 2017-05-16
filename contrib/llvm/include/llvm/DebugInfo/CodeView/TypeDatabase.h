@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -89,27 +95,41 @@ block|{
 name|class
 name|TypeDatabase
 block|{
+name|friend
+name|class
+name|RandomAccessTypeVisitor
+decl_stmt|;
 name|public
 label|:
 name|explicit
 name|TypeDatabase
 parameter_list|(
 name|uint32_t
-name|ExpectedSize
+name|Capacity
 parameter_list|)
 function_decl|;
-comment|/// Gets the type index for the next type record.
+comment|/// Records the name of a type, and reserves its type index.
 name|TypeIndex
-name|getNextTypeIndex
-argument_list|()
+name|appendType
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
 specifier|const
-expr_stmt|;
+name|CVType
+modifier|&
+name|Data
+parameter_list|)
+function_decl|;
 comment|/// Records the name of a type, and reserves its type index.
 name|void
 name|recordType
 parameter_list|(
 name|StringRef
 name|Name
+parameter_list|,
+name|TypeIndex
+name|Index
 parameter_list|,
 specifier|const
 name|CVType
@@ -152,7 +172,7 @@ name|Index
 parameter_list|)
 function_decl|;
 name|bool
-name|containsTypeIndex
+name|contains
 argument_list|(
 name|TypeIndex
 name|Index
@@ -164,10 +184,34 @@ name|size
 argument_list|()
 specifier|const
 expr_stmt|;
+name|uint32_t
+name|capacity
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|empty
+argument_list|()
+specifier|const
+expr_stmt|;
+name|TypeIndex
+name|getAppendIndex
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
+name|void
+name|grow
+parameter_list|()
+function_decl|;
 name|BumpPtrAllocator
 name|Allocator
+decl_stmt|;
+name|uint32_t
+name|Count
+init|=
+literal|0
 decl_stmt|;
 comment|/// All user defined type records in .debug$T live in here. Type indices
 comment|/// greater than 0x1000 are user defined. Subtract 0x1000 from the index to
@@ -190,6 +234,9 @@ name|TypeRecords
 expr_stmt|;
 name|StringSaver
 name|TypeNameStorage
+decl_stmt|;
+name|BitVector
+name|ValidRecords
 decl_stmt|;
 block|}
 empty_stmt|;

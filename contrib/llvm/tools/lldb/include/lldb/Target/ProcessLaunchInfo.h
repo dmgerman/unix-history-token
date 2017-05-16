@@ -348,7 +348,7 @@ block|;
 name|bool
 name|ConvertArgumentsForLaunchingInShell
 argument_list|(
-argument|Error&error
+argument|Status&error
 argument_list|,
 argument|bool localhost
 argument_list|,

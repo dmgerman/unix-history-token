@@ -236,7 +236,6 @@ name|false
 return|;
 block|}
 comment|/// Returns the profile count for \p CallInst.
-specifier|static
 name|Optional
 operator|<
 name|uint64_t

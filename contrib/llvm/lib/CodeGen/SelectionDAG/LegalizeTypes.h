@@ -4658,6 +4658,17 @@ name|OpNo
 parameter_list|)
 function_decl|;
 name|SDValue
+name|SplitVecOp_VECREDUCE
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+name|OpNo
+parameter_list|)
+function_decl|;
+name|SDValue
 name|SplitVecOp_UnaryOp
 parameter_list|(
 name|SDNode

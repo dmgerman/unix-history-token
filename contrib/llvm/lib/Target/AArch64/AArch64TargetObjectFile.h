@@ -139,6 +139,18 @@ argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
 name|override
+block|;
+name|void
+name|getNameWithPrefix
+argument_list|(
+argument|SmallVectorImpl<char>&OutName
+argument_list|,
+argument|const GlobalValue *GV
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

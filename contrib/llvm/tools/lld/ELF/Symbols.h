@@ -366,15 +366,7 @@ name|getGotOffset
 argument_list|()
 specifier|const
 expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|typename
-name|ELFT
-operator|::
-name|uint
+name|uint64_t
 name|getGotVA
 argument_list|()
 specifier|const

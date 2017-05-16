@@ -176,7 +176,7 @@ argument|BreakpointSite *bp_site
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|(
 argument|ProcessLaunchInfo&launch_info
@@ -194,7 +194,7 @@ argument|Debugger&debugger
 argument_list|,
 argument|Target *target
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
