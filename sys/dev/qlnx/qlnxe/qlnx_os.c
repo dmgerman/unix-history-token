@@ -1644,15 +1644,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1713,15 +1705,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: exit\n"
-operator|,
-name|__func__
-operator|)
+literal|"exit\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1924,22 +1908,14 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: %p\n"
-operator|,
-name|__func__
-operator|,
+literal|"%p\n"
+argument_list|,
 name|ha
 operator|->
 name|sp_taskqueue
 index|[
 name|i
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2697,17 +2673,9 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: exit ret = %d\n"
-operator|,
-name|__func__
-operator|,
+literal|"exit ret = %d\n"
+argument_list|,
 name|ret
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2854,19 +2822,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: %p\n"
-operator|,
-name|__func__
-operator|,
+literal|"%p\n"
+argument_list|,
 name|fp
 operator|->
 name|fp_taskqueue
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3587,65 +3547,59 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s:\n\t\t\tpci_reg [%p, 0x%08x 0x%08x]"
+literal|"\n\t\t\tpci_reg [%p, 0x%08x 0x%08x]"
 literal|"\n\t\t\tdbells [%p, 0x%08x 0x%08x]"
 literal|"\n\t\t\tmsix [%p, 0x%08x 0x%08x 0x%x 0x%x]"
 literal|"\n\t\t\t[ncpus = %d][num_rss = 0x%x] [num_tc = 0x%x]\n"
-operator|,
-name|__func__
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|pci_reg
-operator|,
+argument_list|,
 name|rsrc_len_reg
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|reg_rid
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|pci_dbells
-operator|,
+argument_list|,
 name|rsrc_len_dbells
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|dbells_rid
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|msix_bar
-operator|,
+argument_list|,
 name|rsrc_len_msix
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|msix_rid
-operator|,
+argument_list|,
 name|pci_msix_count
 argument_list|(
 name|dev
 argument_list|)
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|msix_count
-operator|,
+argument_list|,
 name|mp_ncpus
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|num_rss
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|num_tc
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3842,37 +3796,31 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: p_hwfn [%p] sp_irq_rid %d"
+literal|"p_hwfn [%p] sp_irq_rid %d"
 literal|" sp_irq %p sp_handle %p\n"
-operator|,
-name|__func__
-operator|,
+argument_list|,
 name|p_hwfn
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|sp_irq_rid
 index|[
 name|i
 index|]
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|sp_irq
 index|[
 name|i
 index|]
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|sp_handle
 index|[
 name|i
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4129,20 +4077,16 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
 literal|"grcdump_size[%d] = 0x%08x\n"
-operator|,
+argument_list|,
 name|i
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|grcdump_size
 index|[
 name|i
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 name|ha
@@ -4243,20 +4187,16 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
 literal|"idle_chk_size[%d] = 0x%08x\n"
-operator|,
+argument_list|,
 name|i
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|idle_chk_size
 index|[
 name|i
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 name|ha
@@ -4475,21 +4415,15 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: STORM_FW version %s MFW version %s\n"
-operator|,
-name|__func__
-operator|,
+literal|"STORM_FW version %s MFW version %s\n"
+argument_list|,
 name|ha
 operator|->
 name|stormfw_ver
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|mfw_ver
-operator|)
 argument_list|)
 expr_stmt|;
 name|qlnx_init_ifnet
@@ -4533,13 +4467,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: success\n"
-operator|,
-name|__func__
-operator|)
+literal|"success\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4837,13 +4765,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -5318,13 +5240,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: exit\n"
-operator|,
-name|__func__
-operator|)
+literal|"exit\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5369,15 +5285,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: start\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -5433,15 +5341,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: end\n"
-operator|,
-name|__func__
-operator|)
+literal|"exit\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9007,7 +8907,7 @@ name|ha
 operator|->
 name|dp_level
 operator|=
-literal|0
+literal|0x01
 expr_stmt|;
 name|SYSCTL_ADD_UINT
 argument_list|(
@@ -10234,13 +10134,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: exit\n"
-operator|,
-name|__func__
-operator|)
+literal|"exit\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10266,6 +10160,13 @@ name|ha
 operator|->
 name|ifp
 decl_stmt|;
+name|QL_DPRINT1
+argument_list|(
+name|ha
+argument_list|,
+literal|"Driver Initialization start \n"
+argument_list|)
+expr_stmt|;
 name|qlnx_stop
 argument_list|(
 name|ha
@@ -10325,15 +10226,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 name|QLNX_LOCK
@@ -10355,15 +10248,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: exit\n"
-operator|,
-name|__func__
-operator|)
+literal|"exit\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -11255,17 +11140,9 @@ name|QL_DPRINT4
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: SIOCSIFADDR (0x%lx)\n"
-operator|,
-name|__func__
-operator|,
+literal|"SIOCSIFADDR (0x%lx)\n"
+argument_list|,
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -11317,17 +11194,10 @@ name|QL_DPRINT4
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: SIOCSIFADDR (0x%lx) ipv4 [0x%08x]\n"
-operator|,
-name|__func__
-operator|,
+literal|"SIOCSIFADDR (0x%lx) ipv4 [0x%08x]\n"
+argument_list|,
 name|cmd
-operator|,
+argument_list|,
 name|ntohl
 argument_list|(
 name|IA_SIN
@@ -11339,7 +11209,6 @@ name|sin_addr
 operator|.
 name|s_addr
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|arp_ifinit
@@ -11370,17 +11239,9 @@ name|QL_DPRINT4
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: SIOCSIFMTU (0x%lx)\n"
-operator|,
-name|__func__
-operator|,
+literal|"SIOCSIFMTU (0x%lx)\n"
+argument_list|,
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -11453,17 +11314,9 @@ name|QL_DPRINT4
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: SIOCSIFFLAGS (0x%lx)\n"
-operator|,
-name|__func__
-operator|,
+literal|"SIOCSIFFLAGS (0x%lx)\n"
+argument_list|,
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 name|QLNX_LOCK
@@ -11595,19 +11448,11 @@ name|QL_DPRINT4
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: %s (0x%lx)\n"
-operator|,
-name|__func__
-operator|,
+literal|"%s (0x%lx)\n"
+argument_list|,
 literal|"SIOCADDMULTI"
-operator|,
+argument_list|,
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -11641,19 +11486,11 @@ name|QL_DPRINT4
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: %s (0x%lx)\n"
-operator|,
-name|__func__
-operator|,
+literal|"%s (0x%lx)\n"
+argument_list|,
 literal|"SIOCDELMULTI"
-operator|,
+argument_list|,
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -11690,17 +11527,9 @@ name|QL_DPRINT4
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: SIOCSIFMEDIA/SIOCGIFMEDIA (0x%lx)\n"
-operator|,
-name|__func__
-operator|,
+literal|"SIOCSIFMEDIA/SIOCGIFMEDIA (0x%lx)\n"
+argument_list|,
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 name|ret
@@ -11737,17 +11566,9 @@ name|QL_DPRINT4
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: SIOCSIFCAP (0x%lx)\n"
-operator|,
-name|__func__
-operator|,
+literal|"SIOCSIFCAP (0x%lx)\n"
+argument_list|,
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -11954,16 +11775,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s :"
-literal|" ecore_ptt_acquire failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"ecore_ptt_acquire failed\n"
 argument_list|)
 expr_stmt|;
 name|ret
@@ -12050,86 +11862,77 @@ name|QL_DPRINT8
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"SIOCGI2C copyout ret = %d"
-literal|" len = %d addr = 0x%02x offset = 0x%04x"
-literal|" data[0..7]=0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"
-literal|" 0x%02x 0x%02x 0x%02x\n"
-operator|,
+literal|"SIOCGI2C copyout ret = %d \ 			 len = %d addr = 0x%02x offset = 0x%04x \ 			 data[0..7]=0x%02x 0x%02x 0x%02x 0x%02x 0x%02x \ 			 0x%02x 0x%02x 0x%02x\n"
+argument_list|,
 name|ret
-operator|,
+argument_list|,
 name|i2c
 operator|.
 name|len
-operator|,
+argument_list|,
 name|i2c
 operator|.
 name|dev_addr
-operator|,
+argument_list|,
 name|i2c
 operator|.
 name|offset
-operator|,
+argument_list|,
 name|i2c
 operator|.
 name|data
 index|[
 literal|0
 index|]
-operator|,
+argument_list|,
 name|i2c
 operator|.
 name|data
 index|[
 literal|1
 index|]
-operator|,
+argument_list|,
 name|i2c
 operator|.
 name|data
 index|[
 literal|2
 index|]
-operator|,
+argument_list|,
 name|i2c
 operator|.
 name|data
 index|[
 literal|3
 index|]
-operator|,
+argument_list|,
 name|i2c
 operator|.
 name|data
 index|[
 literal|4
 index|]
-operator|,
+argument_list|,
 name|i2c
 operator|.
 name|data
 index|[
 literal|5
 index|]
-operator|,
+argument_list|,
 name|i2c
 operator|.
 name|data
 index|[
 literal|6
 index|]
-operator|,
+argument_list|,
 name|i2c
 operator|.
 name|data
 index|[
 literal|7
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -12142,17 +11945,9 @@ name|QL_DPRINT4
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: default (0x%lx)\n"
-operator|,
-name|__func__
-operator|,
+literal|"default (0x%lx)\n"
+argument_list|,
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 name|ret
@@ -12215,15 +12010,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 name|ifm
@@ -12252,15 +12039,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: exit\n"
-operator|,
-name|__func__
-operator|)
+literal|"exit\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -12305,15 +12084,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 name|ifmr
@@ -12388,15 +12159,8 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: exit (%s)\n"
-operator|,
-name|__func__
-operator|,
+literal|"exit (%s)\n"
+argument_list|,
 operator|(
 name|ha
 operator|->
@@ -12405,7 +12169,6 @@ condition|?
 literal|"link_up"
 else|:
 literal|"link_down"
-operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12517,25 +12280,18 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: (mp == NULL) "
+literal|"(mp == NULL) "
 literal|" tx_idx = 0x%x"
 literal|" ecore_prod_idx = 0x%x"
 literal|" ecore_cons_idx = 0x%x"
 literal|" hw_bd_cons = 0x%x"
 literal|" txq_db_last = 0x%x"
 literal|" elem_left = 0x%x\n"
-operator|,
-name|__func__
-operator|,
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|,
+argument_list|,
 name|ecore_chain_get_prod_idx
 argument_list|(
 operator|&
@@ -12543,7 +12299,7 @@ name|txq
 operator|->
 name|tx_pbl
 argument_list|)
-operator|,
+argument_list|,
 name|ecore_chain_get_cons_idx
 argument_list|(
 operator|&
@@ -12551,7 +12307,7 @@ name|txq
 operator|->
 name|tx_pbl
 argument_list|)
-operator|,
+argument_list|,
 name|le16toh
 argument_list|(
 operator|*
@@ -12559,13 +12315,13 @@ name|txq
 operator|->
 name|hw_cons_ptr
 argument_list|)
-operator|,
+argument_list|,
 name|txq
 operator|->
 name|tx_db
 operator|.
 name|raw
-operator|,
+argument_list|,
 name|ecore_chain_get_elem_left
 argument_list|(
 operator|&
@@ -12573,7 +12329,6 @@ name|txq
 operator|->
 name|tx_pbl
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -12857,27 +12612,20 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: (diff = 0x%x) "
+literal|"(diff = 0x%x) "
 literal|" tx_idx = 0x%x"
 literal|" ecore_prod_idx = 0x%x"
 literal|" ecore_cons_idx = 0x%x"
 literal|" hw_bd_cons = 0x%x"
 literal|" txq_db_last = 0x%x"
 literal|" elem_left = 0x%x\n"
-operator|,
-name|__func__
-operator|,
+argument_list|,
 name|diff
-operator|,
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|,
+argument_list|,
 name|ecore_chain_get_prod_idx
 argument_list|(
 operator|&
@@ -12885,7 +12633,7 @@ name|txq
 operator|->
 name|tx_pbl
 argument_list|)
-operator|,
+argument_list|,
 name|ecore_chain_get_cons_idx
 argument_list|(
 operator|&
@@ -12893,7 +12641,7 @@ name|txq
 operator|->
 name|tx_pbl
 argument_list|)
-operator|,
+argument_list|,
 name|le16toh
 argument_list|(
 operator|*
@@ -12901,13 +12649,13 @@ name|txq
 operator|->
 name|hw_cons_ptr
 argument_list|)
-operator|,
+argument_list|,
 name|txq
 operator|->
 name|tx_db
 operator|.
 name|raw
-operator|,
+argument_list|,
 name|ecore_chain_get_elem_left
 argument_list|(
 operator|&
@@ -12915,7 +12663,6 @@ name|txq
 operator|->
 name|tx_pbl
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -13008,15 +12755,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 if|#
@@ -13139,17 +12878,9 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: exit ret = %d\n"
-operator|,
-name|__func__
-operator|,
+literal|"exit ret = %d\n"
+argument_list|,
 name|ret
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -13200,15 +12931,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -13302,15 +13025,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: exit\n"
-operator|,
-name|__func__
-operator|)
+literal|"exit\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -14001,15 +13716,7 @@ name|QL_DPRINT8
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14301,21 +14008,13 @@ name|QL_DPRINT8
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: EFBIG [%d]\n"
-operator|,
-name|__func__
-operator|,
+literal|"EFBIG [%d]\n"
+argument_list|,
 name|m_head
 operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -14363,17 +14062,9 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: m_defrag() = NULL [%d]\n"
-operator|,
-name|__func__
-operator|,
+literal|"m_defrag() = NULL [%d]\n"
+argument_list|,
 name|ret
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -14425,23 +14116,15 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: bus_dmamap_load_mbuf_sg failed0[%d, %d]\n"
-operator|,
-name|__func__
-operator|,
+literal|"bus_dmamap_load_mbuf_sg failed0 [%d, %d]\n"
+argument_list|,
 name|ret
-operator|,
+argument_list|,
 name|m_head
 operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -14494,25 +14177,17 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: (%d) nsegs too many for non-TSO[%d, %d]\n"
-operator|,
-name|__func__
-operator|,
+literal|"(%d) nsegs too many for non-TSO [%d, %d]\n"
+argument_list|,
 name|ret
-operator|,
+argument_list|,
 name|nsegs
-operator|,
+argument_list|,
 name|m_head
 operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -14571,23 +14246,15 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: bus_dmamap_load_mbuf_sg failed1[%d, %d]\n"
-operator|,
-name|__func__
-operator|,
+literal|"bus_dmamap_load_mbuf_sg failed1 [%d, %d]\n"
+argument_list|,
 name|ret
-operator|,
+argument_list|,
 name|m_head
 operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -14693,24 +14360,16 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: (%d, 0x%x) insuffient BDs"
-literal|"in chain[%d] trying to free packets\n"
-operator|,
-name|__func__
-operator|,
+literal|"(%d, 0x%x) insuffient BDs"
+literal|" in chain[%d] trying to free packets\n"
+argument_list|,
 name|nsegs
-operator|,
+argument_list|,
 name|elem_left
-operator|,
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -14758,23 +14417,15 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: (%d, 0x%x) insuffient BDs in chain[%d]\n"
-operator|,
-name|__func__
-operator|,
+literal|"(%d, 0x%x) insuffient BDs in chain[%d]\n"
+argument_list|,
 name|nsegs
-operator|,
+argument_list|,
 name|elem_left
-operator|,
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -15989,15 +15640,7 @@ name|QL_DPRINT8
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: exit\n"
-operator|,
-name|__func__
-operator|)
+literal|"exit\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -16051,6 +15694,17 @@ name|IFF_DRV_RUNNING
 operator|)
 expr_stmt|;
 comment|/* 	 * We simply lock and unlock each fp->tx_mtx to 	 * propagate the if_drv_flags 	 * state to each tx thread 	 */
+name|QL_DPRINT1
+argument_list|(
+name|ha
+argument_list|,
+literal|"QLNX STATE = %d\n"
+argument_list|,
+name|ha
+operator|->
+name|state
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ha
@@ -16465,15 +16119,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: mp = NULL\n"
-operator|,
-name|__func__
-operator|)
+literal|"mp = NULL\n"
 argument_list|)
 expr_stmt|;
 name|fp
@@ -16546,16 +16192,8 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: New buffer allocation failed, dropping"
+literal|"New buffer allocation failed, dropping"
 literal|" incoming packet and reusing its buffer\n"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 name|qlnx_reuse_rx_data
@@ -16792,109 +16430,88 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: enter\n "
-literal|"\t type = 0x%x\n"
-literal|"\t bitfields = 0x%x\n"
-literal|"\t seg_len = 0x%x\n"
-literal|"\t pars_flags = 0x%x\n"
-literal|"\t vlan_tag = 0x%x\n"
-literal|"\t rss_hash = 0x%x\n"
-literal|"\t len_on_first_bd = 0x%x\n"
-literal|"\t placement_offset = 0x%x\n"
-literal|"\t tpa_agg_index = 0x%x\n"
-literal|"\t header_len = 0x%x\n"
-literal|"\t ext_bd_len_list[0] = 0x%x\n"
-literal|"\t ext_bd_len_list[1] = 0x%x\n"
-literal|"\t ext_bd_len_list[2] = 0x%x\n"
-literal|"\t ext_bd_len_list[3] = 0x%x\n"
-literal|"\t ext_bd_len_list[4] = 0x%x\n"
-operator|,
-name|__func__
-operator|,
+literal|"[rss_id = %d]: enter\n \                 \t type = 0x%x\n \                 \t bitfields = 0x%x\n \                 \t seg_len = 0x%x\n \                 \t pars_flags = 0x%x\n \                 \t vlan_tag = 0x%x\n \                 \t rss_hash = 0x%x\n \                 \t len_on_first_bd = 0x%x\n \                 \t placement_offset = 0x%x\n \                 \t tpa_agg_index = 0x%x\n \                 \t header_len = 0x%x\n \                 \t ext_bd_len_list[0] = 0x%x\n \                 \t ext_bd_len_list[1] = 0x%x\n \                 \t ext_bd_len_list[2] = 0x%x\n \                 \t ext_bd_len_list[3] = 0x%x\n \                 \t ext_bd_len_list[4] = 0x%x\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|type
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|bitfields
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|seg_len
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|pars_flags
 operator|.
 name|flags
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|vlan_tag
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|rss_hash
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|len_on_first_bd
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|placement_offset
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|tpa_agg_index
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|header_len
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|ext_bd_len_list
 index|[
 literal|0
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|ext_bd_len_list
 index|[
 literal|1
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|ext_bd_len_list
 index|[
 literal|2
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|ext_bd_len_list
 index|[
 literal|3
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|ext_bd_len_list
 index|[
 literal|4
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -16946,19 +16563,13 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: mp = %p \n "
-operator|,
-name|__func__
-operator|,
+literal|"[rss_id = %d]: mp = %p \n "
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|,
+argument_list|,
 name|mp
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -16972,17 +16583,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: mp = NULL\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: mp = NULL\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -17030,22 +16635,17 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: CQE in CONS = %u has error,"
+literal|"[%d]: CQE in CONS = %u has error,"
 literal|" flags = %x, dropping incoming packet\n"
-operator|,
-name|__func__
-operator|,
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|,
+argument_list|,
 name|rxq
 operator|->
 name|sw_rx_cons
-operator|,
+argument_list|,
 name|le16toh
 argument_list|(
 name|cqe
@@ -17054,7 +16654,6 @@ name|pars_flags
 operator|.
 name|flags
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -17090,18 +16689,12 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: New buffer allocation failed,"
+literal|"[%d]: New buffer allocation failed,"
 literal|" dropping incoming packet and reusing its buffer\n"
-operator|,
-name|__func__
-operator|,
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -17391,18 +16984,12 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: invalid aggregation state,"
+literal|"[%d]: invalid aggregation state,"
 literal|" dropping incoming packet and reusing its buffer\n"
-operator|,
-name|__func__
-operator|,
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|QLNX_INC_IQDROPS
@@ -17586,17 +17173,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 4\n "
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: 4\n "
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -17653,19 +17234,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s[%d]: mpc = NULL\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: mpc = NULL\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -17745,18 +17318,13 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: New buffer allocation failed, dropping"
-literal|" incoming packet and reusing its buffer\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: New buffer allocation failed,"
+literal|" dropping incoming packet and reusing its"
+literal|" buffer\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|qlnx_reuse_rx_data
@@ -17924,18 +17492,12 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: invalid aggregation state,"
-literal|" dropping incoming packet and reusing its buffer\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: invalid aggregation state, dropping"
+literal|" incoming packet and reusing its buffer\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|QLNX_INC_IQDROPS
@@ -18259,19 +17821,12 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 5\n"
-literal|"\tagg_state = %d\n"
-literal|"\t mpf = %p mpl = %p\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: 5\n\tagg_state = %d\n\t mpf = %p mpl = %p\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|,
+argument_list|,
 name|rxq
 operator|->
 name|tpa_info
@@ -18280,7 +17835,7 @@ name|agg_index
 index|]
 operator|.
 name|agg_state
-operator|,
+argument_list|,
 name|rxq
 operator|->
 name|tpa_info
@@ -18289,7 +17844,7 @@ name|agg_index
 index|]
 operator|.
 name|mpf
-operator|,
+argument_list|,
 name|rxq
 operator|->
 name|tpa_info
@@ -18298,7 +17853,6 @@ name|agg_index
 index|]
 operator|.
 name|mpl
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -18376,75 +17930,61 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: enter\n "
-literal|"\t type = 0x%x\n"
-literal|"\t tpa_agg_index = 0x%x\n"
-literal|"\t len_list[0] = 0x%x\n"
-literal|"\t len_list[1] = 0x%x\n"
-literal|"\t len_list[2] = 0x%x\n"
-literal|"\t len_list[3] = 0x%x\n"
-literal|"\t len_list[4] = 0x%x\n"
-literal|"\t len_list[5] = 0x%x\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: enter\n \                 \t type = 0x%x\n \                 \t tpa_agg_index = 0x%x\n \                 \t len_list[0] = 0x%x\n \                 \t len_list[1] = 0x%x\n \                 \t len_list[2] = 0x%x\n \                 \t len_list[3] = 0x%x\n \                 \t len_list[4] = 0x%x\n \                 \t len_list[5] = 0x%x\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|type
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|tpa_agg_index
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|len_list
 index|[
 literal|0
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|len_list
 index|[
 literal|1
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|len_list
 index|[
 literal|2
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|len_list
 index|[
 literal|3
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|len_list
 index|[
 literal|4
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|len_list
 index|[
 literal|5
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 name|agg_index
@@ -18464,17 +18004,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 0\n "
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: 0\n "
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -18502,17 +18036,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 1\n "
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: 1\n "
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -18590,17 +18118,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: mpc = NULL\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: mpc = NULL\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -18680,18 +18202,13 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: New buffer allocation failed, dropping"
-literal|" incoming packet and reusing its buffer\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: New buffer allocation failed,"
+literal|" dropping incoming packet and reusing its"
+literal|" buffer\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|qlnx_reuse_rx_data
@@ -18845,22 +18362,16 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 2\n"
+literal|"[%d]: 2\n"
 literal|"\tmpf = %p mpl = %p\n"
-operator|,
-name|__func__
-operator|,
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|,
+argument_list|,
 name|mpf
-operator|,
+argument_list|,
 name|mpl
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -18996,84 +18507,67 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: enter\n "
-literal|"\t type = 0x%x\n"
-literal|"\t tpa_agg_index = 0x%x\n"
-literal|"\t total_packet_len = 0x%x\n"
-literal|"\t num_of_bds = 0x%x\n"
-literal|"\t end_reason = 0x%x\n"
-literal|"\t num_of_coalesced_segs = 0x%x\n"
-literal|"\t ts_delta = 0x%x\n"
-literal|"\t len_list[0] = 0x%x\n"
-literal|"\t len_list[1] = 0x%x\n"
-literal|"\t len_list[2] = 0x%x\n"
-literal|"\t len_list[3] = 0x%x\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: enter\n \                 \t type = 0x%x\n \                 \t tpa_agg_index = 0x%x\n \                 \t total_packet_len = 0x%x\n \                 \t num_of_bds = 0x%x\n \                 \t end_reason = 0x%x\n \                 \t num_of_coalesced_segs = 0x%x\n \                 \t ts_delta = 0x%x\n \                 \t len_list[0] = 0x%x\n \                 \t len_list[1] = 0x%x\n \                 \t len_list[2] = 0x%x\n \                 \t len_list[3] = 0x%x\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|type
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|tpa_agg_index
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|total_packet_len
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|num_of_bds
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|end_reason
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|num_of_coalesced_segs
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|ts_delta
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|len_list
 index|[
 literal|0
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|len_list
 index|[
 literal|1
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|len_list
 index|[
 literal|2
 index|]
-operator|,
+argument_list|,
 name|cqe
 operator|->
 name|len_list
 index|[
 literal|3
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 name|agg_index
@@ -19093,17 +18587,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 0\n "
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: 0\n "
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -19135,17 +18623,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 1\n "
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: 1\n "
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -19178,17 +18660,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 2\n "
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: 2\n "
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|qlnx_reuse_rx_data
@@ -19240,17 +18716,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: mpc = NULL\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: mpc = NULL\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -19330,18 +18800,13 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: New buffer allocation failed, dropping"
-literal|" incoming packet and reusing its buffer\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: New buffer allocation failed,"
+literal|" dropping incoming packet and reusing its"
+literal|" buffer\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|qlnx_reuse_rx_data
@@ -19495,17 +18960,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 5\n "
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: 5\n "
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -19519,17 +18978,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 6\n "
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: 6\n "
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 name|mp
@@ -19576,17 +19029,11 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 7\n "
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: 7\n "
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -19787,40 +19234,33 @@ name|QL_DPRINT7
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s[%d]: 8 csum_data = 0x%x csum_flags = 0x%lx\n "
-literal|"m_len = 0x%x m_pkthdr_len = 0x%x\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d]: 8 csum_data = 0x%x csum_flags = 0x%lx\n \ 		m_len = 0x%x m_pkthdr_len = 0x%x\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|,
+argument_list|,
 name|mp
 operator|->
 name|m_pkthdr
 operator|.
 name|csum_data
-operator|,
+argument_list|,
 name|mp
 operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
-operator|,
+argument_list|,
 name|mp
 operator|->
 name|m_len
-operator|,
+argument_list|,
 name|mp
 operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|)
 argument_list|)
 expr_stmt|;
 call|(
@@ -20091,13 +19531,7 @@ name|QL_DPRINT3
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
 literal|"Got a slowath CQE\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|ecore_eth_cqe_completion
@@ -20236,15 +19670,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: mp = NULL\n"
-operator|,
-name|__func__
-operator|)
+literal|"mp = NULL\n"
 argument_list|)
 expr_stmt|;
 name|fp
@@ -20315,29 +19741,24 @@ name|QL_DPRINT3
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
 literal|"CQE type = %x, flags = %x, vlan = %x,"
 literal|" len %u, parsing flags = %d pad  = %d\n"
-operator|,
+argument_list|,
 name|cqe_type
-operator|,
+argument_list|,
 name|fp_cqe
 operator|->
 name|bitfields
-operator|,
+argument_list|,
 name|le16toh
 argument_list|(
 name|fp_cqe
 operator|->
 name|vlan_tag
 argument_list|)
-operator|,
+argument_list|,
 name|len
-operator|,
+argument_list|,
 name|le16toh
 argument_list|(
 name|fp_cqe
@@ -20346,9 +19767,8 @@ name|pars_flags
 operator|.
 name|flags
 argument_list|)
-operator|,
+argument_list|,
 name|pad
-operator|)
 argument_list|)
 expr_stmt|;
 name|data
@@ -20406,16 +19826,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
 literal|"CQE in CONS = %u has error, flags = %x,"
 literal|" dropping incoming packet\n"
-operator|,
+argument_list|,
 name|sw_comp_cons
-operator|,
+argument_list|,
 name|le16toh
 argument_list|(
 name|cqe
@@ -20426,7 +19841,6 @@ name|pars_flags
 operator|.
 name|flags
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -20464,14 +19878,8 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
 literal|"New buffer allocation failed, dropping"
 literal|" incoming packet and reusing its buffer\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|qlnx_reuse_rx_data
@@ -20526,19 +19934,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: len = %d len_on_first_bd = %d\n"
-operator|,
-name|__func__
-operator|,
+literal|"len = %d len_on_first_bd = %d\n"
+argument_list|,
 name|len
-operator|,
+argument_list|,
 name|len_on_first_bd
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -21092,17 +20492,9 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: illegal interrupt[%d]\n"
-operator|,
-name|__func__
-operator|,
+literal|"illegal interrupt[%d]\n"
+argument_list|,
 name|idx
-operator|)
 argument_list|)
 expr_stmt|;
 name|ha
@@ -21129,23 +20521,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|QL_DPRINT1
-argument_list|(
-name|ha
-argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: fp_array[%d] NULL\n"
-operator|,
-name|__func__
-operator|,
-name|idx
-operator|)
-argument_list|)
-expr_stmt|;
 name|ha
 operator|->
 name|err_fp_null
@@ -21235,15 +20610,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 name|ecore_int_sp_dpc
@@ -21255,15 +20622,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: exit\n"
-operator|,
-name|__func__
-operator|)
+literal|"exit\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -21444,13 +20803,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: could not create dma tag\n"
-operator|,
-name|__func__
-operator|)
+literal|"could not create dma tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -21505,13 +20858,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: bus_dmamem_alloc failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"bus_dmamem_alloc failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -21815,49 +21162,7 @@ name|qlnx_dma_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|QL_DPRINT5
-argument_list|(
-name|ha
-argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: [%p %p %p %p 0x%08x ]\n"
-operator|,
-name|__func__
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|dma_buf
-operator|.
-name|dma_map
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|dma_buf
-operator|.
-name|dma_tag
-operator|,
-name|dma_buf
-operator|.
-name|dma_b
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|dma_buf
-operator|.
-name|dma_addr
-operator|,
-name|size
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* 	QL_DPRINT5(ha, "[%p %p %p %p 0x%08x ]\n", 		(void *)dma_buf.dma_map, (void *)dma_buf.dma_tag, 		dma_buf.dma_b, (void *)dma_buf.dma_addr, size); */
 return|return
 operator|(
 name|dma_buf
@@ -21956,49 +21261,7 @@ operator|+
 name|size
 operator|)
 expr_stmt|;
-name|QL_DPRINT5
-argument_list|(
-name|ha
-argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: [%p %p %p %p 0x%08x ]\n"
-operator|,
-name|__func__
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|dma_p
-operator|->
-name|dma_map
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|dma_p
-operator|->
-name|dma_tag
-operator|,
-name|dma_p
-operator|->
-name|dma_b
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|dma_p
-operator|->
-name|dma_addr
-operator|,
-name|size
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* 	QL_DPRINT5(ha, "[%p %p %p %p 0x%08x ]\n", 		(void *)dma_p->dma_map, (void *)dma_p->dma_tag, 		dma_p->dma_b, (void *)dma_p->dma_addr, size); */
 name|dma_buf
 operator|=
 operator|*
@@ -22110,13 +21373,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: could not create parent dma tag\n"
-operator|,
-name|__func__
-operator|)
+literal|"could not create parent dma tag\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -22245,15 +21502,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: tx_tag alloc failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"tx_tag alloc failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -22370,15 +21619,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: rx_tag alloc failed\n"
-operator|,
-name|__func__
-operator|)
+literal|" rx_tag alloc failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -22743,17 +21984,19 @@ block|{
 name|int
 name|reg
 decl_stmt|;
+name|qlnx_host_t
+modifier|*
+name|ha
+decl_stmt|;
+name|ha
+operator|=
+name|ecore_dev
+expr_stmt|;
 if|if
 condition|(
 name|pci_find_cap
 argument_list|(
-operator|(
-operator|(
-name|qlnx_host_t
-operator|*
-operator|)
-name|ecore_dev
-operator|)
+name|ha
 operator|->
 name|pci_dev
 argument_list|,
@@ -22772,29 +22015,9 @@ else|else
 block|{
 name|QL_DPRINT1
 argument_list|(
-operator|(
-operator|(
-name|qlnx_host_t
-operator|*
-operator|)
-name|ecore_dev
-operator|)
+name|ha
 argument_list|,
-operator|(
-operator|(
-operator|(
-name|qlnx_host_t
-operator|*
-operator|)
-name|ecore_dev
-operator|)
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -24560,20 +23783,13 @@ name|struct
 name|ecore_eth_stats
 name|eth_stats
 decl_stmt|;
-name|device_t
-name|dev
-decl_stmt|;
-name|dev
-operator|=
-operator|(
-operator|(
 name|qlnx_host_t
-operator|*
-operator|)
+modifier|*
+name|ha
+decl_stmt|;
+name|ha
+operator|=
 name|cdev
-operator|)
-operator|->
-name|pci_dev
 expr_stmt|;
 name|stats
 operator|=
@@ -24639,36 +23855,18 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-operator|(
-name|qlnx_host_t
-operator|*
-operator|)
-name|cdev
-operator|)
+name|ha
 operator|->
 name|err_get_proto_invalid_type
 operator|++
 expr_stmt|;
 name|QL_DPRINT1
 argument_list|(
-operator|(
-operator|(
-name|qlnx_host_t
-operator|*
-operator|)
-name|cdev
-operator|)
+name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: invalid protocol type 0x%x\n"
-operator|,
-name|__func__
-operator|,
+literal|"invalid protocol type 0x%x\n"
+argument_list|,
 name|type
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -24731,15 +23929,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : ecore_ptt_acquire failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"ecore_ptt_acquire failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -24829,15 +24019,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : ecore_ptt_acquire failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"ecore_ptt_acquire failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -25407,40 +24589,25 @@ operator|)
 name|cdev
 operator|)
 argument_list|,
-operator|(
-operator|(
-operator|(
-name|qlnx_host_t
-operator|*
-operator|)
-name|cdev
-operator|)
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: hwfn_index = %d p_hwfn = %p sb_id = 0x%x rel_sb_id = 0x%x "
-literal|"sb_info = %p sb_virt_addr = %p sb_phy_addr = %p\n"
-operator|,
-name|__func__
-operator|,
+literal|"hwfn_index = %d p_hwfn = %p sb_id = 0x%x rel_sb_id = 0x%x \                 sb_info = %p sb_virt_addr = %p sb_phy_addr = %p\n"
+argument_list|,
 name|hwfn_index
-operator|,
+argument_list|,
 name|p_hwfn
-operator|,
+argument_list|,
 name|sb_id
-operator|,
+argument_list|,
 name|rel_sb_id
-operator|,
+argument_list|,
 name|sb_info
-operator|,
+argument_list|,
 name|sb_virt_addr
-operator|,
+argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
 name|sb_phy_addr
-operator|)
 argument_list|)
 expr_stmt|;
 name|rc
@@ -25548,15 +24715,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Status block allocation failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"Status block allocation failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -25584,21 +24743,6 @@ condition|(
 name|rc
 condition|)
 block|{
-name|QL_DPRINT1
-argument_list|(
-name|ha
-argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: failed\n"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 name|OSAL_DMA_FREE_COHERENT
 argument_list|(
 name|cdev
@@ -26046,15 +25190,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : Failed to allocate Rx data\n"
-operator|,
-name|__func__
-operator|)
+literal|"Failed to allocate Rx data\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -26133,17 +25269,10 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: bus_dmamap_load failed[%d, 0x%016llx, %d]\n"
-operator|,
-name|__func__
-operator|,
+literal|"bus_dmamap_load failed[%d, 0x%016llx, %d]\n"
+argument_list|,
 name|ret
-operator|,
+argument_list|,
 operator|(
 name|long
 name|long
@@ -26151,9 +25280,8 @@ name|unsigned
 name|int
 operator|)
 name|dma_addr
-operator|,
+argument_list|,
 name|nsegs
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -26340,15 +25468,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : Failed to allocate Rx data\n"
-operator|,
-name|__func__
-operator|)
+literal|"Failed to allocate Rx data\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -26427,17 +25547,10 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: bus_dmamap_load failed[%d, 0x%016llx, %d]\n"
-operator|,
-name|__func__
-operator|,
+literal|"bus_dmamap_load failed[%d, 0x%016llx, %d]\n"
+argument_list|,
 name|ret
-operator|,
+argument_list|,
 operator|(
 name|long
 name|long
@@ -26445,9 +25558,8 @@ name|unsigned
 name|int
 operator|)
 name|dma_addr
-operator|,
+argument_list|,
 name|nsegs
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -26850,15 +25962,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Rx buffers allocation failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"Rx buffers allocation failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -26879,18 +25983,10 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Allocated less buffers than"
+literal|"Allocated less buffers than"
 literal|" desired (%d allocated)\n"
-operator|,
-name|__func__
-operator|,
+argument_list|,
 name|num_allocated
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -26942,19 +26038,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: tcp_lro_init[%d] failed\n"
-operator|,
-name|__func__
-operator|,
+literal|"tcp_lro_init[%d] failed\n"
+argument_list|,
 name|rxq
 operator|->
 name|rxq_id
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -26975,19 +26063,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: tcp_lro_init[%d] failed\n"
-operator|,
-name|__func__
-operator|,
+literal|"tcp_lro_init[%d] failed\n"
+argument_list|,
 name|rxq
 operator|->
 name|rxq_id
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -27534,22 +26614,15 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"buf_ring_alloc failed for "
-literal|" fp[%d, %d]\n"
-operator|,
+literal|"buf_ring_alloc failed for fp[%d, %d]\n"
+argument_list|,
 name|ha
 operator|->
 name|dev_unit
-operator|,
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -28026,17 +27099,11 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: setting mtu to %d\n"
-operator|,
-name|__func__
-operator|,
+literal|"Setting mtu to %d and VPORT ID = %d\n"
+argument_list|,
 name|mtu
-operator|)
+argument_list|,
+name|vport_id
 argument_list|)
 expr_stmt|;
 name|for_each_hwfn
@@ -28098,20 +27165,12 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Failed to start VPORT V-PORT %d "
-literal|"with MTU %d\n"
-operator|,
-name|__func__
-operator|,
+literal|"Failed to start VPORT V-PORT %d"
+literal|" with MTU %d\n"
+argument_list|,
 name|vport_id
-operator|,
+argument_list|,
 name|mtu
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -28128,19 +27187,11 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Started V-PORT %d with MTU %d\n"
-operator|,
-name|__func__
-operator|,
+literal|"Started V-PORT %d with MTU %d\n"
+argument_list|,
 name|vport_id
-operator|,
+argument_list|,
 name|mtu
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -28283,6 +27334,14 @@ operator|->
 name|sge_tpa_params
 expr_stmt|;
 comment|/* RSS - is a bit tricky, since upper-layer isn't familiar with hwfns.          * We need to re-fix the rss values per engine for CMT.          */
+if|if
+condition|(
+name|params
+operator|->
+name|rss_params
+operator|->
+name|update_rss_config
+condition|)
 name|sp_params
 operator|.
 name|rss_params
@@ -28290,6 +27349,13 @@ operator|=
 name|params
 operator|->
 name|rss_params
+expr_stmt|;
+else|else
+name|sp_params
+operator|.
+name|rss_params
+operator|=
+name|NULL
 expr_stmt|;
 name|for_each_hwfn
 argument_list|(
@@ -28409,20 +27475,15 @@ name|QL_DPRINT3
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
 literal|"%p %p %p %p %p %p %p %p \n"
-operator|,
+argument_list|,
 name|rss
 operator|->
 name|rss_ind_table
 index|[
 name|j
 index|]
-operator|,
+argument_list|,
 name|rss
 operator|->
 name|rss_ind_table
@@ -28431,7 +27492,7 @@ name|j
 operator|+
 literal|1
 index|]
-operator|,
+argument_list|,
 name|rss
 operator|->
 name|rss_ind_table
@@ -28440,7 +27501,7 @@ name|j
 operator|+
 literal|2
 index|]
-operator|,
+argument_list|,
 name|rss
 operator|->
 name|rss_ind_table
@@ -28449,7 +27510,7 @@ name|j
 operator|+
 literal|3
 index|]
-operator|,
+argument_list|,
 name|rss
 operator|->
 name|rss_ind_table
@@ -28458,7 +27519,7 @@ name|j
 operator|+
 literal|4
 index|]
-operator|,
+argument_list|,
 name|rss
 operator|->
 name|rss_ind_table
@@ -28467,7 +27528,7 @@ name|j
 operator|+
 literal|5
 index|]
-operator|,
+argument_list|,
 name|rss
 operator|->
 name|rss_ind_table
@@ -28476,7 +27537,7 @@ name|j
 operator|+
 literal|6
 index|]
-operator|,
+argument_list|,
 name|rss
 operator|->
 name|rss_ind_table
@@ -28485,7 +27546,6 @@ name|j
 operator|+
 literal|7
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 name|j
@@ -28503,6 +27563,17 @@ operator|->
 name|hw_info
 operator|.
 name|opaque_fid
+expr_stmt|;
+name|QL_DPRINT1
+argument_list|(
+name|ha
+argument_list|,
+literal|"Update sp vport ID=%d\n"
+argument_list|,
+name|params
+operator|->
+name|vport_id
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -28527,15 +27598,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s:Failed to update VPORT\n"
-operator|,
-name|__func__
-operator|)
+literal|"Failed to update VPORT\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -28546,36 +27609,27 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Updated V-PORT %d: tx_active_flag %d,"
-literal|"rx_active_flag %d [tx_update %d], [rx_update %d]\n"
-operator|,
-name|__func__
-operator|,
+literal|"Updated V-PORT %d: tx_active_flag %d, \ 			rx_active_flag %d [tx_update %d], [rx_update %d]\n"
+argument_list|,
 name|params
 operator|->
 name|vport_id
-operator|,
+argument_list|,
 name|params
 operator|->
 name|vport_active_tx_flg
-operator|,
+argument_list|,
 name|params
 operator|->
 name|vport_active_rx_flg
-operator|,
+argument_list|,
 name|params
 operator|->
 name|update_vport_active_tx_flg
-operator|,
+argument_list|,
 name|params
 operator|->
 name|update_vport_active_rx_flg
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -29141,6 +28195,17 @@ name|ha
 operator|->
 name|ifp
 expr_stmt|;
+name|QL_DPRINT1
+argument_list|(
+name|ha
+argument_list|,
+literal|"Num RSS = %d\n"
+argument_list|,
+name|ha
+operator|->
+name|num_rss
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -29153,16 +28218,8 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Cannot update V-VPORT as active as there"
+literal|"Cannot update V-VPORT as active as there"
 literal|" are no Rx queues\n"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -29214,17 +28271,9 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Start V-PORT failed %d\n"
-operator|,
-name|__func__
-operator|,
+literal|"Start V-PORT failed %d\n"
+argument_list|,
 name|rc
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -29235,18 +28284,11 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Start vport ramrod passed,"
-literal|" vport_id = %d, MTU = %d, vlan_removal_en = %d\n"
-operator|,
-name|__func__
-operator|,
+literal|"Start vport ramrod passed, "
+literal|"vport_id = %d, MTU = %d, vlan_removal_en = %d\n"
+argument_list|,
 name|vport_id
-operator|,
+argument_list|,
 call|(
 name|int
 call|)
@@ -29257,9 +28299,8 @@ name|if_mtu
 operator|+
 literal|0xe
 argument_list|)
-operator|,
+argument_list|,
 name|vlan_removal_en
-operator|)
 argument_list|)
 expr_stmt|;
 name|for_each_rss
@@ -29425,19 +28466,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Start RXQ #%d failed %d\n"
-operator|,
-name|__func__
-operator|,
+literal|"Start RXQ #%d failed %d\n"
+argument_list|,
 name|i
-operator|,
+argument_list|,
 name|rc
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -29631,21 +28664,13 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Start TXQ #%d failed %d\n"
-operator|,
-name|__func__
-operator|,
+literal|"Start TXQ #%d failed %d\n"
+argument_list|,
 name|txq
 operator|->
 name|index
-operator|,
+argument_list|,
 name|rc
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -30086,17 +29111,9 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Update V-PORT failed %d\n"
-operator|,
-name|__func__
-operator|,
+literal|"Update V-PORT failed %d\n"
+argument_list|,
 name|rc
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -30139,15 +29156,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 name|hw_bd_cons
@@ -30227,23 +29236,15 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s[%d, %d]: done\n"
-operator|,
-name|__func__
-operator|,
+literal|"[%d, %d]: done\n"
+argument_list|,
 name|fp
 operator|->
 name|rss_id
-operator|,
+argument_list|,
 name|txq
 operator|->
 name|index
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -30371,6 +29372,17 @@ name|inner_vlan_removal_flg
 operator|=
 literal|0
 expr_stmt|;
+name|QL_DPRINT1
+argument_list|(
+name|ha
+argument_list|,
+literal|"Update vport ID= %d\n"
+argument_list|,
+name|vport_update_params
+operator|.
+name|vport_id
+argument_list|)
+expr_stmt|;
 name|rc
 operator|=
 name|qlnx_update_vport
@@ -30390,15 +29402,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s:Failed to update vport\n"
-operator|,
-name|__func__
-operator|)
+literal|"Failed to update vport\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -30572,17 +29576,9 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Failed to stop TXQ #%d\n"
-operator|,
-name|__func__
-operator|,
+literal|"Failed to stop TXQ #%d\n"
+argument_list|,
 name|tx_queue_id
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -30617,17 +29613,9 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Failed to stop RXQ #%d\n"
-operator|,
-name|__func__
-operator|,
+literal|"Failed to stop RXQ #%d\n"
+argument_list|,
 name|i
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -30680,15 +29668,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: Failed to stop VPORT\n"
-operator|,
-name|__func__
-operator|)
+literal|"Failed to stop VPORT\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -31875,13 +30855,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+literal|"enter\n"
 argument_list|)
 expr_stmt|;
 name|rc
@@ -31921,21 +30895,15 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: Allocated %d RSS queues on %d TC/s\n"
-operator|,
-name|__func__
-operator|,
+literal|"Allocated %d RSS queues on %d TC/s\n"
+argument_list|,
 name|ha
 operator|->
 name|num_rss
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|num_tc
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -32007,11 +30975,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
 literal|"could not setup interrupt\n"
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -32022,16 +30986,10 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: rss_id = %d irq_rid %d"
-literal|" irq %p handle %p\n"
-operator|,
-name|__func__
-operator|,
+literal|"rss_id = %d irq_rid %d \ 			 irq %p handle %p\n"
+argument_list|,
 name|i
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|irq_vec
@@ -32040,7 +30998,7 @@ name|i
 index|]
 operator|.
 name|irq_rid
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|irq_vec
@@ -32049,7 +31007,7 @@ name|i
 index|]
 operator|.
 name|irq
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|irq_vec
@@ -32058,7 +31016,6 @@ name|i
 index|]
 operator|.
 name|handle
-operator|)
 argument_list|)
 expr_stmt|;
 name|bus_bind_intr
@@ -32100,13 +31057,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: Start VPORT, RXQ and TXQ succeeded\n"
-operator|,
-name|__func__
-operator|)
+literal|"Start VPORT, RXQ and TXQ succeeded\n"
 argument_list|)
 expr_stmt|;
 comment|/* Add primary mac and set Rx filters */
@@ -32198,17 +31149,9 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: exit [%d]\n"
-operator|,
-name|__func__
-operator|,
+literal|"exit [%d]\n"
+argument_list|,
 name|rc
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -32412,15 +31355,18 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
+literal|"enter\n"
+argument_list|)
+expr_stmt|;
+name|QL_DPRINT1
+argument_list|(
+name|ha
+argument_list|,
+literal|" QLNX STATE = %d\n"
+argument_list|,
 name|ha
 operator|->
-name|pci_dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
+name|state
 argument_list|)
 expr_stmt|;
 if|if
@@ -32570,15 +31516,7 @@ name|QL_DPRINT2
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: exit\n"
-operator|,
-name|__func__
-operator|)
+literal|"exit\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -32653,15 +31591,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: ecore_ptt_acquire failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"ecore_ptt_acquire failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -32697,17 +31627,10 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : ecore_dbg_grc_get_dump_buf_size failed [0x%x]\n"
-operator|,
-name|__func__
-operator|,
+literal|"ecore_dbg_grc_get_dump_buf_size failed"
+literal|"[0x%x]\n"
+argument_list|,
 name|rval
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -32794,15 +31717,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: ecore_ptt_acquire failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"ecore_ptt_acquire failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -32838,18 +31753,10 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : "
-literal|"ecore_dbg_idle_chk_get_dump_buf_size failed [0x%x]\n"
-operator|,
-name|__func__
-operator|,
+literal|"ecore_dbg_idle_chk_get_dump_buf_size failed"
+literal|" [0x%x]\n"
+argument_list|,
 name|rval
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
