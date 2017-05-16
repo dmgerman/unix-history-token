@@ -256,6 +256,21 @@ modifier|&
 name|Sled
 parameter_list|)
 function_decl|;
+name|bool
+name|patchCustomEvent
+parameter_list|(
+name|bool
+name|Enable
+parameter_list|,
+name|uint32_t
+name|FuncId
+parameter_list|,
+specifier|const
+name|XRaySledEntry
+modifier|&
+name|Sled
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -287,6 +302,11 @@ function_decl|;
 specifier|extern
 name|void
 name|__xray_ArgLoggerEntry
+parameter_list|()
+function_decl|;
+specifier|extern
+name|void
+name|__xray_CustomEvent
 parameter_list|()
 function_decl|;
 block|}

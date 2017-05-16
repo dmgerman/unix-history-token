@@ -44,7 +44,7 @@ file|"../fp_lib.h"
 end_include
 
 begin_function_decl
-name|COMPILER_RT_ABI
+name|AEABI_RTABI
 name|fp_t
 name|__aeabi_fsub
 parameter_list|(
@@ -56,7 +56,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|COMPILER_RT_ABI
+name|AEABI_RTABI
 name|fp_t
 name|__aeabi_frsub
 parameter_list|(

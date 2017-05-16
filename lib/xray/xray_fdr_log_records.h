@@ -113,6 +113,8 @@ block|,
 name|TSCWrap
 block|,
 name|WalltimeMarker
+block|,
+name|CustomEventMarker
 block|,   }
 decl_stmt|;
 comment|// Use 7 bits to identify this record type.

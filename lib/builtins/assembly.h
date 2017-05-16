@@ -211,12 +211,18 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__ANDROID__
+name|__FreeBSD__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|__Fuchsia__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__linux__
 argument_list|)
 end_if
 

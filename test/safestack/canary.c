@@ -12,7 +12,11 @@ comment|// RUN: %clang_safestack -fstack-protector-all -D_FORTIFY_SOURCE=0 -g %s
 end_comment
 
 begin_comment
-comment|// RUN: not --crash %run %t.ssp 2>&1 | FileCheck -check-prefix=SSP %s
+comment|// RUN: env LIBC_FATAL_STDERR_=1 not --crash %run %t.ssp 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:     FileCheck -check-prefix=SSP %s
 end_comment
 
 begin_comment
