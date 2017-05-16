@@ -296,7 +296,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|xo_ssize_t
 name|formatter
 parameter_list|(
 name|xo_handle_t
@@ -307,7 +307,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|xo_ssize_t
 name|bufsiz
 parameter_list|,
 specifier|const
