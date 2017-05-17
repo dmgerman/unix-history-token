@@ -2449,6 +2449,11 @@ operator|)
 return|;
 name|out_fail
 label|:
+name|E6000SW_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|e6000sw_detach
 argument_list|(
 name|dev
