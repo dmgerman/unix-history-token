@@ -2847,6 +2847,11 @@ modifier|*
 name|iscsi_ulp_softc
 decl_stmt|;
 comment|/* (struct cxgbei_data *) */
+name|void
+modifier|*
+name|ccr_softc
+decl_stmt|;
+comment|/* (struct ccr_softc *) */
 name|struct
 name|l2t_data
 modifier|*
