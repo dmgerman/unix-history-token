@@ -2699,12 +2699,13 @@ function_decl|;
 comment|/// \brief Returns true if the file contents have been overridden.
 name|bool
 name|isFileOverridden
-parameter_list|(
+argument_list|(
 specifier|const
 name|FileEntry
-modifier|*
+operator|*
 name|File
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 if|if
 condition|(

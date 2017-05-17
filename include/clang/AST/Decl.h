@@ -1172,43 +1172,6 @@ name|Decl
 operator|::
 name|setModulePrivate
 block|;
-comment|/// \brief Determine whether this declaration is hidden from name lookup.
-name|bool
-name|isHidden
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Hidden
-return|;
-block|}
-comment|/// \brief Set whether this declaration is hidden from name lookup.
-name|void
-name|setHidden
-argument_list|(
-argument|bool Hide
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-operator|!
-name|Hide
-operator|||
-name|isFromASTFile
-argument_list|()
-operator|||
-name|hasLocalOwningModuleStorage
-argument_list|()
-operator|)
-operator|&&
-literal|"declaration with no owning module can't be hidden"
-argument_list|)
-block|;
-name|Hidden
-operator|=
-name|Hide
-block|;   }
 comment|/// \brief Determine whether this declaration is a C++ class member.
 name|bool
 name|isCXXClassMember

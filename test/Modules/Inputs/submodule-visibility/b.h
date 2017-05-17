@@ -34,11 +34,11 @@ name|ALLOW_NAME_LEAKAGE
 argument_list|)
 end_if
 
-begin_error
-error|#
-directive|error
-error|A is defined
-end_error
+begin_warning
+warning|#
+directive|warning
+warning|A is defined
+end_warning
 
 begin_endif
 endif|#
@@ -50,6 +50,27 @@ define|#
 directive|define
 name|B
 end_define
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|void
+name|b_template
+argument_list|()
+block|{
+name|N
+operator|::
+name|C
+operator|::
+name|f
+argument_list|(
+literal|0
+argument_list|)
+block|; }
+end_expr_stmt
 
 end_unit
 
