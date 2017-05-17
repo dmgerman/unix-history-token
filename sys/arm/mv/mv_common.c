@@ -719,6 +719,16 @@ name|decode_win_usb_dump
 block|}
 block|,
 block|{
+literal|"marvell,orion-ehci"
+block|,
+operator|&
+name|decode_win_usb_setup
+block|,
+operator|&
+name|decode_win_usb_dump
+block|}
+block|,
+block|{
 literal|"marvell,armada-380-xhci"
 block|,
 operator|&
