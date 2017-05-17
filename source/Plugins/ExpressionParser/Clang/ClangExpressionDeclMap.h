@@ -917,42 +917,6 @@ name|this
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Given a target, find a data symbol that has the given name.
-comment|///
-comment|/// @param[in] target
-comment|///     The target to use as the basis for the search.
-comment|///
-comment|/// @param[in] name
-comment|///     The name as a plain C string.
-comment|///
-comment|/// @param[in] module
-comment|///     The module to limit the search to. This can be NULL
-comment|///
-comment|/// @return
-comment|///     The LLDB Symbol found, or NULL if none was found.
-comment|//------------------------------------------------------------------
-specifier|const
-name|Symbol
-operator|*
-name|FindGlobalDataSymbol
-argument_list|(
-name|Target
-operator|&
-name|target
-argument_list|,
-specifier|const
-name|ConstString
-operator|&
-name|name
-argument_list|,
-name|Module
-operator|*
-name|module
-operator|=
-name|NULL
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
 comment|/// Given a target, find a variable that matches the given name and
 comment|/// type.
 comment|///
