@@ -160,20 +160,18 @@ block|}
 empty_stmt|;
 comment|// For a Relocation to symbol S create a Thunk to be added to a synthetic
 comment|// ThunkSection. At present there are implementations for ARM and Mips Thunks.
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|Thunk
-operator|*
+modifier|*
 name|addThunk
-argument_list|(
-argument|uint32_t RelocType
-argument_list|,
-argument|SymbolBody&S
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|uint32_t
+name|RelocType
+parameter_list|,
+name|SymbolBody
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
 block|}
 comment|// namespace elf
 block|}

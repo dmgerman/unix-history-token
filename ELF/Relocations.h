@@ -367,11 +367,6 @@ block|;
 name|class
 name|Thunk
 block|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|ThunkCreator
 block|{
