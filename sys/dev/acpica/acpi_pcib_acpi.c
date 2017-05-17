@@ -2358,6 +2358,11 @@ name|bus0_seen
 operator|=
 literal|1
 expr_stmt|;
+name|bus_generic_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|acpi_pcib_attach
