@@ -770,6 +770,11 @@ argument_list|,
 name|nbytes
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|trackbuf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EX_OK
@@ -967,6 +972,11 @@ argument_list|(
 literal|"non-IO error"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|trackbuf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EX_OSERR
@@ -1066,6 +1076,11 @@ argument_list|(
 literal|'\n'
 argument_list|,
 name|stderr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|trackbuf
 argument_list|)
 expr_stmt|;
 return|return
@@ -1292,6 +1307,11 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+name|free
+argument_list|(
+name|trackbuf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
