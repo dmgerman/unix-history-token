@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/ADT/SparseBitVector.h - Efficient Sparse BitVector -*- C++ -*- ===//
+comment|//===- llvm/ADT/SparseBitVector.h - Efficient Sparse BitVector --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -139,19 +139,20 @@ name|SparseBitVectorElement
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|BitWord
+operator|=
 name|unsigned
 name|long
-name|BitWord
-typedef|;
-typedef|typedef
-name|unsigned
+block|;
+name|using
 name|size_type
-typedef|;
-enum|enum
+operator|=
+name|unsigned
+block|;   enum
 block|{
 name|BITWORD_SIZE
-init|=
+operator|=
 sizeof|sizeof
 argument_list|(
 name|BitWord
@@ -160,7 +161,7 @@ operator|*
 name|CHAR_BIT
 block|,
 name|BITWORDS_PER_ELEMENT
-init|=
+operator|=
 operator|(
 name|ElementSize
 operator|+
@@ -172,22 +173,22 @@ operator|/
 name|BITWORD_SIZE
 block|,
 name|BITS_PER_ELEMENT
-init|=
+operator|=
 name|ElementSize
 block|}
-enum|;
+block|;
 name|private
-label|:
+operator|:
 comment|// Index of Element in terms of where first bit starts.
 name|unsigned
 name|ElementIndex
-decl_stmt|;
+block|;
 name|BitWord
 name|Bits
 index|[
 name|BITWORDS_PER_ELEMENT
 index|]
-decl_stmt|;
+block|;
 name|SparseBitVectorElement
 argument_list|()
 block|{
@@ -195,7 +196,7 @@ name|ElementIndex
 operator|=
 operator|~
 literal|0U
-expr_stmt|;
+block|;
 name|memset
 argument_list|(
 operator|&
@@ -213,21 +214,19 @@ argument_list|)
 operator|*
 name|BITWORDS_PER_ELEMENT
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|public
-label|:
+operator|:
 name|explicit
 name|SparseBitVectorElement
-parameter_list|(
-name|unsigned
-name|Idx
-parameter_list|)
+argument_list|(
+argument|unsigned Idx
+argument_list|)
 block|{
 name|ElementIndex
 operator|=
 name|Idx
-expr_stmt|;
+block|;
 name|memset
 argument_list|(
 operator|&
@@ -245,8 +244,7 @@ argument_list|)
 operator|*
 name|BITWORDS_PER_ELEMENT
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|// Comparison.
 name|bool
 name|operator
@@ -1338,7 +1336,9 @@ operator|>
 name|class
 name|SparseBitVector
 block|{
-typedef|typedef
+name|using
+name|ElementList
+operator|=
 name|std
 operator|::
 name|list
@@ -1347,35 +1347,26 @@ name|SparseBitVectorElement
 operator|<
 name|ElementSize
 operator|>>
-name|ElementList
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|ElementListIter
+operator|=
 name|typename
 name|ElementList
 operator|::
 name|iterator
-name|ElementListIter
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|ElementListConstIter
+operator|=
 name|typename
 name|ElementList
 operator|::
 name|const_iterator
-name|ElementListConstIter
-expr_stmt|;
-end_typedef
-
-begin_enum
-enum|enum
+block|;   enum
 block|{
 name|BITWORD_SIZE
-init|=
+operator|=
 name|SparseBitVectorElement
 operator|<
 name|ElementSize
@@ -1383,40 +1374,21 @@ operator|>
 operator|::
 name|BITWORD_SIZE
 block|}
-enum|;
-end_enum
-
-begin_comment
+block|;
 comment|// Pointer to our current Element.
-end_comment
-
-begin_decl_stmt
 name|ElementListIter
 name|CurrElementIter
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|ElementList
 name|Elements
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// This is like std::lower_bound, except we do linear searching from the
-end_comment
-
-begin_comment
 comment|// current position.
-end_comment
-
-begin_function
 name|ElementListIter
 name|FindLowerBound
-parameter_list|(
-name|unsigned
-name|ElementIndex
-parameter_list|)
+argument_list|(
+argument|unsigned ElementIndex
+argument_list|)
 block|{
 if|if
 condition|(
@@ -1457,9 +1429,12 @@ comment|// Search from our current iterator, either backwards or forwards,
 comment|// depending on what element we are looking for.
 name|ElementListIter
 name|ElementIter
-init|=
+operator|=
 name|CurrElementIter
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|CurrElementIter
@@ -1527,17 +1502,23 @@ operator|++
 name|ElementIter
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 name|CurrElementIter
 operator|=
 name|ElementIter
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|ElementIter
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|// Iterator to walk set bits in the bitmap.  This iterator is a lot uglier
 end_comment
 
@@ -1545,9 +1526,12 @@ begin_comment
 comment|// than it would be, in order to be efficient.
 end_comment
 
-begin_decl_stmt
-name|class
+begin_macro
+unit|class
 name|SparseBitVectorIterator
+end_macro
+
+begin_block
 block|{
 name|private
 label|:
@@ -1998,7 +1982,7 @@ operator|==
 name|BitNumber
 return|;
 block|}
-end_decl_stmt
+end_block
 
 begin_expr_stmt
 name|bool
@@ -2030,12 +2014,13 @@ name|public
 label|:
 end_label
 
-begin_typedef
-typedef|typedef
-name|SparseBitVectorIterator
+begin_decl_stmt
+name|using
 name|iterator
-typedef|;
-end_typedef
+init|=
+name|SparseBitVectorIterator
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|SparseBitVector
@@ -2053,15 +2038,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
-
-begin_expr_stmt
-operator|~
-name|SparseBitVector
-argument_list|()
-operator|=
-expr|default
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|// SparseBitVector copy ctor.
@@ -2125,6 +2101,15 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
+
+begin_expr_stmt
+operator|~
+name|SparseBitVector
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// Clear.

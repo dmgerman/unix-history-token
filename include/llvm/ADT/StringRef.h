@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- StringRef.h - Constant String Reference Wrapper --------*- C++ -*-===//
+comment|//===- StringRef.h - Constant String Reference Wrapper ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstring>
 end_include
 
@@ -83,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<limits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
 end_include
 
 begin_include
@@ -101,6 +113,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|APInt
+decl_stmt|;
+name|class
+name|hash_code
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -109,12 +127,6 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
-name|class
-name|APInt
-decl_stmt|;
-name|class
-name|hash_code
-decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
@@ -195,18 +207,6 @@ name|StringRef
 block|{
 name|public
 label|:
-typedef|typedef
-specifier|const
-name|char
-modifier|*
-name|iterator
-typedef|;
-typedef|typedef
-specifier|const
-name|char
-modifier|*
-name|const_iterator
-typedef|;
 specifier|static
 specifier|const
 name|size_t
@@ -218,10 +218,25 @@ argument_list|(
 literal|0
 argument_list|)
 decl_stmt|;
-typedef|typedef
-name|size_t
+name|using
+name|iterator
+init|=
+specifier|const
+name|char
+operator|*
+decl_stmt|;
+name|using
+name|const_iterator
+init|=
+specifier|const
+name|char
+operator|*
+decl_stmt|;
+name|using
 name|size_type
-typedef|;
+init|=
+name|size_t
+decl_stmt|;
 name|private
 label|:
 comment|/// The start of the string, in an external buffer.
@@ -4321,11 +4336,19 @@ block|; }
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_STRINGREF_H
+end_comment
 
 end_unit
 

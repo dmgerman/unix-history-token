@@ -160,11 +160,11 @@ operator|::
 name|Form
 name|Form
 expr_stmt|;
-comment|// Form for this value.
+comment|/// Form for this value.
 name|ValueType
 name|Value
 decl_stmt|;
-comment|// Contains all data for the form.
+comment|/// Contains all data for the form.
 specifier|const
 name|DWARFUnit
 modifier|*
@@ -172,7 +172,7 @@ name|U
 init|=
 name|nullptr
 decl_stmt|;
-comment|// Remember the DWARFUnit at extract time.
+comment|/// Remember the DWARFUnit at extract time.
 name|public
 label|:
 name|DWARFFormValue
@@ -325,11 +325,14 @@ name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief extracts a value in data at offset *offset_ptr.
+comment|/// Extracts a value in \p Data at offset \p *OffsetPtr.
 comment|///
 comment|/// The passed DWARFUnit is allowed to be nullptr, in which
 comment|/// case no relocation processing will be performed and some
 comment|/// kind of forms that depend on Unit information are disallowed.
+comment|/// \param Data The DataExtractor to use.
+comment|/// \param OffsetPtr The offset within DataExtractor where the data starts.
+comment|/// \param U The optional DWARFUnit supplying information for some forms.
 comment|/// \returns whether the extraction succeeded.
 name|bool
 name|extractValue

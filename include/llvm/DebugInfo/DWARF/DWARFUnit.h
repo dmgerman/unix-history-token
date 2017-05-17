@@ -640,7 +640,7 @@ name|DWARFContext
 modifier|&
 name|Context
 decl_stmt|;
-comment|// Section containing this DWARFUnit.
+comment|/// Section containing this DWARFUnit.
 specifier|const
 name|DWARFSection
 modifier|&
@@ -708,7 +708,7 @@ decl_stmt|;
 name|uint64_t
 name|BaseAddr
 decl_stmt|;
-comment|// The compile unit debug information entry items.
+comment|/// The compile unit debug information entry items.
 name|std
 operator|::
 name|vector
@@ -717,9 +717,9 @@ name|DWARFDebugInfoEntry
 operator|>
 name|DieArray
 expr_stmt|;
-comment|// Map from range's start address to end address and corresponding DIE.
-comment|// IntervalMap does not support range removal, as a result, we use the
-comment|// std::map::upper_bound for address range lookup.
+comment|/// Map from range's start address to end address and corresponding DIE.
+comment|/// IntervalMap does not support range removal, as a result, we use the
+comment|/// std::map::upper_bound for address range lookup.
 name|std
 operator|::
 name|map
@@ -971,7 +971,7 @@ operator|=
 name|Base
 expr_stmt|;
 block|}
-comment|// Recursively update address to Die map.
+comment|/// Recursively update address to Die map.
 name|void
 name|updateAddressDieMap
 parameter_list|(

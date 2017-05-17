@@ -318,6 +318,76 @@ else|:
 literal|2
 return|;
 block|}
+comment|/// Predicate canonicalization reduces the number of patterns that need to be
+comment|/// matched by other transforms. For example, we may swap the operands of a
+comment|/// conditional branch or select to create a compare with a canonical (inverted)
+comment|/// predicate which is then more likely to be matched with other values.
+specifier|static
+specifier|inline
+name|bool
+name|isCanonicalPredicate
+argument_list|(
+name|CmpInst
+operator|::
+name|Predicate
+name|Pred
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|Pred
+condition|)
+block|{
+case|case
+name|CmpInst
+operator|::
+name|ICMP_NE
+case|:
+case|case
+name|CmpInst
+operator|::
+name|ICMP_ULE
+case|:
+case|case
+name|CmpInst
+operator|::
+name|ICMP_SLE
+case|:
+case|case
+name|CmpInst
+operator|::
+name|ICMP_UGE
+case|:
+case|case
+name|CmpInst
+operator|::
+name|ICMP_SGE
+case|:
+comment|// TODO: There are 16 FCMP predicates. Should others be (not) canonical?
+case|case
+name|CmpInst
+operator|::
+name|FCMP_ONE
+case|:
+case|case
+name|CmpInst
+operator|::
+name|FCMP_OLE
+case|:
+case|case
+name|CmpInst
+operator|::
+name|FCMP_OGE
+case|:
+return|return
+name|false
+return|;
+default|default:
+return|return
+name|true
+return|;
+block|}
+block|}
 comment|/// \brief Add one to a Constant
 specifier|static
 specifier|inline

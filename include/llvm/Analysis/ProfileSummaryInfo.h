@@ -215,6 +215,54 @@ argument_list|(
 argument|std::move(Arg.Summary)
 argument_list|)
 block|{}
+comment|/// \brief Returns true if profile summary is available.
+name|bool
+name|hasProfileSummary
+argument_list|()
+block|{
+return|return
+name|computeSummary
+argument_list|()
+return|;
+block|}
+comment|/// \brief Returns true if module \c M has sample profile.
+name|bool
+name|hasSampleProfile
+parameter_list|()
+block|{
+return|return
+name|hasProfileSummary
+argument_list|()
+operator|&&
+name|Summary
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|ProfileSummary
+operator|::
+name|PSK_Sample
+return|;
+block|}
+comment|/// \brief Returns true if module \c M has instrumentation profile.
+name|bool
+name|hasInstrumentationProfile
+parameter_list|()
+block|{
+return|return
+name|hasProfileSummary
+argument_list|()
+operator|&&
+name|Summary
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|ProfileSummary
+operator|::
+name|PSK_Instr
+return|;
+block|}
 comment|/// Handle the invalidation of this information.
 comment|///
 comment|/// When used as a result of \c ProfileSummaryAnalysis this method will be
@@ -224,11 +272,17 @@ comment|/// here.
 name|bool
 name|invalidate
 argument_list|(
-argument|Module&
+name|Module
+operator|&
 argument_list|,
-argument|const PreservedAnalyses&
+specifier|const
+name|PreservedAnalyses
+operator|&
 argument_list|,
-argument|ModuleAnalysisManager::Invalidator&
+name|ModuleAnalysisManager
+operator|::
+name|Invalidator
+operator|&
 argument_list|)
 block|{
 return|return
