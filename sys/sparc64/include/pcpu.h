@@ -91,6 +91,7 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
+specifier|register
 name|struct
 name|pcb
 modifier|*
@@ -106,6 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|struct
 name|pcpu
 modifier|*
