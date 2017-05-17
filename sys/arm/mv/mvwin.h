@@ -1000,7 +1000,7 @@ name|MV_WIN_USB3_CTRL
 parameter_list|(
 name|n
 parameter_list|)
-value|(0x8 * (n))
+value|(0x8 * (n) + 0x4000)
 end_define
 
 begin_define
@@ -1010,7 +1010,7 @@ name|MV_WIN_USB3_BASE
 parameter_list|(
 name|n
 parameter_list|)
-value|(0x8 * (n) + 0x4)
+value|(0x8 * (n) + 0x4004)
 end_define
 
 begin_define
