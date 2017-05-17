@@ -416,7 +416,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__AEABI__
+name|__ARM_EABI__
 argument_list|)
 end_if
 

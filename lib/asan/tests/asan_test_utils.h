@@ -146,6 +146,12 @@ directive|include
 file|<algorithm>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -166,12 +172,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
 end_include
 
 begin_endif
