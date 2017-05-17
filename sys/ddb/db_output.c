@@ -306,7 +306,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|last_print
 decl_stmt|,
@@ -1171,7 +1170,6 @@ name|struct
 name|dbputchar_arg
 name|dca
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

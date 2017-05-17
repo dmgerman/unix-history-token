@@ -5050,7 +5050,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -12050,7 +12049,6 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-specifier|register
 name|int
 name|prop
 decl_stmt|;
@@ -14509,7 +14507,6 @@ name|postsig
 parameter_list|(
 name|sig
 parameter_list|)
-specifier|register
 name|int
 name|sig
 decl_stmt|;

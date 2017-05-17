@@ -359,7 +359,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|register
 name|struct
 name|getpriority_args
 modifier|*
@@ -1634,7 +1633,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|register
 name|struct
 name|rtprio_args
 modifier|*
@@ -2381,7 +2379,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|register
 name|struct
 name|osetrlimit_args
 modifier|*
@@ -2500,7 +2497,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|register
 name|struct
 name|ogetrlimit_args
 modifier|*
@@ -2646,7 +2642,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|register
 name|struct
 name|__setrlimit_args
 modifier|*
@@ -2960,7 +2955,6 @@ decl_stmt|,
 modifier|*
 name|oldlim
 decl_stmt|;
-specifier|register
 name|struct
 name|rlimit
 modifier|*
@@ -3615,7 +3609,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|register
 name|struct
 name|__getrlimit_args
 modifier|*
@@ -4360,13 +4353,11 @@ begin_function
 name|int
 name|sys_getrusage
 parameter_list|(
-specifier|register
 name|struct
 name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|register
 name|struct
 name|getrusage_args
 modifier|*

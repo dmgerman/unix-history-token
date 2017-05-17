@@ -610,7 +610,6 @@ name|int
 name|n
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -619,7 +618,6 @@ decl_stmt|,
 modifier|*
 name|m1
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|,

@@ -1353,7 +1353,6 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|fifoinfo
 modifier|*

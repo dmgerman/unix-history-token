@@ -5876,7 +5876,6 @@ operator|->
 name|max_chain_length
 decl_stmt|;
 comment|/* max hash chain length */
-specifier|register
 name|Bytef
 modifier|*
 name|scan
@@ -5890,13 +5889,11 @@ operator|->
 name|strstart
 decl_stmt|;
 comment|/* current string */
-specifier|register
 name|Bytef
 modifier|*
 name|match
 decl_stmt|;
 comment|/* matched string */
-specifier|register
 name|int
 name|len
 decl_stmt|;
@@ -5966,7 +5963,6 @@ ifdef|#
 directive|ifdef
 name|UNALIGNED_OK
 comment|/* Compare two bytes at a time. Note: this is not always beneficial.      * Try with and without -DUNALIGNED_OK to check.      */
-specifier|register
 name|Bytef
 modifier|*
 name|strend
@@ -5983,7 +5979,6 @@ name|MAX_MATCH
 operator|-
 literal|1
 decl_stmt|;
-specifier|register
 name|ush
 name|scan_start
 init|=
@@ -5994,7 +5989,6 @@ operator|*
 operator|)
 name|scan
 decl_stmt|;
-specifier|register
 name|ush
 name|scan_end
 init|=
@@ -6013,7 +6007,6 @@ operator|)
 decl_stmt|;
 else|#
 directive|else
-specifier|register
 name|Bytef
 modifier|*
 name|strend
@@ -6028,7 +6021,6 @@ name|strstart
 operator|+
 name|MAX_MATCH
 decl_stmt|;
-specifier|register
 name|Byte
 name|scan_end1
 init|=
@@ -6039,7 +6031,6 @@ operator|-
 literal|1
 index|]
 decl_stmt|;
-specifier|register
 name|Byte
 name|scan_end
 init|=
@@ -6861,13 +6852,11 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|unsigned
 name|n
 decl_stmt|,
 name|m
 decl_stmt|;
-specifier|register
 name|Posf
 modifier|*
 name|p
@@ -14416,7 +14405,6 @@ name|len
 decl_stmt|;
 comment|/* its bit length */
 block|{
-specifier|register
 name|unsigned
 name|res
 init|=
@@ -20237,17 +20225,14 @@ name|int
 name|h
 decl_stmt|;
 comment|/* table level */
-specifier|register
 name|uInt
 name|i
 decl_stmt|;
 comment|/* counter, current code */
-specifier|register
 name|uInt
 name|j
 decl_stmt|;
 comment|/* counter */
-specifier|register
 name|int
 name|k
 decl_stmt|;
@@ -20256,7 +20241,6 @@ name|int
 name|l
 decl_stmt|;
 comment|/* bits per table (returned in m) */
-specifier|register
 name|uIntf
 modifier|*
 name|p
@@ -20287,7 +20271,6 @@ name|N_MAX
 index|]
 decl_stmt|;
 comment|/* values in order of bit length */
-specifier|register
 name|int
 name|w
 decl_stmt|;
@@ -22014,7 +21997,6 @@ decl_stmt|;
 comment|/* for zfree function */
 comment|/* Free the malloc'ed tables built by huft_build(), which makes a linked    list of the tables it made, with the links in a dummy first entry of    each table. */
 block|{
-specifier|register
 name|inflate_huft
 modifier|*
 name|p

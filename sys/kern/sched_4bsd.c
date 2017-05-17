@@ -1731,7 +1731,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|fixpt_t
 name|loadfac
 init|=

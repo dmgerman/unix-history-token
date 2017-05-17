@@ -913,7 +913,6 @@ name|uint32_t
 name|count
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|usb_m_copy_in_arg
 modifier|*

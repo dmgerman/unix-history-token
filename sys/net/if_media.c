@@ -327,7 +327,6 @@ modifier|*
 name|aux
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ifmedia_entry
 modifier|*

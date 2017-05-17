@@ -188,7 +188,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|register
 name|struct
 name|ibcs2_lseek_args
 modifier|*

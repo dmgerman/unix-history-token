@@ -2465,7 +2465,6 @@ modifier|*
 name|ivp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|next
 init|=
@@ -2948,7 +2947,6 @@ modifier|*
 name|ivp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|next
 init|=
@@ -3464,7 +3462,6 @@ modifier|*
 name|ivp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|next
 init|=
@@ -4303,7 +4300,6 @@ modifier|*
 name|ivp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|next
 init|=
@@ -5150,7 +5146,6 @@ modifier|*
 name|ivp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|next
 init|=
@@ -6022,7 +6017,6 @@ modifier|*
 name|ivp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|next
 init|=
@@ -6902,7 +6896,6 @@ modifier|*
 name|ivp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|next
 init|=
@@ -7968,7 +7961,6 @@ modifier|*
 name|ivp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|next
 init|=
@@ -9042,7 +9034,6 @@ modifier|*
 name|ivp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|next
 init|=
@@ -10164,7 +10155,6 @@ modifier|*
 name|ivp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|next
 init|=

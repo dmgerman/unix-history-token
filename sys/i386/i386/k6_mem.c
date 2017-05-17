@@ -213,7 +213,6 @@ name|wc
 decl_stmt|,
 name|uc
 decl_stmt|;
-specifier|register
 name|int
 name|bit
 decl_stmt|;

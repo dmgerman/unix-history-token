@@ -90,7 +90,7 @@ name|b
 parameter_list|,
 name|delta
 parameter_list|)
-value|{ \ 	register int	xxs;	\ 							\ 	delta = (a)->tv_usec - (b)->tv_usec; \ 	if ((xxs = (a)->tv_sec - (b)->tv_sec)) { \ 		switch (xxs) { \ 		default: \
+value|{ \ 	int	xxs;	\ 							\ 	delta = (a)->tv_usec - (b)->tv_usec; \ 	if ((xxs = (a)->tv_sec - (b)->tv_sec)) { \ 		switch (xxs) { \ 		default: \
 comment|/* if (xxs< 0) \ 				printf("rm_class: bogus time values\n"); */
 value|\ 			delta = 0; \
 comment|/* fall through */
@@ -107,7 +107,7 @@ name|delta
 parameter_list|,
 name|res
 parameter_list|)
-value|{ \ 	register int xxus = (a)->tv_usec + (delta); \ 	\ 	(res)->tv_sec = (a)->tv_sec; \ 	while (xxus>= 1000000) { \ 		++((res)->tv_sec); \ 		xxus -= 1000000; \ 	} \ 	(res)->tv_usec = xxus; \ }
+value|{ \ 	int xxus = (a)->tv_usec + (delta); \ 	\ 	(res)->tv_sec = (a)->tv_sec; \ 	while (xxus>= 1000000) { \ 		++((res)->tv_sec); \ 		xxus -= 1000000; \ 	} \ 	(res)->tv_usec = xxus; \ }
 define|#
 directive|define
 name|RM_TIMEOUT

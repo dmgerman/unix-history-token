@@ -121,11 +121,9 @@ name|u_char
 name|p
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|u_char
 name|c
 decl_stmt|;

@@ -195,7 +195,7 @@ parameter_list|,
 name|k
 parameter_list|)
 define|\
-value|{ \ 	register int len = m->m_len; \  \ 	while (k>= len) { \ 		k -= len; \ 		m = m->m_next; \ 		if (m == 0) \ 			return (0); \ 		len = m->m_len; \ 	} \ }
+value|{ \ 	int len = m->m_len; \  \ 	while (k>= len) { \ 		k -= len; \ 		m = m->m_next; \ 		if (m == 0) \ 			return (0); \ 		len = m->m_len; \ 	} \ }
 end_define
 
 begin_function_decl
@@ -1564,7 +1564,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|_KERNEL
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -2347,11 +2346,9 @@ name|int
 name|len
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 specifier|const
 name|struct
 name|bpf_insn
@@ -2433,7 +2430,6 @@ operator|==
 name|BPF_JMP
 condition|)
 block|{
-specifier|register
 name|u_int
 name|offset
 decl_stmt|;
