@@ -772,6 +772,11 @@ modifier|*
 name|if_addr
 decl_stmt|;
 comment|/* pointer to link-level address */
+name|void
+modifier|*
+name|if_hw_addr
+decl_stmt|;
+comment|/* hardware link-level address */
 specifier|const
 name|u_int8_t
 modifier|*
@@ -3122,6 +3127,20 @@ name|ifp
 parameter_list|,
 name|int
 name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|if_gethwaddr
+parameter_list|(
+name|if_t
+name|ifp
+parameter_list|,
+name|struct
+name|ifreq
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
