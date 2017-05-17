@@ -3897,7 +3897,11 @@ return|;
 block|}
 name|BLACKLIST_NOTIFY
 argument_list|(
-name|BLACKLIST_AUTH_FAIL
+name|BLACKLIST_BAD_USER
+argument_list|,
+name|sshpam_authctxt
+operator|->
+name|user
 argument_list|)
 expr_stmt|;
 name|error

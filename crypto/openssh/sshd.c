@@ -1516,6 +1516,8 @@ block|}
 name|BLACKLIST_NOTIFY
 argument_list|(
 name|BLACKLIST_AUTH_FAIL
+argument_list|,
+literal|"ssh"
 argument_list|)
 expr_stmt|;
 comment|/* Log error and exit. */

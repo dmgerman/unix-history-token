@@ -15,6 +15,12 @@ directive|define
 name|BLACKLIST_CLIENT_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BLACKLIST_API_ENUM
+end_ifndef
+
 begin_enum
 enum|enum
 block|{
@@ -23,9 +29,18 @@ init|=
 literal|0
 block|,
 name|BLACKLIST_AUTH_FAIL
+block|,
+name|BLACKLIST_ABUSIVE_BEHAVIOR
+block|,
+name|BLACKLIST_BAD_USER
 block|}
 enum|;
 end_enum
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -47,6 +62,10 @@ name|void
 name|blacklist_notify
 parameter_list|(
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -65,8 +84,10 @@ directive|define
 name|BLACKLIST_NOTIFY
 parameter_list|(
 name|x
+parameter_list|,
+name|msg
 parameter_list|)
-value|blacklist_notify(x)
+value|blacklist_notify(x,msg)
 end_define
 
 begin_else
@@ -87,6 +108,8 @@ directive|define
 name|BLACKLIST_NOTIFY
 parameter_list|(
 name|x
+parameter_list|,
+name|msg
 parameter_list|)
 end_define
 
