@@ -418,6 +418,7 @@ expr_stmt|;
 end_typedef
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|It
 name|base
 argument_list|()
@@ -429,6 +430,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_macro
+name|TEST_CONSTEXPR_CXX14
+end_macro
+
 begin_expr_stmt
 name|input_iterator
 argument_list|()
@@ -437,6 +442,7 @@ name|it_
 argument_list|()
 block|{}
 name|explicit
+name|TEST_CONSTEXPR_CXX14
 name|input_iterator
 argument_list|(
 argument|It it
@@ -455,6 +461,7 @@ operator|,
 name|class
 name|T
 operator|>
+name|TEST_CONSTEXPR_CXX14
 name|input_iterator
 argument_list|(
 specifier|const
@@ -473,6 +480,7 @@ argument_list|(
 argument|u.it_
 argument_list|)
 block|{}
+name|TEST_CONSTEXPR_CXX14
 name|reference
 name|operator
 operator|*
@@ -488,6 +496,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|pointer
 name|operator
 operator|->
@@ -505,6 +514,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|input_iterator
 operator|&
 name|operator
@@ -523,6 +533,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|input_iterator
 name|operator
 operator|++
@@ -551,6 +562,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|friend
+name|TEST_CONSTEXPR_CXX14
 name|bool
 name|operator
 operator|==
@@ -580,6 +592,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|friend
+name|TEST_CONSTEXPR_CXX14
 name|bool
 name|operator
 operator|!=
@@ -816,6 +829,7 @@ expr_stmt|;
 end_typedef
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|It
 name|base
 argument_list|()
@@ -827,6 +841,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_macro
+name|TEST_CONSTEXPR_CXX14
+end_macro
+
 begin_expr_stmt
 name|forward_iterator
 argument_list|()
@@ -835,6 +853,7 @@ name|it_
 argument_list|()
 block|{}
 name|explicit
+name|TEST_CONSTEXPR_CXX14
 name|forward_iterator
 argument_list|(
 argument|It it
@@ -850,6 +869,7 @@ operator|<
 name|class
 name|U
 operator|>
+name|TEST_CONSTEXPR_CXX14
 name|forward_iterator
 argument_list|(
 specifier|const
@@ -866,6 +886,7 @@ argument_list|(
 argument|u.it_
 argument_list|)
 block|{}
+name|TEST_CONSTEXPR_CXX14
 name|reference
 name|operator
 operator|*
@@ -881,6 +902,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|pointer
 name|operator
 operator|->
@@ -898,6 +920,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|forward_iterator
 operator|&
 name|operator
@@ -916,6 +939,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|forward_iterator
 name|operator
 operator|++
@@ -944,6 +968,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|friend
+name|TEST_CONSTEXPR_CXX14
 name|bool
 name|operator
 operator|==
@@ -973,6 +998,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|friend
+name|TEST_CONSTEXPR_CXX14
 name|bool
 name|operator
 operator|!=
@@ -1029,6 +1055,7 @@ name|U
 operator|>
 specifier|inline
 name|bool
+name|TEST_CONSTEXPR_CXX14
 name|operator
 operator|==
 operator|(
@@ -1074,6 +1101,7 @@ name|U
 operator|>
 specifier|inline
 name|bool
+name|TEST_CONSTEXPR_CXX14
 name|operator
 operator|!=
 operator|(
@@ -1189,6 +1217,7 @@ expr_stmt|;
 end_typedef
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|It
 name|base
 argument_list|()
@@ -1200,6 +1229,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_macro
+name|TEST_CONSTEXPR_CXX14
+end_macro
+
 begin_expr_stmt
 name|bidirectional_iterator
 argument_list|()
@@ -1208,6 +1241,7 @@ name|it_
 argument_list|()
 block|{}
 name|explicit
+name|TEST_CONSTEXPR_CXX14
 name|bidirectional_iterator
 argument_list|(
 argument|It it
@@ -1223,6 +1257,7 @@ operator|<
 name|class
 name|U
 operator|>
+name|TEST_CONSTEXPR_CXX14
 name|bidirectional_iterator
 argument_list|(
 specifier|const
@@ -1239,6 +1274,7 @@ argument_list|(
 argument|u.it_
 argument_list|)
 block|{}
+name|TEST_CONSTEXPR_CXX14
 name|reference
 name|operator
 operator|*
@@ -1254,6 +1290,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|pointer
 name|operator
 operator|->
@@ -1271,6 +1308,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|bidirectional_iterator
 operator|&
 name|operator
@@ -1289,6 +1327,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|bidirectional_iterator
 name|operator
 operator|++
@@ -1316,6 +1355,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|bidirectional_iterator
 operator|&
 name|operator
@@ -1334,6 +1374,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|bidirectional_iterator
 name|operator
 operator|--
@@ -1390,6 +1431,7 @@ name|U
 operator|>
 specifier|inline
 name|bool
+name|TEST_CONSTEXPR_CXX14
 name|operator
 operator|==
 operator|(
@@ -1435,6 +1477,7 @@ name|U
 operator|>
 specifier|inline
 name|bool
+name|TEST_CONSTEXPR_CXX14
 name|operator
 operator|!=
 operator|(
@@ -1550,6 +1593,7 @@ expr_stmt|;
 end_typedef
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|It
 name|base
 argument_list|()
@@ -1561,6 +1605,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_macro
+name|TEST_CONSTEXPR_CXX14
+end_macro
+
 begin_expr_stmt
 name|random_access_iterator
 argument_list|()
@@ -1569,6 +1617,7 @@ name|it_
 argument_list|()
 block|{}
 name|explicit
+name|TEST_CONSTEXPR_CXX14
 name|random_access_iterator
 argument_list|(
 argument|It it
@@ -1584,6 +1633,7 @@ operator|<
 name|class
 name|U
 operator|>
+name|TEST_CONSTEXPR_CXX14
 name|random_access_iterator
 argument_list|(
 specifier|const
@@ -1600,6 +1650,7 @@ argument_list|(
 argument|u.it_
 argument_list|)
 block|{}
+name|TEST_CONSTEXPR_CXX14
 name|reference
 name|operator
 operator|*
@@ -1615,6 +1666,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|pointer
 name|operator
 operator|->
@@ -1632,6 +1684,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|random_access_iterator
 operator|&
 name|operator
@@ -1650,6 +1703,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|random_access_iterator
 name|operator
 operator|++
@@ -1677,6 +1731,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|random_access_iterator
 operator|&
 name|operator
@@ -1695,6 +1750,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|random_access_iterator
 name|operator
 operator|--
@@ -1722,6 +1778,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|random_access_iterator
 operator|&
 name|operator
@@ -1743,6 +1800,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|random_access_iterator
 name|operator
 operator|+
@@ -1771,6 +1829,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|friend
+name|TEST_CONSTEXPR_CXX14
 name|random_access_iterator
 name|operator
 operator|+
@@ -1793,6 +1852,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|random_access_iterator
 operator|&
 name|operator
@@ -1813,6 +1873,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|TEST_CONSTEXPR_CXX14
 name|random_access_iterator
 name|operator
 operator|-
@@ -1840,6 +1901,7 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
+name|TEST_CONSTEXPR_CXX14
 name|reference
 name|operator
 index|[]
@@ -1888,6 +1950,7 @@ name|U
 operator|>
 specifier|inline
 name|bool
+name|TEST_CONSTEXPR_CXX14
 name|operator
 operator|==
 operator|(
@@ -1933,6 +1996,7 @@ name|U
 operator|>
 specifier|inline
 name|bool
+name|TEST_CONSTEXPR_CXX14
 name|operator
 operator|!=
 operator|(
@@ -1975,6 +2039,7 @@ name|U
 operator|>
 specifier|inline
 name|bool
+name|TEST_CONSTEXPR_CXX14
 name|operator
 operator|<
 operator|(
@@ -2020,6 +2085,7 @@ name|U
 operator|>
 specifier|inline
 name|bool
+name|TEST_CONSTEXPR_CXX14
 name|operator
 operator|<=
 operator|(
@@ -2062,6 +2128,7 @@ name|U
 operator|>
 specifier|inline
 name|bool
+name|TEST_CONSTEXPR_CXX14
 name|operator
 operator|>
 operator|(
@@ -2101,6 +2168,7 @@ name|U
 operator|>
 specifier|inline
 name|bool
+name|TEST_CONSTEXPR_CXX14
 name|operator
 operator|>=
 operator|(
@@ -2142,6 +2210,7 @@ name|class
 name|U
 operator|>
 specifier|inline
+name|TEST_CONSTEXPR_CXX14
 name|typename
 name|std
 operator|::
@@ -2192,6 +2261,7 @@ name|class
 name|Iter
 operator|>
 specifier|inline
+name|TEST_CONSTEXPR_CXX14
 name|Iter
 name|base
 argument_list|(
@@ -2214,6 +2284,7 @@ name|class
 name|Iter
 operator|>
 specifier|inline
+name|TEST_CONSTEXPR_CXX14
 name|Iter
 name|base
 argument_list|(
@@ -2236,6 +2307,7 @@ name|class
 name|Iter
 operator|>
 specifier|inline
+name|TEST_CONSTEXPR_CXX14
 name|Iter
 name|base
 argument_list|(
@@ -2258,6 +2330,7 @@ name|class
 name|Iter
 operator|>
 specifier|inline
+name|TEST_CONSTEXPR_CXX14
 name|Iter
 name|base
 argument_list|(
@@ -2280,6 +2353,7 @@ name|class
 name|Iter
 operator|>
 specifier|inline
+name|TEST_CONSTEXPR_CXX14
 name|Iter
 name|base
 argument_list|(
@@ -2303,6 +2377,7 @@ name|Iter
 operator|>
 comment|// everything else
 specifier|inline
+name|TEST_CONSTEXPR_CXX14
 name|Iter
 name|base
 argument_list|(
