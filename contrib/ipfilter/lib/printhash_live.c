@@ -319,7 +319,7 @@ name|ipferror
 argument_list|(
 name|fd
 argument_list|,
-literal|"walking hash nodes:"
+literal|"walking hash nodes"
 argument_list|)
 expr_stmt|;
 if|if
