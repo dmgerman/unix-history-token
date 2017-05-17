@@ -10640,6 +10640,8 @@ name|phandle_t
 name|node
 decl_stmt|,
 name|child
+decl_stmt|,
+name|sb
 decl_stmt|;
 name|struct
 name|soc_node_spec
@@ -10656,6 +10658,10 @@ name|err
 decl_stmt|,
 name|i
 decl_stmt|;
+name|sb
+operator|=
+literal|0
+expr_stmt|;
 name|node
 operator|=
 name|OF_finddevice
@@ -10842,6 +10848,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|sb
+operator|=
 name|node
 operator|=
 name|fdt_find_compatible
@@ -10884,10 +10892,7 @@ operator|&&
 operator|(
 name|node
 operator|==
-name|OF_finddevice
-argument_list|(
-literal|"simple-bus"
-argument_list|)
+name|sb
 operator|)
 condition|)
 block|{
