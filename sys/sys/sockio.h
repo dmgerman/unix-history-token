@@ -630,6 +630,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCGHWADDR
+value|_IOWR('i', 62, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get hardware lladdr */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCSIFPHYADDR
 value|_IOW('i', 70, struct ifaliasreq)
 end_define

@@ -680,6 +680,11 @@ decl_stmt|;
 comment|/* pointer to link-level address */
 name|void
 modifier|*
+name|if_hw_addr
+decl_stmt|;
+comment|/* hardware link-level address */
+name|void
+modifier|*
 name|if_llsoftc
 decl_stmt|;
 comment|/* link layer softc */
@@ -3910,6 +3915,21 @@ name|u_char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|if_gethwaddr
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|ifreq
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
