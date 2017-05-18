@@ -483,6 +483,9 @@ name|ip
 operator|->
 name|i_ffs1_size
 operator|>=
+operator|(
+name|uint64_t
+operator|)
 name|lblktosize
 argument_list|(
 name|fs
@@ -654,6 +657,9 @@ name|ip
 operator|->
 name|i_ffs1_size
 operator|<
+operator|(
+name|uint64_t
+operator|)
 name|lblktosize
 argument_list|(
 name|fs
@@ -1772,6 +1778,9 @@ name|ip
 operator|->
 name|i_ffs2_size
 operator|>=
+operator|(
+name|uint64_t
+operator|)
 name|lblktosize
 argument_list|(
 name|fs
@@ -1943,6 +1952,9 @@ name|ip
 operator|->
 name|i_ffs2_size
 operator|<
+operator|(
+name|uint64_t
+operator|)
 name|lblktosize
 argument_list|(
 name|fs

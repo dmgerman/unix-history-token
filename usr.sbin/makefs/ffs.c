@@ -5922,7 +5922,8 @@ name|int
 name|cg
 decl_stmt|,
 name|cgino
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|i
 decl_stmt|;
 name|daddr_t
@@ -5934,7 +5935,7 @@ index|[
 name|FFS_MAXBSIZE
 index|]
 decl_stmt|;
-name|int32_t
+name|uint32_t
 name|initediblk
 decl_stmt|;
 name|ffs_opt_t

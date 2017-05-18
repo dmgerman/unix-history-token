@@ -2443,7 +2443,8 @@ name|int
 name|error
 decl_stmt|,
 name|istemp
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|type
 decl_stmt|;
 name|st
