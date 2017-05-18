@@ -397,6 +397,14 @@ literal|"NEC uPD720200 USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0x00151912
+case|:
+return|return
+operator|(
+literal|"NEC uPD720202 USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0x10001b73
 case|:
 return|return
@@ -437,6 +445,22 @@ case|:
 return|return
 operator|(
 literal|"Intel Panther Point USB 3.0 controller"
+operator|)
+return|;
+case|case
+literal|0x22b58086
+case|:
+return|return
+operator|(
+literal|"Intel Braswell USB 3.0 controller"
+operator|)
+return|;
+case|case
+literal|0x5aa88086
+case|:
+return|return
+operator|(
+literal|"Intel Apollo Lake USB 3.0 controller"
 operator|)
 return|;
 case|case
