@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/CVTypeVisitor.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/CodeView/TypeDatabase.h"
 end_include
 
@@ -70,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeDeserializer.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/CodeView/TypeIndex.h"
 end_include
 
@@ -83,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/CodeView/TypeRecord.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo/CodeView/TypeVisitorCallbackPipeline.h"
 end_include
 
 begin_include
@@ -213,21 +195,6 @@ decl_stmt|;
 comment|/// The database visitor which adds new records to the database.
 name|TypeDatabaseVisitor
 name|DatabaseVisitor
-decl_stmt|;
-comment|/// The deserializer which deserializes new records.
-name|TypeDeserializer
-name|Deserializer
-decl_stmt|;
-comment|/// The visitation callback pipeline to use.  By default this contains a
-comment|/// deserializer and a type database visitor.  But the callback specified
-comment|/// in the constructor is also added.
-name|TypeVisitorCallbackPipeline
-name|Pipeline
-decl_stmt|;
-comment|/// The visitor used to visit the internal pipeline for deserialization and
-comment|/// database maintenance.
-name|CVTypeVisitor
-name|InternalVisitor
 decl_stmt|;
 comment|/// A vector mapping type indices to type offset.  For every record that has
 comment|/// been visited, contains the absolute offset of that record in the record

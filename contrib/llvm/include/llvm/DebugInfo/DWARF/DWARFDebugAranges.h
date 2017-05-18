@@ -108,7 +108,7 @@ name|DataExtractor
 name|DebugArangesData
 parameter_list|)
 function_decl|;
-comment|// Call appendRange multiple times and then call construct.
+comment|/// Call appendRange multiple times and then call construct.
 name|void
 name|appendRange
 parameter_list|(
@@ -248,15 +248,15 @@ block|}
 name|uint64_t
 name|LowPC
 struct|;
-comment|// Start of address range.
+comment|/// Start of address range.
 name|uint32_t
 name|Length
 decl_stmt|;
-comment|// End of address range (not including this address).
+comment|/// End of address range (not including this address).
 name|uint32_t
 name|CUOffset
 decl_stmt|;
-comment|// Offset of the compile unit or die.
+comment|/// Offset of the compile unit or die.
 block|}
 empty_stmt|;
 struct|struct

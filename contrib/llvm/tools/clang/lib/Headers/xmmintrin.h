@@ -9244,7 +9244,7 @@ comment|/// \code
 end_comment
 
 begin_comment
-comment|/// void _mm_extract_pi(__m64 a, int n);
+comment|/// int _mm_extract_pi16(__m64 a, int n);
 end_comment
 
 begin_comment
@@ -9340,7 +9340,7 @@ comment|/// \code
 end_comment
 
 begin_comment
-comment|/// void _mm_insert_pi(__m64 a, int d, int n);
+comment|/// __m64 _mm_insert_pi16(__m64 a, int d, int n);
 end_comment
 
 begin_comment
@@ -11298,11 +11298,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c> CVTPI2PS + \c COMPOSITE</c>
-end_comment
-
-begin_comment
-comment|///   instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS + COMPOSITE</c> instruction.
 end_comment
 
 begin_comment
@@ -11439,11 +11435,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c> CVTPI2PS + \c COMPOSITE</c>
-end_comment
-
-begin_comment
-comment|///   instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS + COMPOSITE</c> instruction.
 end_comment
 
 begin_comment
@@ -11571,11 +11563,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c> CVTPI2PS + \c COMPOSITE</c>
-end_comment
-
-begin_comment
-comment|///   instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS + COMPOSITE</c> instruction.
 end_comment
 
 begin_comment
@@ -11669,11 +11657,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c> CVTPI2PS + \c COMPOSITE</c>
-end_comment
-
-begin_comment
-comment|///   instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS + COMPOSITE</c> instruction.
 end_comment
 
 begin_comment
@@ -11762,11 +11746,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c> CVTPI2PS + \c COMPOSITE</c>
-end_comment
-
-begin_comment
-comment|///   instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPI2PS + COMPOSITE</c> instruction.
 end_comment
 
 begin_comment
@@ -11905,11 +11885,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c> CVTPS2PI + \c COMPOSITE</c>
-end_comment
-
-begin_comment
-comment|///   instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPS2PI + COMPOSITE</c> instruction.
 end_comment
 
 begin_comment
@@ -12031,11 +12007,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the<c> CVTPS2PI + \c COMPOSITE</c>
-end_comment
-
-begin_comment
-comment|///   instruction.
+comment|/// This intrinsic corresponds to the<c> CVTPS2PI + COMPOSITE</c> instruction.
 end_comment
 
 begin_comment

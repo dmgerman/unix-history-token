@@ -1542,13 +1542,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|CleanTemporaryFiles
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|bool
 name|Parse
@@ -2172,28 +2165,6 @@ name|ASTDeserializationListener
 modifier|*
 name|getDeserializationListener
 parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Add a temporary file that the ASTUnit depends on.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This file will be erased when the ASTUnit is destroyed.
-end_comment
-
-begin_function_decl
-name|void
-name|addTemporaryFile
-parameter_list|(
-name|StringRef
-name|TempFile
-parameter_list|)
 function_decl|;
 end_function_decl
 

@@ -919,6 +919,21 @@ end_expr_stmt
 
 begin_expr_stmt
 name|bool
+name|hasMin3Max3_16
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getGeneration
+argument_list|()
+operator|>=
+name|GFX9
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
 name|hasCARRY
 argument_list|()
 specifier|const

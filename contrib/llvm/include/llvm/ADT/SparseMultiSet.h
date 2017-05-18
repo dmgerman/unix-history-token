@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- llvm/ADT/SparseMultiSet.h - Sparse multiset ------------*- C++ -*-===//
+comment|//===- llvm/ADT/SparseMultiSet.h - Sparse multiset --------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -286,7 +286,7 @@ name|Next
 argument_list|(
 argument|N
 argument_list|)
-block|{ }
+block|{}
 comment|/// List tails have invalid Nexts.
 name|bool
 name|isTail
@@ -326,73 +326,72 @@ return|;
 block|}
 expr|}
 block|;
-typedef|typedef
+name|using
+name|KeyT
+operator|=
 name|typename
 name|KeyFunctorT
 operator|::
 name|argument_type
-name|KeyT
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|DenseT
+operator|=
 name|SmallVector
 operator|<
 name|SMSNode
-operator|,
+block|,
 literal|8
 operator|>
-name|DenseT
-expr_stmt|;
+block|;
 name|DenseT
 name|Dense
-expr_stmt|;
+block|;
 name|SparseT
-modifier|*
+operator|*
 name|Sparse
-init|=
+operator|=
 name|nullptr
-decl_stmt|;
+block|;
 name|unsigned
 name|Universe
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 name|KeyFunctorT
 name|KeyIndexOf
-decl_stmt|;
+block|;
 name|SparseSetValFunctor
 operator|<
 name|KeyT
-operator|,
+block|,
 name|ValueT
-operator|,
+block|,
 name|KeyFunctorT
 operator|>
 name|ValIndexOf
-expr_stmt|;
+block|;
 comment|/// We have a built-in recycler for reusing tombstone slots. This recycler
 comment|/// puts a singly-linked free list into tombstone slots, allowing us quick
 comment|/// erasure, iterator preservation, and dense size.
 name|unsigned
 name|FreelistIdx
-init|=
+operator|=
 name|SMSNode
 operator|::
 name|INVALID
-decl_stmt|;
+block|;
 name|unsigned
 name|NumFree
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 name|unsigned
 name|sparseIndex
 argument_list|(
-specifier|const
-name|ValueT
-operator|&
-name|Val
+argument|const ValueT&Val
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -405,7 +404,7 @@ name|Universe
 operator|&&
 literal|"Invalid key in set. Did object mutate?"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|ValIndexOf
 argument_list|(
@@ -416,12 +415,9 @@ block|}
 name|unsigned
 name|sparseIndex
 argument_list|(
-specifier|const
-name|SMSNode
-operator|&
-name|N
+argument|const SMSNode&N
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|sparseIndex
@@ -438,12 +434,9 @@ comment|/// list tail. D must be a valid entry node.
 name|bool
 name|isHead
 argument_list|(
-specifier|const
-name|SMSNode
-operator|&
-name|D
+argument|const SMSNode&D
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -454,7 +447,7 @@ argument_list|()
 operator|&&
 literal|"Invalid node for head"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Dense
 index|[
@@ -472,12 +465,9 @@ comment|/// that key.
 name|bool
 name|isSingleton
 argument_list|(
-specifier|const
-name|SMSNode
-operator|&
-name|N
+argument|const SMSNode&N
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -488,7 +478,7 @@ argument_list|()
 operator|&&
 literal|"Invalid node for singleton"
 argument_list|)
-expr_stmt|;
+block|;
 comment|// Is N its own predecessor?
 return|return
 operator|&
@@ -507,18 +497,13 @@ comment|/// Add in the given SMSNode. Uses a free entry in our freelist if
 comment|/// available. Returns the index of the added node.
 name|unsigned
 name|addValue
-parameter_list|(
-specifier|const
-name|ValueT
-modifier|&
-name|V
-parameter_list|,
-name|unsigned
-name|Prev
-parameter_list|,
-name|unsigned
-name|Next
-parameter_list|)
+argument_list|(
+argument|const ValueT& V
+argument_list|,
+argument|unsigned Prev
+argument_list|,
+argument|unsigned Next
+argument_list|)
 block|{
 if|if
 condition|(
@@ -558,14 +543,14 @@ name|FreelistIdx
 decl_stmt|;
 name|unsigned
 name|NextFree
-init|=
+operator|=
 name|Dense
 index|[
 name|Idx
 index|]
 operator|.
 name|Next
-decl_stmt|;
+block|;
 name|assert
 argument_list|(
 name|Dense
@@ -578,7 +563,7 @@ argument_list|()
 operator|&&
 literal|"Non-tombstone free?"
 argument_list|)
-expr_stmt|;
+block|;
 name|Dense
 index|[
 name|Idx
@@ -592,14 +577,14 @@ name|Prev
 argument_list|,
 name|Next
 argument_list|)
-expr_stmt|;
+block|;
 name|FreelistIdx
 operator|=
 name|NextFree
-expr_stmt|;
+block|;
 operator|--
 name|NumFree
-expr_stmt|;
+block|;
 return|return
 name|Idx
 return|;
@@ -607,10 +592,9 @@ block|}
 comment|/// Make the current index a new tombstone. Pushes it onto the freelist.
 name|void
 name|makeTombstone
-parameter_list|(
-name|unsigned
-name|Idx
-parameter_list|)
+argument_list|(
+argument|unsigned Idx
+argument_list|)
 block|{
 name|Dense
 index|[
@@ -622,7 +606,7 @@ operator|=
 name|SMSNode
 operator|::
 name|INVALID
-expr_stmt|;
+block|;
 name|Dense
 index|[
 name|Idx
@@ -631,52 +615,57 @@ operator|.
 name|Next
 operator|=
 name|FreelistIdx
-expr_stmt|;
+block|;
 name|FreelistIdx
 operator|=
 name|Idx
-expr_stmt|;
+block|;
 operator|++
 name|NumFree
-expr_stmt|;
-block|}
+block|;   }
 name|public
-label|:
-typedef|typedef
-name|ValueT
+operator|:
+name|using
 name|value_type
-typedef|;
-typedef|typedef
+operator|=
 name|ValueT
-modifier|&
+block|;
+name|using
 name|reference
-typedef|;
-typedef|typedef
-specifier|const
+operator|=
 name|ValueT
-modifier|&
+operator|&
+block|;
+name|using
 name|const_reference
-typedef|;
-typedef|typedef
-name|ValueT
-modifier|*
-name|pointer
-typedef|;
-typedef|typedef
+operator|=
 specifier|const
 name|ValueT
-modifier|*
+operator|&
+block|;
+name|using
+name|pointer
+operator|=
+name|ValueT
+operator|*
+block|;
+name|using
 name|const_pointer
-typedef|;
-typedef|typedef
-name|unsigned
+operator|=
+specifier|const
+name|ValueT
+operator|*
+block|;
+name|using
 name|size_type
-typedef|;
+operator|=
+name|unsigned
+block|;
 name|SparseMultiSet
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|SparseMultiSet
 argument_list|(
 specifier|const
@@ -685,11 +674,11 @@ operator|&
 argument_list|)
 operator|=
 name|delete
-expr_stmt|;
+block|;
 name|SparseMultiSet
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|SparseMultiSet
@@ -697,7 +686,7 @@ operator|&
 operator|)
 operator|=
 name|delete
-decl_stmt|;
+block|;
 operator|~
 name|SparseMultiSet
 argument_list|()
@@ -746,7 +735,7 @@ name|free
 argument_list|(
 name|Sparse
 argument_list|)
-expr_stmt|;
+block|;
 comment|// The Sparse array doesn't actually need to be initialized, so malloc
 comment|// would be enough here, but that will cause tools like valgrind to
 comment|// complain about branching on uninitialized data.
@@ -768,23 +757,13 @@ name|SparseT
 argument_list|)
 argument_list|)
 operator|)
-expr_stmt|;
+block|;
 name|Universe
 operator|=
 name|U
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
+block|;   }
 comment|/// Our iterators are iterators over the collection of objects that share a
-end_comment
-
-begin_comment
 comment|/// key.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -841,7 +820,7 @@ name|SparseIdx
 argument_list|(
 argument|SI
 argument_list|)
-block|{ }
+block|{}
 comment|/// Whether our iterator has fallen outside our dense vector.
 name|bool
 name|isEnd
@@ -877,13 +856,7 @@ return|return
 name|false
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Whether our iterator is properly keyed, i.e. the SparseIdx is valid
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isKeyed
 argument_list|()
@@ -897,9 +870,6 @@ operator|->
 name|Universe
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|Prev
 argument_list|()
@@ -916,9 +886,6 @@ operator|.
 name|Prev
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|Next
 argument_list|()
@@ -935,9 +902,6 @@ operator|.
 name|Next
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setPrev
 parameter_list|(
@@ -957,9 +921,6 @@ operator|=
 name|P
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|setNext
 parameter_list|(
@@ -979,15 +940,11 @@ operator|=
 name|N
 expr_stmt|;
 block|}
-end_function
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_typedef
-typedef|typedef
+name|using
+name|super
+init|=
 name|std
 operator|::
 name|iterator
@@ -995,54 +952,42 @@ operator|<
 name|std
 operator|::
 name|bidirectional_iterator_tag
-operator|,
+decl_stmt|,
 name|ValueT
-operator|>
-name|super
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+decl|>
+decl_stmt|;
+name|using
+name|value_type
+init|=
 name|typename
 name|super
 operator|::
 name|value_type
-name|value_type
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+decl_stmt|;
+name|using
+name|difference_type
+init|=
 name|typename
 name|super
 operator|::
 name|difference_type
-name|difference_type
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+decl_stmt|;
+name|using
+name|pointer
+init|=
 name|typename
 name|super
 operator|::
 name|pointer
-name|pointer
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+decl_stmt|;
+name|using
+name|reference
+init|=
 name|typename
 name|super
 operator|::
 name|reference
-name|reference
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
+decl_stmt|;
 name|reference
 name|operator
 operator|*
@@ -1085,18 +1030,12 @@ operator|.
 name|Data
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|pointer
 name|operator
 operator|->
 expr|(
-end_expr_stmt
-
-begin_expr_stmt
-unit|)
-specifier|const
+block|)
+decl|const
 block|{
 return|return
 operator|&
@@ -1106,7 +1045,7 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|/// Comparison operators
@@ -1353,47 +1292,50 @@ return|;
 block|}
 end_expr_stmt
 
-begin_typedef
+begin_decl_stmt
 unit|};
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|iterator_base
 operator|<
 name|SparseMultiSet
 operator|*
 operator|>
-name|iterator
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|const_iterator
+init|=
 name|iterator_base
 operator|<
 specifier|const
 name|SparseMultiSet
 operator|*
 operator|>
-name|const_iterator
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// Convenience types
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|RangePair
+init|=
 name|std
 operator|::
 name|pair
 operator|<
 name|iterator
-operator|,
+decl_stmt|,
 name|iterator
-operator|>
-name|RangePair
-expr_stmt|;
-end_typedef
+decl|>
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Returns an iterator past this container. Note that such an iterator cannot

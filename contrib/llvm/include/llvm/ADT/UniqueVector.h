@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/ADT/UniqueVector.h ---------------------------------*- C++ -*-===//
+comment|//===- llvm/ADT/UniqueVector.h ----------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,7 +86,9 @@ name|UniqueVector
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|VectorType
+operator|=
 name|typename
 name|std
 operator|::
@@ -94,63 +96,60 @@ name|vector
 operator|<
 name|T
 operator|>
-name|VectorType
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|iterator
+operator|=
 name|typename
 name|VectorType
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_iterator
+operator|=
 name|typename
 name|VectorType
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
+block|;
 name|private
-label|:
+operator|:
 comment|// Map - Used to handle the correspondence of entry to ID.
 name|std
 operator|::
 name|map
 operator|<
 name|T
-operator|,
+block|,
 name|unsigned
 operator|>
 name|Map
-expr_stmt|;
+block|;
 comment|// Vector - ID ordered vector of entries. Entries can be indexed by ID - 1.
-comment|//
 name|VectorType
 name|Vector
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 comment|/// insert - Append entry to the vector if it doesn't already exist.  Returns
 comment|/// the entry's index + 1 to be used as a unique ID.
 name|unsigned
 name|insert
-parameter_list|(
-specifier|const
-name|T
-modifier|&
-name|Entry
-parameter_list|)
+argument_list|(
+argument|const T&Entry
+argument_list|)
 block|{
 comment|// Check if the entry is already in the map.
 name|unsigned
-modifier|&
+operator|&
 name|Val
-init|=
+operator|=
 name|Map
 index|[
 name|Entry
 index|]
-decl_stmt|;
+block|;
 comment|// See if entry exists, if so return prior ID.
 if|if
 condition|(
@@ -174,7 +173,7 @@ argument_list|()
 operator|)
 operator|+
 literal|1
-expr_stmt|;
+block|;
 comment|// Insert in vector.
 name|Vector
 operator|.
@@ -182,7 +181,7 @@ name|push_back
 argument_list|(
 name|Entry
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Val
 return|;
@@ -241,7 +240,6 @@ literal|0
 return|;
 block|}
 comment|/// operator[] - Returns a reference to the entry with the specified ID.
-comment|///
 specifier|const
 name|T
 modifier|&
@@ -325,7 +323,6 @@ argument_list|()
 return|;
 block|}
 comment|/// size - Returns the number of entries in the vector.
-comment|///
 name|size_t
 name|size
 argument_list|()
@@ -339,7 +336,6 @@ argument_list|()
 return|;
 block|}
 comment|/// empty - Returns true if the vector is empty.
-comment|///
 name|bool
 name|empty
 argument_list|()
@@ -353,7 +349,6 @@ argument_list|()
 return|;
 block|}
 comment|/// reset - Clears all the entries.
-comment|///
 name|void
 name|reset
 parameter_list|()
@@ -382,7 +377,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End of namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

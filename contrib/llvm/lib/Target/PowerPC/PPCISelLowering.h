@@ -2935,6 +2935,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|SDValue
+name|LowerINTRINSIC_VOID
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SDValue
 name|LowerSCALAR_TO_VECTOR
 argument_list|(
 name|SDValue

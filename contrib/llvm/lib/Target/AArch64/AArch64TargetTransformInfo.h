@@ -703,6 +703,23 @@ return|return
 name|false
 return|;
 block|}
+name|bool
+name|useReductionIntrinsic
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|TTI
+operator|::
+name|ReductionFlags
+name|Flags
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 block|}
 end_decl_stmt

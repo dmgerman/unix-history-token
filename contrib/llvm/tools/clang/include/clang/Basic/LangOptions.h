@@ -490,6 +490,16 @@ operator|!=
 name|CMK_None
 return|;
 block|}
+comment|/// Do we need to track the owning module for a local declaration?
+name|bool
+name|trackLocalOwningModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModulesLocalVisibility
+return|;
+block|}
 name|bool
 name|isSignedOverflowDefined
 argument_list|()

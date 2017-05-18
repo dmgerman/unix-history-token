@@ -68,19 +68,16 @@ block|{
 struct|struct
 name|RelocAddrEntry
 block|{
-name|uint8_t
-name|Width
-decl_stmt|;
 name|int64_t
 name|Value
 decl_stmt|;
 block|}
 struct|;
-comment|// In place of applying the relocations to the data we've read from disk we use
-comment|// a separate mapping table to the side and checking that at locations in the
-comment|// dwarf where we expect relocated values. This adds a bit of complexity to the
-comment|// dwarf parsing/extraction at the benefit of not allocating memory for the
-comment|// entire size of the debug info sections.
+comment|/// In place of applying the relocations to the data we've read from disk we use
+comment|/// a separate mapping table to the side and checking that at locations in the
+comment|/// dwarf where we expect relocated values. This adds a bit of complexity to the
+comment|/// dwarf parsing/extraction at the benefit of not allocating memory for the
+comment|/// entire size of the debug info sections.
 typedef|typedef
 name|DenseMap
 operator|<

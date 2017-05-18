@@ -104,11 +104,11 @@ block|{
 name|uint64_t
 name|Offset
 decl_stmt|;
-comment|// Offset of a CU in the .debug_info section.
+comment|/// Offset of a CU in the .debug_info section.
 name|uint64_t
 name|Length
 decl_stmt|;
-comment|// Length of that CU.
+comment|/// Length of that CU.
 block|}
 struct|;
 name|SmallVector
@@ -125,15 +125,15 @@ block|{
 name|uint64_t
 name|LowAddress
 decl_stmt|;
-comment|// The low address.
+comment|/// The low address.
 name|uint64_t
 name|HighAddress
 decl_stmt|;
-comment|// The high address.
+comment|/// The high address.
 name|uint32_t
 name|CuIndex
 decl_stmt|;
-comment|// The CU index.
+comment|/// The CU index.
 block|}
 struct|;
 name|SmallVector
@@ -150,11 +150,11 @@ block|{
 name|uint32_t
 name|NameOffset
 decl_stmt|;
-comment|// Offset of the symbol's name in the constant pool.
+comment|/// Offset of the symbol's name in the constant pool.
 name|uint32_t
 name|VecOffset
 decl_stmt|;
-comment|// Offset of the CU vector in the constant pool.
+comment|/// Offset of the CU vector in the constant pool.
 block|}
 struct|;
 name|SmallVector
@@ -165,7 +165,7 @@ literal|0
 operator|>
 name|SymbolTable
 expr_stmt|;
-comment|// Each value is CU index + attributes.
+comment|/// Each value is CU index + attributes.
 name|SmallVector
 operator|<
 name|std

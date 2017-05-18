@@ -115,24 +115,24 @@ label|:
 struct|struct
 name|RangeListEntry
 block|{
-comment|// A beginning address offset. This address offset has the size of an
-comment|// address and is relative to the applicable base address of the
-comment|// compilation unit referencing this range list. It marks the beginning
-comment|// of an address range.
+comment|/// A beginning address offset. This address offset has the size of an
+comment|/// address and is relative to the applicable base address of the
+comment|/// compilation unit referencing this range list. It marks the beginning
+comment|/// of an address range.
 name|uint64_t
 name|StartAddress
 decl_stmt|;
-comment|// An ending address offset. This address offset again has the size of
-comment|// an address and is relative to the applicable base address of the
-comment|// compilation unit referencing this range list. It marks the first
-comment|// address past the end of the address range. The ending address must
-comment|// be greater than or equal to the beginning address.
+comment|/// An ending address offset. This address offset again has the size of
+comment|/// an address and is relative to the applicable base address of the
+comment|/// compilation unit referencing this range list. It marks the first
+comment|/// address past the end of the address range. The ending address must
+comment|/// be greater than or equal to the beginning address.
 name|uint64_t
 name|EndAddress
 decl_stmt|;
-comment|// The end of any given range list is marked by an end of list entry,
-comment|// which consists of a 0 for the beginning address offset
-comment|// and a 0 for the ending address offset.
+comment|/// The end of any given range list is marked by an end of list entry,
+comment|/// which consists of a 0 for the beginning address offset
+comment|/// and a 0 for the ending address offset.
 name|bool
 name|isEndOfListEntry
 argument_list|()
@@ -152,12 +152,12 @@ literal|0
 operator|)
 return|;
 block|}
-comment|// A base address selection entry consists of:
-comment|// 1. The value of the largest representable address offset
-comment|// (for example, 0xffffffff when the size of an address is 32 bits).
-comment|// 2. An address, which defines the appropriate base address for
-comment|// use in interpreting the beginning and ending address offsets of
-comment|// subsequent entries of the location list.
+comment|/// A base address selection entry consists of:
+comment|/// 1. The value of the largest representable address offset
+comment|/// (for example, 0xffffffff when the size of an address is 32 bits).
+comment|/// 2. An address, which defines the appropriate base address for
+comment|/// use in interpreting the beginning and ending address offsets of
+comment|/// subsequent entries of the location list.
 name|bool
 name|isBaseAddressSelectionEntry
 argument_list|(
@@ -201,7 +201,7 @@ block|}
 struct|;
 name|private
 label|:
-comment|// Offset in .debug_ranges section.
+comment|/// Offset in .debug_ranges section.
 name|uint32_t
 name|Offset
 decl_stmt|;

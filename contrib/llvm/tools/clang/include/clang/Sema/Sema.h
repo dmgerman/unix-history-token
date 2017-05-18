@@ -5236,13 +5236,6 @@ name|VisibleModules
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|Module
-modifier|*
-name|CachedFakeTopLevelModule
-decl_stmt|;
-end_decl_stmt
-
 begin_label
 name|public
 label|:
@@ -5252,7 +5245,7 @@ begin_comment
 comment|/// \brief Get the module owning an entity.
 end_comment
 
-begin_function_decl
+begin_function
 name|Module
 modifier|*
 name|getOwningModule
@@ -5261,8 +5254,15 @@ name|Decl
 modifier|*
 name|Entity
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+name|Entity
+operator|->
+name|getOwningModule
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Make a merged definition of an existing hidden definition \p ND

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/ADT/StringExtras.h - Useful string functions -------*- C++ -*-===//
+comment|//===- llvm/ADT/StringExtras.h - Useful string functions --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,22 +68,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<iterator>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<iterator>
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|raw_ostream
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -92,6 +119,9 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|/// hexdigit - Return the hexadecimal character for the
 comment|/// given number \p X (which should be less than 16).
 specifier|static
@@ -801,7 +831,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}   static
+unit|}  static
 specifier|inline
 name|std
 operator|::
@@ -1557,6 +1587,10 @@ end_expr_stmt
 
 begin_comment
 unit|}
+comment|// end namespace detail
+end_comment
+
+begin_comment
 comment|/// Joins the strings in the range [Begin, End), adding Separator between
 end_comment
 
@@ -1583,7 +1617,9 @@ argument_list|,
 argument|StringRef Separator
 argument_list|)
 block|{
-typedef|typedef
+name|using
+name|tag
+operator|=
 name|typename
 name|std
 operator|::
@@ -1593,11 +1629,7 @@ name|IteratorT
 operator|>
 operator|::
 name|iterator_category
-name|tag
-expr_stmt|;
-end_expr_stmt
-
-begin_return
+block|;
 return|return
 name|detail
 operator|::
@@ -1613,10 +1645,10 @@ name|tag
 argument_list|()
 argument_list|)
 return|;
-end_return
+block|}
+end_expr_stmt
 
 begin_comment
-unit|}
 comment|/// Joins the strings in the range [R.begin(), R.end()), adding Separator
 end_comment
 
@@ -1625,7 +1657,7 @@ comment|/// between the elements.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|Range
@@ -1802,13 +1834,17 @@ end_return
 
 begin_comment
 unit|}  }
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_STRINGEXTRAS_H
+end_comment
 
 end_unit
 
