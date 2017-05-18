@@ -1235,7 +1235,7 @@ argument_list|)
 expr_stmt|;
 name|setenv
 argument_list|(
-literal|"comconsole_speedspeed"
+literal|"comconsole_speed"
 argument_list|,
 name|var
 argument_list|,
