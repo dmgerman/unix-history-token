@@ -680,11 +680,6 @@ decl_stmt|;
 comment|/* pointer to link-level address */
 name|void
 modifier|*
-name|if_hw_addr
-decl_stmt|;
-comment|/* hardware link-level address */
-name|void
-modifier|*
 name|if_llsoftc
 decl_stmt|;
 comment|/* link layer softc */
@@ -814,10 +809,15 @@ name|void
 modifier|*
 name|if_pspare
 index|[
-literal|8
+literal|7
 index|]
 decl_stmt|;
-comment|/* 1 netmap, 7 TDB */
+comment|/* 1 netmap, 6 TDB */
+name|void
+modifier|*
+name|if_hw_addr
+decl_stmt|;
+comment|/* hardware link-level address */
 block|}
 struct|;
 end_struct
