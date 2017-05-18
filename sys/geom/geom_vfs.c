@@ -693,7 +693,7 @@ name|geom
 operator|->
 name|softc
 expr_stmt|;
-comment|/* 	 * If the provider has orphaned us, just return EXIO. 	 */
+comment|/* 	 * If the provider has orphaned us, just return ENXIO. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
