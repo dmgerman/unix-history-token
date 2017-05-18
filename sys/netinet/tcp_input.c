@@ -6756,7 +6756,14 @@ name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
