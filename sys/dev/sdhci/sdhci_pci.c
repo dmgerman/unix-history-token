@@ -381,6 +381,12 @@ operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
 operator||
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+operator||
+name|SDHCI_QUIRK_MMC_DDR52
+operator||
+name|SDHCI_QUIRK_CAPS_BIT63_FOR_MMC_HS400
+operator||
+name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
 block|}
 block|,
 block|{
@@ -391,6 +397,8 @@ block|,
 literal|"Intel Bay Trail SDXC Controller"
 block|,
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+operator||
+name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
 block|}
 block|,
 block|{
@@ -405,6 +413,12 @@ operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
 operator||
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+operator||
+name|SDHCI_QUIRK_MMC_DDR52
+operator||
+name|SDHCI_QUIRK_CAPS_BIT63_FOR_MMC_HS400
+operator||
+name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
 block|}
 block|,
 block|{
@@ -421,6 +435,12 @@ operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
 operator||
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+operator||
+name|SDHCI_QUIRK_MMC_DDR52
+operator||
+name|SDHCI_QUIRK_CAPS_BIT63_FOR_MMC_HS400
+operator||
+name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
 block|}
 block|,
 block|{
@@ -431,6 +451,8 @@ block|,
 literal|"Intel Braswell SDXC Controller"
 block|,
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+operator||
+name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
 block|}
 block|,
 block|{
@@ -441,6 +463,8 @@ block|,
 literal|"Intel Apollo Lake SDXC Controller"
 block|,
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+operator||
+name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
 block|}
 block|,
 block|{
@@ -455,6 +479,12 @@ operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
 operator||
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+operator||
+name|SDHCI_QUIRK_MMC_DDR52
+operator||
+name|SDHCI_QUIRK_CAPS_BIT63_FOR_MMC_HS400
+operator||
+name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
 block|}
 block|,
 block|{
@@ -1610,6 +1640,19 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|sc
+operator|->
+name|quirks
+operator|&=
+operator|~
+name|sdhci_quirk_clear
+expr_stmt|;
+name|sc
+operator|->
+name|quirks
+operator||=
+name|sdhci_quirk_set
+expr_stmt|;
 comment|/* Some controllers need to be bumped into the right mode. */
 if|if
 condition|(
@@ -2417,6 +2460,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|mmcbr_switch_vccq
+argument_list|,
+name|sdhci_generic_switch_vccq
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|mmcbr_request
 argument_list|,
 name|sdhci_generic_request
@@ -2443,7 +2493,7 @@ argument_list|,
 name|sdhci_generic_release_host
 argument_list|)
 block|,
-comment|/* SDHCI registers accessors */
+comment|/* SDHCI accessors */
 name|DEVMETHOD
 argument_list|(
 name|sdhci_read_1
@@ -2498,6 +2548,13 @@ argument_list|(
 name|sdhci_write_multi_4
 argument_list|,
 name|sdhci_pci_write_multi_4
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|sdhci_set_uhs_timing
+argument_list|,
+name|sdhci_generic_set_uhs_timing
 argument_list|)
 block|,
 name|DEVMETHOD_END
