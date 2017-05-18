@@ -27410,6 +27410,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_usage
 parameter_list|(
