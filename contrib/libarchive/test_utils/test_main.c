@@ -6203,6 +6203,11 @@ argument_list|(
 name|expected
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|buff
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -6345,6 +6350,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|expected
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buff
 argument_list|)
 expr_stmt|;
 return|return

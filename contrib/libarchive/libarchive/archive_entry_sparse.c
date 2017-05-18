@@ -109,10 +109,10 @@ name|archive_entry
 modifier|*
 name|entry
 parameter_list|,
-name|int64_t
+name|la_int64_t
 name|offset
 parameter_list|,
-name|int64_t
+name|la_int64_t
 name|length
 parameter_list|)
 block|{
@@ -439,11 +439,11 @@ name|archive_entry
 modifier|*
 name|entry
 parameter_list|,
-name|int64_t
+name|la_int64_t
 modifier|*
 name|offset
 parameter_list|,
-name|int64_t
+name|la_int64_t
 modifier|*
 name|length
 parameter_list|)

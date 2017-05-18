@@ -98,6 +98,11 @@ literal|"This version of bsdcpio was compiled "
 literal|"without lz4 support"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* POSIX permits different handling of the spawnp 		 * system call used to launch the subsidiary 		 * program: */
@@ -122,6 +127,11 @@ name|skipping
 argument_list|(
 literal|"This version of bsdcpio uses an external lz4 program "
 literal|"but no such program is available on this system."
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 return|return;
@@ -149,6 +159,11 @@ literal|"This version of bsdcpio uses an external lz4 program "
 literal|"but no such program is available on this system."
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* On some systems the error won't be detected until closing 		   time, by a 127 exit error returned by waitpid. */
@@ -174,12 +189,22 @@ literal|"This version of bsdcpio uses an external lz4 program "
 literal|"but no such program is available on this system."
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|failure
 argument_list|(
 literal|"--lz4 option is broken: %s"
 argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
@@ -192,6 +217,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Check that the archive file has an lz4 signature. */
 name|p
 operator|=
@@ -217,6 +247,11 @@ argument_list|,
 literal|"\x04\x22\x4d\x18"
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

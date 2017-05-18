@@ -66,12 +66,10 @@ argument_list|,
 literal|"archive.err"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
 name|p
-index|[
-name|s
-index|]
-operator|=
-literal|'\0'
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -133,6 +131,11 @@ argument_list|,
 literal|"\x1f\x8b\x08\x00"
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
