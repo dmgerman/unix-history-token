@@ -193,6 +193,27 @@ name|__u64
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|POOL_FILE_MODE
+value|(S_IRUSR | S_IWUSR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POOL_DIR_MODE
+value|(POOL_FILE_MODE | S_IXUSR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POOL_DIR
+value|"/var/db/hyperv/pool"
+end_define
+
 begin_comment
 comment|/*  * ENUM Data  */
 end_comment
@@ -1072,13 +1093,9 @@ if|if
 condition|(
 name|mkdir
 argument_list|(
-literal|"/var/db/hyperv/pool"
+name|POOL_DIR
 argument_list|,
-name|S_IRUSR
-operator||
-name|S_IWUSR
-operator||
-name|S_IROTH
+name|POOL_DIR_MODE
 argument_list|)
 operator|<
 literal|0
@@ -1107,6 +1124,14 @@ name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
+name|chmod
+argument_list|(
+name|POOL_DIR
+argument_list|,
+name|POOL_DIR_MODE
+argument_list|)
+expr_stmt|;
+comment|/* fix old mistake */
 for|for
 control|(
 name|i
@@ -1159,11 +1184,7 @@ name|O_RDWR
 operator||
 name|O_CREAT
 argument_list|,
-name|S_IRUSR
-operator||
-name|S_IWUSR
-operator||
-name|S_IROTH
+name|POOL_FILE_MODE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1180,6 +1201,14 @@ literal|1
 operator|)
 return|;
 block|}
+name|fchmod
+argument_list|(
+name|fd
+argument_list|,
+name|POOL_FILE_MODE
+argument_list|)
+expr_stmt|;
+comment|/* fix old mistake */
 name|filep
 operator|=
 name|fopen
