@@ -9139,6 +9139,13 @@ name|rem
 operator|=
 operator|(
 operator|(
+operator|(
+name|unsigned
+operator|)
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 operator|)
