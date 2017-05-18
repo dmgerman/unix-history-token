@@ -462,6 +462,9 @@ literal|0xffff
 block|,
 literal|"Intel Apollo Lake SDXC Controller"
 block|,
+name|SDHCI_QUIRK_BROKEN_DMA
+operator||
+comment|/* APL18 erratum */
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 operator||
 name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
@@ -474,6 +477,9 @@ literal|0xffff
 block|,
 literal|"Intel Apollo Lake eMMC 5.0 Controller"
 block|,
+name|SDHCI_QUIRK_BROKEN_DMA
+operator||
+comment|/* APL18 erratum */
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET

@@ -163,7 +163,7 @@ literal|"80860F14"
 block|,
 literal|1
 block|,
-literal|"Intel Bay Trail eMMC 4.5 Controller"
+literal|"Intel Bay Trail/Braswell eMMC 4.5/4.5.1 Controller"
 block|,
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
 operator||
@@ -183,7 +183,7 @@ literal|"80860F14"
 block|,
 literal|3
 block|,
-literal|"Intel Bay Trail SDXC Controller"
+literal|"Intel Bay Trail/Braswell SDXC Controller"
 block|,
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 operator||
@@ -195,9 +195,47 @@ literal|"80860F16"
 block|,
 literal|0
 block|,
-literal|"Intel Bay Trail SDXC Controller"
+literal|"Intel Bay Trail/Braswell SDXC Controller"
 block|,
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+operator||
+name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
+block|}
+block|,
+block|{
+literal|"80865ACA"
+block|,
+literal|0
+block|,
+literal|"Intel Apollo Lake SDXC Controller"
+block|,
+name|SDHCI_QUIRK_BROKEN_DMA
+operator||
+comment|/* APL18 erratum */
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+operator||
+name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
+block|}
+block|,
+block|{
+literal|"80865ACC"
+block|,
+literal|0
+block|,
+literal|"Intel Apollo Lake eMMC 5.0 Controller"
+block|,
+name|SDHCI_QUIRK_BROKEN_DMA
+operator||
+comment|/* APL18 erratum */
+name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
+operator||
+name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+operator||
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+operator||
+name|SDHCI_QUIRK_MMC_DDR52
+operator||
+name|SDHCI_QUIRK_CAPS_BIT63_FOR_MMC_HS400
 operator||
 name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
 block|}
@@ -226,6 +264,10 @@ block|{
 literal|"80860F14"
 block|,
 literal|"80860F16"
+block|,
+literal|"80865ACA"
+block|,
+literal|"80865ACC"
 block|,
 name|NULL
 block|}
@@ -1096,6 +1138,60 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+comment|/* Intel Braswell eMMC 4.5.1 controller quirk */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|acpi_dev
+operator|->
+name|hid
+argument_list|,
+literal|"80860F14"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|acpi_dev
+operator|->
+name|uid
+operator|==
+literal|1
+operator|&&
+name|SDHCI_READ_4
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|slot
+argument_list|,
+name|SDHCI_CAPABILITIES
+argument_list|)
+operator|==
+literal|0x446cc8b2
+operator|&&
+name|SDHCI_READ_4
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|slot
+argument_list|,
+name|SDHCI_CAPABILITIES2
+argument_list|)
+operator|==
+literal|0x00000807
+condition|)
+name|sc
+operator|->
+name|quirks
+operator||=
+name|SDHCI_QUIRK_DATA_TIMEOUT_1MHZ
+expr_stmt|;
 name|sc
 operator|->
 name|quirks
