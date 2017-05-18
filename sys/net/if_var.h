@@ -772,11 +772,6 @@ modifier|*
 name|if_addr
 decl_stmt|;
 comment|/* pointer to link-level address */
-name|void
-modifier|*
-name|if_hw_addr
-decl_stmt|;
-comment|/* hardware link-level address */
 specifier|const
 name|u_int8_t
 modifier|*
@@ -1011,10 +1006,15 @@ name|void
 modifier|*
 name|if_pspare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 comment|/* packet pacing / general use */
+name|void
+modifier|*
+name|if_hw_addr
+decl_stmt|;
+comment|/* hardware link-level address */
 name|int
 name|if_ispare
 index|[
