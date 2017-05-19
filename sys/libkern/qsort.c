@@ -82,7 +82,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|__inline
+specifier|inline
 name|char
 modifier|*
 name|med3
@@ -107,7 +107,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|swapfunc
 parameter_list|(
@@ -117,24 +117,14 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
+name|size_t
+parameter_list|,
 name|int
 parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(a)< (b) ? (a) : (b)
-end_define
 
 begin_comment
 comment|/*  * Qsort routine from Bentley& McIlroy's "Engineering a Sort Function".  */
@@ -153,7 +143,7 @@ name|parmj
 parameter_list|,
 name|n
 parameter_list|)
-value|{ 		\ 	long i = (n) / sizeof (TYPE); 			\ 	TYPE *pi = (TYPE *) (parmi); 			\ 	TYPE *pj = (TYPE *) (parmj); 			\ 	do { 						\ 		TYPE	t = *pi;			\ 		*pi++ = *pj;				\ 		*pj++ = t;				\         } while (--i> 0);				\ }
+value|{		\ 	size_t i = (n) / sizeof (TYPE);			\ 	TYPE *pi = (TYPE *) (parmi);		\ 	TYPE *pj = (TYPE *) (parmj);		\ 	do { 						\ 		TYPE	t = *pi;		\ 		*pi++ = *pj;				\ 		*pj++ = t;				\ 	} while (--i> 0);				\ }
 end_define
 
 begin_define
@@ -161,16 +151,18 @@ define|#
 directive|define
 name|SWAPINIT
 parameter_list|(
+name|TYPE
+parameter_list|,
 name|a
 parameter_list|,
 name|es
 parameter_list|)
-value|swaptype = ((char *)a - (char *)0) % sizeof(long) || \ 	es % sizeof(long) ? 2 : es == sizeof(long)? 0 : 1;
+value|swaptype_ ## TYPE =	\ 	((char *)a - (char *)0) % sizeof(TYPE) ||	\ 	es % sizeof(TYPE) ? 2 : es == sizeof(TYPE) ? 0 : 1;
 end_define
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|swapfunc
 parameter_list|(
@@ -182,22 +174,42 @@ name|char
 modifier|*
 name|b
 parameter_list|,
-name|int
+name|size_t
 name|n
 parameter_list|,
 name|int
-name|swaptype
+name|swaptype_long
+parameter_list|,
+name|int
+name|swaptype_int
 parameter_list|)
 block|{
 if|if
 condition|(
-name|swaptype
+name|swaptype_long
 operator|<=
 literal|1
 condition|)
 name|swapcode
 argument_list|(
 argument|long
+argument_list|,
+argument|a
+argument_list|,
+argument|b
+argument_list|,
+argument|n
+argument_list|)
+elseif|else
+if|if
+condition|(
+name|swaptype_int
+operator|<=
+literal|1
+condition|)
+name|swapcode
+argument_list|(
+argument|int
 argument_list|,
 argument|a
 argument_list|,
@@ -229,7 +241,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|if (swaptype == 0) {				\ 		long t = *(long *)(a);			\ 		*(long *)(a) = *(long *)(b);		\ 		*(long *)(b) = t;			\ 	} else						\ 		swapfunc(a, b, es, swaptype)
+value|if (swaptype_long == 0) {			\ 		long t = *(long *)(a);			\ 		*(long *)(a) = *(long *)(b);		\ 		*(long *)(b) = t;			\ 	} else if (swaptype_int == 0) {			\ 		int t = *(int *)(a);			\ 		*(int *)(a) = *(int *)(b);		\ 		*(int *)(b) = t;			\ 	} else						\ 		swapfunc(a, b, es, swaptype_long, swaptype_int)
 end_define
 
 begin_define
@@ -243,7 +255,8 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|if ((n)> 0) swapfunc(a, b, n, swaptype)
+define|\
+value|if ((n)> 0) swapfunc(a, b, n, swaptype_long, swaptype_int)
 end_define
 
 begin_ifdef
@@ -292,7 +305,7 @@ end_endif
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|char
 modifier|*
 name|med3
@@ -479,12 +492,18 @@ decl_stmt|,
 modifier|*
 name|pn
 decl_stmt|;
+name|size_t
+name|d1
+decl_stmt|,
+name|d2
+decl_stmt|;
 name|int
-name|d
+name|cmp_result
+decl_stmt|;
+name|int
+name|swaptype_long
 decl_stmt|,
-name|r
-decl_stmt|,
-name|swaptype
+name|swaptype_int
 decl_stmt|,
 name|swap_cnt
 decl_stmt|;
@@ -492,6 +511,17 @@ name|loop
 label|:
 name|SWAPINIT
 argument_list|(
+name|long
+argument_list|,
+name|a
+argument_list|,
+name|es
+argument_list|)
+expr_stmt|;
+name|SWAPINIT
+argument_list|(
+name|int
+argument_list|,
 name|a
 argument_list|,
 name|es
@@ -628,8 +658,9 @@ operator|>
 literal|40
 condition|)
 block|{
+name|size_t
 name|d
-operator|=
+init|=
 operator|(
 name|n
 operator|/
@@ -637,7 +668,7 @@ literal|8
 operator|)
 operator|*
 name|es
-expr_stmt|;
+decl_stmt|;
 name|pl
 operator|=
 name|med3
@@ -766,7 +797,7 @@ operator|<=
 name|pc
 operator|&&
 operator|(
-name|r
+name|cmp_result
 operator|=
 name|CMP
 argument_list|(
@@ -783,7 +814,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|r
+name|cmp_result
 operator|==
 literal|0
 condition|)
@@ -816,7 +847,7 @@ operator|<=
 name|pc
 operator|&&
 operator|(
-name|r
+name|cmp_result
 operator|=
 name|CMP
 argument_list|(
@@ -833,7 +864,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|r
+name|cmp_result
 operator|==
 literal|0
 condition|)
@@ -976,9 +1007,9 @@ name|n
 operator|*
 name|es
 expr_stmt|;
-name|r
+name|d1
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|pa
 operator|-
@@ -999,14 +1030,14 @@ name|a
 argument_list|,
 name|pb
 operator|-
-name|r
+name|d1
 argument_list|,
-name|r
+name|d1
 argument_list|)
 expr_stmt|;
-name|r
+name|d1
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|pd
 operator|-
@@ -1025,23 +1056,38 @@ name|pb
 argument_list|,
 name|pn
 operator|-
-name|r
+name|d1
 argument_list|,
-name|r
+name|d1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|r
+name|d1
 operator|=
 name|pb
 operator|-
 name|pa
-operator|)
+expr_stmt|;
+name|d2
+operator|=
+name|pd
+operator|-
+name|pc
+expr_stmt|;
+if|if
+condition|(
+name|d1
+operator|<=
+name|d2
+condition|)
+block|{
+comment|/* Recurse on left partition, then iterate on right partition */
+if|if
+condition|(
+name|d1
 operator|>
 name|es
 condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|I_AM_QSORT_R
@@ -1049,7 +1095,7 @@ name|qsort_r
 argument_list|(
 name|a
 argument_list|,
-name|r
+name|d1
 operator|/
 name|es
 argument_list|,
@@ -1066,7 +1112,7 @@ name|qsort
 argument_list|(
 name|a
 argument_list|,
-name|r
+name|d1
 operator|/
 name|es
 argument_list|,
@@ -1077,35 +1123,102 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 if|if
 condition|(
-operator|(
-name|r
-operator|=
-name|pd
-operator|-
-name|pc
-operator|)
+name|d2
 operator|>
 name|es
 condition|)
 block|{
 comment|/* Iterate rather than recurse to save stack space */
+comment|/* qsort(pn - d2, d2 / es, es, cmp); */
 name|a
 operator|=
 name|pn
 operator|-
-name|r
+name|d2
 expr_stmt|;
 name|n
 operator|=
-name|r
+name|d2
 operator|/
 name|es
 expr_stmt|;
 goto|goto
 name|loop
 goto|;
+block|}
+block|}
+else|else
+block|{
+comment|/* Recurse on right partition, then iterate on left partition */
+if|if
+condition|(
+name|d2
+operator|>
+name|es
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|I_AM_QSORT_R
+name|qsort_r
+argument_list|(
+name|pn
+operator|-
+name|d2
+argument_list|,
+name|d2
+operator|/
+name|es
+argument_list|,
+name|es
+argument_list|,
+name|thunk
+argument_list|,
+name|cmp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|qsort
+argument_list|(
+name|pn
+operator|-
+name|d2
+argument_list|,
+name|d2
+operator|/
+name|es
+argument_list|,
+name|es
+argument_list|,
+name|cmp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+if|if
+condition|(
+name|d1
+operator|>
+name|es
+condition|)
+block|{
+comment|/* Iterate rather than recurse to save stack space */
+comment|/* qsort(a, d1 / es, es, cmp); */
+name|n
+operator|=
+name|d1
+operator|/
+name|es
+expr_stmt|;
+goto|goto
+name|loop
+goto|;
+block|}
 block|}
 block|}
 end_decl_stmt
