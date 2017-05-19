@@ -968,7 +968,7 @@ name|pst
 operator|->
 name|drop_prob
 expr_stmt|;
-comment|/* calculate current qdelay */
+comment|/* calculate current qdelay using DRE method. 	 * If TS is used and no data in the queue, reset current_qdelay 	 * as it stays at last value during dequeue process.  	*/
 if|if
 condition|(
 name|pprms
@@ -977,7 +977,6 @@ name|flags
 operator|&
 name|PIE_DEPRATEEST_ENABLED
 condition|)
-block|{
 name|pst
 operator|->
 name|current_qdelay
@@ -1001,7 +1000,24 @@ operator|)
 operator|>>
 name|PIE_DQ_THRESHOLD_BITS
 expr_stmt|;
-block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|pst
+operator|->
+name|pq
+operator|->
+name|ni
+operator|.
+name|len_bytes
+condition|)
+name|pst
+operator|->
+name|current_qdelay
+operator|=
+literal|0
+expr_stmt|;
 comment|/* calculate drop probability */
 name|p
 operator|=
