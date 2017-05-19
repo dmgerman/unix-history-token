@@ -1222,37 +1222,6 @@ value|CESA_TDMA_ECR_DATA_ERROR
 end_define
 
 begin_comment
-comment|/*  CESA TDMA address decoding registers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_CESA_CTRL
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x8 * (n) + 0xA04)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_CESA_BASE
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x8 * (n) + 0xA00)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_CESA_MAX
-value|4
-end_define
-
-begin_comment
 comment|/* CESA SA registers definitions */
 end_comment
 
