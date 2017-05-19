@@ -8419,7 +8419,9 @@ if|if
 condition|(
 name|priv
 operator|->
-name|sysctl
+name|stat_sysctl
+operator|!=
+name|NULL
 condition|)
 name|sysctl_ctx_free
 argument_list|(
@@ -9092,7 +9094,9 @@ if|if
 condition|(
 name|priv
 operator|->
-name|sysctl
+name|conf_sysctl
+operator|!=
+name|NULL
 condition|)
 name|sysctl_ctx_free
 argument_list|(
@@ -13418,7 +13422,7 @@ argument_list|)
 expr_stmt|;
 name|priv
 operator|->
-name|sysctl
+name|conf_sysctl
 operator|=
 name|SYSCTL_ADD_NODE
 argument_list|(
@@ -13452,7 +13456,7 @@ name|SYSCTL_CHILDREN
 argument_list|(
 name|priv
 operator|->
-name|sysctl
+name|conf_sysctl
 argument_list|)
 argument_list|,
 name|OID_AUTO
@@ -13901,11 +13905,6 @@ modifier|*
 name|ctx
 decl_stmt|;
 name|struct
-name|sysctl_oid
-modifier|*
-name|node
-decl_stmt|;
-name|struct
 name|sysctl_oid_list
 modifier|*
 name|node_list
@@ -13951,7 +13950,9 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|node
+name|priv
+operator|->
+name|stat_sysctl
 operator|=
 name|SYSCTL_ADD_NODE
 argument_list|(
@@ -13961,7 +13962,7 @@ name|SYSCTL_CHILDREN
 argument_list|(
 name|priv
 operator|->
-name|sysctl
+name|conf_sysctl
 argument_list|)
 argument_list|,
 name|OID_AUTO
@@ -13979,7 +13980,9 @@ name|node_list
 operator|=
 name|SYSCTL_CHILDREN
 argument_list|(
-name|node
+name|priv
+operator|->
+name|stat_sysctl
 argument_list|)
 expr_stmt|;
 ifdef|#
