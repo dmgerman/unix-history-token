@@ -2883,6 +2883,11 @@ name|pid_t
 name|p_reapsubtree
 decl_stmt|;
 comment|/* (e) Pid of the direct child of the 					       reaper which spawned 					       our subtree. */
+comment|/* End area that is copied on creation. */
+define|#
+directive|define
+name|p_endcopy
+value|p_xexit
 name|u_int
 name|p_xexit
 decl_stmt|;
@@ -2891,11 +2896,6 @@ name|u_int
 name|p_xsig
 decl_stmt|;
 comment|/* (c) Stop/kill sig. */
-comment|/* End area that is copied on creation. */
-define|#
-directive|define
-name|p_endcopy
-value|p_pgrp
 name|struct
 name|pgrp
 modifier|*
