@@ -1212,6 +1212,15 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+comment|/* Turn off all unsupported QP allocation flags */
+name|flags
+operator|&=
+name|dev
+operator|->
+name|caps
+operator|.
+name|alloc_res_qp_mask
+expr_stmt|;
 if|if
 condition|(
 name|mlx4_is_mfunc
