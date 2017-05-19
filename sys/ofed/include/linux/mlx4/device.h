@@ -737,6 +737,12 @@ init|=
 literal|1LL
 operator|<<
 literal|25
+block|,
+name|MLX4_DEV_CAP_FLAG2_SYS_EQS
+init|=
+literal|1LL
+operator|<<
+literal|26
 block|, }
 enum|;
 end_enum
@@ -1697,6 +1703,9 @@ name|max_cqes
 decl_stmt|;
 name|int
 name|reserved_cqs
+decl_stmt|;
+name|int
+name|num_sys_eqs
 decl_stmt|;
 name|int
 name|num_eqs
