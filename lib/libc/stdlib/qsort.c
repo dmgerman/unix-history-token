@@ -145,7 +145,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -183,7 +183,7 @@ name|parmj
 parameter_list|,
 name|n
 parameter_list|)
-value|{		\ 	long i = (n) / sizeof (TYPE);			\ 	TYPE *pi = (TYPE *) (parmi);		\ 	TYPE *pj = (TYPE *) (parmj);		\ 	do { 						\ 		TYPE	t = *pi;		\ 		*pi++ = *pj;				\ 		*pj++ = t;				\ 	} while (--i> 0);				\ }
+value|{		\ 	size_t i = (n) / sizeof (TYPE);			\ 	TYPE *pi = (TYPE *) (parmi);		\ 	TYPE *pj = (TYPE *) (parmj);		\ 	do { 						\ 		TYPE	t = *pi;		\ 		*pi++ = *pj;				\ 		*pj++ = t;				\ 	} while (--i> 0);				\ }
 end_define
 
 begin_define
@@ -214,7 +214,7 @@ name|char
 modifier|*
 name|b
 parameter_list|,
-name|int
+name|size_t
 name|n
 parameter_list|,
 name|int
