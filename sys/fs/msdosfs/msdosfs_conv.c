@@ -125,7 +125,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|unix2doschr
 parameter_list|(
 specifier|const
@@ -152,7 +152,7 @@ parameter_list|(
 name|u_char
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|,
 name|struct
 name|msdosfsmount
@@ -163,7 +163,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|unix2winchr
 parameter_list|(
 specifier|const
@@ -2712,7 +2712,7 @@ decl_stmt|,
 modifier|*
 name|wcp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|c
 decl_stmt|;
 comment|/* 	 * Fill the dos filename string with blanks. These are DOS's pad 	 * characters. 	 */
@@ -3697,7 +3697,7 @@ modifier|*
 name|pmp
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|wcp
 decl_stmt|;
@@ -3706,7 +3706,7 @@ name|i
 decl_stmt|,
 name|end
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|code
 decl_stmt|;
 comment|/* 	 * Drop trailing blanks and dots 	 */
@@ -3760,7 +3760,7 @@ control|(
 name|wcp
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|wep
@@ -4081,7 +4081,7 @@ block|{
 name|size_t
 name|len
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|c1
 decl_stmt|,
 name|c2
@@ -4265,11 +4265,11 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|cp
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|np
 decl_stmt|,
@@ -4282,7 +4282,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|code
 decl_stmt|;
 name|int
@@ -4793,10 +4793,10 @@ comment|/*  * Compute the unrolled checksum of a DOS filename for Win95 LFN use.
 end_comment
 
 begin_function
-name|u_int8_t
+name|uint8_t
 name|winChksum
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|name
 parameter_list|)
@@ -4804,7 +4804,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|s
 decl_stmt|;
 for|for
@@ -5398,7 +5398,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|unix2doschr
 parameter_list|(
 specifier|const
@@ -5437,7 +5437,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|wc
 decl_stmt|;
 name|size_t
@@ -5728,7 +5728,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|c
 operator|)
@@ -5750,7 +5750,7 @@ name|u_char
 modifier|*
 name|outbuf
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|wc
 parameter_list|,
 name|struct
@@ -5937,7 +5937,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|unix2winchr
 parameter_list|(
 specifier|const
@@ -5968,7 +5968,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|wc
 decl_stmt|;
 name|size_t

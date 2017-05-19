@@ -1357,7 +1357,7 @@ literal|16
 condition|)
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|bpn
@@ -1379,7 +1379,7 @@ literal|32
 condition|)
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|bpn

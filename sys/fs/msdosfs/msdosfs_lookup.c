@@ -102,7 +102,7 @@ name|componentname
 modifier|*
 name|cnp
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|inum
 parameter_list|)
@@ -274,7 +274,7 @@ name|componentname
 modifier|*
 name|cnp
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|dd_inum
 parameter_list|)
@@ -381,7 +381,7 @@ decl_stmt|;
 name|int
 name|unlen
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|inode1
 decl_stmt|;
 name|int
@@ -2159,7 +2159,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|chksum
 init|=
 name|winChksum

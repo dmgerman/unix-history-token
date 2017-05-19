@@ -233,7 +233,7 @@ name|u_quad_t
 name|de_modrev
 decl_stmt|;
 comment|/* Revision level for lease. */
-name|u_int64_t
+name|uint64_t
 name|de_inode
 decl_stmt|;
 comment|/* Inode number (really byte offset of direntry) */
@@ -382,7 +382,7 @@ name|mod
 parameter_list|,
 name|cre
 parameter_list|)
-value|do {				\ 	if ((dep)->de_flag& DE_UPDATE) {				\ 		(dep)->de_flag |= DE_MODIFIED;				\ 		timespec2fattime((mod), 0,&(dep)->de_MDate,		\&(dep)->de_MTime, NULL);				\ 		(dep)->de_Attributes |= ATTR_ARCHIVE;			\ 	}								\ 	if ((dep)->de_pmp->pm_flags& MSDOSFSMNT_NOWIN95) {		\ 		(dep)->de_flag&= ~(DE_UPDATE | DE_CREATE | DE_ACCESS);	\ 		break;							\ 	}								\ 	if ((dep)->de_flag& DE_ACCESS) {				\ 		u_int16_t adate;					\ 									\ 		timespec2fattime((acc), 0,&adate, NULL, NULL);		\ 		if (adate != (dep)->de_ADate) {				\ 			(dep)->de_flag |= DE_MODIFIED;			\ 			(dep)->de_ADate = adate;			\ 		}							\ 	}								\ 	if ((dep)->de_flag& DE_CREATE) {				\ 		timespec2fattime((cre), 0,&(dep)->de_CDate,		\&(dep)->de_CTime,&(dep)->de_CHun);			\ 		(dep)->de_flag |= DE_MODIFIED;				\ 	}								\ 	(dep)->de_flag&= ~(DE_UPDATE | DE_CREATE | DE_ACCESS);		\ } while (0)
+value|do {				\ 	if ((dep)->de_flag& DE_UPDATE) {				\ 		(dep)->de_flag |= DE_MODIFIED;				\ 		timespec2fattime((mod), 0,&(dep)->de_MDate,		\&(dep)->de_MTime, NULL);				\ 		(dep)->de_Attributes |= ATTR_ARCHIVE;			\ 	}								\ 	if ((dep)->de_pmp->pm_flags& MSDOSFSMNT_NOWIN95) {		\ 		(dep)->de_flag&= ~(DE_UPDATE | DE_CREATE | DE_ACCESS);	\ 		break;							\ 	}								\ 	if ((dep)->de_flag& DE_ACCESS) {				\ 		uint16_t adate;						\ 									\ 		timespec2fattime((acc), 0,&adate, NULL, NULL);		\ 		if (adate != (dep)->de_ADate) {				\ 			(dep)->de_flag |= DE_MODIFIED;			\ 			(dep)->de_ADate = adate;			\ 		}							\ 	}								\ 	if ((dep)->de_flag& DE_CREATE) {				\ 		timespec2fattime((cre), 0,&(dep)->de_CDate,		\&(dep)->de_CTime,&(dep)->de_CHun);			\ 		(dep)->de_flag |= DE_MODIFIED;				\ 	}								\ 	(dep)->de_flag&= ~(DE_UPDATE | DE_CREATE | DE_ACCESS);		\ } while (0)
 end_define
 
 begin_comment
@@ -401,18 +401,18 @@ name|u_short
 name|defid_pad
 decl_stmt|;
 comment|/* force long alignment */
-name|u_int32_t
+name|uint32_t
 name|defid_dirclust
 decl_stmt|;
 comment|/* cluster this dir entry came from */
-name|u_int32_t
+name|uint32_t
 name|defid_dirofs
 decl_stmt|;
 comment|/* offset of entry within the cluster */
 if|#
 directive|if
 literal|0
-block|u_int32_t defid_gen;
+block|uint32_t defid_gen;
 comment|/* generation number */
 endif|#
 directive|endif

@@ -31,47 +31,47 @@ begin_struct
 struct|struct
 name|bpb33
 block|{
-name|u_int16_t
+name|uint16_t
 name|bpbBytesPerSec
 decl_stmt|;
 comment|/* bytes per sector */
-name|u_int8_t
+name|uint8_t
 name|bpbSecPerClust
 decl_stmt|;
 comment|/* sectors per cluster */
-name|u_int16_t
+name|uint16_t
 name|bpbResSectors
 decl_stmt|;
 comment|/* number of reserved sectors */
-name|u_int8_t
+name|uint8_t
 name|bpbFATs
 decl_stmt|;
 comment|/* number of FATs */
-name|u_int16_t
+name|uint16_t
 name|bpbRootDirEnts
 decl_stmt|;
 comment|/* number of root directory entries */
-name|u_int16_t
+name|uint16_t
 name|bpbSectors
 decl_stmt|;
 comment|/* total number of sectors */
-name|u_int8_t
+name|uint8_t
 name|bpbMedia
 decl_stmt|;
 comment|/* media descriptor */
-name|u_int16_t
+name|uint16_t
 name|bpbFATsecs
 decl_stmt|;
 comment|/* number of sectors per FAT */
-name|u_int16_t
+name|uint16_t
 name|bpbSecPerTrack
 decl_stmt|;
 comment|/* sectors per track */
-name|u_int16_t
+name|uint16_t
 name|bpbHeads
 decl_stmt|;
 comment|/* number of heads */
-name|u_int16_t
+name|uint16_t
 name|bpbHiddenSecs
 decl_stmt|;
 comment|/* number of hidden sectors */
@@ -87,51 +87,51 @@ begin_struct
 struct|struct
 name|bpb50
 block|{
-name|u_int16_t
+name|uint16_t
 name|bpbBytesPerSec
 decl_stmt|;
 comment|/* bytes per sector */
-name|u_int8_t
+name|uint8_t
 name|bpbSecPerClust
 decl_stmt|;
 comment|/* sectors per cluster */
-name|u_int16_t
+name|uint16_t
 name|bpbResSectors
 decl_stmt|;
 comment|/* number of reserved sectors */
-name|u_int8_t
+name|uint8_t
 name|bpbFATs
 decl_stmt|;
 comment|/* number of FATs */
-name|u_int16_t
+name|uint16_t
 name|bpbRootDirEnts
 decl_stmt|;
 comment|/* number of root directory entries */
-name|u_int16_t
+name|uint16_t
 name|bpbSectors
 decl_stmt|;
 comment|/* total number of sectors */
-name|u_int8_t
+name|uint8_t
 name|bpbMedia
 decl_stmt|;
 comment|/* media descriptor */
-name|u_int16_t
+name|uint16_t
 name|bpbFATsecs
 decl_stmt|;
 comment|/* number of sectors per FAT */
-name|u_int16_t
+name|uint16_t
 name|bpbSecPerTrack
 decl_stmt|;
 comment|/* sectors per track */
-name|u_int16_t
+name|uint16_t
 name|bpbHeads
 decl_stmt|;
 comment|/* number of heads */
-name|u_int32_t
+name|uint32_t
 name|bpbHiddenSecs
 decl_stmt|;
 comment|/* # of hidden sectors */
-name|u_int32_t
+name|uint32_t
 name|bpbHugeSectors
 decl_stmt|;
 comment|/* # of sectors if bpbSectors == 0 */
@@ -147,59 +147,59 @@ begin_struct
 struct|struct
 name|bpb710
 block|{
-name|u_int16_t
+name|uint16_t
 name|bpbBytesPerSec
 decl_stmt|;
 comment|/* bytes per sector */
-name|u_int8_t
+name|uint8_t
 name|bpbSecPerClust
 decl_stmt|;
 comment|/* sectors per cluster */
-name|u_int16_t
+name|uint16_t
 name|bpbResSectors
 decl_stmt|;
 comment|/* number of reserved sectors */
-name|u_int8_t
+name|uint8_t
 name|bpbFATs
 decl_stmt|;
 comment|/* number of FATs */
-name|u_int16_t
+name|uint16_t
 name|bpbRootDirEnts
 decl_stmt|;
 comment|/* number of root directory entries */
-name|u_int16_t
+name|uint16_t
 name|bpbSectors
 decl_stmt|;
 comment|/* total number of sectors */
-name|u_int8_t
+name|uint8_t
 name|bpbMedia
 decl_stmt|;
 comment|/* media descriptor */
-name|u_int16_t
+name|uint16_t
 name|bpbFATsecs
 decl_stmt|;
 comment|/* number of sectors per FAT */
-name|u_int16_t
+name|uint16_t
 name|bpbSecPerTrack
 decl_stmt|;
 comment|/* sectors per track */
-name|u_int16_t
+name|uint16_t
 name|bpbHeads
 decl_stmt|;
 comment|/* number of heads */
-name|u_int32_t
+name|uint32_t
 name|bpbHiddenSecs
 decl_stmt|;
 comment|/* # of hidden sectors */
-name|u_int32_t
+name|uint32_t
 name|bpbHugeSectors
 decl_stmt|;
 comment|/* # of sectors if bpbSectors == 0 */
-name|u_int32_t
+name|uint32_t
 name|bpbBigFATsecs
 decl_stmt|;
 comment|/* like bpbFATsecs for FAT32 */
-name|u_int16_t
+name|uint16_t
 name|bpbExtFlags
 decl_stmt|;
 comment|/* extended flags: */
@@ -213,7 +213,7 @@ directive|define
 name|FATMIRROR
 value|0x80
 comment|/* FAT is mirrored (like it always was) */
-name|u_int16_t
+name|uint16_t
 name|bpbFSVers
 decl_stmt|;
 comment|/* filesystem version */
@@ -222,19 +222,19 @@ directive|define
 name|FSVERS
 value|0
 comment|/* currently only 0 is understood */
-name|u_int32_t
+name|uint32_t
 name|bpbRootClust
 decl_stmt|;
 comment|/* start cluster for root directory */
-name|u_int16_t
+name|uint16_t
 name|bpbFSInfo
 decl_stmt|;
 comment|/* filesystem info structure sector */
-name|u_int16_t
+name|uint16_t
 name|bpbBackup
 decl_stmt|;
 comment|/* backup boot sector */
-name|u_int8_t
+name|uint8_t
 name|bpbReserved
 index|[
 literal|12
@@ -474,124 +474,124 @@ begin_struct
 struct|struct
 name|byte_bpb710
 block|{
-name|u_int8_t
+name|uint8_t
 name|bpbBytesPerSec
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* bytes per sector */
-name|u_int8_t
+name|uint8_t
 name|bpbSecPerClust
 decl_stmt|;
 comment|/* sectors per cluster */
-name|u_int8_t
+name|uint8_t
 name|bpbResSectors
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* number of reserved sectors */
-name|u_int8_t
+name|uint8_t
 name|bpbFATs
 decl_stmt|;
 comment|/* number of FATs */
-name|u_int8_t
+name|uint8_t
 name|bpbRootDirEnts
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* number of root directory entries */
-name|u_int8_t
+name|uint8_t
 name|bpbSectors
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* total number of sectors */
-name|u_int8_t
+name|uint8_t
 name|bpbMedia
 decl_stmt|;
 comment|/* media descriptor */
-name|u_int8_t
+name|uint8_t
 name|bpbFATsecs
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* number of sectors per FAT */
-name|u_int8_t
+name|uint8_t
 name|bpbSecPerTrack
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* sectors per track */
-name|u_int8_t
+name|uint8_t
 name|bpbHeads
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* number of heads */
-name|u_int8_t
+name|uint8_t
 name|bpbHiddenSecs
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* # of hidden sectors */
-name|u_int8_t
+name|uint8_t
 name|bpbHugeSectors
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* # of sectors if bpbSectors == 0 */
-name|u_int8_t
+name|uint8_t
 name|bpbBigFATsecs
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* like bpbFATsecs for FAT32 */
-name|u_int8_t
+name|uint8_t
 name|bpbExtFlags
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* extended flags: */
-name|u_int8_t
+name|uint8_t
 name|bpbFSVers
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* filesystem version */
-name|u_int8_t
+name|uint8_t
 name|bpbRootClust
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* start cluster for root directory */
-name|u_int8_t
+name|uint8_t
 name|bpbFSInfo
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* filesystem info structure sector */
-name|u_int8_t
+name|uint8_t
 name|bpbBackup
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* backup boot sector */
-name|u_int8_t
+name|uint8_t
 name|bpbReserved
 index|[
 literal|12
@@ -610,43 +610,43 @@ begin_struct
 struct|struct
 name|fsinfo
 block|{
-name|u_int8_t
+name|uint8_t
 name|fsisig1
 index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fsifill1
 index|[
 literal|480
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fsisig2
 index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fsinfree
 index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fsinxtfree
 index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fsifill2
 index|[
 literal|12
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fsisig3
 index|[
 literal|4

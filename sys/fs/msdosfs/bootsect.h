@@ -31,7 +31,7 @@ begin_struct
 struct|struct
 name|bootsector33
 block|{
-name|u_int8_t
+name|uint8_t
 name|bsJump
 index|[
 literal|3
@@ -63,10 +63,10 @@ literal|479
 index|]
 decl_stmt|;
 comment|/* pad so struct is 512b */
-name|u_int8_t
+name|uint8_t
 name|bsBootSectSig0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bsBootSectSig1
 decl_stmt|;
 define|#
@@ -130,7 +130,7 @@ begin_struct
 struct|struct
 name|bootsector50
 block|{
-name|u_int8_t
+name|uint8_t
 name|bsJump
 index|[
 literal|3
@@ -165,10 +165,10 @@ literal|448
 index|]
 decl_stmt|;
 comment|/* pad so structure is 512b */
-name|u_int8_t
+name|uint8_t
 name|bsBootSectSig0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bsBootSectSig1
 decl_stmt|;
 define|#
@@ -187,7 +187,7 @@ begin_struct
 struct|struct
 name|bootsector710
 block|{
-name|u_int8_t
+name|uint8_t
 name|bsJump
 index|[
 literal|3
@@ -222,10 +222,10 @@ literal|420
 index|]
 decl_stmt|;
 comment|/* pad so structure is 512b */
-name|u_int8_t
+name|uint8_t
 name|bsBootSectSig0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bsBootSectSig1
 decl_stmt|;
 define|#
