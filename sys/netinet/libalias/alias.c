@@ -2636,11 +2636,6 @@ argument_list|(
 name|la
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|create
-expr_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
 condition|(
@@ -2653,6 +2648,16 @@ condition|)
 return|return
 operator|(
 name|PKT_ALIAS_OK
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|create
+condition|)
+return|return
+operator|(
+name|PKT_ALIAS_IGNORED
 operator|)
 return|;
 name|lnk
