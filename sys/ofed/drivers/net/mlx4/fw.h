@@ -424,6 +424,9 @@ decl_stmt|;
 name|u8
 name|def_counter_index
 decl_stmt|;
+name|u8
+name|extra_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
