@@ -13100,6 +13100,7 @@ name|p_flag
 operator|&
 name|P_TRACED
 operator|||
+operator|(
 name|SIGISMEMBER
 argument_list|(
 name|ps
@@ -13108,6 +13109,17 @@ name|ps_sigcatch
 argument_list|,
 name|sig
 argument_list|)
+operator|&&
+operator|!
+name|SIGISMEMBER
+argument_list|(
+name|td
+operator|->
+name|td_sigmask
+argument_list|,
+name|sig
+argument_list|)
+operator|)
 condition|)
 name|tdsigwakeup
 argument_list|(
