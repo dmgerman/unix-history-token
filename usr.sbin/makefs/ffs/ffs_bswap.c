@@ -87,16 +87,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|panic
-parameter_list|(
-name|x
-parameter_list|)
-value|printf("%s\n", (x)), abort()
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -118,6 +108,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ffs/ffs_extern.h"
 end_include
 
 begin_define

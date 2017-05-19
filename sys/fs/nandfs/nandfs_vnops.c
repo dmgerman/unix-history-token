@@ -524,7 +524,6 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -534,7 +533,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|nandfs_node
 modifier|*

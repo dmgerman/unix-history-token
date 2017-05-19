@@ -1007,7 +1007,6 @@ name|int
 name|sustain
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|sound
 decl_stmt|,
@@ -1223,7 +1222,6 @@ name|timeval
 decl_stmt|,
 name|tempo
 decl_stmt|;
-specifier|register
 name|char
 name|c
 init|=

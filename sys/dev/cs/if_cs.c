@@ -4769,7 +4769,6 @@ specifier|static
 name|int
 name|cs_ioctl
 parameter_list|(
-specifier|register
 name|struct
 name|ifnet
 modifier|*

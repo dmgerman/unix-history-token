@@ -830,6 +830,38 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Disable this warning from clang:  *  * cast from 'char *' to  *    'struct stack *' increases required alignment from 1 to 8  *    [-Werror,-Wcast-align]  *                 spare_stack = (struct stack *)  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__clang__
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|diagnostic
+name|push
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|diagnostic
+name|ignored
+literal|"-Wcast-align"
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* This function must be called with _thread_list_lock held. */
 end_comment
 
@@ -984,6 +1016,25 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__clang__
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|diagnostic
+name|pop
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

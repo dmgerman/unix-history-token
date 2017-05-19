@@ -1208,7 +1208,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|register
 name|struct
 name|getgroups_args
 modifier|*
@@ -1337,7 +1336,6 @@ begin_function
 name|int
 name|sys_setsid
 parameter_list|(
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1586,7 +1584,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|register
 name|struct
 name|setpgid_args
 modifier|*
@@ -1602,14 +1599,12 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-specifier|register
 name|struct
 name|proc
 modifier|*
 name|targp
 decl_stmt|;
 comment|/* target process */
-specifier|register
 name|struct
 name|pgrp
 modifier|*
@@ -3544,7 +3539,6 @@ begin_function
 name|int
 name|sys_setreuid
 parameter_list|(
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -3952,7 +3946,6 @@ begin_function
 name|int
 name|sys_setregid
 parameter_list|(
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -4326,7 +4319,6 @@ begin_function
 name|int
 name|sys_setresuid
 parameter_list|(
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -4776,7 +4768,6 @@ begin_function
 name|int
 name|sys_setresgid
 parameter_list|(
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -5181,7 +5172,6 @@ begin_function
 name|int
 name|sys_getresuid
 parameter_list|(
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -5353,7 +5343,6 @@ begin_function
 name|int
 name|sys_getresgid
 parameter_list|(
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -5522,7 +5511,6 @@ begin_function
 name|int
 name|sys_issetugid
 parameter_list|(
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -7622,7 +7610,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ucred
 modifier|*

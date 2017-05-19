@@ -465,7 +465,7 @@ condition|)
 block|{
 name|kern_yield
 argument_list|(
-literal|0
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -516,7 +516,7 @@ name|EINTR
 case|:
 name|kern_yield
 argument_list|(
-literal|0
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 goto|goto

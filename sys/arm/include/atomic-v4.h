@@ -835,7 +835,6 @@ name|u_int32_t
 name|newval
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|done
 decl_stmt|,

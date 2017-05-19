@@ -1063,7 +1063,6 @@ name|int
 name|addr
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|d
 decl_stmt|,
@@ -1167,7 +1166,6 @@ modifier|*
 name|dest
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2116,7 +2114,6 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6717,7 +6714,6 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

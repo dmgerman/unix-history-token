@@ -2693,7 +2693,6 @@ operator|->
 name|vpo_dev
 argument_list|)
 decl_stmt|;
-specifier|register
 name|char
 name|r
 decl_stmt|;
@@ -2711,7 +2710,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|k
 decl_stmt|;

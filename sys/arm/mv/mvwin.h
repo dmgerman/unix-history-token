@@ -966,6 +966,37 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* CESA TDMA address decoding registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_CTRL
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x8 * (n) + 0xA04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_BASE
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x8 * (n) + 0xA00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_MAX
+value|4
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1000,7 +1031,7 @@ name|MV_WIN_USB3_CTRL
 parameter_list|(
 name|n
 parameter_list|)
-value|(0x8 * (n))
+value|(0x8 * (n) + 0x4000)
 end_define
 
 begin_define
@@ -1010,7 +1041,7 @@ name|MV_WIN_USB3_BASE
 parameter_list|(
 name|n
 parameter_list|)
-value|(0x8 * (n) + 0x4)
+value|(0x8 * (n) + 0x4004)
 end_define
 
 begin_define
@@ -1621,6 +1652,61 @@ name|MV_CPU_SUBSYS_REGS_LEN
 value|0x100
 end_define
 
+begin_define
+define|#
+directive|define
+name|IO_WIN_9_CTRL_OFFSET
+value|0x98
+end_define
+
+begin_define
+define|#
+directive|define
+name|IO_WIN_9_BASE_OFFSET
+value|0x9C
+end_define
+
+begin_comment
+comment|/* Mbus decoding unit IDs and attributes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBUS_BOOTROM_TGT_ID
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBUS_BOOTROM_ATTR
+value|0x1D
+end_define
+
+begin_comment
+comment|/* Internal Units Sync Barrier Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MV_SYNC_BARRIER_CTRL
+value|0x84
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_SYNC_BARRIER_CTRL_ALL
+value|0xFFFF
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* IO Window Control Register fields */
 end_comment
@@ -1694,61 +1780,6 @@ directive|define
 name|IO_WIN_ENA_MASK
 value|0x1
 end_define
-
-begin_define
-define|#
-directive|define
-name|IO_WIN_9_CTRL_OFFSET
-value|0x98
-end_define
-
-begin_define
-define|#
-directive|define
-name|IO_WIN_9_BASE_OFFSET
-value|0x9C
-end_define
-
-begin_comment
-comment|/* Mbus decoding unit IDs and attributes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBUS_BOOTROM_TGT_ID
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBUS_BOOTROM_ATTR
-value|0x1D
-end_define
-
-begin_comment
-comment|/* Internal Units Sync Barrier Control Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MV_SYNC_BARRIER_CTRL
-value|0x84
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_SYNC_BARRIER_CTRL_ALL
-value|0xFFFF
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

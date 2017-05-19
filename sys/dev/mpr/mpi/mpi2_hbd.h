@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2012-2015 LSI Corp.  * Copyright (c) 2013-2016 Avag
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 2009-2015 LSI Corporation.  *  Copyright (c) 2013-2016 Avago Technologies  *  All rights reserved.  *  *  *           Name:  mpi2_hbd.h  *          Title:  MPI Host Based Discovery messages and structures  *  Creation Date:  October 21, 2009  *  *  mpi2_hbd.h Version:  02.00.03  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  10-28-09  02.00.00  Initial version.  *  08-11-10  02.00.01  Removed PortGroups, DmaGroup, and ControlGroup from  *                      HBD Action request, replaced by AdditionalInfo field.  *  11-18-11  02.00.02  Incorporating additions for MPI v2.5.  *  11-18-14  02.00.03  Updated copyright information.  *  --------------------------------------------------------------------------  */
+comment|/*  *  Copyright (c) 2009-2015 LSI Corporation.  *  Copyright (c) 2013-2016 Avago Technologies  *  All rights reserved.  *  *  *           Name:  mpi2_hbd.h  *          Title:  MPI Host Based Discovery messages and structures  *  Creation Date:  October 21, 2009  *  *  mpi2_hbd.h Version:  02.00.04  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  10-28-09  02.00.00  Initial version.  *  08-11-10  02.00.01  Removed PortGroups, DmaGroup, and ControlGroup from  *                      HBD Action request, replaced by AdditionalInfo field.  *  11-18-11  02.00.02  Incorporating additions for MPI v2.5.  *  11-18-14  02.00.03  Updated copyright information.  *  02-17-16  02.00.04  Added SAS 4 22.5 gbs speed support.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -319,6 +319,13 @@ define|#
 directive|define
 name|MPI25_HBD_MAX_RATE_12_0
 value|(0x0B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_HBD_MAX_RATE_22_5
+value|(0x0C)
 end_define
 
 begin_comment

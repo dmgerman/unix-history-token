@@ -982,7 +982,6 @@ modifier|*
 name|dest
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1855,7 +1854,6 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3383,7 +3381,6 @@ block|{
 name|caddr_t
 name|ptr
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6511,7 +6508,6 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

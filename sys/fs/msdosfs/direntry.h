@@ -35,7 +35,7 @@ begin_struct
 struct|struct
 name|direntry
 block|{
-name|u_int8_t
+name|uint8_t
 name|deName
 index|[
 literal|11
@@ -57,7 +57,7 @@ directive|define
 name|SLOT_DELETED
 value|0xe5
 comment|/* file in this slot deleted */
-name|u_int8_t
+name|uint8_t
 name|deAttributes
 decl_stmt|;
 comment|/* file attributes */
@@ -96,7 +96,7 @@ directive|define
 name|ATTR_ARCHIVE
 value|0x20
 comment|/* file is new or modified */
-name|u_int8_t
+name|uint8_t
 name|deLowerCase
 decl_stmt|;
 comment|/* NT VFAT lower case flags */
@@ -110,60 +110,60 @@ directive|define
 name|LCASE_EXT
 value|0x10
 comment|/* filename extension in lower case */
-name|u_int8_t
+name|uint8_t
 name|deCHundredth
 decl_stmt|;
 comment|/* hundredth of seconds in CTime */
-name|u_int8_t
+name|uint8_t
 name|deCTime
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* create time */
-name|u_int8_t
+name|uint8_t
 name|deCDate
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* create date */
-name|u_int8_t
+name|uint8_t
 name|deADate
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* access date */
-name|u_int8_t
+name|uint8_t
 name|deHighClust
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* high bytes of cluster number */
-name|u_int8_t
+name|uint8_t
 name|deMTime
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* last update time */
-name|u_int8_t
+name|uint8_t
 name|deMDate
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* last update date */
-name|u_int8_t
+name|uint8_t
 name|deStartCluster
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* starting cluster of file */
-name|u_int8_t
+name|uint8_t
 name|deFileSize
 index|[
 literal|4
@@ -182,7 +182,7 @@ begin_struct
 struct|struct
 name|winentry
 block|{
-name|u_int8_t
+name|uint8_t
 name|weCnt
 decl_stmt|;
 define|#
@@ -193,35 +193,35 @@ define|#
 directive|define
 name|WIN_CNT
 value|0x3f
-name|u_int8_t
+name|uint8_t
 name|wePart1
 index|[
 literal|10
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|weAttributes
 decl_stmt|;
 define|#
 directive|define
 name|ATTR_WIN95
 value|0x0f
-name|u_int8_t
+name|uint8_t
 name|weReserved1
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|weChksum
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|wePart2
 index|[
 literal|12
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|weReserved2
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|wePart3
 index|[
 literal|4
@@ -608,10 +608,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int8_t
+name|uint8_t
 name|winChksum
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|name
 parameter_list|)

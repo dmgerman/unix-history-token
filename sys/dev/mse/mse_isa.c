@@ -1220,7 +1220,6 @@ modifier|*
 name|but
 parameter_list|)
 block|{
-specifier|register
 name|char
 name|x
 decl_stmt|,

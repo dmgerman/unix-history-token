@@ -806,6 +806,25 @@ literal|"UFS label"
 block|}
 block|,
 block|{
+literal|'s'
+block|,
+literal|"softupdates"
+block|,
+operator|&
+name|ffs_opts
+operator|->
+name|softupdates
+block|,
+name|OPT_INT32
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|"enable softupdates"
+block|}
+block|,
+block|{
 operator|.
 name|name
 operator|=
@@ -888,6 +907,12 @@ operator|->
 name|version
 operator|=
 literal|1
+expr_stmt|;
+name|ffs_opts
+operator|->
+name|softupdates
+operator|=
+literal|0
 expr_stmt|;
 name|fsopts
 operator|->
@@ -5922,7 +5947,8 @@ name|int
 name|cg
 decl_stmt|,
 name|cgino
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|i
 decl_stmt|;
 name|daddr_t
@@ -5934,7 +5960,7 @@ index|[
 name|FFS_MAXBSIZE
 index|]
 decl_stmt|;
-name|int32_t
+name|uint32_t
 name|initediblk
 decl_stmt|;
 name|ffs_opt_t

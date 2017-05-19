@@ -18920,6 +18920,11 @@ goto|goto
 name|err_free_eq
 goto|;
 block|}
+name|mlx4_init_quotas
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|mlx4_setup_hca
@@ -18992,11 +18997,6 @@ condition|)
 goto|goto
 name|err_steer
 goto|;
-name|mlx4_init_quotas
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|mlx4_init_hca_info
 argument_list|(
 name|dev

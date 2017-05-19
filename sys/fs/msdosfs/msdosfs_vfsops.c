@@ -1989,7 +1989,7 @@ name|byte_bpb710
 modifier|*
 name|b710
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|SecPerClust
 decl_stmt|;
 name|u_long

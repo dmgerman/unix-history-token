@@ -665,7 +665,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|proc
 modifier|*

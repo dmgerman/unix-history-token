@@ -1068,17 +1068,14 @@ name|int
 name|h
 decl_stmt|;
 comment|/* table level */
-specifier|register
 name|unsigned
 name|i
 decl_stmt|;
 comment|/* counter, current code */
-specifier|register
 name|unsigned
 name|j
 decl_stmt|;
 comment|/* counter */
-specifier|register
 name|int
 name|k
 decl_stmt|;
@@ -1101,13 +1098,11 @@ operator|+
 literal|1
 decl_stmt|;
 comment|/* stack of bits per table */
-specifier|register
 name|unsigned
 modifier|*
 name|p
 decl_stmt|;
 comment|/* pointer into c[], b[], or v[] */
-specifier|register
 name|struct
 name|huft
 modifier|*
@@ -1135,7 +1130,6 @@ name|N_MAX
 index|]
 decl_stmt|;
 comment|/* values in order of bit length */
-specifier|register
 name|int
 name|w
 decl_stmt|;
@@ -2184,7 +2178,6 @@ name|t
 parameter_list|)
 comment|/* Free the malloc'ed tables built by huft_build(), which makes a linked    list of the tables it made, with the links in a dummy first entry of    each table. */
 block|{
-specifier|register
 name|struct
 name|huft
 modifier|*
@@ -2274,7 +2267,6 @@ name|int
 name|bd
 parameter_list|)
 block|{
-specifier|register
 name|unsigned
 name|e
 decl_stmt|;
@@ -2301,12 +2293,10 @@ decl_stmt|,
 name|md
 decl_stmt|;
 comment|/* masks for bl and bd bits */
-specifier|register
 name|ulg
 name|b
 decl_stmt|;
 comment|/* bit buffer */
-specifier|register
 name|unsigned
 name|k
 decl_stmt|;
@@ -2847,12 +2837,10 @@ name|unsigned
 name|w
 decl_stmt|;
 comment|/* current window position */
-specifier|register
 name|ulg
 name|b
 decl_stmt|;
 comment|/* bit buffer */
-specifier|register
 name|unsigned
 name|k
 decl_stmt|;
@@ -3395,12 +3383,10 @@ decl_stmt|;
 comment|/* literal/length and distance code 					 * lengths */
 endif|#
 directive|endif
-specifier|register
 name|ulg
 name|b
 decl_stmt|;
 comment|/* bit buffer */
-specifier|register
 name|unsigned
 name|k
 decl_stmt|;
@@ -4156,12 +4142,10 @@ name|unsigned
 name|t
 decl_stmt|;
 comment|/* block type */
-specifier|register
 name|ulg
 name|b
 decl_stmt|;
 comment|/* bit buffer */
-specifier|register
 name|unsigned
 name|k
 decl_stmt|;

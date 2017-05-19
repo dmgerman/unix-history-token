@@ -505,6 +505,9 @@ name|buf_ring
 modifier|*
 name|tx_br
 decl_stmt|;
+name|uint32_t
+name|tx_ring_full
+decl_stmt|;
 name|struct
 name|task
 name|fp_task
@@ -1018,6 +1021,12 @@ name|uint32_t
 name|dbg_level
 decl_stmt|;
 name|uint32_t
+name|dbg_trace_lro_cnt
+decl_stmt|;
+name|uint32_t
+name|dbg_trace_tso_pkt_len
+decl_stmt|;
+name|uint32_t
 name|dp_level
 decl_stmt|;
 name|uint32_t
@@ -1085,10 +1094,6 @@ comment|/* tx related */
 name|struct
 name|callout
 name|tx_callout
-decl_stmt|;
-name|struct
-name|mtx
-name|tx_lock
 decl_stmt|;
 name|uint32_t
 name|txr_idx
@@ -1408,8 +1413,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x0001) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x0001) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_define
@@ -1420,8 +1428,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x0002) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x0002) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_define
@@ -1432,8 +1443,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x0004) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x0004) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_define
@@ -1444,8 +1458,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x0008) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x0008) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_define
@@ -1456,8 +1473,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x0010) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x0010) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_define
@@ -1468,8 +1488,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x0020) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x0020) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_define
@@ -1480,8 +1503,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x0040) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x0040) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_define
@@ -1492,8 +1518,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x0080) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x0080) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_define
@@ -1504,8 +1533,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x0100) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x0100) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_define
@@ -1516,8 +1548,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x0400) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x0400) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_define
@@ -1528,8 +1563,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x0800) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x0800) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_define
@@ -1540,20 +1578,11 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
-parameter_list|)
-value|if (ha->dbg_level& 0x1000) device_printf x
-end_define
-
-begin_define
-define|#
-directive|define
-name|QL_DPRINT14
-parameter_list|(
-name|ha
 parameter_list|,
-name|x
+modifier|...
 parameter_list|)
-value|if (ha->dbg_level& 0x2000) device_printf x
+define|\
+value|do { 							\ 		if ((ha)->dbg_level& 0x1000) {			\ 			device_printf ((ha)->pci_dev,		\ 				"[%s:%d]" x,			\ 				__func__, __LINE__,		\ 				## __VA_ARGS__);		\ 		}						\ 	} while (0)
 end_define
 
 begin_else
@@ -1569,6 +1598,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
@@ -1580,6 +1611,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
@@ -1591,6 +1624,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
@@ -1602,6 +1637,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
@@ -1613,6 +1650,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
@@ -1624,6 +1663,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
@@ -1635,6 +1676,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
@@ -1646,6 +1689,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
@@ -1657,6 +1702,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
@@ -1668,6 +1715,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
@@ -1679,6 +1728,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
@@ -1690,17 +1741,8 @@ parameter_list|(
 name|ha
 parameter_list|,
 name|x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|QL_DPRINT14
-parameter_list|(
-name|ha
 parameter_list|,
-name|x
+modifier|...
 parameter_list|)
 end_define
 

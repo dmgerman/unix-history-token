@@ -118,6 +118,10 @@ name|int
 name|maxblkspercg
 decl_stmt|;
 comment|/* max # of blocks per cylinder group */
+name|int
+name|softupdates
+decl_stmt|;
+comment|/* soft updates */
 comment|/* XXX: support `old' file systems ? */
 block|}
 name|ffs_opt_t

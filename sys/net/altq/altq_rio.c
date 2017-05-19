@@ -353,7 +353,7 @@ name|b
 parameter_list|,
 name|delta
 parameter_list|)
-value|{					\ 	register int	xxs;					\ 								\ 	delta = (a)->tv_usec - (b)->tv_usec; 			\ 	if ((xxs = (a)->tv_sec - (b)->tv_sec) != 0) { 		\ 		if (xxs< 0) { 					\ 			delta = 60000000;			\ 		} else if (xxs> 4)  {				\ 			if (xxs> 60)				\ 				delta = 60000000;		\ 			else					\ 				delta += xxs * 1000000;		\ 		} else while (xxs> 0) {			\ 			delta += 1000000;			\ 			xxs--;					\ 		}						\ 	}							\ }
+value|{					\ 	int	xxs;						\ 								\ 	delta = (a)->tv_usec - (b)->tv_usec; 			\ 	if ((xxs = (a)->tv_sec - (b)->tv_sec) != 0) { 		\ 		if (xxs< 0) { 					\ 			delta = 60000000;			\ 		} else if (xxs> 4)  {				\ 			if (xxs> 60)				\ 				delta = 60000000;		\ 			else					\ 				delta += xxs * 1000000;		\ 		} else while (xxs> 0) {			\ 			delta += 1000000;			\ 			xxs--;					\ 		}						\ 	}							\ }
 end_define
 
 begin_ifdef

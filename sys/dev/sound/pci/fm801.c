@@ -1883,7 +1883,6 @@ name|ch
 operator|->
 name|parent
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

@@ -514,7 +514,6 @@ init|=
 operator|*
 name|mp
 decl_stmt|;
-specifier|register
 name|struct
 name|ip6_hdr
 modifier|*
@@ -529,7 +528,6 @@ name|ip6_hdr
 operator|*
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|inpcb
 modifier|*

@@ -66,7 +66,6 @@ name|int
 name|enc
 parameter_list|)
 block|{
-specifier|register
 name|DES_LONG
 name|l
 decl_stmt|,
@@ -79,7 +78,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DES_PTR
-specifier|register
 specifier|const
 name|unsigned
 name|char
@@ -99,13 +97,11 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|DES_UNROLL
-specifier|register
 name|int
 name|i
 decl_stmt|;
 endif|#
 directive|endif
-specifier|register
 name|DES_LONG
 modifier|*
 name|s
@@ -708,7 +704,6 @@ name|int
 name|enc
 parameter_list|)
 block|{
-specifier|register
 name|DES_LONG
 name|l
 decl_stmt|,
@@ -721,7 +716,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DES_PTR
-specifier|register
 specifier|const
 name|unsigned
 name|char
@@ -741,13 +735,11 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|DES_UNROLL
-specifier|register
 name|int
 name|i
 decl_stmt|;
 endif|#
 directive|endif
-specifier|register
 name|DES_LONG
 modifier|*
 name|s
@@ -1330,7 +1322,6 @@ name|des_key_schedule
 name|ks3
 parameter_list|)
 block|{
-specifier|register
 name|DES_LONG
 name|l
 decl_stmt|,
@@ -1466,7 +1457,6 @@ name|des_key_schedule
 name|ks3
 parameter_list|)
 block|{
-specifier|register
 name|DES_LONG
 name|l
 decl_stmt|,

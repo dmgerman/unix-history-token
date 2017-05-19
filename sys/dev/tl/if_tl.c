@@ -2209,7 +2209,6 @@ name|int
 name|byte
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2375,7 +2374,6 @@ modifier|*
 name|dest
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -9197,7 +9195,6 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

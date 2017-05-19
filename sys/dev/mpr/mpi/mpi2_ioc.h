@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2012-2015 LSI Corp.  * Copyright (c) 2013-2016 Avag
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 2000-2015 LSI Corporation.  *  Copyright (c) 2013-2016 Avago Technologies  *  All rights reserved.  *  *  *           Name:  mpi2_ioc.h  *          Title:  MPI IOC, Port, Event, FW Download, and FW Upload messages  *  Creation Date:  October 11, 2006  *  *  mpi2_ioc.h Version:  02.00.27  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-04-07  02.00.01  In IOCFacts Reply structure, renamed MaxDevices to  *                      MaxTargets.  *                      Added TotalImageSize field to FWDownload Request.  *                      Added reserved words to FWUpload Request.  *  06-26-07  02.00.02  Added IR Configuration Change List Event.  *  08-31-07  02.00.03  Removed SystemReplyQueueDepth field from the IOCInit  *                      request and replaced it with  *                      ReplyDescriptorPostQueueDepth and ReplyFreeQueueDepth.  *                      Replaced the MinReplyQueueDepth field of the IOCFacts  *                      reply with MaxReplyDescriptorPostQueueDepth.  *                      Added MPI2_RDPQ_DEPTH_MIN define to specify the minimum  *                      depth for the Reply Descriptor Post Queue.  *                      Added SASAddress field to Initiator Device Table  *                      Overflow Event data.  *  10-31-07  02.00.04  Added ReasonCode MPI2_EVENT_SAS_INIT_RC_NOT_RESPONDING  *                      for SAS Initiator Device Status Change Event data.  *                      Modified Reason Code defines for SAS Topology Change  *                      List Event data, including adding a bit for PHY Vacant  *                      status, and adding a mask for the Reason Code.  *                      Added define for  *                      MPI2_EVENT_SAS_TOPO_ES_DELAY_NOT_RESPONDING.  *                      Added define for MPI2_EXT_IMAGE_TYPE_MEGARAID.  *  12-18-07  02.00.05  Added Boot Status defines for the IOCExceptions field of  *                      the IOCFacts Reply.  *                      Removed MPI2_IOCFACTS_CAPABILITY_EXTENDED_BUFFER define.  *                      Moved MPI2_VERSION_UNION to mpi2.h.  *                      Changed MPI2_EVENT_NOTIFICATION_REQUEST to use masks  *                      instead of enables, and added SASBroadcastPrimitiveMasks  *                      field.  *                      Added Log Entry Added Event and related structure.  *  02-29-08  02.00.06  Added define MPI2_IOCFACTS_CAPABILITY_INTEGRATED_RAID.  *                      Removed define MPI2_IOCFACTS_PROTOCOL_SMP_TARGET.  *                      Added MaxVolumes and MaxPersistentEntries fields to  *                      IOCFacts reply.  *                      Added ProtocalFlags and IOCCapabilities fields to  *                      MPI2_FW_IMAGE_HEADER.  *                      Removed MPI2_PORTENABLE_FLAGS_ENABLE_SINGLE_PORT.  *  03-03-08  02.00.07  Fixed MPI2_FW_IMAGE_HEADER by changing Reserved26 to  *                      a U16 (from a U32).  *                      Removed extra 's' from EventMasks name.  *  06-27-08  02.00.08  Fixed an offset in a comment.  *  10-02-08  02.00.09  Removed SystemReplyFrameSize from MPI2_IOC_INIT_REQUEST.  *                      Removed CurReplyFrameSize from MPI2_IOC_FACTS_REPLY and  *                      renamed MinReplyFrameSize to ReplyFrameSize.  *                      Added MPI2_IOCFACTS_EXCEPT_IR_FOREIGN_CONFIG_MAX.  *                      Added two new RAIDOperation values for Integrated RAID  *                      Operations Status Event data.  *                      Added four new IR Configuration Change List Event data  *                      ReasonCode values.  *                      Added two new ReasonCode defines for SAS Device Status  *                      Change Event data.  *                      Added three new DiscoveryStatus bits for the SAS  *                      Discovery event data.  *                      Added Multiplexing Status Change bit to the PhyStatus  *                      field of the SAS Topology Change List event data.  *                      Removed define for MPI2_INIT_IMAGE_BOOTFLAGS_XMEMCOPY.  *                      BootFlags are now product-specific.  *                      Added defines for the indivdual signature bytes  *                      for MPI2_INIT_IMAGE_FOOTER.  *  01-19-09  02.00.10  Added MPI2_IOCFACTS_CAPABILITY_EVENT_REPLAY define.  *                      Added MPI2_EVENT_SAS_DISC_DS_DOWNSTREAM_INITIATOR  *                      define.  *                      Added MPI2_EVENT_SAS_DEV_STAT_RC_SATA_INIT_FAILURE  *                      define.  *                      Removed MPI2_EVENT_SAS_DISC_DS_SATA_INIT_FAILURE define.  *  05-06-09  02.00.11  Added MPI2_IOCFACTS_CAPABILITY_RAID_ACCELERATOR define.  *                      Added MPI2_IOCFACTS_CAPABILITY_MSI_X_INDEX define.  *                      Added two new reason codes for SAS Device Status Change  *                      Event.  *                      Added new event: SAS PHY Counter.  *  07-30-09  02.00.12  Added GPIO Interrupt event define and structure.  *                      Added MPI2_IOCFACTS_CAPABILITY_EXTENDED_BUFFER define.  *                      Added new product id family for 2208.  *  10-28-09  02.00.13  Added HostMSIxVectors field to MPI2_IOC_INIT_REQUEST.  *                      Added MaxMSIxVectors field to MPI2_IOC_FACTS_REPLY.  *                      Added MinDevHandle field to MPI2_IOC_FACTS_REPLY.  *                      Added MPI2_IOCFACTS_CAPABILITY_HOST_BASED_DISCOVERY.  *                      Added MPI2_EVENT_HOST_BASED_DISCOVERY_PHY define.  *                      Added MPI2_EVENT_SAS_TOPO_ES_NO_EXPANDER define.  *                      Added Host Based Discovery Phy Event data.  *                      Added defines for ProductID Product field  *                      (MPI2_FW_HEADER_PID_).  *                      Modified values for SAS ProductID Family  *                      (MPI2_FW_HEADER_PID_FAMILY_).  *  02-10-10  02.00.14  Added SAS Quiesce Event structure and defines.  *                      Added PowerManagementControl Request structures and  *                      defines.  *  05-12-10  02.00.15  Marked Task Set Full Event as obsolete.  *                      Added MPI2_EVENT_SAS_TOPO_LR_UNSUPPORTED_PHY define.  *  11-10-10  02.00.16  Added MPI2_FW_DOWNLOAD_ITYPE_MIN_PRODUCT_SPECIFIC.  *  02-23-11  02.00.17  Added SAS NOTIFY Primitive event, and added  *                      SASNotifyPrimitiveMasks field to  *                      MPI2_EVENT_NOTIFICATION_REQUEST.  *                      Added Temperature Threshold Event.  *                      Added Host Message Event.  *                      Added Send Host Message request and reply.  *  05-25-11  02.00.18  For Extended Image Header, added  *                      MPI2_EXT_IMAGE_TYPE_MIN_PRODUCT_SPECIFIC and  *                      MPI2_EXT_IMAGE_TYPE_MAX_PRODUCT_SPECIFIC defines.  *                      Deprecated MPI2_EXT_IMAGE_TYPE_MAX define.  *  08-24-11  02.00.19  Added PhysicalPort field to  *                      MPI2_EVENT_DATA_SAS_DEVICE_STATUS_CHANGE structure.  *                      Marked MPI2_PM_CONTROL_FEATURE_PCIE_LINK as obsolete.  *  11-18-11  02.00.20  Incorporating additions for MPI v2.5.  *  03-29-12  02.00.21  Added a product specific range to event values.  *  07-26-12  02.00.22  Added MPI2_IOCFACTS_EXCEPT_PARTIAL_MEMORY_FAILURE.  *                      Added ElapsedSeconds field to  *                      MPI2_EVENT_DATA_IR_OPERATION_STATUS.  *  08-19-13  02.00.23  For IOCInit, added MPI2_IOCINIT_MSGFLAG_RDPQ_ARRAY_MODE  *                      and MPI2_IOC_INIT_RDPQ_ARRAY_ENTRY.  *                      Added MPI2_IOCFACTS_CAPABILITY_RDPQ_ARRAY_CAPABLE.  *                      Added MPI2_FW_DOWNLOAD_ITYPE_PUBLIC_KEY.  *                      Added Encrypted Hash Extended Image.  *  12-05-13  02.00.24  Added MPI25_HASH_IMAGE_TYPE_BIOS.  *  11-18-14  02.00.25  Updated copyright information.  *  03-16-15  02.00.26  Updated for MPI v2.6.  *                      Added MPI2_EVENT_ACTIVE_CABLE_EXCEPTION and  *                      MPI26_EVENT_DATA_ACTIVE_CABLE_EXCEPT.  *                      Added MPI2_EVENT_PCIE_LINK_COUNTER and  *                      MPI26_EVENT_DATA_PCIE_LINK_COUNTER.  *                      Added MPI26_CTRL_OP_SHUTDOWN.  *                      Added MPI26_CTRL_OP_LINK_CLEAR_ERROR_LOG  *                      Added MPI26_FW_HEADER_PID_FAMILY_3324_SAS  *  08-25-15  02.00.27  Added IC ARCH Class based signature defines  *                        *  --------------------------------------------------------------------------  */
+comment|/*  *  Copyright (c) 2000-2015 LSI Corporation.  *  Copyright (c) 2013-2016 Avago Technologies  *  All rights reserved.  *  *  *           Name:  mpi2_ioc.h  *          Title:  MPI IOC, Port, Event, FW Download, and FW Upload messages  *  Creation Date:  October 11, 2006  *  *  mpi2_ioc.h Version:  02.00.30  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-04-07  02.00.01  In IOCFacts Reply structure, renamed MaxDevices to  *                      MaxTargets.  *                      Added TotalImageSize field to FWDownload Request.  *                      Added reserved words to FWUpload Request.  *  06-26-07  02.00.02  Added IR Configuration Change List Event.  *  08-31-07  02.00.03  Removed SystemReplyQueueDepth field from the IOCInit  *                      request and replaced it with  *                      ReplyDescriptorPostQueueDepth and ReplyFreeQueueDepth.  *                      Replaced the MinReplyQueueDepth field of the IOCFacts  *                      reply with MaxReplyDescriptorPostQueueDepth.  *                      Added MPI2_RDPQ_DEPTH_MIN define to specify the minimum  *                      depth for the Reply Descriptor Post Queue.  *                      Added SASAddress field to Initiator Device Table  *                      Overflow Event data.  *  10-31-07  02.00.04  Added ReasonCode MPI2_EVENT_SAS_INIT_RC_NOT_RESPONDING  *                      for SAS Initiator Device Status Change Event data.  *                      Modified Reason Code defines for SAS Topology Change  *                      List Event data, including adding a bit for PHY Vacant  *                      status, and adding a mask for the Reason Code.  *                      Added define for  *                      MPI2_EVENT_SAS_TOPO_ES_DELAY_NOT_RESPONDING.  *                      Added define for MPI2_EXT_IMAGE_TYPE_MEGARAID.  *  12-18-07  02.00.05  Added Boot Status defines for the IOCExceptions field of  *                      the IOCFacts Reply.  *                      Removed MPI2_IOCFACTS_CAPABILITY_EXTENDED_BUFFER define.  *                      Moved MPI2_VERSION_UNION to mpi2.h.  *                      Changed MPI2_EVENT_NOTIFICATION_REQUEST to use masks  *                      instead of enables, and added SASBroadcastPrimitiveMasks  *                      field.  *                      Added Log Entry Added Event and related structure.  *  02-29-08  02.00.06  Added define MPI2_IOCFACTS_CAPABILITY_INTEGRATED_RAID.  *                      Removed define MPI2_IOCFACTS_PROTOCOL_SMP_TARGET.  *                      Added MaxVolumes and MaxPersistentEntries fields to  *                      IOCFacts reply.  *                      Added ProtocalFlags and IOCCapabilities fields to  *                      MPI2_FW_IMAGE_HEADER.  *                      Removed MPI2_PORTENABLE_FLAGS_ENABLE_SINGLE_PORT.  *  03-03-08  02.00.07  Fixed MPI2_FW_IMAGE_HEADER by changing Reserved26 to  *                      a U16 (from a U32).  *                      Removed extra 's' from EventMasks name.  *  06-27-08  02.00.08  Fixed an offset in a comment.  *  10-02-08  02.00.09  Removed SystemReplyFrameSize from MPI2_IOC_INIT_REQUEST.  *                      Removed CurReplyFrameSize from MPI2_IOC_FACTS_REPLY and  *                      renamed MinReplyFrameSize to ReplyFrameSize.  *                      Added MPI2_IOCFACTS_EXCEPT_IR_FOREIGN_CONFIG_MAX.  *                      Added two new RAIDOperation values for Integrated RAID  *                      Operations Status Event data.  *                      Added four new IR Configuration Change List Event data  *                      ReasonCode values.  *                      Added two new ReasonCode defines for SAS Device Status  *                      Change Event data.  *                      Added three new DiscoveryStatus bits for the SAS  *                      Discovery event data.  *                      Added Multiplexing Status Change bit to the PhyStatus  *                      field of the SAS Topology Change List event data.  *                      Removed define for MPI2_INIT_IMAGE_BOOTFLAGS_XMEMCOPY.  *                      BootFlags are now product-specific.  *                      Added defines for the indivdual signature bytes  *                      for MPI2_INIT_IMAGE_FOOTER.  *  01-19-09  02.00.10  Added MPI2_IOCFACTS_CAPABILITY_EVENT_REPLAY define.  *                      Added MPI2_EVENT_SAS_DISC_DS_DOWNSTREAM_INITIATOR  *                      define.  *                      Added MPI2_EVENT_SAS_DEV_STAT_RC_SATA_INIT_FAILURE  *                      define.  *                      Removed MPI2_EVENT_SAS_DISC_DS_SATA_INIT_FAILURE define.  *  05-06-09  02.00.11  Added MPI2_IOCFACTS_CAPABILITY_RAID_ACCELERATOR define.  *                      Added MPI2_IOCFACTS_CAPABILITY_MSI_X_INDEX define.  *                      Added two new reason codes for SAS Device Status Change  *                      Event.  *                      Added new event: SAS PHY Counter.  *  07-30-09  02.00.12  Added GPIO Interrupt event define and structure.  *                      Added MPI2_IOCFACTS_CAPABILITY_EXTENDED_BUFFER define.  *                      Added new product id family for 2208.  *  10-28-09  02.00.13  Added HostMSIxVectors field to MPI2_IOC_INIT_REQUEST.  *                      Added MaxMSIxVectors field to MPI2_IOC_FACTS_REPLY.  *                      Added MinDevHandle field to MPI2_IOC_FACTS_REPLY.  *                      Added MPI2_IOCFACTS_CAPABILITY_HOST_BASED_DISCOVERY.  *                      Added MPI2_EVENT_HOST_BASED_DISCOVERY_PHY define.  *                      Added MPI2_EVENT_SAS_TOPO_ES_NO_EXPANDER define.  *                      Added Host Based Discovery Phy Event data.  *                      Added defines for ProductID Product field  *                      (MPI2_FW_HEADER_PID_).  *                      Modified values for SAS ProductID Family  *                      (MPI2_FW_HEADER_PID_FAMILY_).  *  02-10-10  02.00.14  Added SAS Quiesce Event structure and defines.  *                      Added PowerManagementControl Request structures and  *                      defines.  *  05-12-10  02.00.15  Marked Task Set Full Event as obsolete.  *                      Added MPI2_EVENT_SAS_TOPO_LR_UNSUPPORTED_PHY define.  *  11-10-10  02.00.16  Added MPI2_FW_DOWNLOAD_ITYPE_MIN_PRODUCT_SPECIFIC.  *  02-23-11  02.00.17  Added SAS NOTIFY Primitive event, and added  *                      SASNotifyPrimitiveMasks field to  *                      MPI2_EVENT_NOTIFICATION_REQUEST.  *                      Added Temperature Threshold Event.  *                      Added Host Message Event.  *                      Added Send Host Message request and reply.  *  05-25-11  02.00.18  For Extended Image Header, added  *                      MPI2_EXT_IMAGE_TYPE_MIN_PRODUCT_SPECIFIC and  *                      MPI2_EXT_IMAGE_TYPE_MAX_PRODUCT_SPECIFIC defines.  *                      Deprecated MPI2_EXT_IMAGE_TYPE_MAX define.  *  08-24-11  02.00.19  Added PhysicalPort field to  *                      MPI2_EVENT_DATA_SAS_DEVICE_STATUS_CHANGE structure.  *                      Marked MPI2_PM_CONTROL_FEATURE_PCIE_LINK as obsolete.  *  11-18-11  02.00.20  Incorporating additions for MPI v2.5.  *  03-29-12  02.00.21  Added a product specific range to event values.  *  07-26-12  02.00.22  Added MPI2_IOCFACTS_EXCEPT_PARTIAL_MEMORY_FAILURE.  *                      Added ElapsedSeconds field to  *                      MPI2_EVENT_DATA_IR_OPERATION_STATUS.  *  08-19-13  02.00.23  For IOCInit, added MPI2_IOCINIT_MSGFLAG_RDPQ_ARRAY_MODE  *                      and MPI2_IOC_INIT_RDPQ_ARRAY_ENTRY.  *                      Added MPI2_IOCFACTS_CAPABILITY_RDPQ_ARRAY_CAPABLE.  *                      Added MPI2_FW_DOWNLOAD_ITYPE_PUBLIC_KEY.  *                      Added Encrypted Hash Extended Image.  *  12-05-13  02.00.24  Added MPI25_HASH_IMAGE_TYPE_BIOS.  *  11-18-14  02.00.25  Updated copyright information.  *  03-16-15  02.00.26  Updated for MPI v2.6.  *                      Added MPI2_EVENT_ACTIVE_CABLE_EXCEPTION and  *                      MPI26_EVENT_DATA_ACTIVE_CABLE_EXCEPT.  *                      Added MPI2_EVENT_PCIE_LINK_COUNTER and  *                      MPI26_EVENT_DATA_PCIE_LINK_COUNTER.  *                      Added MPI26_CTRL_OP_SHUTDOWN.  *                      Added MPI26_CTRL_OP_LINK_CLEAR_ERROR_LOG  *                      Added MPI26_FW_HEADER_PID_FAMILY_3324_SAS and  *                      MPI26_FW_HEADER_PID_FAMILY_3516_SAS.  *  08-25-15  02.00.27  Added IC ARCH Class based signature defines.  *                      Added MPI26_EVENT_PCIE_ENUM_ES_RESOURCES_EXHAUSTED event.  *                      Added ConigurationFlags field to IOCInit message to  *                      support NVMe SGL format control.  *                      Added PCIe SRIOV support.  * 02-17-16   02.00.28  Added SAS 4 22.5 gbs speed support.  *                      Added PCIe 4 16.0 GT/sec speec support.  *                      Removed AHCI support.  *                      Removed SOP support.  * 07-01-16   02.00.29  Added Archclass for 4008 product.  *                      Added IOCException MPI2_IOCFACTS_EXCEPT_PCIE_DISABLED  * 08-23-16   02.00.30  Added new defines for the ImageType field of FWDownload  *                      Request Message.  *                      Added new defines for the ImageType field of FWUpload  *                      Request Message.  *                      Added new values for the RegionType field in the Layout  *                      Data sections of the FLASH Layout Extended Image Data.  *                      Added new defines for the ReasonCode field of  *                      Active Cable Exception Event.  *                      Added MPI2_EVENT_ENCL_DEVICE_STATUS_CHANGE and  *                      MPI26_EVENT_DATA_ENCL_DEV_STATUS_CHANGE.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -272,6 +272,17 @@ define|#
 directive|define
 name|MPI2_IOCINIT_HDRVERSION_DEV_SHIFT
 value|(0)
+end_define
+
+begin_comment
+comment|/* ConfigurationFlags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_IOCINIT_CFGFLAGS_NVME_SGL_FORMAT
+value|(0x0001)
 end_define
 
 begin_comment
@@ -709,6 +720,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPI2_IOCFACTS_EXCEPT_PCIE_DISABLED
+value|(0x0400)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_IOCFACTS_EXCEPT_PARTIAL_MEMORY_FAILURE
 value|(0x0200)
 end_define
@@ -801,6 +819,20 @@ end_comment
 begin_comment
 comment|/* IOCCapabilities */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_IOCFACTS_CAPABILITY_PCIE_SRIOV
+value|(0x00100000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_IOCFACTS_CAPABILITY_ATOMIC_REQ
+value|(0x00080000)
+end_define
 
 begin_define
 define|#
@@ -909,6 +941,17 @@ end_define
 
 begin_comment
 comment|/* ProtocolFlags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_IOCFACTS_PROTOCOL_NVME_DEVICES
+value|(0x0008)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
 end_comment
 
 begin_define
@@ -1115,6 +1158,17 @@ directive|define
 name|MPI2_PORTFACTS_PORTTYPE_SAS_VIRTUAL
 value|(0x31)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_PORTFACTS_PORTTYPE_TRI_MODE
+value|(0x40)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
 
 begin_comment
 comment|/**************************************************************************** *  PortEnable message ****************************************************************************/
@@ -1561,6 +1615,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI2_EVENT_ENCL_DEVICE_STATUS_CHANGE
+value|(0x001D)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MPI2_EVENT_IR_VOLUME
 value|(0x001E)
 end_define
@@ -1641,6 +1706,50 @@ directive|define
 name|MPI2_EVENT_POWER_PERFORMANCE_CHANGE
 value|(0x0029)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_EVENT_PCIE_DEVICE_STATUS_CHANGE
+value|(0x0030)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_EVENT_PCIE_ENUMERATION
+value|(0x0031)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_EVENT_PCIE_TOPOLOGY_CHANGE_LIST
+value|(0x0032)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_EVENT_PCIE_LINK_COUNTER
+value|(0x0033)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
 
 begin_define
 define|#
@@ -3497,6 +3606,13 @@ name|MPI25_EVENT_SAS_TOPO_LR_RATE_12_0
 value|(0x0B)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_SAS_TOPO_LR_RATE_22_5
+value|(0x0C)
+end_define
+
 begin_comment
 comment|/* values for the PhyStatus field */
 end_comment
@@ -3608,6 +3724,16 @@ name|Mpi2EventDataSasEnclDevStatusChange_t
 operator|,
 name|MPI2_POINTER
 name|pMpi2EventDataSasEnclDevStatusChange_t
+operator|,
+name|MPI26_EVENT_DATA_ENCL_DEV_STATUS_CHANGE
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_EVENT_DATA_ENCL_DEV_STATUS_CHANGE
+operator|,
+name|Mpi26EventDataEnclDevStatusChange_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26EventDataEnclDevStatusChange_t
 typedef|;
 end_typedef
 
@@ -3626,6 +3752,24 @@ begin_define
 define|#
 directive|define
 name|MPI2_EVENT_SAS_ENCL_RC_NOT_RESPONDING
+value|(0x02)
+end_define
+
+begin_comment
+comment|/* Enclosure Device Status Change event ReasonCode values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_ENCL_RC_ADDED
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_ENCL_RC_NOT_RESPONDING
 value|(0x02)
 end_define
 
@@ -3915,6 +4059,647 @@ directive|define
 name|MPI2_EVENT_HBD_DT_SAS
 value|(0x01)
 end_define
+
+begin_comment
+comment|/* PCIe Device Status Change Event data (MPI v2.6 and later) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_EVENT_DATA_PCIE_DEVICE_STATUS_CHANGE
+block|{
+name|U16
+name|TaskTag
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|ReasonCode
+decl_stmt|;
+comment|/* 0x02 */
+name|U8
+name|PhysicalPort
+decl_stmt|;
+comment|/* 0x03 */
+name|U8
+name|ASC
+decl_stmt|;
+comment|/* 0x04 */
+name|U8
+name|ASCQ
+decl_stmt|;
+comment|/* 0x05 */
+name|U16
+name|DevHandle
+decl_stmt|;
+comment|/* 0x06 */
+name|U32
+name|Reserved2
+decl_stmt|;
+comment|/* 0x08 */
+name|U64
+name|WWID
+decl_stmt|;
+comment|/* 0x0C */
+name|U8
+name|LUN
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* 0x14 */
+block|}
+name|MPI26_EVENT_DATA_PCIE_DEVICE_STATUS_CHANGE
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_EVENT_DATA_PCIE_DEVICE_STATUS_CHANGE
+operator|,
+name|Mpi26EventDataPCIeDeviceStatusChange_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26EventDataPCIeDeviceStatusChange_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* PCIe Device Status Change Event data ReasonCode values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIDEV_STAT_RC_SMART_DATA
+value|(0x05)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIDEV_STAT_RC_UNSUPPORTED
+value|(0x07)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIDEV_STAT_RC_INTERNAL_DEVICE_RESET
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIDEV_STAT_RC_TASK_ABORT_INTERNAL
+value|(0x09)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIDEV_STAT_RC_ABORT_TASK_SET_INTERNAL
+value|(0x0A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIDEV_STAT_RC_CLEAR_TASK_SET_INTERNAL
+value|(0x0B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIDEV_STAT_RC_QUERY_TASK_INTERNAL
+value|(0x0C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIDEV_STAT_RC_ASYNC_NOTIFICATION
+value|(0x0D)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIDEV_STAT_RC_CMP_INTERNAL_DEV_RESET
+value|(0x0E)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIDEV_STAT_RC_CMP_TASK_ABORT_INTERNAL
+value|(0x0F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIDEV_STAT_RC_DEV_INIT_FAILURE
+value|(0x10)
+end_define
+
+begin_comment
+comment|/* PCIe Enumeration Event data (MPI v2.6 and later) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_EVENT_DATA_PCIE_ENUMERATION
+block|{
+name|U8
+name|Flags
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|ReasonCode
+decl_stmt|;
+comment|/* 0x01 */
+name|U8
+name|PhysicalPort
+decl_stmt|;
+comment|/* 0x02 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x03 */
+name|U32
+name|EnumerationStatus
+decl_stmt|;
+comment|/* 0x04 */
+block|}
+name|MPI26_EVENT_DATA_PCIE_ENUMERATION
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_EVENT_DATA_PCIE_ENUMERATION
+operator|,
+name|Mpi26EventDataPCIeEnumeration_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26EventDataPCIeEnumeration_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* PCIe Enumeration Event data Flags values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_ENUM_DEVICE_CHANGE
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_ENUM_IN_PROGRESS
+value|(0x01)
+end_define
+
+begin_comment
+comment|/* PCIe Enumeration Event data ReasonCode values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_ENUM_RC_STARTED
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_ENUM_RC_COMPLETED
+value|(0x02)
+end_define
+
+begin_comment
+comment|/* PCIe Enumeration Event data EnumerationStatus values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_ENUM_ES_MAX_SWITCHES_EXCEED
+value|(0x40000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_ENUM_ES_MAX_DEVICES_EXCEED
+value|(0x20000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_ENUM_ES_RESOURCES_EXHAUSTED
+value|(0x10000000)
+end_define
+
+begin_comment
+comment|/* PCIe Topology Change List Event data (MPI v2.6 and later) */
+end_comment
+
+begin_comment
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check NumEntries at runtime.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MPI26_EVENT_PCIE_TOPO_PORT_COUNT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PORT_COUNT
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_EVENT_PCIE_TOPO_PORT_ENTRY
+block|{
+name|U16
+name|AttachedDevHandle
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|PortStatus
+decl_stmt|;
+comment|/* 0x02 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x03 */
+name|U8
+name|CurrentPortInfo
+decl_stmt|;
+comment|/* 0x04 */
+name|U8
+name|Reserved2
+decl_stmt|;
+comment|/* 0x05 */
+name|U8
+name|PreviousPortInfo
+decl_stmt|;
+comment|/* 0x06 */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 0x07 */
+block|}
+name|MPI26_EVENT_PCIE_TOPO_PORT_ENTRY
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_EVENT_PCIE_TOPO_PORT_ENTRY
+operator|,
+name|Mpi26EventPCIeTopoPortEntry_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26EventPCIeTopoPortEntry_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* PCIe Topology Change List Event data PortStatus values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PS_DEV_ADDED
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PS_NOT_RESPONDING
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PS_PORT_CHANGED
+value|(0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PS_NO_CHANGE
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PS_DELAY_NOT_RESPONDING
+value|(0x05)
+end_define
+
+begin_comment
+comment|/* PCIe Topology Change List Event data defines for CurrentPortInfo and PreviousPortInfo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_LANE_MASK
+value|(0xF0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_LANES_UNKNOWN
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_1_LANE
+value|(0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_2_LANES
+value|(0x20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_4_LANES
+value|(0x30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_8_LANES
+value|(0x40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_RATE_MASK
+value|(0x0F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_RATE_UNKNOWN
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_RATE_DISABLED
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_RATE_2_5
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_RATE_5_0
+value|(0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_RATE_8_0
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_PI_RATE_16_0
+value|(0x05)
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_EVENT_DATA_PCIE_TOPOLOGY_CHANGE_LIST
+block|{
+name|U16
+name|EnclosureHandle
+decl_stmt|;
+comment|/* 0x00 */
+name|U16
+name|SwitchDevHandle
+decl_stmt|;
+comment|/* 0x02 */
+name|U8
+name|NumPorts
+decl_stmt|;
+comment|/* 0x04 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x05 */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x06 */
+name|U8
+name|NumEntries
+decl_stmt|;
+comment|/* 0x08 */
+name|U8
+name|StartPortNum
+decl_stmt|;
+comment|/* 0x09 */
+name|U8
+name|SwitchStatus
+decl_stmt|;
+comment|/* 0x0A */
+name|U8
+name|PhysicalPort
+decl_stmt|;
+comment|/* 0x0B */
+name|MPI26_EVENT_PCIE_TOPO_PORT_ENTRY
+name|PortEntry
+index|[
+name|MPI26_EVENT_PCIE_TOPO_PORT_COUNT
+index|]
+decl_stmt|;
+comment|/* 0x0C */
+block|}
+name|MPI26_EVENT_DATA_PCIE_TOPOLOGY_CHANGE_LIST
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_EVENT_DATA_PCIE_TOPOLOGY_CHANGE_LIST
+operator|,
+name|Mpi26EventDataPCIeTopologyChangeList_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26EventDataPCIeTopologyChangeList_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* PCIe Topology Change List Event data SwitchStatus values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_SS_NO_PCIE_SWITCH
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_SS_ADDED
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_SS_NOT_RESPONDING
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_SS_RESPONDING
+value|(0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_PCIE_TOPO_SS_DELAY_NOT_RESPONDING
+value|(0x04)
+end_define
+
+begin_comment
+comment|/* PCIe Link Counter Event data (MPI v2.6 and later) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_EVENT_DATA_PCIE_LINK_COUNTER
+block|{
+name|U64
+name|TimeStamp
+decl_stmt|;
+comment|/* 0x00 */
+name|U32
+name|Reserved1
+decl_stmt|;
+comment|/* 0x08 */
+name|U8
+name|LinkEventCode
+decl_stmt|;
+comment|/* 0x0C */
+name|U8
+name|LinkNum
+decl_stmt|;
+comment|/* 0x0D */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x0E */
+name|U32
+name|LinkEventInfo
+decl_stmt|;
+comment|/* 0x10 */
+name|U8
+name|CounterType
+decl_stmt|;
+comment|/* 0x14 */
+name|U8
+name|ThresholdWindow
+decl_stmt|;
+comment|/* 0x15 */
+name|U8
+name|TimeUnits
+decl_stmt|;
+comment|/* 0x16 */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 0x17 */
+name|U32
+name|EventThreshold
+decl_stmt|;
+comment|/* 0x18 */
+name|U16
+name|ThresholdFlags
+decl_stmt|;
+comment|/* 0x1C */
+name|U16
+name|Reserved4
+decl_stmt|;
+comment|/* 0x1E */
+block|}
+name|MPI26_EVENT_DATA_PCIE_LINK_COUNTER
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_EVENT_DATA_PCIE_LINK_COUNTER
+operator|,
+name|Mpi26EventDataPcieLinkCounter_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26EventDataPcieLinkCounter_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* use MPI26_PCIELINK3_EVTCODE_ values from mpi2_cnfg.h for the LinkEventCode field */
+end_comment
+
+begin_comment
+comment|/* use MPI26_PCIELINK3_COUNTER_TYPE_ values from mpi2_cnfg.h for the CounterType field */
+end_comment
+
+begin_comment
+comment|/* use MPI26_PCIELINK3_TIME_UNITS_ values from mpi2_cnfg.h for the TimeUnits field */
+end_comment
+
+begin_comment
+comment|/* use MPI26_PCIELINK3_TFLAGS_ values from mpi2_cnfg.h for the ThresholdFlags field */
+end_comment
 
 begin_comment
 comment|/**************************************************************************** *  EventAck message ****************************************************************************/
@@ -4386,6 +5171,55 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPI2_FW_DOWNLOAD_ITYPE_SBR
+value|(0x0E)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_DOWNLOAD_ITYPE_SBR_BACKUP
+value|(0x0F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_DOWNLOAD_ITYPE_HIIM
+value|(0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_DOWNLOAD_ITYPE_HIIA
+value|(0x11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_DOWNLOAD_ITYPE_CTLR
+value|(0x12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_DOWNLOAD_ITYPE_IMR_FIRMWARE
+value|(0x13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_DOWNLOAD_ITYPE_MR_NVDATA
+value|(0x14)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_FW_DOWNLOAD_ITYPE_MIN_PRODUCT_SPECIFIC
 value|(0xF0)
 end_define
@@ -4753,6 +5587,55 @@ define|#
 directive|define
 name|MPI2_FW_UPLOAD_ITYPE_CBB_BACKUP
 value|(0x0D)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_UPLOAD_ITYPE_SBR
+value|(0x0E)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_UPLOAD_ITYPE_SBR_BACKUP
+value|(0x0F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_UPLOAD_ITYPE_HIIM
+value|(0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_UPLOAD_ITYPE_HIIA
+value|(0x11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_UPLOAD_ITYPE_CTLR
+value|(0x12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_UPLOAD_ITYPE_IMR_FIRMWARE
+value|(0x13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FW_UPLOAD_ITYPE_MR_NVDATA
+value|(0x14)
 end_define
 
 begin_comment
@@ -5266,6 +6149,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI26_FW_HEADER_SIGNATURE0_ARC_3
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI26_FW_HEADER_SIGNATURE0
 value|(MPI26_FW_HEADER_SIGNATURE0_BASE+MPI26_FW_HEADER_SIGNATURE0_ARC_0)
 end_define
@@ -5279,6 +6169,13 @@ define|#
 directive|define
 name|MPI26_FW_HEADER_SIGNATURE0_3516
 value|(MPI26_FW_HEADER_SIGNATURE0_BASE+MPI26_FW_HEADER_SIGNATURE0_ARC_1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_FW_HEADER_SIGNATURE0_4008
+value|(MPI26_FW_HEADER_SIGNATURE0_BASE+MPI26_FW_HEADER_SIGNATURE0_ARC_3)
 end_define
 
 begin_comment
@@ -5952,6 +6849,55 @@ define|#
 directive|define
 name|MPI2_FLASH_REGION_CBB_BACKUP
 value|(0x0D)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FLASH_REGION_SBR
+value|(0x0E)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FLASH_REGION_SBR_BACKUP
+value|(0x0F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FLASH_REGION_HIIM
+value|(0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FLASH_REGION_HIIA
+value|(0x11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FLASH_REGION_CTLR
+value|(0x12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FLASH_REGION_IMR_FIRMWARE
+value|(0x13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_FLASH_REGION_MR_NVDATA
+value|(0x14)
 end_define
 
 begin_comment
@@ -7249,6 +8195,20 @@ define|#
 directive|define
 name|MPI26_CTRL_OP_DEV_CLOSE_PERSIST_CONNECTION
 value|(0x19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_CTRL_OP_ENABLE_NVME_SGL_FORMAT
+value|(0x1A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_CTRL_OP_DISABLE_NVME_SGL_FORMAT
+value|(0x1B)
 end_define
 
 begin_define

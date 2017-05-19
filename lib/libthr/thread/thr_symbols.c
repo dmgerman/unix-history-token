@@ -47,6 +47,26 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__clang__
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|diagnostic
+name|ignored
+literal|"-Wmissing-variable-declarations"
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* A collection of symbols needed by debugger */
 end_comment

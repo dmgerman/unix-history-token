@@ -326,6 +326,12 @@ directive|include
 file|<sys/smp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sched.h>
+end_include
+
 begin_function
 specifier|static
 name|__inline
@@ -479,26 +485,6 @@ parameter_list|(
 name|ha
 parameter_list|)
 value|mtx_unlock(&ha->hw_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|QLNX_TX_LOCK
-parameter_list|(
-name|ha
-parameter_list|)
-value|mtx_lock(&ha->tx_lock);
-end_define
-
-begin_define
-define|#
-directive|define
-name|QLNX_TX_UNLOCK
-parameter_list|(
-name|ha
-parameter_list|)
-value|mtx_unlock(&ha->tx_lock);
 end_define
 
 begin_comment

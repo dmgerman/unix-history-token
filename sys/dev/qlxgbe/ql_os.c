@@ -8786,7 +8786,6 @@ modifier|*
 name|nmp
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|mbuf
 modifier|*

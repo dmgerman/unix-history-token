@@ -273,7 +273,6 @@ begin_function
 name|int
 name|in6_pcbbind
 parameter_list|(
-specifier|register
 name|struct
 name|inpcb
 modifier|*
@@ -1410,7 +1409,6 @@ specifier|static
 name|int
 name|in6_pcbladdr
 parameter_list|(
-specifier|register
 name|struct
 name|inpcb
 modifier|*
@@ -1427,7 +1425,6 @@ modifier|*
 name|plocal_addr6
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -1654,7 +1651,6 @@ begin_function
 name|int
 name|in6_pcbconnect_mbuf
 parameter_list|(
-specifier|register
 name|struct
 name|inpcb
 modifier|*
@@ -1685,7 +1681,6 @@ name|inp
 operator|->
 name|inp_pcbinfo
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -2201,7 +2196,6 @@ modifier|*
 name|nam
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|inpcb
 modifier|*
@@ -3028,7 +3022,6 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|inpcb
 modifier|*

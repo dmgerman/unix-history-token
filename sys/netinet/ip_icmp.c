@@ -915,7 +915,6 @@ name|int
 name|mtu
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ip
 modifier|*
@@ -933,7 +932,6 @@ decl_stmt|,
 modifier|*
 name|nip
 decl_stmt|;
-specifier|register
 name|unsigned
 name|oiphlen
 init|=
@@ -943,13 +941,11 @@ name|ip_hl
 operator|<<
 literal|2
 decl_stmt|;
-specifier|register
 name|struct
 name|icmp
 modifier|*
 name|icp
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -4147,7 +4143,6 @@ operator|>
 literal|0
 condition|)
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|cp
@@ -4508,7 +4503,6 @@ modifier|*
 name|opts
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ip
 modifier|*
@@ -4523,11 +4517,9 @@ name|ip
 operator|*
 argument_list|)
 decl_stmt|;
-specifier|register
 name|int
 name|hlen
 decl_stmt|;
-specifier|register
 name|struct
 name|icmp
 modifier|*

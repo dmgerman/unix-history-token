@@ -379,7 +379,6 @@ name|struct
 name|rm_priotracker
 name|in_ifa_tracker
 decl_stmt|;
-specifier|register
 name|u_long
 name|i
 init|=
@@ -390,7 +389,6 @@ operator|.
 name|s_addr
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|in_ifaddr
 modifier|*
@@ -754,7 +752,6 @@ name|in_addr
 name|in
 parameter_list|)
 block|{
-specifier|register
 name|u_long
 name|i
 init|=
@@ -765,7 +762,6 @@ operator|.
 name|s_addr
 argument_list|)
 decl_stmt|;
-specifier|register
 name|u_long
 name|net
 decl_stmt|;
@@ -848,7 +844,6 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cplim
@@ -862,7 +857,6 @@ name|ap
 operator|->
 name|sin_addr
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -4475,7 +4469,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ifaddr
 modifier|*

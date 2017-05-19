@@ -1499,7 +1499,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3500,7 +3499,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -13879,7 +13877,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

@@ -1883,6 +1883,7 @@ name|struct
 name|dl_phdr_info
 modifier|*
 name|phdr_info
+name|__unused
 parameter_list|)
 block|{
 if|#

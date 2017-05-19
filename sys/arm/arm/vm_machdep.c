@@ -259,13 +259,11 @@ begin_function
 name|void
 name|cpu_fork
 parameter_list|(
-specifier|register
 name|struct
 name|thread
 modifier|*
 name|td1
 parameter_list|,
-specifier|register
 name|struct
 name|proc
 modifier|*

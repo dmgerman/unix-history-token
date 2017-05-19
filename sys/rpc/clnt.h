@@ -1766,7 +1766,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	const register int fd;		-- fd  *	const struct netconfig *nconf;	-- netconfig structure  *	struct netbuf *svcaddr;		-- servers address  *	const u_long prog;			-- program number  *	const u_long vers;			-- version number  *	const u_int sendsz;			-- send size  *	const u_int recvsz;			-- recv size  */
+comment|/*  *	const int fd;			-- fd  *	const struct netconfig *nconf;	-- netconfig structure  *	struct netbuf *svcaddr;		-- servers address  *	const u_long prog;			-- program number  *	const u_long vers;			-- version number  *	const u_int sendsz;			-- send size  *	const u_int recvsz;			-- recv size  */
 end_comment
 
 begin_comment

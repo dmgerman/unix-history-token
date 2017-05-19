@@ -717,7 +717,6 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-specifier|register
 name|DES_LONG
 name|c
 decl_stmt|,
@@ -729,19 +728,16 @@ name|s
 decl_stmt|,
 name|t2
 decl_stmt|;
-specifier|register
 specifier|const
 name|unsigned
 name|char
 modifier|*
 name|in
 decl_stmt|;
-specifier|register
 name|DES_LONG
 modifier|*
 name|k
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

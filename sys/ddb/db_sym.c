@@ -1123,7 +1123,6 @@ block|{
 name|c_db_sym_t
 name|sp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1137,7 +1136,6 @@ name|symtab_end
 init|=
 name|db_nsymtab
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -1337,11 +1335,9 @@ name|char
 modifier|*
 name|sym_name
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|bool
 name|found_once
 init|=
@@ -1437,7 +1433,6 @@ modifier|*
 name|offp
 parameter_list|)
 block|{
-specifier|register
 name|unsigned
 name|int
 name|diff
@@ -1445,7 +1440,6 @@ decl_stmt|;
 name|size_t
 name|newdiff
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

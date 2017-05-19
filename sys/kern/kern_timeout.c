@@ -6522,7 +6522,6 @@ modifier|*
 name|time_change
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|callout
 modifier|*

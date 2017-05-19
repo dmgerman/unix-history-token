@@ -203,7 +203,7 @@ name|u_long
 name|pm_fatsize
 decl_stmt|;
 comment|/* size of fat in bytes */
-name|u_int32_t
+name|uint32_t
 name|pm_fatmask
 decl_stmt|;
 comment|/* mask to use for fat numbers */
@@ -256,7 +256,7 @@ modifier|*
 name|pm_d2u
 decl_stmt|;
 comment|/* DOS->Local iconv handle */
-name|u_int32_t
+name|uint32_t
 name|pm_nfileno
 decl_stmt|;
 comment|/* next 32-bit fileno */
@@ -719,7 +719,7 @@ name|int
 name|unused1
 decl_stmt|;
 comment|/* unused, was version number */
-name|u_int16_t
+name|uint16_t
 name|unused2
 index|[
 literal|128

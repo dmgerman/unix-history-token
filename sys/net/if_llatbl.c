@@ -2213,7 +2213,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void lltable_drain(int af) { 	struct lltable	*llt; 	struct llentry	*lle; 	register int i;  	LLTABLE_LIST_RLOCK(); 	SLIST_FOREACH(llt,&V_lltables, llt_link) { 		if (llt->llt_af != af) 			continue;  		for (i=0; i< llt->llt_hsize; i++) { 			LIST_FOREACH(lle,&llt->lle_head[i], lle_next) { 				LLE_WLOCK(lle); 				if (lle->la_hold) { 					m_freem(lle->la_hold); 					lle->la_hold = NULL; 				} 				LLE_WUNLOCK(lle); 			} 		} 	} 	LLTABLE_LIST_RUNLOCK(); }
+unit|void lltable_drain(int af) { 	struct lltable	*llt; 	struct llentry	*lle; 	int i;  	LLTABLE_LIST_RLOCK(); 	SLIST_FOREACH(llt,&V_lltables, llt_link) { 		if (llt->llt_af != af) 			continue;  		for (i=0; i< llt->llt_hsize; i++) { 			LIST_FOREACH(lle,&llt->lle_head[i], lle_next) { 				LLE_WLOCK(lle); 				if (lle->la_hold) { 					m_freem(lle->la_hold); 					lle->la_hold = NULL; 				} 				LLE_WUNLOCK(lle); 			} 		} 	} 	LLTABLE_LIST_RUNLOCK(); }
 endif|#
 directive|endif
 end_endif
