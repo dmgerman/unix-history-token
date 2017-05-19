@@ -440,6 +440,8 @@ argument_list|()
 expr_stmt|;
 name|mp_maxid
 operator|=
+name|mp_ncpus
+operator|-
 literal|1
 expr_stmt|;
 block|}
