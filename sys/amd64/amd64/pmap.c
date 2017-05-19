@@ -30375,7 +30375,7 @@ operator|(
 operator|*
 name|pte
 operator|&
-name|PG_PS_FRAME
+name|PG_FRAME
 operator|)
 operator|<
 name|dmaplimit
