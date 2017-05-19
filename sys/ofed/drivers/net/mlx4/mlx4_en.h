@@ -2223,7 +2223,12 @@ decl_stmt|;
 name|struct
 name|sysctl_oid
 modifier|*
-name|sysctl
+name|conf_sysctl
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|stat_sysctl
 decl_stmt|;
 name|struct
 name|sysctl_ctx_list
