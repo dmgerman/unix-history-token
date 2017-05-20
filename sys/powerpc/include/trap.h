@@ -572,7 +572,7 @@ begin_define
 define|#
 directive|define
 name|EXC_DTRACE
-value|0x7c810808
+value|0x7ffff808
 end_define
 
 begin_comment

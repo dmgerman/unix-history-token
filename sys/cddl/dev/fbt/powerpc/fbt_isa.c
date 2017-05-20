@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|FBT_PATCHVAL
-value|0x7c810808
+value|0x7ffff808
 end_define
 
 begin_define
