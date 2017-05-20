@@ -1760,6 +1760,8 @@ argument_list|,
 name|wh
 argument_list|,
 name|bssid
+argument_list|,
+name|rxs
 argument_list|)
 condition|)
 goto|goto
@@ -1885,6 +1887,8 @@ argument_list|(
 name|ni
 argument_list|,
 name|m
+argument_list|,
+name|rxs
 argument_list|)
 operator|!=
 literal|0

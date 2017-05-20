@@ -2090,6 +2090,8 @@ argument_list|,
 name|wh
 operator|->
 name|i_addr1
+argument_list|,
+name|rxs
 argument_list|)
 condition|)
 goto|goto
@@ -2254,6 +2256,8 @@ argument_list|(
 name|ni
 argument_list|,
 name|m
+argument_list|,
+name|rxs
 argument_list|)
 operator|!=
 literal|0

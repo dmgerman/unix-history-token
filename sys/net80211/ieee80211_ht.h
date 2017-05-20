@@ -644,6 +644,11 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
