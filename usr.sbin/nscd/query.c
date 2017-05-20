@@ -3367,6 +3367,8 @@ expr_stmt|;
 name|assert
 argument_list|(
 name|read_response
+operator|->
+name|data
 operator|!=
 name|NULL
 argument_list|)
@@ -3482,6 +3484,8 @@ expr_stmt|;
 name|assert
 argument_list|(
 name|read_response
+operator|->
+name|data
 operator|!=
 name|NULL
 argument_list|)
