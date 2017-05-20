@@ -174,11 +174,15 @@ comment|/* Current line */
 name|size_t
 name|lnstart
 decl_stmt|;
-comment|/* Start of line processing */
+comment|/* Position in line */
 name|size_t
 name|matchidx
 decl_stmt|;
-comment|/* Latest used match index */
+comment|/* Latest match index */
+name|int
+name|printed
+decl_stmt|;
+comment|/* Metadata printed? */
 name|bool
 name|binary
 decl_stmt|;
@@ -998,6 +1002,14 @@ name|pc
 operator|.
 name|ln
 operator|.
+name|boff
+operator|=
+literal|0
+expr_stmt|;
+name|pc
+operator|.
+name|ln
+operator|.
 name|off
 operator|=
 operator|-
@@ -1010,6 +1022,12 @@ operator|=
 name|f
 operator|->
 name|binary
+expr_stmt|;
+name|pc
+operator|.
+name|printed
+operator|=
+literal|0
 expr_stmt|;
 name|tail
 operator|=
@@ -1096,7 +1114,13 @@ operator|)
 condition|;
 control|)
 block|{
-comment|/* Reset match count and line start for every line processed */
+comment|/* Reset per-line statistics */
+name|pc
+operator|.
+name|printed
+operator|=
+literal|0
+expr_stmt|;
 name|pc
 operator|.
 name|matchidx
@@ -1106,6 +1130,14 @@ expr_stmt|;
 name|pc
 operator|.
 name|lnstart
+operator|=
+literal|0
+expr_stmt|;
+name|pc
+operator|.
+name|ln
+operator|.
+name|boff
 operator|=
 literal|0
 expr_stmt|;
@@ -1406,10 +1438,12 @@ operator|>
 literal|0
 condition|)
 block|{
-name|printline
+name|grep_printline
 argument_list|(
 operator|&
 name|pc
+operator|.
+name|ln
 argument_list|,
 literal|'-'
 argument_list|)
@@ -2724,13 +2758,19 @@ name|printf
 argument_list|(
 literal|"%lld"
 argument_list|,
-operator|(
+call|(
 name|long
 name|long
-operator|)
+call|)
+argument_list|(
 name|line
 operator|->
 name|off
+operator|+
+name|line
+operator|->
+name|boff
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printsep
@@ -2803,6 +2843,18 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* Only print metadata once per line if --color */
+if|if
+condition|(
+operator|!
+name|oflag
+operator|&&
+name|pc
+operator|->
+name|printed
+operator|==
+literal|0
+condition|)
 name|printline_metadata
 argument_list|(
 operator|&
@@ -2848,11 +2900,34 @@ operator|.
 name|rm_eo
 condition|)
 continue|continue;
+comment|/* 			 * Metadata is printed on a per-line basis, so every 			 * match gets file metadata with the -o flag. 			 */
 if|if
 condition|(
-operator|!
 name|oflag
 condition|)
+block|{
+name|pc
+operator|->
+name|ln
+operator|.
+name|boff
+operator|=
+name|match
+operator|.
+name|rm_so
+expr_stmt|;
+name|printline_metadata
+argument_list|(
+operator|&
+name|pc
+operator|->
+name|ln
+argument_list|,
+name|sep
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|fwrite
 argument_list|(
 name|pc
@@ -2997,6 +3072,11 @@ name|ln
 argument_list|,
 name|sep
 argument_list|)
+expr_stmt|;
+name|pc
+operator|->
+name|printed
+operator|++
 expr_stmt|;
 block|}
 end_function

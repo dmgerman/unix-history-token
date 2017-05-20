@@ -185,6 +185,16 @@ name|item
 operator|->
 name|data
 operator|.
+name|boff
+operator|=
+name|x
+operator|->
+name|boff
+expr_stmt|;
+name|item
+operator|->
+name|data
+operator|.
 name|off
 operator|=
 name|x
