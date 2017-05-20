@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__ARM_INCLUDE_EFI_H_
+name|__PC98_INCLUDE_EFI_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__ARM_INCLUDE_EFI_H_
+name|__PC98_INCLUDE_EFI_H_
 end_define
 
 begin_define
@@ -21,13 +21,17 @@ directive|define
 name|EFIABI_ATTR
 end_define
 
+begin_comment
+comment|/* Note: we don't actually support this on pc98 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* __ARM_INCLUDE_EFI_H_ */
+comment|/* __PC98_INCLUDE_EFI_H_ */
 end_comment
 
 end_unit

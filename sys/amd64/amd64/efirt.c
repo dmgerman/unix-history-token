@@ -1479,7 +1479,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 block|}
@@ -1521,7 +1521,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 block|}
@@ -1617,7 +1617,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 block|}
@@ -2444,7 +2444,6 @@ name|efi_init
 argument_list|()
 operator|)
 return|;
-break|break;
 case|case
 name|MOD_UNLOAD
 case|:

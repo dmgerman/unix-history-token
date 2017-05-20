@@ -6,54 +6,24 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LIBEFI_INT_H_
+name|_BOOT_EFI_EFICHAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LIBEFI_INT_H_
+name|_BOOT_EFI_EFICHAR_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/iodev.h>
-end_include
-
 begin_function_decl
 name|int
-name|libefi_ucs2_to_utf8
+name|ucs2_to_utf8
 parameter_list|(
-name|u_short
-modifier|*
-parameter_list|,
-name|size_t
+specifier|const
+name|efi_char
 modifier|*
 parameter_list|,
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|libefi_utf8_to_ucs2
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|size_t
-modifier|*
-parameter_list|,
-name|u_short
 modifier|*
 modifier|*
 parameter_list|)
@@ -62,10 +32,17 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libefi_efivar
+name|utf8_to_ucs2
 parameter_list|(
-name|struct
-name|iodev_efivar_req
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|efi_char
+modifier|*
+modifier|*
+parameter_list|,
+name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -77,7 +54,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _LIBEFI_INT_H_ */
+comment|/* _BOOT_EFI_EFICHAR_H_ */
 end_comment
 
 end_unit
