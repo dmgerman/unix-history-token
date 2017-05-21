@@ -137,7 +137,7 @@ comment|/* mask for FAT32 cluster numbers */
 end_comment
 
 begin_comment
-comment|/*  * MSDOSFS:  * Return true if filesystem uses 12 bit fats. Microsoft Programmer's  * Reference says if the maximum cluster number in a filesystem is greater  * than 4078 ((CLUST_RSRVS - CLUST_FIRST)& FAT12_MASK) then we've got a  * 16 bit fat filesystem. While mounting, the result of this test is stored  * in pm_fatentrysize.  */
+comment|/*  * MSDOSFS:  * Return true if filesystem uses 12 bit FATs. Microsoft Programmer's  * Reference says if the maximum cluster number in a filesystem is greater  * than 4078 ((CLUST_RSRVS - CLUST_FIRST)& FAT12_MASK) then we've got a  * 16 bit FAT filesystem. While mounting, the result of this test is stored  * in pm_fatentrysize.  */
 end_comment
 
 begin_define
@@ -200,7 +200,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* get a fat entry */
+comment|/* get a FAT entry */
 end_comment
 
 begin_define
@@ -211,7 +211,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* set a fat entry */
+comment|/* set a FAT entry */
 end_comment
 
 begin_define

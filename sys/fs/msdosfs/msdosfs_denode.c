@@ -478,7 +478,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* init the fat cache for this denode */
+comment|/* init the FAT cache for this denode */
 name|error
 operator|=
 name|insmntque
