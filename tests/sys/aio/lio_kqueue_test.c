@@ -102,8 +102,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|IOCBS_PER_LIO
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_IOCBS
-value|LIO_MAX * 16
+value|(LIO_MAX * IOCBS_PER_LIO)
 end_define
 
 begin_define
@@ -381,9 +388,7 @@ name|aiocb
 operator|*
 argument_list|)
 operator|*
-name|MAX_IOCBS
-operator|/
-name|LIO_MAX
+name|IOCBS_PER_LIO
 argument_list|)
 expr_stmt|;
 for|for
@@ -394,9 +399,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAX_IOCBS
-operator|/
-name|LIO_MAX
+name|IOCBS_PER_LIO
 condition|;
 name|i
 operator|++
@@ -405,9 +408,7 @@ block|{
 name|k
 operator|=
 operator|(
-name|MAX_IOCBS
-operator|/
-name|LIO_MAX
+name|IOCBS_PER_LIO
 operator|*
 name|j
 operator|)
@@ -495,7 +496,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"hello iocb[k] %d\n"
+literal|"hello iocb[k] %ld\n"
 argument_list|,
 name|iocb
 index|[
@@ -557,9 +558,7 @@ index|[
 name|j
 index|]
 argument_list|,
-name|MAX_IOCBS
-operator|/
-name|LIO_MAX
+name|IOCBS_PER_LIO
 argument_list|,
 operator|&
 name|sig
@@ -580,7 +579,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Time %d %d %d result -> %d\n"
+literal|"Time %ld %ld %ld result -> %d\n"
 argument_list|,
 name|time1
 argument_list|,
@@ -815,10 +814,18 @@ name|result
 argument_list|,
 name|error
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|kq_returned
 operator|.
 name|ident
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|kq_returned
 operator|.
 name|data

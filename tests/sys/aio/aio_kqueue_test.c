@@ -753,10 +753,18 @@ name|result
 argument_list|,
 name|error
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|kq_returned
 operator|.
 name|ident
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|kq_returned
 operator|.
 name|data
@@ -780,7 +788,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Try again left %d out of %d %d\n"
+literal|"Try again left %d out of %lu %d\n"
 argument_list|,
 name|pending
 argument_list|,
