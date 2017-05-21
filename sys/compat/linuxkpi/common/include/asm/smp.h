@@ -51,6 +51,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|get_cpu
+parameter_list|()
+value|({			\ 	sched_pin();			\ 	PCPU_GET(cpuid);		\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|put_cpu
+parameter_list|()
+define|\
+value|sched_unpin()
+end_define
+
 begin_endif
 endif|#
 directive|endif
