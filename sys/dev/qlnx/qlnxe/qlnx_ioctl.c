@@ -432,15 +432,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : ecore_ptt_acquire failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"ecore_ptt_acquire failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -501,19 +493,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : ecore_dbg_grc_dump failed [%d, 0x%x]\n"
-operator|,
-name|__func__
-operator|,
+literal|"ecore_dbg_grc_dump failed [%d, 0x%x]\n"
+argument_list|,
 name|hwfn_index
-operator|,
+argument_list|,
 name|rval
-operator|)
 argument_list|)
 expr_stmt|;
 name|ecore_ptt_release
@@ -719,19 +703,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: grcdump_dwords[%d] = 0x%x\n"
-operator|,
-name|__func__
-operator|,
+literal|"grcdump_dwords[%d] = 0x%x\n"
+argument_list|,
 name|i
-operator|,
+argument_list|,
 name|dwords
-operator|)
 argument_list|)
 expr_stmt|;
 name|rval
@@ -882,15 +858,7 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : ecore_ptt_acquire failed\n"
-operator|,
-name|__func__
-operator|)
+literal|"ecore_ptt_acquire failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -951,19 +919,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : ecore_dbg_idle_chk_dump failed [%d, 0x%x]\n"
-operator|,
-name|__func__
-operator|,
+literal|"ecore_dbg_idle_chk_dump failed [%d, 0x%x]\n"
+argument_list|,
 name|hwfn_index
-operator|,
+argument_list|,
 name|rval
-operator|)
 argument_list|)
 expr_stmt|;
 name|ecore_ptt_release
@@ -1169,19 +1129,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: idle_chk_dwords[%d] = 0x%x\n"
-operator|,
-name|__func__
-operator|,
+literal|"idle_chk_dwords[%d] = 0x%x\n"
+argument_list|,
 name|i
-operator|,
+argument_list|,
 name|dwords
-operator|)
 argument_list|)
 expr_stmt|;
 name|rval
@@ -1305,19 +1257,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: ecore_ptt_acquire [%d, 0x%x]failed\n"
-operator|,
-name|__func__
-operator|,
+literal|"ecore_ptt_acquire [%d, 0x%x]failed\n"
+argument_list|,
 name|hwfn_index
-operator|,
+argument_list|,
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1423,19 +1367,11 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : cmd = 0x%x failed [0x%x]\n"
-operator|,
-name|__func__
-operator|,
+literal|"cmd = 0x%x failed [0x%x]\n"
+argument_list|,
 name|cmd
-operator|,
+argument_list|,
 name|rval
-operator|)
 argument_list|)
 expr_stmt|;
 name|num_dwords
@@ -1596,21 +1532,13 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: qlnx_zalloc [%d, 0x%x]failed\n"
-operator|,
-name|__func__
-operator|,
+literal|"qlnx_zalloc [%d, 0x%x]failed\n"
+argument_list|,
 name|hwfn_index
-operator|,
+argument_list|,
 name|trace
 operator|->
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1654,21 +1582,13 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: ecore_ptt_acquire [%d, 0x%x]failed\n"
-operator|,
-name|__func__
-operator|,
+literal|"ecore_ptt_acquire [%d, 0x%x]failed\n"
+argument_list|,
 name|hwfn_index
-operator|,
+argument_list|,
 name|trace
 operator|->
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1841,21 +1761,13 @@ name|QL_DPRINT1
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s : cmd = 0x%x failed [0x%x]\n"
-operator|,
-name|__func__
-operator|,
+literal|"cmd = 0x%x failed [0x%x]\n"
+argument_list|,
 name|trace
 operator|->
 name|cmd
-operator|,
+argument_list|,
 name|rval
-operator|)
 argument_list|)
 expr_stmt|;
 name|num_dwords
@@ -2734,28 +2646,19 @@ name|QL_DPRINT9
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: issue cmd = 0x%x data = %p "
-literal|" data_len = 0x%x ret = 0x%x exit\n"
-operator|,
-name|__func__
-operator|,
+literal|"issue cmd = 0x%x data = %p \ 		 data_len = 0x%x ret = 0x%x exit\n"
+argument_list|,
 name|cmd
-operator|,
+argument_list|,
 name|nvram
 operator|->
 name|data
-operator|,
+argument_list|,
 name|nvram
 operator|->
 name|data_len
-operator|,
+argument_list|,
 name|ret
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2792,34 +2695,25 @@ name|QL_DPRINT9
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: cmd = 0x%x data = %p "
-literal|" data_len = 0x%x resp = 0x%x ret = 0x%x exit\n"
-operator|,
-name|__func__
-operator|,
+literal|"cmd = 0x%x data = %p \ 		 data_len = 0x%x resp = 0x%x ret = 0x%x exit\n"
+argument_list|,
 name|cmd
-operator|,
+argument_list|,
 name|nvram
 operator|->
 name|data
-operator|,
+argument_list|,
 name|nvram
 operator|->
 name|data_len
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|cdev
 operator|.
 name|mcp_nvm_resp
-operator|,
+argument_list|,
 name|ret
-operator|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -2916,32 +2810,23 @@ name|QL_DPRINT9
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: data = %p data_len = 0x%x "
-literal|" resp = 0x%x ret = 0x%x exit\n"
-operator|,
-name|__func__
-operator|,
+literal|" data = %p data_len = 0x%x \ 		 resp = 0x%x ret = 0x%x exit\n"
+argument_list|,
 name|nvram
 operator|->
 name|data
-operator|,
+argument_list|,
 name|nvram
 operator|->
 name|data_len
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|cdev
 operator|.
 name|mcp_nvm_resp
-operator|,
+argument_list|,
 name|ret
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3053,32 +2938,23 @@ name|QL_DPRINT9
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: data = %p data_len = 0x%x "
-literal|" resp = 0x%x ret = 0x%x exit\n"
-operator|,
-name|__func__
-operator|,
+literal|"data = %p data_len = 0x%x \ 		 resp = 0x%x ret = 0x%x exit\n"
+argument_list|,
 name|nvram
 operator|->
 name|data
-operator|,
+argument_list|,
 name|nvram
 operator|->
 name|data_len
-operator|,
+argument_list|,
 name|ha
 operator|->
 name|cdev
 operator|.
 name|mcp_nvm_resp
-operator|,
+argument_list|,
 name|ret
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3209,24 +3085,15 @@ name|QL_DPRINT9
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: QLNX_NVRAM_CMD_SET_SECURE_MODE "
-literal|" resp = 0x%x ret = 0x%x exit\n"
-operator|,
-name|__func__
-operator|,
+literal|"QLNX_NVRAM_CMD_SET_SECURE_MODE \ 			 resp = 0x%x ret = 0x%x exit\n"
+argument_list|,
 name|ha
 operator|->
 name|cdev
 operator|.
 name|mcp_nvm_resp
-operator|,
+argument_list|,
 name|ret
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3251,24 +3118,15 @@ name|QL_DPRINT9
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: QLNX_NVRAM_CMD_DEL_FILE "
-literal|" resp = 0x%x ret = 0x%x exit\n"
-operator|,
-name|__func__
-operator|,
+literal|"QLNX_NVRAM_CMD_DEL_FILE \ 			 resp = 0x%x ret = 0x%x exit\n"
+argument_list|,
 name|ha
 operator|->
 name|cdev
 operator|.
 name|mcp_nvm_resp
-operator|,
+argument_list|,
 name|ret
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3293,24 +3151,15 @@ name|QL_DPRINT9
 argument_list|(
 name|ha
 argument_list|,
-operator|(
-name|ha
-operator|->
-name|pci_dev
-operator|,
-literal|"%s: QLNX_NVRAM_CMD_PUT_FILE_BEGIN "
-literal|" resp = 0x%x ret = 0x%x exit\n"
-operator|,
-name|__func__
-operator|,
+literal|"QLNX_NVRAM_CMD_PUT_FILE_BEGIN \ 			 resp = 0x%x ret = 0x%x exit\n"
+argument_list|,
 name|ha
 operator|->
 name|cdev
 operator|.
 name|mcp_nvm_resp
-operator|,
+argument_list|,
 name|ret
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
