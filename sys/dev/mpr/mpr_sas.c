@@ -8910,6 +8910,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|nvme_dsm_ranges_dma_handle
 argument_list|,
 literal|0
