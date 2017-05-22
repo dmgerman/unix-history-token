@@ -196,6 +196,13 @@ name|size_t
 argument_list|)
 argument_list|)
 decl_stmt|;
+comment|/// This removes whatever the currently provided custom event handler is.
+comment|/// Returns 1 on success, 0 on error.
+specifier|extern
+name|int
+name|__xray_remove_customevent_handler
+parameter_list|()
+function_decl|;
 enum|enum
 name|XRayPatchingStatus
 block|{

@@ -3751,7 +3751,7 @@ name|bool
 name|executable
 parameter_list|,
 name|bool
-name|readable
+name|writable
 parameter_list|)
 function_decl|;
 name|bool
@@ -3837,7 +3837,7 @@ name|bool
 name|executable
 decl_stmt|;
 name|bool
-name|readable
+name|writable
 decl_stmt|;
 name|AddressRange
 argument_list|(
@@ -3847,7 +3847,7 @@ argument|uptr end
 argument_list|,
 argument|bool executable
 argument_list|,
-argument|bool readable
+argument|bool writable
 argument_list|)
 block|:
 name|next
@@ -3870,9 +3870,9 @@ argument_list|(
 name|executable
 argument_list|)
 operator|,
-name|readable
+name|writable
 argument_list|(
-argument|readable
+argument|writable
 argument_list|)
 block|{}
 block|}
