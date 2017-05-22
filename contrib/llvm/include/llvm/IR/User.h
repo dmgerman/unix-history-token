@@ -189,11 +189,6 @@ name|friend
 expr|struct
 name|HungoffOperandTraits
 block|;
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 specifier|inline
 specifier|static
@@ -328,6 +323,15 @@ argument_list|,
 argument|bool IsPhi = false
 argument_list|)
 block|;
+name|protected
+operator|:
+operator|~
+name|User
+argument_list|()
+operator|=
+expr|default
+block|;
+comment|// Use deleteValue() to delete a generic Instruction.
 name|public
 operator|:
 name|User
@@ -338,13 +342,6 @@ operator|&
 argument_list|)
 operator|=
 name|delete
-block|;
-operator|~
-name|User
-argument_list|()
-name|override
-operator|=
-expr|default
 block|;
 comment|/// \brief Free memory allocated for User and Use objects.
 name|void

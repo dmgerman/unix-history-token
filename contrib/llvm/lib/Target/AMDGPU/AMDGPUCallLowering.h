@@ -149,6 +149,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|static
 name|CCAssignFn
 operator|*
 name|CCAssignFnForCall
@@ -157,7 +158,16 @@ argument|CallingConv::ID CC
 argument_list|,
 argument|bool IsVarArg
 argument_list|)
-specifier|const
+block|;
+specifier|static
+name|CCAssignFn
+operator|*
+name|CCAssignFnForReturn
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|,
+argument|bool IsVarArg
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

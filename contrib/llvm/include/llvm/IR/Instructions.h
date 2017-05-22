@@ -373,12 +373,6 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
-comment|// Out of line virtual method, so the vtable, etc. has a home.
-operator|~
-name|AllocaInst
-argument_list|()
-name|override
-block|;
 comment|/// Return true if there is an allocation size parameter to the allocation
 comment|/// instruction that is not 1.
 name|bool
@@ -3382,11 +3376,6 @@ argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
 name|void
-name|anchor
-argument_list|()
-name|override
-block|;
-name|void
 name|init
 argument_list|(
 name|Value
@@ -4543,11 +4532,6 @@ operator|:
 name|public
 name|CmpInst
 block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|void
 name|AssertOK
 argument_list|()
@@ -5776,11 +5760,6 @@ specifier|const
 block|;
 name|public
 operator|:
-operator|~
-name|CallInst
-argument_list|()
-name|override
-block|;
 specifier|static
 name|CallInst
 operator|*
@@ -10954,11 +10933,6 @@ name|s
 argument_list|)
 return|;
 block|}
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|protected
 operator|:
 comment|// Note: Instruction needs to be a friend here to call cloneImpl.
@@ -12184,11 +12158,6 @@ specifier|const
 block|;
 name|public
 operator|:
-operator|~
-name|ReturnInst
-argument_list|()
-name|override
-block|;
 specifier|static
 name|ReturnInst
 operator|*

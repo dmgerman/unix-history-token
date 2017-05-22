@@ -65,10 +65,6 @@ block|{
 name|class
 name|TypeVisitorCallbacks
 block|{
-name|friend
-name|class
-name|CVTypeVisitor
-decl_stmt|;
 name|public
 label|:
 name|virtual

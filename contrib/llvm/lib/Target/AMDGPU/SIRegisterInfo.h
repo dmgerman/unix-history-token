@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/AMDGPUMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineRegisterInfo.h"
 end_include
 
@@ -187,8 +193,45 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|unsigned
+name|reservedStackPtrOffsetReg
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 name|BitVector
 name|getReservedRegs
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|MCPhysReg
+operator|*
+name|getCalleeSavedRegs
+argument_list|(
+argument|const MachineFunction *MF
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getCallPreservedMask
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|CallingConv::ID
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -878,6 +921,23 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|unsigned
+name|getReturnAddressReg
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+comment|// Not a callee saved register.
+return|return
+name|AMDGPU
+operator|::
+name|SGPR30_SGPR31
+return|;
+block|}
 name|private
 label|:
 name|void

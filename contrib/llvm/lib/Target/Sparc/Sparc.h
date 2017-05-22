@@ -115,11 +115,7 @@ function_decl|;
 name|FunctionPass
 modifier|*
 name|createSparcDelaySlotFillerPass
-parameter_list|(
-name|TargetMachine
-modifier|&
-name|TM
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|void
 name|LowerSparcMachineInstrToMCInst

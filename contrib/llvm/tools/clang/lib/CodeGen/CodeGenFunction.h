@@ -9201,12 +9201,15 @@ parameter_list|,
 name|QualType
 name|T
 parameter_list|,
-name|AlignmentSource
-name|AlignSource
+name|LValueBaseInfo
+name|BaseInfo
 init|=
+name|LValueBaseInfo
+argument_list|(
 name|AlignmentSource
 operator|::
 name|Type
+argument_list|)
 parameter_list|)
 block|{
 return|return
@@ -9221,7 +9224,7 @@ argument_list|,
 name|getContext
 argument_list|()
 argument_list|,
-name|AlignSource
+name|BaseInfo
 argument_list|,
 name|CGM
 operator|.
@@ -9250,12 +9253,15 @@ argument_list|,
 name|CharUnits
 name|Alignment
 argument_list|,
-name|AlignmentSource
-name|AlignSource
+name|LValueBaseInfo
+name|BaseInfo
 operator|=
+name|LValueBaseInfo
+argument_list|(
 name|AlignmentSource
 operator|::
 name|Type
+argument_list|)
 argument_list|)
 block|{
 return|return
@@ -9275,7 +9281,7 @@ argument_list|,
 name|getContext
 argument_list|()
 argument_list|,
-name|AlignSource
+name|BaseInfo
 argument_list|,
 name|CGM
 operator|.
@@ -9327,9 +9333,9 @@ parameter_list|(
 name|QualType
 name|T
 parameter_list|,
-name|AlignmentSource
+name|LValueBaseInfo
 modifier|*
-name|Source
+name|BaseInfo
 init|=
 name|nullptr
 parameter_list|,
@@ -9348,9 +9354,9 @@ parameter_list|(
 name|QualType
 name|T
 parameter_list|,
-name|AlignmentSource
+name|LValueBaseInfo
 modifier|*
-name|Source
+name|BaseInfo
 init|=
 name|nullptr
 parameter_list|)
@@ -9369,9 +9375,9 @@ name|ReferenceType
 modifier|*
 name|RefTy
 parameter_list|,
-name|AlignmentSource
+name|LValueBaseInfo
 modifier|*
-name|Source
+name|BaseInfo
 init|=
 name|nullptr
 parameter_list|)
@@ -9405,9 +9411,9 @@ name|PointerType
 modifier|*
 name|PtrTy
 parameter_list|,
-name|AlignmentSource
+name|LValueBaseInfo
 modifier|*
-name|Source
+name|BaseInfo
 init|=
 name|nullptr
 parameter_list|)
@@ -15792,7 +15798,7 @@ argument|QualType Ty
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|AlignmentSource AlignSource =                                   AlignmentSource::Type
+argument|LValueBaseInfo BaseInfo =                                     LValueBaseInfo(AlignmentSource::Type)
 argument_list|,
 argument|llvm::MDNode *TBAAInfo = nullptr
 argument_list|,
@@ -15867,12 +15873,15 @@ argument_list|,
 name|QualType
 name|Ty
 argument_list|,
-name|AlignmentSource
-name|AlignSource
+name|LValueBaseInfo
+name|BaseInfo
 operator|=
+name|LValueBaseInfo
+argument_list|(
 name|AlignmentSource
 operator|::
 name|Type
+argument_list|)
 argument_list|,
 name|llvm
 operator|::
@@ -16453,9 +16462,9 @@ name|Expr
 modifier|*
 name|Array
 parameter_list|,
-name|AlignmentSource
+name|LValueBaseInfo
 modifier|*
-name|AlignSource
+name|BaseInfo
 init|=
 name|nullptr
 parameter_list|)
@@ -17480,9 +17489,9 @@ name|MemberPointerType
 operator|*
 name|memberPtrType
 argument_list|,
-name|AlignmentSource
+name|LValueBaseInfo
 operator|*
-name|AlignSource
+name|BaseInfo
 operator|=
 name|nullptr
 argument_list|)
@@ -20815,27 +20824,15 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// EmitPointerWithAlignment - Given an expression with a pointer
+comment|/// EmitPointerWithAlignment - Given an expression with a pointer type,
 end_comment
 
 begin_comment
-comment|/// type, emit the value and compute our best estimate of the
+comment|/// emit the value and compute our best estimate of the alignment of the
 end_comment
 
 begin_comment
-comment|/// alignment of the pointee.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Note that this function will conservatively fall back on the type
-end_comment
-
-begin_comment
-comment|/// when it doesn't
+comment|/// pointee.
 end_comment
 
 begin_comment
@@ -20843,19 +20840,23 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param Source - If non-null, this will be initialized with
+comment|/// \param BaseInfo - If non-null, this will be initialized with
 end_comment
 
 begin_comment
-comment|///   information about the source of the alignment.  Note that this
+comment|/// information about the source of the alignment and the may-alias
 end_comment
 
 begin_comment
-comment|///   function will conservatively fall back on the type when it
+comment|/// attribute.  Note that this function will conservatively fall back on
 end_comment
 
 begin_comment
-comment|///   doesn't recognize the expression, which means that sometimes
+comment|/// the type when it doesn't recognize the expression and may-alias will
+end_comment
+
+begin_comment
+comment|/// be set to false.
 end_comment
 
 begin_comment
@@ -20863,39 +20864,31 @@ comment|///
 end_comment
 
 begin_comment
-comment|///   a worst-case One
+comment|/// One reasonable way to use this information is when there's a language
 end_comment
 
 begin_comment
-comment|///   reasonable way to use this information is when there's a
+comment|/// guarantee that the pointer must be aligned to some stricter value, and
 end_comment
 
 begin_comment
-comment|///   language guarantee that the pointer must be aligned to some
+comment|/// we're simply trying to ensure that sufficiently obvious uses of under-
 end_comment
 
 begin_comment
-comment|///   stricter value, and we're simply trying to ensure that
+comment|/// aligned objects don't get miscompiled; for example, a placement new
 end_comment
 
 begin_comment
-comment|///   sufficiently obvious uses of under-aligned objects don't get
+comment|/// into the address of a local variable.  In such a case, it's quite
 end_comment
 
 begin_comment
-comment|///   miscompiled; for example, a placement new into the address of
+comment|/// reasonable to just ignore the returned alignment when it isn't from an
 end_comment
 
 begin_comment
-comment|///   a local variable.  In such a case, it's quite reasonable to
-end_comment
-
-begin_comment
-comment|///   just ignore the returned alignment when it isn't from an
-end_comment
-
-begin_comment
-comment|///   explicit source.
+comment|/// explicit source.
 end_comment
 
 begin_function_decl
@@ -20907,9 +20900,9 @@ name|Expr
 modifier|*
 name|Addr
 parameter_list|,
-name|AlignmentSource
+name|LValueBaseInfo
 modifier|*
-name|Source
+name|BaseInfo
 init|=
 name|nullptr
 parameter_list|)

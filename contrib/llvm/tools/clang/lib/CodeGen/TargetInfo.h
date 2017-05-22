@@ -631,10 +631,25 @@ argument|QualType QT
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// Get the AST address space for alloca.
+name|virtual
+name|unsigned
+name|getASTAllocaAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LangAS
+operator|::
+name|Default
+return|;
+block|}
 comment|/// Perform address space cast of an expression of pointer type.
 comment|/// \param V is the LLVM value to be casted to another address space.
-comment|/// \param SrcTy is the QualType of \p V.
-comment|/// \param DestTy is the destination QualType.
+comment|/// \param SrcAddr is the language address space of \p V.
+comment|/// \param DestAddr is the targeted language address space.
+comment|/// \param DestTy is the destination LLVM pointer type.
+comment|/// \param IsNonNull is the flag indicating \p V is known to be non null.
 name|virtual
 name|llvm
 operator|::
@@ -646,9 +661,13 @@ argument|CodeGen::CodeGenFunction&CGF
 argument_list|,
 argument|llvm::Value *V
 argument_list|,
-argument|QualType SrcTy
+argument|unsigned SrcAddr
 argument_list|,
-argument|QualType DestTy
+argument|unsigned DestAddr
+argument_list|,
+argument|llvm::Type *DestTy
+argument_list|,
+argument|bool IsNonNull = false
 argument_list|)
 specifier|const
 expr_stmt|;

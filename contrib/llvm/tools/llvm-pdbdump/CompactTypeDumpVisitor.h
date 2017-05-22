@@ -72,7 +72,7 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|TypeDatabase
+name|TypeCollection
 decl_stmt|;
 block|}
 name|namespace
@@ -94,9 +94,9 @@ name|CompactTypeDumpVisitor
 argument_list|(
 name|codeview
 operator|::
-name|TypeDatabase
+name|TypeCollection
 operator|&
-name|TypeDB
+name|Types
 argument_list|,
 name|ScopedPrinter
 operator|*
@@ -105,7 +105,7 @@ argument_list|)
 block|;
 name|CompactTypeDumpVisitor
 argument_list|(
-argument|codeview::TypeDatabase&TypeDB
+argument|codeview::TypeCollection&Types
 argument_list|,
 argument|codeview::TypeIndex FirstTI
 argument_list|,
@@ -144,9 +144,9 @@ name|Offset
 block|;
 name|codeview
 operator|::
-name|TypeDatabase
+name|TypeCollection
 operator|&
-name|TypeDB
+name|Types
 block|; }
 decl_stmt|;
 block|}

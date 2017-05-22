@@ -288,6 +288,9 @@ name|SizeAlignInBytes
 decl_stmt|;
 block|}
 union|;
+name|unsigned
+name|ASTAllocaAddressSpace
+decl_stmt|;
 name|CharUnits
 name|getSizeSize
 argument_list|()
@@ -382,6 +385,15 @@ specifier|const
 block|{
 return|return
 name|BuiltinCC
+return|;
+block|}
+name|unsigned
+name|getASTAllocaAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ASTAllocaAddressSpace
 return|;
 block|}
 block|}

@@ -554,6 +554,15 @@ name|Parent
 operator|=
 name|parent
 block|;   }
+operator|~
+name|GlobalValue
+argument_list|()
+block|{
+name|removeDeadConstantUsers
+argument_list|()
+block|;
+comment|// remove any dead constants using this.
+block|}
 name|public
 operator|:
 expr|enum
@@ -581,16 +590,6 @@ argument_list|)
 operator|=
 name|delete
 block|;
-operator|~
-name|GlobalValue
-argument_list|()
-name|override
-block|{
-name|removeDeadConstantUsers
-argument_list|()
-block|;
-comment|// remove any dead constants using this.
-block|}
 name|unsigned
 name|getAlignment
 argument_list|()

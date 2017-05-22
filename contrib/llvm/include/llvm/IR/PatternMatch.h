@@ -5294,8 +5294,23 @@ name|Instruction
 operator|::
 name|Xor
 condition|)
+block|{
+if|if
+condition|(
+name|isAllOnes
+argument_list|(
+name|O
+operator|->
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+argument_list|)
+condition|)
 return|return
-name|matchIfNot
+name|L
+operator|.
+name|match
 argument_list|(
 name|O
 operator|->
@@ -5303,7 +5318,25 @@ name|getOperand
 argument_list|(
 literal|0
 argument_list|)
-argument_list|,
+argument_list|)
+return|;
+if|if
+condition|(
+name|isAllOnes
+argument_list|(
+name|O
+operator|->
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|L
+operator|.
+name|match
+argument_list|(
 name|O
 operator|->
 name|getOperand
@@ -5312,6 +5345,7 @@ literal|1
 argument_list|)
 argument_list|)
 return|;
+block|}
 return|return
 name|false
 return|;
@@ -5319,11 +5353,9 @@ block|}
 name|private
 operator|:
 name|bool
-name|matchIfNot
+name|isAllOnes
 argument_list|(
-argument|Value *LHS
-argument_list|,
-argument|Value *RHS
+argument|Value *V
 argument_list|)
 block|{
 return|return
@@ -5333,7 +5365,7 @@ operator|<
 name|ConstantInt
 operator|>
 operator|(
-name|RHS
+name|V
 operator|)
 operator|||
 name|isa
@@ -5341,7 +5373,7 @@ operator|<
 name|ConstantDataVector
 operator|>
 operator|(
-name|RHS
+name|V
 operator|)
 operator|||
 comment|// FIXME: Remove CV.
@@ -5350,7 +5382,7 @@ operator|<
 name|ConstantVector
 operator|>
 operator|(
-name|RHS
+name|V
 operator|)
 operator|)
 operator|&&
@@ -5359,18 +5391,11 @@ operator|<
 name|Constant
 operator|>
 operator|(
-name|RHS
+name|V
 operator|)
 operator|->
 name|isAllOnesValue
 argument_list|()
-operator|&&
-name|L
-operator|.
-name|match
-argument_list|(
-name|LHS
-argument_list|)
 return|;
 block|}
 expr|}

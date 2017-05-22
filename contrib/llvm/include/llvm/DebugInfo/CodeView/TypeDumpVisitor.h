@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeDatabase.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/CodeView/TypeIndex.h"
 end_include
 
@@ -89,6 +83,9 @@ decl_stmt|;
 name|namespace
 name|codeview
 block|{
+name|class
+name|TypeCollection
+decl_stmt|;
 comment|/// Dumper for CodeView type streams found in COFF object files and PDB files.
 name|class
 name|TypeDumpVisitor
@@ -100,7 +97,7 @@ name|public
 operator|:
 name|TypeDumpVisitor
 argument_list|(
-argument|TypeDatabase&TypeDB
+argument|TypeCollection&TpiTypes
 argument_list|,
 argument|ScopedPrinter *W
 argument_list|,
@@ -117,9 +114,9 @@ argument_list|(
 name|PrintRecordBytes
 argument_list|)
 block|,
-name|TypeDB
+name|TpiTypes
 argument_list|(
-argument|TypeDB
+argument|TpiTypes
 argument_list|)
 block|{}
 comment|/// When dumping types from an IPI stream in a PDB, a type index may refer to
@@ -127,15 +124,15 @@ comment|/// a type or an item ID. The dumper will lookup the "name" of the index
 comment|/// the item database if appropriate. If ItemDB is null, it will use TypeDB,
 comment|/// which is correct when dumping types from an object file (/Z7).
 name|void
-name|setItemDB
+name|setIpiTypes
 argument_list|(
-argument|TypeDatabase&DB
+argument|TypeCollection&Types
 argument_list|)
 block|{
-name|ItemDB
+name|IpiTypes
 operator|=
 operator|&
-name|DB
+name|Types
 block|; }
 name|void
 name|printTypeIndex
@@ -281,19 +278,19 @@ block|;
 comment|/// Get the database of indices for the stream that we are dumping. If ItemDB
 comment|/// is set, then we must be dumping an item (IPI) stream. This will also
 comment|/// always get the appropriate DB for printing item names.
-name|TypeDatabase
+name|TypeCollection
 operator|&
-name|getSourceDB
+name|getSourceTypes
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ItemDB
+name|IpiTypes
 operator|?
 operator|*
-name|ItemDB
+name|IpiTypes
 operator|:
-name|TypeDB
+name|TpiTypes
 return|;
 block|}
 name|ScopedPrinter
@@ -305,13 +302,13 @@ name|PrintRecordBytes
 operator|=
 name|false
 block|;
-name|TypeDatabase
+name|TypeCollection
 operator|&
-name|TypeDB
+name|TpiTypes
 block|;
-name|TypeDatabase
+name|TypeCollection
 operator|*
-name|ItemDB
+name|IpiTypes
 operator|=
 name|nullptr
 block|; }

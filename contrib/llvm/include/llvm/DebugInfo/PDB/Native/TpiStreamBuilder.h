@@ -291,11 +291,12 @@ name|TypeRecordBytes
 operator|=
 literal|0
 block|;
-name|Optional
-operator|<
 name|PdbRaw_TpiVer
-operator|>
 name|VerHeader
+operator|=
+name|PdbRaw_TpiVer
+operator|::
+name|PdbTpiV80
 block|;
 name|std
 operator|::

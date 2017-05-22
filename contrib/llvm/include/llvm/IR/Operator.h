@@ -123,20 +123,16 @@ range|:
 name|public
 name|User
 block|{
-name|protected
-operator|:
-comment|// NOTE: Cannot use = delete because it's not legal to delete
-comment|// an overridden method that's not deleted in the base class. Cannot leave
-comment|// this unimplemented because that leads to an ODR-violation.
-operator|~
-name|Operator
-argument_list|()
-name|override
-block|;
 name|public
 operator|:
 comment|// The Operator class is intended to be used as a utility, and is never itself
 comment|// instantiated.
+name|Operator
+argument_list|()
+operator|=
+name|delete
+block|;
+operator|~
 name|Operator
 argument_list|()
 operator|=

@@ -9225,25 +9225,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Find the module that contains the specified location, either
-end_comment
-
-begin_comment
-comment|/// directly or indirectly.
-end_comment
-
-begin_function_decl
-name|Module
-modifier|*
-name|getModuleContainingLocation
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief We want to produce a diagnostic at location IncLoc concerning a
 end_comment
 
@@ -9257,6 +9238,10 @@ end_comment
 
 begin_comment
 comment|/// \param IncLoc The location at which the missing import was detected.
+end_comment
+
+begin_comment
+comment|/// \param M The desired module.
 end_comment
 
 begin_comment
@@ -9291,6 +9276,10 @@ name|getModuleHeaderToIncludeForDiagnostics
 parameter_list|(
 name|SourceLocation
 name|IncLoc
+parameter_list|,
+name|Module
+modifier|*
+name|M
 parameter_list|,
 name|SourceLocation
 name|MLoc

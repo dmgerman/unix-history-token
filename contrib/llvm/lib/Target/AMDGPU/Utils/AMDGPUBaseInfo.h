@@ -889,11 +889,6 @@ block|{
 case|case
 name|CallingConv
 operator|::
-name|C
-case|:
-case|case
-name|CallingConv
-operator|::
 name|AMDGPU_KERNEL
 case|:
 case|case

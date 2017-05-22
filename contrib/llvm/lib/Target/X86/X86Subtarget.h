@@ -482,6 +482,12 @@ comment|/// True if the LEA instruction with certain arguments is slow
 name|bool
 name|SlowLEA
 block|;
+comment|/// True if the LEA instruction has all three source operands: base, index,
+comment|/// and offset or if the LEA instruction uses base and index registers where
+comment|/// the base is EBP, RBP,or R13
+name|bool
+name|Slow3OpsLEA
+block|;
 comment|/// True if INC and DEC instructions are slow when writing to flags
 name|bool
 name|SlowIncDec
@@ -595,12 +601,6 @@ block|;
 name|X86FrameLowering
 name|FrameLowering
 block|;
-name|bool
-name|OptForSize
-block|;
-name|bool
-name|OptForMinSize
-block|;
 name|public
 operator|:
 comment|/// This constructor initializes the data members to match that
@@ -617,10 +617,6 @@ argument_list|,
 argument|const X86TargetMachine&TM
 argument_list|,
 argument|unsigned StackAlignOverride
-argument_list|,
-argument|bool OptForSize
-argument_list|,
-argument|bool OptForMinSize
 argument_list|)
 block|;
 comment|/// This object will take onwership of \p GISelAccessor.
@@ -1557,6 +1553,15 @@ name|SlowLEA
 return|;
 block|}
 name|bool
+name|slow3OpsLEA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Slow3OpsLEA
+return|;
+block|}
+name|bool
 name|slowIncDec
 argument_list|()
 specifier|const
@@ -1686,24 +1691,6 @@ specifier|const
 block|{
 return|return
 name|UseSoftFloat
-return|;
-block|}
-name|bool
-name|getOptForSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|OptForSize
-return|;
-block|}
-name|bool
-name|getOptForMinSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|OptForMinSize
 return|;
 block|}
 comment|/// Use mfence if we have SSE2 or we're on x86-64 (even if we asked for

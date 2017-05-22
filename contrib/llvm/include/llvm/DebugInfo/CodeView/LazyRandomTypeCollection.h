@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- RandomAccessTypeVisitor.h ------------------------------ *- C++ --*-===//
+comment|//===- LazyRandomTypeCollection.h ---------------------------- *- C++ --*-===//
 end_comment
 
 begin_comment
@@ -34,19 +34,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_CODEVIEW_RANDOMACCESSTYPEVISITOR_H
+name|LLVM_DEBUGINFO_CODEVIEW_LAZYRANDOMTYPECOLLECTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_CODEVIEW_RANDOMACCESSTYPEVISITOR_H
+name|LLVM_DEBUGINFO_CODEVIEW_LAZYRANDOMTYPECOLLECTION_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/TinyPtrVector.h"
+file|"llvm/DebugInfo/CodeView/TypeCollection.h"
 end_include
 
 begin_include
@@ -90,9 +90,6 @@ name|class
 name|TypeDatabase
 decl_stmt|;
 name|class
-name|TypeServerHandler
-decl_stmt|;
-name|class
 name|TypeVisitorCallbacks
 decl_stmt|;
 comment|/// \brief Provides amortized O(1) random access to a CodeView type stream.
@@ -111,14 +108,17 @@ comment|/// supplying such an array, the producer of a type stream can allow the
 comment|/// consumer much better access time, because the consumer can find the nearest
 comment|/// index in this array, and do a linear scan forward only from there.
 comment|///
-comment|/// RandomAccessTypeVisitor implements this algorithm, but additionally goes one
-comment|/// step further by caching offsets of every record that has been visited at
+comment|/// LazyRandomTypeCollection implements this algorithm, but additionally goes
+comment|/// one step further by caching offsets of every record that has been visited at
 comment|/// least once.  This way, even repeated visits of the same record will never
 comment|/// require more than one linear scan.  For a type stream of N elements divided
 comment|/// into M chunks of roughly equal size, this yields a worst case lookup time
 comment|/// of O(N/M) and an amortized time of O(1).
 name|class
-name|RandomAccessTypeVisitor
+name|LazyRandomTypeCollection
+range|:
+name|public
+name|TypeCollection
 block|{
 typedef|typedef
 name|FixedStreamArray
@@ -128,27 +128,114 @@ operator|>
 name|PartialOffsetArray
 expr_stmt|;
 name|public
-label|:
-name|RandomAccessTypeVisitor
+operator|:
+name|explicit
+name|LazyRandomTypeCollection
+argument_list|(
+argument|uint32_t RecordCountHint
+argument_list|)
+decl_stmt|;
+name|LazyRandomTypeCollection
+argument_list|(
+argument|StringRef Data
+argument_list|,
+argument|uint32_t RecordCountHint
+argument_list|)
+empty_stmt|;
+name|LazyRandomTypeCollection
+argument_list|(
+argument|ArrayRef<uint8_t> Data
+argument_list|,
+argument|uint32_t RecordCountHint
+argument_list|)
+empty_stmt|;
+name|LazyRandomTypeCollection
 argument_list|(
 argument|const CVTypeArray&Types
 argument_list|,
-argument|uint32_t NumRecords
+argument|uint32_t RecordCountHint
 argument_list|,
 argument|PartialOffsetArray PartialOffsets
 argument_list|)
 empty_stmt|;
-name|Error
-name|visitTypeIndex
+name|LazyRandomTypeCollection
+argument_list|(
+argument|const CVTypeArray&Types
+argument_list|,
+argument|uint32_t RecordCountHint
+argument_list|)
+empty_stmt|;
+name|void
+name|reset
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Data
+argument_list|)
+decl_stmt|;
+name|void
+name|reset
 parameter_list|(
-name|TypeIndex
-name|Index
-parameter_list|,
-name|TypeVisitorCallbacks
-modifier|&
-name|Callbacks
+name|StringRef
+name|Data
 parameter_list|)
 function_decl|;
+name|CVType
+name|getType
+argument_list|(
+name|TypeIndex
+name|Index
+argument_list|)
+name|override
+decl_stmt|;
+name|StringRef
+name|getTypeName
+argument_list|(
+name|TypeIndex
+name|Index
+argument_list|)
+name|override
+decl_stmt|;
+name|bool
+name|contains
+argument_list|(
+name|TypeIndex
+name|Index
+argument_list|)
+name|override
+decl_stmt|;
+name|uint32_t
+name|size
+argument_list|()
+name|override
+expr_stmt|;
+name|uint32_t
+name|capacity
+argument_list|()
+name|override
+expr_stmt|;
+name|Optional
+operator|<
+name|TypeIndex
+operator|>
+name|getFirst
+argument_list|()
+name|override
+expr_stmt|;
+name|Optional
+operator|<
+name|TypeIndex
+operator|>
+name|getNext
+argument_list|(
+argument|TypeIndex Prev
+argument_list|)
+name|override
+expr_stmt|;
+name|private
+label|:
 specifier|const
 name|TypeDatabase
 operator|&
@@ -160,10 +247,22 @@ return|return
 name|Database
 return|;
 block|}
-name|private
-label|:
+name|Error
+name|ensureTypeExists
+parameter_list|(
+name|TypeIndex
+name|Index
+parameter_list|)
+function_decl|;
 name|Error
 name|visitRangeForType
+parameter_list|(
+name|TypeIndex
+name|TI
+parameter_list|)
+function_decl|;
+name|Error
+name|fullScanForType
 parameter_list|(
 name|TypeIndex
 name|TI
@@ -182,14 +281,26 @@ name|TypeIndex
 name|End
 parameter_list|)
 function_decl|;
+name|Error
+name|visitOneRecord
+parameter_list|(
+name|TypeIndex
+name|TI
+parameter_list|,
+name|uint32_t
+name|Offset
+parameter_list|,
+name|CVType
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
 comment|/// Visited records get automatically added to the type database.
 name|TypeDatabase
 name|Database
 decl_stmt|;
 comment|/// The type array to allow random access visitation of.
-specifier|const
 name|CVTypeArray
-modifier|&
 name|Types
 decl_stmt|;
 comment|/// The database visitor which adds new records to the database.
@@ -217,11 +328,14 @@ decl_stmt|;
 block|}
 empty_stmt|;
 block|}
-comment|// end namespace codeview
-block|}
 end_decl_stmt
 
 begin_comment
+comment|// end namespace codeview
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 
@@ -231,7 +345,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_DEBUGINFO_CODEVIEW_RANDOMACCESSTYPEVISITOR_H
+comment|// LLVM_DEBUGINFO_CODEVIEW_LAZYRANDOMTYPECOLLECTION_H
 end_comment
 
 end_unit

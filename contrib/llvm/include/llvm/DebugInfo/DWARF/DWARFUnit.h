@@ -281,7 +281,9 @@ parameter_list|,
 name|StringRef
 name|SOS
 parameter_list|,
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|*
 name|AOS
 parameter_list|,
 name|StringRef
@@ -486,7 +488,9 @@ parameter_list|,
 name|StringRef
 name|SOS
 parameter_list|,
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|*
 name|AOS
 parameter_list|,
 name|StringRef
@@ -668,7 +672,9 @@ decl_stmt|;
 name|StringRef
 name|StringOffsetSection
 decl_stmt|;
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|*
 name|AddrOffsetSection
 decl_stmt|;
 name|uint32_t
@@ -782,6 +788,8 @@ label|:
 name|DWOHolder
 argument_list|(
 argument|StringRef DWOPath
+argument_list|,
+argument|uint64_t DWOId
 argument_list|)
 empty_stmt|;
 name|DWARFUnit
@@ -897,7 +905,7 @@ argument|StringRef SS
 argument_list|,
 argument|StringRef SOS
 argument_list|,
-argument|StringRef AOS
+argument|const DWARFSection *AOS
 argument_list|,
 argument|StringRef LS
 argument_list|,
@@ -955,7 +963,9 @@ block|}
 name|void
 name|setAddrOffsetSection
 parameter_list|(
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|*
 name|AOS
 parameter_list|,
 name|uint32_t

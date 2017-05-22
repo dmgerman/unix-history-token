@@ -685,6 +685,30 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
+comment|/// Returns the size of the wchar_t type in bytes.
+name|unsigned
+name|getWCharSize
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Returns size of the default wchar_t type on target \p T. This is mostly
+comment|/// intended to verify that the size in the frontend matches LLVM. All other
+comment|/// queries should use getWCharSize() instead.
+specifier|static
+name|unsigned
+name|getTargetWCharSize
+parameter_list|(
+specifier|const
+name|Triple
+modifier|&
+name|T
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// Provides information about what library functions are available for
@@ -1284,6 +1308,32 @@ return|return
 name|Attribute
 operator|::
 name|None
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \copydoc TargetLibraryInfoImpl::getWCharSize()
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|getWCharSize
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
+argument_list|)
+decl|const
+block|{
+return|return
+name|Impl
+operator|->
+name|getWCharSize
+argument_list|(
+name|M
+argument_list|)
 return|;
 block|}
 end_decl_stmt

@@ -1220,11 +1220,16 @@ name|ScratchWaveOffsetReg
 operator|=
 name|Reg
 block|;
-comment|// FIXME: Only for entry functions.
+if|if
+condition|(
+name|isEntryFunction
+argument_list|()
+condition|)
 name|FrameOffsetReg
 operator|=
 name|ScratchWaveOffsetReg
-block|;   }
+expr_stmt|;
+block|}
 name|unsigned
 name|getQueuePtrUserSGPR
 argument_list|()

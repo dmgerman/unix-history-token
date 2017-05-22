@@ -479,6 +479,55 @@ return|;
 block|}
 end_decl_stmt
 
+begin_function
+name|void
+name|updateMax
+parameter_list|(
+name|unsigned
+name|V
+parameter_list|)
+block|{
+name|unsigned
+name|PrevMax
+init|=
+name|Value
+operator|.
+name|load
+argument_list|(
+name|std
+operator|::
+name|memory_order_relaxed
+argument_list|)
+decl_stmt|;
+comment|// Keep trying to update max until we succeed or another thread produces
+comment|// a bigger max than us.
+while|while
+condition|(
+name|V
+operator|>
+name|PrevMax
+operator|&&
+operator|!
+name|Value
+operator|.
+name|compare_exchange_weak
+argument_list|(
+name|PrevMax
+argument_list|,
+name|V
+argument_list|,
+name|std
+operator|::
+name|memory_order_relaxed
+argument_list|)
+condition|)
+block|{     }
+name|init
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_else
 else|#
 directive|else
@@ -605,6 +654,16 @@ name|this
 return|;
 block|}
 end_expr_stmt
+
+begin_function
+name|void
+name|updateMax
+parameter_list|(
+name|unsigned
+name|V
+parameter_list|)
+block|{}
+end_function
 
 begin_endif
 endif|#

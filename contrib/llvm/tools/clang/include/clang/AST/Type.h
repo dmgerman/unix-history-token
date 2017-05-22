@@ -1541,6 +1541,20 @@ operator|>>
 name|AddressSpaceShift
 return|;
 block|}
+name|bool
+name|hasTargetSpecificAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getAddressSpace
+argument_list|()
+operator|>=
+name|LangAS
+operator|::
+name|FirstTargetAddressSpace
+return|;
+block|}
 comment|/// Get the address space attribute value to be printed by diagnostics.
 name|unsigned
 name|getAddressSpaceAttributePrintValue
@@ -1562,11 +1576,8 @@ name|Addr
 operator|==
 literal|0
 operator|||
-name|Addr
-operator|>=
-name|LangAS
-operator|::
-name|Count
+name|hasTargetSpecificAddressSpace
+argument_list|()
 argument_list|)
 block|;
 if|if
@@ -1578,7 +1589,7 @@ name|Addr
 operator|-
 name|LangAS
 operator|::
-name|Count
+name|FirstTargetAddressSpace
 return|;
 comment|// TODO: The diagnostic messages where Addr may be 0 should be fixed
 comment|// since it cannot differentiate the situation where 0 denotes the default
@@ -8098,12 +8109,15 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Determine whether the given type can have a nullability
-comment|/// specifier applied to it, i.e., if it is any kind of pointer type
-comment|/// or a dependent type that could instantiate to any kind of
-comment|/// pointer type.
+comment|/// specifier applied to it, i.e., if it is any kind of pointer type.
+comment|///
+comment|/// \param ResultIfUnknown The value to return if we don't yet know whether
+comment|///        this type can have nullability because it is dependent.
 name|bool
 name|canHaveNullability
-argument_list|()
+argument_list|(
+argument|bool ResultIfUnknown = true
+argument_list|)
 specifier|const
 block|;
 comment|/// Retrieve the set of substitutions required when accessing a member

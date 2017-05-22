@@ -274,7 +274,6 @@ decl_stmt|;
 operator|~
 name|GlobalVariable
 argument_list|()
-name|override
 block|{
 name|dropAllReferences
 argument_list|()

@@ -1047,8 +1047,9 @@ argument_list|)
 return|;
 block|}
 comment|/// ConsumeToken - Consume the current 'peek token' and lex the next one.
-comment|/// This does not work with special tokens: string literals, code completion
-comment|/// and balanced tokens must be handled using the specific consume methods.
+comment|/// This does not work with special tokens: string literals, code completion,
+comment|/// annotation tokens and balanced tokens must be handled using the specific
+comment|/// consume methods.
 comment|/// Returns the location of the consumed token.
 name|SourceLocation
 name|ConsumeToken
@@ -1321,6 +1322,11 @@ name|tok
 operator|::
 name|code_completion
 argument_list|)
+operator|||
+name|Tok
+operator|.
+name|isAnnotation
+argument_list|()
 return|;
 block|}
 comment|/// \brief Returns true if the current token is '=' or is a type of '='.
@@ -1434,9 +1440,60 @@ else|:
 name|handleUnexpectedCodeCompletionToken
 argument_list|()
 return|;
+if|if
+condition|(
+name|Tok
+operator|.
+name|isAnnotation
+argument_list|()
+condition|)
+return|return
+name|ConsumeAnnotationToken
+argument_list|()
+return|;
 return|return
 name|ConsumeToken
 argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|ConsumeAnnotationToken
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|Tok
+operator|.
+name|isAnnotation
+argument_list|()
+operator|&&
+literal|"wrong consume method"
+argument_list|)
+expr_stmt|;
+name|SourceLocation
+name|Loc
+init|=
+name|Tok
+operator|.
+name|getLocation
+argument_list|()
+decl_stmt|;
+name|PrevTokLocation
+operator|=
+name|Tok
+operator|.
+name|getAnnotationEndLoc
+argument_list|()
+expr_stmt|;
+name|PP
+operator|.
+name|Lex
+argument_list|(
+name|Tok
+argument_list|)
+expr_stmt|;
+return|return
+name|Loc
 return|;
 block|}
 comment|/// ConsumeParen - This consume method keeps the paren count up-to-date.
@@ -5150,6 +5207,13 @@ name|TypeCastState
 name|isTypeCast
 init|=
 name|NotTypeCast
+parameter_list|)
+function_decl|;
+name|ExprResult
+name|ParseConstantExpressionInExprEvalContext
+parameter_list|(
+name|TypeCastState
+name|isTypeCast
 parameter_list|)
 function_decl|;
 name|ExprResult

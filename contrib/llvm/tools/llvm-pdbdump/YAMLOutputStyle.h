@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/CVTypeDumper.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/ScopedPrinter.h"
 end_include
 

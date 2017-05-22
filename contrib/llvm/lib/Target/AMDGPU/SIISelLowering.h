@@ -121,6 +121,21 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|lowerStackParameter
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|CCValAssign&VA
+argument_list|,
+argument|const SDLoc&SL
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|const ISD::InputArg&Arg
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerGlobalAddress
 argument_list|(
 argument|AMDGPUMachineFunction *MFI
@@ -856,6 +871,22 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|CanLowerReturn
+argument_list|(
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|LLVMContext&Context
+argument_list|)
+specifier|const
+name|override
+block|;
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -863,7 +894,7 @@ argument|SDValue Chain
 argument_list|,
 argument|CallingConv::ID CallConv
 argument_list|,
-argument|bool isVarArg
+argument|bool IsVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,

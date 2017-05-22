@@ -537,25 +537,8 @@ argument_list|(
 argument|LIS_
 argument_list|)
 block|{}
-name|LaneBitmask
-name|getDefRegMask
-argument_list|(
-argument|const MachineOperand&MO
-argument_list|)
-specifier|const
-expr_stmt|;
-name|LaneBitmask
-name|getUsedRegMask
-argument_list|(
-specifier|const
-name|MachineOperand
-operator|&
-name|MO
-argument_list|)
-decl|const
-decl_stmt|;
 name|public
-label|:
+operator|:
 comment|// live regs for the current state
 specifier|const
 name|decltype

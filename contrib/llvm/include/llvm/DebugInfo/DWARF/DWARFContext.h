@@ -1052,7 +1052,9 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|&
 name|getAddrSection
 parameter_list|()
 init|=
@@ -1269,7 +1271,7 @@ block|;
 name|DWARFSection
 name|RangeDWOSection
 block|;
-name|StringRef
+name|DWARFSection
 name|AddrSection
 block|;
 name|DWARFSection
@@ -1643,7 +1645,9 @@ return|return
 name|RangeDWOSection
 return|;
 block|}
-name|StringRef
+specifier|const
+name|DWARFSection
+operator|&
 name|getAddrSection
 argument_list|()
 name|override

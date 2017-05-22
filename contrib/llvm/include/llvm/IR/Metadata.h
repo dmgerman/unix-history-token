@@ -612,11 +612,6 @@ operator|*
 name|MD
 argument_list|)
 block|;
-operator|~
-name|MetadataAsValue
-argument_list|()
-name|override
-block|;
 comment|/// \brief Drop use of metadata (during teardown).
 name|void
 name|dropUse
@@ -628,6 +623,10 @@ name|nullptr
 block|; }
 name|public
 operator|:
+operator|~
+name|MetadataAsValue
+argument_list|()
+block|;
 specifier|static
 name|MetadataAsValue
 operator|*

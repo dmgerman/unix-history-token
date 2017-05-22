@@ -673,11 +673,6 @@ init|=
 name|true
 decl_stmt|;
 name|bool
-name|AllowBind
-init|=
-name|true
-decl_stmt|;
-name|bool
 name|NxCompat
 init|=
 name|true
@@ -708,11 +703,6 @@ init|=
 name|false
 decl_stmt|;
 comment|// This is for debugging.
-name|bool
-name|DebugPdb
-init|=
-name|false
-decl_stmt|;
 name|bool
 name|DumpPdb
 init|=

@@ -550,20 +550,6 @@ name|bool
 name|run
 parameter_list|()
 function_decl|;
-comment|// Driver is the owner of all opened files.
-comment|// InputFiles have MemoryBufferRefs to them.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MemoryBuffer
-operator|>>
-name|OwningMBs
-expr_stmt|;
 name|std
 operator|::
 name|list
@@ -595,17 +581,6 @@ name|Resources
 expr_stmt|;
 block|}
 empty_stmt|;
-name|void
-name|parseModuleDefs
-parameter_list|(
-name|MemoryBufferRef
-name|MB
-parameter_list|)
-function_decl|;
-name|void
-name|writeImportLibrary
-parameter_list|()
-function_decl|;
 comment|// Functions below this line are defined in DriverUtils.cpp.
 name|void
 name|printHelp

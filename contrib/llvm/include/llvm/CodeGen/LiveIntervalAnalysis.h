@@ -618,7 +618,7 @@ argument_list|,
 argument|SmallVectorImpl<SlotIndex> *EndPoints
 argument_list|)
 decl_stmt|;
-comment|/// This function should be used. Its intend is to tell you that
+comment|/// This function should not be used. Its intend is to tell you that
 comment|/// you are doing something wrong if you call pruveValue directly on a
 comment|/// LiveInterval. Indeed, you are supposed to call pruneValue on the main
 comment|/// LiveRange and all the LiveRange of the subranges if any.

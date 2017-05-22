@@ -68,7 +68,7 @@ block|{
 struct|struct
 name|RelocAddrEntry
 block|{
-name|int64_t
+name|uint64_t
 name|Value
 decl_stmt|;
 block|}

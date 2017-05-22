@@ -287,12 +287,6 @@ argument_list|,
 argument|InsertAtEnd
 argument_list|)
 block|{}
-comment|// Out of line virtual method, so the vtable, etc has a home.
-operator|~
-name|TerminatorInst
-argument_list|()
-name|override
-block|;
 name|public
 operator|:
 comment|/// Return the number of successors that this terminator has.
@@ -1388,12 +1382,6 @@ name|unsigned
 argument_list|)
 operator|=
 name|delete
-block|;
-comment|// Out of line virtual method, so the vtable, etc has a home.
-operator|~
-name|UnaryInstruction
-argument_list|()
-name|override
 block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
@@ -2662,11 +2650,6 @@ operator|:
 name|public
 name|UnaryInstruction
 block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|protected
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics for subclasses
@@ -3765,12 +3748,6 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
-comment|// Out of line virtual method.
 name|public
 operator|:
 name|CmpInst

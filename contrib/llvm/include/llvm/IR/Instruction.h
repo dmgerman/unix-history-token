@@ -157,6 +157,26 @@ decl_stmt|;
 struct_decl|struct
 name|AAMDNodes
 struct_decl|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|ilist_alloc_traits
+operator|<
+name|Instruction
+operator|>
+block|{
+specifier|static
+specifier|inline
+name|void
+name|deleteNode
+argument_list|(
+name|Instruction
+operator|*
+name|V
+argument_list|)
+block|; }
+expr_stmt|;
 name|class
 name|Instruction
 range|:
@@ -190,6 +210,13 @@ operator|<<
 literal|15
 block|}
 enum|;
+name|protected
+label|:
+operator|~
+name|Instruction
+argument_list|()
+expr_stmt|;
+comment|// Use deleteValue() to delete a generic Instruction.
 name|public
 label|:
 name|Instruction
@@ -213,12 +240,6 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-comment|// Out of line virtual method, so the vtable, etc has a home.
-operator|~
-name|Instruction
-argument_list|()
-name|override
-expr_stmt|;
 comment|/// Specialize the methods defined in Value, as we know that an instruction
 comment|/// can only be used by other instructions.
 name|Instruction
@@ -2168,6 +2189,23 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
+specifier|inline
+name|void
+name|ilist_alloc_traits
+operator|<
+name|Instruction
+operator|>
+operator|::
+name|deleteNode
+argument_list|(
+argument|Instruction *V
+argument_list|)
+block|{
+name|V
+operator|->
+name|deleteValue
+argument_list|()
+block|; }
 block|}
 end_decl_stmt
 

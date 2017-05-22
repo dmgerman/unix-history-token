@@ -97,17 +97,41 @@ argument_list|)
 expr_stmt|;
 comment|/// @brief Resize the buffer and uncompress section data into it.
 comment|/// @param Out         Destination buffer.
+name|template
+operator|<
+name|class
+name|T
+operator|>
 name|Error
+name|resizeAndDecompress
+argument_list|(
+argument|T&Out
+argument_list|)
+block|{
+name|Out
+operator|.
+name|resize
+argument_list|(
+name|DecompressedSize
+argument_list|)
+block|;
+return|return
 name|decompress
 argument_list|(
-name|SmallString
-operator|<
-literal|32
-operator|>
-operator|&
+block|{
 name|Out
+operator|.
+name|data
+argument_list|()
+block|,
+operator|(
+name|size_t
+operator|)
+name|DecompressedSize
+block|}
 argument_list|)
-decl_stmt|;
+return|;
+block|}
 comment|/// @brief Uncompress section data to raw buffer provided.
 comment|/// @param Buffer      Destination buffer.
 name|Error

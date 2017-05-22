@@ -146,6 +146,14 @@ name|uint8_t
 operator|>
 name|Bytes
 block|;
+name|mutable
+name|uint32_t
+name|Literal
+block|;
+name|mutable
+name|bool
+name|HasLiteral
+block|;
 name|public
 operator|:
 name|AMDGPUDisassembler
