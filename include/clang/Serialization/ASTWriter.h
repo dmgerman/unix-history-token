@@ -2315,16 +2315,6 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
-comment|/// \brief Infer the submodule ID that contains an entity at the given
-comment|/// source location.
-name|serialization
-operator|::
-name|SubmoduleID
-name|inferSubmoduleIDFromLocation
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
-expr_stmt|;
 comment|/// \brief Retrieve or create a submodule ID for this module, or return 0 if
 comment|/// the submodule is neither local (a submodle of the currently-written module)
 comment|/// nor from an imported module.

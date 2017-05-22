@@ -1436,22 +1436,6 @@ name|bool
 name|Complain
 parameter_list|)
 function_decl|;
-comment|/// \brief Infers the (sub)module based on the given source location and
-comment|/// source manager.
-comment|///
-comment|/// \param Loc The location within the source that we are querying, along
-comment|/// with its source manager.
-comment|///
-comment|/// \returns The module that owns this source location, or null if no
-comment|/// module owns this source location.
-name|Module
-modifier|*
-name|inferModuleFromLocation
-parameter_list|(
-name|FullSourceLoc
-name|Loc
-parameter_list|)
-function_decl|;
 comment|/// \brief Sets the umbrella header of the given module to the given
 comment|/// header.
 name|void

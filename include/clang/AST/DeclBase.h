@@ -145,6 +145,9 @@ name|class
 name|ExportDecl
 decl_stmt|;
 name|class
+name|ExternalSourceSymbolAttr
+decl_stmt|;
+name|class
 name|FunctionDecl
 decl_stmt|;
 name|class
@@ -888,6 +891,23 @@ name|DC
 operator|)
 operator|->
 name|Hidden
+operator|&&
+operator|(
+operator|!
+name|cast
+operator|<
+name|Decl
+operator|>
+operator|(
+name|DC
+operator|)
+operator|->
+name|isFromASTFile
+argument_list|()
+operator|||
+name|hasLocalOwningModuleStorage
+argument_list|()
+operator|)
 argument_list|)
 operator|,
 name|IdentifierNamespace
@@ -1885,6 +1905,14 @@ name|Bits
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Looks on this and related declarations for an applicable
+comment|/// external source symbol attribute.
+name|ExternalSourceSymbolAttr
+operator|*
+name|getExternalSourceSymbolAttr
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Whether this declaration was marked as being private to the
 comment|/// module in which it was defined.
 name|bool
@@ -2291,6 +2319,14 @@ condition|)
 return|return
 name|nullptr
 return|;
+name|assert
+argument_list|(
+name|hasLocalOwningModuleStorage
+argument_list|()
+operator|&&
+literal|"hidden local decl but no local module storage"
+argument_list|)
+expr_stmt|;
 end_expr_stmt
 
 begin_return

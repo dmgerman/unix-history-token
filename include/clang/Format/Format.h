@@ -1458,6 +1458,10 @@ comment|/// ``Foo<Protocol>`` instead of ``Foo<Protocol>``.
 name|bool
 name|ObjCSpaceBeforeProtocolList
 decl_stmt|;
+comment|/// \brief The penalty for breaking around an assignment operator.
+name|unsigned
+name|PenaltyBreakAssignment
+decl_stmt|;
 comment|/// \brief The penalty for breaking a function call after ``call(``.
 name|unsigned
 name|PenaltyBreakBeforeFirstCallParameter
@@ -2041,6 +2045,12 @@ operator|==
 name|R
 operator|.
 name|ObjCSpaceBeforeProtocolList
+operator|&&
+name|PenaltyBreakAssignment
+operator|==
+name|R
+operator|.
+name|PenaltyBreakAssignment
 operator|&&
 name|PenaltyBreakBeforeFirstCallParameter
 operator|==

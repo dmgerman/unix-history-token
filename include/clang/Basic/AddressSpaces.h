@@ -108,7 +108,7 @@ block|,
 comment|// This denotes the count of language-specific address spaces and also
 comment|// the offset added to the target-specific address spaces, which are usually
 comment|// specified by address space attributes __attribute__(address_space(n))).
-name|Count
+name|FirstTargetAddressSpace
 block|}
 enum|;
 comment|/// The type of a lookup table which maps from language-specific address spaces
@@ -117,7 +117,7 @@ typedef|typedef
 name|unsigned
 name|Map
 index|[
-name|Count
+name|FirstTargetAddressSpace
 index|]
 typedef|;
 block|}

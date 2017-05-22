@@ -310,7 +310,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{expected ')'}} expected-warning {{type specifier missing}} expected-note {{to match this}}
+comment|// expected-warning {{type specifier missing}} expected-error {{type-id cannot have a name}}
 end_comment
 
 begin_comment

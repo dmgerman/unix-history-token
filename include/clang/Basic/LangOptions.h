@@ -497,7 +497,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|isCompilingModule
+argument_list|()
+operator|||
 name|ModulesLocalVisibility
+operator|||
+name|ModulesTS
 return|;
 block|}
 name|bool

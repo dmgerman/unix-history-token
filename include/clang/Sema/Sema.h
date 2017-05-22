@@ -5498,6 +5498,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Determine if there is a visible declaration of \p D that is an explicit
+end_comment
+
+begin_comment
+comment|/// specialization declaration for a specialization of a template. (For a
+end_comment
+
+begin_comment
+comment|/// member specialization, use hasVisibleMemberSpecialization.)
+end_comment
+
+begin_decl_stmt
+name|bool
+name|hasVisibleExplicitSpecialization
+argument_list|(
+specifier|const
+name|NamedDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|Module
+operator|*
+operator|>
+operator|*
+name|Modules
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Determine if there is a visible declaration of \p D that is a member
 end_comment
 
@@ -10636,7 +10672,9 @@ begin_function_decl
 name|void
 name|notePreviousDefinition
 parameter_list|(
-name|SourceLocation
+specifier|const
+name|NamedDecl
+modifier|*
 name|Old
 parameter_list|,
 name|SourceLocation
@@ -34543,11 +34581,11 @@ end_expr_stmt
 
 begin_decl_stmt
 name|class
-name|SavePendingInstantiationsAndVTableUsesRAII
+name|GlobalEagerInstantiationScope
 block|{
 name|public
 label|:
-name|SavePendingInstantiationsAndVTableUsesRAII
+name|GlobalEagerInstantiationScope
 argument_list|(
 argument|Sema&S
 argument_list|,
@@ -34591,9 +34629,33 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_function
+name|void
+name|perform
+parameter_list|()
+block|{
+if|if
+condition|(
+name|Enabled
+condition|)
+block|{
+name|S
+operator|.
+name|DefineUsedVTables
+argument_list|()
+expr_stmt|;
+name|S
+operator|.
+name|PerformPendingInstantiations
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_expr_stmt
 operator|~
-name|SavePendingInstantiationsAndVTableUsesRAII
+name|GlobalEagerInstantiationScope
 argument_list|()
 block|{
 if|if
@@ -34738,11 +34800,11 @@ end_expr_stmt
 
 begin_decl_stmt
 name|class
-name|SavePendingLocalImplicitInstantiationsRAII
+name|LocalEagerInstantiationScope
 block|{
 name|public
 label|:
-name|SavePendingLocalImplicitInstantiationsRAII
+name|LocalEagerInstantiationScope
 argument_list|(
 name|Sema
 operator|&
@@ -34763,8 +34825,20 @@ operator|.
 name|PendingLocalImplicitInstantiations
 argument_list|)
 block|;     }
+name|void
+name|perform
+argument_list|()
+block|{
+name|S
+operator|.
+name|PerformPendingInstantiations
+argument_list|(
+comment|/*LocalOnly=*/
+name|true
+argument_list|)
+block|; }
 operator|~
-name|SavePendingLocalImplicitInstantiationsRAII
+name|LocalEagerInstantiationScope
 argument_list|()
 block|{
 name|assert

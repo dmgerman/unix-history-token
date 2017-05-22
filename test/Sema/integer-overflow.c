@@ -1016,6 +1016,57 @@ index|]
 operator|+
 literal|1
 decl_stmt|;
+comment|// expected-warning@+1 {{overflow in expression; result is 536870912 with type 'int'}}
+name|f0
+argument_list|(
+literal|4608
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|)
+expr_stmt|;
+name|f0
+argument_list|(
+literal|4608ul
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|)
+expr_stmt|;
+comment|// expected-warning@+1 2{{overflow in expression; result is 536870912 with type 'int'}}
+name|f1
+argument_list|(
+literal|4608
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|,
+literal|4608
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|)
+expr_stmt|;
+comment|// expected-warning@+1 2{{overflow in expression; result is 536870912 with type 'int'}}
+name|f2
+argument_list|(
+literal|4608
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|,
+literal|4608
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|)
+expr_stmt|;
 comment|// expected-warning@+1 2{{overflow in expression; result is 536870912 with type 'int'}}
 name|int
 name|j1

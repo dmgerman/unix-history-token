@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -triple amdgcn -emit-llvm< %s | FileCheck -check-pref
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple amdgcn---amdgiz -emit-llvm< %s | FileCheck -check-prefixes=CHeCK,GIZ %s
+comment|// RUN: %clang_cc1 -triple amdgcn---amdgiz -emit-llvm< %s | FileCheck -check-prefixes=CHECK,GIZ %s
 end_comment
 
 begin_comment
@@ -208,11 +208,19 @@ comment|// CHECK-LABEL: define void @test4(
 end_comment
 
 begin_comment
-comment|// CHECK: call void @llvm.memcpy.p0i8.p2i8
+comment|// GIZ: call void @llvm.memcpy.p0i8.p2i8
 end_comment
 
 begin_comment
-comment|// CHECK: call void @llvm.memcpy.p2i8.p0i8
+comment|// GIZ: call void @llvm.memcpy.p2i8.p0i8
+end_comment
+
+begin_comment
+comment|// PIZ: call void @llvm.memcpy.p4i8.p2i8
+end_comment
+
+begin_comment
+comment|// PIZ: call void @llvm.memcpy.p2i8.p4i8
 end_comment
 
 begin_decl_stmt

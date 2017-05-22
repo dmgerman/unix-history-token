@@ -3918,7 +3918,7 @@ operator|*
 operator|>
 name|getModulesWithMergedDefinition
 argument_list|(
-argument|NamedDecl *Def
+argument|const NamedDecl *Def
 argument_list|)
 block|{
 name|auto
@@ -11067,7 +11067,7 @@ name|AS
 operator|>=
 name|LangAS
 operator|::
-name|Count
+name|FirstTargetAddressSpace
 return|;
 block|}
 end_decl_stmt

@@ -295,6 +295,20 @@ literal|8
 operator|>
 name|ClassSubobjects
 expr_stmt|;
+comment|/// VisitedDependentRecords - Records the dependent records that have been
+comment|/// already visited.
+name|llvm
+operator|::
+name|SmallDenseSet
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+literal|4
+operator|>
+name|VisitedDependentRecords
+expr_stmt|;
 comment|/// FindAmbiguities - Whether Sema::IsDerivedFrom should try find
 comment|/// ambiguous paths while it is looking for a path from a derived
 comment|/// type to a base type.
