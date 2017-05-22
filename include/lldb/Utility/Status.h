@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Status.h -------------------------------------------------*- C++
-end_comment
-
-begin_comment
-comment|//-*-===//
+comment|//===-- Status.h ------------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -38,23 +34,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__DCError_h__
+name|LLDB_UTILITY_STATUS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__DCError_h__
+name|LLDB_UTILITY_STATUS_H
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
 
 begin_include
 include|#
@@ -85,6 +72,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/FormatVariadic.h"
 end_include
 
@@ -93,6 +86,16 @@ include|#
 directive|include
 file|<cstdarg>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t
+end_comment
 
 begin_include
 include|#
@@ -118,16 +121,6 @@ end_include
 
 begin_comment
 comment|// for forward
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
-
-begin_comment
-comment|// for uint32_t
 end_comment
 
 begin_decl_stmt
@@ -361,6 +354,32 @@ begin_expr_stmt
 operator|~
 name|Status
 argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// llvm::Error support
+end_comment
+
+begin_decl_stmt
+name|explicit
+name|Status
+argument_list|(
+name|llvm
+operator|::
+name|Error
+name|error
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Error
+name|ToError
+argument_list|()
+specifier|const
 expr_stmt|;
 end_expr_stmt
 
@@ -1118,16 +1137,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #if defined(__cplusplus)
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// #ifndef __DCError_h__
+comment|// #ifndef LLDB_UTILITY_STATUS_H
 end_comment
 
 end_unit
