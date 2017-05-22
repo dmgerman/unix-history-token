@@ -885,14 +885,6 @@ end_expr_stmt
 begin_expr_stmt
 name|STATIC_LIB_REQUIRE
 argument_list|(
-name|_spinlock_debug
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|STATIC_LIB_REQUIRE
-argument_list|(
 name|_spinunlock
 argument_list|)
 expr_stmt|;

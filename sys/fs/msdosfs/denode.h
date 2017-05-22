@@ -31,7 +31,7 @@ value|0x1fffffff
 end_define
 
 begin_comment
-comment|/*  * The fat cache structure. fc_fsrcn is the filesystem relative cluster  * number that corresponds to the file relative cluster number in this  * structure (fc_frcn).  */
+comment|/*  * The FAT cache structure. fc_fsrcn is the filesystem relative cluster  * number that corresponds to the file relative cluster number in this  * structure (fc_frcn).  */
 end_comment
 
 begin_struct
@@ -51,7 +51,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The fat entry cache as it stands helps make extending files a "quick"  * operation by avoiding having to scan the fat to discover the last  * cluster of the file. The cache also helps sequential reads by  * remembering the last cluster read from the file.  This also prevents us  * from having to rescan the fat to find the next cluster to read.  This  * cache is probably pretty worthless if a file is opened by multiple  * processes.  */
+comment|/*  * The FAT entry cache as it stands helps make extending files a "quick"  * operation by avoiding having to scan the FAT to discover the last  * cluster of the file. The cache also helps sequential reads by  * remembering the last cluster read from the file.  This also prevents us  * from having to rescan the FAT to find the next cluster to read.  This  * cache is probably pretty worthless if a file is opened by multiple  * processes.  */
 end_comment
 
 begin_define
@@ -110,7 +110,7 @@ comment|/* doesn't represent an actual cluster # */
 end_comment
 
 begin_comment
-comment|/*  * Set a slot in the fat cache.  */
+comment|/*  * Set a slot in the FAT cache.  */
 end_comment
 
 begin_define
@@ -228,7 +228,7 @@ index|[
 name|FC_SIZE
 index|]
 decl_stmt|;
-comment|/* fat cache */
+comment|/* FAT cache */
 name|u_quad_t
 name|de_modrev
 decl_stmt|;

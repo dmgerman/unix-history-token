@@ -653,7 +653,7 @@ name|pmp
 operator|->
 name|pm_bpcluster
 expr_stmt|;
-comment|/* 	 * Rummage around in the fat cache, maybe we can avoid tromping 	 * through every fat entry for the file. And, keep track of how far 	 * off the cache was from where we wanted to be. 	 */
+comment|/* 	 * Rummage around in the FAT cache, maybe we can avoid tromping 	 * through every FAT entry for the file. And, keep track of how far 	 * off the cache was from where we wanted to be. 	 */
 name|i
 operator|=
 literal|0
@@ -966,7 +966,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* update last file cluster entry in the fat cache */
+comment|/* update last file cluster entry in the FAT cache */
 name|fc_setcache
 argument_list|(
 name|dep
@@ -989,7 +989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the closest entry in the fat cache to the cluster we are looking  * for.  */
+comment|/*  * Find the closest entry in the FAT cache to the cluster we are looking  * for.  */
 end_comment
 
 begin_function
@@ -1121,7 +1121,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Purge the fat cache in denode dep of all entries relating to file  * relative cluster frcn and beyond.  */
+comment|/*  * Purge the FAT cache in denode dep of all entries relating to file  * relative cluster frcn and beyond.  */
 end_comment
 
 begin_function
@@ -1197,7 +1197,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the fat.  * If mirroring the fat, update all copies, with the first copy as last.  * Else update only the current fat (ignoring the others).  *  * pmp	 - msdosfsmount structure for filesystem to update  * bp	 - addr of modified fat block  * fatbn - block number relative to begin of filesystem of the modified fat block.  */
+comment|/*  * Update the FAT.  * If mirroring the FAT, update all copies, with the first copy as last.  * Else update only the current FAT (ignoring the others).  *  * pmp	 - msdosfsmount structure for filesystem to update  * bp	 - addr of modified FAT block  * fatbn - block number relative to begin of filesystem of the modified FAT block.  */
 end_comment
 
 begin_function
@@ -1254,7 +1254,7 @@ operator|&
 name|MSDOSFS_FATMIRROR
 condition|)
 block|{
-comment|/* 		 * Now copy the block(s) of the modified fat to the other copies of 		 * the fat and write them out.  This is faster than reading in the 		 * other fats and then writing them back out.  This could tie up 		 * the fat for quite a while. Preventing others from accessing it. 		 * To prevent us from going after the fat quite so much we use 		 * delayed writes, unless they specfied "synchronous" when the 		 * filesystem was mounted.  If synch is asked for then use 		 * bwrite()'s and really slow things down. 		 */
+comment|/* 		 * Now copy the block(s) of the modified FAT to the other copies of 		 * the FAT and write them out.  This is faster than reading in the 		 * other FATs and then writing them back out.  This could tie up 		 * the FAT for quite a while. Preventing others from accessing it. 		 * To prevent us from going after the FAT quite so much we use 		 * delayed writes, unless they specified "synchronous" when the 		 * filesystem was mounted.  If synch is asked for then use 		 * bwrite()'s and really slow things down. 		 */
 if|if
 condition|(
 name|fatbn
@@ -1415,7 +1415,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Write out the first (or current) fat last. 	 */
+comment|/* 	 * Write out the first (or current) FAT last. 	 */
 if|if
 condition|(
 name|pmp
@@ -1441,7 +1441,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Updating entries in 12 bit fats is a pain in the butt.  *  * The following picture shows where nibbles go when moving from a 12 bit  * cluster number into the appropriate bytes in the FAT.  *  *	byte m        byte m+1      byte m+2  *	+----+----+   +----+----+   +----+----+  *	|  0    1 |   |  2    3 |   |  4    5 |   FAT bytes  *	+----+----+   +----+----+   +----+----+  *  *	+----+----+----+   +----+----+----+  *	|  3    0    1 |   |  4    5    2 |  *	+----+----+----+   +----+----+----+  *	cluster n  	   cluster n+1  *  * Where n is even. m = n + (n>> 2)  *  */
+comment|/*  * Updating entries in 12 bit FATs is a pain in the butt.  *  * The following picture shows where nibbles go when moving from a 12 bit  * cluster number into the appropriate bytes in the FAT.  *  *	byte m        byte m+1      byte m+2  *	+----+----+   +----+----+   +----+----+  *	|  0    1 |   |  2    3 |   |  4    5 |   FAT bytes  *	+----+----+   +----+----+   +----+----+  *  *	+----+----+----+   +----+----+----+  *	|  3    0    1 |   |  4    5    2 |  *	+----+----+----+   +----+----+----+  *	cluster n  	   cluster n+1  *  * Where n is even. m = n + (n>> 2)  *  */
 end_comment
 
 begin_function
@@ -1814,7 +1814,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get or Set or 'Get and Set' the cluster'th entry in the fat.  *  * function	- whether to get or set a fat entry  * pmp		- address of the msdosfsmount structure for the filesystem  *		  whose fat is to be manipulated.  * cn		- which cluster is of interest  * oldcontents	- address of a word that is to receive the contents of the  *		  cluster'th entry if this is a get function  * newcontents	- the new value to be written into the cluster'th element of  *		  the fat if this is a set function.  *  * This function can also be used to free a cluster by setting the fat entry  * for a cluster to 0.  *  * All copies of the fat are updated if this is a set function. NOTE: If  * fatentry() marks a cluster as free it does not update the inusemap in  * the msdosfsmount structure. This is left to the caller.  */
+comment|/*  * Get or Set or 'Get and Set' the cluster'th entry in the FAT.  *  * function	- whether to get or set a FAT entry  * pmp		- address of the msdosfsmount structure for the filesystem  *		  whose FAT is to be manipulated.  * cn		- which cluster is of interest  * oldcontents	- address of a word that is to receive the contents of the  *		  cluster'th entry if this is a get function  * newcontents	- the new value to be written into the cluster'th element of  *		  the FAT if this is a set function.  *  * This function can also be used to free a cluster by setting the FAT entry  * for a cluster to 0.  *  * All copies of the FAT are updated if this is a set function. NOTE: If  * fatentry() marks a cluster as free it does not update the inusemap in  * the msdosfsmount structure. This is left to the caller.  */
 end_comment
 
 begin_function
@@ -2088,7 +2088,7 @@ name|pmp
 operator|->
 name|pm_fatmask
 expr_stmt|;
-comment|/* map reserved fat entries to same values for all fats */
+comment|/* map reserved FAT entries to same values for all FATs */
 if|if
 condition|(
 operator|(
@@ -2210,7 +2210,7 @@ break|break;
 case|case
 name|FAT32_MASK
 case|:
-comment|/* 			 * According to spec we have to retain the 			 * high order bits of the fat entry. 			 */
+comment|/* 			 * According to spec we have to retain the 			 * high order bits of the FAT entry. 			 */
 name|readcn
 operator|=
 name|getulong
@@ -2288,7 +2288,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update a contiguous cluster chain  *  * pmp	    - mount point  * start    - first cluster of chain  * count    - number of clusters in chain  * fillwith - what to write into fat entry of last cluster  */
+comment|/*  * Update a contiguous cluster chain  *  * pmp	    - mount point  * start    - first cluster of chain  * count    - number of clusters in chain  * fillwith - what to write into FAT entry of last cluster  */
 end_comment
 
 begin_function
@@ -2912,7 +2912,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate contigous free clusters.  *  * pmp	      - mount point.  * start      - start of cluster chain.  * count      - number of clusters to allocate.  * fillwith   - put this value into the fat entry for the  *		last allocated cluster.  * retcluster - put the first allocated cluster's number here.  * got	      - how many clusters were actually allocated.  */
+comment|/*  * Allocate contigous free clusters.  *  * pmp	      - mount point.  * start      - start of cluster chain.  * count      - number of clusters to allocate.  * fillwith   - put this value into the FAT entry for the  *		last allocated cluster.  * retcluster - put the first allocated cluster's number here.  * got	      - how many clusters were actually allocated.  */
 end_comment
 
 begin_function
@@ -3118,7 +3118,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate contiguous free clusters.  *  * pmp	      - mount point.  * start      - preferred start of cluster chain.  * count      - number of clusters requested.  * fillwith   - put this value into the fat entry for the  *		last allocated cluster.  * retcluster - put the first allocated cluster's number here.  * got	      - how many clusters were actually allocated.  */
+comment|/*  * Allocate contiguous free clusters.  *  * pmp	      - mount point.  * start      - preferred start of cluster chain.  * count      - number of clusters requested.  * fillwith   - put this value into the FAT entry for the  *		last allocated cluster.  * retcluster - put the first allocated cluster's number here.  * got	      - how many clusters were actually allocated.  */
 end_comment
 
 begin_function
@@ -3989,7 +3989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read in fat blocks looking for free clusters. For every free cluster  * found turn off its corresponding bit in the pm_inusemap.  */
+comment|/*  * Read in FAT blocks looking for free clusters. For every free cluster  * found turn off its corresponding bit in the pm_inusemap.  */
 end_comment
 
 begin_function
@@ -4031,7 +4031,7 @@ argument_list|(
 name|pmp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Mark all clusters in use, we mark the free ones in the fat scan 	 * loop further down. 	 */
+comment|/* 	 * Mark all clusters in use, we mark the free ones in the FAT scan 	 * loop further down. 	 */
 for|for
 control|(
 name|cn
@@ -4062,7 +4062,7 @@ index|]
 operator|=
 name|FULL_RUN
 expr_stmt|;
-comment|/* 	 * Figure how many free clusters are in the filesystem by ripping 	 * through the fat counting the number of entries whose content is 	 * zero.  These represent free clusters. 	 */
+comment|/* 	 * Figure how many free clusters are in the filesystem by ripping 	 * through the FAT counting the number of entries whose content is 	 * zero.  These represent free clusters. 	 */
 name|pmp
 operator|->
 name|pm_freeclustercount
@@ -4641,7 +4641,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-comment|/* 		 * Update the "last cluster of the file" entry in the denode's fat 		 * cache. 		 */
+comment|/* 		 * Update the "last cluster of the file" entry in the 		 * denode's FAT cache. 		 */
 name|fc_setcache
 argument_list|(
 name|dep

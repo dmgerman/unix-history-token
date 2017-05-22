@@ -3009,7 +3009,7 @@ name|FAT12_MASK
 operator|)
 condition|)
 block|{
-comment|/* 			 * This will usually be a floppy disk. This size makes 			 * sure that one fat entry will not be split across 			 * multiple blocks. 			 */
+comment|/* 			 * This will usually be a floppy disk. This size makes 			 * sure that one FAT entry will not be split across 			 * multiple blocks. 			 */
 name|pmp
 operator|->
 name|pm_fatmask
@@ -3451,7 +3451,7 @@ condition|)
 goto|goto
 name|error_exit
 goto|;
-comment|/* 	 * If they want fat updates to be synchronous then let them suffer 	 * the performance degradation in exchange for the on disk copy of 	 * the fat being correct just about all the time.  I suppose this 	 * would be a good thing to turn on if the kernel is still flakey. 	 */
+comment|/* 	 * If they want FAT updates to be synchronous then let them suffer 	 * the performance degradation in exchange for the on disk copy of 	 * the FAT being correct just about all the time.  I suppose this 	 * would be a good thing to turn on if the kernel is still flakey. 	 */
 if|if
 condition|(
 name|mp
@@ -4564,7 +4564,7 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-comment|/* 	 * If we ever switch to not updating all of the fats all the time, 	 * this would be the place to update them from the first one. 	 */
+comment|/* 	 * If we ever switch to not updating all of the FATs all the time, 	 * this would be the place to update them from the first one. 	 */
 if|if
 condition|(
 name|pmp
@@ -4589,7 +4589,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* update fats here */
+comment|/* update FATs here */
 block|}
 block|}
 comment|/* 	 * Write back each (modified) denode. 	 */

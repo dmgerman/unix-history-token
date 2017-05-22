@@ -1743,7 +1743,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Top version %s\n"
-literal|"Usage: %s [-abCHIijnPqStuvz] [-d count] [-m io | cpu] [-o field] [-s time]\n"
+literal|"Usage: %s [-abCHIijnPqStuvwz] [-d count] [-m io | cpu] [-o field] [-s time]\n"
 literal|"       [-J jail] [-U username] [number]\n"
 argument_list|,
 name|version_string

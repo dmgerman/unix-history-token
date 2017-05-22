@@ -3457,7 +3457,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Do the bmap now, since pcbmap needs buffers 			 * for the fat table. (see msdosfs_strategy) 			 */
+comment|/* 			 * Do the bmap now, since pcbmap needs buffers 			 * for the FAT table. (see msdosfs_strategy) 			 */
 if|if
 condition|(
 name|bp

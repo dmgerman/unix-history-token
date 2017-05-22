@@ -189,6 +189,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|unix2dos
 index|[
@@ -747,6 +748,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|dos2unix
 index|[
@@ -1305,6 +1307,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|u2l
 index|[
@@ -1863,6 +1866,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|l2u
 index|[

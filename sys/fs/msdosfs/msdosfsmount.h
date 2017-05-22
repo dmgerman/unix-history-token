@@ -83,7 +83,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Layout of the mount control block for a msdos filesystem.  */
+comment|/*  * Layout of the mount control block for a MSDOSFS filesystem.  */
 end_comment
 
 begin_struct
@@ -117,7 +117,7 @@ comment|/* gid to set as owner of the files */
 name|mode_t
 name|pm_mask
 decl_stmt|;
-comment|/* mask to and with file protection bits  				   for files */
+comment|/* mask to and with file protection bits 				   for files */
 name|mode_t
 name|pm_dirmask
 decl_stmt|;
@@ -146,7 +146,7 @@ comment|/* How many DEV_BSIZE blocks fit inside a physical sector */
 name|u_long
 name|pm_FATsecs
 decl_stmt|;
-comment|/* actual number of fat sectors */
+comment|/* actual number of FAT sectors */
 name|u_long
 name|pm_fatblk
 decl_stmt|;
@@ -194,19 +194,19 @@ comment|/* ~0 if fs is modified, this can rollover to 0	*/
 name|u_long
 name|pm_fatblocksize
 decl_stmt|;
-comment|/* size of fat blocks in bytes */
+comment|/* size of FAT blocks in bytes */
 name|u_long
 name|pm_fatblocksec
 decl_stmt|;
-comment|/* size of fat blocks in sectors */
+comment|/* size of FAT blocks in sectors */
 name|u_long
 name|pm_fatsize
 decl_stmt|;
-comment|/* size of fat in bytes */
+comment|/* size of FAT in bytes */
 name|uint32_t
 name|pm_fatmask
 decl_stmt|;
-comment|/* mask to use for fat numbers */
+comment|/* mask to use for FAT numbers */
 name|u_long
 name|pm_fsinfo
 decl_stmt|;
@@ -218,7 +218,7 @@ comment|/* next place to search for a free cluster */
 name|u_int
 name|pm_fatmult
 decl_stmt|;
-comment|/* these 2 values are used in fat */
+comment|/* these 2 values are used in FAT */
 name|u_int
 name|pm_fatdiv
 decl_stmt|;
@@ -226,7 +226,7 @@ comment|/*	offset computation */
 name|u_int
 name|pm_curfat
 decl_stmt|;
-comment|/* current fat for FAT32 (0 otherwise) */
+comment|/* current FAT for FAT32 (0 otherwise) */
 name|u_int
 modifier|*
 name|pm_inusemap

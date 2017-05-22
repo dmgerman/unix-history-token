@@ -492,6 +492,12 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|bssid
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
 parameter_list|)
 block|{
 define|#

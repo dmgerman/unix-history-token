@@ -849,10 +849,25 @@ operator|-
 name|off
 argument_list|)
 expr_stmt|;
+comment|/* With FILE_MMAP, this is EOF; there's no more to refill */
+if|if
+condition|(
+name|filebehave
+operator|==
+name|FILE_MMAP
+condition|)
+block|{
+name|bufrem
+operator|-=
+name|len
+expr_stmt|;
+break|break;
+block|}
 name|off
 operator|=
 name|len
 expr_stmt|;
+comment|/* Fetch more to try and find EOL/EOF */
 if|if
 condition|(
 name|grep_refill
@@ -889,27 +904,8 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|&&
-name|filebehave
-operator|!=
-name|FILE_MMAP
 condition|)
 continue|continue;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* mmap EOF: return partial line, consume buffer */
-name|diff
-operator|=
-name|len
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* got it: finish up the line (like code above) */
 operator|++
 name|p
@@ -924,7 +920,6 @@ name|len
 operator|+=
 name|diff
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|grep_lnbufgrow
