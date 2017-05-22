@@ -223,6 +223,10 @@ name|bool
 name|empty
 parameter_list|()
 function_decl|;
+name|void
+name|clearCache
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 name|class
@@ -267,6 +271,14 @@ parameter_list|)
 function_decl|;
 name|void
 name|emitForCurrentSection
+parameter_list|(
+name|MCStreamer
+modifier|&
+name|Streamer
+parameter_list|)
+function_decl|;
+name|void
+name|clearCacheForCurrentSection
 parameter_list|(
 name|MCStreamer
 modifier|&
