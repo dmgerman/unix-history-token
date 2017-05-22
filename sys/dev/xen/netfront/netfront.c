@@ -5814,11 +5814,6 @@ condition|(
 name|work_to_do
 condition|)
 do|;
-name|XN_RX_UNLOCK
-argument_list|(
-name|rxq
-argument_list|)
-expr_stmt|;
 name|mbufq_drain
 argument_list|(
 operator|&
@@ -5944,11 +5939,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|XN_RX_LOCK
-argument_list|(
-name|rxq
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
