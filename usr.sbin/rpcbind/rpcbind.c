@@ -3706,7 +3706,7 @@ name|void
 name|terminate
 parameter_list|(
 name|int
-name|dummy
+name|signum
 name|__unused
 parameter_list|)
 block|{
@@ -3722,7 +3722,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rpcbind terminating on signal. Restart with \"rpcbind -w\""
+literal|"rpcbind terminating on signal %d. Restart with \"rpcbind -w\""
+argument_list|,
+name|signum
 argument_list|)
 expr_stmt|;
 name|write_warmstart
