@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"OutputSections.h"
+file|<llvm/ADT/ArrayRef.h>
 end_include
 
 begin_decl_stmt
@@ -56,6 +56,9 @@ block|{
 name|namespace
 name|elf
 block|{
+struct_decl|struct
+name|BaseCommand
+struct_decl|;
 name|template
 operator|<
 name|class
@@ -68,10 +71,10 @@ name|llvm
 operator|::
 name|ArrayRef
 operator|<
-name|OutputSection
+name|BaseCommand
 operator|*
 operator|>
-name|OutputSections
+name|Script
 argument_list|)
 expr_stmt|;
 block|}

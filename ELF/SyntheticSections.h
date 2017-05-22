@@ -496,14 +496,14 @@ expr_stmt|;
 block|}
 empty_stmt|;
 name|class
-name|GotBaseSection
+name|GotSection
 range|:
 name|public
 name|SyntheticSection
 block|{
 name|public
 operator|:
-name|GotBaseSection
+name|GotSection
 argument_list|()
 block|;
 name|size_t
@@ -525,6 +525,13 @@ name|bool
 name|empty
 argument_list|()
 specifier|const
+name|override
+block|;
+name|void
+name|writeTo
+argument_list|(
+argument|uint8_t *Buf
+argument_list|)
 name|override
 block|;
 name|void
@@ -609,28 +616,6 @@ operator|=
 literal|0
 block|; }
 decl_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|class
-name|GotSection
-name|final
-operator|:
-name|public
-name|GotBaseSection
-block|{
-name|public
-operator|:
-name|void
-name|writeTo
-argument_list|(
-argument|uint8_t *Buf
-argument_list|)
-name|override
-block|; }
-expr_stmt|;
 comment|// .note.gnu.build-id section.
 name|class
 name|BuildIdSection
@@ -3656,7 +3641,7 @@ modifier|*
 name|GdbIndex
 decl_stmt|;
 specifier|static
-name|GotBaseSection
+name|GotSection
 modifier|*
 name|Got
 decl_stmt|;

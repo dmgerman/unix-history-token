@@ -94,6 +94,8 @@ name|RelExpr
 block|{
 name|R_ABS
 block|,
+name|R_ARM_SBREL
+block|,
 name|R_GOT
 block|,
 name|R_GOTONLY_PC
