@@ -947,7 +947,7 @@ name|u_int16_t
 name|sct
 decl_stmt|;
 name|u_int16_t
-name|reserved206
+name|reserved207
 index|[
 literal|2
 index|]
