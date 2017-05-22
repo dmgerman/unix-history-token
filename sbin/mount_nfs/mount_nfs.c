@@ -3528,6 +3528,10 @@ expr_stmt|;
 comment|/* Add mounted file system to PATH_MOUNTTAB */
 if|if
 condition|(
+name|mountmode
+operator|!=
+name|V4
+operator|&&
 operator|!
 name|add_mtab
 argument_list|(
