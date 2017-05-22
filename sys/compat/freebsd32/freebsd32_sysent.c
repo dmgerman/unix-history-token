@@ -440,7 +440,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|SYF_CAPENABLED
+literal|0
 block|,
 name|SY_THR_STATIC
 block|}
