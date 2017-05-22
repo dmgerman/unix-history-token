@@ -444,6 +444,13 @@ begin_struct
 struct|struct
 name|ndis_softc
 block|{
+define|#
+directive|define
+name|NDISUSB_GET_IFNET
+parameter_list|(
+name|ndis_softc
+parameter_list|)
+value|( (ndis_softc)->ndis_80211 ? NULL : (ndis_softc)->ifp )
 name|u_int
 name|ndis_80211
 range|:
