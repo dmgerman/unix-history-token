@@ -112,16 +112,6 @@ value|24
 end_define
 
 begin_function_decl
-name|void
-name|putchar
-parameter_list|(
-name|int
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|EFI_STATUS
 name|efi_main
 parameter_list|(
