@@ -101,7 +101,7 @@ parameter_list|,
 name|cfi
 parameter_list|)
 define|\
-value|((((((pri)& 7)<< 13) | ((cfi)& 1))<< 12) | ((vlid)& EVL_VLID_MASK))
+value|((((((pri)& 7)<< 1) | ((cfi)& 1))<< 12) | ((vlid)& EVL_VLID_MASK))
 end_define
 
 begin_comment
