@@ -1078,13 +1078,6 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
-name|initializeLiveRangeShrinkPass
-parameter_list|(
-name|PassRegistry
-modifier|&
-parameter_list|)
-function_decl|;
-name|void
 name|initializeLiveRegMatrixPass
 parameter_list|(
 name|PassRegistry

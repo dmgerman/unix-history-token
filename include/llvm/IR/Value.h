@@ -101,6 +101,12 @@ directive|include
 file|<iterator>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -210,6 +216,8 @@ comment|/// llvm/IR/ValueHandle.h for details.
 name|class
 name|Value
 block|{
+comment|// The least-significant bit of the first word of Value *must* be zero:
+comment|//   http://www.llvm.org/docs/ProgrammersManual.html#the-waymarking-algorithm
 name|Type
 modifier|*
 name|VTy
@@ -730,6 +738,16 @@ argument_list|,
 argument|unsigned scid
 argument_list|)
 empty_stmt|;
+comment|/// Value's destructor should be virtual by design, but that would require
+comment|/// that Value and all of its subclasses have a vtable that effectively
+comment|/// duplicates the information in the value ID. As a size optimization, the
+comment|/// destructor has been protected, and the caller should manually call
+comment|/// deleteValue.
+operator|~
+name|Value
+argument_list|()
+expr_stmt|;
+comment|// Use deleteValue() to delete a generic Value.
 name|public
 label|:
 name|Value
@@ -752,11 +770,11 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|virtual
-operator|~
-name|Value
-argument_list|()
-expr_stmt|;
+comment|/// Delete a pointer to a generic Value.
+name|void
+name|deleteValue
+parameter_list|()
+function_decl|;
 comment|/// \brief Support for debugging, callable in GDB: V->dump()
 name|void
 name|dump
@@ -2192,6 +2210,54 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_struct
+struct|struct
+name|ValueDeleter
+block|{
+name|void
+name|operator
+argument_list|()
+operator|(
+name|Value
+operator|*
+name|V
+operator|)
+block|{
+name|V
+operator|->
+name|deleteValue
+argument_list|()
+block|; }
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// Use this instead of std::unique_ptr<Value> or std::unique_ptr<Instruction>.
+end_comment
+
+begin_comment
+comment|/// Those don't work because Value and Instruction's destructors are protected,
+end_comment
+
+begin_comment
+comment|/// aren't virtual, and won't destroy the complete object.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Value
+operator|,
+name|ValueDeleter
+operator|>
+name|unique_value
+expr_stmt|;
+end_typedef
 
 begin_expr_stmt
 specifier|inline

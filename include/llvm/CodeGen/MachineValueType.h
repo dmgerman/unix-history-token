@@ -190,350 +190,360 @@ name|LAST_FP_VALUETYPE
 init|=
 name|ppcf128
 block|,
-name|v2i1
+name|v1i1
 init|=
 literal|14
+block|,
+comment|//    1 x i1
+name|v2i1
+init|=
+literal|15
 block|,
 comment|//    2 x i1
 name|v4i1
 init|=
-literal|15
+literal|16
 block|,
 comment|//    4 x i1
 name|v8i1
 init|=
-literal|16
+literal|17
 block|,
 comment|//    8 x i1
 name|v16i1
 init|=
-literal|17
+literal|18
 block|,
 comment|//   16 x i1
 name|v32i1
 init|=
-literal|18
+literal|19
 block|,
 comment|//   32 x i1
 name|v64i1
 init|=
-literal|19
+literal|20
 block|,
 comment|//   64 x i1
 name|v512i1
 init|=
-literal|20
+literal|21
 block|,
 comment|//  512 x i1
 name|v1024i1
 init|=
-literal|21
+literal|22
 block|,
 comment|// 1024 x i1
 name|v1i8
 init|=
-literal|22
+literal|23
 block|,
 comment|//  1 x i8
 name|v2i8
 init|=
-literal|23
+literal|24
 block|,
 comment|//  2 x i8
 name|v4i8
 init|=
-literal|24
+literal|25
 block|,
 comment|//  4 x i8
 name|v8i8
 init|=
-literal|25
+literal|26
 block|,
 comment|//  8 x i8
 name|v16i8
 init|=
-literal|26
+literal|27
 block|,
 comment|// 16 x i8
 name|v32i8
 init|=
-literal|27
+literal|28
 block|,
 comment|// 32 x i8
 name|v64i8
 init|=
-literal|28
+literal|29
 block|,
 comment|// 64 x i8
 name|v128i8
 init|=
-literal|29
+literal|30
 block|,
 comment|//128 x i8
 name|v256i8
 init|=
-literal|30
+literal|31
 block|,
 comment|//256 x i8
 name|v1i16
 init|=
-literal|31
+literal|32
 block|,
 comment|//  1 x i16
 name|v2i16
 init|=
-literal|32
+literal|33
 block|,
 comment|//  2 x i16
 name|v4i16
 init|=
-literal|33
+literal|34
 block|,
 comment|//  4 x i16
 name|v8i16
 init|=
-literal|34
+literal|35
 block|,
 comment|//  8 x i16
 name|v16i16
 init|=
-literal|35
+literal|36
 block|,
 comment|// 16 x i16
 name|v32i16
 init|=
-literal|36
+literal|37
 block|,
 comment|// 32 x i16
 name|v64i16
 init|=
-literal|37
+literal|38
 block|,
 comment|// 64 x i16
 name|v128i16
 init|=
-literal|38
+literal|39
 block|,
 comment|//128 x i16
 name|v1i32
 init|=
-literal|39
+literal|40
 block|,
 comment|//  1 x i32
 name|v2i32
 init|=
-literal|40
+literal|41
 block|,
 comment|//  2 x i32
 name|v4i32
 init|=
-literal|41
+literal|42
 block|,
 comment|//  4 x i32
 name|v8i32
 init|=
-literal|42
+literal|43
 block|,
 comment|//  8 x i32
 name|v16i32
 init|=
-literal|43
+literal|44
 block|,
 comment|// 16 x i32
 name|v32i32
 init|=
-literal|44
+literal|45
 block|,
 comment|// 32 x i32
 name|v64i32
 init|=
-literal|45
+literal|46
 block|,
 comment|// 64 x i32
 name|v1i64
 init|=
-literal|46
+literal|47
 block|,
 comment|//  1 x i64
 name|v2i64
 init|=
-literal|47
+literal|48
 block|,
 comment|//  2 x i64
 name|v4i64
 init|=
-literal|48
+literal|49
 block|,
 comment|//  4 x i64
 name|v8i64
 init|=
-literal|49
+literal|50
 block|,
 comment|//  8 x i64
 name|v16i64
 init|=
-literal|50
+literal|51
 block|,
 comment|// 16 x i64
 name|v32i64
 init|=
-literal|51
+literal|52
 block|,
 comment|// 32 x i64
 name|v1i128
 init|=
-literal|52
+literal|53
 block|,
 comment|//  1 x i128
 comment|// Scalable integer types
+name|nxv1i1
+init|=
+literal|54
+block|,
+comment|// n x  1 x i1
 name|nxv2i1
 init|=
-literal|53
+literal|55
 block|,
 comment|// n x  2 x i1
 name|nxv4i1
 init|=
-literal|54
+literal|56
 block|,
 comment|// n x  4 x i1
 name|nxv8i1
 init|=
-literal|55
+literal|57
 block|,
 comment|// n x  8 x i1
 name|nxv16i1
 init|=
-literal|56
+literal|58
 block|,
 comment|// n x 16 x i1
 name|nxv32i1
 init|=
-literal|57
+literal|59
 block|,
 comment|// n x 32 x i1
 name|nxv1i8
 init|=
-literal|58
+literal|60
 block|,
 comment|// n x  1 x i8
 name|nxv2i8
 init|=
-literal|59
+literal|61
 block|,
 comment|// n x  2 x i8
 name|nxv4i8
 init|=
-literal|60
+literal|62
 block|,
 comment|// n x  4 x i8
 name|nxv8i8
 init|=
-literal|61
+literal|63
 block|,
 comment|// n x  8 x i8
 name|nxv16i8
 init|=
-literal|62
+literal|64
 block|,
 comment|// n x 16 x i8
 name|nxv32i8
 init|=
-literal|63
+literal|65
 block|,
 comment|// n x 32 x i8
 name|nxv1i16
 init|=
-literal|64
+literal|66
 block|,
 comment|// n x  1 x i16
 name|nxv2i16
 init|=
-literal|65
+literal|67
 block|,
 comment|// n x  2 x i16
 name|nxv4i16
 init|=
-literal|66
+literal|68
 block|,
 comment|// n x  4 x i16
 name|nxv8i16
 init|=
-literal|67
+literal|69
 block|,
 comment|// n x  8 x i16
 name|nxv16i16
 init|=
-literal|68
+literal|70
 block|,
 comment|// n x 16 x i16
 name|nxv32i16
 init|=
-literal|69
+literal|71
 block|,
 comment|// n x 32 x i16
 name|nxv1i32
 init|=
-literal|70
+literal|72
 block|,
 comment|// n x  1 x i32
 name|nxv2i32
 init|=
-literal|71
+literal|73
 block|,
 comment|// n x  2 x i32
 name|nxv4i32
 init|=
-literal|72
+literal|74
 block|,
 comment|// n x  4 x i32
 name|nxv8i32
 init|=
-literal|73
+literal|75
 block|,
 comment|// n x  8 x i32
 name|nxv16i32
 init|=
-literal|74
+literal|76
 block|,
 comment|// n x 16 x i32
 name|nxv32i32
 init|=
-literal|75
+literal|77
 block|,
 comment|// n x 32 x i32
 name|nxv1i64
 init|=
-literal|76
+literal|78
 block|,
 comment|// n x  1 x i64
 name|nxv2i64
 init|=
-literal|77
+literal|79
 block|,
 comment|// n x  2 x i64
 name|nxv4i64
 init|=
-literal|78
+literal|80
 block|,
 comment|// n x  4 x i64
 name|nxv8i64
 init|=
-literal|79
+literal|81
 block|,
 comment|// n x  8 x i64
 name|nxv16i64
 init|=
-literal|80
+literal|82
 block|,
 comment|// n x 16 x i64
 name|nxv32i64
 init|=
-literal|81
+literal|83
 block|,
 comment|// n x 32 x i64
 name|FIRST_INTEGER_VECTOR_VALUETYPE
 init|=
-name|v2i1
+name|v1i1
 block|,
 name|LAST_INTEGER_VECTOR_VALUETYPE
 init|=
@@ -541,7 +551,7 @@ name|nxv32i64
 block|,
 name|FIRST_INTEGER_SCALABLE_VALUETYPE
 init|=
-name|nxv2i1
+name|nxv1i1
 block|,
 name|LAST_INTEGER_SCALABLE_VALUETYPE
 init|=
@@ -549,122 +559,122 @@ name|nxv32i64
 block|,
 name|v2f16
 init|=
-literal|82
+literal|84
 block|,
 comment|//  2 x f16
 name|v4f16
 init|=
-literal|83
+literal|85
 block|,
 comment|//  4 x f16
 name|v8f16
 init|=
-literal|84
+literal|86
 block|,
 comment|//  8 x f16
 name|v1f32
 init|=
-literal|85
+literal|87
 block|,
 comment|//  1 x f32
 name|v2f32
 init|=
-literal|86
+literal|88
 block|,
 comment|//  2 x f32
 name|v4f32
 init|=
-literal|87
+literal|89
 block|,
 comment|//  4 x f32
 name|v8f32
 init|=
-literal|88
+literal|90
 block|,
 comment|//  8 x f32
 name|v16f32
 init|=
-literal|89
+literal|91
 block|,
 comment|// 16 x f32
 name|v1f64
 init|=
-literal|90
+literal|92
 block|,
 comment|//  1 x f64
 name|v2f64
 init|=
-literal|91
+literal|93
 block|,
 comment|//  2 x f64
 name|v4f64
 init|=
-literal|92
+literal|94
 block|,
 comment|//  4 x f64
 name|v8f64
 init|=
-literal|93
+literal|95
 block|,
 comment|//  8 x f64
 name|nxv2f16
 init|=
-literal|94
+literal|96
 block|,
 comment|// n x  2 x f16
 name|nxv4f16
 init|=
-literal|95
+literal|97
 block|,
 comment|// n x  4 x f16
 name|nxv8f16
 init|=
-literal|96
+literal|98
 block|,
 comment|// n x  8 x f16
 name|nxv1f32
 init|=
-literal|97
+literal|99
 block|,
 comment|// n x  1 x f32
 name|nxv2f32
 init|=
-literal|98
+literal|100
 block|,
 comment|// n x  2 x f32
 name|nxv4f32
 init|=
-literal|99
+literal|101
 block|,
 comment|// n x  4 x f32
 name|nxv8f32
 init|=
-literal|100
+literal|102
 block|,
 comment|// n x  8 x f32
 name|nxv16f32
 init|=
-literal|101
+literal|103
 block|,
 comment|// n x 16 x f32
 name|nxv1f64
 init|=
-literal|102
+literal|104
 block|,
 comment|// n x  1 x f64
 name|nxv2f64
 init|=
-literal|103
+literal|105
 block|,
 comment|// n x  2 x f64
 name|nxv4f64
 init|=
-literal|104
+literal|106
 block|,
 comment|// n x  4 x f64
 name|nxv8f64
 init|=
-literal|105
+literal|107
 block|,
 comment|// n x  8 x f64
 name|FIRST_FP_VECTOR_VALUETYPE
@@ -685,7 +695,7 @@ name|nxv8f64
 block|,
 name|FIRST_VECTOR_VALUETYPE
 init|=
-name|v2i1
+name|v1i1
 block|,
 name|LAST_VECTOR_VALUETYPE
 init|=
@@ -693,22 +703,22 @@ name|nxv8f64
 block|,
 name|x86mmx
 init|=
-literal|106
+literal|108
 block|,
 comment|// This is an X86 MMX value
 name|Glue
 init|=
-literal|107
+literal|109
 block|,
 comment|// This glues nodes together during pre-RA sched
 name|isVoid
 init|=
-literal|108
+literal|110
 block|,
 comment|// This has no value
 name|Untyped
 init|=
-literal|109
+literal|111
 block|,
 comment|// This value takes a register, but has
 comment|// unspecified type.  The register class
@@ -720,7 +730,7 @@ block|,
 comment|// This is always the beginning of the list.
 name|LAST_VALUETYPE
 init|=
-literal|110
+literal|112
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.
@@ -1734,6 +1744,9 @@ literal|"Not a vector MVT!"
 argument_list|)
 expr_stmt|;
 case|case
+name|v1i1
+case|:
+case|case
 name|v2i1
 case|:
 case|case
@@ -1756,6 +1769,9 @@ name|v512i1
 case|:
 case|case
 name|v1024i1
+case|:
+case|case
+name|nxv1i1
 case|:
 case|case
 name|nxv2i1
@@ -2322,6 +2338,9 @@ return|return
 literal|2
 return|;
 case|case
+name|v1i1
+case|:
+case|case
 name|v1i8
 case|:
 case|case
@@ -2341,6 +2360,9 @@ name|v1f32
 case|:
 case|case
 name|v1f64
+case|:
+case|case
+name|nxv1i1
 case|:
 case|case
 name|nxv1i8
@@ -2453,6 +2475,12 @@ argument_list|)
 expr_stmt|;
 case|case
 name|i1
+case|:
+case|case
+name|v1i1
+case|:
+case|case
+name|nxv1i1
 case|:
 return|return
 literal|1
@@ -3090,6 +3118,17 @@ name|MVT
 operator|::
 name|i1
 case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|v1i1
+return|;
 if|if
 condition|(
 name|NumElements
@@ -3739,6 +3778,17 @@ name|MVT
 operator|::
 name|i1
 case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv1i1
+return|;
 if|if
 condition|(
 name|NumElements

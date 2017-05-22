@@ -872,8 +872,8 @@ name|DL
 argument_list|)
 return|;
 block|}
-comment|/// Returns true if the GEP is based on a pointer to a string (array of i8),
-comment|/// and is indexing into this string.
+comment|/// Returns true if the GEP is based on a pointer to a string (array of
+comment|// \p CharSize integers) and is indexing into this string.
 name|bool
 name|isGEPBasedOnPointerToString
 parameter_list|(
@@ -881,6 +881,107 @@ specifier|const
 name|GEPOperator
 modifier|*
 name|GEP
+parameter_list|,
+name|unsigned
+name|CharSize
+init|=
+literal|8
+parameter_list|)
+function_decl|;
+comment|/// Represents offset+length into a ConstantDataArray.
+struct|struct
+name|ConstantDataArraySlice
+block|{
+comment|/// ConstantDataArray pointer. nullptr indicates a zeroinitializer (a valid
+comment|/// initializer, it just doesn't fit the ConstantDataArray interface).
+specifier|const
+name|ConstantDataArray
+modifier|*
+name|Array
+decl_stmt|;
+comment|/// Slice starts at this Offset.
+name|uint64_t
+name|Offset
+decl_stmt|;
+comment|/// Length of the slice.
+name|uint64_t
+name|Length
+decl_stmt|;
+comment|/// Moves the Offset and adjusts Length accordingly.
+name|void
+name|move
+parameter_list|(
+name|uint64_t
+name|Delta
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Delta
+operator|<
+name|Length
+argument_list|)
+expr_stmt|;
+name|Offset
+operator|+=
+name|Delta
+expr_stmt|;
+name|Length
+operator|-=
+name|Delta
+expr_stmt|;
+block|}
+comment|/// Convenience accessor for elements in the slice.
+name|uint64_t
+name|operator
+index|[]
+argument_list|(
+name|unsigned
+name|I
+argument_list|)
+decl|const
+block|{
+return|return
+name|Array
+operator|==
+name|nullptr
+condition|?
+literal|0
+else|:
+name|Array
+operator|->
+name|getElementAsInteger
+argument_list|(
+name|I
+operator|+
+name|Offset
+argument_list|)
+return|;
+block|}
+block|}
+struct|;
+comment|/// Returns true if the value \p V is a pointer into a ContantDataArray.
+comment|/// If successfull \p Index will point to a ConstantDataArray info object
+comment|/// with an apropriate offset.
+name|bool
+name|getConstantDataArrayInfo
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|ConstantDataArraySlice
+modifier|&
+name|Slice
+parameter_list|,
+name|unsigned
+name|ElementSize
+parameter_list|,
+name|uint64_t
+name|Offset
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// This function computes the length of a null-terminated C string pointed to
@@ -921,6 +1022,11 @@ specifier|const
 name|Value
 modifier|*
 name|V
+parameter_list|,
+name|unsigned
+name|CharSize
+init|=
+literal|8
 parameter_list|)
 function_decl|;
 comment|/// This method strips off any GEP address adjustments and pointer casts from

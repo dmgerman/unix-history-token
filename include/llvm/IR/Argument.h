@@ -95,15 +95,11 @@ comment|/// argument of course represents the value of the actual argument that 
 comment|/// function was called with.
 name|class
 name|Argument
+name|final
 range|:
 name|public
 name|Value
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|Function
 operator|*
 name|Parent

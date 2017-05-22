@@ -133,9 +133,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|TargetMachine
-decl_stmt|;
 define|#
 directive|define
 name|INITIALIZE_PASS
@@ -245,26 +242,6 @@ return|return
 name|new
 name|PassName
 argument_list|()
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|PassName
-operator|>
-name|Pass
-operator|*
-name|callTargetMachineCtor
-argument_list|(
-argument|TargetMachine *TM
-argument_list|)
-block|{
-return|return
-name|new
-name|PassName
-argument_list|(
-name|TM
-argument_list|)
 return|;
 block|}
 comment|//===---------------------------------------------------------------------------

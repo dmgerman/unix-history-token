@@ -644,6 +644,27 @@ operator|.
 name|ObjectFormat
 return|;
 block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|Triple
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|Other
+operator|)
+return|;
+block|}
 comment|/// @}
 comment|/// @name Normalization
 comment|/// @{
@@ -2173,6 +2194,27 @@ comment|/// \returns true if the triple is little endian, false otherwise.
 name|bool
 name|isLittleEndian
 argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Test whether target triples are compatible.
+name|bool
+name|isCompatibleWith
+argument_list|(
+specifier|const
+name|Triple
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Merge target triples.
+name|std
+operator|::
+name|string
+name|merge
+argument_list|(
+argument|const Triple&Other
+argument_list|)
 specifier|const
 expr_stmt|;
 comment|/// @}

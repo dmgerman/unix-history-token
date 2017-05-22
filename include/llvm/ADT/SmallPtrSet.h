@@ -1619,6 +1619,16 @@ operator|<
 name|PtrType
 operator|>
 block|;
+name|using
+name|key_type
+operator|=
+name|ConstPtrType
+block|;
+name|using
+name|value_type
+operator|=
+name|PtrType
+block|;
 name|SmallPtrSetImpl
 argument_list|(
 specifier|const

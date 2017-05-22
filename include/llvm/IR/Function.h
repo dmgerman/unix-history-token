@@ -434,7 +434,6 @@ decl_stmt|;
 operator|~
 name|Function
 argument_list|()
-name|override
 expr_stmt|;
 specifier|static
 name|Function

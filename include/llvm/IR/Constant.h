@@ -107,11 +107,6 @@ range|:
 name|public
 name|User
 block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|protected
 operator|:
 name|Constant

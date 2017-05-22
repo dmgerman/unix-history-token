@@ -169,6 +169,9 @@ comment|// MachO 64-bit, little endian
 name|ID_MachO64B
 block|,
 comment|// MachO 64-bit, big endian
+name|ID_WinRes
+block|,
+comment|// Windows resource (.res) file.
 name|ID_Wasm
 block|,
 name|ID_EndObjects
@@ -436,6 +439,17 @@ name|TypeID
 operator|==
 name|ID_MachO64B
 operator|)
+return|;
+block|}
+name|bool
+name|isWinRes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeID
+operator|==
+name|ID_WinRes
 return|;
 block|}
 name|Triple

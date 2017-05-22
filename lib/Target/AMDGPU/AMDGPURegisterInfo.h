@@ -106,24 +106,6 @@ argument_list|(
 argument|unsigned Channel
 argument_list|)
 specifier|const
-block|;
-specifier|const
-name|MCPhysReg
-operator|*
-name|getCalleeSavedRegs
-argument_list|(
-argument|const MachineFunction *MF
-argument_list|)
-specifier|const
-name|override
-block|;
-name|unsigned
-name|getFrameRegister
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-name|override
 block|; }
 decl_stmt|;
 block|}

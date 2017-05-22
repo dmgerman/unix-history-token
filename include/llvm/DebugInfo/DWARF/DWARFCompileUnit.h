@@ -81,7 +81,7 @@ argument|StringRef SS
 argument_list|,
 argument|StringRef SOS
 argument_list|,
-argument|StringRef AOS
+argument|const DWARFSection *AOS
 argument_list|,
 argument|StringRef LS
 argument_list|,

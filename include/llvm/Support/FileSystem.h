@@ -1265,7 +1265,7 @@ block|,
 comment|///< PECOFF executable file
 name|windows_resource
 block|,
-comment|///< Windows compiled resource file (.rc)
+comment|///< Windows compiled resource file (.res)
 name|wasm_object
 comment|///< WebAssembly Object file
 block|}

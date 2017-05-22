@@ -672,6 +672,21 @@ operator|&
 name|B
 argument_list|)
 decl_stmt|;
+name|Value
+modifier|*
+name|optimizeWcslen
+argument_list|(
+name|CallInst
+operator|*
+name|CI
+argument_list|,
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|)
+decl_stmt|;
 comment|// Wrapper for all String/Memory Library Call Optimizations
 name|Value
 modifier|*
@@ -1128,6 +1143,25 @@ name|StringRef
 name|FuncName
 parameter_list|)
 function_decl|;
+comment|/// Shared code to optimize strlen+wcslen.
+name|Value
+modifier|*
+name|optimizeStringLength
+argument_list|(
+name|CallInst
+operator|*
+name|CI
+argument_list|,
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|,
+name|unsigned
+name|CharSize
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

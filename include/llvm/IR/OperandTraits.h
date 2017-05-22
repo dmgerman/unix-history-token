@@ -98,6 +98,21 @@ argument_list|(
 argument|SubClass* U
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+operator|!
+name|std
+operator|::
+name|is_polymorphic
+operator|<
+name|SubClass
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"adding virtual methods to subclasses of User breaks use lists"
+argument_list|)
+block|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -212,6 +227,21 @@ argument_list|(
 argument|SubClass* U
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+operator|!
+name|std
+operator|::
+name|is_polymorphic
+operator|<
+name|SubClass
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"adding virtual methods to subclasses of User breaks use lists"
+argument_list|)
+block|;
 return|return
 name|reinterpret_cast
 operator|<

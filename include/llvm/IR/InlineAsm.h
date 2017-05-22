@@ -117,6 +117,7 @@ name|ConstantUniqueMap
 expr_stmt|;
 name|class
 name|InlineAsm
+name|final
 range|:
 name|public
 name|Value
@@ -178,11 +179,6 @@ argument|bool isAlignStack
 argument_list|,
 argument|AsmDialect asmDialect
 argument_list|)
-block|;
-operator|~
-name|InlineAsm
-argument_list|()
-name|override
 block|;
 comment|/// When the ConstantUniqueMap merges two types and makes two InlineAsms
 comment|/// identical, it destroys one of them with this method.

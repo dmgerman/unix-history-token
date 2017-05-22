@@ -167,6 +167,7 @@ comment|/// modifying a program. However, the verifier will ensure that basic bl
 comment|/// are "well formed".
 name|class
 name|BasicBlock
+name|final
 range|:
 name|public
 name|Value
@@ -276,7 +277,6 @@ decl_stmt|;
 operator|~
 name|BasicBlock
 argument_list|()
-name|override
 expr_stmt|;
 comment|/// \brief Get the context in which this basic block lives.
 name|LLVMContext

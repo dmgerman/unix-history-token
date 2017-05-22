@@ -240,11 +240,6 @@ name|friend
 name|class
 name|Constant
 block|;
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|Value
 operator|*
 name|handleOperandChangeImpl
@@ -383,11 +378,6 @@ name|APInt
 operator|&
 name|V
 argument_list|)
-block|;
-name|void
-name|anchor
-argument_list|()
-name|override
 block|;
 name|void
 name|destroyConstantImpl
@@ -892,11 +882,6 @@ name|APFloat
 operator|&
 name|V
 argument_list|)
-block|;
-name|void
-name|anchor
-argument_list|()
-name|override
 block|;
 name|void
 name|destroyConstantImpl
@@ -2048,7 +2033,6 @@ block|{}
 operator|~
 name|ConstantDataSequential
 argument_list|()
-name|override
 block|{
 name|delete
 name|Next
@@ -2176,10 +2160,13 @@ name|getElementByteSize
 argument_list|()
 specifier|const
 block|;
-comment|/// This method returns true if this is an array of i8.
+comment|/// This method returns true if this is an array of \p CharSize integers.
 name|bool
 name|isString
-argument_list|()
+argument_list|(
+argument|unsigned CharSize =
+literal|8
+argument_list|)
 specifier|const
 block|;
 comment|/// This method returns true if the array "isString", ends with a null byte,
@@ -2350,11 +2337,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|public
 operator|:
 name|ConstantDataArray
@@ -2648,11 +2630,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|public
 operator|:
 name|ConstantDataVector

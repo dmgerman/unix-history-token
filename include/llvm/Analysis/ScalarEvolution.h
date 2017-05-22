@@ -2157,10 +2157,12 @@ name|isComplete
 argument_list|()
 return|;
 block|}
-comment|/// Return an expression indicating the exact backedge-taken count of the
-comment|/// loop if it is known or SCEVCouldNotCompute otherwise. This is the
-comment|/// number of times the loop header can be guaranteed to execute, minus
-comment|/// one.
+comment|/// Return an expression indicating the exact *backedge-taken*
+comment|/// count of the loop if it is known or SCEVCouldNotCompute
+comment|/// otherwise.  If execution makes it to the backedge on every
+comment|/// iteration (i.e. there are no abnormal exists like exception
+comment|/// throws and thread exits) then this is the number of times the
+comment|/// loop header will execute minus one.
 comment|///
 comment|/// If the SCEV predicate associated with the answer can be different
 comment|/// from AlwaysTrue, we must add a (non null) Predicates argument.
@@ -5265,11 +5267,11 @@ name|ExitingBlock
 parameter_list|)
 function_decl|;
 comment|/// If the specified loop has a predictable backedge-taken count, return it,
-comment|/// otherwise return a SCEVCouldNotCompute object. The backedge-taken count
-comment|/// is the number of times the loop header will be branched to from within
-comment|/// the loop. This is one less than the trip count of the loop, since it
-comment|/// doesn't count the first iteration, when the header is branched to from
-comment|/// outside the loop.
+comment|/// otherwise return a SCEVCouldNotCompute object. The backedge-taken count is
+comment|/// the number of times the loop header will be branched to from within the
+comment|/// loop, assuming there are no abnormal exists like exception throws. This is
+comment|/// one less than the trip count of the loop, since it doesn't count the first
+comment|/// iteration, when the header is branched to from outside the loop.
 comment|///
 comment|/// Note that it is not valid to call this method on a loop without a
 comment|/// loop-invariant backedge-taken count (see
@@ -5305,8 +5307,10 @@ modifier|&
 name|Predicates
 parameter_list|)
 function_decl|;
-comment|/// Similar to getBackedgeTakenCount, except return the least SCEV value
-comment|/// that is known never to be less than the actual backedge taken count.
+comment|/// When successful, this returns a SCEVConstant that is greater than or equal
+comment|/// to (i.e. a "conservative over-approximation") of the value returend by
+comment|/// getBackedgeTakenCount.  If such a value cannot be computed, it returns the
+comment|/// SCEVCouldNotCompute object.
 specifier|const
 name|SCEV
 modifier|*

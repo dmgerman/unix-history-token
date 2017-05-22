@@ -121,12 +121,7 @@ block|{
 name|FunctionPass
 modifier|*
 name|createAtomicExpandPass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// createUnreachableBlockEliminationPass - The LLVM code generator does not
 comment|/// work well with unreachable basic blocks (what live ranges make sense for a
@@ -197,14 +192,7 @@ comment|/// matching during instruction selection.
 name|FunctionPass
 modifier|*
 name|createCodeGenPreparePass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-init|=
-name|nullptr
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// createScalarizeMaskedMemIntrinPass - Replace masked load, store, gather
 comment|/// and scatter intrinsics with scalar code when target doesn't support them.
@@ -325,13 +313,6 @@ name|char
 modifier|&
 name|ShrinkWrapID
 decl_stmt|;
-comment|/// LiveRangeShrink pass. Move instruction close to its definition to shrink
-comment|/// the definition's live range.
-specifier|extern
-name|char
-modifier|&
-name|LiveRangeShrinkID
-decl_stmt|;
 comment|/// Greedy register allocator.
 specifier|extern
 name|char
@@ -406,12 +387,7 @@ decl_stmt|;
 name|MachineFunctionPass
 modifier|*
 name|createPrologEpilogInserterPass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// ExpandPostRAPseudos - This pass expands pseudo instructions after
 comment|/// register allocation.
@@ -654,12 +630,7 @@ comment|///
 name|FunctionPass
 modifier|*
 name|createStackProtectorPass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// createMachineVerifierPass - This pass verifies cenerated machine code
 comment|/// instructions for correctness.
@@ -681,24 +652,14 @@ comment|/// adapted to code generation.  Required if using dwarf exception handl
 name|FunctionPass
 modifier|*
 name|createDwarfEHPass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// createWinEHPass - Prepares personality functions used by MSVC on Windows,
 comment|/// in addition to the Itanium LSDA based personalities.
 name|FunctionPass
 modifier|*
 name|createWinEHPass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// createSjLjEHPreparePass - This pass adapts exception handling code to use
 comment|/// the GCC-style builtin setjmp/longjmp (sjlj) to handling EH control flow.
@@ -787,12 +748,7 @@ comment|///
 name|FunctionPass
 modifier|*
 name|createInterleavedAccessPass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// LowerEmuTLS - This pass generates __emutls_[vt].xyz variables for all
 comment|/// TLS variables for the emulated TLS model.
@@ -800,12 +756,7 @@ comment|///
 name|ModulePass
 modifier|*
 name|createLowerEmuTLSPass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// This pass lowers the @llvm.load.relative intrinsic to instructions.
 comment|/// This is unsafe to do earlier because a pass may combine the constant
@@ -847,14 +798,7 @@ comment|/// protect against stack-based overflow vulnerabilities.
 name|FunctionPass
 modifier|*
 name|createSafeStackPass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-init|=
-name|nullptr
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// This pass detects subregister lanes in a virtual register that are used
 comment|/// independently of other lanes and splits them into separate virtual
@@ -917,87 +861,6 @@ end_decl_stmt
 begin_comment
 comment|// End llvm namespace
 end_comment
-
-begin_comment
-comment|/// Target machine pass initializer for passes with dependencies. Use with
-end_comment
-
-begin_comment
-comment|/// INITIALIZE_TM_PASS_END.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INITIALIZE_TM_PASS_BEGIN
-value|INITIALIZE_PASS_BEGIN
-end_define
-
-begin_comment
-comment|/// Target machine pass initializer for passes with dependencies. Use with
-end_comment
-
-begin_comment
-comment|/// INITIALIZE_TM_PASS_BEGIN.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INITIALIZE_TM_PASS_END
-parameter_list|(
-name|passName
-parameter_list|,
-name|arg
-parameter_list|,
-name|name
-parameter_list|,
-name|cfg
-parameter_list|,
-name|analysis
-parameter_list|)
-define|\
-value|PassInfo *PI = new PassInfo(                                                 \       name, arg,&passName::ID,                                                \       PassInfo::NormalCtor_t(callDefaultCtor<passName>), cfg, analysis,        \       PassInfo::TargetMachineCtor_t(callTargetMachineCtor<passName>));         \   Registry.registerPass(*PI, true);                                            \   return PI;                                                                   \   }                                                                            \   static llvm::once_flag Initialize##passName##PassFlag;                       \   void llvm::initialize##passName##Pass(PassRegistry&Registry) {              \     llvm::call_once(Initialize##passName##PassFlag,                            \                     initialize##passName##PassOnce, std::ref(Registry));       \   }
-end_define
-
-begin_comment
-comment|/// This initializer registers TargetMachine constructor, so the pass being
-end_comment
-
-begin_comment
-comment|/// initialized can use target dependent interfaces. Please do not move this
-end_comment
-
-begin_comment
-comment|/// macro to be together with INITIALIZE_PASS, which is a complete target
-end_comment
-
-begin_comment
-comment|/// independent initializer, and we don't want to make libScalarOpts depend
-end_comment
-
-begin_comment
-comment|/// on libCodeGen.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INITIALIZE_TM_PASS
-parameter_list|(
-name|passName
-parameter_list|,
-name|arg
-parameter_list|,
-name|name
-parameter_list|,
-name|cfg
-parameter_list|,
-name|analysis
-parameter_list|)
-define|\
-value|INITIALIZE_TM_PASS_BEGIN(passName, arg, name, cfg, analysis)                 \   INITIALIZE_TM_PASS_END(passName, arg, name, cfg, analysis)
-end_define
 
 begin_endif
 endif|#
