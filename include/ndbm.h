@@ -72,6 +72,7 @@ decl_stmt|;
 name|int
 name|dsize
 decl_stmt|;
+comment|/* XXX Should be size_t according to 1003.1-2008. */
 block|}
 name|datum
 typedef|;
