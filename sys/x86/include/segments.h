@@ -1505,19 +1505,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LBSDICALLS_SEL
-value|16
-end_define
-
-begin_comment
-comment|/* BSDI system call gate */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NLDT
-value|(LBSDICALLS_SEL + 1)
+value|(LUDATA_SEL + 1)
 end_define
 
 begin_else
