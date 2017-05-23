@@ -31,12 +31,29 @@ begin_comment
 comment|/*  * This global flag is non-zero when a process has created one  * or more threads. It is used to avoid calling locking functions  * when they are not required.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__LIBC_ISTHREADED_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__LIBC_ISTHREADED_DECLARED
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|__isthreaded
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Elf_Auxinfo *__elf_aux_vector, the pointer to the ELF aux vector  * provided by kernel. Either set for us by rtld, or found at runtime  * on stack for static binaries.  *  * Type is void to avoid polluting whole libc with ELF types.  */

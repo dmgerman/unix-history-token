@@ -1942,12 +1942,29 @@ define|\
 value|(curthr->report_events&& 			\ 	 (((curthr)->event_mask | _thread_event_mask )& e) != 0)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__LIBC_ISTHREADED_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__LIBC_ISTHREADED_DECLARED
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|__isthreaded
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Global variables for the pthread kernel.  */
@@ -3160,6 +3177,12 @@ name|__hidden
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC_PRIVATE_H_
+end_ifndef
+
 begin_function_decl
 name|void
 name|_pthread_cancel_enter
@@ -3179,6 +3202,11 @@ name|maycancel
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -3231,6 +3259,12 @@ directive|ifdef
 name|_SYS_FCNTL_H_
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC_PRIVATE_H_
+end_ifndef
+
 begin_function_decl
 name|int
 name|__sys_fcntl
@@ -3267,6 +3301,19 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* _LIBC_PRIVATE_H_ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_FCNTL_H_ */
+end_comment
+
+begin_comment
 comment|/* #include<signal.h> */
 end_comment
 
@@ -3289,6 +3336,49 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|__sys_sigaltstack
+parameter_list|(
+specifier|const
+name|struct
+name|sigaltstack
+modifier|*
+parameter_list|,
+name|struct
+name|sigaltstack
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__sys_sigpending
+parameter_list|(
+name|sigset_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__sys_sigreturn
+parameter_list|(
+specifier|const
+name|ucontext_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC_PRIVATE_H_
+end_ifndef
+
+begin_function_decl
+name|int
 name|__sys_sigaction
 parameter_list|(
 name|int
@@ -3300,16 +3390,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|sigaction
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|__sys_sigpending
-parameter_list|(
-name|sigset_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3344,26 +3424,18 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__sys_sigreturn
+name|__sys_sigtimedwait
 parameter_list|(
 specifier|const
-name|ucontext_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|__sys_sigaltstack
-parameter_list|(
-specifier|const
-name|struct
-name|sigaltstack
+name|sigset_t
 modifier|*
 parameter_list|,
+name|siginfo_t
+modifier|*
+parameter_list|,
+specifier|const
 name|struct
-name|sigaltstack
+name|timespec
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3378,25 +3450,6 @@ name|sigset_t
 modifier|*
 parameter_list|,
 name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|__sys_sigtimedwait
-parameter_list|(
-specifier|const
-name|sigset_t
-modifier|*
-parameter_list|,
-name|siginfo_t
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|timespec
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3424,6 +3477,19 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* _LIBC_PRIVATE_H_ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_FCNTL_H_ */
+end_comment
+
+begin_comment
 comment|/* #include<time.h> */
 end_comment
 
@@ -3432,6 +3498,12 @@ ifdef|#
 directive|ifdef
 name|_TIME_H_
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC_PRIVATE_H_
+end_ifndef
 
 begin_function_decl
 name|int
@@ -3475,6 +3547,19 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* _LIBC_PRIVATE_H_ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_FCNTL_H_ */
+end_comment
+
+begin_comment
 comment|/* #include<sys/ucontext.h> */
 end_comment
 
@@ -3483,6 +3568,12 @@ ifdef|#
 directive|ifdef
 name|_SYS_UCONTEXT_H_
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC_PRIVATE_H_
+end_ifndef
 
 begin_function_decl
 name|int
@@ -3518,6 +3609,19 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* _LIBC_PRIVATE_H_ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_FCNTL_H_ */
+end_comment
+
+begin_comment
 comment|/* #include<unistd.h> */
 end_comment
 
@@ -3526,6 +3630,30 @@ ifdef|#
 directive|ifdef
 name|_UNISTD_H_
 end_ifdef
+
+begin_function_decl
+name|void
+name|__sys_exit
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|pid_t
+name|__sys_getpid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC_PRIVATE_H_
+end_ifndef
 
 begin_function_decl
 name|int
@@ -3546,15 +3674,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|pid_t
-name|__sys_getpid
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ssize_t
 name|__sys_read
 parameter_list|(
@@ -3568,19 +3687,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|__sys_exit
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _LIBC_PRIVATE_H_ */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _SYS_FCNTL_H_ */
+end_comment
 
 begin_function
 specifier|static

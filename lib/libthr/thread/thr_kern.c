@@ -165,7 +165,9 @@ end_function
 begin_function
 name|void
 name|_thr_assert_lock_level
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|PANIC
 argument_list|(

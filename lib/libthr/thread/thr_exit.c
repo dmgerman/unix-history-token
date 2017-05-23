@@ -100,17 +100,6 @@ directive|include
 file|"thr_private.h"
 end_include
 
-begin_function_decl
-name|void
-name|_pthread_exit
-parameter_list|(
-name|void
-modifier|*
-name|status
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -258,7 +247,7 @@ init|=
 literal|0
 decl_stmt|;
 name|Dl_info
-name|dlinfo
+name|dli
 decl_stmt|;
 name|void
 modifier|*
@@ -303,7 +292,7 @@ argument_list|(
 name|forcedunwind
 argument_list|,
 operator|&
-name|dlinfo
+name|dli
 argument_list|)
 condition|)
 block|{
@@ -315,7 +304,7 @@ name|handle
 operator|=
 name|dlopen
 argument_list|(
-name|dlinfo
+name|dli
 operator|.
 name|dli_fname
 argument_list|,
