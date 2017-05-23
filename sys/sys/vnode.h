@@ -841,10 +841,9 @@ name|u_short
 name|va_mode
 decl_stmt|;
 comment|/* files access mode and type */
-name|short
-name|va_nlink
+name|u_short
+name|va_padding0
 decl_stmt|;
-comment|/* number of references to file */
 name|uid_t
 name|va_uid
 decl_stmt|;
@@ -853,11 +852,15 @@ name|gid_t
 name|va_gid
 decl_stmt|;
 comment|/* owner group id */
+name|nlink_t
+name|va_nlink
+decl_stmt|;
+comment|/* number of references to file */
 name|dev_t
 name|va_fsid
 decl_stmt|;
 comment|/* filesystem id */
-name|long
+name|ino_t
 name|va_fileid
 decl_stmt|;
 comment|/* file id */
@@ -2490,6 +2493,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|freebsd11_stat
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
@@ -2758,7 +2767,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cvtnstat
+name|freebsd11_cvtnstat
 parameter_list|(
 name|struct
 name|stat
@@ -2769,6 +2778,23 @@ name|struct
 name|nstat
 modifier|*
 name|nsb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|freebsd11_cvtstat
+parameter_list|(
+name|struct
+name|stat
+modifier|*
+name|st
+parameter_list|,
+name|struct
+name|freebsd11_stat
+modifier|*
+name|ost
 parameter_list|)
 function_decl|;
 end_function_decl

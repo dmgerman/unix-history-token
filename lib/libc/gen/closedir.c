@@ -169,6 +169,13 @@ operator|->
 name|dd_buf
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|dirp
+operator|->
+name|dd_compat_de
+argument_list|)
+expr_stmt|;
 name|_reclaim_telldir
 argument_list|(
 name|dirp

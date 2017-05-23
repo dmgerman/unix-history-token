@@ -2035,8 +2035,12 @@ begin_define
 define|#
 directive|define
 name|UIO_MX
-value|16
+value|_GENERIC_DIRLEN(10)
 end_define
+
+begin_comment
+comment|/* number of symbols in INT_MAX printout */
+end_comment
 
 begin_function
 specifier|static

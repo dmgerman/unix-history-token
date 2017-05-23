@@ -3093,20 +3093,6 @@ value|minor(d)
 end_define
 
 begin_comment
-comment|/*  * Define this to be the macro that returns the minimum size required  * for a directory entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIRENT_SIZE
-parameter_list|(
-name|dp
-parameter_list|)
-value|GENERIC_DIRSIZ(dp)
-end_define
-
-begin_comment
 comment|/*  * The vnode tag for nfsv4root.  */
 end_comment
 

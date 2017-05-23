@@ -46,7 +46,7 @@ name|long
 name|loc_index
 decl_stmt|;
 comment|/* key associated with structure */
-name|long
+name|off_t
 name|loc_seek
 decl_stmt|;
 comment|/* magic cookie returned by getdirentries */
@@ -146,6 +146,20 @@ name|oldloc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|RDU_SKIP
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|RDU_SHORT
+value|0x0002
+end_define
 
 begin_endif
 endif|#

@@ -1003,13 +1003,6 @@ begin_comment
 comment|/*  * Global variables  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DIRHDSIZ
-value|(sizeof (struct dirent) - (MAXNAMLEN + 1))
-end_define
-
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(

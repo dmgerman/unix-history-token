@@ -60,7 +60,7 @@ name|int
 name|dd_len
 decl_stmt|;
 comment|/* size of data buffer */
-name|long
+name|off_t
 name|dd_seek
 decl_stmt|;
 comment|/* magic cookie returned by getdirentries */
@@ -80,6 +80,11 @@ modifier|*
 name|dd_td
 decl_stmt|;
 comment|/* telldir position recording */
+name|void
+modifier|*
+name|dd_compat_de
+decl_stmt|;
+comment|/* compat dirent */
 block|}
 struct|;
 end_struct
@@ -93,6 +98,34 @@ name|dirp
 parameter_list|)
 value|((dirp)->dd_fd)
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|dirent
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|__readdir_r
+parameter_list|(
+name|DIR
+modifier|*
+name|dirp
+parameter_list|,
+name|struct
+name|dirent
+modifier|*
+name|entry
+parameter_list|,
+name|struct
+name|dirent
+modifier|*
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

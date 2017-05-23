@@ -4945,6 +4945,15 @@ argument_list|)
 expr_stmt|;
 name|kp
 operator|->
+name|ki_tdev_freebsd11
+operator|=
+name|kp
+operator|->
+name|ki_tdev
+expr_stmt|;
+comment|/* truncate */
+name|kp
+operator|->
 name|ki_tpgid
 operator|=
 name|tp
@@ -4977,12 +4986,23 @@ name|s_sid
 expr_stmt|;
 block|}
 else|else
+block|{
 name|kp
 operator|->
 name|ki_tdev
 operator|=
 name|NODEV
 expr_stmt|;
+name|kp
+operator|->
+name|ki_tdev_freebsd11
+operator|=
+name|kp
+operator|->
+name|ki_tdev
+expr_stmt|;
+comment|/* truncate */
+block|}
 if|if
 condition|(
 name|p
@@ -6349,6 +6369,17 @@ operator|*
 name|ki32
 argument_list|,
 name|ki_tdev
+argument_list|)
+expr_stmt|;
+name|CP
+argument_list|(
+operator|*
+name|ki
+argument_list|,
+operator|*
+name|ki32
+argument_list|,
+name|ki_tdev_freebsd11
 argument_list|)
 expr_stmt|;
 name|CP
@@ -11732,6 +11763,7 @@ name|va
 operator|.
 name|va_fileid
 expr_stmt|;
+comment|/* truncate */
 name|kve
 operator|->
 name|kve_fsid
@@ -12976,6 +13008,15 @@ name|va_fsid
 expr_stmt|;
 name|kve
 operator|->
+name|kve_vn_fsid_freebsd11
+operator|=
+name|kve
+operator|->
+name|kve_vn_fsid
+expr_stmt|;
+comment|/* truncate */
+name|kve
+operator|->
 name|kve_vn_mode
 operator|=
 name|MAKEIMODE
@@ -13005,6 +13046,15 @@ name|va
 operator|.
 name|va_rdev
 expr_stmt|;
+name|kve
+operator|->
+name|kve_vn_rdev_freebsd11
+operator|=
+name|kve
+operator|->
+name|kve_vn_rdev
+expr_stmt|;
+comment|/* truncate */
 name|kve
 operator|->
 name|kve_status

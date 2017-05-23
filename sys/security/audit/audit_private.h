@@ -262,15 +262,18 @@ decl_stmt|;
 name|gid_t
 name|vn_gid
 decl_stmt|;
-name|dev_t
+name|u_int32_t
 name|vn_dev
 decl_stmt|;
+comment|/* XXX dev_t compatibility */
 name|long
 name|vn_fsid
 decl_stmt|;
+comment|/* XXX uint64_t compatibility */
 name|long
 name|vn_fileid
 decl_stmt|;
+comment|/* XXX ino_t compatibility */
 name|long
 name|vn_gen
 decl_stmt|;
@@ -573,6 +576,7 @@ decl_stmt|;
 name|int
 name|ar_arg_dev
 decl_stmt|;
+comment|/* XXX dev_t compatibility */
 name|long
 name|ar_arg_value
 decl_stmt|;

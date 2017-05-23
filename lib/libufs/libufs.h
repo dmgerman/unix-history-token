@@ -59,14 +59,14 @@ name|caddr_t
 name|d_inoblock
 decl_stmt|;
 comment|/* inode block */
-name|ino_t
+name|uint32_t
 name|d_inomin
 decl_stmt|;
-comment|/* low inode */
-name|ino_t
+comment|/* low inode (not ino_t for ABI compat) */
+name|uint32_t
 name|d_inomax
 decl_stmt|;
-comment|/* high inode */
+comment|/* high inode (not ino_t for ABI compat) */
 union|union
 block|{
 name|struct

@@ -1115,6 +1115,12 @@ name|td_loccnt
 operator|=
 literal|0
 expr_stmt|;
+name|dirp
+operator|->
+name|dd_compat_de
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Use the system page size if that is a multiple of DIRBLKSIZ. 	 * Hopefully this can be a big win someday by allowing page 	 * trades to user space to be done by _getdirentries(). 	 */
 name|incr
 operator|=

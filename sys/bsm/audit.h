@@ -757,9 +757,10 @@ begin_struct
 struct|struct
 name|au_tid
 block|{
-name|dev_t
+name|u_int32_t
 name|port
 decl_stmt|;
+comment|/* XXX dev_t compatibility */
 name|u_int32_t
 name|machine
 decl_stmt|;
@@ -779,9 +780,10 @@ begin_struct
 struct|struct
 name|au_tid_addr
 block|{
-name|dev_t
+name|u_int32_t
 name|at_port
 decl_stmt|;
+comment|/* XXX dev_t compatibility */
 name|u_int32_t
 name|at_type
 decl_stmt|;

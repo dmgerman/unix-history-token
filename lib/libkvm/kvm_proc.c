@@ -2325,6 +2325,15 @@ operator|=
 name|SZOMB
 expr_stmt|;
 block|}
+name|kp
+operator|->
+name|ki_tdev_freebsd11
+operator|=
+name|kp
+operator|->
+name|ki_tdev
+expr_stmt|;
+comment|/* truncate */
 name|bcopy
 argument_list|(
 operator|&

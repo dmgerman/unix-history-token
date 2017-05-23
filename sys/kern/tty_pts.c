@@ -2356,6 +2356,23 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|kif
+operator|->
+name|kf_un
+operator|.
+name|kf_pts
+operator|.
+name|kf_pts_dev_freebsd11
+operator|=
+name|kif
+operator|->
+name|kf_un
+operator|.
+name|kf_pts
+operator|.
+name|kf_pts_dev
+expr_stmt|;
+comment|/* truncate */
 name|strlcpy
 argument_list|(
 name|kif

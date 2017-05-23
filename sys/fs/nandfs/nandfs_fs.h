@@ -1728,7 +1728,7 @@ begin_define
 define|#
 directive|define
 name|MNAMELEN
-value|88
+value|1024
 end_define
 
 begin_endif

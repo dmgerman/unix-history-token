@@ -197,9 +197,9 @@ modifier|*
 name|f
 parameter_list|,
 name|struct
-name|acctv2
+name|acctv3
 modifier|*
-name|av2
+name|av3
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -213,9 +213,9 @@ modifier|*
 name|f
 parameter_list|,
 name|struct
-name|acctv2
+name|acctv3
 modifier|*
-name|av2
+name|av3
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -229,7 +229,7 @@ modifier|*
 index|[]
 parameter_list|,
 name|struct
-name|acctv2
+name|acctv3
 modifier|*
 parameter_list|)
 function_decl|;
@@ -325,7 +325,7 @@ index|[]
 parameter_list|)
 block|{
 name|struct
-name|acctv2
+name|acctv3
 name|ab
 decl_stmt|;
 name|char
@@ -347,9 +347,9 @@ modifier|*
 name|f
 parameter_list|,
 name|struct
-name|acctv2
+name|acctv3
 modifier|*
-name|av2
+name|av3
 parameter_list|)
 function_decl|;
 name|time_t
@@ -1111,7 +1111,7 @@ name|argv
 index|[]
 parameter_list|,
 name|struct
-name|acctv2
+name|acctv3
 modifier|*
 name|acp
 parameter_list|)

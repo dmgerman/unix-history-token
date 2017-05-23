@@ -562,7 +562,6 @@ literal|1
 argument_list|)
 condition|)
 continue|continue;
-comment|/* 		 * Print a warning if converting the block number to a dev_t 		 * will truncate it.  badsect was not very useful in versions 		 * of BSD before 4.4 because dev_t was 16 bits and another 		 * bit was lost by bogus sign extensions. 		 */
 name|diskbn
 operator|=
 name|dbtofsb
@@ -572,31 +571,6 @@ argument_list|,
 name|number
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|dev_t
-operator|)
-name|diskbn
-operator|!=
-name|diskbn
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"sector %ld cannot be represented as a dev_t\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|number
-argument_list|)
-expr_stmt|;
-name|errs
-operator|++
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|mknod

@@ -199,7 +199,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE_INT
-value|4
+value|2
 end_define
 
 begin_define
@@ -474,8 +474,8 @@ name|short
 name|ki_spare_short1
 decl_stmt|;
 comment|/* unused (just here for alignment) */
-name|dev_t
-name|ki_tdev
+name|uint32_t
+name|ki_tdev_freebsd11
 decl_stmt|;
 comment|/* controlling tty dev */
 name|sigset_t
@@ -721,6 +721,10 @@ name|KI_NSPARE_INT
 index|]
 decl_stmt|;
 comment|/* spare room for growth */
+name|uint64_t
+name|ki_tdev
+decl_stmt|;
+comment|/* controlling tty dev */
 name|int
 name|ki_oncpu
 decl_stmt|;
@@ -1447,36 +1451,35 @@ name|int64_t
 name|kf_offset
 decl_stmt|;
 comment|/* Seek location. */
-name|int
-name|kf_vnode_type
-decl_stmt|;
-comment|/* Vnode type. */
-name|int
-name|kf_sock_domain
-decl_stmt|;
-comment|/* Socket domain. */
-name|int
-name|kf_sock_type
-decl_stmt|;
-comment|/* Socket type. */
-name|int
-name|kf_sock_protocol
-decl_stmt|;
-comment|/* Socket protocol. */
-name|struct
-name|sockaddr_storage
-name|kf_sa_local
-decl_stmt|;
-comment|/* Socket address. */
-name|struct
-name|sockaddr_storage
-name|kf_sa_peer
-decl_stmt|;
-comment|/* Peer address. */
 union|union
 block|{
 struct|struct
 block|{
+name|uint32_t
+name|kf_spareint
+decl_stmt|;
+comment|/* Socket domain. */
+name|int
+name|kf_sock_domain0
+decl_stmt|;
+comment|/* Socket type. */
+name|int
+name|kf_sock_type0
+decl_stmt|;
+comment|/* Socket protocol. */
+name|int
+name|kf_sock_protocol0
+decl_stmt|;
+comment|/* Socket address. */
+name|struct
+name|sockaddr_storage
+name|kf_sa_local
+decl_stmt|;
+comment|/* Peer address. */
+name|struct
+name|sockaddr_storage
+name|kf_sa_peer
+decl_stmt|;
 comment|/* Address of so_pcb. */
 name|uint64_t
 name|kf_sock_pcb
@@ -1506,6 +1509,31 @@ name|kf_sock
 struct|;
 struct|struct
 block|{
+comment|/* Vnode type. */
+name|int
+name|kf_file_type
+decl_stmt|;
+comment|/* Space for future use */
+name|int
+name|kf_spareint
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint64_t
+name|kf_spareint64
+index|[
+literal|30
+index|]
+decl_stmt|;
+comment|/* Vnode filesystem id. */
+name|uint64_t
+name|kf_file_fsid
+decl_stmt|;
+comment|/* File device. */
+name|uint64_t
+name|kf_file_rdev
+decl_stmt|;
 comment|/* Global file id. */
 name|uint64_t
 name|kf_file_fileid
@@ -1514,13 +1542,13 @@ comment|/* File size. */
 name|uint64_t
 name|kf_file_size
 decl_stmt|;
-comment|/* Vnode filesystem id. */
+comment|/* Vnode filesystem id, FreeBSD 11 compat. */
 name|uint32_t
-name|kf_file_fsid
+name|kf_file_fsid_freebsd11
 decl_stmt|;
-comment|/* File device. */
+comment|/* File device, FreeBSD 11 compat. */
 name|uint32_t
-name|kf_file_rdev
+name|kf_file_rdev_freebsd11
 decl_stmt|;
 comment|/* File mode. */
 name|uint16_t
@@ -1539,6 +1567,18 @@ struct|;
 struct|struct
 block|{
 name|uint32_t
+name|kf_spareint
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint64_t
+name|kf_spareint64
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|uint32_t
 name|kf_sem_value
 decl_stmt|;
 name|uint16_t
@@ -1549,6 +1589,18 @@ name|kf_sem
 struct|;
 struct|struct
 block|{
+name|uint32_t
+name|kf_spareint
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint64_t
+name|kf_spareint64
+index|[
+literal|32
+index|]
+decl_stmt|;
 name|uint64_t
 name|kf_pipe_addr
 decl_stmt|;
@@ -1571,13 +1623,31 @@ struct|;
 struct|struct
 block|{
 name|uint32_t
+name|kf_spareint
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint64_t
+name|kf_spareint64
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|uint32_t
+name|kf_pts_dev_freebsd11
+decl_stmt|;
+name|uint32_t
+name|kf_pts_pad0
+decl_stmt|;
+name|uint64_t
 name|kf_pts_dev
 decl_stmt|;
 comment|/* Round to 64 bit alignment. */
 name|uint32_t
-name|kf_pts_pad0
+name|kf_pts_pad1
 index|[
-literal|7
+literal|4
 index|]
 decl_stmt|;
 block|}
@@ -1585,6 +1655,18 @@ name|kf_pts
 struct|;
 struct|struct
 block|{
+name|uint32_t
+name|kf_spareint
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint64_t
+name|kf_spareint64
+index|[
+literal|32
+index|]
+decl_stmt|;
 name|pid_t
 name|kf_pid
 decl_stmt|;
@@ -1625,6 +1707,45 @@ comment|/* Path to file, if any. */
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|kf_vnode_type
+value|kf_un.kf_file.kf_file_type
+end_define
+
+begin_define
+define|#
+directive|define
+name|kf_sock_domain
+value|kf_un.kf_sock.kf_sock_domain0
+end_define
+
+begin_define
+define|#
+directive|define
+name|kf_sock_type
+value|kf_un.kf_sock.kf_sock_type0
+end_define
+
+begin_define
+define|#
+directive|define
+name|kf_sock_protocol
+value|kf_un.kf_sock.kf_sock_protocol0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The KERN_PROC_VMMAP sysctl allows a process to dump the VM layout of  * another process as a series of entries.  */
@@ -1874,7 +1995,7 @@ name|uint64_t
 name|kve_fileid
 decl_stmt|;
 comment|/* inode number if vnode */
-name|dev_t
+name|uint32_t
 name|kve_fsid
 decl_stmt|;
 comment|/* dev_t of vnode location */
@@ -1944,7 +2065,7 @@ name|kve_vn_fileid
 decl_stmt|;
 comment|/* inode number if vnode */
 name|uint32_t
-name|kve_vn_fsid
+name|kve_vn_fsid_freebsd11
 decl_stmt|;
 comment|/* dev_t of vnode location */
 name|int
@@ -1980,7 +2101,7 @@ name|kve_vn_size
 decl_stmt|;
 comment|/* File size. */
 name|uint32_t
-name|kve_vn_rdev
+name|kve_vn_rdev_freebsd11
 decl_stmt|;
 comment|/* Device id if device. */
 name|uint16_t
@@ -1991,10 +2112,18 @@ name|uint16_t
 name|kve_status
 decl_stmt|;
 comment|/* Status flags. */
+name|uint64_t
+name|kve_vn_fsid
+decl_stmt|;
+comment|/* dev_t of vnode location */
+name|uint64_t
+name|kve_vn_rdev
+decl_stmt|;
+comment|/* Device id if device. */
 name|int
 name|_kve_ispare
 index|[
-literal|12
+literal|8
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */
@@ -2035,7 +2164,7 @@ name|kvo_vn_fileid
 decl_stmt|;
 comment|/* inode number if vnode. */
 name|uint32_t
-name|kvo_vn_fsid
+name|kvo_vn_fsid_freebsd11
 decl_stmt|;
 comment|/* dev_t of vnode location. */
 name|int
@@ -2063,9 +2192,12 @@ name|kvo_inactive
 decl_stmt|;
 comment|/* Number of inactive pages. */
 name|uint64_t
+name|kvo_vn_fsid
+decl_stmt|;
+name|uint64_t
 name|_kvo_qspare
 index|[
-literal|8
+literal|7
 index|]
 decl_stmt|;
 name|uint32_t

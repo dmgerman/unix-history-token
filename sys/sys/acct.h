@@ -41,12 +41,12 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * Accounting structure version 2 (current).  * The first byte is always zero.  * Time units are microseconds.  */
+comment|/*  * Accounting structure version 3 (current).  * The first byte is always zero.  * Time units are microseconds.  */
 end_comment
 
 begin_struct
 struct|struct
-name|acctv2
+name|acctv3
 block|{
 name|uint8_t
 name|ac_zero
@@ -103,13 +103,33 @@ name|__dev_t
 name|ac_tty
 decl_stmt|;
 comment|/* controlling tty */
+name|uint32_t
+name|ac_pad0
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_LP64
+argument_list|)
+name|uint32_t
+name|ac_pad1
+decl_stmt|;
+endif|#
+directive|endif
 name|uint16_t
 name|ac_len2
 decl_stmt|;
 comment|/* record length */
 union|union
 block|{
-name|__dev_t
+name|uint32_t
 name|ac_align
 decl_stmt|;
 comment|/* force v1 compatible alignment */
@@ -155,6 +175,86 @@ define|#
 directive|define
 name|ac_flagx
 value|ac_trailer.ac_flag
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|acctv2
+block|{
+name|uint8_t
+name|ac_zero
+decl_stmt|;
+comment|/* zero identifies new version */
+name|uint8_t
+name|ac_version
+decl_stmt|;
+comment|/* record version number */
+name|uint16_t
+name|ac_len
+decl_stmt|;
+comment|/* record length */
+name|char
+name|ac_comm
+index|[
+name|AC_COMM_LEN
+index|]
+decl_stmt|;
+comment|/* command name */
+name|float
+name|ac_utime
+decl_stmt|;
+comment|/* user time */
+name|float
+name|ac_stime
+decl_stmt|;
+comment|/* system time */
+name|float
+name|ac_etime
+decl_stmt|;
+comment|/* elapsed time */
+name|time_t
+name|ac_btime
+decl_stmt|;
+comment|/* starting time */
+name|uid_t
+name|ac_uid
+decl_stmt|;
+comment|/* user id */
+name|gid_t
+name|ac_gid
+decl_stmt|;
+comment|/* group id */
+name|float
+name|ac_mem
+decl_stmt|;
+comment|/* average memory usage */
+name|float
+name|ac_io
+decl_stmt|;
+comment|/* count of IO blocks */
+name|uint32_t
+name|ac_tty
+decl_stmt|;
+comment|/* controlling tty */
+name|uint16_t
+name|ac_len2
+decl_stmt|;
+comment|/* record length */
+union|union
+block|{
+name|uint32_t
+name|ac_align
+decl_stmt|;
+comment|/* force v1 compatible alignment */
+name|uint8_t
+name|ac_flag
+decl_stmt|;
+comment|/* accounting flags */
+block|}
+name|ac_trailer
+union|;
 block|}
 struct|;
 end_struct
@@ -213,7 +313,7 @@ name|comp_t
 name|ac_io
 decl_stmt|;
 comment|/* count of IO blocks */
-name|__dev_t
+name|uint32_t
 name|ac_tty
 decl_stmt|;
 comment|/* controlling tty */

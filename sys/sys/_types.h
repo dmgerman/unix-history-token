@@ -109,7 +109,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
+name|__uint64_t
 name|__ino_t
 typedef|;
 end_typedef
@@ -171,7 +171,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__uint16_t
+name|__uint64_t
 name|__nlink_t
 typedef|;
 end_typedef
@@ -478,7 +478,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
+name|__uint64_t
 name|__dev_t
 typedef|;
 end_typedef

@@ -5254,6 +5254,9 @@ operator|->
 name|t_dev
 argument_list|)
 else|:
+operator|(
+name|uint32_t
+operator|)
 name|NODEV
 expr_stmt|;
 block|}

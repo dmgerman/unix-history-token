@@ -1851,8 +1851,14 @@ struct|struct
 name|__sanitizer_dirent
 block|{
 name|unsigned
-name|int
+name|long
+name|long
 name|d_fileno
+decl_stmt|;
+name|unsigned
+name|long
+name|long
+name|d_off
 decl_stmt|;
 name|unsigned
 name|short

@@ -8329,6 +8329,12 @@ name|kvo_vn_fsid
 operator|=
 literal|0
 expr_stmt|;
+name|kvo
+operator|.
+name|kvo_vn_fsid_freebsd11
+operator|=
+literal|0
+expr_stmt|;
 name|freepath
 operator|=
 name|NULL
@@ -8515,6 +8521,15 @@ name|va
 operator|.
 name|va_fsid
 expr_stmt|;
+name|kvo
+operator|.
+name|kvo_vn_fsid_freebsd11
+operator|=
+name|va
+operator|.
+name|va_fsid
+expr_stmt|;
+comment|/* truncate */
 block|}
 name|vput
 argument_list|(

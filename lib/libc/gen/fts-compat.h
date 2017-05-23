@@ -38,7 +38,7 @@ modifier|*
 name|fts_array
 decl_stmt|;
 comment|/* sort array */
-name|dev_t
+name|uint32_t
 name|fts_dev
 decl_stmt|;
 comment|/* starting device # */
@@ -233,15 +233,15 @@ name|u_short
 name|fts_namelen
 decl_stmt|;
 comment|/* strlen(fts_name) */
-name|ino_t
+name|uint32_t
 name|fts_ino
 decl_stmt|;
 comment|/* inode */
-name|dev_t
+name|uint32_t
 name|fts_dev
 decl_stmt|;
 comment|/* device */
-name|nlink_t
+name|uint16_t
 name|fts_nlink
 decl_stmt|;
 comment|/* link count */
@@ -375,7 +375,7 @@ name|fts_instr
 decl_stmt|;
 comment|/* fts_set() instructions */
 name|struct
-name|stat
+name|freebsd11_stat
 modifier|*
 name|fts_statp
 decl_stmt|;
