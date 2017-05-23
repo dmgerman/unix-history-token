@@ -130,11 +130,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_decl_stmt
 name|__END_DECLS
-end_macro
+comment|/* action values for user applications */
+define|#
+directive|define
+name|BLACKLIST_API_ENUM
+value|1
+name|enum
+type|{
+name|BLACKLIST_AUTH_OK
+init|=
+literal|0
+decl_stmt|,
+name|BLACKLIST_AUTH_FAIL
+decl_stmt|,
+name|BLACKLIST_ABUSIVE_BEHAVIOR
+decl_stmt|,
+name|BLACKLIST_BAD_USER
+end_decl_stmt
 
 begin_endif
+unit|};
 endif|#
 directive|endif
 end_endif

@@ -58,6 +58,10 @@ block|,
 name|BL_ADD
 block|,
 name|BL_DELETE
+block|,
+name|BL_ABUSE
+block|,
+name|BL_BADUSER
 block|}
 name|bl_type_t
 typedef|;

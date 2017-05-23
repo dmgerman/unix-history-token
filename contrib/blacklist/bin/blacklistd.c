@@ -972,6 +972,30 @@ name|bi_type
 condition|)
 block|{
 case|case
+name|BL_ABUSE
+case|:
+comment|/* 		 * If the application has signaled abusive behavior, 		 * set the number of fails to be one less than the 		 * configured limit.  Fallthrough to the normal BL_ADD 		 * processing, which will increment the failure count 		 * to the threshhold, and block the abusive address. 		 */
+if|if
+condition|(
+name|c
+operator|.
+name|c_nfail
+operator|!=
+operator|-
+literal|1
+condition|)
+name|dbi
+operator|.
+name|count
+operator|=
+name|c
+operator|.
+name|c_nfail
+operator|-
+literal|1
+expr_stmt|;
+comment|/*FALLTHROUGH*/
+case|case
 name|BL_ADD
 case|:
 name|dbi
@@ -1160,6 +1184,11 @@ name|last
 operator|=
 literal|0
 expr_stmt|;
+break|break;
+case|case
+name|BL_BADUSER
+case|:
+comment|/* ignore for now */
 break|break;
 default|default:
 call|(
