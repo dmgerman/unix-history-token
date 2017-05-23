@@ -119,7 +119,7 @@ comment|/* (p) intransit blocking page faults */
 name|u_int
 name|v_reactivated
 decl_stmt|;
-comment|/* (f) pages reactivated from free list */
+comment|/* (p) pages reactivated by the pagedaemon */
 name|u_int
 name|v_pdwakeups
 decl_stmt|;
@@ -128,6 +128,10 @@ name|u_int
 name|v_pdpages
 decl_stmt|;
 comment|/* (p) pages analyzed by daemon */
+name|u_int
+name|v_pdshortfalls
+decl_stmt|;
+comment|/* (p) page reclamation shortfalls */
 name|u_int
 name|v_tcached
 decl_stmt|;
@@ -186,6 +190,10 @@ name|v_inactive_count
 decl_stmt|;
 comment|/* (q) pages inactive */
 name|u_int
+name|v_laundry_count
+decl_stmt|;
+comment|/* (q) pages eligible for laundering */
+name|u_int
 name|v_cache_count
 decl_stmt|;
 comment|/* (f) pages on cache queue */
@@ -234,12 +242,6 @@ name|u_int
 name|v_kthreadpages
 decl_stmt|;
 comment|/* (p) VM pages affected by fork() by kernel */
-name|u_int
-name|v_spare
-index|[
-literal|2
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -422,6 +424,52 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Return the number of pages we need to launder.  * A positive number indicates that we have a shortfall of clean pages.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|vm_laundry_target
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vm_paging_target
+argument_list|()
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Obtain the value of a per-CPU counter.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_METER_PCPU_CNT
+parameter_list|(
+name|member
+parameter_list|)
+define|\
+value|vm_meter_cnt(__offsetof(struct vmmeter, member))
+end_define
+
+begin_function_decl
+name|u_int
+name|vm_meter_cnt
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

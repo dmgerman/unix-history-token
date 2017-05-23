@@ -6163,11 +6163,7 @@ name|m_tmp
 operator|->
 name|flags
 operator|&
-operator|(
-name|PG_CACHED
-operator||
 name|PG_ZERO
-operator|)
 operator|)
 operator|==
 literal|0

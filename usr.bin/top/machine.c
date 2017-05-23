@@ -704,9 +704,9 @@ literal|"K Active, "
 block|,
 literal|"K Inact, "
 block|,
-literal|"K Wired, "
+literal|"K Laundry, "
 block|,
-literal|"K Cache, "
+literal|"K Wired, "
 block|,
 literal|"K Buf, "
 block|,
@@ -2580,7 +2580,7 @@ argument_list|)
 expr_stmt|;
 name|GETSYSCTL
 argument_list|(
-literal|"vm.stats.vm.v_wire_count"
+literal|"vm.stats.vm.v_laundry_count"
 argument_list|,
 name|memory_stats
 index|[
@@ -2590,7 +2590,7 @@ argument_list|)
 expr_stmt|;
 name|GETSYSCTL
 argument_list|(
-literal|"vm.stats.vm.v_cache_count"
+literal|"vm.stats.vm.v_wire_count"
 argument_list|,
 name|memory_stats
 index|[

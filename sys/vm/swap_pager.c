@@ -4197,8 +4197,6 @@ operator|-
 name|i
 argument_list|,
 name|VM_ALLOC_NORMAL
-operator||
-name|VM_ALLOC_IFNOTCACHED
 argument_list|)
 expr_stmt|;
 if|if
@@ -4339,8 +4337,6 @@ operator|+
 literal|1
 argument_list|,
 name|VM_ALLOC_NORMAL
-operator||
-name|VM_ALLOC_IFNOTCACHED
 argument_list|)
 expr_stmt|;
 if|if
@@ -5649,7 +5645,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * For write success, clear the dirty 			 * status, then finish the I/O ( which decrements the 			 * busy count and possibly wakes waiter's up ). 			 */
+comment|/* 			 * For write success, clear the dirty 			 * status, then finish the I/O ( which decrements the 			 * busy count and possibly wakes waiter's up ). 			 * A page is only written to swap after a period of 			 * inactivity.  Therefore, we do not expect it to be 			 * reused. 			 */
 name|KASSERT
 argument_list|(
 operator|!
@@ -5671,23 +5667,12 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_sunbusy
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vm_page_count_severe
-argument_list|()
-condition|)
-block|{
 name|vm_page_lock
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_try_to_cache
+name|vm_page_deactivate_noreuse
 argument_list|(
 name|m
 argument_list|)
@@ -5697,7 +5682,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
+name|vm_page_sunbusy
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* 	 * adjust pip.  NOTE: the original parent may still have its own 	 * pip refs on the object. 	 */
@@ -5939,7 +5928,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_FORCE_PAGEIN() - force a swap block to be paged in  *  *	This routine dissociates the page at the given index within a  *	swap block from its backing store, paging it in if necessary.  *	If the page is paged in, it is placed in the inactive queue,  *	since it had its backing store ripped out from under it.  *	We also attempt to swap in all other pages in the swap block,  *	we only guarantee that the one at the specified index is  *	paged in.  *  *	XXX - The code to page the whole block in doesn't work, so we  *	      revert to the one-by-one behavior for now.  Sigh.  */
+comment|/*  * SWP_PAGER_FORCE_PAGEIN() - force a swap block to be paged in  *  *	This routine dissociates the page at the given index within an object  *	from its backing store, paging it in if it does not reside in memory.  *	If the page is paged in, it is marked dirty and placed in the laundry  *	queue.  The page is marked dirty because it no longer has backing  *	store.  It is placed in the laundry queue because it has not been  *	accessed recently.  Otherwise, it would already reside in memory.  *  *	We also attempt to swap in all other pages in the swap block.  *	However, we only guarantee that the one at the specified index is  *	paged in.  *  *	XXX - The code to page the whole block in doesn't work, so we  *	      revert to the one-by-one behavior for now.  Sigh.  */
 end_comment
 
 begin_function
@@ -6061,7 +6050,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_deactivate
+name|vm_page_launder
 argument_list|(
 name|m
 argument_list|)

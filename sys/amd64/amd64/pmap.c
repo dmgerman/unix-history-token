@@ -2376,20 +2376,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|vm_page_t
-name|pmap_lookup_pt_page
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
-name|vm_offset_t
-name|va
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|pmap_pde_attr
 parameter_list|(
@@ -2532,14 +2518,14 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|vm_page_t
 name|pmap_remove_pt_page
 parameter_list|(
 name|pmap_t
 name|pmap
 parameter_list|,
-name|vm_page_t
-name|mpte
+name|vm_offset_t
+name|va
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9109,14 +9095,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Looks for a page table page mapping the specified virtual address in the  * specified pmap's collection of idle page table pages.  Returns NULL if there  * is no page table page corresponding to the specified virtual address.  */
+comment|/*  * Removes the page table page mapping the specified virtual address from the  * specified pmap's collection of idle page table pages, and returns it.  * Otherwise, returns NULL if there is no page table page corresponding to the  * specified virtual address.  */
 end_comment
 
 begin_function
 specifier|static
 name|__inline
 name|vm_page_t
-name|pmap_lookup_pt_page
+name|pmap_remove_pt_page
 parameter_list|(
 name|pmap_t
 name|pmap
@@ -9134,7 +9120,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|vm_radix_lookup
+name|vm_radix_remove
 argument_list|(
 operator|&
 name|pmap
@@ -9148,45 +9134,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Removes the specified page table page from the specified pmap's collection  * of idle page table pages.  The specified page table page must be a member of  * the pmap's collection.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|pmap_remove_pt_page
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
-name|vm_page_t
-name|mpte
-parameter_list|)
-block|{
-name|PMAP_LOCK_ASSERT
-argument_list|(
-name|pmap
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|vm_radix_remove
-argument_list|(
-operator|&
-name|pmap
-operator|->
-name|pm_root
-argument_list|,
-name|mpte
-operator|->
-name|pindex
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -15344,30 +15291,22 @@ name|oldpde
 operator|&
 name|PG_A
 operator|)
-operator|!=
+operator|==
 literal|0
-operator|&&
+operator|||
 operator|(
 name|mpte
 operator|=
-name|pmap_lookup_pt_page
+name|pmap_remove_pt_page
 argument_list|(
 name|pmap
 argument_list|,
 name|va
 argument_list|)
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
-name|pmap_remove_pt_page
-argument_list|(
-name|pmap
-argument_list|,
-name|mpte
-argument_list|)
-expr_stmt|;
-else|else
 block|{
 name|KASSERT
 argument_list|(
@@ -15832,7 +15771,7 @@ argument_list|)
 expr_stmt|;
 name|mpte
 operator|=
-name|pmap_lookup_pt_page
+name|pmap_remove_pt_page
 argument_list|(
 name|pmap
 argument_list|,
@@ -15848,13 +15787,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"pmap_remove_kernel_pde: Missing pt page."
-argument_list|)
-expr_stmt|;
-name|pmap_remove_pt_page
-argument_list|(
-name|pmap
-argument_list|,
-name|mpte
 argument_list|)
 expr_stmt|;
 name|mptepa
@@ -16266,7 +16198,7 @@ else|else
 block|{
 name|mpte
 operator|=
-name|pmap_lookup_pt_page
+name|pmap_remove_pt_page
 argument_list|(
 name|pmap
 argument_list|,
@@ -16280,13 +16212,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pmap_remove_pt_page
-argument_list|(
-name|pmap
-argument_list|,
-name|mpte
-argument_list|)
-expr_stmt|;
 name|pmap_resident_count_dec
 argument_list|(
 name|pmap
@@ -24756,7 +24681,7 @@ expr_stmt|;
 block|}
 name|mpte
 operator|=
-name|pmap_lookup_pt_page
+name|pmap_remove_pt_page
 argument_list|(
 name|pmap
 argument_list|,
@@ -24772,13 +24697,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pmap_remove_pt_page
-argument_list|(
-name|pmap
-argument_list|,
-name|mpte
-argument_list|)
-expr_stmt|;
 name|pmap_resident_count_dec
 argument_list|(
 name|pmap

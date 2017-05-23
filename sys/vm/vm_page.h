@@ -415,8 +415,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PQ_COUNT
+name|PQ_LAUNDRY
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PQ_COUNT
+value|3
 end_define
 
 begin_expr_stmt
@@ -505,6 +512,10 @@ name|vmd_last_active_scan
 decl_stmt|;
 name|struct
 name|vm_page
+name|vmd_laundry_marker
+decl_stmt|;
+name|struct
+name|vm_page
 name|vmd_marker
 decl_stmt|;
 comment|/* marker for pagedaemon private use */
@@ -546,6 +557,16 @@ parameter_list|(
 name|pq
 parameter_list|)
 value|mtx_lock(&(pq)->pq_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_pagequeue_lockptr
+parameter_list|(
+name|pq
+parameter_list|)
+value|(&(pq)->pq_mutex)
 end_define
 
 begin_define
@@ -971,17 +992,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_CACHED
-value|0x0001
-end_define
-
-begin_comment
-comment|/* page is cached */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PG_FICTITIOUS
 value|0x0004
 end_define
@@ -1010,17 +1020,6 @@ end_define
 
 begin_comment
 comment|/* special queue marker page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PG_WINATCFLS
-value|0x0040
-end_define
-
-begin_comment
-comment|/* flush dirty page on inactive q */
 end_comment
 
 begin_define
@@ -1096,7 +1095,7 @@ file|<machine/atomic.h>
 end_include
 
 begin_comment
-comment|/*  * Each pageable resident page falls into one of four lists:  *  *	free  *		Available for allocation now.  *  *	cache  *		Almost available for allocation. Still associated with  *		an object, but clean and immediately freeable.  *  * The following lists are LRU sorted:  *  *	inactive  *		Low activity, candidates for reclamation.  *		This is the list of pages that should be  *		paged out next.  *  *	active  *		Pages that are "active" i.e. they have been  *		recently referenced.  *  */
+comment|/*  * Each pageable resident page falls into one of four lists:  *  *	free  *		Available for allocation now.  *  *	inactive  *		Low activity, candidates for reclamation.  *		This list is approximately LRU ordered.  *  *	laundry  *		This is the list of pages that should be  *		paged out next.  *  *	active  *		Pages that are "active", i.e., they have been  *		recently referenced.  *  */
 end_comment
 
 begin_decl_stmt
@@ -1246,20 +1245,12 @@ name|VM_ALLOC_IFCACHED
 value|0x0400
 end_define
 
-begin_comment
-comment|/* (ag) Fail if page is not cached */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|VM_ALLOC_IFNOTCACHED
 value|0x0800
 end_define
-
-begin_comment
-comment|/* (ag) Fail if page is cached */
-end_comment
 
 begin_define
 define|#
@@ -1591,50 +1582,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vm_page_cache
-parameter_list|(
-name|vm_page_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_page_cache_free
-parameter_list|(
-name|vm_object_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_page_cache_transfer
-parameter_list|(
-name|vm_object_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|vm_object_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vm_page_try_to_cache
-parameter_list|(
-name|vm_page_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|vm_page_try_to_free
 parameter_list|(
@@ -1735,14 +1682,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|boolean_t
-name|vm_page_is_cached
+name|void
+name|vm_page_launder
 parameter_list|(
-name|vm_object_t
-name|object
-parameter_list|,
-name|vm_pindex_t
-name|pindex
+name|vm_page_t
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2886,6 +2830,72 @@ name|void
 operator|)
 name|mret
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|vm_page_active
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+return|return
+operator|(
+name|m
+operator|->
+name|queue
+operator|==
+name|PQ_ACTIVE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|vm_page_inactive
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+return|return
+operator|(
+name|m
+operator|->
+name|queue
+operator|==
+name|PQ_INACTIVE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|vm_page_in_laundry
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+return|return
+operator|(
+name|m
+operator|->
+name|queue
+operator|==
+name|PQ_LAUNDRY
+operator|)
+return|;
 block|}
 end_function
 

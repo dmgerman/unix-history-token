@@ -50,7 +50,7 @@ file|<vm/_vm_radix.h>
 end_include
 
 begin_comment
-comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  *	The root of cached pages pool is protected by both the per-object lock  *	and the free pages queue mutex.  *	On insert in the cache radix trie, the per-object lock is expected  *	to be already held and the free pages queue mutex will be  *	acquired during the operation too.  *	On remove and lookup from the cache radix trie, only the free  *	pages queue mutex is expected to be locked.  *	These rules allow for reliably checking for the presence of cached  *	pages with only the per-object lock held, thereby reducing contention  *	for the free pages queue mutex.  *  * List of locks  *	(c)	const until freed  *	(o)	per-object lock   *	(f)	free pages queue mutex  *  */
+comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  * List of locks  *	(c)	const until freed  *	(o)	per-object lock   *	(f)	free pages queue mutex  *  */
 end_comment
 
 begin_struct
@@ -162,11 +162,6 @@ argument_list|)
 name|rvq
 expr_stmt|;
 comment|/* list of reservations */
-name|struct
-name|vm_radix
-name|cache
-decl_stmt|;
-comment|/* (o + f) root of the cache page radix trie */
 name|void
 modifier|*
 name|handle
@@ -890,30 +885,6 @@ name|waitid
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|boolean_t
-name|vm_object_cache_is_empty
-parameter_list|(
-name|vm_object_t
-name|object
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vm_radix_is_empty
-argument_list|(
-operator|&
-name|object
-operator|->
-name|cache
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_function_decl
 name|void

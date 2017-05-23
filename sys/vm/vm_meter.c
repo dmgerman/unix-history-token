@@ -835,66 +835,63 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vcnt() -	accumulate statistics from all cpus and the global cnt  *		structure.  *  *	The vmmeter structure is now per-cpu as well as global.  Those  *	statistics which can be kept on a per-cpu basis (to avoid cache  *	stalls between cpus) can be moved to the per-cpu vmmeter.  Remaining  *	statistics, such as v_free_reserved, are left in the global  *	structure.  *  * (sysctl_oid *oidp, void *arg1, int arg2, struct sysctl_req *req)  */
+comment|/*  * vm_meter_cnt() -	accumulate statistics from all cpus and the global cnt  *			structure.  *  *	The vmmeter structure is now per-cpu as well as global.  Those  *	statistics which can be kept on a per-cpu basis (to avoid cache  *	stalls between cpus) can be moved to the per-cpu vmmeter.  Remaining  *	statistics, such as v_free_reserved, are left in the global  *	structure.  */
 end_comment
 
 begin_function
-specifier|static
-name|int
-name|vcnt
+name|u_int
+name|vm_meter_cnt
 parameter_list|(
-name|SYSCTL_HANDLER_ARGS
+name|size_t
+name|offset
 parameter_list|)
 block|{
-name|int
+name|struct
+name|pcpu
+modifier|*
+name|pcpu
+decl_stmt|;
+name|u_int
 name|count
-init|=
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|arg1
 decl_stmt|;
 name|int
-name|offset
-init|=
+name|i
+decl_stmt|;
+name|count
+operator|=
+operator|*
 operator|(
-name|char
+name|u_int
 operator|*
 operator|)
-name|arg1
-operator|-
+operator|(
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
 name|vm_cnt
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
+operator|+
+name|offset
+operator|)
+expr_stmt|;
 name|CPU_FOREACH
 argument_list|(
 argument|i
 argument_list|)
 block|{
-name|struct
 name|pcpu
-modifier|*
-name|pcpu
-init|=
+operator|=
 name|pcpu_find
 argument_list|(
 name|i
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|count
 operator|+=
 operator|*
 operator|(
-name|int
+name|u_int
 operator|*
 operator|)
 operator|(
@@ -913,6 +910,43 @@ expr_stmt|;
 block|}
 return|return
 operator|(
+name|count
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|cnt_sysctl
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|u_int
+name|count
+decl_stmt|;
+name|count
+operator|=
+name|vm_meter_cnt
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|arg1
+operator|-
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|vm_cnt
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 name|SYSCTL_OUT
 argument_list|(
 name|req
@@ -922,7 +956,7 @@ name|count
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|count
 argument_list|)
 argument_list|)
 operator|)
@@ -1048,7 +1082,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_PROC(parent, OID_AUTO, var, \ 	    CTLTYPE_UINT | CTLFLAG_RD | CTLFLAG_MPSAFE,&vm_cnt.var, 0, vcnt, \ 	    "IU", descr)
+value|SYSCTL_PROC(parent, OID_AUTO, var, \ 	    CTLTYPE_UINT | CTLFLAG_RD | CTLFLAG_MPSAFE,&vm_cnt.var, 0,	\ 	    cnt_sysctl, "IU", descr)
 end_define
 
 begin_define
@@ -1280,7 +1314,7 @@ name|VM_STATS_VM
 argument_list|(
 name|v_reactivated
 argument_list|,
-literal|"Pages reactivated from free list"
+literal|"Pages reactivated by pagedaemon"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1301,6 +1335,16 @@ argument_list|(
 name|v_pdpages
 argument_list|,
 literal|"Pages analyzed by pagedaemon"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VM_STATS_VM
+argument_list|(
+name|v_pdshortfalls
+argument_list|,
+literal|"Page reclamation shortfalls"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1441,6 +1485,16 @@ argument_list|(
 name|v_inactive_count
 argument_list|,
 literal|"Inactive pages"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VM_STATS_VM
+argument_list|(
+name|v_laundry_count
+argument_list|,
+literal|"Pages eligible for laundering"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

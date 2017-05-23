@@ -61,6 +61,9 @@ name|alignment
 parameter_list|,
 name|vm_paddr_t
 name|boundary
+parameter_list|,
+name|vm_page_t
+name|mpred
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -133,16 +136,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|vm_reserv_level_iffullpop
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|boolean_t
-name|vm_reserv_reactivate_page
 parameter_list|(
 name|vm_page_t
 name|m
