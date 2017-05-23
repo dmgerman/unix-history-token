@@ -514,6 +514,20 @@ name|G_MIRROR_DEVICE_STATE_RUNNING
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|G_MIRROR_TYPE_MANUAL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_MIRROR_TYPE_AUTOMATIC
+value|1
+end_define
+
 begin_comment
 comment|/* Bump syncid on first write. */
 end_comment
@@ -540,6 +554,10 @@ begin_struct
 struct|struct
 name|g_mirror_softc
 block|{
+name|u_int
+name|sc_type
+decl_stmt|;
+comment|/* Device type (manual/automatic). */
 name|u_int
 name|sc_state
 decl_stmt|;
@@ -693,6 +711,12 @@ name|sc_name
 value|sc_geom->name
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|g_mirror_metadata
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|u_int
 name|g_mirror_ndisks
@@ -704,6 +728,29 @@ name|sc
 parameter_list|,
 name|int
 name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|g_geom
+modifier|*
+name|g_mirror_create
+parameter_list|(
+name|struct
+name|g_class
+modifier|*
+name|mp
+parameter_list|,
+specifier|const
+name|struct
+name|g_mirror_metadata
+modifier|*
+name|md
+parameter_list|,
+name|u_int
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
