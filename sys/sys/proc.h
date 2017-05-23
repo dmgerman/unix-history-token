@@ -5039,6 +5039,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|cr_canseejailproc
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|u1
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|u2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|cr_cansignal
 parameter_list|(
 name|struct
