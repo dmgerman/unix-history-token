@@ -8173,6 +8173,14 @@ literal|"sg"
 expr_stmt|;
 break|break;
 case|case
+name|KVME_TYPE_MGTDEVICE
+case|:
+name|str
+operator|=
+literal|"md"
+expr_stmt|;
+break|break;
+case|case
 name|KVME_TYPE_UNKNOWN
 case|:
 default|default:
