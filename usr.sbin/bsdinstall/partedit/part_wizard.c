@@ -12,13 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<libutil.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<libutil.h>
 end_include
 
 begin_include
