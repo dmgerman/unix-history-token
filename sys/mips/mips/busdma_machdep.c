@@ -3247,13 +3247,11 @@ name|sgsize
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|map
 operator|->
 name|pagesneeded
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|CTR3
@@ -3398,13 +3396,11 @@ name|paddr
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|map
 operator|->
 name|pagesneeded
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|CTR3
