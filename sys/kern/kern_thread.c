@@ -331,7 +331,7 @@ argument_list|,
 name|p_filemon
 argument_list|)
 operator|==
-literal|0x3d0
+literal|0x3c0
 argument_list|,
 literal|"struct proc KBI p_filemon"
 argument_list|)
@@ -349,7 +349,7 @@ argument_list|,
 name|p_comm
 argument_list|)
 operator|==
-literal|0x3e0
+literal|0x3d0
 argument_list|,
 literal|"struct proc KBI p_comm"
 argument_list|)
@@ -367,7 +367,7 @@ argument_list|,
 name|p_emuldata
 argument_list|)
 operator|==
-literal|0x4b0
+literal|0x4a0
 argument_list|,
 literal|"struct proc KBI p_emuldata"
 argument_list|)
@@ -504,7 +504,7 @@ argument_list|,
 name|p_filemon
 argument_list|)
 operator|==
-literal|0x278
+literal|0x268
 argument_list|,
 literal|"struct proc KBI p_filemon"
 argument_list|)
@@ -522,7 +522,7 @@ argument_list|,
 name|p_comm
 argument_list|)
 operator|==
-literal|0x284
+literal|0x274
 argument_list|,
 literal|"struct proc KBI p_comm"
 argument_list|)
@@ -540,7 +540,7 @@ argument_list|,
 name|p_emuldata
 argument_list|)
 operator|==
-literal|0x304
+literal|0x2f4
 argument_list|,
 literal|"struct proc KBI p_emuldata"
 argument_list|)

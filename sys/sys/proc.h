@@ -2646,14 +2646,19 @@ modifier|*
 name|p_ksi
 decl_stmt|;
 comment|/* Locked by parent proc lock */
-name|sigqueue_t
-name|p_sigqueue
+name|uint64_t
+name|padding1
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* (c) Sigs not delivered to a td. */
-define|#
-directive|define
-name|p_siglist
-value|p_sigqueue.sq_signals
+name|void
+modifier|*
+name|padding2
+index|[
+literal|4
+index|]
+decl_stmt|;
 comment|/* The following fields are all zeroed upon creation in fork. */
 define|#
 directive|define
@@ -3028,6 +3033,14 @@ name|uint64_t
 name|p_elf_flags
 decl_stmt|;
 comment|/* (x) ELF flags */
+name|sigqueue_t
+name|p_sigqueue
+decl_stmt|;
+comment|/* (c) Sigs not delivered to a td. */
+define|#
+directive|define
+name|p_siglist
+value|p_sigqueue.sq_signals
 block|}
 struct|;
 end_struct
