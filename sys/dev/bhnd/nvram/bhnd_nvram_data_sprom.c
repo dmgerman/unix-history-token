@@ -534,6 +534,12 @@ name|uint16_t
 name|magic
 decl_stmt|;
 name|uint8_t
+name|srevcrc
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
 name|srev
 decl_stmt|;
 name|bool
@@ -670,7 +676,7 @@ operator|+=
 name|nr
 expr_stmt|;
 block|}
-comment|/* Read SPROM revision */
+comment|/* Read 8-bit SPROM revision, maintaining 16-bit size alignment 		 * required by some OTP/SPROM chipsets. */
 name|error
 operator|=
 name|bhnd_nvram_io_read
@@ -682,11 +688,11 @@ operator|->
 name|srev_offset
 argument_list|,
 operator|&
-name|srev
+name|srevcrc
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|srev
+name|srevcrc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -699,6 +705,13 @@ operator|(
 name|error
 operator|)
 return|;
+name|srev
+operator|=
+name|srevcrc
+index|[
+literal|0
+index|]
+expr_stmt|;
 comment|/* Early sromrev 1 devices (specifically some BCM440x enet 		 * cards) are reported to have been incorrectly programmed 		 * with a revision of 0x10. */
 if|if
 condition|(
