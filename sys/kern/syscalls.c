@@ -53,9 +53,9 @@ comment|/* 12 = chdir */
 literal|"fchdir"
 block|,
 comment|/* 13 = fchdir */
-literal|"mknod"
+literal|"compat11.mknod"
 block|,
-comment|/* 14 = mknod */
+comment|/* 14 = freebsd11 mknod */
 literal|"chmod"
 block|,
 comment|/* 15 = chmod */
@@ -575,15 +575,15 @@ comment|/* 186 = lfs_segclean */
 literal|"#187"
 block|,
 comment|/* 187 = lfs_segwait */
-literal|"stat"
+literal|"compat11.stat"
 block|,
-comment|/* 188 = stat */
-literal|"fstat"
+comment|/* 188 = freebsd11 stat */
+literal|"compat11.fstat"
 block|,
-comment|/* 189 = fstat */
-literal|"lstat"
+comment|/* 189 = freebsd11 fstat */
+literal|"compat11.lstat"
 block|,
-comment|/* 190 = lstat */
+comment|/* 190 = freebsd11 lstat */
 literal|"pathconf"
 block|,
 comment|/* 191 = pathconf */
@@ -599,9 +599,9 @@ comment|/* 194 = getrlimit */
 literal|"setrlimit"
 block|,
 comment|/* 195 = setrlimit */
-literal|"getdirentries"
+literal|"compat11.getdirentries"
 block|,
-comment|/* 196 = getdirentries */
+comment|/* 196 = freebsd11 getdirentries */
 literal|"compat6.mmap"
 block|,
 comment|/* 197 = freebsd6 mmap */
@@ -827,9 +827,9 @@ comment|/* 270 = nosys */
 literal|"#271"
 block|,
 comment|/* 271 = nosys */
-literal|"getdents"
+literal|"compat11.getdents"
 block|,
-comment|/* 272 = getdents */
+comment|/* 272 = freebsd11 getdents */
 literal|"#273"
 block|,
 comment|/* 273 = nosys */
@@ -845,15 +845,15 @@ comment|/* 276 = lutimes */
 literal|"netbsd_msync"
 block|,
 comment|/* 277 = netbsd_msync */
-literal|"nstat"
+literal|"compat11.nstat"
 block|,
-comment|/* 278 = nstat */
-literal|"nfstat"
+comment|/* 278 = freebsd11 nstat */
+literal|"compat11.nfstat"
 block|,
-comment|/* 279 = nfstat */
-literal|"nlstat"
+comment|/* 279 = freebsd11 nfstat */
+literal|"compat11.nlstat"
 block|,
-comment|/* 280 = nlstat */
+comment|/* 280 = freebsd11 nlstat */
 literal|"#281"
 block|,
 comment|/* 281 = nosys */
@@ -908,9 +908,9 @@ comment|/* 297 = freebsd4 fhstatfs */
 literal|"fhopen"
 block|,
 comment|/* 298 = fhopen */
-literal|"fhstat"
+literal|"compat11.fhstat"
 block|,
-comment|/* 299 = fhstat */
+comment|/* 299 = freebsd11 fhstat */
 literal|"modnext"
 block|,
 comment|/* 300 = modnext */
@@ -1196,18 +1196,18 @@ comment|/* 393 = sendfile */
 literal|"mac_syscall"
 block|,
 comment|/* 394 = mac_syscall */
-literal|"getfsstat"
+literal|"compat11.getfsstat"
 block|,
-comment|/* 395 = getfsstat */
-literal|"statfs"
+comment|/* 395 = freebsd11 getfsstat */
+literal|"compat11.statfs"
 block|,
-comment|/* 396 = statfs */
-literal|"fstatfs"
+comment|/* 396 = freebsd11 statfs */
+literal|"compat11.fstatfs"
 block|,
-comment|/* 397 = fstatfs */
-literal|"fhstatfs"
+comment|/* 397 = freebsd11 fstatfs */
+literal|"compat11.fhstatfs"
 block|,
-comment|/* 398 = fhstatfs */
+comment|/* 398 = freebsd11 fhstatfs */
 literal|"#399"
 block|,
 comment|/* 399 = nosys */
@@ -1490,9 +1490,9 @@ comment|/* 491 = fchownat */
 literal|"fexecve"
 block|,
 comment|/* 492 = fexecve */
-literal|"fstatat"
+literal|"compat11.fstatat"
 block|,
-comment|/* 493 = fstatat */
+comment|/* 493 = freebsd11 fstatat */
 literal|"futimesat"
 block|,
 comment|/* 494 = futimesat */
@@ -1505,9 +1505,9 @@ comment|/* 496 = mkdirat */
 literal|"mkfifoat"
 block|,
 comment|/* 497 = mkfifoat */
-literal|"mknodat"
+literal|"compat11.mknodat"
 block|,
-comment|/* 498 = mknodat */
+comment|/* 498 = freebsd11 mknodat */
 literal|"openat"
 block|,
 comment|/* 499 = openat */
@@ -1664,6 +1664,33 @@ comment|/* 549 = numa_setaffinity */
 literal|"fdatasync"
 block|,
 comment|/* 550 = fdatasync */
+literal|"fstat"
+block|,
+comment|/* 551 = fstat */
+literal|"fstatat"
+block|,
+comment|/* 552 = fstatat */
+literal|"fhstat"
+block|,
+comment|/* 553 = fhstat */
+literal|"getdirentries"
+block|,
+comment|/* 554 = getdirentries */
+literal|"statfs"
+block|,
+comment|/* 555 = statfs */
+literal|"fstatfs"
+block|,
+comment|/* 556 = fstatfs */
+literal|"getfsstat"
+block|,
+comment|/* 557 = getfsstat */
+literal|"fhstatfs"
+block|,
+comment|/* 558 = fhstatfs */
+literal|"mknodat"
+block|,
+comment|/* 559 = mknodat */
 block|}
 decl_stmt|;
 end_decl_stmt

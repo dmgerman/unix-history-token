@@ -237,6 +237,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD11
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|compat11
+parameter_list|(
+name|n
+parameter_list|,
+name|name
+parameter_list|)
+value|n, (sy_call_t *)__CONCAT(freebsd11_,name)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|compat11
+parameter_list|(
+name|n
+parameter_list|,
+name|name
+parameter_list|)
+value|0, (sy_call_t *)nosys
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* The casts are bogus but will do for now. */
 end_comment
@@ -603,16 +643,15 @@ block|}
 block|,
 comment|/* 13 = fchdir */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|mknod_args
+name|freebsd11_mknod_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_mknod
+argument_list|,
+name|mknod
+argument_list|)
 block|,
 name|AUE_MKNOD
 block|,
@@ -627,7 +666,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 14 = mknod */
+comment|/* 14 = freebsd11 mknod */
 block|{
 name|AS
 argument_list|(
@@ -4956,16 +4995,15 @@ block|}
 block|,
 comment|/* 187 = lfs_segwait */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|stat_args
+name|freebsd11_stat_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_stat
+argument_list|,
+name|stat
+argument_list|)
 block|,
 name|AUE_STAT
 block|,
@@ -4980,18 +5018,17 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 188 = stat */
+comment|/* 188 = freebsd11 stat */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|fstat_args
+name|freebsd11_fstat_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_fstat
+argument_list|,
+name|fstat
+argument_list|)
 block|,
 name|AUE_FSTAT
 block|,
@@ -5006,18 +5043,17 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 189 = fstat */
+comment|/* 189 = freebsd11 fstat */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|lstat_args
+name|freebsd11_lstat_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_lstat
+argument_list|,
+name|lstat
+argument_list|)
 block|,
 name|AUE_LSTAT
 block|,
@@ -5032,7 +5068,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 190 = lstat */
+comment|/* 190 = freebsd11 lstat */
 block|{
 name|AS
 argument_list|(
@@ -5161,16 +5197,15 @@ block|}
 block|,
 comment|/* 195 = setrlimit */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|getdirentries_args
+name|freebsd11_getdirentries_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_getdirentries
+argument_list|,
+name|getdirentries
+argument_list|)
 block|,
 name|AUE_GETDIRENTRIES
 block|,
@@ -5185,7 +5220,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 196 = getdirentries */
+comment|/* 196 = freebsd11 getdirentries */
 block|{
 name|compat6
 argument_list|(
@@ -7058,16 +7093,15 @@ block|}
 block|,
 comment|/* 271 = nosys */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|getdents_args
+name|freebsd11_getdents_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_getdents
+argument_list|,
+name|getdents
+argument_list|)
 block|,
 name|AUE_O_GETDENTS
 block|,
@@ -7082,7 +7116,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 272 = getdents */
+comment|/* 272 = freebsd11 getdents */
 block|{
 literal|0
 block|,
@@ -7211,16 +7245,15 @@ block|}
 block|,
 comment|/* 277 = netbsd_msync */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|nstat_args
+name|freebsd11_nstat_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_nstat
+argument_list|,
+name|nstat
+argument_list|)
 block|,
 name|AUE_STAT
 block|,
@@ -7235,18 +7268,17 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 278 = nstat */
+comment|/* 278 = freebsd11 nstat */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|nfstat_args
+name|freebsd11_nfstat_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_nfstat
+argument_list|,
+name|nfstat
+argument_list|)
 block|,
 name|AUE_FSTAT
 block|,
@@ -7261,18 +7293,17 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 279 = nfstat */
+comment|/* 279 = freebsd11 nfstat */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|nlstat_args
+name|freebsd11_nlstat_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_nlstat
+argument_list|,
+name|nlstat
+argument_list|)
 block|,
 name|AUE_LSTAT
 block|,
@@ -7287,7 +7318,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 280 = nlstat */
+comment|/* 280 = freebsd11 nlstat */
 block|{
 literal|0
 block|,
@@ -7714,16 +7745,15 @@ block|}
 block|,
 comment|/* 298 = fhopen */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|fhstat_args
+name|freebsd11_fhstat_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_fhstat
+argument_list|,
+name|fhstat
+argument_list|)
 block|,
 name|AUE_FHSTAT
 block|,
@@ -7738,7 +7768,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 299 = fhstat */
+comment|/* 299 = freebsd11 fhstat */
 block|{
 name|AS
 argument_list|(
@@ -10144,16 +10174,15 @@ block|}
 block|,
 comment|/* 394 = mac_syscall */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|getfsstat_args
+name|freebsd11_getfsstat_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_getfsstat
+argument_list|,
+name|getfsstat
+argument_list|)
 block|,
 name|AUE_GETFSSTAT
 block|,
@@ -10168,18 +10197,17 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 395 = getfsstat */
+comment|/* 395 = freebsd11 getfsstat */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|statfs_args
+name|freebsd11_statfs_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_statfs
+argument_list|,
+name|statfs
+argument_list|)
 block|,
 name|AUE_STATFS
 block|,
@@ -10194,18 +10222,17 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 396 = statfs */
+comment|/* 396 = freebsd11 statfs */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|fstatfs_args
+name|freebsd11_fstatfs_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_fstatfs
+argument_list|,
+name|fstatfs
+argument_list|)
 block|,
 name|AUE_FSTATFS
 block|,
@@ -10220,18 +10247,17 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 397 = fstatfs */
+comment|/* 397 = freebsd11 fstatfs */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|fhstatfs_args
+name|freebsd11_fhstatfs_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_fhstatfs
+argument_list|,
+name|fhstatfs
+argument_list|)
 block|,
 name|AUE_FHSTATFS
 block|,
@@ -10246,7 +10272,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 398 = fhstatfs */
+comment|/* 398 = freebsd11 fhstatfs */
 block|{
 literal|0
 block|,
@@ -12659,16 +12685,15 @@ block|}
 block|,
 comment|/* 492 = fexecve */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|fstatat_args
+name|freebsd11_fstatat_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_fstatat
+argument_list|,
+name|fstatat
+argument_list|)
 block|,
 name|AUE_FSTATAT
 block|,
@@ -12683,7 +12708,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 493 = fstatat */
+comment|/* 493 = freebsd11 fstatat */
 block|{
 name|AS
 argument_list|(
@@ -12789,16 +12814,15 @@ block|}
 block|,
 comment|/* 497 = mkfifoat */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|mknodat_args
+name|freebsd11_mknodat_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_mknodat
+argument_list|,
+name|mknodat
+argument_list|)
 block|,
 name|AUE_MKNODAT
 block|,
@@ -12813,7 +12837,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 498 = mknodat */
+comment|/* 498 = freebsd11 mknodat */
 block|{
 name|AS
 argument_list|(
@@ -14157,6 +14181,240 @@ name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 550 = fdatasync */
+block|{
+name|AS
+argument_list|(
+name|fstat_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sys_fstat
+block|,
+name|AUE_FSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SYF_CAPENABLED
+block|,
+name|SY_THR_STATIC
+block|}
+block|,
+comment|/* 551 = fstat */
+block|{
+name|AS
+argument_list|(
+name|fstatat_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sys_fstatat
+block|,
+name|AUE_FSTATAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SYF_CAPENABLED
+block|,
+name|SY_THR_STATIC
+block|}
+block|,
+comment|/* 552 = fstatat */
+block|{
+name|AS
+argument_list|(
+name|fhstat_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sys_fhstat
+block|,
+name|AUE_FHSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SY_THR_STATIC
+block|}
+block|,
+comment|/* 553 = fhstat */
+block|{
+name|AS
+argument_list|(
+name|getdirentries_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sys_getdirentries
+block|,
+name|AUE_GETDIRENTRIES
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SYF_CAPENABLED
+block|,
+name|SY_THR_STATIC
+block|}
+block|,
+comment|/* 554 = getdirentries */
+block|{
+name|AS
+argument_list|(
+name|statfs_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sys_statfs
+block|,
+name|AUE_STATFS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SY_THR_STATIC
+block|}
+block|,
+comment|/* 555 = statfs */
+block|{
+name|AS
+argument_list|(
+name|fstatfs_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sys_fstatfs
+block|,
+name|AUE_FSTATFS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SYF_CAPENABLED
+block|,
+name|SY_THR_STATIC
+block|}
+block|,
+comment|/* 556 = fstatfs */
+block|{
+name|AS
+argument_list|(
+name|getfsstat_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sys_getfsstat
+block|,
+name|AUE_GETFSSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SY_THR_STATIC
+block|}
+block|,
+comment|/* 557 = getfsstat */
+block|{
+name|AS
+argument_list|(
+name|fhstatfs_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sys_fhstatfs
+block|,
+name|AUE_FHSTATFS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SY_THR_STATIC
+block|}
+block|,
+comment|/* 558 = fhstatfs */
+block|{
+name|AS
+argument_list|(
+name|mknodat_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sys_mknodat
+block|,
+name|AUE_MKNODAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SYF_CAPENABLED
+block|,
+name|SY_THR_STATIC
+block|}
+block|,
+comment|/* 559 = mknodat */
 block|}
 decl_stmt|;
 end_decl_stmt

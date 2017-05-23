@@ -98,7 +98,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_mknod
+name|FREEBSD32_SYS_freebsd11_freebsd32_mknod
 value|14
 end_define
 
@@ -1009,21 +1009,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_freebsd32_stat
+name|FREEBSD32_SYS_freebsd11_freebsd32_stat
 value|188
 end_define
 
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_freebsd32_fstat
+name|FREEBSD32_SYS_freebsd11_freebsd32_fstat
 value|189
 end_define
 
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_freebsd32_lstat
+name|FREEBSD32_SYS_freebsd11_freebsd32_lstat
 value|190
 end_define
 
@@ -1058,7 +1058,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_freebsd32_getdirentries
+name|FREEBSD32_SYS_freebsd11_freebsd32_getdirentries
 value|196
 end_define
 
@@ -1365,7 +1365,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_getdents
+name|FREEBSD32_SYS_freebsd11_freebsd32_getdents
 value|272
 end_define
 
@@ -1400,21 +1400,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_nstat
+name|FREEBSD32_SYS_freebsd11_nstat
 value|278
 end_define
 
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_nfstat
+name|FREEBSD32_SYS_freebsd11_nfstat
 value|279
 end_define
 
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_nlstat
+name|FREEBSD32_SYS_freebsd11_nlstat
 value|280
 end_define
 
@@ -1446,7 +1446,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_fhstat
+name|FREEBSD32_SYS_freebsd11_freebsd32_fhstat
 value|299
 end_define
 
@@ -1937,28 +1937,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_getfsstat
+name|FREEBSD32_SYS_freebsd11_getfsstat
 value|395
 end_define
 
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_statfs
+name|FREEBSD32_SYS_freebsd11_statfs
 value|396
 end_define
 
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_fstatfs
+name|FREEBSD32_SYS_freebsd11_fstatfs
 value|397
 end_define
 
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_fhstatfs
+name|FREEBSD32_SYS_freebsd11_fhstatfs
 value|398
 end_define
 
@@ -2553,7 +2553,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_freebsd32_fstatat
+name|FREEBSD32_SYS_freebsd11_freebsd32_fstatat
 value|493
 end_define
 
@@ -2588,7 +2588,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_mknodat
+name|FREEBSD32_SYS_freebsd11_freebsd32_mknodat
 value|498
 end_define
 
@@ -2970,8 +2970,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_MAXSYSCALL
+name|FREEBSD32_SYS_freebsd32_fstat
 value|551
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_freebsd32_fstatat
+value|552
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_freebsd32_fhstat
+value|553
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_freebsd32_getdirentries
+value|554
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_statfs
+value|555
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_fstatfs
+value|556
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_getfsstat
+value|557
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_fhstatfs
+value|558
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_mknodat
+value|559
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_MAXSYSCALL
+value|560
 end_define
 
 end_unit
