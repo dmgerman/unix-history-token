@@ -649,6 +649,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|pmap_remap_vm_attr
+parameter_list|(
+name|vm_memattr_t
+name|old_attr
+parameter_list|,
+name|vm_memattr_t
+name|new_attr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
