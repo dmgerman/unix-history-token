@@ -199,33 +199,6 @@ name|RPCBPROC_NULL
 value|0
 end_define
 
-begin_comment
-comment|/* XXX (ngie): for clarity on what needs to be reverted later. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__FreeBSD_bug_216954__
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD_bug_216954__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -1703,23 +1676,6 @@ end_macro
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-ifdef|#
-directive|ifdef
-name|__FreeBSD_bug_216954__
-name|atf_tc_expect_signal
-argument_list|(
-name|SIGSEGV
-argument_list|,
-literal|"fails with SIGSEGV only on ^/stable/10 -- bug # 216954"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|rawtest
 argument_list|(
 name|NULL
