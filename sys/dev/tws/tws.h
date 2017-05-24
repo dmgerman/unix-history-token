@@ -179,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|TWS_MAX_NUM_LUNS
-value|16
+value|32
 end_define
 
 begin_define
