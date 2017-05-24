@@ -357,6 +357,10 @@ literal|0x4
 block|}
 name|zfs_share_type_t
 typedef|;
+define|#
+directive|define
+name|CONFIG_BUF_MINSIZE
+value|65536
 name|int
 name|zfs_error
 parameter_list|(
