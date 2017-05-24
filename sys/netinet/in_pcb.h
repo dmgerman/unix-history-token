@@ -374,6 +374,7 @@ begin_struct
 struct|struct
 name|inpcb
 block|{
+comment|/* Cache line #1 (amd64) */
 name|LIST_ENTRY
 argument_list|(
 argument|inpcb
@@ -388,20 +389,42 @@ argument_list|)
 name|inp_pcbgrouphash
 expr_stmt|;
 comment|/* (g/i) hash list */
-name|LIST_ENTRY
-argument_list|(
-argument|inpcb
-argument_list|)
-name|inp_list
-expr_stmt|;
-comment|/* (p/l) list for all PCBs for proto */
-comment|/* (p[w]) for list iteration */
-comment|/* (p[r]/l) for addition/removal */
+name|struct
+name|rwlock
+name|inp_lock
+decl_stmt|;
+comment|/* Cache line #2 (amd64) */
+define|#
+directive|define
+name|inp_start_zero
+value|inp_refcount
+define|#
+directive|define
+name|inp_zero_size
+value|(sizeof(struct inpcb) - \ 			    offsetof(struct inpcb, inp_start_zero))
+name|u_int
+name|inp_refcount
+decl_stmt|;
+comment|/* (i) refcount */
+name|int
+name|inp_flags
+decl_stmt|;
+comment|/* (i) generic IP/datagram flags */
+name|int
+name|inp_flags2
+decl_stmt|;
+comment|/* (i) generic IP/datagram flags #2*/
 name|void
 modifier|*
 name|inp_ppcb
 decl_stmt|;
 comment|/* (i) pointer to per-protocol pcb */
+name|struct
+name|socket
+modifier|*
+name|inp_socket
+decl_stmt|;
+comment|/* (i) back pointer to socket */
 name|struct
 name|inpcbinfo
 modifier|*
@@ -422,12 +445,6 @@ name|inp_pcbgroup_wild
 expr_stmt|;
 comment|/* (g/i/h) group wildcard entry */
 name|struct
-name|socket
-modifier|*
-name|inp_socket
-decl_stmt|;
-comment|/* (i) back pointer to socket */
-name|struct
 name|ucred
 modifier|*
 name|inp_cred
@@ -437,14 +454,6 @@ name|u_int32_t
 name|inp_flow
 decl_stmt|;
 comment|/* (i) IPv6 flow information */
-name|int
-name|inp_flags
-decl_stmt|;
-comment|/* (i) generic IP/datagram flags */
-name|int
-name|inp_flags2
-decl_stmt|;
-comment|/* (i) generic IP/datagram flags #2*/
 name|u_char
 name|inp_vflag
 decl_stmt|;
@@ -465,10 +474,6 @@ name|uint32_t
 name|inp_flowid
 decl_stmt|;
 comment|/* (x) flow id / queue id */
-name|u_int
-name|inp_refcount
-decl_stmt|;
-comment|/* (i) refcount */
 name|struct
 name|m_snd_tag
 modifier|*
@@ -571,10 +576,6 @@ modifier|*
 name|inp_phd
 decl_stmt|;
 comment|/* (i/h) head of this list */
-define|#
-directive|define
-name|inp_zero_size
-value|offsetof(struct inpcb, inp_gencnt)
 name|inp_gen_t
 name|inp_gencnt
 decl_stmt|;
@@ -585,10 +586,6 @@ modifier|*
 name|inp_lle
 decl_stmt|;
 comment|/* cached L2 information */
-name|struct
-name|rwlock
-name|inp_lock
-decl_stmt|;
 name|rt_gen_t
 name|inp_rt_cookie
 decl_stmt|;
@@ -598,23 +595,23 @@ block|{
 comment|/* cached L3 information */
 name|struct
 name|route
-name|inpu_route
+name|inp_route
 decl_stmt|;
 name|struct
 name|route_in6
-name|inpu_route6
+name|inp_route6
 decl_stmt|;
 block|}
-name|inp_rtu
 union|;
-define|#
-directive|define
-name|inp_route
-value|inp_rtu.inpu_route
-define|#
-directive|define
-name|inp_route6
-value|inp_rtu.inpu_route6
+name|LIST_ENTRY
+argument_list|(
+argument|inpcb
+argument_list|)
+name|inp_list
+expr_stmt|;
+comment|/* (p/l) list for all PCBs for proto */
+comment|/* (p[w]) for list iteration */
+comment|/* (p[r]/l) for addition/removal */
 block|}
 struct|;
 end_struct
