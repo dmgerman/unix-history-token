@@ -2424,7 +2424,7 @@ condition|(
 name|dp
 operator|->
 name|dp_dirty_total
-operator|<=
+operator|<
 name|zfs_dirty_data_max
 condition|)
 name|cv_signal
