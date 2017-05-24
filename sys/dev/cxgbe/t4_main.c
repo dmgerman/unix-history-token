@@ -1050,7 +1050,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Tunables.  See tweak_tunables() too.  *  * Each tunable is set to a default value here if it's known at compile-time.  * Otherwise it is set to -1 as an indication to tweak_tunables() that it should  * provide a reasonable default when the driver is loaded.  *  * Tunables applicable to both T4 and T5 are under hw.cxgbe.  Those specific to  * T5 are under hw.cxl.  */
+comment|/*  * Tunables.  See tweak_tunables() too.  *  * Each tunable is set to a default value here if it's known at compile-time.  * Otherwise it is set to -n as an indication to tweak_tunables() that it should  * provide a reasonable default (upto n) when the driver is loaded.  *  * Tunables applicable to both T4 and T5 are under hw.cxgbe.  Those specific to  * T5 are under hw.cxl.  */
 end_comment
 
 begin_comment
@@ -1069,7 +1069,7 @@ name|int
 name|t4_ntxq10g
 init|=
 operator|-
-literal|1
+name|NTXQ_10G
 decl_stmt|;
 end_decl_stmt
 
@@ -1096,7 +1096,7 @@ name|int
 name|t4_nrxq10g
 init|=
 operator|-
-literal|1
+name|NRXQ_10G
 decl_stmt|;
 end_decl_stmt
 
@@ -1123,7 +1123,7 @@ name|int
 name|t4_ntxq1g
 init|=
 operator|-
-literal|1
+name|NTXQ_1G
 decl_stmt|;
 end_decl_stmt
 
@@ -1150,7 +1150,7 @@ name|int
 name|t4_nrxq1g
 init|=
 operator|-
-literal|1
+name|NRXQ_1G
 decl_stmt|;
 end_decl_stmt
 
@@ -1178,7 +1178,7 @@ name|int
 name|t4_ntxq_vi
 init|=
 operator|-
-literal|1
+name|NTXQ_VI
 decl_stmt|;
 end_decl_stmt
 
@@ -1206,7 +1206,7 @@ name|int
 name|t4_nrxq_vi
 init|=
 operator|-
-literal|1
+name|NRXQ_VI
 decl_stmt|;
 end_decl_stmt
 
@@ -1260,7 +1260,7 @@ name|int
 name|t4_nofldtxq10g
 init|=
 operator|-
-literal|1
+name|NOFLDTXQ_10G
 decl_stmt|;
 end_decl_stmt
 
@@ -1288,7 +1288,7 @@ name|int
 name|t4_nofldrxq10g
 init|=
 operator|-
-literal|1
+name|NOFLDRXQ_10G
 decl_stmt|;
 end_decl_stmt
 
@@ -1316,7 +1316,7 @@ name|int
 name|t4_nofldtxq1g
 init|=
 operator|-
-literal|1
+name|NOFLDTXQ_1G
 decl_stmt|;
 end_decl_stmt
 
@@ -1344,7 +1344,7 @@ name|int
 name|t4_nofldrxq1g
 init|=
 operator|-
-literal|1
+name|NOFLDRXQ_1G
 decl_stmt|;
 end_decl_stmt
 
@@ -1372,7 +1372,7 @@ name|int
 name|t4_nofldtxq_vi
 init|=
 operator|-
-literal|1
+name|NOFLDTXQ_VI
 decl_stmt|;
 end_decl_stmt
 
@@ -1400,7 +1400,7 @@ name|int
 name|t4_nofldrxq_vi
 init|=
 operator|-
-literal|1
+name|NOFLDRXQ_VI
 decl_stmt|;
 end_decl_stmt
 
@@ -1439,7 +1439,7 @@ name|int
 name|t4_nnmtxq_vi
 init|=
 operator|-
-literal|1
+name|NNMTXQ_VI
 decl_stmt|;
 end_decl_stmt
 
@@ -1467,7 +1467,7 @@ name|int
 name|t4_nnmrxq_vi
 init|=
 operator|-
-literal|1
+name|NNMRXQ_VI
 decl_stmt|;
 end_decl_stmt
 
@@ -54195,6 +54195,64 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * t  = ptr to tunable.  * nc = number of CPUs.  * c  = compiled in default for that tunable.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|calculate_nqueues
+parameter_list|(
+name|int
+modifier|*
+name|t
+parameter_list|,
+name|int
+name|nc
+parameter_list|,
+specifier|const
+name|int
+name|c
+parameter_list|)
+block|{
+name|int
+name|nq
+decl_stmt|;
+if|if
+condition|(
+operator|*
+name|t
+operator|>
+literal|0
+condition|)
+return|return;
+name|nq
+operator|=
+operator|*
+name|t
+operator|<
+literal|0
+condition|?
+operator|-
+operator|*
+name|t
+else|:
+name|c
+expr_stmt|;
+operator|*
+name|t
+operator|=
+name|min
+argument_list|(
+name|nc
+argument_list|,
+name|nq
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Come up with reasonable defaults for some of the tunables, provided they're  * not set by the user (in which case we'll use the values as is).  */
 end_comment
 
@@ -54229,10 +54287,11 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
-name|t4_ntxq10g
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_ntxq10g
+argument_list|,
 name|nc
 argument_list|,
 name|NTXQ_10G
@@ -54259,10 +54318,11 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
-name|t4_ntxq1g
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_ntxq1g
+argument_list|,
 name|nc
 argument_list|,
 name|NTXQ_1G
@@ -54271,16 +54331,11 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-if|if
-condition|(
-name|t4_ntxq_vi
-operator|<
-literal|1
-condition|)
-name|t4_ntxq_vi
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_ntxq_vi
+argument_list|,
 name|nc
 argument_list|,
 name|NTXQ_VI
@@ -54303,10 +54358,11 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
-name|t4_nrxq10g
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_nrxq10g
+argument_list|,
 name|nc
 argument_list|,
 name|NRXQ_10G
@@ -54333,10 +54389,11 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
-name|t4_nrxq1g
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_nrxq1g
+argument_list|,
 name|nc
 argument_list|,
 name|NRXQ_1G
@@ -54345,16 +54402,11 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-if|if
-condition|(
-name|t4_nrxq_vi
-operator|<
-literal|1
-condition|)
-name|t4_nrxq_vi
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_nrxq_vi
+argument_list|,
 name|nc
 argument_list|,
 name|NRXQ_VI
@@ -54363,91 +54415,61 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TCP_OFFLOAD
-if|if
-condition|(
-name|t4_nofldtxq10g
-operator|<
-literal|1
-condition|)
-name|t4_nofldtxq10g
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_nofldtxq10g
+argument_list|,
 name|nc
 argument_list|,
 name|NOFLDTXQ_10G
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|t4_nofldtxq1g
-operator|<
-literal|1
-condition|)
-name|t4_nofldtxq1g
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_nofldtxq1g
+argument_list|,
 name|nc
 argument_list|,
 name|NOFLDTXQ_1G
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|t4_nofldtxq_vi
-operator|<
-literal|1
-condition|)
-name|t4_nofldtxq_vi
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_nofldtxq_vi
+argument_list|,
 name|nc
 argument_list|,
 name|NOFLDTXQ_VI
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|t4_nofldrxq10g
-operator|<
-literal|1
-condition|)
-name|t4_nofldrxq10g
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_nofldrxq10g
+argument_list|,
 name|nc
 argument_list|,
 name|NOFLDRXQ_10G
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|t4_nofldrxq1g
-operator|<
-literal|1
-condition|)
-name|t4_nofldrxq1g
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_nofldrxq1g
+argument_list|,
 name|nc
 argument_list|,
 name|NOFLDRXQ_1G
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|t4_nofldrxq_vi
-operator|<
-literal|1
-condition|)
-name|t4_nofldrxq_vi
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_nofldrxq_vi
+argument_list|,
 name|nc
 argument_list|,
 name|NOFLDRXQ_VI
@@ -54536,31 +54558,21 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|DEV_NETMAP
-if|if
-condition|(
-name|t4_nnmtxq_vi
-operator|<
-literal|1
-condition|)
-name|t4_nnmtxq_vi
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_nnmtxq_vi
+argument_list|,
 name|nc
 argument_list|,
 name|NNMTXQ_VI
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|t4_nnmrxq_vi
-operator|<
-literal|1
-condition|)
-name|t4_nnmrxq_vi
-operator|=
-name|min
+name|calculate_nqueues
 argument_list|(
+operator|&
+name|t4_nnmrxq_vi
+argument_list|,
 name|nc
 argument_list|,
 name|NNMRXQ_VI
