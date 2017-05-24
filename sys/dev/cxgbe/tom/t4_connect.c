@@ -1989,6 +1989,8 @@ operator|&
 name|inp
 operator|->
 name|in6p_laddr
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
