@@ -1238,6 +1238,10 @@ parameter_list|,
 name|struct
 name|in6_addr
 modifier|*
+parameter_list|,
+name|struct
+name|clip_entry
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
