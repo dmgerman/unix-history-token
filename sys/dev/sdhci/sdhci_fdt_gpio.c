@@ -243,7 +243,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Non-removable media"
+literal|"Non-removable media\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -540,7 +540,26 @@ argument_list|,
 literal|"wp-disable"
 argument_list|)
 condition|)
+block|{
+name|gpio
+operator|->
+name|wp_disabled
+operator|=
+name|true
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Write protect disabled\n"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|gpio_pin_get_by_ofw_property
