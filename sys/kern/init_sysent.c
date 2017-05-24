@@ -12548,7 +12548,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|SYF_CAPENABLED
 block|,
 name|SY_THR_STATIC
 block|}
@@ -12574,7 +12574,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|SYF_CAPENABLED
 block|,
 name|SY_THR_STATIC
 block|}
