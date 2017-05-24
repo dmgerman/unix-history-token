@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -126,6 +126,10 @@ comment|/* has this transaction already been delayed? */
 name|boolean_t
 name|tx_waited
 decl_stmt|;
+comment|/* transaction is marked as being a "net free" of space */
+name|boolean_t
+name|tx_netfree
+decl_stmt|;
 comment|/* time this transaction was created */
 name|hrtime_t
 name|tx_start
@@ -137,29 +141,6 @@ decl_stmt|;
 name|int
 name|tx_err
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZFS_DEBUG
-name|uint64_t
-name|tx_space_towrite
-decl_stmt|;
-name|uint64_t
-name|tx_space_tofree
-decl_stmt|;
-name|uint64_t
-name|tx_space_tooverwrite
-decl_stmt|;
-name|uint64_t
-name|tx_space_tounref
-decl_stmt|;
-name|refcount_t
-name|tx_space_written
-decl_stmt|;
-name|refcount_t
-name|tx_space_freed
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 enum|enum
@@ -202,23 +183,8 @@ name|refcount_t
 name|txh_space_towrite
 decl_stmt|;
 name|refcount_t
-name|txh_space_tofree
-decl_stmt|;
-name|refcount_t
-name|txh_space_tooverwrite
-decl_stmt|;
-name|refcount_t
-name|txh_space_tounref
-decl_stmt|;
-name|refcount_t
 name|txh_memory_tohold
 decl_stmt|;
-name|refcount_t
-name|txh_fudge
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZFS_DEBUG
 name|enum
 name|dmu_tx_hold_type
 name|txh_type
@@ -229,8 +195,6 @@ decl_stmt|;
 name|uint64_t
 name|txh_arg2
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 name|dmu_tx_hold_t
 typedef|;
@@ -402,17 +366,6 @@ name|object
 parameter_list|)
 function_decl|;
 name|void
-name|dmu_tx_willuse_space
-parameter_list|(
-name|dmu_tx_t
-modifier|*
-name|tx
-parameter_list|,
-name|int64_t
-name|delta
-parameter_list|)
-function_decl|;
-name|void
 name|dmu_tx_dirty_buf
 parameter_list|(
 name|dmu_tx_t
@@ -423,17 +376,6 @@ name|struct
 name|dmu_buf_impl
 modifier|*
 name|db
-parameter_list|)
-function_decl|;
-name|int
-name|dmu_tx_holds
-parameter_list|(
-name|dmu_tx_t
-modifier|*
-name|tx
-parameter_list|,
-name|uint64_t
-name|object
 parameter_list|)
 function_decl|;
 name|void
