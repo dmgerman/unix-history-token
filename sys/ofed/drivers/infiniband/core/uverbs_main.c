@@ -3758,6 +3758,13 @@ if|if
 condition|(
 operator|!
 name|dev
+operator|||
+operator|!
+name|dev
+operator|->
+name|ib_dev
+operator|->
+name|dma_device
 condition|)
 return|return
 operator|-
@@ -3838,6 +3845,13 @@ if|if
 condition|(
 operator|!
 name|dev
+operator|||
+operator|!
+name|dev
+operator|->
+name|ib_dev
+operator|->
+name|dma_device
 condition|)
 return|return
 operator|-
