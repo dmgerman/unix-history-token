@@ -563,7 +563,7 @@ name|i
 parameter_list|,
 name|c
 parameter_list|)
-value|((void *)				\ 				 ((uintptr_t)((((i)& 0x1f)<< 5) |	\ 				 ((c)& 0x1f))))
+value|((void *)				\ 				 ((uintptr_t)((((i)& 0x1f)<< 7) |	\ 				 ((c)& 0x7f))))
 end_define
 
 begin_define
@@ -573,7 +573,7 @@ name|FEEDMIXER_INFOIDX
 parameter_list|(
 name|d
 parameter_list|)
-value|((uint32_t)((uintptr_t)(d)>> 5)& 0x1f)
+value|((uint32_t)((uintptr_t)(d)>> 7)& 0x1f)
 end_define
 
 begin_define
@@ -583,7 +583,7 @@ name|FEEDMIXER_CHANNELS
 parameter_list|(
 name|d
 parameter_list|)
-value|((uint32_t)((uintptr_t)(d))& 0x1f)
+value|((uint32_t)((uintptr_t)(d))& 0x7f)
 end_define
 
 begin_function
