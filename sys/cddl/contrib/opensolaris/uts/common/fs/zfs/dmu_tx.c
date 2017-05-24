@@ -1461,10 +1461,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|zio_t
-modifier|*
-name|zio
-decl_stmt|;
 name|tx
 operator|=
 name|txh
@@ -1995,9 +1991,6 @@ name|dmu_tx_hold_t
 modifier|*
 name|txh
 parameter_list|,
-name|int
-name|add
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -2225,8 +2218,6 @@ name|dmu_tx_hold_zap_impl
 argument_list|(
 name|txh
 argument_list|,
-name|add
-argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -2299,8 +2290,6 @@ condition|)
 name|dmu_tx_hold_zap_impl
 argument_list|(
 name|txh
-argument_list|,
-name|add
 argument_list|,
 name|name
 argument_list|)
