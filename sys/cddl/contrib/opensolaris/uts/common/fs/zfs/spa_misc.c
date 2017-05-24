@@ -454,10 +454,41 @@ end_function
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"vfs.zfs.debug_flags"
+literal|"vfs.zfs.debugflags"
 argument_list|,
 operator|&
 name|zfs_flags
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debugflags
+argument_list|,
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_MPSAFE
+operator||
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|,
+name|sysctl_vfs_zfs_debug_flags
+argument_list|,
+literal|"IU"
+argument_list|,
+literal|"Debug flags for ZFS testing."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -488,7 +519,7 @@ name|sysctl_vfs_zfs_debug_flags
 argument_list|,
 literal|"IU"
 argument_list|,
-literal|"Debug flags for ZFS testing."
+literal|"Debug flags for ZFS testing (deprecated, see vfs.zfs.debugflags)."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
