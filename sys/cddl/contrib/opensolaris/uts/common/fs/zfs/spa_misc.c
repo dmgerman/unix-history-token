@@ -6331,6 +6331,31 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return the last txg where data can be dirtied. The final txgs  * will be used to just clear out any deferred frees that remain.  */
+end_comment
+
+begin_function
+name|uint64_t
+name|spa_final_dirty_txg
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+block|{
+return|return
+operator|(
+name|spa
+operator|->
+name|spa_final_txg
+operator|-
+name|TXG_DEFER_SIZE
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|pool_state_t
 name|spa_state
