@@ -14094,6 +14094,8 @@ condition|(
 name|fromsnap
 operator|!=
 name|NULL
+operator|&&
+name|recursive
 condition|)
 block|{
 name|nvlist_t
@@ -14253,8 +14255,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|recursive
-operator|&&
 operator|!
 name|flags
 operator|->
@@ -14512,6 +14512,8 @@ operator|->
 name|drr_payloadlen
 operator|!=
 literal|0
+operator|&&
+name|recursive
 operator|&&
 name|fromsnap
 operator|!=
