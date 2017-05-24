@@ -1566,12 +1566,21 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * The standard approximation for standard deviation is 	 * sqrt(average(x**2) - average(x)**2), i.e. the square root 	 * of the average of the squares minus the square of the average. 	 */
+comment|/* 	 * The standard approximation for standard deviation is 	 * sqrt(average(x**2) - average(x)**2), i.e. the square root 	 * of the average of the squares minus the square of the average. 	 * When normalizing, we should divide the sum of x**2 by normal**2. 	 */
 name|dt_divide_128
 argument_list|(
 name|data
 operator|+
 literal|2
+argument_list|,
+name|normal
+argument_list|,
+name|avg_of_squares
+argument_list|)
+expr_stmt|;
+name|dt_divide_128
+argument_list|(
+name|avg_of_squares
 argument_list|,
 name|normal
 argument_list|,
