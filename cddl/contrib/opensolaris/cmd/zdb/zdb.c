@@ -277,6 +277,13 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|reference_tracking_enable
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|boolean_t
 name|zfs_recover
 decl_stmt|;
@@ -302,6 +309,12 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_decl_stmt
+name|int
+name|reference_tracking_enable
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|boolean_t
@@ -20384,6 +20397,11 @@ comment|/* 	 * "zdb -c" uses checksum-verifying scrub i/os which are async reads
 name|zfs_vdev_async_read_max_active
 operator|=
 literal|10
+expr_stmt|;
+comment|/* 	 * Disable reference tracking for better performance. 	 */
+name|reference_tracking_enable
+operator|=
+name|B_FALSE
 expr_stmt|;
 name|kernel_init
 argument_list|(
