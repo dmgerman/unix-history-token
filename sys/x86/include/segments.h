@@ -1468,17 +1468,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|L43BSDCALLS_SEL
-value|2
-end_define
-
-begin_comment
-comment|/* notyet */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LUCODE_SEL
 value|3
 end_define
@@ -1489,18 +1478,6 @@ directive|define
 name|LUDATA_SEL
 value|5
 end_define
-
-begin_comment
-comment|/* separate stack, es,fs,gs sels ? */
-end_comment
-
-begin_comment
-comment|/* #define	LPOSIXCALLS_SEL	5*/
-end_comment
-
-begin_comment
-comment|/* notyet */
-end_comment
 
 begin_define
 define|#
