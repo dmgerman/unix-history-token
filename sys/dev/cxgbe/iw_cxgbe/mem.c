@@ -95,6 +95,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
 name|is_t4
 argument_list|(
 name|dev
@@ -123,6 +124,7 @@ operator|*
 literal|1024
 operator|*
 literal|1024ULL
+operator|)
 return|;
 block|}
 end_function
@@ -2191,7 +2193,9 @@ init|;
 operator|*
 name|shift
 operator|<
-literal|27
+name|PAGE_SHIFT
+operator|+
+name|M_FW_RI_TPTE_PS
 condition|;
 operator|++
 operator|(
@@ -2803,9 +2807,6 @@ name|attr
 operator|.
 name|len
 operator|=
-operator|(
-name|u32
-operator|)
 name|total_size
 expr_stmt|;
 name|mhp
@@ -3171,9 +3172,6 @@ name|attr
 operator|.
 name|len
 operator|=
-operator|(
-name|u32
-operator|)
 name|total_size
 expr_stmt|;
 name|mhp
