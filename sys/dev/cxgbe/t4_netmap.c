@@ -5052,7 +5052,6 @@ operator|&
 name|na
 argument_list|)
 expr_stmt|;
-comment|/* This adds IFCAP_NETMAP to if_capabilities */
 block|}
 end_function
 
