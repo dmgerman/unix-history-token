@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -2199,6 +2199,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|mutex_enter
+argument_list|(
+operator|&
+name|bpo
+operator|->
+name|bpo_lock
+argument_list|)
+expr_stmt|;
 name|dmu_buf_will_dirty
 argument_list|(
 name|bpo
@@ -2274,14 +2282,6 @@ argument_list|,
 operator|==
 argument_list|,
 name|DMU_OT_BPOBJ_SUBOBJ
-argument_list|)
-expr_stmt|;
-name|mutex_enter
-argument_list|(
-operator|&
-name|bpo
-operator|->
-name|bpo_lock
 argument_list|)
 expr_stmt|;
 name|dmu_write
