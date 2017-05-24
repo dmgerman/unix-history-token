@@ -6383,13 +6383,7 @@ name|ibdev
 operator|.
 name|dma_device
 operator|=
-name|dev
-operator|->
-name|rdev
-operator|.
-name|adap
-operator|->
-name|dev
+name|NULL
 expr_stmt|;
 name|dev
 operator|->

@@ -1482,7 +1482,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"iw_cxgbe: Chelsio T4/T5 RDMA driver loaded.\n"
+literal|"iw_cxgbe: Chelsio T4/T5/T6 RDMA driver loaded.\n"
 argument_list|)
 expr_stmt|;
 break|break;
