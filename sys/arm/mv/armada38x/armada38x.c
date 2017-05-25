@@ -568,6 +568,12 @@ operator|&
 name|MV_SCU_ENABLE
 operator|)
 condition|)
+block|{
+comment|/* Enable SCU Speculative linefills to L2 */
+name|val
+operator||=
+name|MV_SCU_SL_L2_ENABLE
+expr_stmt|;
 name|bus_space_write_4
 argument_list|(
 name|fdtbus_bs_tag
@@ -581,6 +587,7 @@ operator||
 name|MV_SCU_ENABLE
 argument_list|)
 expr_stmt|;
+block|}
 name|bus_space_unmap
 argument_list|(
 name|fdtbus_bs_tag
