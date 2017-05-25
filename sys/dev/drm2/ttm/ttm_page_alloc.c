@@ -351,7 +351,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-name|PQ_INACTIVE
+name|PQ_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
