@@ -1395,6 +1395,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|M_SETFIB
 argument_list|(
 name|m
