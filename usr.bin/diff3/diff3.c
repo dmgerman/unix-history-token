@@ -515,17 +515,6 @@ end_enum
 begin_define
 define|#
 directive|define
-name|MAX_CHECK
-value|768
-end_define
-
-begin_comment
-comment|/* 3 kb of chars */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DIFF_PATH
 value|"/usr/bin/diff"
 end_define
