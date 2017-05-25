@@ -2384,8 +2384,7 @@ name|FAIL_POINT_YIELD
 case|:
 name|kern_yield
 argument_list|(
-operator|-
-literal|1
+name|PRI_UNCHANGED
 argument_list|)
 expr_stmt|;
 break|break;
