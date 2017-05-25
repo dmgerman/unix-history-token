@@ -419,6 +419,13 @@ index|[]
 init|=
 block|{
 block|{
+literal|0x6800
+block|,
+literal|"Chelsio T6-DBG-25 VF"
+block|}
+block|,
+comment|/* 2 x 10/25G, debug */
+block|{
 literal|0x6801
 block|,
 literal|"Chelsio T6225-CR VF"
@@ -432,6 +439,34 @@ literal|"Chelsio T6225-SO-CR VF"
 block|}
 block|,
 comment|/* 2 x 10/25G, nomem */
+block|{
+literal|0x6803
+block|,
+literal|"Chelsio T6425-CR VF"
+block|}
+block|,
+comment|/* 4 x 10/25G */
+block|{
+literal|0x6804
+block|,
+literal|"Chelsio T6425-SO-CR VF"
+block|}
+block|,
+comment|/* 4 x 10/25G, nomem */
+block|{
+literal|0x6805
+block|,
+literal|"Chelsio T6225-OCP-SO VF"
+block|}
+block|,
+comment|/* 2 x 10/25G, nomem */
+block|{
+literal|0x6806
+block|,
+literal|"Chelsio T62100-OCP-SO VF"
+block|}
+block|,
+comment|/* 2 x 40/50/100G, nomem */
 block|{
 literal|0x6807
 block|,
@@ -447,13 +482,60 @@ block|}
 block|,
 comment|/* 2 x 40/50/100G, nomem */
 block|{
+literal|0x6809
+block|,
+literal|"Chelsio T6210-BT VF"
+block|}
+block|,
+comment|/* 2 x 10GBASE-T */
+block|{
 literal|0x680d
 block|,
 literal|"Chelsio T62100-CR VF"
 block|}
 block|,
 comment|/* 2 x 40/50/100G */
+block|{
+literal|0x6810
+block|,
+literal|"Chelsio T6-DBG-100 VF"
 block|}
+block|,
+comment|/* 2 x 40/50/100G, debug */
+block|{
+literal|0x6811
+block|,
+literal|"Chelsio T6225-LL-CR VF"
+block|}
+block|,
+comment|/* 2 x 10/25G */
+block|{
+literal|0x6814
+block|,
+literal|"Chelsio T61100-OCP-SO VF"
+block|}
+block|,
+comment|/* 1 x 40/50/100G, nomem */
+block|{
+literal|0x6815
+block|,
+literal|"Chelsio T6201-BT VF"
+block|}
+block|,
+comment|/* 2 x 1000BASE-T */
+comment|/* Custom */
+block|{
+literal|0x6880
+block|,
+literal|"Chelsio T6225 80 VF"
+block|}
+block|,
+block|{
+literal|0x6881
+block|,
+literal|"Chelsio T62100 81 VF"
+block|}
+block|, }
 struct|;
 end_struct
 
