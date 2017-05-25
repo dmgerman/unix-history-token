@@ -655,6 +655,7 @@ index|[
 name|SGE_NTIMERS
 index|]
 decl_stmt|;
+comment|/* final, scaled values */
 name|int
 name|counter_val
 index|[
