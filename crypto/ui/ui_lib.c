@@ -3529,9 +3529,6 @@ name|type
 condition|)
 block|{
 case|case
-name|UIT_PROMPT
-case|:
-case|case
 name|UIT_BOOLEAN
 case|:
 return|return

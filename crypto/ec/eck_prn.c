@@ -1655,6 +1655,10 @@ name|char
 name|str
 index|[
 literal|128
+operator|+
+literal|1
+operator|+
+literal|4
 index|]
 decl_stmt|;
 if|if

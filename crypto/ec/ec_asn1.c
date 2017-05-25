@@ -41,6 +41,16 @@ directive|include
 file|<openssl/objects.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|OSSL_NELEM
+parameter_list|(
+name|x
+parameter_list|)
+value|(sizeof(x)/sizeof(x[0]))
+end_define
+
 begin_function
 name|int
 name|EC_GROUP_get_basis_type
@@ -53,8 +63,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -72,8 +80,25 @@ comment|/* everything else is currently not supported */
 return|return
 literal|0
 return|;
-while|while
-condition|(
+comment|/* Find the last non-zero element of group->poly[] */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+name|int
+operator|)
+name|OSSL_NELEM
+argument_list|(
+name|group
+operator|->
+name|poly
+argument_list|)
+operator|&&
 name|group
 operator|->
 name|poly
@@ -82,10 +107,11 @@ name|i
 index|]
 operator|!=
 literal|0
-condition|)
+condition|;
 name|i
 operator|++
-expr_stmt|;
+control|)
+continue|continue;
 if|if
 condition|(
 name|i

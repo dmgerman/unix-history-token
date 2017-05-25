@@ -1423,6 +1423,9 @@ comment|/* 87 */
 name|NID_certificate_policies
 block|,
 comment|/* 89 */
+name|NID_crl_distribution_points
+block|,
+comment|/* 103 */
 name|NID_ext_key_usage
 block|,
 comment|/* 126 */

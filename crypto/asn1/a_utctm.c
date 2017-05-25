@@ -520,9 +520,9 @@ index|]
 operator|==
 literal|'-'
 condition|?
-operator|-
 literal|1
 else|:
+operator|-
 literal|1
 decl_stmt|,
 name|offset
