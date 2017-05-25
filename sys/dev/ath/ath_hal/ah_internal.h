@@ -59,6 +59,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_comment
+comment|/* XXX for reasons */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"opt_ah.h"
 end_include
 
@@ -282,7 +292,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Each chip or class of chips registers to offer support.  */
+comment|/*  * Each chip or class of chips registers to offer support.  *  * Compiled-in versions will include a linker set to iterate through the  * linked in code.  *  * Modules will have to register HAL backends separately.  */
 end_comment
 
 begin_struct
@@ -339,6 +349,12 @@ modifier|*
 name|error
 parameter_list|)
 function_decl|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|ath_hal_chip
+argument_list|)
+name|node
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -361,7 +377,7 @@ parameter_list|,
 name|_attach
 parameter_list|)
 define|\
-value|static struct ath_hal_chip _name##_chip = {			\ 	.name		= #_name,				\ 	.probe		= _probe,				\ 	.attach		= _attach				\ };								\ OS_DATA_SET(ah_chips, _name##_chip)
+value|struct ath_hal_chip _name##_chip = {				\ 	.name		= #_name,				\ 	.probe		= _probe,				\ 	.attach		= _attach,				\ };								\ OS_DATA_SET(ah_chips, _name##_chip)
 end_define
 
 begin_endif
@@ -370,7 +386,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Each RF backend registers to offer support; this is mostly  * used by multi-chip 5212 solutions.  Single-chip solutions  * have a fixed idea about which RF to use.  */
+comment|/*  * Each RF backend registers to offer support; this is mostly  * used by multi-chip 5212 solutions.  Single-chip solutions  * have a fixed idea about which RF to use.  *  * Compiled in versions will include this linker set to iterate through  * the linked in code.  *  * Modules will have to register RF backends separately.  */
 end_comment
 
 begin_struct
@@ -410,6 +426,12 @@ modifier|*
 name|ecode
 parameter_list|)
 function_decl|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|ath_hal_rf
+argument_list|)
+name|node
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -432,7 +454,7 @@ parameter_list|,
 name|_attach
 parameter_list|)
 define|\
-value|static struct ath_hal_rf _name##_rf = {				\ 	.name		= __STRING(_name),			\ 	.probe		= _probe,				\ 	.attach		= _attach				\ };								\ OS_DATA_SET(ah_rfs, _name##_rf)
+value|struct ath_hal_rf _name##_rf = {				\ 	.name		= __STRING(_name),			\ 	.probe		= _probe,				\ 	.attach		= _attach,				\ };								\ OS_DATA_SET(ah_rfs, _name##_rf)
 end_define
 
 begin_endif
@@ -4180,6 +4202,62 @@ parameter_list|,
 name|HAL_SURVEY_SAMPLE
 modifier|*
 name|hs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Chip registration - for modules.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ath_hal_add_chip
+parameter_list|(
+name|struct
+name|ath_hal_chip
+modifier|*
+name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ath_hal_remove_chip
+parameter_list|(
+name|struct
+name|ath_hal_chip
+modifier|*
+name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ath_hal_add_rf
+parameter_list|(
+name|struct
+name|ath_hal_rf
+modifier|*
+name|arf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ath_hal_remove_rf
+parameter_list|(
+name|struct
+name|ath_hal_rf
+modifier|*
+name|arf
 parameter_list|)
 function_decl|;
 end_function_decl
