@@ -66,34 +66,6 @@ begin_comment
 comment|/* XXX for reasons */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"opt_ah.h"
-end_include
-
-begin_comment
-comment|/* needed for AH_SUPPORT_AR5416 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AH_SUPPORT_AR5416
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|AH_SUPPORT_AR5416
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -715,9 +687,6 @@ decl_stmt|;
 name|int16_t
 name|noiseFloorAdjust
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5416
 name|int16_t
 name|noiseFloorCtl
 index|[
@@ -730,9 +699,6 @@ index|[
 name|AH_MAX_CHAINS
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* AH_SUPPORT_AR5416 */
 name|uint16_t
 name|mainSpur
 decl_stmt|;
