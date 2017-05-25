@@ -3707,7 +3707,7 @@ comment|/* T6 PE10K6 FPGA (PF0) */
 block|{
 literal|0x6400
 block|,
-literal|"Chelsio T6225-DBG"
+literal|"Chelsio T6-DBG-25"
 block|}
 block|,
 comment|/* 2 x 10/25G, debug */
@@ -3726,6 +3726,34 @@ block|}
 block|,
 comment|/* 2 x 10/25G, nomem */
 block|{
+literal|0x6403
+block|,
+literal|"Chelsio T6425-CR"
+block|}
+block|,
+comment|/* 4 x 10/25G */
+block|{
+literal|0x6404
+block|,
+literal|"Chelsio T6425-SO-CR"
+block|}
+block|,
+comment|/* 4 x 10/25G, nomem */
+block|{
+literal|0x6405
+block|,
+literal|"Chelsio T6225-OCP-SO"
+block|}
+block|,
+comment|/* 2 x 10/25G, nomem */
+block|{
+literal|0x6406
+block|,
+literal|"Chelsio T62100-OCP-SO"
+block|}
+block|,
+comment|/* 2 x 40/50/100G, nomem */
+block|{
 literal|0x6407
 block|,
 literal|"Chelsio T62100-LP-CR"
@@ -3740,6 +3768,13 @@ block|}
 block|,
 comment|/* 2 x 40/50/100G, nomem */
 block|{
+literal|0x6409
+block|,
+literal|"Chelsio T6210-BT"
+block|}
+block|,
+comment|/* 2 x 10GBASE-T */
+block|{
 literal|0x640d
 block|,
 literal|"Chelsio T62100-CR"
@@ -3749,11 +3784,44 @@ comment|/* 2 x 40/50/100G */
 block|{
 literal|0x6410
 block|,
-literal|"Chelsio T62100-DBG"
+literal|"Chelsio T6-DBG-100"
 block|}
 block|,
 comment|/* 2 x 40/50/100G, debug */
+block|{
+literal|0x6411
+block|,
+literal|"Chelsio T6225-LL-CR"
 block|}
+block|,
+comment|/* 2 x 10/25G */
+block|{
+literal|0x6414
+block|,
+literal|"Chelsio T61100-OCP-SO"
+block|}
+block|,
+comment|/* 1 x 40/50/100G, nomem */
+block|{
+literal|0x6415
+block|,
+literal|"Chelsio T6201-BT"
+block|}
+block|,
+comment|/* 2 x 1000BASE-T */
+comment|/* Custom */
+block|{
+literal|0x6480
+block|,
+literal|"Chelsio T6225 80"
+block|}
+block|,
+block|{
+literal|0x6481
+block|,
+literal|"Chelsio T62100 81"
+block|}
+block|, }
 struct|;
 end_struct
 
