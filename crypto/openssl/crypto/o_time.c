@@ -284,14 +284,20 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_SUNOS
 argument_list|)
-comment|/*      * should return&data, but doesn't on some systems, so we don't even      * look at the return value      */
+if|if
+condition|(
 name|gmtime_r
 argument_list|(
 name|timer
 argument_list|,
 name|result
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 name|ts
 operator|=
 name|result

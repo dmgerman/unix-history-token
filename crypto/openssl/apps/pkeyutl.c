@@ -1611,6 +1611,7 @@ name|rv
 operator|==
 literal|1
 condition|)
+block|{
 name|BIO_puts
 argument_list|(
 name|out
@@ -1618,6 +1619,11 @@ argument_list|,
 literal|"Signature Verified Successfully\n"
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|rv

@@ -3978,7 +3978,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ssl3_init_finished_mac
 parameter_list|(
 name|SSL
@@ -7065,6 +7065,9 @@ name|SSL
 modifier|*
 name|s
 parameter_list|,
+name|int
+name|sent
+parameter_list|,
 specifier|const
 name|unsigned
 name|char
@@ -7462,6 +7465,22 @@ end_function_decl
 begin_function_decl
 name|int
 name|custom_exts_copy
+parameter_list|(
+name|custom_ext_methods
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|custom_ext_methods
+modifier|*
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|custom_exts_copy_flags
 parameter_list|(
 name|custom_ext_methods
 modifier|*

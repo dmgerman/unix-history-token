@@ -75,6 +75,16 @@ name|OPENSSL_SYS_UNIX
 operator|||
 name|defined
 name|DJGPP
+expr|\
+operator|||
+operator|(
+name|defined
+name|__VMS_VER
+operator|&&
+name|__VMS_VER
+operator|>=
+literal|70000000
+operator|)
 end_if
 
 begin_include
