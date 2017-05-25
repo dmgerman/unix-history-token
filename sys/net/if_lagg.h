@@ -649,39 +649,6 @@ begin_comment
 comment|/* name */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|sc_capabilities
-value|sc_ifp->if_capabilities
-end_define
-
-begin_comment
-comment|/* capabilities */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFCAP_LAGG_MASK
-value|0xffff0000
-end_define
-
-begin_comment
-comment|/* private capabilities */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFCAP_LAGG_FULLDUPLEX
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* full duplex with>1 ports */
-end_comment
-
 begin_comment
 comment|/* Private data used by the loadbalancing protocol */
 end_comment
