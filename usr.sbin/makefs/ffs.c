@@ -532,16 +532,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|int
-name|sectorsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX: for buf.c::getblk() */
-end_comment
-
 begin_comment
 comment|/* publicly visible functions */
 end_comment
@@ -2174,13 +2164,6 @@ name|inodes
 argument_list|)
 expr_stmt|;
 block|}
-name|sectorsize
-operator|=
-name|fsopts
-operator|->
-name|sectorsize
-expr_stmt|;
-comment|/* XXX - see earlier */
 comment|/* now check calculated sizes vs requested sizes */
 if|if
 condition|(
@@ -2461,6 +2444,15 @@ decl_stmt|;
 name|time_t
 name|tstamp
 decl_stmt|;
+name|int
+name|oflags
+init|=
+name|O_RDWR
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
+decl_stmt|;
 name|assert
 argument_list|(
 name|image
@@ -2487,11 +2479,7 @@ name|open
 argument_list|(
 name|image
 argument_list|,
-name|O_RDWR
-operator||
-name|O_CREAT
-operator||
-name|O_TRUNC
+name|oflags
 argument_list|,
 literal|0666
 argument_list|)
@@ -4751,6 +4739,16 @@ name|fsopts
 operator|->
 name|fs_specific
 decl_stmt|;
+name|struct
+name|vnode
+name|vp
+init|=
+block|{
+name|fsopts
+block|,
+name|NULL
+block|}
+decl_stmt|;
 name|assert
 argument_list|(
 name|din
@@ -4816,6 +4814,13 @@ operator|)
 name|fsopts
 operator|->
 name|superblock
+expr_stmt|;
+name|in
+operator|.
+name|i_devvp
+operator|=
+operator|&
+name|vp
 expr_stmt|;
 if|if
 condition|(
@@ -4955,14 +4960,6 @@ operator|.
 name|ffs2_din
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|in
-operator|.
-name|i_fd
-operator|=
-name|fsopts
-operator|->
-name|fd
 expr_stmt|;
 if|if
 condition|(

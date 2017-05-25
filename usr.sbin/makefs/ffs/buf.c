@@ -87,17 +87,6 @@ directive|include
 file|"buf.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|sectorsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX: from ffs.c& mkfs.c */
-end_comment
-
 begin_expr_stmt
 specifier|static
 name|TAILQ_HEAD
@@ -143,6 +132,14 @@ name|offset
 decl_stmt|;
 name|ssize_t
 name|rv
+decl_stmt|;
+name|fsinfo_t
+modifier|*
+name|fsinfo
+init|=
+name|vp
+operator|->
+name|fs
 decl_stmt|;
 name|assert
 argument_list|(
@@ -199,9 +196,10 @@ operator|)
 operator|->
 name|b_blkno
 operator|*
+name|fsinfo
+operator|->
 name|sectorsize
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|debug
@@ -248,7 +246,9 @@ operator|*
 name|bpp
 operator|)
 operator|->
-name|b_fd
+name|b_fs
+operator|->
+name|fd
 argument_list|,
 name|offset
 argument_list|,
@@ -293,7 +293,9 @@ operator|*
 name|bpp
 operator|)
 operator|->
-name|b_fd
+name|b_fs
+operator|->
+name|fd
 argument_list|,
 operator|(
 operator|*
@@ -514,6 +516,14 @@ decl_stmt|;
 name|ssize_t
 name|rv
 decl_stmt|;
+name|fsinfo_t
+modifier|*
+name|fs
+init|=
+name|bp
+operator|->
+name|b_fs
+decl_stmt|;
 name|assert
 argument_list|(
 name|bp
@@ -527,9 +537,10 @@ name|bp
 operator|->
 name|b_blkno
 operator|*
+name|fs
+operator|->
 name|sectorsize
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|debug
@@ -565,7 +576,9 @@ name|lseek
 argument_list|(
 name|bp
 operator|->
-name|b_fd
+name|b_fs
+operator|->
+name|fd
 argument_list|,
 name|offset
 argument_list|,
@@ -586,7 +599,9 @@ name|write
 argument_list|(
 name|bp
 operator|->
-name|b_fd
+name|b_fs
+operator|->
+name|fd
 argument_list|,
 name|bp
 operator|->
@@ -887,14 +902,6 @@ operator|->
 name|b_lblkno
 operator|=
 name|blkno
-expr_stmt|;
-name|bp
-operator|->
-name|b_fd
-operator|=
-name|vp
-operator|->
-name|fd
 expr_stmt|;
 name|bp
 operator|->

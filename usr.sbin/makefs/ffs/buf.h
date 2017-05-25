@@ -33,6 +33,12 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
+name|makefs_fsinfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|ucred
 struct_decl|;
 end_struct_decl
@@ -41,19 +47,14 @@ begin_struct
 struct|struct
 name|vnode
 block|{
-name|int
-name|fd
-decl_stmt|;
-name|void
+name|struct
+name|makefs_fsinfo
 modifier|*
 name|fs
 decl_stmt|;
 name|void
 modifier|*
 name|v_data
-decl_stmt|;
-name|int
-name|offset
 decl_stmt|;
 block|}
 struct|;
@@ -79,10 +80,8 @@ decl_stmt|;
 name|daddr_t
 name|b_lblkno
 decl_stmt|;
-name|int
-name|b_fd
-decl_stmt|;
-name|void
+name|struct
+name|makefs_fsinfo
 modifier|*
 name|b_fs
 decl_stmt|;
