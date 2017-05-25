@@ -10499,6 +10499,28 @@ name|cpu_wins_no
 operator|=
 name|tuples
 expr_stmt|;
+comment|/* Check range */
+if|if
+condition|(
+name|tuples
+operator|>
+name|nitems
+argument_list|(
+name|cpu_win_tbl
+argument_list|)
+condition|)
+block|{
+name|debugf
+argument_list|(
+literal|"too many tuples to fit into cpu_win_tbl\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|i
@@ -10730,6 +10752,28 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* Check range */
+if|if
+condition|(
+name|t
+operator|>=
+name|nitems
+argument_list|(
+name|cpu_win_tbl
+argument_list|)
+condition|)
+block|{
+name|debugf
+argument_list|(
+literal|"cannot fit CESA tuple into cpu_win_tbl\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 name|cpu_win_tbl
 index|[
 name|t
