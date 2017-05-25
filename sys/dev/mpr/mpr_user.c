@@ -9198,7 +9198,7 @@ literal|0
 expr_stmt|;
 name|target
 operator|=
-name|mpr_mapping_get_sas_id_from_handle
+name|mpr_mapping_get_tid_from_handle
 argument_list|(
 name|sc
 argument_list|,
