@@ -24953,43 +24953,6 @@ literal|1
 operator|*
 name|hz
 expr_stmt|;
-comment|/* Start out with 1/8 of all memory */
-name|arc_c
-operator|=
-name|allmem
-operator|/
-literal|8
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|illumos
-ifdef|#
-directive|ifdef
-name|_KERNEL
-comment|/* 	 * On architectures where the physical memory can be larger 	 * than the addressable space (intel in 32-bit mode), we may 	 * need to limit the cache to 1/8 of VM size. 	 */
-name|arc_c
-operator|=
-name|MIN
-argument_list|(
-name|arc_c
-argument_list|,
-name|vmem_size
-argument_list|(
-name|heap_arena
-argument_list|,
-name|VMEM_ALLOC
-operator||
-name|VMEM_FREE
-argument_list|)
-operator|/
-literal|8
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* illumos */
 comment|/* set min cache to 1/32 of all memory, or arc_abs_min, whichever is more */
 name|arc_c_min
 operator|=
@@ -25119,6 +25082,30 @@ name|arc_c_max
 operator|/
 literal|4
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+comment|/* 	 * Metadata is stored in the kernel's heap.  Don't let us 	 * use more than half the heap for the ARC. 	 */
+name|arc_meta_limit
+operator|=
+name|MIN
+argument_list|(
+name|arc_meta_limit
+argument_list|,
+name|vmem_size
+argument_list|(
+name|heap_arena
+argument_list|,
+name|VMEM_ALLOC
+operator||
+name|VMEM_FREE
+argument_list|)
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Allow the tunable to override if it is reasonable */
 if|if
 condition|(
