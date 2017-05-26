@@ -3009,10 +3009,12 @@ name|SIGCANCEL
 argument_list|)
 condition|)
 return|return
+operator|(
 name|__sys_setcontext
 argument_list|(
 name|ucp
 argument_list|)
+operator|)
 return|;
 operator|(
 name|void
