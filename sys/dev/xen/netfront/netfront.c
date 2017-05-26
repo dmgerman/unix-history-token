@@ -5519,8 +5519,6 @@ name|err
 decl_stmt|,
 name|work_to_do
 decl_stmt|;
-do|do
-block|{
 name|XN_RX_LOCK_ASSERT
 argument_list|(
 name|rxq
@@ -5558,6 +5556,8 @@ name|np
 operator|->
 name|xn_ifp
 expr_stmt|;
+do|do
+block|{
 name|rp
 operator|=
 name|rxq
@@ -5784,6 +5784,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 name|rxq
 operator|->
 name|ring
@@ -5792,14 +5793,34 @@ name|rsp_cons
 operator|=
 name|i
 expr_stmt|;
+name|xn_alloc_rx_buffers
+argument_list|(
+name|rxq
+argument_list|)
+expr_stmt|;
+name|RING_FINAL_CHECK_FOR_RESPONSES
+argument_list|(
+operator|&
+name|rxq
+operator|->
+name|ring
+argument_list|,
+name|work_to_do
+argument_list|)
+expr_stmt|;
 block|}
+do|while
+condition|(
+name|work_to_do
+condition|)
+do|;
 name|mbufq_drain
 argument_list|(
 operator|&
 name|mbufq_errq
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Process all the mbufs after the remapping is complete. 		 * Break the mbuf chain first though. 		 */
+comment|/* 	 * Process all the mbufs after the remapping is complete. 	 * Break the mbuf chain first though. 	 */
 while|while
 condition|(
 operator|(
@@ -5822,12 +5843,6 @@ argument_list|,
 name|IFCOUNTER_IPACKETS
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-comment|/* XXX: Do we really need to drop the rx lock? */
-name|XN_RX_UNLOCK
-argument_list|(
-name|rxq
 argument_list|)
 expr_stmt|;
 if|#
@@ -5872,7 +5887,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * If LRO fails, pass up to the stack 				 * directly. 				 */
+comment|/* 			 * If LRO fails, pass up to the stack 			 * directly. 			 */
 call|(
 modifier|*
 name|ifp
@@ -5902,20 +5917,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|XN_RX_LOCK
-argument_list|(
-name|rxq
-argument_list|)
-expr_stmt|;
 block|}
-name|rxq
-operator|->
-name|ring
-operator|.
-name|rsp_cons
-operator|=
-name|i
-expr_stmt|;
 if|#
 directive|if
 operator|(
@@ -5929,7 +5931,7 @@ argument_list|(
 name|INET6
 argument_list|)
 operator|)
-comment|/* 		 * Flush any outstanding LRO work 		 */
+comment|/* 	 * Flush any outstanding LRO work 	 */
 name|tcp_lro_flush_all
 argument_list|(
 name|lro
@@ -5937,27 +5939,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|xn_alloc_rx_buffers
-argument_list|(
-name|rxq
-argument_list|)
-expr_stmt|;
-name|RING_FINAL_CHECK_FOR_RESPONSES
-argument_list|(
-operator|&
-name|rxq
-operator|->
-name|ring
-argument_list|,
-name|work_to_do
-argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|work_to_do
-condition|)
-do|;
 block|}
 end_function
 
