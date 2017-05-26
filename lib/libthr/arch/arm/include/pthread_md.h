@@ -178,25 +178,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-unit|}  extern
+begin_function
+unit|}  static
+name|__inline
 name|struct
 name|pthread
 modifier|*
-name|_thr_initial
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|pthread
-operator|*
 name|_get_curthread
-argument_list|(
-argument|void
-argument_list|)
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -210,18 +201,15 @@ operator|->
 name|tcb_thread
 operator|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

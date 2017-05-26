@@ -211,6 +211,22 @@ define|\
 value|WEAK_REF(func, SYM_FBP10(sym));			\ 	SYM_DEFAULT(sym, SYM_FBP10(sym), FBSDprivate_1.0)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|pthread
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pthread
+modifier|*
+name|_thr_initial
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include
@@ -1975,16 +1991,6 @@ specifier|extern
 name|char
 modifier|*
 name|_usrstack
-name|__hidden
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pthread
-modifier|*
-name|_thr_initial
 name|__hidden
 decl_stmt|;
 end_decl_stmt
