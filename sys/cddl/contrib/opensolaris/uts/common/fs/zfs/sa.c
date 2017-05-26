@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 iXsystems, Inc  * Copyright (c) 2013, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 iXsystems, Inc  * Copyright (c) 2013, 2017 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -178,7 +178,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|sa_idx_tab_t
 modifier|*
 name|sa_find_idx_tab
 parameter_list|(
@@ -189,9 +189,9 @@ parameter_list|,
 name|dmu_object_type_t
 name|bonustype
 parameter_list|,
-name|void
+name|sa_hdr_phys_t
 modifier|*
-name|data
+name|hdr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7598,7 +7598,8 @@ directive|endif
 end_endif
 
 begin_function
-name|void
+specifier|static
+name|sa_idx_tab_t
 modifier|*
 name|sa_find_idx_tab
 parameter_list|(
@@ -7609,24 +7610,14 @@ parameter_list|,
 name|dmu_object_type_t
 name|bonustype
 parameter_list|,
-name|void
+name|sa_hdr_phys_t
 modifier|*
-name|data
+name|hdr
 parameter_list|)
 block|{
 name|sa_idx_tab_t
 modifier|*
 name|idx_tab
-decl_stmt|;
-name|sa_hdr_phys_t
-modifier|*
-name|hdr
-init|=
-operator|(
-name|sa_hdr_phys_t
-operator|*
-operator|)
-name|data
 decl_stmt|;
 name|sa_os_t
 modifier|*
