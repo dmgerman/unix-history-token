@@ -326,6 +326,21 @@ name|EZFS_UNKNOWN
 block|}
 name|zfs_error_t
 typedef|;
+comment|/*  * UEFI boot support parameters. When creating whole disk boot pool,  * zpool create should allow to create EFI System partition for UEFI boot  * program. In case of BIOS, the EFI System partition is not used  * even if it does exist.  */
+typedef|typedef
+enum|enum
+name|zpool_boot_label
+block|{
+name|ZPOOL_NO_BOOT_LABEL
+init|=
+literal|0
+block|,
+name|ZPOOL_CREATE_BOOT_LABEL
+block|,
+name|ZPOOL_COPY_BOOT_LABEL
+block|}
+name|zpool_boot_label_t
+typedef|;
 comment|/*  * The following data structures are all part  * of the zfs_allow_t data structure which is  * used for printing 'allow' permissions.  * It is a linked list of zfs_allow_t's which  * then contain avl tree's for user/group/sets/...  * and each one of the entries in those trees have  * avl tree's for the permissions they belong to and  * whether they are local,descendent or local+descendent  * permissions.  The AVL trees are used primarily for  * sorting purposes, but also so that we can quickly find  * a given user and or permission.  */
 typedef|typedef
 struct|struct
@@ -1022,6 +1037,13 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|zpool_boot_label_t
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/*  * Functions to manage pool properties  */
@@ -1257,6 +1279,14 @@ modifier|*
 parameter_list|,
 name|nvlist_t
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|boolean_t
+name|zpool_is_bootable
+parameter_list|(
+name|zpool_handle_t
 modifier|*
 parameter_list|)
 function_decl|;

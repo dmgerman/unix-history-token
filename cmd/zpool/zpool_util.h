@@ -86,6 +86,12 @@ parameter_list|,
 name|boolean_t
 name|dryrun
 parameter_list|,
+name|zpool_boot_label_t
+name|boot_type
+parameter_list|,
+name|uint64_t
+name|boot_size
+parameter_list|,
 name|int
 name|argc
 parameter_list|,
