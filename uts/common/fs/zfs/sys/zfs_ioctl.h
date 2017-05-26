@@ -182,6 +182,7 @@ define|#
 directive|define
 name|DMU_BACKUP_FEATURE_COMPRESSED
 value|(1<< 22)
+comment|/* flag #23 is reserved for the large dnode feature */
 comment|/*  * Mask of all supported backup features  */
 define|#
 directive|define
