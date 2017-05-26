@@ -312,6 +312,10 @@ name|freeblocks
 decl_stmt|;
 comment|/* free blocks to leave */
 name|off_t
+name|offset
+decl_stmt|;
+comment|/* offset from start of file */
+name|off_t
 name|roundup
 decl_stmt|;
 comment|/* round image size up to this value */

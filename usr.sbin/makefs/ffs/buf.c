@@ -199,6 +199,10 @@ operator|*
 name|fsinfo
 operator|->
 name|sectorsize
+operator|+
+name|fsinfo
+operator|->
+name|offset
 expr_stmt|;
 if|if
 condition|(
@@ -540,6 +544,10 @@ operator|*
 name|fs
 operator|->
 name|sectorsize
+operator|+
+name|fs
+operator|->
+name|offset
 expr_stmt|;
 if|if
 condition|(
