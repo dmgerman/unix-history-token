@@ -386,6 +386,8 @@ name|dp
 operator|->
 name|dp_dirty_datasets
 argument_list|,
+name|spa
+argument_list|,
 name|offsetof
 argument_list|(
 name|dsl_dataset_t
@@ -400,6 +402,8 @@ operator|&
 name|dp
 operator|->
 name|dp_dirty_zilogs
+argument_list|,
+name|spa
 argument_list|,
 name|offsetof
 argument_list|(
@@ -416,6 +420,8 @@ name|dp
 operator|->
 name|dp_dirty_dirs
 argument_list|,
+name|spa
+argument_list|,
 name|offsetof
 argument_list|(
 name|dsl_dir_t
@@ -430,6 +436,8 @@ operator|&
 name|dp
 operator|->
 name|dp_sync_tasks
+argument_list|,
+name|spa
 argument_list|,
 name|offsetof
 argument_list|(
