@@ -528,6 +528,16 @@ name|__rman_res_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * When the following macro is defined, the system uses 64-bit inode numbers.  * Programs can use this to avoid including<sys/param.h>, with its associated  * namespace pollution.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__INO64
+end_define
+
 begin_endif
 endif|#
 directive|endif
