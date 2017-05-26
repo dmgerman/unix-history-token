@@ -162,7 +162,7 @@ block|{
 name|regmatch_t
 name|matches
 index|[
-name|MAX_LINE_MATCHES
+name|MAX_MATCHES
 index|]
 decl_stmt|;
 comment|/* Matches made */
@@ -1377,7 +1377,7 @@ name|pc
 operator|.
 name|matchidx
 operator|>=
-name|MAX_LINE_MATCHES
+name|MAX_MATCHES
 condition|)
 block|{
 comment|/* Reset matchidx and try again */
@@ -1864,6 +1864,19 @@ condition|(
 name|st
 operator|>
 literal|0
+operator|&&
+name|pc
+operator|->
+name|ln
+operator|.
+name|dat
+index|[
+name|st
+operator|-
+literal|1
+index|]
+operator|!=
+name|fileeol
 condition|)
 name|leflags
 operator||=
@@ -2296,7 +2309,7 @@ name|lflag
 operator|||
 name|matchidx
 operator|>=
-name|MAX_LINE_MATCHES
+name|MAX_MATCHES
 condition|)
 block|{
 name|pc
