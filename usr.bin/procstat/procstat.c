@@ -133,10 +133,11 @@ parameter_list|)
 block|{
 name|xo_error
 argument_list|(
-literal|"usage: procstat [-CHhn] [-M core] [-N system] "
-literal|"[-w interval]\n"
+literal|"usage: procstat [--libxo] [-CHhn] [-M core] "
+literal|"[-N system] [-w interval]\n"
 literal|"                [-b | -c | -e | -f | -i | -j | -k | "
-literal|"-l | -r | -s | -S | -t | -v | -x]\n"
+literal|"-l | -L | -r | -s | \n"
+literal|"                 -S | -t | -v | -x]\n"
 literal|"                [-a | pid | core ...]\n"
 argument_list|)
 expr_stmt|;
@@ -717,7 +718,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CHN:M:abcefijklLhrsStvw:x"
+literal|"abCcefHhijkLlM:N:nrSstvw:x"
 argument_list|)
 operator|)
 operator|!=
