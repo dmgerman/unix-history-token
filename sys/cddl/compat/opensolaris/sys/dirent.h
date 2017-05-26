@@ -61,7 +61,7 @@ name|DIRENT64_RECLEN
 parameter_list|(
 name|len
 parameter_list|)
-value|((sizeof(struct dirent) -		\ 				 sizeof(((struct dirent *)NULL)->d_name) + \ 				 (len) + 1 + 3)& ~3)
+value|_GENERIC_DIRLEN(len)
 end_define
 
 begin_endif

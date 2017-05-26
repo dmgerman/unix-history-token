@@ -468,10 +468,10 @@ name|int
 name|xt_flags
 decl_stmt|;
 comment|/* Terminal option flags. */
-name|dev_t
+name|uint32_t
 name|xt_dev
 decl_stmt|;
-comment|/* Userland device. */
+comment|/* Userland device. XXXKIB truncated */
 block|}
 struct|;
 end_struct

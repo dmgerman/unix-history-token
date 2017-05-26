@@ -1071,10 +1071,8 @@ name|sockaddr_storage
 name|ss
 decl_stmt|;
 name|char
+modifier|*
 name|servername
-index|[
-name|MNAMELEN
-index|]
 decl_stmt|;
 name|struct
 name|timeval
@@ -1132,6 +1130,18 @@ argument_list|,
 literal|"nlm_advlock_1"
 argument_list|)
 expr_stmt|;
+name|servername
+operator|=
+name|malloc
+argument_list|(
+name|MNAMELEN
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+comment|/* XXXKIB vp locked */
 name|nmp
 operator|=
 name|VFSTONFS
@@ -1899,6 +1909,13 @@ expr_stmt|;
 name|nlm_host_release
 argument_list|(
 name|host
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|servername
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return

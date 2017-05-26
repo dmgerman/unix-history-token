@@ -5483,13 +5483,10 @@ operator|->
 name|sctp_socket
 operator|)
 operator|&&
-operator|(
+name|SCTP_IS_LISTENING
+argument_list|(
 name|inp
-operator|->
-name|sctp_socket
-operator|->
-name|so_qlimit
-operator|)
+argument_list|)
 condition|)
 block|{
 comment|/* to is peer addr, from is my addr */
@@ -7783,11 +7780,10 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|SCTP_IS_LISTENING
+argument_list|(
 name|tinp
-operator|->
-name|sctp_socket
-operator|->
-name|so_qlimit
+argument_list|)
 condition|)
 block|{
 continue|continue;

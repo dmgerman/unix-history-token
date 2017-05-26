@@ -124,6 +124,17 @@ operator|)
 name|bio
 argument_list|)
 expr_stmt|;
+comment|/* Ignore errors and continue printing the other information. */
+if|if
+condition|(
+name|len
+operator|<
+literal|0
+condition|)
+name|len
+operator|=
+literal|0
+expr_stmt|;
 name|p
 operator|=
 name|buf

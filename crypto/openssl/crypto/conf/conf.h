@@ -1141,6 +1141,10 @@ name|CONF_R_UNKNOWN_MODULE_NAME
 value|113
 define|#
 directive|define
+name|CONF_R_VARIABLE_EXPANSION_TOO_LONG
+value|116
+define|#
+directive|define
 name|CONF_R_VARIABLE_HAS_NO_VALUE
 value|104
 ifdef|#

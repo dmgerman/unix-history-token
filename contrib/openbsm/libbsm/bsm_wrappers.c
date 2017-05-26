@@ -1196,6 +1196,9 @@ modifier|*
 name|tid
 parameter_list|)
 block|{
+name|dev_t
+name|port
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -1218,8 +1221,6 @@ operator|=
 name|audit_set_terminal_port
 argument_list|(
 operator|&
-name|tid
-operator|->
 name|port
 argument_list|)
 operator|)
@@ -1231,6 +1232,12 @@ operator|(
 name|ret
 operator|)
 return|;
+name|tid
+operator|->
+name|port
+operator|=
+name|port
+expr_stmt|;
 return|return
 operator|(
 name|audit_set_terminal_host

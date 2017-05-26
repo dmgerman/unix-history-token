@@ -1173,6 +1173,9 @@ name|xt
 operator|.
 name|xt_dev
 operator|=
+operator|(
+name|uint32_t
+operator|)
 name|NODEV
 expr_stmt|;
 name|ttyprt

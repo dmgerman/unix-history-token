@@ -12387,18 +12387,6 @@ name|x
 operator|>>
 literal|16
 expr_stmt|;
-comment|/* XXX does this work? */
-comment|/* XXX yes! */
-name|ldt
-index|[
-name|LBSDICALLS_SEL
-index|]
-operator|=
-name|ldt
-index|[
-name|LSYS5CALLS_SEL
-index|]
-expr_stmt|;
 comment|/* transfer to user mode */
 name|_ucodesel
 operator|=

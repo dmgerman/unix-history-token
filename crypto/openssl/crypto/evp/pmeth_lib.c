@@ -651,6 +651,12 @@ operator|<=
 literal|0
 condition|)
 block|{
+name|ret
+operator|->
+name|pmeth
+operator|=
+name|NULL
+expr_stmt|;
 name|EVP_PKEY_CTX_free
 argument_list|(
 name|ret
@@ -1272,6 +1278,12 @@ condition|)
 return|return
 name|rctx
 return|;
+name|rctx
+operator|->
+name|pmeth
+operator|=
+name|NULL
+expr_stmt|;
 name|EVP_PKEY_CTX_free
 argument_list|(
 name|rctx

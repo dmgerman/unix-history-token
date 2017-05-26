@@ -4503,7 +4503,7 @@ name|sc
 operator|->
 name|sc_type
 operator|!=
-name|MV_TYPE_PCI
+name|MV_TYPE_PCIE
 condition|)
 return|return;
 name|bus_space_write_4

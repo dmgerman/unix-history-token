@@ -2398,7 +2398,14 @@ begin_define
 define|#
 directive|define
 name|MV_SCU_ENABLE
-value|1
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_SCU_SL_L2_ENABLE
+value|(1<< 3)
 end_define
 
 begin_define

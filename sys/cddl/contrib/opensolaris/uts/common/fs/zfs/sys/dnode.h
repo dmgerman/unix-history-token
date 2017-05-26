@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<sys/zrlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/multilist.h>
 end_include
 
 begin_ifdef
@@ -487,7 +493,7 @@ name|dn_dbufs_count
 decl_stmt|;
 comment|/* count of dn_dbufs */
 comment|/* protected by os_lock: */
-name|list_node_t
+name|multilist_node_t
 name|dn_dirty_link
 index|[
 name|TXG_SIZE
@@ -953,21 +959,6 @@ name|dn
 parameter_list|,
 name|int64_t
 name|space
-parameter_list|)
-function_decl|;
-name|void
-name|dnode_willuse_space
-parameter_list|(
-name|dnode_t
-modifier|*
-name|dn
-parameter_list|,
-name|int64_t
-name|space
-parameter_list|,
-name|dmu_tx_t
-modifier|*
-name|tx
 parameter_list|)
 function_decl|;
 name|void

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * This file and its contents are supplied un
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, 2017 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -113,18 +113,13 @@ name|multilist_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|void
-name|multilist_create
-parameter_list|(
 name|multilist_t
 modifier|*
-parameter_list|,
+name|multilist_create
+parameter_list|(
 name|size_t
 parameter_list|,
 name|size_t
-parameter_list|,
-name|unsigned
-name|int
 parameter_list|,
 name|multilist_sublist_index_func_t
 modifier|*
@@ -182,6 +177,17 @@ modifier|*
 parameter_list|,
 name|unsigned
 name|int
+parameter_list|)
+function_decl|;
+name|multilist_sublist_t
+modifier|*
+name|multilist_sublist_lock_obj
+parameter_list|(
+name|multilist_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 name|void

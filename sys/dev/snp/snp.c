@@ -197,6 +197,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SNPGTYY_32DEV
+value|_IOR('T', 89, uint32_t)
+end_define
+
 begin_comment
 comment|/*  * There is no need to have a big input buffer. In most typical setups,  * we won't inject much data into the TTY, because users can't type  * really fast.  */
 end_comment
@@ -1085,6 +1092,48 @@ operator|->
 name|snp_tty
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|SNPGTYY_32DEV
+case|:
+if|if
+condition|(
+name|ss
+operator|->
+name|snp_tty
+operator|==
+name|NULL
+condition|)
+operator|*
+operator|(
+name|uint32_t
+operator|*
+operator|)
+name|data
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+else|else
+operator|*
+operator|(
+name|uint32_t
+operator|*
+operator|)
+name|data
+operator|=
+name|tty_udev
+argument_list|(
+name|ss
+operator|->
+name|snp_tty
+argument_list|)
+expr_stmt|;
+comment|/* trunc */
 return|return
 operator|(
 literal|0

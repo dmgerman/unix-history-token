@@ -580,11 +580,6 @@ name|fts_options
 operator|=
 name|options
 expr_stmt|;
-comment|/* Shush, GCC. */
-name|tmp
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* Logical walks turn on NOCHDIR; symbolic links are too hard. */
 if|if
 condition|(
@@ -645,6 +640,11 @@ operator|->
 name|fts_level
 operator|=
 name|FTS_ROOTPARENTLEVEL
+expr_stmt|;
+comment|/* Shush, GCC. */
+name|tmp
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Allocate/initialize root(s). */
 for|for

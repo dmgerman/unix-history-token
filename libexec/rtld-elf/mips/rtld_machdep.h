@@ -207,19 +207,6 @@ parameter_list|)
 value|((off) + (size))
 end_define
 
-begin_comment
-comment|/*  * Lazy binding entry point, called via PLT.  */
-end_comment
-
-begin_function_decl
-name|void
-name|_rtld_bind_start
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 specifier|extern
 name|void

@@ -279,15 +279,6 @@ begin_comment
 comment|/* ! TLS_USE_SYSARCH */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pthread
-modifier|*
-name|_thr_initial
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|__inline

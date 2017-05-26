@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_comment
@@ -5572,9 +5572,7 @@ name|lr
 operator|->
 name|lr_length
 operator|<=
-name|zp
-operator|->
-name|z_blksz
+name|size
 argument_list|)
 expr_stmt|;
 comment|/* 			 * On success, we need to wait for the write I/O 			 * initiated by dmu_sync() to complete before we can 			 * release this dbuf.  We will finish everything up 			 * in the zfs_get_done() callback. 			 */
@@ -6139,7 +6137,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* fast path (should be redundant with vfs namecache) */
+comment|/* 	 * Fast path lookup, however we must skip DNLC lookup 	 * for case folding or normalizing lookups because the 	 * DNLC code only stores the passed in name.  This means 	 * creating 'a' and removing 'A' on a case insensitive 	 * file system would work, but DNLC still thinks 'a' 	 * exists and won't let you create it again on the next 	 * pass through fast path. 	 */
 if|if
 condition|(
 operator|!
@@ -20908,9 +20906,8 @@ argument_list|,
 name|B_TRUE
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|err
+operator|=
 name|sa_bulk_update
 argument_list|(
 name|zp
@@ -20922,6 +20919,11 @@ argument_list|,
 name|count
 argument_list|,
 name|tx
+argument_list|)
+expr_stmt|;
+name|ASSERT0
+argument_list|(
+name|err
 argument_list|)
 expr_stmt|;
 name|zfs_log_write

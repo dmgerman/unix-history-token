@@ -562,6 +562,33 @@ argument_list|,
 literal|"-checks<n>"
 argument_list|)
 expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"%-14s generate prime\n"
+argument_list|,
+literal|"-generate"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"%-14s number of bits\n"
+argument_list|,
+literal|"-bits<n>"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"%-14s safe prime\n"
+argument_list|,
+literal|"-safe"
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;

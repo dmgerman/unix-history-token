@@ -177,27 +177,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * The DIRSIZ macro is the minimum record length which will hold the directory  * entry.  This requires the amount of space in struct dirent without the  * d_name field, plus enough space for the name and a terminating nul byte  * (dp->d_namlen + 1), rounded up to a 4 byte boundary.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DIRSIZ
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DIRSIZ
-parameter_list|(
-name|dp
-parameter_list|)
-define|\
-value|((sizeof(struct dirent) - sizeof(dp)->d_name) +			\ 	    (((dp)->d_namlen + 1 + 3)&~ 3))
-end_define
-
 begin_decl_stmt
 name|int
 ifdef|#
@@ -416,7 +395,7 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-name|DIRSIZ
+name|_GENERIC_DIRSIZ
 argument_list|(
 name|d
 argument_list|)

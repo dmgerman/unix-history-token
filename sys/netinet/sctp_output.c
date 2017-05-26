@@ -64508,13 +64508,10 @@ operator|&
 name|SCTP_PCB_FLAGS_TCPTYPE
 operator|)
 operator|&&
-operator|(
+name|SCTP_IS_LISTENING
+argument_list|(
 name|inp
-operator|->
-name|sctp_socket
-operator|->
-name|so_qlimit
-operator|)
+argument_list|)
 condition|)
 block|{
 comment|/* The listener can NOT send */

@@ -302,7 +302,7 @@ name|r_size
 operator|-
 name|offset
 expr_stmt|;
-comment|/* Allocate an I/O context for the SPROM parser. SPROM reads do not 	 * appear to require any specific alignment. */
+comment|/* Allocate an I/O context for the SPROM parser. All SPROM reads 	 * must be 16-bit aligned */
 name|io
 operator|=
 name|bhnd_nvram_iores_new
@@ -313,7 +313,10 @@ name|offset
 argument_list|,
 name|sprom_size
 argument_list|,
-literal|1
+sizeof|sizeof
+argument_list|(
+name|uint16_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -2453,7 +2453,7 @@ name|spa
 operator|->
 name|spa_alloc_tree
 argument_list|,
-name|zio_timestamp_compare
+name|zio_bookmark_compare
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -6331,6 +6331,31 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return the last txg where data can be dirtied. The final txgs  * will be used to just clear out any deferred frees that remain.  */
+end_comment
+
+begin_function
+name|uint64_t
+name|spa_final_dirty_txg
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+block|{
+return|return
+operator|(
+name|spa
+operator|->
+name|spa_final_txg
+operator|-
+name|TXG_DEFER_SIZE
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|pool_state_t
 name|spa_state
@@ -6394,7 +6419,7 @@ end_comment
 
 begin_function
 name|uint64_t
-name|spa_get_asize
+name|spa_get_worst_case_asize
 parameter_list|(
 name|spa_t
 modifier|*

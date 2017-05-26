@@ -532,16 +532,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|int
-name|sectorsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX: for buf.c::getblk() */
-end_comment
-
 begin_comment
 comment|/* publicly visible functions */
 end_comment
@@ -2174,13 +2164,6 @@ name|inodes
 argument_list|)
 expr_stmt|;
 block|}
-name|sectorsize
-operator|=
-name|fsopts
-operator|->
-name|sectorsize
-expr_stmt|;
-comment|/* XXX - see earlier */
 comment|/* now check calculated sizes vs requested sizes */
 if|if
 condition|(
@@ -2458,6 +2441,13 @@ decl_stmt|;
 name|off_t
 name|bufrem
 decl_stmt|;
+name|int
+name|oflags
+init|=
+name|O_RDWR
+operator||
+name|O_CREAT
+decl_stmt|;
 name|time_t
 name|tstamp
 decl_stmt|;
@@ -2478,6 +2468,18 @@ expr_stmt|;
 comment|/* create image */
 if|if
 condition|(
+name|fsopts
+operator|->
+name|offset
+operator|==
+literal|0
+condition|)
+name|oflags
+operator||=
+name|O_TRUNC
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|fsopts
 operator|->
@@ -2487,11 +2489,7 @@ name|open
 argument_list|(
 name|image
 argument_list|,
-name|O_RDWR
-operator||
-name|O_CREAT
-operator||
-name|O_TRUNC
+name|oflags
 argument_list|,
 literal|0666
 argument_list|)
@@ -2658,6 +2656,43 @@ argument_list|,
 name|bufsize
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|fsopts
+operator|->
+name|offset
+operator|!=
+literal|0
+condition|)
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|fsopts
+operator|->
+name|fd
+argument_list|,
+name|fsopts
+operator|->
+name|offset
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"can't seek"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 while|while
 condition|(
@@ -4751,6 +4786,16 @@ name|fsopts
 operator|->
 name|fs_specific
 decl_stmt|;
+name|struct
+name|vnode
+name|vp
+init|=
+block|{
+name|fsopts
+block|,
+name|NULL
+block|}
+decl_stmt|;
 name|assert
 argument_list|(
 name|din
@@ -4816,6 +4861,13 @@ operator|)
 name|fsopts
 operator|->
 name|superblock
+expr_stmt|;
+name|in
+operator|.
+name|i_devvp
+operator|=
+operator|&
+name|vp
 expr_stmt|;
 if|if
 condition|(
@@ -4955,14 +5007,6 @@ operator|.
 name|ffs2_din
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|in
-operator|.
-name|i_fd
-operator|=
-name|fsopts
-operator|->
-name|fd
 expr_stmt|;
 if|if
 condition|(

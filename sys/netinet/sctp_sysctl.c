@@ -2019,6 +2019,14 @@ name|NULL
 operator|)
 operator|||
 operator|(
+operator|!
+name|SCTP_IS_LISTENING
+argument_list|(
+name|inp
+argument_list|)
+operator|)
+operator|||
+operator|(
 name|inp
 operator|->
 name|sctp_flags

@@ -4218,9 +4218,6 @@ operator|--
 expr_stmt|;
 break|break;
 case|case
-name|SYS_mknod
-case|:
-case|case
 name|SYS_mknodat
 case|:
 name|print_number

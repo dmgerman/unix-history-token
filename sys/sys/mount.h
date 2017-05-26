@@ -139,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|MNAMELEN
-value|88
+value|1024
 end_define
 
 begin_comment
@@ -150,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|STATFS_VERSION
-value|0x20030518
+value|0x20140518
 end_define
 
 begin_comment
@@ -267,6 +267,151 @@ comment|/* directory on which mounted */
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WANT_FREEBSD11_STATFS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FREEBSD11_STATFS_VERSION
+value|0x20030518
+end_define
+
+begin_comment
+comment|/* current version number */
+end_comment
+
+begin_struct
+struct|struct
+name|freebsd11_statfs
+block|{
+name|uint32_t
+name|f_version
+decl_stmt|;
+comment|/* structure version number */
+name|uint32_t
+name|f_type
+decl_stmt|;
+comment|/* type of filesystem */
+name|uint64_t
+name|f_flags
+decl_stmt|;
+comment|/* copy of mount exported flags */
+name|uint64_t
+name|f_bsize
+decl_stmt|;
+comment|/* filesystem fragment size */
+name|uint64_t
+name|f_iosize
+decl_stmt|;
+comment|/* optimal transfer block size */
+name|uint64_t
+name|f_blocks
+decl_stmt|;
+comment|/* total data blocks in filesystem */
+name|uint64_t
+name|f_bfree
+decl_stmt|;
+comment|/* free blocks in filesystem */
+name|int64_t
+name|f_bavail
+decl_stmt|;
+comment|/* free blocks avail to non-superuser */
+name|uint64_t
+name|f_files
+decl_stmt|;
+comment|/* total file nodes in filesystem */
+name|int64_t
+name|f_ffree
+decl_stmt|;
+comment|/* free nodes avail to non-superuser */
+name|uint64_t
+name|f_syncwrites
+decl_stmt|;
+comment|/* count of sync writes since mount */
+name|uint64_t
+name|f_asyncwrites
+decl_stmt|;
+comment|/* count of async writes since mount */
+name|uint64_t
+name|f_syncreads
+decl_stmt|;
+comment|/* count of sync reads since mount */
+name|uint64_t
+name|f_asyncreads
+decl_stmt|;
+comment|/* count of async reads since mount */
+name|uint64_t
+name|f_spare
+index|[
+literal|10
+index|]
+decl_stmt|;
+comment|/* unused spare */
+name|uint32_t
+name|f_namemax
+decl_stmt|;
+comment|/* maximum filename length */
+name|uid_t
+name|f_owner
+decl_stmt|;
+comment|/* user that mounted the filesystem */
+name|fsid_t
+name|f_fsid
+decl_stmt|;
+comment|/* filesystem id */
+name|char
+name|f_charspare
+index|[
+literal|80
+index|]
+decl_stmt|;
+comment|/* spare string space */
+name|char
+name|f_fstypename
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* filesystem type name */
+name|char
+name|f_mntfromname
+index|[
+literal|88
+index|]
+decl_stmt|;
+comment|/* mounted filesystem */
+name|char
+name|f_mntonname
+index|[
+literal|88
+index|]
+decl_stmt|;
+comment|/* directory on which mounted */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _WANT_FREEBSD11_STATFS || _KERNEL */
+end_comment
 
 begin_ifdef
 ifdef|#

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright (c) 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -2637,7 +2637,7 @@ end_function
 
 begin_function
 name|int
-name|zio_timestamp_compare
+name|zio_bookmark_compare
 parameter_list|(
 specifier|const
 name|void
@@ -2664,37 +2664,6 @@ name|z2
 init|=
 name|x2
 decl_stmt|;
-if|if
-condition|(
-name|z1
-operator|->
-name|io_queued_timestamp
-operator|<
-name|z2
-operator|->
-name|io_queued_timestamp
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-name|z1
-operator|->
-name|io_queued_timestamp
-operator|>
-name|z2
-operator|->
-name|io_queued_timestamp
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 if|if
 condition|(
 name|z1
@@ -14004,19 +13973,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ASSERT3U
-argument_list|(
-name|nio
-operator|->
-name|io_queued_timestamp
-argument_list|,
-operator|<=
-argument_list|,
-name|zio
-operator|->
-name|io_queued_timestamp
-argument_list|)
-expr_stmt|;
 name|ASSERT
 argument_list|(
 name|nio

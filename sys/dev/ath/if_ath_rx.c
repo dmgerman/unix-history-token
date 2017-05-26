@@ -2237,9 +2237,7 @@ index|]
 operator|.
 name|rxflags
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5416
+comment|/* 802.11 specific flags */
 name|sc
 operator|->
 name|sc_rx_th
@@ -2385,15 +2383,11 @@ name|CHAN_HT40D
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|rs
 operator|->
 name|rs_flags
 operator|&
 name|HAL_RX_GI
-operator|)
-operator|==
-literal|0
 condition|)
 name|sc
 operator|->
@@ -2404,8 +2398,6 @@ operator||=
 name|IEEE80211_RADIOTAP_F_SHORTGI
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|sc
 operator|->
 name|sc_rx_th
@@ -2659,10 +2651,7 @@ argument_list|,
 name|tsf
 argument_list|)
 expr_stmt|;
-comment|/* These aren't specifically errors */
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5416
+comment|/* 802.11 return codes - These aren't specifically errors */
 if|if
 condition|(
 name|rs
@@ -2768,9 +2757,6 @@ operator|.
 name|ast_rx_stbc
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* AH_SUPPORT_AR5416 */
 if|if
 condition|(
 name|rs
@@ -3574,9 +3560,6 @@ name|sc_lastrs
 operator|=
 name|rs
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5416
 if|if
 condition|(
 name|rs
@@ -3590,9 +3573,6 @@ operator|.
 name|ast_rx_agg
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* AH_SUPPORT_AR5416 */
 comment|/* 	 * Populate the per-chain RSSI values where appropriate. 	 */
 name|bzero
 argument_list|(

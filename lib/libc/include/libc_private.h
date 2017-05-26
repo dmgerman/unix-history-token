@@ -31,12 +31,29 @@ begin_comment
 comment|/*  * This global flag is non-zero when a process has created one  * or more threads. It is used to avoid calling locking functions  * when they are not required.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__LIBC_ISTHREADED_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__LIBC_ISTHREADED_DECLARED
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|__isthreaded
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Elf_Auxinfo *__elf_aux_vector, the pointer to the ELF aux vector  * provided by kernel. Either set for us by rtld, or found at runtime  * on stack for static binaries.  *  * Type is void to avoid polluting whole libc with ELF types.  */
@@ -816,6 +833,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|stat
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|timespec
 struct_decl|;
 end_struct_decl
@@ -971,6 +994,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__ssize_t
+name|__sys_getdirentries
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|__size_t
+parameter_list|,
+name|__off_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|__sys_fcntl
 parameter_list|(
@@ -987,6 +1027,25 @@ begin_function_decl
 name|int
 name|__sys_fdatasync
 parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__sys_fstatat
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|stat
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;

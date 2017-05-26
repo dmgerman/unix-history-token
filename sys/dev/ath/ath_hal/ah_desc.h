@@ -15,38 +15,6 @@ directive|define
 name|_DEV_ATH_DESC_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"opt_ah.h"
-end_include
-
-begin_comment
-comment|/* NB: required for AH_SUPPORT_AR5416 */
-end_comment
-
-begin_comment
-comment|/*  * For now, define this for the structure definitions.  * Because of how the HAL / driver module currently builds,  * it's not very feasible to build the module without  * this defined.  The rest of the code (eg in the driver  * body) can work fine with these fields being uninitialised;  * they'll be initialised to 0 anyway.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AH_SUPPORT_AR5416
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|AH_SUPPORT_AR5416
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Transmit descriptor status.  This structure is filled  * in only after the tx descriptor process method finds a  * ``done'' descriptor; at which point it returns something  * other than HAL_EINPROGRESS.  *  * Note that ts_antenna may not be valid for all h/w.  It  * should be used only if non-zero.  */
 end_comment
@@ -101,9 +69,6 @@ name|uint8_t
 name|ts_finaltsi
 decl_stmt|;
 comment|/* final transmit series index */
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5416
 comment|/* 802.11n status */
 name|uint8_t
 name|ts_flags
@@ -160,9 +125,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* AH_SUPPORT_AR5416 */
 block|}
 struct|;
 end_struct
@@ -340,9 +302,6 @@ name|uint32_t
 name|rs_antenna
 decl_stmt|;
 comment|/* antenna information */
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5416
 comment|/* 802.11n status */
 name|int8_t
 name|rs_rssi_ctl
@@ -407,9 +366,6 @@ name|uint32_t
 name|rs_evm4
 decl_stmt|;
 comment|/* needed for ar9300 and later */
-endif|#
-directive|endif
-comment|/* AH_SUPPORT_AR5416 */
 block|}
 struct|;
 end_struct
@@ -928,39 +884,12 @@ begin_comment
 comment|/*  * Definitions for the software frame/packet descriptors used by  * the Atheros HAL.  This definition obscures hardware-specific  * details from the driver.  Drivers are expected to fillin the  * portions of a descriptor that are not opaque then use HAL calls  * to complete the work.  Status for completed frames is returned  * in a device-independent format.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5416
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|HAL_DESC_HW_SIZE
 value|20
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|HAL_DESC_HW_SIZE
-value|4
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR5416 */
-end_comment
 
 begin_struct
 struct|struct

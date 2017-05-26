@@ -36,6 +36,12 @@ name|i_number
 decl_stmt|;
 comment|/* The identity of the inode. */
 name|struct
+name|vnode
+modifier|*
+name|i_devvp
+decl_stmt|;
+comment|/* vnode pointer (contains fsopts) */
+name|struct
 name|fs
 modifier|*
 name|i_fs
@@ -45,10 +51,6 @@ name|union
 name|dinode
 name|i_din
 decl_stmt|;
-name|int
-name|i_fd
-decl_stmt|;
-comment|/* File descriptor */
 name|uint64_t
 name|i_size
 decl_stmt|;

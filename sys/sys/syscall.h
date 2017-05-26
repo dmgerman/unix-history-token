@@ -98,7 +98,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_mknod
+name|SYS_freebsd11_mknod
 value|14
 end_define
 
@@ -1037,21 +1037,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_stat
+name|SYS_freebsd11_stat
 value|188
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYS_fstat
+name|SYS_freebsd11_fstat
 value|189
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYS_lstat
+name|SYS_freebsd11_lstat
 value|190
 end_define
 
@@ -1086,7 +1086,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_getdirentries
+name|SYS_freebsd11_getdirentries
 value|196
 end_define
 
@@ -1400,7 +1400,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_getdents
+name|SYS_freebsd11_getdents
 value|272
 end_define
 
@@ -1435,21 +1435,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_nstat
+name|SYS_freebsd11_nstat
 value|278
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYS_nfstat
+name|SYS_freebsd11_nfstat
 value|279
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYS_nlstat
+name|SYS_freebsd11_nlstat
 value|280
 end_define
 
@@ -1481,7 +1481,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_fhstat
+name|SYS_freebsd11_fhstat
 value|299
 end_define
 
@@ -2035,28 +2035,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_getfsstat
+name|SYS_freebsd11_getfsstat
 value|395
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYS_statfs
+name|SYS_freebsd11_statfs
 value|396
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYS_fstatfs
+name|SYS_freebsd11_fstatfs
 value|397
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYS_fhstatfs
+name|SYS_freebsd11_fhstatfs
 value|398
 end_define
 
@@ -2644,7 +2644,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_fstatat
+name|SYS_freebsd11_fstatat
 value|493
 end_define
 
@@ -2679,7 +2679,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_mknodat
+name|SYS_freebsd11_mknodat
 value|498
 end_define
 
@@ -3040,8 +3040,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_MAXSYSCALL
+name|SYS_fstat
 value|551
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_fstatat
+value|552
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_fhstat
+value|553
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_getdirentries
+value|554
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_statfs
+value|555
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_fstatfs
+value|556
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_getfsstat
+value|557
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_fhstatfs
+value|558
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_mknodat
+value|559
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_MAXSYSCALL
+value|560
 end_define
 
 end_unit

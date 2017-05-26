@@ -309,6 +309,13 @@ name|a
 operator|->
 name|data
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
+block|{
 name|memcpy
 argument_list|(
 name|p
@@ -322,12 +329,6 @@ name|p
 operator|+=
 name|len
 expr_stmt|;
-if|if
-condition|(
-name|len
-operator|>
-literal|0
-condition|)
 name|p
 index|[
 operator|-
@@ -340,6 +341,7 @@ operator|<<
 name|bits
 operator|)
 expr_stmt|;
+block|}
 operator|*
 name|pp
 operator|=

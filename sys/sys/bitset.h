@@ -241,6 +241,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|BIT_OR2
+parameter_list|(
+name|_s
+parameter_list|,
+name|d
+parameter_list|,
+name|s1
+parameter_list|,
+name|s2
+parameter_list|)
+value|do {					\ 	__size_t __i;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++)		\ 		(d)->__bits[__i] = (s1)->__bits[__i] | (s2)->__bits[__i];\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BIT_AND
 parameter_list|(
 name|_s
@@ -255,6 +271,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|BIT_AND2
+parameter_list|(
+name|_s
+parameter_list|,
+name|d
+parameter_list|,
+name|s1
+parameter_list|,
+name|s2
+parameter_list|)
+value|do {					\ 	__size_t __i;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++)		\ 		(d)->__bits[__i] = (s1)->__bits[__i]& (s2)->__bits[__i];\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BIT_NAND
 parameter_list|(
 name|_s
@@ -264,6 +296,52 @@ parameter_list|,
 name|s
 parameter_list|)
 value|do {						\ 	__size_t __i;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++)		\ 		(d)->__bits[__i]&= ~(s)->__bits[__i];			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIT_NAND2
+parameter_list|(
+name|_s
+parameter_list|,
+name|d
+parameter_list|,
+name|s1
+parameter_list|,
+name|s2
+parameter_list|)
+value|do {					\ 	__size_t __i;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++)		\ 		(d)->__bits[__i] = (s1)->__bits[__i]& ~(s2)->__bits[__i];\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIT_XOR
+parameter_list|(
+name|_s
+parameter_list|,
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+value|do {						\ 	__size_t __i;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++)		\ 		(d)->__bits[__i] ^= (s)->__bits[__i];			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIT_XOR2
+parameter_list|(
+name|_s
+parameter_list|,
+name|d
+parameter_list|,
+name|s1
+parameter_list|,
+name|s2
+parameter_list|)
+value|do {					\ 	__size_t __i;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++)		\ 		(d)->__bits[__i] = (s1)->__bits[__i] ^ (s2)->__bits[__i];\ } while (0)
 end_define
 
 begin_define

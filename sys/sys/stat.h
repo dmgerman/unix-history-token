@@ -314,7 +314,7 @@ name|__uint16_t
 name|st_dev
 decl_stmt|;
 comment|/* inode's device */
-name|ino_t
+name|__uint32_t
 name|st_ino
 decl_stmt|;
 comment|/* inode's number */
@@ -322,7 +322,7 @@ name|mode_t
 name|st_mode
 decl_stmt|;
 comment|/* inode protection mode */
-name|nlink_t
+name|__uint16_t
 name|st_nlink
 decl_stmt|;
 comment|/* number of hard links */
@@ -382,15 +382,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WANT_FREEBSD11_STAT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
 begin_struct
 struct|struct
-name|stat
+name|freebsd11_stat
 block|{
-name|__dev_t
+name|__uint32_t
 name|st_dev
 decl_stmt|;
 comment|/* inode's device */
-name|ino_t
+name|__uint32_t
 name|st_ino
 decl_stmt|;
 comment|/* inode's number */
@@ -398,7 +412,7 @@ name|mode_t
 name|st_mode
 decl_stmt|;
 comment|/* inode protection mode */
-name|nlink_t
+name|__uint16_t
 name|st_nlink
 decl_stmt|;
 comment|/* number of hard links */
@@ -410,7 +424,7 @@ name|gid_t
 name|st_gid
 decl_stmt|;
 comment|/* group ID of the file's group */
-name|__dev_t
+name|__uint32_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
@@ -506,6 +520,156 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _WANT_FREEBSD11_STAT || _KERNEL */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STAT_TIME_T_EXT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|stat
+block|{
+name|dev_t
+name|st_dev
+decl_stmt|;
+comment|/* inode's device */
+name|ino_t
+name|st_ino
+decl_stmt|;
+comment|/* inode's number */
+name|nlink_t
+name|st_nlink
+decl_stmt|;
+comment|/* number of hard links */
+name|mode_t
+name|st_mode
+decl_stmt|;
+comment|/* inode protection mode */
+name|__int16_t
+name|st_padding0
+decl_stmt|;
+name|uid_t
+name|st_uid
+decl_stmt|;
+comment|/* user ID of the file's owner */
+name|gid_t
+name|st_gid
+decl_stmt|;
+comment|/* group ID of the file's group */
+name|__int32_t
+name|st_padding1
+decl_stmt|;
+name|dev_t
+name|st_rdev
+decl_stmt|;
+comment|/* device type */
+ifdef|#
+directive|ifdef
+name|__STAT_TIME_T_EXT
+name|__int32_t
+name|st_atim_ext
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|timespec
+name|st_atim
+decl_stmt|;
+comment|/* time of last access */
+ifdef|#
+directive|ifdef
+name|__STAT_TIME_T_EXT
+name|__int32_t
+name|st_mtim_ext
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|timespec
+name|st_mtim
+decl_stmt|;
+comment|/* time of last data modification */
+ifdef|#
+directive|ifdef
+name|__STAT_TIME_T_EXT
+name|__int32_t
+name|st_ctim_ext
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|timespec
+name|st_ctim
+decl_stmt|;
+comment|/* time of last file status change */
+ifdef|#
+directive|ifdef
+name|__STAT_TIME_T_EXT
+name|__int32_t
+name|st_btim_ext
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|timespec
+name|st_birthtim
+decl_stmt|;
+comment|/* time of file creation */
+name|off_t
+name|st_size
+decl_stmt|;
+comment|/* file size, in bytes */
+name|blkcnt_t
+name|st_blocks
+decl_stmt|;
+comment|/* blocks allocated for file */
+name|blksize_t
+name|st_blksize
+decl_stmt|;
+comment|/* optimal blocksize for I/O */
+name|fflags_t
+name|st_flags
+decl_stmt|;
+comment|/* user defined flags for file */
+name|__uint64_t
+name|st_gen
+decl_stmt|;
+comment|/* file generation number */
+name|__uint64_t
+name|st_spare
+index|[
+literal|10
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -516,11 +680,11 @@ begin_struct
 struct|struct
 name|nstat
 block|{
-name|__dev_t
+name|__uint32_t
 name|st_dev
 decl_stmt|;
 comment|/* inode's device */
-name|ino_t
+name|__uint32_t
 name|st_ino
 decl_stmt|;
 comment|/* inode's number */
@@ -540,7 +704,7 @@ name|gid_t
 name|st_gid
 decl_stmt|;
 comment|/* group ID of the file's group */
-name|__dev_t
+name|__uint32_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
@@ -584,7 +748,7 @@ name|timespec
 name|st_birthtim
 decl_stmt|;
 comment|/* time of file creation */
-comment|/* 	 * See above about the following padding. 	 */
+comment|/* 	 * See comment in the definition of struct freebsd11_stat 	 * above about the following padding. 	 */
 name|unsigned
 name|int
 range|:

@@ -2609,12 +2609,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__LIBC_ISTHREADED_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__LIBC_ISTHREADED_DECLARED
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|__isthreaded
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

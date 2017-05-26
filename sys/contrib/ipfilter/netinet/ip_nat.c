@@ -3200,6 +3200,9 @@ name|tq
 operator|++
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|LARGE_NAT
 if|if
 condition|(
 name|tq
@@ -3210,6 +3213,8 @@ name|softn
 operator|->
 name|ipf_nat_deficmpage
 condition|)
+endif|#
+directive|endif
 name|tq
 operator|->
 name|ifq_ttl
@@ -9006,14 +9011,6 @@ name|int
 name|getlock
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|IPF_NAT6
-name|int
-name|i
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|getlock

@@ -297,7 +297,7 @@ define|#
 directive|define
 name|FILL_BMGS
 define|\
-value|if (fg->len> 0&& !fg->hasdot)					\     {									\       fg->sbmGs = malloc(fg->len * sizeof(int));			\       if (!fg->sbmGs)							\ 	return REG_ESPACE;						\       if (fg->len == 1)							\ 	fg->sbmGs[0] = 1;						\       else								\ 	_FILL_BMGS(fg->sbmGs, fg->pattern, fg->len, false);		\       DPRINT_BMGS(fg->len, "GS shift for pos %d is %d\n", fg->sbmGs);	\     }
+value|if (fg->len> 0&& !fg->hasdot)					\     {									\       fg->sbmGs = malloc(fg->len * sizeof(*fg->sbmGs));			\       if (!fg->sbmGs)							\ 	return REG_ESPACE;						\       if (fg->len == 1)							\ 	fg->sbmGs[0] = 1;						\       else								\ 	_FILL_BMGS(fg->sbmGs, fg->pattern, fg->len, false);		\       DPRINT_BMGS(fg->len, "GS shift for pos %d is %d\n", fg->sbmGs);	\     }
 end_define
 
 begin_comment
@@ -309,7 +309,7 @@ define|#
 directive|define
 name|FILL_BMGS_WIDE
 define|\
-value|if (fg->wlen> 0&& !fg->hasdot)					\     {									\       fg->bmGs = malloc(fg->wlen * sizeof(int));			\       if (!fg->bmGs)							\ 	return REG_ESPACE;						\       if (fg->wlen == 1)						\ 	fg->bmGs[0] = 1;						\       else								\ 	_FILL_BMGS(fg->bmGs, fg->wpattern, fg->wlen, true);		\       DPRINT_BMGS(fg->wlen, "GS shift (wide) for pos %d is %d\n",	\ 		  fg->bmGs);						\     }
+value|if (fg->wlen> 0&& !fg->hasdot)					\     {									\       fg->bmGs = malloc(fg->wlen * sizeof(*fg->bmGs));			\       if (!fg->bmGs)							\ 	return REG_ESPACE;						\       if (fg->wlen == 1)						\ 	fg->bmGs[0] = 1;						\       else								\ 	_FILL_BMGS(fg->bmGs, fg->wpattern, fg->wlen, true);		\       DPRINT_BMGS(fg->wlen, "GS shift (wide) for pos %d is %d\n",	\ 		  fg->bmGs);						\     }
 end_define
 
 begin_define

@@ -745,6 +745,10 @@ define|#
 directive|define
 name|SYS_F_FREAD
 value|11
+define|#
+directive|define
+name|SYS_F_FFLUSH
+value|18
 comment|/* reasons */
 define|#
 directive|define

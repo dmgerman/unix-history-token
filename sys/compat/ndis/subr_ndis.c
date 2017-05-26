@@ -3420,6 +3420,7 @@ operator|->
 name|do_devext
 argument_list|)
 expr_stmt|;
+comment|/* 	device_printf(sc->ndis_dev, "NdisReadConfiguration sc=%p\n", sc); 	*/
 if|if
 condition|(
 name|key
@@ -4776,9 +4777,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
+name|NDISUSB_GET_IFNET
+argument_list|(
 name|sc
-operator|->
-name|ifp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6041,6 +6043,11 @@ name|ndis_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 name|ndis_miniport_block
 modifier|*
 name|block
@@ -6082,10 +6089,15 @@ operator|->
 name|do_devext
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|=
+name|NDISUSB_GET_IFNET
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
 name|ifp
 operator|==
 name|NULL
@@ -6100,8 +6112,6 @@ return|return;
 block|}
 if|if
 condition|(
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_addr

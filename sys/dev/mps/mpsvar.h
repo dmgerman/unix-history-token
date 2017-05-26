@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MPS_DRIVER_VERSION
-value|"21.01.00.00-fbsd"
+value|"21.02.00.00-fbsd"
 end_define
 
 begin_define
@@ -138,6 +138,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPS_MISSING_CHECK_DELAY
+value|10
+end_define
+
+begin_comment
+comment|/* 10 seconds between missing check */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MPS_SCSI_RI_INVALID_FRAME
 value|(0x00000002)
 end_define
@@ -210,13 +221,6 @@ define|#
 directive|define
 name|MPS_MAP_IN_USE
 value|0x10000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPS_RAID_CHANNEL
-value|1
 end_define
 
 begin_define
@@ -365,7 +369,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * struct dev_mapping_table - device mapping information  * @physical_id: SAS address for drives or WWID for RAID volumes  * @device_info: bitfield provides detailed info about the device  * @phy_bits: bitfields indicating controller phys  * @dpm_entry_num: index of this device in device persistent map table  * @dev_handle: device handle for the device pointed by this entry  * @channel: target channel  * @id: target id  * @missing_count: number of times the device not detected by driver  * @hide_flag: Hide this physical disk/not (foreign configuration)  * @init_complete: Whether the start of the day checks completed or not  */
+comment|/**  * struct dev_mapping_table - device mapping information  * @physical_id: SAS address for drives or WWID for RAID volumes  * @device_info: bitfield provides detailed info about the device  * @phy_bits: bitfields indicating controller phys  * @dpm_entry_num: index of this device in device persistent map table  * @dev_handle: device handle for the device pointed by this entry  * @id: target id  * @missing_count: number of times the device not detected by driver  * @hide_flag: Hide this physical disk/not (foreign configuration)  * @init_complete: Whether the start of the day checks completed or not  */
 end_comment
 
 begin_struct
@@ -387,11 +391,8 @@ decl_stmt|;
 name|u16
 name|dev_handle
 decl_stmt|;
-name|u8
+name|u16
 name|reserved1
-decl_stmt|;
-name|u8
-name|channel
 decl_stmt|;
 name|u16
 name|id
@@ -972,6 +973,10 @@ name|callout
 name|periodic
 decl_stmt|;
 name|struct
+name|callout
+name|device_check_callout
+decl_stmt|;
+name|struct
 name|mpssas_softc
 modifier|*
 name|sassc
@@ -1240,9 +1245,6 @@ decl_stmt|;
 name|uint8_t
 name|num_rsvd_entries
 decl_stmt|;
-name|uint8_t
-name|num_channels
-decl_stmt|;
 name|uint16_t
 name|max_dpm_entries
 decl_stmt|;
@@ -1254,12 +1256,6 @@ name|track_mapping_events
 decl_stmt|;
 name|uint32_t
 name|pending_map_events
-decl_stmt|;
-name|uint8_t
-name|mt_full_retry
-decl_stmt|;
-name|uint8_t
-name|mt_add_device_failed
 decl_stmt|;
 comment|/* FW diag Buffer List */
 name|mps_fw_diagnostic_buffer_t
@@ -3303,17 +3299,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|mps_mapping_is_reinit_required
-parameter_list|(
-name|struct
-name|mps_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|mps_mapping_free_memory
 parameter_list|(
@@ -3359,11 +3344,8 @@ begin_function_decl
 name|void
 name|mps_mapping_check_devices
 parameter_list|(
-name|struct
-name|mps_softc
+name|void
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3383,7 +3365,7 @@ end_function_decl
 begin_function_decl
 name|unsigned
 name|int
-name|mps_mapping_get_sas_id
+name|mps_mapping_get_tid
 parameter_list|(
 name|struct
 name|mps_softc
@@ -3399,7 +3381,7 @@ end_function_decl
 begin_function_decl
 name|unsigned
 name|int
-name|mps_mapping_get_sas_id_from_handle
+name|mps_mapping_get_tid_from_handle
 parameter_list|(
 name|struct
 name|mps_softc
@@ -3415,7 +3397,7 @@ end_function_decl
 begin_function_decl
 name|unsigned
 name|int
-name|mps_mapping_get_raid_id
+name|mps_mapping_get_raid_tid
 parameter_list|(
 name|struct
 name|mps_softc
@@ -3426,7 +3408,7 @@ name|u64
 name|wwid
 parameter_list|,
 name|u16
-name|handle
+name|volHandle
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3434,7 +3416,7 @@ end_function_decl
 begin_function_decl
 name|unsigned
 name|int
-name|mps_mapping_get_raid_id_from_handle
+name|mps_mapping_get_raid_tid_from_handle
 parameter_list|(
 name|struct
 name|mps_softc

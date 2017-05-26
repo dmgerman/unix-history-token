@@ -1530,7 +1530,10 @@ operator|)
 return|;
 name|bzero
 argument_list|(
+operator|&
 name|inp
+operator|->
+name|inp_start_zero
 argument_list|,
 name|inp_zero_size
 argument_list|)

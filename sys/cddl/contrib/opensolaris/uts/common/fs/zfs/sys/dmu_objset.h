@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -256,7 +256,8 @@ comment|/* XXX sketchy */
 name|zil_header_t
 name|os_zil_header
 decl_stmt|;
-name|list_t
+name|multilist_t
+modifier|*
 name|os_synced_dnodes
 decl_stmt|;
 name|uint64_t
@@ -279,14 +280,9 @@ comment|/* Protected by os_lock */
 name|kmutex_t
 name|os_lock
 decl_stmt|;
-name|list_t
+name|multilist_t
+modifier|*
 name|os_dirty_dnodes
-index|[
-name|TXG_SIZE
-index|]
-decl_stmt|;
-name|list_t
-name|os_free_dnodes
 index|[
 name|TXG_SIZE
 index|]
@@ -296,6 +292,10 @@ name|os_dnodes
 decl_stmt|;
 name|list_t
 name|os_downgraded_dbufs
+decl_stmt|;
+comment|/* Protects changes to DMU_{USER,GROUP}USED_OBJECT */
+name|kmutex_t
+name|os_userused_lock
 decl_stmt|;
 comment|/* stuff we store for the user */
 name|kmutex_t
@@ -754,6 +754,21 @@ parameter_list|(
 name|objset_t
 modifier|*
 name|os
+parameter_list|)
+function_decl|;
+name|void
+name|dmu_objset_willuse_space
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|int64_t
+name|space
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
 parameter_list|)
 function_decl|;
 name|void

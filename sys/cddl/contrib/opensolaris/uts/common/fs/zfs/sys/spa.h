@@ -2176,6 +2176,15 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|uint64_t
+name|spa_final_dirty_txg
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
 name|spa_version
 parameter_list|(
 name|spa_t
@@ -2212,7 +2221,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|uint64_t
-name|spa_get_asize
+name|spa_get_worst_case_asize
 parameter_list|(
 name|spa_t
 modifier|*

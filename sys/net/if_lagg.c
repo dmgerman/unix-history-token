@@ -8934,7 +8934,6 @@ name|rval
 init|=
 name|NULL
 decl_stmt|;
-comment|// int new_link = LINK_STATE_DOWN;
 comment|/* 	 * Search a port which reports an active link state. 	 */
 if|if
 condition|(
@@ -9020,15 +9019,6 @@ block|}
 block|}
 name|found
 label|:
-if|if
-condition|(
-name|rval
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 		 * The IEEE 802.1D standard assumes that a lagg with 		 * multiple ports is always full duplex. This is valid 		 * for load sharing laggs and if at least two links 		 * are active. Unfortunately, checking the latter would 		 * be too expensive at this point. 		 XXX 		if ((sc->sc_capabilities& IFCAP_LAGG_FULLDUPLEX)&& 		    (sc->sc_count> 1)) 			new_link = LINK_STATE_FULL_DUPLEX; 		else 			new_link = rval->lp_link_state; 		 */
-block|}
 return|return
 operator|(
 name|rval
@@ -9082,12 +9072,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|sc
-operator|->
-name|sc_capabilities
-operator|=
-name|IFCAP_LAGG_FULLDUPLEX
-expr_stmt|;
 name|sc
 operator|->
 name|sc_seq
@@ -9844,12 +9828,6 @@ name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_capabilities
-operator|=
-name|IFCAP_LAGG_FULLDUPLEX
 expr_stmt|;
 name|lb
 operator|->

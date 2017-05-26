@@ -65,17 +65,35 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WANT_FREEBSD11_STATFS
+end_define
+
 begin_include
 include|#
 directive|include
 file|<sys/mount.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WANT_FREEBSD11_STAT
+end_define
+
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|_WANT_FREEBSD11_DIRENT
+end_define
 
 begin_include
 include|#
@@ -111,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gen-compat.h"
 end_include
 
 begin_include
@@ -512,10 +536,10 @@ name|FTS
 name|ftsp_fts
 decl_stmt|;
 name|struct
-name|statfs
+name|freebsd11_statfs
 name|ftsp_statfs
 decl_stmt|;
-name|dev_t
+name|uint32_t
 name|ftsp_dev
 decl_stmt|;
 name|int
@@ -677,11 +701,6 @@ name|fts_options
 operator|=
 name|options
 expr_stmt|;
-comment|/* Shush, GCC. */
-name|tmp
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* Logical walks turn on NOCHDIR; symbolic links are too hard. */
 if|if
 condition|(
@@ -742,6 +761,11 @@ operator|->
 name|fts_level
 operator|=
 name|FTS_ROOTPARENTLEVEL
+expr_stmt|;
+comment|/* Shush, GCC. */
+name|tmp
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Allocate/initialize root(s). */
 for|for
@@ -2663,7 +2687,7 @@ name|type
 parameter_list|)
 block|{
 name|struct
-name|dirent
+name|freebsd11_dirent
 modifier|*
 name|dp
 decl_stmt|;
@@ -3084,7 +3108,7 @@ operator|&&
 operator|(
 name|dp
 operator|=
-name|readdir
+name|freebsd11_readdir
 argument_list|(
 name|dirp
 argument_list|)
@@ -3756,14 +3780,14 @@ name|FTSENT
 modifier|*
 name|t
 decl_stmt|;
-name|dev_t
+name|uint32_t
 name|dev
 decl_stmt|;
-name|ino_t
+name|uint32_t
 name|ino
 decl_stmt|;
 name|struct
-name|stat
+name|freebsd11_stat
 modifier|*
 name|sbp
 decl_stmt|,
@@ -3849,7 +3873,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|stat
+name|freebsd11_stat
 argument_list|(
 name|p
 operator|->
@@ -3866,7 +3890,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|lstat
+name|freebsd11_lstat
 argument_list|(
 name|p
 operator|->
@@ -3900,7 +3924,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|lstat
+name|freebsd11_lstat
 argument_list|(
 name|p
 operator|->
@@ -4344,7 +4368,7 @@ name|FTSENT
 name|ent
 decl_stmt|;
 name|struct
-name|stat
+name|freebsd11_stat
 name|statbuf
 decl_stmt|;
 block|}
@@ -4868,7 +4892,7 @@ decl_stmt|,
 name|newfd
 decl_stmt|;
 name|struct
-name|stat
+name|freebsd11_stat
 name|sb
 decl_stmt|;
 name|newfd
@@ -4918,7 +4942,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|_fstat
+name|freebsd11_fstat
 argument_list|(
 name|newfd
 argument_list|,
@@ -5061,7 +5085,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|statfs
+name|freebsd11_statfs
 argument_list|(
 name|ent
 operator|->

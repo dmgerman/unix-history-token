@@ -489,7 +489,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"B:b:Dd:f:F:M:m:N:o:pR:s:S:t:T:xZ"
+literal|"B:b:Dd:f:F:M:m:N:O:o:pR:s:S:t:T:xZ"
 argument_list|)
 operator|)
 operator|!=
@@ -826,6 +826,25 @@ argument_list|,
 name|optarg
 argument_list|,
 literal|1LL
+argument_list|,
+name|LLONG_MAX
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'O'
+case|:
+name|fsoptions
+operator|.
+name|offset
+operator|=
+name|strsuftoll
+argument_list|(
+literal|"offset"
+argument_list|,
+name|optarg
+argument_list|,
+literal|0LL
 argument_list|,
 name|LLONG_MAX
 argument_list|)
@@ -2165,8 +2184,8 @@ name|stderr
 argument_list|,
 literal|"Usage: %s [-xZ] [-B endian] [-b free-blocks] [-d debug-mask]\n"
 literal|"\t[-F mtree-specfile] [-f free-files] [-M minimum-size] [-m maximum-size]\n"
-literal|"\t[-N userdb-dir] [-o fs-options] [-R roundup-size] [-S sector-size]\n"
-literal|"\t[-s image-size] [-T<timestamp/file>] [-t fs-type]\n"
+literal|"\t[-N userdb-dir] [-O offset] [-o fs-options] [-R roundup-size]\n"
+literal|"\t[-S sector-size] [-s image-size] [-T<timestamp/file>] [-t fs-type]\n"
 literal|"\timage-file directory | manifest [extra-directory ...]\n"
 argument_list|,
 name|prog

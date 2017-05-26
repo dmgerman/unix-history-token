@@ -109,7 +109,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
+name|__uint64_t
 name|__ino_t
 typedef|;
 end_typedef
@@ -171,7 +171,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__uint16_t
+name|__uint64_t
 name|__nlink_t
 typedef|;
 end_typedef
@@ -478,7 +478,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
+name|__uint64_t
 name|__dev_t
 typedef|;
 end_typedef
@@ -527,6 +527,16 @@ name|__uintmax_t
 name|__rman_res_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * When the following macro is defined, the system uses 64-bit inode numbers.  * Programs can use this to avoid including<sys/param.h>, with its associated  * namespace pollution.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__INO64
+end_define
 
 begin_endif
 endif|#

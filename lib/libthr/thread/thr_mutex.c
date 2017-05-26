@@ -176,28 +176,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_pthread_mutex_init_calloc_cb
-parameter_list|(
-name|pthread_mutex_t
-modifier|*
-name|mutex
-parameter_list|,
-name|void
-modifier|*
-function_decl|(
-name|calloc_cb
-function_decl|)
-parameter_list|(
-name|size_t
-parameter_list|,
-name|size_t
-parameter_list|)
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|_pthread_mutex_getspinloops_np
 parameter_list|(
 name|pthread_mutex_t
@@ -3600,6 +3578,11 @@ name|ret
 decl_stmt|,
 name|robust
 decl_stmt|;
+name|robust
+operator|=
+literal|0
+expr_stmt|;
+comment|/* pacify gcc */
 name|curthread
 operator|=
 name|_get_curthread
