@@ -3001,8 +3001,8 @@ condition|(
 operator|!
 name|SIGISMEMBER
 argument_list|(
-name|uc
-operator|.
+name|ucp
+operator|->
 name|uc_sigmask
 argument_list|,
 name|SIGCANCEL
