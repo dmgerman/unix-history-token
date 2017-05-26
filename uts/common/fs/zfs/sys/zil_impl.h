@@ -61,6 +61,10 @@ name|blkptr_t
 name|lwb_blk
 decl_stmt|;
 comment|/* on disk address of this log blk */
+name|boolean_t
+name|lwb_slog
+decl_stmt|;
+comment|/* lwb_blk is on SLOG device */
 name|int
 name|lwb_nused
 decl_stmt|;
@@ -123,10 +127,6 @@ name|uint64_t
 name|itxg_txg
 decl_stmt|;
 comment|/* txg for this chain */
-name|uint64_t
-name|itxg_sod
-decl_stmt|;
-comment|/* total size on disk for this txg */
 name|itxs_t
 modifier|*
 name|itxg_itxs
@@ -325,10 +325,6 @@ name|zl_itx_commit_list
 decl_stmt|;
 comment|/* itx list to be committed */
 name|uint64_t
-name|zl_itx_list_sz
-decl_stmt|;
-comment|/* total size of records on list */
-name|uint64_t
 name|zl_cur_used
 decl_stmt|;
 comment|/* current commit log size used */
@@ -395,10 +391,21 @@ decl_stmt|;
 block|}
 name|zil_bp_node_t
 typedef|;
+comment|/*  * Maximum amount of write data that can be put into single log block.  */
 define|#
 directive|define
 name|ZIL_MAX_LOG_DATA
 value|(SPA_OLD_MAXBLOCKSIZE - sizeof (zil_chain_t) - \     sizeof (lr_write_t))
+comment|/*  * Maximum amount of log space we agree to waste to reduce number of  * WR_NEED_COPY chunks to reduce zl_get_data() overhead (~12%).  */
+define|#
+directive|define
+name|ZIL_MAX_WASTE_SPACE
+value|(ZIL_MAX_LOG_DATA / 8)
+comment|/*  * Maximum amount of write data for WR_COPIED.  Fall back to WR_NEED_COPY  * as more space efficient if we can't fit at least two log records into  * maximum sized log block.  */
+define|#
+directive|define
+name|ZIL_MAX_COPIED_DATA
+value|((SPA_OLD_MAXBLOCKSIZE - \     sizeof (zil_chain_t)) / 2 - sizeof (lr_write_t))
 ifdef|#
 directive|ifdef
 name|__cplusplus

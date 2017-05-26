@@ -1626,7 +1626,8 @@ name|uint64_t
 name|size
 parameter_list|,
 name|boolean_t
-name|use_slog
+modifier|*
+name|slog
 parameter_list|)
 function_decl|;
 specifier|extern
