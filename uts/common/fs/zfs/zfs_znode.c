@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -6451,10 +6451,10 @@ operator|->
 name|v_lock
 argument_list|)
 expr_stmt|;
+name|VN_RELE_LOCKED
+argument_list|(
 name|vp
-operator|->
-name|v_count
-operator|--
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

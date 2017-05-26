@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 1988, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright 2016 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3244,10 +3244,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|VN_RELE_LOCKED
+argument_list|(
 name|vp
-operator|->
-name|v_count
-operator|--
+argument_list|)
 expr_stmt|;
 name|mutex_exit
 argument_list|(
@@ -3339,10 +3339,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|VN_RELE_LOCKED
+argument_list|(
 name|vp
-operator|->
-name|v_count
-operator|--
+argument_list|)
 expr_stmt|;
 block|}
 name|mutex_exit
@@ -3357,7 +3357,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Like vn_rele() except that it clears v_stream under v_lock.  * This is used by sockfs when it dismantels the association between  * the sockfs node and the vnode in the underlaying file system.  * v_lock has to be held to prevent a thread coming through the lookupname  * path from accessing a stream head that is going away.  */
+comment|/*  * Like vn_rele() except that it clears v_stream under v_lock.  * This is used by sockfs when it dismantles the association between  * the sockfs node and the vnode in the underlying file system.  * v_lock has to be held to prevent a thread coming through the lookupname  * path from accessing a stream head that is going away.  */
 end_comment
 
 begin_function
@@ -3421,10 +3421,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|VN_RELE_LOCKED
+argument_list|(
 name|vp
-operator|->
-name|v_count
-operator|--
+argument_list|)
 expr_stmt|;
 name|mutex_exit
 argument_list|(
@@ -3533,10 +3533,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|VN_RELE_LOCKED
+argument_list|(
 name|vp
-operator|->
-name|v_count
-operator|--
+argument_list|)
 expr_stmt|;
 name|mutex_exit
 argument_list|(

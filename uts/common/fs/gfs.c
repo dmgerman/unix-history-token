@@ -11,12 +11,9 @@ begin_comment
 comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
+begin_comment
+comment|/*  * Copyright (c) 2017 by Delphix. All rights reserved.  */
+end_comment
 
 begin_include
 include|#
@@ -2115,10 +2112,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|VN_RELE_LOCKED
+argument_list|(
 name|vp
-operator|->
-name|v_count
-operator|--
+argument_list|)
 expr_stmt|;
 name|data
 operator|=

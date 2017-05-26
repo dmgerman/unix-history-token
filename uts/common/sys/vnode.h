@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 1988, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -107,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_endif
@@ -4900,13 +4906,21 @@ specifier|extern
 name|uint_t
 name|pvn_vmodsort_supported
 decl_stmt|;
+comment|/*  * All changes to v_count should be done through VN_HOLD() or VN_RELE(), or  * one of their variants. This makes it possible to ensure proper locking,  * and to guarantee that all modifications are accompanied by a firing of  * the vn-hold or vn-rele SDT DTrace probe.  *  * Example DTrace command for tracing vnode references using these probes:  *  * dtrace -q -n 'sdt:::vn-hold,sdt:::vn-rele  * {  *	this->vp = (vnode_t *)arg0;  *	printf("%s %s(%p[%s]) %d\n", execname, probename, this->vp,  *	    this->vp->v_path == NULL ? "NULL" : stringof(this->vp->v_path),  *	    this->vp->v_count)  * }'  */
+define|#
+directive|define
+name|VN_HOLD_LOCKED
+parameter_list|(
+name|vp
+parameter_list|)
+value|{			\ 	ASSERT(mutex_owned(&(vp)->v_lock));	\ 	(vp)->v_count++;			\ 	DTRACE_PROBE1(vn__hold, vnode_t *, vp);	\ }
 define|#
 directive|define
 name|VN_HOLD
 parameter_list|(
 name|vp
 parameter_list|)
-value|{ \ 	mutex_enter(&(vp)->v_lock); \ 	(vp)->v_count++; \ 	mutex_exit(&(vp)->v_lock); \ }
+value|{		\ 	mutex_enter(&(vp)->v_lock);	\ 	VN_HOLD_LOCKED(vp);		\ 	mutex_exit(&(vp)->v_lock);	\ }
 define|#
 directive|define
 name|VN_RELE
@@ -4923,6 +4937,13 @@ parameter_list|,
 name|taskq
 parameter_list|)
 value|{ \ 	vn_rele_async(vp, taskq); \ }
+define|#
+directive|define
+name|VN_RELE_LOCKED
+parameter_list|(
+name|vp
+parameter_list|)
+value|{			\ 	ASSERT(mutex_owned(&(vp)->v_lock));	\ 	ASSERT((vp)->v_count>= 1);		\ 	(vp)->v_count--;			\ 	DTRACE_PROBE1(vn__rele, vnode_t *, vp);	\ }
 define|#
 directive|define
 name|VN_SET_VFS_TYPE_DEV
