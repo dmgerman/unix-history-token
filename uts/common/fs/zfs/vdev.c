@@ -12523,6 +12523,10 @@ operator|-
 name|vd
 operator|->
 name|vdev_asize
+operator|-
+name|spa
+operator|->
+name|spa_bootsize
 argument_list|,
 literal|1ULL
 operator|<<

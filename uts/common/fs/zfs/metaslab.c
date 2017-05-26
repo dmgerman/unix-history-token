@@ -1242,6 +1242,9 @@ name|c
 operator|++
 control|)
 block|{
+name|uint64_t
+name|tspace
+decl_stmt|;
 name|vdev_t
 modifier|*
 name|tvd
@@ -1282,11 +1285,9 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/* 		 * Calculate if we have enough space to add additional 		 * metaslabs. We report the expandable space in terms 		 * of the metaslab size since that's the unit of expansion. 		 */
-name|space
-operator|+=
-name|P2ALIGN
-argument_list|(
+comment|/* 		 * Calculate if we have enough space to add additional 		 * metaslabs. We report the expandable space in terms 		 * of the metaslab size since that's the unit of expansion. 		 * Adjust by efi system partition size. 		 */
+name|tspace
+operator|=
 name|tvd
 operator|->
 name|vdev_max_asize
@@ -1294,6 +1295,32 @@ operator|-
 name|tvd
 operator|->
 name|vdev_asize
+expr_stmt|;
+if|if
+condition|(
+name|tspace
+operator|>
+name|mc
+operator|->
+name|mc_spa
+operator|->
+name|spa_bootsize
+condition|)
+block|{
+name|tspace
+operator|-=
+name|mc
+operator|->
+name|mc_spa
+operator|->
+name|spa_bootsize
+expr_stmt|;
+block|}
+name|space
+operator|+=
+name|P2ALIGN
+argument_list|(
+name|tspace
 argument_list|,
 literal|1ULL
 operator|<<

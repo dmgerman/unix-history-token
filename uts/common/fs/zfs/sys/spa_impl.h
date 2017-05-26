@@ -765,6 +765,10 @@ name|uint64_t
 name|spa_autoexpand
 decl_stmt|;
 comment|/* lun expansion on/off */
+name|uint64_t
+name|spa_bootsize
+decl_stmt|;
+comment|/* efi system partition size */
 name|ddt_t
 modifier|*
 name|spa_ddt

@@ -428,6 +428,24 @@ argument_list|,
 literal|"DEDUP"
 argument_list|)
 expr_stmt|;
+comment|/* system partition size */
+name|zprop_register_number
+argument_list|(
+name|ZPOOL_PROP_BOOTSIZE
+argument_list|,
+literal|"bootsize"
+argument_list|,
+literal|0
+argument_list|,
+name|PROP_ONETIME
+argument_list|,
+name|ZFS_TYPE_POOL
+argument_list|,
+literal|"<size>"
+argument_list|,
+literal|"BOOTSIZE"
+argument_list|)
+expr_stmt|;
 comment|/* default number properties */
 name|zprop_register_number
 argument_list|(

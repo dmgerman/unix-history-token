@@ -372,6 +372,8 @@ name|ZPOOL_PROP_LEAKED
 block|,
 name|ZPOOL_PROP_MAXBLOCKSIZE
 block|,
+name|ZPOOL_PROP_BOOTSIZE
+block|,
 name|ZPOOL_NUM_PROPS
 block|}
 name|zpool_prop_t
