@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  */
 end_comment
 
 begin_include
@@ -11667,9 +11667,10 @@ operator|->
 name|spa_root_vdev
 decl_stmt|;
 name|boolean_t
-name|postevent
-init|=
-name|B_FALSE
+name|wasoffline
+decl_stmt|;
+name|vdev_state_t
+name|oldstate
 decl_stmt|;
 name|spa_vdev_state_enter
 argument_list|(
@@ -11728,25 +11729,23 @@ name|ENOTSUP
 argument_list|)
 operator|)
 return|;
-name|postevent
+name|wasoffline
 operator|=
 operator|(
 name|vd
 operator|->
 name|vdev_offline
-operator|==
-name|B_TRUE
 operator|||
 name|vd
 operator|->
 name|vdev_tmpoffline
-operator|==
-name|B_TRUE
 operator|)
-condition|?
-name|B_TRUE
-else|:
-name|B_FALSE
+expr_stmt|;
+name|oldstate
+operator|=
+name|vd
+operator|->
+name|vdev_state
 expr_stmt|;
 name|tvd
 operator|=
@@ -11971,7 +11970,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|postevent
+name|wasoffline
+operator|||
+operator|(
+name|oldstate
+operator|<
+name|VDEV_STATE_DEGRADED
+operator|&&
+name|vd
+operator|->
+name|vdev_state
+operator|>=
+name|VDEV_STATE_DEGRADED
+operator|)
 condition|)
 name|spa_event_notify
 argument_list|(
