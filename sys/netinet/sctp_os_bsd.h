@@ -2028,11 +2028,6 @@ parameter_list|)
 value|SHA256_Final((caddr_t)x, y)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -2081,6 +2076,21 @@ name|val
 parameter_list|)
 define|\
 value|{ \ 	int32_t oldval; \ 	oldval = atomic_fetchadd_int(addr, -val); \ 	if (oldval< val) { \ 		*addr = 0; \ 	} \ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SCTP_IS_LISTENING
+parameter_list|(
+name|inp
+parameter_list|)
+value|((inp->sctp_flags& SCTP_PCB_FLAGS_ACCEPTING) != 0)
 end_define
 
 begin_endif
