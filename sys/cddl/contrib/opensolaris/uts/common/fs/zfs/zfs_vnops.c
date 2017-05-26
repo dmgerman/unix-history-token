@@ -20906,9 +20906,8 @@ argument_list|,
 name|B_TRUE
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|err
+operator|=
 name|sa_bulk_update
 argument_list|(
 name|zp
@@ -20920,6 +20919,11 @@ argument_list|,
 name|count
 argument_list|,
 name|tx
+argument_list|)
+expr_stmt|;
+name|ASSERT0
+argument_list|(
+name|err
 argument_list|)
 expr_stmt|;
 name|zfs_log_write
