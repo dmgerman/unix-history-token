@@ -2383,15 +2383,11 @@ name|CHAN_HT40D
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|rs
 operator|->
 name|rs_flags
 operator|&
 name|HAL_RX_GI
-operator|)
-operator|==
-literal|0
 condition|)
 name|sc
 operator|->
