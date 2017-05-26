@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dsl_scan.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zil.h>
 end_include
 
 begin_include
@@ -2959,6 +2965,86 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Verify that this txg is active (open, quiescing, syncing).  Non-active  * txg's should not be manipulated.  */
+end_comment
+
+begin_function
+name|void
+name|txg_verify
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|uint64_t
+name|txg
+parameter_list|)
+block|{
+name|dsl_pool_t
+modifier|*
+name|dp
+init|=
+name|spa_get_dsl
+argument_list|(
+name|spa
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|txg
+operator|<=
+name|TXG_INITIAL
+operator|||
+name|txg
+operator|==
+name|ZILTEST_TXG
+condition|)
+return|return;
+name|ASSERT3U
+argument_list|(
+name|txg
+argument_list|,
+operator|<=
+argument_list|,
+name|dp
+operator|->
+name|dp_tx
+operator|.
+name|tx_open_txg
+argument_list|)
+expr_stmt|;
+name|ASSERT3U
+argument_list|(
+name|txg
+argument_list|,
+operator|>=
+argument_list|,
+name|dp
+operator|->
+name|dp_tx
+operator|.
+name|tx_synced_txg
+argument_list|)
+expr_stmt|;
+name|ASSERT3U
+argument_list|(
+name|txg
+argument_list|,
+operator|>=
+argument_list|,
+name|dp
+operator|->
+name|dp_tx
+operator|.
+name|tx_open_txg
+operator|-
+name|TXG_CONCURRENT_STATES
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Per-txg object lists.  */
 end_comment
 
@@ -2969,6 +3055,10 @@ parameter_list|(
 name|txg_list_t
 modifier|*
 name|tl
+parameter_list|,
+name|spa_t
+modifier|*
+name|spa
 parameter_list|,
 name|size_t
 name|offset
@@ -2996,6 +3086,12 @@ operator|->
 name|tl_offset
 operator|=
 name|offset
+expr_stmt|;
+name|tl
+operator|->
+name|tl_spa
+operator|=
+name|spa
 expr_stmt|;
 for|for
 control|(
@@ -3080,6 +3176,15 @@ name|uint64_t
 name|txg
 parameter_list|)
 block|{
+name|txg_verify
+argument_list|(
+name|tl
+operator|->
+name|tl_spa
+argument_list|,
+name|txg
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|tl
@@ -3098,7 +3203,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns true if all txg lists are empty.  *  * Warning: this is inherently racy (an item could be added immediately after this  * function returns). We don't bother with the lock because it wouldn't change the  * semantics.  */
+comment|/*  * Returns true if all txg lists are empty.  *  * Warning: this is inherently racy (an item could be added immediately  * after this function returns). We don't bother with the lock because  * it wouldn't change the semantics.  */
 end_comment
 
 begin_function
@@ -3201,6 +3306,15 @@ decl_stmt|;
 name|boolean_t
 name|add
 decl_stmt|;
+name|txg_verify
+argument_list|(
+name|tl
+operator|->
+name|tl_spa
+argument_list|,
+name|txg
+argument_list|)
+expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -3326,6 +3440,15 @@ decl_stmt|;
 name|boolean_t
 name|add
 decl_stmt|;
+name|txg_verify
+argument_list|(
+name|tl
+operator|->
+name|tl_spa
+argument_list|,
+name|txg
+argument_list|)
+expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -3462,6 +3585,15 @@ name|p
 init|=
 name|NULL
 decl_stmt|;
+name|txg_verify
+argument_list|(
+name|tl
+operator|->
+name|tl_spa
+argument_list|,
+name|txg
+argument_list|)
+expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -3583,6 +3715,15 @@ modifier|*
 modifier|*
 name|tp
 decl_stmt|;
+name|txg_verify
+argument_list|(
+name|tl
+operator|->
+name|tl_spa
+argument_list|,
+name|txg
+argument_list|)
+expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -3740,6 +3881,15 @@ operator|->
 name|tl_offset
 operator|)
 decl_stmt|;
+name|txg_verify
+argument_list|(
+name|tl
+operator|->
+name|tl_spa
+argument_list|,
+name|txg
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|tn
@@ -3790,6 +3940,15 @@ index|[
 name|t
 index|]
 decl_stmt|;
+name|txg_verify
+argument_list|(
+name|tl
+operator|->
+name|tl_spa
+argument_list|,
+name|txg
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|tn
@@ -3856,6 +4015,15 @@ operator|->
 name|tl_offset
 operator|)
 decl_stmt|;
+name|txg_verify
+argument_list|(
+name|tl
+operator|->
+name|tl_spa
+argument_list|,
+name|txg
+argument_list|)
+expr_stmt|;
 name|tn
 operator|=
 name|tn

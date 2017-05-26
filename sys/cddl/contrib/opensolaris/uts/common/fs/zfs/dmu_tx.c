@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -276,17 +276,13 @@ argument_list|(
 name|NULL
 argument_list|)
 decl_stmt|;
-name|ASSERT3U
+name|txg_verify
 argument_list|(
-name|txg
-argument_list|,
-operator|<=
-argument_list|,
 name|dp
 operator|->
-name|dp_tx
-operator|.
-name|tx_open_txg
+name|dp_spa
+argument_list|,
+name|txg
 argument_list|)
 expr_stmt|;
 name|tx

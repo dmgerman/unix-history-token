@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -255,17 +255,6 @@ parameter_list|(
 name|lwb
 parameter_list|)
 value|((BP_GET_LSIZE(&lwb->lwb_blk) - \     sizeof (zil_chain_t)) == (lwb->lwb_sz - lwb->lwb_nused))
-end_define
-
-begin_comment
-comment|/*  * ziltest is by and large an ugly hack, but very useful in  * checking replay without tedious work.  * When running ziltest we want to keep all itx's and so maintain  * a single list in the zl_itxg[] that uses a high txg: ZILTEST_TXG  * We subtract TXG_CONCURRENT_STATES to allow for common code.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ZILTEST_TXG
-value|(UINT64_MAX - TXG_CONCURRENT_STATES)
 end_define
 
 begin_function
