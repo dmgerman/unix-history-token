@@ -4133,7 +4133,7 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|/* 	 * If dsl_scan_ddt() has aready visited this block, it will have 	 * already done any translations or scrubbing, so don't call the 	 * callback again. 	 */
+comment|/* 	 * If dsl_scan_ddt() has already visited this block, it will have 	 * already done any translations or scrubbing, so don't call the 	 * callback again. 	 */
 if|if
 condition|(
 name|ddt_class_contains
@@ -7418,6 +7418,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Called whenever a txg syncs. */
+end_comment
+
 begin_function
 name|void
 name|dsl_scan_sync
@@ -9572,6 +9576,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Called by the ZFS_IOC_POOL_SCAN ioctl to start a scrub or resilver */
+end_comment
 
 begin_function
 name|int
