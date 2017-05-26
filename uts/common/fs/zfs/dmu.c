@@ -139,6 +139,12 @@ directive|include
 file|<sys/zfeature.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/abd.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -7870,6 +7876,13 @@ operator|->
 name|io_error
 argument_list|)
 expr_stmt|;
+name|abd_put
+argument_list|(
+name|zio
+operator|->
+name|io_abd
+argument_list|)
+expr_stmt|;
 name|kmem_free
 argument_list|(
 name|dsa
@@ -8022,11 +8035,20 @@ name|zgd
 operator|->
 name|zgd_bp
 argument_list|,
+name|abd_get_from_buf
+argument_list|(
 name|zgd
 operator|->
 name|zgd_db
 operator|->
 name|db_data
+argument_list|,
+name|zgd
+operator|->
+name|zgd_db
+operator|->
+name|db_size
+argument_list|)
 argument_list|,
 name|zgd
 operator|->
@@ -10178,6 +10200,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|abd_init
+argument_list|()
+expr_stmt|;
 name|zfs_dbgmsg_init
 argument_list|()
 expr_stmt|;
@@ -10241,6 +10266,9 @@ name|sa_cache_fini
 argument_list|()
 expr_stmt|;
 name|zfs_dbgmsg_fini
+argument_list|()
+expr_stmt|;
+name|abd_fini
 argument_list|()
 expr_stmt|;
 block|}

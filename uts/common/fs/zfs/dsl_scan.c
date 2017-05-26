@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2016 Gary Mills  */
+comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2016 Gary Mills  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -143,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|<sys/zfeature.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/abd.h>
 end_include
 
 begin_ifdef
@@ -8809,15 +8815,11 @@ name|zio
 operator|->
 name|io_spa
 decl_stmt|;
-name|zio_data_buf_free
+name|abd_free
 argument_list|(
 name|zio
 operator|->
-name|io_data
-argument_list|,
-name|zio
-operator|->
-name|io_size
+name|io_abd
 argument_list|)
 expr_stmt|;
 name|mutex_enter
@@ -9215,15 +9217,6 @@ name|vdev_children
 operator|*
 name|zfs_top_maxinflight
 decl_stmt|;
-name|void
-modifier|*
-name|data
-init|=
-name|zio_data_buf_alloc
-argument_list|(
-name|size
-argument_list|)
-decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -9293,7 +9286,12 @@ name|spa
 argument_list|,
 name|bp
 argument_list|,
-name|data
+name|abd_alloc_for_io
+argument_list|(
+name|size
+argument_list|,
+name|B_FALSE
+argument_list|)
 argument_list|,
 name|size
 argument_list|,

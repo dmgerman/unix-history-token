@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -29,18 +29,63 @@ directive|include
 file|<sys/sha2.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/abd.h>
+end_include
+
+begin_function
+specifier|static
+name|int
+name|sha_incremental
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|SHA2_CTX
+modifier|*
+name|ctx
+init|=
+name|arg
+decl_stmt|;
+name|SHA2Update
+argument_list|(
+name|ctx
+argument_list|,
+name|buf
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
 begin_function
 name|void
-name|zio_checksum_SHA256
+name|abd_checksum_SHA256
 parameter_list|(
-specifier|const
-name|void
+name|abd_t
 modifier|*
-name|buf
+name|abd
 parameter_list|,
 name|uint64_t
 name|size
@@ -69,14 +114,21 @@ operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
-name|SHA2Update
+operator|(
+name|void
+operator|)
+name|abd_iterate_func
 argument_list|(
-operator|&
-name|ctx
+name|abd
 argument_list|,
-name|buf
+literal|0
 argument_list|,
 name|size
+argument_list|,
+name|sha_incremental
+argument_list|,
+operator|&
+name|ctx
 argument_list|)
 expr_stmt|;
 name|SHA2Final
@@ -88,7 +140,7 @@ operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * A prior implementation of this function had a 	 * private SHA256 implementation always wrote things out in 	 * Big Endian and there wasn't a byteswap variant of it. 	 * To preseve on disk compatibility we need to force that 	 * behaviour. 	 */
+comment|/* 	 * A prior implementation of this function had a 	 * private SHA256 implementation always wrote things out in 	 * Big Endian and there wasn't a byteswap variant of it. 	 * To preserve on disk compatibility we need to force that 	 * behavior. 	 */
 name|zcp
 operator|->
 name|zc_word
@@ -166,12 +218,11 @@ end_comment
 
 begin_function
 name|void
-name|zio_checksum_SHA512_native
+name|abd_checksum_SHA512_native
 parameter_list|(
-specifier|const
-name|void
+name|abd_t
 modifier|*
-name|buf
+name|abd
 parameter_list|,
 name|uint64_t
 name|size
@@ -197,14 +248,21 @@ operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
-name|SHA2Update
+operator|(
+name|void
+operator|)
+name|abd_iterate_func
 argument_list|(
-operator|&
-name|ctx
+name|abd
 argument_list|,
-name|buf
+literal|0
 argument_list|,
 name|size
+argument_list|,
+name|sha_incremental
+argument_list|,
+operator|&
+name|ctx
 argument_list|)
 expr_stmt|;
 name|SHA2Final
@@ -224,12 +282,11 @@ end_comment
 
 begin_function
 name|void
-name|zio_checksum_SHA512_byteswap
+name|abd_checksum_SHA512_byteswap
 parameter_list|(
-specifier|const
-name|void
+name|abd_t
 modifier|*
-name|buf
+name|abd
 parameter_list|,
 name|uint64_t
 name|size
@@ -247,9 +304,9 @@ block|{
 name|zio_cksum_t
 name|tmp
 decl_stmt|;
-name|zio_checksum_SHA512_native
+name|abd_checksum_SHA512_native
 argument_list|(
-name|buf
+name|abd
 argument_list|,
 name|size
 argument_list|,

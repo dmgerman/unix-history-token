@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2015 by Delphix. All rights reserved.  * Copyright Saso Kiselkov 2013, All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2016 by Delphix. All rights reserved.  * Copyright Saso Kiselkov 2013, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -43,15 +43,17 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+struct_decl|struct
+name|abd
+struct_decl|;
 comment|/*  * Signature for checksum functions.  */
 typedef|typedef
 name|void
 name|zio_checksum_t
 parameter_list|(
-specifier|const
-name|void
+name|struct
+name|abd
 modifier|*
-name|data
 parameter_list|,
 name|uint64_t
 name|size
@@ -207,49 +209,49 @@ decl_stmt|;
 comment|/*  * Checksum routines.  */
 specifier|extern
 name|zio_checksum_t
-name|zio_checksum_SHA256
+name|abd_checksum_SHA256
 decl_stmt|;
 specifier|extern
 name|zio_checksum_t
-name|zio_checksum_SHA512_native
+name|abd_checksum_SHA512_native
 decl_stmt|;
 specifier|extern
 name|zio_checksum_t
-name|zio_checksum_SHA512_byteswap
+name|abd_checksum_SHA512_byteswap
 decl_stmt|;
 comment|/* Skein */
 specifier|extern
 name|zio_checksum_t
-name|zio_checksum_skein_native
+name|abd_checksum_skein_native
 decl_stmt|;
 specifier|extern
 name|zio_checksum_t
-name|zio_checksum_skein_byteswap
+name|abd_checksum_skein_byteswap
 decl_stmt|;
 specifier|extern
 name|zio_checksum_tmpl_init_t
-name|zio_checksum_skein_tmpl_init
+name|abd_checksum_skein_tmpl_init
 decl_stmt|;
 specifier|extern
 name|zio_checksum_tmpl_free_t
-name|zio_checksum_skein_tmpl_free
+name|abd_checksum_skein_tmpl_free
 decl_stmt|;
 comment|/* Edon-R */
 specifier|extern
 name|zio_checksum_t
-name|zio_checksum_edonr_native
+name|abd_checksum_edonr_native
 decl_stmt|;
 specifier|extern
 name|zio_checksum_t
-name|zio_checksum_edonr_byteswap
+name|abd_checksum_edonr_byteswap
 decl_stmt|;
 specifier|extern
 name|zio_checksum_tmpl_init_t
-name|zio_checksum_edonr_tmpl_init
+name|abd_checksum_edonr_tmpl_init
 decl_stmt|;
 specifier|extern
 name|zio_checksum_tmpl_free_t
-name|zio_checksum_edonr_tmpl_free
+name|abd_checksum_edonr_tmpl_free
 decl_stmt|;
 specifier|extern
 name|int
@@ -281,18 +283,15 @@ name|zio_checksum_compute
 parameter_list|(
 name|zio_t
 modifier|*
-name|zio
 parameter_list|,
 name|enum
 name|zio_checksum
-name|checksum
 parameter_list|,
-name|void
+name|struct
+name|abd
 modifier|*
-name|data
 parameter_list|,
 name|uint64_t
-name|size
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -308,7 +307,8 @@ parameter_list|,
 name|enum
 name|zio_checksum
 parameter_list|,
-name|void
+name|struct
+name|abd
 modifier|*
 parameter_list|,
 name|uint64_t

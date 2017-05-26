@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2013 Saso Kiselkov.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2016 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -25,6 +29,12 @@ directive|include
 file|<sys/edonr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/abd.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -39,6 +49,48 @@ name|EDONR_BLOCK_SIZE
 value|EdonR512_BLOCK_SIZE
 end_define
 
+begin_function
+specifier|static
+name|int
+name|edonr_incremental
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|EdonRState
+modifier|*
+name|ctx
+init|=
+name|arg
+decl_stmt|;
+name|EdonRUpdate
+argument_list|(
+name|ctx
+argument_list|,
+name|buf
+argument_list|,
+name|size
+operator|*
+literal|8
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Native zio_checksum interface for the Edon-R hash function.  */
 end_comment
@@ -49,12 +101,11 @@ end_comment
 
 begin_function
 name|void
-name|zio_checksum_edonr_native
+name|abd_checksum_edonr_native
 parameter_list|(
-specifier|const
-name|void
+name|abd_t
 modifier|*
-name|buf
+name|abd
 parameter_list|,
 name|uint64_t
 name|size
@@ -100,16 +151,21 @@ name|ctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|EdonRUpdate
+operator|(
+name|void
+operator|)
+name|abd_iterate_func
 argument_list|(
-operator|&
-name|ctx
+name|abd
 argument_list|,
-name|buf
+literal|0
 argument_list|,
 name|size
-operator|*
-literal|8
+argument_list|,
+name|edonr_incremental
+argument_list|,
+operator|&
+name|ctx
 argument_list|)
 expr_stmt|;
 name|EdonRFinal
@@ -145,12 +201,11 @@ end_comment
 
 begin_function
 name|void
-name|zio_checksum_edonr_byteswap
+name|abd_checksum_edonr_byteswap
 parameter_list|(
-specifier|const
-name|void
+name|abd_t
 modifier|*
-name|buf
+name|abd
 parameter_list|,
 name|uint64_t
 name|size
@@ -168,9 +223,9 @@ block|{
 name|zio_cksum_t
 name|tmp
 decl_stmt|;
-name|zio_checksum_edonr_native
+name|abd_checksum_edonr_native
 argument_list|(
-name|buf
+name|abd
 argument_list|,
 name|size
 argument_list|,
@@ -254,7 +309,7 @@ end_function
 begin_function
 name|void
 modifier|*
-name|zio_checksum_edonr_tmpl_init
+name|abd_checksum_edonr_tmpl_init
 parameter_list|(
 specifier|const
 name|zio_cksum_salt_t
@@ -366,7 +421,7 @@ end_function
 
 begin_function
 name|void
-name|zio_checksum_edonr_tmpl_free
+name|abd_checksum_edonr_tmpl_free
 parameter_list|(
 name|void
 modifier|*

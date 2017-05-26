@@ -115,6 +115,12 @@ directive|include
 file|<sys/dsl_scan.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/abd.h>
+end_include
+
 begin_comment
 comment|/*  * Virtual device management.  */
 end_comment
@@ -4559,7 +4565,7 @@ name|io_size
 argument_list|,
 name|zio
 operator|->
-name|io_data
+name|io_abd
 argument_list|,
 name|ZIO_CHECKSUM_OFF
 argument_list|,
@@ -4580,15 +4586,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|zio_buf_free
+name|abd_free
 argument_list|(
 name|zio
 operator|->
-name|io_data
-argument_list|,
-name|zio
-operator|->
-name|io_size
+name|io_abd
 argument_list|)
 expr_stmt|;
 block|}
@@ -4617,15 +4619,11 @@ name|vps_writeable
 operator|=
 literal|1
 expr_stmt|;
-name|zio_buf_free
+name|abd_free
 argument_list|(
 name|zio
 operator|->
-name|io_data
-argument_list|,
-name|zio
-operator|->
-name|io_size
+name|io_abd
 argument_list|)
 expr_stmt|;
 block|}
@@ -5086,9 +5084,11 @@ argument_list|)
 argument_list|,
 name|VDEV_PAD_SIZE
 argument_list|,
-name|zio_buf_alloc
+name|abd_alloc_for_io
 argument_list|(
 name|VDEV_PAD_SIZE
+argument_list|,
+name|B_TRUE
 argument_list|)
 argument_list|,
 name|ZIO_CHECKSUM_OFF

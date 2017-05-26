@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2009, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dsl_scan.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/abd.h>
 end_include
 
 begin_comment
@@ -3653,23 +3659,15 @@ if|if
 condition|(
 name|dde
 operator|->
-name|dde_repair_data
+name|dde_repair_abd
 operator|!=
 name|NULL
 condition|)
-name|zio_buf_free
+name|abd_free
 argument_list|(
 name|dde
 operator|->
-name|dde_repair_data
-argument_list|,
-name|DDK_GET_PSIZE
-argument_list|(
-operator|&
-name|dde
-operator|->
-name|dde_key
-argument_list|)
+name|dde_repair_abd
 argument_list|)
 expr_stmt|;
 name|cv_destroy
@@ -5014,7 +5012,7 @@ if|if
 condition|(
 name|dde
 operator|->
-name|dde_repair_data
+name|dde_repair_abd
 operator|!=
 name|NULL
 operator|&&
@@ -5263,7 +5261,7 @@ name|blk
 argument_list|,
 name|rdde
 operator|->
-name|dde_repair_data
+name|dde_repair_abd
 argument_list|,
 name|DDK_GET_PSIZE
 argument_list|(

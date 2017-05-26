@@ -782,6 +782,14 @@ parameter_list|)
 value|(BP_IS_EMBEDDED(bp) ? 1 : (bp)->blk_fill)
 define|#
 directive|define
+name|BP_IS_METADATA
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|(BP_GET_LEVEL(bp)> 0 || DMU_OT_IS_METADATA(BP_GET_TYPE(bp)))
+define|#
+directive|define
 name|BP_GET_ASIZE
 parameter_list|(
 name|bp
@@ -795,7 +803,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|((BP_GET_LEVEL(bp)> 0 || DMU_OT_IS_METADATA(BP_GET_TYPE(bp))) ? \ 	BP_GET_PSIZE(bp) : BP_GET_LSIZE(bp))
+value|(BP_IS_METADATA(bp) ? BP_GET_PSIZE(bp) : BP_GET_LSIZE(bp))
 define|#
 directive|define
 name|BP_GET_NDVAS
@@ -983,7 +991,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(((BP_GET_LEVEL(bp)> 0) || (DMU_OT_IS_METADATA(BP_GET_TYPE(bp)))) ? \ 	ARC_BUFC_METADATA : ARC_BUFC_DATA)
+value|(BP_IS_METADATA(bp) ? ARC_BUFC_METADATA : ARC_BUFC_DATA)
 typedef|typedef
 enum|enum
 name|spa_import_type
