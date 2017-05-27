@@ -180,6 +180,18 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/* 1100090 was where kvm_open2(3) was introduced. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100091
+end_if
+
 begin_macro
 name|ATF_TC_BODY
 argument_list|(
@@ -575,6 +587,11 @@ expr_stmt|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|ATF_TP_ADD_TCS
 argument_list|(
@@ -591,6 +608,11 @@ argument_list|,
 name|kvm_geterr_negative_test_NULL
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100091
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -605,6 +627,8 @@ argument_list|,
 name|kvm_geterr_positive_test_no_error
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|atf_no_error
