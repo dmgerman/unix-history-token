@@ -6197,6 +6197,57 @@ value|2
 end_define
 
 begin_comment
+comment|/* Values for ch_type (compressed section headers). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFCOMPRESS_ZLIB
+value|1
+end_define
+
+begin_comment
+comment|/* ZLIB/DEFLATE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFCOMPRESS_LOOS
+value|0x60000000
+end_define
+
+begin_comment
+comment|/* OS-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFCOMPRESS_HIOS
+value|0x6fffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELFCOMPRESS_LOPROC
+value|0x70000000
+end_define
+
+begin_comment
+comment|/* Processor-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFCOMPRESS_HIPROC
+value|0x7fffffff
+end_define
+
+begin_comment
 comment|/*  * Relocation types.  *  * All machine architectures are defined here to allow tools on one to  * handle others.  */
 end_comment
 
