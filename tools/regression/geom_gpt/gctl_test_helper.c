@@ -26,13 +26,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<assert.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<libgeom.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -65,6 +71,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libgeom.h>
+end_include
+
 begin_struct
 struct|struct
 name|retval
@@ -88,6 +100,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|retval
 modifier|*
@@ -96,6 +109,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 decl_stmt|;
@@ -105,7 +119,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -466,11 +482,20 @@ name|int
 name|c
 decl_stmt|,
 name|len
+decl_stmt|,
+name|parse_retval
 decl_stmt|;
 name|req
 operator|=
 name|gctl_get_handle
 argument_list|()
+expr_stmt|;
+name|assert
+argument_list|(
+name|req
+operator|!=
+name|NULL
+argument_list|)
 expr_stmt|;
 name|gctl_ro_param
 argument_list|(
@@ -481,7 +506,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|"GPT"
+literal|"PART"
 argument_list|)
 expr_stmt|;
 while|while
@@ -527,22 +552,24 @@ comment|/* NOTREACHED */
 break|break;
 block|}
 block|}
-while|while
-condition|(
+for|for
+control|(
+init|;
 name|optind
 operator|<
 name|argc
-condition|)
+condition|;
+name|optind
+operator|++
+control|)
 block|{
-if|if
-condition|(
-operator|!
+name|parse_retval
+operator|=
 name|parse
 argument_list|(
 name|argv
 index|[
 name|optind
-operator|++
 index|]
 argument_list|,
 operator|&
@@ -554,6 +581,12 @@ argument_list|,
 operator|&
 name|len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parse_retval
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -572,6 +605,13 @@ argument_list|(
 expr|struct
 name|retval
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|rv
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 name|rv
@@ -622,6 +662,19 @@ name|value
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|warnc
+argument_list|(
+name|parse_retval
+argument_list|,
+literal|"failed to parse argument (%s)"
+argument_list|,
+name|argv
+index|[
+name|optind
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
