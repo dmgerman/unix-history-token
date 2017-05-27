@@ -8525,15 +8525,14 @@ literal|0
 init|;
 name|dvbase
 operator|<
-name|sp
-operator|->
-name|sw_end
+name|nblks
 condition|;
 name|dvbase
 operator|+=
-name|dmmax
+name|BLIST_BMAP_RADIX
 control|)
 block|{
+comment|/* 		 * blist_fill() cannot allocate more than BLIST_BMAP_RADIX 		 * blocks per call. 		 */
 name|swap_pager_avail
 operator|-=
 name|blist_fill
@@ -8544,7 +8543,14 @@ name|sw_blist
 argument_list|,
 name|dvbase
 argument_list|,
-name|dmmax
+name|ulmin
+argument_list|(
+name|nblks
+operator|-
+name|dvbase
+argument_list|,
+name|BLIST_BMAP_RADIX
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
