@@ -1014,8 +1014,6 @@ condition|)
 name|bootp
 argument_list|(
 name|sock
-argument_list|,
-name|BOOTP_NONE
 argument_list|)
 expr_stmt|;
 block|}

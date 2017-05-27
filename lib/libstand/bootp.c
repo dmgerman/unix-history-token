@@ -384,9 +384,6 @@ name|bootp
 parameter_list|(
 name|int
 name|sock
-parameter_list|,
-name|int
-name|flag
 parameter_list|)
 block|{
 name|void
@@ -609,14 +606,7 @@ index|]
 operator|=
 name|DHCPDISCOVER
 expr_stmt|;
-comment|/* 	 * If we are booting from PXE, we want to send the string 	 * 'PXEClient' to the DHCP server so you have the option of 	 * only responding to PXE aware dhcp requests. 	 */
-if|if
-condition|(
-name|flag
-operator|&
-name|BOOTP_PXE
-condition|)
-block|{
+comment|/* 	 * We are booting from PXE, we want to send the string 	 * 'PXEClient' to the DHCP server so you have the option of 	 * only responding to PXE aware dhcp requests. 	 */
 name|bp
 operator|->
 name|bp_vend
@@ -780,17 +770,6 @@ operator|->
 name|bp_vend
 index|[
 literal|37
-index|]
-operator|=
-name|TAG_END
-expr_stmt|;
-block|}
-else|else
-name|bp
-operator|->
-name|bp_vend
-index|[
-literal|7
 index|]
 operator|=
 name|TAG_END
@@ -1029,13 +1008,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|flag
-operator|&
-name|BOOTP_PXE
-condition|)
-block|{
 name|bp
 operator|->
 name|bp_vend
@@ -1074,17 +1046,6 @@ operator|->
 name|bp_vend
 index|[
 literal|36
-index|]
-operator|=
-name|TAG_END
-expr_stmt|;
-block|}
-else|else
-name|bp
-operator|->
-name|bp_vend
-index|[
-literal|25
 index|]
 operator|=
 name|TAG_END
