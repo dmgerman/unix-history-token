@@ -412,6 +412,13 @@ name|TAG_CLIENTID
 value|((unsigned char)  61)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TAG_USER_CLASS
+value|((unsigned char)  77)
+end_define
+
 begin_endif
 endif|#
 directive|endif
