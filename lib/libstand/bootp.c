@@ -659,6 +659,7 @@ index|]
 operator|=
 name|TAG_USER_CLASS
 expr_stmt|;
+comment|/* len of each user class + number of user class */
 name|bp
 operator|->
 name|bp_vend
@@ -668,6 +669,7 @@ index|]
 operator|=
 literal|8
 expr_stmt|;
+comment|/* len of the first user class */
 name|bp
 operator|->
 name|bp_vend
