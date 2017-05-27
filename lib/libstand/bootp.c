@@ -671,7 +671,7 @@ literal|7
 expr_stmt|;
 name|bcopy
 argument_list|(
-literal|"FREEBSD"
+literal|"FreeBSD"
 argument_list|,
 operator|&
 name|bp
