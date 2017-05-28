@@ -906,6 +906,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -971,6 +974,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -1980,6 +1986,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|run_tests
 parameter_list|(
