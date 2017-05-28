@@ -206,6 +206,8 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
+argument_list|,
+literal|0600
 argument_list|)
 expr_stmt|;
 if|if
@@ -218,7 +220,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"open(%s, O_RDWR|O_CREAT"
+literal|"open(%s, O_RDWR|O_CREAT, 0600)"
 argument_list|,
 name|path
 argument_list|)
