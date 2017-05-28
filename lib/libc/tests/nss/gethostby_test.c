@@ -429,23 +429,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__noreturn__
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_macro
 name|IMPLEMENT_TEST_DATA
 argument_list|(
@@ -3398,6 +3381,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 ifdef|#
@@ -3739,6 +3723,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3926,6 +3911,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -4496,7 +4482,7 @@ modifier|*
 name|snapshot_file
 parameter_list|,
 name|int
-name|af_type
+name|_af_type
 parameter_list|,
 name|enum
 name|test_methods
@@ -4525,7 +4511,7 @@ literal|2
 decl_stmt|;
 switch|switch
 condition|(
-name|af_type
+name|_af_type
 condition|)
 block|{
 case|case
@@ -4557,7 +4543,7 @@ name|atf_tc_fail
 argument_list|(
 literal|"unhandled address family: %d"
 argument_list|,
-name|af_type
+name|_af_type
 argument_list|)
 expr_stmt|;
 break|break;
