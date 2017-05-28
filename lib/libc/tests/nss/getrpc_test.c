@@ -302,23 +302,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__noreturn__
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_macro
 name|IMPLEMENT_TEST_DATA
 argument_list|(
@@ -1428,6 +1411,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|printf
@@ -1863,6 +1847,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 comment|/* 	 * Only correctness can be checked when doing 1-pass test for 	 * getrpcent(). 	 */
