@@ -4321,6 +4321,8 @@ directive|endif
 comment|/* 		 * An address might reverse resolve to hostname alias or the 		 * official hostname, e.g. moon.vub.ac.be. 		 */
 name|bool
 name|found_a_match
+init|=
+name|false
 decl_stmt|;
 if|if
 condition|(
