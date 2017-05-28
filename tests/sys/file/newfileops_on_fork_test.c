@@ -243,15 +243,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|__unused
-name|int
-name|argc
-parameter_list|,
-name|__unused
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|struct
