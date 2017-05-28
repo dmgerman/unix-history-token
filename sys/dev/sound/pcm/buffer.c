@@ -38,6 +38,12 @@ directive|define
 name|SND_USE_FXDIV
 end_define
 
+begin_define
+define|#
+directive|define
+name|SND_DECLARE_FXDIV
+end_define
+
 begin_include
 include|#
 directive|include
