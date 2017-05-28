@@ -405,7 +405,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -491,7 +491,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -616,7 +616,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -652,7 +652,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -696,7 +696,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -949,7 +949,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -1066,7 +1066,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -1151,7 +1151,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -1279,7 +1279,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -1341,7 +1341,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -1383,7 +1383,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -1422,7 +1422,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -1574,7 +1574,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -1786,7 +1786,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -1906,7 +1906,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -1966,7 +1966,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -2113,7 +2113,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -2241,7 +2241,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -2314,7 +2314,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -2352,7 +2352,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -2454,7 +2454,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -2545,7 +2545,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -2677,7 +2677,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -3025,7 +3025,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -3063,7 +3063,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -3130,7 +3130,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
@@ -3153,7 +3153,7 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cam_errbuf
 argument_list|)
