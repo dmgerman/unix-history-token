@@ -580,15 +580,15 @@ name|sc_detach_private
 operator|=
 name|r92e_detach_private
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|RTWN_WITHOUT_UCODE
 name|sc
 operator|->
 name|sc_set_media_status
 operator|=
 name|r92e_set_media_status
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|RTWN_WITHOUT_UCODE
 name|sc
 operator|->
 name|sc_set_rsvd_page
@@ -608,6 +608,14 @@ operator|=
 name|rtwn_nop_softc
 expr_stmt|;
 comment|/* XXX TODO? */
+else|#
+directive|else
+name|sc
+operator|->
+name|sc_set_media_status
+operator|=
+name|rtwn_nop_softc_int
+expr_stmt|;
 endif|#
 directive|endif
 name|sc
