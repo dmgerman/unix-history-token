@@ -115,7 +115,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"accept"
@@ -153,7 +152,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"fork"
@@ -191,9 +189,9 @@ operator|+
 literal|1
 argument_list|,
 literal|0
+argument_list|)
 operator|<
 literal|0
-argument_list|)
 condition|)
 block|{
 if|if
@@ -216,7 +214,6 @@ name|EINVAL
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"file descriptor still open in child"
@@ -225,7 +222,6 @@ expr_stmt|;
 else|else
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"unexpected error"
@@ -235,7 +231,6 @@ block|}
 else|else
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"ftruncate succeeded"
@@ -285,7 +280,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"socket"
@@ -361,7 +355,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"bind"
@@ -381,7 +374,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"listen"
@@ -405,7 +397,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"pthread_create"
