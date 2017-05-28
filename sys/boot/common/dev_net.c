@@ -886,11 +886,6 @@ name|rootaddr
 decl_stmt|,
 name|smask
 decl_stmt|;
-specifier|extern
-name|struct
-name|in_addr
-name|servip
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SUPPORT_BOOTP
@@ -1560,13 +1555,6 @@ name|ptr
 argument_list|)
 argument_list|,
 name|ptr
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|ip
 argument_list|)
 expr_stmt|;
 name|addr
