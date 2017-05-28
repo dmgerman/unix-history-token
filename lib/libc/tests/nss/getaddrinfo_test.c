@@ -699,6 +699,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|free_addrinfo
 parameter_list|(
@@ -1995,6 +1996,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|run_tests
 parameter_list|(

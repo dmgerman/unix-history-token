@@ -104,16 +104,6 @@ block|, }
 enum|;
 end_enum
 
-begin_decl_stmt
-specifier|static
-name|enum
-name|test_methods
-name|method
-init|=
-name|TEST_BUILD_SNAPSHOT
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|DECLARE_TEST_DATA
 argument_list|(
