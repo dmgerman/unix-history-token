@@ -4492,6 +4492,10 @@ name|bool
 name|use_ipv6_mapping
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|snapshot_file_copy
+decl_stmt|;
 name|struct
 name|hostent_test_data
 name|td
@@ -4509,6 +4513,37 @@ init|=
 operator|-
 literal|2
 decl_stmt|;
+if|if
+condition|(
+name|snapshot_file
+operator|==
+name|NULL
+condition|)
+name|snapshot_file_copy
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+block|{
+name|snapshot_file_copy
+operator|=
+name|strdup
+argument_list|(
+name|snapshot_file
+argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE
+argument_list|(
+name|snapshot_file_copy
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+name|snapshot_file
+operator|=
+name|snapshot_file_copy
+expr_stmt|;
 switch|switch
 condition|(
 name|_af_type
@@ -4591,12 +4626,14 @@ argument_list|(
 literal|"error: can't init res_state\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|rv
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|fin2
+goto|;
 block|}
 if|if
 condition|(
@@ -5058,6 +5095,13 @@ operator|&
 name|td
 argument_list|)
 expr_stmt|;
+name|fin2
+label|:
+name|free
+argument_list|(
+name|snapshot_file_copy
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rv
@@ -5089,7 +5133,7 @@ parameter_list|,
 name|use_ipv6_mapping
 parameter_list|)
 define|\
-value|do {									\ 	char *_hostlist_file;						\ 	char *_snapshot_file;						\ 	ATF_REQUIRE(0< asprintf(&_hostlist_file, "%s/%s",		\ 	    atf_tc_get_config_var(tc, "srcdir"), HOSTLIST_FILE));	\ 	if (snapshot_file == NULL)					\ 		_snapshot_file = NULL;					\ 	else {								\ 		_snapshot_file = strdup(snapshot_file); 		\ 		ATF_REQUIRE(_snapshot_file != NULL);			\ 	}								\ 	ATF_REQUIRE(run_tests(_hostlist_file, _snapshot_file, af_type,	\ 	    method, use_ipv6_mapping) == 0);				\ } while(0)
+value|do {									\ 	char *_hostlist_file;						\ 	ATF_REQUIRE(0< asprintf(&_hostlist_file, "%s/%s",		\ 	    atf_tc_get_config_var(tc, "srcdir"), HOSTLIST_FILE));	\ 	ATF_REQUIRE(run_tests(_hostlist_file, snapshot_file, af_type,	\ 	    method, use_ipv6_mapping) == 0);				\ 	free(_hostlist_file);						\ } while (0)
 end_define
 
 begin_define
@@ -5108,7 +5152,7 @@ parameter_list|,
 name|use_ipv6_mapping
 parameter_list|)
 define|\
-value|do {									\ 	use_ipnode_functions = false; 					\ 	_RUN_TESTS(tc, snapshot_file, af_type, method, use_ipv6_mapping); \ } while(0)
+value|do {									\ 	use_ipnode_functions = false; 					\ 	_RUN_TESTS(tc, snapshot_file, af_type, method, use_ipv6_mapping); \ } while (0)
 end_define
 
 begin_define
@@ -5127,7 +5171,7 @@ parameter_list|,
 name|use_ipv6_mapping
 parameter_list|)
 define|\
-value|do {									\ 	use_ipnode_functions = true; 					\ 	_RUN_TESTS(tc, snapshot_file, af_type, method, use_ipv6_mapping); \ } while(0)
+value|do {									\ 	use_ipnode_functions = true; 					\ 	_RUN_TESTS(tc, snapshot_file, af_type, method, use_ipv6_mapping); \ } while (0)
 end_define
 
 begin_expr_stmt
