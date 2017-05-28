@@ -120,6 +120,11 @@ argument_list|,
 literal|"accept"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|accept_fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
