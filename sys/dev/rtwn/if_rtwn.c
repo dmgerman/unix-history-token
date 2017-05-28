@@ -425,12 +425,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RTWN_WITHOUT_UCODE
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|void
@@ -446,6 +440,12 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RTWN_WITHOUT_UCODE
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -3593,12 +3593,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RTWN_WITHOUT_UCODE
-end_ifndef
-
 begin_function
 specifier|static
 name|void
@@ -3628,6 +3622,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RTWN_WITHOUT_UCODE
+end_ifndef
 
 begin_function
 specifier|static
@@ -8590,9 +8590,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifndef|#
-directive|ifndef
-name|RTWN_WITHOUT_UCODE
 comment|/* Notify firmware. */
 name|id
 operator||=
@@ -8613,8 +8610,6 @@ argument_list|,
 name|rtwn_set_media_status
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -8675,9 +8670,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|RTWN_WITHOUT_UCODE
 name|rtwn_cmd_sleepable
 argument_list|(
 name|sc
@@ -8697,8 +8689,6 @@ argument_list|,
 name|rtwn_set_media_status
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|RTWN_NT_UNLOCK
 argument_list|(
