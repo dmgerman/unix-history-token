@@ -897,6 +897,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -972,6 +975,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
