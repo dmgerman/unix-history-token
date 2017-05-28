@@ -1533,6 +1533,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|printf
@@ -1867,6 +1868,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 comment|/* Only correctness can be checked when doing 1-pass test for 	 * getgrent(). */
