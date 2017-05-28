@@ -473,14 +473,10 @@ name|r_aliases
 operator|=
 name|calloc
 argument_list|(
-literal|1
-argument_list|,
-operator|(
 name|aliases_num
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char
