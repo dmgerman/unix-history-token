@@ -1544,8 +1544,6 @@ modifier|*
 name|ps
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|rv
 decl_stmt|;
 name|printf
@@ -1556,10 +1554,6 @@ name|line
 argument_list|)
 expr_stmt|;
 name|rv
-operator|=
-literal|0
-expr_stmt|;
-name|i
 operator|=
 literal|0
 expr_stmt|;
