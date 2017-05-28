@@ -179,9 +179,9 @@ name|read_only_fd
 decl_stmt|;
 name|char
 name|path
-index|[
-name|PATH_MAX
-index|]
+index|[]
+init|=
+literal|"ftruncate_file"
 decl_stmt|;
 name|struct
 name|stat
@@ -196,21 +196,16 @@ decl_stmt|;
 name|char
 name|ch
 decl_stmt|;
-comment|/* 	 * Tests using a writable temporary file: grow and then shrink a file 	 * using ftruncate and various lengths.  Make sure that a negative 	 * file length is rejected.  Make sure that when we grow the file, 	 * bytes now in the range of the file size return 0. 	 * 	 * Save a read-only reference to the file to use later for read-only 	 * descriptor tests. 	 */
-name|snprintf
-argument_list|(
-name|path
-argument_list|,
-name|PATH_MAX
-argument_list|,
-literal|"/tmp/ftruncate.XXXXXXXXXXXXX"
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Tests using a writable file: grow and then shrink a file 	 * using ftruncate and various lengths.  Make sure that a negative 	 * file length is rejected.  Make sure that when we grow the file, 	 * bytes now in the range of the file size return 0. 	 * 	 * Save a read-only reference to the file to use later for read-only 	 * descriptor tests. 	 */
 name|fd
 operator|=
-name|mkstemp
+name|open
 argument_list|(
 name|path
+argument_list|,
+name|O_RDWR
+operator||
+name|O_CREAT
 argument_list|)
 expr_stmt|;
 if|if
@@ -223,7 +218,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"mkstemp"
+literal|"open(%s, O_RDWR|O_CREAT"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 name|read_only_fd
