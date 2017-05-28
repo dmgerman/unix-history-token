@@ -2067,6 +2067,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2132,6 +2135,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2169,6 +2175,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2199,6 +2208,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2226,6 +2238,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2277,6 +2292,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|size_t
+operator|)
 name|ht
 operator|->
 name|h_length
@@ -2297,6 +2315,9 @@ name|i
 operator|+
 literal|1
 operator|!=
+operator|(
+name|size_t
+operator|)
 name|ht
 operator|->
 name|h_length
@@ -2326,6 +2347,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2370,6 +2394,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2401,6 +2428,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2431,6 +2461,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -4448,6 +4481,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|run_tests
 parameter_list|(
