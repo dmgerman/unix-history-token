@@ -801,6 +801,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -839,6 +842,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -874,6 +880,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -892,6 +901,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|ai
 operator|->
 name|ai_addrlen
@@ -912,6 +924,9 @@ name|i
 operator|+
 literal|1
 operator|!=
+operator|(
+name|int
+operator|)
 name|ai
 operator|->
 name|ai_addrlen
@@ -943,6 +958,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -987,6 +1005,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
