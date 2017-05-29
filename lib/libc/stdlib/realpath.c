@@ -323,6 +323,8 @@ expr_stmt|;
 name|next_token_len
 operator|=
 name|p
+operator|!=
+name|NULL
 condition|?
 name|p
 operator|-
@@ -459,7 +461,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 continue|continue;
+block|}
 elseif|else
 if|if
 condition|(
@@ -623,9 +627,8 @@ name|slen
 operator|<
 literal|0
 condition|)
-block|{
+empty_stmt|;
 comment|/* keep errno from readlink(2) call */
-block|}
 elseif|else
 if|if
 condition|(
@@ -633,19 +636,15 @@ name|slen
 operator|==
 literal|0
 condition|)
-block|{
 name|errno
 operator|=
 name|ENOENT
 expr_stmt|;
-block|}
 else|else
-block|{
 name|errno
 operator|=
 name|ENAMETOOLONG
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|NULL
