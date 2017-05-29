@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"2.5.1-FreeBSD"
+value|"2.6.0-FreeBSD"
 end_define
 
 begin_define
