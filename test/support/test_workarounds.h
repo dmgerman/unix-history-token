@@ -68,6 +68,10 @@ directive|define
 name|TEST_WORKAROUND_EDG_EXPLICIT_CONSTEXPR
 end_define
 
+begin_comment
+comment|// VSO#424280
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -85,14 +89,22 @@ end_if
 begin_define
 define|#
 directive|define
-name|TEST_WORKAROUND_C1XX_BROKEN_NULLPTR_CONVERSION_OPERATOR
+name|TEST_WORKAROUND_C1XX_BROKEN_IS_TRIVIALLY_COPYABLE
 end_define
+
+begin_comment
+comment|// VSO#117743
+end_comment
 
 begin_define
 define|#
 directive|define
-name|TEST_WORKAROUND_C1XX_BROKEN_IS_TRIVIALLY_COPYABLE
+name|TEST_WORKAROUND_C1XX_EMPTY_PARAMETER_PACK_EXPANSION
 end_define
+
+begin_comment
+comment|// VSO#109062
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -105,6 +117,10 @@ define|#
 directive|define
 name|TEST_WORKAROUND_C1XX_BROKEN_ZA_CTOR_CHECK
 end_define
+
+begin_comment
+comment|// VSO#119998
+end_comment
 
 begin_endif
 endif|#
