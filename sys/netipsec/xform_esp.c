@@ -1109,12 +1109,13 @@ name|int
 name|protoff
 parameter_list|)
 block|{
-name|char
-name|buf
-index|[
+name|IPSEC_DEBUG_DECLARE
+argument_list|(
+argument|char buf[
 literal|128
-index|]
-decl_stmt|;
+argument|]
+argument_list|)
+empty_stmt|;
 specifier|const
 name|struct
 name|auth_hash
@@ -2017,12 +2018,13 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
-name|char
-name|buf
-index|[
+name|IPSEC_DEBUG_DECLARE
+argument_list|(
+argument|char buf[
 literal|128
-index|]
-decl_stmt|;
+argument|]
+argument_list|)
+empty_stmt|;
 name|u_int8_t
 name|lastthree
 index|[
@@ -3044,12 +3046,11 @@ name|int
 name|protoff
 parameter_list|)
 block|{
-name|char
-name|buf
-index|[
-name|IPSEC_ADDRSTRLEN
-index|]
-decl_stmt|;
+name|IPSEC_DEBUG_DECLARE
+argument_list|(
+argument|char buf[IPSEC_ADDRSTRLEN]
+argument_list|)
+empty_stmt|;
 name|struct
 name|cryptodesc
 modifier|*
