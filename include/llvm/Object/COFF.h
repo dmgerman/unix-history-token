@@ -3617,6 +3617,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|uint64_t
+name|getSectionIndex
+argument_list|(
+name|DataRefImpl
+name|Sec
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint64_t
 name|getSectionSize
 argument_list|(
 name|DataRefImpl

@@ -704,6 +704,27 @@ modifier|&
 name|DAG
 parameter_list|)
 function_decl|;
+comment|/// isXXSLDWIShuffleMask - Return true if this is a shuffle mask suitable
+comment|/// for a XXSLDWI instruction.
+name|bool
+name|isXXSLDWIShuffleMask
+parameter_list|(
+name|ShuffleVectorSDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+modifier|&
+name|ShiftElts
+parameter_list|,
+name|bool
+modifier|&
+name|Swap
+parameter_list|,
+name|bool
+name|IsLE
+parameter_list|)
+function_decl|;
 comment|/// isVSLDOIShuffleMask - If this is a vsldoi shuffle mask, return the
 comment|/// shift amount, otherwise return -1.
 name|int

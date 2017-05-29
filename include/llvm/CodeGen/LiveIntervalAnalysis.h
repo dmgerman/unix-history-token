@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- LiveIntervalAnalysis.h - Live Interval Analysis ---------*- C++ -*-===//
+comment|//===- LiveIntervalAnalysis.h - Live Interval Analysis ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,6 +86,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IndexedMap.h"
 end_include
 
@@ -128,7 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
+file|"llvm/MC/LaneBitmask.h"
 end_include
 
 begin_include
@@ -140,13 +146,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cmath>
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -158,37 +188,31 @@ name|class
 name|BitVector
 decl_stmt|;
 name|class
-name|BlockFrequency
-decl_stmt|;
-name|class
 name|LiveRangeCalc
 decl_stmt|;
 name|class
-name|LiveVariables
+name|MachineBlockFrequencyInfo
 decl_stmt|;
 name|class
 name|MachineDominatorTree
 decl_stmt|;
 name|class
-name|MachineLoopInfo
+name|MachineFunction
 decl_stmt|;
 name|class
-name|TargetRegisterInfo
+name|MachineInstr
 decl_stmt|;
 name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|raw_ostream
+decl_stmt|;
+name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
-name|TargetRegisterClass
-decl_stmt|;
-name|class
 name|VirtRegMap
-decl_stmt|;
-name|class
-name|MachineBlockFrequencyInfo
 decl_stmt|;
 name|class
 name|LiveIntervals
@@ -225,10 +249,14 @@ block|;
 name|MachineDominatorTree
 operator|*
 name|DomTree
+operator|=
+name|nullptr
 block|;
 name|LiveRangeCalc
 operator|*
 name|LRCalc
+operator|=
+name|nullptr
 block|;
 comment|/// Special pool allocator for VNInfo's (LiveInterval val#).
 name|VNInfo
@@ -1602,13 +1630,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_LIVEINTERVALANALYSIS_H
+end_comment
 
 end_unit
 

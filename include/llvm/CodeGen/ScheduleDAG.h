@@ -206,7 +206,7 @@ block|,
 comment|///< Regular data dependence (aka true-dependence).
 name|Anti
 block|,
-comment|///< A register anti-dependedence (aka WAR).
+comment|///< A register anti-dependence (aka WAR).
 name|Output
 block|,
 comment|///< A register output-dependence (aka WAW).
@@ -216,7 +216,7 @@ block|}
 enum|;
 comment|// Strong dependencies must be respected by the scheduler. Artificial
 comment|// dependencies may be removed only if they are redundant with another
-comment|// strong depedence.
+comment|// strong dependence.
 comment|//
 comment|// Weak dependencies may be violated by the scheduling strategy, but only if
 comment|// the strategy can prove it is correct to do so.
@@ -1445,7 +1445,7 @@ comment|///
 comment|/// BoundaryNodes can have DAG edges, including Data edges, but they do not
 comment|/// correspond to schedulable entities (e.g. instructions) and do not have a
 comment|/// valid ID. Consequently, always check for boundary nodes before accessing
-comment|/// an assoicative data structure keyed on node ID.
+comment|/// an associative data structure keyed on node ID.
 name|bool
 name|isBoundaryNode
 argument_list|()

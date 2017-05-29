@@ -68,6 +68,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASSERT_EXPECTED
+parameter_list|(
+name|Exp
+parameter_list|)
+define|\
+value|{                                                                            \     auto E = Exp.takeError();                                                  \     bool Success = static_cast<bool>(E);                                       \     if (!Success)                                                              \       consumeError(std::move(E));                                              \     ASSERT_FALSE(Success);                                                     \   }
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXPECT_EXPECTED
 parameter_list|(
 name|Exp

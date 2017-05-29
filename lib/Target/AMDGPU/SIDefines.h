@@ -459,6 +459,11 @@ block|,
 comment|// Operand for source modifiers for VOP instructions
 name|OPERAND_INPUT_MODS
 block|,
+comment|// Operand for GFX9 SDWA instructions
+name|OPERAND_SDWA9_SRC
+block|,
+name|OPERAND_SDWA9_VOPC_DST
+block|,
 comment|/// Operand with 32-bit immediate that uses the constant bus.
 name|OPERAND_KIMM32
 block|,
@@ -584,9 +589,13 @@ name|SDWA
 init|=
 literal|2
 block|,
-name|DPP
+name|SDWA9
 init|=
 literal|3
+block|,
+name|DPP
+init|=
+literal|4
 block|}
 enum|;
 block|}
@@ -1056,6 +1065,42 @@ block|,
 name|UNUSED_PRESERVE
 init|=
 literal|2
+block|, }
+enum|;
+enum|enum
+name|SDWA9EncValues
+block|{
+name|SRC_SGPR_MASK
+init|=
+literal|0x100
+block|,
+name|SRC_VGPR_MASK
+init|=
+literal|0xFF
+block|,
+name|VOPC_DST_VCC_MASK
+init|=
+literal|0x80
+block|,
+name|VOPC_DST_SGPR_MASK
+init|=
+literal|0x7F
+block|,
+name|SRC_VGPR_MIN
+init|=
+literal|0
+block|,
+name|SRC_VGPR_MAX
+init|=
+literal|255
+block|,
+name|SRC_SGPR_MIN
+init|=
+literal|256
+block|,
+name|SRC_SGPR_MAX
+init|=
+literal|357
 block|, }
 enum|;
 block|}

@@ -1230,6 +1230,14 @@ specifier|const
 name|override
 block|;
 name|uint64_t
+name|getSectionIndex
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|)
+specifier|const
+name|override
+block|;
+name|uint64_t
 name|getSectionSize
 argument_list|(
 argument|DataRefImpl Sec

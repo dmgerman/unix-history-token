@@ -236,6 +236,12 @@ specifier|const
 name|RelocAddrMap
 modifier|*
 name|Relocs
+parameter_list|,
+name|uint64_t
+modifier|*
+name|SecNdx
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// DWARFContext
@@ -375,6 +381,50 @@ operator|<
 name|DWARFDebugLocDWO
 operator|>
 name|LocDWO
+block|;    struct
+name|DWOFile
+block|{
+name|object
+operator|::
+name|OwningBinary
+operator|<
+name|object
+operator|::
+name|ObjectFile
+operator|>
+name|File
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DWARFContext
+operator|>
+name|Context
+block|;   }
+block|;
+name|StringMap
+operator|<
+name|std
+operator|::
+name|weak_ptr
+operator|<
+name|DWOFile
+operator|>>
+name|DWOFiles
+block|;
+name|std
+operator|::
+name|weak_ptr
+operator|<
+name|DWOFile
+operator|>
+name|DWP
+block|;
+name|bool
+name|CheckedForDWP
+operator|=
+name|false
 block|;
 comment|/// Read compile units from the debug_info section (if necessary)
 comment|/// and store them in CUs.
@@ -693,6 +743,14 @@ name|get
 argument_list|()
 return|;
 block|}
+name|DWARFCompileUnit
+modifier|*
+name|getDWOCompileUnitForHash
+parameter_list|(
+name|uint64_t
+name|Hash
+parameter_list|)
+function_decl|;
 comment|/// Get a DIE given an exact offset.
 name|DWARFDie
 name|getDIEForOffset
@@ -832,6 +890,14 @@ argument_list|()
 argument_list|)
 name|override
 decl_stmt|;
+name|virtual
+name|StringRef
+name|getFileName
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 name|virtual
 name|bool
 name|isLittleEndian
@@ -1143,6 +1209,17 @@ operator|==
 literal|5
 return|;
 block|}
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|DWARFContext
+operator|>
+name|getDWOContext
+argument_list|(
+argument|StringRef AbsolutePath
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 comment|/// Return the compile unit that includes an offset (relative to .debug_info).
@@ -1194,6 +1271,9 @@ name|virtual
 name|void
 name|anchor
 argument_list|()
+block|;
+name|StringRef
+name|FileName
 block|;
 name|bool
 name|IsLittleEndian
@@ -1353,6 +1433,16 @@ argument_list|,
 argument|bool isLittleEndian = sys::IsLittleEndianHost
 argument_list|)
 block|;
+name|StringRef
+name|getFileName
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|FileName
+return|;
+block|}
 name|bool
 name|isLittleEndian
 argument_list|()

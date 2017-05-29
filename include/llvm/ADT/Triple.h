@@ -149,6 +149,9 @@ comment|// MIPS64EL: mips64el
 name|msp430
 block|,
 comment|// MSP430: msp430
+name|nios2
+block|,
+comment|// NIOSII: nios2
 name|ppc
 block|,
 comment|// PPC: powerpc

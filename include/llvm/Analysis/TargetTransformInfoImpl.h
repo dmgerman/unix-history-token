@@ -1094,6 +1094,14 @@ return|return
 name|false
 return|;
 block|}
+name|bool
+name|prefersVectorizedAddressing
+parameter_list|()
+block|{
+return|return
+name|true
+return|;
+block|}
 name|int
 name|getScalingFactorCost
 parameter_list|(

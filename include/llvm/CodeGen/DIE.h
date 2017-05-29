@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- lib/CodeGen/DIE.h - DWARF Info Entries -----------------*- C++ -*-===//
+comment|//===- lib/CodeGen/DIE.h - DWARF Info Entries -------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -164,6 +164,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -212,6 +218,8 @@ expr_stmt|;
 comment|/// Dwarf attribute value for DW_FORM_implicit_const
 name|int64_t
 name|Value
+init|=
+literal|0
 decl_stmt|;
 name|public
 label|:
@@ -229,12 +237,7 @@ argument_list|)
 operator|,
 name|Form
 argument_list|(
-name|F
-argument_list|)
-operator|,
-name|Value
-argument_list|(
-literal|0
+argument|F
 argument_list|)
 block|{}
 name|DIEAbbrevData
@@ -515,8 +518,6 @@ modifier|&
 name|Alloc
 decl_stmt|;
 comment|/// \brief FoldingSet that uniques the abbreviations.
-name|llvm
-operator|::
 name|FoldingSet
 operator|<
 name|DIEAbbrev
@@ -1189,22 +1190,19 @@ comment|/// A pointer to another debug information entry.  An instance of this c
 comment|/// also be used as a proxy for a debug information entry not yet defined
 comment|/// (ie. types.)
 name|class
-name|DIE
-decl_stmt|;
-name|class
 name|DIEEntry
 block|{
 name|DIE
 modifier|*
 name|Entry
 decl_stmt|;
+name|public
+label|:
 name|DIEEntry
 argument_list|()
 operator|=
 name|delete
 expr_stmt|;
-name|public
-label|:
 name|explicit
 name|DIEEntry
 argument_list|(
@@ -1410,32 +1408,33 @@ comment|/// Storage for the value.
 comment|///
 comment|/// All values that aren't standard layout (or are larger than 8 bytes)
 comment|/// should be stored by reference instead of by value.
-typedef|typedef
+name|using
+name|ValTy
+init|=
 name|AlignedCharArrayUnion
 operator|<
 name|DIEInteger
-operator|,
+decl_stmt|,
 name|DIEString
-operator|,
+decl_stmt|,
 name|DIEExpr
-operator|,
+decl_stmt|,
 name|DIELabel
-operator|,
+decl_stmt|,
 name|DIEDelta
-operator|*
-operator|,
+modifier|*
+decl_stmt|,
 name|DIEEntry
-operator|,
+decl_stmt|,
 name|DIEBlock
-operator|*
-operator|,
+modifier|*
+decl_stmt|,
 name|DIELoc
-operator|*
-operator|,
+modifier|*
+decl_stmt|,
 name|DIELocList
-operator|>
-name|ValTy
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|static_assert
 argument_list|(
 sizeof|sizeof
@@ -1915,10 +1914,11 @@ struct|;
 struct|struct
 name|IntrusiveBackListBase
 block|{
-typedef|typedef
-name|IntrusiveBackListNode
+name|using
 name|Node
-typedef|;
+init|=
+name|IntrusiveBackListNode
+decl_stmt|;
 name|Node
 modifier|*
 name|Last
@@ -2491,13 +2491,14 @@ argument_list|)
 block|{}
 block|}
 block|;
-typedef|typedef
+name|using
+name|ListTy
+operator|=
 name|IntrusiveBackList
 operator|<
 name|Node
 operator|>
-name|ListTy
-expr_stmt|;
+block|;
 name|ListTy
 name|List
 block|;
@@ -2529,29 +2530,30 @@ name|friend
 name|class
 name|const_value_iterator
 block|;
-typedef|typedef
+name|using
+name|iterator_adaptor
+operator|=
 name|iterator_adaptor_base
 operator|<
 name|value_iterator
-operator|,
+block|,
 name|ListTy
 operator|::
 name|iterator
-operator|,
+block|,
 name|std
 operator|::
 name|forward_iterator_tag
-operator|,
+block|,
 name|DIEValue
 operator|>
-name|iterator_adaptor
-expr_stmt|;
+block|;
 name|public
 operator|:
 name|value_iterator
 argument_list|()
 operator|=
-block|default
+expr|default
 block|;
 name|explicit
 name|value_iterator
@@ -2615,30 +2617,31 @@ specifier|const
 name|DIEValue
 operator|>
 block|{
-typedef|typedef
+name|using
+name|iterator_adaptor
+operator|=
 name|iterator_adaptor_base
 operator|<
 name|const_value_iterator
-operator|,
+block|,
 name|ListTy
 operator|::
 name|const_iterator
-operator|,
+block|,
 name|std
 operator|::
 name|forward_iterator_tag
-operator|,
+block|,
 specifier|const
 name|DIEValue
 operator|>
-name|iterator_adaptor
-expr_stmt|;
+block|;
 name|public
 operator|:
 name|const_value_iterator
 argument_list|()
 operator|=
-block|default
+expr|default
 block|;
 name|const_value_iterator
 argument_list|(
@@ -2693,20 +2696,22 @@ return|;
 block|}
 expr|}
 block|;
-typedef|typedef
+name|using
+name|value_range
+operator|=
 name|iterator_range
 operator|<
 name|value_iterator
 operator|>
-name|value_range
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_value_range
+operator|=
 name|iterator_range
 operator|<
 name|const_value_iterator
 operator|>
-name|const_value_range
-expr_stmt|;
+block|;
 name|value_iterator
 name|addValue
 argument_list|(
@@ -2864,10 +2869,14 @@ block|;
 comment|/// Dwarf unit relative offset.
 name|unsigned
 name|Offset
+operator|=
+literal|0
 block|;
 comment|/// Size of instance + children.
 name|unsigned
 name|Size
+operator|=
+literal|0
 block|;
 name|unsigned
 name|AbbrevNumber
@@ -2892,6 +2901,8 @@ comment|/// Set to true to force a DIE to emit an abbreviation that says it has
 comment|/// children even when it doesn't. This is used for unit testing purposes.
 name|bool
 name|ForceChildren
+operator|=
+name|false
 block|;
 comment|/// Children DIEs.
 name|IntrusiveBackList
@@ -2912,39 +2923,69 @@ operator|*
 operator|>
 name|Owner
 block|;
-name|DIE
-argument_list|()
-operator|=
-name|delete
-block|;
 name|explicit
 name|DIE
 argument_list|(
 argument|dwarf::Tag Tag
 argument_list|)
 operator|:
-name|Offset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Size
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|Tag
 argument_list|(
-name|Tag
-argument_list|)
-block|,
-name|ForceChildren
-argument_list|(
-argument|false
+argument|Tag
 argument_list|)
 block|{}
 name|public
 operator|:
+name|DIE
+argument_list|()
+operator|=
+name|delete
+block|;
+name|DIE
+argument_list|(
+specifier|const
+name|DIE
+operator|&
+name|RHS
+argument_list|)
+operator|=
+name|delete
+block|;
+name|DIE
+argument_list|(
+name|DIE
+operator|&&
+name|RHS
+argument_list|)
+operator|=
+name|delete
+block|;
+name|DIE
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|DIE
+operator|&
+name|RHS
+operator|)
+operator|=
+name|delete
+block|;
+name|DIE
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|DIE
+operator|&&
+name|RHS
+operator|)
+operator|=
+name|delete
+block|;
 specifier|static
 name|DIE
 operator|*
@@ -2966,49 +3007,6 @@ name|Tag
 argument_list|)
 return|;
 block|}
-name|DIE
-argument_list|(
-specifier|const
-name|DIE
-operator|&
-name|RHS
-argument_list|)
-operator|=
-name|delete
-block|;
-name|DIE
-argument_list|(
-name|DIE
-operator|&&
-name|RHS
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|DIE
-operator|&
-name|RHS
-operator|)
-operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|DIE
-operator|&&
-name|RHS
-operator|)
-operator|=
-name|delete
-block|;
 comment|// Accessors.
 name|unsigned
 name|getAbbrevNumber
@@ -3074,41 +3072,45 @@ name|ForceChildren
 operator|=
 name|B
 block|; }
-typedef|typedef
+name|using
+name|child_iterator
+operator|=
 name|IntrusiveBackList
 operator|<
 name|DIE
 operator|>
 operator|::
 name|iterator
-name|child_iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_child_iterator
+operator|=
 name|IntrusiveBackList
 operator|<
 name|DIE
 operator|>
 operator|::
 name|const_iterator
-name|const_child_iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|child_range
+operator|=
 name|iterator_range
 operator|<
 name|child_iterator
 operator|>
-name|child_range
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_child_range
+operator|=
 name|iterator_range
 operator|<
 name|const_child_iterator
 operator|>
-name|const_child_range
-expr_stmt|;
+block|;
 name|child_range
 name|children
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|make_range
@@ -3150,7 +3152,7 @@ operator|*
 name|getParent
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// Generate the abbreviation for this DIE.
 comment|///
 comment|/// Calculate the abbreviation for this, which should be uniqued and
@@ -3159,27 +3161,25 @@ name|DIEAbbrev
 name|generateAbbrev
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// Set the abbreviation number for this DIE.
 name|void
 name|setAbbrevNumber
-parameter_list|(
-name|unsigned
-name|I
-parameter_list|)
+argument_list|(
+argument|unsigned I
+argument_list|)
 block|{
 name|AbbrevNumber
 operator|=
 name|I
-expr_stmt|;
-block|}
+block|; }
 comment|/// Get the absolute offset within the .debug_info or .debug_types section
 comment|/// for this DIE.
 name|unsigned
 name|getDebugSectionOffset
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// Compute the offset of this DIE and all its children.
 comment|///
 comment|/// This function gets called just before we are going to generate the debug
@@ -3198,20 +3198,14 @@ comment|/// \returns the offset for the DIE that follows this DIE within the
 comment|/// current compile/type unit.
 name|unsigned
 name|computeOffsetsAndAbbrevs
-parameter_list|(
-specifier|const
-name|AsmPrinter
-modifier|*
-name|AP
-parameter_list|,
-name|DIEAbbrevSet
-modifier|&
-name|AbbrevSet
-parameter_list|,
-name|unsigned
-name|CUOffset
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|DIEAbbrevSet&AbbrevSet
+argument_list|,
+argument|unsigned CUOffset
+argument_list|)
+block|;
 comment|/// Climb up the parent chain to get the compile unit or type unit DIE that
 comment|/// this DIE belongs to.
 comment|///
@@ -3223,7 +3217,7 @@ operator|*
 name|getUnitDie
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// Climb up the parent chain to get the compile unit or type unit that this
 comment|/// DIE belongs to.
 comment|///
@@ -3235,40 +3229,34 @@ operator|*
 name|getUnit
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|void
 name|setOffset
-parameter_list|(
-name|unsigned
-name|O
-parameter_list|)
+argument_list|(
+argument|unsigned O
+argument_list|)
 block|{
 name|Offset
 operator|=
 name|O
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setSize
-parameter_list|(
-name|unsigned
-name|S
-parameter_list|)
+argument_list|(
+argument|unsigned S
+argument_list|)
 block|{
 name|Size
 operator|=
 name|S
-expr_stmt|;
-block|}
+block|; }
 comment|/// Add a child to the DIE.
 name|DIE
-modifier|&
+operator|&
 name|addChild
-parameter_list|(
-name|DIE
-modifier|*
-name|Child
-parameter_list|)
+argument_list|(
+argument|DIE *Child
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -3280,13 +3268,13 @@ argument_list|()
 operator|&&
 literal|"Child should be orphaned"
 argument_list|)
-expr_stmt|;
+block|;
 name|Child
 operator|->
 name|Owner
 operator|=
 name|this
-expr_stmt|;
+block|;
 name|Children
 operator|.
 name|push_back
@@ -3294,7 +3282,7 @@ argument_list|(
 operator|*
 name|Child
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Children
 operator|.
@@ -3309,47 +3297,27 @@ comment|/// gives \a DIEValue::isNone) if no such attribute exists.
 name|DIEValue
 name|findAttribute
 argument_list|(
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
+argument|dwarf::Attribute Attribute
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|void
 name|print
 argument_list|(
-name|raw_ostream
-operator|&
-name|O
+argument|raw_ostream&O
 argument_list|,
-name|unsigned
-name|IndentCount
-operator|=
+argument|unsigned IndentCount =
 literal|0
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|void
 name|dump
-parameter_list|()
-function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+argument_list|()
+block|; }
+block|;
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// Represents a compile or type unit.
-end_comment
-
-begin_decl_stmt
 name|class
 name|DIEUnit
 block|{
@@ -3360,41 +3328,41 @@ comment|/// DIEUnit. This allows us to be able to find the DIEUnit for any DIE w
 comment|/// having to store a pointer to the DIEUnit in each DIE instance.
 name|DIE
 name|Die
-decl_stmt|;
+block|;
 comment|/// The section this unit will be emitted in. This may or may not be set to
 comment|/// a valid section depending on the client that is emitting DWARF.
 name|MCSection
-modifier|*
+operator|*
 name|Section
-decl_stmt|;
+block|;
 name|uint64_t
 name|Offset
-decl_stmt|;
+block|;
 comment|/// .debug_info or .debug_types absolute section offset.
 name|uint32_t
 name|Length
-decl_stmt|;
+block|;
 comment|/// The length in bytes of all of the DIEs in this unit.
 specifier|const
 name|uint16_t
 name|Version
-decl_stmt|;
+block|;
 comment|/// The Dwarf version number for this unit.
 specifier|const
 name|uint8_t
 name|AddrSize
-decl_stmt|;
+block|;
 comment|/// The size in bytes of an address for this unit.
 name|protected
-label|:
+operator|:
 operator|~
 name|DIEUnit
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|DIEUnit
 argument_list|(
 argument|uint16_t Version
@@ -3403,7 +3371,7 @@ argument|uint8_t AddrSize
 argument_list|,
 argument|dwarf::Tag UnitTag
 argument_list|)
-empty_stmt|;
+block|;
 name|DIEUnit
 argument_list|(
 specifier|const
@@ -3413,7 +3381,7 @@ name|RHS
 argument_list|)
 operator|=
 name|delete
-expr_stmt|;
+block|;
 name|DIEUnit
 argument_list|(
 name|DIEUnit
@@ -3422,10 +3390,10 @@ name|RHS
 argument_list|)
 operator|=
 name|delete
-expr_stmt|;
+block|;
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|DIEUnit
@@ -3434,10 +3402,10 @@ name|RHS
 operator|)
 operator|=
 name|delete
-decl_stmt|;
+block|;
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|DIEUnit
@@ -3446,18 +3414,16 @@ name|RHS
 operator|)
 operator|=
 name|delete
-decl_stmt|;
+block|;
 comment|/// Set the section that this DIEUnit will be emitted into.
 comment|///
 comment|/// This function is used by some clients to set the section. Not all clients
 comment|/// that emit DWARF use this section variable.
 name|void
 name|setSection
-parameter_list|(
-name|MCSection
-modifier|*
-name|Section
-parameter_list|)
+argument_list|(
+argument|MCSection *Section
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -3466,14 +3432,13 @@ name|this
 operator|->
 name|Section
 argument_list|)
-expr_stmt|;
+block|;
 name|this
 operator|->
 name|Section
 operator|=
 name|Section
-expr_stmt|;
-block|}
+block|;   }
 name|virtual
 specifier|const
 name|MCSymbol
@@ -3501,16 +3466,14 @@ return|;
 block|}
 name|void
 name|setDebugSectionOffset
-parameter_list|(
-name|unsigned
-name|O
-parameter_list|)
+argument_list|(
+argument|unsigned O
+argument_list|)
 block|{
 name|Offset
 operator|=
 name|O
-expr_stmt|;
-block|}
+block|; }
 name|unsigned
 name|getDebugSectionOffset
 argument_list|()
@@ -3522,16 +3485,14 @@ return|;
 block|}
 name|void
 name|setLength
-parameter_list|(
-name|uint64_t
-name|L
-parameter_list|)
+argument_list|(
+argument|uint64_t L
+argument_list|)
 block|{
 name|Length
 operator|=
 name|L
-expr_stmt|;
-block|}
+block|; }
 name|uint64_t
 name|getLength
 argument_list|()
@@ -3560,9 +3521,9 @@ name|AddrSize
 return|;
 block|}
 name|DIE
-modifier|&
+operator|&
 name|getUnitDie
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Die
@@ -3579,18 +3540,11 @@ return|return
 name|Die
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
-name|struct
+expr|}
+block|;  struct
 name|BasicDIEUnit
 name|final
-range|:
+operator|:
 name|DIEUnit
 block|{
 name|BasicDIEUnit
@@ -3612,43 +3566,30 @@ argument|UnitTag
 argument_list|)
 block|{}
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// DIELoc - Represents an expression location.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_decl_stmt
 name|class
 name|DIELoc
-range|:
+operator|:
 name|public
 name|DIEValueList
 block|{
 name|mutable
 name|unsigned
 name|Size
+operator|=
+literal|0
 block|;
 comment|// Size in bytes excluding size header.
 name|public
 operator|:
 name|DIELoc
 argument_list|()
-operator|:
-name|Size
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// ComputeSize - Calculate the size of the location expression.
 comment|///
 name|unsigned
@@ -3696,9 +3637,6 @@ name|dwarf
 operator|::
 name|DW_FORM_block1
 return|;
-end_decl_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -3714,9 +3652,6 @@ name|dwarf
 operator|::
 name|DW_FORM_block2
 return|;
-end_if
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -3732,96 +3667,61 @@ name|dwarf
 operator|::
 name|DW_FORM_block4
 return|;
-end_if
-
-begin_return
 return|return
 name|dwarf
 operator|::
 name|DW_FORM_block
 return|;
-end_return
-
-begin_macro
-unit|}    void
+block|}
+name|void
 name|EmitValue
 argument_list|(
 argument|const AsmPrinter *AP
 argument_list|,
 argument|dwarf::Form Form
 argument_list|)
-end_macro
-
-begin_decl_stmt
 specifier|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|unsigned
 name|SizeOf
 argument_list|(
-specifier|const
-name|AsmPrinter
-operator|*
-name|AP
+argument|const AsmPrinter *AP
 argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
+argument|dwarf::Form Form
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
+block|;
 name|void
 name|print
 argument_list|(
-name|raw_ostream
-operator|&
-name|O
+argument|raw_ostream&O
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+specifier|const
+block|; }
+block|;
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// DIEBlock - Represents a block of values.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_decl_stmt
 name|class
 name|DIEBlock
-range|:
+operator|:
 name|public
 name|DIEValueList
 block|{
 name|mutable
 name|unsigned
 name|Size
+operator|=
+literal|0
 block|;
 comment|// Size in bytes excluding size header.
 name|public
 operator|:
 name|DIEBlock
 argument_list|()
-operator|:
-name|Size
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// ComputeSize - Calculate the size of the location expression.
 comment|///
 name|unsigned
@@ -3870,9 +3770,6 @@ name|dwarf
 operator|::
 name|DW_FORM_block2
 return|;
-end_decl_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -3888,63 +3785,42 @@ name|dwarf
 operator|::
 name|DW_FORM_block4
 return|;
-end_if
-
-begin_return
 return|return
 name|dwarf
 operator|::
 name|DW_FORM_block
 return|;
-end_return
-
-begin_macro
-unit|}    void
+block|}
+name|void
 name|EmitValue
 argument_list|(
 argument|const AsmPrinter *AP
 argument_list|,
 argument|dwarf::Form Form
 argument_list|)
-end_macro
-
-begin_decl_stmt
 specifier|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|unsigned
 name|SizeOf
 argument_list|(
-specifier|const
-name|AsmPrinter
-operator|*
-name|AP
+argument|const AsmPrinter *AP
 argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
+argument|dwarf::Form Form
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
+block|;
 name|void
 name|print
 argument_list|(
-name|raw_ostream
-operator|&
-name|O
+argument|raw_ostream&O
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|; }
+expr_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment
-unit|};  }
 comment|// end namespace llvm
 end_comment
 

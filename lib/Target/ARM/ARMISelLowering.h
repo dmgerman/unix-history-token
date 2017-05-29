@@ -1493,6 +1493,8 @@ block|;
 name|bool
 name|canMergeStoresTo
 argument_list|(
+argument|unsigned AddressSpace
+argument_list|,
 argument|EVT MemVT
 argument_list|)
 specifier|const

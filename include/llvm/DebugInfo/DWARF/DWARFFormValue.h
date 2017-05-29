@@ -153,6 +153,10 @@ name|data
 init|=
 name|nullptr
 decl_stmt|;
+name|uint64_t
+name|SectionIndex
+decl_stmt|;
+comment|/// Section index for reference forms.
 block|}
 struct|;
 name|dwarf
@@ -207,6 +211,17 @@ return|return
 name|Value
 operator|.
 name|uval
+return|;
+block|}
+name|uint64_t
+name|getSectionIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+operator|.
+name|SectionIndex
 return|;
 block|}
 name|void

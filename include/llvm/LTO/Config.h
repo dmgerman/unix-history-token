@@ -137,9 +137,12 @@ name|string
 operator|>
 name|MAttrs
 expr_stmt|;
+name|Optional
+operator|<
 name|Reloc
 operator|::
 name|Model
+operator|>
 name|RelocModel
 operator|=
 name|Reloc

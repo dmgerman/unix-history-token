@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- LiveStackAnalysis.h - Live Stack Slot Analysis ----------*- C++ -*-===//
+comment|//===- LiveStackAnalysis.h - Live Stack Slot Analysis -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -82,13 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
+file|"llvm/Pass.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|<cassert>
 end_include
 
 begin_include
@@ -108,6 +108,12 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|TargetRegisterClass
+decl_stmt|;
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
+name|class
 name|LiveStacks
 range|:
 name|public
@@ -126,40 +132,40 @@ name|Allocator
 name|VNInfoAllocator
 block|;
 comment|/// S2IMap - Stack slot indices to live interval mapping.
-comment|///
-typedef|typedef
+name|using
+name|SS2IntervalMap
+operator|=
 name|std
 operator|::
 name|unordered_map
 operator|<
 name|int
-operator|,
+block|,
 name|LiveInterval
 operator|>
-name|SS2IntervalMap
-expr_stmt|;
+block|;
 name|SS2IntervalMap
 name|S2IMap
-decl_stmt|;
+block|;
 comment|/// S2RCMap - Stack slot indices to register class mapping.
 name|std
 operator|::
 name|map
 operator|<
 name|int
-operator|,
+block|,
 specifier|const
 name|TargetRegisterClass
 operator|*
 operator|>
 name|S2RCMap
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 specifier|static
 name|char
 name|ID
-decl_stmt|;
+block|;
 comment|// Pass identification, replacement for typeid
 name|LiveStacks
 argument_list|()
@@ -178,18 +184,20 @@ name|getPassRegistry
 argument_list|()
 argument_list|)
 block|;   }
-typedef|typedef
+name|using
+name|iterator
+operator|=
 name|SS2IntervalMap
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_iterator
+operator|=
 name|SS2IntervalMap
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
+block|;
 name|const_iterator
 name|begin
 argument_list|()
@@ -216,7 +224,7 @@ return|;
 block|}
 name|iterator
 name|begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|S2IMap
@@ -227,7 +235,7 @@ return|;
 block|}
 name|iterator
 name|end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|S2IMap
@@ -252,25 +260,20 @@ argument_list|()
 return|;
 block|}
 name|LiveInterval
-modifier|&
+operator|&
 name|getOrCreateInterval
-parameter_list|(
-name|int
-name|Slot
-parameter_list|,
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|RC
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|int Slot
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|)
+block|;
 name|LiveInterval
-modifier|&
+operator|&
 name|getInterval
-parameter_list|(
-name|int
-name|Slot
-parameter_list|)
+argument_list|(
+argument|int Slot
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -280,7 +283,7 @@ literal|0
 operator|&&
 literal|"Spill slot indice must be>= 0"
 argument_list|)
-expr_stmt|;
+block|;
 name|SS2IntervalMap
 operator|::
 name|iterator
@@ -292,7 +295,7 @@ name|find
 argument_list|(
 name|Slot
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|I
@@ -304,7 +307,7 @@ argument_list|()
 operator|&&
 literal|"Interval does not exist for stack slot"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|I
 operator|->
@@ -313,13 +316,12 @@ return|;
 block|}
 specifier|const
 name|LiveInterval
-modifier|&
+operator|&
 name|getInterval
 argument_list|(
-name|int
-name|Slot
+argument|int Slot
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -329,7 +331,7 @@ literal|0
 operator|&&
 literal|"Spill slot indice must be>= 0"
 argument_list|)
-expr_stmt|;
+block|;
 name|SS2IntervalMap
 operator|::
 name|const_iterator
@@ -341,7 +343,7 @@ name|find
 argument_list|(
 name|Slot
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|I
@@ -353,7 +355,7 @@ argument_list|()
 operator|&&
 literal|"Interval does not exist for stack slot"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|I
 operator|->
@@ -363,10 +365,9 @@ block|}
 name|bool
 name|hasInterval
 argument_list|(
-name|int
-name|Slot
+argument|int Slot
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|S2IMap
@@ -379,13 +380,12 @@ return|;
 block|}
 specifier|const
 name|TargetRegisterClass
-modifier|*
+operator|*
 name|getIntervalRegClass
 argument_list|(
-name|int
-name|Slot
+argument|int Slot
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -395,13 +395,13 @@ literal|0
 operator|&&
 literal|"Spill slot indice must be>= 0"
 argument_list|)
-expr_stmt|;
+block|;
 name|std
 operator|::
 name|map
 operator|<
 name|int
-operator|,
+block|,
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -416,7 +416,7 @@ name|find
 argument_list|(
 name|Slot
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|I
@@ -428,7 +428,7 @@ argument_list|()
 operator|&&
 literal|"Register class info does not exist for stack slot"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|I
 operator|->
@@ -449,59 +449,50 @@ block|}
 name|void
 name|getAnalysisUsage
 argument_list|(
-name|AnalysisUsage
-operator|&
-name|AU
+argument|AnalysisUsage&AU
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|void
 name|releaseMemory
 argument_list|()
 name|override
-expr_stmt|;
+block|;
 comment|/// runOnMachineFunction - pass entry point
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
+argument|MachineFunction&
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 comment|/// print - Implement the dump method.
 name|void
 name|print
 argument_list|(
-name|raw_ostream
-operator|&
-name|O
+argument|raw_ostream&O
 argument_list|,
-specifier|const
-name|Module
-operator|*
-operator|=
-name|nullptr
+argument|const Module * = nullptr
 argument_list|)
-decl|const
+specifier|const
 name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* LLVM_CODEGEN_LIVESTACK_ANALYSIS_H */
+comment|// LLVM_CODEGEN_LIVESTACK_ANALYSIS_H
 end_comment
 
 end_unit

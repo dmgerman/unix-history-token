@@ -95,6 +95,9 @@ decl_stmt|;
 name|uint64_t
 name|HighPC
 decl_stmt|;
+name|uint64_t
+name|SectionIndex
+decl_stmt|;
 block|}
 struct|;
 comment|/// DWARFAddressRangesVector - represents a set of absolute address ranges.
@@ -129,6 +132,10 @@ comment|/// address past the end of the address range. The ending address must
 comment|/// be greater than or equal to the beginning address.
 name|uint64_t
 name|EndAddress
+decl_stmt|;
+comment|/// A section index this range belongs to.
+name|uint64_t
+name|SectionIndex
 decl_stmt|;
 comment|/// The end of any given range list is marked by an end of list entry,
 comment|/// which consists of a 0 for the beginning address offset

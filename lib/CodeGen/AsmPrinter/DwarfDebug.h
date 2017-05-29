@@ -1184,10 +1184,6 @@ literal|1
 operator|>
 name|TypeUnitsUnderConstruction
 block|;
-comment|/// Whether to emit the pubnames/pubtypes sections.
-name|bool
-name|HasDwarfPubSections
-block|;
 comment|/// Whether to use the GNU TLS opcode (instead of the standard opcode).
 name|bool
 name|UseGNUTLSOpcode
@@ -1830,7 +1826,7 @@ begin_decl_stmt
 name|void
 name|addGnuPubAttributes
 argument_list|(
-name|DwarfUnit
+name|DwarfCompileUnit
 operator|&
 name|U
 argument_list|,
@@ -1853,7 +1849,7 @@ end_comment
 begin_function_decl
 name|DwarfCompileUnit
 modifier|&
-name|constructDwarfCompileUnit
+name|getOrCreateDwarfCompileUnit
 parameter_list|(
 specifier|const
 name|DICompileUnit
@@ -2609,6 +2605,17 @@ name|Scope
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|bool
+name|hasDwarfPubSections
+argument_list|(
+name|bool
+name|includeMinimalInlineScopes
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|}; }

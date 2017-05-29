@@ -6077,6 +6077,18 @@ operator|>
 name|Ops
 argument_list|)
 decl_stmt|;
+comment|/// Mutate the specified strict FP node to its non-strict equivalent,
+comment|/// unlinking the node from its chain and dropping the metadata arguments.
+comment|/// The node must be a strict FP node.
+name|SDNode
+modifier|*
+name|mutateStrictFPToFP
+parameter_list|(
+name|SDNode
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
 comment|/// These are used for target selectors to create a new node
 comment|/// with specified return type(s), MachineInstr opcode, and operands.
 comment|///

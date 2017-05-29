@@ -442,6 +442,11 @@ name|AppendUnique
 init|=
 literal|6
 block|,
+comment|/// Takes the max of the two values, which are required to be integers.
+name|Max
+init|=
+literal|7
+block|,
 comment|// Markers:
 name|ModFlagBehaviorFirstVal
 init|=
@@ -449,7 +454,7 @@ name|Error
 block|,
 name|ModFlagBehaviorLastVal
 init|=
-name|AppendUnique
+name|Max
 block|}
 enum|;
 comment|/// Checks if Metadata represents a valid ModFlagBehavior, and stores the

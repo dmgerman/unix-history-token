@@ -2782,12 +2782,10 @@ name|getSubReg
 argument_list|()
 return|;
 block|}
-comment|/// Return true if this is a transient instruction that is
-comment|/// either very likely to be eliminated during register allocation (such as
-comment|/// copy-like instructions), or if this instruction doesn't have an
-comment|/// execution-time cost.
+comment|/// Return true if this instruction doesn't produce any output in the form of
+comment|/// executable instructions.
 name|bool
-name|isTransient
+name|isMetaInstruction
 argument_list|()
 specifier|const
 block|{
@@ -2801,33 +2799,6 @@ default|default:
 return|return
 name|false
 return|;
-comment|// Copy-like instructions are usually eliminated during register allocation.
-case|case
-name|TargetOpcode
-operator|::
-name|PHI
-case|:
-case|case
-name|TargetOpcode
-operator|::
-name|COPY
-case|:
-case|case
-name|TargetOpcode
-operator|::
-name|INSERT_SUBREG
-case|:
-case|case
-name|TargetOpcode
-operator|::
-name|SUBREG_TO_REG
-case|:
-case|case
-name|TargetOpcode
-operator|::
-name|REG_SEQUENCE
-case|:
-comment|// Pseudo-instructions that don't produce any real output.
 case|case
 name|TargetOpcode
 operator|::
@@ -2857,6 +2828,56 @@ case|case
 name|TargetOpcode
 operator|::
 name|DBG_VALUE
+case|:
+return|return
+name|true
+return|;
+block|}
+block|}
+comment|/// Return true if this is a transient instruction that is either very likely
+comment|/// to be eliminated during register allocation (such as copy-like
+comment|/// instructions), or if this instruction doesn't have an execution-time cost.
+name|bool
+name|isTransient
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getOpcode
+argument_list|()
+condition|)
+block|{
+default|default:
+return|return
+name|isMetaInstruction
+argument_list|()
+return|;
+comment|// Copy-like instructions are usually eliminated during register allocation.
+case|case
+name|TargetOpcode
+operator|::
+name|PHI
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|COPY
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|INSERT_SUBREG
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|SUBREG_TO_REG
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|REG_SEQUENCE
 case|:
 return|return
 name|true

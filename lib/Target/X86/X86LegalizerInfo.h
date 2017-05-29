@@ -138,6 +138,10 @@ name|setLegalizerInfoSSE41
 argument_list|()
 block|;
 name|void
+name|setLegalizerInfoAVX
+argument_list|()
+block|;
+name|void
 name|setLegalizerInfoAVX2
 argument_list|()
 block|;

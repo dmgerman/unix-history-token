@@ -369,6 +369,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|uint64_t
+name|getIndex
+argument_list|()
+specifier|const
+expr_stmt|;
+name|uint64_t
 name|getSize
 argument_list|()
 specifier|const
@@ -891,6 +896,16 @@ block|;
 name|virtual
 name|uint64_t
 name|getSectionAddress
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|uint64_t
+name|getSectionIndex
 argument_list|(
 argument|DataRefImpl Sec
 argument_list|)
@@ -1752,6 +1767,23 @@ return|return
 name|OwningObject
 operator|->
 name|getSectionAddress
+argument_list|(
+name|SectionPimpl
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|uint64_t
+name|SectionRef
+operator|::
+name|getIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwningObject
+operator|->
+name|getSectionIndex
 argument_list|(
 name|SectionPimpl
 argument_list|)

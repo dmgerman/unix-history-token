@@ -395,6 +395,34 @@ name|STRICT_FDIV
 block|,
 name|STRICT_FREM
 block|,
+comment|/// Constrained versions of libm-equivalent floating point intrinsics.
+comment|/// These will be lowered to the equivalent non-constrained pseudo-op
+comment|/// (or expanded to the equivalent library call) before final selection.
+comment|/// They are used to limit optimizations while the DAG is being optimized.
+name|STRICT_FSQRT
+block|,
+name|STRICT_FPOW
+block|,
+name|STRICT_FPOWI
+block|,
+name|STRICT_FSIN
+block|,
+name|STRICT_FCOS
+block|,
+name|STRICT_FEXP
+block|,
+name|STRICT_FEXP2
+block|,
+name|STRICT_FLOG
+block|,
+name|STRICT_FLOG10
+block|,
+name|STRICT_FLOG2
+block|,
+name|STRICT_FRINT
+block|,
+name|STRICT_FNEARBYINT
+block|,
 comment|/// FMA - Perform a * b + c with no intermediate rounding step.
 name|FMA
 block|,

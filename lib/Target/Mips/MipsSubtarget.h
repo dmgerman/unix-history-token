@@ -292,10 +292,6 @@ comment|// Mips16 hard float
 name|bool
 name|InMips16HardFloat
 block|;
-comment|// PreviousInMips16 -- the function we just processed was in Mips 16 Mode
-name|bool
-name|PreviousInMips16Mode
-block|;
 comment|// InMicroMips -- can process MicroMips instructions
 name|bool
 name|InMicroMipsMode
@@ -458,9 +454,9 @@ name|MipsSubtarget
 argument_list|(
 argument|const Triple&TT
 argument_list|,
-argument|const std::string&CPU
+argument|StringRef CPU
 argument_list|,
-argument|const std::string&FS
+argument|StringRef FS
 argument_list|,
 argument|bool little
 argument_list|,

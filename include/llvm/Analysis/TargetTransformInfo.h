@@ -907,6 +907,12 @@ name|DataType
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Return true if target doesn't mind addresses in vectors.
+name|bool
+name|prefersVectorizedAddressing
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Return the cost of the scaling factor used in the addressing
 comment|/// mode represented by AM for this target, for a load/store
 comment|/// of the specified type.
@@ -2390,6 +2396,13 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|bool
+name|prefersVectorizedAddressing
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
 name|int
 name|getScalingFactorCost
 argument_list|(
@@ -3613,6 +3626,18 @@ name|isLegalMaskedGather
 argument_list|(
 name|DataType
 argument_list|)
+return|;
+block|}
+name|bool
+name|prefersVectorizedAddressing
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|prefersVectorizedAddressing
+argument_list|()
 return|;
 block|}
 name|int

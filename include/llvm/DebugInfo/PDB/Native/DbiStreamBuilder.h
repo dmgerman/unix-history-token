@@ -377,6 +377,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|uint32_t
+name|calculateNamesOffset
+argument_list|()
+specifier|const
+expr_stmt|;
+name|uint32_t
 name|calculateSectionContribsStreamSize
 argument_list|()
 specifier|const

@@ -692,6 +692,16 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// GVNSink - This pass uses an "inverted" value numbering to decide the
+comment|// similarity of expressions and sinks similar expressions into successors.
+comment|//
+name|FunctionPass
+modifier|*
+name|createGVNSinkPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// MergedLoadStoreMotion - This pass merges loads and stores in diamonds. Loads
 comment|// are hoisted into the header, while stores sink into the footer.
 comment|//

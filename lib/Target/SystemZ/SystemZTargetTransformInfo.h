@@ -265,6 +265,14 @@ name|Vector
 parameter_list|)
 function_decl|;
 name|bool
+name|prefersVectorizedAddressing
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
 name|supportsEfficientVectorElementLoadStore
 parameter_list|()
 block|{

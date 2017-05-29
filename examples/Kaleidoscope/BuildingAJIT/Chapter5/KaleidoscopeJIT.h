@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===----- KaleidoscopeJIT.h - A simple JIT for Kaleidoscope ----*- C++ -*-===//
+comment|//===- KaleidoscopeJIT.h - A simple JIT for Kaleidoscope --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -98,19 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/Orc/CompileOnDemandLayer.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ExecutionEngine/Orc/CompileUtils.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/Orc/IndirectionUtils.h"
 end_include
 
 begin_include
@@ -384,15 +378,16 @@ name|namespace
 name|orc
 block|{
 comment|// Typedef the remote-client API.
-typedef|typedef
+name|using
+name|MyRemote
+init|=
 name|remote
 operator|::
 name|OrcRemoteTargetClient
 operator|<
 name|FDRPCChannel
 operator|>
-name|MyRemote
-expr_stmt|;
+decl_stmt|;
 name|class
 name|KaleidoscopeJIT
 block|{
@@ -424,7 +419,9 @@ argument_list|)
 operator|>
 name|CompileLayer
 expr_stmt|;
-typedef|typedef
+name|using
+name|OptimizeFunction
+init|=
 name|std
 operator|::
 name|function
@@ -444,8 +441,7 @@ name|Module
 operator|>
 operator|)
 operator|>
-name|OptimizeFunction
-expr_stmt|;
+decl_stmt|;
 name|IRTransformLayer
 operator|<
 name|decltype
@@ -475,15 +471,16 @@ name|Remote
 decl_stmt|;
 name|public
 label|:
-typedef|typedef
+name|using
+name|ModuleHandle
+init|=
 name|decltype
 argument_list|(
 name|OptimizeLayer
 argument_list|)
 operator|::
 name|ModuleSetHandleT
-name|ModuleHandle
-expr_stmt|;
+decl_stmt|;
 name|KaleidoscopeJIT
 argument_list|(
 name|MyRemote

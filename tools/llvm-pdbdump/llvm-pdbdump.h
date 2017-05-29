@@ -307,6 +307,7 @@ block|}
 name|namespace
 name|pdb2yaml
 block|{
+extern|extern llvm::cl::opt<bool> All;
 extern|extern llvm::cl::opt<bool> NoFileHeaders;
 extern|extern llvm::cl::opt<bool> Minimal;
 extern|extern llvm::cl::opt<bool> StreamMetadata;

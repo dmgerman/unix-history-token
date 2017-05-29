@@ -449,6 +449,11 @@ modifier|*
 name|TII
 decl_stmt|;
 specifier|const
+name|MachineRegisterInfo
+modifier|*
+name|MRI
+decl_stmt|;
+specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|TRI

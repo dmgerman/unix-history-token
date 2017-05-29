@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=- llvm/CodeGen/MachineDominators.h - Machine Dom Calculation --*- C++ -*-==//
+comment|//==- llvm/CodeGen/MachineDominators.h - Machine Dom Calculation -*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -72,19 +72,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunction.h"
+file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunctionPass.h"
+file|"llvm/CodeGen/MachineInstr.h"
 end_include
 
 begin_include
@@ -102,7 +108,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -142,13 +160,14 @@ name|MachineBasicBlock
 operator|>
 expr_stmt|;
 extern|extern template class DominatorTreeBase<MachineBasicBlock>;
-typedef|typedef
+name|using
+name|MachineDomTreeNode
+init|=
 name|DomTreeNodeBase
 operator|<
 name|MachineBasicBlock
 operator|>
-name|MachineDomTreeNode
-expr_stmt|;
+decl_stmt|;
 comment|//===-------------------------------------
 comment|/// DominatorTree Class - Concrete subclass of DominatorTreeBase that is used to
 comment|/// compute a normal dominator tree.
@@ -933,43 +952,34 @@ operator|>
 expr|struct
 name|MachineDomTreeGraphTraitsBase
 block|{
-typedef|typedef
-name|Node
-modifier|*
+name|using
 name|NodeRef
-typedef|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|ChildIterator
+operator|=
+name|Node
+operator|*
+block|;
+name|using
 name|ChildIteratorType
-typedef|;
-end_typedef
-
-begin_function
+operator|=
+name|ChildIterator
+block|;
 specifier|static
 name|NodeRef
 name|getEntryNode
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|ChildIteratorType
 name|child_begin
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
@@ -978,7 +988,7 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -1094,11 +1104,19 @@ return|;
 block|}
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|};  }
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEDOMINATORS_H
+end_comment
 
 end_unit
 

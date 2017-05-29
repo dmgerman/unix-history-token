@@ -772,6 +772,10 @@ argument_list|,
 name|uint64_t
 operator|&
 name|HighPC
+argument_list|,
+name|uint64_t
+operator|&
+name|SectionIndex
 argument_list|)
 decl|const
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===----- KaleidoscopeJIT.h - A simple JIT for Kaleidoscope ----*- C++ -*-===//
+comment|//===- KaleidoscopeJIT.h - A simple JIT for Kaleidoscope --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
+file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
 end_include
 
 begin_include
@@ -207,15 +207,16 @@ name|CompileLayer
 expr_stmt|;
 name|public
 label|:
-typedef|typedef
+name|using
+name|ModuleHandle
+init|=
 name|decltype
 argument_list|(
 name|CompileLayer
 argument_list|)
 operator|::
 name|ModuleSetHandleT
-name|ModuleHandle
-expr_stmt|;
+decl_stmt|;
 name|KaleidoscopeJIT
 argument_list|()
 operator|:

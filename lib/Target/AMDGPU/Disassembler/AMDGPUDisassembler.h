@@ -444,6 +444,36 @@ argument_list|(
 argument|unsigned Val
 argument_list|)
 specifier|const
+block|;
+name|MCOperand
+name|decodeSDWA9Src
+argument_list|(
+argument|const OpWidthTy Width
+argument_list|,
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
+name|decodeSDWA9Src16
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
+name|decodeSDWA9Src32
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
+name|decodeSDWA9VopcDst
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//

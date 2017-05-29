@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===----- KaleidoscopeJIT.h - A simple JIT for Kaleidoscope ----*- C++ -*-===//
+comment|//===- KaleidoscopeJIT.h - A simple JIT for Kaleidoscope --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
+file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
 end_include
 
 begin_include
@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/Orc/CompileOnDemandLayer.h"
+file|"llvm/ExecutionEngine/Orc/CompileUtils.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/Orc/CompileUtils.h"
+file|"llvm/ExecutionEngine/Orc/IndirectionUtils.h"
 end_include
 
 begin_include
@@ -396,7 +396,9 @@ argument_list|)
 operator|>
 name|CompileLayer
 expr_stmt|;
-typedef|typedef
+name|using
+name|OptimizeFunction
+init|=
 name|std
 operator|::
 name|function
@@ -416,8 +418,7 @@ name|Module
 operator|>
 operator|)
 operator|>
-name|OptimizeFunction
-expr_stmt|;
+decl_stmt|;
 name|IRTransformLayer
 operator|<
 name|decltype
@@ -447,15 +448,16 @@ name|IndirectStubsMgr
 expr_stmt|;
 name|public
 label|:
-typedef|typedef
+name|using
+name|ModuleHandle
+init|=
 name|decltype
 argument_list|(
 name|OptimizeLayer
 argument_list|)
 operator|::
 name|ModuleSetHandleT
-name|ModuleHandle
-expr_stmt|;
+decl_stmt|;
 name|KaleidoscopeJIT
 argument_list|()
 operator|:

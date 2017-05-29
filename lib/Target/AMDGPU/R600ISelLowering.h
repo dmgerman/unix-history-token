@@ -184,6 +184,16 @@ specifier|const
 name|override
 block|;
 name|bool
+name|canMergeStoresTo
+argument_list|(
+argument|unsigned AS
+argument_list|,
+argument|EVT MemVT
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
 name|allowsMisalignedMemoryAccesses
 argument_list|(
 argument|EVT VT

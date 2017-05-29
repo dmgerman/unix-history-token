@@ -75,7 +75,7 @@ name|TypeTableCollection
 argument_list|(
 name|ArrayRef
 operator|<
-name|MutableArrayRef
+name|ArrayRef
 operator|<
 name|uint8_t
 operator|>>
@@ -148,7 +148,7 @@ argument_list|)
 block|;
 name|ArrayRef
 operator|<
-name|MutableArrayRef
+name|ArrayRef
 operator|<
 name|uint8_t
 operator|>>

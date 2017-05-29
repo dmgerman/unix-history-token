@@ -121,6 +121,17 @@ argument|const SDLoc&DL
 argument_list|)
 specifier|const
 block|;
+name|public
+operator|:
+specifier|static
+name|bool
+name|isOrEquivalentToAdd
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDValue Op
+argument_list|)
+block|;
 name|protected
 operator|:
 specifier|const
