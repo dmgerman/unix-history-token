@@ -941,7 +941,7 @@ name|TrailingObjects
 operator|<
 name|AttributeListImpl
 block|,
-name|IndexAttrPair
+name|AttributeSet
 operator|>
 block|{
 name|friend
@@ -953,48 +953,27 @@ name|TrailingObjects
 block|;
 name|private
 operator|:
+comment|/// Bitset with a bit for each available attribute Attribute::AttrKind.
+name|uint64_t
+name|AvailableFunctionAttrs
+block|;
 name|LLVMContext
 operator|&
 name|Context
 block|;
 name|unsigned
-name|NumSlots
+name|NumAttrSets
 block|;
 comment|///< Number of entries in this set.
-comment|/// Bitset with a bit for each available attribute Attribute::AttrKind.
-name|uint64_t
-name|AvailableFunctionAttrs
-block|;
 comment|// Helper fn for TrailingObjects class.
 name|size_t
 name|numTrailingObjects
 argument_list|(
-argument|OverloadToken<IndexAttrPair>
+argument|OverloadToken<AttributeSet>
 argument_list|)
 block|{
 return|return
-name|NumSlots
-return|;
-block|}
-comment|/// \brief Return a pointer to the IndexAttrPair for the specified slot.
-specifier|const
-name|IndexAttrPair
-operator|*
-name|getSlotPair
-argument_list|(
-argument|unsigned Slot
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getTrailingObjects
-operator|<
-name|IndexAttrPair
-operator|>
-operator|(
-operator|)
-operator|+
-name|Slot
+name|NumAttrSets
 return|;
 block|}
 name|public
@@ -1007,15 +986,9 @@ name|C
 argument_list|,
 name|ArrayRef
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-argument_list|,
 name|AttributeSet
-operator|>>
-name|Slots
+operator|>
+name|Sets
 argument_list|)
 block|;
 comment|// AttributesSetImpt is uniqued, these should not be available.
@@ -1064,56 +1037,6 @@ return|return
 name|Context
 return|;
 block|}
-comment|/// \brief Return the number of slots used in this attribute list. This is
-comment|/// the number of arguments that have an attribute set on them (including the
-comment|/// function itself).
-name|unsigned
-name|getNumSlots
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumSlots
-return|;
-block|}
-comment|/// \brief Get the index of the given "slot" in the AttrNodes list. This index
-comment|/// is the index of the return, parameter, or function object that the
-comment|/// attributes are applied to, not the index into the AttrNodes list where the
-comment|/// attributes reside.
-name|unsigned
-name|getSlotIndex
-argument_list|(
-argument|unsigned Slot
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getSlotPair
-argument_list|(
-name|Slot
-argument_list|)
-operator|->
-name|first
-return|;
-block|}
-comment|/// \brief Retrieve the attribute set node for the given "slot" in the
-comment|/// AttrNode list.
-name|AttributeSet
-name|getSlotAttributes
-argument_list|(
-argument|unsigned Slot
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getSlotPair
-argument_list|(
-name|Slot
-argument_list|)
-operator|->
-name|second
-return|;
-block|}
 comment|/// \brief Return true if the AttributeSet or the FunctionIndex has an
 comment|/// enum attribute of the given kind.
 name|bool
@@ -1136,45 +1059,36 @@ operator|<<
 name|Kind
 return|;
 block|}
-name|using
-name|iterator
-operator|=
+typedef|typedef
+specifier|const
 name|AttributeSet
-operator|::
+modifier|*
 name|iterator
-block|;
+typedef|;
 name|iterator
 name|begin
-argument_list|(
-argument|unsigned Slot
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
-name|getSlotAttributes
-argument_list|(
-name|Slot
-argument_list|)
-operator|.
-name|begin
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|AttributeSet
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 name|iterator
 name|end
-argument_list|(
-argument|unsigned Slot
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
-name|getSlotAttributes
-argument_list|(
-name|Slot
-argument_list|)
-operator|.
-name|end
+name|begin
 argument_list|()
+operator|+
+name|NumAttrSets
 return|;
 block|}
 name|void
@@ -1194,14 +1108,8 @@ name|ID
 argument_list|,
 name|ArrayRef
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-argument_list|,
 name|AttributeSet
-operator|>>
+operator|>
 name|Nodes
 argument_list|)
 block|;

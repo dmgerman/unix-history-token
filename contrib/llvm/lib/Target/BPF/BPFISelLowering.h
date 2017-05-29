@@ -158,6 +158,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|// This method decides whether folding a constant offset
+comment|// with the given GlobalAddress is legal.
+name|bool
+name|isOffsetFoldingLegal
+argument_list|(
+argument|const GlobalAddressSDNode *GA
+argument_list|)
+specifier|const
+name|override
+block|;
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter

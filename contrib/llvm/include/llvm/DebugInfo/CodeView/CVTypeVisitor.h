@@ -199,6 +199,11 @@ name|TypeVisitorCallbacks
 modifier|&
 name|Callbacks
 parameter_list|,
+name|VisitorDataSource
+name|Source
+init|=
+name|VDS_BytesPresent
+parameter_list|,
 name|TypeServerHandler
 modifier|*
 name|TS

@@ -317,6 +317,9 @@ argument_list|()
 operator|||
 name|isObject
 argument_list|()
+operator|||
+name|isCOFFImportFile
+argument_list|()
 return|;
 block|}
 name|bool

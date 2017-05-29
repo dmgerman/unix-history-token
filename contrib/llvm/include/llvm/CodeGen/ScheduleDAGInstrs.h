@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/LivePhysRegs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ScheduleDAG.h"
 end_include
 
@@ -690,7 +696,7 @@ modifier|*
 name|FirstDbgValue
 decl_stmt|;
 comment|/// Set of live physical registers for updating kill flags.
-name|BitVector
+name|LivePhysRegs
 name|LiveRegs
 decl_stmt|;
 name|public
@@ -968,7 +974,7 @@ name|void
 name|fixupKills
 parameter_list|(
 name|MachineBasicBlock
-modifier|*
+modifier|&
 name|MBB
 parameter_list|)
 function_decl|;

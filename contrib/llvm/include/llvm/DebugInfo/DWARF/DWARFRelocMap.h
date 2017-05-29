@@ -65,9 +65,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// RelocAddrEntry contains relocated value and section index.
+comment|/// Section index is -1LL if relocation points to absolute symbol.
 struct|struct
 name|RelocAddrEntry
 block|{
+name|uint64_t
+name|SectionIndex
+decl_stmt|;
 name|uint64_t
 name|Value
 decl_stmt|;

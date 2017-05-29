@@ -52,13 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/ADT/StringSet.h"
 end_include
 
 begin_include
@@ -170,14 +164,8 @@ name|NativeSession
 operator|>
 name|Session
 block|;
-name|SmallVector
+name|StringSet
 operator|<
-name|SmallString
-operator|<
-literal|64
-operator|>
-block|,
-literal|4
 operator|>
 name|SearchPaths
 block|; }

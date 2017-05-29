@@ -248,6 +248,12 @@ modifier|*
 name|DT
 init|=
 name|nullptr
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Compute known bits from the range metadata.

@@ -75,6 +75,8 @@ block|{
 name|kHandleSignalNo
 block|,
 name|kHandleSignalYes
+block|,
+name|kHandleSignalExclusive
 block|, }
 enum|;
 struct|struct

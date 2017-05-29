@@ -1104,8 +1104,6 @@ operator|->
 name|OrdinalHint
 return|;
 block|}
-name|private
-operator|:
 name|ImportFile
 operator|*
 name|File
@@ -1169,6 +1167,10 @@ return|return
 name|Data
 return|;
 block|}
+name|DefinedImportData
+operator|*
+name|WrappedSym
+block|;
 name|private
 operator|:
 name|Chunk

@@ -510,6 +510,17 @@ name|char
 name|terminator
 argument_list|)
 decl_stmt|;
+name|bool
+name|ConsumeFront
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|StringRef
+operator|&
+name|str
+argument_list|)
+decl_stmt|;
 specifier|const
 name|char
 modifier|*

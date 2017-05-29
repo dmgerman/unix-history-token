@@ -36,71 +36,75 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file implements the LivePhysRegs utility for tracking liveness of
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// physical registers. This can be used for ad-hoc liveness tracking after
+comment|/// This file implements the LivePhysRegs utility for tracking liveness of
 end_comment
 
 begin_comment
-comment|// register allocation. You can start with the live-ins/live-outs at the
+comment|/// physical registers. This can be used for ad-hoc liveness tracking after
 end_comment
 
 begin_comment
-comment|// beginning/end of a block and update the information while walking the
+comment|/// register allocation. You can start with the live-ins/live-outs at the
 end_comment
 
 begin_comment
-comment|// instructions inside the block. This implementation tracks the liveness on a
+comment|/// beginning/end of a block and update the information while walking the
 end_comment
 
 begin_comment
-comment|// sub-register granularity.
+comment|/// instructions inside the block. This implementation tracks the liveness on a
 end_comment
 
 begin_comment
-comment|//
+comment|/// sub-register granularity.
 end_comment
 
 begin_comment
-comment|// We assume that the high bits of a physical super-register are not preserved
+comment|///
 end_comment
 
 begin_comment
-comment|// unless the instruction has an implicit-use operand reading the super-
+comment|/// We assume that the high bits of a physical super-register are not preserved
 end_comment
 
 begin_comment
-comment|// register.
+comment|/// unless the instruction has an implicit-use operand reading the super-
 end_comment
 
 begin_comment
-comment|//
+comment|/// register.
 end_comment
 
 begin_comment
-comment|// X86 Example:
+comment|///
 end_comment
 
 begin_comment
-comment|// %YMM0<def> = ...
+comment|/// X86 Example:
 end_comment
 
 begin_comment
-comment|// %XMM0<def> = ... (Kills %XMM0, all %XMM0s sub-registers, and %YMM0)
+comment|/// %YMM0<def> = ...
 end_comment
 
 begin_comment
-comment|//
+comment|/// %XMM0<def> = ... (Kills %XMM0, all %XMM0s sub-registers, and %YMM0)
 end_comment
 
 begin_comment
-comment|// %YMM0<def> = ...
+comment|///
 end_comment
 
 begin_comment
-comment|// %XMM0<def> = ..., %YMM0<imp-use> (%YMM0 and all its sub-registers are alive)
+comment|/// %YMM0<def> = ...
+end_comment
+
+begin_comment
+comment|/// %XMM0<def> = ..., %YMM0<imp-use> (%YMM0 and all its sub-registers are alive)
 end_comment
 
 begin_comment
@@ -162,7 +166,16 @@ block|{
 name|class
 name|MachineInstr
 decl_stmt|;
-comment|/// \brief A set of live physical registers with functions to track liveness
+name|class
+name|MachineOperand
+decl_stmt|;
+name|class
+name|MachineRegisterInfo
+decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
+comment|/// \brief A set of physical registers with utility functions to track liveness
 comment|/// when walking backward/forward through a basic block.
 name|class
 name|LivePhysRegs
@@ -180,6 +193,38 @@ name|unsigned
 operator|>
 name|LiveRegs
 expr_stmt|;
+name|public
+label|:
+comment|/// Constructs an unitialized set. init() needs to be called to initialize it.
+name|LivePhysRegs
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+comment|/// Constructs and initializes an empty set.
+name|LivePhysRegs
+argument_list|(
+specifier|const
+name|TargetRegisterInfo
+operator|&
+name|TRI
+argument_list|)
+operator|:
+name|TRI
+argument_list|(
+argument|&TRI
+argument_list|)
+block|{
+name|LiveRegs
+operator|.
+name|setUniverse
+argument_list|(
+name|TRI
+operator|.
+name|getNumRegs
+argument_list|()
+argument_list|)
+block|;   }
 name|LivePhysRegs
 argument_list|(
 specifier|const
@@ -201,51 +246,15 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|public
-label|:
-comment|/// \brief Constructs a new empty LivePhysRegs set.
-name|LivePhysRegs
-argument_list|()
-operator|=
-expr|default
-expr_stmt|;
-comment|/// \brief Constructs and initialize an empty LivePhysRegs set.
-name|LivePhysRegs
-argument_list|(
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|TRI
-argument_list|)
-operator|:
-name|TRI
-argument_list|(
-argument|TRI
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|TRI
-operator|&&
-literal|"Invalid TargetRegisterInfo pointer."
-argument_list|)
-block|;
-name|LiveRegs
-operator|.
-name|setUniverse
-argument_list|(
-name|TRI
-operator|->
-name|getNumRegs
-argument_list|()
-argument_list|)
-block|;   }
-comment|/// \brief Clear and initialize the LivePhysRegs set.
+comment|/// (re-)initializes and clears the set.
 name|void
 name|init
-argument_list|(
-argument|const TargetRegisterInfo&TRI
-argument_list|)
+parameter_list|(
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+name|TRI
+parameter_list|)
 block|{
 name|this
 operator|->
@@ -253,12 +262,12 @@ name|TRI
 operator|=
 operator|&
 name|TRI
-block|;
+expr_stmt|;
 name|LiveRegs
 operator|.
 name|clear
 argument_list|()
-block|;
+expr_stmt|;
 name|LiveRegs
 operator|.
 name|setUniverse
@@ -268,18 +277,20 @@ operator|.
 name|getNumRegs
 argument_list|()
 argument_list|)
-block|;   }
-comment|/// \brief Clears the LivePhysRegs set.
+expr_stmt|;
+block|}
+comment|/// Clears the set.
 name|void
 name|clear
-argument_list|()
+parameter_list|()
 block|{
 name|LiveRegs
 operator|.
 name|clear
 argument_list|()
-block|; }
-comment|/// \brief Returns true if the set is empty.
+expr_stmt|;
+block|}
+comment|/// Returns true if the set is empty.
 name|bool
 name|empty
 argument_list|()
@@ -292,7 +303,7 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// \brief Adds a physical register and all its sub-registers to the set.
+comment|/// Adds a physical register and all its sub-registers to the set.
 name|void
 name|addReg
 parameter_list|(
@@ -406,7 +417,7 @@ name|R
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Removes physical registers clobbered by the regmask operand @p MO.
+comment|/// Removes physical registers clobbered by the regmask operand \p MO.
 name|void
 name|removeRegsInMask
 argument_list|(
@@ -429,10 +440,12 @@ operator|*
 operator|>>
 operator|*
 name|Clobbers
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// \brief Returns true if register @p Reg is contained in the set. This also
-comment|/// works if only the super register of @p Reg has been defined, because
+comment|/// \brief Returns true if register \p Reg is contained in the set. This also
+comment|/// works if only the super register of \p Reg has been defined, because
 comment|/// addReg() always adds all sub-registers to the set as well.
 comment|/// Note: Returns false if just some sub registers are live, use available()
 comment|/// when searching a free register.
@@ -467,9 +480,9 @@ name|Reg
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Simulates liveness when stepping backwards over an
-comment|/// instruction(bundle): Remove Defs, add uses. This is the recommended way of
-comment|/// calculating liveness.
+comment|/// Simulates liveness when stepping backwards over an instruction(bundle).
+comment|/// Remove Defs, add uses. This is the recommended way of calculating
+comment|/// liveness.
 name|void
 name|stepBackward
 parameter_list|(
@@ -479,13 +492,12 @@ modifier|&
 name|MI
 parameter_list|)
 function_decl|;
-comment|/// \brief Simulates liveness when stepping forward over an
-comment|/// instruction(bundle): Remove killed-uses, add defs. This is the not
-comment|/// recommended way, because it depends on accurate kill flags. If possible
-comment|/// use stepBackward() instead of this function.
-comment|/// The clobbers set will be the list of registers either defined or clobbered
-comment|/// by a regmask.  The operand will identify whether this is a regmask or
-comment|/// register operand.
+comment|/// Simulates liveness when stepping forward over an instruction(bundle).
+comment|/// Remove killed-uses, add defs. This is the not recommended way, because it
+comment|/// depends on accurate kill flags. If possible use stepBackward() instead of
+comment|/// this function. The clobbers set will be the list of registers either
+comment|/// defined or clobbered by a regmask.  The operand will identify whether this
+comment|/// is a regmask or register operand.
 name|void
 name|stepForward
 argument_list|(
@@ -510,7 +522,7 @@ operator|&
 name|Clobbers
 argument_list|)
 decl_stmt|;
-comment|/// Adds all live-in registers of basic block @p MBB.
+comment|/// Adds all live-in registers of basic block \p MBB.
 comment|/// Live in registers are the registers in the blocks live-in list and the
 comment|/// pristine registers.
 name|void
@@ -522,7 +534,7 @@ modifier|&
 name|MBB
 parameter_list|)
 function_decl|;
-comment|/// Adds all live-out registers of basic block @p MBB.
+comment|/// Adds all live-out registers of basic block \p MBB.
 comment|/// Live out registers are the union of the live-in registers of the successor
 comment|/// blocks and pristine registers. Live out registers of the end block are the
 comment|/// callee saved registers.
@@ -535,7 +547,7 @@ modifier|&
 name|MBB
 parameter_list|)
 function_decl|;
-comment|/// Like addLiveOuts() but does not add pristine registers/callee saved
+comment|/// Adds all live-out registers of basic block \p MBB but skips pristine
 comment|/// registers.
 name|void
 name|addLiveOutsNoPristines
@@ -546,15 +558,16 @@ modifier|&
 name|MBB
 parameter_list|)
 function_decl|;
-typedef|typedef
+name|using
+name|const_iterator
+init|=
 name|SparseSet
 operator|<
 name|unsigned
 operator|>
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
+decl_stmt|;
 name|const_iterator
 name|begin
 argument_list|()
@@ -579,7 +592,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// \brief Prints the currently live registers to @p OS.
+comment|/// Prints the currently live registers to \p OS.
 name|void
 name|print
 argument_list|(
@@ -589,7 +602,7 @@ name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Dumps the currently live registers to the debug output.
+comment|/// Dumps the currently live registers to the debug output.
 name|void
 name|dump
 argument_list|()
@@ -597,7 +610,7 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
-comment|/// Adds live-in registers from basic block @p MBB, taking associated
+comment|/// \brief Adds live-in registers from basic block \p MBB, taking associated
 comment|/// lane masks into consideration.
 name|void
 name|addBlockLiveIns
@@ -637,10 +650,10 @@ return|return
 name|OS
 return|;
 block|}
-comment|/// Compute the live-in list for \p MBB assuming all of its successors live-in
-comment|/// lists are up-to-date. Uses the given LivePhysReg instance \p LiveRegs; This
-comment|/// is just here to avoid repeated heap allocations when calling this multiple
-comment|/// times in a pass.
+comment|/// \brief Computes the live-in list for \p MBB assuming all of its successors
+comment|/// live-in lists are up-to-date. Uses the given LivePhysReg instance \p
+comment|/// LiveRegs; This is just here to avoid repeated heap allocations when calling
+comment|/// this multiple times in a pass.
 name|void
 name|computeLiveIns
 parameter_list|(
@@ -649,9 +662,9 @@ modifier|&
 name|LiveRegs
 parameter_list|,
 specifier|const
-name|TargetRegisterInfo
+name|MachineRegisterInfo
 modifier|&
-name|TRI
+name|MRI
 parameter_list|,
 name|MachineBasicBlock
 modifier|&

@@ -267,13 +267,6 @@ argument_list|(
 argument|unsigned Reg
 argument_list|)
 specifier|const
-block|;
-name|bool
-name|isCalleeSaveReg
-argument_list|(
-argument|unsigned Reg
-argument_list|)
-specifier|const
 block|; }
 decl_stmt|;
 block|}

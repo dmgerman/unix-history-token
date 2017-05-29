@@ -153,6 +153,13 @@ name|TypeLeafKind
 operator|>
 name|CVType
 expr_stmt|;
+typedef|typedef
+name|RemappedRecord
+operator|<
+name|TypeLeafKind
+operator|>
+name|RemappedType
+expr_stmt|;
 struct|struct
 name|CVMemberRecord
 block|{
@@ -1250,7 +1257,7 @@ argument|PointerOptions PO
 argument_list|,
 argument|uint8_t Size
 argument_list|,
-argument|const MemberPointerInfo&Member
+argument|const MemberPointerInfo&MPI
 argument_list|)
 operator|:
 name|TypeRecord
@@ -1281,38 +1288,7 @@ argument_list|)
 block|,
 name|MemberInfo
 argument_list|(
-argument|Member
-argument_list|)
-block|{}
-name|PointerRecord
-argument_list|(
-argument|TypeIndex ReferentType
-argument_list|,
-argument|uint32_t Attrs
-argument_list|,
-argument|const MemberPointerInfo&Member
-argument_list|)
-operator|:
-name|TypeRecord
-argument_list|(
-name|TypeRecordKind
-operator|::
-name|Pointer
-argument_list|)
-block|,
-name|ReferentType
-argument_list|(
-name|ReferentType
-argument_list|)
-block|,
-name|Attrs
-argument_list|(
-name|Attrs
-argument_list|)
-block|,
-name|MemberInfo
-argument_list|(
-argument|Member
+argument|MPI
 argument_list|)
 block|{}
 name|TypeIndex

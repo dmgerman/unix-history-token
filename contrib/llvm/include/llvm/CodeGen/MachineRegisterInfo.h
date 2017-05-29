@@ -2484,6 +2484,28 @@ modifier|&
 name|RegBank
 parameter_list|)
 function_decl|;
+name|void
+name|setRegClassOrRegBank
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|RegClassOrRegBank
+modifier|&
+name|RCOrRB
+parameter_list|)
+block|{
+name|VRegInfo
+index|[
+name|Reg
+index|]
+operator|.
+name|first
+operator|=
+name|RCOrRB
+expr_stmt|;
+block|}
 comment|/// constrainRegClass - Constrain the register class of the specified virtual
 comment|/// register to be a common subclass of RC and the current register class,
 comment|/// but only if the new class has at least MinNumRegs registers.  Return the

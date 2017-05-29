@@ -4291,6 +4291,8 @@ name|ExpectedObjectiveCInterface
 block|,
 name|ExpectedMethodOrProperty
 block|,
+name|ExpectedFunctionOrMethodOrProperty
+block|,
 name|ExpectedStructOrUnion
 block|,
 name|ExpectedStructOrUnionOrClass

@@ -1381,6 +1381,9 @@ name|virtual
 name|bool
 name|canMergeStoresTo
 argument_list|(
+name|unsigned
+name|AddressSpace
+argument_list|,
 name|EVT
 name|MemVT
 argument_list|)
@@ -2380,7 +2383,7 @@ comment|// to provide custom legalization for it.
 if|if
 condition|(
 name|Op
-operator|>
+operator|>=
 name|array_lengthof
 argument_list|(
 name|OpActions

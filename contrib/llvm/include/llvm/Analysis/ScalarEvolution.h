@@ -5655,6 +5655,31 @@ modifier|*
 name|L
 parameter_list|)
 function_decl|;
+comment|/// Determine if the SCEV can be evaluated at loop's entry. It is true if it
+comment|/// doesn't depend on a SCEVUnknown of an instruction which is dominated by
+comment|/// the header of loop L.
+name|bool
+name|isAvailableAtLoopEntry
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+name|DominatorTree
+modifier|&
+name|DT
+parameter_list|,
+name|LoopInfo
+modifier|&
+name|LI
+parameter_list|)
+function_decl|;
 comment|/// Return true if the given SCEV changes value in a known way in the
 comment|/// specified loop.  This property being true implies that the value is
 comment|/// variant in the loop AND that we can emit an expression to compute the

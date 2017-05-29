@@ -83603,6 +83603,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__VSX__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|vec_xxpermdi
+value|__builtin_vsx_xxpermdi
+end_define
+
+begin_define
+define|#
+directive|define
+name|vec_xxsldwi
+value|__builtin_vsx_xxsldwi
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* vec_xor */
 end_comment

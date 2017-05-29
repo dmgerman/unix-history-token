@@ -162,6 +162,20 @@ argument|MachineInstrBuilder&Ret
 argument_list|)
 specifier|const
 block|;
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+operator|>
+name|SplitArgTy
+expr_stmt|;
 comment|/// Split an argument into one or more arguments that the CC lowering can cope
 comment|/// with (e.g. replace pointers with integers).
 name|void
@@ -171,17 +185,21 @@ argument|const ArgInfo&OrigArg
 argument_list|,
 argument|SmallVectorImpl<ArgInfo>&SplitArgs
 argument_list|,
-argument|const DataLayout&DL
+argument|MachineFunction&MF
 argument_list|,
-argument|MachineRegisterInfo&MRI
+argument|const SplitArgTy&PerformArgSplit
 argument_list|)
 specifier|const
-block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End of namespace llvm
 end_comment
 

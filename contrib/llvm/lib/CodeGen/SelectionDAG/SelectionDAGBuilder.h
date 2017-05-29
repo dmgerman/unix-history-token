@@ -3758,12 +3758,9 @@ name|void
 name|visitConstrainedFPIntrinsic
 parameter_list|(
 specifier|const
-name|CallInst
+name|ConstrainedFPIntrinsic
 modifier|&
-name|I
-parameter_list|,
-name|unsigned
-name|Intrinsic
+name|FPI
 parameter_list|)
 function_decl|;
 name|void

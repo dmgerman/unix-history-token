@@ -612,6 +612,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ITE
+parameter_list|(
+name|cond
+parameter_list|)
+value|ite cond
+end_define
+
+begin_define
+define|#
+directive|define
 name|WIDE
 parameter_list|(
 name|op
@@ -637,6 +647,15 @@ begin_define
 define|#
 directive|define
 name|ITT
+parameter_list|(
+name|cond
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITE
 parameter_list|(
 name|cond
 parameter_list|)

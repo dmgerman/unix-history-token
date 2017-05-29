@@ -7023,7 +7023,7 @@ operator|::
 name|user_id_t
 name|StartTrace
 argument_list|(
-argument|lldb::TraceOptionsSP&options
+argument|const TraceOptions&options
 argument_list|,
 argument|Status&error
 argument_list|)
@@ -7049,7 +7049,7 @@ comment|/// In the other case that tracing on an individual thread needs
 comment|/// to be stopped a thread_id can be supplied.
 comment|//------------------------------------------------------------------
 name|virtual
-name|void
+name|Status
 name|StopTrace
 argument_list|(
 name|lldb
@@ -7061,19 +7061,14 @@ name|lldb
 operator|::
 name|tid_t
 name|thread_id
-argument_list|,
-name|Status
-operator|&
-name|error
 argument_list|)
 block|{
-name|error
-operator|.
-name|SetErrorString
+return|return
+name|Status
 argument_list|(
 literal|"Not implemented"
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 comment|//------------------------------------------------------------------
 comment|/// Provides the trace data as raw bytes. A buffer needs to be
@@ -7084,7 +7079,7 @@ comment|/// may not. The thread_id should be used to select a particular
 comment|/// thread for trace extraction.
 comment|//------------------------------------------------------------------
 name|virtual
-name|size_t
+name|Status
 name|GetData
 argument_list|(
 name|lldb
@@ -7097,16 +7092,14 @@ operator|::
 name|tid_t
 name|thread_id
 argument_list|,
-name|Status
+name|llvm
+operator|::
+name|MutableArrayRef
+operator|<
+name|uint8_t
+operator|>
 operator|&
-name|error
-argument_list|,
-name|void
-operator|*
-name|buf
-argument_list|,
-name|size_t
-name|size
+name|buffer
 argument_list|,
 name|size_t
 name|offset
@@ -7114,22 +7107,18 @@ operator|=
 literal|0
 argument_list|)
 block|{
-name|error
-operator|.
-name|SetErrorString
+return|return
+name|Status
 argument_list|(
 literal|"Not implemented"
 argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 comment|//------------------------------------------------------------------
 comment|/// Similar API as above except for obtaining meta data
 comment|//------------------------------------------------------------------
 name|virtual
-name|size_t
+name|Status
 name|GetMetaData
 argument_list|(
 name|lldb
@@ -7142,16 +7131,14 @@ operator|::
 name|tid_t
 name|thread_id
 argument_list|,
-name|Status
+name|llvm
+operator|::
+name|MutableArrayRef
+operator|<
+name|uint8_t
+operator|>
 operator|&
-name|error
-argument_list|,
-name|void
-operator|*
-name|buf
-argument_list|,
-name|size_t
-name|size
+name|buffer
 argument_list|,
 name|size_t
 name|offset
@@ -7159,15 +7146,11 @@ operator|=
 literal|0
 argument_list|)
 block|{
-name|error
-operator|.
-name|SetErrorString
+return|return
+name|Status
 argument_list|(
 literal|"Not implemented"
 argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -7180,7 +7163,7 @@ comment|/// configuration used by a specific thread. The thread_id specified
 comment|/// should also match the uid otherwise an error will be returned.
 comment|//------------------------------------------------------------------
 name|virtual
-name|void
+name|Status
 name|GetTraceConfig
 argument_list|(
 name|lldb
@@ -7188,25 +7171,17 @@ operator|::
 name|user_id_t
 name|uid
 argument_list|,
-name|Status
-operator|&
-name|error
-argument_list|,
-name|lldb
-operator|::
-name|TraceOptionsSP
+name|TraceOptions
 operator|&
 name|options
 argument_list|)
 block|{
-name|error
-operator|.
-name|SetErrorString
+return|return
+name|Status
 argument_list|(
 literal|"Not implemented"
 argument_list|)
-expr_stmt|;
-return|return;
+return|;
 block|}
 name|protected
 label|:

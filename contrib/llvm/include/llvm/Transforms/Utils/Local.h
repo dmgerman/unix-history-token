@@ -1322,6 +1322,20 @@ modifier|*
 name|J
 parameter_list|)
 function_decl|;
+comment|// Replace each use of 'From' with 'To', if that use does not belong to basic
+comment|// block where 'From' is defined. Returns the number of replacements made.
+name|unsigned
+name|replaceNonLocalUsesWith
+parameter_list|(
+name|Instruction
+modifier|*
+name|From
+parameter_list|,
+name|Value
+modifier|*
+name|To
+parameter_list|)
+function_decl|;
 comment|/// Replace each use of 'From' with 'To' if that use is dominated by
 comment|/// the given edge.  Returns the number of replacements made.
 name|unsigned
@@ -1437,6 +1451,23 @@ specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
+parameter_list|)
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//  Transform predicates
+comment|//
+comment|/// Given an instruction, is it legal to set operand OpIdx to a non-constant
+comment|/// value?
+name|bool
+name|canReplaceOperandWithVariable
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|unsigned
+name|OpIdx
 parameter_list|)
 function_decl|;
 block|}

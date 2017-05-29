@@ -123,9 +123,6 @@ block|;
 name|SourceLocation
 name|Loc
 block|;
-name|QualType
-name|RetType
-block|;
 name|SmallVector
 operator|<
 name|Stmt
@@ -223,6 +220,10 @@ argument_list|()
 block|;
 name|bool
 name|makeReturnObject
+argument_list|()
+block|;
+name|bool
+name|makeGroDeclAndReturnStmt
 argument_list|()
 block|;
 name|bool

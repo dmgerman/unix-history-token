@@ -174,6 +174,42 @@ return|return
 literal|0
 return|;
 block|}
+name|virtual
+name|unsigned
+name|getSDWA9SrcEncoding
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+name|unsigned
+name|getSDWA9VopcDstEncoding
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 name|protected
 operator|:
 name|uint64_t

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- AtomicExpandUtils.h - Utilities for expanding atomic instructions -===//
+comment|//===- AtomicExpandUtils.h - Utilities for expanding atomic instructions --===//
 end_comment
 
 begin_comment
@@ -31,6 +31,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_CODEGEN_ATOMICEXPANDUTILS_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_CODEGEN_ATOMICEXPANDUTILS_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -43,20 +55,28 @@ directive|include
 file|"llvm/IR/IRBuilder.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/AtomicOrdering.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|Value
+name|AtomicRMWInst
 decl_stmt|;
 name|class
-name|AtomicRMWInst
+name|Value
 decl_stmt|;
 comment|/// Parameters (see the expansion example below):
 comment|/// (the builder, %addr, %loaded, %new_val, ordering,
 comment|///  /* OUT */ %success, /* OUT */ %new_loaded)
-typedef|typedef
+name|using
+name|CreateCmpXchgInstFun
+init|=
 name|function_ref
 operator|<
 name|void
@@ -86,8 +106,7 @@ operator|*
 operator|&
 argument_list|)
 operator|>
-name|CreateCmpXchgInstFun
-expr_stmt|;
+decl_stmt|;
 comment|/// \brief Expand an atomic RMW instruction into a loop utilizing
 comment|/// cmpxchg. You'll want to make sure your target machine likes cmpxchg
 comment|/// instructions in the first place and that there isn't another, better,
@@ -109,7 +128,8 @@ comment|///     br label %loop
 comment|/// loop:
 comment|///     %loaded = phi iN [ %init_loaded, %entry ], [ %new_loaded, %loop ]
 comment|///     %new = some_op iN %loaded, %incr
-comment|/// ; This is what -atomic-expand will produce using this function on i686 targets:
+comment|/// ; This is what -atomic-expand will produce using this function on i686
+comment|/// targets:
 comment|///     %pair = cmpxchg iN* %addr, iN %loaded, iN %new_val
 comment|///     %new_loaded = extractvalue { iN, i1 } %pair, 0
 comment|///     %success = extractvalue { iN, i1 } %pair, 1
@@ -132,6 +152,19 @@ parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_ATOMICEXPANDUTILS_H
+end_comment
 
 end_unit
 

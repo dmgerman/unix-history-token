@@ -1435,6 +1435,18 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|bool
+name|hasSDWA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSDWA
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// \brief Returns the offset in bytes from the start of the input buffer
 end_comment
@@ -2432,15 +2444,6 @@ specifier|const
 block|{
 return|return
 name|HasInv2PiInlineImm
-return|;
-block|}
-name|bool
-name|hasSDWA
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasSDWA
 return|;
 block|}
 name|bool

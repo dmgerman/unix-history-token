@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"Config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lld/Core/LLVM.h"
 end_include
 
@@ -641,9 +647,14 @@ argument_list|)
 operator|:
 name|InputFile
 argument_list|(
-argument|ImportKind
+name|ImportKind
 argument_list|,
-argument|M
+name|M
+argument_list|)
+block|,
+name|Live
+argument_list|(
+argument|!Config->DoGC
 argument_list|)
 block|{}
 specifier|static
@@ -707,6 +718,15 @@ operator|*
 name|Location
 operator|=
 name|nullptr
+block|;
+comment|// We want to eliminate dllimported symbols if no one actually refers them.
+comment|// This "Live" bit is used to keep track of which import library members
+comment|// are actually in use.
+comment|//
+comment|// If the Live bit is turned off by MarkLive, Writer will ignore dllimported
+comment|// symbols provided by this import library member.
+name|bool
+name|Live
 block|; }
 decl_stmt|;
 comment|// Used for LTO.

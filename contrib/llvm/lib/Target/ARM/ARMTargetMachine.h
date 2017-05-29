@@ -250,56 +250,14 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ARM target machine.
-comment|///
-name|class
-name|ARMTargetMachine
-operator|:
-name|public
-name|ARMBaseTargetMachine
-block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
-name|public
-operator|:
-name|ARMTargetMachine
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|const Triple&TT
-argument_list|,
-argument|StringRef CPU
-argument_list|,
-argument|StringRef FS
-argument_list|,
-argument|const TargetOptions&Options
-argument_list|,
-argument|Optional<Reloc::Model> RM
-argument_list|,
-argument|CodeModel::Model CM
-argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|,
-argument|bool isLittle
-argument_list|)
-block|; }
-block|;
-comment|/// ARM little endian target machine.
+comment|/// ARM/Thumb little endian target machine.
 comment|///
 name|class
 name|ARMLETargetMachine
 operator|:
 name|public
-name|ARMTargetMachine
+name|ARMBaseTargetMachine
 block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|public
 operator|:
 name|ARMLETargetMachine
@@ -322,131 +280,17 @@ argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 block|;
-comment|/// ARM big endian target machine.
+comment|/// ARM/Thumb big endian target machine.
 comment|///
 name|class
 name|ARMBETargetMachine
-operator|:
-name|public
-name|ARMTargetMachine
-block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
-name|public
-operator|:
-name|ARMBETargetMachine
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|const Triple&TT
-argument_list|,
-argument|StringRef CPU
-argument_list|,
-argument|StringRef FS
-argument_list|,
-argument|const TargetOptions&Options
-argument_list|,
-argument|Optional<Reloc::Model> RM
-argument_list|,
-argument|CodeModel::Model CM
-argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|)
-block|; }
-block|;
-comment|/// Thumb target machine.
-comment|/// Due to the way architectures are handled, this represents both
-comment|///   Thumb-1 and Thumb-2.
-comment|///
-name|class
-name|ThumbTargetMachine
 operator|:
 name|public
 name|ARMBaseTargetMachine
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|public
 operator|:
-name|ThumbTargetMachine
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|const Triple&TT
-argument_list|,
-argument|StringRef CPU
-argument_list|,
-argument|StringRef FS
-argument_list|,
-argument|const TargetOptions&Options
-argument_list|,
-argument|Optional<Reloc::Model> RM
-argument_list|,
-argument|CodeModel::Model CM
-argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|,
-argument|bool isLittle
-argument_list|)
-block|; }
-block|;
-comment|/// Thumb little endian target machine.
-comment|///
-name|class
-name|ThumbLETargetMachine
-operator|:
-name|public
-name|ThumbTargetMachine
-block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
-name|public
-operator|:
-name|ThumbLETargetMachine
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|const Triple&TT
-argument_list|,
-argument|StringRef CPU
-argument_list|,
-argument|StringRef FS
-argument_list|,
-argument|const TargetOptions&Options
-argument_list|,
-argument|Optional<Reloc::Model> RM
-argument_list|,
-argument|CodeModel::Model CM
-argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|)
-block|; }
-block|;
-comment|/// Thumb big endian target machine.
-comment|///
-name|class
-name|ThumbBETargetMachine
-operator|:
-name|public
-name|ThumbTargetMachine
-block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
-name|public
-operator|:
-name|ThumbBETargetMachine
+name|ARMBETargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,

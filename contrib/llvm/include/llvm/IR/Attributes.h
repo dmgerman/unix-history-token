@@ -1153,7 +1153,7 @@ comment|/// its parameters. You access the attributes for each of them via an in
 comment|/// the AttributeList object. The function attributes are at index
 comment|/// `AttributeList::FunctionIndex', the return value is at index
 comment|/// `AttributeList::ReturnIndex', and the attributes for the parameters start at
-comment|/// index `1'.
+comment|/// index `AttributeList::FirstArgIndex'.
 name|class
 name|AttributeList
 block|{
@@ -1273,27 +1273,6 @@ argument_list|,
 argument|ArrayRef<AttributeSet> ArgAttrs
 argument_list|)
 block|;
-specifier|static
-name|AttributeList
-name|getImpl
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|ArrayRef
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-argument_list|,
-name|AttributeSet
-operator|>>
-name|Attrs
-argument_list|)
-block|;
 name|private
 operator|:
 name|explicit
@@ -1309,6 +1288,21 @@ argument_list|(
 argument|LI
 argument_list|)
 block|{}
+specifier|static
+name|AttributeList
+name|getImpl
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|ArrayRef
+operator|<
+name|AttributeSet
+operator|>
+name|AttrSets
+argument_list|)
+block|;
 name|public
 operator|:
 name|AttributeList
@@ -1738,30 +1732,54 @@ argument|bool InAttrGrp = false
 argument_list|)
 specifier|const
 block|;
-name|using
+comment|//===--------------------------------------------------------------------===//
+comment|// AttributeList Introspection
+comment|//===--------------------------------------------------------------------===//
+typedef|typedef
+specifier|const
+name|AttributeSet
+modifier|*
 name|iterator
-operator|=
-name|ArrayRef
-operator|<
-name|Attribute
-operator|>
-operator|::
-name|iterator
-block|;
+typedef|;
 name|iterator
 name|begin
-argument_list|(
-argument|unsigned Slot
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 name|iterator
 name|end
-argument_list|(
-argument|unsigned Slot
-argument_list|)
+argument_list|()
 specifier|const
 block|;
+name|unsigned
+name|getNumAttrSets
+argument_list|()
+specifier|const
+block|;
+comment|/// Use these to iterate over the valid attribute indices.
+name|unsigned
+name|index_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AttributeList
+operator|::
+name|FunctionIndex
+return|;
+block|}
+name|unsigned
+name|index_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumAttrSets
+argument_list|()
+operator|-
+literal|1
+return|;
+block|}
 comment|/// operator==/!= - Provide equality predicates.
 name|bool
 name|operator
@@ -1801,9 +1819,6 @@ operator|.
 name|pImpl
 return|;
 block|}
-comment|//===--------------------------------------------------------------------===//
-comment|// AttributeList Introspection
-comment|//===--------------------------------------------------------------------===//
 comment|/// \brief Return a raw pointer that uniquely identifies this attribute list.
 name|void
 operator|*
@@ -1822,42 +1837,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getNumSlots
-argument_list|()
+name|pImpl
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
-comment|/// \brief Return the number of slots used in this attribute list.  This is
-comment|/// the number of arguments that have an attribute set on them (including the
-comment|/// function itself).
-name|unsigned
-name|getNumSlots
-argument_list|()
-specifier|const
-block|;
-comment|/// \brief Return the index for the given slot.
-name|unsigned
-name|getSlotIndex
-argument_list|(
-argument|unsigned Slot
-argument_list|)
-specifier|const
-block|;
-comment|/// \brief Return the attributes at the given slot.
-name|AttributeSet
-name|getSlotAttributes
-argument_list|(
-argument|unsigned Slot
-argument_list|)
-specifier|const
-block|;
 name|void
 name|dump
 argument_list|()
 specifier|const
 block|; }
-block|;
+expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// \class
 comment|/// \brief Provide DenseMapInfo for AttributeList.

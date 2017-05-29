@@ -162,8 +162,6 @@ name|createStream
 argument_list|(
 argument|uint32_t BlockSize
 argument_list|,
-argument|uint32_t NumBlocks
-argument_list|,
 argument|const MSFStreamLayout&Layout
 argument_list|,
 argument|BinaryStreamRef MsfData
@@ -291,7 +289,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NumBlocks
+name|StreamLayout
+operator|.
+name|Blocks
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 name|uint32_t
@@ -310,8 +313,6 @@ operator|:
 name|MappedBlockStream
 argument_list|(
 argument|uint32_t BlockSize
-argument_list|,
-argument|uint32_t NumBlocks
 argument_list|,
 argument|const MSFStreamLayout&StreamLayout
 argument_list|,
@@ -361,10 +362,6 @@ block|;
 specifier|const
 name|uint32_t
 name|BlockSize
-block|;
-specifier|const
-name|uint32_t
-name|NumBlocks
 block|;
 specifier|const
 name|MSFStreamLayout
@@ -417,8 +414,6 @@ operator|>
 name|createStream
 argument_list|(
 argument|uint32_t BlockSize
-argument_list|,
-argument|uint32_t NumBlocks
 argument_list|,
 argument|const MSFStreamLayout&Layout
 argument_list|,
@@ -581,8 +576,6 @@ operator|:
 name|WritableMappedBlockStream
 argument_list|(
 argument|uint32_t BlockSize
-argument_list|,
-argument|uint32_t NumBlocks
 argument_list|,
 argument|const MSFStreamLayout&StreamLayout
 argument_list|,

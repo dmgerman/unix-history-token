@@ -371,6 +371,26 @@ operator|.
 name|MetaVar
 return|;
 block|}
+comment|/// Find flags from OptTable which starts with Cur.
+comment|///
+comment|/// \param [in] Cur - String prefix that all returned flags need
+comment|//  to start with.
+comment|///
+comment|/// \return The vector of flags which start with Cur.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|findByPrefix
+argument_list|(
+argument|StringRef Cur
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// \brief Parse a single argument; returning the new argument and
 comment|/// updating Index.
 comment|///

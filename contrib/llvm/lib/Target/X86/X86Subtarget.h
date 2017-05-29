@@ -504,6 +504,10 @@ comment|/// Processor has AVX-512 Conflict Detection Instructions
 name|bool
 name|HasCDI
 block|;
+comment|/// Processor has AVX-512 population count Instructions
+name|bool
+name|HasVPOPCNTDQ
+block|;
 comment|/// Processor has AVX-512 Doubleword and Quadword instructions
 name|bool
 name|HasDQI
@@ -1577,6 +1581,15 @@ specifier|const
 block|{
 return|return
 name|HasCDI
+return|;
+block|}
+name|bool
+name|hasVPOPCNTDQ
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVPOPCNTDQ
 return|;
 block|}
 name|bool

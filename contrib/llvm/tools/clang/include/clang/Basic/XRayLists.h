@@ -167,6 +167,8 @@ name|ALWAYS
 operator|,
 name|NEVER
 operator|,
+name|ALWAYS_ARG1
+operator|,
 block|}
 empty_stmt|;
 name|ImbueAttribute

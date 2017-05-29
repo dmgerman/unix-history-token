@@ -777,6 +777,13 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
+name|initializeGVNSinkLegacyPassPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
 name|initializeGVNLegacyPassPass
 parameter_list|(
 name|PassRegistry
@@ -1114,6 +1121,13 @@ parameter_list|)
 function_decl|;
 name|void
 name|initializeLoaderPassPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
+name|initializeLocalizerPass
 parameter_list|(
 name|PassRegistry
 modifier|&

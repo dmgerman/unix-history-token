@@ -932,6 +932,28 @@ modifier|&
 name|STI
 parameter_list|)
 function_decl|;
+name|bool
+name|isGFX9
+parameter_list|(
+specifier|const
+name|MCSubtargetInfo
+modifier|&
+name|STI
+parameter_list|)
+function_decl|;
+comment|/// \brief Is Reg - scalar register
+name|bool
+name|isSGPR
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|*
+name|TRI
+parameter_list|)
+function_decl|;
 comment|/// If \p Reg is a pseudo reg, return the correct hardware register given
 comment|/// \p STI otherwise return \p Reg.
 name|unsigned

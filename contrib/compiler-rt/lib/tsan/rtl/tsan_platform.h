@@ -3789,6 +3789,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ImitateTlsWrite
+parameter_list|(
+name|ThreadState
+modifier|*
+name|thr
+parameter_list|,
+name|uptr
+name|tls_addr
+parameter_list|,
+name|uptr
+name|tls_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|call_pthread_cancel_with_cleanup
 parameter_list|(

@@ -998,7 +998,7 @@ block|;
 comment|/// Returns true if the instruction has a shift by immediate that can be
 comment|/// executed in one cycle less.
 name|bool
-name|isFalkorLSLFast
+name|isFalkorShiftExtFast
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|)

@@ -254,11 +254,6 @@ argument_list|()
 specifier|const
 name|override
 expr_stmt|;
-name|bool
-name|includeMinimalInlineScopes
-argument_list|()
-specifier|const
-expr_stmt|;
 name|DenseMap
 operator|<
 specifier|const
@@ -381,6 +376,20 @@ name|Skeleton
 return|;
 block|}
 end_expr_stmt
+
+begin_macro
+name|bool
+end_macro
+
+begin_macro
+name|includeMinimalInlineScopes
+argument_list|()
+end_macro
+
+begin_decl_stmt
+specifier|const
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

@@ -112,6 +112,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|raw_ostream
+decl_stmt|;
+name|class
 name|TargetRegisterInfo
 decl_stmt|;
 ifndef|#
@@ -126,13 +129,14 @@ operator|>
 name|class
 name|SparseBitVector
 expr_stmt|;
-typedef|typedef
+name|using
+name|LiveVirtRegBitSet
+init|=
 name|SparseBitVector
 operator|<
 literal|128
 operator|>
-name|LiveVirtRegBitSet
-expr_stmt|;
+decl_stmt|;
 endif|#
 directive|endif
 comment|/// Union of live intervals that are strong candidates for coalescing into a
@@ -145,41 +149,45 @@ block|{
 comment|// A set of live virtual register segments that supports fast insertion,
 comment|// intersection, and removal.
 comment|// Mapping SlotIndex intervals to virtual register numbers.
-typedef|typedef
+name|using
+name|LiveSegments
+init|=
 name|IntervalMap
 operator|<
 name|SlotIndex
-operator|,
+decl_stmt|,
 name|LiveInterval
-operator|*
-operator|>
-name|LiveSegments
-expr_stmt|;
+modifier|*
+decl|>
+decl_stmt|;
 name|public
 label|:
 comment|// SegmentIter can advance to the next segment ordered by starting position
 comment|// which may belong to a different live virtual register. We also must be able
 comment|// to reach the current segment's containing virtual register.
-typedef|typedef
+name|using
+name|SegmentIter
+init|=
 name|LiveSegments
 operator|::
 name|iterator
-name|SegmentIter
-expr_stmt|;
+decl_stmt|;
 comment|/// Const version of SegmentIter.
-typedef|typedef
+name|using
+name|ConstSegmentIter
+init|=
 name|LiveSegments
 operator|::
 name|const_iterator
-name|ConstSegmentIter
-expr_stmt|;
+decl_stmt|;
 comment|// LiveIntervalUnions share an external allocator.
-typedef|typedef
+name|using
+name|Allocator
+init|=
 name|LiveSegments
 operator|::
 name|Allocator
-name|Allocator
-expr_stmt|;
+decl_stmt|;
 name|private
 label|:
 name|unsigned
@@ -313,10 +321,11 @@ argument_list|()
 return|;
 block|}
 comment|// Provide public access to the underlying map to allow overlap iteration.
-typedef|typedef
-name|LiveSegments
+name|using
 name|Map
-typedef|;
+init|=
+name|LiveSegments
+decl_stmt|;
 specifier|const
 name|Map
 operator|&

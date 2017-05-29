@@ -1442,7 +1442,13 @@ block|,
 comment|///< Coroutine frame memory deallocation.
 name|ReturnValue
 block|,
-comment|///< Return value for thunk function.
+comment|///< Return value for thunk function: p.get_return_object().
+name|ResultDecl
+block|,
+comment|///< Declaration holding the result of get_return_object.
+name|ReturnStmt
+block|,
+comment|///< Return statement for the thunk function.
 name|ReturnStmtOnAllocFailure
 block|,
 comment|///< Return statement if allocation failed.
@@ -1547,9 +1553,21 @@ name|Deallocate
 operator|=
 name|nullptr
 block|;
-name|Stmt
+name|Expr
 operator|*
 name|ReturnValue
+operator|=
+name|nullptr
+block|;
+name|Stmt
+operator|*
+name|ResultDecl
+operator|=
+name|nullptr
+block|;
+name|Stmt
+operator|*
+name|ReturnStmt
 operator|=
 name|nullptr
 block|;
@@ -1786,7 +1804,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|cast_or_null
+name|cast
 operator|<
 name|Expr
 operator|>
@@ -1799,6 +1817,38 @@ operator|::
 name|ReturnValue
 index|]
 operator|)
+return|;
+block|}
+name|Stmt
+operator|*
+name|getResultDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStoredStmts
+argument_list|()
+index|[
+name|SubStmt
+operator|::
+name|ResultDecl
+index|]
+return|;
+block|}
+name|Stmt
+operator|*
+name|getReturnStmt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStoredStmts
+argument_list|()
+index|[
+name|SubStmt
+operator|::
+name|ReturnStmt
+index|]
 return|;
 block|}
 name|Stmt
