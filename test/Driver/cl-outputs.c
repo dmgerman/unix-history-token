@@ -204,7 +204,7 @@ comment|// oCRAZY2:  "-o" "..obj"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /c %s -### /o 2>&1 | FileCheck -check-prefix=oMISSINGARG %s
+comment|// RUN: not %clang_cl /c %s -### /o 2>&1 | FileCheck -check-prefix=oMISSINGARG %s
 end_comment
 
 begin_comment
@@ -584,7 +584,7 @@ comment|// FeoDIRNAMEEXTDLL: "-implib:foo.dir{{[/\\]+}}a.lib"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -### /o 2>&1 | FileCheck -check-prefix=FeoMISSINGARG %s
+comment|// RUN: not %clang_cl -### /o 2>&1 | FileCheck -check-prefix=FeoMISSINGARG %s
 end_comment
 
 begin_comment

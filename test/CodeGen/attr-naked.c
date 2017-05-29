@@ -26,7 +26,7 @@ comment|// (Note that naked needs to imply noinline to work properly.)
 end_comment
 
 begin_comment
-comment|// CHECK: define void @t1() [[NAKED:#[0-9]+]] {
+comment|// CHECK: define void @t1() [[NAKED_OPTNONE:#[0-9]+]] {
 end_comment
 
 begin_function
@@ -45,7 +45,7 @@ comment|// (It doesn't really make sense, but it isn't invalid.)
 end_comment
 
 begin_comment
-comment|// CHECK: define void @t2() [[NAKED]] {
+comment|// CHECK: define void @t2() [[NAKED:#[0-9]+]] {
 end_comment
 
 begin_macro
@@ -87,6 +87,10 @@ comment|// CHECK-NOT: store
 comment|// CHECK: unreachable
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: attributes [[NAKED_OPTNONE]] = { naked noinline nounwind optnone{{.*}} }
+end_comment
 
 begin_comment
 comment|// CHECK: attributes [[NAKED]] = { naked noinline nounwind{{.*}} }

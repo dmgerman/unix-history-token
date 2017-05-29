@@ -18583,6 +18583,24 @@ name|Idx
 index|]
 return|;
 block|}
+specifier|const
+name|Designator
+operator|*
+name|getDesignator
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|{
+return|return
+operator|&
+name|designators
+argument_list|()
+index|[
+name|Idx
+index|]
+return|;
+block|}
 name|void
 name|setDesignators
 argument_list|(

@@ -8,6 +8,10 @@ comment|// RUN: %clang_cc1 -triple arm64-apple-ios9 -target-cpu cyclone -emit-ll
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple arm64-apple-ios9 -target-cpu cyclone -emit-llvm -o - %s | FileCheck %s --check-prefix=ARM64
+end_comment
+
+begin_comment
 comment|// REQUIRES: aarch64-registered-target,x86-registered-target
 end_comment
 
@@ -326,6 +330,16 @@ end_comment
 begin_comment
 comment|/*****************************************************************************/
 end_comment
+
+begin_typedef
+typedef|typedef
+name|float
+name|float3
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(3)));
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -3944,6 +3958,33 @@ end_comment
 
 begin_comment
 comment|// CHECK: define swiftcc void @take_union_het_vecint([[UNION]]*
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|float3
+name|f3
+decl_stmt|;
+block|}
+name|struct_v1f3
+typedef|;
+end_typedef
+
+begin_macro
+name|TEST
+argument_list|(
+argument|struct_v1f3
+argument_list|)
+end_macro
+
+begin_comment
+comment|// ARM64-LABEL: define swiftcc {<2 x float>, float } @return_struct_v1f3()
+end_comment
+
+begin_comment
+comment|// ARM64-LABEL: define swiftcc void @take_struct_v1f3(<2 x float>, float)
 end_comment
 
 end_unit

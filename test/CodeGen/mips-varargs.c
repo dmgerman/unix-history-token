@@ -1,26 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple mips-unknown-linux -o - -emit-llvm %s | FileCheck %s -check-prefix=ALL -check-prefix=O32
+comment|// RUN: %clang_cc1 -triple mips-unknown-linux -o - -emit-llvm %s | FileCheck %s -check-prefixes=ALL,O32 -enable-var-scope
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple mipsel-unknown-linux -o - -emit-llvm %s | FileCheck %s -check-prefix=ALL -check-prefix=O32
+comment|// RUN: %clang_cc1 -triple mipsel-unknown-linux -o - -emit-llvm %s | FileCheck %s -check-prefixes=ALL,O32 -enable-var-scope
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple mips64-unknown-linux -o - -emit-llvm  -target-abi n32 %s | FileCheck %s -check-prefix=ALL -check-prefix=N32 -check-prefix=NEW
+comment|// RUN: %clang_cc1 -triple mips64-unknown-linux -o - -emit-llvm  -target-abi n32 %s | FileCheck %s -check-prefixes=ALL,N32,NEW -enable-var-scope
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple mips64-unknown-linux -o - -emit-llvm  -target-abi n32 %s | FileCheck %s -check-prefix=ALL -check-prefix=N32 -check-prefix=NEW
+comment|// RUN: %clang_cc1 -triple mips64-unknown-linux -o - -emit-llvm  -target-abi n32 %s | FileCheck %s -check-prefixes=ALL,N32,NEW -enable-var-scope
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple mips64-unknown-linux -o - -emit-llvm %s | FileCheck %s -check-prefix=ALL -check-prefix=N64 -check-prefix=NEW
+comment|// RUN: %clang_cc1 -triple mips64-unknown-linux -o - -emit-llvm %s | FileCheck %s -check-prefixes=ALL,N64,NEW -enable-var-scope
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple mips64el-unknown-linux -o - -emit-llvm %s | FileCheck %s -check-prefix=ALL -check-prefix=N64 -check-prefix=NEW
+comment|// RUN: %clang_cc1 -triple mips64el-unknown-linux -o - -emit-llvm %s | FileCheck %s -check-prefixes=ALL,N64,NEW -enable-var-scope
 end_comment
 
 begin_include
@@ -90,15 +90,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   %va = alloca i8*, align [[PTRALIGN:4]]
+comment|// O32:   %va = alloca i8*, align [[$PTRALIGN:4]]
 end_comment
 
 begin_comment
-comment|// N32:   %va = alloca i8*, align [[PTRALIGN:4]]
+comment|// N32:   %va = alloca i8*, align [[$PTRALIGN:4]]
 end_comment
 
 begin_comment
-comment|// N64:   %va = alloca i8*, align [[PTRALIGN:8]]
+comment|// N64:   %va = alloca i8*, align [[$PTRALIGN:8]]
 end_comment
 
 begin_comment
@@ -122,15 +122,15 @@ comment|// ALL:   call void @llvm.va_start(i8* [[VA]])
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[PTRALIGN]]
+comment|// ALL:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
-comment|// O32:   [[AP_NEXT:%.+]] = getelementptr inbounds i8, i8* [[AP_CUR]], [[INTPTR_T:i32]] [[CHUNKSIZE:4]]
+comment|// O32:   [[AP_NEXT:%.+]] = getelementptr inbounds i8, i8* [[AP_CUR]], [[$INTPTR_T:i32]] [[$CHUNKSIZE:4]]
 end_comment
 
 begin_comment
-comment|// NEW:   [[AP_NEXT:%.+]] = getelementptr inbounds i8, i8* [[AP_CUR]], [[INTPTR_T:i32|i64]] [[CHUNKSIZE:8]]
+comment|// NEW:   [[AP_NEXT:%.+]] = getelementptr inbounds i8, i8* [[AP_CUR]], [[$INTPTR_T:i32|i64]] [[$CHUNKSIZE:8]]
 end_comment
 
 begin_comment
@@ -138,7 +138,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   store i8* [[AP_NEXT]], i8** %va, align [[PTRALIGN]]
+comment|// ALL:   store i8* [[AP_NEXT]], i8** %va, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
@@ -258,7 +258,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   %va = alloca i8*, align [[PTRALIGN]]
+comment|// ALL:   %va = alloca i8*, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
@@ -270,7 +270,7 @@ comment|// ALL:   call void @llvm.va_start(i8* [[VA]])
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[PTRALIGN]]
+comment|// ALL:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
@@ -306,11 +306,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_NEXT:%.+]] = getelementptr inbounds i8, i8* [[AP_CUR]], [[INTPTR_T]] 8
+comment|// ALL:   [[AP_NEXT:%.+]] = getelementptr inbounds i8, i8* [[AP_CUR]], [[$INTPTR_T]] 8
 end_comment
 
 begin_comment
-comment|// ALL:   store i8* [[AP_NEXT]], i8** %va, align [[PTRALIGN]]
+comment|// ALL:   store i8* [[AP_NEXT]], i8** %va, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
@@ -395,11 +395,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   %va = alloca i8*, align [[PTRALIGN]]
+comment|// ALL:   %va = alloca i8*, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
-comment|// ALL:   [[V:%.*]] = alloca i8*, align [[PTRALIGN]]
+comment|// ALL:   [[V:%.*]] = alloca i8*, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
@@ -415,15 +415,15 @@ comment|// ALL:   call void @llvm.va_start(i8* [[VA]])
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[PTRALIGN]]
+comment|// ALL:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_NEXT:%.+]] = getelementptr inbounds i8, i8* [[AP_CUR]], [[INTPTR_T]] [[CHUNKSIZE]]
+comment|// ALL:   [[AP_NEXT:%.+]] = getelementptr inbounds i8, i8* [[AP_CUR]], [[$INTPTR_T]] [[$CHUNKSIZE]]
 end_comment
 
 begin_comment
-comment|// ALL:   store i8* [[AP_NEXT]], i8** %va, align [[PTRALIGN]]
+comment|// ALL:   store i8* [[AP_NEXT]], i8** %va, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
@@ -471,11 +471,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   [[ARG:%.+]] = load i8*, i8** [[AP_CAST]], align [[PTRALIGN]]
+comment|// ALL:   [[ARG:%.+]] = load i8*, i8** [[AP_CAST]], align [[$PTRALIGN]]
 end_comment
 
 begin_comment
-comment|// ALL:   store i8* [[ARG]], i8** [[V]], align [[PTRALIGN]]
+comment|// ALL:   store i8* [[ARG]], i8** [[V]], align [[$PTRALIGN]]
 end_comment
 
 begin_comment
@@ -548,11 +548,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   %va = alloca i8*, align [[PTRALIGN]]
+comment|// ALL:   %va = alloca i8*, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
-comment|// ALL:   [[V]] = alloca<4 x i32>, align 16
+comment|// ALL:   [[V:%.+]] = alloca<4 x i32>, align 16
 end_comment
 
 begin_comment
@@ -564,7 +564,7 @@ comment|// ALL:   call void @llvm.va_start(i8* [[VA1]])
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[PTRALIGN]]
+comment|// ALL:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
@@ -600,19 +600,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP1:%.+]] = ptrtoint i8* [[AP_CUR]] to [[INTPTR_T]]
+comment|// NEW:   [[TMP1:%.+]] = ptrtoint i8* [[AP_CUR]] to [[$INTPTR_T]]
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP2:%.+]] = add [[INTPTR_T]] [[TMP1]], 15
+comment|// NEW:   [[TMP2:%.+]] = add [[$INTPTR_T]] [[TMP1]], 15
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP3:%.+]] = and [[INTPTR_T]] [[TMP2]], -16
+comment|// NEW:   [[TMP3:%.+]] = and [[$INTPTR_T]] [[TMP2]], -16
 end_comment
 
 begin_comment
-comment|// NEW:   [[AP_CUR:%.+]] = inttoptr [[INTPTR_T]] [[TMP3]] to i8*
+comment|// NEW:   [[AP_CUR:%.+]] = inttoptr [[$INTPTR_T]] [[TMP3]] to i8*
 end_comment
 
 begin_comment
@@ -620,11 +620,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_NEXT:%.+]] = getelementptr inbounds i8, i8* [[AP_CUR]], [[INTPTR_T]] 16
+comment|// ALL:   [[AP_NEXT:%.+]] = getelementptr inbounds i8, i8* [[AP_CUR]], [[$INTPTR_T]] 16
 end_comment
 
 begin_comment
-comment|// ALL:   store i8* [[AP_NEXT]], i8** %va, align [[PTRALIGN]]
+comment|// ALL:   store i8* [[AP_NEXT]], i8** %va, align [[$PTRALIGN]]
 end_comment
 
 begin_comment
@@ -641,6 +641,10 @@ end_comment
 
 begin_comment
 comment|// N64:   [[ARG:%.+]] = load<4 x i32>,<4 x i32>* [[AP_CAST]], align 16
+end_comment
+
+begin_comment
+comment|// N32:   [[ARG:%.+]] = load<4 x i32>,<4 x i32>* [[AP_CAST]], align 16
 end_comment
 
 begin_comment

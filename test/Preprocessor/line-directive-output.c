@@ -195,5 +195,34 @@ begin_empty
 empty|# 50 "a\012.c"
 end_empty
 
+begin_empty
+empty|# 1 "system.h" 3
+end_empty
+
+begin_empty
+empty|# 2
+end_empty
+
+begin_function_decl
+name|void
+name|sys_foo
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// CHECK: # 1 "system.h" 3
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: # 2 "system.h" 3
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: void sys_foo(void);
+end_comment
+
 end_unit
 

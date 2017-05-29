@@ -4414,6 +4414,346 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: fsub<2 x double><double -0.000000e+00, double -0.000000e+00>, {{%[0-9]+}}
 comment|// CHECK-LE: fsub<2 x double><double -0.000000e+00, double -0.000000e+00>, {{%[0-9]+}}
+name|res_vd
+operator|=
+name|vec_xxpermdi
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 0, i32 2>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 3, i32 1>
+name|res_vf
+operator|=
+name|vec_xxpermdi
+argument_list|(
+name|vf
+argument_list|,
+name|vf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 0, i32 3>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 2, i32 1>
+name|res_vsll
+operator|=
+name|vec_xxpermdi
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 1, i32 2>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 3, i32 0>
+name|res_vull
+operator|=
+name|vec_xxpermdi
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 1, i32 3>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 2, i32 0>
+name|res_vsi
+operator|=
+name|vec_xxpermdi
+argument_list|(
+name|vsi
+argument_list|,
+name|vsi
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 0, i32 2>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 3, i32 1>
+name|res_vui
+operator|=
+name|vec_xxpermdi
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 0, i32 3>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 2, i32 1>
+name|res_vss
+operator|=
+name|vec_xxpermdi
+argument_list|(
+name|vss
+argument_list|,
+name|vss
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 1, i32 2>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 3, i32 0>
+name|res_vus
+operator|=
+name|vec_xxpermdi
+argument_list|(
+name|vus
+argument_list|,
+name|vus
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 1, i32 3>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 2, i32 0>
+name|res_vsc
+operator|=
+name|vec_xxpermdi
+argument_list|(
+name|vsc
+argument_list|,
+name|vsc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 0, i32 2>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 3, i32 1>
+name|res_vuc
+operator|=
+name|vec_xxpermdi
+argument_list|(
+name|vuc
+argument_list|,
+name|vuc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 0, i32 3>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 2, i32 1>
+name|res_vd
+operator|=
+name|vec_xxsldwi
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+name|res_vf
+operator|=
+name|vec_xxsldwi
+argument_list|(
+name|vf
+argument_list|,
+name|vf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 1, i32 2, i32 3, i32 4>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 7, i32 0, i32 1, i32 2>
+name|res_vsll
+operator|=
+name|vec_xxsldwi
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 2, i32 3, i32 4, i32 5>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 6, i32 7, i32 0, i32 1>
+name|res_vull
+operator|=
+name|vec_xxsldwi
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 3, i32 4, i32 5, i32 6>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 5, i32 6, i32 7, i32 0>
+name|res_vsi
+operator|=
+name|vec_xxsldwi
+argument_list|(
+name|vsi
+argument_list|,
+name|vsi
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+name|res_vui
+operator|=
+name|vec_xxsldwi
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 1, i32 2, i32 3, i32 4>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 7, i32 0, i32 1, i32 2>
+name|res_vss
+operator|=
+name|vec_xxsldwi
+argument_list|(
+name|vss
+argument_list|,
+name|vss
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 2, i32 3, i32 4, i32 5>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 6, i32 7, i32 0, i32 1>
+name|res_vus
+operator|=
+name|vec_xxsldwi
+argument_list|(
+name|vus
+argument_list|,
+name|vus
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 3, i32 4, i32 5, i32 6>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 5, i32 6, i32 7, i32 0>
+name|res_vsc
+operator|=
+name|vec_xxsldwi
+argument_list|(
+name|vsc
+argument_list|,
+name|vsc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+name|res_vuc
+operator|=
+name|vec_xxsldwi
+argument_list|(
+name|vuc
+argument_list|,
+name|vuc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 1, i32 2, i32 3, i32 4>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 7, i32 0, i32 1, i32 2>
+block|}
+end_function
+
+begin_comment
+comment|// The return type of the call expression may be different from the return type of the shufflevector.
+end_comment
+
+begin_comment
+comment|// Wrong implementation could crash the compiler, add this test case to check that and avoid ICE.
+end_comment
+
+begin_function
+name|vector
+name|int
+name|xxpermdi_should_not_assert
+parameter_list|(
+name|vector
+name|int
+name|a
+parameter_list|,
+name|vector
+name|int
+name|b
+parameter_list|)
+block|{
+return|return
+name|vec_xxpermdi
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|0
+argument_list|)
+return|;
+comment|// CHECK-LABEL: xxpermdi_should_not_assert
+comment|// CHECK:  bitcast<4 x i32> %{{[0-9]+}} to<2 x i64>
+comment|// CHECK-NEXT:  bitcast<4 x i32> %{{[0-9]+}} to<2 x i64>
+comment|// CHECK-NEXT:  shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 0, i32 2>
+comment|// CHECK-NEXT:  bitcast<2 x i64> %{{[0-9]+}} to<4 x i32>
+comment|// CHECK-LE:  bitcast<4 x i32> %{{[0-9]+}} to<2 x i64>
+comment|// CHECK-LE-NEXT:  bitcast<4 x i32> %{{[0-9]+}} to<2 x i64>
+comment|// CHECK-LE-NEXT:  shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 3, i32 1>
+comment|// CHECK-LE-NEXT:  bitcast<2 x i64> %{{[0-9]+}} to<4 x i32>
+block|}
+end_function
+
+begin_function
+name|vector
+name|double
+name|xxsldwi_should_not_assert
+parameter_list|(
+name|vector
+name|double
+name|a
+parameter_list|,
+name|vector
+name|double
+name|b
+parameter_list|)
+block|{
+return|return
+name|vec_xxsldwi
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|0
+argument_list|)
+return|;
+comment|// CHECK-LABEL: xxsldwi_should_not_assert
+comment|// CHECK:  bitcast<2 x double> %{{[0-9]+}} to<4 x i32>
+comment|// CHECK-NEXT:  bitcast<2 x double> %{{[0-9]+}} to<4 x i32>
+comment|// CHECK-NEXT:  shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK-NEXT:  bitcast<4 x i32> %{{[0-9]+}} to<2 x double>
+comment|// CHECK-LE:  bitcast<2 x double> %{{[0-9]+}} to<4 x i32>
+comment|// CHECK-NEXT-LE:  bitcast<2 x double> %{{[0-9]+}} to<4 x i32>
+comment|// CHECK-NEXT-LE:  shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK-NEXT-LE:  bitcast<4 x i32> %{{[0-9]+}} to<2 x double>
 block|}
 end_function
 

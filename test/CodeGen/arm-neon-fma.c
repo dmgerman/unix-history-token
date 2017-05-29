@@ -20,7 +20,7 @@ comment|// RUN:   -ffreestanding \
 end_comment
 
 begin_comment
-comment|// RUN:   -emit-llvm -o - %s | opt -S -mem2reg | FileCheck %s
+comment|// RUN:   -disable-O0-optnone -emit-llvm -o - %s | opt -S -mem2reg | FileCheck %s
 end_comment
 
 begin_include

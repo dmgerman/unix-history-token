@@ -250,6 +250,13 @@ decl_stmt|;
 name|class
 name|ASTDeserializationListener
 decl_stmt|;
+name|namespace
+name|vfs
+block|{
+name|class
+name|FileSystem
+decl_stmt|;
+block|}
 comment|/// \brief Utility class for loading a ASTContext from an AST file.
 comment|///
 name|class
@@ -1563,6 +1570,14 @@ operator|::
 name|MemoryBuffer
 operator|>
 name|OverrideMainBuffer
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|VFS
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -1633,19 +1648,27 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
+begin_decl_stmt
 name|ComputedPreamble
 name|ComputePreamble
-parameter_list|(
+argument_list|(
 name|CompilerInvocation
-modifier|&
+operator|&
 name|Invocation
-parameter_list|,
+argument_list|,
 name|unsigned
 name|MaxLines
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|VFS
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|std
@@ -1661,6 +1684,8 @@ argument_list|(
 argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps
 argument_list|,
 argument|const CompilerInvocation&PreambleInvocationIn
+argument_list|,
+argument|IntrusiveRefCntPtr<vfs::FileSystem> VFS
 argument_list|,
 argument|bool AllowRebuild = true
 argument_list|,
@@ -3189,6 +3214,26 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param VFS - A vfs::FileSystem to be used for all file accesses. Note that
+end_comment
+
+begin_comment
+comment|/// preamble is saved to a temporary directory on a RealFileSystem, so in order
+end_comment
+
+begin_comment
+comment|/// for it to be loaded correctly, VFS should have access to it(i.e., be an
+end_comment
+
+begin_comment
+comment|/// overlay over RealFileSystem).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \returns \c true if a catastrophic failure occurred (which means that the
 end_comment
 
@@ -3210,6 +3255,14 @@ name|PCHContainerOps
 argument_list|,
 name|unsigned
 name|PrecompilePreambleAfterNParses
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|VFS
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -3603,6 +3656,26 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param VFS - A vfs::FileSystem to be used for all file accesses. Note that
+end_comment
+
+begin_comment
+comment|/// preamble is saved to a temporary directory on a RealFileSystem, so in order
+end_comment
+
+begin_comment
+comment|/// for it to be loaded correctly, VFS should have access to it(i.e., be an
+end_comment
+
+begin_comment
+comment|/// overlay over RealFileSystem). RealFileSystem will be used if \p VFS is nullptr.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|// FIXME: Move OnlyLocalDecls, UseBumpAllocator to setters on the ASTUnit, we
 end_comment
 
@@ -3730,6 +3803,16 @@ operator|*
 name|ErrAST
 operator|=
 name|nullptr
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|VFS
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -3740,6 +3823,30 @@ end_comment
 
 begin_comment
 comment|/// were originally used to produce this translation unit.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param VFS - A vfs::FileSystem to be used for all file accesses. Note that
+end_comment
+
+begin_comment
+comment|/// preamble is saved to a temporary directory on a RealFileSystem, so in order
+end_comment
+
+begin_comment
+comment|/// for it to be loaded correctly, VFS should give an access to this(i.e. be an
+end_comment
+
+begin_comment
+comment|/// overlay over RealFileSystem). FileMgr->getVirtualFileSystem() will be used if
+end_comment
+
+begin_comment
+comment|/// \p VFS is nullptr.
 end_comment
 
 begin_comment
@@ -3773,6 +3880,16 @@ operator|>
 name|RemappedFiles
 operator|=
 name|None
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|VFS
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 end_decl_stmt

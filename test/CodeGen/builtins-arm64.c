@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple arm64-unknown-linux -emit-llvm -o - %s | opt -S -mem2reg | FileCheck %s
+comment|// RUN: %clang_cc1 -triple arm64-unknown-linux -disable-O0-optnone -emit-llvm -o - %s | opt -S -mem2reg | FileCheck %s
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon \
 end_comment
 
 begin_comment
-comment|// RUN:  -fallow-half-arguments-and-returns -emit-llvm -o - %s \
+comment|// RUN:  -fallow-half-arguments-and-returns -disable-O0-optnone -emit-llvm -o - %s \
 end_comment
 
 begin_comment

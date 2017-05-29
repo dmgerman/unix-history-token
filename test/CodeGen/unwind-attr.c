@@ -94,7 +94,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: attributes [[TF]] = { noinline "{{.*}} }
+comment|// CHECK: attributes [[TF]] = { noinline optnone "{{.*}} }
 end_comment
 
 begin_comment

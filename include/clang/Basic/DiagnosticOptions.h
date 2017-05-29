@@ -341,7 +341,11 @@ block|,
 name|DefaultSpellCheckingLimit
 operator|=
 literal|50
-block|}
+block|,
+name|DefaultSnippetLineLimit
+operator|=
+literal|1
+block|,   }
 block|;
 comment|// Define simple diagnostic options (with no accessors).
 define|#

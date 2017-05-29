@@ -802,6 +802,59 @@ name|Complain
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Resolve the given header directive to an actual header file.
+comment|///
+comment|/// \param M The module in which we're resolving the header directive.
+comment|/// \param Header The header directive to resolve.
+comment|/// \param RelativePathName Filled in with the relative path name from the
+comment|///        module to the resolved header.
+comment|/// \return The resolved file, if any.
+specifier|const
+name|FileEntry
+modifier|*
+name|resolveHeader
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+name|Module
+operator|::
+name|UnresolvedHeaderDirective
+name|Header
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|RelativePathName
+argument_list|)
+decl_stmt|;
+comment|/// Attempt to resolve the specified header directive as naming a builtin
+comment|/// header.
+specifier|const
+name|FileEntry
+modifier|*
+name|resolveAsBuiltinHeader
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+name|Module
+operator|::
+name|UnresolvedHeaderDirective
+name|Header
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|BuiltinPathName
+argument_list|)
+decl_stmt|;
 comment|/// \brief Looks up the modules that \p File corresponds to.
 comment|///
 comment|/// If \p File represents a builtin header within Clang's builtin include

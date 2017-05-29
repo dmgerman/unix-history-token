@@ -672,7 +672,7 @@ comment|// RUN: %clang -### -S -fextended-identifiers %s 2>&1 | FileCheck -check
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -S -fno-extended-identifiers %s 2>&1 | FileCheck -check-prefix=CHECK-NO-EXTENDED-IDENTIFIERS %s
+comment|// RUN: not %clang -### -S -fno-extended-identifiers %s 2>&1 | FileCheck -check-prefix=CHECK-NO-EXTENDED-IDENTIFIERS %s
 end_comment
 
 begin_comment

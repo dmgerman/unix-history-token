@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang %s -cake-is-lie -%0 -%d -HHHH -munknown-to-clang-option -print-stats -funknown-to-clang-option -### 2>&1 | \
+comment|// RUN: not %clang %s -cake-is-lie -%0 -%d -HHHH -munknown-to-clang-option -print-stats -funknown-to-clang-option -### 2>&1 | \
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: FileCheck %s --check-prefix=CL
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -cake-is-lie -%0 -%d -HHHH -munknown-to-clang-option -print-stats -funknown-to-clang-option -c -Werror=unknown-argument -### -- %s 2>&1 | \
+comment|// RUN: not %clang_cl -cake-is-lie -%0 -%d -HHHH -munknown-to-clang-option -print-stats -funknown-to-clang-option -c -Werror=unknown-argument -### -- %s 2>&1 | \
 end_comment
 
 begin_comment

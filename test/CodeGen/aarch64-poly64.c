@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon \
 end_comment
 
 begin_comment
-comment|// RUN:  -ffp-contract=fast -emit-llvm -o - %s | opt -S -mem2reg \
+comment|// RUN:  -ffp-contract=fast -disable-O0-optnone -emit-llvm -o - %s | opt -S -mem2reg \
 end_comment
 
 begin_comment

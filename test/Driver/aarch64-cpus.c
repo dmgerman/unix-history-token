@@ -44,7 +44,7 @@ comment|// RUN: %clang -target arm64 -mlittle-endian -### -c %s 2>&1 | FileCheck
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu-generic -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-GENERIC %s
+comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=generic -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-GENERIC %s
 end_comment
 
 begin_comment

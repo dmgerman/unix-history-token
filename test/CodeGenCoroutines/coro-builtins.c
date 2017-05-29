@@ -55,7 +55,7 @@ argument_list|()
 expr_stmt|;
 comment|// CHECK-NEXT: %[[SIZE:.+]] = call i64 @llvm.coro.size.i64()
 comment|// CHECK-NEXT: %[[MEM:.+]] = call i8* @myAlloc(i64 %[[SIZE]])
-comment|// CHECK-NEXT: %[[BEG:.+]] = call i8* @llvm.coro.begin(token %[[COROID]], i8* %[[MEM]])
+comment|// CHECK-NEXT: %[[FRAME:.+]] = call i8* @llvm.coro.begin(token %[[COROID]], i8* %[[MEM]])
 name|__builtin_coro_begin
 argument_list|(
 name|myAlloc
@@ -65,32 +65,28 @@ argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: %[[FRAME1:.+]] = call i8* @llvm.coro.frame()
-comment|// CHECK-NEXT: call void @llvm.coro.resume(i8* %[[FRAME1]])
+comment|// CHECK-NEXT: call void @llvm.coro.resume(i8* %[[FRAME]])
 name|__builtin_coro_resume
 argument_list|(
 name|__builtin_coro_frame
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: %[[FRAME2:.+]] = call i8* @llvm.coro.frame()
-comment|// CHECK-NEXT: call void @llvm.coro.destroy(i8* %[[FRAME2]])
+comment|// CHECK-NEXT: call void @llvm.coro.destroy(i8* %[[FRAME]])
 name|__builtin_coro_destroy
 argument_list|(
 name|__builtin_coro_frame
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: %[[FRAME3:.+]] = call i8* @llvm.coro.frame()
-comment|// CHECK-NEXT: call i1 @llvm.coro.done(i8* %[[FRAME3]])
+comment|// CHECK-NEXT: call i1 @llvm.coro.done(i8* %[[FRAME]])
 name|__builtin_coro_done
 argument_list|(
 name|__builtin_coro_frame
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: %[[FRAME4:.+]] = call i8* @llvm.coro.frame()
-comment|// CHECK-NEXT: call i8* @llvm.coro.promise(i8* %[[FRAME4]], i32 48, i1 false)
+comment|// CHECK-NEXT: call i8* @llvm.coro.promise(i8* %[[FRAME]], i32 48, i1 false)
 name|__builtin_coro_promise
 argument_list|(
 name|__builtin_coro_frame
@@ -101,16 +97,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: %[[FRAME5:.+]] = call i8* @llvm.coro.frame()
-comment|// CHECK-NEXT: call i8* @llvm.coro.free(token %[[COROID]], i8* %[[FRAME5]])
+comment|// CHECK-NEXT: call i8* @llvm.coro.free(token %[[COROID]], i8* %[[FRAME]])
 name|__builtin_coro_free
 argument_list|(
 name|__builtin_coro_frame
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: %[[FRAME6:.+]] = call i8* @llvm.coro.frame()
-comment|// CHECK-NEXT: call i1 @llvm.coro.end(i8* %[[FRAME6]], i1 false)
+comment|// CHECK-NEXT: call i1 @llvm.coro.end(i8* %[[FRAME]], i1 false)
 name|__builtin_coro_end
 argument_list|(
 name|__builtin_coro_frame

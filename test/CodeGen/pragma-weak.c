@@ -938,7 +938,7 @@ comment|// CHECK: attributes [[NI]] = { noinline nounwind{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[RN]] = { noinline nounwind readnone{{.*}} }
+comment|// CHECK: attributes [[RN]] = { noinline nounwind optnone readnone{{.*}} }
 end_comment
 
 end_unit

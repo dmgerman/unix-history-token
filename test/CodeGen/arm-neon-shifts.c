@@ -8,6 +8,10 @@ comment|// RUN: %clang_cc1 -triple thumbv7-apple-darwin \
 end_comment
 
 begin_comment
+comment|// RUN:   -disable-O0-optnone \
+end_comment
+
+begin_comment
 comment|// RUN:   -target-cpu cortex-a8 \
 end_comment
 

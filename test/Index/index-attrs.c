@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: c-index-test -index-file -check-prefix CHECK %s -target armv7-windows-gnu -fdeclspec
+comment|// RUN: c-index-test -index-file %s -target armv7-windows-gnu -fdeclspec 2>&1 | FileCheck %s
 end_comment
 
 begin_function
@@ -17,7 +17,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: [indexDeclaraton]: kind: function | name: export_function | {{.*}} | lang: C
+comment|// CHECK: [indexDeclaration]: kind: function | name: export_function | {{.*}} | lang: C
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ block|{}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: [indexDeclaration] kind: function | name: export_gnu_attribute | {{.*}} | lang: C
+comment|// CHECK: [indexDeclaration]: kind: function | name: export_gnu_attribute | {{.*}} | lang: C
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: [indexDeclaration] kind: function | name: import_function | {{.*}} | lang: C
+comment|// CHECK: [indexDeclaration]: kind: function | name: import_function | {{.*}} | lang: C
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: [indexDeclaration] kind: function | name: import_gnu_function | {{.*}} | lang: C
+comment|// CHECK: [indexDeclaration]: kind: function | name: import_gnu_attribute | {{.*}} | lang: C
 end_comment
 
 begin_comment

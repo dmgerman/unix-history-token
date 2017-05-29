@@ -924,17 +924,39 @@ comment|/// \endcode
 name|bool
 name|BreakBeforeTernaryOperators
 decl_stmt|;
-comment|/// \brief Always break constructor initializers before commas and align
+comment|/// \brief Different ways to break initializers.
+enum|enum
+name|BreakConstructorInitializersStyle
+block|{
+comment|/// Break constructor initializers before the colon and after the commas.
+comment|/// \code
+comment|/// Constructor()
+comment|///     : initializer1(),
+comment|///       initializer2()
+comment|/// \endcode
+name|BCIS_BeforeColon
+block|,
+comment|/// Break constructor initializers before the colon and commas, and align
 comment|/// the commas with the colon.
 comment|/// \code
-comment|///    true:                                  false:
-comment|///    SomeClass::Constructor()       vs.     SomeClass::Constructor() : a(a),
-comment|///        : a(a)                                                   b(b),
-comment|///        , b(b)                                                   c(c) {}
-comment|///        , c(c) {}
+comment|/// Constructor()
+comment|///     : initializer1()
+comment|///     , initializer2()
 comment|/// \endcode
-name|bool
-name|BreakConstructorInitializersBeforeComma
+name|BCIS_BeforeComma
+block|,
+comment|/// Break constructor initializers after the colon and commas.
+comment|/// \code
+comment|/// Constructor() :
+comment|///     initializer1(),
+comment|///     initializer2()
+comment|/// \endcode
+name|BCIS_AfterColon
+block|}
+enum|;
+comment|/// \brief The constructor initializers style to use..
+name|BreakConstructorInitializersStyle
+name|BreakConstructorInitializers
 decl_stmt|;
 comment|/// \brief Break after each annotation on a field in Java files.
 comment|/// \code{.java}
@@ -1866,11 +1888,11 @@ name|R
 operator|.
 name|BreakBeforeTernaryOperators
 operator|&&
-name|BreakConstructorInitializersBeforeComma
+name|BreakConstructorInitializers
 operator|==
 name|R
 operator|.
-name|BreakConstructorInitializersBeforeComma
+name|BreakConstructorInitializers
 operator|&&
 name|BreakAfterJavaFieldAnnotations
 operator|==

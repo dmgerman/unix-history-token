@@ -308,7 +308,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -gfoo %s 2>&1 | FileCheck -check-prefix=G_NO %s
+comment|// RUN: not %clang -### -c -gfoo %s 2>&1 | FileCheck -check-prefix=G_ERR %s
 end_comment
 
 begin_comment
@@ -665,6 +665,14 @@ end_comment
 
 begin_comment
 comment|// G_PS4: "-generate-arange-section"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// G_ERR: error: unknown argument:
 end_comment
 
 begin_comment

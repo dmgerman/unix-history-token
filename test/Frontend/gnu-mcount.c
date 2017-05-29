@@ -4,19 +4,19 @@ comment|// REQUIRES: arm-registered-target,aarch64-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target armv7-unknown-none-eabi -pg -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM-EABI
+comment|// RUN: %clang -target armv7-unknown-none-eabi -pg -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM-BAREMETAL-EABI
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target armv7-unknown-none-eabi -pg -meabi gnu -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM-EABI-MEABI-GNU
+comment|// RUN: %clang -target armv7-unknown-none-eabi -pg -meabi gnu -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM-BAREMETAL-EABI-MEABI-GNU
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64-unknown-none-eabi -pg -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM64-EABI
+comment|// RUN: %clang -target aarch64-unknown-none-eabi -pg -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM64-BAREMETAL-EABI
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64-unknown-none-eabi -pg -meabi gnu -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM64-EABI-MEABI-GNU
+comment|// RUN: %clang -target aarch64-unknown-none-eabi -pg -meabi gnu -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM64-BAREMETAL-EABI-MEABI-GNU
 end_comment
 
 begin_comment
@@ -176,6 +176,26 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: f
+end_comment
+
+begin_comment
+comment|// TODO: add profiling support for arm-baremetal
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-BAREMETAL-EABI-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01mcount"{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-BAREMETAL-EABI-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-ARM64-BAREMETAL-EABI: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="mcount"{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-ARM64-BAREMETAL-EABI-MEABI-GNU: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01_mcount"{{.*}} }
 end_comment
 
 begin_comment
