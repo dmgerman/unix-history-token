@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Threading.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mutex>
 end_include
 
@@ -1096,7 +1102,7 @@ operator|>
 name|OffsetMap
 block|;
 name|mutable
-name|std
+name|llvm
 operator|::
 name|once_flag
 name|InitOffsetMap
@@ -1418,6 +1424,14 @@ operator|<
 name|RelTy
 operator|>
 name|Rels
+argument_list|)
+block|;
+name|void
+name|copyShtGroup
+argument_list|(
+name|uint8_t
+operator|*
+name|Buf
 argument_list|)
 block|; }
 decl_stmt|;

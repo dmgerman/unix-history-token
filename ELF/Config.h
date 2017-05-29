@@ -578,6 +578,9 @@ name|bool
 name|ZRelro
 decl_stmt|;
 name|bool
+name|ZRodynamic
+decl_stmt|;
+name|bool
 name|ZText
 decl_stmt|;
 name|bool
