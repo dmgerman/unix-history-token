@@ -193,6 +193,7 @@ operator|::
 name|tid_t
 name|getThreadID
 argument_list|()
+specifier|const
 block|{
 return|return
 name|m_thread_id

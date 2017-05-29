@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"lldb/Core/TraceOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/MainLoop.h"
 end_include
 
@@ -862,6 +868,177 @@ argument_list|,
 argument|NativeProcessProtocolSP&process_sp
 argument_list|)
 block|;
+comment|//------------------------------------------------------------------
+comment|/// StartTracing API for starting a tracing instance with the
+comment|/// TraceOptions on a specific thread or process.
+comment|///
+comment|/// @param[in] config
+comment|///     The configuration to use when starting tracing.
+comment|///
+comment|/// @param[out] error
+comment|///     Status indicates what went wrong.
+comment|///
+comment|/// @return
+comment|///     The API returns a user_id which can be used to get trace
+comment|///     data, trace configuration or stopping the trace instance.
+comment|///     The user_id is a key to identify and operate with a tracing
+comment|///     instance. It may refer to the complete process or a single
+comment|///     thread.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|user_id_t
+name|StartTrace
+argument_list|(
+argument|const TraceOptions&config
+argument_list|,
+argument|Status&error
+argument_list|)
+block|{
+name|error
+operator|.
+name|SetErrorString
+argument_list|(
+literal|"Not implemented"
+argument_list|)
+block|;
+return|return
+name|LLDB_INVALID_UID
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// StopTracing API as the name suggests stops a tracing instance.
+comment|///
+comment|/// @param[in] uid
+comment|///     The user id of the trace intended to be stopped. Now a
+comment|///     user_id may map to multiple threads in which case this API
+comment|///     could be used to stop the tracing for a specific thread by
+comment|///     supplying its thread id.
+comment|///
+comment|/// @param[in] thread
+comment|///     Thread is needed when the complete process is being traced
+comment|///     and the user wishes to stop tracing on a particular thread.
+comment|///
+comment|/// @return
+comment|///     Status indicating what went wrong.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Status
+name|StopTrace
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|lldb::tid_t thread = LLDB_INVALID_THREAD_ID
+argument_list|)
+block|{
+return|return
+name|Status
+argument_list|(
+literal|"Not implemented"
+argument_list|)
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// This API provides the trace data collected in the form of raw
+comment|/// data.
+comment|///
+comment|/// @param[in] uid thread
+comment|///     The uid and thread provide the context for the trace
+comment|///     instance.
+comment|///
+comment|/// @param[in] buffer
+comment|///     The buffer provides the destination buffer where the trace
+comment|///     data would be read to. The buffer should be truncated to the
+comment|///     filled length by this function.
+comment|///
+comment|/// @param[in] offset
+comment|///     There is possibility to read partially the trace data from
+comment|///     a specified offset where in such cases the buffer provided
+comment|///     may be smaller than the internal trace collection container.
+comment|///
+comment|/// @return
+comment|///     The size of the data actually read.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Status
+name|GetData
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|lldb::tid_t thread
+argument_list|,
+argument|llvm::MutableArrayRef<uint8_t>&buffer
+argument_list|,
+argument|size_t offset =
+literal|0
+argument_list|)
+block|{
+return|return
+name|Status
+argument_list|(
+literal|"Not implemented"
+argument_list|)
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Similar API as above except it aims to provide any extra data
+comment|/// useful for decoding the actual trace data.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Status
+name|GetMetaData
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|lldb::tid_t thread
+argument_list|,
+argument|llvm::MutableArrayRef<uint8_t>&buffer
+argument_list|,
+argument|size_t offset =
+literal|0
+argument_list|)
+block|{
+return|return
+name|Status
+argument_list|(
+literal|"Not implemented"
+argument_list|)
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// API to query the TraceOptions for a given user id
+comment|///
+comment|/// @param[in] uid
+comment|///     The user id of the tracing instance.
+comment|///
+comment|/// @param[in] config
+comment|///     The thread id of the tracing instance, in case configuration
+comment|///     for a specific thread is needed should be specified in the
+comment|///     config.
+comment|///
+comment|/// @param[out] error
+comment|///     Status indicates what went wrong.
+comment|///
+comment|/// @param[out] config
+comment|///     The actual configuration being used for tracing.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Status
+name|GetTraceConfig
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|TraceOptions&config
+argument_list|)
+block|{
+return|return
+name|Status
+argument_list|(
+literal|"Not implemented"
+argument_list|)
+return|;
+block|}
 name|protected
 operator|:
 name|lldb
@@ -1048,6 +1225,10 @@ block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lldb_private
+end_comment
 
 begin_endif
 endif|#

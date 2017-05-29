@@ -464,7 +464,16 @@ block|,
 name|eServerPacketType_notify
 block|,
 comment|// '%' notification
-block|}
+name|eServerPacketType_jTraceStart
+block|,
+name|eServerPacketType_jTraceBufferRead
+block|,
+name|eServerPacketType_jTraceMetaRead
+block|,
+name|eServerPacketType_jTraceStop
+block|,
+name|eServerPacketType_jTraceConfigRead
+block|,   }
 enum|;
 end_enum
 

@@ -366,6 +366,24 @@ name|char
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|EL_CLIENTDATA
+comment|/* editline with wide support + wide char read function */
+name|using
+name|EditLineGetCharType
+init|=
+name|wchar_t
+decl_stmt|;
+else|#
+directive|else
+name|using
+name|EditLineGetCharType
+init|=
+name|char
+decl_stmt|;
+endif|#
+directive|endif
 typedef|typedef
 name|int
 argument_list|(
@@ -378,7 +396,7 @@ name|EditLine
 operator|*
 name|editline
 argument_list|,
-name|EditLineCharType
+name|EditLineGetCharType
 operator|*
 name|c
 argument_list|)
@@ -870,7 +888,7 @@ comment|/// editing trickery.
 name|int
 name|GetCharacter
 parameter_list|(
-name|EditLineCharType
+name|EditLineGetCharType
 modifier|*
 name|c
 parameter_list|)
@@ -1019,7 +1037,7 @@ parameter_list|(
 name|char
 name|ch
 parameter_list|,
-name|EditLineCharType
+name|EditLineGetCharType
 modifier|&
 name|out
 parameter_list|)

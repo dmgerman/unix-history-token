@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Utility/StreamGDBRemote.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -1360,6 +1366,63 @@ operator|&
 name|config_sp
 argument_list|)
 block|;
+name|lldb
+operator|::
+name|user_id_t
+name|SendStartTracePacket
+argument_list|(
+specifier|const
+name|TraceOptions
+operator|&
+name|options
+argument_list|,
+name|Status
+operator|&
+name|error
+argument_list|)
+block|;
+name|Status
+name|SendStopTracePacket
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|lldb::tid_t thread_id
+argument_list|)
+block|;
+name|Status
+name|SendGetDataPacket
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|lldb::tid_t thread_id
+argument_list|,
+argument|llvm::MutableArrayRef<uint8_t>&buffer
+argument_list|,
+argument|size_t offset =
+literal|0
+argument_list|)
+block|;
+name|Status
+name|SendGetMetaDataPacket
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|lldb::tid_t thread_id
+argument_list|,
+argument|llvm::MutableArrayRef<uint8_t>&buffer
+argument_list|,
+argument|size_t offset =
+literal|0
+argument_list|)
+block|;
+name|Status
+name|SendGetTraceConfigPacket
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|TraceOptions&options
+argument_list|)
+block|;
 name|protected
 operator|:
 name|LazyBool
@@ -1676,6 +1739,20 @@ argument_list|,
 argument|StringExtractorGDBRemote&response
 argument_list|,
 argument|bool send_async
+argument_list|)
+block|;
+name|Status
+name|SendGetTraceDataPacket
+argument_list|(
+argument|StreamGDBRemote&packet
+argument_list|,
+argument|lldb::user_id_t uid
+argument_list|,
+argument|lldb::tid_t thread_id
+argument_list|,
+argument|llvm::MutableArrayRef<uint8_t>&buffer
+argument_list|,
+argument|size_t offset
 argument_list|)
 block|;
 name|private

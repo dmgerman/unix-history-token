@@ -68,6 +68,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_comment
+comment|// for StructuredDataType
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<functional>
 end_include
 
@@ -280,34 +290,6 @@ name|Generic
 operator|>
 name|GenericSP
 expr_stmt|;
-name|enum
-name|class
-name|Type
-block|{
-name|eTypeInvalid
-operator|=
-operator|-
-literal|1
-operator|,
-name|eTypeNull
-operator|=
-literal|0
-operator|,
-name|eTypeGeneric
-operator|,
-name|eTypeArray
-operator|,
-name|eTypeInteger
-operator|,
-name|eTypeFloat
-operator|,
-name|eTypeBoolean
-operator|,
-name|eTypeString
-operator|,
-name|eTypeDictionary
-block|}
-empty_stmt|;
 name|class
 name|Object
 range|:
@@ -323,7 +305,7 @@ name|public
 operator|:
 name|Object
 argument_list|(
-argument|Type t = Type::eTypeInvalid
+argument|lldb::StructuredDataType t = lldb::eStructuredDataTypeInvalid
 argument_list|)
 operator|:
 name|m_type
@@ -355,11 +337,13 @@ argument_list|()
 block|{
 name|m_type
 operator|=
-name|Type
+name|lldb
 operator|::
-name|eTypeInvalid
+name|eStructuredDataTypeInvalid
 block|; }
-name|Type
+name|lldb
+operator|::
+name|StructuredDataType
 name|GetType
 argument_list|()
 specifier|const
@@ -371,7 +355,7 @@ block|}
 name|void
 name|SetType
 argument_list|(
-argument|Type t
+argument|lldb::StructuredDataType t
 argument_list|)
 block|{
 name|m_type
@@ -388,9 +372,9 @@ operator|(
 operator|(
 name|m_type
 operator|==
-name|Type
+name|lldb
 operator|::
-name|eTypeArray
+name|eStructuredDataTypeArray
 operator|)
 operator|?
 name|static_cast
@@ -416,9 +400,9 @@ operator|(
 operator|(
 name|m_type
 operator|==
-name|Type
+name|lldb
 operator|::
-name|eTypeDictionary
+name|eStructuredDataTypeDictionary
 operator|)
 condition|?
 name|static_cast
@@ -444,9 +428,9 @@ operator|(
 operator|(
 name|m_type
 operator|==
-name|Type
+name|lldb
 operator|::
-name|eTypeInteger
+name|eStructuredDataTypeInteger
 operator|)
 condition|?
 name|static_cast
@@ -503,9 +487,9 @@ operator|(
 operator|(
 name|m_type
 operator|==
-name|Type
+name|lldb
 operator|::
-name|eTypeFloat
+name|eStructuredDataTypeFloat
 operator|)
 condition|?
 name|static_cast
@@ -562,9 +546,9 @@ operator|(
 operator|(
 name|m_type
 operator|==
-name|Type
+name|lldb
 operator|::
-name|eTypeBoolean
+name|eStructuredDataTypeBoolean
 operator|)
 condition|?
 name|static_cast
@@ -620,9 +604,9 @@ operator|(
 operator|(
 name|m_type
 operator|==
-name|Type
+name|lldb
 operator|::
-name|eTypeString
+name|eStructuredDataTypeString
 operator|)
 condition|?
 name|static_cast
@@ -677,9 +661,9 @@ operator|(
 operator|(
 name|m_type
 operator|==
-name|Type
+name|lldb
 operator|::
-name|eTypeGeneric
+name|eStructuredDataTypeGeneric
 operator|)
 condition|?
 name|static_cast
@@ -733,9 +717,11 @@ literal|0
 decl_stmt|;
 name|private
 label|:
-name|Type
+name|lldb
+operator|::
+name|StructuredDataType
 name|m_type
-decl_stmt|;
+expr_stmt|;
 block|}
 empty_stmt|;
 name|class
@@ -751,7 +737,7 @@ argument_list|()
 operator|:
 name|Object
 argument_list|(
-argument|Type::eTypeArray
+argument|lldb::eStructuredDataTypeArray
 argument_list|)
 block|{}
 operator|~
@@ -1395,9 +1381,9 @@ argument_list|)
 operator|:
 name|Object
 argument_list|(
-name|Type
+name|lldb
 operator|::
-name|eTypeInteger
+name|eStructuredDataTypeInteger
 argument_list|)
 block|,
 name|m_value
@@ -1465,9 +1451,9 @@ argument_list|)
 operator|:
 name|Object
 argument_list|(
-name|Type
+name|lldb
 operator|::
-name|eTypeFloat
+name|eStructuredDataTypeFloat
 argument_list|)
 block|,
 name|m_value
@@ -1534,9 +1520,9 @@ argument_list|)
 operator|:
 name|Object
 argument_list|(
-name|Type
+name|lldb
 operator|::
-name|eTypeBoolean
+name|eStructuredDataTypeBoolean
 argument_list|)
 block|,
 name|m_value
@@ -1601,7 +1587,7 @@ argument_list|()
 operator|:
 name|Object
 argument_list|(
-argument|Type::eTypeString
+argument|lldb::eStructuredDataTypeString
 argument_list|)
 block|{}
 name|explicit
@@ -1612,9 +1598,9 @@ argument_list|)
 operator|:
 name|Object
 argument_list|(
-name|Type
+name|lldb
 operator|::
-name|eTypeString
+name|eStructuredDataTypeString
 argument_list|)
 block|,
 name|m_value
@@ -1676,9 +1662,9 @@ argument_list|()
 operator|:
 name|Object
 argument_list|(
-name|Type
+name|lldb
 operator|::
-name|eTypeDictionary
+name|eStructuredDataTypeDictionary
 argument_list|)
 block|,
 name|m_dict
@@ -2647,7 +2633,7 @@ argument_list|()
 operator|:
 name|Object
 argument_list|(
-argument|Type::eTypeNull
+argument|lldb::eStructuredDataTypeNull
 argument_list|)
 block|{}
 operator|~
@@ -2701,9 +2687,9 @@ argument_list|)
 operator|:
 name|Object
 argument_list|(
-name|Type
+name|lldb
 operator|::
-name|eTypeGeneric
+name|eStructuredDataTypeGeneric
 argument_list|)
 block|,
 name|m_object

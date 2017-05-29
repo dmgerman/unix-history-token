@@ -94,7 +94,7 @@ comment|///     The start offset to begin reading the trace data.
 comment|///
 comment|/// @param[in] thread_id
 comment|///     Tracing could be started for the complete process or a
-comment|///     single thread, in the first case the uid obtained would
+comment|///     single thread, in the first case the traceid obtained would
 comment|///     map to all the threads existing within the process and the
 comment|///     ones spawning later. The thread_id parameter can be used in
 comment|///     such a scenario to select the trace data for a specific
@@ -170,16 +170,17 @@ comment|/// @param[out] error
 comment|///     An error explaining what went wrong.
 comment|///
 comment|/// @param[in] thread_id
-comment|///     The user id could map to a tracing instance for a thread
+comment|///     The trace id could map to a tracing instance for a thread
 comment|///     or could also map to a group of threads being traced with
 comment|///     the same trace options. A thread_id is normally optional
 comment|///     except in the case of tracing a complete process and tracing
 comment|///     needs to switched off on a particular thread.
 comment|///     A situation could occur where initially a thread (lets say
-comment|///     thread A) is being individually traced with a particular uid
-comment|///     and then tracing is started on the complete process, in this
-comment|///     case thread A will continue without any change. All newly
-comment|///     spawned threads would be traced with the uid of the process.
+comment|///     thread A) is being individually traced with a particular
+comment|///     trace id and then tracing is started on the complete
+comment|///     process, in this case thread A will continue without any
+comment|///     change. All newly spawned threads would be traced with the
+comment|///     trace id of the process.
 comment|///     Now if the StopTrace API is called for the whole process,
 comment|///     thread A will not be stopped and must be stopped separately.
 comment|//------------------------------------------------------------------

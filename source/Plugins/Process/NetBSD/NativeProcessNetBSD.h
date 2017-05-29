@@ -373,6 +373,12 @@ comment|// ---------------------------------------------------------------------
 name|NativeProcessNetBSD
 argument_list|()
 block|;
+name|bool
+name|HasThreadNoLock
+argument_list|(
+argument|lldb::tid_t thread_id
+argument_list|)
+block|;
 name|NativeThreadNetBSDSP
 name|AddThread
 argument_list|(
