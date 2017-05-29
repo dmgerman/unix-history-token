@@ -1889,8 +1889,8 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-name|bool
-name|IsHandledDeadlySignal
+name|HandleSignalMode
+name|GetHandleSignalMode
 parameter_list|(
 name|int
 name|signum

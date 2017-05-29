@@ -58,7 +58,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<math.h>
 end_include
 
 begin_include
@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<math.h>
+file|<stdlib.h>
 end_include
 
 begin_function_decl
@@ -88,12 +88,6 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|__arm__
-end_if
 
 begin_function
 name|int
@@ -139,19 +133,11 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|main
 parameter_list|()
 block|{
-if|#
-directive|if
-name|__arm__
 if|if
 condition|(
 name|test__bswapsi2
@@ -176,15 +162,6 @@ condition|)
 return|return
 literal|1
 return|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"skipped\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;

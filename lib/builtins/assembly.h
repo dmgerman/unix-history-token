@@ -516,6 +516,16 @@ parameter_list|)
 value|itt cond
 end_define
 
+begin_define
+define|#
+directive|define
+name|ITE
+parameter_list|(
+name|cond
+parameter_list|)
+value|ite cond
+end_define
+
 begin_else
 else|#
 directive|else
@@ -534,6 +544,15 @@ begin_define
 define|#
 directive|define
 name|ITT
+parameter_list|(
+name|cond
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITE
 parameter_list|(
 name|cond
 parameter_list|)
