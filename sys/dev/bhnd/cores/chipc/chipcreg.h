@@ -1606,7 +1606,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_PLL_TYPE4
-value|0x8
+value|0x1
 end_define
 
 begin_comment

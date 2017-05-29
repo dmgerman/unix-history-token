@@ -412,6 +412,13 @@ name|TAG_CLIENTID
 value|((unsigned char)  61)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TAG_USER_CLASS
+value|((unsigned char)  77)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -483,32 +490,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * bootp flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BOOTP_NONE
-value|0x0000
-end_define
-
-begin_comment
-comment|/* No flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BOOTP_PXE
-value|0x0001
-end_define
-
-begin_comment
-comment|/* Booting from PXE. */
-end_comment
 
 begin_comment
 comment|/*  * "vendor" data permitted for CMU bootp clients.  */

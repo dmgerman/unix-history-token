@@ -82,16 +82,6 @@ block|}
 enum|;
 end_enum
 
-begin_decl_stmt
-specifier|static
-name|enum
-name|test_methods
-name|method
-init|=
-name|TEST_BUILD_SNAPSHOT
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|DECLARE_TEST_DATA
 argument_list|(
@@ -185,6 +175,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -196,6 +192,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -507,6 +508,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|ATF_REQUIRE
@@ -805,6 +807,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -857,6 +865,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1362,6 +1375,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 ifdef|#
@@ -1807,6 +1821,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 comment|/* Only correctness can be checked when doing 1-pass test for 	 * getpwent(). */

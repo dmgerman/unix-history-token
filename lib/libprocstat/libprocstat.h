@@ -600,6 +600,14 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+name|unsigned
+name|int
+name|sendq
+decl_stmt|;
+name|unsigned
+name|int
+name|recvq
+decl_stmt|;
 block|}
 struct|;
 end_struct

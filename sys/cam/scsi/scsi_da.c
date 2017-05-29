@@ -1908,6 +1908,28 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Genesys GL3224 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Generic*"
+block|,
+literal|"STORAGE DEVICE*"
+block|,
+literal|"120?"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+operator||
+name|DA_Q_4K
+operator||
+name|DA_Q_NO_RC16
+block|}
+block|,
+block|{
 comment|/* 		 * Genesys 6-in-1 Card Reader 		 * PR: usb/94647 		 */
 block|{
 name|T_DIRECT

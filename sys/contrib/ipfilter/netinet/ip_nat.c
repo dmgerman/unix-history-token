@@ -3200,9 +3200,6 @@ name|tq
 operator|++
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|LARGE_NAT
 if|if
 condition|(
 name|tq
@@ -3213,8 +3210,6 @@ name|softn
 operator|->
 name|ipf_nat_deficmpage
 condition|)
-endif|#
-directive|endif
 name|tq
 operator|->
 name|ifq_ttl

@@ -1009,6 +1009,8 @@ operator|(
 name|uint32_t
 operator|)
 name|blks
+operator|-
+literal|1
 expr_stmt|;
 name|pmbr
 operator|=

@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -642,6 +642,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -699,6 +700,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|free_addrinfo
 parameter_list|(
@@ -800,6 +802,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -838,6 +843,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -873,6 +881,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -891,6 +902,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|ai
 operator|->
 name|ai_addrlen
@@ -911,6 +925,9 @@ name|i
 operator|+
 literal|1
 operator|!=
+operator|(
+name|int
+operator|)
 name|ai
 operator|->
 name|ai_addrlen
@@ -942,6 +959,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -986,6 +1006,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -1521,8 +1544,6 @@ modifier|*
 name|ps
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|rv
 decl_stmt|;
 name|printf
@@ -1533,10 +1554,6 @@ name|line
 argument_list|)
 expr_stmt|;
 name|rv
-operator|=
-literal|0
-expr_stmt|;
-name|i
 operator|=
 literal|0
 expr_stmt|;
@@ -1694,6 +1711,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|printf
@@ -1995,6 +2013,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|run_tests
 parameter_list|(
@@ -2002,6 +2021,7 @@ name|char
 modifier|*
 name|hostlist_file
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|snapshot_file
@@ -2016,9 +2036,40 @@ name|td
 decl_stmt|,
 name|td_snap
 decl_stmt|;
+name|char
+modifier|*
+name|snapshot_file_copy
+decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
+if|if
+condition|(
+name|snapshot_file
+operator|==
+name|NULL
+condition|)
+name|snapshot_file_copy
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+block|{
+name|snapshot_file_copy
+operator|=
+name|strdup
+argument_list|(
+name|snapshot_file
+argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE
+argument_list|(
+name|snapshot_file_copy
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 name|memset
 argument_list|(
 operator|&
@@ -2302,12 +2353,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|hostlist_file
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|snapshot_file
+name|snapshot_file_copy
 argument_list|)
 expr_stmt|;
 block|}
@@ -2331,7 +2377,7 @@ name|snapshot_file
 parameter_list|,
 name|ai_family
 parameter_list|)
-value|do {			\ 	char *_hostlist_file;						\ 	char *_snapshot_file;						\ 	ATF_REQUIRE(0< asprintf(&_hostlist_file, "%s/%s",		\ 	    atf_tc_get_config_var(tc, "srcdir"), HOSTLIST_FILE));	\ 	if (snapshot_file == NULL)					\ 		_snapshot_file = NULL;					\ 	else {							\ 		_snapshot_file = strdup(snapshot_file); 		\ 		ATF_REQUIRE(_snapshot_file != NULL);			\ 	}								\ 	run_tests(_hostlist_file, _snapshot_file, ai_family);		\ } while(0)
+value|do {			\ 	char *_hostlist_file;						\ 	ATF_REQUIRE(0< asprintf(&_hostlist_file, "%s/%s",		\ 	    atf_tc_get_config_var(tc, "srcdir"), HOSTLIST_FILE));	\ 	run_tests(_hostlist_file, snapshot_file, ai_family);		\ 	free(_hostlist_file);						\ } while (0)
 end_define
 
 begin_expr_stmt

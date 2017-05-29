@@ -2241,6 +2241,46 @@ name|proto
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|.
+name|proto
+operator|==
+name|IPPROTO_TCP
+operator|||
+name|sock
+operator|.
+name|proto
+operator|==
+name|IPPROTO_SCTP
+operator|||
+name|sock
+operator|.
+name|type
+operator|==
+name|SOCK_STREAM
+condition|)
+block|{
+name|xo_emit
+argument_list|(
+literal|"{:sendq/%u} "
+argument_list|,
+name|sock
+operator|.
+name|sendq
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:recvq/%u} "
+argument_list|,
+name|sock
+operator|.
+name|recvq
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 			 * While generally we like to print two addresses, 			 * local and peer, for sockets, it turns out to be 			 * more useful to print the first non-nul address for 			 * local sockets, as typically they aren't bound and 			 *  connected, and the path strings can get long. 			 */
 if|if
 condition|(

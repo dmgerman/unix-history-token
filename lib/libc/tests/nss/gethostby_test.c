@@ -429,23 +429,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__noreturn__
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_macro
 name|IMPLEMENT_TEST_DATA
 argument_list|(
@@ -799,14 +782,10 @@ name|h_aliases
 operator|=
 name|calloc
 argument_list|(
-literal|1
-argument_list|,
-operator|(
 name|aliases_num
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char
@@ -909,14 +888,10 @@ name|h_addr_list
 operator|=
 name|calloc
 argument_list|(
-literal|1
-argument_list|,
-operator|(
 name|addrs_num
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char
@@ -2075,6 +2050,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2140,6 +2118,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2177,6 +2158,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2207,6 +2191,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2234,6 +2221,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2285,6 +2275,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|size_t
+operator|)
 name|ht
 operator|->
 name|h_length
@@ -2305,6 +2298,9 @@ name|i
 operator|+
 literal|1
 operator|!=
+operator|(
+name|size_t
+operator|)
 name|ht
 operator|->
 name|h_length
@@ -2334,6 +2330,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2378,6 +2377,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2409,6 +2411,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2439,6 +2444,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -3373,6 +3381,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 ifdef|#
@@ -3714,6 +3723,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3805,13 +3815,17 @@ argument_list|(
 literal|"not ok - shouldn't have been resolved\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|rv
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
 block|}
+else|else
+name|rv
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3844,12 +3858,14 @@ argument_list|(
 literal|"not ok - should have been resolved\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|rv
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
 name|rv
 operator|=
@@ -3872,17 +3888,29 @@ argument_list|(
 literal|"not ok - addrinfo and hostent are not equal\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|rv
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
 block|}
 block|}
+name|done
+label|:
+if|if
+condition|(
+name|ai
+operator|!=
+name|NULL
+condition|)
+name|freeaddrinfo
+argument_list|(
+name|ai
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|rv
 operator|)
 return|;
 block|}
@@ -3901,6 +3929,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -4310,6 +4339,8 @@ directive|endif
 comment|/* 		 * An address might reverse resolve to hostname alias or the 		 * official hostname, e.g. moon.vub.ac.be. 		 */
 name|bool
 name|found_a_match
+init|=
+name|false
 decl_stmt|;
 if|if
 condition|(
@@ -4456,6 +4487,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|run_tests
 parameter_list|(
@@ -4470,7 +4502,7 @@ modifier|*
 name|snapshot_file
 parameter_list|,
 name|int
-name|af_type
+name|_af_type
 parameter_list|,
 name|enum
 name|test_methods
@@ -4480,6 +4512,10 @@ name|bool
 name|use_ipv6_mapping
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|snapshot_file_copy
+decl_stmt|;
 name|struct
 name|hostent_test_data
 name|td
@@ -4497,9 +4533,40 @@ init|=
 operator|-
 literal|2
 decl_stmt|;
+if|if
+condition|(
+name|snapshot_file
+operator|==
+name|NULL
+condition|)
+name|snapshot_file_copy
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+block|{
+name|snapshot_file_copy
+operator|=
+name|strdup
+argument_list|(
+name|snapshot_file
+argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE
+argument_list|(
+name|snapshot_file_copy
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+name|snapshot_file
+operator|=
+name|snapshot_file_copy
+expr_stmt|;
 switch|switch
 condition|(
-name|af_type
+name|_af_type
 condition|)
 block|{
 case|case
@@ -4531,7 +4598,7 @@ name|atf_tc_fail
 argument_list|(
 literal|"unhandled address family: %d"
 argument_list|,
-name|af_type
+name|_af_type
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4579,12 +4646,14 @@ argument_list|(
 literal|"error: can't init res_state\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|rv
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|fin2
+goto|;
 block|}
 if|if
 condition|(
@@ -5046,6 +5115,13 @@ operator|&
 name|td
 argument_list|)
 expr_stmt|;
+name|fin2
+label|:
+name|free
+argument_list|(
+name|snapshot_file_copy
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rv
@@ -5077,7 +5153,7 @@ parameter_list|,
 name|use_ipv6_mapping
 parameter_list|)
 define|\
-value|do {									\ 	char *_hostlist_file;						\ 	char *_snapshot_file;						\ 	ATF_REQUIRE(0< asprintf(&_hostlist_file, "%s/%s",		\ 	    atf_tc_get_config_var(tc, "srcdir"), HOSTLIST_FILE));	\ 	if (snapshot_file == NULL)					\ 		_snapshot_file = NULL;					\ 	else {								\ 		_snapshot_file = strdup(snapshot_file); 		\ 		ATF_REQUIRE(_snapshot_file != NULL);			\ 	}								\ 	ATF_REQUIRE(run_tests(_hostlist_file, _snapshot_file, af_type,	\ 	    method, use_ipv6_mapping) == 0);				\ } while(0)
+value|do {									\ 	char *_hostlist_file;						\ 	ATF_REQUIRE(0< asprintf(&_hostlist_file, "%s/%s",		\ 	    atf_tc_get_config_var(tc, "srcdir"), HOSTLIST_FILE));	\ 	ATF_REQUIRE(run_tests(_hostlist_file, snapshot_file, af_type,	\ 	    method, use_ipv6_mapping) == 0);				\ 	free(_hostlist_file);						\ } while (0)
 end_define
 
 begin_define
@@ -5096,7 +5172,7 @@ parameter_list|,
 name|use_ipv6_mapping
 parameter_list|)
 define|\
-value|do {									\ 	use_ipnode_functions = false; 					\ 	_RUN_TESTS(tc, snapshot_file, af_type, method, use_ipv6_mapping); \ } while(0)
+value|do {									\ 	use_ipnode_functions = false; 					\ 	_RUN_TESTS(tc, snapshot_file, af_type, method, use_ipv6_mapping); \ } while (0)
 end_define
 
 begin_define
@@ -5115,7 +5191,7 @@ parameter_list|,
 name|use_ipv6_mapping
 parameter_list|)
 define|\
-value|do {									\ 	use_ipnode_functions = true; 					\ 	_RUN_TESTS(tc, snapshot_file, af_type, method, use_ipv6_mapping); \ } while(0)
+value|do {									\ 	use_ipnode_functions = true; 					\ 	_RUN_TESTS(tc, snapshot_file, af_type, method, use_ipv6_mapping); \ } while (0)
 end_define
 
 begin_expr_stmt

@@ -719,13 +719,11 @@ argument_list|(
 name|bp
 argument_list|)
 condition|)
-name|panic
-argument_list|(
-literal|"%s requires PMU\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|BHND_PMU_ALP_CLOCK
+operator|)
+return|;
 return|return
 operator|(
 name|bhnd_pmu_alp_clock
@@ -762,13 +760,11 @@ argument_list|(
 name|bp
 argument_list|)
 condition|)
-name|panic
-argument_list|(
-literal|"%s requires PMU\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|BHND_PMU_ILP_CLOCK
+operator|)
+return|;
 return|return
 operator|(
 name|bhnd_pmu_ilp_clock

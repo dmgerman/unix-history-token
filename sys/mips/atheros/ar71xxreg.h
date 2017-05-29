@@ -2808,6 +2808,10 @@ define|\
 value|*((volatile uint32_t *)MIPS_PHYS_TO_KSEG1((reg)))
 end_define
 
+begin_comment
+comment|/*  * Note: Don't put a flush read here; some users (eg the AR724x PCI fixup code)  * requires write-only space to certain registers.  Doing the read afterwards  * causes things to break.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2818,7 +2822,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|do { \       *((volatile uint32_t *)MIPS_PHYS_TO_KSEG1((reg))) = (val); \       (void) ATH_READ_REG(reg); \     } while (0)
+value|*((volatile uint32_t *)MIPS_PHYS_TO_KSEG1((reg))) = (val)
 end_define
 
 begin_function

@@ -284,6 +284,39 @@ block|, }
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_AES128GMAC
+block|{
+name|SADB_X_AALG_AES128GMAC
+block|,
+literal|"aes-gmac-128"
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_AES192GMAC
+block|{
+name|SADB_X_AALG_AES192GMAC
+block|,
+literal|"aes-gmac-192"
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_AES256GMAC
+block|{
+name|SADB_X_AALG_AES256GMAC
+block|,
+literal|"aes-gmac-256"
+block|, }
+block|,
+endif|#
+directive|endif
 block|{
 operator|-
 literal|1

@@ -1455,8 +1455,9 @@ union|union
 block|{
 struct|struct
 block|{
+comment|/* Sendq size */
 name|uint32_t
-name|kf_spareint
+name|kf_sock_sendq
 decl_stmt|;
 comment|/* Socket domain. */
 name|int
@@ -1500,9 +1501,9 @@ comment|/* Receive buffer state. */
 name|uint16_t
 name|kf_sock_rcv_sb_state
 decl_stmt|;
-comment|/* Round to 64 bit alignment. */
+comment|/* Recvq size. */
 name|uint32_t
-name|kf_sock_pad0
+name|kf_sock_recvq
 decl_stmt|;
 block|}
 name|kf_sock

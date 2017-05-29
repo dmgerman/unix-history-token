@@ -1648,15 +1648,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * dmmax is in page-sized chunks with the new swap system.  It was  * dev-bsized chunks in the old.  dmmax is always a power of 2.  *  * swap_*() routines are externally accessible.  swp_*() routines are  * internal.  */
+comment|/*  * swap_*() routines are externally accessible.  swp_*() routines are  * internal.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|dmmax
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1696,11 +1689,11 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|dmmax
+name|nsw_cluster_max
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum size of a swap block"
+literal|"Maximum size of a swap block in pages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2103,13 +2096,6 @@ name|swdev_syscall_lock
 argument_list|,
 literal|"swsysc"
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Device Stripe, in PAGE_SIZE'd blocks 	 */
-name|dmmax
-operator|=
-name|SWB_NPAGES
-operator|*
-literal|2
 expr_stmt|;
 block|}
 end_function
@@ -8525,15 +8511,14 @@ literal|0
 init|;
 name|dvbase
 operator|<
-name|sp
-operator|->
-name|sw_end
+name|nblks
 condition|;
 name|dvbase
 operator|+=
-name|dmmax
+name|BLIST_BMAP_RADIX
 control|)
 block|{
+comment|/* 		 * blist_fill() cannot allocate more than BLIST_BMAP_RADIX 		 * blocks per call. 		 */
 name|swap_pager_avail
 operator|-=
 name|blist_fill
@@ -8544,7 +8529,14 @@ name|sw_blist
 argument_list|,
 name|dvbase
 argument_list|,
-name|dmmax
+name|ulmin
+argument_list|(
+name|nblks
+operator|-
+name|dvbase
+argument_list|,
+name|BLIST_BMAP_RADIX
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
