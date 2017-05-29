@@ -1166,7 +1166,7 @@ block|{
 define|#
 directive|define
 name|AH_TIMEOUT
-value|1000
+value|5000
 return|return
 name|ath_hal_waitfor
 argument_list|(
