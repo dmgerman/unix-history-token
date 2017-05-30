@@ -246,6 +246,14 @@ name|bool
 operator|>
 name|PrecompiledPreambleBytes
 expr_stmt|;
+comment|/// \brief True indicates that a preamble is being generated.
+comment|///
+comment|/// When the lexer is done, one of the things that need to be preserved is the
+comment|/// conditional #if stack, so the ASTWriter/ASTReader can save/restore it when
+comment|/// processing the rest of the file.
+name|bool
+name|GeneratePreamble
+decl_stmt|;
 comment|/// The implicit PTH input included at the start of the translation unit, or
 comment|/// empty.
 name|std
@@ -420,6 +428,11 @@ argument_list|(
 literal|0
 argument_list|,
 name|true
+argument_list|)
+operator|,
+name|GeneratePreamble
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|RemappedFilesKeepOriginalName

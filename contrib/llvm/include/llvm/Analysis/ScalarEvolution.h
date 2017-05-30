@@ -5670,14 +5670,6 @@ specifier|const
 name|Loop
 modifier|*
 name|L
-parameter_list|,
-name|DominatorTree
-modifier|&
-name|DT
-parameter_list|,
-name|LoopInfo
-modifier|&
-name|LI
 parameter_list|)
 function_decl|;
 comment|/// Return true if the given SCEV changes value in a known way in the

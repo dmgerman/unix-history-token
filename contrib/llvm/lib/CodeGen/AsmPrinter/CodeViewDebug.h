@@ -779,7 +779,7 @@ name|beginCVSubsection
 argument_list|(
 name|codeview
 operator|::
-name|ModuleDebugFragmentKind
+name|DebugSubsectionKind
 name|Kind
 argument_list|)
 decl_stmt|;

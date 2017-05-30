@@ -1602,8 +1602,7 @@ parameter_list|(
 name|T
 parameter_list|)
 define|\
-value|case is##T:                                                                  \     destruct<DIE##T>();
-return|return;
+value|case is##T:                                                                  \     destruct<DIE##T>();                                                        \     return;
 define|#
 directive|define
 name|HANDLE_DIEVALUE_LARGE
@@ -1611,8 +1610,7 @@ parameter_list|(
 name|T
 parameter_list|)
 define|\
-value|case is##T:                                                                  \     destruct<const DIE##T *>();
-return|return;
+value|case is##T:                                                                  \     destruct<const DIE##T *>();                                                \     return;
 include|#
 directive|include
 file|"llvm/CodeGen/DIEValue.def"

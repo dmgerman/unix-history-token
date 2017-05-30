@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StringTable.h"
+file|"llvm/DebugInfo/CodeView/DebugStringTableSubsection.h"
 end_include
 
 begin_include
@@ -223,7 +223,7 @@ name|nullptr
 decl_stmt|;
 name|codeview
 operator|::
-name|StringTableRef
+name|DebugStringTableSubsectionRef
 name|Strings
 expr_stmt|;
 name|FixedStreamArray

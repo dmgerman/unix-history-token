@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModuleDebugUnknownFragment.h -----------------------------*- C++ -*-===//
+comment|//===- DebugUnknownSubsection.h -----------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleDebugFragment.h"
+file|"llvm/DebugInfo/CodeView/DebugSubsection.h"
 end_include
 
 begin_include
@@ -63,22 +63,22 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|ModuleDebugUnknownFragmentRef
+name|DebugUnknownSubsectionRef
 name|final
 range|:
 name|public
-name|ModuleDebugFragmentRef
+name|DebugSubsectionRef
 block|{
 name|public
 operator|:
-name|ModuleDebugUnknownFragmentRef
+name|DebugUnknownSubsectionRef
 argument_list|(
-argument|ModuleDebugFragmentKind Kind
+argument|DebugSubsectionKind Kind
 argument_list|,
 argument|BinaryStreamRef Data
 argument_list|)
 operator|:
-name|ModuleDebugFragmentRef
+name|DebugSubsectionRef
 argument_list|(
 name|Kind
 argument_list|)

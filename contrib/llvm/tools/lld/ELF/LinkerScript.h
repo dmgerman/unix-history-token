@@ -171,6 +171,42 @@ decl_stmt|;
 name|bool
 name|ForceAbsolute
 decl_stmt|;
+name|uint64_t
+name|Alignment
+init|=
+literal|1
+decl_stmt|;
+name|ExprValue
+argument_list|(
+argument|SectionBase *Sec
+argument_list|,
+argument|bool ForceAbsolute
+argument_list|,
+argument|uint64_t Val
+argument_list|,
+argument|uint64_t Alignment
+argument_list|)
+block|:
+name|Sec
+argument_list|(
+name|Sec
+argument_list|)
+operator|,
+name|Val
+argument_list|(
+name|Val
+argument_list|)
+operator|,
+name|ForceAbsolute
+argument_list|(
+name|ForceAbsolute
+argument_list|)
+operator|,
+name|Alignment
+argument_list|(
+argument|Alignment
+argument_list|)
+block|{   }
 name|ExprValue
 argument_list|(
 argument|SectionBase *Sec
@@ -179,7 +215,7 @@ argument|bool ForceAbsolute
 argument_list|,
 argument|uint64_t Val
 argument_list|)
-block|:
+operator|:
 name|Sec
 argument_list|(
 name|Sec

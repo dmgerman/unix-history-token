@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModuleDebugFileChecksumFragment.h ------------------------*- C++ -*-===//
+comment|//===- DebugChecksumsSubsection.h -------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGFILECHECKSUMFRAGMENT_H
+name|LLVM_DEBUGINFO_CODEVIEW_DEBUGCHECKSUMSSUBSECTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGFILECHECKSUMFRAGMENT_H
+name|LLVM_DEBUGINFO_CODEVIEW_DEBUGCHECKSUMSSUBSECTION_H
 end_define
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleDebugFragment.h"
+file|"llvm/DebugInfo/CodeView/DebugSubsection.h"
 end_include
 
 begin_include
@@ -93,7 +93,7 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|StringTable
+name|DebugStringTableSubsection
 decl_stmt|;
 struct|struct
 name|FileChecksumEntry
@@ -169,11 +169,11 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|ModuleDebugFileChecksumFragmentRef
+name|DebugChecksumsSubsectionRef
 name|final
 range|:
 name|public
-name|ModuleDebugFragmentRef
+name|DebugSubsectionRef
 block|{
 typedef|typedef
 name|VarStreamArray
@@ -192,19 +192,19 @@ name|Iterator
 expr_stmt|;
 name|public
 label|:
-name|ModuleDebugFileChecksumFragmentRef
+name|DebugChecksumsSubsectionRef
 argument_list|()
 operator|:
-name|ModuleDebugFragmentRef
+name|DebugSubsectionRef
 argument_list|(
-argument|ModuleDebugFragmentKind::FileChecksums
+argument|DebugSubsectionKind::FileChecksums
 argument_list|)
 block|{}
 specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ModuleDebugFragmentRef *S
+argument|const DebugSubsectionRef *S
 argument_list|)
 block|{
 return|return
@@ -213,9 +213,21 @@ operator|->
 name|kind
 argument_list|()
 operator|==
-name|ModuleDebugFragmentKind
+name|DebugSubsectionKind
 operator|::
 name|FileChecksums
+return|;
+block|}
+name|bool
+name|valid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Checksums
+operator|.
+name|valid
+argument_list|()
 return|;
 block|}
 name|Error
@@ -223,6 +235,13 @@ name|initialize
 parameter_list|(
 name|BinaryStreamReader
 name|Reader
+parameter_list|)
+function_decl|;
+name|Error
+name|initialize
+parameter_list|(
+name|BinaryStreamRef
+name|Stream
 parameter_list|)
 function_decl|;
 name|Iterator
@@ -266,18 +285,18 @@ decl_stmt|;
 block|}
 empty_stmt|;
 name|class
-name|ModuleDebugFileChecksumFragment
+name|DebugChecksumsSubsection
 name|final
 range|:
 name|public
-name|ModuleDebugFragment
+name|DebugSubsection
 block|{
 name|public
 operator|:
 name|explicit
-name|ModuleDebugFileChecksumFragment
+name|DebugChecksumsSubsection
 argument_list|(
-name|StringTable
+name|DebugStringTableSubsection
 operator|&
 name|Strings
 argument_list|)
@@ -286,7 +305,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ModuleDebugFragment *S
+argument|const DebugSubsection *S
 argument_list|)
 block|{
 return|return
@@ -295,7 +314,7 @@ operator|->
 name|kind
 argument_list|()
 operator|==
-name|ModuleDebugFragmentKind
+name|DebugSubsectionKind
 operator|::
 name|FileChecksums
 return|;
@@ -311,8 +330,9 @@ argument|ArrayRef<uint8_t> Bytes
 argument_list|)
 block|;
 name|uint32_t
-name|calculateSerializedLength
+name|calculateSerializedSize
 argument_list|()
+specifier|const
 name|override
 block|;
 name|Error
@@ -320,6 +340,7 @@ name|commit
 argument_list|(
 argument|BinaryStreamWriter&Writer
 argument_list|)
+specifier|const
 name|override
 block|;
 name|uint32_t
@@ -331,7 +352,7 @@ specifier|const
 block|;
 name|private
 operator|:
-name|StringTable
+name|DebugStringTableSubsection
 operator|&
 name|Strings
 block|;

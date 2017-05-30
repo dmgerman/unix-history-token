@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|40
+value|41
 end_define
 
 begin_define
@@ -1362,6 +1362,14 @@ name|FileName
 parameter_list|,
 name|unsigned
 name|options
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Suspend a translation unit in order to free memory associated with it.  *  * A suspended translation unit uses significantly less memory but on the other  * side does not support any other calls than \c clang_reparseTranslationUnit  * to resume it or \c clang_disposeTranslationUnit to dispose it completely.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_suspendTranslationUnit
+parameter_list|(
+name|CXTranslationUnit
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Destroy the specified CXTranslationUnit object.  */

@@ -1184,6 +1184,11 @@ comment|/// \brief Record code for \#pragma pack options.
 name|PACK_PRAGMA_OPTIONS
 init|=
 literal|61
+block|,
+comment|/// \brief The stack of open #ifs/#ifdefs recorded in a preamble.
+name|PP_CONDITIONAL_STACK
+init|=
+literal|62
 block|,     }
 enum|;
 comment|/// \brief Record types used within a source manager block.

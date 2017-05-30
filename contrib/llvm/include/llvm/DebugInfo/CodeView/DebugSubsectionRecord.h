@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModuleDebugFragment.h ------------------------------------*- C++ -*-===//
+comment|//===- DebugSubsection.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -87,18 +87,18 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|ModuleDebugFragment
+name|DebugSubsection
 decl_stmt|;
 comment|// Corresponds to the `CV_DebugSSubsectionHeader_t` structure.
 struct|struct
-name|ModuleDebugFragmentHeader
+name|DebugSubsectionHeader
 block|{
 name|support
 operator|::
 name|ulittle32_t
 name|Kind
 expr_stmt|;
-comment|// codeview::ModuleDebugFragmentKind enum
+comment|// codeview::DebugSubsectionKind enum
 name|support
 operator|::
 name|ulittle32_t
@@ -108,16 +108,16 @@ comment|// number of bytes occupied by this record.
 block|}
 struct|;
 name|class
-name|ModuleDebugFragmentRecord
+name|DebugSubsectionRecord
 block|{
 name|public
 label|:
-name|ModuleDebugFragmentRecord
+name|DebugSubsectionRecord
 argument_list|()
 expr_stmt|;
-name|ModuleDebugFragmentRecord
+name|DebugSubsectionRecord
 argument_list|(
-argument|ModuleDebugFragmentKind Kind
+argument|DebugSubsectionKind Kind
 argument_list|,
 argument|BinaryStreamRef Data
 argument_list|)
@@ -129,7 +129,7 @@ parameter_list|(
 name|BinaryStreamRef
 name|Stream
 parameter_list|,
-name|ModuleDebugFragmentRecord
+name|DebugSubsectionRecord
 modifier|&
 name|Info
 parameter_list|)
@@ -139,7 +139,7 @@ name|getRecordLength
 argument_list|()
 specifier|const
 expr_stmt|;
-name|ModuleDebugFragmentKind
+name|DebugSubsectionKind
 name|kind
 argument_list|()
 specifier|const
@@ -151,7 +151,7 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
-name|ModuleDebugFragmentKind
+name|DebugSubsectionKind
 name|Kind
 decl_stmt|;
 name|BinaryStreamRef
@@ -160,15 +160,15 @@ decl_stmt|;
 block|}
 empty_stmt|;
 name|class
-name|ModuleDebugFragmentRecordBuilder
+name|DebugSubsectionRecordBuilder
 block|{
 name|public
 label|:
-name|ModuleDebugFragmentRecordBuilder
+name|DebugSubsectionRecordBuilder
 argument_list|(
-argument|ModuleDebugFragmentKind Kind
+argument|DebugSubsectionKind Kind
 argument_list|,
-argument|ModuleDebugFragment&Frag
+argument|DebugSubsection&Frag
 argument_list|)
 empty_stmt|;
 name|uint32_t
@@ -185,10 +185,10 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-name|ModuleDebugFragmentKind
+name|DebugSubsectionKind
 name|Kind
 decl_stmt|;
-name|ModuleDebugFragment
+name|DebugSubsection
 modifier|&
 name|Frag
 decl_stmt|;
@@ -204,7 +204,7 @@ name|VarStreamArrayExtractor
 operator|<
 name|codeview
 operator|::
-name|ModuleDebugFragmentRecord
+name|DebugSubsectionRecord
 operator|>
 block|{
 typedef|typedef
@@ -219,7 +219,7 @@ argument|BinaryStreamRef Stream
 argument_list|,
 argument|uint32_t&Length
 argument_list|,
-argument|codeview::ModuleDebugFragmentRecord&Info
+argument|codeview::DebugSubsectionRecord&Info
 argument_list|)
 block|{
 if|if
@@ -229,7 +229,7 @@ name|EC
 init|=
 name|codeview
 operator|::
-name|ModuleDebugFragmentRecord
+name|DebugSubsectionRecord
 operator|::
 name|initialize
 argument_list|(
@@ -265,9 +265,9 @@ block|{
 typedef|typedef
 name|VarStreamArray
 operator|<
-name|ModuleDebugFragmentRecord
+name|DebugSubsectionRecord
 operator|>
-name|ModuleDebugFragmentArray
+name|DebugSubsectionArray
 expr_stmt|;
 block|}
 end_decl_stmt
