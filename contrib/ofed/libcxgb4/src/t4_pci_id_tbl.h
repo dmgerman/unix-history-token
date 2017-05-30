@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This file is part of the Chelsio T4 Ethernet driver.  *  * Copyright (C) 2003-2014 Chelsio Communications.  All rights reserved.  *  * This program is distributed in the hope that it will be useful, but WITHOUT  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  * FITNESS FOR A PARTICULAR PURPOSE.  See the LICENSE file included in this  * release for licensing terms and conditions.  */
+comment|/*  * This file is part of the Chelsio T4/T5/T6 Ethernet driver.  *  * Copyright (C) 2003-2017 Chelsio Communications.  All rights reserved.  *  * This program is distributed in the hope that it will be useful, but WITHOUT  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  * FITNESS FOR A PARTICULAR PURPOSE.  See the LICENSE file included in this  * release for licensing terms and conditions.  */
 end_comment
 
 begin_ifndef
@@ -18,12 +18,6 @@ end_define
 begin_comment
 comment|/*  * The Os-Dependent code can defined cpp macros for creating a PCI Device ID  * Table.  This is useful because it allows the PCI ID Table to be maintained  * in a single place and all supporting OSes to get new PCI Device IDs  * automatically.  *  * The macros are:  *  * CH_PCI_DEVICE_ID_TABLE_DEFINE_BEGIN  *   -- Used to start the definition of the PCI ID Table.  *  * CH_PCI_DEVICE_ID_FUNCTION  *   -- The PCI Function Number to use in the PCI Device ID Table.  "0"  *   -- for drivers attaching to PF0-3, "4" for drivers attaching to PF4,  *   -- "8" for drivers attaching to SR-IOV Virtual Functions, etc.  *  * CH_PCI_DEVICE_ID_FUNCTION2 [optional]  *   -- If defined, create a PCI Device ID Table with both  *   -- CH_PCI_DEVICE_ID_FUNCTION and CH_PCI_DEVICE_ID_FUNCTION2 populated.  *  * CH_PCI_ID_TABLE_ENTRY(DeviceID)  *   -- Used for the individual PCI Device ID entries.  Note that we will  *   -- be adding a trailing comma (",") after all of the entries (and  *   -- between the pairs of entries if CH_PCI_DEVICE_ID_FUNCTION2 is defined).  *  * CH_PCI_DEVICE_ID_TABLE_DEFINE_END  *   -- Used to finish the definition of the PCI ID Table.  Note that we  *   -- will be adding a trailing semi-colon (";") here.  *  * CH_PCI_DEVICE_ID_BYPASS_SUPPORTED [optional]  *   -- If defined, indicates that the OS Driver has support for Bypass  *   -- Adapters.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CH_PCI_DEVICE_ID_TABLE_DEFINE_BEGIN
-end_ifdef
 
 begin_comment
 comment|/*  * Some sanity checks ...  */
@@ -152,6 +146,12 @@ literal|0xb001
 argument_list|)
 decl_stmt|,
 comment|/* PF0 T5 PE10K FPGA */
+name|CH_PCI_ID_TABLE_ENTRY
+argument_list|(
+literal|0xc006
+argument_list|)
+decl_stmt|,
+comment|/* PF0 T6 PE10K6 FPGA */
 else|#
 directive|else
 name|CH_PCI_ID_TABLE_FENTRY
@@ -172,6 +172,18 @@ literal|0xb001
 argument_list|)
 decl_stmt|,
 comment|/* PF0 T5 PE10K FPGA */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0xc006
+argument_list|)
+decl_stmt|,
+comment|/* PF0 T6 PE10K6 FPGA */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0xc106
+argument_list|)
+decl_stmt|,
+comment|/* PF1 T6 PE10K6 FPGA */
 endif|#
 directive|endif
 comment|/* 	 *  These FPGAs seem to be used only by the csiostor driver 	 */
@@ -202,6 +214,12 @@ literal|0xa002
 argument_list|)
 decl_stmt|,
 comment|/* PE10K FPGA iSCSI */
+name|CH_PCI_ID_TABLE_ENTRY
+argument_list|(
+literal|0xc106
+argument_list|)
+decl_stmt|,
+comment|/* PF1 T6 PE10K6 FPGA */
 endif|#
 directive|endif
 comment|/* 	 * T4 adapters: 	 */
@@ -488,6 +506,24 @@ decl_stmt|,
 comment|/* T502-bt */
 name|CH_PCI_ID_TABLE_FENTRY
 argument_list|(
+literal|0x5016
+argument_list|)
+decl_stmt|,
+comment|/* T580-OCP-SO */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5017
+argument_list|)
+decl_stmt|,
+comment|/* T520-OCP-SO */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5018
+argument_list|)
+decl_stmt|,
+comment|/* T540-BT */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
 literal|0x5080
 argument_list|)
 decl_stmt|,
@@ -498,18 +534,217 @@ literal|0x5081
 argument_list|)
 decl_stmt|,
 comment|/* Custom T540-LL-cr */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5082
+argument_list|)
+decl_stmt|,
+comment|/* Custom T504-cr */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5083
+argument_list|)
+decl_stmt|,
+comment|/* Custom T540-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5084
+argument_list|)
+decl_stmt|,
+comment|/* Custom T580-cr */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5085
+argument_list|)
+decl_stmt|,
+comment|/* Custom 3x T580-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5086
+argument_list|)
+decl_stmt|,
+comment|/* Custom 2x T580-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5087
+argument_list|)
+decl_stmt|,
+comment|/* Custom T580-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5088
+argument_list|)
+decl_stmt|,
+comment|/* Custom T570-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5089
+argument_list|)
+decl_stmt|,
+comment|/* Custom T520-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5090
+argument_list|)
+decl_stmt|,
+comment|/* Custom T540-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5091
+argument_list|)
+decl_stmt|,
+comment|/* Custom T522-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5092
+argument_list|)
+decl_stmt|,
+comment|/* Custom T520-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5093
+argument_list|)
+decl_stmt|,
+comment|/* Custom SECA */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5094
+argument_list|)
+decl_stmt|,
+comment|/* Custom T540-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5095
+argument_list|)
+decl_stmt|,
+comment|/* Custom T540-CR-SO */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5096
+argument_list|)
+decl_stmt|,
+comment|/* Custom T580-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5097
+argument_list|)
+decl_stmt|,
+comment|/* Custom T520-KR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5098
+argument_list|)
+decl_stmt|,
+comment|/* Custom 2x40G QSFP */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x5099
+argument_list|)
+decl_stmt|,
+comment|/* Custom 2x40G QSFP */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x509A
+argument_list|)
+decl_stmt|,
+comment|/* Custom T520-CR */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x509B
+argument_list|)
+decl_stmt|,
+comment|/* Custom T540-CR LOM */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x509c
+argument_list|)
+decl_stmt|,
+comment|/* Custom T520-CR SFP+ LOM */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x509d
+argument_list|)
+decl_stmt|,
+comment|/* Custom T540-CR SFP+ */
+comment|/* T6 adapter */
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6000
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6001
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6002
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6003
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6004
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6005
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6006
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6007
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6008
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6009
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x600d
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6010
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6011
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6014
+argument_list|)
+decl_stmt|,
+name|CH_PCI_ID_TABLE_FENTRY
+argument_list|(
+literal|0x6015
+argument_list|)
+decl_stmt|,
 name|CH_PCI_DEVICE_ID_TABLE_DEFINE_END
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CH_PCI_DEVICE_ID_TABLE_DEFINE_BEGIN */
-end_comment
 
 begin_endif
 endif|#
