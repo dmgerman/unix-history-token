@@ -99,6 +99,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|MODULE_INFO
+parameter_list|(
+name|tag
+parameter_list|,
+name|info
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODULE_FIRMWARE
+parameter_list|(
+name|firmware
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|THIS_MODULE
 value|((struct module *)0)
 end_define

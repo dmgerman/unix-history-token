@@ -220,6 +220,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_VENDOR_ID_REDHAT_QUMRANET
+value|0x1af4
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_VENDOR_ID_SERVERWORKS
 value|0x1166
 end_define
@@ -243,6 +250,20 @@ define|#
 directive|define
 name|PCI_VENDOR_ID_VIA
 value|0x1106
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_SUBVENDOR_ID_REDHAT_QUMRANET
+value|0x1af4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ATI_RADEON_QY
+value|0x5159
 end_define
 
 begin_define
@@ -285,6 +306,13 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_MELLANOX_SINAI
 value|0x6274
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_SUBDEVICE_ID_QEMU
+value|0x1100
 end_define
 
 begin_define

@@ -198,6 +198,14 @@ define|\
 value|unsigned long n[howmany(bits, sizeof(long) * 8)]
 end_define
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|irq_hw_number_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|rcu_head

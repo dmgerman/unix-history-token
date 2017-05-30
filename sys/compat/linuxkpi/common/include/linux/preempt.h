@@ -30,6 +30,22 @@ define|\
 value|(curthread->td_intr_nesting_level || curthread->td_critnest)
 end_define
 
+begin_define
+define|#
+directive|define
+name|preempt_disable
+parameter_list|()
+value|critical_enter()
+end_define
+
+begin_define
+define|#
+directive|define
+name|preempt_enable
+parameter_list|()
+value|critical_exit()
+end_define
+
 begin_endif
 endif|#
 directive|endif

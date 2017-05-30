@@ -39,6 +39,12 @@ directive|include
 file|<linux/compiler.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<linux/types.h>
+end_include
+
 begin_function
 specifier|static
 specifier|inline

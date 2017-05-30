@@ -750,6 +750,12 @@ decl_stmt|;
 name|counter_u64_t
 name|bad_req_id
 decl_stmt|;
+name|counter_u64_t
+name|defragment
+decl_stmt|;
+name|counter_u64_t
+name|defragment_err
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1216,6 +1222,16 @@ name|missing_tx_max_queues
 decl_stmt|;
 name|uint32_t
 name|missing_tx_threshold
+decl_stmt|;
+comment|/* Task updating hw stats */
+name|struct
+name|task
+name|stats_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|stats_tq
 decl_stmt|;
 comment|/* Statistics */
 name|struct

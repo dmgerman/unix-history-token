@@ -9885,7 +9885,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|do {\ 	if (src->type) {\ 		int hlen = (((struct ip6_ext *)src->type)->ip6e_len + 1)<< 3;\ 		dst->type = malloc(hlen, M_IP6OPT, canwait);\ 		if (dst->type == NULL&& canwait == M_NOWAIT)\ 			goto bad;\ 		bcopy(src->type, dst->type, hlen);\ 	}\ } while (
+value|do {\ 	if (src->type) {\ 		int hlen = (((struct ip6_ext *)src->type)->ip6e_len + 1)<< 3;\ 		dst->type = malloc(hlen, M_IP6OPT, canwait);\ 		if (dst->type == NULL)\ 			goto bad;\ 		bcopy(src->type, dst->type, hlen);\ 	}\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define

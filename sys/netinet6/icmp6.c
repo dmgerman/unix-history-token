@@ -2378,6 +2378,11 @@ operator|=
 name|off
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|n
+condition|)
+block|{
 name|nicmp6
 operator|->
 name|icmp6_type
@@ -2390,11 +2395,6 @@ name|icmp6_code
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|n
-condition|)
-block|{
 name|ICMP6STAT_INC
 argument_list|(
 name|icp6s_reflect
@@ -2718,6 +2718,7 @@ name|n
 operator|=
 name|NULL
 expr_stmt|;
+break|break;
 block|}
 name|maxhlen
 operator|=
