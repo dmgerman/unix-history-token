@@ -3909,6 +3909,11 @@ name|br
 argument_list|)
 expr_stmt|;
 comment|/* Free buffer DMA maps, */
+name|ENA_RING_MTX_LOCK
+argument_list|(
+name|tx_ring
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|int
@@ -3982,6 +3987,11 @@ name|map
 argument_list|)
 expr_stmt|;
 block|}
+name|ENA_RING_MTX_UNLOCK
+argument_list|(
+name|tx_ring
+argument_list|)
+expr_stmt|;
 comment|/* And free allocated memory. */
 name|ENA_MEM_FREE
 argument_list|(
@@ -5633,6 +5643,11 @@ index|[
 name|qid
 index|]
 decl_stmt|;
+name|ENA_RING_MTX_LOCK
+argument_list|(
+name|tx_ring
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|int
@@ -5712,6 +5727,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|ENA_RING_MTX_UNLOCK
+argument_list|(
+name|tx_ring
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
