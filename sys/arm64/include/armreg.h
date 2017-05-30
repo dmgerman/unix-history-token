@@ -2291,6 +2291,34 @@ parameter_list|)
 value|((attr)<< ((idx) * 8))
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAIR_DEVICE_nGnRnE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAIR_NORMAL_NC
+value|0x44
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAIR_NORMAL_WT
+value|0x88
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAIR_NORMAL_WB
+value|0xff
+end_define
+
 begin_comment
 comment|/* PAR_EL1 - Physical Address Register */
 end_comment
