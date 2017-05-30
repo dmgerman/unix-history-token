@@ -3209,11 +3209,16 @@ name|limit
 operator|==
 name|RLIM_INFINITY
 condition|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|numbr
 argument_list|,
 name|inf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|numbr
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
