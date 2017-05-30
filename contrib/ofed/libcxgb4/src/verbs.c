@@ -1001,7 +1001,7 @@ name|err3
 goto|;
 if|if
 condition|(
-name|dev_is_t5
+name|dev_is_t4
 argument_list|(
 name|chp
 operator|->
@@ -1014,7 +1014,7 @@ name|cq
 operator|.
 name|ugts
 operator|+=
-literal|5
+literal|1
 expr_stmt|;
 else|else
 name|chp
@@ -1023,7 +1023,7 @@ name|cq
 operator|.
 name|ugts
 operator|+=
-literal|1
+literal|5
 expr_stmt|;
 name|chp
 operator|->

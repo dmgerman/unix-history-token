@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This file is part of the Chelsio T4 Ethernet driver.  *  * Copyright (C) 2003-2014 Chelsio Communications.  All rights reserved.  *  * This program is distributed in the hope that it will be useful, but WITHOUT  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  * FITNESS FOR A PARTICULAR PURPOSE.  See the LICENSE file included in this  * release for licensing terms and conditions.  */
+comment|/*  * This file is part of the Chelsio T4/T5/T6 Ethernet driver.  *  * Copyright (C) 2003-2016 Chelsio Communications.  All rights reserved.  *  * This program is distributed in the hope that it will be useful, but WITHOUT  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  * FITNESS FOR A PARTICULAR PURPOSE.  See the LICENSE file included in this  * release for licensing terms and conditions.  */
 end_comment
 
 begin_ifndef
@@ -77,20 +77,77 @@ name|CHELSIO_T5_FPGA
 value|0xb
 end_define
 
-begin_comment
-comment|/*  * Translate a PCI Device ID to a base Chelsio Chip Version -- CHELSIO_T4,  * CHELSIO_T5, etc.  If it weren't for the screwed up numbering of the FPGAs  * we could do this simply as DeviceID>> 12 (because we know the real  * encoding oc CHELSIO_Tx identifiers).  However, the FPGAs _do_ have weird  * Device IDs so we need to do this translation here.  Note that only constant  * arithmetic and comparisons can be done here since this is being used to  * initialize static tables, etc.  *  * Finally: This will of course need to be expanded as future chips are  * developed.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|CHELSIO_T6
+value|0x6
+end_define
 
 begin_define
 define|#
 directive|define
+name|CHELSIO_T6_FPGA
+value|0xc
+end_define
+
+begin_comment
+comment|/*  * Translate a PCI Device ID to a base Chelsio Chip Version -- CHELSIO_T4,  * CHELSIO_T5, etc.  If it weren't for the screwed up numbering of the FPGAs  * we could do this simply as DeviceID>> 12 (because we know the real  * encoding oc CHELSIO_Tx identifiers).  However, the FPGAs _do_ have weird  * Device IDs so we need to do this translation here.  Note that only constant  * arithmetic and comparisons can be done here since this is being used to  * initialize static tables, etc.  *  * Finally: This will of course need to be expanded as future chips are  * developed.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|int
 name|CHELSIO_PCI_ID_CHIP_VERSION
 parameter_list|(
-name|__DeviceID
+name|unsigned
+name|int
+name|DeviceID
 parameter_list|)
-define|\
-value|(CHELSIO_PCI_ID_VER(__DeviceID) == CHELSIO_T4 || \ 	 CHELSIO_PCI_ID_VER(__DeviceID) == CHELSIO_T4_FPGA \ 	 ? CHELSIO_T4 \ 	 : CHELSIO_T5)
-end_define
+block|{
+switch|switch
+condition|(
+name|CHELSIO_PCI_ID_VER
+argument_list|(
+name|DeviceID
+argument_list|)
+condition|)
+block|{
+case|case
+name|CHELSIO_T4
+case|:
+case|case
+name|CHELSIO_T4_FPGA
+case|:
+return|return
+name|CHELSIO_T4
+return|;
+case|case
+name|CHELSIO_T5
+case|:
+case|case
+name|CHELSIO_T5_FPGA
+case|:
+return|return
+name|CHELSIO_T5
+return|;
+case|case
+name|CHELSIO_T6
+case|:
+case|case
+name|CHELSIO_T6_FPGA
+case|:
+return|return
+name|CHELSIO_T6
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Internally we code the Chelsio T4 Family "Chip Code" as a tuple:  *  *     (Is FPGA, Chip Version, Chip Revision)  *  * where:  *  *     Is FPGA: is 0/1 indicating whether we're working with an FPGA  *     Chip Version: is T4, T5, etc.  *     Chip Revision: is the FAB "spin" of the Chip Version.  */
@@ -180,7 +237,7 @@ name|CHELSIO_CHIP_CODE
 argument_list|(
 name|CHELSIO_T5
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 block|,
 name|T5_FIRST_REV
@@ -190,6 +247,23 @@ block|,
 name|T5_LAST_REV
 init|=
 name|T5_A1
+block|,
+name|T6_A0
+init|=
+name|CHELSIO_CHIP_CODE
+argument_list|(
+name|CHELSIO_T6
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|T6_FIRST_REV
+init|=
+name|T6_A0
+block|,
+name|T6_LAST_REV
+init|=
+name|T6_A0
 block|, }
 enum|;
 end_enum
@@ -237,6 +311,30 @@ name|chip
 argument_list|)
 operator|==
 name|CHELSIO_T5
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|is_t6
+parameter_list|(
+name|enum
+name|chip_type
+name|chip
+parameter_list|)
+block|{
+return|return
+operator|(
+name|CHELSIO_CHIP_VERSION
+argument_list|(
+name|chip
+argument_list|)
+operator|==
+name|CHELSIO_T6
 operator|)
 return|;
 block|}
