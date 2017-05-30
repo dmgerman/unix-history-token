@@ -715,6 +715,46 @@ argument_list|,
 literal|"Queue stops"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_COUNTER_U64
+argument_list|(
+name|ctx
+argument_list|,
+name|tx_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"defragmentations"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|tx_stats
+operator|->
+name|defragment
+argument_list|,
+literal|"Mbuf defragmentations"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_COUNTER_U64
+argument_list|(
+name|ctx
+argument_list|,
+name|tx_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"defragmentation_err"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|tx_stats
+operator|->
+name|defragment_err
+argument_list|,
+literal|"Mbuf defragmentation failures"
+argument_list|)
+expr_stmt|;
 comment|/* RX specific stats */
 name|rx_node
 operator|=

@@ -750,6 +750,12 @@ decl_stmt|;
 name|counter_u64_t
 name|bad_req_id
 decl_stmt|;
+name|counter_u64_t
+name|defragment
+decl_stmt|;
+name|counter_u64_t
+name|defragment_err
+decl_stmt|;
 block|}
 struct|;
 end_struct
