@@ -1975,7 +1975,6 @@ operator|&
 name|res
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -2010,6 +2009,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|bcopy
 argument_list|(
 name|res
@@ -2023,6 +2023,13 @@ operator|->
 name|ai_addrlen
 argument_list|)
 expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
