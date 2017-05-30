@@ -9006,14 +9006,6 @@ name|int
 name|getlock
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|IPF_NAT6
-name|int
-name|i
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|getlock
