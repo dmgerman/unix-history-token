@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModuleDebugInlineeLinesFragment.h ------------------------*- C++ -*-===//
+comment|//===- DebugInlineeLinesSubsection.h ----------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,25 +34,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGINLINEELINESFRAGMENT_H
+name|LLVM_DEBUGINFO_CODEVIEW_BUGINLINEELINESSUBSECTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGINLINEELINESFRAGMENT_H
+name|LLVM_DEBUGINFO_CODEVIEW_BUGINLINEELINESSUBSECTION_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/Line.h"
+file|"llvm/DebugInfo/CodeView/DebugSubsection.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleDebugFragment.h"
+file|"llvm/DebugInfo/CodeView/Line.h"
 end_include
 
 begin_include
@@ -81,13 +81,10 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|ModuleDebugInlineeLineFragmentRef
+name|DebugInlineeLinesSubsectionsRef
 decl_stmt|;
 name|class
-name|ModuleDebugFileChecksumFragment
-decl_stmt|;
-name|class
-name|StringTable
+name|DebugChecksumsSubsection
 decl_stmt|;
 name|enum
 name|class
@@ -185,11 +182,11 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|ModuleDebugInlineeLineFragmentRef
+name|DebugInlineeLinesSubsectionRef
 name|final
 range|:
 name|public
-name|ModuleDebugFragmentRef
+name|DebugSubsectionRef
 block|{
 typedef|typedef
 name|VarStreamArray
@@ -206,7 +203,7 @@ name|Iterator
 expr_stmt|;
 name|public
 label|:
-name|ModuleDebugInlineeLineFragmentRef
+name|DebugInlineeLinesSubsectionRef
 argument_list|()
 expr_stmt|;
 specifier|static
@@ -214,7 +211,7 @@ name|bool
 name|classof
 parameter_list|(
 specifier|const
-name|ModuleDebugFragmentRef
+name|DebugSubsectionRef
 modifier|*
 name|S
 parameter_list|)
@@ -225,7 +222,7 @@ operator|->
 name|kind
 argument_list|()
 operator|==
-name|ModuleDebugFragmentKind
+name|DebugSubsectionKind
 operator|::
 name|InlineeLines
 return|;
@@ -286,17 +283,17 @@ end_empty_stmt
 
 begin_decl_stmt
 name|class
-name|ModuleDebugInlineeLineFragment
+name|DebugInlineeLinesSubsection
 name|final
 range|:
 name|public
-name|ModuleDebugFragment
+name|DebugSubsection
 block|{
 name|public
 operator|:
-name|ModuleDebugInlineeLineFragment
+name|DebugInlineeLinesSubsection
 argument_list|(
-argument|ModuleDebugFileChecksumFragment&Checksums
+argument|DebugChecksumsSubsection&Checksums
 argument_list|,
 argument|bool HasExtraFiles
 argument_list|)
@@ -305,7 +302,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ModuleDebugFragment *S
+argument|const DebugSubsection *S
 argument_list|)
 block|{
 return|return
@@ -314,7 +311,7 @@ operator|->
 name|kind
 argument_list|()
 operator|==
-name|ModuleDebugFragmentKind
+name|DebugSubsectionKind
 operator|::
 name|InlineeLines
 return|;
@@ -324,11 +321,13 @@ name|commit
 argument_list|(
 argument|BinaryStreamWriter&Writer
 argument_list|)
+specifier|const
 name|override
 block|;
 name|uint32_t
-name|calculateSerializedLength
+name|calculateSerializedSize
 argument_list|()
+specifier|const
 name|override
 block|;
 name|void
@@ -349,7 +348,7 @@ argument_list|)
 block|;
 name|private
 operator|:
-name|ModuleDebugFileChecksumFragment
+name|DebugChecksumsSubsection
 operator|&
 name|Checksums
 block|;

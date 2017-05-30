@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleDebugFragmentRecord.h"
+file|"llvm/DebugInfo/CodeView/DebugSubsectionRecord.h"
 end_include
 
 begin_include
@@ -110,7 +110,7 @@ block|{
 typedef|typedef
 name|codeview
 operator|::
-name|ModuleDebugFragmentArray
+name|DebugSubsectionArray
 operator|::
 name|Iterator
 name|LinesAndChecksumsIterator
@@ -221,7 +221,7 @@ name|GlobalRefsSubstream
 decl_stmt|;
 name|codeview
 operator|::
-name|ModuleDebugFragmentArray
+name|DebugSubsectionArray
 name|LinesAndChecksums
 expr_stmt|;
 block|}

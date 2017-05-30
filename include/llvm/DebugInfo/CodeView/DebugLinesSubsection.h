@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModuleDebugLineFragment.h --------------------------------*- C++ -*-===//
+comment|//===- DebugLinesSubsection.h --------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/Line.h"
+file|"llvm/DebugInfo/CodeView/DebugSubsection.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleDebugFragment.h"
+file|"llvm/DebugInfo/CodeView/Line.h"
 end_include
 
 begin_include
@@ -81,10 +81,10 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|ModuleDebugFileChecksumFragment
+name|DebugChecksumsSubsection
 decl_stmt|;
 name|class
-name|StringTable
+name|DebugStringTableSubsection
 decl_stmt|;
 comment|// Corresponds to the `CV_DebugSLinesHeader_t` structure.
 struct|struct
@@ -238,11 +238,11 @@ function_decl|;
 block|}
 empty_stmt|;
 name|class
-name|ModuleDebugLineFragmentRef
+name|DebugLinesSubsectionRef
 name|final
 range|:
 name|public
-name|ModuleDebugFragmentRef
+name|DebugSubsectionRef
 block|{
 name|friend
 name|class
@@ -265,7 +265,7 @@ name|Iterator
 expr_stmt|;
 name|public
 label|:
-name|ModuleDebugLineFragmentRef
+name|DebugLinesSubsectionRef
 argument_list|()
 expr_stmt|;
 specifier|static
@@ -273,7 +273,7 @@ name|bool
 name|classof
 parameter_list|(
 specifier|const
-name|ModuleDebugFragmentRef
+name|DebugSubsectionRef
 modifier|*
 name|S
 parameter_list|)
@@ -284,7 +284,7 @@ operator|->
 name|kind
 argument_list|()
 operator|==
-name|ModuleDebugFragmentKind
+name|DebugSubsectionKind
 operator|::
 name|Lines
 return|;
@@ -351,11 +351,11 @@ decl_stmt|;
 block|}
 empty_stmt|;
 name|class
-name|ModuleDebugLineFragment
+name|DebugLinesSubsection
 name|final
 range|:
 name|public
-name|ModuleDebugFragment
+name|DebugSubsection
 block|{   struct
 name|Block
 block|{
@@ -391,13 +391,13 @@ block|;   }
 block|;
 name|public
 operator|:
-name|ModuleDebugLineFragment
+name|DebugLinesSubsection
 argument_list|(
-name|ModuleDebugFileChecksumFragment
+name|DebugChecksumsSubsection
 operator|&
 name|Checksums
 argument_list|,
-name|StringTable
+name|DebugStringTableSubsection
 operator|&
 name|Strings
 argument_list|)
@@ -406,7 +406,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ModuleDebugFragment *S
+argument|const DebugSubsection *S
 argument_list|)
 block|{
 return|return
@@ -415,7 +415,7 @@ operator|->
 name|kind
 argument_list|()
 operator|==
-name|ModuleDebugFragmentKind
+name|DebugSubsectionKind
 operator|::
 name|Lines
 return|;
@@ -447,8 +447,9 @@ argument|uint32_t ColEnd
 argument_list|)
 block|;
 name|uint32_t
-name|calculateSerializedLength
+name|calculateSerializedSize
 argument_list|()
+specifier|const
 name|override
 block|;
 name|Error
@@ -456,6 +457,7 @@ name|commit
 argument_list|(
 argument|BinaryStreamWriter&Writer
 argument_list|)
+specifier|const
 name|override
 block|;
 name|void
@@ -485,7 +487,7 @@ specifier|const
 block|;
 name|private
 operator|:
-name|ModuleDebugFileChecksumFragment
+name|DebugChecksumsSubsection
 operator|&
 name|Checksums
 block|;

@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StringTable.h"
+file|"llvm/DebugInfo/CodeView/DebugStringTableSubsection.h"
 end_include
 
 begin_include
@@ -142,7 +142,7 @@ decl|const
 decl_stmt|;
 name|codeview
 operator|::
-name|StringTable
+name|DebugStringTableSubsection
 operator|&
 name|getStrings
 argument_list|()
@@ -154,7 +154,7 @@ block|}
 specifier|const
 name|codeview
 operator|::
-name|StringTable
+name|DebugStringTableSubsection
 operator|&
 name|getStrings
 argument_list|()
@@ -209,7 +209,7 @@ decl|const
 decl_stmt|;
 name|codeview
 operator|::
-name|StringTable
+name|DebugStringTableSubsection
 name|Strings
 expr_stmt|;
 block|}

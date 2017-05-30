@@ -2600,10 +2600,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getGeneration
-argument_list|()
-operator|<
-name|GFX9
+name|true
 return|;
 block|}
 comment|/// \returns true if the flat_scratch register should be initialized with the

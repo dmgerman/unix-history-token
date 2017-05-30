@@ -188,6 +188,9 @@ name|bool
 name|HasProcessorAssist
 block|;
 name|bool
+name|HasDFPZonedConversion
+block|;
+name|bool
 name|HasVector
 block|;
 name|bool
@@ -198,6 +201,9 @@ name|HasLoadAndZeroRightmostByte
 block|;
 name|bool
 name|HasMessageSecurityAssist5
+block|;
+name|bool
+name|HasDFPPackedConversion
 block|;
 name|private
 operator|:
@@ -494,6 +500,16 @@ return|return
 name|HasProcessorAssist
 return|;
 block|}
+comment|// Return true if the target has the DFP zoned-conversion facility.
+name|bool
+name|hasDFPZonedConversion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDFPZonedConversion
+return|;
+block|}
 comment|// Return true if the target has the load-and-zero-rightmost-byte facility.
 name|bool
 name|hasLoadAndZeroRightmostByte
@@ -513,6 +529,16 @@ specifier|const
 block|{
 return|return
 name|HasMessageSecurityAssist5
+return|;
+block|}
+comment|// Return true if the target has the DFP packed-conversion facility.
+name|bool
+name|hasDFPPackedConversion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDFPPackedConversion
 return|;
 block|}
 comment|// Return true if the target has the vector facility.

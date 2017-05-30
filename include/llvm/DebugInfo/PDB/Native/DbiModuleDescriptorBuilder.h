@@ -52,19 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleDebugFileChecksumFragment.h"
+file|"llvm/DebugInfo/CodeView/DebugChecksumsSubsection.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleDebugInlineeLinesFragment.h"
+file|"llvm/DebugInfo/CodeView/DebugInlineeLinesSubsection.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleDebugLineFragment.h"
+file|"llvm/DebugInfo/CodeView/DebugLinesSubsection.h"
 end_include
 
 begin_include
@@ -114,7 +114,7 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|ModuleDebugFragmentRecordBuilder
+name|DebugSubsectionRecordBuilder
 decl_stmt|;
 block|}
 name|namespace
@@ -198,7 +198,7 @@ name|unique_ptr
 operator|<
 name|codeview
 operator|::
-name|ModuleDebugLineFragment
+name|DebugLinesSubsection
 operator|>
 name|Lines
 argument_list|)
@@ -212,7 +212,7 @@ name|unique_ptr
 operator|<
 name|codeview
 operator|::
-name|ModuleDebugInlineeLineFragment
+name|DebugInlineeLinesSubsection
 operator|>
 name|Inlinees
 argument_list|)
@@ -226,7 +226,7 @@ name|unique_ptr
 operator|<
 name|codeview
 operator|::
-name|ModuleDebugFileChecksumFragment
+name|DebugChecksumsSubsection
 operator|>
 name|Checksums
 argument_list|)
@@ -363,7 +363,7 @@ name|unique_ptr
 operator|<
 name|codeview
 operator|::
-name|ModuleDebugFileChecksumFragment
+name|DebugChecksumsSubsection
 operator|>
 name|ChecksumInfo
 expr_stmt|;
@@ -377,7 +377,7 @@ name|unique_ptr
 operator|<
 name|codeview
 operator|::
-name|ModuleDebugLineFragment
+name|DebugLinesSubsection
 operator|>>
 name|LineInfo
 expr_stmt|;
@@ -391,7 +391,7 @@ name|unique_ptr
 operator|<
 name|codeview
 operator|::
-name|ModuleDebugInlineeLineFragment
+name|DebugInlineeLinesSubsection
 operator|>>
 name|Inlinees
 expr_stmt|;
@@ -405,7 +405,7 @@ name|unique_ptr
 operator|<
 name|codeview
 operator|::
-name|ModuleDebugFragmentRecordBuilder
+name|DebugSubsectionRecordBuilder
 operator|>>
 name|C13Builders
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- StringTable.h - CodeView String Table Reader/Writer ------*- C++ -*-===//
+comment|//===- DebugStringTableSubsection.h - CodeView String Table -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_CODEVIEW_STRINGTABLE_H
+name|LLVM_DEBUGINFO_CODEVIEW_DEBUGSTRINGTABLESUBSECTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_CODEVIEW_STRINGTABLE_H
+name|LLVM_DEBUGINFO_CODEVIEW_DEBUGSTRINGTABLESUBSECTION_H
 end_define
 
 begin_include
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/DebugSubsection.h"
 end_include
 
 begin_include
@@ -91,23 +97,43 @@ name|codeview
 block|{
 comment|/// Represents a read-only view of a CodeView string table.  This is a very
 comment|/// simple flat buffer consisting of null-terminated strings, where strings
-comment|/// are retrieved by their offset in the buffer.  StringTableRef does not own
-comment|/// the underlying storage for the buffer.
+comment|/// are retrieved by their offset in the buffer.  DebugStringTableSubsectionRef
+comment|/// does not own the underlying storage for the buffer.
 name|class
-name|StringTableRef
+name|DebugStringTableSubsectionRef
+range|:
+name|public
+name|DebugSubsectionRef
 block|{
 name|public
-label|:
-name|StringTableRef
+operator|:
+name|DebugStringTableSubsectionRef
 argument_list|()
-expr_stmt|;
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DebugSubsectionRef *S
+argument_list|)
+block|{
+return|return
+name|S
+operator|->
+name|kind
+argument_list|()
+operator|==
+name|DebugSubsectionKind
+operator|::
+name|StringTable
+return|;
+block|}
 name|Error
 name|initialize
-parameter_list|(
-name|BinaryStreamRef
-name|Contents
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|BinaryStreamRef Contents
+argument_list|)
+block|;
 name|Expected
 operator|<
 name|StringRef
@@ -117,7 +143,7 @@ argument_list|(
 argument|uint32_t Offset
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|valid
 argument_list|()
@@ -131,57 +157,79 @@ argument_list|()
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|BinaryStreamRef
 name|Stream
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
-comment|/// Represents a read-write view of a CodeView string table.  StringTable owns
-comment|/// the underlying storage for the table, and is capable of serializing the
-comment|/// string table into a format understood by StringTableRef.
+comment|/// Represents a read-write view of a CodeView string table.
+comment|/// DebugStringTableSubsection owns the underlying storage for the table, and is
+comment|/// capable of serializing the string table into a format understood by
+comment|/// DebugStringTableSubsectionRef.
 name|class
-name|StringTable
+name|DebugStringTableSubsection
+range|:
+name|public
+name|DebugSubsection
 block|{
 name|public
-label|:
+operator|:
+name|DebugStringTableSubsection
+argument_list|()
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DebugSubsection *S
+argument_list|)
+block|{
+return|return
+name|S
+operator|->
+name|kind
+argument_list|()
+operator|==
+name|DebugSubsectionKind
+operator|::
+name|StringTable
+return|;
+block|}
 comment|// If string S does not exist in the string table, insert it.
 comment|// Returns the ID for S.
 name|uint32_t
 name|insert
-parameter_list|(
-name|StringRef
-name|S
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef S
+argument_list|)
+block|;
 comment|// Return the ID for string S.  Assumes S exists in the table.
 name|uint32_t
 name|getStringId
 argument_list|(
-name|StringRef
-name|S
+argument|StringRef S
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|uint32_t
 name|calculateSerializedSize
 argument_list|()
 specifier|const
-expr_stmt|;
+name|override
+block|;
 name|Error
 name|commit
 argument_list|(
-name|BinaryStreamWriter
-operator|&
-name|Writer
+argument|BinaryStreamWriter&Writer
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+name|override
+block|;
 name|uint32_t
 name|size
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|StringMap
 operator|<
 name|uint32_t
@@ -217,20 +265,19 @@ argument_list|()
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|StringMap
 operator|<
 name|uint32_t
 operator|>
 name|Strings
-expr_stmt|;
+block|;
 name|uint32_t
 name|StringSize
-init|=
+operator|=
 literal|1
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 block|}
 block|}
 end_decl_stmt

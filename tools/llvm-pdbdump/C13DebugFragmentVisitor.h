@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleDebugFileChecksumFragment.h"
+file|"llvm/DebugInfo/CodeView/DebugChecksumsSubsection.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleDebugFragmentVisitor.h"
+file|"llvm/DebugInfo/CodeView/DebugSubsectionVisitor.h"
 end_include
 
 begin_include
@@ -89,7 +89,7 @@ range|:
 name|public
 name|codeview
 operator|::
-name|ModuleDebugFragmentVisitor
+name|DebugSubsectionVisitor
 block|{
 name|public
 operator|:
@@ -107,28 +107,28 @@ block|;
 name|Error
 name|visitUnknown
 argument_list|(
-argument|codeview::ModuleDebugUnknownFragmentRef&Fragment
+argument|codeview::DebugUnknownSubsectionRef&Fragment
 argument_list|)
 name|final
 block|;
 name|Error
 name|visitFileChecksums
 argument_list|(
-argument|codeview::ModuleDebugFileChecksumFragmentRef&Checksums
+argument|codeview::DebugChecksumsSubsectionRef&Checksums
 argument_list|)
 name|final
 block|;
 name|Error
 name|visitLines
 argument_list|(
-argument|codeview::ModuleDebugLineFragmentRef&Lines
+argument|codeview::DebugLinesSubsectionRef&Lines
 argument_list|)
 name|final
 block|;
 name|Error
 name|visitInlineeLines
 argument_list|(
-argument|codeview::ModuleDebugInlineeLineFragmentRef&Lines
+argument|codeview::DebugInlineeLinesSubsectionRef&Lines
 argument_list|)
 name|final
 block|;
@@ -197,7 +197,7 @@ name|Optional
 operator|<
 name|codeview
 operator|::
-name|ModuleDebugFileChecksumFragmentRef
+name|DebugChecksumsSubsectionRef
 operator|>
 name|Checksums
 block|;
@@ -207,7 +207,7 @@ name|vector
 operator|<
 name|codeview
 operator|::
-name|ModuleDebugInlineeLineFragmentRef
+name|DebugInlineeLinesSubsectionRef
 operator|>
 name|InlineeLines
 block|;
@@ -217,7 +217,7 @@ name|vector
 operator|<
 name|codeview
 operator|::
-name|ModuleDebugLineFragmentRef
+name|DebugLinesSubsectionRef
 operator|>
 name|Lines
 block|;

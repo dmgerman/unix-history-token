@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModuleDebugFragmentVisitor.h -----------------------------*- C++ -*-===//
+comment|//===- DebugSubsectionVisitor.h -----------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -63,28 +63,28 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|ModuleDebugFileChecksumFragmentRef
+name|DebugChecksumsSubsectionRef
 decl_stmt|;
 name|class
-name|ModuleDebugFragmentRecord
+name|DebugSubsectionRecord
 decl_stmt|;
 name|class
-name|ModuleDebugInlineeLineFragmentRef
+name|DebugInlineeLinesSubsectionRef
 decl_stmt|;
 name|class
-name|ModuleDebugLineFragmentRef
+name|DebugLinesSubsectionRef
 decl_stmt|;
 name|class
-name|ModuleDebugUnknownFragmentRef
+name|DebugUnknownSubsectionRef
 decl_stmt|;
 name|class
-name|ModuleDebugFragmentVisitor
+name|DebugSubsectionVisitor
 block|{
 name|public
 label|:
 name|virtual
 operator|~
-name|ModuleDebugFragmentVisitor
+name|DebugSubsectionVisitor
 argument_list|()
 operator|=
 expr|default
@@ -93,7 +93,7 @@ name|virtual
 name|Error
 name|visitUnknown
 parameter_list|(
-name|ModuleDebugUnknownFragmentRef
+name|DebugUnknownSubsectionRef
 modifier|&
 name|Unknown
 parameter_list|)
@@ -109,7 +109,7 @@ name|virtual
 name|Error
 name|visitLines
 parameter_list|(
-name|ModuleDebugLineFragmentRef
+name|DebugLinesSubsectionRef
 modifier|&
 name|Lines
 parameter_list|)
@@ -125,7 +125,7 @@ name|virtual
 name|Error
 name|visitFileChecksums
 parameter_list|(
-name|ModuleDebugFileChecksumFragmentRef
+name|DebugChecksumsSubsectionRef
 modifier|&
 name|Checksums
 parameter_list|)
@@ -141,7 +141,7 @@ name|virtual
 name|Error
 name|visitInlineeLines
 parameter_list|(
-name|ModuleDebugInlineeLineFragmentRef
+name|DebugInlineeLinesSubsectionRef
 modifier|&
 name|Inlinees
 parameter_list|)
@@ -168,14 +168,14 @@ block|}
 block|}
 empty_stmt|;
 name|Error
-name|visitModuleDebugFragment
+name|visitDebugSubsection
 parameter_list|(
 specifier|const
-name|ModuleDebugFragmentRecord
+name|DebugSubsectionRecord
 modifier|&
 name|R
 parameter_list|,
-name|ModuleDebugFragmentVisitor
+name|DebugSubsectionVisitor
 modifier|&
 name|V
 parameter_list|)
@@ -186,11 +186,11 @@ name|typename
 name|T
 operator|>
 name|Error
-name|visitModuleDebugFragments
+name|visitDebugSubsections
 argument_list|(
 argument|T&&FragmentRange
 argument_list|,
-argument|ModuleDebugFragmentVisitor&V
+argument|DebugSubsectionVisitor&V
 argument_list|)
 block|{
 for|for
@@ -208,7 +208,7 @@ condition|(
 name|auto
 name|EC
 init|=
-name|visitModuleDebugFragment
+name|visitDebugSubsection
 argument_list|(
 name|L
 argument_list|,

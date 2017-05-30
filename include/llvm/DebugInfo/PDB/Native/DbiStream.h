@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/ModuleDebugFragment.h"
+file|"llvm/DebugInfo/CodeView/DebugSubsection.h"
 end_include
 
 begin_include
@@ -95,18 +95,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/BinaryStreamArray.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/BinaryStreamArray.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/BinaryStreamRef.h"
 end_include
 
 begin_include
