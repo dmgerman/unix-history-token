@@ -4,7 +4,11 @@ comment|// RUN: %clang_cc1 -triple thumbv7s-apple-darwin -target-abi apcs-gnu\
 end_comment
 
 begin_comment
-comment|// RUN:  -target-cpu swift -fallow-half-arguments-and-returns -ffreestanding -emit-llvm -o - %s \
+comment|// RUN:  -target-cpu swift -fallow-half-arguments-and-returns -ffreestanding \
+end_comment
+
+begin_comment
+comment|// RUN:  -disable-O0-optnone -emit-llvm -o - %s \
 end_comment
 
 begin_comment
@@ -16060,7 +16064,7 @@ comment|// CHECK-LABEL: @test_vgetq_lane_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__REINT_244:%.*]] = alloca<8 x half>, align 16
+comment|// CHECK:   [[__REINT_244:%.*]] = alloca<8 x half>, align 8
 end_comment
 
 begin_comment
@@ -16068,7 +16072,7 @@ comment|// CHECK:   [[__REINT1_244:%.*]] = alloca i16, align 2
 end_comment
 
 begin_comment
-comment|// CHECK:   store<8 x half> %a,<8 x half>* [[__REINT_244]], align 16
+comment|// CHECK:   store<8 x half> %a,<8 x half>* [[__REINT_244]], align 8
 end_comment
 
 begin_comment
@@ -16076,7 +16080,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x half>* [[__REINT_244]] to<8 x i16
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = load<8 x i16>,<8 x i16>* [[TMP0]], align 16
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i16>,<8 x i16>* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -20863,7 +20867,7 @@ comment|// CHECK-LABEL: @test_vld2q_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint8x16x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -20898,7 +20902,7 @@ comment|// CHECK-LABEL: @test_vld2q_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -20937,7 +20941,7 @@ comment|// CHECK-LABEL: @test_vld2q_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -20976,7 +20980,7 @@ comment|// CHECK-LABEL: @test_vld2q_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int8x16x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -21011,7 +21015,7 @@ comment|// CHECK-LABEL: @test_vld2q_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -21050,7 +21054,7 @@ comment|// CHECK-LABEL: @test_vld2q_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -21089,7 +21093,7 @@ comment|// CHECK-LABEL: @test_vld2q_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -21128,7 +21132,7 @@ comment|// CHECK-LABEL: @test_vld2q_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -21167,7 +21171,7 @@ comment|// CHECK-LABEL: @test_vld2q_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly8x16x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -21202,7 +21206,7 @@ comment|// CHECK-LABEL: @test_vld2q_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -22153,15 +22157,15 @@ comment|// CHECK-LABEL: @test_vld2q_lane_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -22173,7 +22177,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x i16>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -22185,7 +22189,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -22205,7 +22209,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x i16>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -22221,7 +22225,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -22271,15 +22275,15 @@ comment|// CHECK-LABEL: @test_vld2q_lane_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -22291,7 +22295,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<4 x i32>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -22303,7 +22307,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint32x4x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -22323,7 +22327,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<4 x i32>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -22339,7 +22343,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -22389,15 +22393,15 @@ comment|// CHECK-LABEL: @test_vld2q_lane_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -22409,7 +22413,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x i16>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -22421,7 +22425,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -22441,7 +22445,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x i16>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -22457,7 +22461,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -22507,15 +22511,15 @@ comment|// CHECK-LABEL: @test_vld2q_lane_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -22527,7 +22531,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<4 x i32>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -22539,7 +22543,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int32x4x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -22559,7 +22563,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<4 x i32>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -22575,7 +22579,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -22625,15 +22629,15 @@ comment|// CHECK-LABEL: @test_vld2q_lane_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -22645,7 +22649,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x half>]* [[COERCE_DIVE]] to [
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -22657,7 +22661,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -22677,7 +22681,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x half>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -22693,7 +22697,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -22743,15 +22747,15 @@ comment|// CHECK-LABEL: @test_vld2q_lane_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -22763,7 +22767,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<4 x float>]* [[COERCE_DIVE]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -22775,7 +22779,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float32x4x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -22795,7 +22799,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<4 x float>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -22811,7 +22815,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -22861,15 +22865,15 @@ comment|// CHECK-LABEL: @test_vld2q_lane_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x2_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -22881,7 +22885,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x i16>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -22893,7 +22897,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -22913,7 +22917,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x i16>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -22929,7 +22933,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -24099,7 +24103,7 @@ comment|// CHECK-LABEL: @test_vld3q_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint8x16x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint8x16x3_t, align 8
 end_comment
 
 begin_comment
@@ -24134,7 +24138,7 @@ comment|// CHECK-LABEL: @test_vld3q_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -24173,7 +24177,7 @@ comment|// CHECK-LABEL: @test_vld3q_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -24212,7 +24216,7 @@ comment|// CHECK-LABEL: @test_vld3q_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int8x16x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int8x16x3_t, align 8
 end_comment
 
 begin_comment
@@ -24247,7 +24251,7 @@ comment|// CHECK-LABEL: @test_vld3q_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -24286,7 +24290,7 @@ comment|// CHECK-LABEL: @test_vld3q_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -24325,7 +24329,7 @@ comment|// CHECK-LABEL: @test_vld3q_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -24364,7 +24368,7 @@ comment|// CHECK-LABEL: @test_vld3q_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -24403,7 +24407,7 @@ comment|// CHECK-LABEL: @test_vld3q_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly8x16x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly8x16x3_t, align 8
 end_comment
 
 begin_comment
@@ -24438,7 +24442,7 @@ comment|// CHECK-LABEL: @test_vld3q_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -25389,15 +25393,15 @@ comment|// CHECK-LABEL: @test_vld3q_lane_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -25409,7 +25413,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x i16>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -25421,7 +25425,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -25441,7 +25445,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x i16>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -25457,7 +25461,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -25473,7 +25477,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -25527,15 +25531,15 @@ comment|// CHECK-LABEL: @test_vld3q_lane_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -25547,7 +25551,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<4 x i32>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -25559,7 +25563,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint32x4x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -25579,7 +25583,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<4 x i32>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -25595,7 +25599,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -25611,7 +25615,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -25665,15 +25669,15 @@ comment|// CHECK-LABEL: @test_vld3q_lane_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -25685,7 +25689,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x i16>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -25697,7 +25701,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -25717,7 +25721,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x i16>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -25733,7 +25737,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -25749,7 +25753,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -25803,15 +25807,15 @@ comment|// CHECK-LABEL: @test_vld3q_lane_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -25823,7 +25827,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<4 x i32>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -25835,7 +25839,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int32x4x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -25855,7 +25859,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<4 x i32>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -25871,7 +25875,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -25887,7 +25891,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -25941,15 +25945,15 @@ comment|// CHECK-LABEL: @test_vld3q_lane_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -25961,7 +25965,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x half>]* [[COERCE_DIVE]] to [
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -25973,7 +25977,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -25993,7 +25997,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x half>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -26009,7 +26013,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -26025,7 +26029,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -26079,15 +26083,15 @@ comment|// CHECK-LABEL: @test_vld3q_lane_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -26099,7 +26103,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<4 x float>]* [[COERCE_DIVE]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -26111,7 +26115,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float32x4x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -26131,7 +26135,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<4 x float>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -26147,7 +26151,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -26163,7 +26167,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -26217,15 +26221,15 @@ comment|// CHECK-LABEL: @test_vld3q_lane_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x3_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -26237,7 +26241,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x i16>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -26249,7 +26253,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -26269,7 +26273,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x i16>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -26285,7 +26289,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -26301,7 +26305,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -27651,7 +27655,7 @@ comment|// CHECK-LABEL: @test_vld4q_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint8x16x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint8x16x4_t, align 8
 end_comment
 
 begin_comment
@@ -27686,7 +27690,7 @@ comment|// CHECK-LABEL: @test_vld4q_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -27725,7 +27729,7 @@ comment|// CHECK-LABEL: @test_vld4q_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -27764,7 +27768,7 @@ comment|// CHECK-LABEL: @test_vld4q_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int8x16x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int8x16x4_t, align 8
 end_comment
 
 begin_comment
@@ -27799,7 +27803,7 @@ comment|// CHECK-LABEL: @test_vld4q_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -27838,7 +27842,7 @@ comment|// CHECK-LABEL: @test_vld4q_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -27877,7 +27881,7 @@ comment|// CHECK-LABEL: @test_vld4q_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -27916,7 +27920,7 @@ comment|// CHECK-LABEL: @test_vld4q_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -27955,7 +27959,7 @@ comment|// CHECK-LABEL: @test_vld4q_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly8x16x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly8x16x4_t, align 8
 end_comment
 
 begin_comment
@@ -27990,7 +27994,7 @@ comment|// CHECK-LABEL: @test_vld4q_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -28941,15 +28945,15 @@ comment|// CHECK-LABEL: @test_vld4q_lane_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -28961,7 +28965,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x i16>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -28973,7 +28977,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -28993,7 +28997,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x i16>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -29009,7 +29013,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -29025,7 +29029,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -29041,7 +29045,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP11:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -29099,15 +29103,15 @@ comment|// CHECK-LABEL: @test_vld4q_lane_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.uint32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -29119,7 +29123,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<4 x i32>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -29131,7 +29135,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint32x4x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -29151,7 +29155,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<4 x i32>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -29167,7 +29171,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -29183,7 +29187,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -29199,7 +29203,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP11:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -29257,15 +29261,15 @@ comment|// CHECK-LABEL: @test_vld4q_lane_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -29277,7 +29281,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x i16>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -29289,7 +29293,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -29309,7 +29313,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x i16>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -29325,7 +29329,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -29341,7 +29345,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -29357,7 +29361,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP11:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -29415,15 +29419,15 @@ comment|// CHECK-LABEL: @test_vld4q_lane_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.int32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -29435,7 +29439,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<4 x i32>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -29447,7 +29451,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int32x4x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -29467,7 +29471,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<4 x i32>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -29483,7 +29487,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -29499,7 +29503,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -29515,7 +29519,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP11:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -29573,15 +29577,15 @@ comment|// CHECK-LABEL: @test_vld4q_lane_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -29593,7 +29597,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x half>]* [[COERCE_DIVE]] to [
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -29605,7 +29609,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -29625,7 +29629,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x half>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -29641,7 +29645,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -29657,7 +29661,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -29673,7 +29677,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP11:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -29731,15 +29735,15 @@ comment|// CHECK-LABEL: @test_vld4q_lane_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.float32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -29751,7 +29755,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<4 x float>]* [[COERCE_DIVE]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -29763,7 +29767,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float32x4x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -29783,7 +29787,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<4 x float>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -29799,7 +29803,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -29815,7 +29819,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -29831,7 +29835,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP11:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -29889,15 +29893,15 @@ comment|// CHECK-LABEL: @test_vld4q_lane_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x4_t, align 16
+comment|// CHECK:   [[__RET:%.*]] = alloca %struct.poly16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -29909,7 +29913,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x i16>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -29921,7 +29925,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -29941,7 +29945,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x i16>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -29957,7 +29961,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP7:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -29973,7 +29977,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP9:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -29989,7 +29993,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP11:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -65584,11 +65588,11 @@ comment|// CHECK:   [[__REINT_248:%.*]] = alloca half, align 2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__REINT1_248:%.*]] = alloca<8 x half>, align 16
+comment|// CHECK:   [[__REINT1_248:%.*]] = alloca<8 x half>, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__REINT2_248:%.*]] = alloca<8 x i16>, align 16
+comment|// CHECK:   [[__REINT2_248:%.*]] = alloca<8 x i16>, align 8
 end_comment
 
 begin_comment
@@ -65600,7 +65604,7 @@ comment|// CHECK:   store half [[TMP0]], half* [[__REINT_248]], align 2
 end_comment
 
 begin_comment
-comment|// CHECK:   store<8 x half> %b,<8 x half>* [[__REINT1_248]], align 16
+comment|// CHECK:   store<8 x half> %b,<8 x half>* [[__REINT1_248]], align 8
 end_comment
 
 begin_comment
@@ -65616,7 +65620,7 @@ comment|// CHECK:   [[TMP3:%.*]] = bitcast<8 x half>* [[__REINT1_248]] to<8 x i1
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[TMP3]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[TMP3]], align 8
 end_comment
 
 begin_comment
@@ -65632,7 +65636,7 @@ comment|// CHECK:   [[VSET_LANE:%.*]] = insertelement<8 x i16> [[TMP6]], i16 [[T
 end_comment
 
 begin_comment
-comment|// CHECK:   store<8 x i16> [[VSET_LANE]],<8 x i16>* [[__REINT2_248]], align 16
+comment|// CHECK:   store<8 x i16> [[VSET_LANE]],<8 x i16>* [[__REINT2_248]], align 8
 end_comment
 
 begin_comment
@@ -65640,7 +65644,7 @@ comment|// CHECK:   [[TMP7:%.*]] = bitcast<8 x i16>* [[__REINT2_248]] to<8 x hal
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x half>,<8 x half>* [[TMP7]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x half>,<8 x half>* [[TMP7]], align 8
 end_comment
 
 begin_comment
@@ -73218,11 +73222,11 @@ comment|// CHECK-LABEL: @test_vst2q_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint8x16x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -73234,7 +73238,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<16 x i8>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -73246,7 +73250,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint8x16x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -73258,7 +73262,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -73270,7 +73274,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -73308,11 +73312,11 @@ comment|// CHECK-LABEL: @test_vst2q_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -73324,7 +73328,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x i16>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -73336,7 +73340,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -73352,7 +73356,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x i16>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -73368,7 +73372,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -73418,11 +73422,11 @@ comment|// CHECK-LABEL: @test_vst2q_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -73434,7 +73438,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<4 x i32>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -73446,7 +73450,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint32x4x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -73462,7 +73466,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<4 x i32>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -73478,7 +73482,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -73528,11 +73532,11 @@ comment|// CHECK-LABEL: @test_vst2q_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int8x16x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -73544,7 +73548,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<16 x i8>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -73556,7 +73560,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int8x16x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -73568,7 +73572,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -73580,7 +73584,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -73618,11 +73622,11 @@ comment|// CHECK-LABEL: @test_vst2q_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -73634,7 +73638,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x i16>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -73646,7 +73650,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -73662,7 +73666,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x i16>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -73678,7 +73682,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -73728,11 +73732,11 @@ comment|// CHECK-LABEL: @test_vst2q_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -73744,7 +73748,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<4 x i32>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -73756,7 +73760,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int32x4x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -73772,7 +73776,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<4 x i32>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -73788,7 +73792,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -73838,11 +73842,11 @@ comment|// CHECK-LABEL: @test_vst2q_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -73854,7 +73858,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x half>]* [[COERCE_DIVE]] to [
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -73866,7 +73870,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -73882,7 +73886,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x half>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -73898,7 +73902,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -73948,11 +73952,11 @@ comment|// CHECK-LABEL: @test_vst2q_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -73964,7 +73968,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<4 x float>]* [[COERCE_DIVE]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -73976,7 +73980,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float32x4x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -73992,7 +73996,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<4 x float>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -74008,7 +74012,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -74058,11 +74062,11 @@ comment|// CHECK-LABEL: @test_vst2q_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly8x16x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -74074,7 +74078,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<16 x i8>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -74086,7 +74090,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly8x16x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -74098,7 +74102,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -74110,7 +74114,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -74148,11 +74152,11 @@ comment|// CHECK-LABEL: @test_vst2q_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -74164,7 +74168,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x i16>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -74176,7 +74180,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -74192,7 +74196,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x i16>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -74208,7 +74212,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -75518,11 +75522,11 @@ comment|// CHECK-LABEL: @test_vst2q_lane_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -75534,7 +75538,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x i16>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -75546,7 +75550,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -75562,7 +75566,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x i16>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -75578,7 +75582,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -75630,11 +75634,11 @@ comment|// CHECK-LABEL: @test_vst2q_lane_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -75646,7 +75650,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<4 x i32>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -75658,7 +75662,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint32x4x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -75674,7 +75678,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<4 x i32>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -75690,7 +75694,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -75742,11 +75746,11 @@ comment|// CHECK-LABEL: @test_vst2q_lane_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -75758,7 +75762,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x i16>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -75770,7 +75774,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -75786,7 +75790,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x i16>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -75802,7 +75806,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -75854,11 +75858,11 @@ comment|// CHECK-LABEL: @test_vst2q_lane_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -75870,7 +75874,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<4 x i32>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -75882,7 +75886,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int32x4x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -75898,7 +75902,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<4 x i32>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -75914,7 +75918,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -75966,11 +75970,11 @@ comment|// CHECK-LABEL: @test_vst2q_lane_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -75982,7 +75986,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x half>]* [[COERCE_DIVE]] to [
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -75994,7 +75998,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -76010,7 +76014,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x half>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -76026,7 +76030,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -76078,11 +76082,11 @@ comment|// CHECK-LABEL: @test_vst2q_lane_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -76094,7 +76098,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<4 x float>]* [[COERCE_DIVE]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -76106,7 +76110,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float32x4x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -76122,7 +76126,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<4 x float>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -76138,7 +76142,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -76190,11 +76194,11 @@ comment|// CHECK-LABEL: @test_vst2q_lane_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x2_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x2_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x2_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -76206,7 +76210,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [2 x<8 x i16>]* [[COERCE_DIVE]] to [4
 end_comment
 
 begin_comment
-comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [4 x i64] [[B]].coerce, [4 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -76218,7 +76222,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly16x8x2_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -76234,7 +76238,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [2 x<8 x i16>], [2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -76250,7 +76254,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [2 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -77362,11 +77366,11 @@ comment|// CHECK-LABEL: @test_vst3q_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint8x16x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint8x16x3_t, align 8
 end_comment
 
 begin_comment
@@ -77378,7 +77382,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<16 x i8>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -77390,7 +77394,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint8x16x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -77402,7 +77406,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -77414,7 +77418,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -77426,7 +77430,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -77464,11 +77468,11 @@ comment|// CHECK-LABEL: @test_vst3q_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -77480,7 +77484,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x i16>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -77492,7 +77496,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -77508,7 +77512,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x i16>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -77524,7 +77528,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -77540,7 +77544,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -77594,11 +77598,11 @@ comment|// CHECK-LABEL: @test_vst3q_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -77610,7 +77614,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<4 x i32>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -77622,7 +77626,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint32x4x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -77638,7 +77642,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<4 x i32>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -77654,7 +77658,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -77670,7 +77674,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -77724,11 +77728,11 @@ comment|// CHECK-LABEL: @test_vst3q_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int8x16x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int8x16x3_t, align 8
 end_comment
 
 begin_comment
@@ -77740,7 +77744,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<16 x i8>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -77752,7 +77756,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int8x16x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -77764,7 +77768,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -77776,7 +77780,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -77788,7 +77792,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -77826,11 +77830,11 @@ comment|// CHECK-LABEL: @test_vst3q_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -77842,7 +77846,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x i16>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -77854,7 +77858,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -77870,7 +77874,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x i16>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -77886,7 +77890,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -77902,7 +77906,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -77956,11 +77960,11 @@ comment|// CHECK-LABEL: @test_vst3q_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -77972,7 +77976,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<4 x i32>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -77984,7 +77988,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int32x4x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -78000,7 +78004,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<4 x i32>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -78016,7 +78020,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -78032,7 +78036,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -78086,11 +78090,11 @@ comment|// CHECK-LABEL: @test_vst3q_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -78102,7 +78106,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x half>]* [[COERCE_DIVE]] to [
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -78114,7 +78118,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -78130,7 +78134,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x half>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -78146,7 +78150,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -78162,7 +78166,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -78216,11 +78220,11 @@ comment|// CHECK-LABEL: @test_vst3q_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -78232,7 +78236,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<4 x float>]* [[COERCE_DIVE]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -78244,7 +78248,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float32x4x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -78260,7 +78264,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<4 x float>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -78276,7 +78280,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -78292,7 +78296,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -78346,11 +78350,11 @@ comment|// CHECK-LABEL: @test_vst3q_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly8x16x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly8x16x3_t, align 8
 end_comment
 
 begin_comment
@@ -78362,7 +78366,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<16 x i8>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -78374,7 +78378,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly8x16x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -78386,7 +78390,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -78398,7 +78402,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -78410,7 +78414,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -78448,11 +78452,11 @@ comment|// CHECK-LABEL: @test_vst3q_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -78464,7 +78468,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x i16>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -78476,7 +78480,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -78492,7 +78496,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x i16>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -78508,7 +78512,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -78524,7 +78528,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -80054,11 +80058,11 @@ comment|// CHECK-LABEL: @test_vst3q_lane_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -80070,7 +80074,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x i16>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -80082,7 +80086,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -80098,7 +80102,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x i16>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -80114,7 +80118,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -80130,7 +80134,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -80186,11 +80190,11 @@ comment|// CHECK-LABEL: @test_vst3q_lane_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -80202,7 +80206,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<4 x i32>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -80214,7 +80218,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint32x4x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -80230,7 +80234,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<4 x i32>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -80246,7 +80250,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -80262,7 +80266,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -80318,11 +80322,11 @@ comment|// CHECK-LABEL: @test_vst3q_lane_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -80334,7 +80338,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x i16>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -80346,7 +80350,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -80362,7 +80366,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x i16>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -80378,7 +80382,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -80394,7 +80398,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -80450,11 +80454,11 @@ comment|// CHECK-LABEL: @test_vst3q_lane_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -80466,7 +80470,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<4 x i32>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -80478,7 +80482,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int32x4x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -80494,7 +80498,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<4 x i32>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -80510,7 +80514,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -80526,7 +80530,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -80582,11 +80586,11 @@ comment|// CHECK-LABEL: @test_vst3q_lane_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -80598,7 +80602,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x half>]* [[COERCE_DIVE]] to [
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -80610,7 +80614,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -80626,7 +80630,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x half>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -80642,7 +80646,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -80658,7 +80662,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -80714,11 +80718,11 @@ comment|// CHECK-LABEL: @test_vst3q_lane_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x3_t, align 8
 end_comment
 
 begin_comment
@@ -80730,7 +80734,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<4 x float>]* [[COERCE_DIVE]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -80742,7 +80746,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float32x4x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -80758,7 +80762,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<4 x float>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -80774,7 +80778,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -80790,7 +80794,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -80846,11 +80850,11 @@ comment|// CHECK-LABEL: @test_vst3q_lane_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x3_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x3_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x3_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x3_t, align 8
 end_comment
 
 begin_comment
@@ -80862,7 +80866,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [3 x<8 x i16>]* [[COERCE_DIVE]] to [6
 end_comment
 
 begin_comment
-comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [6 x i64] [[B]].coerce, [6 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -80874,7 +80878,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly16x8x3_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 48, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -80890,7 +80894,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [3 x<8 x i16>], [3
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -80906,7 +80910,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -80922,7 +80926,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [3 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -82214,11 +82218,11 @@ comment|// CHECK-LABEL: @test_vst4q_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint8x16x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint8x16x4_t, align 8
 end_comment
 
 begin_comment
@@ -82230,7 +82234,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<16 x i8>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -82242,7 +82246,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint8x16x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -82254,7 +82258,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -82266,7 +82270,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -82278,7 +82282,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -82290,7 +82294,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -82328,11 +82332,11 @@ comment|// CHECK-LABEL: @test_vst4q_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -82344,7 +82348,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x i16>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -82356,7 +82360,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -82372,7 +82376,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x i16>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -82388,7 +82392,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -82404,7 +82408,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -82420,7 +82424,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -82478,11 +82482,11 @@ comment|// CHECK-LABEL: @test_vst4q_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -82494,7 +82498,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<4 x i32>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -82506,7 +82510,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint32x4x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -82522,7 +82526,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<4 x i32>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -82538,7 +82542,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -82554,7 +82558,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -82570,7 +82574,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -82628,11 +82632,11 @@ comment|// CHECK-LABEL: @test_vst4q_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int8x16x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int8x16x4_t, align 8
 end_comment
 
 begin_comment
@@ -82644,7 +82648,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<16 x i8>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -82656,7 +82660,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int8x16x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -82668,7 +82672,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -82680,7 +82684,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -82692,7 +82696,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -82704,7 +82708,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -82742,11 +82746,11 @@ comment|// CHECK-LABEL: @test_vst4q_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -82758,7 +82762,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x i16>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -82770,7 +82774,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -82786,7 +82790,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x i16>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -82802,7 +82806,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -82818,7 +82822,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -82834,7 +82838,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -82892,11 +82896,11 @@ comment|// CHECK-LABEL: @test_vst4q_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -82908,7 +82912,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<4 x i32>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -82920,7 +82924,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int32x4x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -82936,7 +82940,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<4 x i32>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -82952,7 +82956,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -82968,7 +82972,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -82984,7 +82988,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -83042,11 +83046,11 @@ comment|// CHECK-LABEL: @test_vst4q_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -83058,7 +83062,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x half>]* [[COERCE_DIVE]] to [
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -83070,7 +83074,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -83086,7 +83090,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x half>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -83102,7 +83106,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -83118,7 +83122,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -83134,7 +83138,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -83192,11 +83196,11 @@ comment|// CHECK-LABEL: @test_vst4q_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -83208,7 +83212,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<4 x float>]* [[COERCE_DIVE]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -83220,7 +83224,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float32x4x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -83236,7 +83240,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<4 x float>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -83252,7 +83256,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -83268,7 +83272,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -83284,7 +83288,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -83342,11 +83346,11 @@ comment|// CHECK-LABEL: @test_vst4q_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly8x16x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly8x16x4_t, align 8
 end_comment
 
 begin_comment
@@ -83358,7 +83362,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<16 x i8>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -83370,7 +83374,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly8x16x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -83382,7 +83386,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -83394,7 +83398,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -83406,7 +83410,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP5:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -83418,7 +83422,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<16 x i8>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -83456,11 +83460,11 @@ comment|// CHECK-LABEL: @test_vst4q_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -83472,7 +83476,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x i16>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -83484,7 +83488,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -83500,7 +83504,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x i16>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -83516,7 +83520,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -83532,7 +83536,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -83548,7 +83552,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -85298,11 +85302,11 @@ comment|// CHECK-LABEL: @test_vst4q_lane_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -85314,7 +85318,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x i16>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -85326,7 +85330,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -85342,7 +85346,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x i16>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -85358,7 +85362,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -85374,7 +85378,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -85390,7 +85394,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -85450,11 +85454,11 @@ comment|// CHECK-LABEL: @test_vst4q_lane_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.uint32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -85466,7 +85470,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<4 x i32>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -85478,7 +85482,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.uint32x4x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -85494,7 +85498,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<4 x i32>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -85510,7 +85514,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -85526,7 +85530,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -85542,7 +85546,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -85602,11 +85606,11 @@ comment|// CHECK-LABEL: @test_vst4q_lane_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -85618,7 +85622,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x i16>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -85630,7 +85634,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -85646,7 +85650,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x i16>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -85662,7 +85666,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -85678,7 +85682,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -85694,7 +85698,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -85754,11 +85758,11 @@ comment|// CHECK-LABEL: @test_vst4q_lane_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.int32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -85770,7 +85774,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<4 x i32>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -85782,7 +85786,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.int32x4x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -85798,7 +85802,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<4 x i32>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -85814,7 +85818,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -85830,7 +85834,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -85846,7 +85850,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<4 x i32>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<4 x i32>,<4 x i32>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -85906,11 +85910,11 @@ comment|// CHECK-LABEL: @test_vst4q_lane_f16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -85922,7 +85926,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x half>]* [[COERCE_DIVE]] to [
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -85934,7 +85938,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -85950,7 +85954,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x half>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -85966,7 +85970,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -85982,7 +85986,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -85998,7 +86002,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x half>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<8 x half>,<8 x half>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -86058,11 +86062,11 @@ comment|// CHECK-LABEL: @test_vst4q_lane_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.float32x4x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.float32x4x4_t, align 8
 end_comment
 
 begin_comment
@@ -86074,7 +86078,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<4 x float>]* [[COERCE_DIVE]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -86086,7 +86090,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.float32x4x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -86102,7 +86106,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<4 x float>], 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -86118,7 +86122,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -86134,7 +86138,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -86150,7 +86154,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<4 x float>],
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<4 x float>,<4 x float>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -86210,11 +86214,11 @@ comment|// CHECK-LABEL: @test_vst4q_lane_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x4_t, align 16
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly16x8x4_t, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x4_t, align 16
+comment|// CHECK:   [[__S1:%.*]] = alloca %struct.poly16x8x4_t, align 8
 end_comment
 
 begin_comment
@@ -86226,7 +86230,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast [4 x<8 x i16>]* [[COERCE_DIVE]] to [8
 end_comment
 
 begin_comment
-comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 16
+comment|// CHECK:   store [8 x i64] [[B]].coerce, [8 x i64]* [[TMP0]], align 8
 end_comment
 
 begin_comment
@@ -86238,7 +86242,7 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast %struct.poly16x8x4_t* [[B]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP1]], i8* [[TMP2]], i32 64, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -86254,7 +86258,7 @@ comment|// CHECK:   [[ARRAYIDX:%.*]] = getelementptr inbounds [4 x<8 x i16>], [4
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 16
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX]], align 8
 end_comment
 
 begin_comment
@@ -86270,7 +86274,7 @@ comment|// CHECK:   [[ARRAYIDX2:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 16
+comment|// CHECK:   [[TMP6:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX2]], align 8
 end_comment
 
 begin_comment
@@ -86286,7 +86290,7 @@ comment|// CHECK:   [[ARRAYIDX4:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 16
+comment|// CHECK:   [[TMP8:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX4]], align 8
 end_comment
 
 begin_comment
@@ -86302,7 +86306,7 @@ comment|// CHECK:   [[ARRAYIDX6:%.*]] = getelementptr inbounds [4 x<8 x i16>], [
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 16
+comment|// CHECK:   [[TMP10:%.*]] = load<8 x i16>,<8 x i16>* [[ARRAYIDX6]], align 8
 end_comment
 
 begin_comment
@@ -92244,7 +92248,7 @@ comment|// CHECK-LABEL: @test_vtrnq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int8x16x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -92284,7 +92288,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.int8x16x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92318,7 +92322,7 @@ comment|// CHECK-LABEL: @test_vtrnq_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int16x8x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -92366,7 +92370,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int16x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92400,7 +92404,7 @@ comment|// CHECK-LABEL: @test_vtrnq_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int32x4x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -92448,7 +92452,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int32x4x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92482,7 +92486,7 @@ comment|// CHECK-LABEL: @test_vtrnq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint8x16x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -92522,7 +92526,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.uint8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92556,7 +92560,7 @@ comment|// CHECK-LABEL: @test_vtrnq_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint16x8x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -92604,7 +92608,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92638,7 +92642,7 @@ comment|// CHECK-LABEL: @test_vtrnq_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint32x4x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -92686,7 +92690,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint32x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92720,7 +92724,7 @@ comment|// CHECK-LABEL: @test_vtrnq_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.float32x4x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.float32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -92768,7 +92772,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.float32x4x2_t* [[__RET_I]] to
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92802,7 +92806,7 @@ comment|// CHECK-LABEL: @test_vtrnq_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly8x16x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -92842,7 +92846,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.poly8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -92876,7 +92880,7 @@ comment|// CHECK-LABEL: @test_vtrnq_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly16x8x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -92924,7 +92928,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.poly16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94424,7 +94428,7 @@ comment|// CHECK-LABEL: @test_vuzpq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int8x16x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -94464,7 +94468,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.int8x16x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94498,7 +94502,7 @@ comment|// CHECK-LABEL: @test_vuzpq_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int16x8x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -94546,7 +94550,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int16x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94580,7 +94584,7 @@ comment|// CHECK-LABEL: @test_vuzpq_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int32x4x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -94628,7 +94632,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int32x4x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94662,7 +94666,7 @@ comment|// CHECK-LABEL: @test_vuzpq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint8x16x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -94702,7 +94706,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.uint8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94736,7 +94740,7 @@ comment|// CHECK-LABEL: @test_vuzpq_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint16x8x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -94784,7 +94788,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94818,7 +94822,7 @@ comment|// CHECK-LABEL: @test_vuzpq_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint32x4x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -94866,7 +94870,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint32x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94900,7 +94904,7 @@ comment|// CHECK-LABEL: @test_vuzpq_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.float32x4x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.float32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -94948,7 +94952,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.float32x4x2_t* [[__RET_I]] to
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -94982,7 +94986,7 @@ comment|// CHECK-LABEL: @test_vuzpq_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly8x16x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -95022,7 +95026,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.poly8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95056,7 +95060,7 @@ comment|// CHECK-LABEL: @test_vuzpq_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly16x8x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -95104,7 +95108,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.poly16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95852,7 +95856,7 @@ comment|// CHECK-LABEL: @test_vzipq_s8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int8x16x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -95892,7 +95896,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.int8x16x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -95926,7 +95930,7 @@ comment|// CHECK-LABEL: @test_vzipq_s16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int16x8x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -95974,7 +95978,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int16x8x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -96008,7 +96012,7 @@ comment|// CHECK-LABEL: @test_vzipq_s32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int32x4x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.int32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -96056,7 +96060,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.int32x4x2_t* [[__RET_I]] to i
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -96090,7 +96094,7 @@ comment|// CHECK-LABEL: @test_vzipq_u8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint8x16x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -96130,7 +96134,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.uint8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -96164,7 +96168,7 @@ comment|// CHECK-LABEL: @test_vzipq_u16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint16x8x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -96212,7 +96216,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -96246,7 +96250,7 @@ comment|// CHECK-LABEL: @test_vzipq_u32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint32x4x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.uint32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -96294,7 +96298,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.uint32x4x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -96328,7 +96332,7 @@ comment|// CHECK-LABEL: @test_vzipq_f32(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.float32x4x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.float32x4x2_t, align 8
 end_comment
 
 begin_comment
@@ -96376,7 +96380,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.float32x4x2_t* [[__RET_I]] to
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -96410,7 +96414,7 @@ comment|// CHECK-LABEL: @test_vzipq_p8(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly8x16x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly8x16x2_t, align 8
 end_comment
 
 begin_comment
@@ -96450,7 +96454,7 @@ comment|// CHECK:   [[TMP4:%.*]] = bitcast %struct.poly8x16x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP3]], i8* [[TMP4]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment
@@ -96484,7 +96488,7 @@ comment|// CHECK-LABEL: @test_vzipq_p16(
 end_comment
 
 begin_comment
-comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly16x8x2_t, align 16
+comment|// CHECK:   [[__RET_I:%.*]] = alloca %struct.poly16x8x2_t, align 8
 end_comment
 
 begin_comment
@@ -96532,7 +96536,7 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast %struct.poly16x8x2_t* [[__RET_I]] to 
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 16, i1 false)
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[TMP5]], i8* [[TMP6]], i32 32, i32 8, i1 false)
 end_comment
 
 begin_comment

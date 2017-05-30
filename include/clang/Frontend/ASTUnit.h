@@ -3895,6 +3895,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Free data that will be re-generated on the next parse.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Preamble-related data is not affected.
+end_comment
+
+begin_function_decl
+name|void
+name|ResetForParse
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Perform code completion at the given file, line, and
 end_comment
 

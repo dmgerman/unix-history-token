@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o - | grep load | grep "4 x float" | not grep "align 4"
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-linux-gnu -emit-llvm %s -o - | grep load | grep "4 x float" | not grep "align 4"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o - | grep load | grep "4 x float" | grep "align 16"
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-linux-gnu -emit-llvm %s -o - | grep load | grep "4 x float" | grep "align 16"
 end_comment
 
 begin_comment

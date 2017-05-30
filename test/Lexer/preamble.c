@@ -61,20 +61,14 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"honk"
+file|"foo"
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
+begin_decl_stmt
 name|int
-name|foo
-parameter_list|()
-function_decl|;
-end_function_decl
+name|bar
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -86,15 +80,7 @@ comment|// This test checks for detection of the preamble of a file, which
 end_comment
 
 begin_comment
-comment|// includes all of the starting comments and #includes. Note that any
-end_comment
-
-begin_comment
-comment|// changes to the preamble part of this file must be mirrored in
-end_comment
-
-begin_comment
-comment|// Inputs/preamble.txt, since we diff against it.
+comment|// includes all of the starting comments and #includes.
 end_comment
 
 begin_comment
@@ -147,6 +133,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: #endif
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: #ifdef WIBBLE
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: #include "foo"
 end_comment
 
 begin_comment

@@ -8913,6 +8913,11 @@ operator|>
 literal|1
 condition|)
 block|{
+name|clang_suspendTranslationUnit
+argument_list|(
+name|TU
+argument_list|)
+expr_stmt|;
 name|Err
 operator|=
 name|clang_reparseTranslationUnit

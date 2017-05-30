@@ -29,7 +29,7 @@ name|omp
 name|target
 name|exit
 name|data
-comment|// expected-error {{expected at least one map clause for '#pragma omp target exit data'}}
+comment|// expected-error {{expected at least one 'map' clause for '#pragma omp target exit data'}}
 pragma|#
 directive|pragma
 name|omp

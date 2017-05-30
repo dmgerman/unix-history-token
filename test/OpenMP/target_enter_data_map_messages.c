@@ -29,7 +29,7 @@ name|omp
 name|target
 name|enter
 name|data
-comment|// expected-error {{expected at least one map clause for '#pragma omp target enter data'}}
+comment|// expected-error {{expected at least one 'map' clause for '#pragma omp target enter data'}}
 pragma|#
 directive|pragma
 name|omp

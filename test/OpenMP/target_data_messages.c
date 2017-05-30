@@ -31,7 +31,7 @@ directive|pragma
 name|omp
 name|target
 name|data
-comment|// expected-error {{expected at least one map clause for '#pragma omp target data'}}
+comment|// expected-error {{expected at least one 'map' or 'use_device_ptr' clause for '#pragma omp target data'}}
 block|{}
 name|L1
 label|:
