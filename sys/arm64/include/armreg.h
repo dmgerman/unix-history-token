@@ -2430,7 +2430,7 @@ value|0xc8222400
 end_define
 
 begin_comment
-comment|/* Reserved, write 0 */
+comment|/* Reserved ARMv8.0, write 0 */
 end_comment
 
 begin_define
@@ -2441,7 +2441,7 @@ value|0x30d00800
 end_define
 
 begin_comment
-comment|/* Reserved, write 1 */
+comment|/* Reserved ARMv8.0, write 1 */
 end_comment
 
 begin_define
@@ -2559,6 +2559,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTLR_IESB
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTLR_SPAN
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTLR_EOE
 value|0x01000000
 end_define
@@ -2575,6 +2589,20 @@ define|#
 directive|define
 name|SCTLR_UCI
 value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTLR_nTLSMD
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTLR_LSMAOE
+value|0x20000000
 end_define
 
 begin_comment
