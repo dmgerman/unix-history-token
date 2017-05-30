@@ -57,7 +57,7 @@ name|namespace
 name|elf
 block|{
 struct_decl|struct
-name|BaseCommand
+name|OutputSectionCommand
 struct_decl|;
 name|template
 operator|<
@@ -71,7 +71,7 @@ name|llvm
 operator|::
 name|ArrayRef
 operator|<
-name|BaseCommand
+name|OutputSectionCommand
 operator|*
 operator|>
 name|Script
