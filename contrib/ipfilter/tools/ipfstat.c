@@ -8749,12 +8749,12 @@ name|STGROWSIZE
 expr_stmt|;
 name|tstable
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|tstable
 argument_list|,
 name|maxtsentries
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|statetop_t

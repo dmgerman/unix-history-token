@@ -5599,15 +5599,13 @@ operator|*
 operator|)
 name|calloc
 argument_list|(
-literal|1
+name|FRC_MAX
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 name|m
 argument_list|)
-operator|*
-name|FRC_MAX
 argument_list|)
 expr_stmt|;
 for|for
