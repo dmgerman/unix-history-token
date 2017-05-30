@@ -1834,6 +1834,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*   * Read the vdev config from a device.  Return the number of valid labels that  * were found.  The vdev config will be returned in config if and only if at  * least one valid label was found.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1863,9 +1867,6 @@ name|VDEV_LABELS
 index|]
 decl_stmt|;
 name|char
-modifier|*
-name|p
-decl_stmt|,
 modifier|*
 name|buf
 decl_stmt|;
@@ -1909,7 +1910,7 @@ decl_stmt|;
 name|int
 name|l
 decl_stmt|,
-name|len
+name|nlabels
 decl_stmt|;
 name|g_topology_assert_not
 argument_list|()
@@ -2108,6 +2109,10 @@ name|VDEV_LABELS
 argument_list|)
 expr_stmt|;
 comment|/* Parse the labels */
+name|nlabels
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|l
@@ -2233,7 +2238,9 @@ name|NULL
 expr_stmt|;
 continue|continue;
 block|}
-break|break;
+name|nlabels
+operator|++
+expr_stmt|;
 block|}
 comment|/* Free the label storage */
 for|for
@@ -2261,14 +2268,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|*
-name|config
-operator|==
-name|NULL
-condition|?
-name|ENOENT
-else|:
-literal|0
+name|nlabels
 operator|)
 return|;
 block|}
@@ -2715,6 +2715,8 @@ name|pool_guid
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|nlabels
 decl_stmt|;
 name|DROP_GIANT
 argument_list|()
@@ -2808,7 +2810,7 @@ continue|continue;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|error
+name|nlabels
 operator|=
 name|vdev_geom_read_config
 argument_list|(
@@ -2830,7 +2832,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|nlabels
+operator|==
+literal|0
 condition|)
 continue|continue;
 name|ZFS_LOG
@@ -2883,10 +2887,39 @@ enum|enum
 name|match
 block|{
 name|NO_MATCH
+init|=
+literal|0
 block|,
-name|TOP_MATCH
+comment|/* No matching labels found */
+name|TOPGUID_MATCH
+init|=
+literal|1
 block|,
+comment|/* Labels match top guid, not vdev guid*/
+name|ZERO_MATCH
+init|=
+literal|1
+block|,
+comment|/* Should never be returned */
+name|ONE_MATCH
+init|=
+literal|2
+block|,
+comment|/* 1 label matching the vdev_guid */
+name|TWO_MATCH
+init|=
+literal|3
+block|,
+comment|/* 2 label matching the vdev_guid */
+name|THREE_MATCH
+init|=
+literal|4
+block|,
+comment|/* 3 label matching the vdev_guid */
 name|FULL_MATCH
+init|=
+literal|5
+comment|/* all labels match the vdev_guid */
 block|}
 enum|;
 end_enum
@@ -2922,6 +2955,9 @@ name|struct
 name|g_consumer
 modifier|*
 name|cp
+decl_stmt|;
+name|int
+name|nlabels
 decl_stmt|;
 name|cp
 operator|=
@@ -2959,8 +2995,8 @@ block|}
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
+name|nlabels
+operator|=
 name|vdev_geom_read_config
 argument_list|(
 name|cp
@@ -2968,7 +3004,11 @@ argument_list|,
 operator|&
 name|config
 argument_list|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|nlabels
+operator|==
 literal|0
 condition|)
 block|{
@@ -3137,7 +3177,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|FULL_MATCH
+name|ZERO_MATCH
+operator|+
+name|nlabels
 operator|)
 return|;
 block|}
@@ -3170,7 +3212,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|TOP_MATCH
+name|TOPGUID_MATCH
 operator|)
 return|;
 block|}
@@ -3231,6 +3273,9 @@ name|struct
 name|g_provider
 modifier|*
 name|pp
+decl_stmt|,
+modifier|*
+name|best_pp
 decl_stmt|;
 name|struct
 name|g_consumer
@@ -3239,7 +3284,9 @@ name|cp
 decl_stmt|;
 name|enum
 name|match
-name|m
+name|match
+decl_stmt|,
+name|best_match
 decl_stmt|;
 name|g_topology_assert
 argument_list|()
@@ -3247,6 +3294,14 @@ expr_stmt|;
 name|cp
 operator|=
 name|NULL
+expr_stmt|;
+name|best_pp
+operator|=
+name|NULL
+expr_stmt|;
+name|best_match
+operator|=
+name|NO_MATCH
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -3292,7 +3347,7 @@ argument_list|,
 argument|provider
 argument_list|)
 block|{
-name|m
+name|match
 operator|=
 name|vdev_attach_ok
 argument_list|(
@@ -3303,39 +3358,44 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
-operator|==
-name|NO_MATCH
-condition|)
-continue|continue;
-if|if
-condition|(
-name|cp
-operator|!=
-name|NULL
+name|match
+operator|>
+name|best_match
 condition|)
 block|{
+name|best_match
+operator|=
+name|match
+expr_stmt|;
+name|best_pp
+operator|=
+name|pp
+expr_stmt|;
+block|}
 if|if
 condition|(
-name|m
+name|match
 operator|==
 name|FULL_MATCH
 condition|)
-name|vdev_geom_detach
-argument_list|(
-name|cp
-argument_list|,
-name|B_TRUE
-argument_list|)
-expr_stmt|;
-else|else
-continue|continue;
+goto|goto
+name|out
+goto|;
 block|}
+block|}
+block|}
+name|out
+label|:
+if|if
+condition|(
+name|best_pp
+condition|)
+block|{
 name|cp
 operator|=
 name|vdev_geom_attach
 argument_list|(
-name|pp
+name|best_pp
 argument_list|,
 name|vd
 argument_list|)
@@ -3349,28 +3409,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS WARNING: Unable to "
-literal|"attach to %s.\n"
+literal|"ZFS WARNING: Unable to attach to %s.\n"
 argument_list|,
-name|pp
+name|best_pp
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
-name|m
-operator|==
-name|FULL_MATCH
-condition|)
-return|return
-operator|(
-name|cp
-operator|)
-return|;
-block|}
 block|}
 block|}
 return|return
