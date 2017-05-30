@@ -212,6 +212,63 @@ begin_comment
 comment|/* Set the handler */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ENTER_USER_ACCESS
+parameter_list|(
+name|reg
+parameter_list|,
+name|tmp
+parameter_list|)
+define|\
+value|ldr	tmp, =has_pan;
+comment|/* Get the addr of has_pan */
+value|\ 	ldr	reg, [tmp];
+comment|/* Read it */
+value|\ 	cbz	reg, 997f;
+comment|/* If no PAN skip */
+value|\ 	.inst	0xd500409f | (0<< 8);
+comment|/* Clear PAN */
+value|\ 	997:
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXIT_USER_ACCESS
+parameter_list|(
+name|reg
+parameter_list|)
+define|\
+value|cbz	reg, 998f;
+comment|/* If no PAN skip */
+value|\ 	.inst	0xd500409f | (1<< 8);
+comment|/* Set PAN */
+value|\ 	998:
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXIT_USER_ACCESS_CHECK
+parameter_list|(
+name|reg
+parameter_list|,
+name|tmp
+parameter_list|)
+define|\
+value|ldr	tmp, =has_pan;
+comment|/* Get the addr of has_pan */
+value|\ 	ldr	reg, [tmp];
+comment|/* Read it */
+value|\ 	cbz	reg, 999f;
+comment|/* If no PAN skip */
+value|\ 	.inst	0xd500409f | (1<< 8);
+comment|/* Set PAN */
+value|\ 	999:
+end_define
+
 begin_endif
 endif|#
 directive|endif

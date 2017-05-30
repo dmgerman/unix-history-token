@@ -27,6 +27,15 @@ directive|include
 file|<machine/armreg.h>
 end_include
 
+begin_function_decl
+name|void
+name|pan_enable
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|__inline

@@ -1174,6 +1174,12 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|pan_enable
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Enable interrupts */
 end_comment

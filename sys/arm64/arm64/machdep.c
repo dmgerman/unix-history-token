@@ -474,6 +474,12 @@ begin_comment
 comment|/* The size of cache line the dc zva zeroes */
 end_comment
 
+begin_decl_stmt
+name|int
+name|has_pan
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* pagezero_* implementations are provided in support.S */
 end_comment
@@ -517,6 +523,71 @@ init|=
 name|pagezero_simple
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|void
+name|pan_setup
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint64_t
+name|id_aa64mfr1
+decl_stmt|;
+name|id_aa64mfr1
+operator|=
+name|READ_SPECIALREG
+argument_list|(
+name|id_aa64mmfr1_el1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ID_AA64MMFR1_PAN
+argument_list|(
+name|id_aa64mfr1
+argument_list|)
+operator|!=
+name|ID_AA64MMFR1_PAN_NONE
+condition|)
+name|has_pan
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pan_enable
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* 	 * The LLVM integrated assembler doesn't understand the PAN 	 * PSTATE field. Because of this we need to manually create 	 * the instruction in an asm block. This is equivalent to: 	 * msr pan, #1 	 * 	 * This sets the PAN bit, stopping the kernel from accessing 	 * memory when userspace can also access it unless the kernel 	 * uses the userspace load/store instructions. 	 */
+if|if
+condition|(
+name|has_pan
+condition|)
+block|{
+name|WRITE_SPECIALREG
+argument_list|(
+name|sctlr_el1
+argument_list|,
+name|READ_SPECIALREG
+argument_list|(
+name|sctlr_el1
+argument_list|)
+operator|&
+operator|~
+name|SCTLR_SPAN
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile(".inst 0xd500409f | (0x1<< 8)");
+block|}
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -4233,6 +4304,12 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|pan_setup
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Bootstrap enough of pmap  to enter the kernel proper */
 end_comment
@@ -4319,6 +4396,12 @@ end_expr_stmt
 
 begin_expr_stmt
 name|kdb_init
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|pan_enable
 argument_list|()
 expr_stmt|;
 end_expr_stmt
