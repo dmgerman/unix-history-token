@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ManagedStatic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/RWMutex.h"
 end_include
 
@@ -154,21 +160,6 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|template
-operator|<
-name|class
-name|C
-operator|>
-name|class
-name|ManagedStatic
-expr_stmt|;
 block|}
 end_decl_stmt
 
