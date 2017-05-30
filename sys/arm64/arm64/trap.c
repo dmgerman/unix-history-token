@@ -1127,7 +1127,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"spsr: %16lx\n"
+literal|"spsr:         %8x\n"
 argument_list|,
 name|frame
 operator|->
@@ -1158,10 +1158,9 @@ decl_stmt|;
 comment|/* Read the esr register to get the exception details */
 name|esr
 operator|=
-name|READ_SPECIALREG
-argument_list|(
-name|esr_el1
-argument_list|)
+name|frame
+operator|->
+name|tf_esr
 expr_stmt|;
 name|exception
 operator|=
@@ -1455,10 +1454,9 @@ name|frame
 expr_stmt|;
 name|esr
 operator|=
-name|READ_SPECIALREG
-argument_list|(
-name|esr_el1
-argument_list|)
+name|frame
+operator|->
+name|tf_esr
 expr_stmt|;
 name|exception
 operator|=

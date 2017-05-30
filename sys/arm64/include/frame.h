@@ -50,8 +50,11 @@ decl_stmt|;
 name|uint64_t
 name|tf_elr
 decl_stmt|;
-name|uint64_t
+name|uint32_t
 name|tf_spsr
+decl_stmt|;
+name|uint32_t
+name|tf_esr
 decl_stmt|;
 name|uint64_t
 name|tf_x
