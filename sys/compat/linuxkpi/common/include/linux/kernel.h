@@ -375,6 +375,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|BUILD_BUG_ON_MSG
+parameter_list|(
+name|x
+parameter_list|,
+name|msg
+parameter_list|)
+value|BUILD_BUG_ON(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUILD_BUG_ON_NOT_POWER_OF_2
+parameter_list|(
+name|x
+parameter_list|)
+value|BUILD_BUG_ON(!powerof2(x))
+end_define
+
+begin_define
+define|#
+directive|define
 name|BUG
 parameter_list|()
 value|panic("BUG at %s:%d", __FILE__, __LINE__)
@@ -418,6 +440,13 @@ parameter_list|(
 name|cond
 parameter_list|)
 value|({					\       static bool __warn_on_once;				\       bool __ret = (cond);					\       if (__ret&& !__warn_on_once) {				\ 		__warn_on_once = 1;				\ 		printf("WARNING %s failed at %s:%d\n",		\ 		    __stringify(cond), __FILE__, __LINE__);	\       }								\       unlikely(__ret);						\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|oops_in_progress
+value|SCHEDULER_STOPPED()
 end_define
 
 begin_undef
