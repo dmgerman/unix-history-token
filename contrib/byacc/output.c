@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: output.c,v 1.74 2014/10/05 23:21:09 tom Exp $ */
+comment|/* $Id: output.c,v 1.79 2016/12/02 20:42:38 tom Exp $ */
 end_comment
 
 begin_include
@@ -1140,6 +1140,199 @@ end_function
 begin_function
 specifier|static
 name|void
+name|output_stype
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|unionized
+operator|&&
+name|ntags
+operator|==
+literal|0
+condition|)
+block|{
+name|putc_code
+argument_list|(
+name|fp
+argument_list|,
+literal|'\n'
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"#if "
+literal|"! defined(YYSTYPE)&& "
+literal|"! defined(YYSTYPE_IS_DECLARED)\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"/* Default: YYSTYPE is the semantic value type. */\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"typedef int YYSTYPE;\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"# define YYSTYPE_IS_DECLARED 1\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYBTYACC
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|void
+name|output_ltype
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+name|putc_code
+argument_list|(
+name|fp
+argument_list|,
+literal|'\n'
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"#if ! defined YYLTYPE&& ! defined YYLTYPE_IS_DECLARED\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"/* Default: YYLTYPE is the text position type. */\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"typedef struct YYLTYPE\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"{\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"    int first_line;\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"    int first_column;\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"    int last_line;\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"    int last_column;\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"    unsigned source;\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"} YYLTYPE;\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"#define YYLTYPE_IS_DECLARED 1\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|fp
+argument_list|,
+literal|"#define YYRHSLOC(rhs, k) ((rhs)[k])\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+name|void
 name|output_YYINT_typedef
 parameter_list|(
 name|FILE
@@ -1501,6 +1694,13 @@ name|gsymb
 index|]
 expr_stmt|;
 block|}
+name|putl_code
+argument_list|(
+name|output_file
+argument_list|,
+literal|"#if defined(YYDESTRUCT_CALL) || defined(YYSTYPE_TOSTRING)\n"
+argument_list|)
+expr_stmt|;
 comment|/* yystos[] may be unused, depending on compile-time defines */
 name|start_int_table
 argument_list|(
@@ -1564,6 +1764,13 @@ expr_stmt|;
 name|FREE
 argument_list|(
 name|translate
+argument_list|)
+expr_stmt|;
+name|putl_code
+argument_list|(
+name|output_file
+argument_list|,
+literal|"#endif /* YYDESTRUCT_CALL || YYSTYPE_TOSTRING */\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5524,6 +5731,50 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|token_table
+operator|&&
+name|rflag
+operator|&&
+name|fp
+operator|!=
+name|externs_file
+condition|)
+block|{
+if|if
+condition|(
+name|fp
+operator|==
+name|code_file
+condition|)
+operator|++
+name|outline
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"#undef yytname\n"
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|code_file
+condition|)
+operator|++
+name|outline
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"#define yytname yyname\n"
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|fp
 operator|==
 name|defines_file
@@ -5584,6 +5835,23 @@ name|symbol_prefix
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYBTYACC
+argument_list|)
+if|if
+condition|(
+name|locations
+condition|)
+name|output_ltype
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -6058,6 +6326,12 @@ condition|(
 name|token_table
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
+block|{
 name|output_line
 argument_list|(
 literal|"#undef yytname"
@@ -6068,6 +6342,7 @@ argument_list|(
 literal|"#define yytname yyname"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -6991,185 +7266,6 @@ end_function
 begin_function
 specifier|static
 name|void
-name|output_stype
-parameter_list|(
-name|FILE
-modifier|*
-name|fp
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|unionized
-operator|&&
-name|ntags
-operator|==
-literal|0
-condition|)
-block|{
-name|putc_code
-argument_list|(
-name|fp
-argument_list|,
-literal|'\n'
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"#if "
-literal|"! defined(YYSTYPE)&& "
-literal|"! defined(YYSTYPE_IS_DECLARED)\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"/* Default: YYSTYPE is the semantic value type. */\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"typedef int YYSTYPE;\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"# define YYSTYPE_IS_DECLARED 1\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"#endif\n"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|YYBTYACC
-argument_list|)
-end_if
-
-begin_function
-specifier|static
-name|void
-name|output_ltype
-parameter_list|(
-name|FILE
-modifier|*
-name|fp
-parameter_list|)
-block|{
-name|putc_code
-argument_list|(
-name|fp
-argument_list|,
-literal|'\n'
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"#if ! defined YYLTYPE&& ! defined YYLTYPE_IS_DECLARED\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"/* Default: YYLTYPE is the text position type. */\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"typedef struct YYLTYPE\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"{\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"    int first_line;\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"    int first_column;\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"    int last_line;\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"    int last_column;\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"} YYLTYPE;\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"#define YYLTYPE_IS_DECLARED 1\n"
-argument_list|)
-expr_stmt|;
-name|putl_code
-argument_list|(
-name|fp
-argument_list|,
-literal|"#endif\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-specifier|static
-name|void
 name|output_trailing_text
 parameter_list|(
 name|void
@@ -7988,7 +8084,7 @@ name|puts_code
 argument_list|(
 name|fp
 argument_list|,
-literal|"YYLTYPE loc, "
+literal|"YYLTYPE *loc, "
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8044,7 +8140,7 @@ name|puts_code
 argument_list|(
 name|fp
 argument_list|,
-literal|"yylloc, "
+literal|"&yylloc, "
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8264,6 +8360,30 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|output_initial_action
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|initial_action
+condition|)
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|initial_action
 argument_list|)
 expr_stmt|;
 block|}
@@ -9100,6 +9220,28 @@ argument_list|(
 name|code_file
 argument_list|,
 name|body_2
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYBTYACC
+argument_list|)
+if|if
+condition|(
+name|initial_action
+condition|)
+name|output_initial_action
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|write_section
+argument_list|(
+name|code_file
+argument_list|,
+name|body_3
 argument_list|)
 expr_stmt|;
 name|output_semantic_actions

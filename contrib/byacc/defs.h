@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: defs.h,v 1.51 2014/10/02 22:38:13 tom Exp $ */
+comment|/* $Id: defs.h,v 1.54 2016/12/02 19:27:56 tom Exp $ */
 end_comment
 
 begin_ifdef
@@ -727,6 +727,20 @@ name|TOKEN_TABLE
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|ERROR_VERBOSE
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|XXXDEBUG
+value|18
+end_define
+
 begin_if
 if|#
 directive|if
@@ -740,14 +754,21 @@ begin_define
 define|#
 directive|define
 name|LOCATIONS
-value|17
+value|19
 end_define
 
 begin_define
 define|#
 directive|define
 name|DESTRUCTOR
-value|18
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|INITIAL_ACTION
+value|21
 end_define
 
 begin_endif
@@ -1497,6 +1518,13 @@ name|token_table
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|error_verbose
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -1524,6 +1552,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|destructor
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|initial_action
 decl_stmt|;
 end_decl_stmt
 
@@ -1638,6 +1674,17 @@ name|char
 modifier|*
 specifier|const
 name|body_2
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|body_3
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -2361,7 +2408,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/*nothing*/
+comment|/*nothing */
 end_comment
 
 begin_endif
@@ -2411,6 +2458,25 @@ end_function_decl
 begin_comment
 comment|/* error.c */
 end_comment
+
+begin_struct
+struct|struct
+name|ainfo
+block|{
+name|int
+name|a_lineno
+decl_stmt|;
+name|char
+modifier|*
+name|a_line
+decl_stmt|;
+name|char
+modifier|*
+name|a_cptr
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_function_decl
 specifier|extern
@@ -2495,7 +2561,9 @@ specifier|extern
 name|void
 name|default_action_warning
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2505,16 +2573,10 @@ specifier|extern
 name|void
 name|destructor_redeclared_warning
 parameter_list|(
-name|int
-name|a_lineno
-parameter_list|,
-name|char
+specifier|const
+name|struct
+name|ainfo
 modifier|*
-name|a_line
-parameter_list|,
-name|char
-modifier|*
-name|a_cptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2888,16 +2950,10 @@ specifier|extern
 name|void
 name|unterminated_action
 argument_list|(
-name|int
-name|a_lineno
-argument_list|,
-name|char
+specifier|const
+expr|struct
+name|ainfo
 operator|*
-name|a_line
-argument_list|,
-name|char
-operator|*
-name|a_cptr
 argument_list|)
 name|GCC_NORETURN
 decl_stmt|;
@@ -2908,16 +2964,10 @@ specifier|extern
 name|void
 name|unterminated_comment
 argument_list|(
-name|int
-name|c_lineno
-argument_list|,
-name|char
+specifier|const
+expr|struct
+name|ainfo
 operator|*
-name|c_line
-argument_list|,
-name|char
-operator|*
-name|c_cptr
 argument_list|)
 name|GCC_NORETURN
 decl_stmt|;
@@ -2928,16 +2978,10 @@ specifier|extern
 name|void
 name|unterminated_string
 argument_list|(
-name|int
-name|s_lineno
-argument_list|,
-name|char
+specifier|const
+expr|struct
+name|ainfo
 operator|*
-name|s_line
-argument_list|,
-name|char
-operator|*
-name|s_cptr
 argument_list|)
 name|GCC_NORETURN
 decl_stmt|;
@@ -2948,16 +2992,10 @@ specifier|extern
 name|void
 name|unterminated_text
 argument_list|(
-name|int
-name|t_lineno
-argument_list|,
-name|char
+specifier|const
+expr|struct
+name|ainfo
 operator|*
-name|t_line
-argument_list|,
-name|char
-operator|*
-name|t_cptr
 argument_list|)
 name|GCC_NORETURN
 decl_stmt|;
@@ -2968,16 +3006,10 @@ specifier|extern
 name|void
 name|unterminated_union
 argument_list|(
-name|int
-name|u_lineno
-argument_list|,
-name|char
+specifier|const
+expr|struct
+name|ainfo
 operator|*
-name|u_line
-argument_list|,
-name|char
-operator|*
-name|u_cptr
 argument_list|)
 name|GCC_NORETURN
 decl_stmt|;
@@ -3049,16 +3081,10 @@ specifier|extern
 name|void
 name|unterminated_arglist
 argument_list|(
-name|int
-name|a_lineno
-argument_list|,
-name|char
+specifier|const
+expr|struct
+name|ainfo
 operator|*
-name|a_line
-argument_list|,
-name|char
-operator|*
-name|a_cptr
 argument_list|)
 name|GCC_NORETURN
 decl_stmt|;

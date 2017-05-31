@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file generated automatically using  * @Id: skel2c,v 1.3 2014/04/06 19:48:04 tom Exp @  */
+comment|/* This file generated automatically using  * @Id: skel2c,v 1.4 2016/06/07 00:26:09 tom Exp @  */
 end_comment
 
 begin_comment
-comment|/* @Id: yaccpar.skel,v 1.5 2014/04/07 21:51:00 tom Exp @ */
+comment|/* @Id: yaccpar.skel,v 1.7 2016/06/06 23:35:55 Tom.Shields Exp @ */
 end_comment
 
 begin_include
@@ -152,9 +152,13 @@ literal|"extern YYINT yycheck[];"
 block|,
 literal|""
 block|,
-literal|"#if YYDEBUG"
+literal|"#if YYDEBUG || defined(yytname)"
 block|,
 literal|"extern char *yyname[];"
+block|,
+literal|"#endif"
+block|,
+literal|"#if YYDEBUG"
 block|,
 literal|"extern char *yyrule[];"
 block|,
@@ -330,7 +334,7 @@ literal|""
 block|,
 literal|"#if YYDEBUG"
 block|,
-literal|"#include<stdio.h>		/* needed for printf */"
+literal|"#include<stdio.h>	/* needed for printf */"
 block|,
 literal|"#endif"
 block|,
@@ -488,6 +492,24 @@ literal|"#endif"
 block|,
 literal|""
 block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|body_3
+index|[]
+init|=
+block|{
+literal|"    yym = 0;"
+block|,
+literal|"    yyn = 0;"
+block|,
 literal|"    yynerrs = 0;"
 block|,
 literal|"    yyerrflag = 0;"
@@ -526,7 +548,9 @@ literal|"    if (yychar< 0)"
 block|,
 literal|"    {"
 block|,
-literal|"        if ((yychar = YYLEX)< 0) yychar = YYEOF;"
+literal|"        yychar = YYLEX;"
+block|,
+literal|"        if (yychar< 0) yychar = YYEOF;"
 block|,
 literal|"#if YYDEBUG"
 block|,
@@ -534,7 +558,7 @@ literal|"        if (yydebug)"
 block|,
 literal|"        {"
 block|,
-literal|"            yys = yyname[YYTRANSLATE(yychar)];"
+literal|"            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];"
 block|,
 literal|"            printf(\"%sdebug: state %d, reading %d (%s)\\n\","
 block|,
@@ -546,9 +570,9 @@ literal|"#endif"
 block|,
 literal|"    }"
 block|,
-literal|"    if ((yyn = yysindex[yystate])&& (yyn += yychar)>= 0&&"
+literal|"    if (((yyn = yysindex[yystate]) != 0)&& (yyn += yychar)>= 0&&"
 block|,
-literal|"            yyn<= YYTABLESIZE&& yycheck[yyn] == yychar)"
+literal|"            yyn<= YYTABLESIZE&& yycheck[yyn] == (YYINT) yychar)"
 block|,
 literal|"    {"
 block|,
@@ -562,13 +586,7 @@ literal|"                    YYPREFIX, yystate, yytable[yyn]);"
 block|,
 literal|"#endif"
 block|,
-literal|"        if (yystack.s_mark>= yystack.s_last&& yygrowstack(&yystack) == YYENOMEM)"
-block|,
-literal|"        {"
-block|,
-literal|"            goto yyoverflow;"
-block|,
-literal|"        }"
+literal|"        if (yystack.s_mark>= yystack.s_last&& yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;"
 block|,
 literal|"        yystate = yytable[yyn];"
 block|,
@@ -584,9 +602,9 @@ literal|"        goto yyloop;"
 block|,
 literal|"    }"
 block|,
-literal|"    if ((yyn = yyrindex[yystate])&& (yyn += yychar)>= 0&&"
+literal|"    if (((yyn = yyrindex[yystate]) != 0)&& (yyn += yychar)>= 0&&"
 block|,
-literal|"            yyn<= YYTABLESIZE&& yycheck[yyn] == yychar)"
+literal|"            yyn<= YYTABLESIZE&& yycheck[yyn] == (YYINT) yychar)"
 block|,
 literal|"    {"
 block|,
@@ -596,7 +614,7 @@ literal|"        goto yyreduce;"
 block|,
 literal|"    }"
 block|,
-literal|"    if (yyerrflag) goto yyinrecovery;"
+literal|"    if (yyerrflag != 0) goto yyinrecovery;"
 block|,
 literal|""
 block|,
@@ -604,9 +622,7 @@ literal|"    YYERROR_CALL(\"syntax error\");"
 block|,
 literal|""
 block|,
-literal|"    goto yyerrlab;"
-block|,
-literal|""
+literal|"    goto yyerrlab; /* redundant goto avoids 'unused label' warning */"
 block|,
 literal|"yyerrlab:"
 block|,
@@ -626,9 +642,9 @@ literal|"        for (;;)"
 block|,
 literal|"        {"
 block|,
-literal|"            if ((yyn = yysindex[*yystack.s_mark])&& (yyn += YYERRCODE)>= 0&&"
+literal|"            if (((yyn = yysindex[*yystack.s_mark]) != 0)&& (yyn += YYERRCODE)>= 0&&"
 block|,
-literal|"                    yyn<= YYTABLESIZE&& yycheck[yyn] == YYERRCODE)"
+literal|"                    yyn<= YYTABLESIZE&& yycheck[yyn] == (YYINT) YYERRCODE)"
 block|,
 literal|"            {"
 block|,
@@ -642,13 +658,7 @@ literal|" to state %d\\n\", YYPREFIX, *yystack.s_mark, yytable[yyn]);"
 block|,
 literal|"#endif"
 block|,
-literal|"                if (yystack.s_mark>= yystack.s_last&& yygrowstack(&yystack) == YYENOMEM)"
-block|,
-literal|"                {"
-block|,
-literal|"                    goto yyoverflow;"
-block|,
-literal|"                }"
+literal|"                if (yystack.s_mark>= yystack.s_last&& yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;"
 block|,
 literal|"                yystate = yytable[yyn];"
 block|,
@@ -698,7 +708,7 @@ literal|"        if (yydebug)"
 block|,
 literal|"        {"
 block|,
-literal|"            yys = yyname[YYTRANSLATE(yychar)];"
+literal|"            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];"
 block|,
 literal|"            printf(\"%sdebug: state %d, error recovery discards token %d (%s)\\n\","
 block|,
@@ -730,13 +740,15 @@ literal|"#endif"
 block|,
 literal|"    yym = yylen[yyn];"
 block|,
-literal|"    if (yym)"
+literal|"    if (yym> 0)"
 block|,
 literal|"        yyval = yystack.l_mark[1-yym];"
 block|,
 literal|"    else"
 block|,
 literal|"        memset(&yyval, 0, sizeof yyval);"
+block|,
+literal|""
 block|,
 literal|"    switch (yyn)"
 block|,
@@ -790,7 +802,9 @@ literal|"        if (yychar< 0)"
 block|,
 literal|"        {"
 block|,
-literal|"            if ((yychar = YYLEX)< 0) yychar = YYEOF;"
+literal|"            yychar = YYLEX;"
+block|,
+literal|"            if (yychar< 0) yychar = YYEOF;"
 block|,
 literal|"#if YYDEBUG"
 block|,
@@ -798,7 +812,7 @@ literal|"            if (yydebug)"
 block|,
 literal|"            {"
 block|,
-literal|"                yys = yyname[YYTRANSLATE(yychar)];"
+literal|"                if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];"
 block|,
 literal|"                printf(\"%sdebug: state %d, reading %d (%s)\\n\","
 block|,
@@ -816,9 +830,9 @@ literal|"        goto yyloop;"
 block|,
 literal|"    }"
 block|,
-literal|"    if ((yyn = yygindex[yym])&& (yyn += yystate)>= 0&&"
+literal|"    if (((yyn = yygindex[yym]) != 0)&& (yyn += yystate)>= 0&&"
 block|,
-literal|"            yyn<= YYTABLESIZE&& yycheck[yyn] == yystate)"
+literal|"            yyn<= YYTABLESIZE&& yycheck[yyn] == (YYINT) yystate)"
 block|,
 literal|"        yystate = yytable[yyn];"
 block|,
@@ -836,13 +850,7 @@ literal|"to state %d\\n\", YYPREFIX, *yystack.s_mark, yystate);"
 block|,
 literal|"#endif"
 block|,
-literal|"    if (yystack.s_mark>= yystack.s_last&& yygrowstack(&yystack) == YYENOMEM)"
-block|,
-literal|"    {"
-block|,
-literal|"        goto yyoverflow;"
-block|,
-literal|"    }"
+literal|"    if (yystack.s_mark>= yystack.s_last&& yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;"
 block|,
 literal|"    *++yystack.s_mark = (YYINT) yystate;"
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lalr.c,v 1.11 2014/09/18 00:26:39 tom Exp $ */
+comment|/* $Id: lalr.c,v 1.12 2016/06/07 00:28:03 tom Exp $ */
 end_comment
 
 begin_include

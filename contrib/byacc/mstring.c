@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: mstring.c,v 1.6 2014/04/22 23:36:31 tom Exp $ */
+comment|/* $Id: mstring.c,v 1.7 2016/12/02 17:57:21 tom Exp $ */
 end_comment
 
 begin_include
@@ -750,8 +750,11 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+name|UCH
+argument_list|(
 operator|*
 name|a
+argument_list|)
 argument_list|)
 condition|)
 name|a
@@ -761,8 +764,11 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+name|UCH
+argument_list|(
 operator|*
 name|b
+argument_list|)
 argument_list|)
 condition|)
 name|b
@@ -789,8 +795,11 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+name|UCH
+argument_list|(
 operator|*
 name|a
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -798,17 +807,23 @@ if|if
 condition|(
 name|isalnum
 argument_list|(
+name|UCH
+argument_list|(
 name|a
 index|[
 operator|-
 literal|1
 index|]
 argument_list|)
+argument_list|)
 operator|&&
 name|isalnum
 argument_list|(
+name|UCH
+argument_list|(
 operator|*
 name|b
+argument_list|)
 argument_list|)
 condition|)
 break|break;
@@ -818,8 +833,11 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+name|UCH
+argument_list|(
 operator|*
 name|b
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -827,17 +845,23 @@ if|if
 condition|(
 name|isalnum
 argument_list|(
+name|UCH
+argument_list|(
 name|b
 index|[
 operator|-
 literal|1
 index|]
 argument_list|)
+argument_list|)
 operator|&&
 name|isalnum
 argument_list|(
+name|UCH
+argument_list|(
 operator|*
 name|a
+argument_list|)
 argument_list|)
 condition|)
 break|break;
@@ -883,8 +907,11 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
+name|UCH
+argument_list|(
 operator|*
 name|s
+argument_list|)
 argument_list|)
 condition|)
 name|h
