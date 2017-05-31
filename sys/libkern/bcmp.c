@@ -91,7 +91,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|size_t
 name|length
 decl_stmt|;

@@ -2502,7 +2502,6 @@ specifier|static
 name|uint32_t
 name|encode_surrogate
 parameter_list|(
-specifier|register
 name|uint32_t
 name|code
 parameter_list|)
@@ -2544,7 +2543,6 @@ specifier|static
 name|uint32_t
 name|decode_surrogate
 parameter_list|(
-specifier|register
 specifier|const
 name|u_char
 modifier|*
