@@ -1229,9 +1229,13 @@ decl_stmt|;
 name|map
 operator|=
 operator|&
-name|mm
+name|task
 operator|->
-name|vmspace
+name|task_thread
+operator|->
+name|td_proc
+operator|->
+name|p_vmspace
 operator|->
 name|vm_map
 expr_stmt|;
