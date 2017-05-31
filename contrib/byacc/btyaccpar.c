@@ -4,7 +4,7 @@ comment|/* This file generated automatically using  * @Id: skel2c,v 1.4 2016/06/
 end_comment
 
 begin_comment
-comment|/* @Id: btyaccpar.skel,v 1.5 2016/12/02 22:02:28 tom Exp @ */
+comment|/* @Id: btyaccpar.skel,v 1.6 2017/04/30 23:40:34 tom Exp @ */
 end_comment
 
 begin_include
@@ -1017,6 +1017,44 @@ block|,
 literal|"    if (yydebug)"
 block|,
 literal|"        fprintf(stderr, \"%sdebug[<# of symbols on state stack>]\\n\", YYPREFIX);"
+block|,
+literal|"#endif"
+block|,
+literal|"#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)"
+block|,
+literal|"    memset(yyerror_loc_range, 0, sizeof(yyerror_loc_range));"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|init_vars
+index|[]
+init|=
+block|{
+literal|"    yyerrflag = 0;"
+block|,
+literal|"    yychar = 0;"
+block|,
+literal|"    memset(&yyval,  0, sizeof(yyval));"
+block|,
+literal|"    memset(&yylval, 0, sizeof(yylval));"
+block|,
+literal|"#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)"
+block|,
+literal|"    memset(&yyloc,  0, sizeof(yyloc));"
+block|,
+literal|"    memset(&yylloc, 0, sizeof(yylloc));"
 block|,
 literal|"#endif"
 block|,

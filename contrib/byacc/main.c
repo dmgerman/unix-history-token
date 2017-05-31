@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.59 2017/02/02 00:44:38 tom Exp $ */
+comment|/* $Id: main.c,v 1.60 2017/04/30 20:57:56 Julien.Ramseier Exp $ */
 end_comment
 
 begin_include
@@ -1159,7 +1159,7 @@ else|#
 directive|else
 name|unsupported_flag_warning
 argument_list|(
-literal|"-B"
+literal|"-L"
 argument_list|,
 literal|"reconfigure with --enable-btyacc"
 argument_list|)
