@@ -49,6 +49,14 @@ parameter_list|)
 value|({				\ 	struct task_struct *__task;					\ 	struct thread *__td;						\ 									\ 	if (kthread_add(linux_kthread_fn, NULL, NULL,&__td,		\ 	    RFSTOPPED, 0, fmt, ## __VA_ARGS__))				\ 		__task = NULL;						\ 	else								\ 		__task = linux_kthread_setup_and_run(__td, fn, data);	\ 	__task;								\ })
 end_define
 
+begin_define
+define|#
+directive|define
+name|in_atomic
+parameter_list|()
+value|({				\ 	linux_in_atomic();			\ })
+end_define
+
 begin_function_decl
 specifier|extern
 name|int
@@ -111,6 +119,16 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|linux_in_atomic
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
