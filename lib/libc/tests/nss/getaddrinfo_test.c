@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -642,6 +642,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -699,6 +700,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|free_addrinfo
 parameter_list|(
@@ -800,6 +802,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -838,6 +843,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -873,6 +881,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -891,6 +902,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|ai
 operator|->
 name|ai_addrlen
@@ -911,6 +925,9 @@ name|i
 operator|+
 literal|1
 operator|!=
+operator|(
+name|int
+operator|)
 name|ai
 operator|->
 name|ai_addrlen
@@ -942,6 +959,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -986,6 +1006,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -1521,8 +1544,6 @@ modifier|*
 name|ps
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|rv
 decl_stmt|;
 name|printf
@@ -1533,10 +1554,6 @@ name|line
 argument_list|)
 expr_stmt|;
 name|rv
-operator|=
-literal|0
-expr_stmt|;
-name|i
 operator|=
 literal|0
 expr_stmt|;
@@ -1694,6 +1711,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|printf
@@ -1995,6 +2013,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|run_tests
 parameter_list|(

@@ -302,23 +302,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__noreturn__
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_macro
 name|IMPLEMENT_TEST_DATA
 argument_list|(
@@ -473,14 +456,10 @@ name|r_aliases
 operator|=
 name|calloc
 argument_list|(
-literal|1
-argument_list|,
-operator|(
 name|aliases_num
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char
@@ -868,6 +847,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -933,6 +915,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -1426,6 +1411,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|printf
@@ -1861,6 +1847,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 comment|/* 	 * Only correctness can be checked when doing 1-pass test for 	 * getrpcent(). 	 */
@@ -1878,6 +1865,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|run_tests
 parameter_list|(

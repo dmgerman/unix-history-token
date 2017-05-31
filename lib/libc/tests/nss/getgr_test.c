@@ -104,16 +104,6 @@ block|, }
 enum|;
 end_enum
 
-begin_decl_stmt
-specifier|static
-name|enum
-name|test_methods
-name|method
-init|=
-name|TEST_BUILD_SNAPSHOT
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|DECLARE_TEST_DATA
 argument_list|(
@@ -506,14 +496,10 @@ name|gr_mem
 operator|=
 name|calloc
 argument_list|(
-literal|1
-argument_list|,
-operator|(
 name|members_num
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char
@@ -911,6 +897,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -976,6 +965,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -1517,6 +1509,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|printf
@@ -1851,6 +1844,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 comment|/* Only correctness can be checked when doing 1-pass test for 	 * getgrent(). */

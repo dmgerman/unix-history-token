@@ -429,23 +429,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__noreturn__
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_macro
 name|IMPLEMENT_TEST_DATA
 argument_list|(
@@ -799,14 +782,10 @@ name|h_aliases
 operator|=
 name|calloc
 argument_list|(
-literal|1
-argument_list|,
-operator|(
 name|aliases_num
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char
@@ -909,14 +888,10 @@ name|h_addr_list
 operator|=
 name|calloc
 argument_list|(
-literal|1
-argument_list|,
-operator|(
 name|addrs_num
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char
@@ -2075,6 +2050,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2140,6 +2118,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2177,6 +2158,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2207,6 +2191,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2234,6 +2221,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2285,6 +2275,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|size_t
+operator|)
 name|ht
 operator|->
 name|h_length
@@ -2305,6 +2298,9 @@ name|i
 operator|+
 literal|1
 operator|!=
+operator|(
+name|size_t
+operator|)
 name|ht
 operator|->
 name|h_length
@@ -2334,6 +2330,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2378,6 +2377,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2409,6 +2411,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -2439,6 +2444,9 @@ if|if
 condition|(
 name|written
 operator|>
+operator|(
+name|int
+operator|)
 name|buflen
 condition|)
 return|return;
@@ -3373,6 +3381,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 ifdef|#
@@ -3714,6 +3723,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3901,6 +3911,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -4456,6 +4467,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|run_tests
 parameter_list|(
@@ -4470,7 +4482,7 @@ modifier|*
 name|snapshot_file
 parameter_list|,
 name|int
-name|af_type
+name|_af_type
 parameter_list|,
 name|enum
 name|test_methods
@@ -4499,7 +4511,7 @@ literal|2
 decl_stmt|;
 switch|switch
 condition|(
-name|af_type
+name|_af_type
 condition|)
 block|{
 case|case
@@ -4531,7 +4543,7 @@ name|atf_tc_fail
 argument_list|(
 literal|"unhandled address family: %d"
 argument_list|,
-name|af_type
+name|_af_type
 argument_list|)
 expr_stmt|;
 break|break;

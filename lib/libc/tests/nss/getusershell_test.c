@@ -88,16 +88,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|static
-name|enum
-name|test_methods
-name|method
-init|=
-name|TEST_GETUSERSHELL
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|DECLARE_TEST_DATA
 argument_list|(
@@ -299,6 +289,7 @@ parameter_list|,
 name|void
 modifier|*
 name|mdata
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -533,6 +524,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|run_tests
 parameter_list|(
