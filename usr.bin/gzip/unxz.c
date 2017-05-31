@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: unxz.c,v 1.5 2011/09/30 01:32:21 christos Exp $	*/
+comment|/*	$NetBSD: unxz.c,v 1.6 2016/01/29 15:19:01 christos Exp $	*/
 end_comment
 
 begin_comment
