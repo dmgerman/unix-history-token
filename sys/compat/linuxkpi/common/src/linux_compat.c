@@ -2233,6 +2233,22 @@ modifier|*
 name|vmap
 parameter_list|)
 block|{
+comment|/* Drop reference on vm_file */
+if|if
+condition|(
+name|vmap
+operator|->
+name|vm_file
+operator|!=
+name|NULL
+condition|)
+name|fput
+argument_list|(
+name|vmap
+operator|->
+name|vm_file
+argument_list|)
+expr_stmt|;
 comment|/* Drop reference on mm_struct */
 name|mmput
 argument_list|(
@@ -4431,7 +4447,10 @@ name|vmap
 operator|->
 name|vm_file
 operator|=
+name|get_file
+argument_list|(
 name|filp
+argument_list|)
 expr_stmt|;
 name|vmap
 operator|->
