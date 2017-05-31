@@ -4826,6 +4826,11 @@ operator|.
 name|d_poll
 operator|=
 name|linux_dev_poll
+block|,
+operator|.
+name|d_name
+operator|=
+literal|"lkpidev"
 block|, }
 decl_stmt|;
 end_decl_stmt
