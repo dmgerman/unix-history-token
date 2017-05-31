@@ -179,9 +179,9 @@ name|read_only_fd
 decl_stmt|;
 name|char
 name|path
-index|[
-name|PATH_MAX
-index|]
+index|[]
+init|=
+literal|"ftruncate_file"
 decl_stmt|;
 name|struct
 name|stat
@@ -196,21 +196,18 @@ decl_stmt|;
 name|char
 name|ch
 decl_stmt|;
-comment|/* 	 * Tests using a writable temporary file: grow and then shrink a file 	 * using ftruncate and various lengths.  Make sure that a negative 	 * file length is rejected.  Make sure that when we grow the file, 	 * bytes now in the range of the file size return 0. 	 * 	 * Save a read-only reference to the file to use later for read-only 	 * descriptor tests. 	 */
-name|snprintf
-argument_list|(
-name|path
-argument_list|,
-name|PATH_MAX
-argument_list|,
-literal|"/tmp/ftruncate.XXXXXXXXXXXXX"
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Tests using a writable file: grow and then shrink a file 	 * using ftruncate and various lengths.  Make sure that a negative 	 * file length is rejected.  Make sure that when we grow the file, 	 * bytes now in the range of the file size return 0. 	 * 	 * Save a read-only reference to the file to use later for read-only 	 * descriptor tests. 	 */
 name|fd
 operator|=
-name|mkstemp
+name|open
 argument_list|(
 name|path
+argument_list|,
+name|O_RDWR
+operator||
+name|O_CREAT
+argument_list|,
+literal|0600
 argument_list|)
 expr_stmt|;
 if|if
@@ -221,10 +218,11 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
-literal|"mkstemp"
+literal|"open(%s, O_RDWR|O_CREAT, 0600)"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 name|read_only_fd
@@ -261,7 +259,6 @@ name|error
 expr_stmt|;
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"open(%s, O_RDONLY)"
@@ -292,10 +289,9 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
-literal|"ftruncate(fd, -1) succeeded"
+literal|"ftruncate(fd, -1) succeeded unexpectedly"
 argument_list|)
 expr_stmt|;
 if|if
@@ -306,7 +302,6 @@ name|EINVAL
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"ftruncate(fd, -1) returned wrong error"
@@ -346,7 +341,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"ftruncate(%jd) up"
@@ -371,7 +365,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"stat"
@@ -439,7 +432,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"pread on len %jd up"
@@ -541,7 +533,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"ftruncate(%jd) down"
@@ -566,7 +557,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"stat"
@@ -631,7 +621,6 @@ name|EINVAL
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"ftruncate(read_only_fd) returned wrong error"
@@ -662,7 +651,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"socket(PF_UNIX, SOCK_STREAM, 0)"
@@ -695,7 +683,6 @@ name|EINVAL
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"ftruncate(socket) returned wrong error"
@@ -718,7 +705,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"pipe"
@@ -754,7 +740,6 @@ name|EINVAL
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"ftruncate(pipe) returned wrong error"
@@ -790,7 +775,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"kqueue"
@@ -826,7 +810,6 @@ name|EINVAL
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"ftruncate(kqueue) returned wrong error"

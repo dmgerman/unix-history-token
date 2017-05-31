@@ -115,10 +115,14 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"accept"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|accept_fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -153,7 +157,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"fork"
@@ -191,9 +194,9 @@ operator|+
 literal|1
 argument_list|,
 literal|0
+argument_list|)
 operator|<
 literal|0
-argument_list|)
 condition|)
 block|{
 if|if
@@ -216,7 +219,6 @@ name|EINVAL
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"file descriptor still open in child"
@@ -225,7 +227,6 @@ expr_stmt|;
 else|else
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"unexpected error"
@@ -235,7 +236,6 @@ block|}
 else|else
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"ftruncate succeeded"
@@ -248,15 +248,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|__unused
-name|int
-name|argc
-parameter_list|,
-name|__unused
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -285,7 +277,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"socket"
@@ -361,7 +352,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"bind"
@@ -381,7 +371,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"listen"
@@ -405,7 +394,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"pthread_create"
