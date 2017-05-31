@@ -1297,7 +1297,8 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"no dump, not enough free space on device (%lld available, need %lld)"
+literal|"no dump: not enough free space on device (%lldkB "
+literal|"available; need at least %lldkB)"
 argument_list|,
 call|(
 name|long
