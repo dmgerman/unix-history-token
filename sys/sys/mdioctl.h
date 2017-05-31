@@ -257,6 +257,17 @@ begin_comment
 comment|/* Asynchronous mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MD_VERIFY
+value|0x80
+end_define
+
+begin_comment
+comment|/* Open file with O_VERIFY (vnode only) */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
