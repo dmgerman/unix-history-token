@@ -2224,6 +2224,33 @@ end_expr_stmt
 
 begin_function
 specifier|static
+name|void
+name|linux_cdev_handle_free
+parameter_list|(
+name|struct
+name|vm_area_struct
+modifier|*
+name|vmap
+parameter_list|)
+block|{
+comment|/* Drop reference on mm_struct */
+name|mmput
+argument_list|(
+name|vmap
+operator|->
+name|vm_mm
+argument_list|)
+expr_stmt|;
+name|kfree
+argument_list|(
+name|vmap
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|struct
 name|vm_area_struct
 modifier|*
@@ -2274,7 +2301,7 @@ operator|&
 name|linux_vma_lock
 argument_list|)
 expr_stmt|;
-name|kfree
+name|linux_cdev_handle_free
 argument_list|(
 name|vmap
 argument_list|)
@@ -2286,26 +2313,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * The same VM object might be shared by multiple processes 	 * and the mm_struct is usually freed when a process exits. 	 * 	 * The atomic reference below makes sure the mm_struct is 	 * available as long as the vmap is in the linux_vma_head. 	 */
-if|if
-condition|(
-name|atomic_inc_not_zero
-argument_list|(
-operator|&
-name|vmap
-operator|->
-name|vm_mm
-operator|->
-name|mm_users
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"linuxkpi: mm_users is zero\n"
-argument_list|)
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -2341,13 +2348,6 @@ modifier|*
 name|vmap
 parameter_list|)
 block|{
-if|if
-condition|(
-name|vmap
-operator|==
-name|NULL
-condition|)
-return|return;
 name|rw_wlock
 argument_list|(
 operator|&
@@ -2368,19 +2368,6 @@ name|rw_wunlock
 argument_list|(
 operator|&
 name|linux_vma_lock
-argument_list|)
-expr_stmt|;
-comment|/* Drop reference on mm_struct */
-name|mmput
-argument_list|(
-name|vmap
-operator|->
-name|vm_mm
-argument_list|)
-expr_stmt|;
-name|kfree
-argument_list|(
-name|vmap
 argument_list|)
 expr_stmt|;
 block|}
@@ -2528,6 +2515,12 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Remove handle before calling close operation to prevent 	 * other threads from reusing the handle pointer. 	 */
+name|linux_cdev_handle_remove
+argument_list|(
+name|vmap
+argument_list|)
+expr_stmt|;
 name|down_write
 argument_list|(
 operator|&
@@ -2570,7 +2563,7 @@ operator|->
 name|mmap_sem
 argument_list|)
 expr_stmt|;
-name|linux_cdev_handle_remove
+name|linux_cdev_handle_free
 argument_list|(
 name|vmap
 argument_list|)
@@ -4254,6 +4247,11 @@ modifier|*
 name|vmap
 decl_stmt|;
 name|struct
+name|mm_struct
+modifier|*
+name|mm
+decl_stmt|;
+name|struct
 name|linux_file
 modifier|*
 name|filp
@@ -4349,6 +4347,30 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The same VM object might be shared by multiple processes 	 * and the mm_struct is usually freed when a process exits. 	 * 	 * The atomic reference below makes sure the mm_struct is 	 * available as long as the vmap is in the linux_vma_head. 	 */
+name|mm
+operator|=
+name|current
+operator|->
+name|mm
+expr_stmt|;
+if|if
+condition|(
+name|atomic_inc_not_zero
+argument_list|(
+operator|&
+name|mm
+operator|->
+name|mm_users
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|vmap
 operator|=
 name|kzalloc
@@ -4415,8 +4437,6 @@ name|vmap
 operator|->
 name|vm_mm
 operator|=
-name|current
-operator|->
 name|mm
 expr_stmt|;
 if|if
@@ -4474,7 +4494,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|kfree
+name|linux_cdev_handle_free
 argument_list|(
 name|vmap
 argument_list|)
@@ -4540,7 +4560,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|kfree
+name|linux_cdev_handle_free
 argument_list|(
 name|vmap
 argument_list|)
@@ -4599,6 +4619,11 @@ name|NULL
 condition|)
 block|{
 name|linux_cdev_handle_remove
+argument_list|(
+name|vmap
+argument_list|)
+expr_stmt|;
+name|linux_cdev_handle_free
 argument_list|(
 name|vmap
 argument_list|)
@@ -4666,7 +4691,7 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-name|kfree
+name|linux_cdev_handle_free
 argument_list|(
 name|vmap
 argument_list|)
