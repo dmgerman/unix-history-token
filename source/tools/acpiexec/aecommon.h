@@ -236,13 +236,43 @@ parameter_list|)
 value|TEST_OUTPUT_LEVEL(lvl) {\                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
+begin_define
+define|#
+directive|define
+name|AE_PREFIX
+value|"ACPI Exec: "
+end_define
+
 begin_function_decl
 name|void
 name|ACPI_SYSTEM_XFACE
-name|AeCtrlCHandler
+name|AeSignalHandler
 parameter_list|(
 name|int
 name|Sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AeExceptionHandler
+parameter_list|(
+name|ACPI_STATUS
+name|AmlStatus
+parameter_list|,
+name|ACPI_NAME
+name|Name
+parameter_list|,
+name|UINT16
+name|Opcode
+parameter_list|,
+name|UINT32
+name|AmlOffset
+parameter_list|,
+name|void
+modifier|*
+name|Context
 parameter_list|)
 function_decl|;
 end_function_decl

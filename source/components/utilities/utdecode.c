@@ -1111,11 +1111,15 @@ comment|/* 0B */
 literal|"System Locality Update"
 block|,
 comment|/* 0C */
-literal|"Shutdown Request"
+literal|"Reserved (was previously Shutdown Request)"
 block|,
 comment|/* Reserved in ACPI 6.0 */
 comment|/* 0D */
 literal|"System Resource Affinity Update"
+block|,
+comment|/* 0E */
+literal|"Heterogeneous Memory Attributes Update"
+comment|/* ACPI 6.2 */
 block|}
 decl_stmt|;
 end_decl_stmt

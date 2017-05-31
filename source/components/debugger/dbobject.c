@@ -1029,7 +1029,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nInitialized Local Variables for method [%4.4s]:\n"
+literal|"\nInitialized Local Variables for Method [%4.4s]:\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1088,7 +1088,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"No Local Variables are initialized for method [%4.4s]\n"
+literal|"No Local Variables are initialized for Method [%4.4s]\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1224,7 +1224,9 @@ argument_list|(
 name|Node
 argument_list|)
 argument_list|,
-name|ObjDesc
+name|Node
+operator|->
+name|Object
 operator|->
 name|Method
 operator|.

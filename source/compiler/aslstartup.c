@@ -455,6 +455,16 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Binary file does not contain a valid ACPI table\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|Type
 operator|=
 name|ASL_INPUT_TYPE_BINARY
@@ -756,7 +766,7 @@ expr_stmt|;
 comment|/*      * AML Disassembly (Optional)      */
 if|if
 condition|(
-name|Gbl_DisasmFlag
+name|AcpiGbl_DisasmFlag
 condition|)
 block|{
 name|Status
@@ -1056,6 +1066,10 @@ index|]
 operator|.
 name|Filename
 expr_stmt|;
+name|AcpiGbl_DisasmFlag
+operator|=
+name|TRUE
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -1092,7 +1106,7 @@ name|Gbl_DoCompile
 operator|=
 name|FALSE
 expr_stmt|;
-name|Gbl_DisasmFlag
+name|AcpiGbl_DisasmFlag
 operator|=
 name|TRUE
 expr_stmt|;

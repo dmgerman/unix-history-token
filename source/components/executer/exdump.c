@@ -3067,7 +3067,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"%*s[%u] %p "
+literal|"%*s[%u] %p Refs=%u "
 operator|,
 name|Depth
 operator|,
@@ -3076,6 +3076,12 @@ operator|,
 name|Depth
 operator|,
 name|ObjDesc
+operator|,
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3087,9 +3093,15 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"%p "
+literal|"%p Refs=%u "
 operator|,
 name|ObjDesc
+operator|,
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3202,9 +3214,22 @@ break|break;
 case|case
 name|ACPI_REFCLASS_NAME
 case|:
+name|AcpiUtRepairName
+argument_list|(
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
+argument_list|)
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"- [%4.4s]\n"
+literal|"- [%4.4s] (Node %p)\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -3215,6 +3240,12 @@ operator|->
 name|Name
 operator|.
 name|Ascii
+argument_list|,
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Node
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4108,7 +4139,12 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" Could not convert name to pathname\n"
+literal|" Could not convert name to pathname: %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4116,7 +4152,18 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s\n"
+literal|"%s: %s\n"
+argument_list|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Node
+operator|->
+name|Type
+argument_list|)
 argument_list|,
 operator|(
 name|char
@@ -4485,18 +4532,12 @@ name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Object Reference] Type [%s] %2.2X"
+literal|"[Object Reference] Class [%s]"
 argument_list|,
 name|AcpiUtGetReferenceName
 argument_list|(
 name|ObjDesc
 argument_list|)
-argument_list|,
-name|ObjDesc
-operator|->
-name|Reference
-operator|.
-name|Class
 argument_list|)
 expr_stmt|;
 name|AcpiExDumpReferenceObj

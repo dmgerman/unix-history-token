@@ -24,7 +24,7 @@ comment|/* acpisrc:StructDefs -- for acpisrc conversion */
 end_comment
 
 begin_comment
-comment|/*  * ACPI_MACHINE_WIDTH must be specified in an OS- or compiler-dependent header  * and must be either 32 or 64. 16-bit ACPICA is no longer supported, as of  * 12/2006.  */
+comment|/*  * ACPI_MACHINE_WIDTH must be specified in an OS- or compiler-dependent  * header and must be either 32 or 64. 16-bit ACPICA is no longer  * supported, as of 12/2006.  */
 end_comment
 
 begin_ifndef
@@ -100,7 +100,7 @@ value|0x7F
 end_define
 
 begin_comment
-comment|/*  * Architecture-specific ACPICA Subsystem Data Types  *  * The goal of these types is to provide source code portability across  * 16-bit, 32-bit, and 64-bit targets.  *  * 1) The following types are of fixed size for all targets (16/32/64):  *  * BOOLEAN      Logical boolean  *  * UINT8        8-bit  (1 byte) unsigned value  * UINT16       16-bit (2 byte) unsigned value  * UINT32       32-bit (4 byte) unsigned value  * UINT64       64-bit (8 byte) unsigned value  *  * INT16        16-bit (2 byte) signed value  * INT32        32-bit (4 byte) signed value  * INT64        64-bit (8 byte) signed value  *  * COMPILER_DEPENDENT_UINT64/INT64 - These types are defined in the  * compiler-dependent header(s) and were introduced because there is no common  * 64-bit integer type across the various compilation models, as shown in  * the table below.  *  * Datatype  LP64 ILP64 LLP64 ILP32 LP32 16bit  * char      8    8     8     8     8    8  * short     16   16    16    16    16   16  * _int32         32  * int       32   64    32    32    16   16  * long      64   64    32    32    32   32  * long long            64    64  * pointer   64   64    64    32    32   32  *  * Note: ILP64 and LP32 are currently not supported.  *  *  * 2) These types represent the native word size of the target mode of the  * processor, and may be 16-bit, 32-bit, or 64-bit as required. They are  * usually used for memory allocation, efficient loop counters, and array  * indexes. The types are similar to the size_t type in the C library and are  * required because there is no C type that consistently represents the native  * data width. ACPI_SIZE is needed because there is no guarantee that a  * kernel-level C library is present.  *  * ACPI_SIZE        16/32/64-bit unsigned value  * ACPI_NATIVE_INT  16/32/64-bit signed value  */
+comment|/*  * Architecture-specific ACPICA Subsystem Data Types  *  * The goal of these types is to provide source code portability across  * 16-bit, 32-bit, and 64-bit targets.  *  * 1) The following types are of fixed size for all targets (16/32/64):  *  * BOOLEAN      Logical boolean  *  * UINT8        8-bit  (1 byte) unsigned value  * UINT16       16-bit (2 byte) unsigned value  * UINT32       32-bit (4 byte) unsigned value  * UINT64       64-bit (8 byte) unsigned value  *  * INT16        16-bit (2 byte) signed value  * INT32        32-bit (4 byte) signed value  * INT64        64-bit (8 byte) signed value  *  * COMPILER_DEPENDENT_UINT64/INT64 - These types are defined in the  * compiler-dependent header(s) and were introduced because there is no  * common 64-bit integer type across the various compilation models, as  * shown in the table below.  *  * Datatype  LP64 ILP64 LLP64 ILP32 LP32 16bit  * char      8    8     8     8     8    8  * short     16   16    16    16    16   16  * _int32         32  * int       32   64    32    32    16   16  * long      64   64    32    32    32   32  * long long            64    64  * pointer   64   64    64    32    32   32  *  * Note: ILP64 and LP32 are currently not supported.  *  *  * 2) These types represent the native word size of the target mode of the  * processor, and may be 16-bit, 32-bit, or 64-bit as required. They are  * usually used for memory allocation, efficient loop counters, and array  * indexes. The types are similar to the size_t type in the C library and  * are required because there is no C type that consistently represents the  * native data width. ACPI_SIZE is needed because there is no guarantee  * that a kernel-level C library is present.  *  * ACPI_SIZE        16/32/64-bit unsigned value  * ACPI_NATIVE_INT  16/32/64-bit signed value  */
 end_comment
 
 begin_comment
@@ -273,7 +273,7 @@ comment|/* Has native 64-bit integer support */
 end_comment
 
 begin_comment
-comment|/*  * In the case of the Itanium Processor Family (IPF), the hardware does not  * support misaligned memory transfers. Set the MISALIGNMENT_NOT_SUPPORTED flag  * to indicate that special precautions must be taken to avoid alignment faults.  * (IA64 or ia64 is currently used by existing compilers to indicate IPF.)  *  * Note: EM64T and other X86-64 processors support misaligned transfers,  * so there is no need to define this flag.  */
+comment|/*  * In the case of the Itanium Processor Family (IPF), the hardware does not  * support misaligned memory transfers. Set the MISALIGNMENT_NOT_SUPPORTED  * flag to indicate that special precautions must be taken to avoid alignment  * faults. (IA64 or ia64 is currently used by existing compilers to indicate  * IPF.)  *  * Note: EM64T and other X86-64 processors support misaligned transfers,  * so there is no need to define this flag.  */
 end_comment
 
 begin_if
@@ -703,7 +703,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Some compilers complain about unused variables. Sometimes we don't want to  * use all the variables (for example, _AcpiModuleName). This allows us  * to tell the compiler in a per-variable manner that a variable  * is unused  */
+comment|/*  * Some compilers complain about unused variables. Sometimes we don't want  * to use all the variables (for example, _AcpiModuleName). This allows us  * to tell the compiler in a per-variable manner that a variable  * is unused  */
 end_comment
 
 begin_ifndef
@@ -724,7 +724,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * All ACPICA external functions that are available to the rest of the kernel  * are tagged with thes macros which can be defined as appropriate for the host.  *  * Notes:  * ACPI_EXPORT_SYMBOL_INIT is used for initialization and termination  * interfaces that may need special processing.  * ACPI_EXPORT_SYMBOL is used for all other public external functions.  */
+comment|/*  * All ACPICA external functions that are available to the rest of the  * kernel are tagged with these macros which can be defined as appropriate  * for the host.  *  * Notes:  * ACPI_EXPORT_SYMBOL_INIT is used for initialization and termination  * interfaces that may need special processing.  * ACPI_EXPORT_SYMBOL is used for all other public external functions.  */
 end_comment
 
 begin_ifndef
@@ -970,7 +970,7 @@ comment|/* ACPI_NO_MEM_ALLOCATIONS */
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * ACPI Specification constants (Do not change unless the specification changes)  *  *****************************************************************************/
+comment|/******************************************************************************  *  * ACPI Specification constants (Do not change unless the specification  * changes)  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1384,7 +1384,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * Obsolete: Acpi integer width. In ACPI version 1 (1996), integers are 32 bits.  * In ACPI version 2 (2000) and later, integers are 64 bits. Note that this  * pertains to the ACPI integer type only, not to other integers used in the  * implementation of the ACPICA subsystem.  *  * 01/2010: This type is obsolete and has been removed from the entire ACPICA  * code base. It remains here for compatibility with device drivers that use  * the type. However, it will be removed in the future.  */
+comment|/*  * Obsolete: Acpi integer width. In ACPI version 1 (1996), integers are  * 32 bits. In ACPI version 2 (2000) and later, integers are max 64 bits.  * Note that this pertains to the ACPI integer type only, not to other  * integers used in the implementation of the ACPICA subsystem.  *  * 01/2010: This type is obsolete and has been removed from the entire ACPICA  * code base. It remains here for compatibility with device drivers that use  * the type. However, it will be removed in the future.  */
 end_comment
 
 begin_typedef
@@ -2110,8 +2110,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_NOTIFY_MEMORY_UPDATE
+value|(UINT8) 0x0E
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_GENERIC_NOTIFY_MAX
-value|0x0D
+value|0x0E
 end_define
 
 begin_define
@@ -2294,7 +2301,7 @@ value|(ACPI_TYPE_EXTERNAL_MAX + 1)
 end_define
 
 begin_comment
-comment|/*  * These are object types that do not map directly to the ACPI  * ObjectType() operator. They are used for various internal purposes only.  * If new predefined ACPI_TYPEs are added (via the ACPI specification), these  * internal types must move upwards. (There is code that depends on these  * values being contiguous with the external types above.)  */
+comment|/*  * These are object types that do not map directly to the ACPI  * ObjectType() operator. They are used for various internal purposes  * only. If new predefined ACPI_TYPEs are added (via the ACPI  * specification), these internal types must move upwards. (There  * is code that depends on these values being contiguous with the  * external types above.)  */
 end_comment
 
 begin_define
@@ -2632,7 +2639,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * GPE info flags - Per GPE  * +---+-+-+-+---+  * |7:6|5|4|3|2:0|  * +---+-+-+-+---+  *   |  | | |  |  *   |  | | |  +-- Type of dispatch:to method, handler, notify, or none  *   |  | | +----- Interrupt type: edge or level triggered  *   |  | +------- Is a Wake GPE  *   |  +--------- Is GPE masked by the software GPE masking machanism  *   +------------<Reserved>  */
+comment|/*  * GPE info flags - Per GPE  * +---+-+-+-+---+  * |7:6|5|4|3|2:0|  * +---+-+-+-+---+  *   |  | | |  |  *   |  | | |  +-- Type of dispatch:to method, handler, notify, or none  *   |  | | +----- Interrupt type: edge or level triggered  *   |  | +------- Is a Wake GPE  *   |  +--------- Is GPE masked by the software GPE masking mechanism  *   +------------<Reserved>  */
 end_comment
 
 begin_define
@@ -3185,7 +3192,7 @@ comment|/*  * External ACPI object definition  */
 end_comment
 
 begin_comment
-comment|/*  * Note: Type == ACPI_TYPE_ANY (0) is used to indicate a NULL package element  * or an unresolved named reference.  */
+comment|/*  * Note: Type == ACPI_TYPE_ANY (0) is used to indicate a NULL package  * element or an unresolved named reference.  */
 end_comment
 
 begin_typedef
@@ -4137,7 +4144,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Structure returned from AcpiGetObjectInfo.  * Optimized for both 32- and 64-bit builds  */
+comment|/*  * Structure returned from AcpiGetObjectInfo.  * Optimized for both 32-bit and 64-bit builds.  */
 end_comment
 
 begin_typedef

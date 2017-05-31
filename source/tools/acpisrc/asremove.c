@@ -932,6 +932,10 @@ name|char
 modifier|*
 name|SubBuffer
 decl_stmt|;
+name|char
+modifier|*
+name|SubSubString
+decl_stmt|;
 name|int
 name|NestLevel
 decl_stmt|;
@@ -960,6 +964,72 @@ expr_stmt|;
 if|if
 condition|(
 name|SubString
+condition|)
+block|{
+name|SubSubString
+operator|=
+name|SubString
+operator|+
+name|strlen
+argument_list|(
+name|Keyword
+argument_list|)
+expr_stmt|;
+comment|/* skip spaces */
+while|while
+condition|(
+name|strchr
+argument_list|(
+literal|" \t\r\n"
+argument_list|,
+operator|*
+name|SubSubString
+argument_list|)
+condition|)
+block|{
+name|SubSubString
+operator|++
+expr_stmt|;
+block|}
+comment|/* skip type name */
+while|while
+condition|(
+operator|!
+name|strchr
+argument_list|(
+literal|" \t\r\n"
+argument_list|,
+operator|*
+name|SubSubString
+argument_list|)
+condition|)
+block|{
+name|SubSubString
+operator|++
+expr_stmt|;
+block|}
+comment|/* skip spaces */
+while|while
+condition|(
+name|strchr
+argument_list|(
+literal|" \t\r\n"
+argument_list|,
+operator|*
+name|SubSubString
+argument_list|)
+condition|)
+block|{
+name|SubSubString
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|SubSubString
+operator|==
+literal|'{'
 condition|)
 block|{
 comment|/* Remove the typedef itself */
@@ -1097,6 +1167,26 @@ argument_list|,
 name|SubBuffer
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Skip the entire definition */
+name|SubString
+operator|=
+name|strchr
+argument_list|(
+name|SubString
+argument_list|,
+literal|';'
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+name|SubBuffer
+operator|=
+name|SubString
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}

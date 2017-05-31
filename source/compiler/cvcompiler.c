@@ -134,20 +134,7 @@ argument_list|,
 name|CommentString
 argument_list|)
 expr_stmt|;
-comment|/*          * Determine whether if this comment spans multiple lines.          * If so, break apart the comment by line so that it can be          * properly indented.          */
-if|if
-condition|(
-name|strchr
-argument_list|(
-name|CommentString
-argument_list|,
-literal|'\n'
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/*              * Get the first token. The for loop pads subsequent lines              * for comments similar to the style of this comment.              */
+comment|/*          * Determine whether if this comment spans multiple lines. If so,          * break apart the comment by storing each line in a different node          * within the comment list. This allows the disassembler to          * properly indent a multi-line comment.          */
 name|LineToken
 operator|=
 name|strtok
@@ -157,6 +144,11 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|LineToken
+condition|)
+block|{
 name|FinalLineToken
 operator|=
 name|UtStringCacheCalloc
@@ -1288,6 +1280,14 @@ name|UINT8
 operator|)
 name|AML_COMMENT_OP
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|CommentToPrint
+condition|)
+block|{
+return|return;
+block|}
 name|CgLocalWriteAmlData
 argument_list|(
 name|Op
@@ -1396,6 +1396,11 @@ argument_list|,
 name|FILE_SUFFIX_DISASSEMBLY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NewFilename
+condition|)
+block|{
 name|CvDbgPrint
 argument_list|(
 literal|"Writing file comment, \"%s\" for %s\n"
@@ -1409,6 +1414,7 @@ operator|.
 name|ParseOpName
 argument_list|)
 expr_stmt|;
+block|}
 name|CgWriteOneAmlComment
 argument_list|(
 name|Op
@@ -1708,10 +1714,6 @@ name|NewCommentNode
 decl_stmt|;
 name|NewCommentNode
 operator|=
-operator|(
-name|ACPI_COMMENT_NODE
-operator|*
-operator|)
 name|UtLocalCalloc
 argument_list|(
 sizeof|sizeof
@@ -1727,7 +1729,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|NewCommentNode
+operator|)
 return|;
 block|}
 end_function
@@ -2091,9 +2095,14 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
 name|ToAdd
 condition|)
 block|{
+return|return
+name|InlineComment
+return|;
+block|}
 name|Size
 operator|=
 name|strlen
@@ -2101,7 +2110,6 @@ argument_list|(
 name|ToAdd
 argument_list|)
 expr_stmt|;
-block|}
 name|Size
 operator|+=
 name|strlen

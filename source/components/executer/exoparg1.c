@@ -2337,7 +2337,40 @@ operator|==
 name|ACPI_DESC_TYPE_NAMED
 condition|)
 block|{
-comment|/*              * This is a DerefOf (ObjectReference)              * Get the actual object from the Node (This is the dereference).              * This case may only happen when a LocalX or ArgX is              * dereferenced above.              */
+comment|/*              * This is a DerefOf (ObjectReference)              * Get the actual object from the Node (This is the dereference).              * This case may only happen when a LocalX or ArgX is              * dereferenced above, or for references to device and              * thermal objects.              */
+switch|switch
+condition|(
+operator|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|Operand
+index|[
+literal|0
+index|]
+operator|)
+operator|->
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_DEVICE
+case|:
+case|case
+name|ACPI_TYPE_THERMAL
+case|:
+comment|/* These types have no node subobject, return the NS node */
+name|ReturnDesc
+operator|=
+name|Operand
+index|[
+literal|0
+index|]
+expr_stmt|;
+break|break;
+default|default:
+comment|/* For most types, get the object attached to the node */
 name|ReturnDesc
 operator|=
 name|AcpiNsGetAttachedObject
@@ -2357,6 +2390,8 @@ argument_list|(
 name|ReturnDesc
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 block|}
 else|else
 block|{

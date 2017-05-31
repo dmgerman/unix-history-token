@@ -1185,7 +1185,14 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|AeCtrlCHandler
+name|AeSignalHandler
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGSEGV
+argument_list|,
+name|AeSignalHandler
 argument_list|)
 expr_stmt|;
 comment|/* Init debug globals */

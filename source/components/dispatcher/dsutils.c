@@ -1497,31 +1497,6 @@ name|ACPI_PARSEOP_IN_STACK
 operator|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_DISPATCH
-operator|,
-literal|"Argument previously created, already stacked\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|AcpiDbDisplayArgumentObject
-argument_list|(
-name|WalkState
-operator|->
-name|Operands
-index|[
-name|WalkState
-operator|->
-name|NumOperands
-operator|-
-literal|1
-index|]
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
 comment|/*              * Use value that was already previously returned              * by the evaluation of this argument              */
 name|Status
 operator|=

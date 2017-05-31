@@ -229,7 +229,7 @@ name|AcpiGbl_Optind
 index|]
 operator|&&
 operator|!
-name|Gbl_DisasmFlag
+name|AcpiGbl_DisasmFlag
 condition|)
 block|{
 name|printf
@@ -806,7 +806,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|Gbl_DisasmFlag
+name|AcpiGbl_DisasmFlag
 operator|=
 name|TRUE
 expr_stmt|;
@@ -998,6 +998,14 @@ block|{
 case|case
 literal|'^'
 case|:
+name|printf
+argument_list|(
+name|ACPI_COMMON_SIGNON
+argument_list|(
+name|ASL_COMPILER_NAME
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|Usage
 argument_list|()
 expr_stmt|;

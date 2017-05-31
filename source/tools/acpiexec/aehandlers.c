@@ -105,30 +105,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|ACPI_STATUS
-name|AeExceptionHandler
-parameter_list|(
-name|ACPI_STATUS
-name|AmlStatus
-parameter_list|,
-name|ACPI_NAME
-name|Name
-parameter_list|,
-name|UINT16
-name|Opcode
-parameter_list|,
-name|UINT32
-name|AmlOffset
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|ACPI_STATUS
 name|AeTableHandler
 parameter_list|(
 name|UINT32
@@ -254,89 +230,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|UINT32
-name|SigintCount
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|AE_DEBUG_REGIONS
 name|AeRegions
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeCtrlCHandler  *  * PARAMETERS:  Sig  *  * RETURN:      none  *  * DESCRIPTION: Control-C handler. Abort running control method if any.  *  *****************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|ACPI_SYSTEM_XFACE
-name|AeCtrlCHandler
-parameter_list|(
-name|int
-name|Sig
-parameter_list|)
-block|{
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|SigintCount
-operator|++
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"Caught a ctrl-c (#%u)\n\n"
-argument_list|,
-name|SigintCount
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|AcpiGbl_MethodExecuting
-condition|)
-block|{
-name|AcpiGbl_AbortMethod
-operator|=
-name|TRUE
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|AeCtrlCHandler
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|SigintCount
-operator|<
-literal|10
-condition|)
-block|{
-return|return;
-block|}
-block|}
-operator|(
-name|void
-operator|)
-name|AcpiOsTerminate
-argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AeNotifyHandler(s)  *  * PARAMETERS:  Standard notify handler parameters  *  * RETURN:      Status  *  * DESCRIPTION: Notify handlers for AcpiExec utility. Used by the ASL  *              test suite(s) to communicate errors and other information to  *              this utility via the Notify() operator. Tests notify handling  *              and multiple notify handler support.  *  *****************************************************************************/
@@ -441,13 +338,14 @@ block|{
 if|#
 directive|if
 literal|0
-block|case 0:          printf ("[AcpiExec] Method Error 0x%X: Results not equal\n", Value);         if (AcpiGbl_DebugFile)         {             AcpiOsPrintf ("[AcpiExec] Method Error: Results not equal\n");         }         break;      case 1:          printf ("[AcpiExec] Method Error: Incorrect numeric result\n");         if (AcpiGbl_DebugFile)         {             AcpiOsPrintf ("[AcpiExec] Method Error: Incorrect numeric result\n");         }         break;      case 2:          printf ("[AcpiExec] Method Error: An operand was overwritten\n");         if (AcpiGbl_DebugFile)         {             AcpiOsPrintf ("[AcpiExec] Method Error: An operand was overwritten\n");         }         break;
+block|case 0:          printf (AE_PREFIX             "Method Error 0x%X: Results not equal\n", Value);         if (AcpiGbl_DebugFile)         {             AcpiOsPrintf (AE_PREFIX                 "Method Error: Results not equal\n");         }         break;      case 1:          printf (AE_PREFIX             "Method Error: Incorrect numeric result\n");         if (AcpiGbl_DebugFile)         {             AcpiOsPrintf (AE_PREFIX                 "Method Error: Incorrect numeric result\n");         }         break;      case 2:          printf (AE_PREFIX             "Method Error: An operand was overwritten\n");         if (AcpiGbl_DebugFile)         {             AcpiOsPrintf (AE_PREFIX                 "Method Error: An operand was overwritten\n");         }         break;
 endif|#
 directive|endif
 default|default:
 name|printf
 argument_list|(
-literal|"[AcpiExec] Handler %u: Received a %s Notify on [%4.4s] %p Value 0x%2.2X (%s)\n"
+name|AE_PREFIX
+literal|"Handler %u: Received a %s Notify on [%4.4s] %p Value 0x%2.2X (%s)\n"
 argument_list|,
 name|HandlerId
 argument_list|,
@@ -477,7 +375,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[AcpiExec] Handler %u: Received a %s notify, Value 0x%2.2X\n"
+name|AE_PREFIX
+literal|"Handler %u: Received a %s notify, Value 0x%2.2X\n"
 argument_list|,
 name|HandlerId
 argument_list|,
@@ -528,7 +427,8 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"[AcpiExec] Global:    Received a System Notify on [%4.4s] %p Value 0x%2.2X (%s)\n"
+name|AE_PREFIX
+literal|"Global:    Received a System Notify on [%4.4s] %p Value 0x%2.2X (%s)\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -554,7 +454,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[AcpiExec] Global:    Received a System Notify, Value 0x%2.2X\n"
+name|AE_PREFIX
+literal|"Global:    Received a System Notify, Value 0x%2.2X\n"
 argument_list|,
 name|Value
 argument_list|)
@@ -599,7 +500,8 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"[AcpiExec] Global:    Received a Device Notify on [%4.4s] %p Value 0x%2.2X (%s)\n"
+name|AE_PREFIX
+literal|"Global:    Received a Device Notify on [%4.4s] %p Value 0x%2.2X (%s)\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -625,7 +527,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[AcpiExec] Global:    Received a Device Notify, Value 0x%2.2X\n"
+name|AE_PREFIX
+literal|"Global:    Received a Device Notify, Value 0x%2.2X\n"
 argument_list|,
 name|Value
 argument_list|)
@@ -645,331 +548,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeExceptionHandler  *  * PARAMETERS:  Standard exception handler parameters  *  * RETURN:      Status  *  * DESCRIPTION: System exception handler for AcpiExec utility.  *  *****************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|ACPI_STATUS
-name|AeExceptionHandler
-parameter_list|(
-name|ACPI_STATUS
-name|AmlStatus
-parameter_list|,
-name|ACPI_NAME
-name|Name
-parameter_list|,
-name|UINT16
-name|Opcode
-parameter_list|,
-name|UINT32
-name|AmlOffset
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|)
-block|{
-name|ACPI_STATUS
-name|NewAmlStatus
-init|=
-name|AmlStatus
-decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|ACPI_BUFFER
-name|ReturnObj
-decl_stmt|;
-name|ACPI_OBJECT_LIST
-name|ArgList
-decl_stmt|;
-name|ACPI_OBJECT
-name|Arg
-index|[
-literal|3
-index|]
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|Exception
-decl_stmt|;
-name|Exception
-operator|=
-name|AcpiFormatException
-argument_list|(
-name|AmlStatus
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"[AcpiExec] Exception %s during execution "
-argument_list|,
-name|Exception
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Name
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"of method [%4.4s]"
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|Name
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"at module level (table load)"
-argument_list|)
-expr_stmt|;
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|" Opcode [%s] @%X\n"
-argument_list|,
-name|AcpiPsGetOpcodeName
-argument_list|(
-name|Opcode
-argument_list|)
-argument_list|,
-name|AmlOffset
-argument_list|)
-expr_stmt|;
-comment|/*      * Invoke the _ERR method if present      *      * Setup parameter object      */
-name|ArgList
-operator|.
-name|Count
-operator|=
-literal|3
-expr_stmt|;
-name|ArgList
-operator|.
-name|Pointer
-operator|=
-name|Arg
-expr_stmt|;
-name|Arg
-index|[
-literal|0
-index|]
-operator|.
-name|Type
-operator|=
-name|ACPI_TYPE_INTEGER
-expr_stmt|;
-name|Arg
-index|[
-literal|0
-index|]
-operator|.
-name|Integer
-operator|.
-name|Value
-operator|=
-name|AmlStatus
-expr_stmt|;
-name|Arg
-index|[
-literal|1
-index|]
-operator|.
-name|Type
-operator|=
-name|ACPI_TYPE_STRING
-expr_stmt|;
-name|Arg
-index|[
-literal|1
-index|]
-operator|.
-name|String
-operator|.
-name|Pointer
-operator|=
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
-name|Exception
-argument_list|)
-expr_stmt|;
-name|Arg
-index|[
-literal|1
-index|]
-operator|.
-name|String
-operator|.
-name|Length
-operator|=
-name|strlen
-argument_list|(
-name|Exception
-argument_list|)
-expr_stmt|;
-name|Arg
-index|[
-literal|2
-index|]
-operator|.
-name|Type
-operator|=
-name|ACPI_TYPE_INTEGER
-expr_stmt|;
-name|Arg
-index|[
-literal|2
-index|]
-operator|.
-name|Integer
-operator|.
-name|Value
-operator|=
-name|AcpiOsGetThreadId
-argument_list|()
-expr_stmt|;
-comment|/* Setup return buffer */
-name|ReturnObj
-operator|.
-name|Pointer
-operator|=
-name|NULL
-expr_stmt|;
-name|ReturnObj
-operator|.
-name|Length
-operator|=
-name|ACPI_ALLOCATE_BUFFER
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiEvaluateObject
-argument_list|(
-name|NULL
-argument_list|,
-literal|"\\_ERR"
-argument_list|,
-operator|&
-name|ArgList
-argument_list|,
-operator|&
-name|ReturnObj
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|ReturnObj
-operator|.
-name|Pointer
-condition|)
-block|{
-comment|/* Override original status */
-name|NewAmlStatus
-operator|=
-call|(
-name|ACPI_STATUS
-call|)
-argument_list|(
-operator|(
-name|ACPI_OBJECT
-operator|*
-operator|)
-name|ReturnObj
-operator|.
-name|Pointer
-argument_list|)
-operator|->
-name|Integer
-operator|.
-name|Value
-expr_stmt|;
-comment|/* Free a buffer created via ACPI_ALLOCATE_BUFFER */
-name|AcpiOsFree
-argument_list|(
-name|ReturnObj
-operator|.
-name|Pointer
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|Status
-operator|!=
-name|AE_NOT_FOUND
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"[AcpiExec] Could not execute _ERR method, %s\n"
-argument_list|,
-name|AcpiFormatException
-argument_list|(
-name|Status
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Global override */
-if|if
-condition|(
-name|AcpiGbl_IgnoreErrors
-condition|)
-block|{
-name|NewAmlStatus
-operator|=
-name|AE_OK
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|NewAmlStatus
-operator|!=
-name|AmlStatus
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"[AcpiExec] Exception override, new status %s\n\n"
-argument_list|,
-name|AcpiFormatException
-argument_list|(
-name|NewAmlStatus
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|NewAmlStatus
-operator|)
-return|;
 block|}
 end_function
 
@@ -1039,7 +617,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[AcpiExec] Table Event %s, [%4.4s] %p\n"
+name|AE_PREFIX
+literal|"Table Event %s, [%4.4s] %p\n"
 argument_list|,
 name|TableEvents
 index|[
@@ -1101,7 +680,8 @@ name|GpeDevice
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"[AcpiExec] GPE Handler received GPE %02X (GPE block %4.4s)\n"
+name|AE_PREFIX
+literal|"GPE Handler received GPE %02X (GPE block %4.4s)\n"
 argument_list|,
 name|GpeNumber
 argument_list|,
@@ -1180,7 +760,8 @@ break|break;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"[AcpiExec] Global Event Handler received: Type %s Number %.2X Dev %p\n"
+name|AE_PREFIX
+literal|"Global Event Handler received: Type %s Number %.2X Dev %p\n"
 argument_list|,
 name|TypeName
 argument_list|,
@@ -1222,6 +803,7 @@ argument_list|)
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
+name|AE_PREFIX
 literal|"Received an attached data deletion (1) on %4.4s\n"
 argument_list|,
 name|Node
@@ -1264,6 +846,7 @@ argument_list|)
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
+name|AE_PREFIX
 literal|"Received an attached data deletion (2) on %4.4s\n"
 argument_list|,
 name|Node
@@ -1367,7 +950,8 @@ parameter_list|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[AcpiExec] Received an SCI at handler\n"
+name|AE_PREFIX
+literal|"Received an SCI at handler\n"
 argument_list|)
 expr_stmt|;
 return|return

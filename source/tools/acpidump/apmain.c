@@ -206,14 +206,7 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-x"
 argument_list|,
-literal|"Do not use but dump XSDT"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-x -x"
-argument_list|,
-literal|"Do not use or dump XSDT"
+literal|"Use RSDT instead of XSDT"
 argument_list|)
 expr_stmt|;
 name|ACPI_USAGE_TEXT

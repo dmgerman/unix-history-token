@@ -442,7 +442,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDmConvertResourceIndexes
+name|AcpiDmConvertParseObjects
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*

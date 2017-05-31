@@ -399,17 +399,6 @@ name|Latest_Parse_Node
 operator|=
 name|Op
 expr_stmt|;
-if|if
-condition|(
-name|Gbl_CommentState
-operator|.
-name|Latest_Parse_Node
-operator|->
-name|Asl
-operator|.
-name|ParseOpName
-condition|)
-block|{
 name|CvDbgPrint
 argument_list|(
 literal|"trallocatenode=Set latest parse node to this node.\n"
@@ -449,7 +438,6 @@ argument_list|(
 literal|"    file has been changed!\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/*          * if this parse op's syntax uses () and {} (i.e. Package(1){0x00}) then          * set a flag in the comment state. This facilitates paring comments for          * these types of opcodes.          */
 if|if
@@ -3691,6 +3679,8 @@ comment|/*      * Converter: if TrLinkChildNode is called to link a method call,
 if|if
 condition|(
 name|Gbl_CaptureComments
+operator|&&
+name|Op1
 condition|)
 block|{
 if|if

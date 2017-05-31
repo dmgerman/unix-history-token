@@ -84,13 +84,6 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-ca<file>"
-argument_list|,
-literal|"convert a given ASL file to ASL+ (retains comments)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-v"
 argument_list|,
 literal|"Display compiler version"
@@ -253,7 +246,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nAML Code Generation (*.aml):\n"
+literal|"\nAML Bytecode Generation (*.aml):\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -354,7 +347,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nFirmware Support - C Output:\n"
+literal|"\nFirmware Support - C Text Output:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -387,7 +380,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nFirmware Support - Assembler Output:\n"
+literal|"\nFirmware Support - Assembler Text Output:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -413,7 +406,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nFirmware Support - ASL Output:\n"
+literal|"\nFirmware Support - ASL Text Output:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -421,6 +414,25 @@ argument_list|(
 literal|"-ts"
 argument_list|,
 literal|"Create hex AML table in ASL (Buffer object) (*.hex)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nLegacy-ASL to ASL+ Converter:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ca<file>"
+argument_list|,
+literal|"Convert legacy-ASL source file to new ASL+ file"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|""
+argument_list|,
+literal|"  (Original comments are passed through to ASL+ file)"
 argument_list|)
 expr_stmt|;
 name|printf

@@ -486,7 +486,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Field [%4.4s] at %u exceeds Buffer [%4.4s] size %u (bits)"
+literal|"Field [%4.4s] at bit offset/length %u/%u "
+literal|"exceeds size of target Buffer (%u bits)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -494,17 +495,8 @@ name|ResultDesc
 argument_list|)
 operator|,
 name|BitOffset
-operator|+
-name|BitCount
 operator|,
-name|AcpiUtGetNodeName
-argument_list|(
-name|BufferDesc
-operator|->
-name|Buffer
-operator|.
-name|Node
-argument_list|)
+name|BitCount
 operator|,
 literal|8
 operator|*

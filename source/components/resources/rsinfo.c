@@ -114,6 +114,21 @@ comment|/* 0x12, ACPI_RESOURCE_TYPE_FIXED_DMA */
 name|NULL
 block|,
 comment|/* 0x13, ACPI_RESOURCE_TYPE_SERIAL_BUS - Use subtype table below */
+name|AcpiRsConvertPinFunction
+block|,
+comment|/* 0x14, ACPI_RESOURCE_TYPE_PIN_FUNCTION */
+name|AcpiRsConvertPinConfig
+block|,
+comment|/* 0x15, ACPI_RESOURCE_TYPE_PIN_CONFIG */
+name|AcpiRsConvertPinGroup
+block|,
+comment|/* 0x16, ACPI_RESOURCE_TYPE_PIN_GROUP */
+name|AcpiRsConvertPinGroupFunction
+block|,
+comment|/* 0x17, ACPI_RESOURCE_TYPE_PIN_GROUP_FUNCTION */
+name|AcpiRsConvertPinGroupConfig
+block|,
+comment|/* 0x18, ACPI_RESOURCE_TYPE_PIN_GROUP_CONFIG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -218,12 +233,24 @@ comment|/* 0x0B, ACPI_RESOURCE_NAME_EXTENDED_ADDRESS64 */
 name|AcpiRsConvertGpio
 block|,
 comment|/* 0x0C, ACPI_RESOURCE_NAME_GPIO */
-name|NULL
+name|AcpiRsConvertPinFunction
 block|,
-comment|/* 0x0D, Reserved */
+comment|/* 0x0D, ACPI_RESOURCE_NAME_PIN_FUNCTION */
 name|NULL
 block|,
 comment|/* 0x0E, ACPI_RESOURCE_NAME_SERIAL_BUS - Use subtype table below */
+name|AcpiRsConvertPinConfig
+block|,
+comment|/* 0x0F, ACPI_RESOURCE_NAME_PIN_CONFIG */
+name|AcpiRsConvertPinGroup
+block|,
+comment|/* 0x10, ACPI_RESOURCE_NAME_PIN_GROUP */
+name|AcpiRsConvertPinGroupFunction
+block|,
+comment|/* 0x11, ACPI_RESOURCE_NAME_PIN_GROUP_FUNCTION */
+name|AcpiRsConvertPinGroupConfig
+block|,
+comment|/* 0x12, ACPI_RESOURCE_NAME_PIN_GROUP_CONFIG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -340,6 +367,21 @@ comment|/* ACPI_RESOURCE_TYPE_FIXED_DMA */
 name|NULL
 block|,
 comment|/* ACPI_RESOURCE_TYPE_SERIAL_BUS */
+name|AcpiRsDumpPinFunction
+block|,
+comment|/* ACPI_RESOURCE_TYPE_PIN_FUNCTION */
+name|AcpiRsDumpPinConfig
+block|,
+comment|/* ACPI_RESOURCE_TYPE_PIN_CONFIG */
+name|AcpiRsDumpPinGroup
+block|,
+comment|/* ACPI_RESOURCE_TYPE_PIN_GROUP */
+name|AcpiRsDumpPinGroupFunction
+block|,
+comment|/* ACPI_RESOURCE_TYPE_PIN_GROUP_FUNCTION */
+name|AcpiRsDumpPinGroupConfig
+block|,
+comment|/* ACPI_RESOURCE_TYPE_PIN_GROUP_CONFIG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -502,6 +544,36 @@ name|AML_RESOURCE_COMMON_SERIALBUS
 argument_list|)
 block|,
 comment|/* ACPI_RESOURCE_TYPE_SERIAL_BUS */
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_PIN_FUNCTION
+argument_list|)
+block|,
+comment|/* ACPI_RESOURCE_TYPE_PIN_FUNCTION */
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_PIN_CONFIG
+argument_list|)
+block|,
+comment|/* ACPI_RESOURCE_TYPE_PIN_CONFIG */
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_PIN_GROUP
+argument_list|)
+block|,
+comment|/* ACPI_RESOURCE_TYPE_PIN_GROUP */
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_PIN_GROUP_FUNCTION
+argument_list|)
+block|,
+comment|/* ACPI_RESOURCE_TYPE_PIN_GROUP_FUNCTION */
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_PIN_GROUP_CONFIG
+argument_list|)
+block|,
+comment|/* ACPI_RESOURCE_TYPE_PIN_GROUP_CONFIG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -629,9 +701,34 @@ argument_list|)
 block|,
 name|ACPI_RS_SIZE
 argument_list|(
-argument|ACPI_RESOURCE_COMMON_SERIALBUS
+name|ACPI_RESOURCE_PIN_FUNCTION
 argument_list|)
-block|}
+block|,
+name|ACPI_RS_SIZE
+argument_list|(
+name|ACPI_RESOURCE_COMMON_SERIALBUS
+argument_list|)
+block|,
+name|ACPI_RS_SIZE
+argument_list|(
+name|ACPI_RESOURCE_PIN_CONFIG
+argument_list|)
+block|,
+name|ACPI_RS_SIZE
+argument_list|(
+name|ACPI_RESOURCE_PIN_GROUP
+argument_list|)
+block|,
+name|ACPI_RS_SIZE
+argument_list|(
+name|ACPI_RESOURCE_PIN_GROUP_FUNCTION
+argument_list|)
+block|,
+name|ACPI_RS_SIZE
+argument_list|(
+name|ACPI_RESOURCE_PIN_GROUP_CONFIG
+argument_list|)
+block|, }
 decl_stmt|;
 end_decl_stmt
 

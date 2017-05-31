@@ -1530,7 +1530,7 @@ value|0xFFFFFFFF
 end_define
 
 begin_comment
-comment|/*  * Some of the flags and types below are of the form:  *  * AML_FLAGS_EXEC_#A_#T,#R, or  * AML_TYPE_EXEC_#A_#T,#R where:  *  *      #A is the number of required arguments  *      #T is the number of target operands  *      #R indicates whether there is a return value  */
+comment|/*  * Some of the flags and types below are of the form:  *  * AML_FLAGS_EXEC_#A_#T,#R, or  * AML_TYPE_EXEC_#A_#T,#R where:  *  *      #A is the number of required arguments  *      #T is the number of target operands  *      #R indicates whether there is a return value  *  * These types are used for the top-level dispatch of the AML  * opcode. They group similar operators that can share common  * front-end code before dispatch to the final code that implements  * the operator.  */
 end_comment
 
 begin_comment
@@ -1765,6 +1765,10 @@ name|AML_TYPE_EXEC_0A_0T_1R
 value|0x00
 end_define
 
+begin_comment
+comment|/* 0 Args, 0 Target, 1 RetVal */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1773,7 +1777,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Monadic1  */
+comment|/* 1 Args, 0 Target, 0 RetVal */
 end_comment
 
 begin_define
@@ -1784,7 +1788,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Monadic2  */
+comment|/* 1 Args, 0 Target, 1 RetVal */
 end_comment
 
 begin_define
@@ -1794,6 +1798,10 @@ name|AML_TYPE_EXEC_1A_1T_0R
 value|0x03
 end_define
 
+begin_comment
+comment|/* 1 Args, 1 Target, 0 RetVal */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1802,7 +1810,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Monadic2R */
+comment|/* 1 Args, 1 Target, 1 RetVal */
 end_comment
 
 begin_define
@@ -1813,7 +1821,7 @@ value|0x05
 end_define
 
 begin_comment
-comment|/* Dyadic1   */
+comment|/* 2 Args, 0 Target, 0 RetVal */
 end_comment
 
 begin_define
@@ -1824,7 +1832,7 @@ value|0x06
 end_define
 
 begin_comment
-comment|/* Dyadic2   */
+comment|/* 2 Args, 0 Target, 1 RetVal */
 end_comment
 
 begin_define
@@ -1835,7 +1843,7 @@ value|0x07
 end_define
 
 begin_comment
-comment|/* Dyadic2R  */
+comment|/* 2 Args, 1 Target, 1 RetVal */
 end_comment
 
 begin_define
@@ -1845,6 +1853,10 @@ name|AML_TYPE_EXEC_2A_2T_1R
 value|0x08
 end_define
 
+begin_comment
+comment|/* 2 Args, 2 Target, 1 RetVal */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1852,12 +1864,20 @@ name|AML_TYPE_EXEC_3A_0T_0R
 value|0x09
 end_define
 
+begin_comment
+comment|/* 3 Args, 0 Target, 0 RetVal */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AML_TYPE_EXEC_3A_1T_1R
 value|0x0A
 end_define
+
+begin_comment
+comment|/* 3 Args, 1 Target, 1 RetVal */
+end_comment
 
 begin_define
 define|#
@@ -1867,6 +1887,10 @@ value|0x0B
 end_define
 
 begin_comment
+comment|/* 6 Args, 0 Target, 1 RetVal */
+end_comment
+
+begin_comment
 comment|/* End of types used in dispatch table */
 end_comment
 
@@ -1874,35 +1898,35 @@ begin_define
 define|#
 directive|define
 name|AML_TYPE_LITERAL
-value|0x0B
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_TYPE_CONSTANT
 value|0x0C
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_METHOD_ARGUMENT
+name|AML_TYPE_CONSTANT
 value|0x0D
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_LOCAL_VARIABLE
+name|AML_TYPE_METHOD_ARGUMENT
 value|0x0E
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_DATA_TERM
+name|AML_TYPE_LOCAL_VARIABLE
 value|0x0F
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_TYPE_DATA_TERM
+value|0x10
 end_define
 
 begin_comment
@@ -1913,7 +1937,7 @@ begin_define
 define|#
 directive|define
 name|AML_TYPE_METHOD_CALL
-value|0x10
+value|0x11
 end_define
 
 begin_comment
@@ -1924,70 +1948,70 @@ begin_define
 define|#
 directive|define
 name|AML_TYPE_CREATE_FIELD
-value|0x11
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_TYPE_CREATE_OBJECT
 value|0x12
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_CONTROL
+name|AML_TYPE_CREATE_OBJECT
 value|0x13
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_NAMED_NO_OBJ
+name|AML_TYPE_CONTROL
 value|0x14
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_NAMED_FIELD
+name|AML_TYPE_NAMED_NO_OBJ
 value|0x15
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_NAMED_SIMPLE
+name|AML_TYPE_NAMED_FIELD
 value|0x16
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_NAMED_COMPLEX
+name|AML_TYPE_NAMED_SIMPLE
 value|0x17
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_RETURN
+name|AML_TYPE_NAMED_COMPLEX
 value|0x18
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_UNDEFINED
+name|AML_TYPE_RETURN
 value|0x19
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_BOGUS
+name|AML_TYPE_UNDEFINED
 value|0x1A
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_TYPE_BOGUS
+value|0x1B
 end_define
 
 begin_comment

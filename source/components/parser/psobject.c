@@ -252,6 +252,15 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Aborting disassembly, AML byte code is corrupt"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Dump the context surrounding the invalid opcode */
 name|AcpiUtDumpBuffer
 argument_list|(
@@ -288,6 +297,12 @@ expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|" */\n"
+argument_list|)
+expr_stmt|;
+comment|/*              * Just abort the disassembly, cannot continue because the              * parser is essentially lost. The disassembler can then              * randomly fail because an ill-constructed parse tree              * can result.              */
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_BAD_OPCODE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1003,6 +1018,20 @@ block|{
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_CTRL_PARSE_CONTINUE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
 argument_list|)
 expr_stmt|;
 block|}

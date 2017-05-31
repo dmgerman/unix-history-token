@@ -726,6 +726,9 @@ decl_stmt|;
 name|ACPI_OBJECT_TYPE
 name|ObjType
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
@@ -855,6 +858,8 @@ name|ExternalName
 operator|=
 name|ExternalName
 expr_stmt|;
+name|Status
+operator|=
 name|UtInternalizeName
 argument_list|(
 name|ExternalName
@@ -869,6 +874,27 @@ operator|.
 name|String
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_COMPILER_INTERNAL
+argument_list|,
+name|Next
+argument_list|,
+literal|"Could not internalize namestring"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|Next
 operator|->
 name|Asl
