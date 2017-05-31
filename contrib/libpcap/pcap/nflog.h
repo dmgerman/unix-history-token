@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PCAP_NFLOG_H__
+name|lib_pcap_nflog_h
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PCAP_NFLOG_H__
+name|lib_pcap_nflog_h
 end_define
 
 begin_comment

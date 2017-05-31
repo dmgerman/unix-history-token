@@ -46,7 +46,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|_WIN32
 end_ifdef
 
 begin_include
@@ -55,13 +55,34 @@ directive|include
 file|<pcap-stdinc.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_comment
+comment|/*  * To quote the MSDN page for getaddrinfo() at  *  *    https://msdn.microsoft.com/en-us/library/windows/desktop/ms738520(v=vs.85).aspx  *  * "Support for getaddrinfo on Windows 2000 and older versions  * The getaddrinfo function was added to the Ws2_32.dll on Windows XP and  * later. To execute an application that uses this function on earlier  * versions of Windows, then you need to include the Ws2tcpip.h and  * Wspiapi.h files. When the Wspiapi.h include file is added, the  * getaddrinfo function is defined to the WspiapiGetAddrInfo inline  * function in the Wspiapi.h file. At runtime, the WspiapiGetAddrInfo  * function is implemented in such a way that if the Ws2_32.dll or the  * Wship6.dll (the file containing getaddrinfo in the IPv6 Technology  * Preview for Windows 2000) does not include getaddrinfo, then a  * version of getaddrinfo is implemented inline based on code in the  * Wspiapi.h header file. This inline code will be used on older Windows  * platforms that do not natively support the getaddrinfo function."  *  * We use getaddrinfo(), so we include Wspiapi.h here.  pcap-stdinc.h  * includes Ws2tcpip.h, so we don't need to include it ourselves.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<Wspiapi.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_include
@@ -104,13 +125,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|WIN32
+name|_WIN32
 end_ifndef
 
 begin_ifdef
@@ -222,7 +243,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_include
@@ -271,6 +292,12 @@ begin_include
 include|#
 directive|include
 file|<pcap/namedb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"nametoaddr.h"
 end_include
 
 begin_ifdef
@@ -574,7 +601,7 @@ parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|WIN32
+name|_WIN32
 name|struct
 name|netent
 modifier|*
@@ -604,7 +631,7 @@ literal|0
 return|;
 else|#
 directive|else
-comment|/* 	 * There's no "getnetbyname()" on Windows. 	 */
+comment|/* 	 * There's no "getnetbyname()" on Windows. 	 * 	 * XXX - I guess we could use the BSD code to read 	 * C:\Windows\System32\drivers\etc/networks, assuming 	 * that's its home on all the versions of Windows 	 * we use, but that file probably just has the loopback 	 * network on 127/24 on 99 44/100% of Windows machines. 	 * 	 * (Heck, these days it probably just has that on 99 44/100% 	 * of *UN*X* machines.) 	 */
 return|return
 literal|0
 return|;
@@ -1085,10 +1112,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Static data base of ether protocol types. */
+comment|/*  * Static data base of ether protocol types.  * tcpdump used to import this, and it's declared as an export on  * Debian, at least, so make it a public symbol, even though we  * don't officially export it by declaring it in a header file.  * (Programs *should* do this themselves, as tcpdump now does.)  */
 end_comment
 
 begin_decl_stmt
+name|PCAP_API_DEF
 name|struct
 name|eproto
 name|eproto_db
@@ -1596,13 +1624,11 @@ argument_list|)
 operator|!=
 literal|2
 condition|)
-name|bpf_error
-argument_list|(
-literal|"malformed decnet address '%s'"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 operator|*
 name|addr
 operator|=
@@ -2088,13 +2114,17 @@ directive|endif
 end_endif
 
 begin_function
-name|u_short
+name|int
 name|__pcap_nametodnaddr
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|u_short
+modifier|*
+name|res
 parameter_list|)
 block|{
 ifdef|#
@@ -2110,10 +2140,6 @@ name|struct
 name|nodeent
 modifier|*
 name|nep
-decl_stmt|;
-name|unsigned
-name|short
-name|res
 decl_stmt|;
 name|nep
 operator|=
@@ -2135,20 +2161,17 @@ operator|)
 literal|0
 operator|)
 condition|)
-name|bpf_error
-argument_list|(
-literal|"unknown decnet host name '%s'\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|memcpy
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
-operator|&
 name|res
 argument_list|,
 operator|(
@@ -2168,18 +2191,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|res
+literal|1
 operator|)
 return|;
 else|#
 directive|else
-name|bpf_error
-argument_list|(
-literal|"decnet name support not included, '%s' cannot be translated\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0

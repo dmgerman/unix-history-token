@@ -194,18 +194,18 @@ name|int
 name|bids
 index|[]
 decl_stmt|;
-name|printf
-argument_list|(
+if|if
+condition|(
 name|bids
 index|[
 name|i
 index|]
 operator|>
 literal|0
-condition|?
+condition|)
+name|printf
+argument_list|(
 literal|"[%02d]"
-else|:
-literal|" -- "
 argument_list|,
 name|bids
 index|[
@@ -213,6 +213,12 @@ name|i
 index|]
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" -- "
 argument_list|)
 expr_stmt|;
 endif|#

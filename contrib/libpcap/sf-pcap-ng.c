@@ -46,7 +46,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|_WIN32
 end_ifdef
 
 begin_include
@@ -61,7 +61,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_if
@@ -122,7 +122,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_include
@@ -327,6 +327,13 @@ define|#
 directive|define
 name|PCAP_NG_VERSION_MAJOR
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCAP_NG_VERSION_MINOR
+value|0
 end_define
 
 begin_comment
@@ -629,9 +636,13 @@ enum|enum
 block|{
 name|PASS_THROUGH
 block|,
-name|SCALE_UP
+name|SCALE_UP_DEC
 block|,
-name|SCALE_DOWN
+name|SCALE_DOWN_DEC
+block|,
+name|SCALE_UP_BIN
+block|,
+name|SCALE_DOWN_BIN
 block|}
 name|tstamp_scale_type_t
 typedef|;
@@ -649,14 +660,18 @@ name|u_int
 name|tsresol
 decl_stmt|;
 comment|/* time stamp resolution */
-name|u_int64_t
-name|tsoffset
-decl_stmt|;
-comment|/* time stamp offset */
 name|tstamp_scale_type_t
 name|scale_type
 decl_stmt|;
 comment|/* how to scale */
+name|u_int
+name|scale_factor
+decl_stmt|;
+comment|/* time stamp scale factor for power-of-10 tsresol */
+name|u_int64_t
+name|tsoffset
+decl_stmt|;
+comment|/* time stamp offset */
 block|}
 struct|;
 end_struct
@@ -676,7 +691,7 @@ comment|/* number of interfaces seen in this capture */
 name|bpf_u_int32
 name|ifaces_size
 decl_stmt|;
-comment|/* size of arrary below */
+comment|/* size of array below */
 name|struct
 name|pcap_ng_if
 modifier|*
@@ -776,7 +791,7 @@ name|fp
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -808,7 +823,7 @@ literal|0
 operator|)
 return|;
 comment|/* EOF */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -874,6 +889,13 @@ decl_stmt|;
 name|struct
 name|block_header
 name|bhdr
+decl_stmt|;
+name|u_char
+modifier|*
+name|bdata
+decl_stmt|;
+name|size_t
+name|data_remaining
 decl_stmt|;
 name|status
 operator|=
@@ -950,7 +972,7 @@ operator|*
 literal|1024
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -996,7 +1018,7 @@ name|block_trailer
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1047,9 +1069,11 @@ name|total_length
 condition|)
 block|{
 comment|/* 		 * No - make it big enough. 		 */
-name|p
-operator|->
-name|buffer
+name|void
+modifier|*
+name|bigger_buffer
+decl_stmt|;
+name|bigger_buffer
 operator|=
 name|realloc
 argument_list|(
@@ -1064,14 +1088,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|->
-name|buffer
+name|bigger_buffer
 operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1087,6 +1109,12 @@ literal|1
 operator|)
 return|;
 block|}
+name|p
+operator|->
+name|buffer
+operator|=
+name|bigger_buffer
+expr_stmt|;
 block|}
 comment|/* 	 * Copy the stuff we've read to the buffer, and read the rest 	 * of the block. 	 */
 name|memcpy
@@ -1104,12 +1132,12 @@ name|bhdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|read_bytes
-argument_list|(
-name|fp
-argument_list|,
+name|bdata
+operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|p
 operator|->
 name|buffer
@@ -1118,7 +1146,9 @@ sizeof|sizeof
 argument_list|(
 name|bhdr
 argument_list|)
-argument_list|,
+expr_stmt|;
+name|data_remaining
+operator|=
 name|bhdr
 operator|.
 name|total_length
@@ -1127,6 +1157,16 @@ sizeof|sizeof
 argument_list|(
 name|bhdr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|read_bytes
+argument_list|(
+name|fp
+argument_list|,
+name|bdata
+argument_list|,
+name|data_remaining
 argument_list|,
 literal|1
 argument_list|,
@@ -1147,27 +1187,13 @@ name|cursor
 operator|->
 name|data
 operator|=
-name|p
-operator|->
-name|buffer
-operator|+
-sizeof|sizeof
-argument_list|(
-name|bhdr
-argument_list|)
+name|bdata
 expr_stmt|;
 name|cursor
 operator|->
 name|data_remaining
 operator|=
-name|bhdr
-operator|.
-name|total_length
-operator|-
-sizeof|sizeof
-argument_list|(
-name|bhdr
-argument_list|)
+name|data_remaining
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -1224,7 +1250,7 @@ operator|<
 name|chunk_size
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1468,6 +1494,10 @@ name|u_int64_t
 modifier|*
 name|tsoffset
 parameter_list|,
+name|int
+modifier|*
+name|is_binary
+parameter_list|,
 name|char
 modifier|*
 name|errbuf
@@ -1583,7 +1613,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1618,7 +1648,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1643,7 +1673,7 @@ condition|(
 name|saw_tsresol
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1685,6 +1715,11 @@ condition|)
 block|{
 comment|/* 				 * Resolution is negative power of 2. 				 */
 operator|*
+name|is_binary
+operator|=
+literal|1
+expr_stmt|;
+operator|*
 name|tsresol
 operator|=
 literal|1
@@ -1699,6 +1734,11 @@ block|}
 else|else
 block|{
 comment|/* 				 * Resolution is negative power of 10. 				 */
+operator|*
+name|is_binary
+operator|=
+literal|0
+expr_stmt|;
 operator|*
 name|tsresol
 operator|=
@@ -1739,7 +1779,7 @@ operator|&
 literal|0x80
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1755,7 +1795,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1787,7 +1827,7 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1812,7 +1852,7 @@ condition|(
 name|saw_tsoffset
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1905,6 +1945,9 @@ decl_stmt|;
 name|u_int64_t
 name|tsoffset
 decl_stmt|;
+name|int
+name|is_binary
+decl_stmt|;
 name|ps
 operator|=
 name|p
@@ -1930,25 +1973,29 @@ name|ifaces_size
 condition|)
 block|{
 comment|/* 		 * We need to grow the array. 		 */
+name|bpf_u_int32
+name|new_ifaces_size
+decl_stmt|;
+name|struct
+name|pcap_ng_if
+modifier|*
+name|new_ifaces
+decl_stmt|;
 if|if
 condition|(
 name|ps
 operator|->
-name|ifaces
+name|ifaces_size
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
-comment|/* 			 * It's currently empty. 			 */
-name|ps
-operator|->
-name|ifaces_size
+comment|/* 			 * It's currently empty. 			 * 			 * (The Clang static analyzer doesn't do enough, 			 * err, umm, dataflow *analysis* to realize that 			 * ps->ifaces_size == 0 if ps->ifaces == NULL, 			 * and so complains about a possible zero argument 			 * to realloc(), so we check for the former 			 * condition to shut it up. 			 * 			 * However, it doesn't complain that one of the 			 * multiplications below could overflow, which is 			 * a real, albeit extremely unlikely, problem (you'd 			 * need a pcap-ng file with tens of millions of 			 * interfaces).) 			 */
+name|new_ifaces_size
 operator|=
 literal|1
 expr_stmt|;
-name|ps
-operator|->
-name|ifaces
+name|new_ifaces
 operator|=
 name|malloc
 argument_list|(
@@ -1962,16 +2009,91 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * It's not currently empty; double its size. 			 * (Perhaps overkill once we have a lot of interfaces.) 			 */
+comment|/* 			 * It's not currently empty; double its size. 			 * (Perhaps overkill once we have a lot of interfaces.) 			 * 			 * Check for overflow if we double it. 			 */
+if|if
+condition|(
 name|ps
 operator|->
 name|ifaces_size
-operator|*=
+operator|*
 literal|2
-expr_stmt|;
+operator|<
 name|ps
 operator|->
-name|ifaces
+name|ifaces_size
+condition|)
+block|{
+comment|/* 				 * The maximum number of interfaces before 				 * ps->ifaces_size overflows is the largest 				 * possible 32-bit power of 2, as we do 				 * size doubling. 				 */
+name|pcap_snprintf
+argument_list|(
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"more than %u interfaces in the file"
+argument_list|,
+literal|0x80000000U
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 			 * ps->ifaces_size * 2 doesn't overflow, so it's 			 * safe to multiply. 			 */
+name|new_ifaces_size
+operator|=
+name|ps
+operator|->
+name|ifaces_size
+operator|*
+literal|2
+expr_stmt|;
+comment|/* 			 * Now make sure that's not so big that it overflows 			 * if we multiply by sizeof (struct pcap_ng_if). 			 * 			 * That can happen on 32-bit platforms, with a 32-bit 			 * size_t; it shouldn't happen on 64-bit platforms, 			 * with a 64-bit size_t, as new_ifaces_size is 			 * 32 bits. 			 */
+if|if
+condition|(
+name|new_ifaces_size
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcap_ng_if
+argument_list|)
+operator|<
+name|new_ifaces_size
+condition|)
+block|{
+comment|/* 				 * As this fails only with 32-bit size_t, 				 * the multiplication was 32x32->32, and 				 * the largest 32-bit value that can safely 				 * be multiplied by sizeof (struct pcap_ng_if) 				 * without overflow is the largest 32-bit 				 * (unsigned) value divided by 				 * sizeof (struct pcap_ng_if). 				 */
+name|pcap_snprintf
+argument_list|(
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"more than %u interfaces in the file"
+argument_list|,
+literal|0xFFFFFFFFU
+operator|/
+operator|(
+operator|(
+name|u_int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcap_ng_if
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|new_ifaces
 operator|=
 name|realloc
 argument_list|(
@@ -1979,9 +2101,7 @@ name|ps
 operator|->
 name|ifaces
 argument_list|,
-name|ps
-operator|->
-name|ifaces_size
+name|new_ifaces_size
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1993,15 +2113,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ps
-operator|->
-name|ifaces
+name|new_ifaces
 operator|==
 name|NULL
 condition|)
 block|{
 comment|/* 			 * We ran out of memory. 			 * Give up. 			 */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -2020,6 +2138,18 @@ literal|0
 operator|)
 return|;
 block|}
+name|ps
+operator|->
+name|ifaces_size
+operator|=
+name|new_ifaces_size
+expr_stmt|;
+name|ps
+operator|->
+name|ifaces
+operator|=
+name|new_ifaces
+expr_stmt|;
 block|}
 comment|/* 	 * Set the default time stamp resolution and offset. 	 */
 name|tsresol
@@ -2027,6 +2157,11 @@ operator|=
 literal|1000000
 expr_stmt|;
 comment|/* microsecond resolution */
+name|is_binary
+operator|=
+literal|0
+expr_stmt|;
+comment|/* which is a power of 10 */
 name|tsoffset
 operator|=
 literal|0
@@ -2046,6 +2181,9 @@ name|tsresol
 argument_list|,
 operator|&
 name|tsoffset
+argument_list|,
+operator|&
+name|is_binary
 argument_list|,
 name|errbuf
 argument_list|)
@@ -2089,26 +2227,16 @@ operator|=
 name|tsoffset
 expr_stmt|;
 comment|/* 	 * Determine whether we're scaling up or down or not 	 * at all for this interface. 	 */
-switch|switch
-condition|(
-name|p
-operator|->
-name|opt
-operator|.
-name|tstamp_precision
-condition|)
-block|{
-case|case
-name|PCAP_TSTAMP_PRECISION_MICRO
-case|:
 if|if
 condition|(
 name|tsresol
 operator|==
-literal|1000000
+name|ps
+operator|->
+name|user_tsresol
 condition|)
 block|{
-comment|/* 			 * The resolution is 1 microsecond, 			 * so we don't have to do scaling. 			 */
+comment|/* 		 * The resolution is the resolution the user wants, 		 * so we don't have to do scaling. 		 */
 name|ps
 operator|->
 name|ifaces
@@ -2130,10 +2258,16 @@ if|if
 condition|(
 name|tsresol
 operator|>
-literal|1000000
+name|ps
+operator|->
+name|user_tsresol
 condition|)
 block|{
-comment|/* 			 * The resolution is greater than 			 * 1 microsecond, so we have to 			 * scale the timestamps down. 			 */
+comment|/* 		 * The resolution is greater than what the user wants, 		 * so we have to scale the timestamps down. 		 */
+if|if
+condition|(
+name|is_binary
+condition|)
 name|ps
 operator|->
 name|ifaces
@@ -2147,40 +2281,54 @@ index|]
 operator|.
 name|scale_type
 operator|=
-name|SCALE_DOWN
+name|SCALE_DOWN_BIN
 expr_stmt|;
+else|else
+block|{
+comment|/* 			 * Calculate the scale factor. 			 */
+name|ps
+operator|->
+name|ifaces
+index|[
+name|ps
+operator|->
+name|ifcount
+operator|-
+literal|1
+index|]
+operator|.
+name|scale_factor
+operator|=
+name|tsresol
+operator|/
+name|ps
+operator|->
+name|user_tsresol
+expr_stmt|;
+name|ps
+operator|->
+name|ifaces
+index|[
+name|ps
+operator|->
+name|ifcount
+operator|-
+literal|1
+index|]
+operator|.
+name|scale_type
+operator|=
+name|SCALE_DOWN_DEC
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
-comment|/* 			 * The resolution is less than 1 			 * microsecond, so we have to scale 			 * the timestamps up. 			 */
-name|ps
-operator|->
-name|ifaces
-index|[
-name|ps
-operator|->
-name|ifcount
-operator|-
-literal|1
-index|]
-operator|.
-name|scale_type
-operator|=
-name|SCALE_UP
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|PCAP_TSTAMP_PRECISION_NANO
-case|:
+comment|/* 		 * The resolution is less than what the user wants, 		 * so we have to scale the timestamps up. 		 */
 if|if
 condition|(
-name|tsresol
-operator|==
-literal|1000000000
+name|is_binary
 condition|)
-block|{
-comment|/* 			 * The resolution is 1 nanosecond, 			 * so we don't have to do scaling. 			 */
 name|ps
 operator|->
 name|ifaces
@@ -2194,37 +2342,30 @@ index|]
 operator|.
 name|scale_type
 operator|=
-name|PASS_THROUGH
+name|SCALE_UP_BIN
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|tsresol
-operator|>
-literal|1000000000
-condition|)
-block|{
-comment|/* 			 * The resolution is greater than 			 * 1 nanosecond, so we have to 			 * scale the timestamps down. 			 */
-name|ps
-operator|->
-name|ifaces
-index|[
-name|ps
-operator|->
-name|ifcount
-operator|-
-literal|1
-index|]
-operator|.
-name|scale_type
-operator|=
-name|SCALE_DOWN
-expr_stmt|;
-block|}
 else|else
 block|{
-comment|/* 			 * The resolution is less than 1 			 * nanosecond, so we have to scale 			 * the timestamps up. 			 */
+comment|/* 			 * Calculate the scale factor. 			 */
+name|ps
+operator|->
+name|ifaces
+index|[
+name|ps
+operator|->
+name|ifcount
+operator|-
+literal|1
+index|]
+operator|.
+name|scale_factor
+operator|=
+name|ps
+operator|->
+name|user_tsresol
+operator|/
+name|tsresol
+expr_stmt|;
 name|ps
 operator|->
 name|ifaces
@@ -2238,10 +2379,9 @@ index|]
 operator|.
 name|scale_type
 operator|=
-name|SCALE_UP
+name|SCALE_UP_DEC
 expr_stmt|;
 block|}
-break|break;
 block|}
 return|return
 operator|(
@@ -2330,7 +2470,7 @@ name|err
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Check whether the first 4 bytes of the file are the block 	 * type for a pcap-ng savefile.  	 */
+comment|/* 	 * Check whether the first 4 bytes of the file are the block 	 * type for a pcap-ng savefile. 	 */
 if|if
 condition|(
 name|magic
@@ -2382,7 +2522,7 @@ name|fp
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -2450,7 +2590,7 @@ name|fp
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -2547,7 +2687,7 @@ name|block_trailer
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -2665,7 +2805,7 @@ literal|1000000000
 expr_stmt|;
 break|break;
 default|default:
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -2741,7 +2881,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -2786,6 +2926,10 @@ name|section_header_block
 operator|*
 operator|)
 operator|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|p
 operator|->
 name|buffer
@@ -2821,6 +2965,10 @@ name|read_bytes
 argument_list|(
 name|fp
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|p
 operator|->
 name|buffer
@@ -2904,26 +3052,40 @@ argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX - we don't care about the section length. 		 */
 block|}
+comment|/* currently only SHB version 1.0 is supported */
 if|if
 condition|(
+operator|!
+operator|(
 name|shbp
 operator|->
 name|major_version
-operator|!=
+operator|==
 name|PCAP_NG_VERSION_MAJOR
+operator|&&
+name|shbp
+operator|->
+name|minor_version
+operator|==
+name|PCAP_NG_VERSION_MINOR
+operator|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"unknown pcap-ng savefile major version number %u"
+literal|"unsupported pcap-ng savefile version %u.%u"
 argument_list|,
 name|shbp
 operator|->
 name|major_version
+argument_list|,
+name|shbp
+operator|->
+name|minor_version
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2985,7 +3147,7 @@ literal|0
 condition|)
 block|{
 comment|/* EOF - no IDB in this file */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -3077,6 +3239,36 @@ name|snaplen
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * Interface capture length sanity check 			 */
+if|if
+condition|(
+name|idbp
+operator|->
+name|snaplen
+operator|>
+name|MAXIMUM_SNAPLEN
+condition|)
+block|{
+name|pcap_snprintf
+argument_list|(
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"invalid interface capture length %u, "
+literal|"bigger than maximum of %u"
+argument_list|,
+name|idbp
+operator|->
+name|snaplen
+argument_list|,
+name|MAXIMUM_SNAPLEN
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* 			 * Try to add this interface. 			 */
 if|if
 condition|(
@@ -3107,7 +3299,7 @@ case|case
 name|BT_PB
 case|:
 comment|/* 			 * Saw a packet before we saw any IDBs.  That's 			 * not valid, as we don't know what link-layer 			 * encapsulation the packet has. 			 */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -3614,6 +3806,9 @@ name|hdr
 operator|->
 name|caplen
 operator|>
+operator|(
+name|bpf_u_int32
+operator|)
 name|p
 operator|->
 name|snapshot
@@ -3856,7 +4051,7 @@ operator|->
 name|linktype
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -3880,6 +4075,9 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
+name|bpf_u_int32
+operator|)
 name|p
 operator|->
 name|snapshot
@@ -3889,7 +4087,7 @@ operator|->
 name|snaplen
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -4020,7 +4218,7 @@ name|BYTE_ORDER_MAGIC
 argument_list|)
 case|:
 comment|/* 				 * Byte order changes. 				 */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -4039,7 +4237,7 @@ operator|)
 return|;
 default|default:
 comment|/* 				 * Not a valid SHB. 				 */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -4067,7 +4265,7 @@ operator|!=
 name|PCAP_NG_VERSION_MAJOR
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -4115,7 +4313,7 @@ name|ifcount
 condition|)
 block|{
 comment|/* 		 * Yes.  Fail. 		 */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -4135,7 +4333,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Convert the time stamp to a struct timeval. 	 */
+comment|/* 	 * Convert the time stamp to seconds and fractions of a second, 	 * with the fractions being in units of the file-supplied resolution. 	 */
 name|sec
 operator|=
 name|t
@@ -4171,6 +4369,7 @@ index|]
 operator|.
 name|tsresol
 expr_stmt|;
+comment|/* 	 * Convert the fractions from units of the file-supplied resolution 	 * to units of the user-requested resolution. 	 */
 switch|switch
 condition|(
 name|ps
@@ -4189,12 +4388,9 @@ case|:
 comment|/* 		 * The interface resolution is what the user wants, 		 * so we're done. 		 */
 break|break;
 case|case
-name|SCALE_UP
+name|SCALE_UP_DEC
 case|:
-case|case
-name|SCALE_DOWN
-case|:
-comment|/* 		 * The interface resolution is different from what the 		 * user wants; scale up or down to that resolution. 		 * 		 * XXX - if ps->ifaces[interface_id].tsresol is a power 		 * of 10, we could just multiply by the quotient of 		 * ps->ifaces[interface_id].tsresol and ps->user_tsresol 		 * in the scale-up case, and divide by the quotient of 		 * ps->user_tsresol and ps->ifaces[interface_id].tsresol 		 * in the scale-down case, as we know those are integers, 		 * which would involve fewer arithmetic operations. 		 * 		 * Is there something clever we could do if 		 * ps->ifaces[interface_id].tsresol is a power of 2? 		 */
+comment|/* 		 * The interface resolution is less than what the user 		 * wants; scale the fractional part up to the units of 		 * the resolution the user requested by multiplying by 		 * the quotient of the user-requested resolution and the 		 * file-supplied resolution. 		 * 		 * Those resolutions are both powers of 10, and the user- 		 * requested resolution is greater than the file-supplied 		 * resolution, so the quotient in question is an integer. 		 * We've calculated that quotient already, so we just 		 * multiply by it. 		 */
 name|frac
 operator|*=
 name|ps
@@ -4204,22 +4400,83 @@ index|[
 name|interface_id
 index|]
 operator|.
-name|tsresol
+name|scale_factor
+expr_stmt|;
+break|break;
+case|case
+name|SCALE_UP_BIN
+case|:
+comment|/* 		 * The interface resolution is less than what the user 		 * wants; scale the fractional part up to the units of 		 * the resolution the user requested by multiplying by 		 * the quotient of the user-requested resolution and the 		 * file-supplied resolution. 		 * 		 * The file-supplied resolution is a power of 2, so the 		 * quotient is not an integer, so, in order to do this 		 * entirely with integer arithmetic, we multiply by the 		 * user-requested resolution and divide by the file- 		 * supplied resolution. 		 * 		 * XXX - Is there something clever we could do here, 		 * given that we know that the file-supplied resolution 		 * is a power of 2?  Doing a multiplication followed by 		 * a division runs the risk of overflowing, and involves 		 * two non-simple arithmetic operations. 		 */
+name|frac
+operator|*=
+name|ps
+operator|->
+name|user_tsresol
 expr_stmt|;
 name|frac
 operator|/=
 name|ps
 operator|->
+name|ifaces
+index|[
+name|interface_id
+index|]
+operator|.
+name|tsresol
+expr_stmt|;
+break|break;
+case|case
+name|SCALE_DOWN_DEC
+case|:
+comment|/* 		 * The interface resolution is greater than what the user 		 * wants; scale the fractional part up to the units of 		 * the resolution the user requested by multiplying by 		 * the quotient of the user-requested resolution and the 		 * file-supplied resolution. 		 * 		 * Those resolutions are both powers of 10, and the user- 		 * requested resolution is less than the file-supplied 		 * resolution, so the quotient in question isn't an 		 * integer, but its reciprocal is, and we can just divide 		 * by the reciprocal of the quotient.  We've calculated 		 * the reciprocal of that quotient already, so we must 		 * divide by it. 		 */
+name|frac
+operator|/=
+name|ps
+operator|->
+name|ifaces
+index|[
+name|interface_id
+index|]
+operator|.
+name|scale_factor
+expr_stmt|;
+break|break;
+case|case
+name|SCALE_DOWN_BIN
+case|:
+comment|/* 		 * The interface resolution is greater than what the user 		 * wants; convert the fractional part to units of the 		 * resolution the user requested by multiplying by the 		 * quotient of the user-requested resolution and the 		 * file-supplied resolution.  We do that by multiplying 		 * by the user-requested resolution and dividing by the 		 * file-supplied resolution, as the quotient might not 		 * fit in an integer. 		 * 		 * The file-supplied resolution is a power of 2, so the 		 * quotient is not an integer, and neither is its 		 * reciprocal, so, in order to do this entirely with 		 * integer arithmetic, we multiply by the user-requested 		 * resolution and divide by the file-supplied resolution. 		 * 		 * XXX - Is there something clever we could do here, 		 * given that we know that the file-supplied resolution 		 * is a power of 2?  Doing a multiplication followed by 		 * a division runs the risk of overflowing, and involves 		 * two non-simple arithmetic operations. 		 */
+name|frac
+operator|*=
+name|ps
+operator|->
 name|user_tsresol
+expr_stmt|;
+name|frac
+operator|/=
+name|ps
+operator|->
+name|ifaces
+index|[
+name|interface_id
+index|]
+operator|.
+name|tsresol
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|_WIN32
+comment|/* 	 * tv_sec and tv_used in the Windows struct timeval are both 	 * longs. 	 */
 name|hdr
 operator|->
 name|ts
 operator|.
 name|tv_sec
 operator|=
+operator|(
+name|long
+operator|)
 name|sec
 expr_stmt|;
 name|hdr
@@ -4228,8 +4485,38 @@ name|ts
 operator|.
 name|tv_usec
 operator|=
+operator|(
+name|long
+operator|)
 name|frac
 expr_stmt|;
+else|#
+directive|else
+comment|/* 	 * tv_sec in the UN*X struct timeval is a time_t; tv_usec is 	 * suseconds_t in UN*Xes that work the way the current Single 	 * UNIX Standard specify - but not all older UN*Xes necessarily 	 * support that type, so just cast to int. 	 */
+name|hdr
+operator|->
+name|ts
+operator|.
+name|tv_sec
+operator|=
+operator|(
+name|time_t
+operator|)
+name|sec
+expr_stmt|;
+name|hdr
+operator|->
+name|ts
+operator|.
+name|tv_usec
+operator|=
+operator|(
+name|int
+operator|)
+name|frac
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Get a pointer to the packet data. 	 */
 operator|*
 name|data

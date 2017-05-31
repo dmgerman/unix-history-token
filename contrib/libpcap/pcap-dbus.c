@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2012 Jakub Zawadzki  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  * notice, this list of conditions and the following disclaimer in the  * documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   * products derived from this software without specific prior written   * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2012 Jakub Zawadzki  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  * notice, this list of conditions and the following disclaimer in the  * documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  * products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifdef
@@ -140,7 +140,7 @@ operator|!
 name|message
 condition|)
 block|{
-comment|// XXX handle->opt.timeout = timeout_ms;
+comment|/* XXX handle->opt.timeout = timeout_ms; */
 if|if
 condition|(
 operator|!
@@ -154,7 +154,7 @@ literal|100
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -210,7 +210,7 @@ literal|"Disconnected"
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -385,7 +385,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -581,14 +581,14 @@ name|handle
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 decl_stmt|;
 name|DBusError
 name|error
 init|=
 name|DBUS_ERROR_INIT
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 if|if
@@ -621,7 +621,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -678,7 +678,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -746,7 +746,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -787,7 +787,7 @@ name|error
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -817,7 +817,7 @@ block|}
 block|}
 else|else
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -831,7 +831,7 @@ name|handle
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|)
 expr_stmt|;
 return|return
@@ -1035,7 +1035,7 @@ name|error
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -1140,8 +1140,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 sizeof|sizeof

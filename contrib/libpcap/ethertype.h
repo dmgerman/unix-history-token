@@ -512,6 +512,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|ETHERTYPE_8021AD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_8021AD
+value|0x88a8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ETHERTYPE_LOOPBACK
 end_ifndef
 

@@ -310,7 +310,7 @@ operator|)
 return|;
 comment|/* XXX */
 block|}
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -421,7 +421,7 @@ operator|->
 name|offset
 expr_stmt|;
 comment|/* XXX */
-comment|/*  	 * XXX unfortunately snoop loopback isn't exactly like 	 * BSD's.  The address family is encoded in the first 2 	 * bytes rather than the first 4 bytes!  Luckily the last 	 * two snoop loopback bytes are zeroed. 	 */
+comment|/* 	 * XXX unfortunately snoop loopback isn't exactly like 	 * BSD's.  The address family is encoded in the first 2 	 * bytes rather than the first 4 bytes!  Luckily the last 	 * two snoop loopback bytes are zeroed. 	 */
 if|if
 condition|(
 name|p
@@ -605,7 +605,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -708,7 +708,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -839,7 +839,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -897,7 +897,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -928,7 +928,8 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|snprintf
+comment|/* 		 * XXX - there's probably a particular bind error that 		 * means "there's no such device" and a particular bind 		 * error that means "that device doesn't support snoop"; 		 * they might be the same error, if they both end up 		 * meaning "snoop doesn't know about that device". 		 */
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -976,7 +977,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1057,7 +1058,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|2
 argument_list|)
@@ -1073,7 +1074,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|2
 argument_list|)
@@ -1089,7 +1090,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|2
 argument_list|)
@@ -1105,7 +1106,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|2
 argument_list|)
@@ -1121,7 +1122,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|3
 argument_list|)
@@ -1137,7 +1138,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|3
 argument_list|)
@@ -1153,7 +1154,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|2
 argument_list|)
@@ -1169,7 +1170,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|3
 argument_list|)
@@ -1185,7 +1186,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|2
 argument_list|)
@@ -1200,7 +1201,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|3
 argument_list|)
@@ -1215,7 +1216,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|3
 argument_list|)
@@ -1230,7 +1231,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|2
 argument_list|)
@@ -1331,7 +1332,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|3
 argument_list|)
@@ -1346,7 +1347,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|3
 argument_list|)
@@ -1362,7 +1363,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|3
 argument_list|)
@@ -1399,7 +1400,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|3
 argument_list|)
@@ -1430,7 +1431,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|3
 argument_list|)
@@ -1460,7 +1461,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|2
 argument_list|)
@@ -1491,7 +1492,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|2
 argument_list|)
@@ -1512,7 +1513,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1560,7 +1561,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1589,7 +1590,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1677,7 +1678,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1716,7 +1717,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1747,10 +1748,6 @@ name|p
 operator|->
 name|buffer
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|p
@@ -1767,7 +1764,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1876,6 +1873,7 @@ specifier|const
 name|char
 modifier|*
 name|device
+name|_U_
 parameter_list|,
 name|char
 modifier|*
@@ -1890,8 +1888,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 sizeof|sizeof
@@ -1926,6 +1922,30 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX - there's probably a particular bind error that means "that device  * doesn't support snoop"; if so, we should try a bind and use that.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|can_be_bound
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+name|_U_
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|int
 name|pcap_platform_finddevs
@@ -1942,7 +1962,14 @@ parameter_list|)
 block|{
 return|return
 operator|(
-literal|0
+name|pcap_findalldevs_interfaces
+argument_list|(
+name|alldevsp
+argument_list|,
+name|errbuf
+argument_list|,
+name|can_be_bound
+argument_list|)
 operator|)
 return|;
 block|}

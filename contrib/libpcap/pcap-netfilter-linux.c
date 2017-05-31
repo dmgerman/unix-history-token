@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2011 Jakub Zawadzki  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  * notice, this list of conditions and the following disclaimer in the  * documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   * products derived from this software without specific prior written   * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2011 Jakub Zawadzki  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  * notice, this list of conditions and the following disclaimer in the  * documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  * products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifdef
@@ -134,7 +134,7 @@ file|<linux/netfilter/nfnetlink_queue.h>
 end_include
 
 begin_comment
-comment|/* NOTE: if your program drops privilages after pcap_activate() it WON'T work with nfqueue.  *       It took me quite some time to debug ;/   *  *       Sending any data to nfnetlink socket requires CAP_NET_ADMIN privilages,  *       and in nfqueue we need to send verdict reply after recving packet.  *  *       In tcpdump you can disable dropping privilages with -Z root  */
+comment|/* NOTE: if your program drops privilages after pcap_activate() it WON'T work with nfqueue.  *       It took me quite some time to debug ;/  *  *       Sending any data to nfnetlink socket requires CAP_NET_ADMIN privilages,  *       and in nfqueue we need to send verdict reply after recving packet.  *  *       In tcpdump you can disable dropping privilages with -Z root  */
 end_comment
 
 begin_include
@@ -193,6 +193,10 @@ name|u_int
 name|packets_read
 decl_stmt|;
 comment|/* count of packets read with recvfrom() */
+name|u_int
+name|packets_nobufs
+decl_stmt|;
+comment|/* ENOBUFS counter */
 block|}
 struct|;
 end_struct
@@ -302,6 +306,17 @@ operator|-
 literal|2
 return|;
 block|}
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOBUFS
+condition|)
+name|handlep
+operator|->
+name|packets_nobufs
+operator|++
+expr_stmt|;
 block|}
 do|while
 condition|(
@@ -316,6 +331,10 @@ operator|(
 name|errno
 operator|==
 name|EINTR
+operator|||
+name|errno
+operator|==
+name|ENOBUFS
 operator|)
 condition|)
 do|;
@@ -326,7 +345,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -351,12 +370,20 @@ return|;
 block|}
 name|buf
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|handle
 operator|->
 name|buffer
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|u_int
+operator|)
 name|len
 operator|>=
 name|NLMSG_SPACE
@@ -399,6 +426,9 @@ expr|struct
 name|nlmsghdr
 argument_list|)
 operator|||
+operator|(
+name|u_int
+operator|)
 name|len
 operator|<
 name|nlh
@@ -406,7 +436,7 @@ operator|->
 name|nlmsg_len
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -501,6 +531,8 @@ name|struct
 name|nfgenmsg
 modifier|*
 name|nfg
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|id
@@ -533,7 +565,7 @@ operator|<
 name|HDR_LENGTH
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -827,6 +859,13 @@ name|NFQUEUE
 condition|)
 block|{
 comment|/* XXX, possible responses: NF_DROP, NF_ACCEPT, NF_STOLEN, NF_QUEUE, NF_REPEAT, NF_STOP */
+comment|/* if type == NFQUEUE, handle->linktype is always != DLT_NFLOG, 				   so nfg is always initialized to NLMSG_DATA(nlh). */
+if|if
+condition|(
+name|nfg
+operator|!=
+name|NULL
+condition|)
 name|nfqueue_send_verdict
 argument_list|(
 name|handle
@@ -858,10 +897,16 @@ if|if
 condition|(
 name|msg_len
 operator|>
+operator|(
+name|u_int
+operator|)
 name|len
 condition|)
 name|msg_len
 operator|=
+operator|(
+name|u_int
+operator|)
 name|len
 expr_stmt|;
 name|len
@@ -940,7 +985,9 @@ name|stats
 operator|->
 name|ps_drop
 operator|=
-literal|0
+name|handlep
+operator|->
+name|packets_nobufs
 expr_stmt|;
 name|stats
 operator|->
@@ -972,7 +1019,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -1442,6 +1489,9 @@ comment|/* if not from kernel or wrong sequence skip */
 continue|continue;
 while|while
 condition|(
+operator|(
+name|u_int
+operator|)
 name|len
 operator|>=
 name|NLMSG_SPACE
@@ -2083,7 +2133,7 @@ name|handle
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 decl_stmt|;
 name|unsigned
 name|short
@@ -2200,7 +2250,7 @@ operator|==
 literal|32
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2214,7 +2264,7 @@ name|handle
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|)
 expr_stmt|;
 return|return
@@ -2251,7 +2301,7 @@ operator|>
 literal|65535
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2308,7 +2358,7 @@ operator|*
 name|dev
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2322,7 +2372,7 @@ name|handle
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|)
 expr_stmt|;
 return|return
@@ -2437,7 +2487,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2551,7 +2601,7 @@ operator|->
 name|buffer
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2594,7 +2644,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2630,7 +2680,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2684,7 +2734,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2725,7 +2775,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2765,7 +2815,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2801,7 +2851,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2855,7 +2905,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2896,7 +2946,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2982,7 +3032,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -3169,8 +3219,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 sizeof|sizeof
@@ -3254,7 +3302,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|err_str
 argument_list|,

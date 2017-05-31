@@ -23,7 +23,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|_WIN32
 end_ifdef
 
 begin_include
@@ -38,7 +38,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_if
@@ -99,13 +99,25 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"pcap-int.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pcap/sll.h"
 end_include
 
 begin_include
@@ -118,6 +130,12 @@ begin_include
 include|#
 directive|include
 file|"pcap/nflog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pcap/can_socketcan.h"
 end_include
 
 begin_include
@@ -972,7 +990,7 @@ value|171
 end_define
 
 begin_comment
-comment|/* GPF-T (ITU-T G.7041/Y.1303) */
+comment|/* GPF-F (ITU-T G.7041/Y.1303) */
 end_comment
 
 begin_comment
@@ -1042,7 +1060,7 @@ value|177
 end_define
 
 begin_comment
-comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   * The Link Types are used for prepending meta-information  * like interface index, interface name  * before standard Ethernet, PPP, Frelay& C-HDLC Frames  */
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  * The Link Types are used for prepending meta-information  * like interface index, interface name  * before standard Ethernet, PPP, Frelay& C-HDLC Frames  */
 end_comment
 
 begin_define
@@ -1085,7 +1103,7 @@ value|182
 end_define
 
 begin_comment
-comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   * The DLT_ is used for internal communication with a  * voice Adapter Card (PIC)  */
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  * The DLT_ is used for internal communication with a  * voice Adapter Card (PIC)  */
 end_comment
 
 begin_define
@@ -1118,13 +1136,13 @@ value|185
 end_define
 
 begin_comment
-comment|/*  * USB packets, beginning with a USB setup header; requested by  * Paolo Abeni<paolo.abeni@email.it>.  */
+comment|/*  * This used to be "USB packets, beginning with a USB setup header;  * requested by Paolo Abeni<paolo.abeni@email.it>."  *  * However, that header didn't work all that well - it left out some  * useful information - and was abandoned in favor of the DLT_USB_LINUX  * header.  *  * This is now used by FreeBSD for its BPF taps for USB; that has its  * own headers.  So it is written, so it is done.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LINKTYPE_USB
+name|LINKTYPE_USB_FREEBSD
 value|186
 end_define
 
@@ -1206,7 +1224,7 @@ value|193
 end_define
 
 begin_comment
-comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   * The DLT_ is used for internal communication with a  * integrated service module (ISM).  */
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  * The DLT_ is used for internal communication with a  * integrated service module (ISM).  */
 end_comment
 
 begin_define
@@ -1272,7 +1290,7 @@ value|199
 end_define
 
 begin_comment
-comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   * The DLT_ is used for capturing data on a secure tunnel interface.  */
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  * The DLT_ is used for capturing data on a secure tunnel interface.  */
 end_comment
 
 begin_define
@@ -1445,7 +1463,7 @@ value|215
 end_define
 
 begin_comment
-comment|/*   * David Gibson<david@gibson.dropbear.id.au> requested this for  * captures from the Linux kernel /dev/input/eventN devices. This  * is used to communicate keystrokes and mouse movements from the  * Linux kernel to display systems, such as Xorg.   */
+comment|/*  * David Gibson<david@gibson.dropbear.id.au> requested this for  * captures from the Linux kernel /dev/input/eventN devices. This  * is used to communicate keystrokes and mouse movements from the  * Linux kernel to display systems, such as Xorg.  */
 end_comment
 
 begin_define
@@ -1562,7 +1580,7 @@ value|226
 end_define
 
 begin_comment
-comment|/*  * CAN (Controller Area Network) frames, with a pseudo-header as supplied  * by Linux SocketCAN.  See Documentation/networking/can.txt in the Linux  * source.  *  * Requested by Felix Obenhuber<felix@obenhuber.de>.  */
+comment|/*  * CAN (Controller Area Network) frames, with a pseudo-header as supplied  * by Linux SocketCAN, and with multi-byte numerical fields in that header  * in big-endian byte order.  *  * See Documentation/networking/can.txt in the Linux source.  *  * Requested by Felix Obenhuber<felix@obenhuber.de>.  */
 end_comment
 
 begin_define
@@ -1613,7 +1631,7 @@ value|231
 end_define
 
 begin_comment
-comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   */
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  */
 end_comment
 
 begin_define
@@ -1671,7 +1689,7 @@ value|237
 end_define
 
 begin_comment
-comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   */
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  */
 end_comment
 
 begin_define
@@ -1682,7 +1700,7 @@ value|238
 end_define
 
 begin_comment
-comment|/*  * NetFilter LOG messages   * (payload of netlink NFNL_SUBSYS_ULOG/NFULNL_MSG_PACKET packets)  *  * Requested by Jakub Zawadzki<darkjames-ws@darkjames.pl>  */
+comment|/*  * NetFilter LOG messages  * (payload of netlink NFNL_SUBSYS_ULOG/NFULNL_MSG_PACKET packets)  *  * Requested by Jakub Zawadzki<darkjames-ws@darkjames.pl>  */
 end_comment
 
 begin_define
@@ -1825,7 +1843,7 @@ value|251
 end_define
 
 begin_comment
-comment|/*  * Link-layer header type for upper-protocol layer PDU saves from wireshark.  *   * the actual contents are determined by two TAGs stored with each  * packet:  *   EXP_PDU_TAG_LINKTYPE          the link type (LINKTYPE_ value) of the  *				   original packet.  *  *   EXP_PDU_TAG_PROTO_NAME        the name of the wireshark dissector  * 				   that can make sense of the data stored.  */
+comment|/*  * Link-layer header type for upper-protocol layer PDU saves from wireshark.  *  * the actual contents are determined by two TAGs stored with each  * packet:  *   EXP_PDU_TAG_LINKTYPE          the link type (LINKTYPE_ value) of the  *				   original packet.  *  *   EXP_PDU_TAG_PROTO_NAME        the name of the wireshark dissector  * 				   that can make sense of the data stored.  */
 end_comment
 
 begin_define
@@ -1923,11 +1941,62 @@ name|LINKTYPE_IPMI_HPM_2
 value|260
 end_define
 
+begin_comment
+comment|/*  * per  Joshua Wright<jwright@hasborg.com>, formats for Zwave captures.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_ZWAVE_R1_R2
+value|261
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_ZWAVE_R3
+value|262
+end_define
+
+begin_comment
+comment|/*  * per Steve Karg<skarg@users.sourceforge.net>, formats for Wattstopper  * Digital Lighting Management room bus serial protocol captures.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_WATTSTOPPER_DLM
+value|263
+end_define
+
+begin_comment
+comment|/*  * ISO 14443 contactless smart card messages.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_ISO_14443
+value|264
+end_define
+
+begin_comment
+comment|/*  * Radio data system (RDS) groups.  IEC 62106.  * Per Jonathan Brucker<jonathan.brucke@gmail.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_RDS
+value|265
+end_define
+
 begin_define
 define|#
 directive|define
 name|LINKTYPE_MATCHING_MAX
-value|260
+value|265
 end_define
 
 begin_comment
@@ -2304,6 +2373,187 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|EXTRACT_
+end_define
+
+begin_comment
+comment|/*  * DLT_LINUX_SLL packets with a protocol type of LINUX_SLL_P_CAN or  * LINUX_SLL_P_CANFD have SocketCAN headers in front of the payload,  * with the CAN ID being in host byte order.  *  * When reading a DLT_LINUX_SLL capture file, we need to check for those  * packets and convert the CAN ID from the byte order of the host that  * wrote the file to this host's byte order.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|swap_linux_sll_header
+parameter_list|(
+specifier|const
+name|struct
+name|pcap_pkthdr
+modifier|*
+name|hdr
+parameter_list|,
+name|u_char
+modifier|*
+name|buf
+parameter_list|)
+block|{
+name|u_int
+name|caplen
+init|=
+name|hdr
+operator|->
+name|caplen
+decl_stmt|;
+name|u_int
+name|length
+init|=
+name|hdr
+operator|->
+name|len
+decl_stmt|;
+name|struct
+name|sll_header
+modifier|*
+name|shdr
+init|=
+operator|(
+expr|struct
+name|sll_header
+operator|*
+operator|)
+name|buf
+decl_stmt|;
+name|u_int16_t
+name|protocol
+decl_stmt|;
+name|pcap_can_socketcan_hdr
+modifier|*
+name|chdr
+decl_stmt|;
+if|if
+condition|(
+name|caplen
+operator|<
+operator|(
+name|u_int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sll_header
+argument_list|)
+operator|||
+name|length
+operator|<
+operator|(
+name|u_int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sll_header
+argument_list|)
+condition|)
+block|{
+comment|/* Not enough data to have the protocol field */
+return|return;
+block|}
+name|protocol
+operator|=
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
+name|shdr
+operator|->
+name|sll_protocol
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|protocol
+operator|!=
+name|LINUX_SLL_P_CAN
+operator|&&
+name|protocol
+operator|!=
+name|LINUX_SLL_P_CANFD
+condition|)
+return|return;
+comment|/* 	 * SocketCAN packet; fix up the packet's header. 	 */
+name|chdr
+operator|=
+operator|(
+name|pcap_can_socketcan_hdr
+operator|*
+operator|)
+operator|(
+name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sll_header
+argument_list|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|caplen
+operator|<
+operator|(
+name|u_int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sll_header
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|chdr
+operator|->
+name|can_id
+argument_list|)
+operator|||
+name|length
+operator|<
+operator|(
+name|u_int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sll_header
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|chdr
+operator|->
+name|can_id
+argument_list|)
+condition|)
+block|{
+comment|/* Not enough data to have the CAN ID */
+return|return;
+block|}
+name|chdr
+operator|->
+name|can_id
+operator|=
+name|SWAPLONG
+argument_list|(
+name|chdr
+operator|->
+name|can_id
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * The DLT_USB_LINUX and DLT_USB_LINUX_MMAPPED headers are in host  * byte order when capturing (it's supplied directly from a  * memory-mapped buffer shared by the kernel).  *  * When reading a DLT_USB_LINUX or DLT_USB_LINUX_MMAPPED capture file,  * we need to convert it from the byte order of the host that wrote  * the file to this host's byte order.  */
 end_comment
@@ -2342,17 +2592,8 @@ name|offset
 init|=
 literal|0
 decl_stmt|;
-name|usb_isodesc
-modifier|*
-name|pisodesc
-decl_stmt|;
-name|int32_t
-name|numdesc
-decl_stmt|,
-name|i
-decl_stmt|;
 comment|/* 	 * "offset" is the offset *past* the field we're swapping; 	 * we skip the field *before* checking to make sure 	 * the captured data length includes the entire field. 	 */
-comment|/* 	 * The URB id is a totally opaque value; do we really need to  	 * convert it to the reading host's byte order??? 	 */
+comment|/* 	 * The URB id is a totally opaque value; do we really need to 	 * convert it to the reading host's byte order??? 	 */
 name|offset
 operator|+=
 literal|8
@@ -2620,6 +2861,7 @@ operator|+=
 literal|8
 expr_stmt|;
 comment|/* skip USB setup header */
+comment|/* 	 * With the old header, there are no isochronous descriptors 	 * after the header. 	 * 	 * With the new header, the actual number of descriptors in 	 * the header is not s.iso.numdesc, it's ndesc - only the 	 * first N descriptors, for some value of N, are put into 	 * the header, and ndesc is set to the actual number copied. 	 * In addition, if s.iso.numdesc is negative, no descriptors 	 * are captured, and ndesc is set to 0. 	 */
 if|if
 condition|(
 name|header_len_64_bytes
@@ -2726,7 +2968,6 @@ operator|->
 name|ndesc
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|uhdr
@@ -2737,6 +2978,13 @@ name|URB_ISOCHRONOUS
 condition|)
 block|{
 comment|/* swap the values in struct linux_usb_isodesc */
+name|usb_isodesc
+modifier|*
+name|pisodesc
+decl_stmt|;
+name|u_int32_t
+name|i
+decl_stmt|;
 name|pisodesc
 operator|=
 operator|(
@@ -2753,16 +3001,6 @@ operator|+
 name|offset
 operator|)
 expr_stmt|;
-name|numdesc
-operator|=
-name|uhdr
-operator|->
-name|s
-operator|.
-name|iso
-operator|.
-name|numdesc
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2771,7 +3009,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|numdesc
+name|uhdr
+operator|->
+name|ndesc
 condition|;
 name|i
 operator|++
@@ -2863,6 +3103,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+block|}
 end_function
 
 begin_comment
@@ -2927,7 +3168,7 @@ condition|(
 name|caplen
 operator|<
 operator|(
-name|int
+name|u_int
 operator|)
 sizeof|sizeof
 argument_list|(
@@ -2937,7 +3178,7 @@ operator|||
 name|length
 operator|<
 operator|(
-name|int
+name|u_int
 operator|)
 sizeof|sizeof
 argument_list|(
@@ -2950,13 +3191,10 @@ return|return;
 block|}
 if|if
 condition|(
-operator|!
-operator|(
 name|nfhdr
 operator|->
 name|nflog_version
-operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
@@ -3117,6 +3355,17 @@ condition|(
 name|linktype
 condition|)
 block|{
+case|case
+name|DLT_LINUX_SLL
+case|:
+name|swap_linux_sll_header
+argument_list|(
+name|hdr
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|DLT_USB_LINUX
 case|:

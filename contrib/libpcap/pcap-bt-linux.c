@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2006 Paolo Abeni (Italy)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  * notice, this list of conditions and the following disclaimer in the  * documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   * products derived from this software without specific prior written   * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Bluetooth sniffing API implementation for Linux platform  * By Paolo Abeni<paolo.abeni@email.it>  *  */
+comment|/*  * Copyright (c) 2006 Paolo Abeni (Italy)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  * notice, this list of conditions and the following disclaimer in the  * documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  * products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Bluetooth sniffing API implementation for Linux platform  * By Paolo Abeni<paolo.abeni@email.it>  *  */
 end_comment
 
 begin_ifdef
@@ -285,7 +285,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|err_str
 argument_list|,
@@ -329,7 +329,7 @@ operator|!
 name|dev_list
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|err_str
 argument_list|,
@@ -385,7 +385,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|err_str
 argument_list|,
@@ -444,7 +444,7 @@ index|[
 literal|30
 index|]
 decl_stmt|;
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|dev_name
 argument_list|,
@@ -458,7 +458,7 @@ operator|->
 name|dev_id
 argument_list|)
 expr_stmt|;
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|dev_descr
 argument_list|,
@@ -667,8 +667,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 sizeof|sizeof
@@ -750,7 +748,7 @@ name|handle
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 name|BT_IFACE
 literal|"%d"
@@ -762,7 +760,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -776,7 +774,7 @@ name|handle
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|)
 expr_stmt|;
 return|return
@@ -788,22 +786,16 @@ name|handle
 operator|->
 name|bufsize
 operator|=
-name|handle
-operator|->
-name|snapshot
-operator|+
 name|BT_CTRL_SIZE
 operator|+
 sizeof|sizeof
 argument_list|(
 name|pcap_bluetooth_h4_header
 argument_list|)
-expr_stmt|;
+operator|+
 name|handle
 operator|->
-name|offset
-operator|=
-name|BT_CTRL_SIZE
+name|snapshot
 expr_stmt|;
 name|handle
 operator|->
@@ -890,7 +882,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -929,7 +921,7 @@ operator|->
 name|buffer
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -977,7 +969,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -1025,7 +1017,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -1045,7 +1037,7 @@ goto|goto
 name|close_fail
 goto|;
 block|}
-comment|/* Setup filter, do not call hci function to avoid dependence on  	 * external libs	*/
+comment|/* Setup filter, do not call hci function to avoid dependence on 	 * external libs	*/
 name|memset
 argument_list|(
 operator|&
@@ -1125,7 +1117,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -1196,7 +1188,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -1283,7 +1275,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -1372,40 +1364,49 @@ name|pcap_bluetooth_h4_header
 modifier|*
 name|bthdr
 decl_stmt|;
+name|u_char
+modifier|*
+name|pktd
+decl_stmt|;
+name|int
+name|in
+init|=
+literal|0
+decl_stmt|;
+name|pktd
+operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
+name|handle
+operator|->
+name|buffer
+operator|+
+name|BT_CTRL_SIZE
+expr_stmt|;
 name|bthdr
 operator|=
 operator|(
 name|pcap_bluetooth_h4_header
 operator|*
 operator|)
-operator|&
-name|handle
-operator|->
-name|buffer
-index|[
-name|handle
-operator|->
-name|offset
-index|]
+operator|(
+name|void
+operator|*
+operator|)
+name|pktd
 expr_stmt|;
 name|iv
 operator|.
 name|iov_base
 operator|=
-operator|&
-name|handle
-operator|->
-name|buffer
-index|[
-name|handle
-operator|->
-name|offset
+name|pktd
 operator|+
 sizeof|sizeof
 argument_list|(
 name|pcap_bluetooth_h4_header
 argument_list|)
-index|]
 expr_stmt|;
 name|iv
 operator|.
@@ -1453,9 +1454,7 @@ name|msg
 operator|.
 name|msg_controllen
 operator|=
-name|handle
-operator|->
-name|offset
+name|BT_CTRL_SIZE
 expr_stmt|;
 comment|/* ignore interrupt system call error */
 do|do
@@ -1516,7 +1515,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -1552,11 +1551,6 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
-name|int
-name|in
-init|=
-literal|0
-decl_stmt|;
 while|while
 condition|(
 name|cmsg
@@ -1699,15 +1693,7 @@ name|fcode
 operator|.
 name|bf_insns
 argument_list|,
-operator|&
-name|handle
-operator|->
-name|buffer
-index|[
-name|handle
-operator|->
-name|offset
-index|]
+name|pktd
 argument_list|,
 name|pkth
 operator|.
@@ -1726,15 +1712,7 @@ argument_list|,
 operator|&
 name|pkth
 argument_list|,
-operator|&
-name|handle
-operator|->
-name|buffer
-index|[
-name|handle
-operator|->
-name|offset
-index|]
+name|pktd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1766,7 +1744,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -1881,7 +1859,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
