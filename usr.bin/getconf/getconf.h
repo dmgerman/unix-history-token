@@ -40,6 +40,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|PROG_ENV_VALID_NO_ALT_PATH
+init|=
+operator|-
+literal|1
+block|,
+name|PROG_ENV_INVALID
+init|=
+literal|0
+block|,
+name|PROG_ENV_VALID_HAS_ALT_PATH
+init|=
+literal|1
+block|,
+name|PROG_ENV_UNKNOWN
+init|=
+literal|2
+block|, }
+name|prog_env_validity
+typedef|;
+end_typedef
+
 begin_function_decl
 name|int
 name|find_confstr
@@ -89,7 +114,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|prog_env_validity
 name|find_progenv
 parameter_list|(
 specifier|const
