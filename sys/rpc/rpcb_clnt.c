@@ -1376,7 +1376,7 @@ comment|/* fall back to earlier version */
 end_comment
 
 begin_comment
-unit|vers = RPCBVERS; 			CLNT_CONTROL(client, CLSET_VERS, (char *)(void *)&vers); 			st = CLNT_CALL(client, (rpcproc_t)RPCBPROC_GETTIME, 				(xdrproc_t) xdr_void, NULL, 				(xdrproc_t) xdr_int, (char *)(void *)timep, 				tottimeout); 		} 	} 	CLNT_DESTROY(client); 	return (st == RPC_SUCCESS? TRUE: FALSE); }  static bool_t xdr_netbuf(XDR *xdrs, struct netbuf *objp) { 	bool_t dummy; 	void **pp;  	if (!xdr_uint32_t(xdrs, (uint32_t *)&objp->maxlen)) { 		return (FALSE); 	} 	pp =&objp->buf; 	dummy = xdr_bytes(xdrs, (char **) pp, 			(u_int *)&(objp->len), objp->maxlen); 	return (dummy); }
+unit|vers = RPCBVERS; 			CLNT_CONTROL(client, CLSET_VERS, (char *)(void *)&vers); 			st = CLNT_CALL(client, (rpcproc_t)RPCBPROC_GETTIME, 				(xdrproc_t) xdr_void, NULL, 				(xdrproc_t) xdr_int, (char *)(void *)timep, 				tottimeout); 		} 	} 	CLNT_DESTROY(client); 	return (st == RPC_SUCCESS? TRUE: FALSE); }  static bool_t xdr_netbuf(XDR *xdrs, struct netbuf *objp) { 	bool_t dummy; 	void **pp;  	if (!xdr_uint32_t(xdrs, (uint32_t *)&objp->maxlen)) { 		return (FALSE); 	} 	pp =&objp->buf;  	if (objp->maxlen> RPC_MAXDATASIZE) { 		return (FALSE); 	}  	dummy = xdr_bytes(xdrs, (char **) pp, 			(u_int *)&(objp->len), objp->maxlen); 	return (dummy); }
 comment|/*  * Converts taddr to universal address.  This routine should never  * really be called because local n2a libraries are always provided.  */
 end_comment
 
