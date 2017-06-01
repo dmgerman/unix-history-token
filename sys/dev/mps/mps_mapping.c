@@ -184,7 +184,7 @@ file|<dev/mps/mps_mapping.h>
 end_include
 
 begin_comment
-comment|/**  * _mapping_clear_entry - Clear a particular mapping entry.  * @map_entry: map table entry  *  * Returns nothing.  */
+comment|/**  * _mapping_clear_map_entry - Clear a particular mapping entry.  * @map_entry: map table entry  *  * Returns nothing.  */
 end_comment
 
 begin_function
@@ -228,13 +228,6 @@ operator|->
 name|dev_handle
 operator|=
 literal|0
-expr_stmt|;
-name|map_entry
-operator|->
-name|channel
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 name|map_entry
 operator|->
@@ -559,6 +552,21 @@ name|Reserved1
 operator|=
 literal|0
 expr_stmt|;
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Writing DPM entry %d for enclosure.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|et_entry
+operator|->
+name|dpm_entry_num
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -596,9 +604,16 @@ name|dpm_entry_num
 argument_list|)
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: write of dpm entry %d for enclosure failed\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Write of DPM "
+literal|"entry %d for enclosure failed.\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -685,7 +700,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * _mapping_commit_map_entry - write a particular map table entry in DPM page0.  * @sc: per adapter object  * @enc_entry: enclosure table entry  *  * Returns 0 for success, non-zero for failure.  */
+comment|/**  * _mapping_commit_map_entry - write a particular map table entry in DPM page0.  * @sc: per adapter object  * @mt_entry: mapping table entry  *  * Returns 0 for success, non-zero for failure.  */
 end_comment
 
 begin_function
@@ -724,6 +739,36 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* 	 * It's possible that this Map Entry points to a BAD DPM index. This 	 * can happen if the Map Entry is a for a missing device and the DPM 	 * entry that was being used by this device is now being used by some 	 * new device. So, check for a BAD DPM index and just return if so. 	 */
+if|if
+condition|(
+name|mt_entry
+operator|->
+name|dpm_entry_num
+operator|==
+name|MPS_DPM_BAD_IDX
+condition|)
+block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: DPM entry location for target "
+literal|"%d is invalid. DPM will not be written.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|mt_entry
+operator|->
+name|id
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|memset
 argument_list|(
 operator|&
@@ -849,17 +894,6 @@ name|Reserved1
 operator|=
 literal|0
 expr_stmt|;
-name|dpm_entry
-operator|->
-name|MappingInformation
-operator|=
-name|htole16
-argument_list|(
-name|dpm_entry
-operator|->
-name|MappingInformation
-argument_list|)
-expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -877,6 +911,25 @@ sizeof|sizeof
 argument_list|(
 name|Mpi2DriverMap0Entry_t
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Writing DPM entry %d for target %d.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|mt_entry
+operator|->
+name|dpm_entry_num
+argument_list|,
+name|mt_entry
+operator|->
+name|id
 argument_list|)
 expr_stmt|;
 if|if
@@ -897,15 +950,26 @@ name|dpm_entry_num
 argument_list|)
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: write of dpm entry %d for device failed\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Write of DPM "
+literal|"entry %d for target %d failed.\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|mt_entry
 operator|->
 name|dpm_entry_num
+argument_list|,
+name|mt_entry
+operator|->
+name|id
 argument_list|)
 expr_stmt|;
 name|dpm_entry
@@ -1354,7 +1418,7 @@ name|map_idx
 decl_stmt|,
 name|high_idx
 init|=
-name|MPS_ENCTABLE_BAD_IDX
+name|MPS_MAPTABLE_BAD_IDX
 decl_stmt|;
 name|u8
 name|high_missing_count
@@ -1850,6 +1914,7 @@ name|dev_mapping_table
 modifier|*
 name|mt_entry
 decl_stmt|;
+comment|/* 	 * The IN_USE flag should be clear if the entry is available to use. 	 * This flag is cleared on initialization and and when a volume is 	 * deleted. All other times this flag should be set. If, for some 	 * reason, a free entry cannot be found, look for the entry with the 	 * highest missing count just in case there is one. 	 */
 name|_mapping_get_ir_maprange
 argument_list|(
 name|sc
@@ -1887,6 +1952,7 @@ operator|,
 name|mt_entry
 operator|++
 control|)
+block|{
 if|if
 condition|(
 operator|!
@@ -1901,33 +1967,6 @@ condition|)
 return|return
 name|map_idx
 return|;
-name|mt_entry
-operator|=
-operator|&
-name|sc
-operator|->
-name|mapping_table
-index|[
-name|start_idx
-index|]
-expr_stmt|;
-for|for
-control|(
-name|map_idx
-operator|=
-name|start_idx
-init|;
-name|map_idx
-operator|<=
-name|end_idx
-condition|;
-name|map_idx
-operator|++
-operator|,
-name|mt_entry
-operator|++
-control|)
-block|{
 if|if
 condition|(
 name|mt_entry
@@ -1948,6 +1987,29 @@ operator|=
 name|map_idx
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|high_idx
+operator|==
+name|MPS_MAPTABLE_BAD_IDX
+condition|)
+block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Could not find a "
+literal|"free entry in the mapping table for a Volume. The mapping "
+literal|"table is probably corrupt.\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|high_idx
@@ -2214,6 +2276,32 @@ block|{
 name|u16
 name|entry_num
 decl_stmt|;
+name|Mpi2DriverMap0Entry_t
+modifier|*
+name|dpm_entry
+decl_stmt|;
+name|u16
+name|current_entry
+init|=
+name|MPS_DPM_BAD_IDX
+decl_stmt|,
+name|missing_cnt
+decl_stmt|,
+name|high_missing_cnt
+init|=
+literal|0
+decl_stmt|;
+name|u64
+name|physical_id
+decl_stmt|;
+name|struct
+name|dev_mapping_table
+modifier|*
+name|mt_entry
+decl_stmt|;
+name|u32
+name|map_idx
+decl_stmt|;
 for|for
 control|(
 name|entry_num
@@ -2230,6 +2318,54 @@ name|entry_num
 operator|++
 control|)
 block|{
+name|dpm_entry
+operator|=
+operator|(
+name|Mpi2DriverMap0Entry_t
+operator|*
+operator|)
+operator|(
+operator|(
+name|u8
+operator|*
+operator|)
+name|sc
+operator|->
+name|dpm_pg0
+operator|+
+sizeof|sizeof
+argument_list|(
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+argument_list|)
+operator|)
+expr_stmt|;
+name|dpm_entry
+operator|+=
+name|entry_num
+expr_stmt|;
+name|missing_cnt
+operator|=
+name|dpm_entry
+operator|->
+name|MappingInformation
+operator|&
+name|MPI2_DRVMAP0_MAPINFO_MISSING_MASK
+expr_stmt|;
+comment|/* 		 * If entry is used and not missing, then this entry can't be 		 * used. Look at next one. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|dpm_entry_used
+index|[
+name|entry_num
+index|]
+operator|&&
+operator|!
+name|missing_cnt
+condition|)
+continue|continue;
+comment|/* 		 * If this entry is not used at all, then the missing count 		 * doesn't matter. Just use this one. Otherwise, keep looking 		 * and make sure the entry with the highest missing count is 		 * used. 		 */
 if|if
 condition|(
 operator|!
@@ -2240,12 +2376,138 @@ index|[
 name|entry_num
 index|]
 condition|)
-return|return
+block|{
+name|current_entry
+operator|=
 name|entry_num
-return|;
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+operator|(
+name|current_entry
+operator|==
+name|MPS_DPM_BAD_IDX
+operator|)
+operator|||
+operator|(
+name|missing_cnt
+operator|>
+name|high_missing_cnt
+operator|)
+condition|)
+block|{
+name|current_entry
+operator|=
+name|entry_num
+expr_stmt|;
+name|high_missing_cnt
+operator|=
+name|missing_cnt
+expr_stmt|;
+block|}
+block|}
+comment|/* 	 * If an entry has been found to use and it's already marked as used 	 * it means that some device was already using this entry but it's 	 * missing, and that means that the connection between the missing 	 * device's DPM entry and the mapping table needs to be cleared. To do 	 * this, use the Physical ID of the old device still in the DPM entry 	 * to find its mapping table entry, then mark its DPM entry as BAD. 	 */
+if|if
+condition|(
+operator|(
+name|current_entry
+operator|!=
+name|MPS_DPM_BAD_IDX
+operator|)
+operator|&&
+name|sc
+operator|->
+name|dpm_entry_used
+index|[
+name|current_entry
+index|]
+condition|)
+block|{
+name|dpm_entry
+operator|=
+operator|(
+name|Mpi2DriverMap0Entry_t
+operator|*
+operator|)
+operator|(
+operator|(
+name|u8
+operator|*
+operator|)
+name|sc
+operator|->
+name|dpm_pg0
+operator|+
+sizeof|sizeof
+argument_list|(
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+argument_list|)
+operator|)
+expr_stmt|;
+name|dpm_entry
+operator|+=
+name|current_entry
+expr_stmt|;
+name|physical_id
+operator|=
+name|dpm_entry
+operator|->
+name|PhysicalIdentifier
+operator|.
+name|High
+expr_stmt|;
+name|physical_id
+operator|=
+operator|(
+name|physical_id
+operator|<<
+literal|32
+operator|)
+operator||
+name|dpm_entry
+operator|->
+name|PhysicalIdentifier
+operator|.
+name|Low
+expr_stmt|;
+name|map_idx
+operator|=
+name|_mapping_get_mt_idx_from_id
+argument_list|(
+name|sc
+argument_list|,
+name|physical_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|map_idx
+operator|!=
+name|MPS_MAPTABLE_BAD_IDX
+condition|)
+block|{
+name|mt_entry
+operator|=
+operator|&
+name|sc
+operator|->
+name|mapping_table
+index|[
+name|map_idx
+index|]
+expr_stmt|;
+name|mt_entry
+operator|->
+name|dpm_entry_num
+operator|=
+name|MPS_DPM_BAD_IDX
+expr_stmt|;
+block|}
 block|}
 return|return
-name|MPS_DPM_BAD_IDX
+name|current_entry
 return|;
 block|}
 end_function
@@ -2288,6 +2550,10 @@ init|=
 name|element
 operator|->
 name|ReasonCode
+decl_stmt|,
+name|update_dpm
+init|=
+literal|1
 decl_stmt|;
 name|u16
 name|dpm_idx
@@ -2296,14 +2562,7 @@ name|Mpi2DriverMap0Entry_t
 modifier|*
 name|dpm_entry
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|sc
-operator|->
-name|is_dpm_enable
-condition|)
-return|return;
+comment|/* 	 * Depending on the reason code, update the missing count. Always set 	 * the init_complete flag when here, so just do it first. That flag is 	 * used for volumes to make sure that the DPM entry has been updated. 	 * When a volume is deleted, clear the map entry's IN_USE flag so that 	 * the entry can be used again if another volume is created. Also clear 	 * its dev_handle entry so that other functions can't find this volume 	 * by the handle, since it's not defined any longer. 	 */
 name|mt_entry
 operator|=
 operator|&
@@ -2314,63 +2573,40 @@ index|[
 name|map_idx
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|reason
-operator|==
-name|MPI2_EVENT_IR_CHANGE_RC_ADDED
-condition|)
-block|{
-name|mt_entry
-operator|->
-name|missing_count
-operator|=
-literal|0
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|reason
-operator|==
-name|MPI2_EVENT_IR_CHANGE_RC_VOLUME_CREATED
-condition|)
-block|{
-name|mt_entry
-operator|->
-name|missing_count
-operator|=
-literal|0
-expr_stmt|;
 name|mt_entry
 operator|->
 name|init_complete
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 operator|(
 name|reason
 operator|==
-name|MPI2_EVENT_IR_CHANGE_RC_REMOVED
+name|MPI2_EVENT_IR_CHANGE_RC_ADDED
 operator|)
 operator|||
 operator|(
 name|reason
 operator|==
-name|MPI2_EVENT_IR_CHANGE_RC_VOLUME_DELETED
+name|MPI2_EVENT_IR_CHANGE_RC_VOLUME_CREATED
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
 name|mt_entry
 operator|->
-name|init_complete
+name|missing_count
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|reason
+operator|==
+name|MPI2_EVENT_IR_CHANGE_RC_VOLUME_DELETED
 condition|)
 block|{
 if|if
@@ -2386,25 +2622,12 @@ operator|->
 name|missing_count
 operator|++
 expr_stmt|;
-else|else
 name|mt_entry
 operator|->
-name|init_complete
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|mt_entry
-operator|->
-name|missing_count
-condition|)
-name|mt_entry
-operator|->
-name|missing_count
-operator|++
+name|device_info
+operator|&=
+operator|~
+name|MPS_MAP_IN_USE
 expr_stmt|;
 name|mt_entry
 operator|->
@@ -2413,6 +2636,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * If persistent mapping is enabled, update the DPM with the new missing 	 * count for the volume. If the DPM index is bad, get a free one. If 	 * it's bad for a volume that's being deleted do nothing because that 	 * volume doesn't have a DPM entry.  	 */
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|is_dpm_enable
+condition|)
+return|return;
 name|dpm_idx
 operator|=
 name|mt_entry
@@ -2428,40 +2660,41 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|reason
-operator|==
-name|MPI2_EVENT_IR_CHANGE_RC_ADDED
-operator|)
-operator|||
-operator|(
-name|reason
-operator|==
-name|MPI2_EVENT_IR_CHANGE_RC_REMOVED
-operator|)
-condition|)
-name|dpm_idx
-operator|=
-name|_mapping_get_dpm_idx_from_id
-argument_list|(
-name|sc
-argument_list|,
-name|mt_entry
-operator|->
-name|physical_id
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|reason
 operator|==
 name|MPI2_EVENT_IR_CHANGE_RC_VOLUME_DELETED
 condition|)
+block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Volume being deleted "
+literal|"is not in DPM so DPM missing count will not be "
+literal|"updated.\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+block|}
+if|if
+condition|(
+name|dpm_idx
+operator|==
+name|MPS_DPM_BAD_IDX
+condition|)
+name|dpm_idx
+operator|=
+name|_mapping_get_free_dpm_idx
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Got the DPM entry for the volume or found a free DPM entry if this is 	 * a new volume. Check if the current information is outdated. 	 */
 if|if
 condition|(
 name|dpm_idx
@@ -2512,6 +2745,7 @@ operator|==
 name|le64toh
 argument_list|(
 operator|(
+operator|(
 name|u64
 operator|)
 name|dpm_entry
@@ -2519,7 +2753,13 @@ operator|->
 name|PhysicalIdentifier
 operator|.
 name|High
+operator|<<
+literal|32
+operator|)
 operator||
+operator|(
+name|u64
+operator|)
 name|dpm_entry
 operator|->
 name|PhysicalIdentifier
@@ -2536,29 +2776,30 @@ operator|->
 name|missing_count
 operator|)
 condition|)
-name|mt_entry
-operator|->
-name|init_complete
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
 block|{
-name|dpm_idx
-operator|=
-name|_mapping_get_free_dpm_idx
+name|mps_dprint
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: DPM entry for volume "
+literal|"with target ID %d does not require an update.\n"
+argument_list|,
+name|__func__
+argument_list|,
 name|mt_entry
 operator|->
-name|init_complete
+name|id
+argument_list|)
+expr_stmt|;
+name|update_dpm
 operator|=
 literal|0
 expr_stmt|;
 block|}
+block|}
+comment|/* 	 * Update the volume's persistent info if it's new or the ID or missing 	 * count has changed. If a good DPM index has not been found by now, 	 * there is no space left in the DPM table. 	 */
 if|if
 condition|(
 operator|(
@@ -2567,17 +2808,24 @@ operator|!=
 name|MPS_DPM_BAD_IDX
 operator|)
 operator|&&
-operator|!
-name|mt_entry
-operator|->
-name|init_complete
+name|update_dpm
 condition|)
 block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Update DPM entry for volume "
+literal|"with target ID %d.\n"
+argument_list|,
+name|__func__
+argument_list|,
 name|mt_entry
 operator|->
-name|init_complete
-operator|=
-literal|1
+name|id
+argument_list|)
 expr_stmt|;
 name|mt_entry
 operator|->
@@ -2691,25 +2939,30 @@ operator|==
 name|MPS_DPM_BAD_IDX
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: no space to add entry in DPM table\n"
+name|sc
+argument_list|,
+name|MPS_INFO
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: No space to add an "
+literal|"entry in the DPM table for volume with target ID %d.\n"
 argument_list|,
 name|__func__
-argument_list|)
-expr_stmt|;
+argument_list|,
 name|mt_entry
 operator|->
-name|init_complete
-operator|=
-literal|1
+name|id
+argument_list|)
 expr_stmt|;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/**  * _mapping_add_to_removal_table - mark an entry for removal  * @sc: per adapter object  * @handle: Handle of enclosures/device/volume  *  * Adds the handle or DPM entry number in removal table.  *  * Returns nothing.  */
+comment|/**  * _mapping_add_to_removal_table - add DPM index to the removal table  * @sc: per adapter object  * @dpm_idx: Index of DPM entry to remove  *  * Adds a DPM entry number to the removal table.  *  * Returns nothing.  */
 end_comment
 
 begin_function
@@ -2723,9 +2976,6 @@ modifier|*
 name|sc
 parameter_list|,
 name|u16
-name|handle
-parameter_list|,
-name|u16
 name|dpm_idx
 parameter_list|)
 block|{
@@ -2737,18 +2987,16 @@ decl_stmt|;
 name|u32
 name|i
 decl_stmt|;
-name|u16
-name|ioc_pg8_flags
-init|=
-name|le16toh
-argument_list|(
+comment|/* 	 * This is only used to remove entries from the DPM in the controller. 	 * If DPM is not enabled, just return. 	 */
+if|if
+condition|(
+operator|!
 name|sc
 operator|->
-name|ioc_pg8
-operator|.
-name|Flags
-argument_list|)
-decl_stmt|;
+name|is_dpm_enable
+condition|)
+return|return;
+comment|/* 	 * Find the first available removal_table entry and add the new entry 	 * there. 	 */
 name|remove_entry
 operator|=
 name|sc
@@ -2778,67 +3026,30 @@ if|if
 condition|(
 name|remove_entry
 operator|->
-name|dev_handle
-operator|||
-name|remove_entry
-operator|->
 name|dpm_entry_num
 operator|!=
 name|MPS_DPM_BAD_IDX
 condition|)
 continue|continue;
-if|if
-condition|(
-operator|(
-name|ioc_pg8_flags
-operator|&
-name|MPI2_IOCPAGE8_FLAGS_MASK_MAPPING_MODE
-operator|)
-operator|==
-name|MPI2_IOCPAGE8_FLAGS_ENCLOSURE_SLOT_MAPPING
-condition|)
-block|{
-if|if
-condition|(
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Adding DPM entry %d to table "
+literal|"for removal.\n"
+argument_list|,
+name|__func__
+argument_list|,
 name|dpm_idx
-condition|)
+argument_list|)
+expr_stmt|;
 name|remove_entry
 operator|->
 name|dpm_entry_num
 operator|=
 name|dpm_idx
-expr_stmt|;
-if|if
-condition|(
-name|remove_entry
-operator|->
-name|dpm_entry_num
-operator|==
-name|MPS_DPM_BAD_IDX
-condition|)
-name|remove_entry
-operator|->
-name|dev_handle
-operator|=
-name|handle
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|ioc_pg8_flags
-operator|&
-name|MPI2_IOCPAGE8_FLAGS_MASK_MAPPING_MODE
-operator|)
-operator|==
-name|MPI2_IOCPAGE8_FLAGS_DEVICE_PERSISTENCE_MAPPING
-condition|)
-name|remove_entry
-operator|->
-name|dev_handle
-operator|=
-name|handle
 expr_stmt|;
 break|break;
 block|}
@@ -2846,7 +3057,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * _mapping_update_missing_count - Update missing count for a device  * @sc: per adapter object  * @topo_change: Topology change event entry  *  * Search through the topology change list and if any device is found not  * responding it's associated map table entry and DPM entry is updated  *  * Returns nothing.  */
+comment|/**  * _mapping_update_missing_count - Update missing count for a device  * @sc: per adapter object  * @topo_change: Topology change event entry  *  * Increment the missing count in the mapping table for a device that is not  * responding. If Persitent Mapping is used, increment the DPM entry as well.  * Currently, this function only increments the missing count if the device   * goes missing, so after initialization has completed. This means that the  * missing count can only go from 0 to 1 here. The missing count is incremented  * during initialization as well, so that's where a target's missing count can  * go past 1.  *  * Returns nothing.  */
 end_comment
 
 begin_function
@@ -2963,10 +3174,16 @@ operator|==
 name|MPS_MAPTABLE_BAD_IDX
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: device is already removed from mapping "
-literal|"table\n"
+name|sc
+argument_list|,
+name|MPS_INFO
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: device is "
+literal|"already removed from mapping table\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2985,14 +3202,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|mt_entry
-operator|->
-name|init_complete
-condition|)
-block|{
-if|if
-condition|(
 name|mt_entry
 operator|->
 name|missing_count
@@ -3004,43 +3213,25 @@ operator|->
 name|missing_count
 operator|++
 expr_stmt|;
-else|else
-name|mt_entry
-operator|->
-name|init_complete
-operator|=
-literal|1
-expr_stmt|;
-block|}
+comment|/* 		 * When using Enc/Slot mapping, when a device is removed, it's 		 * mapping table information should be cleared. Otherwise, the 		 * target ID will be incorrect if this same device is re-added 		 * to a different slot. 		 */
 if|if
 condition|(
-operator|!
-name|mt_entry
-operator|->
-name|missing_count
+operator|(
+name|ioc_pg8_flags
+operator|&
+name|MPI2_IOCPAGE8_FLAGS_MASK_MAPPING_MODE
+operator|)
+operator|==
+name|MPI2_IOCPAGE8_FLAGS_ENCLOSURE_SLOT_MAPPING
 condition|)
-name|mt_entry
-operator|->
-name|missing_count
-operator|++
-expr_stmt|;
-name|_mapping_add_to_removal_table
+block|{
+name|_mapping_clear_map_entry
 argument_list|(
-name|sc
-argument_list|,
 name|mt_entry
-operator|->
-name|dev_handle
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|mt_entry
-operator|->
-name|dev_handle
-operator|=
-literal|0
-expr_stmt|;
+block|}
+comment|/* 		 * When using device mapping, update the missing count in the 		 * DPM entry, but only if the missing count has changed. 		 */
 if|if
 condition|(
 operator|(
@@ -3056,11 +3247,6 @@ operator|&&
 name|sc
 operator|->
 name|is_dpm_enable
-operator|&&
-operator|!
-name|mt_entry
-operator|->
-name|init_complete
 operator|&&
 name|mt_entry
 operator|->
@@ -3096,6 +3282,17 @@ name|mt_entry
 operator|->
 name|dpm_entry_num
 expr_stmt|;
+if|if
+condition|(
+name|dpm_entry
+operator|->
+name|MappingInformation
+operator|!=
+name|mt_entry
+operator|->
+name|missing_count
+condition|)
+block|{
 name|dpm_entry
 operator|->
 name|MappingInformation
@@ -3116,12 +3313,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|mt_entry
-operator|->
-name|init_complete
-operator|=
-literal|1
-expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -3219,6 +3411,7 @@ argument_list|)
 operator|&
 name|MPI2_IOCPAGE8_IRFLAGS_MASK_VOLUME_MAPPING_MODE
 expr_stmt|;
+comment|/* 	 * The end of the mapping table depends on where volumes are kept, if 	 * IR is enabled. 	 */
 if|if
 condition|(
 operator|!
@@ -3255,6 +3448,19 @@ operator|-
 name|sc
 operator|->
 name|max_volumes
+expr_stmt|;
+comment|/* 	 * The skip_count is the number of entries that are reserved at the 	 * beginning of the mapping table. But, it does not include the number 	 * of Physical IDs that are reserved for direct attached devices. Look 	 * through the mapping table after these reserved entries to see if  	 * the devices for this enclosure are already mapped. The PHY bit check 	 * is used to make sure that at least one PHY bit is common between the 	 * enclosure and the device that is already mapped. 	 */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Looking for space in the mapping "
+literal|"table for added enclosure.\n"
+argument_list|,
+name|__func__
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -3337,6 +3543,21 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Found space "
+literal|"in the mapping for enclosure at map index "
+literal|"%d.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|start_idx
+argument_list|)
+expr_stmt|;
 return|return
 name|start_idx
 return|;
@@ -3348,6 +3569,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * If the enclosure's devices are not mapped already, look for 	 * contiguous entries in the mapping table that are not reserved. If 	 * enough entries are found, return the starting index for that space. 	 */
+name|num_found
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|map_idx
@@ -3411,6 +3637,21 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Found space "
+literal|"in the mapping for enclosure at map index "
+literal|"%d.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|start_idx
+argument_list|)
+expr_stmt|;
 return|return
 name|start_idx
 return|;
@@ -3422,6 +3663,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * If here, it means that not enough space in the mapping table was 	 * found to support this enclosure, so go through the enclosure table to 	 * see if any enclosure entries have a missing count. If so, get the 	 * enclosure with the highest missing count and check it to see if there 	 * is enough space for the new enclosure. 	 */
 while|while
 condition|(
 operator|!
@@ -3441,9 +3683,36 @@ name|enc_idx
 operator|==
 name|MPS_ENCTABLE_BAD_IDX
 condition|)
+block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Not enough space was "
+literal|"found in the mapping for the added enclosure.\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|MPS_MAPTABLE_BAD_IDX
 return|;
+block|}
+comment|/* 		 * Found a missing enclosure. Set the skip_search flag so this 		 * enclosure is not checked again for a high missing count if 		 * the loop continues. This way, all missing enclosures can 		 * have their space added together to find enough space in the 		 * mapping table for the added enclosure. The space must be 		 * contiguous. 		 */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Space from a missing "
+literal|"enclosure was found.\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|enc_entry
 operator|=
 operator|&
@@ -3454,12 +3723,24 @@ index|[
 name|enc_idx
 index|]
 expr_stmt|;
-comment|/*VSP FIXME*/
 name|enc_entry
 operator|->
 name|skip_search
 operator|=
 literal|1
+expr_stmt|;
+comment|/* 		 * Unmark all of the missing enclosure's device's reserved 		 * space. These will be remarked as reserved if this missing 		 * enclosure's space is not used. 		 */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Clear the reserved flag for "
+literal|"all of the map entries for the enclosure.\n"
+argument_list|,
+name|__func__
+argument_list|)
 expr_stmt|;
 name|mt_entry
 operator|=
@@ -3506,7 +3787,24 @@ operator|&=
 operator|~
 name|MPS_DEV_RESERVED
 expr_stmt|;
+comment|/* 		 * Now that space has been unreserved, check again to see if 		 * enough space is available for the new enclosure. 		 */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Check if new mapping space is "
+literal|"enough for the new enclosure.\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|found_space
+operator|=
+literal|0
+expr_stmt|;
+name|num_found
 operator|=
 literal|0
 expr_stmt|;
@@ -3577,6 +3875,7 @@ name|found_space
 operator|=
 literal|1
 expr_stmt|;
+break|break;
 block|}
 block|}
 else|else
@@ -3591,6 +3890,21 @@ operator|!
 name|found_space
 condition|)
 continue|continue;
+comment|/* 		 * If enough space was found, all of the missing enclosures that 		 * will be used for the new enclosure must be added to the 		 * removal table. Then all mappings for the enclosure's devices 		 * and for the enclosure itself need to be cleared. There may be 		 * more than one enclosure to add to the removal table and 		 * clear. 		 */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Found space in the mapping "
+literal|"for enclosure at map index %d.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|start_idx
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|map_idx
@@ -3663,6 +3977,21 @@ operator|->
 name|removal_flag
 condition|)
 block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: "
+literal|"Enclosure %d will be removed from "
+literal|"the mapping table.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|enc_idx
+argument_list|)
+expr_stmt|;
 name|enc_entry
 operator|->
 name|removal_flag
@@ -3672,8 +4001,6 @@ expr_stmt|;
 name|_mapping_add_to_removal_table
 argument_list|(
 name|sc
-argument_list|,
-literal|0
 argument_list|,
 name|enc_entry
 operator|->
@@ -3691,32 +4018,11 @@ index|[
 name|map_idx
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|mt_entry
-operator|->
-name|device_info
-operator|&
-name|MPS_MAP_IN_USE
-condition|)
-block|{
-name|_mapping_add_to_removal_table
-argument_list|(
-name|sc
-argument_list|,
-name|mt_entry
-operator|->
-name|dev_handle
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|_mapping_clear_map_entry
 argument_list|(
 name|mt_entry
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|map_idx
@@ -3740,6 +4046,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 		 * During the search for space for this enclosure, some entries 		 * in the mapping table may have been unreserved. Go back and 		 * change all of these to reserved again. Only the enclosures 		 * with the removal_flag set should be left as unreserved. The 		 * skip_search flag needs to be cleared as well so that the 		 * enclosure's space will be looked at the next time space is 		 * needed. 		 */
 name|enc_entry
 operator|=
 name|sc
@@ -3773,6 +4080,21 @@ operator|->
 name|removal_flag
 condition|)
 block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Reset the "
+literal|"reserved flag for all of the map entries "
+literal|"for enclosure %d.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|enc_idx
+argument_list|)
+expr_stmt|;
 name|mt_entry
 operator|=
 operator|&
@@ -4003,11 +4325,14 @@ argument_list|)
 expr_stmt|;
 name|sas_address
 operator|=
+name|le32toh
+argument_list|(
 name|sas_device_pg0
 operator|.
 name|SASAddress
 operator|.
 name|High
+argument_list|)
 expr_stmt|;
 name|sas_address
 operator|=
@@ -4017,11 +4342,14 @@ operator|<<
 literal|32
 operator|)
 operator||
+name|le32toh
+argument_list|(
 name|sas_device_pg0
 operator|.
 name|SASAddress
 operator|.
 name|Low
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4119,13 +4447,9 @@ name|phy_change
 operator|->
 name|device_info
 operator|=
-name|le32toh
-argument_list|(
-name|sas_device_pg0
-operator|.
-name|DeviceInfo
-argument_list|)
+name|device_info
 expr_stmt|;
+comment|/* 		 * When using Enc/Slot mapping, if this device is an enclosure 		 * make sure that all of its slots can fit into the mapping 		 * table. 		 */
 if|if
 condition|(
 operator|(
@@ -4137,6 +4461,7 @@ operator|==
 name|MPI2_IOCPAGE8_FLAGS_ENCLOSURE_SLOT_MAPPING
 condition|)
 block|{
+comment|/* 			 * The enclosure should already be in the enclosure 			 * table due to the Enclosure Add event. If not, just 			 * continue, nothing can be done. 			 */
 name|enc_idx
 operator|=
 name|_mapping_get_enc_idx_from_handle
@@ -4165,11 +4490,14 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPS_ERROR
+operator||
 name|MPS_MAPPING
 argument_list|,
-literal|"%s: failed to add "
-literal|"the device with handle 0x%04x because the "
-literal|"enclosure is not in the mapping table\n"
+literal|"%s: "
+literal|"failed to add the device with handle "
+literal|"0x%04x because the enclosure is not in "
+literal|"the mapping table\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4226,6 +4554,7 @@ index|[
 name|enc_idx
 index|]
 expr_stmt|;
+comment|/* 			 * If the enclosure already has a start_index, it's been 			 * mapped, so go to the next Topo change. 			 */
 if|if
 condition|(
 name|et_entry
@@ -4235,6 +4564,7 @@ operator|!=
 name|MPS_MAPTABLE_BAD_IDX
 condition|)
 continue|continue;
+comment|/* 			 * If the Expander Handle is 0, the devices are direct 			 * attached. In that case, the start_index must be just  			 * after the reserved entries. Otherwise, find space in 			 * the mapping table for the enclosure's devices. 			 */
 if|if
 condition|(
 operator|!
@@ -4273,6 +4603,7 @@ name|start_index
 operator|=
 name|map_idx
 expr_stmt|;
+comment|/* 				 * If space cannot be found to hold all of the 				 * enclosure's devices in the mapping table, 				 * there's no need to continue checking the 				 * other devices in this event. Set all of the 				 * phy_details for this event (if the change is 				 * for an add) as already processed because none 				 * of these devices can be added to the mapping 				 * table. 				 */
 if|if
 condition|(
 name|et_entry
@@ -4282,6 +4613,30 @@ operator|==
 name|MPS_MAPTABLE_BAD_IDX
 condition|)
 block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: failed to add the enclosure "
+literal|"with ID 0x%016jx because there is "
+literal|"no free space available in the "
+literal|"mapping table for all of the "
+literal|"enclosure's devices.\n"
+argument_list|,
+name|__func__
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|et_entry
+operator|->
+name|enclosure_id
+argument_list|)
+expr_stmt|;
 name|phy_change
 operator|->
 name|is_processed
@@ -4332,6 +4687,26 @@ block|}
 break|break;
 block|}
 block|}
+comment|/* 			 * Found space in the mapping table for this enclosure. 			 * Initialize each mapping table entry for the 			 * enclosure. 			 */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Initialize %d map "
+literal|"entries for the enclosure, starting at map index "
+literal|" %d.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|et_entry
+operator|->
+name|num_slots
+argument_list|,
+name|map_idx
+argument_list|)
+expr_stmt|;
 name|mt_entry
 operator|=
 operator|&
@@ -4386,6 +4761,12 @@ operator|=
 name|et_entry
 operator|->
 name|phy_bits
+expr_stmt|;
+name|mt_entry
+operator|->
+name|missing_count
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -4674,6 +5055,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* 	 * When using Enc/Slot mapping, if a new enclosure was added and old 	 * enclosure space was needed, the enclosure table may now have gaps 	 * that need to be closed. All enclosure mappings need to be contiguous 	 * so that space can be reused correctly if available. 	 */
 if|if
 condition|(
 operator|(
@@ -4855,7 +5237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * _mapping_add_new_device -Add the new device into mapping table  * @sc: per adapter object  * @topo_change: Topology change event entry  *  * Search through the topology change event list and updates map table,  * enclosure table and DPM pages for for the newly added devices.  *  * Returns nothing  */
+comment|/**  * _mapping_add_new_device -Add the new device into mapping table  * @sc: per adapter object  * @topo_change: Topology change event entry  *  * Search through the topology change event list and update map table,  * enclosure table and DPM pages for the newly added devices.  *  * Returns nothing  */
 end_comment
 
 begin_function
@@ -5043,11 +5425,18 @@ name|is_processed
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: failed to add the device with "
-literal|"handle 0x%04x because the enclosure is "
-literal|"not in the mapping table\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: "
+literal|"failed to add the device with handle "
+literal|"0x%04x because the enclosure is not in "
+literal|"the mapping table\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5058,6 +5447,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 			 * If the enclosure's start_index is BAD here, it means 			 * that there is no room in the mapping table to cover 			 * all of the devices that could be in the enclosure. 			 * There's no reason to process any of the devices for 			 * this enclosure since they can't be mapped. 			 */
 name|et_entry
 operator|=
 operator|&
@@ -5083,27 +5473,18 @@ name|is_processed
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|sc
-operator|->
-name|mt_full_retry
-condition|)
-block|{
-name|sc
-operator|->
-name|mt_add_device_failed
-operator|=
-literal|1
-expr_stmt|;
-continue|continue;
-block|}
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: failed to add the device with "
-literal|"handle 0x%04x because there is no free "
-literal|"space available in the mapping table\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: "
+literal|"failed to add the device with handle "
+literal|"0x%04x because there is no free space "
+literal|"available in the mapping table\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5114,6 +5495,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 			 * Add this device to the mapping table at the correct 			 * offset where space was found to map the enclosure. 			 * Then setup the DPM entry information if being used. 			 */
 name|map_idx
 operator|=
 name|et_entry
@@ -5145,12 +5527,6 @@ operator|=
 name|phy_change
 operator|->
 name|physical_id
-expr_stmt|;
-name|mt_entry
-operator|->
-name|channel
-operator|=
-literal|0
 expr_stmt|;
 name|mt_entry
 operator|->
@@ -5338,7 +5714,6 @@ name|dpm_entry_num
 operator|=
 name|dpm_idx
 expr_stmt|;
-comment|/* FIXME Do I need to set the dpm_idxin mt_entry too */
 name|sc
 operator|->
 name|dpm_entry_used
@@ -5376,11 +5751,13 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
 argument_list|,
-literal|"%s: "
-literal|"failed to add the device "
-literal|"with handle 0x%04x to "
+literal|"%s: failed "
+literal|"to add the device with "
+literal|"handle 0x%04x to "
 literal|"persistent table because "
 literal|"there is no free space "
 literal|"available\n"
@@ -5410,7 +5787,6 @@ name|dpm_idx
 expr_stmt|;
 block|}
 block|}
-comment|/* FIXME Why not mt_entry too? */
 name|et_entry
 operator|->
 name|init_complete
@@ -5430,6 +5806,7 @@ operator|==
 name|MPI2_IOCPAGE8_FLAGS_DEVICE_PERSISTENCE_MAPPING
 condition|)
 block|{
+comment|/* 			 * Get the mapping table index for this device. If it's 			 * not in the mapping table yet, find a free entry if 			 * one is available. If there are no free entries, look 			 * for the entry that has the highest missing count. If 			 * none of that works to find an entry in the mapping 			 * table, there is a problem. Log a message and just 			 * continue on. 			 */
 name|map_idx
 operator|=
 name|_mapping_get_mt_idx_from_id
@@ -5474,6 +5851,7 @@ name|search_idx
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * If an entry will be used that has a missing device, 			 * clear its entry from  the DPM in the controller. 			 */
 if|if
 condition|(
 name|map_idx
@@ -5505,29 +5883,19 @@ index|[
 name|map_idx
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|mt_entry
-operator|->
-name|dev_handle
-condition|)
-block|{
 name|_mapping_add_to_removal_table
 argument_list|(
 name|sc
 argument_list|,
 name|mt_entry
 operator|->
-name|dev_handle
-argument_list|,
-literal|0
+name|dpm_entry_num
 argument_list|)
 expr_stmt|;
 name|is_removed
 operator|=
 literal|1
 expr_stmt|;
-block|}
 name|mt_entry
 operator|->
 name|init_complete
@@ -5560,12 +5928,6 @@ operator|=
 name|phy_change
 operator|->
 name|physical_id
-expr_stmt|;
-name|mt_entry
-operator|->
-name|channel
-operator|=
-literal|0
 expr_stmt|;
 name|mt_entry
 operator|->
@@ -5610,27 +5972,18 @@ name|is_processed
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|sc
-operator|->
-name|mt_full_retry
-condition|)
-block|{
-name|sc
-operator|->
-name|mt_add_device_failed
-operator|=
-literal|1
-expr_stmt|;
-continue|continue;
-block|}
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: failed to add the device with "
-literal|"handle 0x%04x because there is no free "
-literal|"space available in the mapping table\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: "
+literal|"failed to add the device with handle "
+literal|"0x%04x because there is no free space "
+literal|"available in the mapping table\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5715,6 +6068,7 @@ name|PhysicalIdentifier
 operator|.
 name|Low
 expr_stmt|;
+comment|/* 					 * If the Mapping Table's info is not 					 * the same as the DPM entry, clear the 					 * init_complete flag so that it's 					 * updated. 					 */
 if|if
 condition|(
 operator|(
@@ -5733,6 +6087,13 @@ operator|->
 name|init_complete
 operator|=
 literal|1
+expr_stmt|;
+else|else
+name|mt_entry
+operator|->
+name|init_complete
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -5763,12 +6124,6 @@ operator|->
 name|init_complete
 condition|)
 block|{
-name|mt_entry
-operator|->
-name|init_complete
-operator|=
-literal|1
-expr_stmt|;
 name|mt_entry
 operator|->
 name|dpm_entry_num
@@ -5889,13 +6244,13 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
 argument_list|,
-literal|"%s: "
-literal|"failed to add the device "
-literal|"with handle 0x%04x to "
-literal|"persistent table because "
-literal|"there is no free space "
+literal|"%s: failed to add the device with "
+literal|"handle 0x%04x to persistent table "
+literal|"because there is no free space "
 literal|"available\n"
 argument_list|,
 name|__func__
@@ -6100,6 +6455,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* TODO-How to handle failed writes? */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Flushing DPM entry %d.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|entry_num
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mps_config_set_dpm_pg0
@@ -6116,9 +6484,16 @@ name|entry_num
 argument_list|)
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: write of dpm entry %d for device failed\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Flush of "
+literal|"DPM entry %d for device failed\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6641,6 +7016,7 @@ name|phy_bits
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * start_idx and end_idx are only used for IR. 	 */
 if|if
 condition|(
 name|sc
@@ -6656,6 +7032,23 @@ name|start_idx
 argument_list|,
 operator|&
 name|end_idx
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Look through all of the DPM entries that were read from the 	 * controller and copy them over to the driver's internal table if they 	 * have a non-zero ID. At this point, any ID with a value of 0 would be 	 * invalid, so don't copy it. 	 */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Start copy of %d DPM entries into the "
+literal|"mapping table.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sc
+operator|->
+name|max_dpm_entries
 argument_list|)
 expr_stmt|;
 name|dpm_entry
@@ -6783,6 +7176,7 @@ operator|->
 name|PhysicalBitsMapping
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Volumes are at special locations in the mapping table so 		 * account for that. Volume mapping table entries do not depend 		 * on the type of mapping, so continue the loop after adding 		 * volumes to the mapping table. 		 */
 if|if
 condition|(
 name|sc
@@ -6842,12 +7236,6 @@ name|Low
 expr_stmt|;
 name|mt_entry
 operator|->
-name|channel
-operator|=
-name|MPS_RAID_CHANNEL
-expr_stmt|;
-name|mt_entry
-operator|->
 name|id
 operator|=
 name|dev_idx
@@ -6883,6 +7271,7 @@ operator|==
 name|MPI2_IOCPAGE8_FLAGS_ENCLOSURE_SLOT_MAPPING
 condition|)
 block|{
+comment|/* 			 * The dev_idx for an enclosure is the start index. If 			 * the start index is within the controller's default 			 * enclosure area, set the number of slots for this 			 * enclosure to the max allowed. Otherwise, it should be 			 * a normal enclosure and the number of slots is in the 			 * DPM entry's Mapping Information. 			 */
 if|if
 condition|(
 name|dev_idx
@@ -6949,10 +7338,17 @@ operator|->
 name|max_enclosures
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: enclosure entries exceed max "
-literal|"enclosures of %d\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: "
+literal|"Number of enclosure entries in DPM exceed "
+literal|"the max allowed of %d.\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7038,6 +7434,7 @@ name|phy_bits
 operator|=
 name|phy_bits
 expr_stmt|;
+comment|/* 			 * Initialize all entries for this enclosure in the 			 * mapping table and mark them as reserved. The actual 			 * devices have not been processed yet but when they are 			 * they will use these entries. If an entry is found 			 * that already has a valid DPM index, the mapping table 			 * is corrupt. This can happen if the mapping type is 			 * changed without clearing all of the DPM entries in 			 * the controller. 			 */
 name|mt_entry
 operator|=
 operator|&
@@ -7078,10 +7475,16 @@ operator|!=
 name|MPS_DPM_BAD_IDX
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: conflict in mapping table "
-literal|"for enclosure %d\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Conflict in mapping table for "
+literal|" enclosure %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7122,12 +7525,6 @@ name|phy_bits
 expr_stmt|;
 name|mt_entry
 operator|->
-name|channel
-operator|=
-literal|0
-expr_stmt|;
-name|mt_entry
-operator|->
 name|id
 operator|=
 name|dev_idx
@@ -7164,6 +7561,7 @@ operator|==
 name|MPI2_IOCPAGE8_FLAGS_DEVICE_PERSISTENCE_MAPPING
 condition|)
 block|{
+comment|/* 			 * Device mapping, so simply copy the DPM entries to the 			 * mapping table, but check for a corrupt mapping table 			 * (as described above in Enc/Slot mapping). 			 */
 name|map_idx
 operator|=
 name|dev_idx
@@ -7187,10 +7585,16 @@ operator|!=
 name|MPS_DPM_BAD_IDX
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: conflict in mapping table for "
-literal|"device %d\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: "
+literal|"Conflict in mapping table for device %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7231,12 +7635,6 @@ name|phy_bits
 expr_stmt|;
 name|mt_entry
 operator|->
-name|channel
-operator|=
-literal|0
-expr_stmt|;
-name|mt_entry
-operator|->
 name|id
 operator|=
 name|dev_idx
@@ -7266,30 +7664,37 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mps_mapping_check_devices - start of the day check for device availabilty  * @sc: per adapter object  * @sleep_flag: Flag indicating whether this function can sleep or not  *  * Returns nothing.  */
+comment|/*  * mps_mapping_check_devices - start of the day check for device availabilty  * @sc: per adapter object  *  * Returns nothing.  */
 end_comment
 
 begin_function
 name|void
 name|mps_mapping_check_devices
 parameter_list|(
-name|struct
-name|mps_softc
+name|void
 modifier|*
-name|sc
-parameter_list|,
-name|int
-name|sleep_flag
+name|data
 parameter_list|)
 block|{
 name|u32
 name|i
 decl_stmt|;
-comment|/*	u32 cntdn, i; 	u32 timeout = 60;*/
 name|struct
 name|dev_mapping_table
 modifier|*
 name|mt_entry
+decl_stmt|;
+name|struct
+name|mps_softc
+modifier|*
+name|sc
+init|=
+operator|(
+expr|struct
+name|mps_softc
+operator|*
+operator|)
+name|data
 decl_stmt|;
 name|u16
 name|ioc_pg8_flags
@@ -7310,26 +7715,253 @@ name|et_entry
 decl_stmt|;
 name|u32
 name|start_idx
+init|=
+literal|0
 decl_stmt|,
 name|end_idx
-decl_stmt|;
-comment|/* We need to ucomment this when this function is called 	 * from the port enable complete */
-if|#
-directive|if
+init|=
 literal|0
-block|sc->track_mapping_events = 0; 	cntdn = (sleep_flag == CAN_SLEEP) ? 1000*timeout : 2000*timeout; 	do { 		if (!sc->pending_map_events) 			break; 		if (sleep_flag == CAN_SLEEP) 			pause("mps_pause", (hz/1000));
-comment|/* 1msec sleep */
-block|else 			DELAY(500);
-comment|/* 500 useconds delay */
-block|} while (--cntdn);   	if (!cntdn) 		printf("%s: there are %d" 		    " pending events after %d seconds of delay\n", 		    __func__, sc->pending_map_events, timeout);
-endif|#
-directive|endif
+decl_stmt|;
+name|u8
+name|stop_device_checks
+init|=
+literal|0
+decl_stmt|;
+name|MPS_FUNCTRACE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Clear this flag so that this function is never called again except 	 * within this function if the check needs to be done again. The 	 * purpose is to check for missing devices that are currently in the 	 * mapping table so do this only at driver init after discovery. 	 */
 name|sc
 operator|->
-name|pending_map_events
+name|track_mapping_events
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * callout synchronization 	 * This is used to prevent race conditions for the callout.  	 */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Start check for missing devices.\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mps_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|callout_pending
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|device_check_callout
+argument_list|)
+operator|)
+operator|||
+operator|(
+operator|!
+name|callout_active
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|device_check_callout
+argument_list|)
+operator|)
+condition|)
+block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Device Check Callout is "
+literal|"already pending or not active.\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|callout_deactivate
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|device_check_callout
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Use callout to check if any devices in the mapping table have been 	 * processed yet. If ALL devices are marked as not init_complete, no 	 * devices have been processed and mapped. Until devices are mapped 	 * there's no reason to mark them as missing. Continue resetting this 	 * callout until devices have been mapped. 	 */
+if|if
+condition|(
+operator|(
+name|ioc_pg8_flags
+operator|&
+name|MPI2_IOCPAGE8_FLAGS_MASK_MAPPING_MODE
+operator|)
+operator|==
+name|MPI2_IOCPAGE8_FLAGS_ENCLOSURE_SLOT_MAPPING
+condition|)
+block|{
+name|et_entry
+operator|=
+name|sc
+operator|->
+name|enclosure_table
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|sc
+operator|->
+name|num_enc_table_entries
+condition|;
+name|i
+operator|++
+operator|,
+name|et_entry
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|et_entry
+operator|->
+name|init_complete
+condition|)
+block|{
+name|stop_device_checks
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|ioc_pg8_flags
+operator|&
+name|MPI2_IOCPAGE8_FLAGS_MASK_MAPPING_MODE
+operator|)
+operator|==
+name|MPI2_IOCPAGE8_FLAGS_DEVICE_PERSISTENCE_MAPPING
+condition|)
+block|{
+name|mt_entry
+operator|=
+name|sc
+operator|->
+name|mapping_table
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|sc
+operator|->
+name|max_devices
+condition|;
+name|i
+operator|++
+operator|,
+name|mt_entry
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|mt_entry
+operator|->
+name|init_complete
+condition|)
+block|{
+name|stop_device_checks
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+comment|/* 	 * Setup another callout check after a delay. Keep doing this until 	 * devices are mapped. 	 */
+if|if
+condition|(
+operator|!
+name|stop_device_checks
+condition|)
+block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: No devices have been mapped. "
+literal|"Reset callout to check again after a %d second delay.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|MPS_MISSING_CHECK_DELAY
+argument_list|)
+expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|device_check_callout
+argument_list|,
+name|MPS_MISSING_CHECK_DELAY
+operator|*
+name|hz
+argument_list|,
+name|mps_mapping_check_devices
+argument_list|,
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Device check complete.\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Depending on the mapping type, check if devices have been processed 	 * and update their missing counts if not processed. 	 */
 if|if
 condition|(
 operator|(
@@ -7383,6 +8015,22 @@ operator|<
 name|MPS_MAX_MISSING_COUNT
 condition|)
 block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: "
+literal|"Enclosure %d is missing from the "
+literal|"topology. Update its missing "
+literal|"count.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|et_entry
 operator|->
 name|missing_count
@@ -7396,6 +8044,7 @@ name|dpm_entry_num
 operator|!=
 name|MPS_DPM_BAD_IDX
 condition|)
+block|{
 name|_mapping_commit_enc_entry
 argument_list|(
 name|sc
@@ -7403,6 +8052,7 @@ argument_list|,
 name|et_entry
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|et_entry
 operator|->
@@ -7441,6 +8091,46 @@ index|[
 name|start_idx
 index|]
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|ioc_pg8_flags
+operator|&
+name|MPI2_IOCPAGE8_FLAGS_MASK_MAPPING_MODE
+operator|)
+operator|==
+name|MPI2_IOCPAGE8_FLAGS_DEVICE_PERSISTENCE_MAPPING
+condition|)
+block|{
+name|start_idx
+operator|=
+literal|0
+expr_stmt|;
+name|end_idx
+operator|=
+name|sc
+operator|->
+name|max_devices
+operator|-
+literal|1
+expr_stmt|;
+name|mt_entry
+operator|=
+name|sc
+operator|->
+name|mapping_table
+expr_stmt|;
+block|}
+comment|/* 	 * The start and end indices have been set above according to the 	 * mapping type. Go through these mappings and update any entries that 	 * do not have the init_complete flag set, which means they are missing. 	 */
+if|if
+condition|(
+name|end_idx
+operator|==
+literal|0
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -7499,6 +8189,21 @@ operator|->
 name|init_complete
 condition|)
 block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Device in "
+literal|"mapping table at index %d is missing from "
+literal|"topology. Update its missing count.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mt_entry
@@ -7521,6 +8226,7 @@ name|dpm_entry_num
 operator|!=
 name|MPS_DPM_BAD_IDX
 condition|)
+block|{
 name|_mapping_commit_map_entry
 argument_list|(
 name|sc
@@ -7529,119 +8235,6 @@ name|mt_entry
 argument_list|)
 expr_stmt|;
 block|}
-name|mt_entry
-operator|->
-name|init_complete
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|ioc_pg8_flags
-operator|&
-name|MPI2_IOCPAGE8_FLAGS_MASK_MAPPING_MODE
-operator|)
-operator|==
-name|MPI2_IOCPAGE8_FLAGS_DEVICE_PERSISTENCE_MAPPING
-condition|)
-block|{
-name|mt_entry
-operator|=
-name|sc
-operator|->
-name|mapping_table
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|sc
-operator|->
-name|max_devices
-condition|;
-name|i
-operator|++
-operator|,
-name|mt_entry
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|mt_entry
-operator|->
-name|device_info
-operator|&
-name|MPS_DEV_RESERVED
-operator|&&
-operator|!
-name|mt_entry
-operator|->
-name|physical_id
-condition|)
-name|mt_entry
-operator|->
-name|init_complete
-operator|=
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|mt_entry
-operator|->
-name|device_info
-operator|&
-name|MPS_DEV_RESERVED
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|mt_entry
-operator|->
-name|init_complete
-condition|)
-block|{
-if|if
-condition|(
-name|mt_entry
-operator|->
-name|missing_count
-operator|<
-name|MPS_MAX_MISSING_COUNT
-condition|)
-block|{
-name|mt_entry
-operator|->
-name|missing_count
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|mt_entry
-operator|->
-name|dpm_entry_num
-operator|!=
-name|MPS_DPM_BAD_IDX
-condition|)
-name|_mapping_commit_map_entry
-argument_list|(
-name|sc
-argument_list|,
-name|mt_entry
-argument_list|)
-expr_stmt|;
 block|}
 name|mt_entry
 operator|->
@@ -7652,66 +8245,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/**  * mps_mapping_is_reinit_required - check whether event replay required  * @sc: per adapter object  *  * Checks the per ioc flags and decide whether reinit of events required  *  * Returns 1 for reinit of ioc 0 for not.  */
-end_comment
-
-begin_function
-name|int
-name|mps_mapping_is_reinit_required
-parameter_list|(
-name|struct
-name|mps_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|sc
-operator|->
-name|mt_full_retry
-operator|&&
-name|sc
-operator|->
-name|mt_add_device_failed
-condition|)
-block|{
-name|sc
-operator|->
-name|mt_full_retry
-operator|=
-literal|1
-expr_stmt|;
-name|sc
-operator|->
-name|mt_add_device_failed
-operator|=
-literal|0
-expr_stmt|;
-name|_mapping_flush_dpm_pages
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-name|sc
-operator|->
-name|mt_full_retry
-operator|=
-literal|1
-expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -7825,12 +8358,6 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|num_channels
-operator|=
-literal|1
-expr_stmt|;
-name|sc
-operator|->
 name|max_dpm_entries
 operator|=
 name|sc
@@ -7858,6 +8385,26 @@ operator|->
 name|track_mapping_events
 operator|=
 literal|0
+expr_stmt|;
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Mapping table has a max of %d entries "
+literal|"and DPM has a max of %d entries.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sc
+operator|->
+name|max_devices
+argument_list|,
+name|sc
+operator|->
+name|max_dpm_entries
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8090,9 +8637,16 @@ name|dpm_pg0_sz
 argument_list|)
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: dpm page read failed; disabling dpm\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: DPM page "
+literal|"read failed.\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -8130,6 +8684,22 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: DPM processing is disabled. "
+literal|"Device mappings will not persist across reboots or "
+literal|"resets.\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
 name|sc
 operator|->
 name|track_mapping_events
@@ -8170,13 +8740,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mps_mapping_get_sas_id - assign a target id for sas device  * @sc: per adapter object  * @sas_address: sas address of the device  * @handle: device handle  *  * Returns valid ID on success or BAD_ID.  */
+comment|/**  * mps_mapping_get_tid - return the target id for sas device and handle  * @sc: per adapter object  * @sas_address: sas address of the device  * @handle: device handle  *  * Returns valid target ID on success or BAD_ID.  */
 end_comment
 
 begin_function
 name|unsigned
 name|int
-name|mps_mapping_get_sas_id
+name|mps_mapping_get_tid
 parameter_list|(
 name|struct
 name|mps_softc
@@ -8251,13 +8821,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mps_mapping_get_sas_id_from_handle - find a target id in mapping table using  * only the dev handle.  This is just a wrapper function for the local function  * _mapping_get_mt_idx_from_handle.  * @sc: per adapter object  * @handle: device handle  *  * Returns valid ID on success or BAD_ID.  */
+comment|/**  * mps_mapping_get_tid_from_handle - find a target id in mapping table using  * only the dev handle.  This is just a wrapper function for the local function  * _mapping_get_mt_idx_from_handle.  * @sc: per adapter object  * @handle: device handle  *  * Returns valid target ID on success or BAD_ID.  */
 end_comment
 
 begin_function
 name|unsigned
 name|int
-name|mps_mapping_get_sas_id_from_handle
+name|mps_mapping_get_tid_from_handle
 parameter_list|(
 name|struct
 name|mps_softc
@@ -8282,13 +8852,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mps_mapping_get_raid_id - assign a target id for raid device  * @sc: per adapter object  * @wwid: world wide identifier for raid volume  * @handle: device handle  *  * Returns valid ID on success or BAD_ID.  */
+comment|/**  * mps_mapping_get_raid_tid - return the target id for raid device  * @sc: per adapter object  * @wwid: world wide identifier for raid volume  * @volHandle: volume device handle  *  * Returns valid target ID on success or BAD_ID.  */
 end_comment
 
 begin_function
 name|unsigned
 name|int
-name|mps_mapping_get_raid_id
+name|mps_mapping_get_raid_tid
 parameter_list|(
 name|struct
 name|mps_softc
@@ -8299,10 +8869,14 @@ name|u64
 name|wwid
 parameter_list|,
 name|u16
-name|handle
+name|volHandle
 parameter_list|)
 block|{
 name|u32
+name|start_idx
+decl_stmt|,
+name|end_idx
+decl_stmt|,
 name|map_idx
 decl_stmt|;
 name|struct
@@ -8310,22 +8884,17 @@ name|dev_mapping_table
 modifier|*
 name|mt_entry
 decl_stmt|;
-for|for
-control|(
-name|map_idx
-operator|=
-literal|0
-init|;
-name|map_idx
-operator|<
+name|_mapping_get_ir_maprange
+argument_list|(
 name|sc
-operator|->
-name|max_devices
-condition|;
-name|map_idx
-operator|++
-control|)
-block|{
+argument_list|,
+operator|&
+name|start_idx
+argument_list|,
+operator|&
+name|end_idx
+argument_list|)
+expr_stmt|;
 name|mt_entry
 operator|=
 operator|&
@@ -8333,16 +8902,33 @@ name|sc
 operator|->
 name|mapping_table
 index|[
-name|map_idx
+name|start_idx
 index|]
 expr_stmt|;
+for|for
+control|(
+name|map_idx
+operator|=
+name|start_idx
+init|;
+name|map_idx
+operator|<=
+name|end_idx
+condition|;
+name|map_idx
+operator|++
+operator|,
+name|mt_entry
+operator|++
+control|)
+block|{
 if|if
 condition|(
 name|mt_entry
 operator|->
 name|dev_handle
 operator|==
-name|handle
+name|volHandle
 operator|&&
 name|mt_entry
 operator|->
@@ -8363,13 +8949,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mps_mapping_get_raid_id_from_handle - find raid device in mapping table  * using only the volume dev handle.  This is just a wrapper function for the  * local function _mapping_get_ir_mt_idx_from_handle.  * @sc: per adapter object  * @volHandle: volume device handle  *  * Returns valid ID on success or BAD_ID.  */
+comment|/**  * mps_mapping_get_raid_tid_from_handle - find raid device in mapping table  * using only the volume dev handle.  This is just a wrapper function for the  * local function _mapping_get_ir_mt_idx_from_handle.  * @sc: per adapter object  * @volHandle: volume device handle  *  * Returns valid target ID on success or BAD_ID.  */
 end_comment
 
 begin_function
 name|unsigned
 name|int
-name|mps_mapping_get_raid_id_from_handle
+name|mps_mapping_get_raid_tid_from_handle
 parameter_list|(
 name|struct
 name|mps_softc
@@ -8504,10 +9090,16 @@ operator|->
 name|NumSlots
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: enclosure with handle = 0x%x reported 0 "
-literal|"slots\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Enclosure "
+literal|"with handle = 0x%x reported 0 slots.\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8558,6 +9150,7 @@ operator|->
 name|PhyBits
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If the Added enclosure is already in the Enclosure Table, 		 * make sure that all the the enclosure info is up to date. If 		 * the enclosure was missing and has just been added back, or if 		 * the enclosure's Phy Bits have changed, clear the missing 		 * count and update the Phy Bits in the mapping table and in the 		 * DPM, if it's being used. 		 */
 if|if
 condition|(
 name|enc_idx
@@ -8587,10 +9180,14 @@ operator|->
 name|missing_count
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: enclosure %d is already present "
-literal|"with handle = 0x%x\n"
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Enclosure %d "
+literal|"is already present with handle = 0x%x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8705,16 +9302,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|et_entry
-operator|->
-name|init_complete
-operator|&&
-operator|(
 name|missing_count
 operator|||
 name|update_phy_bits
-operator|)
 condition|)
 block|{
 name|dpm_entry
@@ -8756,6 +9346,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/* 			 * This is a new enclosure that is being added. 			 * Initialize the Enclosure Table entry. It will be 			 * finalized when a device is added for the enclosure 			 * and the enclosure has enough space in the Mapping 			 * Table to map its devices. 			 */
 name|enc_idx
 operator|=
 name|sc
@@ -8771,10 +9362,17 @@ operator|->
 name|max_enclosures
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: enclosure can not be added; "
-literal|"mapping table is full\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: "
+literal|"Enclosure cannot be added to mapping "
+literal|"table because it's full.\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -8813,16 +9411,20 @@ name|et_entry
 operator|->
 name|enclosure_id
 operator|=
+name|le64toh
+argument_list|(
 name|event_data
 operator|->
 name|EnclosureLogicalID
 operator|.
 name|High
+argument_list|)
 expr_stmt|;
 name|et_entry
 operator|->
 name|enclosure_id
 operator|=
+operator|(
 operator|(
 name|et_entry
 operator|->
@@ -8831,11 +9433,15 @@ operator|<<
 literal|32
 operator|)
 operator||
+name|le64toh
+argument_list|(
 name|event_data
 operator|->
 name|EnclosureLogicalID
 operator|.
 name|Low
+argument_list|)
+operator|)
 expr_stmt|;
 name|et_entry
 operator|->
@@ -8900,6 +9506,7 @@ operator|==
 name|MPI2_EVENT_SAS_ENCL_RC_NOT_RESPONDING
 condition|)
 block|{
+comment|/* 		 * An enclosure was removed. Update its missing count and then 		 * update the DPM entry with the new missing count for the 		 * enclosure. 		 */
 name|enc_idx
 operator|=
 name|_mapping_get_enc_idx_from_handle
@@ -8921,10 +9528,17 @@ operator|==
 name|MPS_ENCTABLE_BAD_IDX
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: cannot unmap enclosure %d because it has "
-literal|"already been deleted"
+name|sc
+argument_list|,
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Cannot "
+literal|"unmap enclosure %d because it has already been "
+literal|"deleted.\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8947,14 +9561,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|et_entry
-operator|->
-name|init_complete
-condition|)
-block|{
-if|if
-condition|(
 name|et_entry
 operator|->
 name|missing_count
@@ -8966,36 +9572,11 @@ operator|->
 name|missing_count
 operator|++
 expr_stmt|;
-else|else
-name|et_entry
-operator|->
-name|init_complete
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|et_entry
-operator|->
-name|missing_count
-condition|)
-name|et_entry
-operator|->
-name|missing_count
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|sc
 operator|->
 name|is_dpm_enable
-operator|&&
-operator|!
-name|et_entry
-operator|->
-name|init_complete
 operator|&&
 name|et_entry
 operator|->
@@ -9321,234 +9902,6 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * _mapping_check_update_ir_mt_idx - Check and update IR map table index  * @sc: per adapter object  * @event_data: event data payload  * @evt_idx: current event index  * @map_idx: current index and the place holder for new map table index  * @wwid_table: world wide name for volumes in the element table  *  * pass through IR events and find whether any events matches and if so  * tries to find new index if not returns failure  *  * Returns 0 on success and 1 on failure  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|_mapping_check_update_ir_mt_idx
-parameter_list|(
-name|struct
-name|mps_softc
-modifier|*
-name|sc
-parameter_list|,
-name|Mpi2EventDataIrConfigChangeList_t
-modifier|*
-name|event_data
-parameter_list|,
-name|int
-name|evt_idx
-parameter_list|,
-name|u32
-modifier|*
-name|map_idx
-parameter_list|,
-name|u64
-modifier|*
-name|wwid_table
-parameter_list|)
-block|{
-name|struct
-name|dev_mapping_table
-modifier|*
-name|mt_entry
-decl_stmt|;
-name|u32
-name|st_idx
-decl_stmt|,
-name|end_idx
-decl_stmt|,
-name|mt_idx
-init|=
-operator|*
-name|map_idx
-decl_stmt|;
-name|u8
-name|match
-init|=
-literal|0
-decl_stmt|;
-name|Mpi2EventIrConfigElement_t
-modifier|*
-name|element
-decl_stmt|;
-name|u16
-name|element_flags
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|mt_entry
-operator|=
-operator|&
-name|sc
-operator|->
-name|mapping_table
-index|[
-name|mt_idx
-index|]
-expr_stmt|;
-name|_mapping_get_ir_maprange
-argument_list|(
-name|sc
-argument_list|,
-operator|&
-name|st_idx
-argument_list|,
-operator|&
-name|end_idx
-argument_list|)
-expr_stmt|;
-name|search_again
-label|:
-name|match
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|evt_idx
-operator|+
-literal|1
-init|;
-name|i
-operator|<
-name|event_data
-operator|->
-name|NumElements
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|element
-operator|=
-operator|(
-name|Mpi2EventIrConfigElement_t
-operator|*
-operator|)
-operator|&
-name|event_data
-operator|->
-name|ConfigElement
-index|[
-name|i
-index|]
-expr_stmt|;
-name|element_flags
-operator|=
-name|le16toh
-argument_list|(
-name|element
-operator|->
-name|ElementFlags
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|element_flags
-operator|&
-name|MPI2_EVENT_IR_CHANGE_EFLAGS_ELEMENT_TYPE_MASK
-operator|)
-operator|!=
-name|MPI2_EVENT_IR_CHANGE_EFLAGS_VOLUME_ELEMENT
-condition|)
-continue|continue;
-if|if
-condition|(
-name|element
-operator|->
-name|ReasonCode
-operator|==
-name|MPI2_EVENT_IR_CHANGE_RC_ADDED
-operator|||
-name|element
-operator|->
-name|ReasonCode
-operator|==
-name|MPI2_EVENT_IR_CHANGE_RC_VOLUME_CREATED
-condition|)
-block|{
-if|if
-condition|(
-name|mt_entry
-operator|->
-name|physical_id
-operator|==
-name|wwid_table
-index|[
-name|i
-index|]
-condition|)
-block|{
-name|match
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
-if|if
-condition|(
-name|match
-condition|)
-block|{
-do|do
-block|{
-name|mt_idx
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|mt_idx
-operator|>
-name|end_idx
-condition|)
-return|return
-literal|1
-return|;
-name|mt_entry
-operator|=
-operator|&
-name|sc
-operator|->
-name|mapping_table
-index|[
-name|mt_idx
-index|]
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|mt_entry
-operator|->
-name|device_info
-operator|&
-name|MPS_MAP_IN_USE
-condition|)
-do|;
-goto|goto
-name|search_again
-goto|;
-block|}
-operator|*
-name|map_idx
-operator|=
-name|mt_idx
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/**  * mps_mapping_ir_config_change_event - handle IR config change list events  * @sc: per adapter object  * @event_data: event data payload  *  * Returns nothing.  */
 end_comment
 
@@ -9589,11 +9942,6 @@ name|mt_entry
 decl_stmt|;
 name|u16
 name|element_flags
-decl_stmt|;
-name|u8
-name|log_full_error
-init|=
-literal|0
 decl_stmt|;
 name|wwid_table
 operator|=
@@ -9646,6 +9994,7 @@ operator|->
 name|Flags
 argument_list|)
 expr_stmt|;
+comment|/* 	 * For volume changes, get the WWID for the volume and put it in a 	 * table to be used in the processing of the IR change event. 	 */
 for|for
 control|(
 name|i
@@ -9738,44 +10087,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|map_idx
-operator|=
-name|_mapping_get_ir_mt_idx_from_wwid
-argument_list|(
-name|sc
-argument_list|,
-name|wwid_table
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|map_idx
-operator|!=
-name|MPS_MAPTABLE_BAD_IDX
-condition|)
-block|{
-name|mt_entry
-operator|=
-operator|&
-name|sc
-operator|->
-name|mapping_table
-index|[
-name|map_idx
-index|]
-expr_stmt|;
-name|mt_entry
-operator|->
-name|device_info
-operator||=
-name|MPS_MAP_IN_USE
-expr_stmt|;
 block|}
 block|}
-block|}
+comment|/* 	 * Check the ReasonCode for each element in the IR event and Add/Remove 	 * Volumes or Physical Disks of Volumes to/from the mapping table. Use 	 * the WWIDs gotten above in wwid_table. 	 */
 if|if
 condition|(
 name|flags
@@ -9854,6 +10168,7 @@ operator|!=
 name|MPS_MAPTABLE_BAD_IDX
 condition|)
 block|{
+comment|/* 					 * The volume is already in the mapping 					 * table. Just update it's info. 					 */
 name|mt_entry
 operator|=
 operator|&
@@ -9863,12 +10178,6 @@ name|mapping_table
 index|[
 name|map_idx
 index|]
-expr_stmt|;
-name|mt_entry
-operator|->
-name|channel
-operator|=
-name|MPS_RAID_CHANNEL
 expr_stmt|;
 name|mt_entry
 operator|->
@@ -9911,6 +10220,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 				 * Volume is not in mapping table yet. Find a 				 * free entry in the mapping table at the 				 * volume mapping locations. If no entries are 				 * available, this is an error because it means 				 * there are more volumes than can be mapped 				 * and that should never happen for volumes. 				 */
 name|map_idx
 operator|=
 name|_mapping_get_free_ir_mt_idx
@@ -9924,50 +10234,18 @@ name|map_idx
 operator|==
 name|MPS_MAPTABLE_BAD_IDX
 condition|)
-name|log_full_error
-operator|=
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|i
-operator|<
-operator|(
-name|event_data
-operator|->
-name|NumElements
-operator|-
-literal|1
-operator|)
-condition|)
 block|{
-name|log_full_error
-operator|=
-name|_mapping_check_update_ir_mt_idx
+name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|event_data
+name|MPS_ERROR
+operator||
+name|MPS_MAPPING
 argument_list|,
-name|i
-argument_list|,
-operator|&
-name|map_idx
-argument_list|,
-name|wwid_table
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|log_full_error
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: no space to add the RAID "
-literal|"volume with handle 0x%04x in "
+literal|"%s: failed to add the volume with "
+literal|"handle 0x%04x because there is no "
+literal|"free space available in the "
 literal|"mapping table\n"
 argument_list|,
 name|__func__
@@ -10003,12 +10281,6 @@ index|]
 expr_stmt|;
 name|mt_entry
 operator|->
-name|channel
-operator|=
-name|MPS_RAID_CHANNEL
-expr_stmt|;
-name|mt_entry
-operator|->
 name|id
 operator|=
 name|map_idx
@@ -10031,12 +10303,6 @@ operator|=
 name|MPS_DEV_RESERVED
 operator||
 name|MPS_MAP_IN_USE
-expr_stmt|;
-name|mt_entry
-operator|->
-name|init_complete
-operator|=
-literal|0
 expr_stmt|;
 name|_mapping_update_ir_missing_cnt
 argument_list|(
@@ -10082,11 +10348,15 @@ operator|==
 name|MPS_MAPTABLE_BAD_IDX
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: failed to remove a volume "
-literal|"because it has already been "
-literal|"removed\n"
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Failed "
+literal|"to remove a volume because it has "
+literal|"already been removed.\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -10139,11 +10409,16 @@ operator|==
 name|MPS_MAPTABLE_BAD_IDX
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: failed to remove volume "
-literal|"with handle 0x%04x because it has "
-literal|"already been removed\n"
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: Failed "
+literal|"to remove volume with handle "
+literal|"0x%04x because it has already "
+literal|"been removed.\n"
 argument_list|,
 name|__func__
 argument_list|,

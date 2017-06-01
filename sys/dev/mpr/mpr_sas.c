@@ -4036,6 +4036,12 @@ operator|->
 name|facts
 operator|->
 name|MaxTargets
+operator|+
+name|sc
+operator|->
+name|facts
+operator|->
+name|MaxVolumes
 expr_stmt|;
 name|sassc
 operator|->
@@ -4895,6 +4901,44 @@ operator|->
 name|discovery_callout
 argument_list|)
 expr_stmt|;
+comment|/* 	 * After discovery has completed, check the mapping table for any 	 * missing devices and update their missing counts. Only do this once 	 * whenever the driver is initialized so that missing counts aren't 	 * updated unnecessarily. Note that just because discovery has 	 * completed doesn't mean that events have been processed yet. The 	 * check_devices function is a callout timer that checks if ALL devices 	 * are missing. If so, it will wait a little longer for events to 	 * complete and keep resetting itself until some device in the mapping 	 * table is not missing, meaning that event processing has started. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|track_mapping_events
+condition|)
+block|{
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_XINFO
+operator||
+name|MPR_MAPPING
+argument_list|,
+literal|"Discovery has "
+literal|"completed. Check for missing devices in the mapping "
+literal|"table.\n"
+argument_list|)
+expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|device_check_callout
+argument_list|,
+name|MPR_MISSING_CHECK_DELAY
+operator|*
+name|hz
+argument_list|,
+name|mpr_mapping_check_devices
+argument_list|,
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5085,6 +5129,7 @@ name|max_lun
 operator|=
 literal|255
 expr_stmt|;
+comment|/* 		 * initiator_id is set here to an ID outside the set of valid 		 * target IDs (including volumes). 		 */
 name|cpi
 operator|->
 name|initiator_id
@@ -5092,8 +5137,6 @@ operator|=
 name|sassc
 operator|->
 name|maxtargets
-operator|-
-literal|1
 expr_stmt|;
 name|strlcpy
 argument_list|(

@@ -1038,10 +1038,15 @@ name|LinkRate
 argument_list|)
 condition|)
 block|{
-name|printf
+name|mpr_dprint
 argument_list|(
-literal|"%s: failed to add device with "
-literal|"handle 0x%x\n"
+name|sc
+argument_list|,
+name|MPR_ERROR
+argument_list|,
+literal|"%s: "
+literal|"failed to add device with handle "
+literal|"0x%x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1272,7 +1277,7 @@ index|]
 expr_stmt|;
 name|id
 operator|=
-name|mpr_mapping_get_raid_id_from_handle
+name|mpr_mapping_get_raid_tid_from_handle
 argument_list|(
 name|sc
 argument_list|,
@@ -3371,7 +3376,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * use_phynum: 	 *  1 - use the PhyNum field as a fallback to the mapping logic 	 *  0 - never use the PhyNum field 	 * -1 - only use the PhyNum field 	 */
+comment|/* 	 * use_phynum: 	 *  1 - use the PhyNum field as a fallback to the mapping logic 	 *  0 - never use the PhyNum field 	 * -1 - only use the PhyNum field 	 * 	 * Note that using the Phy number to map a device can cause device adds 	 * to fail if multiple enclosures/expanders are in the topology. For 	 * example, if two devices are in the same slot number in two different 	 * enclosures within the topology, only one of those devices will be 	 * added. PhyNum mapping should not be used if multiple enclosures are 	 * in the topology. 	 */
 name|id
 operator|=
 name|MPR_MAP_BAD_ID
@@ -3387,7 +3392,7 @@ literal|1
 condition|)
 name|id
 operator|=
-name|mpr_mapping_get_sas_id
+name|mpr_mapping_get_tid
 argument_list|(
 name|sc
 argument_list|,
@@ -3455,6 +3460,42 @@ name|out
 goto|;
 block|}
 block|}
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_MAPPING
+argument_list|,
+literal|"%s: Target ID for added device is %d.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Only do the ID check and reuse check if the target is not from a 	 * RAID Component. For Physical Disks of a Volume, the ID will be reused 	 * when a volume is deleted because the mapping entry for the PD will 	 * still be in the mapping table. The ID check should not be done here 	 * either since this PD is already being used. 	 */
+name|targ
+operator|=
+operator|&
+name|sassc
+operator|->
+name|targets
+index|[
+name|id
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|targ
+operator|->
+name|flags
+operator|&
+name|MPR_TARGET_FLAGS_RAID_COMPONENT
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 name|mprsas_check_id
@@ -3486,16 +3527,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|targ
-operator|=
-operator|&
-name|sassc
-operator|->
-name|targets
-index|[
-name|id
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|targ
@@ -3511,8 +3542,8 @@ name|sc
 argument_list|,
 name|MPR_MAPPING
 argument_list|,
-literal|"Attempting to reuse target id "
-literal|"%d handle 0x%04x\n"
+literal|"Attempting to reuse "
+literal|"target id %d handle 0x%04x\n"
 argument_list|,
 name|id
 argument_list|,
@@ -3528,6 +3559,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 name|mpr_dprint
 argument_list|(
@@ -5715,7 +5747,7 @@ goto|;
 block|}
 name|id
 operator|=
-name|mpr_mapping_get_sas_id
+name|mpr_mapping_get_tid
 argument_list|(
 name|sc
 argument_list|,
@@ -5731,10 +5763,16 @@ operator|==
 name|MPR_MAP_BAD_ID
 condition|)
 block|{
-name|printf
+name|mpr_dprint
 argument_list|(
-literal|"failure at %s:%d/%s()! Could not get ID for device "
-literal|"with handle 0x%04x\n"
+name|sc
+argument_list|,
+name|MPR_ERROR
+operator||
+name|MPR_INFO
+argument_list|,
+literal|"failure at %s:%d/%s()! "
+literal|"Could not get ID for device with handle 0x%04x\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -5753,6 +5791,19 @@ goto|goto
 name|out
 goto|;
 block|}
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_MAPPING
+argument_list|,
+literal|"%s: Target ID for added device is %d.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mprsas_check_id
@@ -6341,7 +6392,7 @@ goto|;
 block|}
 name|id
 operator|=
-name|mpr_mapping_get_raid_id
+name|mpr_mapping_get_raid_tid
 argument_list|(
 name|sc
 argument_list|,
@@ -6634,9 +6685,7 @@ name|targetid
 operator|<
 name|sc
 operator|->
-name|facts
-operator|->
-name|MaxTargets
+name|max_devices
 condition|;
 name|targetid
 operator|++
@@ -7306,9 +7355,7 @@ name|targetid
 operator|<
 name|sc
 operator|->
-name|facts
-operator|->
-name|MaxTargets
+name|max_devices
 condition|;
 name|targetid
 operator|++
