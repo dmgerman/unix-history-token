@@ -1198,11 +1198,9 @@ label|:
 name|unsigned
 name|EnumValue
 decl_stmt|;
-name|std
-operator|::
-name|string
+name|StringRef
 name|Namespace
-expr_stmt|;
+decl_stmt|;
 name|SmallVector
 operator|<
 name|MVT
@@ -1225,11 +1223,9 @@ decl_stmt|;
 name|bool
 name|Allocatable
 decl_stmt|;
-name|std
-operator|::
-name|string
+name|StringRef
 name|AltOrderSelect
-expr_stmt|;
+decl_stmt|;
 name|uint8_t
 name|AllocationPriority
 decl_stmt|;

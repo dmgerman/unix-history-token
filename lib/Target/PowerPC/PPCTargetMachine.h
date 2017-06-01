@@ -241,13 +241,24 @@ name|ppc64le
 operator|)
 return|;
 block|}
-block|; }
-decl_stmt|;
+block|;
+name|bool
+name|isMachineVerifierClean
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+expr|}
+block|;
 comment|/// PowerPC 32-bit target machine.
 comment|///
 name|class
 name|PPC32TargetMachine
-range|:
+operator|:
 name|public
 name|PPCTargetMachine
 block|{
@@ -277,12 +288,12 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 comment|/// PowerPC 64-bit target machine.
 comment|///
 name|class
 name|PPC64TargetMachine
-range|:
+operator|:
 name|public
 name|PPCTargetMachine
 block|{
@@ -312,8 +323,7 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-decl_stmt|;
-block|}
+block|;  }
 end_decl_stmt
 
 begin_comment

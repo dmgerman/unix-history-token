@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MachineFunctionInitializer.h - machine function initializer ---------===//
+comment|//=- MachineFunctionInitializer.h - machine function initializer --*- C++ -*-=//
 end_comment
 
 begin_comment
@@ -86,21 +86,23 @@ name|virtual
 operator|~
 name|MachineFunctionInitializer
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Initialize the machine function.
 comment|///
 comment|/// Return true if error occurred.
 name|virtual
 name|bool
 name|initializeMachineFunction
-argument_list|(
+parameter_list|(
 name|MachineFunction
-operator|&
+modifier|&
 name|MF
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 block|}
 empty_stmt|;
 block|}
@@ -114,6 +116,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEFUNCTIONINITIALIZER_H
+end_comment
 
 end_unit
 

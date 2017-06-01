@@ -130,6 +130,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -137,30 +143,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerIntPair.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/DebugLoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
@@ -178,50 +160,39 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MachineLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Pass.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|//===----------------------------------------------------------------------===//
-comment|// Forward declarations.
 name|class
-name|BlockAddress
+name|BasicBlock
 decl_stmt|;
 name|class
 name|CallInst
 decl_stmt|;
 name|class
-name|Constant
-decl_stmt|;
-name|class
-name|GlobalVariable
-decl_stmt|;
-name|class
-name|LandingPadInst
-decl_stmt|;
-name|class
-name|MDNode
-decl_stmt|;
-name|class
-name|MMIAddrLabelMap
-decl_stmt|;
-name|class
-name|MachineBasicBlock
+name|Function
 decl_stmt|;
 name|class
 name|MachineFunction
@@ -230,13 +201,13 @@ name|class
 name|MachineFunctionInitializer
 decl_stmt|;
 name|class
+name|MMIAddrLabelMap
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 name|class
-name|PointerType
-decl_stmt|;
-name|class
-name|StructType
+name|TargetMachine
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// This class can be derived from and used by targets to hold private
@@ -249,24 +220,20 @@ name|MachineModuleInfoImpl
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|StubValueTy
+init|=
 name|PointerIntPair
 operator|<
 name|MCSymbol
 operator|*
-operator|,
-literal|1
-operator|,
+decl_stmt|, 1,
 name|bool
-operator|>
-name|StubValueTy
-expr_stmt|;
-name|virtual
-operator|~
-name|MachineModuleInfoImpl
-argument_list|()
-expr_stmt|;
-typedef|typedef
+decl|>
+decl_stmt|;
+name|using
+name|SymbolListTy
+init|=
 name|std
 operator|::
 name|vector
@@ -277,11 +244,14 @@ name|pair
 operator|<
 name|MCSymbol
 operator|*
-operator|,
+decl_stmt|,
 name|StubValueTy
-operator|>
-expr|>
-name|SymbolListTy
+decl|>>
+decl_stmt|;
+name|virtual
+operator|~
+name|MachineModuleInfoImpl
+argument_list|()
 expr_stmt|;
 name|protected
 label|:
@@ -834,13 +804,17 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEMODULEINFO_H
+end_comment
 
 end_unit
 

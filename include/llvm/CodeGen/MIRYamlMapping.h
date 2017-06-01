@@ -1918,9 +1918,6 @@ name|ExposesReturnsTwice
 operator|=
 name|false
 block|;
-name|bool
-name|NoVRegs
-block|;
 comment|// GISel MachineFunctionProperties.
 name|bool
 name|Legalized
@@ -2055,17 +2052,6 @@ argument_list|,
 name|MF
 operator|.
 name|ExposesReturnsTwice
-argument_list|)
-block|;
-name|YamlIO
-operator|.
-name|mapOptional
-argument_list|(
-literal|"noVRegs"
-argument_list|,
-name|MF
-operator|.
-name|NoVRegs
 argument_list|)
 block|;
 name|YamlIO

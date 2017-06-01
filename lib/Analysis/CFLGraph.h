@@ -1038,6 +1038,11 @@ operator|!=
 name|nullptr
 argument_list|)
 expr_stmt|;
+comment|// FIXME: This is subtly broken, due to how we model some instructions
+comment|// (e.g. extractvalue, extractelement) as loads. Since those take
+comment|// non-pointer operands, we'll entirely skip adding edges for those.
+comment|//
+comment|// addAssignEdge seems to have a similar issue with insertvalue, etc.
 if|if
 condition|(
 operator|!
@@ -2929,6 +2934,7 @@ argument_list|,
 name|CE
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 case|case
 name|Instruction

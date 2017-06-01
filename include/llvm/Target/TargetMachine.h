@@ -994,9 +994,23 @@ argument_list|,
 argument|bool DisableVerify = true
 argument_list|)
 name|override
-block|; }
-decl_stmt|;
+block|;
+comment|/// Returns true if the target is expected to pass all machine verifier
+comment|/// checks. This is a stopgap measure to fix targets one by one. We will
+comment|/// remove this at some point and always enable the verifier when
+comment|/// EXPENSIVE_CHECKS is enabled.
+name|virtual
+name|bool
+name|isMachineVerifierClean
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

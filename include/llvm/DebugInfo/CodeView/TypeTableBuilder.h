@@ -64,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeSerializer.h"
+file|"llvm/DebugInfo/CodeView/TypeRecord.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeRecord.h"
+file|"llvm/DebugInfo/CodeView/TypeSerializer.h"
 end_include
 
 begin_include

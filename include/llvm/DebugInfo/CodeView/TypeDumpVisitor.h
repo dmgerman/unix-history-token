@@ -256,7 +256,7 @@ name|AliasName
 parameter_list|)
 include|#
 directive|include
-file|"TypeRecords.def"
+file|"llvm/DebugInfo/CodeView/CodeViewTypes.def"
 name|private
 operator|:
 name|void

@@ -3091,7 +3091,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
-name|LowerSETCCE
+name|LowerSETCCCARRY
 argument_list|(
 name|SDValue
 name|Op

@@ -230,6 +230,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|// Stack access is very expensive. CSRs are also the high registers, and we
+comment|// want to minimize the number of used registers.
+name|unsigned
+name|getCSRFirstUseCost
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|100
+return|;
+block|}
 name|unsigned
 name|getFrameRegister
 argument_list|(

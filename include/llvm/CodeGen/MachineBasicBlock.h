@@ -1662,6 +1662,14 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// Remove entry from the livein set and return iterator to the next.
+name|livein_iterator
+name|removeLiveIn
+parameter_list|(
+name|livein_iterator
+name|I
+parameter_list|)
+function_decl|;
 comment|/// Get the clobber mask for the start of this basic block. Funclets use this
 comment|/// to prevent register allocation across funclet transitions.
 specifier|const

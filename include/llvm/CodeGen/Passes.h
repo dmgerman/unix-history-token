@@ -313,6 +313,13 @@ name|char
 modifier|&
 name|ShrinkWrapID
 decl_stmt|;
+comment|/// LiveRangeShrink pass. Move instruction close to its definition to shrink
+comment|/// the definition's live range.
+specifier|extern
+name|char
+modifier|&
+name|LiveRangeShrinkID
+decl_stmt|;
 comment|/// Greedy register allocator.
 specifier|extern
 name|char

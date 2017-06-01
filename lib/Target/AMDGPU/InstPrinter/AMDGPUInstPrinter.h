@@ -1117,6 +1117,18 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printSwizzle
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printWaitFlag
 argument_list|(
 argument|const MCInst *MI

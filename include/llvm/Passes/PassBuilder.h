@@ -380,6 +380,56 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// Construct the core LLVM module canonicalization and simplification
+comment|/// pipeline.
+comment|///
+comment|/// This pipeline focuses on canonicalizing and simplifying the entire module
+comment|/// of IR. Much like the function simplification pipeline above, it is
+comment|/// suitable to run repeatedly over the IR and is not expected to destroy
+comment|/// important information. It does, however, perform inlining and other
+comment|/// heuristic based simplifications that are not strictly reversible.
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
+name|ModulePassManager
+name|buildModuleSimplificationPipeline
+parameter_list|(
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Construct the core LLVM module optimization pipeline.
+comment|///
+comment|/// This pipeline focuses on optimizing the execution speed of the IR. It
+comment|/// uses cost modeling and thresholds to balance code growth against runtime
+comment|/// improvements. It includes vectorization and other information destroying
+comment|/// transformations. It also cannot generally be run repeatedly on a module
+comment|/// without potentially seriously regressing either runtime performance of
+comment|/// the code or serious code size growth.
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
+name|ModulePassManager
+name|buildModuleOptimizationPipeline
+parameter_list|(
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// Build a per-module default optimization pipeline.
 comment|///
 comment|/// This provides a good default optimization pipeline for per-module
@@ -393,6 +443,53 @@ comment|/// require some transformations for semantic reasons, they should expli
 comment|/// build them.
 name|ModulePassManager
 name|buildPerModuleDefaultPipeline
+parameter_list|(
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Build a pre-link, ThinLTO-targeting default optimization pipeline to
+comment|/// a pass manager.
+comment|///
+comment|/// This adds the pre-link optimizations tuned to prepare a module for
+comment|/// a ThinLTO run. It works to minimize the IR which needs to be analyzed
+comment|/// without making irreversible decisions which could be made better during
+comment|/// the LTO run.
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
+name|ModulePassManager
+name|buildThinLTOPreLinkDefaultPipeline
+parameter_list|(
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Build an ThinLTO default optimization pipeline to a pass manager.
+comment|///
+comment|/// This provides a good default optimization pipeline for link-time
+comment|/// optimization and code generation. It is particularly tuned to fit well
+comment|/// when IR coming into the LTO phase was first run through \c
+comment|/// addPreLinkLTODefaultPipeline, and the two coordinate closely.
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
+name|ModulePassManager
+name|buildThinLTODefaultPipeline
 parameter_list|(
 name|OptimizationLevel
 name|Level

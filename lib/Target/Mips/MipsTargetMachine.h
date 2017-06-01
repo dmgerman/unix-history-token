@@ -275,6 +275,16 @@ return|return
 name|ABI
 return|;
 block|}
+name|bool
+name|isMachineVerifierClean
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
 block|}
 end_decl_stmt
 

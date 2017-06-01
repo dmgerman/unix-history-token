@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ConvertUTF.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Endian.h"
 end_include
 
@@ -449,6 +455,40 @@ name|Dest
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Similar to readCString, however read a null-terminated UTF16 string
+end_comment
+
+begin_comment
+comment|/// instead.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns a success error code if the data was successfully read, otherwise
+end_comment
+
+begin_comment
+comment|/// returns an appropriate error code.
+end_comment
+
+begin_decl_stmt
+name|Error
+name|readWideString
+argument_list|(
+name|ArrayRef
+operator|<
+name|UTF16
+operator|>
+operator|&
+name|Dest
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Read a \p Length byte string into \p Dest.  Whether a copy occurs depends

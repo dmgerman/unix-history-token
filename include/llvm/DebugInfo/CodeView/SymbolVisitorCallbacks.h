@@ -157,7 +157,7 @@ name|AliasName
 parameter_list|)
 include|#
 directive|include
-file|"CVSymbolTypes.def"
+file|"llvm/DebugInfo/CodeView/CodeViewSymbols.def"
 block|}
 empty_stmt|;
 block|}

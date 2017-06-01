@@ -6936,6 +6936,15 @@ argument_list|,
 argument|Attribute::AttrKind Kind
 argument_list|)
 block|;
+comment|/// Adds the attribute to the indicated argument
+name|void
+name|addParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute Attr
+argument_list|)
+block|;
 comment|/// removes the attribute from the list of attributes.
 name|void
 name|removeAttribute
@@ -6961,6 +6970,15 @@ argument_list|(
 argument|unsigned ArgNo
 argument_list|,
 argument|Attribute::AttrKind Kind
+argument_list|)
+block|;
+comment|/// Removes the attribute from the given argument
+name|void
+name|removeParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|StringRef Kind
 argument_list|)
 block|;
 comment|/// adds the dereferenceable attribute to the list of attributes.
@@ -7080,6 +7098,70 @@ operator|.
 name|getAttribute
 argument_list|(
 name|i
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+comment|/// Get the attribute of a given kind from a given arg
+name|Attribute
+name|getParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ArgNo
+operator|<
+name|getNumArgOperands
+argument_list|()
+operator|&&
+literal|"Out of bounds"
+argument_list|)
+block|;
+return|return
+name|getAttributes
+argument_list|()
+operator|.
+name|getParamAttr
+argument_list|(
+name|ArgNo
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+comment|/// Get the attribute of a given kind from a given arg
+name|Attribute
+name|getParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ArgNo
+operator|<
+name|getNumArgOperands
+argument_list|()
+operator|&&
+literal|"Out of bounds"
+argument_list|)
+block|;
+return|return
+name|getAttributes
+argument_list|()
+operator|.
+name|getParamAttr
+argument_list|(
+name|ArgNo
 argument_list|,
 name|Kind
 argument_list|)

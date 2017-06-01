@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/MachineFunction.h --------------------------*- C++ -*-===//
+comment|//===- llvm/CodeGen/MachineFunction.h ---------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -78,7 +78,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/GraphTraits.h"
 end_include
 
 begin_include
@@ -90,7 +108,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -108,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineInstr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineMemOperand.h"
 end_include
 
@@ -115,6 +157,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Instructions.h"
 end_include
 
 begin_include
@@ -150,7 +198,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/AtomicOrdering.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -159,27 +219,72 @@ directive|include
 file|"llvm/Support/Recycler.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|Value
+name|BasicBlock
+decl_stmt|;
+name|class
+name|BlockAddress
+decl_stmt|;
+name|class
+name|DataLayout
+decl_stmt|;
+name|class
+name|DIExpression
+decl_stmt|;
+name|class
+name|DILocalVariable
+decl_stmt|;
+name|class
+name|DILocation
 decl_stmt|;
 name|class
 name|Function
 decl_stmt|;
 name|class
-name|GCModuleInfo
+name|GlobalValue
 decl_stmt|;
 name|class
-name|MachineRegisterInfo
+name|MachineConstantPool
 decl_stmt|;
 name|class
 name|MachineFrameInfo
 decl_stmt|;
 name|class
-name|MachineConstantPool
+name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineJumpTableInfo
@@ -188,7 +293,13 @@ name|class
 name|MachineModuleInfo
 decl_stmt|;
 name|class
+name|MachineRegisterInfo
+decl_stmt|;
+name|class
 name|MCContext
+decl_stmt|;
+name|class
+name|MCInstrDesc
 decl_stmt|;
 name|class
 name|Pass
@@ -197,17 +308,20 @@ name|class
 name|PseudoSourceValueManager
 decl_stmt|;
 name|class
-name|TargetMachine
+name|raw_ostream
 decl_stmt|;
 name|class
-name|TargetSubtargetInfo
+name|SlotIndexes
+decl_stmt|;
+name|class
+name|TargetMachine
 decl_stmt|;
 name|class
 name|TargetRegisterClass
 decl_stmt|;
-struct_decl|struct
-name|MachinePointerInfo
-struct_decl|;
+name|class
+name|TargetSubtargetInfo
+decl_stmt|;
 struct_decl|struct
 name|WinEHFuncInfo
 struct_decl|;
@@ -635,6 +749,8 @@ comment|// SEH handlers active at this lpad.
 name|MCSymbol
 modifier|*
 name|LandingPadLabel
+init|=
+name|nullptr
 decl_stmt|;
 comment|// Label at beginning of landing pad.
 name|std
@@ -656,12 +772,7 @@ argument_list|)
 operator|:
 name|LandingPadBlock
 argument_list|(
-name|MBB
-argument_list|)
-operator|,
-name|LandingPadLabel
-argument_list|(
-argument|nullptr
+argument|MBB
 argument_list|)
 block|{}
 block|}
@@ -764,13 +875,14 @@ operator|>
 name|BasicBlockRecycler
 expr_stmt|;
 comment|// List of machine basic blocks in function
-typedef|typedef
+name|using
+name|BasicBlockListType
+init|=
 name|ilist
 operator|<
 name|MachineBasicBlock
 operator|>
-name|BasicBlockListType
-expr_stmt|;
+decl_stmt|;
 name|BasicBlockListType
 name|BasicBlocks
 decl_stmt|;
@@ -853,8 +965,7 @@ operator|<
 name|unsigned
 operator|,
 literal|4
-operator|>
-expr|>
+operator|>>
 name|LPadToCallSiteMap
 expr_stmt|;
 comment|/// Map of invoke call site index values to associated begin EH_LABEL.
@@ -919,26 +1030,6 @@ operator|::
 name|Unknown
 decl_stmt|;
 comment|/// \}
-name|MachineFunction
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MachineFunction
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 comment|/// Clear all the members of this MachineFunction, but the ones used
 comment|/// to initialize again the MachineFunction.
 comment|/// More specifically, this deallocates all the dynamically allocated
@@ -1011,15 +1102,13 @@ argument_list|)
 block|{}
 block|}
 struct|;
-typedef|typedef
+name|using
+name|VariableDbgInfoMapTy
+init|=
 name|SmallVector
 operator|<
 name|VariableDbgInfo
-operator|,
-literal|4
-operator|>
-name|VariableDbgInfoMapTy
-expr_stmt|;
+decl_stmt|, 4>;
 name|VariableDbgInfoMapTy
 name|VariableDbgInfos
 decl_stmt|;
@@ -1034,6 +1123,27 @@ argument_list|,
 argument|MachineModuleInfo&MMI
 argument_list|)
 empty_stmt|;
+name|MachineFunction
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MachineFunction
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MachineFunction
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 operator|~
 name|MachineFunction
 argument_list|()
@@ -1090,7 +1200,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// getFunction - Return the LLVM function that this machine code represents
-comment|///
 specifier|const
 name|Function
 operator|*
@@ -1103,14 +1212,12 @@ name|Fn
 return|;
 block|}
 comment|/// getName - Return the name of the corresponding LLVM function.
-comment|///
 name|StringRef
 name|getName
 argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// getFunctionNumber - Return a unique ID for the current function.
-comment|///
 name|unsigned
 name|getFunctionNumber
 argument_list|()
@@ -1121,7 +1228,6 @@ name|FunctionNumber
 return|;
 block|}
 comment|/// getTarget - Return the target machine this machine code is compiled with
-comment|///
 specifier|const
 name|TargetMachine
 operator|&
@@ -1190,7 +1296,6 @@ operator|)
 return|;
 block|}
 comment|/// getRegInfo - Return information about the registers currently in use.
-comment|///
 name|MachineRegisterInfo
 modifier|&
 name|getRegInfo
@@ -1216,7 +1321,6 @@ block|}
 comment|/// getFrameInfo - Return the frame info object for the current function.
 comment|/// This object contains information about objects allocated on the stack
 comment|/// frame of the current function in an abstract way.
-comment|///
 name|MachineFrameInfo
 modifier|&
 name|getFrameInfo
@@ -1275,7 +1379,6 @@ parameter_list|)
 function_decl|;
 comment|/// getConstantPool - Return the constant pool object for the current
 comment|/// function.
-comment|///
 name|MachineConstantPool
 modifier|*
 name|getConstantPool
@@ -1320,7 +1423,6 @@ name|WinEHInfo
 return|;
 block|}
 comment|/// getAlignment - Return the alignment (log2, not bytes) of the function.
-comment|///
 name|unsigned
 name|getAlignment
 argument_list|()
@@ -1331,7 +1433,6 @@ name|Alignment
 return|;
 block|}
 comment|/// setAlignment - Set the alignment (log2, not bytes) of the function.
-comment|///
 name|void
 name|setAlignment
 parameter_list|(
@@ -1589,7 +1690,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// getNumBlockIDs - Return the number of MBB ID's allocated.
-comment|///
 name|unsigned
 name|getNumBlockIDs
 argument_list|()
@@ -1622,7 +1722,6 @@ parameter_list|)
 function_decl|;
 comment|/// print - Print out the MachineFunction in a format suitable for debugging
 comment|/// to the specified stream.
-comment|///
 name|void
 name|print
 argument_list|(
@@ -1643,7 +1742,6 @@ comment|/// say 'call F->viewCFG()' and a ghostview window should pop up from th
 comment|/// program, displaying the CFG of the current function with the code for each
 comment|/// basic block inside.  This depends on there being a 'dot' and 'gv' program
 comment|/// in your path.
-comment|///
 name|void
 name|viewCFG
 argument_list|()
@@ -1660,7 +1758,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// dump - Print the current MachineFunction to cerr, useful for debugger use.
-comment|///
 name|void
 name|dump
 argument_list|()
@@ -1693,30 +1790,34 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|// Provide accessors for the MachineBasicBlock list...
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|BasicBlockListType
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_iterator
+init|=
 name|BasicBlockListType
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_reverse_iterator
+init|=
 name|BasicBlockListType
 operator|::
 name|const_reverse_iterator
-name|const_reverse_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|reverse_iterator
+init|=
 name|BasicBlockListType
 operator|::
 name|reverse_iterator
-name|reverse_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// Support for MachineBasicBlock::getNextNode().
 specifier|static
 name|BasicBlockListType
@@ -2130,10 +2231,8 @@ argument_list|)
 block|;   }
 comment|//===--------------------------------------------------------------------===//
 comment|// Internal functions used to automatically number MachineBasicBlocks
-comment|//
 comment|/// \brief Adds the MBB to the internal numbering. Returns the unique number
 comment|/// assigned to the MBB.
-comment|///
 name|unsigned
 name|addToMBBNumbering
 argument_list|(
@@ -2191,7 +2290,6 @@ expr_stmt|;
 block|}
 comment|/// CreateMachineInstr - Allocate a new MachineInstr. Use this instead
 comment|/// of `new MachineInstr'.
-comment|///
 name|MachineInstr
 modifier|*
 name|CreateMachineInstr
@@ -2229,7 +2327,6 @@ name|Orig
 parameter_list|)
 function_decl|;
 comment|/// DeleteMachineInstr - Delete the given MachineInstr.
-comment|///
 name|void
 name|DeleteMachineInstr
 parameter_list|(
@@ -2240,7 +2337,6 @@ parameter_list|)
 function_decl|;
 comment|/// CreateMachineBasicBlock - Allocate a new MachineBasicBlock. Use this
 comment|/// instead of `new MachineBasicBlock'.
-comment|///
 name|MachineBasicBlock
 modifier|*
 name|CreateMachineBasicBlock
@@ -2254,7 +2350,6 @@ name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// DeleteMachineBasicBlock - Delete the given MachineBasicBlock.
-comment|///
 name|void
 name|DeleteMachineBasicBlock
 parameter_list|(
@@ -2339,15 +2434,16 @@ name|uint64_t
 name|Size
 parameter_list|)
 function_decl|;
-typedef|typedef
+name|using
+name|OperandCapacity
+init|=
 name|ArrayRecycler
 operator|<
 name|MachineOperand
 operator|>
 operator|::
 name|Capacity
-name|OperandCapacity
-expr_stmt|;
+decl_stmt|;
 comment|/// Allocate an array of MachineOperands. This is only intended for use by
 comment|/// internal MachineInstr functions.
 name|MachineOperand
@@ -2516,7 +2612,6 @@ parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Label Manipulation.
-comment|//
 comment|/// getJTISymbol - Return the MCSymbol for the specified non-empty jump table.
 comment|/// If isLinkerPrivate is specified, an 'l' label is returned, otherwise a
 comment|/// normal 'L' label is returned.
@@ -3160,23 +3255,18 @@ name|front
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// nodes_iterator/begin/end - Allow iteration over all nodes in the graph
-end_comment
-
-begin_typedef
-typedef|typedef
+name|using
+name|nodes_iterator
+operator|=
 name|pointer_iterator
 operator|<
 name|MachineFunction
 operator|::
 name|iterator
 operator|>
-name|nodes_iterator
 expr_stmt|;
-end_typedef
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -3277,23 +3367,18 @@ name|front
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// nodes_iterator/begin/end - Allow iteration over all nodes in the graph
-end_comment
-
-begin_typedef
-typedef|typedef
+name|using
+name|nodes_iterator
+operator|=
 name|pointer_iterator
 operator|<
 name|MachineFunction
 operator|::
 name|const_iterator
 operator|>
-name|nodes_iterator
 expr_stmt|;
-end_typedef
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -3393,8 +3478,7 @@ name|Inverse
 operator|<
 name|MachineFunction
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|:
 name|public
 name|GraphTraits
@@ -3403,8 +3487,7 @@ name|Inverse
 operator|<
 name|MachineBasicBlock
 operator|*
-operator|>
-expr|>
+operator|>>
 block|{
 specifier|static
 name|NodeRef
@@ -3438,8 +3521,7 @@ operator|<
 specifier|const
 name|MachineFunction
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|:
 name|public
 name|GraphTraits
@@ -3449,8 +3531,7 @@ operator|<
 specifier|const
 name|MachineBasicBlock
 operator|*
-operator|>
-expr|>
+operator|>>
 block|{
 specifier|static
 name|NodeRef
@@ -3473,13 +3554,17 @@ end_expr_stmt
 
 begin_comment
 unit|};  }
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEFUNCTION_H
+end_comment
 
 end_unit
 

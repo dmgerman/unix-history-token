@@ -88,7 +88,7 @@ name|class
 name|ScheduleDAGInstrs
 decl_stmt|;
 name|class
-name|TargetMachine
+name|LLVMTargetMachine
 decl_stmt|;
 struct_decl|struct
 name|MachineSchedContext
@@ -320,7 +320,7 @@ name|AddingMachinePasses
 block|;
 name|protected
 operator|:
-name|TargetMachine
+name|LLVMTargetMachine
 operator|*
 name|TM
 block|;
@@ -352,9 +352,9 @@ name|public
 operator|:
 name|TargetPassConfig
 argument_list|(
-name|TargetMachine
-operator|*
-name|tm
+name|LLVMTargetMachine
+operator|&
+name|TM
 argument_list|,
 name|PassManagerBase
 operator|&

@@ -361,6 +361,15 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+name|bool
+name|isOnlyUsedInZeroEqualityComparison
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+parameter_list|)
+function_decl|;
 comment|/// Return true if the given value is known to be non-zero when defined. For
 comment|/// vectors, return true if every element is known to be non-zero when
 comment|/// defined. For pointers, if the context instruction and dominator tree are
