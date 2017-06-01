@@ -47,6 +47,12 @@ directive|include
 file|<contrib/dev/acpica/include/acinterp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acnamesp.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1392,6 +1398,30 @@ comment|/* Either the method parse or actual execution failed */
 name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|Status
+operator|==
+name|AE_ABORT_METHOD
+condition|)
+block|{
+name|AcpiNsPrintNodePathname
+argument_list|(
+name|WalkState
+operator|->
+name|MethodNode
+argument_list|,
+literal|"Method aborted:"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ACPI_ERROR_METHOD
 argument_list|(
 literal|"Method parse/execution failed"
@@ -1405,6 +1435,7 @@ argument_list|,
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;

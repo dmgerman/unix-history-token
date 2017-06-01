@@ -400,6 +400,8 @@ literal|"Generic Hardware Error Source"
 block|,
 literal|"Generic Hardware Error Source V2"
 block|,
+literal|"IA-32 Deferred Machine Check"
+block|,
 literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
@@ -443,7 +445,31 @@ comment|/* ACPI 6.1 */
 literal|"GSIV"
 block|,
 comment|/* ACPI 6.1 */
+literal|"Software Delegated Exception"
+block|,
+comment|/* ACPI 6.2 */
 literal|"Unknown Notify Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmHmatSubnames
+index|[]
+init|=
+block|{
+literal|"Memory Subystem Address Range"
+block|,
+literal|"System Locality Latency and Bandwidth Information"
+block|,
+literal|"Memory Side Cache Information"
+block|,
+literal|"Unknown Structure Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -566,6 +592,12 @@ comment|/* ACPI_PCCT_TYPE_HW_REDUCED_SUBSPACE */
 literal|"HW-Reduced Comm Subspace Type2"
 block|,
 comment|/* ACPI_PCCT_TYPE_HW_REDUCED_SUBSPACE_TYPE2 */
+literal|"Extended PCC Master Subspace"
+block|,
+comment|/* ACPI_PCCT_TYPE_EXT_PCC_MASTER_SUBSPACE */
+literal|"Extended PCC Slave Subspace"
+block|,
+comment|/* ACPI_PCCT_TYPE_EXT_PCC_SLAVE_SUBSPACE */
 literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
@@ -601,6 +633,30 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+name|AcpiDmPpttSubnames
+index|[]
+init|=
+block|{
+literal|"Processor Hierarchy Node"
+block|,
+comment|/* ACPI_PPTT_TYPE_PROCESSOR */
+literal|"Cache Type"
+block|,
+comment|/* ACPI_PPTT_TYPE_CACHE */
+literal|"ID"
+block|,
+comment|/* ACPI_PMTT_TYPE_ID  */
+literal|"Unknown Subtable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
 name|AcpiDmSratSubnames
 index|[]
 init|=
@@ -613,6 +669,9 @@ literal|"Processor Local x2APIC Affinity"
 block|,
 literal|"GICC Affinity"
 block|,
+literal|"GIC ITS Affinity"
+block|,
+comment|/* Acpi 6.2 */
 literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
@@ -941,6 +1000,18 @@ name|TemplateHest
 block|}
 block|,
 block|{
+name|ACPI_SIG_HMAT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpHmat
+block|,
+name|DtCompileHmat
+block|,
+name|TemplateHmat
+block|}
+block|,
+block|{
 name|ACPI_SIG_HPET
 block|,
 name|AcpiDmTableInfoHpet
@@ -1106,6 +1177,18 @@ block|,
 name|DtCompilePmtt
 block|,
 name|TemplatePmtt
+block|}
+block|,
+block|{
+name|ACPI_SIG_PPTT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpPptt
+block|,
+name|DtCompilePptt
+block|,
+name|TemplatePptt
 block|}
 block|,
 block|{
@@ -1334,6 +1417,18 @@ block|,
 name|DtCompileWpbt
 block|,
 name|TemplateWpbt
+block|}
+block|,
+block|{
+name|ACPI_SIG_WSMT
+block|,
+name|AcpiDmTableInfoWsmt
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateWsmt
 block|}
 block|,
 block|{
@@ -2334,6 +2429,9 @@ case|case
 name|ACPI_DMT_PMTT
 case|:
 case|case
+name|ACPI_DMT_PPTT
+case|:
+case|case
 name|ACPI_DMT_SRAT
 case|:
 case|case
@@ -2373,6 +2471,9 @@ name|ACPI_DMT_DMAR
 case|:
 case|case
 name|ACPI_DMT_HEST
+case|:
+case|case
+name|ACPI_DMT_HMAT
 case|:
 case|case
 name|ACPI_DMT_NFIT
@@ -2785,6 +2886,114 @@ literal|4
 operator|)
 operator|&
 literal|0x03
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_FLAGS4_0
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"%1.1X\n"
+argument_list|,
+operator|(
+operator|*
+operator|(
+name|UINT32
+operator|*
+operator|)
+name|Target
+operator|)
+operator|&
+literal|0x0F
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_FLAGS4_4
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"%1.1X\n"
+argument_list|,
+operator|(
+operator|*
+operator|(
+name|UINT32
+operator|*
+operator|)
+name|Target
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0x0F
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_FLAGS4_8
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"%1.1X\n"
+argument_list|,
+operator|(
+operator|*
+operator|(
+name|UINT32
+operator|*
+operator|)
+name|Target
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0x0F
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_FLAGS4_12
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"%1.1X\n"
+argument_list|,
+operator|(
+operator|*
+operator|(
+name|UINT32
+operator|*
+operator|)
+name|Target
+operator|>>
+literal|12
+operator|)
+operator|&
+literal|0x0F
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_FLAGS16_16
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"%4.4X\n"
+argument_list|,
+operator|(
+operator|*
+operator|(
+name|UINT32
+operator|*
+operator|)
+name|Target
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xFFFF
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3747,6 +3956,41 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_HMAT
+case|:
+comment|/* HMAT subtable types */
+name|Temp16
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp16
+operator|>
+name|ACPI_HMAT_TYPE_RESERVED
+condition|)
+block|{
+name|Temp16
+operator|=
+name|ACPI_HMAT_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT16_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmHmatSubnames
+index|[
+name|Temp16
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_IORTMEM
 case|:
 name|AcpiOsPrintf
@@ -3931,6 +4175,41 @@ operator|*
 name|Target
 argument_list|,
 name|AcpiDmPmttSubnames
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_PPTT
+case|:
+comment|/* PPTT subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_PPTT_TYPE_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_PPTT_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmPpttSubnames
 index|[
 name|Temp8
 index|]

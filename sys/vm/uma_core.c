@@ -25,14 +25,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* I should really use ktr.. */
-end_comment
-
-begin_comment
-comment|/* #define UMA_DEBUG 1 #define UMA_DEBUG_ALLOC 1 #define UMA_DEBUG_ALLOC_1 1 */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -423,33 +415,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Linked list of boot time pages */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|uma_slab
-argument_list|)
-name|uma_boot_pages
-operator|=
-name|LIST_HEAD_INITIALIZER
-argument_list|(
-name|uma_boot_pages
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* This mutex protects the boot time pages list */
+comment|/*  * Pointer and counter to pool of pages, that is preallocated at  * startup to bootstrap UMA.  Early zones continue to use the pool  * until it is depleted, so allocations may happen after boot, thus  * we need a mutex to protect it.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|bootmem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|boot_pages
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
-name|mtx_padalign
+name|mtx
 name|uma_boot_pages_mtx
 decl_stmt|;
 end_decl_stmt
@@ -3458,6 +3445,27 @@ decl_stmt|;
 name|uint8_t
 name|flags
 decl_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_UMA
+argument_list|,
+literal|"keg_free_slab keg %s(%p) slab %p, returning %d bytes"
+argument_list|,
+name|keg
+operator|->
+name|uk_name
+argument_list|,
+name|keg
+argument_list|,
+name|slab
+argument_list|,
+name|PAGE_SIZE
+operator|*
+name|keg
+operator|->
+name|uk_ppera
+argument_list|)
+expr_stmt|;
 name|mem
 operator|=
 name|slab
@@ -3539,26 +3547,6 @@ argument_list|,
 name|SKIP_NONE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
-literal|"%s: Returning %d bytes.\n"
-argument_list|,
-name|keg
-operator|->
-name|uk_name
-argument_list|,
-name|PAGE_SIZE
-operator|*
-name|keg
-operator|->
-name|uk_ppera
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|keg
 operator|->
 name|uk_freef
@@ -3619,24 +3607,23 @@ operator|==
 name|NULL
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
+name|CTR3
 argument_list|(
-literal|"%s free items: %u\n"
+name|KTR_UMA
+argument_list|,
+literal|"keg_drain %s(%p) free items: %u"
 argument_list|,
 name|keg
 operator|->
 name|uk_name
 argument_list|,
 name|keg
+argument_list|,
+name|keg
 operator|->
 name|uk_free
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|KEG_LOCK
 argument_list|(
 name|keg
@@ -3954,20 +3941,6 @@ name|mem
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
-literal|"alloc_slab:  Allocating a new slab for %s\n"
-argument_list|,
-name|keg
-operator|->
-name|uk_name
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|allocf
 operator|=
 name|keg
@@ -4302,6 +4275,21 @@ argument_list|(
 name|keg
 argument_list|)
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_UMA
+argument_list|,
+literal|"keg_alloc_slab: allocated slab %p for %s(%p)"
+argument_list|,
+name|slab
+argument_list|,
+name|keg
+operator|->
+name|uk_name
+argument_list|,
+name|keg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|slab
@@ -4381,13 +4369,12 @@ block|{
 name|uma_keg_t
 name|keg
 decl_stmt|;
-name|uma_slab_t
-name|tmps
+name|void
+modifier|*
+name|mem
 decl_stmt|;
 name|int
 name|pages
-decl_stmt|,
-name|check_pages
 decl_stmt|;
 name|keg
 operator|=
@@ -4404,12 +4391,6 @@ name|bytes
 argument_list|,
 name|PAGE_SIZE
 argument_list|)
-expr_stmt|;
-name|check_pages
-operator|=
-name|pages
-operator|-
-literal|1
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -4429,67 +4410,27 @@ operator|&
 name|uma_boot_pages_mtx
 argument_list|)
 expr_stmt|;
-comment|/* First check if we have enough room. */
-name|tmps
-operator|=
-name|LIST_FIRST
-argument_list|(
-operator|&
-name|uma_boot_pages
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|tmps
-operator|!=
-name|NULL
-operator|&&
-name|check_pages
-operator|--
-operator|>
-literal|0
-condition|)
-name|tmps
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|tmps
-argument_list|,
-name|us_link
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|tmps
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 		 * It's ok to lose tmps references.  The last one will 		 * have tmps->us_data pointing to the start address of 		 * "pages" contiguous pages of memory. 		 */
-while|while
-condition|(
 name|pages
-operator|--
-operator|>
-literal|0
+operator|<=
+name|boot_pages
 condition|)
 block|{
-name|tmps
+name|mem
 operator|=
-name|LIST_FIRST
-argument_list|(
-operator|&
-name|uma_boot_pages
-argument_list|)
+name|bootmem
 expr_stmt|;
-name|LIST_REMOVE
-argument_list|(
-name|tmps
-argument_list|,
-name|us_link
-argument_list|)
+name|boot_pages
+operator|-=
+name|pages
 expr_stmt|;
-block|}
+name|bootmem
+operator|+=
+name|pages
+operator|*
+name|PAGE_SIZE
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -4499,15 +4440,11 @@ expr_stmt|;
 operator|*
 name|pflag
 operator|=
-name|tmps
-operator|->
-name|us_flags
+name|UMA_SLAB_BOOT
 expr_stmt|;
 return|return
 operator|(
-name|tmps
-operator|->
-name|us_data
+name|mem
 operator|)
 return|;
 block|}
@@ -5291,13 +5228,12 @@ name|uk_ipers
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
+name|CTR6
 argument_list|(
+name|KTR_UMA
+argument_list|,
 literal|"UMA decided we need offpage slab headers for "
-literal|"keg: %s, calculated wastedspace = %d, "
+literal|"keg: %s(%p), calculated wastedspace = %d, "
 literal|"maximum wasted space allowed = %d, "
 literal|"calculated ipers = %d, "
 literal|"new wasted space = %d\n"
@@ -5305,6 +5241,8 @@ argument_list|,
 name|keg
 operator|->
 name|uk_name
+argument_list|,
+name|keg
 argument_list|,
 name|wastedspace
 argument_list|,
@@ -5327,8 +5265,6 @@ operator|->
 name|uk_rsize
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|keg
 operator|->
 name|uk_flags
@@ -6228,38 +6164,19 @@ operator|->
 name|uk_hash
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
+name|CTR5
 argument_list|(
-literal|"UMA: %s(%p) size %d(%d) flags %#x ipers %d ppera %d out %d free %d\n"
+name|KTR_UMA
+argument_list|,
+literal|"keg_ctor %p zone %s(%p) out %d free %d\n"
+argument_list|,
+name|keg
 argument_list|,
 name|zone
 operator|->
 name|uz_name
 argument_list|,
 name|zone
-argument_list|,
-name|keg
-operator|->
-name|uk_size
-argument_list|,
-name|keg
-operator|->
-name|uk_rsize
-argument_list|,
-name|keg
-operator|->
-name|uk_flags
-argument_list|,
-name|keg
-operator|->
-name|uk_ipers
-argument_list|,
-name|keg
-operator|->
-name|uk_ppera
 argument_list|,
 operator|(
 name|keg
@@ -6284,8 +6201,6 @@ operator|->
 name|uk_free
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -7357,32 +7272,16 @@ name|uma_startup
 parameter_list|(
 name|void
 modifier|*
-name|bootmem
+name|mem
 parameter_list|,
 name|int
-name|boot_pages
+name|npages
 parameter_list|)
 block|{
 name|struct
 name|uma_zctor_args
 name|args
 decl_stmt|;
-name|uma_slab_t
-name|slab
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
-literal|"Creating uma keg headers zone and keg.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|rw_init
 argument_list|(
 operator|&
@@ -7483,76 +7382,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
-literal|"Filling boot free list.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|boot_pages
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|slab
-operator|=
-call|(
-name|uma_slab_t
-call|)
-argument_list|(
-operator|(
-name|uint8_t
-operator|*
-operator|)
-name|bootmem
-operator|+
-operator|(
-name|i
-operator|*
-name|UMA_SLAB_SIZE
-operator|)
-argument_list|)
-expr_stmt|;
-name|slab
-operator|->
-name|us_data
-operator|=
-operator|(
-name|uint8_t
-operator|*
-operator|)
-name|slab
-expr_stmt|;
-name|slab
-operator|->
-name|us_flags
-operator|=
-name|UMA_SLAB_BOOT
-expr_stmt|;
-name|LIST_INSERT_HEAD
-argument_list|(
-operator|&
-name|uma_boot_pages
-argument_list|,
-name|slab
-argument_list|,
-name|us_link
-argument_list|)
-expr_stmt|;
-block|}
 name|mtx_init
 argument_list|(
 operator|&
@@ -7565,16 +7394,14 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
-literal|"Creating uma zone headers zone and keg.\n"
-argument_list|)
+name|bootmem
+operator|=
+name|mem
 expr_stmt|;
-endif|#
-directive|endif
+name|boot_pages
+operator|=
+name|npages
+expr_stmt|;
 name|args
 operator|.
 name|name
@@ -7666,16 +7493,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
-literal|"Creating slab and hash zones.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Now make a zone for slab headers */
 name|slabzone
 operator|=
@@ -7737,16 +7554,6 @@ name|booted
 operator|=
 name|UMA_STARTUP
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
-literal|"UMA startup complete.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -7776,16 +7583,6 @@ argument_list|,
 literal|"umadrain"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
-literal|"UMA startup2 complete.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -7801,16 +7598,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
-literal|"Starting callout.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|callout_init
 argument_list|(
 operator|&
@@ -7833,16 +7620,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
-literal|"UMA startup3 complete.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -8906,33 +8683,19 @@ name|RANDOM_UMA
 argument_list|)
 expr_stmt|;
 comment|/* This is the fast path allocation */
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG_ALLOC_1
-name|printf
-argument_list|(
-literal|"Allocating one item from %s(%p)\n"
-argument_list|,
-name|zone
-operator|->
-name|uz_name
-argument_list|,
-name|zone
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_UMA
 argument_list|,
-literal|"uma_zalloc_arg thread %x zone %s flags %d"
+literal|"uma_zalloc_arg thread %x zone %s(%p) flags %d"
 argument_list|,
 name|curthread
 argument_list|,
 name|zone
 operator|->
 name|uz_name
+argument_list|,
+name|zone
 argument_list|,
 name|flags
 argument_list|)
@@ -9282,16 +9045,19 @@ operator|>
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG_ALLOC
-name|printf
+name|CTR2
 argument_list|(
-literal|"uma_zalloc: Swapping empty with alloc.\n"
+name|KTR_UMA
+argument_list|,
+literal|"uma_zalloc: zone %s(%p) swapping empty with alloc"
+argument_list|,
+name|zone
+operator|->
+name|uz_name
+argument_list|,
+name|zone
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|cache
 operator|->
 name|uc_freebucket
@@ -9544,6 +9310,21 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_UMA
+argument_list|,
+literal|"uma_zalloc: zone %s(%p) bucket zone returned %p"
+argument_list|,
+name|zone
+operator|->
+name|uz_name
+argument_list|,
+name|zone
+argument_list|,
+name|bucket
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bucket
@@ -9611,16 +9392,6 @@ name|zalloc_start
 goto|;
 block|}
 comment|/* 	 * We may not be able to get a bucket so return an actual item. 	 */
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
-literal|"uma_zalloc_arg: Bucketzone returned NULL\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|zalloc_item
 label|:
 name|item
@@ -10835,22 +10606,6 @@ name|item
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG_ALLOC
-name|printf
-argument_list|(
-literal|"INTERNAL: Allocating one item from %s(%p)\n"
-argument_list|,
-name|zone
-operator|->
-name|uz_name
-argument_list|,
-name|zone
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|zone
@@ -11000,6 +10755,21 @@ argument_list|,
 name|zone
 argument_list|)
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_UMA
+argument_list|,
+literal|"zone_alloc_item item %p from %s(%p)"
+argument_list|,
+name|item
+argument_list|,
+name|zone
+operator|->
+name|uz_name
+argument_list|,
+name|zone
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|item
@@ -11007,6 +10777,19 @@ operator|)
 return|;
 name|fail
 label|:
+name|CTR2
+argument_list|(
+name|KTR_UMA
+argument_list|,
+literal|"zone_alloc_item failed from %s(%p)"
+argument_list|,
+name|zone
+operator|->
+name|uz_name
+argument_list|,
+name|zone
+argument_list|)
+expr_stmt|;
 name|atomic_add_long
 argument_list|(
 operator|&
@@ -11073,24 +10856,6 @@ argument_list|,
 name|RANDOM_UMA
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG_ALLOC_1
-name|printf
-argument_list|(
-literal|"Freeing item %p to %s(%p)\n"
-argument_list|,
-name|item
-argument_list|,
-name|zone
-operator|->
-name|uz_name
-argument_list|,
-name|zone
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|CTR2
 argument_list|(
 name|KTR_UMA
@@ -11505,16 +11270,21 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG_ALLOC
-name|printf
+name|CTR3
 argument_list|(
-literal|"uma_zfree: Putting old bucket on the free list.\n"
+name|KTR_UMA
+argument_list|,
+literal|"uma_zfree: zone %s(%p) putting bucket %p on free list"
+argument_list|,
+name|zone
+operator|->
+name|uz_name
+argument_list|,
+name|zone
+argument_list|,
+name|bucket
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* ub_cnt is pointing to the last free item */
 name|KASSERT
 argument_list|(
@@ -11563,16 +11333,6 @@ argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG_ALLOC
-name|printf
-argument_list|(
-literal|"uma_zfree: Allocating new free bucket.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|bucket
 operator|=
 name|bucket_alloc
@@ -11582,6 +11342,21 @@ argument_list|,
 name|udata
 argument_list|,
 name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_UMA
+argument_list|,
+literal|"uma_zfree: zone %s(%p) allocated bucket %p"
+argument_list|,
+name|zone
+operator|->
+name|uz_name
+argument_list|,
+name|zone
+argument_list|,
+name|bucket
 argument_list|)
 expr_stmt|;
 if|if
@@ -13257,16 +13032,13 @@ name|bool
 name|kmem_danger
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
+name|CTR0
 argument_list|(
-literal|"UMA: vm asked us to release pages!\n"
+name|KTR_UMA
+argument_list|,
+literal|"UMA: vm asked us to release pages!"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sx_assert
 argument_list|(
 operator|&

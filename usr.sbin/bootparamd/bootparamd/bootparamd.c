@@ -1618,6 +1618,13 @@ condition|(
 name|match
 condition|)
 block|{
+name|fid_len
+operator|=
+name|strlen
+argument_list|(
+name|fileid
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|AS_FORMAT

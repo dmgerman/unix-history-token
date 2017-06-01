@@ -3679,6 +3679,8 @@ comment|/*      * Converter: if TrLinkChildNode is called to link a method call,
 if|if
 condition|(
 name|Gbl_CaptureComments
+operator|&&
+name|Op1
 condition|)
 block|{
 if|if

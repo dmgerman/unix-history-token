@@ -885,9 +885,6 @@ name|prio
 init|=
 literal|0
 decl_stmt|;
-name|u_char
-name|old_prio
-decl_stmt|;
 comment|/* 		 * Find the lowest priority or sleeping thread which 		 * is blocking synchronization on this CPU core. All 		 * the threads in the queue are CPU-pinned and cannot 		 * go anywhere while the current thread is locked. 		 */
 name|TAILQ_FOREACH
 argument_list|(
@@ -954,12 +951,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|old_prio
-operator|=
-name|td
-operator|->
-name|td_priority
-expr_stmt|;
 comment|/* set new thread priority */
 name|sched_prio
 argument_list|(
@@ -976,14 +967,6 @@ operator||
 name|SWT_RELINQUISH
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* restore thread priority */
-name|sched_prio
-argument_list|(
-name|td
-argument_list|,
-name|old_prio
 argument_list|)
 expr_stmt|;
 block|}
@@ -1032,6 +1015,9 @@ decl_stmt|;
 name|int
 name|old_pinned
 decl_stmt|;
+name|u_char
+name|old_prio
+decl_stmt|;
 if|if
 condition|(
 name|RCU_SKIP
@@ -1074,6 +1060,12 @@ operator|=
 name|td
 operator|->
 name|td_pinned
+expr_stmt|;
+name|old_prio
+operator|=
+name|td
+operator|->
+name|td_priority
 expr_stmt|;
 name|td
 operator|->
@@ -1150,6 +1142,14 @@ operator|->
 name|td_pinned
 operator|=
 name|old_pinned
+expr_stmt|;
+comment|/* restore thread priority */
+name|sched_prio
+argument_list|(
+name|td
+argument_list|,
+name|old_prio
+argument_list|)
 expr_stmt|;
 name|thread_unlock
 argument_list|(

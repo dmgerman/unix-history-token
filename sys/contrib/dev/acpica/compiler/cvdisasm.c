@@ -380,6 +380,10 @@ operator|*
 name|CommentToPrint
 condition|)
 block|{
+name|CommentExists
+operator|=
+name|TRUE
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"%s"
@@ -765,6 +769,10 @@ name|ACPI_FILE_NODE
 modifier|*
 name|FNode
 decl_stmt|;
+name|ACPI_FILE_NODE
+modifier|*
+name|Current
+decl_stmt|;
 name|CvDbgPrint
 argument_list|(
 literal|"Switching from %s to %s\n"
@@ -832,18 +840,22 @@ name|AslAbort
 argument_list|()
 expr_stmt|;
 block|}
+name|Current
+operator|=
+name|FNode
+expr_stmt|;
 comment|/*      * If the previous file is a descendent of the current file,      * make sure that Include statements from the current file      * to the previous have been emitted.      */
 while|while
 condition|(
-name|FNode
+name|Current
 operator|&&
-name|FNode
+name|Current
 operator|->
 name|Parent
 operator|&&
 name|AcpiUtStricmp
 argument_list|(
-name|FNode
+name|Current
 operator|->
 name|Filename
 argument_list|,
@@ -853,28 +865,19 @@ condition|)
 block|{
 name|CvPrintInclude
 argument_list|(
-name|FNode
+name|Current
 argument_list|,
 name|Level
 argument_list|)
 expr_stmt|;
-name|FNode
+name|Current
 operator|=
-name|FNode
+name|Current
 operator|->
 name|Parent
 expr_stmt|;
 block|}
-comment|/* Redirect output to the Op->Common.CvFilename */
-name|FNode
-operator|=
-name|CvFilenameExists
-argument_list|(
-name|Filename
-argument_list|,
-name|AcpiGbl_FileTreeRoot
-argument_list|)
-expr_stmt|;
+comment|/* Redirect output to Op->Common.CvFilename */
 name|AcpiOsRedirectOutput
 argument_list|(
 name|FNode

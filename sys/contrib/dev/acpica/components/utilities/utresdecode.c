@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: ahtable - Table of known ACPI tables with descriptions  *  *****************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utresdecode - Resource descriptor keyword strings  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -19,466 +19,746 @@ directive|include
 file|<contrib/dev/acpica/include/accommon.h>
 end_include
 
-begin_comment
-comment|/* Local prototypes */
-end_comment
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acresrc.h>
+end_include
 
-begin_function_decl
-specifier|const
-name|AH_TABLE
-modifier|*
-name|AcpiAhGetTableInfo
-parameter_list|(
-name|char
-modifier|*
-name|Signature
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|ACPI_UTILITIES
+end_define
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|AH_TABLE
-name|Gbl_AcpiSupportedTables
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAhGetTableInfo  *  * PARAMETERS:  Signature           - ACPI signature (4 chars) to match  *  * RETURN:      Pointer to a valid AH_TABLE. Null if no match found.  *  * DESCRIPTION: Find a match in the "help" table of supported ACPI tables  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|const
-name|AH_TABLE
-modifier|*
-name|AcpiAhGetTableInfo
-parameter_list|(
-name|char
-modifier|*
-name|Signature
-parameter_list|)
-block|{
-specifier|const
-name|AH_TABLE
-modifier|*
-name|Info
-decl_stmt|;
-for|for
-control|(
-name|Info
-operator|=
-name|Gbl_AcpiSupportedTables
-init|;
-name|Info
-operator|->
-name|Signature
-condition|;
-name|Info
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|ACPI_COMPARE_NAME
+begin_macro
+name|ACPI_MODULE_NAME
 argument_list|(
-name|Signature
-argument_list|,
-name|Info
-operator|->
-name|Signature
+literal|"utresdecode"
 argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Info
-operator|)
-return|;
-block|}
-block|}
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_function
+end_macro
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_DEBUG_OUTPUT
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|ACPI_DISASSEMBLER
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|ACPI_DEBUGGER
+argument_list|)
+end_if
 
 begin_comment
-comment|/*  * Note: Any tables added here should be duplicated within AcpiDmTableData  * in the file common/dmtable.c  */
+comment|/*  * Strings used to decode resource descriptors.  * Used by both the disassembler and the debugger resource dump routines  */
 end_comment
 
 begin_decl_stmt
 specifier|const
-name|AH_TABLE
-name|Gbl_AcpiSupportedTables
+name|char
+modifier|*
+name|AcpiGbl_BmDecode
 index|[]
 init|=
 block|{
-block|{
-name|ACPI_SIG_ASF
+literal|"NotBusMaster"
 block|,
-literal|"Alert Standard Format table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_BERT
-block|,
-literal|"Boot Error Record Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_BGRT
-block|,
-literal|"Boot Graphics Resource Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_BOOT
-block|,
-literal|"Simple Boot Flag Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_CPEP
-block|,
-literal|"Corrected Platform Error Polling table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_CSRT
-block|,
-literal|"Core System Resource Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_DBG2
-block|,
-literal|"Debug Port table type 2"
-block|}
-block|,
-block|{
-name|ACPI_SIG_DBGP
-block|,
-literal|"Debug Port table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_DMAR
-block|,
-literal|"DMA Remapping table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_DRTM
-block|,
-literal|"Dynamic Root of Trust for Measurement table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_DSDT
-block|,
-literal|"Differentiated System Description Table (AML table)"
-block|}
-block|,
-block|{
-name|ACPI_SIG_ECDT
-block|,
-literal|"Embedded Controller Boot Resources Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_EINJ
-block|,
-literal|"Error Injection table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_ERST
-block|,
-literal|"Error Record Serialization Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_FACS
-block|,
-literal|"Firmware ACPI Control Structure"
-block|}
-block|,
-block|{
-name|ACPI_SIG_FADT
-block|,
-literal|"Fixed ACPI Description Table (FADT)"
-block|}
-block|,
-block|{
-name|ACPI_SIG_FPDT
-block|,
-literal|"Firmware Performance Data Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_GTDT
-block|,
-literal|"Generic Timer Description Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_HEST
-block|,
-literal|"Hardware Error Source Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_HMAT
-block|,
-literal|"Heterogeneous Memory Attributes Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_HPET
-block|,
-literal|"High Precision Event Timer table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_IORT
-block|,
-literal|"IO Remapping Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_IVRS
-block|,
-literal|"I/O Virtualization Reporting Structure"
-block|}
-block|,
-block|{
-name|ACPI_SIG_LPIT
-block|,
-literal|"Low Power Idle Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_MADT
-block|,
-literal|"Multiple APIC Description Table (MADT)"
-block|}
-block|,
-block|{
-name|ACPI_SIG_MCFG
-block|,
-literal|"Memory Mapped Configuration table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_MCHI
-block|,
-literal|"Management Controller Host Interface table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_MPST
-block|,
-literal|"Memory Power State Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_MSCT
-block|,
-literal|"Maximum System Characteristics Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_MSDM
-block|,
-literal|"Microsoft Data Management table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_MTMR
-block|,
-literal|"MID Timer Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_NFIT
-block|,
-literal|"NVDIMM Firmware Interface Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_PCCT
-block|,
-literal|"Platform Communications Channel Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_PMTT
-block|,
-literal|"Platform Memory Topology Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_PPTT
-block|,
-literal|"Processor Properties Topology Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_RASF
-block|,
-literal|"RAS Features Table"
-block|}
-block|,
-block|{
-name|ACPI_RSDP_NAME
-block|,
-literal|"Root System Description Pointer"
-block|}
-block|,
-block|{
-name|ACPI_SIG_RSDT
-block|,
-literal|"Root System Description Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_S3PT
-block|,
-literal|"S3 Performance Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_SBST
-block|,
-literal|"Smart Battery Specification Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_SLIC
-block|,
-literal|"Software Licensing Description Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_SLIT
-block|,
-literal|"System Locality Information Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_SPCR
-block|,
-literal|"Serial Port Console Redirection table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_SPMI
-block|,
-literal|"Server Platform Management Interface table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_SRAT
-block|,
-literal|"System Resource Affinity Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_SSDT
-block|,
-literal|"Secondary System Description Table (AML table)"
-block|}
-block|,
-block|{
-name|ACPI_SIG_STAO
-block|,
-literal|"Status Override table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_TCPA
-block|,
-literal|"Trusted Computing Platform Alliance table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_TPM2
-block|,
-literal|"Trusted Platform Module hardware interface table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_UEFI
-block|,
-literal|"UEFI Boot Optimization Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_VRTC
-block|,
-literal|"Virtual Real-Time Clock Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_WAET
-block|,
-literal|"Windows ACPI Emulated Devices Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_WDAT
-block|,
-literal|"Watchdog Action Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_WDDT
-block|,
-literal|"Watchdog Description Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_WDRT
-block|,
-literal|"Watchdog Resource Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_WPBT
-block|,
-literal|"Windows Platform Binary Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_WSMT
-block|,
-literal|"Windows SMM Security Migrations Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_XENV
-block|,
-literal|"Xen Environment table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_XSDT
-block|,
-literal|"Extended System Description Table"
-block|}
-block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
+literal|"BusMaster"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_ConfigDecode
+index|[]
+init|=
+block|{
+literal|"0 - Good Configuration"
+block|,
+literal|"1 - Acceptable Configuration"
+block|,
+literal|"2 - Suboptimal Configuration"
+block|,
+literal|"3 - ***Invalid Configuration***"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_ConsumeDecode
+index|[]
+init|=
+block|{
+literal|"ResourceProducer"
+block|,
+literal|"ResourceConsumer"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_DecDecode
+index|[]
+init|=
+block|{
+literal|"PosDecode"
+block|,
+literal|"SubDecode"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_HeDecode
+index|[]
+init|=
+block|{
+literal|"Level"
+block|,
+literal|"Edge"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_IoDecode
+index|[]
+init|=
+block|{
+literal|"Decode10"
+block|,
+literal|"Decode16"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_LlDecode
+index|[]
+init|=
+block|{
+literal|"ActiveHigh"
+block|,
+literal|"ActiveLow"
+block|,
+literal|"ActiveBoth"
+block|,
+literal|"Reserved"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_MaxDecode
+index|[]
+init|=
+block|{
+literal|"MaxNotFixed"
+block|,
+literal|"MaxFixed"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_MemDecode
+index|[]
+init|=
+block|{
+literal|"NonCacheable"
+block|,
+literal|"Cacheable"
+block|,
+literal|"WriteCombining"
+block|,
+literal|"Prefetchable"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_MinDecode
+index|[]
+init|=
+block|{
+literal|"MinNotFixed"
+block|,
+literal|"MinFixed"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_MtpDecode
+index|[]
+init|=
+block|{
+literal|"AddressRangeMemory"
+block|,
+literal|"AddressRangeReserved"
+block|,
+literal|"AddressRangeACPI"
+block|,
+literal|"AddressRangeNVS"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_RngDecode
+index|[]
+init|=
+block|{
+literal|"InvalidRanges"
+block|,
+literal|"NonISAOnlyRanges"
+block|,
+literal|"ISAOnlyRanges"
+block|,
+literal|"EntireRange"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_RwDecode
+index|[]
+init|=
+block|{
+literal|"ReadOnly"
+block|,
+literal|"ReadWrite"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_ShrDecode
+index|[]
+init|=
+block|{
+literal|"Exclusive"
+block|,
+literal|"Shared"
+block|,
+literal|"ExclusiveAndWake"
+block|,
+comment|/* ACPI 5.0 */
+literal|"SharedAndWake"
+comment|/* ACPI 5.0 */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_SizDecode
+index|[]
+init|=
+block|{
+literal|"Transfer8"
+block|,
+literal|"Transfer8_16"
+block|,
+literal|"Transfer16"
+block|,
+literal|"InvalidSize"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_TrsDecode
+index|[]
+init|=
+block|{
+literal|"DenseTranslation"
+block|,
+literal|"SparseTranslation"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_TtpDecode
+index|[]
+init|=
+block|{
+literal|"TypeStatic"
+block|,
+literal|"TypeTranslation"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_TypDecode
+index|[]
+init|=
+block|{
+literal|"Compatibility"
+block|,
+literal|"TypeA"
+block|,
+literal|"TypeB"
+block|,
+literal|"TypeF"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_PpcDecode
+index|[]
+init|=
+block|{
+literal|"PullDefault"
+block|,
+literal|"PullUp"
+block|,
+literal|"PullDown"
+block|,
+literal|"PullNone"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_IorDecode
+index|[]
+init|=
+block|{
+literal|"IoRestrictionNone"
+block|,
+literal|"IoRestrictionInputOnly"
+block|,
+literal|"IoRestrictionOutputOnly"
+block|,
+literal|"IoRestrictionNoneAndPreserve"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_DtsDecode
+index|[]
+init|=
+block|{
+literal|"Width8bit"
+block|,
+literal|"Width16bit"
+block|,
+literal|"Width32bit"
+block|,
+literal|"Width64bit"
+block|,
+literal|"Width128bit"
+block|,
+literal|"Width256bit"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* GPIO connection type */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_CtDecode
+index|[]
+init|=
+block|{
+literal|"Interrupt"
+block|,
+literal|"I/O"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Serial bus type */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_SbtDecode
+index|[]
+init|=
+block|{
+literal|"/* UNKNOWN serial bus type */"
+block|,
+literal|"I2C"
+block|,
+literal|"SPI"
+block|,
+literal|"UART"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* I2C serial bus access mode */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_AmDecode
+index|[]
+init|=
+block|{
+literal|"AddressingMode7Bit"
+block|,
+literal|"AddressingMode10Bit"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* I2C serial bus slave mode */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_SmDecode
+index|[]
+init|=
+block|{
+literal|"ControllerInitiated"
+block|,
+literal|"DeviceInitiated"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SPI serial bus wire mode */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_WmDecode
+index|[]
+init|=
+block|{
+literal|"FourWireMode"
+block|,
+literal|"ThreeWireMode"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SPI serial clock phase */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_CphDecode
+index|[]
+init|=
+block|{
+literal|"ClockPhaseFirst"
+block|,
+literal|"ClockPhaseSecond"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SPI serial bus clock polarity */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_CpoDecode
+index|[]
+init|=
+block|{
+literal|"ClockPolarityLow"
+block|,
+literal|"ClockPolarityHigh"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SPI serial bus device polarity */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_DpDecode
+index|[]
+init|=
+block|{
+literal|"PolarityLow"
+block|,
+literal|"PolarityHigh"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* UART serial bus endian */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_EdDecode
+index|[]
+init|=
+block|{
+literal|"LittleEndian"
+block|,
+literal|"BigEndian"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* UART serial bus bits per byte */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_BpbDecode
+index|[]
+init|=
+block|{
+literal|"DataBitsFive"
+block|,
+literal|"DataBitsSix"
+block|,
+literal|"DataBitsSeven"
+block|,
+literal|"DataBitsEight"
+block|,
+literal|"DataBitsNine"
+block|,
+literal|"/* UNKNOWN Bits per byte */"
+block|,
+literal|"/* UNKNOWN Bits per byte */"
+block|,
+literal|"/* UNKNOWN Bits per byte */"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* UART serial bus stop bits */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_SbDecode
+index|[]
+init|=
+block|{
+literal|"StopBitsZero"
+block|,
+literal|"StopBitsOne"
+block|,
+literal|"StopBitsOnePlusHalf"
+block|,
+literal|"StopBitsTwo"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* UART serial bus flow control */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_FcDecode
+index|[]
+init|=
+block|{
+literal|"FlowControlNone"
+block|,
+literal|"FlowControlHardware"
+block|,
+literal|"FlowControlXON"
+block|,
+literal|"/* UNKNOWN flow control keyword */"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* UART serial bus parity type */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_PtDecode
+index|[]
+init|=
+block|{
+literal|"ParityTypeNone"
+block|,
+literal|"ParityTypeEven"
+block|,
+literal|"ParityTypeOdd"
+block|,
+literal|"ParityTypeMark"
+block|,
+literal|"ParityTypeSpace"
+block|,
+literal|"/* UNKNOWN parity keyword */"
+block|,
+literal|"/* UNKNOWN parity keyword */"
+block|,
+literal|"/* UNKNOWN parity keyword */"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PinConfig type */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_PtypDecode
+index|[]
+init|=
+block|{
+literal|"Default"
+block|,
+literal|"Bias Pull-up"
+block|,
+literal|"Bias Pull-down"
+block|,
+literal|"Bias Default"
+block|,
+literal|"Bias Disable"
+block|,
+literal|"Bias High Impedance"
+block|,
+literal|"Bias Bus Hold"
+block|,
+literal|"Drive Open Drain"
+block|,
+literal|"Drive Open Source"
+block|,
+literal|"Drive Push Pull"
+block|,
+literal|"Drive Strength"
+block|,
+literal|"Slew Rate"
+block|,
+literal|"Input Debounce"
+block|,
+literal|"Input Schmitt Trigger"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

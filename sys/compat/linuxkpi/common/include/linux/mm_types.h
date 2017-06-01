@@ -57,12 +57,6 @@ name|task_struct
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|vmspace
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|mm_struct
@@ -71,11 +65,6 @@ name|struct
 name|vm_area_struct
 modifier|*
 name|mmap
-decl_stmt|;
-name|struct
-name|vmspace
-modifier|*
-name|vmspace
 decl_stmt|;
 name|atomic_t
 name|mm_count

@@ -405,7 +405,7 @@ begin_define
 define|#
 directive|define
 name|ARGP_EXTERNAL_OP
-value|ARGP_LIST3 (ARGP_NAMESTRING, ARGP_BYTEDATA,      ARGP_BYTEDATA)
+value|ARGP_LIST3 (ARGP_NAME,       ARGP_BYTEDATA,      ARGP_BYTEDATA)
 end_define
 
 begin_define

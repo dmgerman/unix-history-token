@@ -962,23 +962,6 @@ name|Signature
 argument_list|)
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Invalid table signature: 0x%8.8X\n"
-argument_list|,
-operator|*
-name|ACPI_CAST_PTR
-argument_list|(
-name|UINT32
-argument_list|,
-name|TableHeader
-operator|.
-name|Signature
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|AE_BAD_SIGNATURE

@@ -2846,6 +2846,22 @@ name|m_flags
 operator||=
 name|M_AMPDU_MPDU
 expr_stmt|;
+comment|/* NB: zero out i_seq field (for s/w encryption etc) */
+operator|*
+operator|(
+name|uint16_t
+operator|*
+operator|)
+operator|&
+name|wh
+operator|->
+name|i_seq
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6519,6 +6535,21 @@ name|m
 argument_list|,
 name|seqno
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* NB: zero out i_seq field (for s/w encryption etc) */
+operator|*
+operator|(
+name|uint16_t
+operator|*
+operator|)
+name|wh
+operator|->
+name|i_seq
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}

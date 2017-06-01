@@ -1118,7 +1118,7 @@ block|}
 comment|/* Running compiler or disassembler? */
 if|if
 condition|(
-name|Gbl_DisasmFlag
+name|AcpiGbl_DisasmFlag
 condition|)
 block|{
 name|UtilityName

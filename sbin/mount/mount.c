@@ -557,6 +557,12 @@ literal|"automounted"
 block|}
 block|,
 block|{
+name|MNT_VERIFIED
+block|,
+literal|"verified"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL

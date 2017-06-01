@@ -187,23 +187,24 @@ define|\
 value|struct ida name;						\ 	SYSINIT(name##_ida_sysinit, SI_SUB_DRIVERS, SI_ORDER_FIRST,	\ 	    ida_init,&(name))
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|void
 name|idr_preload
 parameter_list|(
-name|x
+name|gfp_t
+name|gfp_mask
 parameter_list|)
-value|do { } while (0)
-end_define
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|void
 name|idr_preload_end
-parameter_list|()
-value|do { } while (0)
-end_define
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

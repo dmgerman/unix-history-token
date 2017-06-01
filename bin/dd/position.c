@@ -162,6 +162,11 @@ operator|)
 operator|==
 literal|0
 operator|&&
+operator|(
+name|n
+operator|<
+literal|0
+operator|||
 name|n
 operator|>
 name|OFF_MAX
@@ -170,6 +175,7 @@ operator|(
 name|ssize_t
 operator|)
 name|sz
+operator|)
 condition|)
 name|errx
 argument_list|(

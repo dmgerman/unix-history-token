@@ -288,12 +288,6 @@ name|Asl
 operator|.
 name|FinalAmlLength
 expr_stmt|;
-name|NamepathOffset
-operator|=
-name|Gbl_CurrentAmlOffset
-operator|+
-name|Length
-expr_stmt|;
 comment|/* Get to the NameSeg/NamePath Op (and length of the name) */
 name|Op
 operator|=

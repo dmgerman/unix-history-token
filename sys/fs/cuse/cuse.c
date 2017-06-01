@@ -6314,9 +6314,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|cuse_lock
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|temp
@@ -6328,6 +6325,9 @@ name|POLLOUT
 operator|)
 condition|)
 block|{
+name|cuse_lock
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|temp
@@ -6360,10 +6360,10 @@ operator|->
 name|server
 argument_list|)
 expr_stmt|;
-block|}
 name|cuse_unlock
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function

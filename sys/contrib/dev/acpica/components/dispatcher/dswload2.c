@@ -747,6 +747,26 @@ name|ACPI_NS_TEMPORARY
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+comment|/*          * Do not open a scope for AML_EXTERNAL_OP          * AcpiNsLookup can open a new scope based on the object type          * of this op. AML_EXTERNAL_OP is a declaration rather than a          * definition. In the case that this external is a method object,          * AcpiNsLookup will open a new scope. However, an AML_EXTERNAL_OP          * associated with the ACPI_TYPE_METHOD is a declaration, rather than          * a definition. Flags is set to avoid opening a scope for any          * AML_EXTERNAL_OP.          */
+if|if
+condition|(
+name|WalkState
+operator|->
+name|Opcode
+operator|==
+name|AML_EXTERNAL_OP
+condition|)
+block|{
+name|Flags
+operator||=
+name|ACPI_NS_DONT_OPEN_SCOPE
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* Add new entry or lookup existing entry */
 name|Status
 operator|=

@@ -61,8 +61,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASL_PREFIX
+value|"iASL: "
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASL_COMPLIANCE
-value|"Supports ACPI Specification Revision 6.1"
+value|"Supports ACPI Specification Revision 6.2"
 end_define
 
 begin_comment

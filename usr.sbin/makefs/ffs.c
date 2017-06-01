@@ -2689,6 +2689,11 @@ argument_list|(
 literal|"can't seek"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1

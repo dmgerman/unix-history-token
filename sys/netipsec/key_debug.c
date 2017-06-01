@@ -311,29 +311,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|void
-name|kdebug_secreplay
-parameter_list|(
-name|struct
-name|secreplay
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3278,6 +3255,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSEC_DEBUG
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -3416,6 +3399,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IPSEC_DEBUG */
+end_comment
 
 begin_function
 specifier|static

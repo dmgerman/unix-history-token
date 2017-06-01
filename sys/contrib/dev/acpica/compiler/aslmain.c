@@ -113,6 +113,20 @@ name|ReturnStatus
 init|=
 literal|0
 decl_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|AslSignalHandler
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGSEGV
+argument_list|,
+name|AslSignalHandler
+argument_list|)
+expr_stmt|;
 comment|/*      * Big-endian machines are not currently supported. ACPI tables must      * be little-endian, and support for big-endian machines needs to      * be implemented.      */
 if|if
 condition|(
@@ -142,13 +156,6 @@ argument_list|()
 expr_stmt|;
 comment|/* For debug version only */
 comment|/* Initialize preprocessor and compiler before command line processing */
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|AslSignalHandler
-argument_list|)
-expr_stmt|;
 name|AcpiGbl_ExternalFileList
 operator|=
 name|NULL
@@ -311,7 +318,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AslSignalHandler  *  * PARAMETERS:  Sig                 - Signal that invoked this handler  *  * RETURN:      None  *  * DESCRIPTION: Control-C handler. Delete any intermediate files and any  *              output files that may be left in an indeterminate state.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AslSignalHandler  *  * PARAMETERS:  Sig                 - Signal that invoked this handler  *  * RETURN:      None  *  * DESCRIPTION: Signal interrupt handler. Delete any intermediate files and  *              any output files that may be left in an indeterminate state.  *              Currently handles SIGINT (control-c) and SIGSEGV (segmentation  *              fault).  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -334,12 +341,55 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|printf
+name|fflush
 argument_list|(
-literal|"Aborting\n\n"
+name|stdout
 argument_list|)
 expr_stmt|;
-comment|/* Close all open files */
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|Sig
+condition|)
+block|{
+case|case
+name|SIGINT
+case|:
+name|printf
+argument_list|(
+literal|"\n"
+name|ASL_PREFIX
+literal|"<Control-C>\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SIGSEGV
+case|:
+comment|/* Even on a seg fault, we will try to delete any partial files */
+name|printf
+argument_list|(
+name|ASL_PREFIX
+literal|"Segmentation Fault\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+name|ASL_PREFIX
+literal|"Unknown interrupt signal (%u), ignoring\n"
+argument_list|,
+name|Sig
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/*      * Close all open files      * Note: the .pre file is the same as the input source file      */
 name|Gbl_Files
 index|[
 name|ASL_FILE_PREPROCESSOR
@@ -349,7 +399,6 @@ name|Handle
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* the .pre file is same as source file */
 for|for
 control|(
 name|i
@@ -391,6 +440,12 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+name|ASL_PREFIX
+literal|"Terminating\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0

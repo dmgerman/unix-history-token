@@ -68,18 +68,21 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|selrecord
-argument_list|(
-name|curthread
-argument_list|,
-operator|&
-name|filp
-operator|->
-name|f_selinfo
-argument_list|)
-expr_stmt|;
+comment|/* NOP */
 block|}
 end_function
+
+begin_function_decl
+specifier|extern
+name|void
+name|linux_poll_wakeup
+parameter_list|(
+name|struct
+name|linux_file
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

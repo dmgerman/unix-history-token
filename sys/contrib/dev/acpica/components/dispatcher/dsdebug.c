@@ -438,6 +438,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ACPI_DISASSEMBLER
+name|AcpiOsPrintf
+argument_list|(
+literal|"Failed at "
+argument_list|)
+expr_stmt|;
 name|AcpiDmDisassemble
 argument_list|(
 name|NextWalkState

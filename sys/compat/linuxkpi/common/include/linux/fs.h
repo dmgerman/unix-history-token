@@ -75,6 +75,12 @@ directive|include
 file|<linux/semaphore.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<linux/spinlock.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|module
@@ -239,6 +245,34 @@ name|struct
 name|vnode
 modifier|*
 name|f_vnode
+decl_stmt|;
+specifier|volatile
+name|u_int
+name|f_count
+decl_stmt|;
+comment|/* kqfilter support */
+name|int
+name|f_kqflags
+decl_stmt|;
+define|#
+directive|define
+name|LINUX_KQ_FLAG_HAS_READ
+value|(1<< 0)
+define|#
+directive|define
+name|LINUX_KQ_FLAG_HAS_WRITE
+value|(1<< 1)
+define|#
+directive|define
+name|LINUX_KQ_FLAG_NEED_READ
+value|(1<< 2)
+define|#
+directive|define
+name|LINUX_KQ_FLAG_NEED_WRITE
+value|(1<< 3)
+comment|/* protects f_selinfo.si_note */
+name|spinlock_t
+name|f_kqlock
 decl_stmt|;
 block|}
 struct|;
@@ -856,6 +890,49 @@ operator|->
 name|v_rdev
 argument_list|)
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|struct
+name|linux_file
+modifier|*
+name|get_file
+parameter_list|(
+name|struct
+name|linux_file
+modifier|*
+name|f
+parameter_list|)
+block|{
+name|refcount_acquire
+argument_list|(
+name|f
+operator|->
+name|_file
+operator|==
+name|NULL
+condition|?
+operator|&
+name|f
+operator|->
+name|f_count
+else|:
+operator|&
+name|f
+operator|->
+name|_file
+operator|->
+name|f_count
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|f
 operator|)
 return|;
 block|}

@@ -1566,9 +1566,15 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Executing CreateObject (Buffer/Package) Op=%p\n"
+literal|"Executing CreateObject (Buffer/Package) Op=%p AMLPtr=%p\n"
 operator|,
 name|Op
+operator|,
+name|Op
+operator|->
+name|Named
+operator|.
+name|Data
 operator|)
 argument_list|)
 expr_stmt|;

@@ -152,6 +152,24 @@ value|"08018188-42cd-bb48-100f-5387d53ded3d"
 end_define
 
 begin_comment
+comment|/* Processor Properties (ACPI 6.2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UUID_CACHE_PROPERTIES
+value|"6DC63E77-257E-4E78-A973-A21F2796898D"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UUID_PHYSICAL_PROPERTY
+value|"DDE4D59A-AA42-4349-B407-EA40F57D9FB7"
+end_define
+
+begin_comment
 comment|/* Miscellaneous */
 end_comment
 

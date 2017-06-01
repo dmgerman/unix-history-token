@@ -201,6 +201,12 @@ literal|"Generic Event Device"
 block|}
 block|,
 block|{
+literal|"ACPI0014"
+block|,
+literal|"Wireless Power Calibration Device"
+block|}
+block|,
+block|{
 literal|"ADMA0F28"
 block|,
 literal|"Intel Audio DMA"

@@ -287,6 +287,13 @@ return|;
 block|}
 end_function
 
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiAcquireMutex
+argument_list|)
+end_macro
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiReleaseMutex  *  * PARAMETERS:  Handle              - Mutex or prefix handle (optional)  *              Pathname            - Mutex pathname (optional)  *  * RETURN:      Status  *  * DESCRIPTION: Release an AML mutex. This is a device driver interface to  *              AML mutex objects, and allows for transaction locking between  *              drivers and AML code. The mutex node is pointed to by  *              Handle:Pathname. Either Handle or Pathname can be NULL, but  *              not both.  *  ******************************************************************************/
 end_comment
@@ -353,6 +360,13 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiReleaseMutex
+argument_list|)
+end_macro
 
 end_unit
 

@@ -3176,7 +3176,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dm:M:N:o:Rt:v"
+literal|"dm:M:N:o:t:v"
 argument_list|)
 operator|)
 operator|!=
@@ -3271,14 +3271,6 @@ name|poolfields
 argument_list|,
 name|optarg
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'R'
-case|:
-name|opts
-operator||=
-name|OPT_NORESOLVE
 expr_stmt|;
 break|break;
 case|case

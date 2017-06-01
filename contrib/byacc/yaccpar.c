@@ -4,7 +4,7 @@ comment|/* This file generated automatically using  * @Id: skel2c,v 1.4 2016/06/
 end_comment
 
 begin_comment
-comment|/* @Id: yaccpar.skel,v 1.7 2016/06/06 23:35:55 Tom.Shields Exp @ */
+comment|/* @Id: yaccpar.skel,v 1.8 2016/12/02 21:44:42 tom Exp @ */
 end_comment
 
 begin_include
@@ -489,6 +489,26 @@ block|,
 literal|"    }"
 block|,
 literal|"#endif"
+block|,
+literal|""
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|init_vars
+index|[]
+init|=
+block|{
+literal|"    memset(&yyval,  0, sizeof(yyval));"
+block|,
+literal|"    memset(&yylval, 0, sizeof(yylval));"
 block|,
 literal|""
 block|,
