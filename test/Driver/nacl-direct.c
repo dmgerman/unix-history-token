@@ -192,7 +192,7 @@ comment|// CHECK-ARM: "-fuse-init-array"
 end_comment
 
 begin_comment
-comment|// CHECK-ARM: "-target-cpu" "cortex-a8"
+comment|// CHECK-ARM: "-target-cpu" "generic"
 end_comment
 
 begin_comment

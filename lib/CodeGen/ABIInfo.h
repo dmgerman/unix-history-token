@@ -496,7 +496,7 @@ argument_list|()
 return|;
 block|}
 expr|}
-block|;  }
+block|; }
 comment|// end namespace CodeGen
 block|}
 end_decl_stmt

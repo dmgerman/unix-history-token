@@ -316,6 +316,13 @@ name|DirectoryEntry
 modifier|*
 name|Directory
 decl_stmt|;
+comment|/// \brief The presumed file name for the module map defining this module.
+comment|/// Only non-empty when building from preprocessed source.
+name|std
+operator|::
+name|string
+name|PresumedModuleMapFile
+expr_stmt|;
 comment|/// \brief The umbrella header or directory.
 name|llvm
 operator|::

@@ -1642,7 +1642,9 @@ comment|///        processing a preprocessed module), the ID of the file.
 comment|/// \param Offset [inout] An offset within ID to start parsing. On exit,
 comment|///        filled by the end of the parsed contents (either EOF or the
 comment|///        location of an end-of-module-map pragma).
-comment|///
+comment|/// \param OriginalModuleMapFile The original path to the module map file,
+comment|///        used to resolve paths within the module (this is required when
+comment|///        building the module from preprocessed source).
 comment|/// \returns true if an error occurred, false otherwise.
 name|bool
 name|loadModuleMapFile
@@ -1666,6 +1668,12 @@ modifier|*
 name|Offset
 init|=
 name|nullptr
+parameter_list|,
+name|StringRef
+name|OriginalModuleMapFile
+init|=
+name|StringRef
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// \brief Collect the set of all known, top-level modules.

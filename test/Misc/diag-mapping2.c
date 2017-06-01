@@ -20,6 +20,10 @@ comment|// RUN: %clang_cc1 %s -Wno-#warnings 2>&1 | not grep diagnostic
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 %s -Wno-cpp 2>&1 | not grep diagnostic
+end_comment
+
+begin_comment
 comment|// -Werror can map all warnings to error.
 end_comment
 

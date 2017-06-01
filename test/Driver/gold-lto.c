@@ -84,7 +84,7 @@ comment|// CHECK-ARM-V7A: "-plugin" "{{.*}}/LLVMgold.so"
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-V7A: "-plugin-opt=mcpu=cortex-a8"
+comment|// CHECK-ARM-V7A: "-plugin-opt=mcpu=generic"
 end_comment
 
 begin_comment

@@ -374,7 +374,7 @@ define|#
 directive|define
 name|LIST_SANITIZER_CHECKS
 define|\
-value|SANITIZER_CHECK(AddOverflow, add_overflow, 0)                                \   SANITIZER_CHECK(BuiltinUnreachable, builtin_unreachable, 0)                  \   SANITIZER_CHECK(CFICheckFail, cfi_check_fail, 0)                             \   SANITIZER_CHECK(DivremOverflow, divrem_overflow, 0)                          \   SANITIZER_CHECK(DynamicTypeCacheMiss, dynamic_type_cache_miss, 0)            \   SANITIZER_CHECK(FloatCastOverflow, float_cast_overflow, 0)                   \   SANITIZER_CHECK(FunctionTypeMismatch, function_type_mismatch, 0)             \   SANITIZER_CHECK(LoadInvalidValue, load_invalid_value, 0)                     \   SANITIZER_CHECK(MissingReturn, missing_return, 0)                            \   SANITIZER_CHECK(MulOverflow, mul_overflow, 0)                                \   SANITIZER_CHECK(NegateOverflow, negate_overflow, 0)                          \   SANITIZER_CHECK(NullabilityArg, nullability_arg, 0)                          \   SANITIZER_CHECK(NullabilityReturn, nullability_return, 0)                    \   SANITIZER_CHECK(NonnullArg, nonnull_arg, 0)                                  \   SANITIZER_CHECK(NonnullReturn, nonnull_return, 0)                            \   SANITIZER_CHECK(OutOfBounds, out_of_bounds, 0)                               \   SANITIZER_CHECK(ShiftOutOfBounds, shift_out_of_bounds, 0)                    \   SANITIZER_CHECK(SubOverflow, sub_overflow, 0)                                \   SANITIZER_CHECK(TypeMismatch, type_mismatch, 1)                              \   SANITIZER_CHECK(VLABoundNotPositive, vla_bound_not_positive, 0)
+value|SANITIZER_CHECK(AddOverflow, add_overflow, 0)                                \   SANITIZER_CHECK(BuiltinUnreachable, builtin_unreachable, 0)                  \   SANITIZER_CHECK(CFICheckFail, cfi_check_fail, 0)                             \   SANITIZER_CHECK(DivremOverflow, divrem_overflow, 0)                          \   SANITIZER_CHECK(DynamicTypeCacheMiss, dynamic_type_cache_miss, 0)            \   SANITIZER_CHECK(FloatCastOverflow, float_cast_overflow, 0)                   \   SANITIZER_CHECK(FunctionTypeMismatch, function_type_mismatch, 0)             \   SANITIZER_CHECK(LoadInvalidValue, load_invalid_value, 0)                     \   SANITIZER_CHECK(MissingReturn, missing_return, 0)                            \   SANITIZER_CHECK(MulOverflow, mul_overflow, 0)                                \   SANITIZER_CHECK(NegateOverflow, negate_overflow, 0)                          \   SANITIZER_CHECK(NullabilityArg, nullability_arg, 0)                          \   SANITIZER_CHECK(NullabilityReturn, nullability_return, 0)                    \   SANITIZER_CHECK(NonnullArg, nonnull_arg, 0)                                  \   SANITIZER_CHECK(NonnullReturn, nonnull_return, 0)                            \   SANITIZER_CHECK(OutOfBounds, out_of_bounds, 0)                               \   SANITIZER_CHECK(PointerOverflow, pointer_overflow, 0)                        \   SANITIZER_CHECK(ShiftOutOfBounds, shift_out_of_bounds, 0)                    \   SANITIZER_CHECK(SubOverflow, sub_overflow, 0)                                \   SANITIZER_CHECK(TypeMismatch, type_mismatch, 1)                              \   SANITIZER_CHECK(VLABoundNotPositive, vla_bound_not_positive, 0)
 enum|enum
 name|SanitizerHandler
 block|{
@@ -19719,6 +19719,33 @@ name|Loc
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// Same as IRBuilder::CreateInBoundsGEP, but additionally emits a check to
+end_comment
+
+begin_comment
+comment|/// detect undefined behavior when the pointer overflow sanitizer is enabled.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitCheckedInBoundsGEP
+argument_list|(
+argument|llvm::Value *Ptr
+argument_list|,
+argument|ArrayRef<llvm::Value *> IdxList
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|const Twine&Name =
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Emit a description of a type in a format suitable for passing to

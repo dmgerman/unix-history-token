@@ -760,7 +760,7 @@ comment|// CHK-LKS: {
 end_comment
 
 begin_comment
-comment|// CHK-LKS:   .omp_offloading :
+comment|// CHK-LKS:   .omp_offloading.powerpc64le-ibm-linux-gnu :
 end_comment
 
 begin_comment
@@ -769,10 +769,6 @@ end_comment
 
 begin_comment
 comment|// CHK-LKS:   {
-end_comment
-
-begin_comment
-comment|// CHK-LKS:     . = ALIGN(0x10);
 end_comment
 
 begin_comment
@@ -788,7 +784,19 @@ comment|// CHK-LKS:     PROVIDE_HIDDEN(.omp_offloading.img_end.powerpc64le-ibm-l
 end_comment
 
 begin_comment
-comment|// CHK-LKS:     . = ALIGN(0x10);
+comment|// CHK-LKS:   }
+end_comment
+
+begin_comment
+comment|// CHK-LKS:   .omp_offloading.x86_64-pc-linux-gnu :
+end_comment
+
+begin_comment
+comment|// CHK-LKS:   ALIGN(0x10)
+end_comment
+
+begin_comment
+comment|// CHK-LKS:   {
 end_comment
 
 begin_comment

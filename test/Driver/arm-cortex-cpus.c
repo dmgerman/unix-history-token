@@ -368,7 +368,7 @@ comment|// RUN: %clang -target arm-linux-gnueabi -march=armv7-a -### -c %s 2>&1 
 end_comment
 
 begin_comment
-comment|// CHECK-V7A: "-cc1"{{.*}} "-triple" "armv7-{{.*}} "-target-cpu" "cortex-a8"
+comment|// CHECK-V7A: "-cc1"{{.*}} "-triple" "armv7-{{.*}} "-target-cpu" "generic"
 end_comment
 
 begin_comment
@@ -380,7 +380,7 @@ comment|// RUN: %clang -target arm-linux-gnueabi -march=armv7-a -mthumb -### -c 
 end_comment
 
 begin_comment
-comment|// CHECK-V7A-THUMB: "-cc1"{{.*}} "-triple" "thumbv7-{{.*}} "-target-cpu" "cortex-a8"
+comment|// CHECK-V7A-THUMB: "-cc1"{{.*}} "-triple" "thumbv7-{{.*}} "-target-cpu" "generic"
 end_comment
 
 begin_comment
@@ -448,7 +448,7 @@ comment|// RUN: %clang -target arm -mlittle-endian -march=armv8-a -mlittle-endia
 end_comment
 
 begin_comment
-comment|// CHECK-V8A: "-cc1"{{.*}} "-triple" "armv8-{{.*}}" "-target-cpu" "cortex-a53"
+comment|// CHECK-V8A: "-cc1"{{.*}} "-triple" "armv8-{{.*}}" "-target-cpu" "generic"
 end_comment
 
 begin_comment
@@ -608,7 +608,7 @@ comment|// RUN: %clang -target arm -march=armebv8-a -mbig-endian -### -c %s 2>&1
 end_comment
 
 begin_comment
-comment|// CHECK-BE-V8A: "-cc1"{{.*}} "-triple" "armebv8-{{.*}}" "-target-cpu" "cortex-a53"
+comment|// CHECK-BE-V8A: "-cc1"{{.*}} "-triple" "armebv8-{{.*}}" "-target-cpu" "generic"
 end_comment
 
 begin_comment
@@ -644,7 +644,7 @@ comment|// RUN: %clang -target arm -march=armv8a -mlittle-endian -mthumb -### -c
 end_comment
 
 begin_comment
-comment|// CHECK-V8A-THUMB: "-cc1"{{.*}} "-triple" "thumbv8-{{.*}}" "-target-cpu" "cortex-a53"
+comment|// CHECK-V8A-THUMB: "-cc1"{{.*}} "-triple" "thumbv8-{{.*}}" "-target-cpu" "generic"
 end_comment
 
 begin_comment
@@ -680,7 +680,7 @@ comment|// RUN: %clang -target arm -march=armebv8a -mbig-endian -mthumb -### -c 
 end_comment
 
 begin_comment
-comment|// CHECK-BE-V8A-THUMB: "-cc1"{{.*}} "-triple" "thumbebv8-{{.*}}" "-target-cpu" "cortex-a53"
+comment|// CHECK-BE-V8A-THUMB: "-cc1"{{.*}} "-triple" "thumbebv8-{{.*}}" "-target-cpu" "generic"
 end_comment
 
 begin_comment
