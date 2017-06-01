@@ -198,6 +198,12 @@ decl_stmt|;
 name|uint8_t
 name|supports_SSU
 decl_stmt|;
+name|uint8_t
+name|is_nvme
+decl_stmt|;
+name|uint32_t
+name|MDTS
+decl_stmt|;
 block|}
 struct|;
 end_struct

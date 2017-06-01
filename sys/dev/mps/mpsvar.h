@@ -936,16 +936,12 @@ decl_stmt|;
 name|int
 name|spinup_wait_time
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900030
+name|int
+name|use_phynum
+decl_stmt|;
 name|uint64_t
 name|chain_alloc_fail
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|sysctl_ctx_list
 name|sysctl_ctx
@@ -1653,14 +1649,6 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900030
-end_if
-
 begin_else
 else|else
 name|sc
@@ -1669,11 +1657,6 @@ name|chain_alloc_fail
 operator|++
 expr_stmt|;
 end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_return
 return|return
@@ -1700,12 +1683,6 @@ modifier|*
 name|chain
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|bzero(chain->chain, 128);
-endif|#
-directive|endif
 name|sc
 operator|->
 name|chain_free
@@ -2412,6 +2389,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|mps_print_field
+parameter_list|(
+name|sc
+parameter_list|,
+name|msg
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|printf("\t" msg, ##args)
+end_define
+
+begin_define
+define|#
+directive|define
 name|mps_vprintf
 parameter_list|(
 name|sc
@@ -2444,24 +2437,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|mps_dprint_field
-parameter_list|(
-name|sc
-parameter_list|,
-name|level
-parameter_list|,
-name|msg
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-define|\
-value|do {								\ 	if ((sc)->mps_debug& (level))				\ 		printf("\t" msg, ##args);			\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MPS_PRINTFIELD_START
 parameter_list|(
 name|sc
@@ -2470,7 +2445,7 @@ name|tag
 modifier|...
 parameter_list|)
 define|\
-value|mps_dprint((sc), MPS_XINFO, ##tag);	\ 	mps_dprint_field((sc), MPS_XINFO, ":\n")
+value|mps_printf((sc), ##tag);			\ 	mps_print_field((sc), ":\n")
 end_define
 
 begin_define
@@ -2483,7 +2458,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|mps_dprint((sc), MPS_XINFO, tag "\n")
+value|mps_printf((sc), tag "\n")
 end_define
 
 begin_define
@@ -2500,38 +2475,7 @@ parameter_list|,
 name|fmt
 parameter_list|)
 define|\
-value|mps_dprint_field((sc), MPS_XINFO, #attr ": " #fmt "\n", (facts)->attr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPS_EVENTFIELD_START
-parameter_list|(
-name|sc
-parameter_list|,
-name|tag
-modifier|...
-parameter_list|)
-define|\
-value|mps_dprint((sc), MPS_EVENT, ##tag);	\ 	mps_dprint_field((sc), MPS_EVENT, ":\n")
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPS_EVENTFIELD
-parameter_list|(
-name|sc
-parameter_list|,
-name|facts
-parameter_list|,
-name|attr
-parameter_list|,
-name|fmt
-parameter_list|)
-define|\
-value|mps_dprint_field((sc), MPS_EVENT, #attr ": " #fmt "\n", (facts)->attr)
+value|mps_print_field((sc), #attr ": " #fmt "\n", (facts)->attr)
 end_define
 
 begin_define
@@ -3090,23 +3034,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mps_request_polled
-parameter_list|(
-name|struct
-name|mps_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|mps_command
-modifier|*
-name|cm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|mps_config_get_bios_pg3
 parameter_list|(
 name|struct
@@ -3547,6 +3474,24 @@ parameter_list|,
 name|Mpi2EventDataIrConfigChangeList_t
 modifier|*
 name|event_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mps_mapping_dump
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mps_mapping_encl_dump
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl

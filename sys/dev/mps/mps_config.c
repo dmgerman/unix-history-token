@@ -959,11 +959,15 @@ expr_stmt|;
 comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|reply
@@ -1256,11 +1260,15 @@ expr_stmt|;
 comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|reply
@@ -4908,11 +4916,15 @@ expr_stmt|;
 comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|reply
@@ -5217,11 +5229,15 @@ expr_stmt|;
 comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|reply
@@ -6244,11 +6260,15 @@ expr_stmt|;
 comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|reply
@@ -6553,11 +6573,15 @@ expr_stmt|;
 comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|reply

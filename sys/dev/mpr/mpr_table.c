@@ -178,6 +178,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/mpr/mpi/mpi2_pci.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/mpr/mpr_ioctl.h>
 end_include
 
@@ -265,6 +271,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|//SLM-Add new PCIe info to all of these tables
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -421,6 +431,30 @@ block|{
 literal|"PowerPerformanceChange"
 block|,
 literal|0x29
+block|}
+block|,
+block|{
+literal|"PCIeDeviceStatusChange"
+block|,
+literal|0x30
+block|}
+block|,
+block|{
+literal|"PCIeEnumeration"
+block|,
+literal|0x31
+block|}
+block|,
+block|{
+literal|"PCIeTopologyChangeList"
+block|,
+literal|0x32
+block|}
+block|,
+block|{
+literal|"PCIeLinkCounter"
+block|,
+literal|0x33
 block|}
 block|,
 block|{
@@ -902,6 +936,58 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mpr_table_lookup
+name|mpr_pcie_linkrate_names
+index|[]
+init|=
+block|{
+block|{
+literal|"Port disabled"
+block|,
+literal|0x01
+block|}
+block|,
+block|{
+literal|"2.5GT/sec"
+block|,
+literal|0x02
+block|}
+block|,
+block|{
+literal|"5.0GT/sec"
+block|,
+literal|0x03
+block|}
+block|,
+block|{
+literal|"8.0GT/sec"
+block|,
+literal|0x04
+block|}
+block|,
+block|{
+literal|"16.0GT/sec"
+block|,
+literal|0x05
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"LinkRate Unknown"
+block|,
+literal|0x00
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|mpr_describe_devinfo
@@ -956,7 +1042,7 @@ end_function
 
 begin_function
 name|void
-name|mpr_print_iocfacts
+name|_mpr_print_iocfacts
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -1038,11 +1124,9 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"WhoInit: %s\n"
 argument_list|,
@@ -1074,6 +1158,18 @@ name|sc
 argument_list|,
 name|facts
 argument_list|,
+name|MaxMSIxVectors
+argument_list|,
+operator|%
+name|d
+argument_list|)
+expr_stmt|;
+name|MPR_PRINTFIELD
+argument_list|(
+name|sc
+argument_list|,
+name|facts
+argument_list|,
 name|RequestCredit
 argument_list|,
 operator|%
@@ -1093,11 +1189,9 @@ operator|%
 name|x
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"IOCCapabilities: %b\n"
 argument_list|,
@@ -1121,11 +1215,9 @@ literal|"\20MSIXIndex"
 literal|"\21HostDisc"
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"FWVersion= %d-%d-%d-%d\n"
 argument_list|,
@@ -1222,11 +1314,9 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"ProtocolFlags: %b\n"
 argument_list|,
@@ -1316,7 +1406,7 @@ end_function
 
 begin_function
 name|void
-name|mpr_print_portfacts
+name|_mpr_print_portfacts
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -1377,7 +1467,7 @@ end_function
 
 begin_function
 name|void
-name|mpr_print_event
+name|_mpr_print_event
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -1389,14 +1479,14 @@ modifier|*
 name|event
 parameter_list|)
 block|{
-name|MPR_EVENTFIELD_START
+name|MPR_PRINTFIELD_START
 argument_list|(
 name|sc
 argument_list|,
 literal|"EventReply"
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -1408,7 +1498,7 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -1420,11 +1510,9 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_EVENT
 argument_list|,
 literal|"Event: %s (0x%x)\n"
 argument_list|,
@@ -1442,7 +1530,7 @@ operator|->
 name|Event
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -1460,7 +1548,7 @@ end_function
 
 begin_function
 name|void
-name|mpr_print_sasdev0
+name|_mpr_print_sasdev0
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -1504,11 +1592,9 @@ operator|%
 name|x
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"SASAddress: 0x%jx\n"
 argument_list|,
@@ -1597,11 +1683,9 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"DeviceInfo: %b,%s\n"
 argument_list|,
@@ -1672,11 +1756,9 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"DeviceName: 0x%jx\n"
 argument_list|,
@@ -1730,7 +1812,7 @@ end_function
 
 begin_function
 name|void
-name|mpr_print_evt_sas
+name|_mpr_print_evt_sas
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -1742,7 +1824,7 @@ modifier|*
 name|event
 parameter_list|)
 block|{
-name|mpr_print_event
+name|_mpr_print_event
 argument_list|(
 name|sc
 argument_list|,
@@ -1775,11 +1857,9 @@ name|event
 operator|->
 name|EventData
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_EVENT
 argument_list|,
 literal|"Flags: %b\n"
 argument_list|,
@@ -1792,11 +1872,9 @@ literal|"\1InProgress"
 literal|"\2DeviceChange"
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_EVENT
 argument_list|,
 literal|"ReasonCode: %s\n"
 argument_list|,
@@ -1810,7 +1888,7 @@ name|ReasonCode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -1822,11 +1900,9 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_EVENT
 argument_list|,
 literal|"DiscoveryStatus: %b\n"
 argument_list|,
@@ -1859,6 +1935,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|//SLM-add for PCIE EVENT too
 case|case
 name|MPI2_EVENT_SAS_TOPOLOGY_CHANGE_LIST
 case|:
@@ -1887,7 +1964,7 @@ name|event
 operator|->
 name|EventData
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -1900,7 +1977,7 @@ operator|%
 name|x
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -1913,7 +1990,7 @@ operator|%
 name|x
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -1925,7 +2002,7 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -1937,7 +2014,7 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -1949,11 +2026,9 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_EVENT
 argument_list|,
 literal|"ExpStatus: %s (0x%x)\n"
 argument_list|,
@@ -1971,7 +2046,7 @@ operator|->
 name|ExpStatus
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -2017,11 +2092,9 @@ name|StartPhyNum
 operator|+
 name|i
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_EVENT
 argument_list|,
 literal|"PHY[%d].AttachedDevHandle: 0x%04x\n"
 argument_list|,
@@ -2032,11 +2105,9 @@ operator|->
 name|AttachedDevHandle
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_EVENT
 argument_list|,
 literal|"PHY[%d].LinkRate: %s (0x%x)\n"
 argument_list|,
@@ -2062,11 +2133,9 @@ operator|->
 name|LinkRate
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_EVENT
 argument_list|,
 literal|"PHY[%d].PhyStatus: %s\n"
 argument_list|,
@@ -2104,7 +2173,7 @@ name|event
 operator|->
 name|EventData
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -2117,11 +2186,9 @@ operator|%
 name|x
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_EVENT
 argument_list|,
 literal|"ReasonCode: %s\n"
 argument_list|,
@@ -2135,7 +2202,7 @@ name|ReasonCode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -2147,7 +2214,7 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -2159,7 +2226,7 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -2171,7 +2238,7 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -2205,7 +2272,7 @@ name|event
 operator|->
 name|EventData
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -2218,11 +2285,9 @@ operator|%
 name|x
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_EVENT
 argument_list|,
 literal|"ReasonCode: %s\n"
 argument_list|,
@@ -2236,7 +2301,7 @@ name|ReasonCode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -2249,7 +2314,7 @@ operator|%
 name|x
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -2262,7 +2327,7 @@ operator|%
 name|x
 argument_list|)
 expr_stmt|;
-name|MPR_EVENTFIELD
+name|MPR_PRINTFIELD
 argument_list|(
 name|sc
 argument_list|,
@@ -2275,11 +2340,9 @@ operator|%
 name|x
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_EVENT
 argument_list|,
 literal|"SASAddress: 0x%jx\n"
 argument_list|,
@@ -2301,7 +2364,7 @@ end_function
 
 begin_function
 name|void
-name|mpr_print_expander1
+name|_mpr_print_expander1
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -2372,11 +2435,9 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"ProgrammedLinkRate: %s (0x%x)\n"
 argument_list|,
@@ -2400,11 +2461,9 @@ operator|->
 name|ProgrammedLinkRate
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"HwLinkRate: %s (0x%x)\n"
 argument_list|,
@@ -2441,11 +2500,9 @@ operator|%
 literal|04x
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"PhyInfo Reason: %s (0x%x)\n"
 argument_list|,
@@ -2469,11 +2526,9 @@ operator|->
 name|PhyInfo
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"AttachedDeviceInfo: %b,%s\n"
 argument_list|,
@@ -2532,11 +2587,9 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"NegotiatedLinkRate: %s (0x%x)\n"
 argument_list|,
@@ -2606,11 +2659,9 @@ operator|%
 name|x
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"AttachedPhyInfo Reason: %s (0x%x)\n"
 argument_list|,
@@ -2660,7 +2711,7 @@ end_function
 
 begin_function
 name|void
-name|mpr_print_sasphy0
+name|_mpr_print_sasphy0
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -2717,11 +2768,9 @@ operator|%
 name|d
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"AttachedPhyInfo Reason: %s (0x%x)\n"
 argument_list|,
@@ -2741,11 +2790,9 @@ operator|->
 name|AttachedPhyInfo
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"ProgrammedLinkRate: %s (0x%x)\n"
 argument_list|,
@@ -2769,11 +2816,9 @@ operator|->
 name|ProgrammedLinkRate
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"HwLinkRate: %s (0x%x)\n"
 argument_list|,
@@ -2822,11 +2867,9 @@ operator|%
 name|x
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"PhyInfo Reason: %s (0x%x)\n"
 argument_list|,
@@ -2850,11 +2893,9 @@ operator|->
 name|PhyInfo
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|sc
-argument_list|,
-name|MPR_XINFO
 argument_list|,
 literal|"NegotiatedLinkRate: %s (0x%x)\n"
 argument_list|,
