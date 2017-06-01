@@ -1229,7 +1229,7 @@ parameter_list|(
 modifier|...
 parameter_list|)
 define|\
-value|static_assert((test_macros_detail::is_same<__VA_ARGS__>::value), \                  "Types differ uexpectedly")
+value|static_assert((test_macros_detail::is_same<__VA_ARGS__>::value), \                  "Types differ unexpectedly")
 end_define
 
 begin_ifndef

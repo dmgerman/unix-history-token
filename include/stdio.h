@@ -142,7 +142,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_LIBCPP_MSVCRT
+name|_LIBCPP_MSVCRT_LIKE
 argument_list|)
 end_if
 
@@ -166,23 +166,6 @@ name|fmt
 parameter_list|,
 name|va_list
 name|ap
-parameter_list|)
-function_decl|;
-name|int
-name|asprintf
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-name|sptr
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|__restrict
-name|fmt
-parameter_list|,
-modifier|...
 parameter_list|)
 function_decl|;
 block|}

@@ -660,7 +660,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|_LIBCPP_MSVCRT
+name|_LIBCPP_MSVCRT_LIKE
 argument_list|)
 end_if
 
