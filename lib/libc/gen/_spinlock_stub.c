@@ -66,21 +66,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|_spinlock_debug_stub
-parameter_list|(
-name|spinlock_t
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -109,16 +94,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_spinlock
-argument_list|,
-name|_spinlock_debug
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_pragma
 pragma|#
