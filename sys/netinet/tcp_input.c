@@ -8870,7 +8870,7 @@ block|}
 endif|#
 directive|endif
 break|break;
-comment|/* 	 * If the state is SYN_SENT: 	 *	if seg contains a RST, then drop the connection. 	 *	if seg does not contain SYN, then drop it. 	 * Otherwise this is an acceptable SYN segment 	 *	initialize tp->rcv_nxt and tp->irs 	 *	if seg contains ack then advance tp->snd_una 	 *	if seg contains an ECE and ECN support is enabled, the stream 	 *	    is ECN capable. 	 *	if SYN has been acked change to ESTABLISHED else SYN_RCVD state 	 *	arrange for segment to be acked (eventually) 	 *	continue processing rest of data/controls, beginning with URG 	 */
+comment|/* 	 * If the state is SYN_SENT: 	 *	if seg contains a RST with valid ACK (SEQ.ACK has already 	 *	    been verified), then drop the connection. 	 *	if seg contains a RST without an ACK, drop the seg. 	 *	if seg does not contain SYN, then drop the seg. 	 * Otherwise this is an acceptable SYN segment 	 *	initialize tp->rcv_nxt and tp->irs 	 *	if seg contains ack then advance tp->snd_una 	 *	if seg contains an ECE and ECN support is enabled, the stream 	 *	    is ECN capable. 	 *	if SYN has been acked change to ESTABLISHED else SYN_RCVD state 	 *	arrange for segment to be acked (eventually) 	 *	continue processing rest of data/controls, beginning with URG 	 */
 case|case
 name|TCPS_SYN_SENT
 case|:
