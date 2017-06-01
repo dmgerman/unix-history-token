@@ -596,7 +596,7 @@ parameter_list|,
 name|uint16_t
 name|ip_len
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|next_mtu
 parameter_list|)
 block|{
@@ -1536,6 +1536,9 @@ operator|->
 name|ip_len
 argument_list|)
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|ntohs
 argument_list|(
 name|icmp

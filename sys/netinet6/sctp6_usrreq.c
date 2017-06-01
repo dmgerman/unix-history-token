@@ -883,7 +883,7 @@ parameter_list|,
 name|uint8_t
 name|icmp6_code
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|next_mtu
 parameter_list|)
 block|{
@@ -1897,9 +1897,6 @@ name|ip6c_icmp6
 operator|->
 name|icmp6_code
 argument_list|,
-operator|(
-name|uint16_t
-operator|)
 name|ntohl
 argument_list|(
 name|ip6cp
