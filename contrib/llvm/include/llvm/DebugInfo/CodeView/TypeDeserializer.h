@@ -192,6 +192,21 @@ argument_list|,
 argument|T&Record
 argument_list|)
 block|{
+name|Record
+operator|.
+name|Kind
+operator|=
+name|static_cast
+operator|<
+name|TypeRecordKind
+operator|>
+operator|(
+name|CVT
+operator|.
+name|kind
+argument_list|()
+operator|)
+block|;
 name|MappingInfo
 name|I
 argument_list|(
@@ -408,7 +423,7 @@ name|AliasName
 parameter_list|)
 include|#
 directive|include
-file|"TypeRecords.def"
+file|"llvm/DebugInfo/CodeView/CodeViewTypes.def"
 name|private
 label|:
 name|template
@@ -684,7 +699,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"TypeRecords.def"
+file|"llvm/DebugInfo/CodeView/CodeViewTypes.def"
 end_include
 
 begin_label

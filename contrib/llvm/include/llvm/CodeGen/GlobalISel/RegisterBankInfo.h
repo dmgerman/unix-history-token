@@ -1015,7 +1015,7 @@ name|InstructionMapping
 operator|>>
 name|MapOfInstructionMappings
 expr_stmt|;
-comment|/// Create a RegisterBankInfo that can accomodate up to \p NumRegBanks
+comment|/// Create a RegisterBankInfo that can accommodate up to \p NumRegBanks
 comment|/// RegisterBank instances.
 name|RegisterBankInfo
 argument_list|(

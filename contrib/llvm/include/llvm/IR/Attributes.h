@@ -761,8 +761,8 @@ name|O
 operator|)
 return|;
 block|}
-comment|/// Add an argument attribute. Because
-comment|/// attribute sets are immutable, this returns a new set.
+comment|/// Add an argument attribute. Returns a new set because attribute sets are
+comment|/// immutable.
 name|AttributeSet
 name|addAttribute
 argument_list|(
@@ -777,8 +777,8 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Add a target-dependent attribute. Because
-comment|/// attribute sets are immutable, this returns a new set.
+comment|/// Add a target-dependent attribute. Returns a new set because attribute sets
+comment|/// are immutable.
 name|AttributeSet
 name|addAttribute
 argument_list|(
@@ -797,8 +797,8 @@ argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Add attributes to the attribute set. Because
-comment|/// attribute sets are immutable, this returns a new set.
+comment|/// Add attributes to the attribute set. Returns a new set because attribute
+comment|/// sets are immutable.
 name|AttributeSet
 name|addAttributes
 argument_list|(
@@ -811,8 +811,8 @@ name|AS
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Remove the specified attribute from this set. Because
-comment|/// attribute sets are immutable, this returns a new set.
+comment|/// Remove the specified attribute from this set. Returns a new set because
+comment|/// attribute sets are immutable.
 name|AttributeSet
 name|removeAttribute
 argument_list|(
@@ -827,8 +827,8 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Remove the specified attribute from this set. Because
-comment|/// attribute sets are immutable, this returns a new set.
+comment|/// Remove the specified attribute from this set. Returns a new set because
+comment|/// attribute sets are immutable.
 name|AttributeSet
 name|removeAttribute
 argument_list|(
@@ -841,8 +841,8 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Remove the specified attributes from this set. Because
-comment|/// attribute sets are immutable, this returns a new set.
+comment|/// Remove the specified attributes from this set. Returns a new set because
+comment|/// attribute sets are immutable.
 name|AttributeSet
 name|removeAttributes
 argument_list|(
@@ -1362,6 +1362,60 @@ argument_list|,
 argument|const AttrBuilder&B
 argument_list|)
 block|;
+comment|/// \brief Add an attribute to the attribute set at the given index.
+comment|/// Returns a new list because attribute lists are immutable.
+name|AttributeList
+name|addAttribute
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Add an attribute to the attribute set at the given index.
+comment|/// Returns a new list because attribute lists are immutable.
+name|AttributeList
+name|addAttribute
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|StringRef Kind
+argument_list|,
+argument|StringRef Value = StringRef()
+argument_list|)
+specifier|const
+block|;
+comment|/// Add an attribute to the attribute set at the given index.
+comment|/// Returns a new list because attribute lists are immutable.
+name|AttributeList
+name|addAttribute
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|Attribute A
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Add attributes to the attribute set at the given index.
+comment|/// Returns a new list because attribute lists are immutable.
+name|AttributeList
+name|addAttributes
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|const AttrBuilder&B
+argument_list|)
+specifier|const
+block|;
 comment|/// Add an argument attribute to the list. Returns a new list because
 comment|/// attribute lists are immutable.
 name|AttributeList
@@ -1388,63 +1442,77 @@ name|Kind
 argument_list|)
 return|;
 block|}
-comment|/// \brief Add an attribute to the attribute set at the given index. Because
-comment|/// attribute sets are immutable, this returns a new set.
+comment|/// Add an argument attribute to the list. Returns a new list because
+comment|/// attribute lists are immutable.
 name|AttributeList
-name|addAttribute
+name|addParamAttribute
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
-argument|unsigned Index
-argument_list|,
-argument|Attribute::AttrKind Kind
-argument_list|)
-specifier|const
-block|;
-comment|/// \brief Add an attribute to the attribute set at the given index. Because
-comment|/// attribute sets are immutable, this returns a new set.
-name|AttributeList
-name|addAttribute
-argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|unsigned Index
+argument|unsigned ArgNo
 argument_list|,
 argument|StringRef Kind
 argument_list|,
 argument|StringRef Value = StringRef()
 argument_list|)
 specifier|const
-block|;
-comment|/// Add an attribute to the attribute set at the given indices. Because
-comment|/// attribute sets are immutable, this returns a new set.
-name|AttributeList
+block|{
+return|return
 name|addAttribute
+argument_list|(
+name|C
+argument_list|,
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|Kind
+argument_list|,
+name|Value
+argument_list|)
+return|;
+block|}
+comment|/// Add an attribute to the attribute list at the given arg indices. Returns a
+comment|/// new list because attribute lists are immutable.
+name|AttributeList
+name|addParamAttribute
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
-argument|ArrayRef<unsigned> Indices
+argument|ArrayRef<unsigned> ArgNos
 argument_list|,
 argument|Attribute A
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Add attributes to the attribute set at the given index. Because
-comment|/// attribute sets are immutable, this returns a new set.
+comment|/// Add an argument attribute to the list. Returns a new list because
+comment|/// attribute lists are immutable.
 name|AttributeList
-name|addAttributes
+name|addParamAttributes
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
-argument|unsigned Index
+argument|unsigned ArgNo
 argument_list|,
 argument|const AttrBuilder&B
 argument_list|)
 specifier|const
-block|;
+block|{
+return|return
+name|addAttributes
+argument_list|(
+name|C
+argument_list|,
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
 comment|/// \brief Remove the specified attribute at the specified index from this
-comment|/// attribute list. Because attribute lists are immutable, this returns the
-comment|/// new list.
+comment|/// attribute list. Returns a new list because attribute lists are immutable.
 name|AttributeList
 name|removeAttribute
 argument_list|(
@@ -1457,8 +1525,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// \brief Remove the specified attribute at the specified index from this
-comment|/// attribute list. Because attribute lists are immutable, this returns the
-comment|/// new list.
+comment|/// attribute list. Returns a new list because attribute lists are immutable.
 name|AttributeList
 name|removeAttribute
 argument_list|(
@@ -1471,8 +1538,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// \brief Remove the specified attributes at the specified index from this
-comment|/// attribute list. Because attribute lists are immutable, this returns the
-comment|/// new list.
+comment|/// attribute list. Returns a new list because attribute lists are immutable.
 name|AttributeList
 name|removeAttributes
 argument_list|(
@@ -1485,8 +1551,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// \brief Remove all attributes at the specified index from this
-comment|/// attribute list. Because attribute lists are immutable, this returns the
-comment|/// new list.
+comment|/// attribute list. Returns a new list because attribute lists are immutable.
 name|AttributeList
 name|removeAttributes
 argument_list|(
@@ -1496,8 +1561,108 @@ argument|unsigned Index
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Add the dereferenceable attribute to the attribute set at the given
-comment|/// index. Because attribute sets are immutable, this returns a new set.
+comment|/// \brief Remove the specified attribute at the specified arg index from this
+comment|/// attribute list. Returns a new list because attribute lists are immutable.
+name|AttributeList
+name|removeParamAttribute
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|{
+return|return
+name|removeAttribute
+argument_list|(
+name|C
+argument_list|,
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+comment|/// \brief Remove the specified attribute at the specified arg index from this
+comment|/// attribute list. Returns a new list because attribute lists are immutable.
+name|AttributeList
+name|removeParamAttribute
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned ArgNo
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|{
+return|return
+name|removeAttribute
+argument_list|(
+name|C
+argument_list|,
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+comment|/// \brief Remove the specified attribute at the specified arg index from this
+comment|/// attribute list. Returns a new list because attribute lists are immutable.
+name|AttributeList
+name|removeParamAttributes
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned ArgNo
+argument_list|,
+argument|const AttrBuilder&AttrsToRemove
+argument_list|)
+specifier|const
+block|{
+return|return
+name|removeAttributes
+argument_list|(
+name|C
+argument_list|,
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|AttrsToRemove
+argument_list|)
+return|;
+block|}
+comment|/// \brief Remove all attributes at the specified arg index from this
+comment|/// attribute list. Returns a new list because attribute lists are immutable.
+name|AttributeList
+name|removeParamAttributes
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned ArgNo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|removeAttributes
+argument_list|(
+name|C
+argument_list|,
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|)
+return|;
+block|}
+comment|/// \Brief Add the dereferenceable attribute to the attribute set at the given
+comment|/// index. Returns a new list because attribute lists are immutable.
 name|AttributeList
 name|addDereferenceableAttr
 argument_list|(
@@ -1509,9 +1674,34 @@ argument|uint64_t Bytes
 argument_list|)
 specifier|const
 block|;
+comment|/// \Brief Add the dereferenceable attribute to the attribute set at the given
+comment|/// arg index. Returns a new list because attribute lists are immutable.
+name|AttributeList
+name|addDereferenceableParamAttr
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned ArgNo
+argument_list|,
+argument|uint64_t Bytes
+argument_list|)
+specifier|const
+block|{
+return|return
+name|addDereferenceableAttr
+argument_list|(
+name|C
+argument_list|,
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|Bytes
+argument_list|)
+return|;
+block|}
 comment|/// \brief Add the dereferenceable_or_null attribute to the attribute set at
-comment|/// the given index. Because attribute sets are immutable, this returns a new
-comment|/// set.
+comment|/// the given index. Returns a new list because attribute lists are immutable.
 name|AttributeList
 name|addDereferenceableOrNullAttr
 argument_list|(
@@ -1523,8 +1713,35 @@ argument|uint64_t Bytes
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Add the dereferenceable_or_null attribute to the attribute set at
+comment|/// the given arg index. Returns a new list because attribute lists are
+comment|/// immutable.
+name|AttributeList
+name|addDereferenceableOrNullParamAttr
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned ArgNo
+argument_list|,
+argument|uint64_t Bytes
+argument_list|)
+specifier|const
+block|{
+return|return
+name|addDereferenceableOrNullAttr
+argument_list|(
+name|C
+argument_list|,
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|Bytes
+argument_list|)
+return|;
+block|}
 comment|/// Add the allocsize attribute to the attribute set at the given index.
-comment|/// Because attribute sets are immutable, this returns a new set.
+comment|/// Returns a new list because attribute lists are immutable.
 name|AttributeList
 name|addAllocSizeAttr
 argument_list|(
@@ -1537,6 +1754,35 @@ argument_list|,
 argument|const Optional<unsigned>&NumElemsArg
 argument_list|)
 block|;
+comment|/// Add the allocsize attribute to the attribute set at the given arg index.
+comment|/// Returns a new list because attribute lists are immutable.
+name|AttributeList
+name|addAllocSizeParamAttr
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|unsigned ArgNo
+argument_list|,
+argument|unsigned ElemSizeArg
+argument_list|,
+argument|const Optional<unsigned>&NumElemsArg
+argument_list|)
+block|{
+return|return
+name|addAllocSizeAttr
+argument_list|(
+name|C
+argument_list|,
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|ElemSizeArg
+argument_list|,
+name|NumElemsArg
+argument_list|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// AttributeList Accessors
 comment|//===--------------------------------------------------------------------===//
@@ -1604,6 +1850,65 @@ argument|unsigned Index
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Return true if the attribute exists for the given argument
+name|bool
+name|hasParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|{
+return|return
+name|hasAttribute
+argument_list|(
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return true if the attribute exists for the given argument
+name|bool
+name|hasParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|{
+return|return
+name|hasAttribute
+argument_list|(
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return true if attributes exists for the given argument
+name|bool
+name|hasParamAttrs
+argument_list|(
+argument|unsigned ArgNo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|hasAttributes
+argument_list|(
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|)
+return|;
+block|}
 comment|/// \brief Equivalent to hasAttribute(AttributeList::FunctionIndex, Kind) but
 comment|/// may be faster.
 name|bool
@@ -1664,6 +1969,48 @@ argument|StringRef Kind
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Return the attribute object that exists at the arg index.
+name|Attribute
+name|getParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getAttribute
+argument_list|(
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return the attribute object that exists at the given index.
+name|Attribute
+name|getParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getAttribute
+argument_list|(
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
 comment|/// \brief Return the alignment of the return value.
 name|unsigned
 name|getRetAlignment
@@ -1694,6 +2041,24 @@ argument|unsigned Index
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Get the number of dereferenceable bytes (or zero if unknown) of an
+comment|/// arg.
+name|uint64_t
+name|getParamDereferenceableBytes
+argument_list|(
+argument|unsigned ArgNo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getDereferenceableBytes
+argument_list|(
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|)
+return|;
+block|}
 comment|/// \brief Get the number of dereferenceable_or_null bytes (or zero if
 comment|/// unknown).
 name|uint64_t
@@ -1703,6 +2068,24 @@ argument|unsigned Index
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Get the number of dereferenceable_or_null bytes (or zero if
+comment|/// unknown) of an arg.
+name|uint64_t
+name|getParamDereferenceableOrNullBytes
+argument_list|(
+argument|unsigned ArgNo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getDereferenceableOrNullBytes
+argument_list|(
+name|ArgNo
+operator|+
+name|FirstArgIndex
+argument_list|)
+return|;
+block|}
 comment|/// Get the allocsize argument numbers (or pair(0, 0) if unknown).
 name|std
 operator|::

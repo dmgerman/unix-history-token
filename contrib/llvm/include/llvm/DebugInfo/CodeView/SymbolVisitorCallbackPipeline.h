@@ -241,7 +241,7 @@ name|AliasName
 parameter_list|)
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/CVSymbolTypes.def"
+file|"llvm/DebugInfo/CodeView/CodeViewSymbols.def"
 name|private
 operator|:
 name|std

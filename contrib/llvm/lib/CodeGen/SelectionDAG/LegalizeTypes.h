@@ -2379,6 +2379,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|ExpandIntOp_SETCCCARRY
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|ExpandIntOp_Shift
 parameter_list|(
 name|SDNode

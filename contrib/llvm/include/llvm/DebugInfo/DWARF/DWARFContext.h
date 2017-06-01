@@ -500,11 +500,7 @@ name|dump
 argument_list|(
 argument|raw_ostream&OS
 argument_list|,
-argument|DIDumpType DumpType = DIDT_All
-argument_list|,
-argument|bool DumpEH = false
-argument_list|,
-argument|bool SummarizeTypes = false
+argument|DIDumpOptions DumpOpts
 argument_list|)
 name|override
 block|;

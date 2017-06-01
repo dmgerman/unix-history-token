@@ -1098,6 +1098,11 @@ name|bool
 name|exceeded
 parameter_list|)
 function_decl|;
+name|AsanAllocator
+modifier|&
+name|get_allocator
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

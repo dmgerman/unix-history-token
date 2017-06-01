@@ -566,6 +566,28 @@ block|,
 name|DIDT_TUIndex
 block|, }
 enum|;
+comment|/// Container for dump options that control which debug information will be
+comment|/// dumped.
+struct|struct
+name|DIDumpOptions
+block|{
+name|DIDumpType
+name|DumpType
+init|=
+name|DIDT_All
+decl_stmt|;
+name|bool
+name|DumpEH
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|SummarizeTypes
+init|=
+name|false
+decl_stmt|;
+block|}
+struct|;
 name|class
 name|DIContext
 block|{
@@ -613,20 +635,8 @@ name|raw_ostream
 modifier|&
 name|OS
 parameter_list|,
-name|DIDumpType
-name|DumpType
-init|=
-name|DIDT_All
-parameter_list|,
-name|bool
-name|DumpEH
-init|=
-name|false
-parameter_list|,
-name|bool
-name|SummarizeTypes
-init|=
-name|false
+name|DIDumpOptions
+name|DumpOpts
 parameter_list|)
 init|=
 literal|0

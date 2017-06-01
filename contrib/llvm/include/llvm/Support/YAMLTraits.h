@@ -8837,6 +8837,52 @@ define|\
 value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<unsigned N>                                                        \   struct SequenceTraits<SmallVector<_type, N>>                                 \       : public SequenceTraitsImpl<SmallVector<_type, N>> {                     \     static const bool flow = true;                                             \   };                                                                           \   template<typename Allocator>                                                \   struct SequenceTraits<std::vector<_type, Allocator>>                         \       : public SequenceTraitsImpl<std::vector<_type, Allocator>> {             \     static const bool flow = true;                                             \   };                                                                           \   }                                                                            \   }
 end_define
 
+begin_define
+define|#
+directive|define
+name|LLVM_YAML_DECLARE_MAPPING_TRAITS
+parameter_list|(
+name|Type
+parameter_list|)
+define|\
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<> struct MappingTraits<Type> {                                     \     static void mapping(IO&IO, Type&Obj);                                    \   };                                                                           \   }                                                                            \   }
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_YAML_DECLARE_ENUM_TRAITS
+parameter_list|(
+name|Type
+parameter_list|)
+define|\
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<> struct ScalarEnumerationTraits<Type> {                           \     static void enumeration(IO&io, Type&Value);                              \   };                                                                           \   }                                                                            \   }
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_YAML_DECLARE_BITSET_TRAITS
+parameter_list|(
+name|Type
+parameter_list|)
+define|\
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<> struct ScalarBitSetTraits<Type> {                                \     static void bitset(IO&IO, Type&Options);                                 \   };                                                                           \   }                                                                            \   }
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_YAML_DECLARE_SCALAR_TRAITS
+parameter_list|(
+name|Type
+parameter_list|,
+name|MustQuote
+parameter_list|)
+define|\
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<> struct ScalarTraits<Type> {                                      \     static void output(const Type&Value, void *ctx, llvm::raw_ostream&Out);  \     static StringRef input(StringRef Scalar, void *ctxt, Type&Value);         \     static bool mustQuote(StringRef) { return MustQuote; }                     \   };                                                                           \   }                                                                            \   }
+end_define
+
 begin_comment
 comment|/// Utility for declaring that a std::vector of a particular type
 end_comment

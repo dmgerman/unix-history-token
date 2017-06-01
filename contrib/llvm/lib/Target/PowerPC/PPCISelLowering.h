@@ -245,6 +245,10 @@ comment|/// VECSHL - The PPC VSX shift left instruction
 comment|///
 name|VECSHL
 block|,
+comment|/// XXPERMDI - The PPC XXPERMDI instruction
+comment|///
+name|XXPERMDI
+block|,
 comment|/// The CMPB instruction (takes two operands of i32 or i64).
 name|CMPB
 block|,
@@ -708,6 +712,27 @@ comment|/// isXXSLDWIShuffleMask - Return true if this is a shuffle mask suitabl
 comment|/// for a XXSLDWI instruction.
 name|bool
 name|isXXSLDWIShuffleMask
+parameter_list|(
+name|ShuffleVectorSDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+modifier|&
+name|ShiftElts
+parameter_list|,
+name|bool
+modifier|&
+name|Swap
+parameter_list|,
+name|bool
+name|IsLE
+parameter_list|)
+function_decl|;
+comment|/// isXXPERMDIShuffleMask - Return true if this is a shuffle mask suitable
+comment|/// for a XXPERMDI instruction.
+name|bool
+name|isXXPERMDIShuffleMask
 parameter_list|(
 name|ShuffleVectorSDNode
 modifier|*

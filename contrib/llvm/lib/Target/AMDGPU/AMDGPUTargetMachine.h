@@ -361,27 +361,26 @@ argument|const Function&
 argument_list|)
 specifier|const
 name|override
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
+name|bool
+name|isMachineVerifierClean
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// GCN Target Machine (SI+)
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_decl_stmt
 name|class
 name|GCNTargetMachine
 name|final
-range|:
+operator|:
 name|public
 name|AMDGPUTargetMachine
 block|{
@@ -437,11 +436,10 @@ argument_list|)
 specifier|const
 name|override
 block|; }
-decl_stmt|;
+block|;  }
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

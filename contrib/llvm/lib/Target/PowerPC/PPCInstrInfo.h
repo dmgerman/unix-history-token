@@ -972,6 +972,13 @@ argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
+block|;
+specifier|static
+name|int
+name|getRecordFormOpcode
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

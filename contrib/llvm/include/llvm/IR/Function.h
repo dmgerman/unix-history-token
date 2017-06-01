@@ -812,30 +812,6 @@ name|Attr
 argument_list|)
 expr_stmt|;
 block|}
-name|void
-name|addParamAttr
-argument_list|(
-name|unsigned
-name|ArgNo
-argument_list|,
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
-argument_list|)
-block|{
-name|addAttribute
-argument_list|(
-name|ArgNo
-operator|+
-name|AttributeList
-operator|::
-name|FirstArgIndex
-argument_list|,
-name|Kind
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// @brief Remove function attributes from this function.
 name|void
 name|removeFnAttr
@@ -880,30 +856,6 @@ name|FunctionIndex
 argument_list|,
 name|Kind
 argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|removeParamAttr
-argument_list|(
-name|unsigned
-name|ArgNo
-argument_list|,
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
-argument_list|)
-block|{
-name|removeAttribute
-argument_list|(
-name|ArgNo
-operator|+
-name|AttributeList
-operator|::
-name|FirstArgIndex
-argument_list|,
-name|Kind
 argument_list|)
 expr_stmt|;
 block|}
@@ -1158,6 +1110,43 @@ modifier|&
 name|Attrs
 parameter_list|)
 function_decl|;
+comment|/// @brief adds the attribute to the list of attributes for the given arg.
+name|void
+name|addParamAttr
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl_stmt|;
+comment|/// @brief adds the attribute to the list of attributes for the given arg.
+name|void
+name|addParamAttr
+parameter_list|(
+name|unsigned
+name|ArgNo
+parameter_list|,
+name|Attribute
+name|Attr
+parameter_list|)
+function_decl|;
+comment|/// @brief adds the attributes to the list of attributes for the given arg.
+name|void
+name|addParamAttrs
+parameter_list|(
+name|unsigned
+name|ArgNo
+parameter_list|,
+specifier|const
+name|AttrBuilder
+modifier|&
+name|Attrs
+parameter_list|)
+function_decl|;
 comment|/// @brief removes the attribute from the list of attributes.
 name|void
 name|removeAttribute
@@ -1188,6 +1177,43 @@ name|removeAttributes
 parameter_list|(
 name|unsigned
 name|i
+parameter_list|,
+specifier|const
+name|AttrBuilder
+modifier|&
+name|Attrs
+parameter_list|)
+function_decl|;
+comment|/// @brief removes the attribute from the list of attributes.
+name|void
+name|removeParamAttr
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl_stmt|;
+comment|/// @brief removes the attribute from the list of attributes.
+name|void
+name|removeParamAttr
+parameter_list|(
+name|unsigned
+name|ArgNo
+parameter_list|,
+name|StringRef
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// @brief removes the attribute from the list of attributes.
+name|void
+name|removeParamAttrs
+parameter_list|(
+name|unsigned
+name|ArgNo
 parameter_list|,
 specifier|const
 name|AttrBuilder
@@ -1304,6 +1330,18 @@ name|uint64_t
 name|Bytes
 parameter_list|)
 function_decl|;
+comment|/// @brief adds the dereferenceable attribute to the list of attributes for
+comment|/// the given arg.
+name|void
+name|addDereferenceableParamAttr
+parameter_list|(
+name|unsigned
+name|ArgNo
+parameter_list|,
+name|uint64_t
+name|Bytes
+parameter_list|)
+function_decl|;
 comment|/// @brief adds the dereferenceable_or_null attribute to the list of
 comment|/// attributes.
 name|void
@@ -1311,6 +1349,18 @@ name|addDereferenceableOrNullAttr
 parameter_list|(
 name|unsigned
 name|i
+parameter_list|,
+name|uint64_t
+name|Bytes
+parameter_list|)
+function_decl|;
+comment|/// @brief adds the dereferenceable_or_null attribute to the list of
+comment|/// attributes for the given arg.
+name|void
+name|addDereferenceableOrNullParamAttr
+parameter_list|(
+name|unsigned
+name|ArgNo
 parameter_list|,
 name|uint64_t
 name|Bytes
@@ -1354,6 +1404,25 @@ name|i
 argument_list|)
 return|;
 block|}
+comment|/// @brief Extract the number of dereferenceable bytes for a parameter.
+comment|/// @param ArgNo Index of an argument, with 0 being the first function arg.
+name|uint64_t
+name|getParamDereferenceableBytes
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|getParamDereferenceableBytes
+argument_list|(
+name|ArgNo
+argument_list|)
+return|;
+block|}
 comment|/// @brief Extract the number of dereferenceable_or_null bytes for a call or
 comment|/// parameter (0=unknown).
 comment|/// @param i AttributeList index, referring to a return value or argument.
@@ -1371,6 +1440,26 @@ operator|.
 name|getDereferenceableOrNullBytes
 argument_list|(
 name|i
+argument_list|)
+return|;
+block|}
+comment|/// @brief Extract the number of dereferenceable_or_null bytes for a
+comment|/// parameter.
+comment|/// @param ArgNo AttributeList ArgNo, referring to an argument.
+name|uint64_t
+name|getParamDereferenceableOrNullBytes
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|getParamDereferenceableOrNullBytes
+argument_list|(
+name|ArgNo
 argument_list|)
 return|;
 block|}

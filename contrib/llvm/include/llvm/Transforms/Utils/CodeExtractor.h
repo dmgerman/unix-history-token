@@ -100,6 +100,9 @@ name|class
 name|Function
 decl_stmt|;
 name|class
+name|Instruction
+decl_stmt|;
+name|class
 name|Loop
 decl_stmt|;
 name|class
@@ -266,6 +269,28 @@ argument_list|,
 name|ValueSet
 operator|&
 name|Outputs
+argument_list|,
+specifier|const
+name|ValueSet
+operator|&
+name|Allocas
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Find the set of allocas whose life ranges are contained within the
+comment|/// outlined region.
+comment|///
+comment|/// Allocas which have life_time markers contained in the outlined region
+comment|/// should be pushed to the outlined function. The address bitcasts that
+comment|/// are used by the lifetime markers are also candidates for shrink-
+comment|/// wrapping. The instructions that need to be sinked are collected in
+comment|/// 'Allocas'.
+name|void
+name|findAllocas
+argument_list|(
+name|ValueSet
+operator|&
+name|Allocas
 argument_list|)
 decl|const
 decl_stmt|;

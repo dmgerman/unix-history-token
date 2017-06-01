@@ -268,12 +268,23 @@ name|TargetIRAnalysis
 name|getTargetIRAnalysis
 argument_list|()
 name|override
-block|;  }
-decl_stmt|;
+block|;
+name|bool
+name|isMachineVerifierClean
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+expr|}
+block|;
 comment|// NVPTXTargetMachine.
 name|class
 name|NVPTXTargetMachine32
-range|:
+operator|:
 name|public
 name|NVPTXTargetMachine
 block|{
@@ -303,10 +314,10 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|class
 name|NVPTXTargetMachine64
-range|:
+operator|:
 name|public
 name|NVPTXTargetMachine
 block|{
@@ -336,8 +347,7 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-decl_stmt|;
-block|}
+block|;  }
 end_decl_stmt
 
 begin_comment

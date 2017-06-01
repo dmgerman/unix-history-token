@@ -4484,6 +4484,28 @@ else|:
 name|MaxStoresPerMemcpy
 return|;
 block|}
+comment|/// Get maximum # of load operations permitted for memcmp
+comment|///
+comment|/// This function returns the maximum number of load operations permitted
+comment|/// to replace a call to memcmp. The value is set by the target at the
+comment|/// performance threshold for such a replacement. If OptSize is true,
+comment|/// return the limit for functions that have OptSize attribute.
+name|unsigned
+name|getMaxExpandSizeMemcmp
+argument_list|(
+name|bool
+name|OptSize
+argument_list|)
+decl|const
+block|{
+return|return
+name|OptSize
+condition|?
+name|MaxLoadsPerMemcmpOptSize
+else|:
+name|MaxLoadsPerMemcmp
+return|;
+block|}
 comment|/// \brief Get maximum # of store operations permitted for llvm.memmove
 comment|///
 comment|/// This function returns the maximum number of store operations permitted
@@ -7798,6 +7820,12 @@ comment|/// Maximum number of store operations that may be substituted for a cal
 comment|/// memcpy, used for functions with OptSize attribute.
 name|unsigned
 name|MaxStoresPerMemcpyOptSize
+decl_stmt|;
+name|unsigned
+name|MaxLoadsPerMemcmp
+decl_stmt|;
+name|unsigned
+name|MaxLoadsPerMemcmpOptSize
 decl_stmt|;
 comment|/// \brief Specify maximum bytes of store instructions per memmove call.
 comment|///

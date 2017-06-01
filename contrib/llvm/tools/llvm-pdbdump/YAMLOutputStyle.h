@@ -103,13 +103,9 @@ name|Expected
 operator|<
 name|Optional
 operator|<
-name|llvm
+name|CodeViewYAML
 operator|::
-name|pdb
-operator|::
-name|yaml
-operator|::
-name|PdbSourceFileInfo
+name|SourceFileInfo
 operator|>>
 name|getFileLineInfo
 argument_list|(

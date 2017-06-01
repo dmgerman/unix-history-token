@@ -267,73 +267,6 @@ name|uint32_t
 operator|>
 name|expressionNumbering
 block|;
-comment|// Expressions is the vector of Expression. ExprIdx is the mapping from
-comment|// value number to the index of Expression in Expressions. We use it
-comment|// instead of a DenseMap because filling such mapping is faster than
-comment|// filling a DenseMap and the compile time is a little better.
-name|uint32_t
-name|nextExprNumber
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|Expression
-operator|>
-name|Expressions
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|uint32_t
-operator|>
-name|ExprIdx
-block|;
-comment|// Value number to PHINode mapping. Used for phi-translate in scalarpre.
-name|DenseMap
-operator|<
-name|uint32_t
-block|,
-name|PHINode
-operator|*
-operator|>
-name|NumberingPhi
-block|;
-comment|// Cache for phi-translate in scalarpre.
-typedef|typedef
-name|DenseMap
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|uint32_t
-operator|,
-specifier|const
-name|BasicBlock
-operator|*
-operator|>
-operator|,
-name|uint32_t
-operator|>
-name|PhiTranslateMap
-expr_stmt|;
-name|PhiTranslateMap
-name|PhiTranslateTable
-block|;
-comment|// Map the block to reversed postorder traversal number. It is used to
-comment|// find back edge easily.
-name|DenseMap
-operator|<
-specifier|const
-name|BasicBlock
-operator|*
-block|,
-name|uint32_t
-operator|>
-name|BlockRPONumber
-block|;
 name|AliasAnalysis
 operator|*
 name|AA
@@ -385,43 +318,6 @@ operator|*
 name|C
 argument_list|)
 block|;
-name|uint32_t
-name|phiTranslateImpl
-argument_list|(
-argument|const BasicBlock *BB
-argument_list|,
-argument|const BasicBlock *PhiBlock
-argument_list|,
-argument|uint32_t Num
-argument_list|,
-argument|GVN&Gvn
-argument_list|)
-block|;
-name|std
-operator|::
-name|pair
-operator|<
-name|uint32_t
-block|,
-name|bool
-operator|>
-name|assignExpNewValueNum
-argument_list|(
-name|Expression
-operator|&
-name|exp
-argument_list|)
-block|;
-name|bool
-name|areAllValsInBB
-argument_list|(
-argument|uint32_t num
-argument_list|,
-argument|const BasicBlock *BB
-argument_list|,
-argument|GVN&Gvn
-argument_list|)
-block|;
 name|public
 operator|:
 name|ValueTable
@@ -458,8 +354,6 @@ name|uint32_t
 name|lookup
 argument_list|(
 argument|Value *V
-argument_list|,
-argument|bool Verify = true
 argument_list|)
 specifier|const
 block|;
@@ -473,26 +367,6 @@ argument_list|,
 argument|Value *LHS
 argument_list|,
 argument|Value *RHS
-argument_list|)
-block|;
-name|uint32_t
-name|phiTranslate
-argument_list|(
-argument|const BasicBlock *BB
-argument_list|,
-argument|const BasicBlock *PhiBlock
-argument_list|,
-argument|uint32_t Num
-argument_list|,
-argument|GVN&Gvn
-argument_list|)
-block|;
-name|void
-name|assignBlockRPONumber
-argument_list|(
-name|Function
-operator|&
-name|F
 argument_list|)
 block|;
 name|bool
@@ -577,84 +451,83 @@ argument|const Value *
 argument_list|)
 specifier|const
 block|;   }
-decl_stmt|;
+block|;
 name|private
-label|:
+operator|:
 name|friend
 name|class
 name|gvn
 operator|::
 name|GVNLegacyPass
-expr_stmt|;
+block|;
 name|friend
-block|struct
+expr|struct
 name|DenseMapInfo
 operator|<
 name|Expression
 operator|>
-expr_stmt|;
+block|;
 name|MemoryDependenceResults
-modifier|*
+operator|*
 name|MD
-decl_stmt|;
+block|;
 name|DominatorTree
-modifier|*
+operator|*
 name|DT
-decl_stmt|;
+block|;
 specifier|const
 name|TargetLibraryInfo
-modifier|*
+operator|*
 name|TLI
-decl_stmt|;
+block|;
 name|AssumptionCache
-modifier|*
+operator|*
 name|AC
-decl_stmt|;
+block|;
 name|SetVector
 operator|<
 name|BasicBlock
 operator|*
 operator|>
 name|DeadBlocks
-expr_stmt|;
+block|;
 name|OptimizationRemarkEmitter
-modifier|*
+operator|*
 name|ORE
-decl_stmt|;
+block|;
 name|ValueTable
 name|VN
-decl_stmt|;
+block|;
 comment|/// A mapping from value numbers to lists of Value*'s that
 comment|/// have that value number.  Use findLeader to query it.
-struct|struct
+block|struct
 name|LeaderTableEntry
 block|{
 name|Value
-modifier|*
+operator|*
 name|Val
-decl_stmt|;
+block|;
 specifier|const
 name|BasicBlock
-modifier|*
+operator|*
 name|BB
-decl_stmt|;
+block|;
 name|LeaderTableEntry
-modifier|*
+operator|*
 name|Next
-decl_stmt|;
-block|}
-struct|;
+block|;   }
+block|;
 name|DenseMap
 operator|<
 name|uint32_t
-operator|,
+block|,
 name|LeaderTableEntry
 operator|>
 name|LeaderTable
-expr_stmt|;
+block|;
 name|BumpPtrAllocator
 name|TableAllocator
-decl_stmt|;
+block|;
 comment|// Block-local map of equivalent values to their leader, does not
 comment|// propagate to any successors. Entries added mid-block are applied
 comment|// to the remaining instructions in the block.
@@ -664,25 +537,25 @@ name|llvm
 operator|::
 name|Value
 operator|*
-operator|,
+block|,
 name|llvm
 operator|::
 name|Constant
 operator|*
-operator|,
+block|,
 literal|4
 operator|>
 name|ReplaceWithConstMap
-expr_stmt|;
+block|;
 name|SmallVector
 operator|<
 name|Instruction
 operator|*
-operator|,
+block|,
 literal|8
 operator|>
 name|InstrsToErase
-expr_stmt|;
+block|;
 typedef|typedef
 name|SmallVector
 operator|<

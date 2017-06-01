@@ -142,7 +142,7 @@ name|AliasName
 parameter_list|)
 include|#
 directive|include
-file|"CVSymbolTypes.def"
+file|"llvm/DebugInfo/CodeView/CodeViewSymbols.def"
 name|private
 operator|:
 name|Optional

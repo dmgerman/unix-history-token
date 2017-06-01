@@ -458,7 +458,7 @@ name|AliasName
 parameter_list|)
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeRecords.def"
+file|"llvm/DebugInfo/CodeView/CodeViewTypes.def"
 name|private
 operator|:
 name|template

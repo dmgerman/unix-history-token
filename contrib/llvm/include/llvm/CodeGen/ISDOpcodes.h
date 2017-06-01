@@ -591,11 +591,21 @@ comment|/// them with (op #2) as a CondCodeSDNode. If the operands are vector ty
 comment|/// then the result type must also be a vector type.
 name|SETCC
 block|,
-comment|/// Like SetCC, ops #0 and #1 are the LHS and RHS operands to compare, but
+comment|/// Like SetCC, ops #0 and #1 are the LHS and RHS operands to compare, and
 comment|/// op #2 is a *carry value*. This operator checks the result of
 comment|/// "LHS - RHS - Carry", and can be used to compare two wide integers:
 comment|/// (setcce lhshi rhshi (subc lhslo rhslo) cc). Only valid for integers.
+comment|/// FIXME: This node is deprecated in favor of SETCCCARRY.
+comment|/// It is kept around for now to provide a smooth transition path
+comment|/// toward the use of SETCCCARRY and will eventually be removed.
 name|SETCCE
+block|,
+comment|/// Like SetCC, ops #0 and #1 are the LHS and RHS operands to compare, but
+comment|/// op #2 is a boolean indicating if there is an incoming carry. This
+comment|/// operator checks the result of "LHS - RHS - Carry", and can be used to
+comment|/// compare two wide integers: (setcce lhshi rhshi (subc lhslo rhslo) cc).
+comment|/// Only valid for integers.
+name|SETCCCARRY
 block|,
 comment|/// SHL_PARTS/SRA_PARTS/SRL_PARTS - These operators are used for expanded
 comment|/// integer shift operations.  The operation ordering is:

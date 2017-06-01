@@ -167,8 +167,6 @@ return|return
 name|Kind
 return|;
 block|}
-name|private
-label|:
 name|SymbolRecordKind
 name|Kind
 decl_stmt|;

@@ -31,6 +31,22 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Defines constants and basic types describing CodeView debug information.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -89,7 +105,7 @@ parameter_list|)
 value|name = value,
 include|#
 directive|include
-file|"TypeRecords.def"
+file|"CodeViewTypes.def"
 block|}
 decl_stmt|;
 comment|/// Duplicate copy of the above enum, but using the official CV names. Useful
@@ -110,7 +126,7 @@ parameter_list|)
 value|name = val,
 include|#
 directive|include
-file|"TypeRecords.def"
+file|"CodeViewTypes.def"
 block|}
 enum|;
 comment|/// Distinguishes individual records in the Symbols subsection of a .debug$S
@@ -134,7 +150,7 @@ parameter_list|)
 value|name = value,
 include|#
 directive|include
-file|"CVSymbolTypes.def"
+file|"CodeViewSymbols.def"
 block|}
 decl_stmt|;
 comment|/// Duplicate copy of the above enum, but using the official CV names. Useful
@@ -155,7 +171,7 @@ parameter_list|)
 value|name = val,
 include|#
 directive|include
-file|"CVSymbolTypes.def"
+file|"CodeViewSymbols.def"
 block|}
 enum|;
 define|#

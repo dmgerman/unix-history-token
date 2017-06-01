@@ -777,41 +777,6 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|isCondInst
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isConditionalALU32
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isConditionalLoad
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isConditionalStore
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isConditionalTransfer
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|bool
 name|isConstExtended
 argument_list|(
 argument|const MachineInstr&MI

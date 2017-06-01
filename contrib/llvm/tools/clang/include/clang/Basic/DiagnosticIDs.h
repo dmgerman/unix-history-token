@@ -130,7 +130,7 @@ name|DIAG_START_PARSE
 init|=
 name|DIAG_START_LEX
 operator|+
-literal|300
+literal|400
 block|,
 name|DIAG_START_AST
 init|=

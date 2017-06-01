@@ -233,7 +233,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const InputSectionBase *D
+argument|const SectionBase *D
 argument_list|)
 block|{
 return|return

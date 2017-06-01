@@ -5466,15 +5466,6 @@ argument_list|,
 argument|bool P
 argument_list|)
 block|;
-name|RecordVal
-argument_list|(
-argument|StringRef N
-argument_list|,
-argument|RecTy *T
-argument_list|,
-argument|bool P
-argument_list|)
-block|;
 name|StringRef
 name|getName
 argument_list|()
@@ -5922,13 +5913,6 @@ name|Name
 argument_list|)
 block|;
 comment|// Also updates RecordKeeper.
-name|void
-name|setName
-argument_list|(
-argument|StringRef Name
-argument_list|)
-block|;
-comment|// Also updates RecordKeeper.
 name|ArrayRef
 operator|<
 name|SMLoc
@@ -6100,28 +6084,28 @@ argument_list|(
 argument|const Init *Name
 argument_list|)
 block|{
-for|for
-control|(
+return|return
+name|const_cast
+operator|<
 name|RecordVal
-modifier|&
-name|Val
-range|:
-name|Values
-control|)
-if|if
-condition|(
-name|Val
-operator|.
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|Record
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getValue
+argument_list|(
 name|Name
-operator|==
-name|Name
-condition|)
-return|return
-operator|&
-name|Val
-return|;
-return|return
-name|nullptr
+argument_list|)
+operator|)
 return|;
 block|}
 name|RecordVal
@@ -6132,15 +6116,27 @@ argument|StringRef Name
 argument_list|)
 block|{
 return|return
+name|const_cast
+operator|<
+name|RecordVal
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|Record
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
 name|getValue
-argument_list|(
-name|StringInit
-operator|::
-name|get
 argument_list|(
 name|Name
 argument_list|)
-argument_list|)
+operator|)
 return|;
 block|}
 name|void
@@ -6577,9 +6573,7 @@ comment|/// This method looks up the specified field and returns
 comment|/// its value as a string, throwing an exception if the field does not exist
 comment|/// or if the value is not a string.
 comment|///
-name|std
-operator|::
-name|string
+name|StringRef
 name|getValueAsString
 argument_list|(
 argument|StringRef FieldName
@@ -6651,9 +6645,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|string
+name|StringRef
 operator|>
 name|getValueAsListOfStrings
 argument_list|(
@@ -7017,10 +7009,10 @@ name|dump
 argument_list|()
 specifier|const
 block|; }
-decl_stmt|;
+block|;
 comment|/// Sorting predicate to sort record pointers by name.
 comment|///
-struct|struct
+block|struct
 name|LessRecord
 block|{
 name|bool
@@ -7031,7 +7023,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-operator|,
+expr|,
 specifier|const
 name|Record
 operator|*
@@ -7059,13 +7051,13 @@ operator|<
 literal|0
 return|;
 block|}
-block|}
-struct|;
+expr|}
+block|;
 comment|/// Sorting predicate to sort record pointers by their
 comment|/// unique ID. If you just need a deterministic order, use this, since it
 comment|/// just compares two `unsigned`; the other sorting predicates require
 comment|/// string manipulation.
-struct|struct
+block|struct
 name|LessRecordByID
 block|{
 name|bool
@@ -7076,7 +7068,7 @@ specifier|const
 name|Record
 operator|*
 name|LHS
-operator|,
+expr|,
 specifier|const
 name|Record
 operator|*
@@ -7096,12 +7088,12 @@ name|getID
 argument_list|()
 return|;
 block|}
-block|}
-struct|;
+expr|}
+block|;
 comment|/// Sorting predicate to sort record pointers by their
 comment|/// name field.
 comment|///
-struct|struct
+block|struct
 name|LessRecordFieldName
 block|{
 name|bool
@@ -7112,7 +7104,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-operator|,
+expr|,
 specifier|const
 name|Record
 operator|*
@@ -7136,18 +7128,16 @@ literal|"Name"
 argument_list|)
 return|;
 block|}
-block|}
-struct|;
-struct|struct
+expr|}
+block|;  struct
 name|LessRecordRegister
 block|{
 specifier|static
 name|bool
 name|ascii_isdigit
-parameter_list|(
-name|char
-name|x
-parameter_list|)
+argument_list|(
+argument|char x
+argument_list|)
 block|{
 return|return
 name|x
@@ -7159,7 +7149,7 @@ operator|<=
 literal|'9'
 return|;
 block|}
-struct|struct
+expr|struct
 name|RecordParts
 block|{
 name|SmallVector
@@ -7169,14 +7159,14 @@ operator|::
 name|pair
 operator|<
 name|bool
-operator|,
+block|,
 name|StringRef
 operator|>
-operator|,
+block|,
 literal|4
 operator|>
 name|Parts
-expr_stmt|;
+block|;
 name|RecordParts
 argument_list|(
 argument|StringRef Rec
@@ -7192,29 +7182,29 @@ condition|)
 return|return;
 name|size_t
 name|Len
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Start
-init|=
+operator|=
 name|Rec
 operator|.
 name|data
 argument_list|()
-decl_stmt|;
+block|;
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Curr
-init|=
+operator|=
 name|Start
-decl_stmt|;
+block|;
 name|bool
 name|isDigitPart
-init|=
+operator|=
 name|ascii_isdigit
 argument_list|(
 name|Curr
@@ -7222,7 +7212,7 @@ index|[
 literal|0
 index|]
 argument_list|)
-decl_stmt|;
+block|;
 for|for
 control|(
 name|size_t
@@ -7243,7 +7233,7 @@ name|E
 condition|;
 operator|++
 name|I
-operator|,
+incr|,
 operator|++
 name|Len
 control|)
@@ -7332,7 +7322,7 @@ expr_stmt|;
 block|}
 name|size_t
 name|size
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Parts
@@ -7346,7 +7336,7 @@ operator|::
 name|pair
 operator|<
 name|bool
-operator|,
+block|,
 name|StringRef
 operator|>
 name|getPart
@@ -7373,8 +7363,8 @@ name|i
 index|]
 return|;
 block|}
-block|}
-struct|;
+expr|}
+block|;
 name|bool
 name|operator
 argument_list|()
@@ -7383,7 +7373,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-operator|,
+expr|,
 specifier|const
 name|Record
 operator|*
@@ -7726,14 +7716,8 @@ operator|<
 name|RHSNumParts
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+expr|}
+block|;
 name|raw_ostream
 operator|&
 name|operator
@@ -7742,48 +7726,31 @@ operator|(
 name|raw_ostream
 operator|&
 name|OS
-operator|,
+expr|,
 specifier|const
 name|RecordKeeper
 operator|&
 name|RK
 operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// Return an Init with a qualifier prefix referring
-end_comment
-
-begin_comment
 comment|/// to CurRec's name.
-end_comment
-
-begin_function_decl
 name|Init
-modifier|*
+operator|*
 name|QualifyName
-parameter_list|(
-name|Record
-modifier|&
-name|CurRec
-parameter_list|,
-name|MultiClass
-modifier|*
-name|CurMultiClass
-parameter_list|,
-name|Init
-modifier|*
-name|Name
-parameter_list|,
-name|StringRef
-name|Scoper
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|Record&CurRec
+argument_list|,
+argument|MultiClass *CurMultiClass
+argument_list|,
+argument|Init *Name
+argument_list|,
+argument|StringRef Scoper
+argument_list|)
+block|;  }
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

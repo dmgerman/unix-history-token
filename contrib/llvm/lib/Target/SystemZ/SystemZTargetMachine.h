@@ -213,9 +213,19 @@ return|return
 name|true
 return|;
 block|}
-block|; }
-decl_stmt|;
+block|;
+name|bool
+name|isMachineVerifierClean
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

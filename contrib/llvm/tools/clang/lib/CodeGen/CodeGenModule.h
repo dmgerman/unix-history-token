@@ -1280,6 +1280,17 @@ operator|*
 operator|>
 name|DeferredVTables
 expr_stmt|;
+comment|/// A queue of (optional) vtables that may be emitted opportunistically.
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|>
+name|OpportunisticVTables
+expr_stmt|;
 comment|/// List of global values which are required to be present in the object file;
 comment|/// bitcast to i8*. This is used for forcing visibility of symbols which may
 comment|/// otherwise be optimized out.
@@ -1720,6 +1731,10 @@ parameter_list|(
 name|GlobalDecl
 name|GD
 parameter_list|)
+function_decl|;
+name|bool
+name|shouldOpportunisticallyEmitVTables
+parameter_list|()
 function_decl|;
 comment|/// Map used to be sure we don't emit the same CompoundLiteral twice.
 name|llvm
@@ -5959,6 +5974,29 @@ end_comment
 begin_function_decl
 name|void
 name|EmitDeferred
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Try to emit external vtables as available_externally if they have emitted
+end_comment
+
+begin_comment
+comment|/// all inlined virtual functions.  It runs after EmitDeferred() and therefore
+end_comment
+
+begin_comment
+comment|/// is not allowed to create new references to things that need to be emitted
+end_comment
+
+begin_comment
+comment|/// lazily.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitVTablesOpportunistically
 parameter_list|()
 function_decl|;
 end_function_decl

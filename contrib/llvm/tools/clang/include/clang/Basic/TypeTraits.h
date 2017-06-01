@@ -163,6 +163,8 @@ name|UTT_IsTrivial
 block|,
 name|UTT_IsTriviallyCopyable
 block|,
+name|UTT_IsTriviallyDestructible
+block|,
 name|UTT_IsUnion
 block|,
 name|UTT_IsUnsigned
