@@ -841,6 +841,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_FUN"
+argument_list|,
+literal|"Function Number"
+argument_list|,
+literal|"Resource descriptor field"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_GAI"
 argument_list|,
 literal|"Get Averaging Interval"
@@ -981,6 +990,15 @@ argument_list|,
 literal|"Hardware ID"
 argument_list|,
 literal|"Returns a device's Plug and Play Hardware ID"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_HMA"
+argument_list|,
+literal|"Heterogeneous Memory Attributes"
+argument_list|,
+literal|"Returns a list of HMAT structures."
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -1134,6 +1152,33 @@ argument_list|,
 literal|"Low Power Idle States"
 argument_list|,
 literal|"Returns a list of supported low power idle states"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_LSI"
+argument_list|,
+literal|"Label Storage Information"
+argument_list|,
+literal|"Returns information about the Label Storage Area associated with the NVDIMM object."
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_LSR"
+argument_list|,
+literal|"Label Storage Read"
+argument_list|,
+literal|"Returns label data from the Label Storage Area of the NVDIMM object."
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_LSW"
+argument_list|,
+literal|"Label Storage Write"
+argument_list|,
+literal|"Writes label data in to the Label Storage Area of the NVDIMM object."
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -2502,6 +2547,15 @@ argument_list|,
 literal|"User Presence Polling"
 argument_list|,
 literal|"Returns the recommended user presence polling interval"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_VAL"
+argument_list|,
+literal|"Pin Configuration Value"
+argument_list|,
+literal|"Resource Descriptor field"
 argument_list|)
 block|,
 name|AH_PREDEF

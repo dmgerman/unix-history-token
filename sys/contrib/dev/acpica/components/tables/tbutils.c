@@ -262,7 +262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbCopyDsdt  *  * PARAMETERS:  TableDesc           - Installed table to copy  *  * RETURN:      None  *  * DESCRIPTION: Implements a subsystem option to copy the DSDT to local memory.  *              Some very bad BIOSs are known to either corrupt the DSDT or  *              install a new, bad DSDT. This copy works around the problem.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbCopyDsdt  *  * PARAMETERS:  TableIndex          - Index of installed table to copy  *  * RETURN:      The copied DSDT  *  * DESCRIPTION: Implements a subsystem option to copy the DSDT to local memory.  *              Some very bad BIOSs are known to either corrupt the DSDT or  *              install a new, bad DSDT. This copy works around the problem.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -486,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbParseRootTable  *  * PARAMETERS:  Rsdp                    - Pointer to the RSDP  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to parse the Root System Description  *              Table (RSDT or XSDT)  *  * NOTE:        Tables are mapped (not copied) for efficiency. The FACS must  *              be mapped and cannot be copied because it contains the actual  *              memory location of the ACPI Global Lock.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbParseRootTable  *  * PARAMETERS:  RsdpAddress         - Pointer to the RSDP  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to parse the Root System Description  *              Table (RSDT or XSDT)  *  * NOTE:        Tables are mapped (not copied) for efficiency. The FACS must  *              be mapped and cannot be copied because it contains the actual  *              memory location of the ACPI Global Lock.  *  ******************************************************************************/
 end_comment
 
 begin_function

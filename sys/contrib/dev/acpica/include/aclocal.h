@@ -2891,7 +2891,7 @@ struct|struct
 name|acpi_parse_obj_named
 block|{
 name|ACPI_PARSE_COMMON
-name|UINT8
+name|char
 modifier|*
 name|Path
 decl_stmt|;
@@ -4076,6 +4076,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_RESOURCE_NAME_PIN_FUNCTION
+value|0x8D
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_RESOURCE_NAME_SERIAL_BUS
 value|0x8E
 end_define
@@ -4083,8 +4090,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_RESOURCE_NAME_PIN_CONFIG
+value|0x8F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_NAME_PIN_GROUP
+value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_NAME_PIN_GROUP_FUNCTION
+value|0x91
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_NAME_PIN_GROUP_CONFIG
+value|0x92
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_RESOURCE_NAME_LARGE_MAX
-value|0x8E
+value|0x92
 end_define
 
 begin_comment
@@ -4196,6 +4231,17 @@ begin_comment
 comment|/* External came from a External() opcode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_EXT_CONFLICTING_DECLARATION
+value|0x20
+end_define
+
+begin_comment
+comment|/* External has a conflicting declaration within AML */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -4212,6 +4258,25 @@ name|Next
 decl_stmt|;
 block|}
 name|ACPI_EXTERNAL_FILE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_parse_object_list
+block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+decl_stmt|;
+name|struct
+name|acpi_parse_object_list
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_PARSE_OBJECT_LIST
 typedef|;
 end_typedef
 

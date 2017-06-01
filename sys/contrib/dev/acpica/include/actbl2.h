@@ -316,6 +316,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_SIG_WSMT
+value|"WSMT"
+end_define
+
+begin_comment
+comment|/* Windows SMM Security Migrations Table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_SIG_XXXX
 value|"XXXX"
 end_define
@@ -3494,7 +3505,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table  *        Version 2  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * December 19, 2014  *  * NOTE: There are two versions of the table with the same signature --  * the client version and the server version. The common PlatformClass  * field is used to differentiate the two types of tables.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table  *        Version 2  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * Version 1.2, Revision 8  * February 27, 2017  *  * NOTE: There are two versions of the table with the same signature --  * the client version and the server version. The common PlatformClass  * field is used to differentiate the two types of tables.  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -3672,7 +3683,7 @@ value|(1<<3)
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * TPM2 - Trusted Platform Module (TPM) 2.0 Hardware Interface Table  *        Version 4  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * December 19, 2014  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * TPM2 - Trusted Platform Module (TPM) 2.0 Hardware Interface Table  *        Version 4  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * Version 1.2, Revision 8  * February 27, 2017  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -3739,6 +3750,94 @@ define|#
 directive|define
 name|ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC
+value|11
+end_define
+
+begin_comment
+comment|/* V1.2 Rev 8 */
+end_comment
+
+begin_comment
+comment|/* Trailer appears after any StartMethod subtables */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_tpm2_trailer
+block|{
+name|UINT32
+name|MinimumLogLength
+decl_stmt|;
+comment|/* Minimum length for the event log area */
+name|UINT64
+name|LogAddress
+decl_stmt|;
+comment|/* Address of the event log area */
+block|}
+name|ACPI_TPM2_TRAILER
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Subtables (StartMethod-specific)  */
+end_comment
+
+begin_comment
+comment|/* 11: Start Method for ARM SMC (V1.2 Rev 8) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_tpm2_arm_smc
+block|{
+name|UINT32
+name|GlobalInterrupt
+decl_stmt|;
+name|UINT8
+name|InterruptFlags
+decl_stmt|;
+name|UINT8
+name|OperationFlags
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+name|UINT32
+name|FunctionId
+decl_stmt|;
+block|}
+name|ACPI_TPM2_ARM_SMC
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for InterruptFlags above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_INTERRUPT_SUPPORT
+value|(1)
+end_define
+
+begin_comment
+comment|/* Values for OperationFlags above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_IDLE_SUPPORT
+value|(1)
 end_define
 
 begin_comment
@@ -4255,6 +4354,52 @@ block|}
 name|ACPI_TABLE_WDRT
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*******************************************************************************  *  * WSMT - Windows SMM Security Migrations Table  *        Version 1  *  * Conforms to "Windows SMM Security Migrations Table",  * Version 1.0, April 18, 2016  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_wsmt
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+name|UINT32
+name|ProtectionFlags
+decl_stmt|;
+block|}
+name|ACPI_TABLE_WSMT
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Flags for ProtectionFlags field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_WSMT_FIXED_COMM_BUFFERS
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WSMT_COMM_BUFFER_NESTED_PTR_PROTECTION
+value|(2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WSMT_SYSTEM_RESOURCE_PROTECTION
+value|(4)
+end_define
 
 begin_comment
 comment|/* Reset to default packing */

@@ -182,6 +182,7 @@ block|{
 comment|/* There are no free IDs in this mask */
 break|break;
 block|}
+comment|/*              * Note: the UINT32 cast ensures that 1 is stored as a unsigned              * integer. Omitting the cast may result in 1 being stored as an              * int. Some compilers or runtime error detection may flag this as              * an error.              */
 if|if
 condition|(
 operator|!
@@ -192,6 +193,9 @@ name|j
 index|]
 operator|&
 operator|(
+operator|(
+name|UINT32
+operator|)
 literal|1
 operator|<<
 name|k
@@ -206,6 +210,9 @@ name|j
 index|]
 operator||=
 operator|(
+operator|(
+name|UINT32
+operator|)
 literal|1
 operator|<<
 name|k
@@ -403,6 +410,9 @@ argument_list|)
 expr_stmt|;
 name|Bit
 operator|=
+operator|(
+name|UINT32
+operator|)
 literal|1
 operator|<<
 name|ACPI_MOD_32

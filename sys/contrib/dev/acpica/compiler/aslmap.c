@@ -2752,6 +2752,66 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* PINCONFIG */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PINFUNCTION */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PINGROUP */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PINGROUPCONFIG */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PINGROUPFUNCTION */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* PIN_NOPULL */
 name|OP_TABLE_ENTRY
 argument_list|(

@@ -145,11 +145,24 @@ comment|/* 0x0B, ACPI_RESOURCE_NAME_EXTENDED_ADDRESS_SPACE */
 name|AcpiDmGpioDescriptor
 block|,
 comment|/* 0x0C, ACPI_RESOURCE_NAME_GPIO */
-name|NULL
+name|AcpiDmPinFunctionDescriptor
 block|,
-comment|/* 0x0D, Reserved */
+comment|/* 0x0D, ACPI_RESOURCE_NAME_PIN_FUNCTION */
 name|AcpiDmSerialBusDescriptor
+block|,
 comment|/* 0x0E, ACPI_RESOURCE_NAME_SERIAL_BUS */
+name|AcpiDmPinConfigDescriptor
+block|,
+comment|/* 0x0F, ACPI_RESOURCE_NAME_PIN_CONFIG */
+name|AcpiDmPinGroupDescriptor
+block|,
+comment|/* 0x10, ACPI_RESOURCE_NAME_PIN_GROUP */
+name|AcpiDmPinGroupFunctionDescriptor
+block|,
+comment|/* 0x11, ACPI_RESOURCE_NAME_PIN_GROUP_FUNCTION */
+name|AcpiDmPinGroupConfigDescriptor
+block|,
+comment|/* 0x12, ACPI_RESOURCE_NAME_PIN_GROUP_CONFIG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -852,7 +865,7 @@ name|Value
 operator|.
 name|Size
 expr_stmt|;
-comment|/*      * Not a template if declared buffer length != actual length of the      * intialization byte list. Because the resource macros will create      * a buffer of the exact required length (buffer length will be equal      * to the actual length).      */
+comment|/*      * Not a template if declared buffer length != actual length of the      * intialization byte list. Because the resource macros will create      * a buffer of the exact required length (buffer length will be equal      * to the actual length).      *      * NOTE (April 2017): Resource templates with this issue have been      * seen in the field. We still don't want to attempt to disassemble      * a buffer like this to a resource template because this output      * would not match the original input buffer (it would be shorter      * than the original when the disassembled code is recompiled).      * Basically, a buffer like this appears to be hand crafted in the      * first place, so just emitting a buffer object instead of a      * resource template more closely resembles the original ASL code.      */
 if|if
 condition|(
 name|DeclaredBufferLength

@@ -1105,7 +1105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtStringCacheCalloc  *  * PARAMETERS:  Length              - Size of buffer requested  *  * RETURN:      Pointer to the buffer. Aborts on allocation failure  *  * DESCRIPTION: Allocate a string buffer. Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtStringCacheCalloc  *  * PARAMETERS:  Length              - Size of buffer requested  *  * RETURN:      Pointer to the buffer. Aborts compiler on allocation failure  *  * DESCRIPTION: Allocate a string buffer. Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1515,20 +1515,6 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Info
-operator|.
-name|InternalName
-condition|)
-block|{
-return|return
-operator|(
-name|AE_NO_MEMORY
-operator|)
-return|;
-block|}
 comment|/* Build the name */
 name|Status
 operator|=
