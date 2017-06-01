@@ -1260,16 +1260,9 @@ name|editedhost
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|pat
 condition|)
-name|pat
-operator|=
-name|strdup
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
+block|{
 while|while
 condition|(
 operator|*
@@ -1345,6 +1338,7 @@ block|}
 name|pat
 operator|++
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
