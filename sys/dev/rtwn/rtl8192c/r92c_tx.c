@@ -1619,18 +1619,6 @@ index|[
 name|tid
 index|]
 expr_stmt|;
-comment|/* NB: clear Fragment Number field. */
-operator|*
-operator|(
-name|uint16_t
-operator|*
-operator|)
-name|wh
-operator|->
-name|i_seq
-operator|=
-literal|0
-expr_stmt|;
 name|ni
 operator|->
 name|ni_txseqs
