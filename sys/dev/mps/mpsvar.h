@@ -936,6 +936,9 @@ decl_stmt|;
 name|int
 name|spinup_wait_time
 decl_stmt|;
+name|int
+name|use_phynum
+decl_stmt|;
 name|uint64_t
 name|chain_alloc_fail
 decl_stmt|;
@@ -2386,6 +2389,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|mps_print_field
+parameter_list|(
+name|sc
+parameter_list|,
+name|msg
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|printf("\t" msg, ##args)
+end_define
+
+begin_define
+define|#
+directive|define
 name|mps_vprintf
 parameter_list|(
 name|sc
@@ -2418,24 +2437,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|mps_dprint_field
-parameter_list|(
-name|sc
-parameter_list|,
-name|level
-parameter_list|,
-name|msg
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-define|\
-value|do {								\ 	if ((sc)->mps_debug& (level))				\ 		printf("\t" msg, ##args);			\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MPS_PRINTFIELD_START
 parameter_list|(
 name|sc
@@ -2444,7 +2445,7 @@ name|tag
 modifier|...
 parameter_list|)
 define|\
-value|mps_dprint((sc), MPS_XINFO, ##tag);	\ 	mps_dprint_field((sc), MPS_XINFO, ":\n")
+value|mps_printf((sc), ##tag);			\ 	mps_print_field((sc), ":\n")
 end_define
 
 begin_define
@@ -2457,7 +2458,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|mps_dprint((sc), MPS_XINFO, tag "\n")
+value|mps_printf((sc), tag "\n")
 end_define
 
 begin_define
@@ -2474,38 +2475,7 @@ parameter_list|,
 name|fmt
 parameter_list|)
 define|\
-value|mps_dprint_field((sc), MPS_XINFO, #attr ": " #fmt "\n", (facts)->attr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPS_EVENTFIELD_START
-parameter_list|(
-name|sc
-parameter_list|,
-name|tag
-modifier|...
-parameter_list|)
-define|\
-value|mps_dprint((sc), MPS_EVENT, ##tag);	\ 	mps_dprint_field((sc), MPS_EVENT, ":\n")
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPS_EVENTFIELD
-parameter_list|(
-name|sc
-parameter_list|,
-name|facts
-parameter_list|,
-name|attr
-parameter_list|,
-name|fmt
-parameter_list|)
-define|\
-value|mps_dprint_field((sc), MPS_EVENT, #attr ": " #fmt "\n", (facts)->attr)
+value|mps_print_field((sc), #attr ": " #fmt "\n", (facts)->attr)
 end_define
 
 begin_define

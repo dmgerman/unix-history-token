@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2012-2015 LSI Corp.  * Copyright (c) 2013-2016 Avag
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 2000-2015 LSI Corporation.  *  Copyright (c) 2013-2016 Avago Technologies  *  All rights reserved.  *  *  *           Name:  mpi2_cnfg.h  *          Title:  MPI Configuration messages and pages  *  Creation Date:  November 10, 2006  *  *    mpi2_cnfg.h Version:  02.00.35  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-04-07  02.00.01  Added defines for SAS IO Unit Page 2 PhyFlags.  *                      Added Manufacturing Page 11.  *                      Added MPI2_SAS_EXPANDER0_FLAGS_CONNECTOR_END_DEVICE  *                      define.  *  06-26-07  02.00.02  Adding generic structure for product-specific  *                      Manufacturing pages: MPI2_CONFIG_PAGE_MANUFACTURING_PS.  *                      Rework of BIOS Page 2 configuration page.  *                      Fixed MPI2_BIOSPAGE2_BOOT_DEVICE to be a union of the  *                      forms.  *                      Added configuration pages IOC Page 8 and Driver  *                      Persistent Mapping Page 0.  *  08-31-07  02.00.03  Modified configuration pages dealing with Integrated  *                      RAID (Manufacturing Page 4, RAID Volume Pages 0 and 1,  *                      RAID Physical Disk Pages 0 and 1, RAID Configuration  *                      Page 0).  *                      Added new value for AccessStatus field of SAS Device  *                      Page 0 (_SATA_NEEDS_INITIALIZATION).  *  10-31-07  02.00.04  Added missing SEPDevHandle field to  *                      MPI2_CONFIG_PAGE_SAS_ENCLOSURE_0.  *  12-18-07  02.00.05  Modified IO Unit Page 0 to use 32-bit version fields for  *                      NVDATA.  *                      Modified IOC Page 7 to use masks and added field for  *                      SASBroadcastPrimitiveMasks.  *                      Added MPI2_CONFIG_PAGE_BIOS_4.  *                      Added MPI2_CONFIG_PAGE_LOG_0.  *  02-29-08  02.00.06  Modified various names to make them 32-character unique.  *                      Added SAS Device IDs.  *                      Updated Integrated RAID configuration pages including  *                      Manufacturing Page 4, IOC Page 6, and RAID Configuration  *                      Page 0.  *  05-21-08  02.00.07  Added define MPI2_MANPAGE4_MIX_SSD_SAS_SATA.  *                      Added define MPI2_MANPAGE4_PHYSDISK_128MB_COERCION.  *                      Fixed define MPI2_IOCPAGE8_FLAGS_ENCLOSURE_SLOT_MAPPING.  *                      Added missing MaxNumRoutedSasAddresses field to  *                      MPI2_CONFIG_PAGE_EXPANDER_0.  *                      Added SAS Port Page 0.  *                      Modified structure layout for  *                      MPI2_CONFIG_PAGE_DRIVER_MAPPING_0.  *  06-27-08  02.00.08  Changed MPI2_CONFIG_PAGE_RD_PDISK_1 to use  *                      MPI2_RAID_PHYS_DISK1_PATH_MAX to size the array.  *  10-02-08  02.00.09  Changed MPI2_RAID_PGAD_CONFIGNUM_MASK from 0x0000FFFF  *                      to 0x000000FF.  *                      Added two new values for the Physical Disk Coercion Size  *                      bits in the Flags field of Manufacturing Page 4.  *                      Added product-specific Manufacturing pages 16 to 31.  *                      Modified Flags bits for controlling write cache on SATA  *                      drives in IO Unit Page 1.  *                      Added new bit to AdditionalControlFlags of SAS IO Unit  *                      Page 1 to control Invalid Topology Correction.  *                      Added additional defines for RAID Volume Page 0  *                      VolumeStatusFlags field.  *                      Modified meaning of RAID Volume Page 0 VolumeSettings  *                      define for auto-configure of hot-swap drives.  *                      Added SupportedPhysDisks field to RAID Volume Page 1 and  *                      added related defines.  *                      Added PhysDiskAttributes field (and related defines) to  *                      RAID Physical Disk Page 0.  *                      Added MPI2_SAS_PHYINFO_PHY_VACANT define.  *                      Added three new DiscoveryStatus bits for SAS IO Unit  *                      Page 0 and SAS Expander Page 0.  *                      Removed multiplexing information from SAS IO Unit pages.  *                      Added BootDeviceWaitTime field to SAS IO Unit Page 4.  *                      Removed Zone Address Resolved bit from PhyInfo and from  *                      Expander Page 0 Flags field.  *                      Added two new AccessStatus values to SAS Device Page 0  *                      for indicating routing problems. Added 3 reserved words  *                      to this page.  *  01-19-09  02.00.10  Fixed defines for GPIOVal field of IO Unit Page 3.  *                      Inserted missing reserved field into structure for IOC  *                      Page 6.  *                      Added more pending task bits to RAID Volume Page 0  *                      VolumeStatusFlags defines.  *                      Added MPI2_PHYSDISK0_STATUS_FLAG_NOT_CERTIFIED define.  *                      Added a new DiscoveryStatus bit for SAS IO Unit Page 0  *                      and SAS Expander Page 0 to flag a downstream initiator  *                      when in simplified routing mode.  *                      Removed SATA Init Failure defines for DiscoveryStatus  *                      fields of SAS IO Unit Page 0 and SAS Expander Page 0.  *                      Added MPI2_SAS_DEVICE0_ASTATUS_DEVICE_BLOCKED define.  *                      Added PortGroups, DmaGroup, and ControlGroup fields to  *                      SAS Device Page 0.  *  05-06-09  02.00.11  Added structures and defines for IO Unit Page 5 and IO  *                      Unit Page 6.  *                      Added expander reduced functionality data to SAS  *                      Expander Page 0.  *                      Added SAS PHY Page 2 and SAS PHY Page 3.  *  07-30-09  02.00.12  Added IO Unit Page 7.  *                      Added new device ids.  *                      Added SAS IO Unit Page 5.  *                      Added partial and slumber power management capable flags  *                      to SAS Device Page 0 Flags field.  *                      Added PhyInfo defines for power condition.  *                      Added Ethernet configuration pages.  *  10-28-09  02.00.13  Added MPI2_IOUNITPAGE1_ENABLE_HOST_BASED_DISCOVERY.  *                      Added SAS PHY Page 4 structure and defines.  *  02-10-10  02.00.14  Modified the comments for the configuration page  *                      structures that contain an array of data. The host  *                      should use the "count" field in the page data (e.g. the  *                      NumPhys field) to determine the number of valid elements  *                      in the array.  *                      Added/modified some MPI2_MFGPAGE_DEVID_SAS defines.  *                      Added PowerManagementCapabilities to IO Unit Page 7.  *                      Added PortWidthModGroup field to  *                      MPI2_SAS_IO_UNIT5_PHY_PM_SETTINGS.  *                      Added MPI2_CONFIG_PAGE_SASIOUNIT_6 and related defines.  *                      Added MPI2_CONFIG_PAGE_SASIOUNIT_7 and related defines.  *                      Added MPI2_CONFIG_PAGE_SASIOUNIT_8 and related defines.  *  05-12-10  02.00.15  Added MPI2_RAIDVOL0_STATUS_FLAG_VOL_NOT_CONSISTENT  *                      define.  *                      Added MPI2_PHYSDISK0_INCOMPATIBLE_MEDIA_TYPE define.  *                      Added MPI2_SAS_NEG_LINK_RATE_UNSUPPORTED_PHY define.  *  08-11-10  02.00.16  Removed IO Unit Page 1 device path (multi-pathing)  *                      defines.  *  11-10-10  02.00.17  Added ReceptacleID field (replacing Reserved1) to  *                      MPI2_MANPAGE7_CONNECTOR_INFO and reworked defines for  *                      the Pinout field.  *                      Added BoardTemperature and BoardTemperatureUnits fields  *                      to MPI2_CONFIG_PAGE_IO_UNIT_7.  *                      Added MPI2_CONFIG_EXTPAGETYPE_EXT_MANUFACTURING define  *                      and MPI2_CONFIG_PAGE_EXT_MAN_PS structure.  *  02-23-11  02.00.18  Added ProxyVF_ID field to MPI2_CONFIG_REQUEST.  *                      Added IO Unit Page 8, IO Unit Page 9,  *                      and IO Unit Page 10.  *                      Added SASNotifyPrimitiveMasks field to  *                      MPI2_CONFIG_PAGE_IOC_7.  *  03-09-11  02.00.19  Fixed IO Unit Page 10 (to match the spec).  *  05-25-11  02.00.20  Cleaned up a few comments.  *  08-24-11  02.00.21  Marked the IO Unit Page 7 PowerManagementCapabilities  *                      for PCIe link as obsolete.  *                      Added SpinupFlags field containing a Disable Spin-up bit  *                      to the MPI2_SAS_IOUNIT4_SPINUP_GROUP fields of SAS IO  *                      Unit Page 4.  *  11-18-11  02.00.22  Added define MPI2_IOCPAGE6_CAP_FLAGS_4K_SECTORS_SUPPORT.  *                      Added UEFIVersion field to BIOS Page 1 and defined new  *                      BiosOptions bits.  *                      Incorporating additions for MPI v2.5.  *  11-27-12  02.00.23  Added MPI2_MANPAGE7_FLAG_EVENTREPLAY_SLOT_ORDER.  *                      Added MPI2_BIOSPAGE1_OPTIONS_MASK_OEM_ID.  *  12-20-12  02.00.24  Marked MPI2_SASIOUNIT1_CONTROL_CLEAR_AFFILIATION as  *                      obsolete for MPI v2.5 and later.  *                      Added some defines for 12G SAS speeds.  *  04-09-13  02.00.25  Added MPI2_IOUNITPAGE1_ATA_SECURITY_FREEZE_LOCK.  *                      Fixed MPI2_IOUNITPAGE5_DMA_CAP_MASK_MAX_REQUESTS to  *                      match the specification.  *  08-19-13  02.00.26  Added reserved words to MPI2_CONFIG_PAGE_IO_UNIT_7 for  *                      future use.  *  12-05-13  02.00.27  Added MPI2_MANPAGE7_FLAG_BASE_ENCLOSURE_LEVEL for  *                      MPI2_CONFIG_PAGE_MAN_7.  *                      Added EnclosureLevel and ConnectorName fields to  *                      MPI2_CONFIG_PAGE_SAS_DEV_0.  *                      Added MPI2_SAS_DEVICE0_FLAGS_ENCL_LEVEL_VALID for  *                      MPI2_CONFIG_PAGE_SAS_DEV_0.  *                      Added EnclosureLevel field to  *                      MPI2_CONFIG_PAGE_SAS_ENCLOSURE_0.  *                      Added MPI2_SAS_ENCLS0_FLAGS_ENCL_LEVEL_VALID for  *                      MPI2_CONFIG_PAGE_SAS_ENCLOSURE_0.  *  01-08-14  02.00.28  Added more defines for the BiosOptions field of  *                      MPI2_CONFIG_PAGE_BIOS_1.  *  06-13-14  02.00.29  Added SSUTimeout field to MPI2_CONFIG_PAGE_BIOS_1, and  *                      more defines for the BiosOptions field.  *  11-18-14  02.00.30  Updated copyright information.  *                      Added MPI2_BIOSPAGE1_OPTIONS_ADVANCED_CONFIG.  *                      Added AdapterOrderAux fields to BIOS Page 3.  *  03-16-15  02.00.31  Updated for MPI v2.6.  *                      Added BoardPowerRequirement, PCISlotPowerAllocation, and  *                      Flags field to IO Unit Page 7.  *                      Added IO Unit Page 11.  *                      Added new SAS Phy Event codes  *  05-25-15  02.00.33  Added more defines for the BiosOptions field of  *                      MPI2_CONFIG_PAGE_BIOS_1.  *  12-18-15  02.00.35  Added SATADeviceWaitTime to SAS IO Unit Page 4.  *  --------------------------------------------------------------------------  */
+comment|/*  *  Copyright (c) 2000-2015 LSI Corporation.  *  Copyright (c) 2013-2016 Avago Technologies  *  All rights reserved.  *  *  *           Name:  mpi2_cnfg.h  *          Title:  MPI Configuration messages and pages  *  Creation Date:  November 10, 2006  *  *    mpi2_cnfg.h Version:  02.00.39  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-04-07  02.00.01  Added defines for SAS IO Unit Page 2 PhyFlags.  *                      Added Manufacturing Page 11.  *                      Added MPI2_SAS_EXPANDER0_FLAGS_CONNECTOR_END_DEVICE  *                      define.  *  06-26-07  02.00.02  Adding generic structure for product-specific  *                      Manufacturing pages: MPI2_CONFIG_PAGE_MANUFACTURING_PS.  *                      Rework of BIOS Page 2 configuration page.  *                      Fixed MPI2_BIOSPAGE2_BOOT_DEVICE to be a union of the  *                      forms.  *                      Added configuration pages IOC Page 8 and Driver  *                      Persistent Mapping Page 0.  *  08-31-07  02.00.03  Modified configuration pages dealing with Integrated  *                      RAID (Manufacturing Page 4, RAID Volume Pages 0 and 1,  *                      RAID Physical Disk Pages 0 and 1, RAID Configuration  *                      Page 0).  *                      Added new value for AccessStatus field of SAS Device  *                      Page 0 (_SATA_NEEDS_INITIALIZATION).  *  10-31-07  02.00.04  Added missing SEPDevHandle field to  *                      MPI2_CONFIG_PAGE_SAS_ENCLOSURE_0.  *  12-18-07  02.00.05  Modified IO Unit Page 0 to use 32-bit version fields for  *                      NVDATA.  *                      Modified IOC Page 7 to use masks and added field for  *                      SASBroadcastPrimitiveMasks.  *                      Added MPI2_CONFIG_PAGE_BIOS_4.  *                      Added MPI2_CONFIG_PAGE_LOG_0.  *  02-29-08  02.00.06  Modified various names to make them 32-character unique.  *                      Added SAS Device IDs.  *                      Updated Integrated RAID configuration pages including  *                      Manufacturing Page 4, IOC Page 6, and RAID Configuration  *                      Page 0.  *  05-21-08  02.00.07  Added define MPI2_MANPAGE4_MIX_SSD_SAS_SATA.  *                      Added define MPI2_MANPAGE4_PHYSDISK_128MB_COERCION.  *                      Fixed define MPI2_IOCPAGE8_FLAGS_ENCLOSURE_SLOT_MAPPING.  *                      Added missing MaxNumRoutedSasAddresses field to  *                      MPI2_CONFIG_PAGE_EXPANDER_0.  *                      Added SAS Port Page 0.  *                      Modified structure layout for  *                      MPI2_CONFIG_PAGE_DRIVER_MAPPING_0.  *  06-27-08  02.00.08  Changed MPI2_CONFIG_PAGE_RD_PDISK_1 to use  *                      MPI2_RAID_PHYS_DISK1_PATH_MAX to size the array.  *  10-02-08  02.00.09  Changed MPI2_RAID_PGAD_CONFIGNUM_MASK from 0x0000FFFF  *                      to 0x000000FF.  *                      Added two new values for the Physical Disk Coercion Size  *                      bits in the Flags field of Manufacturing Page 4.  *                      Added product-specific Manufacturing pages 16 to 31.  *                      Modified Flags bits for controlling write cache on SATA  *                      drives in IO Unit Page 1.  *                      Added new bit to AdditionalControlFlags of SAS IO Unit  *                      Page 1 to control Invalid Topology Correction.  *                      Added additional defines for RAID Volume Page 0  *                      VolumeStatusFlags field.  *                      Modified meaning of RAID Volume Page 0 VolumeSettings  *                      define for auto-configure of hot-swap drives.  *                      Added SupportedPhysDisks field to RAID Volume Page 1 and  *                      added related defines.  *                      Added PhysDiskAttributes field (and related defines) to  *                      RAID Physical Disk Page 0.  *                      Added MPI2_SAS_PHYINFO_PHY_VACANT define.  *                      Added three new DiscoveryStatus bits for SAS IO Unit  *                      Page 0 and SAS Expander Page 0.  *                      Removed multiplexing information from SAS IO Unit pages.  *                      Added BootDeviceWaitTime field to SAS IO Unit Page 4.  *                      Removed Zone Address Resolved bit from PhyInfo and from  *                      Expander Page 0 Flags field.  *                      Added two new AccessStatus values to SAS Device Page 0  *                      for indicating routing problems. Added 3 reserved words  *                      to this page.  *  01-19-09  02.00.10  Fixed defines for GPIOVal field of IO Unit Page 3.  *                      Inserted missing reserved field into structure for IOC  *                      Page 6.  *                      Added more pending task bits to RAID Volume Page 0  *                      VolumeStatusFlags defines.  *                      Added MPI2_PHYSDISK0_STATUS_FLAG_NOT_CERTIFIED define.  *                      Added a new DiscoveryStatus bit for SAS IO Unit Page 0  *                      and SAS Expander Page 0 to flag a downstream initiator  *                      when in simplified routing mode.  *                      Removed SATA Init Failure defines for DiscoveryStatus  *                      fields of SAS IO Unit Page 0 and SAS Expander Page 0.  *                      Added MPI2_SAS_DEVICE0_ASTATUS_DEVICE_BLOCKED define.  *                      Added PortGroups, DmaGroup, and ControlGroup fields to  *                      SAS Device Page 0.  *  05-06-09  02.00.11  Added structures and defines for IO Unit Page 5 and IO  *                      Unit Page 6.  *                      Added expander reduced functionality data to SAS  *                      Expander Page 0.  *                      Added SAS PHY Page 2 and SAS PHY Page 3.  *  07-30-09  02.00.12  Added IO Unit Page 7.  *                      Added new device ids.  *                      Added SAS IO Unit Page 5.  *                      Added partial and slumber power management capable flags  *                      to SAS Device Page 0 Flags field.  *                      Added PhyInfo defines for power condition.  *                      Added Ethernet configuration pages.  *  10-28-09  02.00.13  Added MPI2_IOUNITPAGE1_ENABLE_HOST_BASED_DISCOVERY.  *                      Added SAS PHY Page 4 structure and defines.  *  02-10-10  02.00.14  Modified the comments for the configuration page  *                      structures that contain an array of data. The host  *                      should use the "count" field in the page data (e.g. the  *                      NumPhys field) to determine the number of valid elements  *                      in the array.  *                      Added/modified some MPI2_MFGPAGE_DEVID_SAS defines.  *                      Added PowerManagementCapabilities to IO Unit Page 7.  *                      Added PortWidthModGroup field to  *                      MPI2_SAS_IO_UNIT5_PHY_PM_SETTINGS.  *                      Added MPI2_CONFIG_PAGE_SASIOUNIT_6 and related defines.  *                      Added MPI2_CONFIG_PAGE_SASIOUNIT_7 and related defines.  *                      Added MPI2_CONFIG_PAGE_SASIOUNIT_8 and related defines.  *  05-12-10  02.00.15  Added MPI2_RAIDVOL0_STATUS_FLAG_VOL_NOT_CONSISTENT  *                      define.  *                      Added MPI2_PHYSDISK0_INCOMPATIBLE_MEDIA_TYPE define.  *                      Added MPI2_SAS_NEG_LINK_RATE_UNSUPPORTED_PHY define.  *  08-11-10  02.00.16  Removed IO Unit Page 1 device path (multi-pathing)  *                      defines.  *  11-10-10  02.00.17  Added ReceptacleID field (replacing Reserved1) to  *                      MPI2_MANPAGE7_CONNECTOR_INFO and reworked defines for  *                      the Pinout field.  *                      Added BoardTemperature and BoardTemperatureUnits fields  *                      to MPI2_CONFIG_PAGE_IO_UNIT_7.  *                      Added MPI2_CONFIG_EXTPAGETYPE_EXT_MANUFACTURING define  *                      and MPI2_CONFIG_PAGE_EXT_MAN_PS structure.  *  02-23-11  02.00.18  Added ProxyVF_ID field to MPI2_CONFIG_REQUEST.  *                      Added IO Unit Page 8, IO Unit Page 9,  *                      and IO Unit Page 10.  *                      Added SASNotifyPrimitiveMasks field to  *                      MPI2_CONFIG_PAGE_IOC_7.  *  03-09-11  02.00.19  Fixed IO Unit Page 10 (to match the spec).  *  05-25-11  02.00.20  Cleaned up a few comments.  *  08-24-11  02.00.21  Marked the IO Unit Page 7 PowerManagementCapabilities  *                      for PCIe link as obsolete.  *                      Added SpinupFlags field containing a Disable Spin-up bit  *                      to the MPI2_SAS_IOUNIT4_SPINUP_GROUP fields of SAS IO  *                      Unit Page 4.  *  11-18-11  02.00.22  Added define MPI2_IOCPAGE6_CAP_FLAGS_4K_SECTORS_SUPPORT.  *                      Added UEFIVersion field to BIOS Page 1 and defined new  *                      BiosOptions bits.  *                      Incorporating additions for MPI v2.5.  *  11-27-12  02.00.23  Added MPI2_MANPAGE7_FLAG_EVENTREPLAY_SLOT_ORDER.  *                      Added MPI2_BIOSPAGE1_OPTIONS_MASK_OEM_ID.  *  12-20-12  02.00.24  Marked MPI2_SASIOUNIT1_CONTROL_CLEAR_AFFILIATION as  *                      obsolete for MPI v2.5 and later.  *                      Added some defines for 12G SAS speeds.  *  04-09-13  02.00.25  Added MPI2_IOUNITPAGE1_ATA_SECURITY_FREEZE_LOCK.  *                      Fixed MPI2_IOUNITPAGE5_DMA_CAP_MASK_MAX_REQUESTS to  *                      match the specification.  *  08-19-13  02.00.26  Added reserved words to MPI2_CONFIG_PAGE_IO_UNIT_7 for  *                      future use.  *  12-05-13  02.00.27  Added MPI2_MANPAGE7_FLAG_BASE_ENCLOSURE_LEVEL for  *                      MPI2_CONFIG_PAGE_MAN_7.  *                      Added EnclosureLevel and ConnectorName fields to  *                      MPI2_CONFIG_PAGE_SAS_DEV_0.  *                      Added MPI2_SAS_DEVICE0_FLAGS_ENCL_LEVEL_VALID for  *                      MPI2_CONFIG_PAGE_SAS_DEV_0.  *                      Added EnclosureLevel field to  *                      MPI2_CONFIG_PAGE_SAS_ENCLOSURE_0.  *                      Added MPI2_SAS_ENCLS0_FLAGS_ENCL_LEVEL_VALID for  *                      MPI2_CONFIG_PAGE_SAS_ENCLOSURE_0.  *  01-08-14  02.00.28  Added more defines for the BiosOptions field of  *                      MPI2_CONFIG_PAGE_BIOS_1.  *  06-13-14  02.00.29  Added SSUTimeout field to MPI2_CONFIG_PAGE_BIOS_1, and  *                      more defines for the BiosOptions field.  *  11-18-14  02.00.30  Updated copyright information.  *                      Added MPI2_BIOSPAGE1_OPTIONS_ADVANCED_CONFIG.  *                      Added AdapterOrderAux fields to BIOS Page 3.  *  03-16-15  02.00.31  Updated for MPI v2.6.  *                      Added BoardPowerRequirement, PCISlotPowerAllocation, and  *                      Flags field to IO Unit Page 7.  *                      Added IO Unit Page 11.  *                      Added new SAS Phy Event codes  *                      Added PCIe configuration pages.  *  03-19-15  02.00.32  Fixed PCIe Link Config page structure names to be  *                      unique in first 32 characters.  *  05-25-15  02.00.33  Added more defines for the BiosOptions field of  *                      MPI2_CONFIG_PAGE_BIOS_1.  *  08-25-15  02.00.34  Added PCIe Device Page 2 SGL format capability.  *  12-18-15  02.00.35  Added SATADeviceWaitTime to SAS IO Unit Page 4.  *  01-21-16  02.00.36  Added/modified MPI2_MFGPAGE_DEVID_SAS defines.  *                      Added Link field to PCIe Link Pages  *                      Added EnclosureLevel and ConnectorName to PCIe  *                      Device Page 0.  *                      Added define for PCIE IoUnit page 1 max rate shift.  *                      Added comment for reserved ExtPageTypes.  *                      Added SAS 4 22.5 gbs speed support.  *                      Added PCIe 4 16.0 GT/sec speec support.  *                      Removed AHCI support.  *                      Removed SOP support.  *                      Added NegotiatedLinkRate and NegotiatedPortWidth to  *                      PCIe device page 0.  *  04-10-16  02.00.37  Fixed MPI2_MFGPAGE_DEVID_SAS3616/3708 defines  *  07-01-16  02.00.38  Added Manufacturing page 7 Connector types.  *                      Changed declaration of ConnectorName in PCIe DevicePage0  *                      to match SAS DevicePage 0.  *                      Added SATADeviceWaitTime to IO Unit Page 11.  *                      Added MPI26_MFGPAGE_DEVID_SAS4008  *                      Added x16 PCIe width to IO Unit Page 7  *                      Added LINKFLAGS to control SRIS in PCIe IO Unit page 1  *                      phy data.  *                      Added InitStatus to PCIe IO Unit Page 1 header.  *  09-01-16  02.00.39  Added MPI26_CONFIG_PAGE_ENCLOSURE_0 and related defines.  *                      Added MPI26_ENCLOS_PGAD_FORM_GET_NEXT_HANDLE and  *                      MPI26_ENCLOS_PGAD_FORM_HANDLE page address formats.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -365,6 +365,58 @@ name|MPI2_CONFIG_EXTPAGETYPE_EXT_MANUFACTURING
 value|(0x1A)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPI2_CONFIG_EXTPAGETYPE_PCIE_IO_UNIT
+value|(0x1B)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_CONFIG_EXTPAGETYPE_PCIE_SWITCH
+value|(0x1C)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_CONFIG_EXTPAGETYPE_PCIE_DEVICE
+value|(0x1D)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_CONFIG_EXTPAGETYPE_PCIE_LINK
+value|(0x1E)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
+
+begin_comment
+comment|/*  Product specific reserved values  0xE0 - 0xEF */
+end_comment
+
+begin_comment
+comment|/*  Vendor specific reserved values   0xF0 - 0xFF */
+end_comment
+
 begin_comment
 comment|/***************************************************************************** *   PageAddress defines *****************************************************************************/
 end_comment
@@ -636,6 +688,38 @@ value|(0x0000FFFF)
 end_define
 
 begin_comment
+comment|/* Enclosure PageAddress format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLOS_PGAD_FORM_MASK
+value|(0xF0000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLOS_PGAD_FORM_GET_NEXT_HANDLE
+value|(0x00000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLOS_PGAD_FORM_HANDLE
+value|(0x10000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLOS_PGAD_HANDLE_MASK
+value|(0x0000FFFF)
+end_define
+
+begin_comment
 comment|/* RAID Configuration PageAddress format */
 end_comment
 
@@ -735,6 +819,123 @@ begin_define
 define|#
 directive|define
 name|MPI2_ETHERNET_PGAD_IF_NUMBER_MASK
+value|(0x000000FF)
+end_define
+
+begin_comment
+comment|/* PCIe Switch PageAddress format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_SWITCH_PGAD_FORM_MASK
+value|(0xF0000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_SWITCH_PGAD_FORM_GET_NEXT_HNDL
+value|(0x00000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_SWITCH_PGAD_FORM_HNDL_PORTNUM
+value|(0x10000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_SWITCH_EXPAND_PGAD_FORM_HNDL
+value|(0x20000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_SWITCH_PGAD_HANDLE_MASK
+value|(0x0000FFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_SWITCH_PGAD_PORTNUM_MASK
+value|(0x00FF0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_SWITCH_PGAD_PORTNUM_SHIFT
+value|(16)
+end_define
+
+begin_comment
+comment|/* PCIe Device PageAddress format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_DEVICE_PGAD_FORM_MASK
+value|(0xF0000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_DEVICE_PGAD_FORM_GET_NEXT_HANDLE
+value|(0x00000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_DEVICE_PGAD_FORM_HANDLE
+value|(0x20000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_DEVICE_PGAD_HANDLE_MASK
+value|(0x0000FFFF)
+end_define
+
+begin_comment
+comment|/* PCIe Link PageAddress format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_LINK_PGAD_FORM_MASK
+value|(0xF0000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_LINK_PGAD_FORM_GET_NEXT_LINK
+value|(0x00000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_LINK_PGAD_FORM_LINK_NUM
+value|(0x10000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_DEVICE_PGAD_LINKNUM_MASK
 value|(0x000000FF)
 end_define
 
@@ -1230,6 +1431,76 @@ define|#
 directive|define
 name|MPI26_MFGPAGE_DEVID_SAS3324_4
 value|(0x00C3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_MFGPAGE_DEVID_SAS3516
+value|(0x00AA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_MFGPAGE_DEVID_SAS3516_1
+value|(0x00AB)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_MFGPAGE_DEVID_SAS3416
+value|(0x00AC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_MFGPAGE_DEVID_SAS3508
+value|(0x00AD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_MFGPAGE_DEVID_SAS3508_1
+value|(0x00AE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_MFGPAGE_DEVID_SAS3408
+value|(0x00AF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_MFGPAGE_DEVID_SAS3716
+value|(0x00D0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_MFGPAGE_DEVID_SAS3616
+value|(0x00D1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_MFGPAGE_DEVID_SAS3708
+value|(0x00D2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_MFGPAGE_DEVID_SAS4008
+value|(0x00A1)
 end_define
 
 begin_comment
@@ -2157,6 +2428,48 @@ define|#
 directive|define
 name|MPI2_MANPAGE7_PINOUT_SFF_8436
 value|(0x0D)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8088_A
+value|(0x0E)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8643_16i
+value|(0x0F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8654_4i
+value|(0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8654_8i
+value|(0x11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8611_4i
+value|(0x12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8611_8i
+value|(0x13)
 end_define
 
 begin_comment
@@ -3254,6 +3567,13 @@ name|MPI2_IOUNITPAGE7_PCIE_WIDTH_X8
 value|(0x08)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPI2_IOUNITPAGE7_PCIE_WIDTH_X16
+value|(0x10)
+end_define
+
 begin_comment
 comment|/* defines for IO Unit Page 7 PCIeSpeed field */
 end_comment
@@ -3277,6 +3597,13 @@ define|#
 directive|define
 name|MPI2_IOUNITPAGE7_PCIE_SPEED_8_0_GBPS
 value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_IOUNITPAGE7_PCIE_SPEED_16_0_GBPS
+value|(0x03)
 end_define
 
 begin_comment
@@ -4136,7 +4463,7 @@ name|BootDeviceWaitTime
 decl_stmt|;
 comment|/* 0x24 */
 name|U8
-name|Reserved5
+name|SATADeviceWaitTime
 decl_stmt|;
 comment|/* 0x25 */
 name|U16
@@ -7230,6 +7557,13 @@ name|MPI25_SAS_NEG_LINK_RATE_12_0
 value|(0x0B)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPI26_SAS_NEG_LINK_RATE_22_5
+value|(0x0C)
+end_define
+
 begin_comment
 comment|/* values for AttachedPhyInfo fields */
 end_comment
@@ -7602,6 +7936,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI26_SAS_PRATE_MAX_RATE_22_5
+value|(0xC0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_SAS_PRATE_MIN_RATE_MASK
 value|(0x0F)
 end_define
@@ -7639,6 +7980,13 @@ define|#
 directive|define
 name|MPI25_SAS_PRATE_MIN_RATE_12_0
 value|(0x0B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_SAS_PRATE_MIN_RATE_22_5
+value|(0x0C)
 end_define
 
 begin_comment
@@ -7683,6 +8031,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI26_SAS_HWRATE_MAX_RATE_22_5
+value|(0xC0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_SAS_HWRATE_MIN_RATE_MASK
 value|(0x0F)
 end_define
@@ -7713,6 +8068,13 @@ define|#
 directive|define
 name|MPI25_SAS_HWRATE_MIN_RATE_12_0
 value|(0x0B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_SAS_HWRATE_MIN_RATE_22_5
+value|(0x0C)
 end_define
 
 begin_comment
@@ -8494,6 +8856,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI26_SASIOUNIT1_MAX_RATE_22_5
+value|(0xC0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_SASIOUNIT1_MIN_RATE_MASK
 value|(0x0F)
 end_define
@@ -8524,6 +8893,13 @@ define|#
 directive|define
 name|MPI25_SASIOUNIT1_MIN_RATE_12_0
 value|(0x0B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_SASIOUNIT1_MIN_RATE_22_5
+value|(0x0C)
 end_define
 
 begin_comment
@@ -11571,7 +11947,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* SAS Enclosure Page 0 */
+comment|/* SAS Enclosure Page 0, Enclosure Page 0 */
 end_comment
 
 begin_typedef
@@ -11637,6 +12013,16 @@ name|Mpi2SasEnclosurePage0_t
 operator|,
 name|MPI2_POINTER
 name|pMpi2SasEnclosurePage0_t
+operator|,
+name|MPI26_CONFIG_PAGE_ENCLOSURE_0
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_CONFIG_PAGE_ENCLOSURE_0
+operator|,
+name|Mpi26EnclosurePage0_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26EnclosurePage0_t
 typedef|;
 end_typedef
 
@@ -11704,6 +12090,73 @@ begin_define
 define|#
 directive|define
 name|MPI2_SAS_ENCLS0_FLAGS_MNG_IOC_GPIO
+value|(0x0005)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLOSURE0_PAGEVERSION
+value|(0x04)
+end_define
+
+begin_comment
+comment|/* Values for Enclosure Page 0 Flags field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLS0_FLAGS_ENCL_LEVEL_VALID
+value|(0x0010)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLS0_FLAGS_MNG_MASK
+value|(0x000F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLS0_FLAGS_MNG_UNKNOWN
+value|(0x0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLS0_FLAGS_MNG_IOC_SES
+value|(0x0001)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLS0_FLAGS_MNG_IOC_SGPIO
+value|(0x0002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLS0_FLAGS_MNG_EXP_SGPIO
+value|(0x0003)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLS0_FLAGS_MNG_SES_ENCLOSURE
+value|(0x0004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_ENCLS0_FLAGS_MNG_IOC_GPIO
 value|(0x0005)
 end_define
 
@@ -12761,6 +13214,1633 @@ end_typedef
 begin_comment
 comment|/* PageVersion should be provided by product-specific code */
 end_comment
+
+begin_comment
+comment|/**************************************************************************** *   values for fields used by several types of PCIe Config Pages ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* values for NegotiatedLinkRates fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_NEG_LINK_RATE_MASK_PHYSICAL
+value|(0x0F)
+end_define
+
+begin_comment
+comment|/* link rates used for Negotiated Physical Link Rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_NEG_LINK_RATE_UNKNOWN
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_NEG_LINK_RATE_PHY_DISABLED
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_NEG_LINK_RATE_2_5
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_NEG_LINK_RATE_5_0
+value|(0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_NEG_LINK_RATE_8_0
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_NEG_LINK_RATE_16_0
+value|(0x05)
+end_define
+
+begin_comment
+comment|/**************************************************************************** *   PCIe IO Unit Config Pages (MPI v2.6 and later) ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* PCIe IO Unit Page 0 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_PCIE_IO_UNIT0_PHY_DATA
+block|{
+name|U8
+name|Link
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|LinkFlags
+decl_stmt|;
+comment|/* 0x01 */
+name|U8
+name|PhyFlags
+decl_stmt|;
+comment|/* 0x02 */
+name|U8
+name|NegotiatedLinkRate
+decl_stmt|;
+comment|/* 0x03 */
+name|U32
+name|ControllerPhyDeviceInfo
+decl_stmt|;
+comment|/* 0x04 */
+name|U16
+name|AttachedDevHandle
+decl_stmt|;
+comment|/* 0x08 */
+name|U16
+name|ControllerDevHandle
+decl_stmt|;
+comment|/* 0x0A */
+name|U32
+name|EnumerationStatus
+decl_stmt|;
+comment|/* 0x0C */
+name|U32
+name|Reserved1
+decl_stmt|;
+comment|/* 0x10 */
+block|}
+name|MPI26_PCIE_IO_UNIT0_PHY_DATA
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_PCIE_IO_UNIT0_PHY_DATA
+operator|,
+name|Mpi26PCIeIOUnit0PhyData_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PCIeIOUnit0PhyData_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhys at runtime.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MPI26_PCIE_IOUNIT0_PHY_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_IOUNIT0_PHY_MAX
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_CONFIG_PAGE_PIOUNIT_0
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U32
+name|Reserved1
+decl_stmt|;
+comment|/* 0x08 */
+name|U8
+name|NumPhys
+decl_stmt|;
+comment|/* 0x0C */
+name|U8
+name|InitStatus
+decl_stmt|;
+comment|/* 0x0D */
+name|U16
+name|Reserved3
+decl_stmt|;
+comment|/* 0x0E */
+name|MPI26_PCIE_IO_UNIT0_PHY_DATA
+name|PhyData
+index|[
+name|MPI26_PCIE_IOUNIT0_PHY_MAX
+index|]
+decl_stmt|;
+comment|/* 0x10 */
+block|}
+name|MPI26_CONFIG_PAGE_PIOUNIT_0
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_CONFIG_PAGE_PIOUNIT_0
+operator|,
+name|Mpi26PCIeIOUnitPage0_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PCIeIOUnitPage0_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNITPAGE0_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_comment
+comment|/* values for PCIe IO Unit Page 0 LinkFlags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT0_LINKFLAGS_ENUMERATION_IN_PROGRESS
+value|(0x08)
+end_define
+
+begin_comment
+comment|/* values for PCIe IO Unit Page 0 PhyFlags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT0_PHYFLAGS_PHY_DISABLED
+value|(0x08)
+end_define
+
+begin_comment
+comment|/* use MPI26_PCIE_NEG_LINK_RATE_ defines for the NegotiatedLinkRate field */
+end_comment
+
+begin_comment
+comment|/* see mpi2_pci.h for values for PCIe IO Unit Page 0 ControllerPhyDeviceInfo values */
+end_comment
+
+begin_comment
+comment|/* values for PCIe IO Unit Page 0 EnumerationStatus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT0_ES_MAX_SWITCHES_EXCEEDED
+value|(0x40000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT0_ES_MAX_DEVICES_EXCEEDED
+value|(0x20000000)
+end_define
+
+begin_comment
+comment|/* PCIe IO Unit Page 1 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_PCIE_IO_UNIT1_PHY_DATA
+block|{
+name|U8
+name|Link
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|LinkFlags
+decl_stmt|;
+comment|/* 0x01 */
+name|U8
+name|PhyFlags
+decl_stmt|;
+comment|/* 0x02 */
+name|U8
+name|MaxMinLinkRate
+decl_stmt|;
+comment|/* 0x03 */
+name|U32
+name|ControllerPhyDeviceInfo
+decl_stmt|;
+comment|/* 0x04 */
+name|U32
+name|Reserved1
+decl_stmt|;
+comment|/* 0x08 */
+block|}
+name|MPI26_PCIE_IO_UNIT1_PHY_DATA
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_PCIE_IO_UNIT1_PHY_DATA
+operator|,
+name|Mpi26PCIeIOUnit1PhyData_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PCIeIOUnit1PhyData_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* values for LinkFlags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT1_LINKFLAGS_DIS_SRIS
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT1_LINKFLAGS_EN_SRIS
+value|(0x01)
+end_define
+
+begin_comment
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhys at runtime.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MPI26_PCIE_IOUNIT1_PHY_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIE_IOUNIT1_PHY_MAX
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_CONFIG_PAGE_PIOUNIT_1
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U16
+name|ControlFlags
+decl_stmt|;
+comment|/* 0x08 */
+name|U16
+name|Reserved
+decl_stmt|;
+comment|/* 0x0A */
+name|U16
+name|AdditionalControlFlags
+decl_stmt|;
+comment|/* 0x0C */
+name|U16
+name|NVMeMaxQueueDepth
+decl_stmt|;
+comment|/* 0x0E */
+name|U8
+name|NumPhys
+decl_stmt|;
+comment|/* 0x10 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x11 */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x12 */
+name|MPI26_PCIE_IO_UNIT1_PHY_DATA
+name|PhyData
+index|[
+name|MPI26_PCIE_IOUNIT1_PHY_MAX
+index|]
+decl_stmt|;
+comment|/* 0x14 */
+block|}
+name|MPI26_CONFIG_PAGE_PIOUNIT_1
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_CONFIG_PAGE_PIOUNIT_1
+operator|,
+name|Mpi26PCIeIOUnitPage1_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PCIeIOUnitPage1_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNITPAGE1_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_comment
+comment|/* values for PCIe IO Unit Page 1 PhyFlags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT1_PHYFLAGS_PHY_DISABLE
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT1_PHYFLAGS_ENDPOINT_ONLY
+value|(0x01)
+end_define
+
+begin_comment
+comment|/* values for PCIe IO Unit Page 1 MaxMinLinkRate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT1_MAX_RATE_MASK
+value|(0xF0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT1_MAX_RATE_SHIFT
+value|(4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT1_MAX_RATE_2_5
+value|(0x20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT1_MAX_RATE_5_0
+value|(0x30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT1_MAX_RATE_8_0
+value|(0x40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEIOUNIT1_MAX_RATE_16_0
+value|(0x50)
+end_define
+
+begin_comment
+comment|/* see mpi2_pci.h for values for PCIe IO Unit Page 0 ControllerPhyDeviceInfo values */
+end_comment
+
+begin_comment
+comment|/**************************************************************************** *   PCIe Switch Config Pages (MPI v2.6 and later) ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* PCIe Switch Page 0 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_CONFIG_PAGE_PSWITCH_0
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|PhysicalPort
+decl_stmt|;
+comment|/* 0x08 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x09 */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x0A */
+name|U16
+name|DevHandle
+decl_stmt|;
+comment|/* 0x0C */
+name|U16
+name|ParentDevHandle
+decl_stmt|;
+comment|/* 0x0E */
+name|U8
+name|NumPorts
+decl_stmt|;
+comment|/* 0x10 */
+name|U8
+name|PCIeLevel
+decl_stmt|;
+comment|/* 0x11 */
+name|U16
+name|Reserved3
+decl_stmt|;
+comment|/* 0x12 */
+name|U32
+name|Reserved4
+decl_stmt|;
+comment|/* 0x14 */
+name|U32
+name|Reserved5
+decl_stmt|;
+comment|/* 0x18 */
+name|U32
+name|Reserved6
+decl_stmt|;
+comment|/* 0x1C */
+block|}
+name|MPI26_CONFIG_PAGE_PSWITCH_0
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_CONFIG_PAGE_PSWITCH_0
+operator|,
+name|Mpi26PCIeSwitchPage0_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PCIeSwitchPage0_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIESWITCH0_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_comment
+comment|/* PCIe Switch Page 1 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_CONFIG_PAGE_PSWITCH_1
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|PhysicalPort
+decl_stmt|;
+comment|/* 0x08 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x09 */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x0A */
+name|U8
+name|NumPorts
+decl_stmt|;
+comment|/* 0x0C */
+name|U8
+name|PortNum
+decl_stmt|;
+comment|/* 0x0D */
+name|U16
+name|AttachedDevHandle
+decl_stmt|;
+comment|/* 0x0E */
+name|U16
+name|SwitchDevHandle
+decl_stmt|;
+comment|/* 0x10 */
+name|U8
+name|NegotiatedPortWidth
+decl_stmt|;
+comment|/* 0x12 */
+name|U8
+name|NegotiatedLinkRate
+decl_stmt|;
+comment|/* 0x13 */
+name|U32
+name|Reserved4
+decl_stmt|;
+comment|/* 0x14 */
+name|U32
+name|Reserved5
+decl_stmt|;
+comment|/* 0x18 */
+block|}
+name|MPI26_CONFIG_PAGE_PSWITCH_1
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_CONFIG_PAGE_PSWITCH_1
+operator|,
+name|Mpi26PCIeSwitchPage1_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PCIeSwitchPage1_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIESWITCH1_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_comment
+comment|/* use MPI26_PCIE_NEG_LINK_RATE_ defines for the NegotiatedLinkRate field */
+end_comment
+
+begin_comment
+comment|/**************************************************************************** *   PCIe Device Config Pages (MPI v2.6 and later) ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* PCIe Device Page 0 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_CONFIG_PAGE_PCIEDEV_0
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U16
+name|Slot
+decl_stmt|;
+comment|/* 0x08 */
+name|U16
+name|EnclosureHandle
+decl_stmt|;
+comment|/* 0x0A */
+name|U64
+name|WWID
+decl_stmt|;
+comment|/* 0x0C */
+name|U16
+name|ParentDevHandle
+decl_stmt|;
+comment|/* 0x14 */
+name|U8
+name|PortNum
+decl_stmt|;
+comment|/* 0x16 */
+name|U8
+name|AccessStatus
+decl_stmt|;
+comment|/* 0x17 */
+name|U16
+name|DevHandle
+decl_stmt|;
+comment|/* 0x18 */
+name|U8
+name|PhysicalPort
+decl_stmt|;
+comment|/* 0x1A */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x1B */
+name|U32
+name|DeviceInfo
+decl_stmt|;
+comment|/* 0x1C */
+name|U32
+name|Flags
+decl_stmt|;
+comment|/* 0x20 */
+name|U8
+name|SupportedLinkRates
+decl_stmt|;
+comment|/* 0x24 */
+name|U8
+name|MaxPortWidth
+decl_stmt|;
+comment|/* 0x25 */
+name|U8
+name|NegotiatedPortWidth
+decl_stmt|;
+comment|/* 0x26 */
+name|U8
+name|NegotiatedLinkRate
+decl_stmt|;
+comment|/* 0x27 */
+name|U8
+name|EnclosureLevel
+decl_stmt|;
+comment|/* 0x28 */
+name|U8
+name|Reserved2
+decl_stmt|;
+comment|/* 0x29 */
+name|U16
+name|Reserved3
+decl_stmt|;
+comment|/* 0x2A */
+name|U8
+name|ConnectorName
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* 0x2C */
+name|U32
+name|Reserved4
+decl_stmt|;
+comment|/* 0x30 */
+name|U32
+name|Reserved5
+decl_stmt|;
+comment|/* 0x34 */
+block|}
+name|MPI26_CONFIG_PAGE_PCIEDEV_0
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_CONFIG_PAGE_PCIEDEV_0
+operator|,
+name|Mpi26PCIeDevicePage0_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PCIeDevicePage0_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEVICE0_PAGEVERSION
+value|(0x01)
+end_define
+
+begin_comment
+comment|/* values for PCIe Device Page 0 AccessStatus field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_NO_ERRORS
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_NEEDS_INITIALIZATION
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_CAPABILITY_FAILED
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_DEVICE_BLOCKED
+value|(0x07)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_MEMORY_SPACE_ACCESS_FAILED
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_UNSUPPORTED_DEVICE
+value|(0x09)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_MSIX_REQUIRED
+value|(0x0A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_UNKNOWN
+value|(0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_NVME_READY_TIMEOUT
+value|(0x30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_NVME_DEVCFG_UNSUPPORTED
+value|(0x31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_NVME_IDENTIFY_FAILED
+value|(0x32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_NVME_QCONFIG_FAILED
+value|(0x33)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_NVME_QCREATION_FAILED
+value|(0x34)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_NVME_EVENTCFG_FAILED
+value|(0x35)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_NVME_GET_FEATURE_STAT_FAILED
+value|(0x36)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_NVME_IDLE_TIMEOUT
+value|(0x37)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_NVME_FAILURE_STATUS
+value|(0x38)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_ASTATUS_INIT_FAIL_MAX
+value|(0x3F)
+end_define
+
+begin_comment
+comment|/* see mpi2_pci.h for the MPI26_PCIE_DEVINFO_ defines used for the DeviceInfo field */
+end_comment
+
+begin_comment
+comment|/* values for PCIe Device Page 0 Flags field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_UNAUTHORIZED_DEVICE
+value|(0x8000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_ENABLED_FAST_PATH
+value|(0x4000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_FAST_PATH_CAPABLE
+value|(0x2000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_ASYNCHRONOUS_NOTIFICATION
+value|(0x0400)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_ATA_SW_PRESERVATION
+value|(0x0200)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_UNSUPPORTED_DEVICE
+value|(0x0100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_ATA_48BIT_LBA_SUPPORTED
+value|(0x0080)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_ATA_SMART_SUPPORTED
+value|(0x0040)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_ATA_NCQ_SUPPORTED
+value|(0x0020)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_ATA_FUA_SUPPORTED
+value|(0x0010)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_ENCL_LEVEL_VALID
+value|(0x0002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_FLAGS_DEVICE_PRESENT
+value|(0x0001)
+end_define
+
+begin_comment
+comment|/* values for PCIe Device Page 0 SupportedLinkRates field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_LINK_RATE_16_0_SUPPORTED
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_LINK_RATE_8_0_SUPPORTED
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_LINK_RATE_5_0_SUPPORTED
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV0_LINK_RATE_2_5_SUPPORTED
+value|(0x01)
+end_define
+
+begin_comment
+comment|/* use MPI26_PCIE_NEG_LINK_RATE_ defines for the NegotiatedLinkRate field */
+end_comment
+
+begin_comment
+comment|/* PCIe Device Page 2 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_CONFIG_PAGE_PCIEDEV_2
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U16
+name|DevHandle
+decl_stmt|;
+comment|/* 0x08 */
+name|U16
+name|Reserved1
+decl_stmt|;
+comment|/* 0x0A */
+name|U32
+name|MaximumDataTransferSize
+decl_stmt|;
+comment|/* 0x0C */
+name|U32
+name|Capabilities
+decl_stmt|;
+comment|/* 0x10 */
+name|U32
+name|Reserved2
+decl_stmt|;
+comment|/* 0x14 */
+block|}
+name|MPI26_CONFIG_PAGE_PCIEDEV_2
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_CONFIG_PAGE_PCIEDEV_2
+operator|,
+name|Mpi26PCIeDevicePage2_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PCIeDevicePage2_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEVICE2_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_comment
+comment|/* defines for PCIe Device Page 2 Capabilities field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV2_CAP_SGL_FORMAT
+value|(0x00000004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV2_CAP_BIT_BUCKET_SUPPORT
+value|(0x00000002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIEDEV2_CAP_SGL_SUPPORT
+value|(0x00000001)
+end_define
+
+begin_comment
+comment|/**************************************************************************** *   PCIe Link Config Pages (MPI v2.6 and later) ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* PCIe Link Page 1 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_CONFIG_PAGE_PCIELINK_1
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|Link
+decl_stmt|;
+comment|/* 0x08 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x09 */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x0A */
+name|U32
+name|CorrectableErrorCount
+decl_stmt|;
+comment|/* 0x0C */
+name|U16
+name|NonFatalErrorCount
+decl_stmt|;
+comment|/* 0x10 */
+name|U16
+name|Reserved3
+decl_stmt|;
+comment|/* 0x12 */
+name|U16
+name|FatalErrorCount
+decl_stmt|;
+comment|/* 0x14 */
+name|U16
+name|Reserved4
+decl_stmt|;
+comment|/* 0x16 */
+block|}
+name|MPI26_CONFIG_PAGE_PCIELINK_1
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_CONFIG_PAGE_PCIELINK_1
+operator|,
+name|Mpi26PcieLinkPage1_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PcieLinkPage1_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK1_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_comment
+comment|/* PCIe Link Page 2 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_PCIELINK2_LINK_EVENT
+block|{
+name|U8
+name|LinkEventCode
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x01 */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x02 */
+name|U32
+name|LinkEventInfo
+decl_stmt|;
+comment|/* 0x04 */
+block|}
+name|MPI26_PCIELINK2_LINK_EVENT
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_PCIELINK2_LINK_EVENT
+operator|,
+name|Mpi26PcieLink2LinkEvent_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PcieLink2LinkEvent_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* use MPI26_PCIELINK3_EVTCODE_ for the LinkEventCode field */
+end_comment
+
+begin_comment
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumLinkEvents at runtime.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MPI26_PCIELINK2_LINK_EVENT_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK2_LINK_EVENT_MAX
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_CONFIG_PAGE_PCIELINK_2
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|Link
+decl_stmt|;
+comment|/* 0x08 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x09 */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x0A */
+name|U8
+name|NumLinkEvents
+decl_stmt|;
+comment|/* 0x0C */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 0x0D */
+name|U16
+name|Reserved4
+decl_stmt|;
+comment|/* 0x0E */
+name|MPI26_PCIELINK2_LINK_EVENT
+name|LinkEvent
+index|[
+name|MPI26_PCIELINK2_LINK_EVENT_MAX
+index|]
+decl_stmt|;
+comment|/* 0x10 */
+block|}
+name|MPI26_CONFIG_PAGE_PCIELINK_2
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_CONFIG_PAGE_PCIELINK_2
+operator|,
+name|Mpi26PcieLinkPage2_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PcieLinkPage2_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK2_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_comment
+comment|/* PCIe Link Page 3 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_PCIELINK3_LINK_EVENT_CONFIG
+block|{
+name|U8
+name|LinkEventCode
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x01 */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x02 */
+name|U8
+name|CounterType
+decl_stmt|;
+comment|/* 0x04 */
+name|U8
+name|ThresholdWindow
+decl_stmt|;
+comment|/* 0x05 */
+name|U8
+name|TimeUnits
+decl_stmt|;
+comment|/* 0x06 */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 0x07 */
+name|U32
+name|EventThreshold
+decl_stmt|;
+comment|/* 0x08 */
+name|U16
+name|ThresholdFlags
+decl_stmt|;
+comment|/* 0x0C */
+name|U16
+name|Reserved4
+decl_stmt|;
+comment|/* 0x0E */
+block|}
+name|MPI26_PCIELINK3_LINK_EVENT_CONFIG
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_PCIELINK3_LINK_EVENT_CONFIG
+operator|,
+name|Mpi26PcieLink3LinkEventConfig_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PcieLink3LinkEventConfig_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* values for LinkEventCode field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_NO_EVENT
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_CORRECTABLE_ERROR_RECEIVED
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_NON_FATAL_ERROR_RECEIVED
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_FATAL_ERROR_RECEIVED
+value|(0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_DATA_LINK_ERROR_DETECTED
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_TRANSACTION_LAYER_ERROR_DETECTED
+value|(0x05)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_TLP_ECRC_ERROR_DETECTED
+value|(0x06)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_POISONED_TLP
+value|(0x07)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_RECEIVED_NAK_DLLP
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_SENT_NAK_DLLP
+value|(0x09)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_LTSSM_RECOVERY_STATE
+value|(0x0A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_LTSSM_RXL0S_STATE
+value|(0x0B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_LTSSM_TXL0S_STATE
+value|(0x0C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_LTSSM_L1_STATE
+value|(0x0D)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_LTSSM_DISABLED_STATE
+value|(0x0E)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_LTSSM_HOT_RESET_STATE
+value|(0x0F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_SYSTEM_ERROR
+value|(0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_DECODE_ERROR
+value|(0x11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_EVTCODE_DISPARITY_ERROR
+value|(0x12)
+end_define
+
+begin_comment
+comment|/* values for the CounterType field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_COUNTER_TYPE_WRAPPING
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_COUNTER_TYPE_SATURATING
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_COUNTER_TYPE_PEAK_VALUE
+value|(0x02)
+end_define
+
+begin_comment
+comment|/* values for the TimeUnits field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_TM_UNITS_10_MICROSECONDS
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_TM_UNITS_100_MICROSECONDS
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_TM_UNITS_1_MILLISECOND
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_TM_UNITS_10_MILLISECONDS
+value|(0x03)
+end_define
+
+begin_comment
+comment|/* values for the ThresholdFlags field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_TFLAGS_EVENT_NOTIFY
+value|(0x0001)
+end_define
+
+begin_comment
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumLinkEvents at runtime.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MPI26_PCIELINK3_LINK_EVENT_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_LINK_EVENT_MAX
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI26_CONFIG_PAGE_PCIELINK_3
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|Link
+decl_stmt|;
+comment|/* 0x08 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x09 */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x0A */
+name|U8
+name|NumLinkEvents
+decl_stmt|;
+comment|/* 0x0C */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 0x0D */
+name|U16
+name|Reserved4
+decl_stmt|;
+comment|/* 0x0E */
+name|MPI26_PCIELINK3_LINK_EVENT_CONFIG
+name|LinkEventConfig
+index|[
+name|MPI26_PCIELINK3_LINK_EVENT_MAX
+index|]
+decl_stmt|;
+comment|/* 0x10 */
+block|}
+name|MPI26_CONFIG_PAGE_PCIELINK_3
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI26_CONFIG_PAGE_PCIELINK_3
+operator|,
+name|Mpi26PcieLinkPage3_t
+operator|,
+name|MPI2_POINTER
+name|pMpi26PcieLinkPage3_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI26_PCIELINK3_PAGEVERSION
+value|(0x00)
+end_define
 
 begin_endif
 endif|#

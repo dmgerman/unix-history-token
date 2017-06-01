@@ -2198,13 +2198,11 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
-name|mps_dprint_field
+name|mps_print_field
 argument_list|(
 name|cm
 operator|->
 name|cm_sc
-argument_list|,
-name|level
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -7257,7 +7255,7 @@ return|;
 block|}
 name|mpssas_log_command
 argument_list|(
-name|tm
+name|cm
 argument_list|,
 name|MPS_RECOVERY
 operator||
@@ -7442,9 +7440,9 @@ if|if
 condition|(
 name|err
 condition|)
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 argument_list|,
@@ -7579,21 +7577,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mpssas_log_command
-argument_list|(
-name|cm
-argument_list|,
-name|MPS_INFO
-argument_list|,
-literal|"command timeout cm %p ccb %p\n"
-argument_list|,
-name|cm
-argument_list|,
-name|cm
-operator|->
-name|cm_ccb
-argument_list|)
-expr_stmt|;
 name|targ
 operator|=
 name|cm
@@ -7604,6 +7587,34 @@ name|targ
 operator|->
 name|timeouts
 operator|++
+expr_stmt|;
+name|mpssas_log_command
+argument_list|(
+name|cm
+argument_list|,
+name|MPS_ERROR
+argument_list|,
+literal|"command timeout %d cm %p target "
+literal|"%u, handle(0x%04x)\n"
+argument_list|,
+name|cm
+operator|->
+name|cm_ccb
+operator|->
+name|ccb_h
+operator|.
+name|timeout
+argument_list|,
+name|cm
+argument_list|,
+name|targ
+operator|->
+name|tid
+argument_list|,
+name|targ
+operator|->
+name|handle
+argument_list|)
 expr_stmt|;
 comment|/* XXX first, check the firmware state, to see if it's still 	 * operational.  if not, do a diag reset. 	 */
 name|mpssas_set_ccbstatus
@@ -11266,13 +11277,20 @@ name|cm
 argument_list|,
 name|MPS_INFO
 argument_list|,
-literal|"terminated ioc %x scsi %x state %x xfer %u\n"
+literal|"terminated ioc %x loginfo %x scsi %x state %x xfer %u\n"
 argument_list|,
 name|le16toh
 argument_list|(
 name|rep
 operator|->
 name|IOCStatus
+argument_list|)
+argument_list|,
+name|le32toh
+argument_list|(
+name|rep
+operator|->
+name|IOCLogInfo
 argument_list|)
 argument_list|,
 name|rep
@@ -11329,13 +11347,20 @@ name|cm
 argument_list|,
 name|MPS_XINFO
 argument_list|,
-literal|"completed ioc %x scsi %x state %x xfer %u\n"
+literal|"completed ioc %x loginfo %x scsi %x state %x xfer %u\n"
 argument_list|,
 name|le16toh
 argument_list|(
 name|rep
 operator|->
 name|IOCStatus
+argument_list|)
+argument_list|,
+name|le32toh
+argument_list|(
+name|rep
+operator|->
+name|IOCLogInfo
 argument_list|)
 argument_list|,
 name|rep
