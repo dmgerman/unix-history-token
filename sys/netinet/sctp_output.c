@@ -55805,7 +55805,10 @@ name|ip
 operator|->
 name|ip_off
 operator|=
-literal|0
+name|htons
+argument_list|(
+name|IP_DF
+argument_list|)
 expr_stmt|;
 name|ip_fillid
 argument_list|(
