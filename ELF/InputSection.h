@@ -469,9 +469,13 @@ argument_list|,
 argument|Kind SectionKind
 argument_list|)
 block|;
-name|OutputSection
+comment|// Input sections are part of an output section. Special sections
+comment|// like .eh_frame and merge sections are first combined into a
+comment|// synthetic section that is then added to an output section. In all
+comment|// cases this points one level up.
+name|SectionBase
 operator|*
-name|OutSec
+name|Parent
 operator|=
 name|nullptr
 block|;
@@ -626,7 +630,7 @@ name|getObj
 argument_list|()
 return|;
 block|}
-name|InputSectionBase
+name|InputSection
 operator|*
 name|getLinkOrderDep
 argument_list|()
@@ -1055,14 +1059,11 @@ argument|uint64_t Offset
 argument_list|)
 specifier|const
 block|;
-comment|// MergeInputSections are aggregated to a synthetic input sections,
-comment|// and then added to an OutputSection. This pointer points to a
-comment|// synthetic MergeSyntheticSection which this section belongs to.
-name|MergeSyntheticSection
+name|SyntheticSection
 operator|*
-name|MergeSec
-operator|=
-name|nullptr
+name|getParent
+argument_list|()
+specifier|const
 block|;
 name|private
 operator|:
@@ -1271,9 +1272,9 @@ name|Pieces
 block|;
 name|SyntheticSection
 operator|*
-name|EHSec
-operator|=
-name|nullptr
+name|getParent
+argument_list|()
+specifier|const
 block|; }
 decl_stmt|;
 comment|// This is a section that is added directly to an output section
@@ -1331,6 +1332,12 @@ name|uint8_t
 operator|*
 name|Buf
 argument_list|)
+block|;
+name|OutputSection
+operator|*
+name|getParent
+argument_list|()
+specifier|const
 block|;
 comment|// The offset from beginning of the output sections this section was assigned
 comment|// to. The writer sets a value.

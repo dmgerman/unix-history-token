@@ -309,15 +309,6 @@ name|void
 name|finalize
 argument_list|()
 block|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|void
-name|maybeCompress
-argument_list|()
-block|;
 name|void
 name|assignOffsets
 argument_list|()
@@ -597,6 +588,14 @@ empty_stmt|;
 name|uint64_t
 name|getHeaderSize
 parameter_list|()
+function_decl|;
+name|void
+name|reportDiscarded
+parameter_list|(
+name|InputSectionBase
+modifier|*
+name|IS
+parameter_list|)
 function_decl|;
 block|}
 comment|// namespace elf
