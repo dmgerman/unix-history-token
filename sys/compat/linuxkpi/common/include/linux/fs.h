@@ -75,6 +75,12 @@ directive|include
 file|<linux/semaphore.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<linux/spinlock.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|module
@@ -243,6 +249,30 @@ decl_stmt|;
 specifier|volatile
 name|u_int
 name|f_count
+decl_stmt|;
+comment|/* kqfilter support */
+name|int
+name|f_kqflags
+decl_stmt|;
+define|#
+directive|define
+name|LINUX_KQ_FLAG_HAS_READ
+value|(1<< 0)
+define|#
+directive|define
+name|LINUX_KQ_FLAG_HAS_WRITE
+value|(1<< 1)
+define|#
+directive|define
+name|LINUX_KQ_FLAG_NEED_READ
+value|(1<< 2)
+define|#
+directive|define
+name|LINUX_KQ_FLAG_NEED_WRITE
+value|(1<< 3)
+comment|/* protects f_selinfo.si_note */
+name|spinlock_t
+name|f_kqlock
 decl_stmt|;
 block|}
 struct|;

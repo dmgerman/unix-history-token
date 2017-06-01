@@ -81,6 +81,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function_decl
+specifier|extern
+name|void
+name|linux_poll_wakeup
+parameter_list|(
+name|struct
+name|linux_file
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
