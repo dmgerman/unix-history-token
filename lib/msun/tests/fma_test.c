@@ -3508,8 +3508,8 @@ name|j
 argument_list|)
 expr_stmt|;
 continue|continue;
-endif|#
-directive|endif
+else|#
+directive|else
 name|printf
 argument_list|(
 literal|"rmode = %d\n"
@@ -3538,6 +3538,8 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|fesetround
 argument_list|(
