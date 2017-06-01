@@ -148,9 +148,6 @@ expr|struct
 name|umutex
 operator|*
 name|mtx
-argument_list|,
-name|uint32_t
-name|id
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -955,8 +952,6 @@ operator|(
 name|__thr_umutex_unlock
 argument_list|(
 name|mtx
-argument_list|,
-name|id
 argument_list|)
 operator|)
 return|;

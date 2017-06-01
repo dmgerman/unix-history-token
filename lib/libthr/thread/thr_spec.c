@@ -78,6 +78,7 @@ file|"thr_private.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pthread_key
 name|_thread_keytable

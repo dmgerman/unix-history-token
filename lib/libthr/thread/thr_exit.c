@@ -100,17 +100,6 @@ directive|include
 file|"thr_private.h"
 end_include
 
-begin_function_decl
-name|void
-name|_pthread_exit
-parameter_list|(
-name|void
-modifier|*
-name|status
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -258,7 +247,7 @@ init|=
 literal|0
 decl_stmt|;
 name|Dl_info
-name|dlinfo
+name|dli
 decl_stmt|;
 name|void
 modifier|*
@@ -303,7 +292,7 @@ argument_list|(
 name|forcedunwind
 argument_list|,
 operator|&
-name|dlinfo
+name|dli
 argument_list|)
 condition|)
 block|{
@@ -315,7 +304,7 @@ name|handle
 operator|=
 name|dlopen
 argument_list|(
-name|dlinfo
+name|dli
 operator|.
 name|dli_fname
 argument_list|,
@@ -485,11 +474,13 @@ name|thread_unwind_cleanup
 parameter_list|(
 name|_Unwind_Reason_Code
 name|code
+name|__unused
 parameter_list|,
 name|struct
 name|_Unwind_Exception
 modifier|*
 name|e
+name|__unused
 parameter_list|)
 block|{
 comment|/* 	 * Specification said that _Unwind_Resume should not be used here, 	 * instead, user should rethrow the exception. For C++ user, they 	 * should put "throw" sentence in catch(...) block. 	 */
@@ -508,17 +499,20 @@ name|thread_unwind_stop
 parameter_list|(
 name|int
 name|version
+name|__unused
 parameter_list|,
 name|_Unwind_Action
 name|actions
 parameter_list|,
 name|int64_t
 name|exc_class
+name|__unused
 parameter_list|,
 name|struct
 name|_Unwind_Exception
 modifier|*
 name|exc_obj
+name|__unused
 parameter_list|,
 name|struct
 name|_Unwind_Context
@@ -528,6 +522,7 @@ parameter_list|,
 name|void
 modifier|*
 name|stop_parameter
+name|__unused
 parameter_list|)
 block|{
 name|struct

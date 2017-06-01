@@ -759,9 +759,6 @@ name|struct
 name|umutex
 modifier|*
 name|mtx
-parameter_list|,
-name|uint32_t
-name|id
 parameter_list|)
 block|{
 return|return
