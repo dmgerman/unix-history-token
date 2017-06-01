@@ -2469,7 +2469,7 @@ name|ip
 operator|->
 name|ip_len
 argument_list|)
-operator|>
+operator|!=
 name|m
 operator|->
 name|m_pkthdr
