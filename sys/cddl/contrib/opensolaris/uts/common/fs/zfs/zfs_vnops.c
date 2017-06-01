@@ -6563,6 +6563,9 @@ operator|=
 name|cnp
 operator|->
 name|cn_flags
+operator|&
+operator|~
+name|ISDOTDOT
 expr_stmt|;
 name|cn
 operator|.
