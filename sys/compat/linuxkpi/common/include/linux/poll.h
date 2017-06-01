@@ -68,16 +68,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|selrecord
-argument_list|(
-name|curthread
-argument_list|,
-operator|&
-name|filp
-operator|->
-name|f_selinfo
-argument_list|)
-expr_stmt|;
+comment|/* NOP */
 block|}
 end_function
 
