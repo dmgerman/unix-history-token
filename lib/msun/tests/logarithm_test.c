@@ -378,9 +378,14 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * We should insist that log2() return exactly the correct 	 * result and not raise an inexact exception for powers of 2. 	 */
+name|assert
+argument_list|(
 name|feclearexcept
 argument_list|(
 name|FE_ALL_EXCEPT
+argument_list|)
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
