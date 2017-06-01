@@ -14568,6 +14568,10 @@ operator|(
 name|CSUM_UDP
 operator||
 name|CSUM_TCP
+operator||
+name|CSUM_TCP_IPV6
+operator||
+name|CSUM_UDP_IPV6
 operator|)
 condition|)
 block|{
