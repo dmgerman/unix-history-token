@@ -902,6 +902,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|sysdecode_socket_protocol
+parameter_list|(
+name|int
+name|_domain
+parameter_list|,
+name|int
+name|_protocol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|sysdecode_socket_type
 parameter_list|(
