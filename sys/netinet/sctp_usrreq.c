@@ -367,6 +367,12 @@ comment|/* now off to subtract IP_DF flag if needed */
 name|overhead
 operator|=
 name|IP_HDR_SIZE
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctphdr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
