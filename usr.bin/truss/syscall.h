@@ -163,6 +163,8 @@ name|Msgflags
 block|,
 name|CapRights
 block|,
+name|PUInt
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
