@@ -1719,7 +1719,7 @@ name|so_accf
 operator|!=
 name|NULL
 condition|)
-name|do_setopt_accept_filter
+name|accept_filt_setopt
 argument_list|(
 name|so
 argument_list|,
@@ -11553,7 +11553,7 @@ name|SO_ACCEPTFILTER
 case|:
 name|error
 operator|=
-name|do_setopt_accept_filter
+name|accept_filt_setopt
 argument_list|(
 name|so
 argument_list|,
@@ -12665,7 +12665,7 @@ name|SO_ACCEPTFILTER
 case|:
 name|error
 operator|=
-name|do_getopt_accept_filter
+name|accept_filt_getopt
 argument_list|(
 name|so
 argument_list|,
