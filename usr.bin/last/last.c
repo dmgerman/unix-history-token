@@ -1197,6 +1197,11 @@ name|amount
 index|]
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 name|tm
 operator|=
 name|localtime
