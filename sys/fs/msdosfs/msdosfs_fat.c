@@ -1333,13 +1333,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|bp
+name|bpn
 operator|->
 name|b_data
 argument_list|,
-name|bpn
+name|bp
 operator|->
 name|b_data
 argument_list|,

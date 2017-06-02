@@ -1557,13 +1557,15 @@ name|error
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|bp
 operator|->
 name|b_data
 operator|+
 name|boff
+argument_list|,
+literal|0
 argument_list|,
 name|pmp
 operator|->
