@@ -200,35 +200,34 @@ argument_list|)
 name|v_nmntvnodes
 expr_stmt|;
 comment|/* m vnodes for mount point */
-comment|/* 	 * Type specific fields, only one applies to any given vnode. 	 * See #defines below for renaming to v_* namespace. 	 */
+comment|/* 	 * Type specific fields, only one applies to any given vnode. 	 */
 union|union
 block|{
 name|struct
 name|mount
 modifier|*
-name|vu_mount
+name|v_mountedhere
 decl_stmt|;
 comment|/* v ptr to mountpoint (VDIR) */
 name|struct
-name|socket
+name|unpcb
 modifier|*
-name|vu_socket
+name|v_unpcb
 decl_stmt|;
 comment|/* v unix domain net (VSOCK) */
 name|struct
 name|cdev
 modifier|*
-name|vu_cdev
+name|v_rdev
 decl_stmt|;
 comment|/* v device (VCHR, VBLK) */
 name|struct
 name|fifoinfo
 modifier|*
-name|vu_fifoinfo
+name|v_fifoinfo
 decl_stmt|;
 comment|/* v fifo (VFIFO) */
 block|}
-name|v_un
 union|;
 comment|/* 	 * vfs_hash: (mount + inode) -> vnode hash.  The hash value 	 * itself is grouped with other int fields, to avoid padding. 	 */
 name|LIST_ENTRY
@@ -379,34 +378,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|v_mountedhere
-value|v_un.vu_mount
-end_define
-
-begin_define
-define|#
-directive|define
-name|v_socket
-value|v_un.vu_socket
-end_define
-
-begin_define
-define|#
-directive|define
-name|v_rdev
-value|v_un.vu_cdev
-end_define
-
-begin_define
-define|#
-directive|define
-name|v_fifoinfo
-value|v_un.vu_fifoinfo
-end_define
-
-begin_define
-define|#
-directive|define
 name|bo2vnode
 parameter_list|(
 name|bo
@@ -482,7 +453,7 @@ name|void
 modifier|*
 name|xvu_socket
 decl_stmt|;
-comment|/* socket, if VSOCK */
+comment|/* unpcb, if VSOCK */
 name|void
 modifier|*
 name|xvu_fifo
