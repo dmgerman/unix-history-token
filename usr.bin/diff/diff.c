@@ -183,7 +183,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"0123456789aBbC:cdD:efhI:iL:lnNPpqrS:sTtU:uwX:x:"
+value|"0123456789aBbC:cdD:efHhI:iL:lnNPpqrS:sTtU:uwX:x:"
 end_define
 
 begin_enum
@@ -204,8 +204,6 @@ block|,
 name|OPT_NORMAL
 block|,
 name|OPT_HORIZON_LINES
-block|,
-name|OPT_SPEED_LARGE_FILES
 block|,
 name|OPT_CHANGED_GROUP_FORMAT
 block|, }
@@ -288,6 +286,16 @@ block|,
 literal|0
 block|,
 literal|'f'
+block|}
+block|,
+block|{
+literal|"speed-large-files"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'H'
 block|}
 block|,
 block|{
@@ -508,16 +516,6 @@ block|,
 name|NULL
 block|,
 name|OPT_NORMAL
-block|}
-block|,
-block|{
-literal|"speed-large-files"
-block|,
-name|no_argument
-block|,
-name|NULL
-block|,
-name|OPT_SPEED_LARGE_FILES
 block|}
 block|,
 block|{
@@ -922,6 +920,11 @@ name|D_REVERSE
 expr_stmt|;
 break|break;
 case|case
+literal|'H'
+case|:
+comment|/* ignore but needed for compatibility with GNU diff */
+break|break;
+case|case
 literal|'h'
 case|:
 comment|/* silently ignore for backwards compatibility */
@@ -1240,11 +1243,6 @@ argument_list|()
 expr_stmt|;
 block|}
 break|break;
-case|case
-name|OPT_SPEED_LARGE_FILES
-case|:
-break|break;
-comment|/* ignore but needed for compatibility with GNU diff */
 case|case
 name|OPT_STRIPCR
 case|:
