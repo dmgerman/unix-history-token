@@ -3527,12 +3527,6 @@ operator|->
 name|unp_peercred
 argument_list|)
 expr_stmt|;
-name|unp
-operator|->
-name|unp_flags
-operator||=
-name|UNP_HAVEPCCACHED
-expr_stmt|;
 name|solisten_proto
 argument_list|(
 name|so
@@ -6422,19 +6416,6 @@ operator||=
 name|UNP_HAVEPC
 expr_stmt|;
 comment|/* 		 * The receiver's (server's) credentials are copied from the 		 * unp_peercred member of socket on which the former called 		 * listen(); uipc_listen() cached that process's credentials 		 * at that time so we can use them now. 		 */
-name|KASSERT
-argument_list|(
-name|unp2
-operator|->
-name|unp_flags
-operator|&
-name|UNP_HAVEPCCACHED
-argument_list|,
-operator|(
-literal|"unp_connect: listener without cached peercred"
-operator|)
-argument_list|)
-expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -11588,29 +11569,6 @@ block|{
 name|db_printf
 argument_list|(
 literal|"%sUNP_HAVEPC"
-argument_list|,
-name|comma
-condition|?
-literal|", "
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
-name|comma
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|unp_flags
-operator|&
-name|UNP_HAVEPCCACHED
-condition|)
-block|{
-name|db_printf
-argument_list|(
-literal|"%sUNP_HAVEPCCACHED"
 argument_list|,
 name|comma
 condition|?

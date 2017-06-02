@@ -145,7 +145,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Flags in unp_flags.  *  * UNP_HAVEPC - indicates that the unp_peercred member is filled in  * and is really the credentials of the connected peer.  This is used  * to determine whether the contents should be sent to the user or  * not.  *  * UNP_HAVEPCCACHED - indicates that the unp_peercred member is filled  * in, but does *not* contain the credentials of the connected peer  * (there may not even be a peer).  This is set in unp_listen() when  * it fills in unp_peercred for later consumption by unp_connect().  */
+comment|/*  * Flags in unp_flags.  *  * UNP_HAVEPC - indicates that the unp_peercred member is filled in  * and is really the credentials of the connected peer.  This is used  * to determine whether the contents should be sent to the user or  * not.  */
 end_comment
 
 begin_define
@@ -153,13 +153,6 @@ define|#
 directive|define
 name|UNP_HAVEPC
 value|0x001
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNP_HAVEPCCACHED
-value|0x002
 end_define
 
 begin_define
