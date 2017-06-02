@@ -3753,6 +3753,22 @@ name|file
 operator|->
 name|f_flag
 expr_stmt|;
+comment|/* the LinuxKPI supports blocking and non-blocking I/O */
+if|if
+condition|(
+name|cmd
+operator|==
+name|FIONBIO
+operator|||
+name|cmd
+operator|==
+name|FIOASYNC
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|linux_set_current
 argument_list|(
 name|td
