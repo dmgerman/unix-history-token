@@ -613,12 +613,12 @@ name|aio
 parameter_list|)
 block|{
 name|int
-name|err
+name|error
 decl_stmt|;
 while|while
 condition|(
 operator|(
-name|err
+name|error
 operator|=
 name|aio_error
 argument_list|(
@@ -638,7 +638,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|err
+name|error
 condition|)
 block|{
 case|case
@@ -668,7 +668,7 @@ return|;
 default|default:
 return|return
 operator|(
-name|err
+name|error
 operator|)
 return|;
 block|}
@@ -699,9 +699,9 @@ name|aio
 block|}
 decl_stmt|;
 name|int
-name|err
+name|error
 decl_stmt|;
-name|err
+name|error
 operator|=
 name|aio_suspend
 argument_list|(
@@ -714,7 +714,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|error
 operator|==
 literal|0
 condition|)
@@ -729,7 +729,7 @@ return|;
 else|else
 return|return
 operator|(
-name|err
+name|error
 operator|)
 return|;
 block|}
