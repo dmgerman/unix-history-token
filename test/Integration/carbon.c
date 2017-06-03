@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang -fsyntax-only %s
 end_comment
 
+begin_comment
+comment|// REQUIRES: macos-sdk-10.12
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

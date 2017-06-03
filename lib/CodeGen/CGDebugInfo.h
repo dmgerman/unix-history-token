@@ -1929,12 +1929,18 @@ function_decl|;
 comment|/// Constructs the debug code for exiting a function.
 name|void
 name|EmitFunctionEnd
-parameter_list|(
+argument_list|(
 name|CGBuilderTy
-modifier|&
+operator|&
 name|Builder
-parameter_list|)
-function_decl|;
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|)
+decl_stmt|;
 comment|/// Emit metadata to indicate the beginning of a new lexical block
 comment|/// and push the block onto the stack.
 name|void

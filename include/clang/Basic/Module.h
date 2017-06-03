@@ -511,6 +511,11 @@ comment|/// module map file but has not been resolved to a file.
 struct|struct
 name|UnresolvedHeaderDirective
 block|{
+name|HeaderKind
+name|Kind
+init|=
+name|HK_Normal
+decl_stmt|;
 name|SourceLocation
 name|FileNameLoc
 decl_stmt|;
@@ -521,9 +526,38 @@ name|FileName
 expr_stmt|;
 name|bool
 name|IsUmbrella
+init|=
+name|false
 decl_stmt|;
+name|bool
+name|HasBuiltinHeader
+init|=
+name|false
+decl_stmt|;
+name|Optional
+operator|<
+name|off_t
+operator|>
+name|Size
+expr_stmt|;
+name|Optional
+operator|<
+name|time_t
+operator|>
+name|ModTime
+expr_stmt|;
 block|}
 struct|;
+comment|/// Headers that are mentioned in the module map file but that we have not
+comment|/// yet attempted to resolve to a file on the file system.
+name|SmallVector
+operator|<
+name|UnresolvedHeaderDirective
+operator|,
+literal|1
+operator|>
+name|UnresolvedHeaders
+expr_stmt|;
 comment|/// \brief Headers that are mentioned in the module map file but could not be
 comment|/// found on the file system.
 name|SmallVector

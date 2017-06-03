@@ -34839,6 +34839,21 @@ block|}
 block|}
 end_if
 
+begin_if
+if|if
+condition|(
+operator|!
+name|Builder
+operator|.
+name|buildParameterMoves
+argument_list|()
+condition|)
+return|return
+name|StmtError
+argument_list|()
+return|;
+end_if
+
 begin_return
 return|return
 name|getDerived

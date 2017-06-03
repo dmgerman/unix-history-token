@@ -276,6 +276,14 @@ comment|// CHECK_NOPRUNE: -fsanitize-coverage-no-prune
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-coverage=inline-8bit-counters %s -### 2>&1 | FileCheck %s --check-prefix=CHECK_INLINE8BIT
+end_comment
+
+begin_comment
+comment|// CHECK_INLINE8BIT: -fsanitize-coverage-inline-8bit-counters
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl --target=i386-pc-win32 -fsanitize=address -fsanitize-coverage=func,trace-pc-guard -c -### -- %s 2>&1 | FileCheck %s -check-prefix=CLANG-CL-COVERAGE
 end_comment
 

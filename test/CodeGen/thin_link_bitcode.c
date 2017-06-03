@@ -1,5 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -o %t -flto=thin -fthin-link-bitcode=%t.nodebug -triple x86_64-unknown-linux-gnu -emit-llvm-bc -debug-info-kind=limited %s
 end_comment
 
@@ -9,6 +17,18 @@ end_comment
 
 begin_comment
 comment|// RUN: llvm-bcanalyzer -dump %t.nodebug | FileCheck %s --check-prefix=NO_DEBUG
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -o %t.newpm -flto=thin -fexperimental-new-pass-manager -fthin-link-bitcode=%t.newpm.nodebug -triple x86_64-unknown-linux-gnu -emit-llvm-bc -debug-info-kind=limited  %s
+end_comment
+
+begin_comment
+comment|// RUN: llvm-bcanalyzer -dump %t.newpm | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: llvm-bcanalyzer -dump %t.newpm.nodebug | FileCheck %s --check-prefix=NO_DEBUG
 end_comment
 
 begin_function
