@@ -58,9 +58,7 @@ name|struct
 name|in_conninfo
 modifier|*
 parameter_list|,
-name|struct
-name|tcphdr
-modifier|*
+name|tcp_seq
 parameter_list|)
 function_decl|;
 end_function_decl

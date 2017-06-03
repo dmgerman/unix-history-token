@@ -2872,10 +2872,8 @@ name|in_conninfo
 modifier|*
 name|inc
 parameter_list|,
-name|struct
-name|tcphdr
-modifier|*
-name|th
+name|tcp_seq
+name|th_seq
 parameter_list|)
 block|{
 name|struct
@@ -2918,8 +2916,6 @@ if|if
 condition|(
 name|ntohl
 argument_list|(
-name|th
-operator|->
 name|th_seq
 argument_list|)
 operator|!=
