@@ -98,6 +98,8 @@ argument|ScopedPrinter&W
 argument_list|,
 argument|TypeCollection&Types
 argument_list|,
+argument|CodeViewContainer Container
+argument_list|,
 argument|std::unique_ptr<SymbolDumpDelegate> ObjDelegate
 argument_list|,
 argument|bool PrintRecordBytes
@@ -111,6 +113,11 @@ operator|,
 name|Types
 argument_list|(
 name|Types
+argument_list|)
+operator|,
+name|Container
+argument_list|(
+name|Container
 argument_list|)
 operator|,
 name|ObjDelegate
@@ -163,6 +170,9 @@ decl_stmt|;
 name|TypeCollection
 modifier|&
 name|Types
+decl_stmt|;
+name|CodeViewContainer
+name|Container
 decl_stmt|;
 name|std
 operator|::

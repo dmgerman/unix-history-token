@@ -489,6 +489,91 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|// CPSR defined in instruction
+specifier|static
+name|bool
+name|isCPSRDefined
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+block|;
+name|bool
+name|isAddrMode3OpImm
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isAddrMode3OpMinusReg
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+comment|// Load, scaled register offset
+name|bool
+name|isLdstScaledReg
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+comment|// Load, scaled register offset, not plus LSL2
+name|bool
+name|isLdstScaledRegNotPlusLsl2
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+comment|// Minus reg for ldstso addr mode
+name|bool
+name|isLdstSoMinusReg
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+comment|// Scaled register offset in address mode 2
+name|bool
+name|isAm2ScaledReg
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+comment|// Load multiple, base reg in list
+name|bool
+name|isLDMBaseRegInList
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+comment|// get LDM variable defs size
+name|unsigned
+name|getLDMVariableDefsSize
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
 comment|/// GetInstSize - Returns the size of the specified MachineInstr.
 comment|///
 name|unsigned

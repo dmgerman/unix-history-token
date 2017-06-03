@@ -214,6 +214,13 @@ name|char
 modifier|&
 name|AMDGPUMachineCFGStructurizerID
 decl_stmt|;
+name|void
+name|initializeAMDGPUAlwaysInlinePass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
 name|ModulePass
 modifier|*
 name|createAMDGPUAnnotateKernelFeaturesPass

@@ -92,7 +92,9 @@ name|Solution
 block|{
 name|private
 label|:
-typedef|typedef
+name|using
+name|SelectionsMap
+init|=
 name|std
 operator|::
 name|map
@@ -100,11 +102,10 @@ operator|<
 name|GraphBase
 operator|::
 name|NodeId
-operator|,
+decl_stmt|,
 name|unsigned
-operator|>
-name|SelectionsMap
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|SelectionsMap
 name|selections
 decl_stmt|;

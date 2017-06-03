@@ -6003,25 +6003,6 @@ return|return
 name|false
 return|;
 block|}
-name|bool
-name|isTemplateArg
-argument_list|(
-argument|StringRef Name
-argument_list|)
-specifier|const
-block|{
-return|return
-name|isTemplateArg
-argument_list|(
-name|StringInit
-operator|::
-name|get
-argument_list|(
-name|Name
-argument_list|)
-argument_list|)
-return|;
-block|}
 specifier|const
 name|RecordVal
 operator|*
@@ -6161,22 +6142,6 @@ operator|.
 name|push_back
 argument_list|(
 name|Name
-argument_list|)
-block|;   }
-name|void
-name|addTemplateArg
-argument_list|(
-argument|StringRef Name
-argument_list|)
-block|{
-name|addTemplateArg
-argument_list|(
-name|StringInit
-operator|::
-name|get
-argument_list|(
-name|Name
-argument_list|)
 argument_list|)
 block|;   }
 name|void

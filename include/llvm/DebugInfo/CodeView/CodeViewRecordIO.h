@@ -796,6 +796,16 @@ end_decl_stmt
 
 begin_function_decl
 name|Error
+name|padToAlignment
+parameter_list|(
+name|uint32_t
+name|Align
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Error
 name|skipPadding
 parameter_list|()
 function_decl|;

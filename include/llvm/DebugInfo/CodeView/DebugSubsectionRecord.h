@@ -120,6 +120,8 @@ argument_list|(
 argument|DebugSubsectionKind Kind
 argument_list|,
 argument|BinaryStreamRef Data
+argument_list|,
+argument|CodeViewContainer Container
 argument_list|)
 empty_stmt|;
 specifier|static
@@ -132,6 +134,9 @@ parameter_list|,
 name|DebugSubsectionRecord
 modifier|&
 name|Info
+parameter_list|,
+name|CodeViewContainer
+name|Container
 parameter_list|)
 function_decl|;
 name|uint32_t
@@ -151,6 +156,9 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
+name|CodeViewContainer
+name|Container
+decl_stmt|;
 name|DebugSubsectionKind
 name|Kind
 decl_stmt|;
@@ -166,9 +174,9 @@ name|public
 label|:
 name|DebugSubsectionRecordBuilder
 argument_list|(
-argument|DebugSubsectionKind Kind
+argument|std::unique_ptr<DebugSubsection> Subsection
 argument_list|,
-argument|DebugSubsection&Frag
+argument|CodeViewContainer Container
 argument_list|)
 empty_stmt|;
 name|uint32_t
@@ -185,12 +193,16 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-name|DebugSubsectionKind
-name|Kind
-decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DebugSubsection
-modifier|&
-name|Frag
+operator|>
+name|Subsection
+expr_stmt|;
+name|CodeViewContainer
+name|Container
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -222,6 +234,10 @@ argument_list|,
 argument|codeview::DebugSubsectionRecord&Info
 argument_list|)
 block|{
+comment|// FIXME: We need to pass the container type through to this function, but
+comment|// VarStreamArray doesn't easily support stateful contexts.  In practice
+comment|// this isn't super important since the subsection header describes its
+comment|// length and we can just skip it.  It's more important when writing.
 if|if
 condition|(
 name|auto
@@ -236,6 +252,12 @@ argument_list|(
 name|Stream
 argument_list|,
 name|Info
+argument_list|,
+name|codeview
+operator|::
+name|CodeViewContainer
+operator|::
+name|Pdb
 argument_list|)
 condition|)
 return|return

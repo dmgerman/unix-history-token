@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -193,19 +205,19 @@ name|class
 name|PSetIterator
 decl_stmt|;
 comment|/// Convenient type to represent either a register class or a register bank.
-typedef|typedef
+name|using
+name|RegClassOrRegBank
+init|=
 name|PointerUnion
 operator|<
 specifier|const
 name|TargetRegisterClass
 operator|*
-operator|,
-specifier|const
+decl_stmt|, const
 name|RegisterBank
-operator|*
-operator|>
-name|RegClassOrRegBank
-expr_stmt|;
+modifier|*
+decl|>
+decl_stmt|;
 comment|/// MachineRegisterInfo - Keep track of information for virtual and physical
 comment|/// registers, including vreg register classes, use/def chains for registers,
 comment|/// etc.
@@ -444,15 +456,16 @@ comment|/// started.
 name|BitVector
 name|ReservedRegs
 decl_stmt|;
-typedef|typedef
+name|using
+name|VRegToTypeMap
+init|=
 name|DenseMap
 operator|<
 name|unsigned
-operator|,
+decl_stmt|,
 name|LLT
-operator|>
-name|VRegToTypeMap
-expr_stmt|;
+decl|>
+decl_stmt|;
 comment|/// Map generic virtual registers to their actual size.
 name|mutable
 name|std
@@ -919,23 +932,24 @@ name|defusechain_instr_iterator
 expr_stmt|;
 comment|/// reg_iterator/reg_begin/reg_end - Walk all defs and uses of the specified
 comment|/// register.
-typedef|typedef
+name|using
+name|reg_iterator
+init|=
 name|defusechain_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|>
-name|reg_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|reg_iterator
 name|reg_begin
 argument_list|(
@@ -992,23 +1006,24 @@ return|;
 block|}
 comment|/// reg_instr_iterator/reg_instr_begin/reg_instr_end - Walk all defs and uses
 comment|/// of the specified register, stepping by MachineInstr.
-typedef|typedef
+name|using
+name|reg_instr_iterator
+init|=
 name|defusechain_instr_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|>
-name|reg_instr_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|reg_instr_iterator
 name|reg_instr_begin
 argument_list|(
@@ -1065,23 +1080,24 @@ return|;
 block|}
 comment|/// reg_bundle_iterator/reg_bundle_begin/reg_bundle_end - Walk all defs and uses
 comment|/// of the specified register, stepping by bundle.
-typedef|typedef
+name|using
+name|reg_bundle_iterator
+init|=
 name|defusechain_instr_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|>
-name|reg_bundle_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|reg_bundle_iterator
 name|reg_bundle_begin
 argument_list|(
@@ -1158,23 +1174,24 @@ return|;
 block|}
 comment|/// reg_nodbg_iterator/reg_nodbg_begin/reg_nodbg_end - Walk all defs and uses
 comment|/// of the specified register, skipping those marked as Debug.
-typedef|typedef
+name|using
+name|reg_nodbg_iterator
+init|=
 name|defusechain_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|>
-name|reg_nodbg_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|reg_nodbg_iterator
 name|reg_nodbg_begin
 argument_list|(
@@ -1232,23 +1249,24 @@ block|}
 comment|/// reg_instr_nodbg_iterator/reg_instr_nodbg_begin/reg_instr_nodbg_end - Walk
 comment|/// all defs and uses of the specified register, stepping by MachineInstr,
 comment|/// skipping those marked as Debug.
-typedef|typedef
+name|using
+name|reg_instr_nodbg_iterator
+init|=
 name|defusechain_instr_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|>
-name|reg_instr_nodbg_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|reg_instr_nodbg_iterator
 name|reg_instr_nodbg_begin
 argument_list|(
@@ -1306,23 +1324,24 @@ block|}
 comment|/// reg_bundle_nodbg_iterator/reg_bundle_nodbg_begin/reg_bundle_nodbg_end - Walk
 comment|/// all defs and uses of the specified register, stepping by bundle,
 comment|/// skipping those marked as Debug.
-typedef|typedef
+name|using
+name|reg_bundle_nodbg_iterator
+init|=
 name|defusechain_instr_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|>
-name|reg_bundle_nodbg_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|reg_bundle_nodbg_iterator
 name|reg_bundle_nodbg_begin
 argument_list|(
@@ -1398,23 +1417,24 @@ argument_list|()
 return|;
 block|}
 comment|/// def_iterator/def_begin/def_end - Walk all defs of the specified register.
-typedef|typedef
+name|using
+name|def_iterator
+init|=
 name|defusechain_iterator
 operator|<
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|>
-name|def_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|def_iterator
 name|def_begin
 argument_list|(
@@ -1471,23 +1491,24 @@ return|;
 block|}
 comment|/// def_instr_iterator/def_instr_begin/def_instr_end - Walk all defs of the
 comment|/// specified register, stepping by MachineInst.
-typedef|typedef
+name|using
+name|def_instr_iterator
+init|=
 name|defusechain_instr_iterator
 operator|<
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|>
-name|def_instr_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|def_instr_iterator
 name|def_instr_begin
 argument_list|(
@@ -1544,23 +1565,24 @@ return|;
 block|}
 comment|/// def_bundle_iterator/def_bundle_begin/def_bundle_end - Walk all defs of the
 comment|/// specified register, stepping by bundle.
-typedef|typedef
+name|using
+name|def_bundle_iterator
+init|=
 name|defusechain_instr_iterator
 operator|<
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|>
-name|def_bundle_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|def_bundle_iterator
 name|def_bundle_begin
 argument_list|(
@@ -1672,23 +1694,24 @@ argument_list|()
 return|;
 block|}
 comment|/// use_iterator/use_begin/use_end - Walk all uses of the specified register.
-typedef|typedef
+name|using
+name|use_iterator
+init|=
 name|defusechain_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|>
-name|use_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|use_iterator
 name|use_begin
 argument_list|(
@@ -1745,23 +1768,24 @@ return|;
 block|}
 comment|/// use_instr_iterator/use_instr_begin/use_instr_end - Walk all uses of the
 comment|/// specified register, stepping by MachineInstr.
-typedef|typedef
+name|using
+name|use_instr_iterator
+init|=
 name|defusechain_instr_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|>
-name|use_instr_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|use_instr_iterator
 name|use_instr_begin
 argument_list|(
@@ -1818,23 +1842,24 @@ return|;
 block|}
 comment|/// use_bundle_iterator/use_bundle_begin/use_bundle_end - Walk all uses of the
 comment|/// specified register, stepping by bundle.
-typedef|typedef
+name|using
+name|use_bundle_iterator
+init|=
 name|defusechain_instr_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|>
-name|use_bundle_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|use_bundle_iterator
 name|use_bundle_begin
 argument_list|(
@@ -1947,23 +1972,24 @@ return|;
 block|}
 comment|/// use_nodbg_iterator/use_nodbg_begin/use_nodbg_end - Walk all uses of the
 comment|/// specified register, skipping those marked as Debug.
-typedef|typedef
+name|using
+name|use_nodbg_iterator
+init|=
 name|defusechain_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|>
-name|use_nodbg_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|use_nodbg_iterator
 name|use_nodbg_begin
 argument_list|(
@@ -2021,23 +2047,24 @@ block|}
 comment|/// use_instr_nodbg_iterator/use_instr_nodbg_begin/use_instr_nodbg_end - Walk
 comment|/// all uses of the specified register, stepping by MachineInstr, skipping
 comment|/// those marked as Debug.
-typedef|typedef
+name|using
+name|use_instr_nodbg_iterator
+init|=
 name|defusechain_instr_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|>
-name|use_instr_nodbg_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|use_instr_nodbg_iterator
 name|use_instr_nodbg_begin
 argument_list|(
@@ -2095,23 +2122,24 @@ block|}
 comment|/// use_bundle_nodbg_iterator/use_bundle_nodbg_begin/use_bundle_nodbg_end - Walk
 comment|/// all uses of the specified register, stepping by bundle, skipping
 comment|/// those marked as Debug.
-typedef|typedef
+name|using
+name|use_bundle_nodbg_iterator
+init|=
 name|defusechain_instr_iterator
 operator|<
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|false
-operator|,
+decl_stmt|,
 name|true
-operator|>
-name|use_bundle_nodbg_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|use_bundle_nodbg_iterator
 name|use_bundle_nodbg_begin
 argument_list|(
@@ -2297,7 +2325,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// Return the register class of the specified virtual register.
 comment|/// This shouldn't be used directly unless \p Reg has a register class.
 comment|/// \see getRegClassOrNull when this might happen.
-comment|///
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -2397,7 +2424,6 @@ comment|/// Return the register bank of \p Reg, or null if Reg has not been assi
 comment|/// a register bank or has been assigned a register class.
 comment|/// \note It is possible to get the register bank from the register class via
 comment|/// RegisterBankInfo::getRegBankFromRegClass.
-comment|///
 specifier|const
 name|RegisterBank
 modifier|*
@@ -2436,7 +2462,6 @@ block|}
 comment|/// Return the register bank or register class of \p Reg.
 comment|/// \note Before the register bank gets assigned (i.e., before the
 comment|/// RegBankSelect pass) \p Reg may not have either.
-comment|///
 specifier|const
 name|RegClassOrRegBank
 modifier|&
@@ -2457,7 +2482,6 @@ name|first
 return|;
 block|}
 comment|/// setRegClass - Set the register class of the specified virtual register.
-comment|///
 name|void
 name|setRegClass
 parameter_list|(
@@ -2471,7 +2495,6 @@ name|RC
 parameter_list|)
 function_decl|;
 comment|/// Set the register bank to \p RegBank for \p Reg.
-comment|///
 name|void
 name|setRegBank
 parameter_list|(
@@ -2512,7 +2535,6 @@ comment|/// but only if the new class has at least MinNumRegs registers.  Return
 comment|/// new register class, or NULL if no such class exists.
 comment|/// This should only be used when the constraint is known to be trivial, like
 comment|/// GR32 -> GR32_NOSP. Beware of increasing register pressure.
-comment|///
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -2539,7 +2561,6 @@ comment|///
 comment|/// This method can be used after constraints have been removed from a
 comment|/// virtual register, for example after removing instructions or splitting
 comment|/// the live range.
-comment|///
 name|bool
 name|recomputeRegClass
 parameter_list|(
@@ -2549,7 +2570,6 @@ parameter_list|)
 function_decl|;
 comment|/// createVirtualRegister - Create and return a new virtual register in the
 comment|/// function with the specified register class.
-comment|///
 name|unsigned
 name|createVirtualRegister
 parameter_list|(
@@ -2633,7 +2653,6 @@ name|createIncompleteVirtualRegister
 parameter_list|()
 function_decl|;
 comment|/// getNumVirtRegs - Return the number of virtual registers created.
-comment|///
 name|unsigned
 name|getNumVirtRegs
 argument_list|()
@@ -2957,7 +2976,6 @@ comment|/// isReserved - Returns true when PhysReg is a reserved register.
 comment|///
 comment|/// Reserved registers may belong to an allocatable register class, but the
 comment|/// target has explicitly requested that they are not used.
-comment|///
 name|bool
 name|isReserved
 argument_list|(
@@ -3040,7 +3058,9 @@ expr_stmt|;
 block|}
 comment|// Iteration support for the live-ins set.  It's kept in sorted order
 comment|// by register number.
-typedef|typedef
+name|using
+name|livein_iterator
+init|=
 name|std
 operator|::
 name|vector
@@ -3050,13 +3070,11 @@ operator|::
 name|pair
 operator|<
 name|unsigned
-operator|,
+decl_stmt|,
 name|unsigned
-operator|>>
-operator|::
+decl|>>::
 name|const_iterator
-name|livein_iterator
-expr_stmt|;
+decl_stmt|;
 name|livein_iterator
 name|livein_begin
 argument_list|()
@@ -3354,7 +3372,9 @@ block|}
 block|}
 name|public
 operator|:
-typedef|typedef
+name|using
+name|reference
+operator|=
 name|std
 operator|::
 name|iterator
@@ -3362,16 +3382,17 @@ operator|<
 name|std
 operator|::
 name|forward_iterator_tag
-operator|,
+block|,
 name|MachineInstr
-operator|,
+block|,
 name|ptrdiff_t
 operator|>
 operator|::
 name|reference
-name|reference
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|pointer
+operator|=
 name|std
 operator|::
 name|iterator
@@ -3379,20 +3400,19 @@ operator|<
 name|std
 operator|::
 name|forward_iterator_tag
-operator|,
+block|,
 name|MachineInstr
-operator|,
+block|,
 name|ptrdiff_t
 operator|>
 operator|::
 name|pointer
-name|pointer
-expr_stmt|;
+block|;
 name|defusechain_iterator
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|bool
 name|operator
 operator|==
@@ -3617,7 +3637,7 @@ name|operator
 operator|->
 expr|(
 block|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -3625,39 +3645,19 @@ name|Op
 operator|&&
 literal|"Cannot dereference end iterator!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Op
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
-unit|};
+block|}
+empty_stmt|;
 comment|/// defusechain_iterator - This class provides iterator support for machine
-end_comment
-
-begin_comment
 comment|/// operands in the function that use or define a specific register.  If
-end_comment
-
-begin_comment
 comment|/// ReturnUses is true it returns uses of registers, if ReturnDefs is true it
-end_comment
-
-begin_comment
 comment|/// returns defs.  If neither are true then you are silly and it always
-end_comment
-
-begin_comment
 comment|/// returns end().  If SkipDebug is true it skips uses marked Debug
-end_comment
-
-begin_comment
 comment|/// when incrementing.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|bool
@@ -3815,10 +3815,8 @@ literal|"Can't have debug defs"
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_block
-unit|} else
+block|}
+else|else
 block|{
 comment|// If this is an operand we don't care about, skip it.
 while|while
@@ -3854,11 +3852,12 @@ name|Op
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_typedef
-unit|}    public:
-typedef|typedef
+block|}
+name|public
+operator|:
+name|using
+name|reference
+operator|=
 name|std
 operator|::
 name|iterator
@@ -3866,19 +3865,17 @@ operator|<
 name|std
 operator|::
 name|forward_iterator_tag
-operator|,
+block|,
 name|MachineInstr
-operator|,
+block|,
 name|ptrdiff_t
 operator|>
 operator|::
 name|reference
-name|reference
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|pointer
+operator|=
 name|std
 operator|::
 name|iterator
@@ -3886,26 +3883,19 @@ operator|<
 name|std
 operator|::
 name|forward_iterator_tag
-operator|,
+block|,
 name|MachineInstr
-operator|,
+block|,
 name|ptrdiff_t
 operator|>
 operator|::
 name|pointer
-name|pointer
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
+block|;
 name|defusechain_instr_iterator
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|bool
 name|operator
 operator|==
@@ -3925,9 +3915,6 @@ operator|.
 name|Op
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|operator
 operator|!=
@@ -3948,13 +3935,7 @@ name|x
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// atEnd - return true if this iterator is equal to reg_end() on the value.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|atEnd
 argument_list|()
@@ -3966,13 +3947,7 @@ operator|==
 name|nullptr
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Iterator traversal: forward iteration only
-end_comment
-
-begin_expr_stmt
 name|defusechain_instr_iterator
 operator|&
 name|operator
@@ -4016,9 +3991,6 @@ name|advance
 argument_list|()
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 name|Op
@@ -4031,14 +4003,8 @@ operator|==
 name|P
 condition|)
 empty_stmt|;
-end_while
-
-begin_if
-unit|} else
-if|if
-condition|(
-name|ByBundle
-condition|)
+do|} else if (ByBundle
+block|)
 block|{
 name|MachineBasicBlock
 operator|::
@@ -4062,7 +4028,7 @@ name|advance
 argument_list|()
 expr_stmt|;
 block|}
-do|while
+while|while
 condition|(
 name|Op
 operator|&&
@@ -4079,47 +4045,26 @@ argument_list|)
 operator|==
 name|P
 condition|)
-do|;
-block|}
-end_if
-
-begin_return
-return|return
-operator|*
-name|this
-return|;
-end_return
-
-begin_expr_stmt
-unit|}     defusechain_instr_iterator
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
+empty_stmt|;
+do|}        return *this;     }     defusechain_instr_iterator operator++(int
+block|)
 block|{
 comment|// Postincrement
 name|defusechain_instr_iterator
 name|tmp
-operator|=
+init|=
 operator|*
 name|this
-block|;
+decl_stmt|;
 operator|++
 operator|*
 name|this
-block|;
+expr_stmt|;
 return|return
 name|tmp
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Retrieve a reference to the current operand.
-end_comment
-
-begin_expr_stmt
 name|MachineInstr
 operator|&
 name|operator
@@ -4152,9 +4097,6 @@ name|getIterator
 argument_list|()
 argument_list|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|*
 name|Op
@@ -4162,19 +4104,14 @@ operator|->
 name|getParent
 argument_list|()
 return|;
-end_return
-
-begin_expr_stmt
-unit|}      MachineInstr
+block|}
+name|MachineInstr
 operator|*
 name|operator
 operator|->
 expr|(
-end_expr_stmt
-
-begin_expr_stmt
-unit|)
-specifier|const
+block|)
+decl|const
 block|{
 return|return
 operator|&
@@ -4184,7 +4121,7 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 unit|}; };

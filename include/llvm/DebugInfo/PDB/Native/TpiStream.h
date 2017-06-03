@@ -126,7 +126,6 @@ name|public
 label|:
 name|TpiStream
 argument_list|(
-specifier|const
 name|PDBFile
 operator|&
 name|File
@@ -255,7 +254,6 @@ parameter_list|()
 function_decl|;
 name|private
 label|:
-specifier|const
 name|PDBFile
 modifier|&
 name|Pdb

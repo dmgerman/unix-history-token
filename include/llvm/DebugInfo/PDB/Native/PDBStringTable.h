@@ -180,6 +180,13 @@ name|name_ids
 argument_list|()
 specifier|const
 expr_stmt|;
+name|codeview
+operator|::
+name|DebugStringTableSubsectionRef
+name|getStringTable
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|Error

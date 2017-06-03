@@ -286,37 +286,6 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-comment|/// Reparent all debug locations referenced by \c I that belong to \c OrigSP
-comment|/// to become (possibly indirect) children of \c NewSP.
-specifier|static
-name|void
-name|reparentDebugInfo
-argument_list|(
-name|Instruction
-operator|&
-name|I
-argument_list|,
-name|DISubprogram
-operator|*
-name|OrigSP
-argument_list|,
-name|DISubprogram
-operator|*
-name|NewSP
-argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-argument_list|,
-name|MDNode
-operator|*
-operator|>
-operator|&
-name|Cache
-argument_list|)
-decl_stmt|;
 name|unsigned
 name|getLine
 argument_list|()

@@ -337,6 +337,16 @@ name|void
 name|finalize
 parameter_list|()
 function_decl|;
+comment|/// Finalize a specific subprogram - no new variables may be added to this
+comment|/// subprogram afterwards.
+name|void
+name|finalizeSubprogram
+parameter_list|(
+name|DISubprogram
+modifier|*
+name|SP
+parameter_list|)
+function_decl|;
 comment|/// A CompileUnit provides an anchor for all debugging
 comment|/// information generated during this instance of compilation.
 comment|/// \param Lang          Source programming language, eg. dwarf::DW_LANG_C99

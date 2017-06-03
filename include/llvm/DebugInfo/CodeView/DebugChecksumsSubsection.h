@@ -246,7 +246,8 @@ parameter_list|)
 function_decl|;
 name|Iterator
 name|begin
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Checksums
@@ -257,7 +258,8 @@ return|;
 block|}
 name|Iterator
 name|end
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Checksums

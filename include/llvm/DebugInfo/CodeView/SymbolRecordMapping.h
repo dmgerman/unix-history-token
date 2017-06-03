@@ -79,27 +79,37 @@ operator|:
 name|explicit
 name|SymbolRecordMapping
 argument_list|(
-name|BinaryStreamReader
-operator|&
-name|Reader
+argument|BinaryStreamReader&Reader
+argument_list|,
+argument|CodeViewContainer Container
 argument_list|)
 operator|:
 name|IO
 argument_list|(
-argument|Reader
+name|Reader
+argument_list|)
+block|,
+name|Container
+argument_list|(
+argument|Container
 argument_list|)
 block|{}
 name|explicit
 name|SymbolRecordMapping
 argument_list|(
-name|BinaryStreamWriter
-operator|&
-name|Writer
+argument|BinaryStreamWriter&Writer
+argument_list|,
+argument|CodeViewContainer Container
 argument_list|)
 operator|:
 name|IO
 argument_list|(
-argument|Writer
+name|Writer
+argument_list|)
+block|,
+name|Container
+argument_list|(
+argument|Container
 argument_list|)
 block|{}
 name|Error
@@ -153,6 +163,9 @@ name|Kind
 block|;
 name|CodeViewRecordIO
 name|IO
+block|;
+name|CodeViewContainer
+name|Container
 block|; }
 decl_stmt|;
 block|}

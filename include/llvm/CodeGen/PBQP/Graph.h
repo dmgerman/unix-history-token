@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-------------------- Graph.h - PBQP Graph ------------------*- C++ -*-===//
+comment|//===- Graph.h - PBQP Graph -------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Debug.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<algorithm>
 end_include
 
@@ -86,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits>
+file|<iterator>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<limits>
 end_include
 
 begin_include
@@ -113,14 +107,16 @@ name|GraphBase
 block|{
 name|public
 label|:
-typedef|typedef
-name|unsigned
+name|using
 name|NodeId
-typedef|;
-typedef|typedef
+init|=
 name|unsigned
+decl_stmt|;
+name|using
 name|EdgeId
-typedef|;
+init|=
+name|unsigned
+decl_stmt|;
 comment|/// @brief Returns a value representing an invalid (non-existent) node.
 specifier|static
 name|NodeId
@@ -175,110 +171,133 @@ name|GraphBase
 block|{
 name|private
 operator|:
-typedef|typedef
+name|using
+name|CostAllocator
+operator|=
 name|typename
 name|SolverT
 operator|::
 name|CostAllocator
-name|CostAllocator
-expr_stmt|;
+block|;
 name|public
 operator|:
-typedef|typedef
+name|using
+name|RawVector
+operator|=
 name|typename
 name|SolverT
 operator|::
 name|RawVector
-name|RawVector
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|RawMatrix
+operator|=
 name|typename
 name|SolverT
 operator|::
 name|RawMatrix
-name|RawMatrix
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|Vector
+operator|=
 name|typename
 name|SolverT
 operator|::
 name|Vector
-name|Vector
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|Matrix
+operator|=
 name|typename
 name|SolverT
 operator|::
 name|Matrix
-name|Matrix
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|VectorPtr
+operator|=
 name|typename
 name|CostAllocator
 operator|::
 name|VectorPtr
-name|VectorPtr
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|MatrixPtr
+operator|=
 name|typename
 name|CostAllocator
 operator|::
 name|MatrixPtr
-name|MatrixPtr
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|NodeMetadata
+operator|=
 name|typename
 name|SolverT
 operator|::
 name|NodeMetadata
-name|NodeMetadata
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|EdgeMetadata
+operator|=
 name|typename
 name|SolverT
 operator|::
 name|EdgeMetadata
-name|EdgeMetadata
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|GraphMetadata
+operator|=
 name|typename
 name|SolverT
 operator|::
 name|GraphMetadata
-name|GraphMetadata
-expr_stmt|;
+block|;
 name|private
-label|:
+operator|:
 name|class
 name|NodeEntry
 block|{
 name|public
-label|:
-typedef|typedef
+operator|:
+name|using
+name|AdjEdgeList
+operator|=
 name|std
 operator|::
 name|vector
 operator|<
 name|EdgeId
 operator|>
-name|AdjEdgeList
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|AdjEdgeIdx
+operator|=
 name|AdjEdgeList
 operator|::
 name|size_type
-name|AdjEdgeIdx
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|AdjEdgeItr
+operator|=
 name|AdjEdgeList
 operator|::
 name|const_iterator
-name|AdjEdgeItr
-expr_stmt|;
+block|;
+name|NodeEntry
+argument_list|(
+argument|VectorPtr Costs
+argument_list|)
+operator|:
+name|Costs
+argument_list|(
+argument|std::move(Costs)
+argument_list|)
+block|{}
 specifier|static
 name|AdjEdgeIdx
 name|getInvalidAdjEdgeIdx
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|std
@@ -292,55 +311,40 @@ name|max
 argument_list|()
 return|;
 block|}
-name|NodeEntry
-argument_list|(
-argument|VectorPtr Costs
-argument_list|)
-block|:
-name|Costs
-argument_list|(
-argument|std::move(Costs)
-argument_list|)
-block|{}
 name|AdjEdgeIdx
 name|addAdjEdgeId
-parameter_list|(
-name|EdgeId
-name|EId
-parameter_list|)
+argument_list|(
+argument|EdgeId EId
+argument_list|)
 block|{
 name|AdjEdgeIdx
 name|Idx
-init|=
+operator|=
 name|AdjEdgeIds
 operator|.
 name|size
 argument_list|()
-decl_stmt|;
+block|;
 name|AdjEdgeIds
 operator|.
 name|push_back
 argument_list|(
 name|EId
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Idx
 return|;
 block|}
 name|void
 name|removeAdjEdgeId
-parameter_list|(
-name|Graph
-modifier|&
-name|G
-parameter_list|,
-name|NodeId
-name|ThisNId
-parameter_list|,
-name|AdjEdgeIdx
-name|Idx
-parameter_list|)
+argument_list|(
+argument|Graph&G
+argument_list|,
+argument|NodeId ThisNId
+argument_list|,
+argument|AdjEdgeIdx Idx
+argument_list|)
 block|{
 comment|// Swap-and-pop for fast removal.
 comment|//   1) Update the adj index of the edge currently at back().
@@ -364,7 +368,7 @@ name|ThisNId
 argument_list|,
 name|Idx
 argument_list|)
-expr_stmt|;
+block|;
 name|AdjEdgeIds
 index|[
 name|Idx
@@ -374,13 +378,12 @@ name|AdjEdgeIds
 operator|.
 name|back
 argument_list|()
-expr_stmt|;
+block|;
 name|AdjEdgeIds
 operator|.
 name|pop_back
 argument_list|()
-expr_stmt|;
-block|}
+block|;       }
 specifier|const
 name|AdjEdgeList
 operator|&
@@ -394,22 +397,21 @@ return|;
 block|}
 name|VectorPtr
 name|Costs
-decl_stmt|;
+block|;
 name|NodeMetadata
 name|Metadata
-decl_stmt|;
+block|;
 name|private
-label|:
+operator|:
 name|AdjEdgeList
 name|AdjEdgeIds
-decl_stmt|;
-block|}
-empty_stmt|;
+block|;     }
+block|;
 name|class
 name|EdgeEntry
 block|{
 name|public
-label|:
+operator|:
 name|EdgeEntry
 argument_list|(
 argument|NodeId N1Id
@@ -418,7 +420,7 @@ argument|NodeId N2Id
 argument_list|,
 argument|MatrixPtr Costs
 argument_list|)
-block|:
+operator|:
 name|Costs
 argument_list|(
 argument|std::move(Costs)
@@ -430,14 +432,14 @@ literal|0
 index|]
 operator|=
 name|N1Id
-expr_stmt|;
+block|;
 name|NIds
 index|[
 literal|1
 index|]
 operator|=
 name|N2Id
-expr_stmt|;
+block|;
 name|ThisEdgeAdjIdxs
 index|[
 literal|0
@@ -447,7 +449,7 @@ name|NodeEntry
 operator|::
 name|getInvalidAdjEdgeIdx
 argument_list|()
-expr_stmt|;
+block|;
 name|ThisEdgeAdjIdxs
 index|[
 literal|1
@@ -457,21 +459,16 @@ name|NodeEntry
 operator|::
 name|getInvalidAdjEdgeIdx
 argument_list|()
-expr_stmt|;
-block|}
+block|;       }
 name|void
 name|connectToN
-parameter_list|(
-name|Graph
-modifier|&
-name|G
-parameter_list|,
-name|EdgeId
-name|ThisEdgeId
-parameter_list|,
-name|unsigned
-name|NIdx
-parameter_list|)
+argument_list|(
+argument|Graph&G
+argument_list|,
+argument|EdgeId ThisEdgeId
+argument_list|,
+argument|unsigned NIdx
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -487,11 +484,11 @@ argument_list|()
 operator|&&
 literal|"Edge already connected to NIds[NIdx]."
 argument_list|)
-expr_stmt|;
+block|;
 name|NodeEntry
-modifier|&
+operator|&
 name|N
-init|=
+operator|=
 name|G
 operator|.
 name|getNode
@@ -501,7 +498,7 @@ index|[
 name|NIdx
 index|]
 argument_list|)
-decl_stmt|;
+block|;
 name|ThisEdgeAdjIdxs
 index|[
 name|NIdx
@@ -513,18 +510,14 @@ name|addAdjEdgeId
 argument_list|(
 name|ThisEdgeId
 argument_list|)
-expr_stmt|;
-block|}
+block|;       }
 name|void
 name|connect
-parameter_list|(
-name|Graph
-modifier|&
-name|G
-parameter_list|,
-name|EdgeId
-name|ThisEdgeId
-parameter_list|)
+argument_list|(
+argument|Graph&G
+argument_list|,
+argument|EdgeId ThisEdgeId
+argument_list|)
 block|{
 name|connectToN
 argument_list|(
@@ -534,7 +527,7 @@ name|ThisEdgeId
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+block|;
 name|connectToN
 argument_list|(
 name|G
@@ -543,19 +536,13 @@ name|ThisEdgeId
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-block|}
+block|;       }
 name|void
 name|setAdjEdgeIdx
 argument_list|(
-name|NodeId
-name|NId
+argument|NodeId NId
 argument_list|,
-name|typename
-name|NodeEntry
-operator|::
-name|AdjEdgeIdx
-name|NewIdx
+argument|typename NodeEntry::AdjEdgeIdx NewIdx
 argument_list|)
 block|{
 if|if
@@ -599,14 +586,11 @@ block|}
 block|}
 name|void
 name|disconnectFromN
-parameter_list|(
-name|Graph
-modifier|&
-name|G
-parameter_list|,
-name|unsigned
-name|NIdx
-parameter_list|)
+argument_list|(
+argument|Graph&G
+argument_list|,
+argument|unsigned NIdx
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -622,11 +606,11 @@ argument_list|()
 operator|&&
 literal|"Edge not connected to NIds[NIdx]."
 argument_list|)
-expr_stmt|;
+block|;
 name|NodeEntry
-modifier|&
+operator|&
 name|N
-init|=
+operator|=
 name|G
 operator|.
 name|getNode
@@ -636,7 +620,7 @@ index|[
 name|NIdx
 index|]
 argument_list|)
-decl_stmt|;
+block|;
 name|N
 operator|.
 name|removeAdjEdgeId
@@ -653,7 +637,7 @@ index|[
 name|NIdx
 index|]
 argument_list|)
-expr_stmt|;
+block|;
 name|ThisEdgeAdjIdxs
 index|[
 name|NIdx
@@ -663,18 +647,14 @@ name|NodeEntry
 operator|::
 name|getInvalidAdjEdgeIdx
 argument_list|()
-expr_stmt|;
-block|}
+block|;       }
 name|void
 name|disconnectFrom
-parameter_list|(
-name|Graph
-modifier|&
-name|G
-parameter_list|,
-name|NodeId
-name|NId
-parameter_list|)
+argument_list|(
+argument|Graph&G
+argument_list|,
+argument|NodeId NId
+argument_list|)
 block|{
 if|if
 condition|(
@@ -741,18 +721,18 @@ return|;
 block|}
 name|MatrixPtr
 name|Costs
-decl_stmt|;
+block|;
 name|EdgeMetadata
 name|Metadata
-decl_stmt|;
+block|;
 name|private
-label|:
+operator|:
 name|NodeId
 name|NIds
 index|[
 literal|2
 index|]
-decl_stmt|;
+block|;
 name|typename
 name|NodeEntry
 operator|::
@@ -761,76 +741,85 @@ name|ThisEdgeAdjIdxs
 index|[
 literal|2
 index|]
-expr_stmt|;
-block|}
-empty_stmt|;
+block|;     }
+block|;
 comment|// ----- MEMBERS -----
 name|GraphMetadata
 name|Metadata
-decl_stmt|;
+block|;
 name|CostAllocator
 name|CostAlloc
-decl_stmt|;
+block|;
 name|SolverT
-modifier|*
+operator|*
 name|Solver
-decl_stmt|;
-typedef|typedef
+operator|=
+name|nullptr
+block|;
+name|using
+name|NodeVector
+operator|=
 name|std
 operator|::
 name|vector
 operator|<
 name|NodeEntry
 operator|>
-name|NodeVector
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|FreeNodeVector
+operator|=
 name|std
 operator|::
 name|vector
 operator|<
 name|NodeId
 operator|>
-name|FreeNodeVector
-expr_stmt|;
+block|;
 name|NodeVector
 name|Nodes
-decl_stmt|;
+block|;
 name|FreeNodeVector
 name|FreeNodeIds
-decl_stmt|;
-typedef|typedef
+block|;
+name|using
+name|EdgeVector
+operator|=
 name|std
 operator|::
 name|vector
 operator|<
 name|EdgeEntry
 operator|>
-name|EdgeVector
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|FreeEdgeVector
+operator|=
 name|std
 operator|::
 name|vector
 operator|<
 name|EdgeId
 operator|>
-name|FreeEdgeVector
-expr_stmt|;
+block|;
 name|EdgeVector
 name|Edges
-decl_stmt|;
+block|;
 name|FreeEdgeVector
 name|FreeEdgeIds
-decl_stmt|;
+block|;
+name|Graph
+argument_list|(
+argument|const Graph&Other
+argument_list|)
+block|{}
 comment|// ----- INTERNAL METHODS -----
 name|NodeEntry
-modifier|&
+operator|&
 name|getNode
-parameter_list|(
-name|NodeId
-name|NId
-parameter_list|)
+argument_list|(
+argument|NodeId NId
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -843,7 +832,7 @@ argument_list|()
 operator|&&
 literal|"Out of bound NodeId"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Nodes
 index|[
@@ -853,13 +842,12 @@ return|;
 block|}
 specifier|const
 name|NodeEntry
-modifier|&
+operator|&
 name|getNode
 argument_list|(
-name|NodeId
-name|NId
+argument|NodeId NId
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -872,7 +860,7 @@ argument_list|()
 operator|&&
 literal|"Out of bound NodeId"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Nodes
 index|[
@@ -881,12 +869,11 @@ index|]
 return|;
 block|}
 name|EdgeEntry
-modifier|&
+operator|&
 name|getEdge
-parameter_list|(
-name|EdgeId
-name|EId
-parameter_list|)
+argument_list|(
+argument|EdgeId EId
+argument_list|)
 block|{
 return|return
 name|Edges
@@ -897,13 +884,12 @@ return|;
 block|}
 specifier|const
 name|EdgeEntry
-modifier|&
+operator|&
 name|getEdge
 argument_list|(
-name|EdgeId
-name|EId
+argument|EdgeId EId
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|Edges
@@ -914,16 +900,15 @@ return|;
 block|}
 name|NodeId
 name|addConstructedNode
-parameter_list|(
-name|NodeEntry
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeEntry N
+argument_list|)
 block|{
 name|NodeId
 name|NId
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -986,10 +971,9 @@ return|;
 block|}
 name|EdgeId
 name|addConstructedEdge
-parameter_list|(
-name|EdgeEntry
-name|E
-parameter_list|)
+argument_list|(
+argument|EdgeEntry E
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -1011,12 +995,12 @@ argument_list|()
 operator|&&
 literal|"Attempt to add duplicate edge."
 argument_list|)
-expr_stmt|;
+block|;
 name|EdgeId
 name|EId
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -1092,16 +1076,11 @@ name|this
 argument_list|,
 name|EId
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|EId
 return|;
 block|}
-name|Graph
-argument_list|(
-argument|const Graph&Other
-argument_list|)
-block|{}
 name|void
 name|operator
 init|=
@@ -1114,42 +1093,48 @@ operator|)
 block|{}
 name|public
 operator|:
-typedef|typedef
+name|using
+name|AdjEdgeItr
+operator|=
 name|typename
 name|NodeEntry
 operator|::
 name|AdjEdgeItr
-name|AdjEdgeItr
-expr_stmt|;
+decl_stmt|;
 name|class
 name|NodeItr
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|iterator_category
+init|=
 name|std
 operator|::
 name|forward_iterator_tag
-name|iterator_category
-expr_stmt|;
-typedef|typedef
-name|NodeId
+decl_stmt|;
+name|using
 name|value_type
-typedef|;
-typedef|typedef
-name|int
+init|=
+name|NodeId
+decl_stmt|;
+name|using
 name|difference_type
-typedef|;
-typedef|typedef
-name|NodeId
-modifier|*
+init|=
+name|int
+decl_stmt|;
+name|using
 name|pointer
-typedef|;
-typedef|typedef
+init|=
 name|NodeId
-modifier|&
+operator|*
+decl_stmt|;
+name|using
 name|reference
-typedef|;
+init|=
+name|NodeId
+operator|&
+decl_stmt|;
 name|NodeItr
 argument_list|(
 argument|NodeId CurNId
@@ -1478,7 +1463,7 @@ name|G
 argument_list|(
 argument|G
 argument_list|)
-block|{ }
+block|{}
 name|NodeItr
 name|begin
 argument_list|()
@@ -1576,7 +1561,7 @@ name|G
 argument_list|(
 argument|G
 argument_list|)
-block|{ }
+block|{}
 name|EdgeItr
 name|begin
 argument_list|()
@@ -1674,7 +1659,7 @@ name|NE
 argument_list|(
 argument|NE
 argument_list|)
-block|{ }
+block|{}
 name|typename
 name|NodeEntry
 operator|::
@@ -1758,38 +1743,25 @@ empty_stmt|;
 comment|/// @brief Construct an empty PBQP graph.
 name|Graph
 argument_list|()
-operator|:
-name|Solver
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// @brief Construct an empty PBQP graph with the given graph metadata.
 name|Graph
 argument_list|(
 argument|GraphMetadata Metadata
 argument_list|)
-operator|:
+block|:
 name|Metadata
 argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Metadata
-argument_list|)
-argument_list|)
-operator|,
-name|Solver
-argument_list|(
-argument|nullptr
+argument|std::move(Metadata)
 argument_list|)
 block|{}
 comment|/// @brief Get a reference to the graph metadata.
 name|GraphMetadata
-operator|&
+modifier|&
 name|getMetadata
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Metadata
@@ -3422,12 +3394,12 @@ end_function
 
 begin_comment
 unit|};  }
-comment|// namespace PBQP
+comment|// end namespace PBQP
 end_comment
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

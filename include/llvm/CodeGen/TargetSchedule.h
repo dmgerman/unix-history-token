@@ -200,6 +200,18 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief TargetSubtargetInfo getter.
+specifier|const
+name|TargetSubtargetInfo
+operator|*
+name|getSubtargetInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|STI
+return|;
+block|}
 comment|/// \brief TargetInstrInfo getter.
 specifier|const
 name|TargetInstrInfo

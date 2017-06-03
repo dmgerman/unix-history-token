@@ -748,6 +748,20 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
+comment|/// Replaces all frame index virtual registers with physical registers. Uses the
+comment|/// register scavenger to find an appropriate register to use.
+name|void
+name|scavengeFrameVirtualRegs
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
+name|RegScavenger
+modifier|&
+name|RS
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

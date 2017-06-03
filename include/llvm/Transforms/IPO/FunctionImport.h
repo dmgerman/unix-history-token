@@ -263,9 +263,6 @@ comment|///
 comment|/// \p ExportLists contains for each Module the set of globals (GUID) that will
 comment|/// be imported by another module, or referenced by such a function. I.e. this
 comment|/// is the set of globals that need to be promoted/renamed appropriately.
-comment|///
-comment|/// \p DeadSymbols (optional) contains a list of GUID that are deemed "dead" and
-comment|/// will be ignored for the purpose of importing.
 name|void
 name|ComputeCrossModuleImport
 argument_list|(
@@ -299,18 +296,6 @@ name|ExportSetTy
 operator|>
 operator|&
 name|ExportLists
-argument_list|,
-specifier|const
-name|DenseSet
-operator|<
-name|GlobalValue
-operator|::
-name|GUID
-operator|>
-operator|*
-name|DeadSymbols
-operator|=
-name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// Compute all the imports for the given module using the Index.
@@ -338,15 +323,9 @@ decl_stmt|;
 comment|/// Compute all the symbols that are "dead": i.e these that can't be reached
 comment|/// in the graph from any of the given symbols listed in
 comment|/// \p GUIDPreservedSymbols.
-name|DenseSet
-operator|<
-name|GlobalValue
-operator|::
-name|GUID
-operator|>
+name|void
 name|computeDeadSymbols
 argument_list|(
-specifier|const
 name|ModuleSummaryIndex
 operator|&
 name|Index
@@ -361,7 +340,7 @@ operator|>
 operator|&
 name|GUIDPreservedSymbols
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/// Compute the set of summaries needed for a ThinLTO backend compilation of
 comment|/// \p ModulePath.
 comment|//
