@@ -349,6 +349,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|INTRNG
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|armv6 requires INTRNG
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|pcpu
