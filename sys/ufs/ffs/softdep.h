@@ -3141,6 +3141,17 @@ begin_comment
 comment|/* flush thread not yet started */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FLUSH_RC_ACTIVE
+value|0x0008
+end_define
+
+begin_comment
+comment|/* a thread is flushing the mount point */
+end_comment
+
 begin_comment
 comment|/*  * Keep the old names from when these were in the ufsmount structure.  */
 end_comment

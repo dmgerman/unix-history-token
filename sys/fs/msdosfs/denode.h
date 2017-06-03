@@ -327,7 +327,7 @@ parameter_list|,
 name|dp
 parameter_list|)
 define|\
-value|(bcopy((dp)->deName, (dep)->de_Name, 11),	\ 	 (dep)->de_Attributes = (dp)->deAttributes,	\ 	 (dep)->de_LowerCase = (dp)->deLowerCase,	\ 	 (dep)->de_CHun = (dp)->deCHundredth,		\ 	 (dep)->de_CTime = getushort((dp)->deCTime),	\ 	 (dep)->de_CDate = getushort((dp)->deCDate),	\ 	 (dep)->de_ADate = getushort((dp)->deADate),	\ 	 (dep)->de_MTime = getushort((dp)->deMTime),	\ 	 (dep)->de_MDate = getushort((dp)->deMDate),	\ 	 (dep)->de_StartCluster = getushort((dp)->deStartCluster), \ 	 (dep)->de_FileSize = getulong((dp)->deFileSize), \ 	 (FAT32((dep)->de_pmp) ? DE_INTERNALIZE32((dep), (dp)) : 0))
+value|(memcpy((dep)->de_Name, (dp)->deName, 11),	\ 	 (dep)->de_Attributes = (dp)->deAttributes,	\ 	 (dep)->de_LowerCase = (dp)->deLowerCase,	\ 	 (dep)->de_CHun = (dp)->deCHundredth,		\ 	 (dep)->de_CTime = getushort((dp)->deCTime),	\ 	 (dep)->de_CDate = getushort((dp)->deCDate),	\ 	 (dep)->de_ADate = getushort((dp)->deADate),	\ 	 (dep)->de_MTime = getushort((dp)->deMTime),	\ 	 (dep)->de_MDate = getushort((dp)->deMDate),	\ 	 (dep)->de_StartCluster = getushort((dp)->deStartCluster), \ 	 (dep)->de_FileSize = getulong((dp)->deFileSize), \ 	 (FAT32((dep)->de_pmp) ? DE_INTERNALIZE32((dep), (dp)) : 0))
 end_define
 
 begin_define
@@ -340,7 +340,7 @@ parameter_list|,
 name|dep
 parameter_list|)
 define|\
-value|(bcopy((dep)->de_Name, (dp)->deName, 11),	\ 	 (dp)->deAttributes = (dep)->de_Attributes,	\ 	 (dp)->deLowerCase = (dep)->de_LowerCase,	\ 	 (dp)->deCHundredth = (dep)->de_CHun,		\ 	 putushort((dp)->deCTime, (dep)->de_CTime),	\ 	 putushort((dp)->deCDate, (dep)->de_CDate),	\ 	 putushort((dp)->deADate, (dep)->de_ADate),	\ 	 putushort((dp)->deMTime, (dep)->de_MTime),	\ 	 putushort((dp)->deMDate, (dep)->de_MDate),	\ 	 putushort((dp)->deStartCluster, (dep)->de_StartCluster), \ 	 putulong((dp)->deFileSize,			\ 	     ((dep)->de_Attributes& ATTR_DIRECTORY) ? 0 : (dep)->de_FileSize), \ 	 putushort((dp)->deHighClust, (dep)->de_StartCluster>> 16))
+value|(memcpy((dp)->deName, (dep)->de_Name, 11),	\ 	 (dp)->deAttributes = (dep)->de_Attributes,	\ 	 (dp)->deLowerCase = (dep)->de_LowerCase,	\ 	 (dp)->deCHundredth = (dep)->de_CHun,		\ 	 putushort((dp)->deCTime, (dep)->de_CTime),	\ 	 putushort((dp)->deCDate, (dep)->de_CDate),	\ 	 putushort((dp)->deADate, (dep)->de_ADate),	\ 	 putushort((dp)->deMTime, (dep)->de_MTime),	\ 	 putushort((dp)->deMDate, (dep)->de_MDate),	\ 	 putushort((dp)->deStartCluster, (dep)->de_StartCluster), \ 	 putulong((dp)->deFileSize,			\ 	     ((dep)->de_Attributes& ATTR_DIRECTORY) ? 0 : (dep)->de_FileSize), \ 	 putushort((dp)->deHighClust, (dep)->de_StartCluster>> 16))
 end_define
 
 begin_ifdef

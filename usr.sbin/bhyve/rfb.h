@@ -35,6 +35,10 @@ name|port
 parameter_list|,
 name|int
 name|wait
+parameter_list|,
+name|char
+modifier|*
+name|password
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -20,25 +20,19 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sockio.h>
+file|<sys/errno.h>
 end_include
 
 begin_include
@@ -56,43 +50,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
+file|<sys/sockio.h>
 end_include
 
 begin_include
@@ -116,43 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/mv/mvwin.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/mv/mvreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/mv/mvvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/etherswitch/etherswitch.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mdio/mdio.h>
 end_include
 
 begin_include
@@ -170,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mge/if_mgevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
@@ -183,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/ofw_bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
 begin_include
@@ -242,7 +164,6 @@ name|E6000SW_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-define|\
 value|sx_xlock(&(_sc)->sx)
 end_define
 
@@ -253,7 +174,6 @@ name|E6000SW_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-define|\
 value|sx_unlock(&(_sc)->sx)
 end_define
 
@@ -266,7 +186,6 @@ name|_sc
 parameter_list|,
 name|_what
 parameter_list|)
-define|\
 value|sx_assert(&(_sc)->sx, (_what))
 end_define
 
@@ -277,7 +196,6 @@ name|E6000SW_TRYLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-define|\
 value|sx_tryxlock(&(_sc)->sx)
 end_define
 
@@ -399,10 +317,8 @@ name|e6000sw_identify
 parameter_list|(
 name|driver_t
 modifier|*
-name|driver
 parameter_list|,
 name|device_t
-name|parent
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -413,7 +329,6 @@ name|int
 name|e6000sw_probe
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -424,7 +339,6 @@ name|int
 name|e6000sw_attach
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -435,7 +349,6 @@ name|int
 name|e6000sw_detach
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -446,13 +359,10 @@ name|int
 name|e6000sw_readphy
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|int
-name|phy
 parameter_list|,
 name|int
-name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -463,16 +373,12 @@ name|int
 name|e6000sw_writephy
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|int
-name|phy
 parameter_list|,
 name|int
-name|reg
 parameter_list|,
 name|int
-name|data
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -484,7 +390,6 @@ modifier|*
 name|e6000sw_getinfo
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -495,7 +400,6 @@ name|void
 name|e6000sw_lock
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -506,7 +410,6 @@ name|void
 name|e6000sw_unlock
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -517,11 +420,9 @@ name|int
 name|e6000sw_getport
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|etherswitch_port_t
 modifier|*
-name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -532,11 +433,9 @@ name|int
 name|e6000sw_setport
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|etherswitch_port_t
 modifier|*
-name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -547,10 +446,8 @@ name|int
 name|e6000sw_readreg_wrapper
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|int
-name|addr_reg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -561,13 +458,10 @@ name|int
 name|e6000sw_writereg_wrapper
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|int
-name|addr_reg
 parameter_list|,
 name|int
-name|val
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -578,13 +472,10 @@ name|int
 name|e6000sw_readphy_wrapper
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|int
-name|phy
 parameter_list|,
 name|int
-name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -595,16 +486,12 @@ name|int
 name|e6000sw_writephy_wrapper
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|int
-name|phy
 parameter_list|,
 name|int
-name|reg
 parameter_list|,
 name|int
-name|data
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -615,11 +502,9 @@ name|int
 name|e6000sw_getvgroup_wrapper
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|etherswitch_vlangroup_t
 modifier|*
-name|vg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -630,11 +515,9 @@ name|int
 name|e6000sw_setvgroup_wrapper
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|etherswitch_vlangroup_t
 modifier|*
-name|vg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -645,11 +528,9 @@ name|int
 name|e6000sw_setvgroup
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|etherswitch_vlangroup_t
 modifier|*
-name|vg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -660,11 +541,9 @@ name|int
 name|e6000sw_getvgroup
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|etherswitch_vlangroup_t
 modifier|*
-name|vg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -675,11 +554,9 @@ name|void
 name|e6000sw_setup
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -691,7 +568,6 @@ name|e6000sw_port_vlan_conf
 parameter_list|(
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -703,7 +579,6 @@ name|e6000sw_tick
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -714,17 +589,13 @@ name|void
 name|e6000sw_set_atustat
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|,
 name|int
-name|bin
 parameter_list|,
 name|int
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -735,14 +606,11 @@ name|int
 name|e6000sw_atu_flush
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|,
 name|int
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -755,16 +623,12 @@ name|e6000sw_writereg
 parameter_list|(
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|,
 name|int
-name|addr
 parameter_list|,
 name|int
-name|reg
 parameter_list|,
 name|int
-name|val
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -777,13 +641,10 @@ name|e6000sw_readreg
 parameter_list|(
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|,
 name|int
-name|addr
 parameter_list|,
 name|int
-name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -796,7 +657,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -809,12 +669,10 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifp
 parameter_list|,
 name|struct
 name|ifmediareq
 modifier|*
-name|ifmr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -825,19 +683,15 @@ name|int
 name|e6000sw_atu_mac_table
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|,
 name|struct
 name|atu_opt
 modifier|*
-name|atu
 parameter_list|,
 name|int
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -849,14 +703,11 @@ name|e6000sw_get_pvid
 parameter_list|(
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|,
 name|int
-name|port
 parameter_list|,
 name|int
 modifier|*
-name|pvid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -868,13 +719,10 @@ name|e6000sw_set_pvid
 parameter_list|(
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|,
 name|int
-name|port
 parameter_list|,
 name|int
-name|pvid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -887,10 +735,8 @@ name|e6000sw_is_cpuport
 parameter_list|(
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|,
 name|int
-name|port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -903,10 +749,8 @@ name|e6000sw_is_fixedport
 parameter_list|(
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|,
 name|int
-name|port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -919,10 +763,8 @@ name|e6000sw_is_phyport
 parameter_list|(
 name|e6000sw_softc_t
 modifier|*
-name|sc
 parameter_list|,
 name|int
-name|port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -935,9 +777,9 @@ name|mii_data
 operator|*
 name|e6000sw_miiforphy
 argument_list|(
-argument|e6000sw_softc_t *sc
+argument|e6000sw_softc_t *
 argument_list|,
-argument|unsigned int phy
+argument|unsigned int
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1189,21 +1031,21 @@ begin_define
 define|#
 directive|define
 name|SMI_CMD_BUSY
-value|(1<<15)
+value|(1<< 15)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SMI_CMD_OP_READ
-value|((2<<10)|SMI_CMD_BUSY|(1<<12))
+value|((2<< 10) | SMI_CMD_BUSY | (1<< 12))
 end_define
 
 begin_define
 define|#
 directive|define
 name|SMI_CMD_OP_WRITE
-value|((1<<10)|SMI_CMD_BUSY|(1<<12))
+value|((1<< 10) | SMI_CMD_BUSY | (1<< 12))
 end_define
 
 begin_define
@@ -1224,6 +1066,7 @@ name|addr
 parameter_list|,
 name|reg
 parameter_list|)
+define|\
 value|MDIO_READREG(device_get_parent(dev), (addr), (reg))
 end_define
 
@@ -1240,6 +1083,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
+define|\
 value|MDIO_WRITEREG(device_get_parent(dev), (addr), (reg), (val))
 end_define
 
@@ -1303,14 +1147,13 @@ name|char
 modifier|*
 name|description
 decl_stmt|;
-name|unsigned
-name|int
-name|id
-decl_stmt|;
 name|phandle_t
 name|dsa_node
 decl_stmt|,
 name|switch_node
+decl_stmt|;
+name|uint32_t
+name|id
 decl_stmt|;
 name|dsa_node
 operator|=
@@ -1457,6 +1300,11 @@ argument_list|,
 name|SWITCH_ID
 argument_list|)
 expr_stmt|;
+name|E6000SW_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|id
@@ -1489,11 +1337,6 @@ literal|"Marvell 88E6176"
 expr_stmt|;
 break|break;
 default|default:
-name|E6000SW_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sx_destroy
 argument_list|(
 operator|&
@@ -1522,11 +1365,6 @@ argument_list|(
 name|dev
 argument_list|,
 name|description
-argument_list|)
-expr_stmt|;
-name|E6000SW_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -2483,7 +2321,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+name|E6000SW_SMI_TIMEOUT
 condition|;
 name|i
 operator|++
@@ -2499,7 +2337,7 @@ name|sc
 argument_list|,
 name|REG_GLOBAL2
 argument_list|,
-name|PHY_CMD
+name|SMI_PHY_CMD_REG
 argument_list|)
 operator|&
 operator|(
@@ -2568,10 +2406,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|val
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2635,7 +2469,7 @@ operator|)
 return|;
 block|}
 name|val
-operator||=
+operator|=
 literal|1
 operator|<<
 name|PHY_CMD_SMI_BUSY
@@ -2720,12 +2554,12 @@ name|REG_GLOBAL2
 argument_list|,
 name|SMI_PHY_DATA_REG
 argument_list|)
-operator|&
-name|PHY_DATA_MASK
 expr_stmt|;
 return|return
 operator|(
 name|val
+operator|&
+name|PHY_DATA_MASK
 operator|)
 return|;
 block|}
@@ -2765,10 +2599,6 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|val
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2833,16 +2663,16 @@ operator|)
 return|;
 block|}
 name|val
+operator|=
+literal|1
+operator|<<
+name|PHY_CMD_SMI_BUSY
+expr_stmt|;
+name|val
 operator||=
 name|PHY_CMD_MODE_MDIO
 operator|<<
 name|PHY_CMD_MODE
-expr_stmt|;
-name|val
-operator||=
-literal|1
-operator|<<
-name|PHY_CMD_SMI_BUSY
 expr_stmt|;
 name|val
 operator||=
@@ -2907,7 +2737,6 @@ name|err
 operator|!=
 literal|0
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -2918,12 +2747,6 @@ expr_stmt|;
 return|return
 operator|(
 name|err
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
@@ -3174,10 +2997,6 @@ name|ifmediareq
 modifier|*
 name|ifmr
 decl_stmt|;
-name|err
-operator|=
-literal|0
-expr_stmt|;
 name|e6000sw_softc_t
 modifier|*
 name|sc
@@ -3192,11 +3011,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|SA_UNLOCKED
-argument_list|)
-expr_stmt|;
-name|E6000SW_LOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -3215,15 +3029,20 @@ name|es_port
 operator|<
 literal|0
 condition|)
-block|{
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|err
 operator|=
-name|EINVAL
+literal|0
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+name|E6000SW_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|e6000sw_get_pvid
 argument_list|(
 name|sc
@@ -3388,8 +3207,6 @@ name|SIOCGIFMEDIA
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
 name|E6000SW_UNLOCK
 argument_list|(
 name|sc
@@ -3428,10 +3245,6 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
-name|err
-operator|=
-literal|0
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -3444,11 +3257,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|SA_UNLOCKED
-argument_list|)
-expr_stmt|;
-name|E6000SW_LOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -3467,15 +3275,20 @@ name|es_port
 operator|<
 literal|0
 condition|)
-block|{
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|err
 operator|=
-name|EINVAL
+literal|0
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+name|E6000SW_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -3543,8 +3356,6 @@ name|SIOCSIFMEDIA
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
 name|E6000SW_UNLOCK
 argument_list|(
 name|sc
@@ -4691,11 +4502,20 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -4963,7 +4783,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-return|return;
 block|}
 end_function
 

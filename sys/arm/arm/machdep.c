@@ -349,6 +349,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|INTRNG
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|armv6 requires INTRNG
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|pcpu
@@ -1181,6 +1206,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_EVENTTIMERS
+end_ifdef
+
 begin_comment
 comment|/*  * Most ARM platforms don't need to do anything special to init their clocks  * (they get intialized during normal device attachment), and by not defining a  * cpu_initclocks() function they get this generic one.  Any platform that needs  * to do something special can just provide their own implementation, which will  * override this one due to the weak linkage.  */
 end_comment
@@ -1191,10 +1222,31 @@ name|arm_generic_initclocks
 parameter_list|(
 name|void
 parameter_list|)
+block|{ }
+end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|arm_generic_initclocks
+argument_list|,
+name|cpu_initclocks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|void
+name|cpu_initclocks
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|NO_EVENTTIMERS
 ifdef|#
 directive|ifdef
 name|SMP
@@ -1221,20 +1273,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
 block|}
 end_function
 
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|arm_generic_initclocks
-argument_list|,
-name|cpu_initclocks
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
