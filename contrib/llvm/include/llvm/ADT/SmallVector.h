@@ -2253,6 +2253,14 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// FIXME: Consider assigning over existing elements, rather than clearing&
+end_comment
+
+begin_comment
+comment|// re-initializing them - for all assign(...) variants.
+end_comment
+
 begin_function
 name|void
 name|assign
@@ -2317,42 +2325,54 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|in_iter
+operator|>
 name|void
 name|assign
 argument_list|(
-name|std
-operator|::
-name|initializer_list
-operator|<
-name|T
-operator|>
-name|IL
+argument|in_iter in_start
+argument_list|,
+argument|in_iter in_end
 argument_list|)
 block|{
 name|clear
 argument_list|()
-expr_stmt|;
+block|;
+name|append
+argument_list|(
+name|in_start
+argument_list|,
+name|in_end
+argument_list|)
+block|;   }
+name|void
+name|assign
+argument_list|(
+argument|std::initializer_list<T> IL
+argument_list|)
+block|{
+name|clear
+argument_list|()
+block|;
 name|append
 argument_list|(
 name|IL
 argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_function
+block|;   }
 name|iterator
 name|erase
-parameter_list|(
-name|const_iterator
-name|CI
-parameter_list|)
+argument_list|(
+argument|const_iterator CI
+argument_list|)
 block|{
 comment|// Just cast away constness because this is a non-const member function.
 name|iterator
 name|I
-init|=
+operator|=
 name|const_cast
 operator|<
 name|iterator
@@ -2360,7 +2380,7 @@ operator|>
 operator|(
 name|CI
 operator|)
-decl_stmt|;
+block|;
 name|assert
 argument_list|(
 name|I
@@ -2372,7 +2392,7 @@ argument_list|()
 operator|&&
 literal|"Iterator to erase is out of bounds."
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|I
@@ -2384,12 +2404,12 @@ argument_list|()
 operator|&&
 literal|"Erasing at past-the-end iterator."
 argument_list|)
-expr_stmt|;
+block|;
 name|iterator
 name|N
-init|=
+operator|=
 name|I
-decl_stmt|;
+block|;
 comment|// Shift all elts down one.
 name|std
 operator|::
@@ -2406,20 +2426,20 @@ argument_list|()
 argument_list|,
 name|I
 argument_list|)
-expr_stmt|;
+block|;
 comment|// Drop the last elt.
 name|this
 operator|->
 name|pop_back
 argument_list|()
-expr_stmt|;
+block|;
 return|return
 operator|(
 name|N
 operator|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_function
 name|iterator

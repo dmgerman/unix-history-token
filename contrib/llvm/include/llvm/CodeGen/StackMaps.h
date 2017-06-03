@@ -509,7 +509,11 @@ comment|///<id>,<num patch bytes>,<num call arguments>,<call target>,
 end_comment
 
 begin_comment
-comment|///   [call arguments],<StackMaps::ConstantOp>,<calling convention>,
+comment|///   [call arguments...],
+end_comment
+
+begin_comment
+comment|///<StackMaps::ConstantOp>,<calling convention>,
 end_comment
 
 begin_comment
@@ -517,18 +521,30 @@ comment|///<StackMaps::ConstantOp>,<statepoint flags>,
 end_comment
 
 begin_comment
-comment|///<StackMaps::ConstantOp>,<num other args>, [other args],
+comment|///<StackMaps::ConstantOp>,<num deopt args>, [deopt args...],
 end_comment
 
 begin_comment
-comment|///   [gc values]
+comment|///<gc base/derived pairs...><gc allocas...>
+end_comment
+
+begin_comment
+comment|/// Note that the last two sets of arguments are not currently length
+end_comment
+
+begin_comment
+comment|///   prefixed.
 end_comment
 
 begin_decl_stmt
 name|class
 name|StatepointOpers
 block|{
-name|private
+comment|// TODO:: we should change the STATEPOINT representation so that CC and
+comment|// Flags should be part of meta operands, with args and deopt operands, and
+comment|// gc operands all prefixed by their length and a type code. This would be
+comment|// much more consistent.
+name|public
 label|:
 comment|// These values are aboolute offsets into the operands of the statepoint
 comment|// instruction.
@@ -557,13 +573,11 @@ name|FlagsOffset
 init|=
 literal|3
 block|,
-name|NumVMSArgsOffset
+name|NumDeoptOperandsOffset
 init|=
 literal|5
 block|}
 enum|;
-name|public
-label|:
 name|explicit
 name|StatepointOpers
 argument_list|(
@@ -804,8 +818,9 @@ struct|;
 comment|// OpTypes are used to encode information about the following logical
 comment|// operand (which may consist of several MachineOperands) for the
 comment|// OpParser.
-typedef|typedef
-enum|enum
+name|using
+name|OpType
+init|= enum
 block|{
 name|DirectMemRefOp
 block|,
@@ -813,8 +828,7 @@ name|IndirectMemRefOp
 block|,
 name|ConstantOp
 block|}
-name|OpType
-typedef|;
+decl_stmt|;
 name|StackMaps
 argument_list|(
 name|AsmPrinter
@@ -889,33 +903,30 @@ name|char
 modifier|*
 name|WSMP
 decl_stmt|;
-typedef|typedef
+name|using
+name|LocationVec
+init|=
 name|SmallVector
 operator|<
 name|Location
-operator|,
-literal|8
-operator|>
-name|LocationVec
-expr_stmt|;
-typedef|typedef
+decl_stmt|, 8>;
+name|using
+name|LiveOutVec
+init|=
 name|SmallVector
 operator|<
 name|LiveOutReg
-operator|,
-literal|8
-operator|>
-name|LiveOutVec
-expr_stmt|;
-typedef|typedef
+decl_stmt|, 8>;
+name|using
+name|ConstantPool
+init|=
 name|MapVector
 operator|<
 name|uint64_t
-operator|,
+decl_stmt|,
 name|uint64_t
-operator|>
-name|ConstantPool
-expr_stmt|;
+decl|>
+decl_stmt|;
 struct|struct
 name|FunctionInfo
 block|{
@@ -1011,26 +1022,28 @@ argument_list|)
 block|{}
 block|}
 struct|;
-typedef|typedef
+name|using
+name|FnInfoMap
+init|=
 name|MapVector
 operator|<
 specifier|const
 name|MCSymbol
 operator|*
-operator|,
+decl_stmt|,
 name|FunctionInfo
-operator|>
-name|FnInfoMap
-expr_stmt|;
-typedef|typedef
+decl|>
+decl_stmt|;
+name|using
+name|CallsiteInfoList
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|CallsiteInfo
 operator|>
-name|CallsiteInfoList
-expr_stmt|;
+decl_stmt|;
 name|AsmPrinter
 modifier|&
 name|AP

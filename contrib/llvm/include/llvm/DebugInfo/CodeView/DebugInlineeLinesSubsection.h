@@ -291,11 +291,28 @@ name|DebugSubsection
 block|{
 name|public
 operator|:
+expr|struct
+name|Entry
+block|{
+name|std
+operator|::
+name|vector
+operator|<
+name|support
+operator|::
+name|ulittle32_t
+operator|>
+name|ExtraFiles
+block|;
+name|InlineeSourceLineHeader
+name|Header
+block|;   }
+block|;
 name|DebugInlineeLinesSubsection
 argument_list|(
 argument|DebugChecksumsSubsection&Checksums
 argument_list|,
-argument|bool HasExtraFiles
+argument|bool HasExtraFiles = false
 argument_list|)
 block|;
 specifier|static
@@ -346,6 +363,63 @@ argument_list|(
 argument|StringRef FileName
 argument_list|)
 block|;
+name|bool
+name|hasExtraFiles
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasExtraFiles
+return|;
+block|}
+name|void
+name|setHasExtraFiles
+argument_list|(
+argument|bool Has
+argument_list|)
+block|{
+name|HasExtraFiles
+operator|=
+name|Has
+block|; }
+name|std
+operator|::
+name|vector
+operator|<
+name|Entry
+operator|>
+operator|::
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Entries
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|std
+operator|::
+name|vector
+operator|<
+name|Entry
+operator|>
+operator|::
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Entries
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 name|private
 operator|:
 name|DebugChecksumsSubsection
@@ -361,22 +435,6 @@ name|uint32_t
 name|ExtraFileCount
 operator|=
 literal|0
-block|;    struct
-name|Entry
-block|{
-name|std
-operator|::
-name|vector
-operator|<
-name|support
-operator|::
-name|ulittle32_t
-operator|>
-name|ExtraFiles
-block|;
-name|InlineeSourceLineHeader
-name|Header
-block|;   }
 block|;
 name|std
 operator|::

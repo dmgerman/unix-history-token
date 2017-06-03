@@ -73,11 +73,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|// Initialize coverage.
-name|void
-name|__sanitizer_cov_init
-parameter_list|()
-function_decl|;
 comment|// Record and dump coverage info.
 name|void
 name|__sanitizer_cov_dump
@@ -95,18 +90,6 @@ name|pcs
 parameter_list|,
 name|uintptr_t
 name|len
-parameter_list|)
-function_decl|;
-comment|// Open<name>.sancov.packed in the coverage directory and return the file
-comment|// descriptor. Returns -1 on failure, or if coverage dumping is disabled.
-comment|// This is intended for use by sandboxing code.
-name|intptr_t
-name|__sanitizer_maybe_open_cov_file
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
 parameter_list|)
 function_decl|;
 ifdef|#

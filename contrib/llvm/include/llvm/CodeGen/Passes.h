@@ -326,6 +326,12 @@ name|char
 modifier|&
 name|RAGreedyID
 decl_stmt|;
+comment|/// Basic register allocator.
+specifier|extern
+name|char
+modifier|&
+name|RABasicID
+decl_stmt|;
 comment|/// VirtRegRewriter pass. Rewrite virtual registers to physical registers as
 comment|/// assigned in VirtRegMap.
 specifier|extern

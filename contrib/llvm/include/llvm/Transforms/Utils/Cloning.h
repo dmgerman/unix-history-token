@@ -155,6 +155,9 @@ name|class
 name|CallGraph
 decl_stmt|;
 name|class
+name|DebugInfoFinder
+decl_stmt|;
+name|class
 name|DominatorTree
 decl_stmt|;
 name|class
@@ -344,6 +347,12 @@ parameter_list|,
 name|ClonedCodeInfo
 modifier|*
 name|CodeInfo
+init|=
+name|nullptr
+parameter_list|,
+name|DebugInfoFinder
+modifier|*
+name|DIFinder
 init|=
 name|nullptr
 parameter_list|)

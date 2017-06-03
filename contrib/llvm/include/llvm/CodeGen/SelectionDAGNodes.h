@@ -190,6 +190,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Metadata.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/AlignOf.h"
 end_include
 
@@ -270,8 +276,19 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|SelectionDAG
+name|APInt
 decl_stmt|;
+name|class
+name|Constant
+decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|DenseMapInfo
+expr_stmt|;
 name|class
 name|GlobalValue
 decl_stmt|;
@@ -282,22 +299,23 @@ name|class
 name|MachineConstantPoolValue
 decl_stmt|;
 name|class
+name|MCSymbol
+decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
+name|class
 name|SDNode
+decl_stmt|;
+name|class
+name|SelectionDAG
+decl_stmt|;
+name|class
+name|Type
 decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-name|class
-name|MCSymbol
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-expr|struct
-name|DenseMapInfo
-expr_stmt|;
 name|void
 name|checkForCycles
 parameter_list|(
@@ -969,11 +987,12 @@ operator|<
 name|SDValue
 operator|>
 block|{
-typedef|typedef
-name|SDNode
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|SDNode
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -988,14 +1007,10 @@ name|getNode
 argument_list|()
 return|;
 block|}
-block|}
 end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -1006,12 +1021,13 @@ specifier|const
 name|SDValue
 operator|>
 block|{
-typedef|typedef
+name|using
+name|SimpleType
+operator|=
 comment|/*const*/
 name|SDNode
-modifier|*
-name|SimpleType
-typedef|;
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -1026,14 +1042,10 @@ name|getNode
 argument_list|()
 return|;
 block|}
-block|}
 end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// Represents a use of a SDNode. This class holds an SDValue,
 end_comment
 
@@ -1396,11 +1408,12 @@ operator|<
 name|SDUse
 operator|>
 block|{
-typedef|typedef
-name|SDNode
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|SDNode
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -1415,14 +1428,10 @@ name|getNode
 argument_list|()
 return|;
 block|}
-block|}
 end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// These are IR-level optimization flags that may be propagated to SDNodes.
 end_comment
 
@@ -2744,7 +2753,9 @@ argument_list|)
 block|{}
 name|public
 operator|:
-typedef|typedef
+name|using
+name|reference
+operator|=
 name|std
 operator|::
 name|iterator
@@ -2759,9 +2770,10 @@ name|ptrdiff_t
 operator|>
 operator|::
 name|reference
-name|reference
 expr_stmt|;
-typedef|typedef
+name|using
+name|pointer
+init|=
 name|std
 operator|::
 name|iterator
@@ -2769,15 +2781,13 @@ operator|<
 name|std
 operator|::
 name|forward_iterator_tag
-operator|,
+decl_stmt|,
 name|SDUse
-operator|,
+decl_stmt|,
 name|ptrdiff_t
-operator|>
-operator|::
+decl|>::
 name|pointer
-name|pointer
-expr_stmt|;
+decl_stmt|;
 name|use_iterator
 argument_list|()
 operator|=
@@ -3443,13 +3453,14 @@ return|;
 block|}
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
-name|SDUse
-modifier|*
+begin_decl_stmt
+name|using
 name|op_iterator
-typedef|;
-end_typedef
+init|=
+name|SDUse
+operator|*
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|op_iterator
@@ -3881,14 +3892,15 @@ return|;
 block|}
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|value_iterator
+init|=
 specifier|const
 name|EVT
-modifier|*
-name|value_iterator
-typedef|;
-end_typedef
+operator|*
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|value_iterator
@@ -8303,7 +8315,7 @@ name|TargetFlags
 argument_list|(
 argument|Flags
 argument_list|)
-block|{   }
+block|{}
 name|public
 operator|:
 specifier|const
@@ -9852,12 +9864,13 @@ name|SDNode
 block|{
 name|public
 operator|:
-typedef|typedef
-name|MachineMemOperand
-modifier|*
-modifier|*
+name|using
 name|mmo_iterator
-typedef|;
+operator|=
+name|MachineMemOperand
+operator|*
+operator|*
+block|;
 name|private
 operator|:
 name|friend
@@ -10237,15 +10250,17 @@ name|SDNode
 operator|*
 operator|>
 block|{
-typedef|typedef
-name|SDNode
-modifier|*
+name|using
 name|NodeRef
-typedef|;
-typedef|typedef
-name|SDNodeIterator
+operator|=
+name|SDNode
+operator|*
+block|;
+name|using
 name|ChildIteratorType
-typedef|;
+operator|=
+name|SDNodeIterator
+block|;
 specifier|static
 name|NodeRef
 name|getEntryNode
@@ -10295,24 +10310,26 @@ comment|/// A representation of the largest SDNode, for use in sizeof().
 comment|///
 comment|/// This needs to be a union because the largest node differs on 32 bit systems
 comment|/// with 4 and 8 byte pointer alignment, respectively.
-typedef|typedef
+name|using
+name|LargestSDNode
+operator|=
 name|AlignedCharArrayUnion
 operator|<
 name|AtomicSDNode
-operator|,
+block|,
 name|TargetIndexSDNode
-operator|,
+block|,
 name|BlockAddressSDNode
-operator|,
+block|,
 name|GlobalAddressSDNode
 operator|>
-name|LargestSDNode
-expr_stmt|;
+block|;
 comment|/// The SDNode class with the greatest alignment requirement.
-typedef|typedef
-name|GlobalAddressSDNode
+name|using
 name|MostAlignedSDNode
-typedef|;
+operator|=
+name|GlobalAddressSDNode
+block|;
 name|namespace
 name|ISD
 block|{

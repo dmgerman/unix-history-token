@@ -2073,9 +2073,14 @@ argument_list|()
 operator|:
 name|MaxAndComplete
 argument_list|(
-argument|nullptr
+name|nullptr
 argument_list|,
 literal|0
+argument_list|)
+block|,
+name|MaxOrZero
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|BackedgeTakenInfo

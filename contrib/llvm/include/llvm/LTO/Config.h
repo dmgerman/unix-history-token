@@ -186,6 +186,12 @@ name|DisableVerify
 init|=
 name|false
 decl_stmt|;
+comment|/// Use the new pass manager
+name|bool
+name|UseNewPM
+init|=
+name|false
+decl_stmt|;
 comment|/// Disable entirely the optimizer, including importing for ThinLTO
 name|bool
 name|CodeGenOnly

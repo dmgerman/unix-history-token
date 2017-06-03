@@ -184,6 +184,11 @@ name|bool
 name|buildDependentStatements
 argument_list|()
 block|;
+comment|/// \brief Build just parameter moves. To use for rebuilding in TreeTransform.
+name|bool
+name|buildParameterMoves
+argument_list|()
+block|;
 name|bool
 name|isInvalid
 argument_list|()

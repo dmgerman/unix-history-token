@@ -114,6 +114,8 @@ name|CVSymbol
 name|toCodeViewSymbol
 argument_list|(
 argument|BumpPtrAllocator&Allocator
+argument_list|,
+argument|codeview::CodeViewContainer Container
 argument_list|)
 specifier|const
 expr_stmt|;

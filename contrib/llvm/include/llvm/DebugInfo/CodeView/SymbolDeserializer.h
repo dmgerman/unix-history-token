@@ -109,14 +109,11 @@ name|SymbolVisitorCallbacks
 block|{   struct
 name|MappingInfo
 block|{
-name|explicit
 name|MappingInfo
 argument_list|(
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-name|RecordData
+argument|ArrayRef<uint8_t> RecordData
+argument_list|,
+argument|CodeViewContainer Container
 argument_list|)
 operator|:
 name|Stream
@@ -138,6 +135,8 @@ block|,
 name|Mapping
 argument_list|(
 argument|Reader
+argument_list|,
+argument|Container
 argument_list|)
 block|{}
 name|BinaryByteStream
@@ -166,10 +165,16 @@ argument_list|,
 argument|T&Record
 argument_list|)
 block|{
+comment|// If we're just deserializing one record, then don't worry about alignment
+comment|// as there's nothing that comes after.
 name|SymbolDeserializer
 name|S
 argument_list|(
 name|nullptr
+argument_list|,
+name|CodeViewContainer
+operator|::
+name|ObjectFile
 argument_list|)
 block|;
 if|if
@@ -229,14 +234,19 @@ block|}
 name|explicit
 name|SymbolDeserializer
 argument_list|(
-name|SymbolVisitorDelegate
-operator|*
-name|Delegate
+argument|SymbolVisitorDelegate *Delegate
+argument_list|,
+argument|CodeViewContainer Container
 argument_list|)
-operator|:
+block|:
 name|Delegate
 argument_list|(
-argument|Delegate
+name|Delegate
+argument_list|)
+operator|,
+name|Container
+argument_list|(
+argument|Container
 argument_list|)
 block|{}
 name|Error
@@ -267,6 +277,8 @@ name|Record
 operator|.
 name|content
 argument_list|()
+operator|,
+name|Container
 operator|)
 block|;
 return|return
@@ -408,6 +420,12 @@ begin_decl_stmt
 name|SymbolVisitorDelegate
 modifier|*
 name|Delegate
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CodeViewContainer
+name|Container
 decl_stmt|;
 end_decl_stmt
 

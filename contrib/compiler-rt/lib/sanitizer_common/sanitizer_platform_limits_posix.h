@@ -100,6 +100,20 @@ define|\
 value|((link_map*)((handle) == nullptr ? nullptr : ((char*)(handle) + 544)))
 end_define
 
+begin_comment
+comment|// Get sys/_types.h, because that tells us whether 64-bit inodes are
+end_comment
+
+begin_comment
+comment|// used in struct dirent below.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -1850,6 +1864,12 @@ name|SANITIZER_FREEBSD
 struct|struct
 name|__sanitizer_dirent
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__INO64
+argument_list|)
 name|unsigned
 name|long
 name|long
@@ -1860,6 +1880,14 @@ name|long
 name|long
 name|d_off
 decl_stmt|;
+else|#
+directive|else
+name|unsigned
+name|int
+name|d_fileno
+decl_stmt|;
+endif|#
+directive|endif
 name|unsigned
 name|short
 name|d_reclen

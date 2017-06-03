@@ -353,6 +353,9 @@ name|bool
 name|FlatForGlobal
 block|;
 name|bool
+name|AutoWaitcntBeforeBarrier
+block|;
+name|bool
 name|UnalignedScratchAccess
 block|;
 name|bool
@@ -637,6 +640,13 @@ operator|==
 name|Triple
 operator|::
 name|OpenCL
+operator|||
+name|TargetTriple
+operator|.
+name|getEnvironmentName
+argument_list|()
+operator|==
+literal|"amdgizcl"
 return|;
 block|}
 name|Generation
@@ -1216,6 +1226,18 @@ specifier|const
 block|{
 return|return
 name|FlatForGlobal
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|hasAutoWaitcntBeforeBarrier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AutoWaitcntBeforeBarrier
 return|;
 block|}
 end_expr_stmt
@@ -2592,17 +2614,6 @@ argument|unsigned VGPRs
 argument_list|)
 specifier|const
 block|;
-comment|/// \returns True if waitcnt instruction is needed before barrier instruction,
-comment|/// false otherwise.
-name|bool
-name|needWaitcntBeforeBarrier
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|/// \returns true if the flat_scratch register should be initialized with the
 comment|/// pointer to the wave's scratch memory rather than a size and offset.
 name|bool

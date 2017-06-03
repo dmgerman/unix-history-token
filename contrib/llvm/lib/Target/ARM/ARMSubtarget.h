@@ -578,6 +578,13 @@ name|AvoidCPSRPartialUpdate
 operator|=
 name|false
 block|;
+comment|/// CheapPredicableCPSRDef - If true, disable +1 predication cost
+comment|/// for instructions updating CPSR. Enabled for Cortex-A57.
+name|bool
+name|CheapPredicableCPSRDef
+operator|=
+name|false
+block|;
 comment|/// AvoidMOVsShifterOperand - If true, codegen should avoid using flag setting
 comment|/// movs with shifter operand (i.e. asr, lsl, lsr).
 name|bool
@@ -1743,6 +1750,15 @@ specifier|const
 block|{
 return|return
 name|AvoidCPSRPartialUpdate
+return|;
+block|}
+name|bool
+name|cheapPredicableCPSRDef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CheapPredicableCPSRDef
 return|;
 block|}
 name|bool

@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/TinyPtrVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -354,6 +360,27 @@ comment|// Adjust the HeaderFileInfoTrait::EmitData streaming.
 comment|// Adjust ModuleMap::addHeader.
 block|}
 enum|;
+comment|/// Convert a header kind to a role. Requires Kind to not be HK_Excluded.
+specifier|static
+name|ModuleHeaderRole
+name|headerKindToRole
+argument_list|(
+name|Module
+operator|::
+name|HeaderKind
+name|Kind
+argument_list|)
+decl_stmt|;
+comment|/// Convert a header role to a kind.
+specifier|static
+name|Module
+operator|::
+name|HeaderKind
+name|headerRoleToKind
+argument_list|(
+argument|ModuleHeaderRole Role
+argument_list|)
+expr_stmt|;
 comment|/// \brief A header that is known to reside within a given module,
 comment|/// whether it was included or excluded.
 name|class
@@ -582,6 +609,40 @@ comment|/// that header.
 name|HeadersMap
 name|Headers
 decl_stmt|;
+comment|/// Map from file sizes to modules with lazy header directives of that size.
+name|mutable
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|off_t
+operator|,
+name|llvm
+operator|::
+name|TinyPtrVector
+operator|<
+name|Module
+operator|*
+operator|>>
+name|LazyHeadersBySize
+expr_stmt|;
+comment|/// Map from mtimes to modules with lazy header directives with those mtimes.
+name|mutable
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|time_t
+operator|,
+name|llvm
+operator|::
+name|TinyPtrVector
+operator|<
+name|Module
+operator|*
+operator|>>
+name|LazyHeadersByModTime
+expr_stmt|;
 comment|/// \brief Mapping from directories with umbrella headers to the module
 comment|/// that is generated from the umbrella header.
 comment|///
@@ -802,7 +863,21 @@ name|Complain
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Resolve the given header directive to an actual header file.
+comment|/// Add an unresolved header to a module.
+name|void
+name|addUnresolvedHeader
+argument_list|(
+name|Module
+operator|*
+name|Mod
+argument_list|,
+name|Module
+operator|::
+name|UnresolvedHeaderDirective
+name|Header
+argument_list|)
+decl_stmt|;
+comment|/// Look up the given header directive to find an actual header file.
 comment|///
 comment|/// \param M The module in which we're resolving the header directive.
 comment|/// \param Header The header directive to resolve.
@@ -812,15 +887,17 @@ comment|/// \return The resolved file, if any.
 specifier|const
 name|FileEntry
 modifier|*
-name|resolveHeader
+name|findHeader
 argument_list|(
 name|Module
 operator|*
 name|M
 argument_list|,
+specifier|const
 name|Module
 operator|::
 name|UnresolvedHeaderDirective
+operator|&
 name|Header
 argument_list|,
 name|SmallVectorImpl
@@ -831,28 +908,38 @@ operator|&
 name|RelativePathName
 argument_list|)
 decl_stmt|;
+comment|/// Resolve the given header directive.
+name|void
+name|resolveHeader
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+specifier|const
+name|Module
+operator|::
+name|UnresolvedHeaderDirective
+operator|&
+name|Header
+argument_list|)
+decl_stmt|;
 comment|/// Attempt to resolve the specified header directive as naming a builtin
 comment|/// header.
-specifier|const
-name|FileEntry
-modifier|*
+comment|/// \return \c true if a corresponding builtin header was found.
+name|bool
 name|resolveAsBuiltinHeader
 argument_list|(
 name|Module
 operator|*
 name|M
 argument_list|,
+specifier|const
 name|Module
 operator|::
 name|UnresolvedHeaderDirective
-name|Header
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
 operator|&
-name|BuiltinPathName
+name|Header
 argument_list|)
 decl_stmt|;
 comment|/// \brief Looks up the modules that \p File corresponds to.
@@ -1117,6 +1204,30 @@ argument|const FileEntry *File
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// Resolve all lazy header directives for the specified file.
+comment|///
+comment|/// This ensures that the HeaderFileInfo on HeaderSearch is up to date. This
+comment|/// is effectively internal, but is exposed so HeaderSearch can call it.
+name|void
+name|resolveHeaderDirectives
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|File
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Resolve all lazy header directives for the specified module.
+name|void
+name|resolveHeaderDirectives
+argument_list|(
+name|Module
+operator|*
+name|Mod
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Reports errors if a module must not include a specific file.
 comment|///
 comment|/// \param RequestingModule The module including a file.

@@ -623,6 +623,11 @@ init|=
 name|false
 decl_stmt|;
 name|bool
+name|Inline8bitCounters
+init|=
+name|false
+decl_stmt|;
+name|bool
 name|NoPrune
 init|=
 name|false

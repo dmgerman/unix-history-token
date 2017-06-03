@@ -183,6 +183,7 @@ comment|/// \brief Find out whether \p A dominates \p B, meaning whether \p A
 comment|/// comes before \p B in \p BB. This is a simplification that considers
 comment|/// cached instruction positions and ignores other basic blocks, being
 comment|/// only relevant to compare relative instructions positions inside \p BB.
+comment|/// Returns false for A == B.
 name|bool
 name|dominates
 parameter_list|(

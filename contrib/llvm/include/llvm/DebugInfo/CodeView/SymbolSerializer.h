@@ -209,6 +209,8 @@ argument_list|(
 argument|SymType&Sym
 argument_list|,
 argument|BumpPtrAllocator&Storage
+argument_list|,
+argument|CodeViewContainer Container
 argument_list|)
 block|{
 name|CVSymbol
@@ -232,6 +234,8 @@ name|SymbolSerializer
 name|Serializer
 argument_list|(
 name|Storage
+argument_list|,
+name|Container
 argument_list|)
 block|;
 name|consumeError
@@ -270,14 +274,13 @@ return|return
 name|Result
 return|;
 block|}
-name|explicit
 name|SymbolSerializer
-parameter_list|(
-name|BumpPtrAllocator
-modifier|&
-name|Storage
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|BumpPtrAllocator&Storage
+argument_list|,
+argument|CodeViewContainer Container
+argument_list|)
+empty_stmt|;
 name|virtual
 name|Error
 name|visitSymbolBegin

@@ -549,11 +549,13 @@ name|NotEligibleToImport
 operator|:
 literal|1
 block|;
-comment|/// Indicate that the global value must be considered a live root for
-comment|/// index-based liveness analysis. Used for special LLVM values such as
-comment|/// llvm.global_ctors that the linker does not know about.
+comment|/// In per-module summary, indicate that the global value must be considered
+comment|/// a live root for index-based liveness analysis. Used for special LLVM
+comment|/// values such as llvm.global_ctors that the linker does not know about.
+comment|///
+comment|/// In combined summary, indicate that the global value is live.
 name|unsigned
-name|LiveRoot
+name|Live
 operator|:
 literal|1
 block|;
@@ -565,7 +567,7 @@ argument|GlobalValue::LinkageTypes Linkage
 argument_list|,
 argument|bool NotEligibleToImport
 argument_list|,
-argument|bool LiveRoot
+argument|bool Live
 argument_list|)
 operator|:
 name|Linkage
@@ -578,9 +580,9 @@ argument_list|(
 name|NotEligibleToImport
 argument_list|)
 block|,
-name|LiveRoot
+name|Live
 argument_list|(
-argument|LiveRoot
+argument|Live
 argument_list|)
 block|{}
 block|}
@@ -626,6 +628,17 @@ name|ValueInfo
 operator|>
 name|RefEdgeList
 block|;
+name|bool
+name|isLive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|.
+name|Live
+return|;
+block|}
 name|protected
 operator|:
 name|GlobalValueSummary
@@ -773,30 +786,17 @@ operator|.
 name|NotEligibleToImport
 return|;
 block|}
-comment|/// Return true if this global value must be considered a root for live
-comment|/// value analysis on the index.
-name|bool
-name|liveRoot
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Flags
-operator|.
-name|LiveRoot
-return|;
-block|}
-comment|/// Flag that this global value must be considered a root for live
-comment|/// value analysis on the index.
 name|void
-name|setLiveRoot
-argument_list|()
+name|setLive
+argument_list|(
+argument|bool Live
+argument_list|)
 block|{
 name|Flags
 operator|.
-name|LiveRoot
+name|Live
 operator|=
-name|true
+name|Live
 block|; }
 comment|/// Flag that this global value cannot be imported.
 name|void
@@ -822,7 +822,19 @@ return|return
 name|RefEdgeList
 return|;
 block|}
-expr|}
+name|friend
+name|class
+name|ModuleSummaryIndex
+block|;
+name|friend
+name|void
+name|computeDeadSymbols
+argument_list|(
+argument|class ModuleSummaryIndex&
+argument_list|,
+argument|const DenseSet<GlobalValue::GUID>&
+argument_list|)
+block|; }
 block|;
 comment|/// \brief Alias summary information.
 name|class
@@ -1319,8 +1331,17 @@ return|return
 block|{}
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Returns the list of virtual calls made by this function using
+end_comment
+
+begin_comment
 comment|/// llvm.type.checked.load intrinsics with all constant integer arguments.
+end_comment
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|ConstVCall
@@ -1338,13 +1359,16 @@ name|TIdInfo
 operator|->
 name|TypeCheckedLoadConstVCalls
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 block|{}
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// Add a type test to the summary. This is used by WholeProgramDevirt if we
 end_comment
 
@@ -1352,15 +1376,15 @@ begin_comment
 comment|/// were unable to devirtualize a checked call.
 end_comment
 
-begin_decl_stmt
-name|void
+begin_macro
+unit|void
 name|addTypeTest
 argument_list|(
-name|GlobalValue
-operator|::
-name|GUID
-name|Guid
+argument|GlobalValue::GUID Guid
 argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1388,7 +1412,7 @@ name|Guid
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_block
 
 begin_expr_stmt
 unit|};
@@ -1930,6 +1954,14 @@ name|GUID
 operator|>
 name|OidGuidMap
 block|;
+comment|/// Indicates that summary-based GlobalValue GC has run, and values with
+comment|/// GVFlags::Live==false are really dead. Otherwise, all values must be
+comment|/// considered live.
+name|bool
+name|WithGlobalValueDeadStripping
+operator|=
+name|false
+block|;
 comment|// YAML I/O support.
 name|friend
 name|yaml
@@ -2021,6 +2053,40 @@ return|return
 name|GlobalValueMap
 operator|.
 name|size
+argument_list|()
+return|;
+block|}
+name|bool
+name|withGlobalValueDeadStripping
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WithGlobalValueDeadStripping
+return|;
+block|}
+name|void
+name|setWithGlobalValueDeadStripping
+argument_list|()
+block|{
+name|WithGlobalValueDeadStripping
+operator|=
+name|true
+block|;   }
+name|bool
+name|isGlobalValueLive
+argument_list|(
+argument|const GlobalValueSummary *GVS
+argument_list|)
+specifier|const
+block|{
+return|return
+operator|!
+name|WithGlobalValueDeadStripping
+operator|||
+name|GVS
+operator|->
+name|isLive
 argument_list|()
 return|;
 block|}

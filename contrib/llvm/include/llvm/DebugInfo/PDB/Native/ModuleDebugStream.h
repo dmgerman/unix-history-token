@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/DebugChecksumsSubsection.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/DebugSubsectionRecord.h"
 end_include
 
@@ -113,7 +119,7 @@ operator|::
 name|DebugSubsectionArray
 operator|::
 name|Iterator
-name|LinesAndChecksumsIterator
+name|DebugSubsectionIterator
 expr_stmt|;
 name|public
 label|:
@@ -170,14 +176,14 @@ name|llvm
 operator|::
 name|iterator_range
 operator|<
-name|LinesAndChecksumsIterator
+name|DebugSubsectionIterator
 operator|>
-name|linesAndChecksums
+name|subsections
 argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
-name|hasLineInfo
+name|hasDebugSubsections
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -185,6 +191,16 @@ name|Error
 name|commit
 parameter_list|()
 function_decl|;
+name|Expected
+operator|<
+name|codeview
+operator|::
+name|DebugChecksumsSubsectionRef
+operator|>
+name|findChecksumsSubsection
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 specifier|const
@@ -222,7 +238,7 @@ decl_stmt|;
 name|codeview
 operator|::
 name|DebugSubsectionArray
-name|LinesAndChecksums
+name|Subsections
 expr_stmt|;
 block|}
 empty_stmt|;

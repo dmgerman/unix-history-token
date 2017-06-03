@@ -175,6 +175,15 @@ operator|<
 name|Chunk
 operator|*
 operator|>
+name|Lookups
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|Chunk
+operator|*
+operator|>
 name|Addresses
 expr_stmt|;
 name|std

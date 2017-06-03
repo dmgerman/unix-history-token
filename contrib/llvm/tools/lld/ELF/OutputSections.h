@@ -222,13 +222,6 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-comment|// If true, this section will be page aligned on disk.
-comment|// Typically the first section of each PT_LOAD segment has this flag.
-name|bool
-name|PageAlign
-operator|=
-name|false
-block|;
 comment|// Pointer to the first section in PT_LOAD segment, which this section
 comment|// also resides in. This field is used to correctly compute file offset
 comment|// of a section. When two sections share the same load segment, difference

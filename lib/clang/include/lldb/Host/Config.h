@@ -78,6 +78,20 @@ name|HAVE_SIGACTION
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAVE_PROCESS_VM_READV
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_NR_PROCESS_VM_READV
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif

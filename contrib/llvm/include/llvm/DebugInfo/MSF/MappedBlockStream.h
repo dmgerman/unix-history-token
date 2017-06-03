@@ -165,6 +165,8 @@ argument_list|,
 argument|const MSFStreamLayout&Layout
 argument_list|,
 argument|BinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -181,6 +183,8 @@ argument_list|,
 argument|BinaryStreamRef MsfData
 argument_list|,
 argument|uint32_t StreamIndex
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -195,6 +199,8 @@ argument_list|(
 argument|const MSFLayout&Layout
 argument_list|,
 argument|BinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -209,6 +215,8 @@ argument_list|(
 argument|const MSFLayout&Layout
 argument_list|,
 argument|BinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 name|llvm
@@ -254,11 +262,6 @@ name|getLength
 argument_list|()
 name|override
 block|;
-name|uint32_t
-name|getNumBytesCopied
-argument_list|()
-specifier|const
-block|;
 name|llvm
 operator|::
 name|BumpPtrAllocator
@@ -267,7 +270,7 @@ name|getAllocator
 argument_list|()
 block|{
 return|return
-name|Pool
+name|Allocator
 return|;
 block|}
 name|void
@@ -317,6 +320,8 @@ argument_list|,
 argument|const MSFStreamLayout&StreamLayout
 argument_list|,
 argument|BinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 name|private
@@ -377,10 +382,16 @@ name|uint8_t
 operator|>
 name|CacheEntry
 expr_stmt|;
-name|llvm
-operator|::
+comment|// We just store the allocator by reference.  We use this to allocate
+comment|// contiguous memory for things like arrays or strings that cross a block
+comment|// boundary, and this memory is expected to outlive the stream.  For example,
+comment|// someone could create a stream, read some stuff, then close the stream, and
+comment|// we would like outstanding references to fields to remain valid since the
+comment|// entire file is mapped anyway.  Because of that, the user must supply the
+comment|// allocator to allocate broken records from.
 name|BumpPtrAllocator
-name|Pool
+operator|&
+name|Allocator
 decl_stmt|;
 name|DenseMap
 operator|<
@@ -418,6 +429,8 @@ argument_list|,
 argument|const MSFStreamLayout&Layout
 argument_list|,
 argument|WritableBinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -434,6 +447,8 @@ argument_list|,
 argument|WritableBinaryStreamRef MsfData
 argument_list|,
 argument|uint32_t StreamIndex
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -448,6 +463,8 @@ argument_list|(
 argument|const MSFLayout&Layout
 argument_list|,
 argument|WritableBinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -462,6 +479,8 @@ argument_list|(
 argument|const MSFLayout&Layout
 argument_list|,
 argument|WritableBinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 name|llvm
@@ -580,6 +599,8 @@ argument_list|,
 argument|const MSFStreamLayout&StreamLayout
 argument_list|,
 argument|WritableBinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 name|private
