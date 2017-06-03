@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"lldb/Host/Config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/uio.h>
 end_include
 
@@ -57,11 +63,12 @@ begin_comment
 comment|// present
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
 name|HAVE_PROCESS_VM_READV
-end_ifndef
+end_if
 
 begin_decl_stmt
 name|ssize_t
