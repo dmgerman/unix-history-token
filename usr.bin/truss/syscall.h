@@ -81,6 +81,8 @@ name|Fcntlflag
 block|,
 name|Rusage
 block|,
+name|RusageWho
+block|,
 name|BinString
 block|,
 name|Shutdown
