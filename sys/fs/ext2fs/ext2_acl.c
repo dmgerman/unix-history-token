@@ -1254,8 +1254,8 @@ name|mnt_flag
 operator|&
 name|MNT_NFS4ACLS
 operator|)
-operator|==
-literal|1
+operator|!=
+literal|0
 operator|)
 condition|)
 return|return
@@ -2106,8 +2106,8 @@ name|mnt_flag
 operator|&
 name|MNT_NFS4ACLS
 operator|)
-operator|==
-literal|1
+operator|!=
+literal|0
 operator|)
 condition|)
 return|return
@@ -2183,8 +2183,8 @@ name|mnt_flag
 operator|&
 name|MNT_NFS4ACLS
 operator|)
-operator|==
-literal|1
+operator|!=
+literal|0
 operator|)
 condition|)
 return|return
