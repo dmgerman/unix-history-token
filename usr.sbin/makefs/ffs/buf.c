@@ -135,7 +135,7 @@ name|rv
 decl_stmt|;
 name|fsinfo_t
 modifier|*
-name|fsinfo
+name|fs
 init|=
 name|vp
 operator|->
@@ -196,11 +196,11 @@ operator|)
 operator|->
 name|b_blkno
 operator|*
-name|fsinfo
+name|fs
 operator|->
 name|sectorsize
 operator|+
-name|fsinfo
+name|fs
 operator|->
 name|offset
 expr_stmt|;
