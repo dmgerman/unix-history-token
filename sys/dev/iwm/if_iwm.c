@@ -16347,7 +16347,7 @@ comment|/* magic numbers came naturally from paris */
 end_comment
 
 begin_comment
-unit|if (sc->sc_capaflags& IWM_UCODE_TLV_FLAGS_DW_BC_TABLE) 		len = roundup(len, 4) / 4;  	w_val = htole16(sta_id<< 12 | len);
+unit|len = roundup(len, 4) / 4;  	w_val = htole16(sta_id<< 12 | len);
 comment|/* Update TX scheduler. */
 end_comment
 

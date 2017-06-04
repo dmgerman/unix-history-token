@@ -1933,7 +1933,7 @@ comment|/*  * BEGIN iwl-fw.h  */
 end_comment
 
 begin_comment
-comment|/**  * enum iwm_ucode_tlv_flag - ucode API flags  * @IWM_UCODE_TLV_FLAGS_PAN: This is PAN capable microcode; this previously  *	was a separate TLV but moved here to save space.  * @IWM_UCODE_TLV_FLAGS_NEWSCAN: new uCode scan behaviour on hidden SSID,  *	treats good CRC threshold as a boolean  * @IWM_UCODE_TLV_FLAGS_MFP: This uCode image supports MFP (802.11w).  * @IWM_UCODE_TLV_FLAGS_P2P: This uCode image supports P2P.  * @IWM_UCODE_TLV_FLAGS_DW_BC_TABLE: The SCD byte count table is in DWORDS  * @IWM_UCODE_TLV_FLAGS_UAPSD: This uCode image supports uAPSD  * @IWM_UCODE_TLV_FLAGS_SHORT_BL: 16 entries of black list instead of 64 in scan  *	offload profile config command.  * @IWM_UCODE_TLV_FLAGS_D3_6_IPV6_ADDRS: D3 image supports up to six  *	(rather than two) IPv6 addresses  * @IWM_UCODE_TLV_FLAGS_NO_BASIC_SSID: not sending a probe with the SSID element  *	from the probe request template.  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_SMALL: new NS offload (small version)  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_LARGE: new NS offload (large version)  * @IWM_UCODE_TLV_FLAGS_P2P_PS: P2P client power save is supported (only on a  *	single bound interface).  * @IWM_UCODE_TLV_FLAGS_UAPSD_SUPPORT: General support for uAPSD  * @IWM_UCODE_TLV_FLAGS_EBS_SUPPORT: this uCode image supports EBS.  * @IWM_UCODE_TLV_FLAGS_P2P_PS_UAPSD: P2P client supports uAPSD power save  * @IWM_UCODE_TLV_FLAGS_BCAST_FILTERING: uCode supports broadcast filtering.  * @IWM_UCODE_TLV_FLAGS_GO_UAPSD: AP/GO interfaces support uAPSD clients  *  */
+comment|/**  * enum iwm_ucode_tlv_flag - ucode API flags  * @IWM_UCODE_TLV_FLAGS_PAN: This is PAN capable microcode; this previously  *	was a separate TLV but moved here to save space.  * @IWM_UCODE_TLV_FLAGS_NEWSCAN: new uCode scan behaviour on hidden SSID,  *	treats good CRC threshold as a boolean  * @IWM_UCODE_TLV_FLAGS_MFP: This uCode image supports MFP (802.11w).  * @IWM_UCODE_TLV_FLAGS_UAPSD: This uCode image supports uAPSD  * @IWM_UCODE_TLV_FLAGS_SHORT_BL: 16 entries of black list instead of 64 in scan  *	offload profile config command.  * @IWM_UCODE_TLV_FLAGS_D3_6_IPV6_ADDRS: D3 image supports up to six  *	(rather than two) IPv6 addresses  * @IWM_UCODE_TLV_FLAGS_NO_BASIC_SSID: not sending a probe with the SSID element  *	from the probe request template.  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_SMALL: new NS offload (small version)  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_LARGE: new NS offload (large version)  * @IWM_UCODE_TLV_FLAGS_UAPSD_SUPPORT: General support for uAPSD  * @IWM_UCODE_TLV_FLAGS_EBS_SUPPORT: this uCode image supports EBS.  * @IWM_UCODE_TLV_FLAGS_P2P_PS_UAPSD: P2P client supports uAPSD power save  * @IWM_UCODE_TLV_FLAGS_BCAST_FILTERING: uCode supports broadcast filtering.  */
 end_comment
 
 begin_enum
@@ -1962,22 +1962,6 @@ operator|(
 literal|1
 operator|<<
 literal|2
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_P2P
-init|=
-operator|(
-literal|1
-operator|<<
-literal|3
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_DW_BC_TABLE
-init|=
-operator|(
-literal|1
-operator|<<
-literal|4
 operator|)
 block|,
 name|IWM_UCODE_TLV_FLAGS_SHORT_BL
@@ -2020,30 +2004,6 @@ operator|<<
 literal|16
 operator|)
 block|,
-name|IWM_UCODE_TLV_FLAGS_P2P_PS
-init|=
-operator|(
-literal|1
-operator|<<
-literal|21
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_BSS_P2P_PS_DCM
-init|=
-operator|(
-literal|1
-operator|<<
-literal|22
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_BSS_P2P_PS_SCM
-init|=
-operator|(
-literal|1
-operator|<<
-literal|23
-operator|)
-block|,
 name|IWM_UCODE_TLV_FLAGS_UAPSD_SUPPORT
 init|=
 operator|(
@@ -2075,22 +2035,6 @@ literal|1
 operator|<<
 literal|29
 operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_GO_UAPSD
-init|=
-operator|(
-literal|1
-operator|<<
-literal|30
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_LTE_COEX
-init|=
-operator|(
-literal|1
-operator|<<
-literal|31
-operator|)
 block|, }
 enum|;
 end_enum
@@ -2104,7 +2048,7 @@ value|"\020\1PAN\2NEWSCAN\3MFP\4P2P\5DW_BC_TABLE\6NEWBT_COEX\7PM_CMD\10SHORT_BL\
 end_define
 
 begin_comment
-comment|/**  * enum iwm_ucode_tlv_api - ucode api  * @IWM_UCODE_TLV_API_FRAGMENTED_SCAN: This ucode supports active dwell time  *	longer than the passive one, which is essential for fragmented scan.  * @IWM_UCODE_TLV_API_WIFI_MCC_UPDATE: ucode supports MCC updates with source.  * @IWM_UCODE_TLV_API_WIDE_CMD_HDR: ucode supports wide command header  * @IWM_UCODE_TLV_API_LQ_SS_PARAMS: Configure STBC/BFER via LQ CMD ss_params  * @IWM_UCODE_TLV_API_EXT_SCAN_PRIORITY: scan APIs use 8-level priority  *	instead of 3.  * @IWM_UCODE_TLV_API_TX_POWER_CHAIN: TX power API has larger command size  *	(command version 3) that supports per-chain limits  *  * @IWM_NUM_UCODE_TLV_API: number of bits used  */
+comment|/**  * enum iwm_ucode_tlv_api - ucode api  * @IWM_UCODE_TLV_API_FRAGMENTED_SCAN: This ucode supports active dwell time  *	longer than the passive one, which is essential for fragmented scan.  * @IWM_UCODE_TLV_API_WIFI_MCC_UPDATE: ucode supports MCC updates with source.  * @IWM_UCODE_TLV_API_LQ_SS_PARAMS: Configure STBC/BFER via LQ CMD ss_params  *  * @IWM_NUM_UCODE_TLV_API: number of bits used  */
 end_comment
 
 begin_enum
@@ -2119,21 +2063,9 @@ name|IWM_UCODE_TLV_API_WIFI_MCC_UPDATE
 init|=
 literal|9
 block|,
-name|IWM_UCODE_TLV_API_WIDE_CMD_HDR
-init|=
-literal|14
-block|,
 name|IWM_UCODE_TLV_API_LQ_SS_PARAMS
 init|=
 literal|18
-block|,
-name|IWM_UCODE_TLV_API_EXT_SCAN_PRIORITY
-init|=
-literal|24
-block|,
-name|IWM_UCODE_TLV_API_TX_POWER_CHAIN
-init|=
-literal|27
 block|,
 name|IWM_NUM_UCODE_TLV_API
 init|=
@@ -11265,7 +11197,7 @@ comment|/*  * BEGIN mvm/fw-api-tx.h  */
 end_comment
 
 begin_comment
-comment|/**  * enum iwm_tx_flags - bitmasks for tx_flags in TX command  * @IWM_TX_CMD_FLG_PROT_REQUIRE: use RTS or CTS-to-self to protect the frame  * @IWM_TX_CMD_FLG_ACK: expect ACK from receiving station  * @IWM_TX_CMD_FLG_STA_RATE: use RS table with initial index from the TX command.  *	Otherwise, use rate_n_flags from the TX command  * @IWM_TX_CMD_FLG_BA: this frame is a block ack  * @IWM_TX_CMD_FLG_BAR: this frame is a BA request, immediate BAR is expected  *	Must set IWM_TX_CMD_FLG_ACK with this flag.  * @IWM_TX_CMD_FLG_TXOP_PROT: protect frame with full TXOP protection  * @IWM_TX_CMD_FLG_VHT_NDPA: mark frame is NDPA for VHT beamformer sequence  * @IWM_TX_CMD_FLG_HT_NDPA: mark frame is NDPA for HT beamformer sequence  * @IWM_TX_CMD_FLG_CSI_FDBK2HOST: mark to send feedback to host (only if good CRC)  * @IWM_TX_CMD_FLG_BT_DIS: disable BT priority for this frame  * @IWM_TX_CMD_FLG_SEQ_CTL: set if FW should override the sequence control.  *	Should be set for mgmt, non-QOS data, mcast, bcast and in scan command  * @IWM_TX_CMD_FLG_MORE_FRAG: this frame is non-last MPDU  * @IWM_TX_CMD_FLG_NEXT_FRAME: this frame includes information of the next frame  * @IWM_TX_CMD_FLG_TSF: FW should calculate and insert TSF in the frame  *	Should be set for beacons and probe responses  * @IWM_TX_CMD_FLG_CALIB: activate PA TX power calibrations  * @IWM_TX_CMD_FLG_KEEP_SEQ_CTL: if seq_ctl is set, don't increase inner seq count  * @IWM_TX_CMD_FLG_AGG_START: allow this frame to start aggregation  * @IWM_TX_CMD_FLG_MH_PAD: driver inserted 2 byte padding after MAC header.  *	Should be set for 26/30 length MAC headers  * @IWM_TX_CMD_FLG_RESP_TO_DRV: zero this if the response should go only to FW  * @IWM_TX_CMD_FLG_CCMP_AGG: this frame uses CCMP for aggregation acceleration  * @IWM_TX_CMD_FLG_TKIP_MIC_DONE: FW already performed TKIP MIC calculation  * @IWM_TX_CMD_FLG_DUR: disable duration overwriting used in PS-Poll Assoc-id  * @IWM_TX_CMD_FLG_FW_DROP: FW should mark frame to be dropped  * @IWM_TX_CMD_FLG_EXEC_PAPD: execute PAPD  * @IWM_TX_CMD_FLG_PAPD_TYPE: 0 for reference power, 1 for nominal power  * @IWM_TX_CMD_FLG_HCCA_CHUNK: mark start of TSPEC chunk  */
+comment|/**  * enum iwm_tx_flags - bitmasks for tx_flags in TX command  * @IWM_TX_CMD_FLG_PROT_REQUIRE: use RTS or CTS-to-self to protect the frame  * @IWM_TX_CMD_FLG_ACK: expect ACK from receiving station  * @IWM_TX_CMD_FLG_STA_RATE: use RS table with initial index from the TX command.  *	Otherwise, use rate_n_flags from the TX command  * @IWM_TX_CMD_FLG_BA: this frame is a block ack  * @IWM_TX_CMD_FLG_BAR: this frame is a BA request, immediate BAR is expected  *	Must set IWM_TX_CMD_FLG_ACK with this flag.  * @IWM_TX_CMD_FLG_TXOP_PROT: protect frame with full TXOP protection  * @IWM_TX_CMD_FLG_VHT_NDPA: mark frame is NDPA for VHT beamformer sequence  * @IWM_TX_CMD_FLG_HT_NDPA: mark frame is NDPA for HT beamformer sequence  * @IWM_TX_CMD_FLG_CSI_FDBK2HOST: mark to send feedback to host (only if good CRC)  * @IWM_TX_CMD_FLG_BT_DIS: disable BT priority for this frame  * @IWM_TX_CMD_FLG_SEQ_CTL: set if FW should override the sequence control.  *	Should be set for mgmt, non-QOS data, mcast, bcast and in scan command  * @IWM_TX_CMD_FLG_MORE_FRAG: this frame is non-last MPDU  * @IWM_TX_CMD_FLG_NEXT_FRAME: this frame includes information of the next frame  * @IWM_TX_CMD_FLG_TSF: FW should calculate and insert TSF in the frame  *	Should be set for beacons and probe responses  * @IWM_TX_CMD_FLG_CALIB: activate PA TX power calibrations  * @IWM_TX_CMD_FLG_KEEP_SEQ_CTL: if seq_ctl is set, don't increase inner seq count  * @IWM_TX_CMD_FLG_AGG_START: allow this frame to start aggregation  * @IWM_TX_CMD_FLG_MH_PAD: driver inserted 2 byte padding after MAC header.  *	Should be set for 26/30 length MAC headers  * @IWM_TX_CMD_FLG_RESP_TO_DRV: zero this if the response should go only to FW  * @IWM_TX_CMD_FLG_TKIP_MIC_DONE: FW already performed TKIP MIC calculation  * @IWM_TX_CMD_FLG_DUR: disable duration overwriting used in PS-Poll Assoc-id  * @IWM_TX_CMD_FLG_FW_DROP: FW should mark frame to be dropped  * @IWM_TX_CMD_FLG_EXEC_PAPD: execute PAPD  * @IWM_TX_CMD_FLG_PAPD_TYPE: 0 for reference power, 1 for nominal power  * @IWM_TX_CMD_FLG_HCCA_CHUNK: mark start of TSPEC chunk  */
 end_comment
 
 begin_enum
@@ -11422,14 +11354,6 @@ operator|(
 literal|1
 operator|<<
 literal|21
-operator|)
-block|,
-name|IWM_TX_CMD_FLG_CCMP_AGG
-init|=
-operator|(
-literal|1
-operator|<<
-literal|22
 operator|)
 block|,
 name|IWM_TX_CMD_FLG_TKIP_MIC_DONE
