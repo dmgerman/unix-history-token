@@ -2133,6 +2133,8 @@ name|exitstatus
 operator|=
 literal|2
 expr_stmt|;
+name|FORCEINTON
+expr_stmt|;
 return|return;
 block|}
 block|}
