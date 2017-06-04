@@ -126,16 +126,5 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Maximum value which the SPSP code can handle. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPSPMAX
-value|3825123056546413050ULL
-end_define
-
 end_unit
 

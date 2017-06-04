@@ -315,7 +315,13 @@ literal|0
 expr_stmt|;
 name|stop
 operator|=
-name|SPSPMAX
+call|(
+name|uint64_t
+call|)
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Convert low and high args.  Strtoumax(3) sets errno to 	 * ERANGE if the number is too large, but, if there's 	 * a leading minus sign it returns the negation of the 	 * result of the conversion, which we'd rather disallow. 	 */
 switch|switch
@@ -457,24 +463,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"%s: illegal numeric format."
-argument_list|,
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stop
-operator|>
-name|SPSPMAX
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s: stop value too large."
 argument_list|,
 name|argv
 index|[
