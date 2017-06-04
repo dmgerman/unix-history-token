@@ -674,7 +674,7 @@ name|state
 operator|=
 name|htole32
 argument_list|(
-name|IWM_SF_FULL_ON
+name|new_state
 argument_list|)
 block|, 	}
 decl_stmt|;
