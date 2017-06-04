@@ -407,6 +407,94 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Note: the below is the version that ships with ath9k.  * The original HAL version is above.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ar9300_disable_pll_lock_detect
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+comment|/* 	 * On AR9330 and AR9340 devices, some PHY registers must be 	 * tuned to gain better stability/performance. These registers 	 * might be changed while doing wlan reset so the registers must 	 * be reprogrammed after each reset. 	 */
+if|if
+condition|(
+name|AR_SREV_HORNET
+argument_list|(
+name|ah
+argument_list|)
+operator|||
+name|AR_SREV_WASP
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+block|{
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_RESET
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|OS_REG_CLR_BIT
+argument_list|(
+name|ah
+argument_list|,
+name|AR_PHY_USB_CTRL1
+argument_list|,
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
+argument_list|)
+expr_stmt|;
+name|OS_REG_RMW
+argument_list|(
+name|ah
+argument_list|,
+name|AR_PHY_USB_CTRL2
+argument_list|,
+operator|(
+literal|1
+operator|<<
+literal|21
+operator|)
+operator||
+operator|(
+literal|0xf
+operator|<<
+literal|22
+operator|)
+argument_list|,
+operator|(
+literal|1
+operator|<<
+literal|21
+operator|)
+operator||
+operator|(
+literal|0x3
+operator|<<
+literal|22
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_function
 specifier|static
 specifier|inline
@@ -7675,6 +7763,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|ar9300_disable_pll_lock_detect
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
 name|ar9300_attach_hw_platform
 argument_list|(
 name|ah
@@ -8214,6 +8307,11 @@ argument_list|(
 name|ah
 argument_list|,
 name|AH_NULL
+argument_list|)
+expr_stmt|;
+name|ar9300_disable_pll_lock_detect
+argument_list|(
+name|ah
 argument_list|)
 expr_stmt|;
 return|return
@@ -18050,7 +18148,7 @@ block|ar9300_get_nf_hist_base(ah,                 AH_PRIVATE(ah)->ah_curchan, is
 comment|/* start NF calibration, without updating BB NF register*/
 block|ar9300_start_nf_cal(ah);
 comment|/*              * If channel_change completed and DMA was stopped              * successfully - skip the rest of reset              */
-block|if (AH9300(ah)->ah_dma_stuck != AH_TRUE) {                 WAR_USB_DISABLE_PLL_LOCK_DETECT(ah);
+block|if (AH9300(ah)->ah_dma_stuck != AH_TRUE) {                 ar9300_disable_pll_lock_detect(ah);
 if|#
 directive|if
 name|ATH_SUPPORT_MCI
@@ -20577,7 +20675,7 @@ name|REG_WRITE
 endif|#
 directive|endif
 comment|/* ATH_LOW_POWER_ENABLE */
-name|WAR_USB_DISABLE_PLL_LOCK_DETECT
+name|ar9300_disable_pll_lock_detect
 argument_list|(
 name|ah
 argument_list|)
