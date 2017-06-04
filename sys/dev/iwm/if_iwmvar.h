@@ -382,6 +382,9 @@ decl_stmt|;
 name|uint8_t
 name|max_tx_pwr_half_dbm
 decl_stmt|;
+name|boolean_t
+name|lar_enabled
+decl_stmt|;
 name|uint16_t
 name|nvm_ch_flags
 index|[]

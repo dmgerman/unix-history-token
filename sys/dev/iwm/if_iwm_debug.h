@@ -134,6 +134,11 @@ init|=
 literal|0x00200000
 block|,
 comment|/* Firmware management */
+name|IWM_DEBUG_LAR
+init|=
+literal|0x00400000
+block|,
+comment|/* Location Aware Regulatory */
 name|IWM_DEBUG_REGISTER
 init|=
 literal|0x20000000
