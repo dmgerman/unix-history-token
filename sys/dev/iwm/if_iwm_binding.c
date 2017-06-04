@@ -283,6 +283,12 @@ directive|include
 file|<dev/iwm/if_iwm_binding.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/iwm/if_iwm_sf.h>
+end_include
+
 begin_comment
 comment|/*  * BEGIN iwlwifi/mvm/binding.c  */
 end_comment
@@ -676,9 +682,6 @@ condition|)
 return|return
 name|EINVAL
 return|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* 	 * Update SF - Disable if needed. if this fails, SF might still be on 	 * while many macs are bound, which is forbidden - so fail the binding. 	 */
 if|if
 condition|(
@@ -686,7 +689,10 @@ name|iwm_mvm_sf_update
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|ivp
+operator|->
+name|iv_vap
 argument_list|,
 name|FALSE
 argument_list|)
@@ -694,8 +700,6 @@ condition|)
 return|return
 name|EINVAL
 return|;
-endif|#
-directive|endif
 return|return
 name|iwm_mvm_binding_update
 argument_list|(
@@ -756,9 +760,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 operator|!
@@ -771,7 +772,10 @@ name|iwm_mvm_sf_update
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|ivp
+operator|->
+name|iv_vap
 argument_list|,
 name|TRUE
 argument_list|)
@@ -786,8 +790,6 @@ literal|"Failed to update SF state\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 name|ret
 return|;

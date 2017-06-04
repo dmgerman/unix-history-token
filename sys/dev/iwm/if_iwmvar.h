@@ -1343,6 +1343,11 @@ decl_stmt|;
 name|boolean_t
 name|last_ebs_successful
 decl_stmt|;
+comment|/* last smart fifo state that was successfully sent to firmware */
+name|enum
+name|iwm_sf_state
+name|sf_state
+decl_stmt|;
 comment|/* Indicate if device power save is allowed */
 name|boolean_t
 name|sc_ps_disabled
