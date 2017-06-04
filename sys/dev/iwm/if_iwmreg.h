@@ -5052,7 +5052,10 @@ name|IWM_CALIB_RES_NOTIF_PHY_DB
 init|=
 literal|0x6b
 block|,
-comment|/* IWM_PHY_DB_CMD = 0x6c, */
+name|IWM_PHY_DB_CMD
+init|=
+literal|0x6c
+block|,
 comment|/* Power - legacy power table command */
 name|IWM_POWER_TABLE_CMD
 init|=

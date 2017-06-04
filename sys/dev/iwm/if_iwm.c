@@ -25013,9 +25013,8 @@ block|}
 break|break;
 comment|/* ignore */
 case|case
-literal|0x6c
+name|IWM_PHY_DB_CMD
 case|:
-comment|/* IWM_PHY_DB_CMD, no idea why it's not in fw-api.h */
 break|break;
 case|case
 name|IWM_INIT_COMPLETE_NOTIF

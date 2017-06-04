@@ -383,10 +383,6 @@ value|0x6c
 end_define
 
 begin_comment
-comment|/* TEMP API - The actual is 0x8c */
-end_comment
-
-begin_comment
 comment|/*  * phy db - configure operational ucode  */
 end_comment
 
