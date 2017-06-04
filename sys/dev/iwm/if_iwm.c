@@ -24250,14 +24250,10 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|le32toh
+name|iwm_rx_packet_len
 argument_list|(
 name|pkt
-operator|->
-name|len_n_flags
 argument_list|)
-operator|&
-name|IWM_FH_RSCSR_FRAME_SIZE_MSK
 expr_stmt|;
 name|len
 operator|+=
@@ -25235,6 +25231,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * Firmware versions 21 and 22 generate some DEBUG_LOG_MSG 		 * messages. Just ignore them for now. 		 */
+case|case
+name|IWM_DEBUG_LOG_MSG
+case|:
+break|break;
 case|case
 name|IWM_MCAST_FILTER_CMD
 case|:
