@@ -167,6 +167,8 @@ name|CapRights
 block|,
 name|PUInt
 block|,
+name|PQuadHex
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
