@@ -219,22 +219,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|tlb_write_random
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile ("tlbwr" : : : "memory");
-name|mips_cp0_sync
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
 begin_function_decl
 specifier|static
 name|void
