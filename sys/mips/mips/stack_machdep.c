@@ -374,7 +374,6 @@ name|OP_SPECIAL
 case|:
 if|if
 condition|(
-operator|(
 name|insn
 operator|.
 name|RType
@@ -382,7 +381,6 @@ operator|.
 name|func
 operator|==
 name|OP_JR
-operator|)
 condition|)
 block|{
 if|if
