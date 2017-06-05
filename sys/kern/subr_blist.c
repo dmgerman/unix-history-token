@@ -1233,6 +1233,9 @@ name|bmu_bitmap
 operator|&=
 operator|~
 operator|(
+operator|(
+name|u_daddr_t
+operator|)
 literal|1
 operator|<<
 name|r
@@ -2302,6 +2305,9 @@ condition|(
 name|v
 operator|&
 operator|(
+operator|(
+name|u_daddr_t
+operator|)
 literal|1
 operator|<<
 name|i
