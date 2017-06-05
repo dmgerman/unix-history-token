@@ -1137,12 +1137,11 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
-name|char
-name|buf
-index|[
-name|IPSEC_ADDRSTRLEN
-index|]
-decl_stmt|;
+name|IPSEC_DEBUG_DECLARE
+argument_list|(
+argument|char buf[IPSEC_ADDRSTRLEN]
+argument_list|)
+empty_stmt|;
 name|struct
 name|cryptodesc
 modifier|*
@@ -1783,12 +1782,11 @@ name|int
 name|protoff
 parameter_list|)
 block|{
-name|char
-name|buf
-index|[
-name|IPSEC_ADDRSTRLEN
-index|]
-decl_stmt|;
+name|IPSEC_DEBUG_DECLARE
+argument_list|(
+argument|char buf[IPSEC_ADDRSTRLEN]
+argument_list|)
+empty_stmt|;
 specifier|const
 name|struct
 name|comp_algo
@@ -2432,12 +2430,11 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
-name|char
-name|buf
-index|[
-name|IPSEC_ADDRSTRLEN
-index|]
-decl_stmt|;
+name|IPSEC_DEBUG_DECLARE
+argument_list|(
+argument|char buf[IPSEC_ADDRSTRLEN]
+argument_list|)
+empty_stmt|;
 name|struct
 name|xform_data
 modifier|*

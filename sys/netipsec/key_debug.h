@@ -162,6 +162,12 @@ name|KEYDEBUG_IPSEC_DUMP
 value|(KEYDEBUG_IPSEC | KEYDEBUG_DUMP)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSEC_DEBUG
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -174,6 +180,31 @@ parameter_list|)
 define|\
 value|if ((V_key_debug_level& (KEYDEBUG_ ## lev)) == (KEYDEBUG_ ## lev)) { \ 	    arg;		\     }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KEYDBG
+parameter_list|(
+name|lev
+parameter_list|,
+name|arg
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !IPSEC_DEBUG */
+end_comment
 
 begin_expr_stmt
 name|VNET_DECLARE

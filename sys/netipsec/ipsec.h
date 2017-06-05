@@ -1180,6 +1180,22 @@ begin_comment
 comment|/* for openbsd compatibility */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSEC_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IPSEC_DEBUG_DECLARE
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1189,6 +1205,34 @@ name|x
 parameter_list|)
 value|do { if (V_ipsec_debug) printf x; } while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IPSEC_DEBUG_DECLARE
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
