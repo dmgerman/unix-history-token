@@ -927,6 +927,8 @@ block|,
 literal|"allow.mount.linprocfs"
 block|,
 literal|"allow.mount.linsysfs"
+block|,
+literal|"allow.reserved_ports"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -980,6 +982,8 @@ block|,
 literal|"allow.mount.nolinprocfs"
 block|,
 literal|"allow.mount.nolinsysfs"
+block|,
+literal|"allow.noreserved_ports"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1000,7 +1004,7 @@ begin_define
 define|#
 directive|define
 name|JAIL_DEFAULT_ALLOW
-value|PR_ALLOW_SET_HOSTNAME
+value|(PR_ALLOW_SET_HOSTNAME | PR_ALLOW_RESERVED_PORTS)
 end_define
 
 begin_define
@@ -15525,10 +15529,32 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 		 * Allow jailed root to bind reserved ports and reuse in-use 		 * ports. 		 */
+comment|/* 		 * Conditionally allow jailed root to bind reserved ports. 		 */
 case|case
 name|PRIV_NETINET_RESERVEDPORT
 case|:
+if|if
+condition|(
+name|cred
+operator|->
+name|cr_prison
+operator|->
+name|pr_allow
+operator|&
+name|PR_ALLOW_RESERVED_PORTS
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+comment|/* 		 * Allow jailed root to reuse in-use ports. 		 */
 case|case
 name|PRIV_NETINET_REUSEPORT
 case|:
@@ -18162,6 +18188,24 @@ argument_list|,
 literal|"B"
 argument_list|,
 literal|"Jail may create sockets other than just UNIX/IPv4/IPv6/route"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_JAIL_PARAM
+argument_list|(
+name|_allow
+argument_list|,
+name|reserved_ports
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+literal|"B"
+argument_list|,
+literal|"Jail may bind sockets to reserved ports"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
