@@ -5166,6 +5166,8 @@ literal|0
 decl_stmt|;
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|READ_ENTER
 argument_list|(
@@ -5580,7 +5582,7 @@ name|ipf_syncnat
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|err
 return|;
 block|}
 end_function
