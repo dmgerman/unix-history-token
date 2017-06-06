@@ -28,7 +28,7 @@ begin_define
 define|#
 directive|define
 name|MAXTSIZ
-value|(128UL*1024*1024)
+value|(32768UL*1024*1024)
 end_define
 
 begin_comment
