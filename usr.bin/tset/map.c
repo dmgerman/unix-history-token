@@ -580,6 +580,11 @@ name|port
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|copy
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAPDEBUG
