@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/rpc_com.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/pmap_prot.h>
 end_include
 
@@ -2207,8 +2213,7 @@ operator|->
 name|arglen
 operator|)
 argument_list|,
-operator|~
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|)
 operator|)
 return|;
