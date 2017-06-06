@@ -2669,6 +2669,17 @@ decl_stmt|;
 if|if
 condition|(
 name|count
+operator|>
+name|radix
+condition|)
+name|panic
+argument_list|(
+literal|"blist_meta_fill: allocation too large"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|count
 operator|==
 name|radix
 operator|||
@@ -2819,17 +2830,6 @@ operator|/=
 name|BLIST_META_RADIX
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|count
-operator|>
-name|radix
-condition|)
-name|panic
-argument_list|(
-literal|"blist_meta_fill: allocation too large"
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 operator|(
