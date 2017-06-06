@@ -8127,6 +8127,8 @@ expr_stmt|;
 name|swap_pager_avail
 operator|+=
 name|nblks
+operator|-
+literal|2
 expr_stmt|;
 name|swap_total
 operator|+=
