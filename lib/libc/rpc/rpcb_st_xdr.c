@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/rpc_com.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"un-namespace.h"
 end_include
 
@@ -162,11 +168,7 @@ name|objp
 operator|->
 name|netid
 argument_list|,
-operator|(
-name|u_int
-operator|)
-operator|~
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|)
 condition|)
 block|{
@@ -467,11 +469,7 @@ name|objp
 operator|->
 name|netid
 argument_list|,
-operator|(
-name|u_int
-operator|)
-operator|~
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|)
 condition|)
 block|{
@@ -762,11 +760,7 @@ name|objp
 operator|->
 name|netid
 argument_list|,
-operator|(
-name|u_int
-operator|)
-operator|~
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|)
 condition|)
 block|{
@@ -946,11 +940,7 @@ name|objp
 operator|->
 name|netid
 argument_list|,
-operator|(
-name|u_int
-operator|)
-operator|~
-literal|0
+name|RPC_MAXDATASIZE
 argument_list|)
 condition|)
 block|{
