@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|R88E_EFUSE_MAX_LEN
-value|512
+value|256
 end_define
 
 begin_define
