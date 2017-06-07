@@ -536,6 +536,12 @@ name|defined
 argument_list|(
 name|__aarch64__
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
 return|return
 operator|(
 name|atomic_swap_int
