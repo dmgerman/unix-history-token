@@ -16088,13 +16088,6 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX: accf_http actually wants to do this on purpose. */
-block|KASSERT(sb->sb_upcall == NULL, ("soupcall_set: overwriting upcall"));
-endif|#
-directive|endif
 name|sb
 operator|->
 name|sb_upcall
