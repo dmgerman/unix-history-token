@@ -41,11 +41,11 @@ begin_comment
 comment|/* ICANON */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -74,11 +74,11 @@ begin_comment
 comment|/* ICANON */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -107,11 +107,11 @@ begin_comment
 comment|/* ICANON */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -177,11 +177,11 @@ begin_comment
 comment|/* ISIG */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -221,11 +221,11 @@ begin_comment
 comment|/* IXON, IXOFF */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -276,11 +276,11 @@ begin_comment
 comment|/* !ICANON */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -441,11 +441,11 @@ begin_comment
 comment|/* enable input flow control */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -475,10 +475,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_POSIX_SOURCE */
-end_comment
-
-begin_comment
 comment|/*  * Output flags - software output processing  */
 end_comment
 
@@ -493,11 +489,11 @@ begin_comment
 comment|/* enable following output processing */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -593,18 +589,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_POSIX_SOURCE */
-end_comment
-
-begin_comment
 comment|/*  * Control flags - hardware control of terminal  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -743,11 +735,11 @@ begin_comment
 comment|/* ignore modem status lines */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -820,11 +812,11 @@ begin_comment
 comment|/*  * "Local" flags - dumping ground for other state  *  * Warning: some flags in this structure begin with  * the letter "I" and look like they belong in the  * input flag.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -841,10 +833,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*_POSIX_SOURCE */
-end_comment
 
 begin_define
 define|#
@@ -890,11 +878,11 @@ begin_comment
 comment|/* echo NL even if ECHO is off */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -923,10 +911,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*_POSIX_SOURCE */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -949,11 +933,11 @@ begin_comment
 comment|/* canonicalize input lines */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -970,10 +954,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*_POSIX_SOURCE */
-end_comment
 
 begin_define
 define|#
@@ -1008,11 +988,11 @@ begin_comment
 comment|/* stop background jobs from output */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -1051,10 +1031,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*_POSIX_SOURCE */
-end_comment
 
 begin_define
 define|#
@@ -1183,11 +1159,11 @@ name|B38400
 value|38400
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -1270,10 +1246,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !_POSIX_SOURCE */
-end_comment
 
 begin_typedef
 typedef|typedef
