@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_argv.c,v 1.109 2016/08/28 16:15:12 schwarze Exp $ */
+comment|/*	$Id: mdoc_argv.c,v 1.115 2017/05/30 16:22:03 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2012, 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2012, 2014-2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -503,19 +503,14 @@ specifier|static
 specifier|const
 name|struct
 name|mdocarg
-name|mdocargs
+name|__mdocargs
 index|[
 name|MDOC_MAX
+operator|-
+name|MDOC_Dd
 index|]
 init|=
 block|{
-block|{
-name|ARGSFL_DELIM
-block|,
-name|NULL
-block|}
-block|,
-comment|/* Ap */
 block|{
 name|ARGSFL_NONE
 block|,
@@ -621,6 +616,13 @@ name|args_An
 block|}
 block|,
 comment|/* An */
+block|{
+name|ARGSFL_DELIM
+block|,
+name|NULL
+block|}
+block|,
+comment|/* Ap */
 block|{
 name|ARGSFL_DELIM
 block|,
@@ -1341,20 +1343,6 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* br */
-block|{
-name|ARGSFL_NONE
-block|,
-name|NULL
-block|}
-block|,
-comment|/* sp */
-block|{
-name|ARGSFL_NONE
-block|,
-name|NULL
-block|}
-block|,
 comment|/* %U */
 block|{
 name|ARGSFL_NONE
@@ -1363,14 +1351,22 @@ name|NULL
 block|}
 block|,
 comment|/* Ta */
-block|{
-name|ARGSFL_NONE
-block|,
-name|NULL
 block|}
-block|,
-comment|/* ll */
-block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|mdocarg
+modifier|*
+specifier|const
+name|mdocargs
+init|=
+name|__mdocargs
+operator|-
+name|MDOC_Dd
 decl_stmt|;
 end_decl_stmt
 
@@ -1390,7 +1386,8 @@ parameter_list|,
 name|int
 name|line
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 name|tok
 parameter_list|,
 name|struct
@@ -1442,6 +1439,17 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Which flags does this macro support? */
+name|assert
+argument_list|(
+name|tok
+operator|>=
+name|MDOC_Dd
+operator|&&
+name|tok
+operator|<
+name|MDOC_MAX
+argument_list|)
+expr_stmt|;
 name|argtable
 operator|=
 name|mdocargs
@@ -2016,7 +2024,8 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 name|tok
 parameter_list|,
 name|char
@@ -2064,29 +2073,14 @@ index|]
 operator|.
 name|flags
 expr_stmt|;
+comment|/* 	 * We know that we're in an `It', so it's reasonable to expect 	 * us to be sitting in a `Bl'.  Someday this may not be the case 	 * (if we allow random `It's sitting out there), so provide a 	 * safe fall-back into the default behaviour. 	 */
 if|if
 condition|(
 name|tok
-operator|!=
+operator|==
 name|MDOC_It
 condition|)
-return|return
-name|args
-argument_list|(
-name|mdoc
-argument_list|,
-name|line
-argument_list|,
-name|pos
-argument_list|,
-name|buf
-argument_list|,
-name|fl
-argument_list|,
-name|v
-argument_list|)
-return|;
-comment|/* 	 * We know that we're in an `It', so it's reasonable to expect 	 * us to be sitting in a `Bl'.  Someday this may not be the case 	 * (if we allow random `It's sitting out there), so provide a 	 * safe fall-back into the default behaviour. 	 */
+block|{
 for|for
 control|(
 name|n
@@ -2096,6 +2090,8 @@ operator|->
 name|last
 init|;
 name|n
+operator|!=
+name|NULL
 condition|;
 name|n
 operator|=
@@ -2103,18 +2099,18 @@ name|n
 operator|->
 name|parent
 control|)
+block|{
 if|if
 condition|(
-name|MDOC_Bl
-operator|==
 name|n
 operator|->
 name|tok
+operator|!=
+name|MDOC_Bl
 condition|)
+continue|continue;
 if|if
 condition|(
-name|LIST_column
-operator|==
 name|n
 operator|->
 name|norm
@@ -2122,13 +2118,15 @@ operator|->
 name|Bl
 operator|.
 name|type
+operator|==
+name|LIST_column
 condition|)
-block|{
 name|fl
 operator|=
 name|ARGSFL_TABSEP
 expr_stmt|;
 break|break;
+block|}
 block|}
 return|return
 name|args
@@ -2682,7 +2680,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
-name|ARGS_QWORD
+name|ARGS_WORD
 return|;
 block|}
 name|mdoc
@@ -2714,7 +2712,7 @@ name|pos
 index|]
 condition|)
 return|return
-name|ARGS_QWORD
+name|ARGS_WORD
 return|;
 while|while
 condition|(
@@ -2759,7 +2757,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
-name|ARGS_QWORD
+name|ARGS_WORD
 return|;
 block|}
 name|p

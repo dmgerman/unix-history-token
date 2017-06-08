@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: main.c,v 1.283 2017/02/17 14:31:52 schwarze Exp $ */
+comment|/*	$Id: main.c,v 1.292 2017/06/03 12:17:25 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -209,8 +209,6 @@ name|OUTMODE_LST
 block|,
 name|OUTMODE_ALL
 block|,
-name|OUTMODE_INT
-block|,
 name|OUTMODE_ONE
 block|}
 enum|;
@@ -240,6 +238,9 @@ comment|/* -Tman */
 name|OUTT_HTML
 block|,
 comment|/* -Thtml */
+name|OUTT_MARKDOWN
+block|,
+comment|/* -Tmarkdown */
 name|OUTT_LINT
 block|,
 comment|/* -Tlint */
@@ -387,7 +388,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|moptions
 parameter_list|(
 name|int
@@ -804,7 +805,7 @@ if|if
 condition|(
 name|pledge
 argument_list|(
-literal|"stdio rpath tmppath tty proc exec flock"
+literal|"stdio rpath tmppath tty proc exec"
 argument_list|,
 name|NULL
 argument_list|)
@@ -1047,9 +1048,6 @@ name|OUTMODE_DEF
 expr_stmt|;
 while|while
 condition|(
-operator|-
-literal|1
-operator|!=
 operator|(
 name|c
 operator|=
@@ -1062,8 +1060,29 @@ argument_list|,
 literal|"aC:cfhI:iK:klM:m:O:S:s:T:VW:w"
 argument_list|)
 operator|)
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|c
+operator|==
+literal|'i'
+operator|&&
+name|search
+operator|.
+name|argmode
+operator|==
+name|ARG_EXPR
+condition|)
+block|{
+name|optind
+operator|--
+expr_stmt|;
+break|break;
+block|}
 switch|switch
 condition|(
 name|c
@@ -1179,14 +1198,6 @@ name|optarg
 operator|+
 literal|3
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'i'
-case|:
-name|outmode
-operator|=
-name|OUTMODE_INT
 expr_stmt|;
 break|break;
 case|case
@@ -1493,7 +1504,7 @@ if|if
 condition|(
 name|pledge
 argument_list|(
-literal|"stdio rpath flock"
+literal|"stdio rpath"
 argument_list|,
 name|NULL
 argument_list|)
@@ -2102,8 +2113,7 @@ operator|.
 name|argmode
 operator|==
 name|ARG_FILE
-operator|&&
-operator|!
+condition|)
 name|moptions
 argument_list|(
 operator|&
@@ -2111,13 +2121,7 @@ name|options
 argument_list|,
 name|auxpaths
 argument_list|)
-condition|)
-return|return
-operator|(
-name|int
-operator|)
-name|MANDOCLEVEL_BADARG
-return|;
+expr_stmt|;
 name|mchars_alloc
 argument_list|()
 expr_stmt|;
@@ -2730,8 +2734,8 @@ name|ARG_FILE
 case|:
 name|fputs
 argument_list|(
-literal|"usage: mandoc [-acfhkl] [-I os=name] "
-literal|"[-K encoding] [-mformat] [-O option]\n"
+literal|"usage: mandoc [-ac] [-I os=name] "
+literal|"[-K encoding] [-mdoc | -man] [-O options]\n"
 literal|"\t      [-T output] [-W level] [file ...]\n"
 argument_list|,
 name|stderr
@@ -2743,11 +2747,9 @@ name|ARG_NAME
 case|:
 name|fputs
 argument_list|(
-literal|"usage: man [-acfhklw] [-C file] [-I os=name] "
-literal|"[-K encoding] [-M path] [-m path]\n"
-literal|"\t   [-O option=value] [-S subsection] [-s section] "
-literal|"[-T output] [-W level]\n"
-literal|"\t   [section] name ...\n"
+literal|"usage: man [-acfhklw] [-C file] [-M path] "
+literal|"[-m path] [-S subsection]\n"
+literal|"\t   [[-s] section] name ...\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -2758,7 +2760,7 @@ name|ARG_WORD
 case|:
 name|fputs
 argument_list|(
-literal|"usage: whatis [-acfhklw] [-C file] "
+literal|"usage: whatis [-afk] [-C file] "
 literal|"[-M path] [-m path] [-O outkey] [-S arch]\n"
 literal|"\t      [-s section] name ...\n"
 argument_list|,
@@ -2771,7 +2773,7 @@ name|ARG_EXPR
 case|:
 name|fputs
 argument_list|(
-literal|"usage: apropos [-acfhklw] [-C file] "
+literal|"usage: apropos [-afk] [-C file] "
 literal|"[-M path] [-m path] [-O outkey] [-S arch]\n"
 literal|"\t       [-s section] expression ...\n"
 argument_list|,
@@ -3662,6 +3664,19 @@ name|man
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|OUTT_MARKDOWN
+case|:
+name|markdown_mdoc
+argument_list|(
+name|curp
+operator|->
+name|outdata
+argument_list|,
+name|man
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -4328,7 +4343,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|moptions
 parameter_list|(
 name|int
@@ -4346,19 +4361,17 @@ name|arg
 operator|==
 name|NULL
 condition|)
-comment|/* nothing to do */
-empty_stmt|;
-elseif|else
+return|return;
 if|if
 condition|(
-literal|0
-operator|==
 name|strcmp
 argument_list|(
 name|arg
 argument_list|,
 literal|"doc"
 argument_list|)
+operator|==
+literal|0
 condition|)
 operator|*
 name|options
@@ -4368,50 +4381,20 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-literal|0
-operator|==
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"andoc"
-argument_list|)
-condition|)
-comment|/* nothing to do */
-empty_stmt|;
-elseif|else
-if|if
-condition|(
-literal|0
-operator|==
 name|strcmp
 argument_list|(
 name|arg
 argument_list|,
 literal|"an"
 argument_list|)
+operator|==
+literal|0
 condition|)
 operator|*
 name|options
 operator||=
 name|MPARSE_MAN
 expr_stmt|;
-else|else
-block|{
-name|warnx
-argument_list|(
-literal|"-m %s: Bad argument"
-argument_list|,
-name|arg
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-return|return
-literal|1
-return|;
 block|}
 end_function
 
@@ -4470,7 +4453,7 @@ name|curp
 operator|->
 name|wlevel
 operator|=
-name|MANDOCLEVEL_WARNING
+name|MANDOCLEVEL_STYLE
 expr_stmt|;
 block|}
 elseif|else
@@ -4536,6 +4519,24 @@ name|strcmp
 argument_list|(
 name|arg
 argument_list|,
+literal|"markdown"
+argument_list|)
+condition|)
+name|curp
+operator|->
+name|outtype
+operator|=
+name|OUTT_MARKDOWN
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+literal|0
+operator|==
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
 literal|"utf8"
 argument_list|)
 condition|)
@@ -4562,24 +4563,6 @@ operator|->
 name|outtype
 operator|=
 name|OUTT_LOCALE
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-literal|0
-operator|==
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"xhtml"
-argument_list|)
-condition|)
-name|curp
-operator|->
-name|outtype
-operator|=
-name|OUTT_HTML
 expr_stmt|;
 elseif|else
 if|if
@@ -4663,7 +4646,7 @@ name|char
 modifier|*
 name|toks
 index|[
-literal|7
+literal|8
 index|]
 decl_stmt|;
 name|toks
@@ -4685,32 +4668,39 @@ index|[
 literal|2
 index|]
 operator|=
-literal|"warning"
+literal|"style"
 expr_stmt|;
 name|toks
 index|[
 literal|3
 index|]
 operator|=
-literal|"error"
+literal|"warning"
 expr_stmt|;
 name|toks
 index|[
 literal|4
 index|]
 operator|=
-literal|"unsupp"
+literal|"error"
 expr_stmt|;
 name|toks
 index|[
 literal|5
 index|]
 operator|=
-literal|"fatal"
+literal|"unsupp"
 expr_stmt|;
 name|toks
 index|[
 literal|6
+index|]
+operator|=
+literal|"fatal"
+expr_stmt|;
+name|toks
+index|[
+literal|7
 index|]
 operator|=
 name|NULL
@@ -4765,7 +4755,7 @@ name|curp
 operator|->
 name|wlevel
 operator|=
-name|MANDOCLEVEL_WARNING
+name|MANDOCLEVEL_STYLE
 expr_stmt|;
 break|break;
 case|case
@@ -4775,7 +4765,7 @@ name|curp
 operator|->
 name|wlevel
 operator|=
-name|MANDOCLEVEL_ERROR
+name|MANDOCLEVEL_WARNING
 expr_stmt|;
 break|break;
 case|case
@@ -4785,11 +4775,21 @@ name|curp
 operator|->
 name|wlevel
 operator|=
-name|MANDOCLEVEL_UNSUPP
+name|MANDOCLEVEL_ERROR
 expr_stmt|;
 break|break;
 case|case
 literal|5
+case|:
+name|curp
+operator|->
+name|wlevel
+operator|=
+name|MANDOCLEVEL_UNSUPP
+expr_stmt|;
+break|break;
+case|case
+literal|6
 case|:
 name|curp
 operator|->

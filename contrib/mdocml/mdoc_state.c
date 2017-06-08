@@ -1,16 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_state.c,v 1.4 2017/01/10 13:47:00 schwarze Exp $ */
+comment|/*	$Id: mdoc_state.c,v 1.8 2017/05/05 15:17:32 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2014, 2015, 2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_include
@@ -129,15 +135,14 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|state_handler
-name|state_handlers
+name|__state_handlers
 index|[
 name|MDOC_MAX
+operator|-
+name|MDOC_Dd
 index|]
 init|=
 block|{
-name|NULL
-block|,
-comment|/* Ap */
 name|NULL
 block|,
 comment|/* Dd */
@@ -183,6 +188,9 @@ comment|/* Ad */
 name|NULL
 block|,
 comment|/* An */
+name|NULL
+block|,
+comment|/* Ap */
 name|NULL
 block|,
 comment|/* Ar */
@@ -491,20 +499,25 @@ block|,
 comment|/* %Q */
 name|NULL
 block|,
-comment|/* br */
-name|NULL
-block|,
-comment|/* sp */
-name|NULL
-block|,
 comment|/* %U */
 name|NULL
 block|,
 comment|/* Ta */
-name|NULL
-block|,
-comment|/* ll */
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|state_handler
+modifier|*
+specifier|const
+name|state_handlers
+init|=
+name|__state_handlers
+operator|-
+name|MDOC_Dd
 decl_stmt|;
 end_decl_stmt
 
@@ -533,8 +546,29 @@ operator|->
 name|tok
 operator|==
 name|TOKEN_NONE
+operator|||
+name|n
+operator|->
+name|tok
+operator|<
+name|ROFF_MAX
 condition|)
 return|return;
+name|assert
+argument_list|(
+name|n
+operator|->
+name|tok
+operator|>=
+name|MDOC_Dd
+operator|&&
+name|n
+operator|->
+name|tok
+operator|<
+name|MDOC_MAX
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

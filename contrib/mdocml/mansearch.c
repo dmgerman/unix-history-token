@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: mansearch.c,v 1.50 2016/07/09 15:23:36 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014, 2015, 2016 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013-2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -379,7 +379,9 @@ name|buildoutput
 parameter_list|(
 name|size_t
 parameter_list|,
-name|int32_t
+name|struct
+name|dbm_page
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -392,6 +394,8 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -405,6 +409,10 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|,
 specifier|const
@@ -879,6 +887,12 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
 name|warn
 argument_list|(
 literal|"%s/%s"
@@ -1056,27 +1070,11 @@ name|mpage
 operator|->
 name|output
 operator|=
-operator|(
-name|int
-operator|)
-name|outkey
-operator|==
-name|KEY_Nd
-condition|?
-name|mandoc_strdup
-argument_list|(
-name|page
-operator|->
-name|desc
-argument_list|)
-else|:
 name|buildoutput
 argument_list|(
 name|outkey
 argument_list|,
 name|page
-operator|->
-name|addr
 argument_list|)
 expr_stmt|;
 name|mpage
@@ -2174,6 +2172,8 @@ argument_list|(
 name|page
 operator|->
 name|name
+argument_list|,
+literal|2
 argument_list|)
 operator|+
 literal|1
@@ -2183,6 +2183,8 @@ argument_list|(
 name|page
 operator|->
 name|sect
+argument_list|,
+literal|2
 argument_list|)
 operator|+
 operator|(
@@ -2201,6 +2203,8 @@ argument_list|(
 name|page
 operator|->
 name|arch
+argument_list|,
+literal|2
 argument_list|)
 operator|)
 operator|+
@@ -2227,6 +2231,8 @@ argument_list|,
 name|page
 operator|->
 name|name
+argument_list|,
+literal|", "
 argument_list|)
 expr_stmt|;
 name|buf
@@ -2247,6 +2253,8 @@ argument_list|,
 name|page
 operator|->
 name|sect
+argument_list|,
+literal|", "
 argument_list|)
 expr_stmt|;
 if|if
@@ -2276,6 +2284,8 @@ argument_list|,
 name|page
 operator|->
 name|arch
+argument_list|,
+literal|", "
 argument_list|)
 expr_stmt|;
 block|}
@@ -2309,7 +2319,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Count the buffer space needed to print the NUL-terminated  * list of NUL-terminated strings, when printing two separator  * characters between strings.  */
+comment|/*  * Count the buffer space needed to print the NUL-terminated  * list of NUL-terminated strings, when printing sep separator  * characters between strings.  */
 end_comment
 
 begin_function
@@ -2321,6 +2331,9 @@ specifier|const
 name|char
 modifier|*
 name|cp
+parameter_list|,
+name|size_t
+name|sep
 parameter_list|)
 block|{
 name|size_t
@@ -2358,7 +2371,10 @@ literal|'\0'
 condition|)
 break|break;
 name|sz
-operator|++
+operator|+=
+name|sep
+operator|-
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -2385,7 +2401,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print the NUL-terminated list of NUL-terminated strings  * into the buffer, seperating strings with a comma and a blank.  */
+comment|/*  * Print the NUL-terminated list of NUL-terminated strings  * into the buffer, seperating strings with sep.  */
 end_comment
 
 begin_function
@@ -2405,8 +2421,18 @@ specifier|const
 name|char
 modifier|*
 name|cp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|sep
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -2433,17 +2459,17 @@ operator|==
 literal|'\0'
 condition|)
 break|break;
-name|buf
-index|[
-operator|(
-operator|*
-name|i
-operator|)
-operator|++
-index|]
+name|s
 operator|=
-literal|','
+name|sep
 expr_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+operator|!=
+literal|'\0'
+condition|)
 name|buf
 index|[
 operator|(
@@ -2453,7 +2479,9 @@ operator|)
 operator|++
 index|]
 operator|=
-literal|' '
+operator|*
+name|s
+operator|++
 expr_stmt|;
 block|}
 elseif|else
@@ -2566,7 +2594,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Build a list of values taken by the macro im  * in the manual page with big-endian address addr.  */
+comment|/*  * Build a list of values taken by the macro im in the manual page.  */
 end_comment
 
 begin_function
@@ -2578,8 +2606,10 @@ parameter_list|(
 name|size_t
 name|im
 parameter_list|,
-name|int32_t
-name|addr
+name|struct
+name|dbm_page
+modifier|*
+name|page
 parameter_list|)
 block|{
 specifier|const
@@ -2589,6 +2619,9 @@ name|oldoutput
 decl_stmt|,
 modifier|*
 name|sep
+decl_stmt|,
+modifier|*
+name|input
 decl_stmt|;
 name|char
 modifier|*
@@ -2600,6 +2633,134 @@ decl_stmt|,
 modifier|*
 name|value
 decl_stmt|;
+name|size_t
+name|sz
+decl_stmt|,
+name|i
+decl_stmt|;
+switch|switch
+condition|(
+name|im
+condition|)
+block|{
+case|case
+name|KEY_Nd
+case|:
+return|return
+name|mandoc_strdup
+argument_list|(
+name|page
+operator|->
+name|desc
+argument_list|)
+return|;
+case|case
+name|KEY_Nm
+case|:
+name|input
+operator|=
+name|page
+operator|->
+name|name
+expr_stmt|;
+break|break;
+case|case
+name|KEY_sec
+case|:
+name|input
+operator|=
+name|page
+operator|->
+name|sect
+expr_stmt|;
+break|break;
+case|case
+name|KEY_arch
+case|:
+name|input
+operator|=
+name|page
+operator|->
+name|arch
+expr_stmt|;
+if|if
+condition|(
+name|input
+operator|==
+name|NULL
+condition|)
+name|input
+operator|=
+literal|"all\0"
+expr_stmt|;
+break|break;
+default|default:
+name|input
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|input
+operator|!=
+name|NULL
+condition|)
+block|{
+name|sz
+operator|=
+name|lstlen
+argument_list|(
+name|input
+argument_list|,
+literal|3
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+name|output
+operator|=
+name|mandoc_malloc
+argument_list|(
+name|sz
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
+name|lstcat
+argument_list|(
+name|output
+argument_list|,
+operator|&
+name|i
+argument_list|,
+name|input
+argument_list|,
+literal|" # "
+argument_list|)
+expr_stmt|;
+name|output
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|assert
+argument_list|(
+name|i
+operator|==
+name|sz
+argument_list|)
+expr_stmt|;
+return|return
+name|output
+return|;
+block|}
 name|output
 operator|=
 name|NULL
@@ -2610,6 +2771,8 @@ name|im
 operator|-
 literal|2
 argument_list|,
+name|page
+operator|->
 name|addr
 argument_list|)
 expr_stmt|;
@@ -3417,6 +3580,43 @@ return|return
 name|e
 return|;
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+literal|"-i"
+argument_list|,
+name|argv
+index|[
+operator|*
+name|argi
+index|]
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|*
+name|argi
+operator|+
+literal|1
+operator|<
+name|argc
+condition|)
+block|{
+name|cs
+operator|=
+literal|0
+expr_stmt|;
+operator|++
+operator|*
+name|argi
+expr_stmt|;
+block|}
+else|else
+name|cs
+operator|=
+literal|1
+expr_stmt|;
 name|e
 operator|=
 name|mandoc_calloc

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term.h,v 1.118 2015/11/07 14:01:16 schwarze Exp $ */
+comment|/*	$Id: term.h,v 1.126 2017/06/07 20:01:19 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011-2015, 2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_enum
@@ -52,20 +52,27 @@ block|}
 enum|;
 end_enum
 
-begin_define
-define|#
-directive|define
-name|TERM_MAXMARGIN
-value|100000
-end_define
-
-begin_comment
-comment|/* FIXME */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|eqn
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
 name|roff_meta
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|roff_node
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|tbl_span
 struct_decl|;
 end_struct_decl
 
@@ -113,25 +120,62 @@ end_struct
 
 begin_struct
 struct|struct
+name|termp_col
+block|{
+name|int
+modifier|*
+name|buf
+decl_stmt|;
+comment|/* Output buffer. */
+name|size_t
+name|maxcols
+decl_stmt|;
+comment|/* Allocated bytes in buf. */
+name|size_t
+name|col
+decl_stmt|;
+comment|/* Byte in buf to be written. */
+name|size_t
+name|rmargin
+decl_stmt|;
+comment|/* Current right margin. */
+name|size_t
+name|offset
+decl_stmt|;
+comment|/* Current left margin. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|termp
 block|{
-name|enum
-name|termtype
-name|type
-decl_stmt|;
 name|struct
 name|rofftbl
 name|tbl
 decl_stmt|;
-comment|/* table configuration */
-name|int
-name|synopsisonly
+comment|/* Table configuration. */
+name|struct
+name|termp_col
+modifier|*
+name|tcols
 decl_stmt|;
-comment|/* print the synopsis only */
-name|int
-name|mdocstyle
+comment|/* Array of table columns. */
+name|struct
+name|termp_col
+modifier|*
+name|tcol
 decl_stmt|;
-comment|/* imitate mdoc(7) output */
+comment|/* Current table column. */
+name|size_t
+name|maxtcol
+decl_stmt|;
+comment|/* Allocated table columns. */
+name|size_t
+name|lasttcol
+decl_stmt|;
+comment|/* Last column currently used. */
 name|size_t
 name|line
 decl_stmt|;
@@ -149,27 +193,15 @@ name|lastrmargin
 decl_stmt|;
 comment|/* Right margin before the last ll. */
 name|size_t
-name|rmargin
-decl_stmt|;
-comment|/* Current right margin. */
-name|size_t
 name|maxrmargin
 decl_stmt|;
 comment|/* Max right margin. */
 name|size_t
-name|maxcols
-decl_stmt|;
-comment|/* Max size of buf. */
-name|size_t
-name|offset
-decl_stmt|;
-comment|/* Margin offest. */
-name|size_t
-name|tabwidth
-decl_stmt|;
-comment|/* Distance of tab positions. */
-name|size_t
 name|col
+decl_stmt|;
+comment|/* Byte position in buf. */
+name|size_t
+name|lastcol
 decl_stmt|;
 comment|/* Bytes in buf. */
 name|size_t
@@ -179,11 +211,23 @@ comment|/* Chars on current line. */
 name|size_t
 name|trailspace
 decl_stmt|;
-comment|/* See termp_flushln(). */
-name|int
-name|overstep
+comment|/* See term_flushln(). */
+name|size_t
+name|minbl
 decl_stmt|;
-comment|/* See termp_flushln(). */
+comment|/* Minimum blanks before next field. */
+name|int
+name|synopsisonly
+decl_stmt|;
+comment|/* Print the synopsis only. */
+name|int
+name|mdocstyle
+decl_stmt|;
+comment|/* Imitate mdoc(7) output. */
+name|int
+name|ti
+decl_stmt|;
+comment|/* Temporary indent for one line. */
 name|int
 name|skipvsp
 decl_stmt|;
@@ -248,12 +292,12 @@ value|(1<< 10)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_DANGLE
+name|TERMP_HANG
 value|(1<< 11)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_HANG
+name|TERMP_NOPAD
 value|(1<< 12)
 comment|/* See term_flushln(). */
 define|#
@@ -271,11 +315,31 @@ directive|define
 name|TERMP_NONEWLINE
 value|(1<< 15)
 comment|/* No line break in nofill mode. */
-name|int
-modifier|*
-name|buf
+define|#
+directive|define
+name|TERMP_BRNEVER
+value|(1<< 16)
+comment|/* Don't even break at maxrmargin. */
+define|#
+directive|define
+name|TERMP_NOBUF
+value|(1<< 17)
+comment|/* Bypass output buffer. */
+define|#
+directive|define
+name|TERMP_NEWMC
+value|(1<< 18)
+comment|/* No .mc printed yet. */
+define|#
+directive|define
+name|TERMP_ENDMC
+value|(1<< 19)
+comment|/* Next break ends .mc mode. */
+name|enum
+name|termtype
+name|type
 decl_stmt|;
-comment|/* Output buffer. */
+comment|/* Terminal, PS, or PDF. */
 name|enum
 name|termenc
 name|enc
@@ -419,6 +483,12 @@ modifier|*
 name|argf
 decl_stmt|;
 comment|/* arg for headf/footf */
+specifier|const
+name|char
+modifier|*
+name|mc
+decl_stmt|;
+comment|/* Margin character. */
 name|struct
 name|termp_ps
 modifier|*
@@ -428,18 +498,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct_decl
-struct_decl|struct
-name|tbl_span
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|eqn
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 specifier|const
 name|char
@@ -447,6 +505,22 @@ modifier|*
 name|ascii_uc2str
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|roff_term_pre
+parameter_list|(
+name|struct
+name|termp
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|roff_node
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -647,6 +721,31 @@ name|struct
 name|termp
 modifier|*
 parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|term_tab_set
+parameter_list|(
+specifier|const
+name|struct
+name|termp
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
+name|term_tab_next
+parameter_list|(
 name|size_t
 parameter_list|)
 function_decl|;
