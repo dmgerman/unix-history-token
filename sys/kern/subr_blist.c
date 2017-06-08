@@ -1397,7 +1397,7 @@ name|scan
 operator|->
 name|bm_bighint
 operator|=
-name|count
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -2704,7 +2704,7 @@ name|scan
 operator|->
 name|bm_bighint
 operator|=
-name|count
+literal|0
 expr_stmt|;
 return|return
 name|nblks
