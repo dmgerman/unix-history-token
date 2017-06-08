@@ -466,6 +466,14 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|str
+operator|==
+name|NULL
+operator|||
+name|len
+operator|==
+literal|0
+operator|||
 operator|!
 name|xo_buf_has_room
 argument_list|(

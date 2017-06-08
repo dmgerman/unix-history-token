@@ -25,7 +25,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"op %s: [%s] [%s]\n"
+literal|"op %s: [%s] [%s] [%#llx]\n"
 argument_list|,
 name|xo_encoder_op_name
 argument_list|(
@@ -41,6 +41,8 @@ name|value
 condition|?
 else|:
 literal|""
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 return|return
