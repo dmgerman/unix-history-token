@@ -1321,6 +1321,15 @@ operator|->
 name|sb_upcall
 operator|!=
 name|NULL
+operator|&&
+operator|!
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_ISDISCONNECTED
+operator|)
 condition|)
 block|{
 name|ret
