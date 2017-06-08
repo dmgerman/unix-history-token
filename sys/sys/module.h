@@ -295,6 +295,16 @@ end_include
 begin_define
 define|#
 directive|define
+name|MODULE_METADATA_CONCAT
+parameter_list|(
+name|uniquifier
+parameter_list|)
+value|_mod_metadata##uniquifier
+end_define
+
+begin_define
+define|#
+directive|define
 name|MODULE_METADATA
 parameter_list|(
 name|uniquifier
@@ -306,7 +316,7 @@ parameter_list|,
 name|cval
 parameter_list|)
 define|\
-value|static struct mod_metadata _mod_metadata##uniquifier = {	\ 		MDT_STRUCT_VERSION,					\ 		type,							\ 		data,							\ 		cval							\ 	};								\ 	DATA_SET(modmetadata_set, _mod_metadata##uniquifier)
+value|static struct mod_metadata MODULE_METADATA_CONCAT(uniquifier) = {	\ 		MDT_STRUCT_VERSION,					\ 		type,							\ 		data,							\ 		cval							\ 	};								\ 	DATA_SET(modmetadata_set, MODULE_METADATA_CONCAT(uniquifier))
 end_define
 
 begin_define
@@ -355,7 +365,7 @@ parameter_list|,
 name|maxver
 parameter_list|)
 define|\
-value|MODULE_DEPEND(name, kernel, __FreeBSD_version,			\ 	    __FreeBSD_version, maxver);			\ 	MODULE_METADATA(_md_##name, MDT_MODULE,&data, #name);		\ 	SYSINIT(name##module, sub, order, module_register_init,&data);	\ 	struct __hack
+value|MODULE_DEPEND(name, kernel, __FreeBSD_version,			\ 	    __FreeBSD_version, maxver);			\ 	MODULE_METADATA(_md_##name, MDT_MODULE,&data, __XSTRING(name));\ 	SYSINIT(name##module, sub, order, module_register_init,&data);	\ 	struct __hack
 end_define
 
 begin_define
@@ -399,6 +409,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|MODULE_VERSION_CONCAT
+parameter_list|(
+name|module
+parameter_list|,
+name|version
+parameter_list|)
+value|_##module##_version
+end_define
+
+begin_define
+define|#
+directive|define
 name|MODULE_VERSION
 parameter_list|(
 name|module
@@ -406,7 +428,7 @@ parameter_list|,
 name|version
 parameter_list|)
 define|\
-value|static struct mod_version _##module##_version			\ 	    __section(".data") = {					\ 		version							\ 	};								\ 	MODULE_METADATA(_##module##_version, MDT_VERSION,		\&_##module##_version, #module)
+value|static struct mod_version MODULE_VERSION_CONCAT(module, version)\ 	    __section(".data") = {					\ 		version							\ 	};								\ 	MODULE_METADATA(MODULE_VERSION_CONCAT(module, version), MDT_VERSION,\&MODULE_VERSION_CONCAT(module, version), __XSTRING(module))
 end_define
 
 begin_comment
