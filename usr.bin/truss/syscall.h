@@ -177,6 +177,8 @@ name|Minherit
 block|,
 name|Mlockall
 block|,
+name|Mountflags
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
