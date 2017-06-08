@@ -14424,6 +14424,13 @@ name|ECONNABORTED
 expr_stmt|;
 block|}
 block|}
+name|SOCK_UNLOCK
+argument_list|(
+name|stcb
+operator|->
+name|sctp_socket
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Wake ANY sleepers */
 if|#
@@ -14555,7 +14562,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|socantrcvmore_locked
+name|socantrcvmore
 argument_list|(
 name|stcb
 operator|->
