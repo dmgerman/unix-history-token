@@ -179,6 +179,8 @@ name|Mlockall
 block|,
 name|Mountflags
 block|,
+name|Msync
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
