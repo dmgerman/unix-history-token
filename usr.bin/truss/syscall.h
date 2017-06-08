@@ -169,6 +169,8 @@ name|PUInt
 block|,
 name|PQuadHex
 block|,
+name|Acltype
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
