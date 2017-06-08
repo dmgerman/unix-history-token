@@ -171,6 +171,8 @@ name|PQuadHex
 block|,
 name|Acltype
 block|,
+name|Extattrnamespace
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
