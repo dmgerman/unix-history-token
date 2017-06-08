@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmandoc.h,v 1.66 2017/02/18 13:43:52 schwarze Exp $ */
+comment|/*	$Id: libmandoc.h,v 1.67 2017/04/29 12:45:41 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -224,15 +224,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|mdoc_hash_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|mdoc_parseln
 parameter_list|(
@@ -257,15 +248,6 @@ parameter_list|(
 name|struct
 name|roff_man
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|man_hash_init
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

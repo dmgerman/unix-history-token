@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandocdb.c,v 1.244 2017/02/17 14:45:55 schwarze Exp $ */
+comment|/*	$Id: mandocdb.c,v 1.250 2017/05/17 22:27:12 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -1273,21 +1273,14 @@ specifier|static
 specifier|const
 name|struct
 name|mdoc_handler
-name|mdocs
+name|__mdocs
 index|[
 name|MDOC_MAX
+operator|-
+name|MDOC_Dd
 index|]
 init|=
 block|{
-block|{
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* Ap */
 block|{
 name|NULL
 block|,
@@ -1423,6 +1416,15 @@ literal|0
 block|}
 block|,
 comment|/* An */
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* Ap */
 block|{
 name|NULL
 block|,
@@ -2349,24 +2351,6 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* br */
-block|{
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* sp */
-block|{
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
 comment|/* %U */
 block|{
 name|NULL
@@ -2377,16 +2361,22 @@ literal|0
 block|}
 block|,
 comment|/* Ta */
-block|{
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
 block|}
-block|,
-comment|/* ll */
-block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|mdoc_handler
+modifier|*
+specifier|const
+name|mdocs
+init|=
+name|__mdocs
+operator|-
+name|MDOC_Dd
 decl_stmt|;
 end_decl_stmt
 
@@ -6413,7 +6403,7 @@ name|man
 operator|->
 name|meta
 operator|.
-name|msec
+name|title
 operator|!=
 literal|'\0'
 condition|)
@@ -7985,13 +7975,6 @@ modifier|*
 name|n
 parameter_list|)
 block|{
-name|assert
-argument_list|(
-name|NULL
-operator|!=
-name|n
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|n
@@ -8000,9 +7983,9 @@ name|n
 operator|->
 name|child
 init|;
-name|NULL
-operator|!=
 name|n
+operator|!=
+name|NULL
 condition|;
 name|n
 operator|=
@@ -8013,6 +7996,18 @@ control|)
 block|{
 if|if
 condition|(
+name|n
+operator|->
+name|tok
+operator|==
+name|TOKEN_NONE
+operator|||
+name|n
+operator|->
+name|tok
+operator|<
+name|ROFF_MAX
+operator|||
 name|n
 operator|->
 name|flags
@@ -8027,6 +8022,21 @@ operator|.
 name|taboo
 condition|)
 continue|continue;
+name|assert
+argument_list|(
+name|n
+operator|->
+name|tok
+operator|>=
+name|MDOC_Dd
+operator|&&
+name|n
+operator|->
+name|tok
+operator|<
+name|MDOC_MAX
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|n
@@ -8051,8 +8061,6 @@ name|ROFFT_TAIL
 case|:
 if|if
 condition|(
-name|NULL
-operator|!=
 name|mdocs
 index|[
 name|n
@@ -8061,11 +8069,9 @@ name|tok
 index|]
 operator|.
 name|fp
-condition|)
-if|if
-condition|(
-literal|0
-operator|==
+operator|!=
+name|NULL
+operator|&&
 operator|(
 operator|*
 name|mdocs
@@ -8084,6 +8090,8 @@ name|meta
 operator|,
 name|n
 operator|)
+operator|==
+literal|0
 condition|)
 break|break;
 if|if
@@ -8126,15 +8134,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|assert
-argument_list|(
-name|n
-operator|->
-name|type
-operator|!=
-name|ROFFT_ROOT
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -11052,6 +11051,46 @@ decl_stmt|;
 name|pid_t
 name|child
 decl_stmt|;
+comment|/* 	 * Do not write empty databases, and delete existing ones 	 * when makewhatis -u causes them to become empty. 	 */
+name|dba_array_start
+argument_list|(
+name|dba
+operator|->
+name|pages
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dba_array_next
+argument_list|(
+name|dba
+operator|->
+name|pages
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|unlink
+argument_list|(
+name|MANDOC_DB
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|say
+argument_list|(
+name|MANDOC_DB
+argument_list|,
+literal|"&unlink"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * Build the database in a temporary file, 	 * then atomically move it into place. 	 */
 if|if
 condition|(
 name|dba_write
@@ -11103,6 +11142,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+comment|/* 	 * We lack write permission and cannot replace the database 	 * file, but let's at least check whether the data changed. 	 */
 operator|(
 name|void
 operator|)

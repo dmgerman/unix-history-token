@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: main.h,v 1.26 2016/07/15 19:33:01 schwarze Exp $ */
+comment|/*	$Id: main.h,v 1.27 2017/03/03 14:23:23 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -256,6 +256,21 @@ name|void
 name|terminal_sepline
 parameter_list|(
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|markdown_mdoc
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|roff_man
 modifier|*
 parameter_list|)
 function_decl|;
