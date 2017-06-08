@@ -22148,9 +22148,12 @@ condition|(
 name|so
 condition|)
 block|{
-name|SOCK_LOCK
+name|SOCKBUF_LOCK
 argument_list|(
+operator|&
 name|so
+operator|->
+name|so_rcv
 argument_list|)
 expr_stmt|;
 if|if
