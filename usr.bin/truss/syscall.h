@@ -173,6 +173,8 @@ name|Acltype
 block|,
 name|Extattrnamespace
 block|,
+name|Minherit
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
