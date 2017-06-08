@@ -901,13 +901,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|uint8_t
-name|xo_color_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 struct|struct
 name|xo_colors_s
 block|{
