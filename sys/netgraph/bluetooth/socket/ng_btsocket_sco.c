@@ -1897,26 +1897,8 @@ name|struct
 name|socket
 modifier|*
 name|so1
-init|=
-name|NULL
 decl_stmt|;
 comment|/* pcb is locked */
-comment|/* 		 * First check the pending connections queue and if we have 		 * space then create new socket and set proper source address. 		 */
-if|if
-condition|(
-name|pcb
-operator|->
-name|so
-operator|->
-name|so_qlen
-operator|<=
-name|pcb
-operator|->
-name|so
-operator|->
-name|so_qlimit
-condition|)
-block|{
 name|CURVNET_SET
 argument_list|(
 name|pcb
@@ -1940,7 +1922,6 @@ expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|so1

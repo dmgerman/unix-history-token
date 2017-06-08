@@ -26778,7 +26778,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 			 * First are we accepting? We do this again here 			 * since it is possible that a previous endpoint WAS 			 * listening responded to a INIT-ACK and then 			 * closed. We opened and bound.. and are now no 			 * longer listening. 			 */
+comment|/* 			 * First are we accepting? We do this again here 			 * since it is possible that a previous endpoint WAS 			 * listening responded to a INIT-ACK and then 			 * closed. We opened and bound.. and are now no 			 * longer listening. 			 * 			 * XXXGL: notes on checking listen queue length. 			 * 1) SCTP_IS_LISTENING() doesn't necessarily mean 			 *    SOLISTENING(), because a listening "UDP type" 			 *    socket isn't listening in terms of the socket 			 *    layer.  It is a normal data flow socket, that 			 *    can fork off new connections.  Thus, we should 			 *    look into sol_qlen only in case we are !UDP. 			 * 2) Checking sol_qlen in general requires locking 			 *    the socket, and this code lacks that. 			 */
 if|if
 condition|(
 operator|(
@@ -26794,17 +26794,28 @@ argument_list|(
 name|inp
 argument_list|)
 operator|||
+operator|(
+operator|!
+operator|(
+name|inp
+operator|->
+name|sctp_flags
+operator|&
+name|SCTP_PCB_FLAGS_UDPTYPE
+operator|)
+operator|&&
 name|inp
 operator|->
 name|sctp_socket
 operator|->
-name|so_qlen
+name|sol_qlen
 operator|>=
 name|inp
 operator|->
 name|sctp_socket
 operator|->
-name|so_qlimit
+name|sol_qlimit
+operator|)
 operator|)
 condition|)
 block|{

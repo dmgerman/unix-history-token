@@ -379,10 +379,47 @@ name|SOCK_NONBLOCK
 value|0x20000000
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Flags for accept1(), kern_accept4() and solisten_dequeue, in addition  * to SOCK_CLOEXEC and SOCK_NONBLOCK.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACCEPT4_INHERIT
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACCEPT4_COMPAT
+value|0x2
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
 
 begin_comment
 comment|/*  * Option flags per-socket.  */
@@ -3987,40 +4024,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|so_listeners_apply_all
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|func
-function_decl|)
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

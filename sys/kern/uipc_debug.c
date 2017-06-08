@@ -2060,22 +2060,6 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"so_qstate: 0x%x ("
-argument_list|,
-name|so
-operator|->
-name|so_qstate
-argument_list|)
-expr_stmt|;
-name|db_print_soqstate
-argument_list|(
-name|so
-operator|->
-name|so_qstate
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
 literal|")   "
 argument_list|)
 expr_stmt|;
@@ -2121,74 +2105,97 @@ argument_list|(
 name|indent
 argument_list|)
 expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"so_head: %p   "
-argument_list|,
+if|if
+condition|(
 name|so
 operator|->
-name|so_head
-argument_list|)
-expr_stmt|;
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+condition|)
+block|{
 name|db_printf
 argument_list|(
-literal|"so_incomp first: %p   "
+literal|"sol_incomp first: %p   "
 argument_list|,
 name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|so
 operator|->
-name|so_incomp
+name|sol_incomp
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"so_comp first: %p\n"
+literal|"sol_comp first: %p\n"
 argument_list|,
 name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|so
 operator|->
-name|so_comp
+name|sol_comp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|db_print_indent
+name|db_printf
 argument_list|(
-name|indent
+literal|"sol_qlen: %d   "
+argument_list|,
+name|so
+operator|->
+name|sol_qlen
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"sol_incqlen: %d   "
+argument_list|,
+name|so
+operator|->
+name|sol_incqlen
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"sol_qlimit: %d   "
+argument_list|,
+name|so
+operator|->
+name|sol_qlimit
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|db_printf
+argument_list|(
+literal|"so_qstate: 0x%x ("
+argument_list|,
+name|so
+operator|->
+name|so_qstate
+argument_list|)
+expr_stmt|;
+name|db_print_soqstate
+argument_list|(
+name|so
+operator|->
+name|so_qstate
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"so_listen: %p   "
+argument_list|,
+name|so
+operator|->
+name|so_listen
 argument_list|)
 expr_stmt|;
 comment|/* so_list skipped */
-name|db_printf
-argument_list|(
-literal|"so_qlen: %u   "
-argument_list|,
-name|so
-operator|->
-name|so_qlen
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"so_incqlen: %u   "
-argument_list|,
-name|so
-operator|->
-name|so_incqlen
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"so_qlimit: %u   "
-argument_list|,
-name|so
-operator|->
-name|so_qlimit
-argument_list|)
-expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"so_timeo: %d   "
@@ -2254,6 +2261,7 @@ argument_list|,
 name|indent
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

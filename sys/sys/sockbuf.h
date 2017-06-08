@@ -18,16 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/selinfo.h>
-end_include
-
-begin_comment
-comment|/* for struct selinfo */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -253,6 +243,12 @@ name|thread
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|selinfo
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|xsockbuf
@@ -297,11 +293,6 @@ struct|struct
 name|sockbuf
 block|{
 name|struct
-name|selinfo
-name|sb_sel
-decl_stmt|;
-comment|/* process selecting read/write */
-name|struct
 name|mtx
 name|sb_mtx
 decl_stmt|;
@@ -311,6 +302,12 @@ name|sx
 name|sb_sx
 decl_stmt|;
 comment|/* prevent I/O interlacing */
+name|struct
+name|selinfo
+modifier|*
+name|sb_sel
+decl_stmt|;
+comment|/* process selecting read/write */
 name|short
 name|sb_state
 decl_stmt|;
