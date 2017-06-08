@@ -175,6 +175,8 @@ name|Extattrnamespace
 block|,
 name|Minherit
 block|,
+name|Mlockall
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
