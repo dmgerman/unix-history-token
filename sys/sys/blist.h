@@ -57,7 +57,7 @@ comment|/* flag */
 end_comment
 
 begin_comment
-comment|/*  * blmeta and bl_bitmap_t MUST be a power of 2 in size.  */
+comment|/*  * Both blmeta and bmu_bitmap MUST be a power of 2 in size.  */
 end_comment
 
 begin_typedef
@@ -145,32 +145,6 @@ value|BLIST_BMAP_RADIX
 end_define
 
 begin_function_decl
-specifier|extern
-name|blist_t
-name|blist_create
-parameter_list|(
-name|daddr_t
-name|blocks
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|blist_destroy
-parameter_list|(
-name|blist_t
-name|blist
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|daddr_t
 name|blist_alloc
 parameter_list|(
@@ -184,24 +158,29 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|void
-name|blist_free
-parameter_list|(
 name|blist_t
-name|blist
-parameter_list|,
+name|blist_create
+parameter_list|(
 name|daddr_t
-name|blkno
+name|blocks
 parameter_list|,
-name|daddr_t
-name|count
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|void
+name|blist_destroy
+parameter_list|(
+name|blist_t
+name|blist
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|daddr_t
 name|blist_fill
 parameter_list|(
@@ -218,7 +197,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|void
+name|blist_free
+parameter_list|(
+name|blist_t
+name|blist
+parameter_list|,
+name|daddr_t
+name|blkno
+parameter_list|,
+name|daddr_t
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|blist_print
 parameter_list|(
@@ -229,7 +223,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|blist_resize
 parameter_list|(
