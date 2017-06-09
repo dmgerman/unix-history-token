@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<linux/compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/kthread.h>
 end_include
 
@@ -32,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/compat.h>
+file|<linux/wait.h>
 end_include
 
 begin_include
