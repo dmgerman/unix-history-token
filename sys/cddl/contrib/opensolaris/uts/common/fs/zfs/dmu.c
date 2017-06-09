@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -8737,8 +8737,6 @@ name|db_level
 argument_list|,
 name|WP_DMU_SYNC
 argument_list|,
-name|ZIO_COMPRESS_INHERIT
-argument_list|,
 operator|&
 name|zp
 argument_list|)
@@ -9430,10 +9428,6 @@ parameter_list|,
 name|int
 name|wp
 parameter_list|,
-name|enum
-name|zio_compress
-name|override_compress
-parameter_list|,
 name|zio_prop_t
 modifier|*
 name|zp
@@ -9518,27 +9512,6 @@ name|os
 operator|->
 name|os_copies
 decl_stmt|;
-name|boolean_t
-name|lz4_ac
-init|=
-name|spa_feature_is_active
-argument_list|(
-name|os
-operator|->
-name|os_spa
-argument_list|,
-name|SPA_FEATURE_LZ4_COMPRESS
-argument_list|)
-decl_stmt|;
-name|IMPLY
-argument_list|(
-name|override_compress
-operator|==
-name|ZIO_COMPRESS_LZ4
-argument_list|,
-name|lz4_ac
-argument_list|)
-expr_stmt|;
 comment|/* 	 * We maintain different write policies for each of the following 	 * types of data: 	 *	 1. metadata 	 *	 2. preallocated blocks (i.e. level-0 blocks of a dump device) 	 *	 3. all other level 0 blocks 	 */
 if|if
 condition|(
@@ -9771,17 +9744,10 @@ name|zp_checksum
 operator|=
 name|checksum
 expr_stmt|;
-comment|/* 	 * If we're writing a pre-compressed buffer, the compression type we use 	 * must match the data. If it hasn't been compressed yet, then we should 	 * use the value dictated by the policies above. 	 */
 name|zp
 operator|->
 name|zp_compress
 operator|=
-name|override_compress
-operator|!=
-name|ZIO_COMPRESS_INHERIT
-condition|?
-name|override_compress
-else|:
 name|compress
 expr_stmt|;
 name|ASSERT3U

@@ -5629,8 +5629,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ZIO_COMPRESS_INHERIT
-argument_list|,
 operator|&
 name|zp
 argument_list|)
