@@ -256,24 +256,11 @@ modifier|*
 name|pm_d2u
 decl_stmt|;
 comment|/* DOS->Local iconv handle */
-name|uint32_t
-name|pm_nfileno
-decl_stmt|;
-comment|/* next 32-bit fileno */
-name|RB_HEAD
-argument_list|(
-argument|msdosfs_filenotree
-argument_list|,
-argument|msdosfs_fileno
-argument_list|)
-name|pm_filenos
-expr_stmt|;
-comment|/* 64<->32-bit fileno mapping */
 name|struct
 name|lock
 name|pm_fatlock
 decl_stmt|;
-comment|/* lockmgr protecting allocations and rb tree */
+comment|/* lockmgr protecting allocations */
 block|}
 struct|;
 end_struct
@@ -604,41 +591,6 @@ define|\
 value|((dirclu) == MSDOSFSROOT \ 	 ? roottobn((pmp), (dirofs)) \ 	 : cntobn((pmp), (dirclu)))
 end_define
 
-begin_function_decl
-name|void
-name|msdosfs_fileno_init
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|msdosfs_fileno_free
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|msdosfs_fileno_map
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|,
-name|uint64_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -840,17 +792,6 @@ end_define
 
 begin_comment
 comment|/* FAT is mirrored */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSDOSFS_LARGEFS
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* perform fileno mapping */
 end_comment
 
 begin_define
