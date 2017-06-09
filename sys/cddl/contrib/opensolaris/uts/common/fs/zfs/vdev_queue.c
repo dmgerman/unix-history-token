@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -2633,7 +2633,7 @@ name|NULL
 else|:
 name|first
 expr_stmt|;
-comment|/* 	 * Walk backwards through sufficiently contiguous I/Os 	 * recording the last non-option I/O. 	 */
+comment|/* 	 * Walk backwards through sufficiently contiguous I/Os 	 * recording the last non-optional I/O. 	 */
 name|flags
 operator|=
 name|zio
@@ -2758,7 +2758,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Walk forward through sufficiently contiguous I/Os. 	 */
+comment|/* 	 * Walk forward through sufficiently contiguous I/Os. 	 * The aggregation limit does not apply to optional i/os, so that 	 * we can issue contiguous writes even if they are larger than the 	 * aggregation limit. 	 */
 while|while
 condition|(
 operator|(
@@ -2784,6 +2784,7 @@ operator|)
 operator|==
 name|flags
 operator|&&
+operator|(
 name|IO_SPAN
 argument_list|(
 name|first
@@ -2792,6 +2793,15 @@ name|dio
 argument_list|)
 operator|<=
 name|zfs_vdev_aggregation_limit
+operator|||
+operator|(
+name|dio
+operator|->
+name|io_flags
+operator|&
+name|ZIO_FLAG_OPTIONAL
+operator|)
+operator|)
 operator|&&
 name|IO_GAP
 argument_list|(
@@ -2910,7 +2920,7 @@ condition|(
 name|stretch
 condition|)
 block|{
-comment|/* This may be a no-op. */
+comment|/* 		 * We are going to include an optional io in our aggregated 		 * span, thus closing the write gap.  Only mandatory i/os can 		 * start aggregated spans, so make sure that the next i/o 		 * after our span is mandatory. 		 */
 name|dio
 operator|=
 name|AVL_NEXT
@@ -2930,6 +2940,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* do not include the optional i/o */
 while|while
 condition|(
 name|last
@@ -2994,7 +3005,7 @@ name|size
 argument_list|,
 operator|<=
 argument_list|,
-name|zfs_vdev_aggregation_limit
+name|SPA_MAXBLOCKSIZE
 argument_list|)
 expr_stmt|;
 name|abuf
