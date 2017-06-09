@@ -1420,11 +1420,6 @@ name|fp
 operator|->
 name|f_data
 decl_stmt|;
-name|struct
-name|sockbuf
-modifier|*
-name|sb
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -1476,7 +1471,21 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* 	 * If SBS_CANTRCVMORE is set, but there's still data left in the 	 * receive buffer, the socket is still readable. 	 */
+if|if
+condition|(
+operator|!
+name|SOLISTENING
+argument_list|(
+name|so
+argument_list|)
+condition|)
+block|{
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+decl_stmt|;
+comment|/* 		 * If SBS_CANTRCVMORE is set, but there's still data left 		 * in the receive buffer, the socket is still readable. 		 */
 name|sb
 operator|=
 operator|&
@@ -1573,6 +1582,7 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
+block|}
 name|ub
 operator|->
 name|st_uid
