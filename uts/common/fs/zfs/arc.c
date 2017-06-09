@@ -21159,6 +21159,12 @@ name|zio_t
 modifier|*
 name|zio
 decl_stmt|;
+name|zio_prop_t
+name|localprop
+init|=
+operator|*
+name|zp
+decl_stmt|;
 name|ASSERT3P
 argument_list|(
 name|ready
@@ -21240,15 +21246,14 @@ name|buf
 argument_list|)
 condition|)
 block|{
-name|ASSERT3U
-argument_list|(
-name|zp
-operator|->
+comment|/* 		 * We're writing a pre-compressed buffer.  Make the 		 * compression algorithm requested by the zio_prop_t match 		 * the pre-compressed buffer's compression algorithm. 		 */
+name|localprop
+operator|.
 name|zp_compress
-argument_list|,
-operator|!=
-argument_list|,
-name|ZIO_COMPRESS_OFF
+operator|=
+name|HDR_GET_COMPRESS
+argument_list|(
+name|hdr
 argument_list|)
 expr_stmt|;
 name|ASSERT3U
@@ -21431,7 +21436,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-name|zp
+operator|&
+name|localprop
 argument_list|,
 name|arc_write_ready
 argument_list|,
