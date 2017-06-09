@@ -1630,7 +1630,30 @@ name|pci_dev
 modifier|*
 name|pdev
 parameter_list|)
-block|{ }
+block|{
+name|pci_disable_io
+argument_list|(
+name|pdev
+operator|->
+name|dev
+operator|.
+name|bsddev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|)
+expr_stmt|;
+name|pci_disable_io
+argument_list|(
+name|pdev
+operator|->
+name|dev
+operator|.
+name|bsddev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
