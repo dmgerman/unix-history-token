@@ -4915,7 +4915,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Emit a single wide character into the given buffer  */
+comment|/*  * Emit one wide character into the given buffer  */
 end_comment
 
 begin_function
@@ -4956,7 +4956,7 @@ literal|0x7f
 expr_stmt|;
 return|return;
 block|}
-comment|/* Start with the low bits and insert them, six bits as a time */
+comment|/* Start with the low bits and insert them, six bits at a time */
 for|for
 control|(
 name|i
@@ -5014,7 +5014,7 @@ index|[
 name|len
 index|]
 expr_stmt|;
-comment|/* Drop in new length bits  */
+comment|/* Drop in new length bits */
 block|}
 end_function
 
