@@ -304,7 +304,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|daddr_t
 name|blst_leaf_fill
 parameter_list|(
 name|blmeta_t
@@ -322,7 +322,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|daddr_t
 name|blst_meta_fill
 parameter_list|(
 name|blmeta_t
@@ -842,7 +842,7 @@ comment|/*  * blist_fill() -	mark a region in the block bitmap as off-limits  *	
 end_comment
 
 begin_function
-name|int
+name|daddr_t
 name|blist_fill
 parameter_list|(
 name|blist_t
@@ -855,7 +855,7 @@ name|daddr_t
 name|count
 parameter_list|)
 block|{
-name|int
+name|daddr_t
 name|filled
 decl_stmt|;
 if|if
@@ -2502,7 +2502,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|daddr_t
 name|blst_leaf_fill
 parameter_list|(
 name|blmeta_t
@@ -2527,7 +2527,7 @@ operator|-
 literal|1
 operator|)
 decl_stmt|;
-name|int
+name|daddr_t
 name|nblks
 decl_stmt|;
 name|u_daddr_t
@@ -2614,7 +2614,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|daddr_t
 name|blst_meta_fill
 parameter_list|(
 name|blmeta_t
@@ -2652,7 +2652,7 @@ operator|/
 name|BLIST_META_RADIX
 operator|)
 decl_stmt|;
-name|int
+name|daddr_t
 name|nblks
 init|=
 literal|0
@@ -3918,8 +3918,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"    n=%d\n"
+literal|"    n=%jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blist_fill
 argument_list|(
 name|bl

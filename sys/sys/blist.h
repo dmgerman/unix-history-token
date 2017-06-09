@@ -202,7 +202,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|daddr_t
 name|blist_fill
 parameter_list|(
 name|blist_t
