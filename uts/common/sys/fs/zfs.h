@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 Joyent, Inc.  */
 end_comment
 
 begin_comment
@@ -2431,7 +2431,7 @@ define|#
 directive|define
 name|ZFS_IMPORT_ONLY
 value|0x8
-comment|/*  * Sysevent payload members.  ZFS will generate the following sysevents with the  * given payloads:  *  *	ESC_ZFS_RESILVER_START  *	ESC_ZFS_RESILVER_END  *	ESC_ZFS_POOL_DESTROY  *	ESC_ZFS_POOL_REGUID  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *  *	ESC_ZFS_VDEV_REMOVE  *	ESC_ZFS_VDEV_CLEAR  *	ESC_ZFS_VDEV_CHECK  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *		ZFS_EV_VDEV_PATH	DATA_TYPE_STRING	(optional)  *		ZFS_EV_VDEV_GUID	DATA_TYPE_UINT64  */
+comment|/*  * Sysevent payload members.  ZFS will generate the following sysevents with the  * given payloads:  *  *	ESC_ZFS_RESILVER_START  *	ESC_ZFS_RESILVER_END  *	ESC_ZFS_POOL_DESTROY  *	ESC_ZFS_POOL_REGUID  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *  *	ESC_ZFS_VDEV_REMOVE  *	ESC_ZFS_VDEV_CLEAR  *	ESC_ZFS_VDEV_CHECK  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *		ZFS_EV_VDEV_PATH	DATA_TYPE_STRING	(optional)  *		ZFS_EV_VDEV_GUID	DATA_TYPE_UINT64  *  *	ESC_ZFS_HISTORY_EVENT  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *		ZFS_EV_HIST_TIME	DATA_TYPE_UINT64	(optional)  *		ZFS_EV_HIST_CMD		DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_WHO		DATA_TYPE_UINT64	(optional)  *		ZFS_EV_HIST_ZONE	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_HOST	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_TXG		DATA_TYPE_UINT64	(optional)  *		ZFS_EV_HIST_INT_EVENT	DATA_TYPE_UINT64	(optional)  *		ZFS_EV_HIST_INT_STR	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_INT_NAME	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_IOCTL	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_DSNAME	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_DSID	DATA_TYPE_UINT64	(optional)  *  * The ZFS_EV_HIST_* members will correspond to the ZPOOL_HIST_* members in the  * history log nvlist.  The keynames will be free of any spaces or other  * characters that could be potentially unexpected to consumers of the  * sysevents.  */
 define|#
 directive|define
 name|ZFS_EV_POOL_NAME
@@ -2448,6 +2448,54 @@ define|#
 directive|define
 name|ZFS_EV_VDEV_GUID
 value|"vdev_guid"
+define|#
+directive|define
+name|ZFS_EV_HIST_TIME
+value|"history_time"
+define|#
+directive|define
+name|ZFS_EV_HIST_CMD
+value|"history_command"
+define|#
+directive|define
+name|ZFS_EV_HIST_WHO
+value|"history_who"
+define|#
+directive|define
+name|ZFS_EV_HIST_ZONE
+value|"history_zone"
+define|#
+directive|define
+name|ZFS_EV_HIST_HOST
+value|"history_hostname"
+define|#
+directive|define
+name|ZFS_EV_HIST_TXG
+value|"history_txg"
+define|#
+directive|define
+name|ZFS_EV_HIST_INT_EVENT
+value|"history_internal_event"
+define|#
+directive|define
+name|ZFS_EV_HIST_INT_STR
+value|"history_internal_str"
+define|#
+directive|define
+name|ZFS_EV_HIST_INT_NAME
+value|"history_internal_name"
+define|#
+directive|define
+name|ZFS_EV_HIST_IOCTL
+value|"history_ioctl"
+define|#
+directive|define
+name|ZFS_EV_HIST_DSNAME
+value|"history_dsname"
+define|#
+directive|define
+name|ZFS_EV_HIST_DSID
+value|"history_dsid"
 ifdef|#
 directive|ifdef
 name|__cplusplus

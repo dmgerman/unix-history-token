@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright (c) 2015, Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright (c) 2015, Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  * Copyright 2017 Joyent, Inc.  */
 end_comment
 
 begin_comment
@@ -518,6 +518,10 @@ parameter_list|,
 name|vdev_t
 modifier|*
 name|vd
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|hist_nvl
 parameter_list|,
 specifier|const
 name|char
@@ -3457,6 +3461,8 @@ expr_stmt|;
 name|spa_event_notify
 argument_list|(
 name|spa
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -7504,6 +7510,8 @@ operator|->
 name|vdev_spa
 argument_list|,
 name|vd
+argument_list|,
+name|NULL
 argument_list|,
 name|ESC_ZFS_VDEV_CHECK
 argument_list|)
@@ -17407,6 +17415,8 @@ name|spa
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|ESC_ZFS_POOL_CREATE
 argument_list|)
 expr_stmt|;
@@ -18521,6 +18531,8 @@ name|spa
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|ESC_ZFS_POOL_IMPORT
 argument_list|)
 expr_stmt|;
@@ -19133,6 +19145,8 @@ expr_stmt|;
 name|spa_event_notify
 argument_list|(
 name|spa
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -19846,6 +19860,8 @@ name|spa
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|ESC_ZFS_POOL_DESTROY
 argument_list|)
 expr_stmt|;
@@ -20498,6 +20514,8 @@ expr_stmt|;
 name|spa_event_notify
 argument_list|(
 name|spa
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -21269,6 +21287,8 @@ name|spa
 argument_list|,
 name|newvd
 argument_list|,
+name|NULL
+argument_list|,
 name|ESC_ZFS_VDEV_SPARE
 argument_list|)
 expr_stmt|;
@@ -21331,6 +21351,8 @@ name|spa
 argument_list|,
 name|newvd
 argument_list|,
+name|NULL
+argument_list|,
 name|ESC_ZFS_BOOTFS_VDEV_ATTACH
 argument_list|)
 expr_stmt|;
@@ -21339,6 +21361,8 @@ argument_list|(
 name|spa
 argument_list|,
 name|newvd
+argument_list|,
+name|NULL
 argument_list|,
 name|ESC_ZFS_VDEV_ATTACH
 argument_list|)
@@ -22073,6 +22097,8 @@ argument_list|(
 name|spa
 argument_list|,
 name|vd
+argument_list|,
+name|NULL
 argument_list|,
 name|ESC_ZFS_VDEV_REMOVE
 argument_list|)
@@ -24737,6 +24763,8 @@ name|spa
 argument_list|,
 name|vd
 argument_list|,
+name|NULL
+argument_list|,
 name|ESC_ZFS_VDEV_REMOVE_AUX
 argument_list|)
 expr_stmt|;
@@ -24847,6 +24875,8 @@ argument_list|(
 name|spa
 argument_list|,
 name|vd
+argument_list|,
+name|NULL
 argument_list|,
 name|ESC_ZFS_VDEV_REMOVE_AUX
 argument_list|)
@@ -24990,6 +25020,8 @@ argument_list|(
 name|spa
 argument_list|,
 name|vd
+argument_list|,
+name|NULL
 argument_list|,
 name|ESC_ZFS_VDEV_REMOVE_DEV
 argument_list|)
@@ -31234,6 +31266,10 @@ name|vdev_t
 modifier|*
 name|vd
 parameter_list|,
+name|nvlist_t
+modifier|*
+name|hist_nvl
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -31445,6 +31481,25 @@ block|}
 block|}
 if|if
 condition|(
+name|hist_nvl
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fnvlist_merge
+argument_list|(
+operator|(
+name|nvlist_t
+operator|*
+operator|)
+name|attr
+argument_list|,
+name|hist_nvl
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|sysevent_attach_attributes
 argument_list|(
 name|ev
@@ -31522,7 +31577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Post a sysevent corresponding to the given event.  The 'name' must be one of  * the event definitions in sys/sysevent/eventdefs.h.  The payload will be  * filled in from the spa and (optionally) the vdev.  This doesn't do anything  * in the userland libzpool, as we don't want consumers to misinterpret ztest  * or zdb as real changes.  */
+comment|/*  * Post a sysevent corresponding to the given event.  The 'name' must be one of  * the event definitions in sys/sysevent/eventdefs.h.  The payload will be  * filled in from the spa and (optionally) the vdev and history nvl.  This  * doesn't do anything in the userland libzpool, as we don't want consumers to  * misinterpret ztest or zdb as real changes.  */
 end_comment
 
 begin_function
@@ -31537,6 +31592,10 @@ name|vdev_t
 modifier|*
 name|vd
 parameter_list|,
+name|nvlist_t
+modifier|*
+name|hist_nvl
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -31550,6 +31609,8 @@ argument_list|(
 name|spa
 argument_list|,
 name|vd
+argument_list|,
+name|hist_nvl
 argument_list|,
 name|name
 argument_list|)

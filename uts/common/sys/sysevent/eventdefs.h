@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2016 Nexenta Systems, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2016 Nexenta Systems, Inc.  * Copyright 2017 Joyent, Inc.  */
 end_comment
 
 begin_ifndef
@@ -405,6 +405,10 @@ define|#
 directive|define
 name|ESC_ZFS_POOL_REGUID
 value|"ESC_ZFS_pool_reguid"
+define|#
+directive|define
+name|ESC_ZFS_HISTORY_EVENT
+value|"ESC_ZFS_history_event"
 comment|/*  * datalink subclass definitions.  */
 define|#
 directive|define

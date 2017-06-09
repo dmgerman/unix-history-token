@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2016 Gary Mills  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2016 Gary Mills  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright 2017 Joyent, Inc.  */
 end_comment
 
 begin_include
@@ -1018,6 +1018,8 @@ name|spa
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|ESC_ZFS_RESILVER_START
 argument_list|)
 expr_stmt|;
@@ -1027,6 +1029,8 @@ block|{
 name|spa_event_notify
 argument_list|(
 name|spa
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -1502,6 +1506,8 @@ block|{
 name|spa_event_notify
 argument_list|(
 name|spa
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

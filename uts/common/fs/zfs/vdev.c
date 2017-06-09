@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  * Copyright 2017 Joyent, Inc.  */
 end_comment
 
 begin_include
@@ -11478,6 +11478,8 @@ name|spa
 argument_list|,
 name|vd
 argument_list|,
+name|NULL
+argument_list|,
 name|ESC_ZFS_VDEV_ONLINE
 argument_list|)
 expr_stmt|;
@@ -12124,6 +12126,8 @@ argument_list|(
 name|spa
 argument_list|,
 name|vd
+argument_list|,
+name|NULL
 argument_list|,
 name|ESC_ZFS_VDEV_CLEAR
 argument_list|)
