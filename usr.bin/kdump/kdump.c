@@ -5512,6 +5512,9 @@ break|break;
 case|case
 name|SYS_rtprio
 case|:
+case|case
+name|SYS_rtprio_thread
+case|:
 name|putchar
 argument_list|(
 literal|'('
