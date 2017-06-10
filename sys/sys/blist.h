@@ -113,10 +113,6 @@ modifier|*
 name|bl_root
 decl_stmt|;
 comment|/* root of radix tree		*/
-name|daddr_t
-name|bl_rootblks
-decl_stmt|;
-comment|/* daddr_t blks allocated for tree */
 block|}
 typedef|*
 name|blist_t
