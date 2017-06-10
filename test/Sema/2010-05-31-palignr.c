@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: not %clang_cc1 -triple x86_64-apple-darwin -emit-llvm -o /dev/null %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -ffreestanding -verify -fsyntax-only %s
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<tmmintrin.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_decl_stmt
@@ -21,12 +27,6 @@ name|int
 name|main
 parameter_list|()
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__SSSE3__
-argument_list|)
 typedef|typedef
 name|int16_t
 name|vSInt16
@@ -74,8 +74,6 @@ operator|=
 operator|*
 name|vdtbl
 expr_stmt|;
-name|v0
-operator|=
 name|_mm_alignr_epi8
 argument_list|(
 name|v0
@@ -89,8 +87,6 @@ comment|// expected-error {{argument to '__builtin_ia32_palignr128' must be a co
 return|return
 literal|0
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple %itanium_abi_triple -emit-llvm %s -o %t
+comment|// RUN: %clang_cc1 -triple %itanium_abi_triple -emit-llvm %s -o %t -debug-info-kind=limited
 end_comment
 
 begin_comment
@@ -317,6 +317,22 @@ end_comment
 
 begin_comment
 comment|// CHECK-GLOBALS:   load i32, i32* @e
+end_comment
+
+begin_comment
+comment|// CHECK-GLOBALS-NOT: DIFlagObjectPointer
+end_comment
+
+begin_comment
+comment|// CHECK-1-NOT: DIFlagObjectPointer
+end_comment
+
+begin_comment
+comment|// CHECK-2-NOT: DIFlagObjectPointer
+end_comment
+
+begin_comment
+comment|// CHECK-3-NOT: DIFlagObjectPointer
 end_comment
 
 end_unit

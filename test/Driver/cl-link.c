@@ -200,7 +200,7 @@ comment|// RUN: %clang_cl /Tc%s -fuse-ld=lld -### 2>&1 | FileCheck --check-prefi
 end_comment
 
 begin_comment
-comment|// USE_LLD: lld-link.exe
+comment|// USE_LLD: lld-link
 end_comment
 
 end_unit

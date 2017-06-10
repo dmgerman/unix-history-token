@@ -8,11 +8,11 @@ comment|// RUN: %clang_cc1 -triple thumbv7-apple-ios5 -emit-llvm -o - %s | FileC
 end_comment
 
 begin_comment
-comment|// LONGCALL: attributes #0 = { {{.*}} "target-features"="+long-calls"
+comment|// LONGCALL: attributes #0 = { {{.*}} "target-features"="+long-calls,+thumb-mode"
 end_comment
 
 begin_comment
-comment|// NOLONGCALL-NOT: attributes #0 = { {{.*}} "target-features"="+long-calls"
+comment|// NOLONGCALL-NOT: attributes #0 = { {{.*}} "target-features"="+long-calls,+thumb-mode"
 end_comment
 
 begin_function

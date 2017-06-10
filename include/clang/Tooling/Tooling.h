@@ -381,8 +381,6 @@ name|bool
 name|handleBeginSource
 argument_list|(
 argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
 argument_list|)
 block|{
 return|return
@@ -1328,8 +1326,6 @@ name|bool
 name|BeginSourceFileAction
 argument_list|(
 argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
 argument_list|)
 name|override
 block|{
@@ -1343,8 +1339,6 @@ operator|::
 name|BeginSourceFileAction
 argument_list|(
 name|CI
-argument_list|,
-name|Filename
 argument_list|)
 condition|)
 return|return
@@ -1360,8 +1354,6 @@ operator|->
 name|handleBeginSource
 argument_list|(
 name|CI
-argument_list|,
-name|Filename
 argument_list|)
 return|;
 return|return

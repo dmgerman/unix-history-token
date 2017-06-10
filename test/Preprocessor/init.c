@@ -18548,6 +18548,46 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -target-feature +nomadd4 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips-none-none< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines -check-prefix MIPS-NOMADD4 %s
+end_comment
+
+begin_comment
+comment|// MIPS-NOMADD4:#define __mips_no_madd4 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips-none-none< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines -check-prefix MIPS-MADD4 %s
+end_comment
+
+begin_comment
+comment|// MIPS-MADD4-NOT:#define __mips_no_madd4 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -target-cpu mips32r3 -target-feature +nan2008 \
 end_comment
 
@@ -35272,7 +35312,7 @@ comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_INT_LOCK_FREE 2
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_LLONG_LOCK_FREE 1
+comment|// WEBASSEMBLY32-NEXT:#define __CLANG_ATOMIC_LLONG_LOCK_FREE 2
 end_comment
 
 begin_comment
@@ -35448,7 +35488,7 @@ comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_INT_LOCK_FREE 2
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_LLONG_LOCK_FREE 1
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_LLONG_LOCK_FREE 2
 end_comment
 
 begin_comment

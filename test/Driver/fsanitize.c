@@ -808,6 +808,22 @@ comment|// CHECK-SANA-SANL-NO-SANA-THUMBEB: "-fsanitize=leak"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target mips-unknown-linux -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANL-MIPS
+end_comment
+
+begin_comment
+comment|// CHECK-SANL-MIPS: unsupported option '-fsanitize=leak' for target 'mips-unknown-linux'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc-unknown-linux -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANL-PPC
+end_comment
+
+begin_comment
+comment|// CHECK-SANL-PPC: unsupported option '-fsanitize=leak' for target 'powerpc-unknown-linux'
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MSAN
 end_comment
 

@@ -167,6 +167,11 @@ argument|SmallVectorImpl<Decl *>&Result
 argument_list|)
 name|override
 block|;
+name|using
+name|ExternalASTSource
+operator|::
+name|CompleteType
+block|;
 name|void
 name|CompleteType
 argument_list|(

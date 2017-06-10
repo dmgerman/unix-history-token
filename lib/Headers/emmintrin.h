@@ -1243,7 +1243,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Compares lower 64-bits double-precision values of both operands, and
+comment|/// \brief Compares lower 64-bit double-precision values of both operands, and
 end_comment
 
 begin_comment
@@ -7136,7 +7136,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param __dp
+comment|/// \param __a
 end_comment
 
 begin_comment
@@ -7242,7 +7242,7 @@ comment|/// \param __dp
 end_comment
 
 begin_comment
-comment|///    An pointer to a memory location containing a double-precision value.
+comment|///    A pointer to a memory location containing a double-precision value.
 end_comment
 
 begin_comment
@@ -8269,6 +8269,58 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Moves packed double-precision values from a 128-bit vector of
+end_comment
+
+begin_comment
+comment|///    [2 x double] to a memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c>VMOVAPD / MOVAPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to an aligned memory location that can store two
+end_comment
+
+begin_comment
+comment|///    double-precision values.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A packed 128-bit vector of [2 x double] containing the values to be
+end_comment
+
+begin_comment
+comment|///    moved.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -8295,6 +8347,58 @@ name|__a
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Moves the lower 64 bits of a 128-bit vector of [2 x double] twice to
+end_comment
+
+begin_comment
+comment|///    the upper and lower 64 bits of a memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c>VMOVDDUP + VMOVAPD / MOVLHPS + MOVAPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a memory location that can store two double-precision
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] whose lower 64 bits are copied to each
+end_comment
+
+begin_comment
+comment|///    of the values in \a dp.
+end_comment
 
 begin_function
 specifier|static

@@ -427,6 +427,28 @@ operator|*
 operator|>
 name|KnownModules
 block|;
+comment|/// \brief The set of top-level modules that has already been built on the
+comment|/// fly as part of this overall compilation action.
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|string
+block|,
+name|std
+operator|::
+name|string
+operator|>
+name|BuiltModules
+block|;
+comment|/// Should we delete the BuiltModules when we're done?
+name|bool
+name|DeleteBuiltModules
+operator|=
+name|true
+block|;
 comment|/// \brief The location of the module-import keyword for the last module
 comment|/// import.
 name|SourceLocation
@@ -2199,6 +2221,17 @@ argument_list|,
 argument|Module::NameVisibilityKind Visibility
 argument_list|,
 argument|bool IsInclusionDirective
+argument_list|)
+name|override
+block|;
+name|void
+name|loadModuleFromSource
+argument_list|(
+argument|SourceLocation ImportLoc
+argument_list|,
+argument|StringRef ModuleName
+argument_list|,
+argument|StringRef Source
 argument_list|)
 name|override
 block|;

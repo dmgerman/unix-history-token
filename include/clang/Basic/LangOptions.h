@@ -235,6 +235,7 @@ name|SOB_Trapping
 comment|// -ftrapv
 block|}
 enum|;
+comment|// FIXME: Unify with TUKind.
 enum|enum
 name|CompilingModuleKind
 block|{

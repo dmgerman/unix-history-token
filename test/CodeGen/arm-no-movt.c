@@ -8,11 +8,11 @@ comment|// RUN: %clang_cc1 -triple thumbv7-apple-ios5 -emit-llvm -o - %s | FileC
 end_comment
 
 begin_comment
-comment|// NO-MOVT: attributes #0 = { {{.*}} "target-features"="+no-movt"
+comment|// NO-MOVT: attributes #0 = { {{.*}} "target-features"="+no-movt,+thumb-mode"
 end_comment
 
 begin_comment
-comment|// MOVT-NOT: attributes #0 = { {{.*}} "target-features"="+no-movt"
+comment|// MOVT-NOT: attributes #0 = { {{.*}} "target-features"="+no-movt,+thumb-mode"
 end_comment
 
 begin_function

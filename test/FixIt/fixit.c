@@ -12,15 +12,11 @@ comment|// RUN: not %clang_cc1 -pedantic -Wunused-label -fixit -x c %t
 end_comment
 
 begin_comment
-comment|// RUN: grep -v CHECK %t> %t2
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -pedantic -Wunused-label -Werror -x c %t
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -input-file=%t2 %t
+comment|// RUN: grep -v CHECK %t | FileCheck %t
 end_comment
 
 begin_comment

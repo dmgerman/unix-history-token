@@ -24,6 +24,10 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-co
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=kernel-address -fsanitize-coverage=func,trace-pc %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FUNC
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=memory -fsanitize-coverage=func,trace-pc %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FUNC
 end_comment
 
