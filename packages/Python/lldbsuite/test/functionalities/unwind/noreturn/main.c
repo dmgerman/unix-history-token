@@ -128,11 +128,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
 name|func_a
 argument_list|()
 expr_stmt|;

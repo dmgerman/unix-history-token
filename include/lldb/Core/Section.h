@@ -628,6 +628,11 @@ argument_list|,
 name|Address
 operator|&
 name|so_addr
+argument_list|,
+name|bool
+name|allow_section_end
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;

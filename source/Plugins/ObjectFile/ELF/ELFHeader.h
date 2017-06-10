@@ -90,7 +90,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ELF.h"
+file|"llvm/BinaryFormat/ELF.h"
 end_include
 
 begin_include
