@@ -181,6 +181,8 @@ name|Mountflags
 block|,
 name|Msync
 block|,
+name|Priowhich
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
