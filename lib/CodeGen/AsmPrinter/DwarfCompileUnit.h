@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DebugInfo.h"
+file|"llvm/BinaryFormat/Dwarf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Dwarf.h"
+file|"llvm/IR/DebugInfo.h"
 end_include
 
 begin_decl_stmt

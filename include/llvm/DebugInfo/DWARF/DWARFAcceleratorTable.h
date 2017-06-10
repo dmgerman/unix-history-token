@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
 end_include
 
@@ -59,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataExtractor.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Dwarf.h"
 end_include
 
 begin_include

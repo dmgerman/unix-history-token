@@ -86,13 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/TargetPassConfig.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Dominators.h"
+file|"llvm/IR/Instructions.h"
 end_include
 
 begin_include
@@ -107,30 +101,33 @@ directive|include
 file|"llvm/Pass.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetMachine.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
+name|BasicBlock
+decl_stmt|;
+name|class
+name|DominatorTree
+decl_stmt|;
+name|class
 name|Function
+decl_stmt|;
+name|class
+name|Instruction
 decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
 name|class
-name|PHINode
+name|TargetLoweringBase
+decl_stmt|;
+name|class
+name|TargetMachine
+decl_stmt|;
+name|class
+name|Type
 decl_stmt|;
 name|class
 name|StackProtector
@@ -163,17 +160,18 @@ comment|///< triggered protection.  3rd closest to the protector.
 block|}
 block|;
 comment|/// A mapping of AllocaInsts to their required SSP layout.
-typedef|typedef
+name|using
+name|SSPLayoutMap
+operator|=
 name|ValueMap
 operator|<
 specifier|const
 name|AllocaInst
 operator|*
-operator|,
+block|,
 name|SSPLayoutKind
 operator|>
-name|SSPLayoutMap
-expr_stmt|;
+block|;
 name|private
 operator|:
 specifier|const
@@ -182,44 +180,44 @@ operator|*
 name|TM
 operator|=
 name|nullptr
-decl_stmt|;
+block|;
 comment|/// TLI - Keep a pointer of a TargetLowering to consult for determining
 comment|/// target type sizes.
 specifier|const
 name|TargetLoweringBase
-modifier|*
+operator|*
 name|TLI
-init|=
+operator|=
 name|nullptr
-decl_stmt|;
+block|;
 name|Triple
 name|Trip
-decl_stmt|;
+block|;
 name|Function
-modifier|*
+operator|*
 name|F
-decl_stmt|;
+block|;
 name|Module
-modifier|*
+operator|*
 name|M
-decl_stmt|;
+block|;
 name|DominatorTree
-modifier|*
+operator|*
 name|DT
-decl_stmt|;
+block|;
 comment|/// Layout - Mapping of allocations to the required SSPLayoutKind.
 comment|/// StackProtector analysis will update this map when determining if an
 comment|/// AllocaInst triggers a stack protector.
 name|SSPLayoutMap
 name|Layout
-decl_stmt|;
+block|;
 comment|/// \brief The minimum size of buffers that will receive stack smashing
 comment|/// protection when -fstack-protection is used.
 name|unsigned
 name|SSPBufferSize
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// VisitedPHIs - The set of PHI nodes visited when determining
 comment|/// if a variable's reference has been taken.  This set
 comment|/// is maintained to ensure we don't visit the same PHI node multiple
@@ -229,23 +227,23 @@ operator|<
 specifier|const
 name|PHINode
 operator|*
-operator|,
+block|,
 literal|16
 operator|>
 name|VisitedPHIs
-expr_stmt|;
+block|;
 comment|// A prologue is generated.
 name|bool
 name|HasPrologue
-init|=
+operator|=
 name|false
-decl_stmt|;
+block|;
 comment|// IR checking code is generated.
 name|bool
 name|HasIRCheck
-init|=
+operator|=
 name|false
-decl_stmt|;
+block|;
 comment|/// InsertStackProtectors - Insert code into the prologue and epilogue of
 comment|/// the function.
 comment|///
@@ -254,15 +252,15 @@ comment|///  - The epilogue checks the value stored in the prologue against the
 comment|///    original value. It calls __stack_chk_fail if they differ.
 name|bool
 name|InsertStackProtectors
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// CreateFailBB - Create a basic block to jump to when the stack protector
 comment|/// check fails.
 name|BasicBlock
-modifier|*
+operator|*
 name|CreateFailBB
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// ContainsProtectableArray - Check whether the type either is an array or
 comment|/// contains an array of sufficient size so that we need stack protectors
 comment|/// for it.
@@ -272,48 +270,38 @@ comment|/// multiple arrays, this gets set if any of them is large.
 name|bool
 name|ContainsProtectableArray
 argument_list|(
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
 argument_list|,
-name|bool
-operator|&
-name|IsLarge
+argument|bool&IsLarge
 argument_list|,
-name|bool
-name|Strong
-operator|=
-name|false
+argument|bool Strong = false
 argument_list|,
-name|bool
-name|InStruct
-operator|=
-name|false
+argument|bool InStruct = false
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Check whether a stack allocation has its address taken.
 name|bool
 name|HasAddressTaken
-parameter_list|(
+argument_list|(
 specifier|const
 name|Instruction
-modifier|*
+operator|*
 name|AI
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// RequiresStackProtector - Check whether or not this function needs a
 comment|/// stack protector based upon the stack protector level.
 name|bool
 name|RequiresStackProtector
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|public
-label|:
+operator|:
 specifier|static
 name|char
 name|ID
-decl_stmt|;
+block|;
 comment|// Pass identification, replacement for typeid.
 name|StackProtector
 argument_list|()
@@ -322,7 +310,7 @@ name|FunctionPass
 argument_list|(
 name|ID
 argument_list|)
-operator|,
+block|,
 name|SSPBufferSize
 argument_list|(
 literal|8
@@ -344,75 +332,48 @@ argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
 name|override
-block|{
-name|AU
-operator|.
-name|addRequired
-operator|<
-name|TargetPassConfig
-operator|>
-operator|(
-operator|)
 block|;
-name|AU
-operator|.
-name|addPreserved
-operator|<
-name|DominatorTreeWrapperPass
-operator|>
-operator|(
-operator|)
-block|;   }
 name|SSPLayoutKind
 name|getSSPLayout
 argument_list|(
 argument|const AllocaInst *AI
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 comment|// Return true if StackProtector is supposed to be handled by SelectionDAG.
 name|bool
 name|shouldEmitSDCheck
 argument_list|(
-specifier|const
-name|BasicBlock
-operator|&
-name|BB
+argument|const BasicBlock&BB
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|void
 name|adjustForColoring
-parameter_list|(
+argument_list|(
 specifier|const
 name|AllocaInst
-modifier|*
+operator|*
 name|From
-parameter_list|,
+argument_list|,
 specifier|const
 name|AllocaInst
-modifier|*
+operator|*
 name|To
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|Fn
+argument|Function&Fn
 argument_list|)
 name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

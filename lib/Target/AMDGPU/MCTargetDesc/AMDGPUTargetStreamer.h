@@ -179,24 +179,6 @@ literal|0
 block|;
 name|virtual
 name|void
-name|EmitAMDGPUHsaModuleScopeGlobal
-argument_list|(
-argument|StringRef GlobalName
-argument_list|)
-operator|=
-literal|0
-block|;
-name|virtual
-name|void
-name|EmitAMDGPUHsaProgramScopeGlobal
-argument_list|(
-argument|StringRef GlobalName
-argument_list|)
-operator|=
-literal|0
-block|;
-name|virtual
-name|void
 name|EmitStartOfCodeObjectMetadata
 argument_list|(
 specifier|const
@@ -300,20 +282,6 @@ argument|unsigned Type
 argument_list|)
 name|override
 block|;
-name|void
-name|EmitAMDGPUHsaModuleScopeGlobal
-argument_list|(
-argument|StringRef GlobalName
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitAMDGPUHsaProgramScopeGlobal
-argument_list|(
-argument|StringRef GlobalName
-argument_list|)
-name|override
-block|;
 comment|/// \returns True on success, false on failure.
 name|bool
 name|EmitCodeObjectMetadata
@@ -395,20 +363,6 @@ argument_list|(
 argument|StringRef SymbolName
 argument_list|,
 argument|unsigned Type
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitAMDGPUHsaModuleScopeGlobal
-argument_list|(
-argument|StringRef GlobalName
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitAMDGPUHsaProgramScopeGlobal
-argument_list|(
-argument|StringRef GlobalName
 argument_list|)
 name|override
 block|;

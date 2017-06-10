@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist_node.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/None.h"
 end_include
 
@@ -85,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ilist_node.h"
 end_include
 
 begin_include
@@ -1262,8 +1262,8 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
-comment|/// Convenience method to copy supported wrapping, exact, and fast-math flags
-comment|/// from V to this instruction.
+comment|/// Convenience method to copy supported exact, fast-math, and (optionally)
+comment|/// wrapping flags from V to this instruction.
 name|void
 name|copyIRFlags
 parameter_list|(
@@ -1271,6 +1271,11 @@ specifier|const
 name|Value
 modifier|*
 name|V
+parameter_list|,
+name|bool
+name|IncludeWrapFlags
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// Logical 'and' of any supported wrapping, exact, and fast-math flags of

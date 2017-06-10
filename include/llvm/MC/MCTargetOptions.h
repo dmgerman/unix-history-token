@@ -80,6 +80,21 @@ operator|,
 comment|/// Windows Exception Handling
 block|}
 empty_stmt|;
+name|enum
+name|class
+name|DebugCompressionType
+block|{
+name|None
+operator|,
+comment|/// No compression
+name|GNU
+operator|,
+comment|/// zlib-gnu style compression
+name|Z
+operator|,
+comment|/// zlib style complession
+block|}
+empty_stmt|;
 name|class
 name|StringRef
 decl_stmt|;

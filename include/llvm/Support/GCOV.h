@@ -72,18 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/MapVector.h"
 end_include
 
@@ -103,6 +91,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include

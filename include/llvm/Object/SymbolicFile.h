@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/BinaryFormat/Magic.h"
 end_include
 
 begin_include
@@ -775,7 +781,7 @@ name|createSymbolicFile
 argument_list|(
 argument|MemoryBufferRef Object
 argument_list|,
-argument|sys::fs::file_magic Type
+argument|llvm::file_magic Type
 argument_list|,
 argument|LLVMContext *Context
 argument_list|)
@@ -799,9 +805,7 @@ name|createSymbolicFile
 argument_list|(
 name|Object
 argument_list|,
-name|sys
-operator|::
-name|fs
+name|llvm
 operator|::
 name|file_magic
 operator|::

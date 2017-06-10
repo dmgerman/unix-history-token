@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Analysis/MemoryBuiltins.h"
 end_include
 

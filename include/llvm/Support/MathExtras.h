@@ -98,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<type_traits>
+file|<limits>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<limits>
+file|<type_traits>
 end_include
 
 begin_ifdef

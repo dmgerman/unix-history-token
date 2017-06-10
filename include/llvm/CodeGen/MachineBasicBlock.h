@@ -92,25 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineInstrBundleIterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineInstr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DebugLoc.h"
+file|"llvm/CodeGen/MachineInstrBundleIterator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/BranchProbability.h"
+file|"llvm/IR/DebugLoc.h"
 end_include
 
 begin_include
@@ -123,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/BranchProbability.h"
 end_include
 
 begin_include

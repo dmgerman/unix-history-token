@@ -106,6 +106,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
@@ -119,12 +125,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm-c/Types.h"
 end_include
 
 begin_decl_stmt

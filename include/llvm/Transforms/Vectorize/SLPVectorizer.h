@@ -385,7 +385,7 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-comment|/// \brief Try to vectorize a chain that may start at the operands of \V;
+comment|/// \brief Try to vectorize a chain that may start at the operands of \p V.
 name|bool
 name|tryToVectorize
 argument_list|(

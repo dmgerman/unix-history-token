@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/CodeGen/SelectionDAGNodes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAGNodes.h"
+file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_decl_stmt

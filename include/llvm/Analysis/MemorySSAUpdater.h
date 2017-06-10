@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/MemorySSA.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/BasicBlock.h"
 end_include
 
@@ -207,12 +213,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/MemorySSA.h"
 end_include
 
 begin_decl_stmt

@@ -153,31 +153,30 @@ operator|::
 name|InlineeSourceLine
 operator|>
 block|{
-typedef|typedef
-name|bool
-name|ContextType
-typedef|;
-specifier|static
 name|Error
-name|extract
-argument_list|(
-argument|BinaryStreamRef Stream
-argument_list|,
-argument|uint32_t&Len
-argument_list|,
-argument|codeview::InlineeSourceLine&Item
-argument_list|,
-argument|bool HasExtraFiles
-argument_list|)
+name|operator
+argument_list|()
+operator|(
+name|BinaryStreamRef
+name|Stream
+operator|,
+name|uint32_t
+operator|&
+name|Len
+operator|,
+name|codeview
+operator|::
+name|InlineeSourceLine
+operator|&
+name|Item
+operator|)
+block|;
+name|bool
+name|HasExtraFiles
+operator|=
+name|false
+block|; }
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|namespace
 name|codeview
 block|{
@@ -275,13 +274,7 @@ operator|>
 name|Lines
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|class
 name|DebugInlineeLinesSubsection
 name|final
@@ -445,10 +438,11 @@ operator|>
 name|Entries
 block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif
-unit|} }
+unit|}
 endif|#
 directive|endif
 end_endif

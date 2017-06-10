@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ExecutionEngine/Orc/IndirectionUtils.h"
 end_include
 
@@ -109,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ExecutionEngine/Orc/LambdaResolver.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
 begin_include

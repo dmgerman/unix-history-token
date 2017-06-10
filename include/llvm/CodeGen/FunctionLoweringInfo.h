@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- FunctionLoweringInfo.h - Lower functions from LLVM IR to CodeGen --===//
+comment|//===- FunctionLoweringInfo.h - Lower functions from LLVM IR to CodeGen ---===//
 end_comment
 
 begin_comment
@@ -114,13 +114,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/InlineAsm.h"
+file|"llvm/IR/Instructions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Instructions.h"
+file|"llvm/IR/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
 end_include
 
 begin_include
@@ -138,6 +144,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -146,7 +164,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|AllocaInst
+name|Argument
 decl_stmt|;
 name|class
 name|BasicBlock
@@ -158,37 +176,25 @@ name|class
 name|Function
 decl_stmt|;
 name|class
-name|GlobalVariable
-decl_stmt|;
-name|class
 name|Instruction
-decl_stmt|;
-name|class
-name|MachineInstr
-decl_stmt|;
-name|class
-name|MachineBasicBlock
 decl_stmt|;
 name|class
 name|MachineFunction
 decl_stmt|;
 name|class
-name|MachineModuleInfo
+name|MachineInstr
 decl_stmt|;
 name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
-name|SelectionDAG
-decl_stmt|;
-name|class
 name|MVT
 decl_stmt|;
 name|class
-name|TargetLowering
+name|SelectionDAG
 decl_stmt|;
 name|class
-name|Value
+name|TargetLowering
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// FunctionLoweringInfo - This contains information that is global to a
@@ -249,8 +255,6 @@ name|MBBMap
 expr_stmt|;
 comment|/// A map from swifterror value in a basic block to the virtual register it is
 comment|/// currently represented by.
-name|llvm
-operator|::
 name|DenseMap
 operator|<
 name|std
@@ -273,8 +277,6 @@ expr_stmt|;
 comment|/// A list of upward exposed vreg uses that need to be satisfied by either a
 comment|/// copy def or a phi node at the beginning of the basic block representing
 comment|/// the predecessor(s) swifterror value.
-name|llvm
-operator|::
 name|DenseMap
 operator|<
 name|std
@@ -300,17 +302,15 @@ name|Value
 modifier|*
 name|SwiftErrorArg
 decl_stmt|;
-typedef|typedef
+name|using
+name|SwiftErrorValues
+init|=
 name|SmallVector
 operator|<
 specifier|const
 name|Value
 operator|*
-operator|,
-literal|1
-operator|>
-name|SwiftErrorValues
-expr_stmt|;
+decl_stmt|, 1>;
 comment|/// A function can only have a single swifterror argument. And if it does
 comment|/// have a swifterror argument, it must be the first entry in
 comment|/// SwiftErrorVals.
@@ -380,19 +380,20 @@ comment|/// slot), and we track that here.
 struct|struct
 name|StatepointSpillMap
 block|{
-typedef|typedef
+name|using
+name|SlotMapTy
+init|=
 name|DenseMap
 operator|<
 specifier|const
 name|Value
 operator|*
-operator|,
+decl_stmt|,
 name|Optional
-operator|<
+decl|<
 name|int
-operator|>>
-name|SlotMapTy
-expr_stmt|;
+decl|>>
+decl_stmt|;
 comment|/// Maps uniqued llvm IR values to the slots they were spilled in.  If a
 comment|/// value is mapped to None it means we visited the value but didn't spill
 comment|/// it (because it was a constant, for instance).
@@ -565,6 +566,8 @@ literal|1
 decl_stmt|;
 name|KnownBits
 name|Known
+init|=
+literal|1
 decl_stmt|;
 name|LiveOutInfo
 argument_list|()
@@ -576,12 +579,7 @@ argument_list|)
 operator|,
 name|IsValid
 argument_list|(
-name|true
-argument_list|)
-operator|,
-name|Known
-argument_list|(
-literal|1
+argument|true
 argument_list|)
 block|{}
 block|}
@@ -1055,6 +1053,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_FUNCTIONLOWERINGINFO_H
+end_comment
 
 end_unit
 

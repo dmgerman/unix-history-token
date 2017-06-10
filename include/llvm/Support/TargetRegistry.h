@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -107,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -2544,7 +2544,11 @@ begin_function_decl
 specifier|static
 name|void
 name|printRegisteredTargetsForVersion
-parameter_list|()
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
 function_decl|;
 end_function_decl
 

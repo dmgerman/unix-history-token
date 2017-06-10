@@ -174,6 +174,12 @@ return|;
 block|}
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|BitcodeFileContents
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/// Represents a module in a bitcode file.
 end_comment
@@ -239,13 +245,9 @@ comment|// Calls the ctor.
 name|friend
 name|Expected
 operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|BitcodeModule
-operator|>>
-name|getBitcodeModuleList
+name|BitcodeFileContents
+operator|>
+name|getBitcodeFileContents
 argument_list|(
 argument|MemoryBufferRef Buffer
 argument_list|)
@@ -390,6 +392,38 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_struct
+struct|struct
+name|BitcodeFileContents
+block|{
+name|std
+operator|::
+name|vector
+operator|<
+name|BitcodeModule
+operator|>
+name|Mods
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// Returns the contents of a bitcode file.
+end_comment
+
+begin_expr_stmt
+name|Expected
+operator|<
+name|BitcodeFileContents
+operator|>
+name|getBitcodeFileContents
+argument_list|(
+argument|MemoryBufferRef Buffer
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Returns a list of modules in the specified bitcode buffer.

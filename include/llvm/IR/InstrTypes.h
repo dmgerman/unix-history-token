@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/None.h"
 end_include
 
@@ -113,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include

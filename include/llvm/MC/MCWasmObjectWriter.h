@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Wasm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCValue.h"
 end_include
 
@@ -107,113 +113,6 @@ decl_stmt|;
 name|class
 name|raw_pwrite_stream
 decl_stmt|;
-comment|// Information about a single relocation.
-struct|struct
-name|WasmRelocationEntry
-block|{
-name|uint64_t
-name|Offset
-decl_stmt|;
-comment|// Where is the relocation.
-specifier|const
-name|MCSymbolWasm
-modifier|*
-name|Symbol
-decl_stmt|;
-comment|// The symbol to relocate with.
-name|int64_t
-name|Addend
-decl_stmt|;
-comment|// A value to add to the symbol.
-name|unsigned
-name|Type
-decl_stmt|;
-comment|// The type of the relocation.
-name|MCSectionWasm
-modifier|*
-name|FixupSection
-decl_stmt|;
-comment|// The section the relocation is targeting.
-name|WasmRelocationEntry
-argument_list|(
-argument|uint64_t Offset
-argument_list|,
-argument|const MCSymbolWasm *Symbol
-argument_list|,
-argument|int64_t Addend
-argument_list|,
-argument|unsigned Type
-argument_list|,
-argument|MCSectionWasm *FixupSection
-argument_list|)
-block|:
-name|Offset
-argument_list|(
-name|Offset
-argument_list|)
-operator|,
-name|Symbol
-argument_list|(
-name|Symbol
-argument_list|)
-operator|,
-name|Addend
-argument_list|(
-name|Addend
-argument_list|)
-operator|,
-name|Type
-argument_list|(
-name|Type
-argument_list|)
-operator|,
-name|FixupSection
-argument_list|(
-argument|FixupSection
-argument_list|)
-block|{}
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&Out
-argument_list|)
-specifier|const
-block|{
-name|Out
-operator|<<
-literal|"Off="
-operator|<<
-name|Offset
-operator|<<
-literal|", Sym="
-operator|<<
-name|Symbol
-operator|<<
-literal|", Addend="
-operator|<<
-name|Addend
-operator|<<
-literal|", Type="
-operator|<<
-name|Type
-operator|<<
-literal|", FixupSection="
-operator|<<
-name|FixupSection
-block|;   }
-name|void
-name|dump
-argument_list|()
-specifier|const
-block|{
-name|print
-argument_list|(
-name|errs
-argument_list|()
-argument_list|)
-block|; }
-block|}
-struct|;
 name|class
 name|MCWasmObjectTargetWriter
 block|{
@@ -238,55 +137,31 @@ name|virtual
 operator|~
 name|MCWasmObjectTargetWriter
 argument_list|()
-block|{}
+expr_stmt|;
 name|virtual
 name|unsigned
 name|getRelocType
 argument_list|(
-argument|MCContext&Ctx
-argument_list|,
-argument|const MCValue&Target
-argument_list|,
-argument|const MCFixup&Fixup
-argument_list|,
-argument|bool IsPCRel
-argument_list|)
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
-name|bool
-name|needsRelocateWithSymbol
-argument_list|(
-specifier|const
-name|MCSymbol
+name|MCContext
 operator|&
-name|Sym
+name|Ctx
 argument_list|,
-name|unsigned
-name|Type
+specifier|const
+name|MCValue
+operator|&
+name|Target
+argument_list|,
+specifier|const
+name|MCFixup
+operator|&
+name|Fixup
+argument_list|,
+name|bool
+name|IsPCRel
 argument_list|)
 decl|const
-decl_stmt|;
-name|virtual
-name|void
-name|sortRelocs
-argument_list|(
-specifier|const
-name|MCAssembler
-operator|&
-name|Asm
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|WasmRelocationEntry
-operator|>
-operator|&
-name|Relocs
-argument_list|)
+init|=
+literal|0
 decl_stmt|;
 comment|/// \name Accessors
 comment|/// @{

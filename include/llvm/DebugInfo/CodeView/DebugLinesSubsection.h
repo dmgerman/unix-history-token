@@ -208,33 +208,29 @@ name|LineColumnExtractor
 block|{
 name|public
 label|:
-typedef|typedef
-specifier|const
-name|LineFragmentHeader
-modifier|*
-name|ContextType
-typedef|;
-specifier|static
 name|Error
-name|extract
-parameter_list|(
+name|operator
+argument_list|()
+operator|(
 name|BinaryStreamRef
 name|Stream
-parameter_list|,
+operator|,
 name|uint32_t
-modifier|&
+operator|&
 name|Len
-parameter_list|,
+operator|,
 name|LineColumnEntry
-modifier|&
+operator|&
 name|Item
-parameter_list|,
+operator|)
+expr_stmt|;
 specifier|const
 name|LineFragmentHeader
 modifier|*
-name|Ctx
-parameter_list|)
-function_decl|;
+name|Header
+init|=
+name|nullptr
+decl_stmt|;
 block|}
 empty_stmt|;
 name|class
@@ -465,7 +461,7 @@ name|setRelocationAddress
 argument_list|(
 argument|uint16_t Segment
 argument_list|,
-argument|uint16_t Offset
+argument|uint32_t Offset
 argument_list|)
 block|;
 name|void
@@ -491,7 +487,7 @@ name|DebugChecksumsSubsection
 operator|&
 name|Checksums
 block|;
-name|uint16_t
+name|uint32_t
 name|RelocOffset
 operator|=
 literal|0

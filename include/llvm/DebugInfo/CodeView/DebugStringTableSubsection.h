@@ -134,6 +134,14 @@ argument_list|(
 argument|BinaryStreamRef Contents
 argument_list|)
 block|;
+name|Error
+name|initialize
+argument_list|(
+name|BinaryStreamReader
+operator|&
+name|Reader
+argument_list|)
+block|;
 name|Expected
 operator|<
 name|StringRef
@@ -154,6 +162,15 @@ name|Stream
 operator|.
 name|valid
 argument_list|()
+return|;
+block|}
+name|BinaryStreamRef
+name|getBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Stream
 return|;
 block|}
 name|private

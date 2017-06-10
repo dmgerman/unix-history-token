@@ -55,6 +55,12 @@ directive|include
 file|"llvm/DebugInfo/PDB/IPDBEnumChildren.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBSymbol.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

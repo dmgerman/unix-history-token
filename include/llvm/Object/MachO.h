@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -103,6 +97,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/BinaryFormat/MachO.h"
 end_include
 
 begin_include
@@ -139,12 +145,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Format.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/MachO.h"
 end_include
 
 begin_include
@@ -2410,6 +2410,14 @@ block|;
 name|bool
 name|isRelocatableObject
 argument_list|()
+specifier|const
+name|override
+block|;
+name|StringRef
+name|mapDebugSectionName
+argument_list|(
+argument|StringRef Name
+argument_list|)
 specifier|const
 name|override
 block|;

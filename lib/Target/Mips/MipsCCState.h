@@ -180,7 +180,7 @@ name|Func
 argument_list|)
 block|;
 comment|/// Identify lowered values that originated from f128 arguments and record
-comment|/// this.
+comment|/// this for use by RetCC_MipsN.
 name|void
 name|PreAnalyzeFormalArgumentsForF128
 argument_list|(
@@ -193,6 +193,53 @@ name|InputArg
 operator|>
 operator|&
 name|Ins
+argument_list|)
+block|;
+name|void
+name|PreAnalyzeCallResultForVectorFloat
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
+argument_list|,
+specifier|const
+name|Type
+operator|*
+name|RetTy
+argument_list|)
+block|;
+name|void
+name|PreAnalyzeFormalArgumentsForVectorFloat
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
+argument_list|)
+block|;
+name|void
+name|PreAnalyzeReturnForVectorFloat
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
 argument_list|)
 block|;
 comment|/// Records whether the value has been lowered from an f128.
@@ -212,6 +259,25 @@ block|,
 literal|4
 operator|>
 name|OriginalArgWasFloat
+block|;
+comment|/// Records whether the value has been lowered from a floating point vector.
+name|SmallVector
+operator|<
+name|bool
+block|,
+literal|4
+operator|>
+name|OriginalArgWasFloatVector
+block|;
+comment|/// Records whether the return value has been lowered from a floating point
+comment|/// vector.
+name|SmallVector
+operator|<
+name|bool
+block|,
+literal|4
+operator|>
+name|OriginalRetWasFloatVector
 block|;
 comment|/// Records whether the value was a fixed argument.
 comment|/// See ISD::OutputArg::IsFixed,
@@ -303,6 +369,11 @@ operator|.
 name|clear
 argument_list|()
 block|;
+name|OriginalArgWasFloatVector
+operator|.
+name|clear
+argument_list|()
+block|;
 name|CallOperandIsFixed
 operator|.
 name|clear
@@ -364,6 +435,11 @@ name|OriginalArgWasF128
 operator|.
 name|clear
 argument_list|()
+block|;
+name|OriginalArgWasFloatVector
+operator|.
+name|clear
+argument_list|()
 block|;   }
 name|void
 name|AnalyzeCallResult
@@ -386,6 +462,13 @@ argument_list|,
 name|Func
 argument_list|)
 block|;
+name|PreAnalyzeCallResultForVectorFloat
+argument_list|(
+name|Ins
+argument_list|,
+name|RetTy
+argument_list|)
+block|;
 name|CCState
 operator|::
 name|AnalyzeCallResult
@@ -404,6 +487,11 @@ name|OriginalArgWasF128
 operator|.
 name|clear
 argument_list|()
+block|;
+name|OriginalArgWasFloatVector
+operator|.
+name|clear
+argument_list|()
 block|;   }
 name|void
 name|AnalyzeReturn
@@ -414,6 +502,11 @@ argument|CCAssignFn Fn
 argument_list|)
 block|{
 name|PreAnalyzeReturnForF128
+argument_list|(
+name|Outs
+argument_list|)
+block|;
+name|PreAnalyzeReturnForVectorFloat
 argument_list|(
 name|Outs
 argument_list|)
@@ -436,6 +529,11 @@ name|OriginalArgWasF128
 operator|.
 name|clear
 argument_list|()
+block|;
+name|OriginalArgWasFloatVector
+operator|.
+name|clear
+argument_list|()
 block|;   }
 name|bool
 name|CheckReturn
@@ -446,6 +544,11 @@ argument|CCAssignFn Fn
 argument_list|)
 block|{
 name|PreAnalyzeReturnForF128
+argument_list|(
+name|ArgsFlags
+argument_list|)
+block|;
+name|PreAnalyzeReturnForVectorFloat
 argument_list|(
 name|ArgsFlags
 argument_list|)
@@ -468,6 +571,11 @@ name|clear
 argument_list|()
 block|;
 name|OriginalArgWasF128
+operator|.
+name|clear
+argument_list|()
+block|;
+name|OriginalArgWasFloatVector
 operator|.
 name|clear
 argument_list|()
@@ -497,6 +605,34 @@ argument_list|)
 block|{
 return|return
 name|OriginalArgWasFloat
+index|[
+name|ValNo
+index|]
+return|;
+block|}
+name|bool
+name|WasOriginalArgVectorFloat
+argument_list|(
+argument|unsigned ValNo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|OriginalArgWasFloatVector
+index|[
+name|ValNo
+index|]
+return|;
+block|}
+name|bool
+name|WasOriginalRetVectorFloat
+argument_list|(
+argument|unsigned ValNo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|OriginalRetWasFloatVector
 index|[
 name|ValNo
 index|]

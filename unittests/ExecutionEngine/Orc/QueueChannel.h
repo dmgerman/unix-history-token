@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<queue>
+file|<condition_variable>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<condition_variable>
+file|<queue>
 end_include
 
 begin_decl_stmt

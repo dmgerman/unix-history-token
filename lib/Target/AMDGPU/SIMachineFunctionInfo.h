@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"SIRegisterInfo.h"
+file|"MCTargetDesc/AMDGPUMCTargetDesc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MCTargetDesc/AMDGPUMCTargetDesc.h"
+file|"SIRegisterInfo.h"
 end_include
 
 begin_include

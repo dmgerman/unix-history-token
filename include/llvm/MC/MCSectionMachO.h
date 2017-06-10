@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSection.h"
+file|"llvm/BinaryFormat/MachO.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MachO.h"
+file|"llvm/MC/MCSection.h"
 end_include
 
 begin_decl_stmt

@@ -100,13 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/ValueHandle.h"
+file|"llvm/IR/PassManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/PassManager.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include

@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/YAML.h"
+file|"llvm/BinaryFormat/MachO.h"
 end_include
 
 begin_include
@@ -82,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MachO.h"
+file|"llvm/ObjectYAML/YAML.h"
 end_include
 
 begin_decl_stmt
@@ -1100,7 +1100,7 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/MachO.def"
+file|"llvm/BinaryFormat/MachO.def"
 name|io
 operator|.
 name|enumFallback
@@ -1394,7 +1394,7 @@ define|\
 value|template<> struct MappingTraits<MachO::LCStruct> {                          \     static void mapping(IO&IO, MachO::LCStruct&LoadCommand);                 \   };
 include|#
 directive|include
-file|"llvm/Support/MachO.def"
+file|"llvm/BinaryFormat/MachO.def"
 comment|// Extra structures used by load commands
 name|template
 operator|<

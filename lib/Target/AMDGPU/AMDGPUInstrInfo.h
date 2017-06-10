@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
+file|"Utils/AMDGPUBaseInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Utils/AMDGPUBaseInfo.h"
+file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
 begin_define

@@ -198,9 +198,6 @@ name|class
 name|MachineFunction
 decl_stmt|;
 name|class
-name|MachineFunctionInitializer
-decl_stmt|;
-name|class
 name|MMIAddrLabelMap
 decl_stmt|;
 name|class
@@ -353,10 +350,6 @@ comment|/// comments in lib/Target/X86/X86FrameLowering.cpp for more details.
 name|bool
 name|UsesMorestackAddr
 block|;
-name|MachineFunctionInitializer
-operator|*
-name|MFInitializer
-block|;
 comment|/// Maps IR Functions to their corresponding MachineFunctions.
 name|DenseMap
 operator|<
@@ -472,28 +465,27 @@ return|return
 name|TheModule
 return|;
 block|}
-name|void
-name|setMachineFunctionInitializer
-argument_list|(
-argument|MachineFunctionInitializer *MFInit
-argument_list|)
-block|{
-name|MFInitializer
-operator|=
-name|MFInit
-block|;   }
 comment|/// Returns the MachineFunction constructed for the IR function \p F.
-comment|/// Creates a new MachineFunction and runs the MachineFunctionInitializer
-comment|/// if none exists yet.
+comment|/// Creates a new MachineFunction if none exists yet.
 name|MachineFunction
 operator|&
-name|getMachineFunction
+name|getOrCreateMachineFunction
 argument_list|(
 specifier|const
 name|Function
 operator|&
 name|F
 argument_list|)
+block|;
+comment|/// \bried Returns the MachineFunction associated to IR function \p F if there
+comment|/// is one, otherwise nullptr.
+name|MachineFunction
+operator|*
+name|getMachineFunction
+argument_list|(
+argument|const Function&F
+argument_list|)
+specifier|const
 block|;
 comment|/// Delete the MachineFunction \p MF and reset the link in the IR Function to
 comment|/// Machine Function map.

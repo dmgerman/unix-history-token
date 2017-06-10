@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DataLayout.h"
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include

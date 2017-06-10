@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/LaneBitmask.h"
 end_include
 
@@ -85,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_include

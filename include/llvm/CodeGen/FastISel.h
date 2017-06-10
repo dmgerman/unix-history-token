@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -96,13 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/CallingConv.h"
+file|"llvm/IR/CallSite.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/CallSite.h"
+file|"llvm/IR/CallingConv.h"
 end_include
 
 begin_include
@@ -153,18 +159,87 @@ directive|include
 file|<utility>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
+name|AllocaInst
+decl_stmt|;
+name|class
+name|BasicBlock
+decl_stmt|;
+name|class
+name|CallInst
+decl_stmt|;
+name|class
+name|Constant
+decl_stmt|;
+name|class
+name|ConstantFP
+decl_stmt|;
+name|class
+name|DataLayout
+decl_stmt|;
+name|class
+name|FunctionLoweringInfo
+decl_stmt|;
+name|class
+name|LoadInst
+decl_stmt|;
+name|class
 name|MachineConstantPool
+decl_stmt|;
+name|class
+name|MachineFrameInfo
+decl_stmt|;
+name|class
+name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineInstr
+decl_stmt|;
+name|class
+name|MachineMemOperand
+decl_stmt|;
+name|class
+name|MachineOperand
+decl_stmt|;
+name|class
+name|MachineRegisterInfo
+decl_stmt|;
+name|class
+name|MCContext
+decl_stmt|;
+name|class
+name|MCInstrDesc
+decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
+name|class
+name|TargetInstrInfo
+decl_stmt|;
+name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
+name|TargetMachine
+decl_stmt|;
+name|class
+name|TargetRegisterClass
+decl_stmt|;
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
+name|class
+name|Type
+decl_stmt|;
+name|class
+name|User
+decl_stmt|;
+name|class
+name|Value
 decl_stmt|;
 comment|/// \brief This is a fast-path instruction selection class that generates poor
 comment|/// code and doesn't support illegal types or non-trivial lowering, but runs
@@ -174,18 +249,20 @@ name|FastISel
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|ArgListEntry
+init|=
 name|TargetLoweringBase
 operator|::
 name|ArgListEntry
-name|ArgListEntry
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|ArgListTy
+init|=
 name|TargetLoweringBase
 operator|::
 name|ArgListTy
-name|ArgListTy
-expr_stmt|;
+decl_stmt|;
 struct|struct
 name|CallLoweringInfo
 block|{
@@ -979,6 +1056,11 @@ name|EmitStartPt
 decl_stmt|;
 name|public
 label|:
+name|virtual
+operator|~
+name|FastISel
+argument_list|()
+expr_stmt|;
 comment|/// \brief Return the position of the last instruction emitted for
 comment|/// materializing constants for use in the current block.
 name|MachineInstr
@@ -1201,11 +1283,6 @@ name|SavePoint
 name|Old
 parameter_list|)
 function_decl|;
-name|virtual
-operator|~
-name|FastISel
-argument_list|()
-expr_stmt|;
 name|protected
 label|:
 name|explicit
@@ -1340,7 +1417,7 @@ parameter_list|)
 function_decl|;
 comment|/// \brief This method is called by target-independent code to request that an
 comment|/// instruction with the given type, opcode, and register and immediate
-comment|// operands be emitted.
+comment|/// operands be emitted.
 name|virtual
 name|unsigned
 name|fastEmit_ri

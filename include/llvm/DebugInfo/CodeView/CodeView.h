@@ -2046,6 +2046,45 @@ block|,   }
 enum_decl|;
 block|}
 struct|;
+comment|// Corresponds to LocalIdAndGlobalIdPair structure.
+comment|// This structure information allows cross-referencing between PDBs.  For
+comment|// example, when a PDB is being built during compilation it is not yet known
+comment|// what other modules may end up in the PDB at link time.  So certain types of
+comment|// IDs may clash between the various compile time PDBs.  For each affected
+comment|// module, a subsection would be put into the PDB containing a mapping from its
+comment|// local IDs to a single ID namespace for all items in the PDB file.
+struct|struct
+name|CrossModuleExport
+block|{
+name|support
+operator|::
+name|ulittle32_t
+name|Local
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|Global
+expr_stmt|;
+block|}
+struct|;
+struct|struct
+name|CrossModuleImport
+block|{
+name|support
+operator|::
+name|ulittle32_t
+name|ModuleNameOffset
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|Count
+expr_stmt|;
+comment|// Number of elements
+comment|// support::ulittle32_t ids[Count]; // id from referenced module
+block|}
+struct|;
 name|enum
 name|class
 name|CodeViewContainer

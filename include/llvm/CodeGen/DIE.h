@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/DwarfStringPoolEntry.h"
 end_include
 
@@ -117,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Dwarf.h"
 end_include
 
 begin_include

@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/AliasSetTracker.h"
+file|"llvm/Analysis/AliasAnalysisEvaluator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/AliasAnalysisEvaluator.h"
+file|"llvm/Analysis/AliasSetTracker.h"
 end_include
 
 begin_include
@@ -204,6 +204,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Valgrind.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Transforms/IPO.h"
 end_include
 
@@ -259,12 +265,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Transforms/Vectorize.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Valgrind.h"
 end_include
 
 begin_include

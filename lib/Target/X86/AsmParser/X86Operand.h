@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCRegisterInfo.h"
+file|"llvm/MC/MCParser/MCParsedAsmOperand.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCParser/MCParsedAsmOperand.h"
+file|"llvm/MC/MCRegisterInfo.h"
 end_include
 
 begin_include

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/ELF.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/SubtargetFeature.h"
 end_include
 
@@ -147,12 +153,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ELF.h"
 end_include
 
 begin_include

@@ -76,6 +76,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/ELF.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/BinaryFormat/MachO.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/COFF.h"
 end_include
 
@@ -106,12 +118,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ELF.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -119,12 +125,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorOr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/MachO.h"
 end_include
 
 begin_include

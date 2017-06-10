@@ -108,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MD5.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
@@ -121,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MD5.h"
 end_include
 
 begin_include

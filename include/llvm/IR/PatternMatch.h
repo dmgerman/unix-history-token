@@ -1389,8 +1389,9 @@ argument_list|)
 block|{
 return|return
 name|C
-operator|==
-literal|1
+operator|.
+name|isOneValue
+argument_list|()
 return|;
 block|}
 expr|}

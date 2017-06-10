@@ -173,6 +173,9 @@ comment|// :lower16:
 comment|// fixup_arm_mod_imm - Fixup for mod_imm
 name|fixup_arm_mod_imm
 block|,
+comment|// fixup_t2_so_imm - Fixup for Thumb2 8-bit rotated operand
+name|fixup_t2_so_imm
+block|,
 comment|// Marker
 name|LastTargetFixupKind
 block|,

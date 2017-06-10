@@ -132,11 +132,16 @@ decl_stmt|;
 name|class
 name|MachineInstr
 decl_stmt|;
+name|class
+name|MDNode
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// InsnRange - This is used to track range of instructions with identical
 comment|/// lexical scope.
 comment|///
-typedef|typedef
+name|using
+name|InsnRange
+init|=
 name|std
 operator|::
 name|pair
@@ -144,13 +149,11 @@ operator|<
 specifier|const
 name|MachineInstr
 operator|*
-operator|,
-specifier|const
+decl_stmt|, const
 name|MachineInstr
-operator|*
-operator|>
-name|InsnRange
-expr_stmt|;
+modifier|*
+decl|>
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// LexicalScope - This class is used to track scope information.
 comment|///

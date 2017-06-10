@@ -178,22 +178,23 @@ enum|;
 comment|/// Clients that want to handle their own diagnostics in a custom way can
 comment|/// register a function pointer+context as a diagnostic handler.
 comment|/// It gets called each time PrintMessage is invoked.
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|DiagHandlerTy
-function_decl|)
-parameter_list|(
+init|=
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
 specifier|const
 name|SMDiagnostic
-modifier|&
-parameter_list|,
+operator|&
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|Context
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 struct|struct

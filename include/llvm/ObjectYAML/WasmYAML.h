@@ -70,13 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/YAML.h"
+file|"llvm/BinaryFormat/Wasm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Wasm.h"
+file|"llvm/ObjectYAML/YAML.h"
 end_include
 
 begin_decl_stmt

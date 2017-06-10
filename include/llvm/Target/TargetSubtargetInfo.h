@@ -86,13 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SchedulerRegistry.h"
+file|"llvm/CodeGen/ScheduleDAGMutation.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ScheduleDAGMutation.h"
+file|"llvm/CodeGen/SchedulerRegistry.h"
 end_include
 
 begin_include

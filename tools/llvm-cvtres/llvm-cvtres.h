@@ -61,27 +61,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|enum
-name|class
-name|machine
-block|{
-name|UNKNOWN
-operator|=
-literal|0
-operator|,
-name|ARM
-operator|,
-name|X64
-operator|,
-name|X86
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_endif
 endif|#
 directive|endif

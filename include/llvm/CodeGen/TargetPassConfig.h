@@ -348,6 +348,12 @@ comment|/// callers.
 name|bool
 name|RequireCodeGenSCCOrder
 block|;
+comment|/// Add the actual instruction selection passes. This does not include
+comment|/// preparation passes on IR.
+name|bool
+name|addCoreISelPasses
+argument_list|()
+block|;
 name|public
 operator|:
 name|TargetPassConfig
@@ -644,6 +650,15 @@ name|bool
 name|usingDefaultRegAlloc
 argument_list|()
 specifier|const
+block|;
+comment|/// High level function that adds all passes necessary to go from llvm IR
+comment|/// representation to the MI representation.
+comment|/// Adds IR based lowering and target specific optimization passes and finally
+comment|/// the core instruction selection passes.
+comment|/// \returns true if an error occured, false otherwise.
+name|bool
+name|addISelPasses
+argument_list|()
 block|;
 comment|/// Add common target configurable passes that perform LLVM IR to IR
 comment|/// transforms following machine independent optimization.

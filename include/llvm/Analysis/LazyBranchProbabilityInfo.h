@@ -96,6 +96,9 @@ decl_stmt|;
 name|class
 name|LoopInfo
 decl_stmt|;
+name|class
+name|TargetLibraryInfo
+decl_stmt|;
 comment|/// \brief This is an alternative analysis pass to
 comment|/// BranchProbabilityInfoWrapperPass.  The difference is that with this pass the
 comment|/// branch probabilities are not computed when the analysis pass is executed but
@@ -144,6 +147,11 @@ specifier|const
 name|LoopInfo
 operator|*
 name|LI
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 operator|:
 name|Calculated
@@ -158,7 +166,12 @@ argument_list|)
 block|,
 name|LI
 argument_list|(
-argument|LI
+name|LI
+argument_list|)
+block|,
+name|TLI
+argument_list|(
+argument|TLI
 argument_list|)
 block|{}
 comment|/// Retrieve the BPI with the branch probabilities computed.
@@ -191,6 +204,8 @@ name|F
 argument_list|,
 operator|*
 name|LI
+argument_list|,
+name|TLI
 argument_list|)
 expr_stmt|;
 name|Calculated
@@ -240,6 +255,11 @@ specifier|const
 name|LoopInfo
 operator|*
 name|LI
+block|;
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 block|;   }
 block|;
 name|std

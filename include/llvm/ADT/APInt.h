@@ -1092,6 +1092,21 @@ operator|*
 name|this
 return|;
 block|}
+comment|/// \brief Determine if this is a value of 1.
+comment|///
+comment|/// This checks to see if the value of this APInt is one.
+name|bool
+name|isOneValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getActiveBits
+argument_list|()
+operator|==
+literal|1
+return|;
+block|}
 comment|/// \brief Determine if this is the largest unsigned value.
 comment|///
 comment|/// This checks to see if the value of this APInt is the maximum unsigned

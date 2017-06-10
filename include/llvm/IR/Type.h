@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm/Support/CBindingWrapping.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CBindingWrapping.h"
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include

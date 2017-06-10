@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/CodeView.h"
+file|"llvm/BinaryFormat/COFF.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/COFF.h"
+file|"llvm/DebugInfo/CodeView/CodeView.h"
 end_include
 
 begin_include

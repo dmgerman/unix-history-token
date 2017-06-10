@@ -82,13 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Transforms/Utils/ValueMapper.h"
+file|"llvm/Transforms/Utils/LoopUtils.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Transforms/Utils/LoopUtils.h"
+file|"llvm/Transforms/Utils/ValueMapper.h"
 end_include
 
 begin_decl_stmt

@@ -70,13 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/YAML.h"
+file|"llvm/BinaryFormat/Dwarf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Dwarf.h"
+file|"llvm/ObjectYAML/YAML.h"
 end_include
 
 begin_decl_stmt
@@ -1130,7 +1130,7 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/Dwarf.def"
+file|"llvm/BinaryFormat/Dwarf.def"
 name|io
 operator|.
 name|enumFallback
@@ -1175,7 +1175,7 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/Dwarf.def"
+file|"llvm/BinaryFormat/Dwarf.def"
 name|io
 operator|.
 name|enumFallback
@@ -1220,7 +1220,7 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/Dwarf.def"
+file|"llvm/BinaryFormat/Dwarf.def"
 name|io
 operator|.
 name|enumFallback
@@ -1269,7 +1269,7 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/Dwarf.def"
+file|"llvm/BinaryFormat/Dwarf.def"
 name|io
 operator|.
 name|enumFallback
@@ -1318,7 +1318,7 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/Dwarf.def"
+file|"llvm/BinaryFormat/Dwarf.def"
 name|io
 operator|.
 name|enumFallback
@@ -1363,7 +1363,7 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/Dwarf.def"
+file|"llvm/BinaryFormat/Dwarf.def"
 name|io
 operator|.
 name|enumFallback

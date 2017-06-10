@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/iterator.h"
 end_include
 
 begin_include
@@ -104,19 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<functional>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
 end_include
 
 begin_include
@@ -129,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<new>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt

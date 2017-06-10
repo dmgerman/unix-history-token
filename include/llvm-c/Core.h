@@ -1790,6 +1790,26 @@ name|LLVMTypeRef
 name|Ty
 parameter_list|)
 function_decl|;
+comment|/**  * Returns type's subtypes  *  * @see llvm::Type::subtypes()  */
+name|void
+name|LLVMGetSubtypes
+parameter_list|(
+name|LLVMTypeRef
+name|Tp
+parameter_list|,
+name|LLVMTypeRef
+modifier|*
+name|Arr
+parameter_list|)
+function_decl|;
+comment|/**  *  Return the number of types in the derived type.  *  * @see llvm::Type::getNumContainedTypes()  */
+name|unsigned
+name|LLVMGetNumContainedTypes
+parameter_list|(
+name|LLVMTypeRef
+name|Tp
+parameter_list|)
+function_decl|;
 comment|/**  * Create a fixed size array type that refers to a specific type.  *  * The created type will exist in the context that its element type  * exists in.  *  * @see llvm::ArrayType::get()  */
 name|LLVMTypeRef
 name|LLVMArrayType

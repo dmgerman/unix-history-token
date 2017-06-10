@@ -52,13 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator_range.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
@@ -70,13 +64,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include

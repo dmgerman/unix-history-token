@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -436,12 +442,13 @@ return|;
 block|}
 endif|#
 directive|endif
-typedef|typedef
+name|using
+name|ProcResIter
+init|=
 specifier|const
 name|MCWriteProcResEntry
-modifier|*
-name|ProcResIter
-typedef|;
+operator|*
+decl_stmt|;
 comment|// \brief Get an iterator into the processor resources consumed by this
 comment|// scheduling class.
 name|ProcResIter

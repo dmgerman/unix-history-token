@@ -163,11 +163,11 @@ label|:
 name|explicit
 name|TypeTableBuilder
 argument_list|(
-name|BumpPtrAllocator
-operator|&
-name|Allocator
+argument|BumpPtrAllocator&Allocator
+argument_list|,
+argument|bool WriteUnique = true
 argument_list|)
-operator|:
+block|:
 name|Allocator
 argument_list|(
 name|Allocator
@@ -176,6 +176,8 @@ operator|,
 name|Serializer
 argument_list|(
 argument|Allocator
+argument_list|,
+argument|WriteUnique
 argument_list|)
 block|{}
 name|TypeTableBuilder

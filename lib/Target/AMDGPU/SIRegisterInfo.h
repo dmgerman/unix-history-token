@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"SIDefines.h"
+file|"MCTargetDesc/AMDGPUMCTargetDesc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MCTargetDesc/AMDGPUMCTargetDesc.h"
+file|"SIDefines.h"
 end_include
 
 begin_include
@@ -419,6 +419,14 @@ argument_list|,
 argument|RegScavenger *RS
 argument_list|)
 specifier|const
+block|;
+name|StringRef
+name|getRegAsmName
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+specifier|const
+name|override
 block|;
 name|unsigned
 name|getHWRegIndex

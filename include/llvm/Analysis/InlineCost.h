@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/CallGraphSCCPass.h"
+file|"llvm/Analysis/AssumptionCache.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/AssumptionCache.h"
+file|"llvm/Analysis/CallGraphSCCPass.h"
 end_include
 
 begin_include

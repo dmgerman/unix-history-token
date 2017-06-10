@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstdint>
+file|<bitset>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<bitset>
+file|<cstdint>
 end_include
 
 begin_include

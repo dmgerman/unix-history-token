@@ -330,6 +330,11 @@ comment|// HasEVA -- supports EVA ASE.
 name|bool
 name|HasEVA
 block|;
+comment|// nomadd4 - disables generation of 4-operand madd.s, madd.d and
+comment|// related instructions.
+name|bool
+name|DisableMadd4
+block|;
 name|InstrItineraryData
 name|InstrItins
 block|;
@@ -978,6 +983,15 @@ specifier|const
 block|{
 return|return
 name|HasMSA
+return|;
+block|}
+name|bool
+name|disableMadd4
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DisableMadd4
 return|;
 block|}
 name|bool

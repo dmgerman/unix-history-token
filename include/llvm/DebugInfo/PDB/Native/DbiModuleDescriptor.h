@@ -218,20 +218,23 @@ operator|::
 name|DbiModuleDescriptor
 operator|>
 block|{
-typedef|typedef
-name|void
-name|ContextType
-typedef|;
-specifier|static
 name|Error
-name|extract
-argument_list|(
-argument|BinaryStreamRef Stream
-argument_list|,
-argument|uint32_t&Length
-argument_list|,
-argument|pdb::DbiModuleDescriptor&Info
-argument_list|)
+name|operator
+argument_list|()
+operator|(
+name|BinaryStreamRef
+name|Stream
+operator|,
+name|uint32_t
+operator|&
+name|Length
+operator|,
+name|pdb
+operator|::
+name|DbiModuleDescriptor
+operator|&
+name|Info
+operator|)
 block|{
 if|if
 condition|(
@@ -258,7 +261,7 @@ name|Info
 operator|.
 name|getRecordLength
 argument_list|()
-expr_stmt|;
+block|;
 return|return
 name|Error
 operator|::
@@ -266,10 +269,15 @@ name|success
 argument_list|()
 return|;
 block|}
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};  }
+unit|}
 comment|// end namespace llvm
 end_comment
 

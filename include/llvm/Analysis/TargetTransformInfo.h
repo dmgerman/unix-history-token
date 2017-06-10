@@ -658,6 +658,37 @@ name|F
 argument_list|)
 decl|const
 decl_stmt|;
+struct|struct
+name|LSRCost
+block|{
+comment|/// TODO: Some of these could be merged. Also, a lexical ordering
+comment|/// isn't always optimal.
+name|unsigned
+name|Insns
+decl_stmt|;
+name|unsigned
+name|NumRegs
+decl_stmt|;
+name|unsigned
+name|AddRecCost
+decl_stmt|;
+name|unsigned
+name|NumIVMuls
+decl_stmt|;
+name|unsigned
+name|NumBaseAdds
+decl_stmt|;
+name|unsigned
+name|ImmCost
+decl_stmt|;
+name|unsigned
+name|SetupCost
+decl_stmt|;
+name|unsigned
+name|ScaleCost
+decl_stmt|;
+block|}
+struct|;
 comment|/// Parameters that control the generic loop unrolling transformation.
 struct|struct
 name|UnrollingPreferences
@@ -863,6 +894,24 @@ name|unsigned
 name|AddrSpace
 operator|=
 literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Return true if LSR cost of C1 is lower than C1.
+name|bool
+name|isLSRCostLess
+argument_list|(
+name|TargetTransformInfo
+operator|::
+name|LSRCost
+operator|&
+name|C1
+argument_list|,
+name|TargetTransformInfo
+operator|::
+name|LSRCost
+operator|&
+name|C2
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1883,6 +1932,13 @@ name|Info
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \returns The maximum element size, in bytes, for an element
+comment|/// unordered-atomic memory intrinsic.
+name|unsigned
+name|getAtomicMemIntrinsicMaxElementSize
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \returns A value which is the result of the given memory intrinsic.  New
 comment|/// instructions may be created to extract the result from the given intrinsic
 comment|/// memory operation.  Returns nullptr if the target cannot create a result
@@ -2361,6 +2417,25 @@ argument_list|,
 argument|int64_t Scale
 argument_list|,
 argument|unsigned AddrSpace
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLSRCostLess
+argument_list|(
+name|TargetTransformInfo
+operator|::
+name|LSRCost
+operator|&
+name|C1
+argument_list|,
+name|TargetTransformInfo
+operator|::
+name|LSRCost
+operator|&
+name|C2
 argument_list|)
 operator|=
 literal|0
@@ -3072,6 +3147,14 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|unsigned
+name|getAtomicMemIntrinsicMaxElementSize
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
 name|Value
 operator|*
 name|getOrCreateResultFromMemIntrinsic
@@ -3590,6 +3673,26 @@ argument_list|,
 name|Scale
 argument_list|,
 name|AddrSpace
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLSRCostLess
+argument_list|(
+argument|TargetTransformInfo::LSRCost&C1
+argument_list|,
+argument|TargetTransformInfo::LSRCost&C2
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLSRCostLess
+argument_list|(
+name|C1
+argument_list|,
+name|C2
 argument_list|)
 return|;
 block|}
@@ -4783,6 +4886,19 @@ name|Inst
 argument_list|,
 name|Info
 argument_list|)
+return|;
+block|}
+name|unsigned
+name|getAtomicMemIntrinsicMaxElementSize
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getAtomicMemIntrinsicMaxElementSize
+argument_list|()
 return|;
 block|}
 name|Value

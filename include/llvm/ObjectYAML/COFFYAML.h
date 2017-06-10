@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/YAML.h"
+file|"llvm/BinaryFormat/COFF.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/COFF.h"
+file|"llvm/ObjectYAML/YAML.h"
 end_include
 
 begin_decl_stmt

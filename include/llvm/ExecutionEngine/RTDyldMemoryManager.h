@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/ExecutionEngine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/CBindingWrapping.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm-c/ExecutionEngine.h"
 end_include
 
 begin_include

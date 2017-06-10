@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/ExecutionEngine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/JITSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Function.h"
 end_include
 
@@ -93,18 +105,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Object/ObjectFile.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/ExecutionEngine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include

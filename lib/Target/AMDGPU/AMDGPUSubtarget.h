@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"R600InstrInfo.h"
+file|"R600FrameLowering.h"
 end_include
 
 begin_include
@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"R600FrameLowering.h"
+file|"R600InstrInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"SIInstrInfo.h"
+file|"SIFrameLowering.h"
 end_include
 
 begin_include
@@ -102,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"SIFrameLowering.h"
+file|"SIInstrInfo.h"
 end_include
 
 begin_include
@@ -229,11 +229,17 @@ block|;    enum
 block|{
 name|ISAVersion0_0_0
 block|,
+name|ISAVersion6_0_0
+block|,
+name|ISAVersion6_0_1
+block|,
 name|ISAVersion7_0_0
 block|,
 name|ISAVersion7_0_1
 block|,
 name|ISAVersion7_0_2
+block|,
+name|ISAVersion7_0_3
 block|,
 name|ISAVersion8_0_0
 block|,
@@ -250,6 +256,10 @@ block|,
 name|ISAVersion9_0_0
 block|,
 name|ISAVersion9_0_1
+block|,
+name|ISAVersion9_0_2
+block|,
+name|ISAVersion9_0_3
 block|}
 block|;    enum
 name|TrapHandlerAbi
@@ -2790,7 +2800,7 @@ name|getFeatureBits
 argument_list|()
 argument_list|)
 return|;
-block|;   }
+block|}
 comment|/// \returns VGPR encoding granularity supported by the subtarget.
 name|unsigned
 name|getVGPREncodingGranule
@@ -2923,11 +2933,10 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|; }
-decl_stmt|;
+block|;  }
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/BinaryStream.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/BinaryStreamRef.h"
 end_include
 

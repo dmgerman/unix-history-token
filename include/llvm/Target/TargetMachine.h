@@ -109,9 +109,6 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
-name|MachineFunctionInitializer
-decl_stmt|;
-name|class
 name|Mangler
 decl_stmt|;
 name|class
@@ -783,12 +780,6 @@ name|AnalysisID
 comment|/*StopAfter*/
 init|=
 name|nullptr
-parameter_list|,
-name|MachineFunctionInitializer
-modifier|*
-comment|/*MFInitializer*/
-init|=
-name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -973,8 +964,6 @@ argument_list|,
 argument|AnalysisID StopBefore = nullptr
 argument_list|,
 argument|AnalysisID StopAfter = nullptr
-argument_list|,
-argument|MachineFunctionInitializer *MFInitializer = nullptr
 argument_list|)
 name|override
 block|;
@@ -1009,8 +998,22 @@ return|return
 name|true
 return|;
 block|}
-expr|}
-block|;  }
+comment|/// \brief Adds an AsmPrinter pass to the pipeline that prints assembly or
+comment|/// machine code from the MI representation.
+name|bool
+name|addAsmPrinter
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|,
+argument|raw_pwrite_stream&Out
+argument_list|,
+argument|CodeGenFileType FileTYpe
+argument_list|,
+argument|MCContext&Context
+argument_list|)
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment
