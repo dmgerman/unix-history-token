@@ -549,6 +549,96 @@ value|-1
 end_define
 
 begin_comment
+comment|/*  * Constants used to describe the type of attachment between MAC and PHY.  */
+end_comment
+
+begin_enum
+enum|enum
+name|mii_contype
+block|{
+name|MII_CONTYPE_UNKNOWN
+block|,
+comment|/* Must be have value 0. */
+name|MII_CONTYPE_MII
+block|,
+name|MII_CONTYPE_GMII
+block|,
+name|MII_CONTYPE_SGMII
+block|,
+name|MII_CONTYPE_QSGMII
+block|,
+name|MII_CONTYPE_TBI
+block|,
+name|MII_CONTYPE_REVMII
+block|,
+comment|/* Reverse MII */
+name|MII_CONTYPE_RMII
+block|,
+name|MII_CONTYPE_RGMII
+block|,
+comment|/* Delays provided by MAC or PCB */
+name|MII_CONTYPE_RGMII_ID
+block|,
+comment|/* Rx and tx delays provided by PHY */
+name|MII_CONTYPE_RGMII_RXID
+block|,
+comment|/* Only rx delay provided by PHY */
+name|MII_CONTYPE_RGMII_TXID
+block|,
+comment|/* Only tx delay provided by PHY */
+name|MII_CONTYPE_RTBI
+block|,
+name|MII_CONTYPE_SMII
+block|,
+name|MII_CONTYPE_XGMII
+block|,
+name|MII_CONTYPE_TRGMII
+block|,
+name|MII_CONTYPE_2000BX
+block|,
+name|MII_CONTYPE_2500BX
+block|,
+name|MII_CONTYPE_RXAUI
+block|,
+name|MII_CONTYPE_COUNT
+comment|/* Add new types before this line. */
+block|}
+enum|;
+end_enum
+
+begin_typedef
+typedef|typedef
+name|enum
+name|mii_contype
+name|mii_contype_t
+typedef|;
+end_typedef
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|mii_contype_is_rgmii
+parameter_list|(
+name|mii_contype_t
+name|con
+parameter_list|)
+block|{
+return|return
+operator|(
+name|con
+operator|>=
+name|MII_CONTYPE_RGMII
+operator|&&
+name|con
+operator|<=
+name|MII_CONTYPE_RGMII_TXID
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Used to attach a PHY to a parent.  */
 end_comment
 
