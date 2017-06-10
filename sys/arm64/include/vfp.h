@@ -47,6 +47,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|pcb
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|vfp_init

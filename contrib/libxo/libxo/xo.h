@@ -624,6 +624,17 @@ begin_comment
 comment|/** Prevent use of XOEF_RETAIN */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|XOF_COLOR_MAP
+value|XOF_BIT(32)
+end_define
+
+begin_comment
+comment|/** Color map has been initialized */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|unsigned

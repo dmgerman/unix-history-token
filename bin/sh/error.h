@@ -144,7 +144,7 @@ name|SETINTON
 parameter_list|(
 name|s
 parameter_list|)
-value|suppressint = (s)
+value|do { suppressint = (s); if (suppressint == 0&& intpending) onint(); } while (0)
 end_define
 
 begin_define

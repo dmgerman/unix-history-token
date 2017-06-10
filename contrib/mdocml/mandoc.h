@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.h,v 1.214 2017/01/28 23:30:08 schwarze Exp $ */
+comment|/*	$Id: mandoc.h,v 1.226 2017/06/08 18:11:22 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -52,8 +52,9 @@ name|MANDOCLEVEL_OK
 init|=
 literal|0
 block|,
-name|MANDOCLEVEL_RESERVED
+name|MANDOCLEVEL_STYLE
 block|,
+comment|/* style suggestions */
 name|MANDOCLEVEL_WARNING
 block|,
 comment|/* warnings: syntax, whitespace, etc. */
@@ -84,6 +85,24 @@ name|mandocerr
 block|{
 name|MANDOCERR_OK
 block|,
+name|MANDOCERR_STYLE
+block|,
+comment|/* ===== start of style suggestions ===== */
+name|MANDOCERR_MACRO_USELESS
+block|,
+comment|/* useless macro: macro */
+name|MANDOCERR_BX
+block|,
+comment|/* consider using OS macro: macro */
+name|MANDOCERR_ER_ORDER
+block|,
+comment|/* errnos out of order: Er ... */
+name|MANDOCERR_ER_REP
+block|,
+comment|/* duplicate errno: Er ... */
+name|MANDOCERR_ND_DOT
+block|,
+comment|/* description line ends with a full stop */
 name|MANDOCERR_WARNING
 block|,
 comment|/* ===== start of warnings ===== */
@@ -155,6 +174,9 @@ comment|/* missing comma before name: Nm name */
 name|MANDOCERR_ND_EMPTY
 block|,
 comment|/* missing description line, using "" */
+name|MANDOCERR_ND_LATE
+block|,
+comment|/* description line outside NAME section */
 name|MANDOCERR_SEC_ORDER
 block|,
 comment|/* sections out of conventional order: Sh title */
@@ -207,6 +229,9 @@ comment|/* fill mode already disabled, skipping: nf */
 name|MANDOCERR_BLK_LINE
 block|,
 comment|/* line scope broken: macro breaks macro */
+name|MANDOCERR_BLK_BLANK
+block|,
+comment|/* skipping blank line in line scope */
 comment|/* related to missing arguments */
 name|MANDOCERR_REQ_EMPTY
 block|,
@@ -302,6 +327,9 @@ comment|/* comma in function argument: arg */
 name|MANDOCERR_FN_PAREN
 block|,
 comment|/* parenthesis in function name: arg */
+name|MANDOCERR_LB_BAD
+block|,
+comment|/* unknown library name: Lb ... */
 name|MANDOCERR_RS_BAD
 block|,
 comment|/* invalid content in Rs block: macro */
@@ -430,6 +458,9 @@ comment|/* skipping display without arguments: Bd */
 name|MANDOCERR_BL_NOTYPE
 block|,
 comment|/* missing list type, using -item: Bl */
+name|MANDOCERR_CE_NONUM
+block|,
+comment|/* argument is not numeric, using 1: ce ... */
 name|MANDOCERR_NM_NONAME
 block|,
 comment|/* missing manual name, using "": Nm */
@@ -595,17 +626,23 @@ name|tbl_cell
 modifier|*
 name|next
 decl_stmt|;
+name|char
+modifier|*
+name|wstr
+decl_stmt|;
+comment|/* min width represented as a string */
+name|size_t
+name|width
+decl_stmt|;
+comment|/* minimum column width */
+name|size_t
+name|spacing
+decl_stmt|;
+comment|/* to the right of the column */
 name|int
 name|vert
 decl_stmt|;
 comment|/* width of subsequent vertical line */
-name|enum
-name|tbl_cellt
-name|pos
-decl_stmt|;
-name|size_t
-name|spacing
-decl_stmt|;
 name|int
 name|col
 decl_stmt|;
@@ -653,6 +690,10 @@ directive|define
 name|TBL_CELL_WMAX
 value|(1<< 7)
 comment|/* x, X */
+name|enum
+name|tbl_cellt
+name|pos
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -727,10 +768,6 @@ modifier|*
 name|layout
 decl_stmt|;
 comment|/* layout cell */
-name|int
-name|spans
-decl_stmt|;
-comment|/* how many spans follow */
 name|struct
 name|tbl_dat
 modifier|*
@@ -741,6 +778,14 @@ modifier|*
 name|string
 decl_stmt|;
 comment|/* data (NULL if not TBL_DATA_DATA) */
+name|int
+name|spans
+decl_stmt|;
+comment|/* how many spans follow */
+name|int
+name|block
+decl_stmt|;
+comment|/* T{ text block T} */
 name|enum
 name|tbl_datt
 name|pos
@@ -1169,6 +1214,12 @@ comment|/* a unicode codepoint */
 name|ESCAPE_NOSPACE
 block|,
 comment|/* suppress space if the last on a line */
+name|ESCAPE_HORIZ
+block|,
+comment|/* horizontal movement */
+name|ESCAPE_HLINE
+block|,
+comment|/* horizontal line drawing */
 name|ESCAPE_SKIPCHAR
 block|,
 comment|/* skip the next character */

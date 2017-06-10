@@ -264,7 +264,7 @@ file|<geom/geom.h>
 end_include
 
 begin_comment
-comment|/*  * SWB_NPAGES must be a power of 2.  It may be set to 1, 2, 4, 8, 16  * or 32 pages per allocation.  * The 32-page limit is due to the radix code (kern/subr_blist.c).  */
+comment|/*  * MAX_PAGEOUT_CLUSTER must be a power of 2 between 1 and 64.  * The 64-page limit is due to the radix code (kern/subr_blist.c).  */
 end_comment
 
 begin_ifndef
@@ -8127,6 +8127,8 @@ expr_stmt|;
 name|swap_pager_avail
 operator|+=
 name|nblks
+operator|-
+literal|2
 expr_stmt|;
 name|swap_total
 operator|+=
@@ -8394,8 +8396,6 @@ parameter_list|)
 block|{
 name|u_long
 name|nblks
-decl_stmt|,
-name|dvbase
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -8503,22 +8503,6 @@ name|sw_flags
 operator||=
 name|SW_CLOSING
 expr_stmt|;
-for|for
-control|(
-name|dvbase
-operator|=
-literal|0
-init|;
-name|dvbase
-operator|<
-name|nblks
-condition|;
-name|dvbase
-operator|+=
-name|BLIST_BMAP_RADIX
-control|)
-block|{
-comment|/* 		 * blist_fill() cannot allocate more than BLIST_BMAP_RADIX 		 * blocks per call. 		 */
 name|swap_pager_avail
 operator|-=
 name|blist_fill
@@ -8527,19 +8511,11 @@ name|sp
 operator|->
 name|sw_blist
 argument_list|,
-name|dvbase
+literal|0
 argument_list|,
-name|ulmin
-argument_list|(
 name|nblks
-operator|-
-name|dvbase
-argument_list|,
-name|BLIST_BMAP_RADIX
-argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|swap_total
 operator|-=
 operator|(

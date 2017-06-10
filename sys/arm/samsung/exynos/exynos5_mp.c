@@ -89,6 +89,18 @@ directive|include
 file|<machine/intr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/platformvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/samsung/exynos/exynos5_mp.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -234,9 +246,10 @@ end_function
 
 begin_function
 name|void
-name|platform_mp_setmaxid
+name|exynos5_mp_setmaxid
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 if|if
@@ -266,9 +279,10 @@ end_function
 
 begin_function
 name|void
-name|platform_mp_start_ap
+name|exynos5_mp_start_ap
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|bus_addr_t

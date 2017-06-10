@@ -1335,14 +1335,8 @@ name|op
 argument_list|)
 argument_list|,
 name|name
-condition|?
-else|:
-literal|""
 argument_list|,
 name|value
-condition|?
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 name|fflush

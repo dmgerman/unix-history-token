@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: eqn.c,v 1.61 2016/01/08 00:50:45 schwarze Exp $ */
+comment|/*	$Id: eqn.c,v 1.62 2017/03/11 15:43:04 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -1542,6 +1542,14 @@ name|int
 name|repl
 parameter_list|)
 block|{
+specifier|static
+name|size_t
+name|last_len
+decl_stmt|;
+specifier|static
+name|int
+name|lim
+decl_stmt|;
 name|char
 modifier|*
 name|start
@@ -1553,8 +1561,6 @@ name|int
 name|q
 decl_stmt|,
 name|diff
-decl_stmt|,
-name|lim
 decl_stmt|;
 name|size_t
 name|ssz
@@ -1577,6 +1583,14 @@ operator|=
 operator|&
 name|dummy
 expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|->
+name|cur
+operator|>=
+name|last_len
+condition|)
 name|lim
 operator|=
 literal|0
@@ -2067,6 +2081,18 @@ name|def
 operator|->
 name|valsz
 argument_list|)
+expr_stmt|;
+name|last_len
+operator|=
+name|start
+operator|-
+name|ep
+operator|->
+name|data
+operator|+
+name|def
+operator|->
+name|valsz
 expr_stmt|;
 name|lim
 operator|++

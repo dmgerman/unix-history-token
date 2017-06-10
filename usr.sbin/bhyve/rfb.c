@@ -3966,7 +3966,7 @@ comment|/* Encrypt the Challenge with DES */
 name|DES_set_key
 argument_list|(
 operator|(
-name|C_Block
+name|const_DES_cblock
 operator|*
 operator|)
 name|keystr
@@ -3978,13 +3978,13 @@ expr_stmt|;
 name|DES_ecb_encrypt
 argument_list|(
 operator|(
-name|C_Block
+name|const_DES_cblock
 operator|*
 operator|)
 name|challenge
 argument_list|,
 operator|(
-name|C_Block
+name|const_DES_cblock
 operator|*
 operator|)
 name|crypt_expected
@@ -3998,7 +3998,7 @@ expr_stmt|;
 name|DES_ecb_encrypt
 argument_list|(
 operator|(
-name|C_Block
+name|const_DES_cblock
 operator|*
 operator|)
 operator|(
@@ -4008,7 +4008,7 @@ name|PASSWD_LENGTH
 operator|)
 argument_list|,
 operator|(
-name|C_Block
+name|const_DES_cblock
 operator|*
 operator|)
 operator|(

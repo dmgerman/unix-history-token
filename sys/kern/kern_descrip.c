@@ -5903,6 +5903,8 @@ operator|(
 name|error
 operator|)
 return|;
+name|error
+operator|=
 name|freebsd11_cvtstat
 argument_list|(
 operator|&
@@ -5912,6 +5914,12 @@ operator|&
 name|osb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|error
 operator|=
 name|copyout

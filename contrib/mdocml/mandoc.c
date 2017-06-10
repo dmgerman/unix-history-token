@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.c,v 1.98 2015/11/12 22:44:27 schwarze Exp $ */
+comment|/*	$Id: mandoc.c,v 1.100 2017/06/02 19:21:23 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008-2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008-2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011-2015, 2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -489,10 +489,41 @@ return|return
 name|ESCAPE_ERROR
 return|;
 block|}
+switch|switch
+condition|(
+operator|(
+operator|*
+name|start
+operator|)
+index|[
+operator|-
+literal|1
+index|]
+condition|)
+block|{
+case|case
+literal|'h'
+case|:
+name|gly
+operator|=
+name|ESCAPE_HORIZ
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|gly
+operator|=
+name|ESCAPE_HLINE
+expr_stmt|;
+break|break;
+default|default:
 name|gly
 operator|=
 name|ESCAPE_IGNORE
 expr_stmt|;
+break|break;
+block|}
 name|term
 operator|=
 operator|*

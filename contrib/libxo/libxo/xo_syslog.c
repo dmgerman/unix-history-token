@@ -629,12 +629,10 @@ argument_list|(
 name|full_msg
 argument_list|)
 decl_stmt|;
-comment|/* Output to stderr if requested. */
+comment|/* Output to stderr if requested, then we've been passed a v0 header */
 if|if
 condition|(
-name|xo_logstat
-operator|&
-name|LOG_PERROR
+name|v0_hdr
 condition|)
 block|{
 name|struct

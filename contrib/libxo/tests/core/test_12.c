@@ -69,6 +69,11 @@ name|flags
 init|=
 name|XOEF_RETAIN
 decl_stmt|;
+name|int
+name|opt_color
+init|=
+literal|1
+decl_stmt|;
 name|argc
 operator|=
 name|xo_parse_args
@@ -188,6 +193,25 @@ name|NULL
 argument_list|,
 name|XO_STYLE_HTML
 argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|argc
+index|]
+argument_list|,
+literal|"no-color"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|opt_color
+operator|=
+literal|0
 expr_stmt|;
 elseif|else
 if|if
@@ -321,6 +345,18 @@ name|XOF_UNITS
 argument_list|)
 expr_stmt|;
 comment|/* Always test w/ this */
+if|if
+condition|(
+name|opt_color
+condition|)
+name|xo_set_flags
+argument_list|(
+name|NULL
+argument_list|,
+name|XOF_COLOR
+argument_list|)
+expr_stmt|;
+comment|/* Force color output */
 name|xo_set_file
 argument_list|(
 name|stdout
@@ -334,6 +370,21 @@ expr_stmt|;
 name|xo_open_container
 argument_list|(
 literal|"data"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{C:fg-red,bg-green}Merry XMas!!{C:}\n"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"One {C:fg-yellow,bg-blue}{:animal}{C:}, "
+literal|"Two {C:fg-green,bg-yellow}{:animal}{C:}\n"
+argument_list|,
+literal|"fish"
+argument_list|,
+literal|"fish"
 argument_list|)
 expr_stmt|;
 specifier|const

@@ -1251,7 +1251,6 @@ argument_list|)
 expr_stmt|;
 name|selwakeuppri
 argument_list|(
-operator|&
 name|sb
 operator|->
 name|sb_sel
@@ -1264,7 +1263,6 @@ condition|(
 operator|!
 name|SEL_WAITING
 argument_list|(
-operator|&
 name|sb
 operator|->
 name|sb_sel
@@ -1308,7 +1306,7 @@ operator|&
 name|sb
 operator|->
 name|sb_sel
-operator|.
+operator|->
 name|si_note
 argument_list|,
 literal|0
@@ -1321,6 +1319,15 @@ operator|->
 name|sb_upcall
 operator|!=
 name|NULL
+operator|&&
+operator|!
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_ISDISCONNECTED
+operator|)
 condition|)
 block|{
 name|ret

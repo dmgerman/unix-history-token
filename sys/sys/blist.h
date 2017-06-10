@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1998 Matthew Dillon.  All Rights Reserved.  * Redis
 end_comment
 
 begin_comment
-comment|/*  * Implements bitmap resource lists.  *  *	Usage:  *		blist = blist_create(blocks, flags)  *		(void)  blist_destroy(blist)  *		blkno = blist_alloc(blist, count)  *		(void)  blist_free(blist, blkno, count)  *		nblks = blist_fill(blist, blkno, count)  *		(void)  blist_resize(&blist, count, freeextra, flags)  *		  *  *	Notes:  *		on creation, the entire list is marked reserved.  You should  *		first blist_free() the sections you want to make available  *		for allocation before doing general blist_alloc()/free()  *		ops.  *  *		SWAPBLK_NONE is returned on failure.  This module is typically  *		capable of managing up to (2^31) blocks per blist, though  *		the memory utilization would be insane if you actually did  *		that.  Managing something like 512MB worth of 4K blocks   *		eats around 32 KBytes of memory.   *  * $FreeBSD$   */
+comment|/*  * Implements bitmap resource lists.  *  *	Usage:  *		blist = blist_create(blocks, flags)  *		(void)  blist_destroy(blist)  *		blkno = blist_alloc(blist, count)  *		(void)  blist_free(blist, blkno, count)  *		nblks = blist_fill(blist, blkno, count)  *		(void)  blist_resize(&blist, count, freeextra, flags)  *		  *  *	Notes:  *		on creation, the entire list is marked reserved.  You should  *		first blist_free() the sections you want to make available  *		for allocation before doing general blist_alloc()/free()  *		ops.  *  *		SWAPBLK_NONE is returned on failure.  This module is typically  *		capable of managing up to (2^63) blocks per blist, though  *		the memory utilization would be insane if you actually did  *		that.  Managing something like 512MB worth of 4K blocks   *		eats around 32 KBytes of memory.   *  * $FreeBSD$   */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint64_t
 name|u_daddr_t
 typedef|;
 end_typedef
@@ -57,7 +57,7 @@ comment|/* flag */
 end_comment
 
 begin_comment
-comment|/*  * blmeta and bl_bitmap_t MUST be a power of 2 in size.  */
+comment|/*  * Both blmeta and bmu_bitmap MUST be a power of 2 in size.  */
 end_comment
 
 begin_typedef
@@ -145,32 +145,6 @@ value|BLIST_BMAP_RADIX
 end_define
 
 begin_function_decl
-specifier|extern
-name|blist_t
-name|blist_create
-parameter_list|(
-name|daddr_t
-name|blocks
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|blist_destroy
-parameter_list|(
-name|blist_t
-name|blist
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|daddr_t
 name|blist_alloc
 parameter_list|(
@@ -184,7 +158,45 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|blist_t
+name|blist_create
+parameter_list|(
+name|daddr_t
+name|blocks
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|blist_destroy
+parameter_list|(
+name|blist_t
+name|blist
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|daddr_t
+name|blist_fill
+parameter_list|(
+name|blist_t
+name|bl
+parameter_list|,
+name|daddr_t
+name|blkno
+parameter_list|,
+name|daddr_t
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|blist_free
 parameter_list|(
@@ -201,24 +213,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
-name|blist_fill
-parameter_list|(
-name|blist_t
-name|bl
-parameter_list|,
-name|daddr_t
-name|blkno
-parameter_list|,
-name|daddr_t
-name|count
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|blist_print
 parameter_list|(
@@ -229,7 +223,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|blist_resize
 parameter_list|(

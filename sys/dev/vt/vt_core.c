@@ -12751,7 +12751,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Start timer when everything ready. */
+comment|/* 		 * Start timer when everything ready. 		 * Note that the operations here are purposefully ordered. 		 * We need to ensure vd_timer_armed is non-zero before we set 		 * the VDF_ASYNC flag. That prevents this function from 		 * racing with vt_resume_flush_timer() to update the 		 * callout structure. 		 */
+name|atomic_add_acq_int
+argument_list|(
+operator|&
+name|vd
+operator|->
+name|vd_timer_armed
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|vd
 operator|->
 name|vd_flags
@@ -12773,12 +12783,6 @@ name|vt_timer
 argument_list|,
 name|vd
 argument_list|)
-expr_stmt|;
-name|vd
-operator|->
-name|vd_timer_armed
-operator|=
-literal|1
 expr_stmt|;
 name|register_handlers
 operator|=

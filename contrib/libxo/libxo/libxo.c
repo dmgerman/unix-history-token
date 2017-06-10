@@ -765,6 +765,13 @@ begin_comment
 comment|/*  * libxo supports colors and effects, for those who like them.  * XO_COL_* ("colors") refers to fancy ansi codes, while X__EFF_*  * ("effects") are bits since we need to maintain state.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|uint8_t
+name|xo_color_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -889,13 +896,6 @@ begin_typedef
 typedef|typedef
 name|uint8_t
 name|xo_effect_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint8_t
-name|xo_color_t
 typedef|;
 end_typedef
 
@@ -1047,6 +1047,9 @@ name|ssize_t
 name|xo_columns
 decl_stmt|;
 comment|/* Columns emitted during this xo_emit call */
+ifndef|#
+directive|ifndef
+name|LIBXO_TEXT_ONLY
 name|uint8_t
 name|xo_color_map_fg
 index|[
@@ -1061,6 +1064,9 @@ name|XO_NUM_COLORS
 index|]
 decl_stmt|;
 comment|/* Background color mappings */
+endif|#
+directive|endif
+comment|/* LIBXO_TEXT_ONLY */
 name|xo_colors_t
 name|xo_colors
 decl_stmt|;
@@ -1904,6 +1910,36 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|xo_set_options_simple
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|input
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|xo_color_find
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|xo_buf_append_div
 parameter_list|(
@@ -2529,28 +2565,6 @@ argument_list|,
 name|XOF_FLUSH_LINE
 argument_list|)
 expr_stmt|;
-comment|/*      * We only want to do color output on terminals, but we only want      * to do this if the user has asked for color.      */
-if|if
-condition|(
-name|XOF_ISSET
-argument_list|(
-name|xop
-argument_list|,
-name|XOF_COLOR_ALLOWED
-argument_list|)
-operator|&&
-name|isatty
-argument_list|(
-literal|1
-argument_list|)
-condition|)
-name|XOF_SET
-argument_list|(
-name|xop
-argument_list|,
-name|XOF_COLOR
-argument_list|)
-expr_stmt|;
 comment|/*      * We need to initialize the locale, which isn't really pretty.      * Libraries should depend on their caller to set up the      * environment.  But we really can't count on the caller to do      * this, because well, they won't.  Trust me.      */
 if|if
 condition|(
@@ -2668,48 +2682,6 @@ argument_list|,
 name|XO_DEPTH
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_LIBXO_OPTIONS
-argument_list|)
-if|if
-condition|(
-operator|!
-name|XOF_ISSET
-argument_list|(
-name|xop
-argument_list|,
-name|XOF_NO_ENV
-argument_list|)
-condition|)
-block|{
-name|char
-modifier|*
-name|env
-init|=
-name|getenv
-argument_list|(
-literal|"LIBXO_OPTIONS"
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|env
-condition|)
-name|xo_set_options
-argument_list|(
-name|xop
-argument_list|,
-name|env
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* NO_GETENV */
 name|XOIF_CLEAR
 argument_list|(
 name|xop
@@ -2744,6 +2716,48 @@ argument_list|(
 name|xop
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_LIBXO_OPTIONS
+argument_list|)
+if|if
+condition|(
+operator|!
+name|XOF_ISSET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_NO_ENV
+argument_list|)
+condition|)
+block|{
+name|char
+modifier|*
+name|env
+init|=
+name|getenv
+argument_list|(
+literal|"LIBXO_OPTIONS"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|env
+condition|)
+name|xo_set_options_simple
+argument_list|(
+name|xop
+argument_list|,
+name|env
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* NO_LIBXO_OPTIONS */
 name|xo_default_inited
 operator|=
 literal|1
@@ -4350,9 +4364,9 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|uint8_t
-name|xo_utf8_bits
+name|xo_utf8_data_bits
 index|[
-literal|7
+literal|5
 index|]
 init|=
 block|{
@@ -4365,13 +4379,35 @@ block|,
 literal|0x0f
 block|,
 literal|0x07
-block|,
-literal|0x03
-block|,
-literal|0x01
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uint8_t
+name|xo_utf8_len_bits
+index|[
+literal|5
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|0x00
+block|,
+literal|0xc0
+block|,
+literal|0xe0
+block|,
+literal|0xf0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * If the byte has a high-bit set, it's UTF-8, not ASCII.  */
+end_comment
 
 begin_function
 specifier|static
@@ -4392,6 +4428,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Look at the high bits of the first byte to determine the length  * of the UTF-8 character.  */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -4404,12 +4444,11 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
-name|unsigned
-name|b
+name|uint8_t
+name|bval
 init|=
 operator|(
-name|unsigned
-name|char
+name|uint8_t
 operator|)
 operator|*
 name|buf
@@ -4420,7 +4459,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|b
+name|bval
 operator|&
 literal|0x80
 operator|)
@@ -4435,7 +4474,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|b
+name|bval
 operator|&
 literal|0xe0
 operator|)
@@ -4450,7 +4489,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|b
+name|bval
 operator|&
 literal|0xf0
 operator|)
@@ -4465,7 +4504,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|b
+name|bval
 operator|&
 literal|0xf8
 operator|)
@@ -4475,36 +4514,6 @@ condition|)
 name|len
 operator|=
 literal|4
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-name|b
-operator|&
-literal|0xfc
-operator|)
-operator|==
-literal|0xf8
-condition|)
-name|len
-operator|=
-literal|5
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-name|b
-operator|&
-literal|0xfe
-operator|)
-operator|==
-literal|0xfc
-condition|)
-name|len
-operator|=
-literal|6
 expr_stmt|;
 else|else
 name|len
@@ -4561,9 +4570,8 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|xo_failure
@@ -4725,7 +4733,7 @@ operator|=
 operator|*
 name|cp
 operator|&
-name|xo_utf8_bits
+name|xo_utf8_data_bits
 index|[
 name|len
 index|]
@@ -4748,6 +4756,7 @@ name|wc
 operator|<<=
 literal|6
 expr_stmt|;
+comment|/* Low six bits have data */
 name|wc
 operator||=
 name|cp
@@ -4892,39 +4901,22 @@ name|len
 operator|=
 literal|4
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-name|wc
-operator|&
-operator|(
-operator|(
-literal|1
-operator|<<
-literal|26
-operator|)
-operator|-
-literal|1
-operator|)
-operator|)
-operator|==
-name|wc
-condition|)
-name|len
-operator|=
-literal|5
-expr_stmt|;
 else|else
 name|len
 operator|=
-literal|6
+operator|-
+literal|1
 expr_stmt|;
+comment|/* Invalid */
 return|return
 name|len
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Emit one wide character into the given buffer  */
+end_comment
 
 begin_function
 specifier|static
@@ -4964,6 +4956,7 @@ literal|0x7f
 expr_stmt|;
 return|return;
 block|}
+comment|/* Start with the low bits and insert them, six bits at a time */
 for|for
 control|(
 name|i
@@ -4997,32 +4990,37 @@ name|wc
 operator|>>=
 literal|6
 expr_stmt|;
+comment|/* Drop the low six bits */
 block|}
+comment|/* Finish off the first byte with the length bits */
 name|buf
 index|[
 literal|0
 index|]
 operator|&=
-name|xo_utf8_bits
+name|xo_utf8_data_bits
 index|[
 name|len
 index|]
 expr_stmt|;
+comment|/* Clear out the length bits */
 name|buf
 index|[
 literal|0
 index|]
 operator||=
-operator|~
-name|xo_utf8_bits
+name|xo_utf8_len_bits
 index|[
 name|len
 index|]
-operator|<<
-literal|1
 expr_stmt|;
+comment|/* Drop in new length bits */
 block|}
 end_function
+
+begin_comment
+comment|/*  * Append a single UTF-8 character to a buffer, converting it to locale  * encoding.  Returns the number of columns consumed by that character,  * as best we can determine it.  */
+end_comment
 
 begin_function
 specifier|static
@@ -5077,7 +5075,7 @@ name|xo_failure
 argument_list|(
 name|xop
 argument_list|,
-literal|"invalid utf-8 byte sequence"
+literal|"invalid UTF-8 byte sequence"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5212,6 +5210,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Append a UTF-8 string to a buffer, converting it into locale encoding  */
+end_comment
 
 begin_function
 specifier|static
@@ -8120,7 +8122,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Create a handle for use by later libxo functions.  *  * Note: normal use of libxo does not require a distinct handle, since  * the default handle (used when NULL is passed) generates text on stdout.  *  * @style Style of output desired (XO_STYLE_* value)  * @flags Set of XOF_* flags in use with this handle  */
+comment|/**  * Create a handle for use by later libxo functions.  *  * Note: normal use of libxo does not require a distinct handle, since  * the default handle (used when NULL is passed) generates text on stdout.  *  * @param style Style of output desired (XO_STYLE_* value)  * @param flags Set of XOF_* flags in use with this handle  * @return Newly allocated handle  * @see xo_destroy  */
 end_comment
 
 begin_function
@@ -8199,7 +8201,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Create a handle that will write to the given file.  Use  * the XOF_CLOSE_FP flag to have the file closed on xo_destroy().  * @fp FILE pointer to use  * @style Style of output desired (XO_STYLE_* value)  * @flags Set of XOF_* flags to use with this handle  */
+comment|/**  * Create a handle that will write to the given file.  Use  * the XOF_CLOSE_FP flag to have the file closed on xo_destroy().  *  * @param fp FILE pointer to use  * @param style Style of output desired (XO_STYLE_* value)  * @param flags Set of XOF_* flags to use with this handle  * @return Newly allocated handle  * @see xo_destroy  */
 end_comment
 
 begin_function
@@ -8266,7 +8268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Set the default handler to output to a file.  * @xop libxo handle  * @fp FILE pointer to use  */
+comment|/**  * Set the default handler to output to a file.  *  * @param xop libxo handle  * @param fp FILE pointer to use  * @return 0 on success, non-zero on failure  */
 end_comment
 
 begin_function
@@ -8339,7 +8341,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Set the default handler to output to a file.  * @fp FILE pointer to use  */
+comment|/**  * Set the default handler to output to a file.  *  * @param fp FILE pointer to use  * @return 0 on success, non-zero on failure  */
 end_comment
 
 begin_function
@@ -8363,7 +8365,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Release any resources held by the handle.  * @xop XO handle to alter (or NULL for default handle)  */
+comment|/**  * Release any resources held by the handle.  *  * @param xop XO handle to alter (or NULL for default handle)  */
 end_comment
 
 begin_function
@@ -8504,7 +8506,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Record a new output style to use for the given handle (or default if  * handle is NULL).  This output style will be used for any future output.  *  * @xop XO handle to alter (or NULL for default handle)  * @style new output style (XO_STYLE_*)  */
+comment|/**  * Record a new output style to use for the given handle (or default if  * handle is NULL).  This output style will be used for any future output.  *  * @param xop XO handle to alter (or NULL for default handle)  * @param style new output style (XO_STYLE_*)  */
 end_comment
 
 begin_function
@@ -8535,6 +8537,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Return the current style of a handle  *  * @param xop XO handle to access  * @return The handle's current style  */
+end_comment
+
 begin_function
 name|xo_style_t
 name|xo_get_style
@@ -8559,6 +8565,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Return the XO_STYLE_* value matching a given name  *  * @param name String name of a style  * @return XO_STYLE_* value  */
+end_comment
 
 begin_function
 specifier|static
@@ -8732,11 +8742,13 @@ block|{
 name|xo_xff_flags_t
 name|xm_value
 decl_stmt|;
+comment|/* Flag value */
 specifier|const
 name|char
 modifier|*
 name|xm_name
 decl_stmt|;
+comment|/* String name */
 block|}
 name|xo_mapping_t
 typedef|;
@@ -8948,6 +8960,12 @@ literal|"color"
 block|}
 block|,
 block|{
+name|XOF_COLOR
+block|,
+literal|"color-force"
+block|}
+block|,
+block|{
 name|XOF_COLUMNS
 block|,
 literal|"columns"
@@ -9083,6 +9101,86 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Options available via the environment variable ($LIBXO_OPTIONS) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|xo_mapping_t
+name|xo_xof_simple_names
+index|[]
+init|=
+block|{
+block|{
+name|XOF_COLOR_ALLOWED
+block|,
+literal|"color"
+block|}
+block|,
+block|{
+name|XOF_FLUSH
+block|,
+literal|"flush"
+block|}
+block|,
+block|{
+name|XOF_FLUSH_LINE
+block|,
+literal|"flush-line"
+block|}
+block|,
+block|{
+name|XOF_NO_HUMANIZE
+block|,
+literal|"no-humanize"
+block|}
+block|,
+block|{
+name|XOF_NO_LOCALE
+block|,
+literal|"no-locale"
+block|}
+block|,
+block|{
+name|XOF_RETAIN_NONE
+block|,
+literal|"no-retain"
+block|}
+block|,
+block|{
+name|XOF_PRETTY
+block|,
+literal|"pretty"
+block|}
+block|,
+block|{
+name|XOF_RETAIN_ALL
+block|,
+literal|"retain"
+block|}
+block|,
+block|{
+name|XOF_UNDERSCORES
+block|,
+literal|"underscores"
+block|}
+block|,
+block|{
+name|XOF_WARN
+block|,
+literal|"warn"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Convert string name to XOF_* flag value.  * Not all are useful.  Or safe.  Or sane.  */
 end_comment
 
@@ -9113,6 +9211,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Set the style of an libxo handle based on a string name  *  * @param xop XO handle  * @param name String value of name  * @return 0 on success, non-zero on failure  */
+end_comment
 
 begin_function
 name|int
@@ -9170,7 +9272,474 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the options for a handle using a string of options  * passed in.  The input is a comma-separated set of names  * and optional values: "xml,pretty,indent=4"  */
+comment|/*  * Fill in the color map, based on the input string; currently unimplemented  * Look for something like "colors=red/blue+green/yellow" as fg/bg pairs.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|xo_set_color_map
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+name|char
+modifier|*
+name|value
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|LIBXO_TEXT_ONLY
+return|return;
+endif|#
+directive|endif
+comment|/* LIBXO_TEXT_ONLY */
+name|char
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+name|ep
+decl_stmt|,
+modifier|*
+name|vp
+decl_stmt|,
+modifier|*
+name|np
+decl_stmt|;
+name|ssize_t
+name|len
+init|=
+name|value
+condition|?
+name|strlen
+argument_list|(
+name|value
+argument_list|)
+operator|+
+literal|1
+else|:
+literal|0
+decl_stmt|;
+name|int
+name|num
+init|=
+literal|1
+decl_stmt|,
+name|fg
+decl_stmt|,
+name|bg
+decl_stmt|;
+for|for
+control|(
+name|cp
+operator|=
+name|value
+operator|,
+name|ep
+operator|=
+name|cp
+operator|+
+name|len
+operator|-
+literal|1
+init|;
+name|cp
+operator|&&
+operator|*
+name|cp
+operator|&&
+name|cp
+operator|<
+name|ep
+condition|;
+name|cp
+operator|=
+name|np
+control|)
+block|{
+name|np
+operator|=
+name|strchr
+argument_list|(
+name|cp
+argument_list|,
+literal|'+'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+condition|)
+operator|*
+name|np
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|vp
+operator|=
+name|strchr
+argument_list|(
+name|cp
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+condition|)
+operator|*
+name|vp
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|fg
+operator|=
+operator|*
+name|cp
+condition|?
+name|xo_color_find
+argument_list|(
+name|cp
+argument_list|)
+else|:
+operator|-
+literal|1
+expr_stmt|;
+name|bg
+operator|=
+operator|(
+name|vp
+operator|&&
+operator|*
+name|vp
+operator|)
+condition|?
+name|xo_color_find
+argument_list|(
+name|vp
+argument_list|)
+else|:
+operator|-
+literal|1
+expr_stmt|;
+name|xop
+operator|->
+name|xo_color_map_fg
+index|[
+name|num
+index|]
+operator|=
+operator|(
+name|fg
+operator|<
+literal|0
+operator|)
+condition|?
+name|num
+else|:
+name|fg
+expr_stmt|;
+name|xop
+operator|->
+name|xo_color_map_bg
+index|[
+name|num
+index|]
+operator|=
+operator|(
+name|bg
+operator|<
+literal|0
+operator|)
+condition|?
+name|num
+else|:
+name|bg
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|num
+operator|>
+name|XO_NUM_COLORS
+condition|)
+break|break;
+block|}
+comment|/* If no color initialization happened, then we don't need the map */
+if|if
+condition|(
+name|num
+operator|>
+literal|0
+condition|)
+name|XOF_SET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_MAP
+argument_list|)
+expr_stmt|;
+else|else
+name|XOF_CLEAR
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_MAP
+argument_list|)
+expr_stmt|;
+comment|/* Fill in the rest of the colors with the defaults */
+for|for
+control|(
+init|;
+name|num
+operator|<
+name|XO_NUM_COLORS
+condition|;
+name|num
+operator|++
+control|)
+name|xop
+operator|->
+name|xo_color_map_fg
+index|[
+name|num
+index|]
+operator|=
+name|xop
+operator|->
+name|xo_color_map_bg
+index|[
+name|num
+index|]
+operator|=
+name|num
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|xo_set_options_simple
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|input
+parameter_list|)
+block|{
+name|xo_xof_flags_t
+name|new_flag
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+name|ep
+decl_stmt|,
+modifier|*
+name|vp
+decl_stmt|,
+modifier|*
+name|np
+decl_stmt|,
+modifier|*
+name|bp
+decl_stmt|;
+name|ssize_t
+name|len
+init|=
+name|strlen
+argument_list|(
+name|input
+argument_list|)
+operator|+
+literal|1
+decl_stmt|;
+name|bp
+operator|=
+name|alloca
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|bp
+argument_list|,
+name|input
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|cp
+operator|=
+name|bp
+operator|,
+name|ep
+operator|=
+name|cp
+operator|+
+name|len
+operator|-
+literal|1
+init|;
+name|cp
+operator|&&
+name|cp
+operator|<
+name|ep
+condition|;
+name|cp
+operator|=
+name|np
+control|)
+block|{
+name|np
+operator|=
+name|strchr
+argument_list|(
+name|cp
+argument_list|,
+literal|','
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+condition|)
+operator|*
+name|np
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|vp
+operator|=
+name|strchr
+argument_list|(
+name|cp
+argument_list|,
+literal|'='
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+condition|)
+operator|*
+name|vp
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+literal|"colors"
+argument_list|,
+name|cp
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|xo_set_color_map
+argument_list|(
+name|xop
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|new_flag
+operator|=
+name|xo_name_lookup
+argument_list|(
+name|xo_xof_simple_names
+argument_list|,
+name|cp
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|new_flag
+operator|!=
+literal|0
+condition|)
+block|{
+name|XOF_SET
+argument_list|(
+name|xop
+argument_list|,
+name|new_flag
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"no-color"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|XOF_CLEAR
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_ALLOWED
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|xo_failure
+argument_list|(
+name|xop
+argument_list|,
+literal|"unknown simple option: %s"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Set the options for a handle using a string of options  * passed in.  The input is a comma-separated set of names  * and optional values: "xml,pretty,indent=4"  *  * @param xop XO handle  * @param input Comma-separated set of option values  * @return 0 on success, non-zero on failure  */
 end_comment
 
 begin_function
@@ -9600,7 +10169,13 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* XXX Look for colors=red-blue+green-yellow */
+name|xo_set_color_map
+argument_list|(
+name|xop
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* 	 * For options, we don't allow "encoder" since we want to 	 * handle it explicitly below as "encoder=xxx". 	 */
@@ -9663,8 +10238,7 @@ argument_list|,
 name|new_flag
 argument_list|)
 expr_stmt|;
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|strcmp
@@ -9676,7 +10250,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|XOF_CLEAR
 argument_list|(
 name|xop
@@ -9684,7 +10257,6 @@ argument_list|,
 name|XOF_COLOR_ALLOWED
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -9792,7 +10364,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-block|}
 if|if
 condition|(
 name|style
@@ -9812,7 +10383,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Set one or more flags for a given handle (or default if handle is NULL).  * These flags will affect future output.  *  * @xop XO handle to alter (or NULL for default handle)  * @flags Flags to be set (XOF_*)  */
+comment|/**  * Set one or more flags for a given handle (or default if handle is NULL).  * These flags will affect future output.  *  * @param xop XO handle to alter (or NULL for default handle)  * @param flags Flags to be set (XOF_*)  */
 end_comment
 
 begin_function
@@ -9844,6 +10415,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Accessor to return the current set of flags for a handle  * @param xop XO handle  * @return Current set of flags  */
+end_comment
+
 begin_function
 name|xo_xof_flags_t
 name|xo_get_flags
@@ -9869,7 +10444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * strndup with a twist: len< 0 means strlen  */
+comment|/**  * strndup with a twist: len< 0 means len = strlen(str)  */
 end_comment
 
 begin_function
@@ -9942,7 +10517,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Record a leading prefix for the XPath we generate.  This allows the  * generated data to be placed within an XML hierarchy but still have  * accurate XPath expressions.  *  * @xop XO handle to alter (or NULL for default handle)  * @path The XPath expression  */
+comment|/**  * Record a leading prefix for the XPath we generate.  This allows the  * generated data to be placed within an XML hierarchy but still have  * accurate XPath expressions.  *  * @param xop XO handle to alter (or NULL for default handle)  * @param path The XPath expression  */
 end_comment
 
 begin_function
@@ -10010,7 +10585,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Record the info data for a set of tags  *  * @xop XO handle to alter (or NULL for default handle)  * @info Info data (xo_info_t) to be recorded (or NULL) (MUST BE SORTED)  * @count Number of entries in info (or -1 to count them ourselves)  */
+comment|/**  * Record the info data for a set of tags  *  * @param xop XO handle to alter (or NULL for default handle)  * @param info Info data (xo_info_t) to be recorded (or NULL) (MUST BE SORTED)  * @pararm count Number of entries in info (or -1 to count them ourselves)  */
 end_comment
 
 begin_function
@@ -10128,7 +10703,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Clear one or more flags for a given handle (or default if handle is NULL).  * These flags will affect future output.  *  * @xop XO handle to alter (or NULL for default handle)  * @flags Flags to be cleared (XOF_*)  */
+comment|/**  * Clear one or more flags for a given handle (or default if handle is NULL).  * These flags will affect future output.  *  * @param xop XO handle to alter (or NULL for default handle)  * @param flags Flags to be cleared (XOF_*)  */
 end_comment
 
 begin_function
@@ -13209,6 +13784,10 @@ name|cols
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Bump one of the 'width' values in a format strings (e.g. "%40.50.60s").  * @param xfp Formatting instructions  * @param digit Single digit (0-9) of input  */
+end_comment
 
 begin_function
 specifier|static
@@ -19612,6 +20191,8 @@ name|xo_data
 argument_list|,
 name|value_offset
 argument_list|)
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|xo_buf_reset
@@ -20732,6 +21313,106 @@ comment|/* LIBXO_TEXT_ONLY */
 block|}
 end_function
 
+begin_comment
+comment|/*  * If the color map is in use (--libxo colors=xxxx), then update  * the incoming foreground and background colors from the map.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|xo_colors_update
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+name|xo_colors_t
+modifier|*
+name|newp
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|LIBXO_TEXT_ONLY
+return|return;
+endif|#
+directive|endif
+comment|/* LIBXO_TEXT_ONLY */
+name|xo_color_t
+name|fg
+init|=
+name|newp
+operator|->
+name|xoc_col_fg
+decl_stmt|;
+if|if
+condition|(
+name|XOF_ISSET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_MAP
+argument_list|)
+operator|&&
+name|fg
+operator|<
+name|XO_NUM_COLORS
+condition|)
+name|fg
+operator|=
+name|xop
+operator|->
+name|xo_color_map_fg
+index|[
+name|fg
+index|]
+expr_stmt|;
+comment|/* Fetch from color map */
+name|newp
+operator|->
+name|xoc_col_fg
+operator|=
+name|fg
+expr_stmt|;
+name|xo_color_t
+name|bg
+init|=
+name|newp
+operator|->
+name|xoc_col_bg
+decl_stmt|;
+if|if
+condition|(
+name|XOF_ISSET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_MAP
+argument_list|)
+operator|&&
+name|bg
+operator|<
+name|XO_NUM_COLORS
+condition|)
+name|bg
+operator|=
+name|xop
+operator|->
+name|xo_color_map_bg
+index|[
+name|bg
+index|]
+expr_stmt|;
+comment|/* Fetch from color map */
+name|newp
+operator|->
+name|xoc_col_bg
+operator|=
+name|bg
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -20926,11 +21607,16 @@ name|XO_COL_DEFAULT
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
+name|xo_color_t
+name|fg
+init|=
 name|newp
 operator|->
 name|xoc_col_fg
+decl_stmt|;
+if|if
+condition|(
+name|fg
 operator|!=
 name|oldp
 operator|->
@@ -20950,16 +21636,12 @@ argument_list|,
 literal|";3%u"
 argument_list|,
 operator|(
-name|newp
-operator|->
-name|xoc_col_fg
+name|fg
 operator|!=
 name|XO_COL_DEFAULT
 operator|)
 condition|?
-name|newp
-operator|->
-name|xoc_col_fg
+name|fg
 operator|-
 literal|1
 else|:
@@ -20967,11 +21649,16 @@ literal|9
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|xo_color_t
+name|bg
+init|=
 name|newp
 operator|->
 name|xoc_col_bg
+decl_stmt|;
+if|if
+condition|(
+name|bg
 operator|!=
 name|oldp
 operator|->
@@ -20991,16 +21678,12 @@ argument_list|,
 literal|";4%u"
 argument_list|,
 operator|(
-name|newp
-operator|->
-name|xoc_col_bg
+name|bg
 operator|!=
 name|XO_COL_DEFAULT
 operator|)
 condition|?
-name|newp
-operator|->
-name|xoc_col_bg
+name|bg
 operator|-
 literal|1
 else|:
@@ -21475,6 +22158,14 @@ argument_list|,
 name|xb
 operator|.
 name|xb_bufp
+argument_list|)
+expr_stmt|;
+name|xo_colors_update
+argument_list|(
+name|xop
+argument_list|,
+operator|&
+name|xoc
 argument_list|)
 expr_stmt|;
 if|if
@@ -25969,12 +26660,6 @@ condition|)
 goto|goto
 name|bail2
 goto|;
-name|xo_buf_cleanup
-argument_list|(
-operator|&
-name|xb
-argument_list|)
-expr_stmt|;
 name|char
 modifier|*
 name|new_fmt
@@ -25996,6 +26681,12 @@ condition|)
 goto|goto
 name|bail2
 goto|;
+name|xo_buf_cleanup
+argument_list|(
+operator|&
+name|xb
+argument_list|)
+expr_stmt|;
 operator|*
 name|new_fmtp
 operator|=
@@ -26591,13 +27282,13 @@ name|field
 operator|=
 literal|0
 init|;
-name|xfip
-operator|->
-name|xfi_ftype
-operator|&&
 name|field
 operator|<
 name|max_fields
+operator|&&
+name|xfip
+operator|->
+name|xfi_ftype
 condition|;
 name|xfip
 operator|++
@@ -28925,6 +29616,8 @@ name|xbp
 argument_list|,
 name|value_offset
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -29305,6 +29998,12 @@ decl_stmt|;
 if|if
 condition|(
 name|top
+operator|!=
+name|NULL
+operator|&&
+name|name
+operator|!=
+name|NULL
 operator|&&
 name|strcmp
 argument_list|(
@@ -29888,6 +30587,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -30378,6 +31079,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -30676,6 +31379,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -31089,6 +31794,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -31440,6 +32147,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -31704,6 +32413,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -32017,6 +32728,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -32491,6 +33204,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -34461,6 +35176,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -34636,6 +35353,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -35109,6 +35828,15 @@ name|cp
 operator|+
 literal|1
 expr_stmt|;
+name|xo_handle_t
+modifier|*
+name|xop
+init|=
+name|xo_default
+argument_list|(
+name|NULL
+argument_list|)
+decl_stmt|;
 for|for
 control|(
 name|save
@@ -35227,7 +35955,7 @@ if|if
 condition|(
 name|xo_set_options
 argument_list|(
-name|NULL
+name|xop
 argument_list|,
 name|cp
 argument_list|)
@@ -35252,7 +35980,7 @@ if|if
 condition|(
 name|xo_set_options
 argument_list|(
-name|NULL
+name|xop
 argument_list|,
 name|cp
 argument_list|)
@@ -35277,7 +36005,7 @@ if|if
 condition|(
 name|xo_set_options
 argument_list|(
-name|NULL
+name|xop
 argument_list|,
 operator|++
 name|cp
@@ -35357,6 +36085,28 @@ literal|1
 return|;
 block|}
 block|}
+comment|/*      * We only want to do color output on terminals, but we only want      * to do this if the user has asked for color.      */
+if|if
+condition|(
+name|XOF_ISSET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_ALLOWED
+argument_list|)
+operator|&&
+name|isatty
+argument_list|(
+literal|1
+argument_list|)
+condition|)
+name|XOF_SET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR
+argument_list|)
+expr_stmt|;
 name|argv
 index|[
 name|save
@@ -35583,6 +36333,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|version
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: html.h,v 1.83 2017/02/05 20:22:04 schwarze Exp $ */
+comment|/*	$Id: html.h,v 1.85 2017/05/04 22:16:09 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -291,6 +291,12 @@ end_struct
 
 begin_struct_decl
 struct_decl|struct
+name|roff_node
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|tbl_span
 struct_decl|;
 end_struct_decl
@@ -300,6 +306,22 @@ struct_decl|struct
 name|eqn
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|void
+name|roff_html_pre
+parameter_list|(
+name|struct
+name|html
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|roff_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -452,6 +474,19 @@ name|print_endline
 parameter_list|(
 name|struct
 name|html
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|html_make_id
+parameter_list|(
+specifier|const
+name|struct
+name|roff_node
 modifier|*
 parameter_list|)
 function_decl|;

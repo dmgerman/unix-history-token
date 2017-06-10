@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -95,6 +101,10 @@ decl_stmt|;
 name|int
 name|lso
 decl_stmt|,
+name|so
+decl_stmt|,
+name|i
+decl_stmt|,
 name|ret
 decl_stmt|;
 comment|/* XXX: PLAIN_TEST_REQUIRE_MODULE "backport" for stable/9 */
@@ -137,7 +147,7 @@ block|}
 comment|/* XXX: PLAIN_TEST_REQUIRE_MODULE for stable/9 */
 name|printf
 argument_list|(
-literal|"1..11\n"
+literal|"1..12\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 0. Open socket(). 	 */
@@ -256,6 +266,23 @@ literal|"ok 2 - getsockopt\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 2. Bind().  Ideally this will succeed. 	 */
+name|setsockopt
+argument_list|(
+name|lso
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_REUSEADDR
+argument_list|,
+operator|&
+name|lso
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lso
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -828,7 +855,298 @@ argument_list|(
 literal|"ok 10 - getsockopt\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Step 10: Remove accept filter.  After removing the accept filter 	 * getsockopt() should fail with EINVAL. 	 */
+comment|/* 	 * Step 10: Set listening socket to non blocking mode.  Open 	 * connection to our listening socket and try to accept.  Should 	 * no succeed.  Write a byte of data and try again.  Should accept. 	 */
+name|i
+operator|=
+name|fcntl
+argument_list|(
+name|lso
+argument_list|,
+name|F_GETFL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 11 - ioctl(F_GETFL): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|i
+operator||=
+name|O_NONBLOCK
+expr_stmt|;
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|lso
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|i
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 11 - ioctl(F_SETFL): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|so
+operator|=
+name|socket
+argument_list|(
+name|PF_INET
+argument_list|,
+name|SOCK_STREAM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|so
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 11 - socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|connect
+argument_list|(
+name|so
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|sin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 11 - connect %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|accept
+argument_list|(
+name|lso
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|!=
+name|EWOULDBLOCK
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 11 - accept #1 %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|write
+argument_list|(
+name|so
+argument_list|,
+literal|"0"
+argument_list|,
+literal|1
+argument_list|)
+operator|!=
+literal|1
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 11 - write %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * XXXGL: ugly, but we need to make sure that our write reaches 	 * remote side of the socket. 	 */
+name|usleep
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|accept
+argument_list|(
+name|lso
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|1
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 11 - accept #2 %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 11 - accept\n"
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|1
+comment|/* 	 * XXXGL: this doesn't belong to the test itself, but is known 	 * to examine rarely examined paths in the kernel.  Intentionally 	 * leave a socket on the incomplete queue, before the program 	 * exits. 	 */
+name|so
+operator|=
+name|socket
+argument_list|(
+name|PF_INET
+argument_list|,
+name|SOCK_STREAM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|so
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 12 - socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|connect
+argument_list|(
+name|so
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|sin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 12 - connect %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * Step 11: Remove accept filter.  After removing the accept filter 	 * getsockopt() should fail with EINVAL. 	 */
 name|ret
 operator|=
 name|setsockopt
@@ -855,7 +1173,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 11 - setsockopt() after listen() "
+literal|"not ok 12 - setsockopt() after listen() "
 literal|"failed with %d (%s)"
 argument_list|,
 name|errno
@@ -912,7 +1230,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 11 - getsockopt() after removing "
+literal|"not ok 12 - getsockopt() after removing "
 literal|"the accept filter returns valid accept filter %s"
 argument_list|,
 name|afa
@@ -931,7 +1249,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 11 - getsockopt() after removing the accept"
+literal|"not ok 12 - getsockopt() after removing the accept"
 literal|"filter failed with %d (%s)"
 argument_list|,
 name|errno
@@ -944,7 +1262,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ok 11 - setsockopt\n"
+literal|"ok 12 - setsockopt\n"
 argument_list|)
 expr_stmt|;
 name|close

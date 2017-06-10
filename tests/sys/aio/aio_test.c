@@ -1401,6 +1401,8 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
+argument_list|,
+literal|0600
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_MSG
@@ -3593,6 +3595,8 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
+argument_list|,
+literal|0600
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_MSG
@@ -5000,6 +5004,8 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
+argument_list|,
+literal|0600
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_MSG

@@ -2056,7 +2056,7 @@ name|qlen
 operator|=
 name|so
 operator|->
-name|so_qlen
+name|sol_qlen
 expr_stmt|;
 name|xinpcb
 operator|.
@@ -2064,7 +2064,7 @@ name|qlen_old
 operator|=
 name|so
 operator|->
-name|so_qlen
+name|sol_qlen
 operator|>
 name|USHRT_MAX
 condition|?
@@ -2075,7 +2075,7 @@ name|uint16_t
 operator|)
 name|so
 operator|->
-name|so_qlen
+name|sol_qlen
 expr_stmt|;
 name|xinpcb
 operator|.
@@ -2083,7 +2083,7 @@ name|maxqlen
 operator|=
 name|so
 operator|->
-name|so_qlimit
+name|sol_qlimit
 expr_stmt|;
 name|xinpcb
 operator|.
@@ -2091,7 +2091,7 @@ name|maxqlen_old
 operator|=
 name|so
 operator|->
-name|so_qlimit
+name|sol_qlimit
 operator|>
 name|USHRT_MAX
 condition|?
@@ -2102,7 +2102,7 @@ name|uint16_t
 operator|)
 name|so
 operator|->
-name|so_qlimit
+name|sol_qlimit
 expr_stmt|;
 block|}
 name|SCTP_INP_INCR_REF

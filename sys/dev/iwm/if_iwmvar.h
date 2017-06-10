@@ -382,6 +382,9 @@ decl_stmt|;
 name|uint8_t
 name|max_tx_pwr_half_dbm
 decl_stmt|;
+name|boolean_t
+name|lar_enabled
+decl_stmt|;
 name|uint16_t
 name|nvm_ch_flags
 index|[]
@@ -1342,6 +1345,11 @@ name|num_of_pages_in_last_blk
 decl_stmt|;
 name|boolean_t
 name|last_ebs_successful
+decl_stmt|;
+comment|/* last smart fifo state that was successfully sent to firmware */
+name|enum
+name|iwm_sf_state
+name|sf_state
 decl_stmt|;
 comment|/* Indicate if device power save is allowed */
 name|boolean_t

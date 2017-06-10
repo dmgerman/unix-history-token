@@ -1545,6 +1545,8 @@ argument_list|(
 name|efp
 argument_list|)
 expr_stmt|;
+name|INTON
+expr_stmt|;
 name|editcmd
 operator|=
 name|stalloc
@@ -1581,8 +1583,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX - should use no JC command */
-name|INTON
-expr_stmt|;
 name|readcmdfile
 argument_list|(
 name|editfile

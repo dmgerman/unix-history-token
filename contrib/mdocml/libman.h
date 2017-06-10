@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libman.h,v 1.79 2015/11/07 14:01:16 schwarze Exp $ */
+comment|/*	$Id: libman.h,v 1.81 2017/04/29 12:45:41 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|MACRO_PROT_ARGS
-value|struct roff_man *man, \ 			  int tok, \ 			  int line, \ 			  int ppos, \ 			  int *pos, \ 			  char *buf
+value|struct roff_man *man, \ 			  enum roff_tok tok, \ 			  int line, \ 			  int ppos, \ 			  int *pos, \ 			  char *buf
 end_define
 
 begin_struct
@@ -64,17 +64,6 @@ specifier|const
 name|man_macros
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|int
-name|man_hash_find
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

@@ -969,10 +969,15 @@ name|u_int
 name|type
 parameter_list|)
 block|{
+name|uint16_t
+name|nofault
+decl_stmt|;
 comment|/* 	 * A trap can occur while DTrace executes a probe. Before 	 * executing the probe, DTrace blocks re-scheduling and sets 	 * a flag in its per-cpu flags to indicate that it doesn't 	 * want to fault. On returning from the probe, the no-fault 	 * flag is cleared and finally re-scheduling is enabled. 	 * 	 * Check if DTrace has enabled 'no-fault' mode: 	 */
-if|if
-condition|(
-operator|(
+name|sched_pin
+argument_list|()
+expr_stmt|;
+name|nofault
+operator|=
 name|cpu_core
 index|[
 name|curcpu
@@ -981,11 +986,32 @@ operator|.
 name|cpuc_dtrace_flags
 operator|&
 name|CPU_DTRACE_NOFAULT
-operator|)
-operator|!=
-literal|0
+expr_stmt|;
+name|sched_unpin
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|nofault
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|frame
+operator|->
+name|srr1
+operator|&
+name|PSL_EE
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"interrupts enabled"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 		 * There are only a couple of trap types that are expected. 		 * All the rest will be handled in the usual way. 		 */
 switch|switch
 condition|(

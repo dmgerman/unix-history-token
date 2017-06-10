@@ -973,8 +973,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|PR_ALLOW_RESERVED_PORTS
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PR_ALLOW_ALL
-value|0x7fff
+value|0xffff
 end_define
 
 begin_comment

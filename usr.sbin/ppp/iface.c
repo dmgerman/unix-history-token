@@ -712,6 +712,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;

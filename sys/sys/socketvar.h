@@ -106,9 +106,26 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_quad_t
+name|uint64_t
 name|so_gen_t
 typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|so_upcall_t
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_struct_decl
@@ -118,17 +135,42 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*-  * Locking key to struct socket:  * (a) constant after allocation, no locking required.  * (b) locked by SOCK_LOCK(so).  * (c) locked by SOCKBUF_LOCK(&so->so_rcv).  * (e) locked by ACCEPT_LOCK().  * (f) not locked since integer reads/writes are atomic.  * (g) used only as a sleep/wakeup address, no value.  * (h) locked by global mutex so_global_mtx.  */
+comment|/*-  * Locking key to struct socket:  * (a) constant after allocation, no locking required.  * (b) locked by SOCK_LOCK(so).  * (cr) locked by SOCKBUF_LOCK(&so->so_rcv).  * (cs) locked by SOCKBUF_LOCK(&so->so_rcv).  * (e) locked by SOLISTEN_LOCK() of corresponding listening socket.  * (f) not locked since integer reads/writes are atomic.  * (g) used only as a sleep/wakeup address, no value.  * (h) locked by global mutex so_global_mtx.  */
 end_comment
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|accept_queue
+argument_list|,
+name|socket
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
 name|socket
 block|{
-name|int
+name|struct
+name|mtx
+name|so_lock
+decl_stmt|;
+specifier|volatile
+name|u_int
 name|so_count
 decl_stmt|;
-comment|/* (b) reference count */
+comment|/* (b / refcount) */
+name|struct
+name|selinfo
+name|so_rdsel
+decl_stmt|;
+comment|/* (b/cr) for so_rcv/so_comp */
+name|struct
+name|selinfo
+name|so_wrsel
+decl_stmt|;
+comment|/* (b/cs) for so_snd */
 name|short
 name|so_type
 decl_stmt|;
@@ -136,19 +178,15 @@ comment|/* (a) generic type, see socket.h */
 name|short
 name|so_options
 decl_stmt|;
-comment|/* from socket call, see socket.h */
+comment|/* (b) from socket call, see socket.h */
 name|short
 name|so_linger
 decl_stmt|;
-comment|/* time to linger while closing */
+comment|/* time to linger close(2) */
 name|short
 name|so_state
 decl_stmt|;
 comment|/* (b) internal state flags SS_* */
-name|int
-name|so_qstate
-decl_stmt|;
-comment|/* (e) internal state flags SQ_* */
 name|void
 modifier|*
 name|so_pcb
@@ -166,48 +204,6 @@ modifier|*
 name|so_proto
 decl_stmt|;
 comment|/* (a) protocol handle */
-comment|/*  * Variables for connection queuing.  * Socket where accepts occur is so_head in all subsidiary sockets.  * If so_head is 0, socket is not related to an accept.  * For head socket so_incomp queues partially completed connections,  * while so_comp is a queue of connections ready to be accepted.  * If a connection is aborted and it has so_head set, then  * it has to be pulled out of either so_incomp or so_comp.  * We allow connections to queue up based on current queue lengths  * and limit on number of queued connections for this socket.  */
-name|struct
-name|socket
-modifier|*
-name|so_head
-decl_stmt|;
-comment|/* (e) back pointer to listen socket */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|socket
-argument_list|)
-name|so_incomp
-expr_stmt|;
-comment|/* (e) queue of partial unaccepted connections */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|socket
-argument_list|)
-name|so_comp
-expr_stmt|;
-comment|/* (e) queue of complete unaccepted connections */
-name|TAILQ_ENTRY
-argument_list|(
-argument|socket
-argument_list|)
-name|so_list
-expr_stmt|;
-comment|/* (e) list of unaccepted connections */
-name|u_int
-name|so_qlen
-decl_stmt|;
-comment|/* (e) number of unaccepted connections */
-name|u_int
-name|so_incqlen
-decl_stmt|;
-comment|/* (e) number of unaccepted incomplete 					   connections */
-name|u_int
-name|so_qlimit
-decl_stmt|;
-comment|/* (e) max number queued connections */
 name|short
 name|so_timeo
 decl_stmt|;
@@ -222,16 +218,6 @@ modifier|*
 name|so_sigio
 decl_stmt|;
 comment|/* [sg] information for async I/O or 					   out of band data (SIGURG) */
-name|u_long
-name|so_oobmark
-decl_stmt|;
-comment|/* (c) chars to oob mark */
-name|struct
-name|sockbuf
-name|so_rcv
-decl_stmt|,
-name|so_snd
-decl_stmt|;
 name|struct
 name|ucred
 modifier|*
@@ -244,12 +230,6 @@ modifier|*
 name|so_label
 decl_stmt|;
 comment|/* (b) MAC label for socket */
-name|struct
-name|label
-modifier|*
-name|so_peerlabel
-decl_stmt|;
-comment|/* (b) cached MAC label for peer */
 comment|/* NB: generation count must not be first. */
 name|so_gen_t
 name|so_gencnt
@@ -260,28 +240,6 @@ modifier|*
 name|so_emuldata
 decl_stmt|;
 comment|/* (b) private data for emulators */
-struct|struct
-name|so_accf
-block|{
-name|struct
-name|accept_filter
-modifier|*
-name|so_accept_filter
-decl_stmt|;
-name|void
-modifier|*
-name|so_accept_filter_arg
-decl_stmt|;
-comment|/* saved filter args */
-name|char
-modifier|*
-name|so_accept_filter_str
-decl_stmt|;
-comment|/* saved user args */
-block|}
-modifier|*
-name|so_accf
-struct|;
 name|struct
 name|osd
 name|osd
@@ -303,81 +261,156 @@ name|uint32_t
 name|so_max_pacing_rate
 decl_stmt|;
 comment|/* (f) TX rate limit in bytes/s */
+union|union
+block|{
+comment|/* Regular (data flow) socket. */
+struct|struct
+block|{
+comment|/* (cr, cs) Receive and send buffers. */
+name|struct
+name|sockbuf
+name|so_rcv
+decl_stmt|,
+name|so_snd
+decl_stmt|;
+comment|/* (e) Our place on accept queue. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|socket
+argument_list|)
+name|so_list
+expr_stmt|;
+name|struct
+name|socket
+modifier|*
+name|so_listen
+decl_stmt|;
+comment|/* (b) */
+enum|enum
+block|{
+name|SQ_NONE
+init|=
+literal|0
+block|,
+name|SQ_INCOMP
+init|=
+literal|0x0800
+block|,
+comment|/* on sol_incomp */
+name|SQ_COMP
+init|=
+literal|0x1000
+block|,
+comment|/* on sol_comp */
+block|}
+name|so_qstate
+enum|;
+comment|/* (b) */
+comment|/* (b) cached MAC label for peer */
+name|struct
+name|label
+modifier|*
+name|so_peerlabel
+decl_stmt|;
+name|u_long
+name|so_oobmark
+decl_stmt|;
+comment|/* chars to oob mark */
+block|}
+struct|;
+comment|/* 		 * Listening socket, where accepts occur, is so_listen in all 		 * subsidiary sockets.  If so_listen is NULL, socket is not 		 * related to an accept.  For a listening socket itself 		 * sol_incomp queues partially completed connections, while 		 * sol_comp is a queue of connections ready to be accepted. 		 * If a connection is aborted and it has so_listen set, then 		 * it has to be pulled out of either sol_incomp or sol_comp. 		 * We allow connections to queue up based on current queue 		 * lengths and limit on number of queued connections for this 		 * socket. 		 */
+struct|struct
+block|{
+comment|/* (e) queue of partial unaccepted connections */
+name|struct
+name|accept_queue
+name|sol_incomp
+decl_stmt|;
+comment|/* (e) queue of complete unaccepted connections */
+name|struct
+name|accept_queue
+name|sol_comp
+decl_stmt|;
+name|u_int
+name|sol_qlen
+decl_stmt|;
+comment|/* (e) sol_comp length */
+name|u_int
+name|sol_incqlen
+decl_stmt|;
+comment|/* (e) sol_incomp length */
+name|u_int
+name|sol_qlimit
+decl_stmt|;
+comment|/* (e) queue limit */
+comment|/* accept_filter(9) optional data */
+name|struct
+name|accept_filter
+modifier|*
+name|sol_accept_filter
+decl_stmt|;
 name|void
 modifier|*
-name|so_pspare
-index|[
-literal|2
-index|]
+name|sol_accept_filter_arg
 decl_stmt|;
-comment|/* general use */
+comment|/* saved filter args */
+name|char
+modifier|*
+name|sol_accept_filter_str
+decl_stmt|;
+comment|/* saved user args */
+comment|/* Optional upcall, for kernel socket. */
+name|so_upcall_t
+modifier|*
+name|sol_upcall
+decl_stmt|;
+comment|/* (e) */
+name|void
+modifier|*
+name|sol_upcallarg
+decl_stmt|;
+comment|/* (e) */
+comment|/* Socket buffer parameters, to be copied to 			 * dataflow sockets, accepted from this one. */
 name|int
-name|so_ispare
-index|[
-literal|2
-index|]
+name|sol_sbrcv_lowat
 decl_stmt|;
-comment|/* general use */
+name|int
+name|sol_sbsnd_lowat
+decl_stmt|;
+name|u_int
+name|sol_sbrcv_hiwat
+decl_stmt|;
+name|u_int
+name|sol_sbsnd_hiwat
+decl_stmt|;
+name|short
+name|sol_sbrcv_flags
+decl_stmt|;
+name|short
+name|sol_sbsnd_flags
+decl_stmt|;
+name|sbintime_t
+name|sol_sbrcv_timeo
+decl_stmt|;
+name|sbintime_t
+name|sol_sbsnd_timeo
+decl_stmt|;
+block|}
+struct|;
+block|}
+union|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Global accept mutex to serialize access to accept queues and  * fields associated with multiple sockets.  This allows us to  * avoid defining a lock order between listen and accept sockets  * until such time as it proves to be a good idea.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|accept_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|ACCEPT_LOCK_ASSERT
-parameter_list|()
-value|mtx_assert(&accept_mtx, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACCEPT_UNLOCK_ASSERT
-parameter_list|()
-value|mtx_assert(&accept_mtx, MA_NOTOWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACCEPT_LOCK
-parameter_list|()
-value|mtx_lock(&accept_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACCEPT_UNLOCK
-parameter_list|()
-value|mtx_unlock(&accept_mtx)
-end_define
-
-begin_comment
-comment|/*  * Per-socket mutex: we reuse the receive socket buffer mutex for space  * efficiency.  This decision should probably be revisited as we optimize  * locking for the socket code.  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SOCK_MTX
 parameter_list|(
-name|_so
+name|so
 parameter_list|)
-value|SOCKBUF_MTX(&(_so)->so_rcv)
+value|&(so)->so_lock
 end_define
 
 begin_define
@@ -385,9 +418,9 @@ define|#
 directive|define
 name|SOCK_LOCK
 parameter_list|(
-name|_so
+name|so
 parameter_list|)
-value|SOCKBUF_LOCK(&(_so)->so_rcv)
+value|mtx_lock(&(so)->so_lock)
 end_define
 
 begin_define
@@ -395,9 +428,9 @@ define|#
 directive|define
 name|SOCK_OWNED
 parameter_list|(
-name|_so
+name|so
 parameter_list|)
-value|SOCKBUF_OWNED(&(_so)->so_rcv)
+value|mtx_owned(&(so)->so_lock)
 end_define
 
 begin_define
@@ -405,9 +438,9 @@ define|#
 directive|define
 name|SOCK_UNLOCK
 parameter_list|(
-name|_so
+name|so
 parameter_list|)
-value|SOCKBUF_UNLOCK(&(_so)->so_rcv)
+value|mtx_unlock(&(so)->so_lock)
 end_define
 
 begin_define
@@ -415,36 +448,70 @@ define|#
 directive|define
 name|SOCK_LOCK_ASSERT
 parameter_list|(
-name|_so
+name|so
 parameter_list|)
-value|SOCKBUF_LOCK_ASSERT(&(_so)->so_rcv)
+value|mtx_assert(&(so)->so_lock, MA_OWNED)
 end_define
-
-begin_comment
-comment|/*  * Socket state bits stored in so_qstate.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|SQ_INCOMP
-value|0x0800
+name|SOCK_UNLOCK_ASSERT
+parameter_list|(
+name|so
+parameter_list|)
+value|mtx_assert(&(so)->so_lock, MA_NOTOWNED)
 end_define
-
-begin_comment
-comment|/* unaccepted, incomplete connection */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|SQ_COMP
-value|0x1000
+name|SOLISTENING
+parameter_list|(
+name|sol
+parameter_list|)
+value|(((sol)->so_options& SO_ACCEPTCONN) != 0)
 end_define
 
-begin_comment
-comment|/* unaccepted, complete connection */
-end_comment
+begin_define
+define|#
+directive|define
+name|SOLISTEN_LOCK
+parameter_list|(
+name|sol
+parameter_list|)
+value|do {					\ 	mtx_lock(&(sol)->so_lock);					\ 	KASSERT(SOLISTENING(sol),					\ 	    ("%s: %p not listening", __func__, (sol)));			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOLISTEN_TRYLOCK
+parameter_list|(
+name|sol
+parameter_list|)
+value|mtx_trylock(&(sol)->so_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOLISTEN_UNLOCK
+parameter_list|(
+name|sol
+parameter_list|)
+value|do {					\ 	KASSERT(SOLISTENING(sol),					\ 	    ("%s: %p not listening", __func__, (sol)));			\ 	mtx_unlock(&(sol)->so_lock);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOLISTEN_LOCK_ASSERT
+parameter_list|(
+name|sol
+parameter_list|)
+value|do {				\ 	mtx_assert(&(sol)->so_lock, MA_OWNED);				\ 	KASSERT(SOLISTENING(sol),					\ 	    ("%s: %p not listening", __func__, (sol)));			\ } while (0)
+end_define
 
 begin_comment
 comment|/*  * Externalized form of struct socket used by the sysctl(3) interface.  */
@@ -605,7 +672,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|(sbavail(&(so)->so_rcv)>= (so)->so_rcv.sb_lowat || \ 	!TAILQ_EMPTY(&(so)->so_comp) || (so)->so_error)
+value|(sbavail(&(so)->so_rcv)>= (so)->so_rcv.sb_lowat ||  (so)->so_error)
 end_define
 
 begin_define
@@ -635,7 +702,7 @@ value|((sbspace(&(so)->so_snd)>= (so)->so_snd.sb_lowat&& \ 	(((so)->so_state&SS_
 end_define
 
 begin_comment
-comment|/*  * soref()/sorele() ref-count the socket structure.  Note that you must  * still explicitly close the socket, but the last ref count will free  * the structure.  */
+comment|/*  * soref()/sorele() ref-count the socket structure.  * soref() may be called without owning socket lock, but in that case a  * caller must own something that holds socket, and so_count must be not 0.  * Note that you must still explicitly close the socket, but the last ref  * count will free the structure.  */
 end_comment
 
 begin_define
@@ -645,7 +712,7 @@ name|soref
 parameter_list|(
 name|so
 parameter_list|)
-value|do {							\ 	SOCK_LOCK_ASSERT(so);						\ 	++(so)->so_count;						\ } while (0)
+value|refcount_acquire(&(so)->so_count)
 end_define
 
 begin_define
@@ -655,7 +722,7 @@ name|sorele
 parameter_list|(
 name|so
 parameter_list|)
-value|do {							\ 	ACCEPT_LOCK_ASSERT();						\ 	SOCK_LOCK_ASSERT(so);						\ 	if ((so)->so_count<= 0)					\ 		panic("sorele");					\ 	if (--(so)->so_count == 0)					\ 		sofree(so);						\ 	else {								\ 		SOCK_UNLOCK(so);					\ 		ACCEPT_UNLOCK();					\ 	}								\ } while (0)
+value|do {							\ 	SOCK_LOCK_ASSERT(so);						\ 	if (refcount_release(&(so)->so_count))				\ 		sofree(so);						\ 	else								\ 		SOCK_UNLOCK(so);					\ } while (0)
 end_define
 
 begin_comment
@@ -1389,6 +1456,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|solisten_dequeue
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|socket
 modifier|*
@@ -1401,6 +1486,19 @@ name|head
 parameter_list|,
 name|int
 name|connstatus
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|socket
+modifier|*
+name|sopeeloff
+parameter_list|(
+name|struct
+name|socket
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1800,10 +1898,8 @@ parameter_list|(
 name|struct
 name|socket
 modifier|*
-name|so
 parameter_list|,
 name|int
-name|which
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1815,30 +1911,29 @@ parameter_list|(
 name|struct
 name|socket
 modifier|*
-name|so
 parameter_list|,
 name|int
-name|which
 parameter_list|,
-name|int
-function_decl|(
+name|so_upcall_t
+parameter_list|,
+name|void
 modifier|*
-name|func
-function_decl|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|solisten_upcall_set
 parameter_list|(
 name|struct
 name|socket
 modifier|*
 parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
+name|so_upcall_t
 parameter_list|,
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1873,6 +1968,17 @@ name|struct
 name|sockbuf
 modifier|*
 name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|solisten_wakeup
+parameter_list|(
+name|struct
+name|socket
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

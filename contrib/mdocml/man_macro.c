@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_macro.c,v 1.115 2017/01/10 13:47:00 schwarze Exp $ */
+comment|/*	$Id: man_macro.c,v 1.120 2017/05/05 15:17:32 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2012, 2013, 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2013 Franco Fichtner<franco@lastsummer.de>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2012-2015, 2017 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2013 Franco Fichtner<franco@lastsummer.de>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -152,7 +152,8 @@ name|struct
 name|roff_man
 modifier|*
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -164,16 +165,11 @@ name|man_macro
 name|__man_macros
 index|[
 name|MAN_MAX
+operator|-
+name|MAN_TH
 index|]
 init|=
 block|{
-block|{
-name|in_line_eoln
-block|,
-name|MAN_NSCOPED
-block|}
-block|,
-comment|/* br */
 block|{
 name|in_line_eoln
 block|,
@@ -336,13 +332,6 @@ block|,
 name|MAN_NSCOPED
 block|}
 block|,
-comment|/* sp */
-block|{
-name|in_line_eoln
-block|,
-name|MAN_NSCOPED
-block|}
-block|,
 comment|/* nf */
 block|{
 name|in_line_eoln
@@ -406,13 +395,6 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* ft */
-block|{
-name|in_line_eoln
-block|,
-literal|0
-block|}
-block|,
 comment|/* OP */
 block|{
 name|in_line_eoln
@@ -442,13 +424,6 @@ name|MAN_BSCOPE
 block|}
 block|,
 comment|/* UE */
-block|{
-name|in_line_eoln
-block|,
-literal|0
-block|}
-block|,
-comment|/* ll */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -462,6 +437,8 @@ specifier|const
 name|man_macros
 init|=
 name|__man_macros
+operator|-
+name|MAN_TH
 decl_stmt|;
 end_decl_stmt
 
@@ -564,7 +541,7 @@ name|pos
 argument_list|,
 literal|"EOF breaks %s"
 argument_list|,
-name|man_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -670,7 +647,7 @@ name|n
 operator|->
 name|pos
 argument_list|,
-name|man_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -735,7 +712,8 @@ name|roff_man
 modifier|*
 name|man
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 name|tok
 parameter_list|)
 block|{
@@ -924,7 +902,8 @@ parameter_list|(
 name|MACRO_PROT_ARGS
 parameter_list|)
 block|{
-name|int
+name|enum
+name|roff_tok
 name|ntok
 decl_stmt|;
 specifier|const
@@ -1159,7 +1138,7 @@ name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|man_macronames
+name|roff_name
 index|[
 name|tok
 index|]
@@ -1357,7 +1336,7 @@ name|pos
 argument_list|,
 literal|"%s ... %s"
 argument_list|,
-name|man_macronames
+name|roff_name
 index|[
 name|tok
 index|]
@@ -1618,10 +1597,6 @@ operator|&&
 operator|(
 name|tok
 operator|==
-name|MAN_br
-operator|||
-name|tok
-operator|==
 name|MAN_fi
 operator|||
 name|tok
@@ -1645,7 +1620,7 @@ name|pos
 argument_list|,
 literal|"%s %s"
 argument_list|,
-name|man_macronames
+name|roff_name
 index|[
 name|tok
 index|]
@@ -1674,19 +1649,9 @@ name|last
 operator|!=
 name|n
 operator|&&
-operator|(
 name|tok
 operator|==
 name|MAN_PD
-operator|||
-name|tok
-operator|==
-name|MAN_ft
-operator|||
-name|tok
-operator|==
-name|MAN_sp
-operator|)
 condition|)
 block|{
 name|mandoc_vmsg
@@ -1704,7 +1669,7 @@ name|pos
 argument_list|,
 literal|"%s ... %s"
 argument_list|,
-name|man_macronames
+name|roff_name
 index|[
 name|tok
 index|]

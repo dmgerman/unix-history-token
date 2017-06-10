@@ -348,6 +348,12 @@ name|nodeinfo
 modifier|*
 name|nodes
 decl_stmt|;
+name|char
+modifier|*
+name|lnode
+init|=
+name|NULL
+decl_stmt|;
 name|num
 operator|=
 name|find_hci_nodes
@@ -377,6 +383,8 @@ name|NULL
 condition|)
 block|{
 name|node
+operator|=
+name|lnode
 operator|=
 name|strdup
 argument_list|(
@@ -537,6 +545,11 @@ argument_list|,
 literal|"Could not connect socket, node=%s"
 argument_list|,
 name|node
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|lnode
 argument_list|)
 expr_stmt|;
 name|memset

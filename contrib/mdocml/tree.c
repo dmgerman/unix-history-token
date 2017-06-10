@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tree.c,v 1.73 2017/02/10 15:45:28 schwarze Exp $ */
+comment|/*	$Id: tree.c,v 1.74 2017/04/24 23:06:18 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -555,7 +555,7 @@ name|ROFFT_BODY
 case|:
 name|p
 operator|=
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -568,7 +568,7 @@ name|ROFFT_HEAD
 case|:
 name|p
 operator|=
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -581,7 +581,7 @@ name|ROFFT_TAIL
 case|:
 name|p
 operator|=
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -594,7 +594,7 @@ name|ROFFT_ELEM
 case|:
 name|p
 operator|=
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -631,7 +631,7 @@ name|ROFFT_BLOCK
 case|:
 name|p
 operator|=
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -1171,7 +1171,7 @@ name|ROFFT_BODY
 case|:
 name|p
 operator|=
-name|man_macronames
+name|roff_name
 index|[
 name|n
 operator|->
