@@ -2385,30 +2385,12 @@ argument_list|()
 specifier|const
 name|override
 block|;
-comment|// Pairs of [CU Offset, CU length].
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|uint64_t
-block|,
-name|uint64_t
-operator|>>
-name|CompilationUnits
-block|;
-name|llvm
-operator|::
-name|StringTableBuilder
-name|StringPool
-block|;
+comment|// Symbol table is a hash table for types and names.
+comment|// It is the area of gdb index.
 name|GdbHashTab
 name|SymbolTable
 block|;
-comment|// The CU vector portion of the constant pool.
+comment|// CU vector is a part of constant pool area of section.
 name|std
 operator|::
 name|vector
@@ -2421,23 +2403,35 @@ name|uint32_t
 operator|>>
 name|CuVectors
 block|;
+comment|// String pool is also a part of constant pool, it follows CU vectors.
+name|llvm
+operator|::
+name|StringTableBuilder
+name|StringPool
+block|;
+comment|// Each chunk contains information gathered from a debug sections of single
+comment|// object and used to build different areas of gdb index.
 name|std
 operator|::
 name|vector
 operator|<
-name|AddressEntry
+name|GdbIndexChunk
 operator|>
-name|AddressArea
+name|Chunks
 block|;
 name|private
 operator|:
-name|void
+name|GdbIndexChunk
 name|readDwarf
 argument_list|(
 name|InputSection
 operator|*
 name|Sec
 argument_list|)
+block|;
+name|void
+name|buildIndex
+argument_list|()
 block|;
 name|uint32_t
 name|CuTypesOffset

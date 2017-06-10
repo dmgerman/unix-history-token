@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/ELF.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/CachePruning.h"
 end_include
 
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/CodeGen.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ELF.h"
 end_include
 
 begin_include
@@ -253,6 +253,19 @@ decl_stmt|;
 comment|// Offset in the string table
 block|}
 struct|;
+comment|// Structure for mapping renamed symbols
+struct|struct
+name|RenamedSymbol
+block|{
+name|Symbol
+modifier|*
+name|Target
+decl_stmt|;
+name|uint8_t
+name|OrigBinding
+decl_stmt|;
+block|}
+struct|;
 comment|// This struct contains the global configuration for the linker.
 comment|// Most fields are direct mapping from the command line options
 comment|// and such fields have the same name as the corresponding options.
@@ -425,6 +438,17 @@ operator|<
 name|uint8_t
 operator|>
 name|BuildIdVector
+expr_stmt|;
+name|llvm
+operator|::
+name|MapVector
+operator|<
+name|Symbol
+operator|*
+operator|,
+name|RenamedSymbol
+operator|>
+name|RenamedSymbols
 expr_stmt|;
 name|bool
 name|AllowMultipleDefinition

@@ -176,6 +176,11 @@ name|Alignment
 init|=
 literal|1
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|Loc
+expr_stmt|;
 name|ExprValue
 argument_list|(
 argument|SectionBase *Sec
@@ -184,7 +189,7 @@ argument|bool ForceAbsolute
 argument_list|,
 argument|uint64_t Val
 argument_list|,
-argument|uint64_t Alignment
+argument|const Twine&Loc
 argument_list|)
 block|:
 name|Sec
@@ -202,33 +207,9 @@ argument_list|(
 name|ForceAbsolute
 argument_list|)
 operator|,
-name|Alignment
+name|Loc
 argument_list|(
-argument|Alignment
-argument_list|)
-block|{   }
-name|ExprValue
-argument_list|(
-argument|SectionBase *Sec
-argument_list|,
-argument|bool ForceAbsolute
-argument_list|,
-argument|uint64_t Val
-argument_list|)
-operator|:
-name|Sec
-argument_list|(
-name|Sec
-argument_list|)
-operator|,
-name|Val
-argument_list|(
-name|Val
-argument_list|)
-operator|,
-name|ForceAbsolute
-argument_list|(
-argument|ForceAbsolute
+argument|Loc.str()
 argument_list|)
 block|{}
 name|ExprValue
@@ -236,6 +217,8 @@ argument_list|(
 argument|SectionBase *Sec
 argument_list|,
 argument|uint64_t Val
+argument_list|,
+argument|const Twine&Loc
 argument_list|)
 operator|:
 name|ExprValue
@@ -245,6 +228,8 @@ argument_list|,
 argument|false
 argument_list|,
 argument|Val
+argument_list|,
+argument|Loc
 argument_list|)
 block|{}
 name|ExprValue
@@ -257,6 +242,8 @@ argument_list|(
 argument|nullptr
 argument_list|,
 argument|Val
+argument_list|,
+literal|""
 argument_list|)
 block|{}
 name|bool
@@ -552,6 +539,20 @@ name|std
 operator|::
 name|string
 name|MemoryRegionName
+block|;
+name|bool
+name|Noload
+operator|=
+name|false
+block|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|void
+name|finalize
+argument_list|()
 block|;
 name|template
 operator|<
@@ -1192,10 +1193,6 @@ parameter_list|()
 function_decl|;
 name|void
 name|processNonSectionCommands
-parameter_list|()
-function_decl|;
-name|void
-name|synchronize
 parameter_list|()
 function_decl|;
 name|void

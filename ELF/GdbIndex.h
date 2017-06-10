@@ -85,9 +85,67 @@ decl_stmt|;
 name|uint64_t
 name|HighAddress
 decl_stmt|;
-name|size_t
+name|uint32_t
 name|CuIndex
 decl_stmt|;
+block|}
+struct|;
+comment|// Struct represents single entry of compilation units list area of gdb index.
+comment|// It consist of CU offset in .debug_info section and it's size.
+struct|struct
+name|CompilationUnitEntry
+block|{
+name|uint64_t
+name|CuOffset
+decl_stmt|;
+name|uint64_t
+name|CuLength
+decl_stmt|;
+block|}
+struct|;
+comment|// Represents data about symbol and type names which are used
+comment|// to build symbol table and constant pool area of gdb index.
+struct|struct
+name|NameTypeEntry
+block|{
+name|StringRef
+name|Name
+decl_stmt|;
+name|uint8_t
+name|Type
+decl_stmt|;
+block|}
+struct|;
+comment|// We fill one GdbIndexDataChunk for each object where scan of
+comment|// debug information performed. That information futher used
+comment|// for filling gdb index section areas.
+struct|struct
+name|GdbIndexChunk
+block|{
+name|std
+operator|::
+name|vector
+operator|<
+name|AddressEntry
+operator|>
+name|AddressArea
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|CompilationUnitEntry
+operator|>
+name|CompilationUnits
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|NameTypeEntry
+operator|>
+name|NamesAndTypes
+expr_stmt|;
 block|}
 struct|;
 comment|// Element of GdbHashTab hash table.
