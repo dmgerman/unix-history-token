@@ -189,6 +189,8 @@ name|Quotactlcmd
 block|,
 name|Reboothowto
 block|,
+name|Rtpriofunc
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
