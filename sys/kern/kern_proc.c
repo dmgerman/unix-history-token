@@ -1382,6 +1382,20 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|td_softdep_cleanup
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|MPASS
+argument_list|(
+name|td
+operator|->
+name|td_su
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* Make sure all thread destructors are executed */
 name|EVENTHANDLER_INVOKE
 argument_list|(
