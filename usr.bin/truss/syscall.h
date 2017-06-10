@@ -187,6 +187,8 @@ name|Ptraceop
 block|,
 name|Quotactlcmd
 block|,
+name|Reboothowto
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
