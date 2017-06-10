@@ -80,43 +80,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LOCALE_en_US
+value|"en-US"
+end_define
+
+begin_define
+define|#
+directive|define
 name|LOCALE_en_US_UTF_8
-value|"English_United States.1252"
+value|"en-US"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LOCALE_cs_CZ_ISO8859_2
-value|"Czech_Czech Republic.1250"
+value|"cs-CZ"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LOCALE_fr_FR_UTF_8
-value|"French_France.1252"
+value|"fr-FR"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LOCALE_fr_CA_ISO8859_1
-value|"French_Canada.1252"
+value|"fr-CA"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LOCALE_ru_RU_UTF_8
-value|"Russian_Russia.1251"
+value|"ru-RU"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LOCALE_zh_CN_UTF_8
-value|"Chinese_China.936"
+value|"zh-CN"
 end_define
 
 begin_elif
@@ -139,6 +146,13 @@ end_comment
 begin_comment
 comment|// provided. UTC should be all right.
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCALE_en_US
+value|"en_US"
+end_define
 
 begin_define
 define|#
@@ -186,6 +200,13 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|LOCALE_en_US
+value|"en_US"
+end_define
 
 begin_define
 define|#

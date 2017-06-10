@@ -96,16 +96,6 @@ begin_comment
 comment|// VSO#117743
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TEST_WORKAROUND_C1XX_EMPTY_PARAMETER_PACK_EXPANSION
-end_define
-
-begin_comment
-comment|// VSO#109062
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
