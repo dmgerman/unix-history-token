@@ -1851,10 +1851,6 @@ block|{
 name|int
 name|c
 decl_stmt|;
-name|infile
-operator|=
-name|optarg
-expr_stmt|;
 while|while
 condition|(
 operator|(
