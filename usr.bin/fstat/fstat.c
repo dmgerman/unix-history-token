@@ -220,7 +220,7 @@ name|devs
 modifier|*
 name|next
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|fsid
 decl_stmt|;
 name|uint64_t
