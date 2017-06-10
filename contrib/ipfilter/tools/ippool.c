@@ -609,7 +609,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-l [-dv] [-m<name>] [-t<type>] [-O<fields>]\n"
+literal|"\t-l [-dv] [-m<name>] [-t<type>]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3260,19 +3260,18 @@ literal|1
 return|;
 block|}
 break|break;
-case|case
-literal|'O'
-case|:
-name|pool_fields
-operator|=
-name|parsefields
-argument_list|(
-name|poolfields
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
+if|#
+directive|if
+literal|0
+block|case 'O' :
+comment|/* XXX This option does not work. This function as  */
+comment|/* XXX used by state and nat can be used to format  */
+comment|/* XXX output especially useful for scripting. It   */
+comment|/* XXX is left here with the intention of making    */
+comment|/* XXX it work for the same purpose at some point.  */
+block|pool_fields = parsefields(poolfields, optarg); 			break;
+endif|#
+directive|endif
 case|case
 literal|'t'
 case|:
@@ -3315,7 +3314,34 @@ operator||=
 name|OPT_VERBOSE
 expr_stmt|;
 break|break;
+default|default :
+name|usage
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* keep compiler happy */
 block|}
+if|if
+condition|(
+name|argc
+operator|-
+name|optind
+operator|>
+literal|0
+condition|)
+name|usage
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|opts
