@@ -185,6 +185,8 @@ name|Priowhich
 block|,
 name|Ptraceop
 block|,
+name|Quotactlcmd
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
