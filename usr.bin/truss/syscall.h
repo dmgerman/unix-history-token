@@ -183,6 +183,8 @@ name|Msync
 block|,
 name|Priowhich
 block|,
+name|Ptraceop
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
