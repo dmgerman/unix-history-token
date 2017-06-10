@@ -96,13 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunctionPass.h"
+file|"llvm/CodeGen/LowLevelType.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/LowLevelType.h"
+file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
 begin_decl_stmt

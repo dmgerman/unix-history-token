@@ -295,6 +295,7 @@ return|return
 name|End
 return|;
 block|}
+comment|/// Check if this is the only edge between Start and End.
 name|bool
 name|isSingleEdge
 argument_list|()
@@ -703,6 +704,10 @@ argument|const BasicBlock *BB
 argument_list|)
 specifier|const
 block|;
+comment|/// Return true if an edge dominates a use.
+comment|///
+comment|/// If BBE is not a unique edge between start and end of the edge, it can
+comment|/// never dominate the use.
 name|bool
 name|dominates
 argument_list|(

@@ -3291,6 +3291,10 @@ name|VarDecl
 block|;
 name|friend
 name|class
+name|ImplicitParamDecl
+block|;
+name|friend
+name|class
 name|ASTDeclReader
 block|;
 name|unsigned
@@ -3366,6 +3370,13 @@ name|unsigned
 name|PreviousDeclInSameBlockScope
 operator|:
 literal|1
+block|;
+comment|/// Defines kind of the ImplicitParamDecl: 'this', 'self', 'vtt', '_cmd' or
+comment|/// something else.
+name|unsigned
+name|ImplicitParamKind
+operator|:
+literal|3
 block|;   }
 block|;
 expr|union
@@ -5815,6 +5826,35 @@ name|override
 block|;
 name|public
 operator|:
+comment|/// Defines the kind of the implicit parameter: is this an implicit parameter
+comment|/// with pointer to 'this', 'self', '_cmd', virtual table pointers, captured
+comment|/// context or something else.
+expr|enum
+name|ImplicitParamKind
+operator|:
+name|unsigned
+block|{
+name|ObjCSelf
+block|,
+comment|/// Parameter for Objective-C 'self' argument
+name|ObjCCmd
+block|,
+comment|/// Parameter for Objective-C '_cmd' argument
+name|CXXThis
+block|,
+comment|/// Parameter for C++ 'this' argument
+name|CXXVTT
+block|,
+comment|/// Parameter for C++ virtual table pointers
+name|CapturedContext
+block|,
+comment|/// Parameter for captured context
+name|Other
+block|,
+comment|/// Other implicit parameter
+block|}
+block|;
+comment|/// Create implicit parameter.
 specifier|static
 name|ImplicitParamDecl
 operator|*
@@ -5829,6 +5869,20 @@ argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|ImplicitParamKind ParamKind
+argument_list|)
+block|;
+specifier|static
+name|ImplicitParamDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ImplicitParamKind ParamKind
 argument_list|)
 block|;
 specifier|static
@@ -5852,6 +5906,8 @@ argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType Type
+argument_list|,
+argument|ImplicitParamKind ParamKind
 argument_list|)
 operator|:
 name|VarDecl
@@ -5870,15 +5926,81 @@ argument|Id
 argument_list|,
 argument|Type
 argument_list|,
-comment|/*tinfo*/
+comment|/*TInfo=*/
 argument|nullptr
 argument_list|,
 argument|SC_None
 argument_list|)
 block|{
+name|NonParmVarDeclBits
+operator|.
+name|ImplicitParamKind
+operator|=
+name|ParamKind
+block|;
 name|setImplicit
 argument_list|()
 block|;   }
+name|ImplicitParamDecl
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|QualType Type
+argument_list|,
+argument|ImplicitParamKind ParamKind
+argument_list|)
+operator|:
+name|VarDecl
+argument_list|(
+argument|ImplicitParam
+argument_list|,
+argument|C
+argument_list|,
+comment|/*DC=*/
+argument|nullptr
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+comment|/*Id=*/
+argument|nullptr
+argument_list|,
+argument|Type
+argument_list|,
+comment|/*TInfo=*/
+argument|nullptr
+argument_list|,
+argument|SC_None
+argument_list|)
+block|{
+name|NonParmVarDeclBits
+operator|.
+name|ImplicitParamKind
+operator|=
+name|ParamKind
+block|;
+name|setImplicit
+argument_list|()
+block|;   }
+comment|/// Returns the implicit parameter kind.
+name|ImplicitParamKind
+name|getParameterKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ImplicitParamKind
+operator|>
+operator|(
+name|NonParmVarDeclBits
+operator|.
+name|ImplicitParamKind
+operator|)
+return|;
+block|}
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -7681,12 +7803,12 @@ name|Definition
 argument_list|)
 return|;
 block|}
-comment|/// isThisDeclarationADefinition - Returns whether this specific
-comment|/// declaration of the function is also a definition. This does not
-comment|/// determine whether the function has been defined (e.g., in a
-comment|/// previous definition); for that information, use isDefined. Note
-comment|/// that this returns false for a defaulted function unless that function
-comment|/// has been implicitly defined (possibly as deleted).
+comment|/// Returns whether this specific declaration of the function is also a
+comment|/// definition that does not contain uninstantiated body.
+comment|///
+comment|/// This does not determine whether the function has been defined (e.g., in a
+comment|/// previous definition); for that information, use isDefined.
+comment|///
 name|bool
 name|isThisDeclarationADefinition
 argument_list|()
@@ -7695,9 +7817,14 @@ block|{
 return|return
 name|IsDeleted
 operator|||
+name|IsDefaulted
+operator|||
 name|Body
 operator|||
 name|IsLateTemplateParsed
+operator|||
+name|hasDefiningAttr
+argument_list|()
 return|;
 block|}
 comment|/// doesThisDeclarationHaveABody - Returns whether this specific

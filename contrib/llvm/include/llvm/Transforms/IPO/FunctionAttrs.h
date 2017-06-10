@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/LazyCallGraph.h"
+file|"llvm/Analysis/CGSCCPassManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/CGSCCPassManager.h"
+file|"llvm/Analysis/LazyCallGraph.h"
 end_include
 
 begin_include

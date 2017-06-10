@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/LiveIntervalAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineCombinerPattern.h"
 end_include
 
@@ -105,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/LiveIntervalAnalysis.h"
 end_include
 
 begin_decl_stmt

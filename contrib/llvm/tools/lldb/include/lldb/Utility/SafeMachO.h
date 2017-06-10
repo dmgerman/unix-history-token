@@ -562,7 +562,7 @@ end_undef
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MachO.h"
+file|"llvm/BinaryFormat/MachO.h"
 end_include
 
 begin_endif

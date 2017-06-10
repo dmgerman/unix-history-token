@@ -108,13 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -163,6 +163,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+struct_decl|struct
+name|BitcodeFileContents
+struct_decl|;
 name|namespace
 name|irsymtab
 block|{
@@ -1418,6 +1421,54 @@ argument_list|)
 block|}
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// The contents of the irsymtab in a bitcode file. Any underlying data for the
+end_comment
+
+begin_comment
+comment|/// irsymtab are owned by Symtab and Strtab.
+end_comment
+
+begin_struct
+struct|struct
+name|FileContents
+block|{
+name|SmallVector
+operator|<
+name|char
+operator|,
+literal|0
+operator|>
+name|Symtab
+operator|,
+name|Strtab
+expr_stmt|;
+name|Reader
+name|TheReader
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// Reads the contents of a bitcode file, creating its irsymtab if necessary.
+end_comment
+
+begin_expr_stmt
+name|Expected
+operator|<
+name|FileContents
+operator|>
+name|readBitcode
+argument_list|(
+specifier|const
+name|BitcodeFileContents
+operator|&
+name|BFC
+argument_list|)
+expr_stmt|;
 end_expr_stmt
 
 begin_comment

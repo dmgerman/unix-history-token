@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Constants.h"
 end_include
 
@@ -169,12 +175,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/ValueHandle.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Dwarf.h"
 end_include
 
 begin_include

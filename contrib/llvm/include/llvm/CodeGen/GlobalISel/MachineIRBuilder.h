@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/LowLevelType.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineInstrBuilder.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/LowLevelType.h"
 end_include
 
 begin_include

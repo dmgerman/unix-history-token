@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Wasm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
@@ -77,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MCStreamer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Wasm.h"
 end_include
 
 begin_decl_stmt

@@ -117,7 +117,7 @@ argument|const DWARFSection *RS
 argument_list|,
 argument|StringRef SS
 argument_list|,
-argument|StringRef SOS
+argument|const DWARFSection&SOS
 argument_list|,
 argument|const DWARFSection *AOS
 argument_list|,

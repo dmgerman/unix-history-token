@@ -185,12 +185,13 @@ parameter_list|()
 function_decl|;
 name|Error
 name|commit
-parameter_list|(
+argument_list|(
 name|BinaryStreamWriter
-modifier|&
+operator|&
 name|Writer
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 name|std
@@ -219,25 +220,24 @@ operator|::
 name|DebugSubsectionRecord
 operator|>
 block|{
-typedef|typedef
-name|void
-name|ContextType
-typedef|;
-specifier|static
 name|Error
-name|extract
-argument_list|(
-argument|BinaryStreamRef Stream
-argument_list|,
-argument|uint32_t&Length
-argument_list|,
-argument|codeview::DebugSubsectionRecord&Info
-argument_list|)
+name|operator
+argument_list|()
+operator|(
+name|BinaryStreamRef
+name|Stream
+operator|,
+name|uint32_t
+operator|&
+name|Length
+operator|,
+name|codeview
+operator|::
+name|DebugSubsectionRecord
+operator|&
+name|Info
+operator|)
 block|{
-comment|// FIXME: We need to pass the container type through to this function, but
-comment|// VarStreamArray doesn't easily support stateful contexts.  In practice
-comment|// this isn't super important since the subsection header describes its
-comment|// length and we can just skip it.  It's more important when writing.
 if|if
 condition|(
 name|auto
@@ -265,11 +265,16 @@ name|EC
 return|;
 name|Length
 operator|=
+name|alignTo
+argument_list|(
 name|Info
 operator|.
 name|getRecordLength
 argument_list|()
-expr_stmt|;
+argument_list|,
+literal|4
+argument_list|)
+block|;
 return|return
 name|Error
 operator|::
@@ -277,10 +282,14 @@ name|success
 argument_list|()
 return|;
 block|}
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_decl_stmt
-unit|};
 name|namespace
 name|codeview
 block|{

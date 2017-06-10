@@ -76,31 +76,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/None.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -113,6 +101,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -9521,6 +9521,18 @@ literal|3
 argument_list|)
 return|;
 block|}
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+operator|=
+name|delete
+block|;
 comment|/// Return true if a shufflevector instruction can be
 comment|/// formed with the specified operands.
 specifier|static
@@ -9901,27 +9913,6 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
-comment|// allocate space for exactly one operand
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|1
-argument_list|)
-return|;
-block|}
 name|void
 name|init
 argument_list|(
@@ -10912,7 +10903,6 @@ operator|&
 name|PN
 argument_list|)
 block|;
-comment|// allocate space for exactly zero operands
 name|explicit
 name|PHINode
 argument_list|(
@@ -10997,6 +10987,7 @@ argument_list|(
 name|ReservedSpace
 argument_list|)
 block|;   }
+comment|// allocate space for exactly zero operands
 name|void
 operator|*
 name|operator
@@ -12411,25 +12402,31 @@ name|TerminatorInst
 block|;
 name|BasicBlock
 operator|*
-name|getSuccessorV
+name|getSuccessor
 argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
-block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-block|;
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"ReturnInst has no successors!"
+argument_list|)
+block|;   }
 name|void
-name|setSuccessorV
+name|setSuccessor
 argument_list|(
 argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
-block|; }
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"ReturnInst has no successors!"
+argument_list|)
+block|;   }
+block|}
 block|;
 name|template
 operator|<
@@ -12902,32 +12899,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|private
-operator|:
-name|friend
-name|TerminatorInst
-block|;
-name|BasicBlock
-operator|*
-name|getSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-block|;
-name|void
-name|setSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|,
-argument|BasicBlock *B
-argument_list|)
-block|; }
+expr|}
 block|;
 name|template
 operator|<
@@ -14431,32 +14403,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|private
-operator|:
-name|friend
-name|TerminatorInst
-block|;
-name|BasicBlock
-operator|*
-name|getSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-block|;
-name|void
-name|setSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|,
-argument|BasicBlock *B
-argument_list|)
-block|; }
+expr|}
 block|;
 name|template
 operator|<
@@ -14847,32 +14794,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|private
-operator|:
-name|friend
-name|TerminatorInst
-block|;
-name|BasicBlock
-operator|*
-name|getSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-block|;
-name|void
-name|setSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|,
-argument|BasicBlock *B
-argument_list|)
-block|; }
+expr|}
 block|;
 name|template
 operator|<
@@ -16927,30 +16849,6 @@ return|;
 block|}
 name|private
 operator|:
-name|friend
-name|TerminatorInst
-block|;
-name|BasicBlock
-operator|*
-name|getSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-block|;
-name|void
-name|setSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|,
-argument|BasicBlock *B
-argument_list|)
-block|;
 name|template
 operator|<
 name|typename
@@ -17356,25 +17254,31 @@ name|TerminatorInst
 block|;
 name|BasicBlock
 operator|*
-name|getSuccessorV
+name|getSuccessor
 argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
-block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-block|;
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"ResumeInst has no successors!"
+argument_list|)
+block|;   }
 name|void
-name|setSuccessorV
+name|setSuccessor
 argument_list|(
 argument|unsigned idx
 argument_list|,
-argument|BasicBlock *B
+argument|BasicBlock *NewSucc
 argument_list|)
-block|; }
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"ResumeInst has no successors!"
+argument_list|)
+block|;   }
+block|}
 block|;
 name|template
 operator|<
@@ -18105,33 +18009,8 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|private
-operator|:
-name|friend
-name|TerminatorInst
+expr|}
 block|;
-name|BasicBlock
-operator|*
-name|getSuccessorV
-argument_list|(
-argument|unsigned Idx
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-block|;
-name|void
-name|setSuccessorV
-argument_list|(
-argument|unsigned Idx
-argument_list|,
-argument|BasicBlock *B
-argument_list|)
-block|; }
-decl_stmt|;
 name|template
 operator|<
 operator|>
@@ -18147,7 +18026,7 @@ operator|<
 literal|2
 operator|>
 block|{}
-expr_stmt|;
+block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|CatchSwitchInst
@@ -18159,7 +18038,7 @@ comment|//                               CleanupPadInst Class
 comment|//===----------------------------------------------------------------------===//
 name|class
 name|CleanupPadInst
-range|:
+operator|:
 name|public
 name|FuncletPadInst
 block|{
@@ -18939,25 +18818,51 @@ name|TerminatorInst
 block|;
 name|BasicBlock
 operator|*
-name|getSuccessorV
+name|getSuccessor
 argument_list|(
 argument|unsigned Idx
 argument_list|)
 specifier|const
-block|;
-name|unsigned
-name|getNumSuccessorsV
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|<
+name|getNumSuccessors
 argument_list|()
-specifier|const
+operator|&&
+literal|"Successor # out of range for catchret!"
+argument_list|)
 block|;
+return|return
+name|getSuccessor
+argument_list|()
+return|;
+block|}
 name|void
-name|setSuccessorV
+name|setSuccessor
 argument_list|(
 argument|unsigned Idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
-block|; }
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|<
+name|getNumSuccessors
+argument_list|()
+operator|&&
+literal|"Successor # out of range for catchret!"
+argument_list|)
+block|;
+name|setSuccessor
+argument_list|(
+name|B
+argument_list|)
+block|;   }
+expr|}
 block|;
 name|template
 operator|<
@@ -19338,25 +19243,44 @@ name|TerminatorInst
 block|;
 name|BasicBlock
 operator|*
-name|getSuccessorV
+name|getSuccessor
 argument_list|(
 argument|unsigned Idx
 argument_list|)
 specifier|const
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|==
+literal|0
+argument_list|)
 block|;
-name|unsigned
-name|getNumSuccessorsV
+return|return
+name|getUnwindDest
 argument_list|()
-specifier|const
-block|;
+return|;
+block|}
 name|void
-name|setSuccessorV
+name|setSuccessor
 argument_list|(
 argument|unsigned Idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|==
+literal|0
+argument_list|)
 block|;
+name|setUnwindDest
+argument_list|(
+name|B
+argument_list|)
+block|;   }
 comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
 comment|// method so that subclasses cannot accidentally use it.
 name|void
@@ -19372,8 +19296,8 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-block|}
-decl_stmt|;
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -19387,12 +19311,12 @@ name|public
 name|VariadicOperandTraits
 operator|<
 name|CleanupReturnInst
-operator|,
+block|,
 comment|/*MINARITY=*/
 literal|1
 operator|>
 block|{}
-expr_stmt|;
+block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|CleanupReturnInst
@@ -19409,7 +19333,7 @@ comment|/// end of the block cannot be reached.
 comment|///
 name|class
 name|UnreachableInst
-range|:
+operator|:
 name|public
 name|TerminatorInst
 block|{
@@ -19552,33 +19476,39 @@ name|TerminatorInst
 block|;
 name|BasicBlock
 operator|*
-name|getSuccessorV
+name|getSuccessor
 argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
-block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-block|;
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"UnreachableInst has no successors!"
+argument_list|)
+block|;   }
 name|void
-name|setSuccessorV
+name|setSuccessor
 argument_list|(
 argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
-block|; }
-decl_stmt|;
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"UnreachableInst has no successors!"
+argument_list|)
+block|;   }
+block|}
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                 TruncInst Class
 comment|//===----------------------------------------------------------------------===//
 comment|/// This class represents a truncation of integer types.
 name|class
 name|TruncInst
-range|:
+operator|:
 name|public
 name|CastInst
 block|{

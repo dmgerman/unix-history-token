@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|41
+value|43
 end_define
 
 begin_define
@@ -1178,6 +1178,11 @@ comment|/**    * \brief Do not stop processing when fatal errors are encountered
 name|CXTranslationUnit_KeepGoing
 init|=
 literal|0x200
+block|,
+comment|/**    * \brief Sets the preprocessor in a mode for parsing a single file only.    */
+name|CXTranslationUnit_SingleFileParse
+init|=
+literal|0x400
 block|}
 enum|;
 comment|/**  * \brief Returns the set of flags that is suitable for parsing a translation  * unit that is being edited.  *  * The set of flags returned provide options for \c clang_parseTranslationUnit()  * to indicate that the translation unit is likely to be reparsed many times,  * either explicitly (via \c clang_reparseTranslationUnit()) or implicitly  * (e.g., by code completion (\c clang_codeCompletionAt())). The returned flag  * set contains an unspecified set of optimizations (e.g., the precompiled   * preamble) geared toward improving the performance of these routines. The  * set of optimizations enabled may change from one version to the next.  */
@@ -3924,6 +3929,24 @@ name|clang_isRestrictQualifiedType
 parameter_list|(
 name|CXType
 name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the address space of the given type.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_getAddressSpace
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the typedef name of the given type.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_getTypedefName
+parameter_list|(
+name|CXType
+name|CT
 parameter_list|)
 function_decl|;
 comment|/**  * \brief For pointer types, returns the type of the pointee.  */

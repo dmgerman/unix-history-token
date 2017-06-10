@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataExtractor.h"
+file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
+file|"llvm/Support/DataExtractor.h"
 end_include
 
 begin_include

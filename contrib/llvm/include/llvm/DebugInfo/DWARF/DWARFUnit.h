@@ -46,19 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Optional.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -70,7 +58,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/BinaryFormat/Dwarf.h"
 end_include
 
 begin_include
@@ -130,12 +136,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Dwarf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<algorithm>
 end_include
 
@@ -160,6 +160,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -167,12 +173,6 @@ begin_include
 include|#
 directive|include
 file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
 end_include
 
 begin_decl_stmt
@@ -278,7 +278,9 @@ parameter_list|,
 name|StringRef
 name|SS
 parameter_list|,
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|&
 name|SOS
 parameter_list|,
 specifier|const
@@ -485,7 +487,9 @@ parameter_list|,
 name|StringRef
 name|SS
 parameter_list|,
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|&
 name|SOS
 parameter_list|,
 specifier|const
@@ -669,8 +673,15 @@ decl_stmt|;
 name|StringRef
 name|StringSection
 decl_stmt|;
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|&
 name|StringOffsetSection
+decl_stmt|;
+name|uint64_t
+name|StringOffsetSectionBase
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|DWARFSection
@@ -855,7 +866,7 @@ argument|const DWARFSection *RS
 argument_list|,
 argument|StringRef SS
 argument_list|,
-argument|StringRef SOS
+argument|const DWARFSection&SOS
 argument_list|,
 argument|const DWARFSection *AOS
 argument_list|,
@@ -903,7 +914,9 @@ return|return
 name|StringSection
 return|;
 block|}
-name|StringRef
+specifier|const
+name|DWARFSection
+operator|&
 name|getStringOffsetSection
 argument_list|()
 specifier|const
@@ -981,9 +994,17 @@ argument_list|(
 name|uint32_t
 name|Index
 argument_list|,
-name|uint32_t
+name|uint64_t
 operator|&
 name|Result
+argument_list|)
+decl|const
+decl_stmt|;
+name|uint64_t
+name|getStringOffsetSectionRelocation
+argument_list|(
+name|uint32_t
+name|Index
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1031,6 +1052,19 @@ block|{
 return|return
 operator|&
 name|InfoSection
+operator|.
+name|Relocs
+return|;
+block|}
+specifier|const
+name|RelocAddrMap
+operator|&
+name|getStringOffsetsRelocMap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StringOffsetSection
 operator|.
 name|Relocs
 return|;

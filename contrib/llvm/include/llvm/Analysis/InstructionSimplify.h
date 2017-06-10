@@ -174,6 +174,9 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
+name|ImmutableCallSite
+decl_stmt|;
+name|class
 name|DataLayout
 decl_stmt|;
 name|class
@@ -1009,6 +1012,9 @@ name|Value
 modifier|*
 name|SimplifyCall
 argument_list|(
+name|ImmutableCallSite
+name|CS
+argument_list|,
 name|Value
 operator|*
 name|V
@@ -1034,6 +1040,9 @@ name|Value
 modifier|*
 name|SimplifyCall
 argument_list|(
+name|ImmutableCallSite
+name|CS
+argument_list|,
 name|Value
 operator|*
 name|V

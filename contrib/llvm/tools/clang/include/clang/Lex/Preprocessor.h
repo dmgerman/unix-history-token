@@ -9382,6 +9382,44 @@ label|:
 end_label
 
 begin_comment
+comment|/// Check that the given module is available, producing a diagnostic if not.
+end_comment
+
+begin_comment
+comment|/// \return \c true if the check failed (because the module is not available).
+end_comment
+
+begin_comment
+comment|///         \c false if the module appears to be usable.
+end_comment
+
+begin_function_decl
+specifier|static
+name|bool
+name|checkModuleIsAvailable
+parameter_list|(
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
+parameter_list|,
+specifier|const
+name|TargetInfo
+modifier|&
+name|TargetInfo
+parameter_list|,
+name|DiagnosticsEngine
+modifier|&
+name|Diags
+parameter_list|,
+name|Module
+modifier|*
+name|M
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Module inclusion testing.
 end_comment
 
@@ -9758,6 +9796,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|HandlePragmaIncludeAlias
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|HandlePragmaModuleBuild
 parameter_list|(
 name|Token
 modifier|&

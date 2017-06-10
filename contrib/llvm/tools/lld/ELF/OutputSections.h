@@ -234,6 +234,15 @@ name|FirstInPtLoad
 operator|=
 name|nullptr
 block|;
+comment|// Pointer to a relocation section for this section. Usually nullptr because
+comment|// we consume relocations, but if --emit-relocs is specified (which is rare),
+comment|// it may have a non-null value.
+name|OutputSection
+operator|*
+name|RelocationSection
+operator|=
+name|nullptr
+block|;
 comment|// The following fields correspond to Elf_Shdr members.
 name|uint64_t
 name|Size
@@ -291,15 +300,6 @@ argument_list|()
 block|;
 name|void
 name|sortCtorsDtors
-argument_list|()
-block|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|void
-name|finalize
 argument_list|()
 block|;
 name|void

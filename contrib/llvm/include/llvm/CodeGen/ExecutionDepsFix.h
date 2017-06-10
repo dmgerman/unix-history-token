@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/CodeGen/ExecutionDepsFix.h - Execution Dependency Fix -*- C++ -*-=//
+comment|//==- llvm/CodeGen/ExecutionDepsFix.h - Execution Dependency Fix -*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -98,6 +98,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -105,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/LivePhysRegs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
 begin_include
@@ -122,7 +140,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Pass.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -135,6 +183,15 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MachineBasicBlock
+decl_stmt|;
+name|class
+name|MachineInstr
+decl_stmt|;
+name|class
+name|TargetInstrInfo
+decl_stmt|;
 comment|/// A DomainValue is a bit like LiveIntervals' ValNo, but it also keeps track
 comment|/// of execution domains.
 comment|///
@@ -156,6 +213,8 @@ block|{
 comment|// Basic reference counting.
 name|unsigned
 name|Refs
+init|=
+literal|0
 decl_stmt|;
 comment|// Bitmask of available domains. For an open DomainValue, it is the still
 comment|// possible domains for collapsing. For a collapsed DomainValue it is the
@@ -180,6 +239,13 @@ literal|8
 operator|>
 name|Instrs
 expr_stmt|;
+name|DomainValue
+argument_list|()
+block|{
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
 comment|// A collapsed DomainValue has no instructions to twiddle - it simply keeps
 comment|// track of the domains where the registers are already available.
 name|bool
@@ -293,35 +359,25 @@ name|AvailableDomains
 argument_list|)
 return|;
 block|}
-name|DomainValue
-argument_list|()
-operator|:
-name|Refs
-argument_list|(
-literal|0
-argument_list|)
-block|{
-name|clear
-argument_list|()
-block|; }
 comment|// Clear this DomainValue and point to next which has all its data.
 name|void
 name|clear
-argument_list|()
+parameter_list|()
 block|{
 name|AvailableDomains
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|Next
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|Instrs
 operator|.
 name|clear
 argument_list|()
-block|;   }
+expr_stmt|;
+block|}
 block|}
 struct|;
 comment|/// Information about a live register.
@@ -415,66 +471,53 @@ comment|// doesn't care whether or not we consider a register killed.
 name|LiveReg
 operator|*
 name|OutRegs
+operator|=
+name|nullptr
 block|;
 comment|// Whether we have gotten to this block in primary processing yet.
 name|bool
 name|PrimaryCompleted
+operator|=
+name|false
 block|;
 comment|// The number of predecessors for which primary processing has completed
 name|unsigned
 name|IncomingProcessed
+operator|=
+literal|0
 block|;
 comment|// The value of `IncomingProcessed` at the start of primary processing
 name|unsigned
 name|PrimaryIncoming
+operator|=
+literal|0
 block|;
 comment|// The number of predecessors for which all processing steps are done.
 name|unsigned
 name|IncomingCompleted
+operator|=
+literal|0
 block|;
 name|MBBInfo
 argument_list|()
-operator|:
-name|OutRegs
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|PrimaryCompleted
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|IncomingProcessed
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|PrimaryIncoming
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|IncomingCompleted
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-block|}
+operator|=
+expr|default
+block|;   }
 block|;
-typedef|typedef
+name|using
+name|MBBInfoMap
+operator|=
 name|DenseMap
 operator|<
 name|MachineBasicBlock
 operator|*
-operator|,
+block|,
 name|MBBInfo
 operator|>
-name|MBBInfoMap
-expr_stmt|;
+block|;
 name|MBBInfoMap
 name|MBBInfos
-decl_stmt|;
+block|;
 comment|/// List of undefined register reads in this block in forward order.
 name|std
 operator|::
@@ -486,23 +529,22 @@ name|pair
 operator|<
 name|MachineInstr
 operator|*
-operator|,
+block|,
 name|unsigned
-operator|>
-expr|>
+operator|>>
 name|UndefReads
-expr_stmt|;
+block|;
 comment|/// Storage for register unit liveness.
 name|LivePhysRegs
 name|LiveRegSet
-decl_stmt|;
+block|;
 comment|/// Current instruction number.
 comment|/// The first instruction in each basic block is 0.
 name|int
 name|CurInstr
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|ExecutionDepsFix
 argument_list|(
 name|char
@@ -519,13 +561,13 @@ name|MachineFunctionPass
 argument_list|(
 name|PassID
 argument_list|)
-operator|,
+block|,
 name|RC
 argument_list|(
 operator|&
 name|RC
 argument_list|)
-operator|,
+block|,
 name|NumRegs
 argument_list|(
 argument|RC.getNumRegs()
@@ -557,7 +599,7 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 name|override
-expr_stmt|;
+block|;
 name|MachineFunctionProperties
 name|getRequiredProperties
 argument_list|()
@@ -579,7 +621,7 @@ argument_list|)
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|iterator_range
 operator|<
 name|SmallVectorImpl
@@ -594,27 +636,22 @@ argument_list|(
 argument|unsigned Reg
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 comment|// DomainValue allocation.
 name|DomainValue
-modifier|*
+operator|*
 name|alloc
-parameter_list|(
-name|int
-name|domain
-init|=
-operator|-
+argument_list|(
+argument|int domain = -
 literal|1
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|DomainValue
-modifier|*
+operator|*
 name|retain
-parameter_list|(
-name|DomainValue
-modifier|*
-name|DV
-parameter_list|)
+argument_list|(
+argument|DomainValue *DV
+argument_list|)
 block|{
 if|if
 condition|(
@@ -819,6 +856,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_EXECUTIONDEPSFIX_H
+end_comment
 
 end_unit
 

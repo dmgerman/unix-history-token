@@ -218,15 +218,15 @@ directive|include
 file|<windows.h>
 end_include
 
+begin_comment
+comment|// Must be included after windows.h
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<wincrypt.h>
 end_include
-
-begin_comment
-comment|// Must be included after windows.h
-end_comment
 
 begin_comment
 comment|/// Determines if the program is running on Windows 8 or newer. This

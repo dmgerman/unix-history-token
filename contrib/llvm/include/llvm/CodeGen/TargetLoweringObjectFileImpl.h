@@ -149,6 +149,19 @@ name|override
 operator|=
 expr|default
 block|;
+comment|/// Emit Obj-C garbage collection and linker options.
+name|void
+name|emitModuleFlags
+argument_list|(
+argument|MCStreamer&Streamer
+argument_list|,
+argument|ArrayRef<Module::ModuleFlagEntry> ModuleFlags
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|;
 name|void
 name|emitPersonalityValue
 argument_list|(
@@ -527,8 +540,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// Emit Obj-C garbage collection and linker options. Only linker option
-comment|/// emission is implemented for COFF.
+comment|/// Emit Obj-C garbage collection and linker options.
 name|void
 name|emitModuleFlags
 argument_list|(

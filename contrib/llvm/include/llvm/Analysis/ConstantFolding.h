@@ -123,6 +123,9 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
+name|ImmutableCallSite
+decl_stmt|;
+name|class
 name|TargetLibraryInfo
 decl_stmt|;
 name|class
@@ -454,6 +457,9 @@ comment|/// the specified function.
 name|bool
 name|canConstantFoldCallTo
 parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|,
 specifier|const
 name|Function
 modifier|*
@@ -466,6 +472,9 @@ name|Constant
 modifier|*
 name|ConstantFoldCall
 argument_list|(
+name|ImmutableCallSite
+name|CS
+argument_list|,
 name|Function
 operator|*
 name|F

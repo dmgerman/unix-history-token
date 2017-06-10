@@ -3574,7 +3574,7 @@ name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|SubstTemplateTypeParmType
 argument_list|,
-argument|{}
+argument|{   TRY_TO(TraverseType(T->getReplacementType())); }
 argument_list|)
 end_macro
 
@@ -3583,7 +3583,7 @@ name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|SubstTemplateTypeParmPackType
 argument_list|,
-argument|{}
+argument|{   TRY_TO(TraverseTemplateArgument(T->getArgumentPack())); }
 argument_list|)
 end_macro
 
@@ -4152,7 +4152,7 @@ name|DEF_TRAVERSE_TYPELOC
 argument_list|(
 argument|SubstTemplateTypeParmType
 argument_list|,
-argument|{}
+argument|{   TRY_TO(TraverseType(TL.getTypePtr()->getReplacementType())); }
 argument_list|)
 end_macro
 
@@ -4161,7 +4161,7 @@ name|DEF_TRAVERSE_TYPELOC
 argument_list|(
 argument|SubstTemplateTypeParmPackType
 argument_list|,
-argument|{}
+argument|{   TRY_TO(TraverseTemplateArgument(TL.getTypePtr()->getArgumentPack())); }
 argument_list|)
 end_macro
 

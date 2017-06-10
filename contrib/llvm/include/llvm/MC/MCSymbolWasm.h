@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSymbol.h"
+file|"llvm/BinaryFormat/Wasm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Wasm.h"
+file|"llvm/MC/MCSymbol.h"
 end_include
 
 begin_decl_stmt

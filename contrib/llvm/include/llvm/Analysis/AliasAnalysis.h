@@ -158,6 +158,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/MemoryLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/TargetLibraryInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/CallSite.h"
 end_include
 
@@ -171,18 +183,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/PassManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/MemoryLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/TargetLibraryInfo.h"
 end_include
 
 begin_decl_stmt

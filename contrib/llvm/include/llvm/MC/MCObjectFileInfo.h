@@ -264,6 +264,11 @@ name|MCSection
 modifier|*
 name|DwarfStrOffDWOSection
 decl_stmt|;
+comment|/// The DWARF v5 string offset and address table sections.
+name|MCSection
+modifier|*
+name|DwarfStrOffSection
+decl_stmt|;
 name|MCSection
 modifier|*
 name|DwarfAddrSection
@@ -868,6 +873,16 @@ specifier|const
 block|{
 return|return
 name|DwarfStrOffDWOSection
+return|;
+block|}
+name|MCSection
+operator|*
+name|getDwarfStrOffSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfStrOffSection
 return|;
 block|}
 name|MCSection

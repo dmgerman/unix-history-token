@@ -94,12 +94,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/APInt.h"
 end_include
 
@@ -119,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Pass.h"
 end_include
 
 begin_decl_stmt

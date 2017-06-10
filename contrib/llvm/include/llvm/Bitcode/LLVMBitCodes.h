@@ -130,6 +130,8 @@ block|,
 name|METADATA_KIND_BLOCK_ID
 block|,
 name|STRTAB_BLOCK_ID
+block|,
+name|FULL_LTO_GLOBALVAL_SUMMARY_BLOCK_ID
 block|, }
 enum|;
 comment|/// Identification block contains a string that describes the producer details,

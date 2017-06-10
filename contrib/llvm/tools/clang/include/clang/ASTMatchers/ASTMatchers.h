@@ -8595,14 +8595,22 @@ operator|==
 name|N
 return|;
 block|}
-comment|/// \brief Matches literals that are equal to the given value.
+comment|/// \brief Matches literals that are equal to the given value of type ValueT.
 comment|///
-comment|/// Example matches true (matcher = cxxBoolLiteral(equals(true)))
+comment|/// Given
 comment|/// \code
-comment|///   true
+comment|///   f('\0', false, 3.14, 42);
 comment|/// \endcode
+comment|/// characterLiteral(equals(0))
+comment|///   matches '\0'
+comment|/// cxxBoolLiteral(equals(false)) and cxxBoolLiteral(equals(0))
+comment|///   match false
+comment|/// floatLiteral(equals(3.14)) and floatLiteral(equals(314e-2))
+comment|///   match 3.14
+comment|/// integerLiteral(equals(42))
+comment|///   matches 42
 comment|///
-comment|/// Usable as: Matcher<CharacterLiteral>, Matcher<CXXBoolLiteral>,
+comment|/// Usable as: Matcher<CharacterLiteral>, Matcher<CXXBoolLiteralExpr>,
 comment|///            Matcher<FloatingLiteral>, Matcher<IntegerLiteral>
 name|template
 operator|<
@@ -8638,6 +8646,102 @@ operator|>
 operator|(
 name|Value
 operator|)
+return|;
+block|}
+name|AST_POLYMORPHIC_MATCHER_P_OVERLOAD
+argument_list|(
+argument|equals
+argument_list|,
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(CharacterLiteral,                                                           CXXBoolLiteralExpr,                                                           IntegerLiteral)
+argument_list|,
+argument|bool
+argument_list|,
+argument|Value
+argument_list|,
+literal|0
+argument_list|)
+block|{
+return|return
+name|internal
+operator|::
+name|ValueEqualsMatcher
+operator|<
+name|NodeType
+operator|,
+name|ParamT
+operator|>
+operator|(
+name|Value
+operator|)
+operator|.
+name|matchesNode
+argument_list|(
+name|Node
+argument_list|)
+return|;
+block|}
+name|AST_POLYMORPHIC_MATCHER_P_OVERLOAD
+argument_list|(
+argument|equals
+argument_list|,
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(CharacterLiteral,                                                           CXXBoolLiteralExpr,                                                           IntegerLiteral)
+argument_list|,
+argument|unsigned
+argument_list|,
+argument|Value
+argument_list|,
+literal|1
+argument_list|)
+block|{
+return|return
+name|internal
+operator|::
+name|ValueEqualsMatcher
+operator|<
+name|NodeType
+operator|,
+name|ParamT
+operator|>
+operator|(
+name|Value
+operator|)
+operator|.
+name|matchesNode
+argument_list|(
+name|Node
+argument_list|)
+return|;
+block|}
+name|AST_POLYMORPHIC_MATCHER_P_OVERLOAD
+argument_list|(
+argument|equals
+argument_list|,
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(CharacterLiteral,                                                           CXXBoolLiteralExpr,                                                           FloatingLiteral,                                                           IntegerLiteral)
+argument_list|,
+argument|double
+argument_list|,
+argument|Value
+argument_list|,
+literal|2
+argument_list|)
+block|{
+return|return
+name|internal
+operator|::
+name|ValueEqualsMatcher
+operator|<
+name|NodeType
+operator|,
+name|ParamT
+operator|>
+operator|(
+name|Value
+operator|)
+operator|.
+name|matchesNode
+argument_list|(
+name|Node
+argument_list|)
 return|;
 block|}
 comment|/// \brief Matches the operator Name of operator expressions (binary or

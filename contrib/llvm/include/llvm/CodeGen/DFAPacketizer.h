@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=- llvm/CodeGen/DFAPacketizer.h - DFA Packetizer for VLIW ---*- C++ -*-=====//
+comment|//===- llvm/CodeGen/DFAPacketizer.h - DFA Packetizer for VLIW ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -128,7 +128,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -136,7 +160,13 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCInstrDesc
+name|DefaultVLIWScheduler
+decl_stmt|;
+name|class
+name|InstrItineraryData
+decl_stmt|;
+name|class
+name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -145,16 +175,13 @@ name|class
 name|MachineLoopInfo
 decl_stmt|;
 name|class
-name|MachineDominatorTree
-decl_stmt|;
-name|class
-name|InstrItineraryData
-decl_stmt|;
-name|class
-name|DefaultVLIWScheduler
+name|MCInstrDesc
 decl_stmt|;
 name|class
 name|SUnit
+decl_stmt|;
+name|class
+name|TargetInstrInfo
 decl_stmt|;
 comment|// --------------------------------------------------------------------
 comment|// Definitions shared between DFAPacketizer.cpp and DFAPacketizerEmitter.cpp
@@ -185,14 +212,16 @@ directive|define
 name|DFA_MAX_RESOURCES
 value|16
 comment|// The max # of resource bits in one term.
-typedef|typedef
-name|uint64_t
+name|using
 name|DFAInput
-typedef|;
-typedef|typedef
-name|int64_t
+init|=
+name|uint64_t
+decl_stmt|;
+name|using
 name|DFAStateInput
-typedef|;
+init|=
+name|int64_t
+decl_stmt|;
 define|#
 directive|define
 name|DFA_TBLTYPE
@@ -204,17 +233,18 @@ name|DFAPacketizer
 block|{
 name|private
 label|:
-typedef|typedef
+name|using
+name|UnsignPair
+init|=
 name|std
 operator|::
 name|pair
 operator|<
 name|unsigned
-operator|,
+decl_stmt|,
 name|DFAInput
-operator|>
-name|UnsignPair
-expr_stmt|;
+decl|>
+decl_stmt|;
 specifier|const
 name|InstrItineraryData
 modifier|*
@@ -222,6 +252,8 @@ name|InstrItins
 decl_stmt|;
 name|int
 name|CurrentState
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|DFAStateInput
@@ -318,52 +350,44 @@ comment|// Check if the resources occupied by a MCInstrDesc are available in
 comment|// the current state.
 name|bool
 name|canReserveResources
-argument_list|(
+parameter_list|(
 specifier|const
-name|llvm
-operator|::
 name|MCInstrDesc
-operator|*
+modifier|*
 name|MID
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// Reserve the resources occupied by a MCInstrDesc and change the current
 comment|// state to reflect that change.
 name|void
 name|reserveResources
-argument_list|(
+parameter_list|(
 specifier|const
-name|llvm
-operator|::
 name|MCInstrDesc
-operator|*
+modifier|*
 name|MID
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// Check if the resources occupied by a machine instruction are available
 comment|// in the current state.
 name|bool
 name|canReserveResources
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|MachineInstr
-operator|&
+modifier|&
 name|MI
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// Reserve the resources occupied by a machine instruction and change the
 comment|// current state to reflect that change.
 name|void
 name|reserveResources
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|MachineInstr
-operator|&
+modifier|&
 name|MI
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 specifier|const
 name|InstrItineraryData
 operator|*
@@ -651,13 +675,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_DFAPACKETIZER_H
+end_comment
 
 end_unit
 

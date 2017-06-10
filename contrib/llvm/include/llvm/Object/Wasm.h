@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Wasm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/Binary.h"
 end_include
 
@@ -105,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/MemoryBuffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Wasm.h"
 end_include
 
 begin_include

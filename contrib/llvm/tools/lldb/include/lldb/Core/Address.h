@@ -854,6 +854,10 @@ comment|///     The target to use when trying resolve the address into
 comment|///     a section + offset. The Target's SectionLoadList object
 comment|///     is used to resolve the address.
 comment|///
+comment|/// @param[in] allow_section_end
+comment|///     If true, treat an address pointing to the end of the module as
+comment|///     belonging to that module.
+comment|///
 comment|/// @return
 comment|///     Returns \b true if the load address was resolved to be
 comment|///     section/offset, \b false otherwise. It is often ok for an
@@ -872,6 +876,11 @@ argument_list|,
 name|Target
 operator|*
 name|target
+argument_list|,
+name|bool
+name|allow_section_end
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 name|bool
@@ -894,6 +903,11 @@ operator|=
 name|lldb
 operator|::
 name|eAddressClassInvalid
+argument_list|,
+name|bool
+name|allow_section_end
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 name|bool

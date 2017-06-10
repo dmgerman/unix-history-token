@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Magic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorOr.h"
 end_include
 
@@ -90,18 +96,6 @@ include|#
 directive|include
 file|<vector>
 end_include
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|sys
-operator|::
-name|fs
-operator|::
-name|file_magic
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 name|namespace
@@ -159,6 +153,8 @@ name|virtual
 name|bool
 name|canParse
 argument_list|(
+name|llvm
+operator|::
 name|file_magic
 name|magic
 argument_list|,

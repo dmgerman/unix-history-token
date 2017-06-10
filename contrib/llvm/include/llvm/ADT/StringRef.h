@@ -94,13 +94,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<type_traits>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<type_traits>
 end_include
 
 begin_include

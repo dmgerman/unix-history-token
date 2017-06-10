@@ -306,6 +306,14 @@ operator|(
 operator|)
 argument_list|)
 block|;
+if|if
+condition|(
+operator|!
+name|Enumerator
+condition|)
+return|return
+name|nullptr
+return|;
 return|return
 name|Enumerator
 operator|->
@@ -352,6 +360,14 @@ operator|::
 name|Tag
 argument_list|)
 block|;
+if|if
+condition|(
+operator|!
+name|BaseIter
+condition|)
+return|return
+name|nullptr
+return|;
 return|return
 name|llvm
 operator|::
@@ -542,13 +558,19 @@ operator|>
 name|RawSymbol
 expr_stmt|;
 block|}
-empty_stmt|;
-block|}
-comment|// namespace llvm
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+unit|}
+comment|// namespace llvm
+end_comment
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

@@ -4052,6 +4052,20 @@ literal|4
 operator|>
 name|Regs
 expr_stmt|;
+comment|/// This list holds the number of registers for each value.
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|4
+operator|>
+name|RegCount
+expr_stmt|;
+comment|/// Records if this value needs to be treated in an ABI dependant manner,
+comment|/// different to normal type legalization.
+name|bool
+name|IsABIMangled
+decl_stmt|;
 name|RegsForValue
 argument_list|()
 expr_stmt|;
@@ -4065,6 +4079,8 @@ argument_list|,
 argument|MVT regvt
 argument_list|,
 argument|EVT valuevt
+argument_list|,
+argument|bool IsABIMangledValue = false
 argument_list|)
 empty_stmt|;
 name|RegsForValue
@@ -4078,6 +4094,8 @@ argument_list|,
 argument|unsigned Reg
 argument_list|,
 argument|Type *Ty
+argument_list|,
+argument|bool IsABIMangledValue = false
 argument_list|)
 empty_stmt|;
 comment|/// Add the specified values to this one.
@@ -4144,6 +4162,18 @@ operator|.
 name|Regs
 operator|.
 name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|RegCount
+operator|.
+name|push_back
+argument_list|(
+name|RHS
+operator|.
+name|Regs
+operator|.
+name|size
 argument_list|()
 argument_list|)
 expr_stmt|;

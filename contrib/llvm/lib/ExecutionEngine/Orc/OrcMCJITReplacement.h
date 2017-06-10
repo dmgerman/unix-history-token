@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ExecutionEngine/Orc/CompileUtils.h"
 end_include
 
@@ -123,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
 begin_include
@@ -182,6 +182,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -195,12 +201,6 @@ begin_include
 include|#
 directive|include
 file|<cstdint>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<algorithm>
 end_include
 
 begin_include

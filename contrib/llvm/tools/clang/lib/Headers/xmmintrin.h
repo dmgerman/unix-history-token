@@ -9128,7 +9128,7 @@ comment|///    A pointer to a 128-bit aligned memory location that will receive 
 end_comment
 
 begin_comment
-comment|///    integer values.
+comment|///    single-precision floating-point values.
 end_comment
 
 begin_comment

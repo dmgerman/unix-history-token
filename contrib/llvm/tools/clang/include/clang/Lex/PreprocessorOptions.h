@@ -267,6 +267,12 @@ operator|::
 name|string
 name|TokenCache
 expr_stmt|;
+comment|/// When enabled, preprocessor is in a mode for parsing a single file only.
+name|bool
+name|SingleFileParseMode
+init|=
+name|false
+decl_stmt|;
 comment|/// \brief True if the SourceManager should report the original file name for
 comment|/// contents of files that were remapped to other files. Defaults to true.
 name|bool
@@ -567,6 +573,10 @@ name|TokenCache
 operator|.
 name|clear
 argument_list|()
+block|;
+name|SingleFileParseMode
+operator|=
+name|false
 block|;
 name|RetainRemappedFileBuffers
 operator|=

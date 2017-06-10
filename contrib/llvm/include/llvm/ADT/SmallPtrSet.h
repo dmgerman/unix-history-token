@@ -102,13 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstring>
+file|<cstdlib>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cstdlib>
+file|<cstring>
 end_include
 
 begin_include
@@ -151,6 +151,26 @@ name|bool
 name|value
 block|; }
 expr_stmt|;
+if|#
+directive|if
+name|LLVM_ENABLE_REVERSE_ITERATION
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|bool
+name|ReverseIterate
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+operator|=
+name|true
+expr_stmt|;
+else|#
+directive|else
 name|template
 operator|<
 name|class
@@ -166,6 +186,8 @@ name|value
 operator|=
 name|false
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/// SmallPtrSetImplBase - This is the common code shared among all the

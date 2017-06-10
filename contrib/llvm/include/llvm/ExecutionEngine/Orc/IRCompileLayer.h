@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/ObjectCache.h"
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/JITSymbol.h"
+file|"llvm/ExecutionEngine/ObjectCache.h"
 end_include
 
 begin_include

@@ -86,6 +86,9 @@ decl_stmt|;
 name|class
 name|OutputSection
 decl_stmt|;
+struct_decl|struct
+name|OutputSectionCommand
+struct_decl|;
 comment|// List of target-independent relocation types. Relocations read
 comment|// from files are converted to these types so that the main code
 comment|// doesn't have to know about architecture-specific details.
@@ -380,7 +383,7 @@ name|createThunks
 argument_list|(
 name|ArrayRef
 operator|<
-name|OutputSection
+name|OutputSectionCommand
 operator|*
 operator|>
 name|OutputSections
@@ -390,6 +393,11 @@ name|private
 operator|:
 name|void
 name|mergeThunks
+argument_list|()
+block|;
+name|ThunkSection
+operator|*
+name|getOSThunkSec
 argument_list|(
 name|OutputSection
 operator|*
@@ -399,25 +407,11 @@ name|std
 operator|::
 name|vector
 operator|<
-name|ThunkSection
+name|InputSection
 operator|*
 operator|>
-operator|&
-name|Thunks
-argument_list|)
-block|;
-name|ThunkSection
 operator|*
-name|getOSThunkSec
-argument_list|(
-name|ThunkSection
-operator|*
-operator|&
-name|TS
-argument_list|,
-name|OutputSection
-operator|*
-name|OS
+name|ISR
 argument_list|)
 block|;
 name|ThunkSection
@@ -431,6 +425,41 @@ argument_list|,
 name|OutputSection
 operator|*
 name|OS
+argument_list|)
+block|;
+name|void
+name|forEachExecInputSection
+argument_list|(
+name|ArrayRef
+operator|<
+name|OutputSectionCommand
+operator|*
+operator|>
+name|OutputSections
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|OutputSection
+operator|*
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|InputSection
+operator|*
+operator|>
+operator|*
+argument_list|,
+name|InputSection
+operator|*
+argument_list|)
+operator|>
+name|Fn
 argument_list|)
 block|;
 name|std
@@ -480,7 +509,13 @@ name|std
 operator|::
 name|map
 operator|<
-name|OutputSection
+name|std
+operator|::
+name|vector
+operator|<
+name|InputSection
+operator|*
+operator|>
 operator|*
 block|,
 name|std
@@ -491,6 +526,11 @@ name|ThunkSection
 operator|*
 operator|>>
 name|ThunkSections
+block|;
+comment|// The ThunkSection for this vector of InputSections
+name|ThunkSection
+operator|*
+name|CurTS
 block|; }
 block|;
 comment|// Return a int64_t to make sure we get the sign extension out of the way as

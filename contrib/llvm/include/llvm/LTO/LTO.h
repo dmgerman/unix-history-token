@@ -1231,7 +1231,12 @@ name|VisibleToRegularObj
 argument_list|(
 literal|0
 argument_list|)
-block|{   }
+operator|,
+name|LinkerRedefined
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 comment|/// The linker has chosen this definition of the symbol.
 name|unsigned
 name|Prevailing
@@ -1248,6 +1253,13 @@ decl_stmt|;
 comment|/// The definition of this symbol is visible outside of the LTO unit.
 name|unsigned
 name|VisibleToRegularObj
+range|:
+literal|1
+decl_stmt|;
+comment|/// Linker redefined version of the symbol which appeared in -wrap or -defsym
+comment|/// linker option.
+name|unsigned
+name|LinkerRedefined
 range|:
 literal|1
 decl_stmt|;

@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCExpr.h"
+file|"llvm/BinaryFormat/MachO.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSection.h"
+file|"llvm/MC/MCExpr.h"
 end_include
 
 begin_include
@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/StringTableBuilder.h"
+file|"llvm/MC/MCSection.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MachO.h"
+file|"llvm/MC/StringTableBuilder.h"
 end_include
 
 begin_include

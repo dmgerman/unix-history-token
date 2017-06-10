@@ -553,7 +553,7 @@ comment|/// \brief Creates a mask whose bits are set to 1, using bit 0 up to and
 end_comment
 
 begin_comment
-comment|///    including the least siginificant bit that is set to 1 in the source
+comment|///    including the least significant bit that is set to 1 in the source
 end_comment
 
 begin_comment
@@ -618,7 +618,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Clears the least siginificant bit that is set to 1 in the source
+comment|/// \brief Clears the least significant bit that is set to 1 in the source
 end_comment
 
 begin_comment
@@ -1250,7 +1250,7 @@ comment|/// \brief Creates a mask whose bits are set to 1, using bit 0 up to and
 end_comment
 
 begin_comment
-comment|///    including the least siginificant bit that is set to 1 in the source
+comment|///    including the least significant bit that is set to 1 in the source
 end_comment
 
 begin_comment
@@ -1317,7 +1317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Clears the least siginificant bit that is set to 1 in the source
+comment|/// \brief Clears the least significant bit that is set to 1 in the source
 end_comment
 
 begin_comment

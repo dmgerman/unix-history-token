@@ -510,25 +510,6 @@ operator|&
 name|range
 argument_list|)
 decl_stmt|;
-comment|// Returns a valid index into coll when a match is found, else UINT32_MAX
-comment|// is returned
-specifier|static
-name|size_t
-name|FindRangeIndexThatContainsValue
-argument_list|(
-specifier|const
-name|VMRange
-operator|::
-name|collection
-operator|&
-name|coll
-argument_list|,
-name|lldb
-operator|::
-name|addr_t
-name|value
-argument_list|)
-decl_stmt|;
 name|protected
 label|:
 name|lldb

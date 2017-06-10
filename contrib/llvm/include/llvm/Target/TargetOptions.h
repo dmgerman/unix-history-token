@@ -291,11 +291,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|CompressDebugSections
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|RelaxELFRelocations
 argument_list|(
 name|false
@@ -469,10 +464,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Compress DWARF debug sections.
-name|unsigned
+name|DebugCompressionType
 name|CompressDebugSections
-range|:
-literal|1
+init|=
+name|DebugCompressionType
+operator|::
+name|None
 decl_stmt|;
 name|unsigned
 name|RelaxELFRelocations

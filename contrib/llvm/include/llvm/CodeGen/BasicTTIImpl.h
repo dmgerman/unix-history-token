@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/TargetLibraryInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/TargetTransformInfoImpl.h"
 end_include
 
@@ -95,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetSubtargetInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/TargetLibraryInfo.h"
 end_include
 
 begin_decl_stmt
@@ -503,6 +503,31 @@ argument_list|,
 name|Ty
 argument_list|,
 name|AddrSpace
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLSRCostLess
+argument_list|(
+name|TTI
+operator|::
+name|LSRCost
+name|C1
+argument_list|,
+name|TTI
+operator|::
+name|LSRCost
+name|C2
+argument_list|)
+block|{
+return|return
+name|TargetTransformInfoImplBase
+operator|::
+name|isLSRCostLess
+argument_list|(
+name|C1
+argument_list|,
+name|C2
 argument_list|)
 return|;
 block|}
@@ -5695,6 +5720,41 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// Try to calculate arithmetic and shuffle op costs for reduction operations.
+comment|/// We're assuming that reduction operation are performing the following way:
+comment|/// 1. Non-pairwise reduction
+comment|/// %val1 = shufflevector<n x t> %val,<n x t> %undef,
+comment|///<n x i32><i32 n/2, i32 n/2 + 1, ..., i32 n, i32 undef, ..., i32 undef>
+comment|///            \----------------v-------------/  \----------v------------/
+comment|///                            n/2 elements               n/2 elements
+comment|/// %red1 = op<n x t> %val,<n x t> val1
+comment|/// After this operation we have a vector %red1 where only the first n/2
+comment|/// elements are meaningful, the second n/2 elements are undefined and can be
+comment|/// dropped. All other operations are actually working with the vector of
+comment|/// length n/2, not n, though the real vector length is still n.
+comment|/// %val2 = shufflevector<n x t> %red1,<n x t> %undef,
+comment|///<n x i32><i32 n/4, i32 n/4 + 1, ..., i32 n/2, i32 undef, ..., i32 undef>
+comment|///            \----------------v-------------/  \----------v------------/
+comment|///                            n/4 elements               3*n/4 elements
+comment|/// %red2 = op<n x t> %red1,<n x t> val2  - working with the vector of
+comment|/// length n/2, the resulting vector has length n/4 etc.
+comment|/// 2. Pairwise reduction:
+comment|/// Everything is the same except for an additional shuffle operation which
+comment|/// is used to produce operands for pairwise kind of reductions.
+comment|/// %val1 = shufflevector<n x t> %val,<n x t> %undef,
+comment|///<n x i32><i32 0, i32 2, ..., i32 n-2, i32 undef, ..., i32 undef>
+comment|///            \-------------v----------/  \----------v------------/
+comment|///                   n/2 elements               n/2 elements
+comment|/// %val2 = shufflevector<n x t> %val,<n x t> %undef,
+comment|///<n x i32><i32 1, i32 3, ..., i32 n-1, i32 undef, ..., i32 undef>
+comment|///            \-------------v----------/  \----------v------------/
+comment|///                   n/2 elements               n/2 elements
+comment|/// %red1 = op<n x t> %val1,<n x t> val2
+comment|/// Again, the operation is performed on<n x t> vector, but the resulting
+comment|/// vector %red1 is<n/2 x t> vector.
+comment|///
+comment|/// The cost model should take into account that the actual length of the
+comment|/// vector is reduced on each iteration.
 name|unsigned
 name|getReductionCost
 parameter_list|(
@@ -5744,41 +5804,6 @@ argument_list|(
 name|NumVecElts
 argument_list|)
 decl_stmt|;
-comment|// Try to calculate arithmetic and shuffle op costs for reduction operations.
-comment|// We're assuming that reduction operation are performing the following way:
-comment|// 1. Non-pairwise reduction
-comment|// %val1 = shufflevector<n x t> %val,<n x t> %undef,
-comment|//<n x i32><i32 n/2, i32 n/2 + 1, ..., i32 n, i32 undef, ..., i32 undef>
-comment|//            \----------------v-------------/  \----------v------------/
-comment|//                            n/2 elements               n/2 elements
-comment|// %red1 = op<n x t> %val,<n x t> val1
-comment|// After this operation we have a vector %red1 with only maningfull the
-comment|// first n/2 elements, the second n/2 elements are undefined and can be
-comment|// dropped. All other operations are actually working with the vector of
-comment|// length n/2, not n. though the real vector length is still n.
-comment|// %val2 = shufflevector<n x t> %red1,<n x t> %undef,
-comment|//<n x i32><i32 n/4, i32 n/4 + 1, ..., i32 n/2, i32 undef, ..., i32 undef>
-comment|//            \----------------v-------------/  \----------v------------/
-comment|//                            n/4 elements               3*n/4 elements
-comment|// %red2 = op<n x t> %red1,<n x t> val2  - working with the vector of
-comment|// length n/2, the resulting vector has length n/4 etc.
-comment|// 2. Pairwise reduction:
-comment|// Everything is the same except for an additional shuffle operation which
-comment|// is used to produce operands for pairwise kind of reductions.
-comment|// %val1 = shufflevector<n x t> %val,<n x t> %undef,
-comment|//<n x i32><i32 0, i32 2, ..., i32 n-2, i32 undef, ..., i32 undef>
-comment|//            \-------------v----------/  \----------v------------/
-comment|//                   n/2 elements               n/2 elements
-comment|// %val2 = shufflevector<n x t> %val,<n x t> %undef,
-comment|//<n x i32><i32 1, i32 3, ..., i32 n-1, i32 undef, ..., i32 undef>
-comment|//            \-------------v----------/  \----------v------------/
-comment|//                   n/2 elements               n/2 elements
-comment|// %red1 = op<n x t> %val1,<n x t> val2
-comment|// Again, the operation is performed on<n x t> vector, but the resulting
-comment|// vector %red1 is<n/2 x t> vector.
-comment|//
-comment|// The cost model should take into account that the actual length of the
-comment|// vector is reduced on each iteration.
 name|unsigned
 name|ArithCost
 init|=

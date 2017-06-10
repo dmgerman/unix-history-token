@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/ELF.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/ELFTypes.h"
 end_include
 
@@ -87,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Object/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ELF.h"
 end_include
 
 begin_include

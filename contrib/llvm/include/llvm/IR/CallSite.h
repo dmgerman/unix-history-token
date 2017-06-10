@@ -110,12 +110,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -123,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -170,12 +170,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Use.h"
 end_include
 
@@ -189,6 +183,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include

@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/BinaryFormat/Magic.h"
 end_include
 
 begin_include
@@ -1286,6 +1292,19 @@ name|error_code
 argument_list|()
 return|;
 block|}
+comment|/// Maps a debug section name to a standard DWARF section name.
+name|virtual
+name|StringRef
+name|mapDebugSectionName
+argument_list|(
+argument|StringRef Name
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Name
+return|;
+block|}
 comment|/// True if this is a relocatable object (.o/.obj).
 name|virtual
 name|bool
@@ -1324,7 +1343,7 @@ name|createObjectFile
 argument_list|(
 argument|MemoryBufferRef Object
 argument_list|,
-argument|sys::fs::file_magic Type
+argument|llvm::file_magic Type
 argument_list|)
 block|;
 specifier|static
@@ -1346,9 +1365,7 @@ name|createObjectFile
 argument_list|(
 name|Object
 argument_list|,
-name|sys
-operator|::
-name|fs
+name|llvm
 operator|::
 name|file_magic
 operator|::

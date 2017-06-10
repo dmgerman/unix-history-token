@@ -88,18 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist_node.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/None.h"
 end_include
 
@@ -112,19 +100,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ilist_node.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -148,13 +148,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm/Support/CBindingWrapping.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CBindingWrapping.h"
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include

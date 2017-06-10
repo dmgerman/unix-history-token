@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/MapVector.h"
 end_include
 
@@ -83,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -381,6 +381,10 @@ operator|<
 name|DWARFDebugLocDWO
 operator|>
 name|LocDWO
+block|;
+comment|/// The maximum DWARF version of all units.
+name|unsigned
+name|MaxVersion
 block|;    struct
 name|DWOFile
 block|{
@@ -457,7 +461,12 @@ argument_list|()
 operator|:
 name|DIContext
 argument_list|(
-argument|CK_DWARF
+name|CK_DWARF
+argument_list|)
+block|,
+name|MaxVersion
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|DWARFContext
@@ -755,6 +764,33 @@ name|uint32_t
 name|Offset
 parameter_list|)
 function_decl|;
+name|unsigned
+name|getMaxVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxVersion
+return|;
+block|}
+name|void
+name|setMaxVersionIfGreater
+parameter_list|(
+name|unsigned
+name|Version
+parameter_list|)
+block|{
+if|if
+condition|(
+name|Version
+operator|>
+name|MaxVersion
+condition|)
+name|MaxVersion
+operator|=
+name|Version
+expr_stmt|;
+block|}
 specifier|const
 name|DWARFUnitIndex
 modifier|&
@@ -1046,6 +1082,18 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+comment|/// DWARF v5
+comment|/// @{
+name|virtual
+specifier|const
+name|DWARFSection
+modifier|&
+name|getStringOffsetSection
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|/// @}
 comment|// Sections for DWARF5 split dwarf proposal.
 name|virtual
 specifier|const
@@ -1098,7 +1146,9 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|&
 name|getStringOffsetDWOSection
 parameter_list|()
 init|=
@@ -1322,6 +1372,12 @@ block|;
 name|StringRef
 name|GnuPubTypesSection
 block|;
+comment|/// DWARF v5
+comment|/// @{
+name|DWARFSection
+name|StringOffsetSection
+block|;
+comment|/// @}
 comment|// Sections for DWARF5 split dwarf proposal.
 name|DWARFSection
 name|InfoDWOSection
@@ -1341,7 +1397,7 @@ block|;
 name|StringRef
 name|StringDWOSection
 block|;
-name|StringRef
+name|DWARFSection
 name|StringOffsetDWOSection
 block|;
 name|DWARFSection
@@ -1648,6 +1704,18 @@ return|return
 name|AppleObjCSection
 return|;
 block|}
+comment|// DWARF v5
+specifier|const
+name|DWARFSection
+operator|&
+name|getStringOffsetSection
+argument_list|()
+name|override
+block|{
+return|return
+name|StringOffsetSection
+return|;
+block|}
 comment|// Sections for DWARF5 split dwarf proposal.
 specifier|const
 name|DWARFSection
@@ -1711,7 +1779,9 @@ return|return
 name|StringDWOSection
 return|;
 block|}
-name|StringRef
+specifier|const
+name|DWARFSection
+operator|&
 name|getStringOffsetDWOSection
 argument_list|()
 name|override

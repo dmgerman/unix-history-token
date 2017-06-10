@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -91,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SparseSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include

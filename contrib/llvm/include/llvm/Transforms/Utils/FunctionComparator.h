@@ -90,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/ValueMap.h"
+file|"llvm/IR/Operator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Operator.h"
+file|"llvm/IR/ValueMap.h"
 end_include
 
 begin_include

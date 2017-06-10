@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/None.h"
 end_include
 
@@ -92,19 +86,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/BinaryFormat/Dwarf.h"
 end_include
 
 begin_include
@@ -117,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Dwarf.h"
 end_include
 
 begin_include
@@ -756,7 +756,7 @@ block|;
 comment|/// Tagged DWARF-like metadata node.
 comment|///
 comment|/// A metadata node with a DWARF tag (i.e., a constant named \c DW_TAG_*,
-comment|/// defined in llvm/Support/Dwarf.h).  Called \a DINode because it's
+comment|/// defined in llvm/BinaryFormat/Dwarf.h).  Called \a DINode because it's
 comment|/// potentially used for non-DWARF output.
 name|class
 name|DINode
@@ -11958,7 +11958,8 @@ block|;
 comment|/// Macro Info DWARF-like metadata node.
 comment|///
 comment|/// A metadata node with a DWARF macro info (i.e., a constant named
-comment|/// \c DW_MACINFO_*, defined in llvm/Support/Dwarf.h).  Called \a DIMacroNode
+comment|/// \c DW_MACINFO_*, defined in llvm/BinaryFormat/Dwarf.h).  Called \a
+comment|/// DIMacroNode
 comment|/// because it's potentially used for non-DWARF output.
 name|class
 name|DIMacroNode

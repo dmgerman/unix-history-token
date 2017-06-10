@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ilist.h"
 end_include
 
@@ -69,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/ilist_node.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
@@ -105,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm-c/Types.h"
 end_include
 
 begin_include

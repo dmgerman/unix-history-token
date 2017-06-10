@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- GCMetadata.h - Garbage collector metadata ---------------*- C++ -*-===//
+comment|//===- GCMetadata.h - Garbage collector metadata ----------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/GCStrategy.h"
 end_include
 
@@ -174,13 +180,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -188,10 +212,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|AsmPrinter
+name|Constant
 decl_stmt|;
 name|class
-name|Constant
+name|Function
 decl_stmt|;
 name|class
 name|MCSymbol
@@ -252,6 +276,9 @@ decl_stmt|;
 comment|///< Usually a frame index.
 name|int
 name|StackOffset
+init|=
+operator|-
+literal|1
 decl_stmt|;
 comment|///< Offset from the stack pointer.
 specifier|const
@@ -273,12 +300,6 @@ argument_list|(
 name|N
 argument_list|)
 operator|,
-name|StackOffset
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-operator|,
 name|Metadata
 argument_list|(
 argument|MD
@@ -293,7 +314,9 @@ name|GCFunctionInfo
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|std
 operator|::
 name|vector
@@ -302,9 +325,10 @@ name|GCPoint
 operator|>
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|roots_iterator
+init|=
 name|std
 operator|::
 name|vector
@@ -313,9 +337,10 @@ name|GCRoot
 operator|>
 operator|::
 name|iterator
-name|roots_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|live_iterator
+init|=
 name|std
 operator|::
 name|vector
@@ -324,8 +349,7 @@ name|GCRoot
 operator|>
 operator|::
 name|const_iterator
-name|live_iterator
-expr_stmt|;
+decl_stmt|;
 name|private
 label|:
 specifier|const
@@ -384,7 +408,6 @@ name|GCFunctionInfo
 argument_list|()
 expr_stmt|;
 comment|/// getFunction - Return the function to which this metadata applies.
-comment|///
 specifier|const
 name|Function
 operator|&
@@ -397,7 +420,6 @@ name|F
 return|;
 block|}
 comment|/// getStrategy - Return the GC strategy for the function.
-comment|///
 name|GCStrategy
 modifier|&
 name|getStrategy
@@ -486,7 +508,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// getFrameSize/setFrameSize - Records the function's frame size.
-comment|///
 name|uint64_t
 name|getFrameSize
 argument_list|()
@@ -509,7 +530,6 @@ name|S
 expr_stmt|;
 block|}
 comment|/// begin/end - Iterators for safe points.
-comment|///
 name|iterator
 name|begin
 parameter_list|()
@@ -545,7 +565,6 @@ argument_list|()
 return|;
 block|}
 comment|/// roots_begin/roots_end - Iterators for all roots in the function.
-comment|///
 name|roots_iterator
 name|roots_begin
 parameter_list|()
@@ -581,7 +600,6 @@ argument_list|()
 return|;
 block|}
 comment|/// live_begin/live_end - Iterators for live roots at a given safe point.
-comment|///
 name|live_iterator
 name|live_begin
 parameter_list|(
@@ -672,7 +690,9 @@ argument_list|)
 block|;
 comment|/// List of per function info objects.  In theory, Each of these
 comment|/// may be associated with a different GC.
-typedef|typedef
+name|using
+name|FuncInfoVec
+operator|=
 name|std
 operator|::
 name|vector
@@ -683,8 +703,7 @@ name|unique_ptr
 operator|<
 name|GCFunctionInfo
 operator|>>
-name|FuncInfoVec
-expr_stmt|;
+block|;
 name|FuncInfoVec
 operator|::
 name|iterator
@@ -716,27 +735,30 @@ operator|:
 comment|/// Owning list of all GCFunctionInfos associated with this Module
 name|FuncInfoVec
 name|Functions
-decl_stmt|;
+block|;
 comment|/// Non-owning map to bypass linear search when finding the GCFunctionInfo
 comment|/// associated with a particular Function.
-typedef|typedef
+name|using
+name|finfo_map_type
+operator|=
 name|DenseMap
 operator|<
 specifier|const
 name|Function
 operator|*
-operator|,
+block|,
 name|GCFunctionInfo
 operator|*
 operator|>
-name|finfo_map_type
-expr_stmt|;
+block|;
 name|finfo_map_type
 name|FInfoMap
-decl_stmt|;
+block|;
 name|public
-label|:
-typedef|typedef
+operator|:
+name|using
+name|iterator
+operator|=
 name|SmallVector
 operator|<
 name|std
@@ -745,27 +767,26 @@ name|unique_ptr
 operator|<
 name|GCStrategy
 operator|>
-operator|,
+block|,
 literal|1
 operator|>
 operator|::
 name|const_iterator
-name|iterator
-expr_stmt|;
+block|;
 specifier|static
 name|char
 name|ID
-decl_stmt|;
+block|;
 name|GCModuleInfo
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// clear - Resets the pass. Any pass, which uses GCModuleInfo, should
 comment|/// call it in doFinalization().
 comment|///
 name|void
 name|clear
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// begin/end - Iterators for used strategies.
 comment|///
 name|iterator
@@ -796,27 +817,31 @@ comment|/// get - Look up function metadata.  This is currently assumed
 comment|/// have the side effect of initializing the associated GCStrategy.  That
 comment|/// will soon change.
 name|GCFunctionInfo
-modifier|&
+operator|&
 name|getFunctionInfo
-parameter_list|(
+argument_list|(
 specifier|const
 name|Function
-modifier|&
+operator|&
 name|F
-parameter_list|)
-function_decl|;
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_GCMETADATA_H
+end_comment
 
 end_unit
 

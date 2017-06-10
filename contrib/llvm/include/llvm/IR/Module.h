@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
+file|"llvm-c/Types.h"
 end_include
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -151,12 +157,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/CodeGen.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm-c/Types.h"
 end_include
 
 begin_include

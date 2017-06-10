@@ -104,13 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/GlobalObject.h"
+file|"llvm/IR/Attributes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Attributes.h"
+file|"llvm/IR/GlobalObject.h"
 end_include
 
 begin_include
@@ -797,6 +797,38 @@ name|Attrs
 operator|=
 name|A
 expr_stmt|;
+block|}
+comment|/// Check if section name is present
+name|bool
+name|hasImplicitSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getAttributes
+argument_list|()
+operator|.
+name|hasAttribute
+argument_list|(
+literal|"bss-section"
+argument_list|)
+operator|||
+name|getAttributes
+argument_list|()
+operator|.
+name|hasAttribute
+argument_list|(
+literal|"data-section"
+argument_list|)
+operator|||
+name|getAttributes
+argument_list|()
+operator|.
+name|hasAttribute
+argument_list|(
+literal|"rodata-section"
+argument_list|)
+return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static

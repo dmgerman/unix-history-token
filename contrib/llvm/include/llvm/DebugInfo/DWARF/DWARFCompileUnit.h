@@ -79,7 +79,7 @@ argument|const DWARFSection *RS
 argument_list|,
 argument|StringRef SS
 argument_list|,
-argument|StringRef SOS
+argument|const DWARFSection&SOS
 argument_list|,
 argument|const DWARFSection *AOS
 argument_list|,
@@ -130,9 +130,9 @@ block|;
 name|void
 name|dump
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
+argument|raw_ostream&OS
+argument_list|,
+argument|DIDumpOptions DumpOpts
 argument_list|)
 block|;
 specifier|static

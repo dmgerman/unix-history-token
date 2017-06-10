@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator.h"
 end_include
 
@@ -64,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
+file|"llvm/BinaryFormat/Dwarf.h"
 end_include
 
 begin_include
@@ -89,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/DWARF/DWARFDebugRangeList.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Dwarf.h"
 end_include
 
 begin_include
@@ -440,6 +440,12 @@ name|unsigned
 name|indent
 operator|=
 literal|0
+argument_list|,
+name|DIDumpOptions
+name|DumpOpts
+operator|=
+name|DIDumpOptions
+argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;

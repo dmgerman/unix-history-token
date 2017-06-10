@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -77,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/FoldingSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -100,13 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/PointerLikeTypeTraits.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm-c/Types.h"
+file|"llvm/Support/PointerLikeTypeTraits.h"
 end_include
 
 begin_include

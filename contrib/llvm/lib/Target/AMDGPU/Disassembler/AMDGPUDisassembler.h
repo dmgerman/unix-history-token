@@ -94,13 +94,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstdint>
+file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<algorithm>
+file|<cstdint>
 end_include
 
 begin_include

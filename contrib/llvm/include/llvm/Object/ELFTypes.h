@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Object/Error.h"
+file|"llvm/BinaryFormat/ELF.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ELF.h"
+file|"llvm/Object/Error.h"
 end_include
 
 begin_include

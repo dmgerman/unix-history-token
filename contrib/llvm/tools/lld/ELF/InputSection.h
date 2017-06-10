@@ -1433,6 +1433,11 @@ operator|>
 name|Rels
 argument_list|)
 block|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
 name|void
 name|copyShtGroup
 argument_list|(

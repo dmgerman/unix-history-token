@@ -167,20 +167,6 @@ block|}
 enum|;
 block|}
 comment|// end namespace LCOMM
-name|enum
-name|class
-name|DebugCompressionType
-block|{
-name|DCT_None
-operator|,
-comment|// no compression
-name|DCT_Zlib
-operator|,
-comment|// zlib style complession
-name|DCT_ZlibGnu
-comment|// zlib-gnu style compression
-block|}
-empty_stmt|;
 comment|/// This class is intended to be used as a base class for asm
 comment|/// properties and features specific to the target.
 name|class
@@ -739,7 +725,7 @@ name|CompressDebugSections
 init|=
 name|DebugCompressionType
 operator|::
-name|DCT_None
+name|None
 decl_stmt|;
 comment|/// True if the integrated assembler should interpret 'a>> b' constant
 comment|/// expressions as logical rather than arithmetic.

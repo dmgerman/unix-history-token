@@ -90,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstdint>
+file|<cstddef>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cstddef>
+file|<cstdint>
 end_include
 
 begin_decl_stmt

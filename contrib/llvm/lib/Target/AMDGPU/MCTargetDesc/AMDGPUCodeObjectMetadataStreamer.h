@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"AMDGPUCodeObjectMetadata.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"AMDKernelCodeT.h"
 end_include
 
@@ -89,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/AMDGPUCodeObjectMetadata.h"
 end_include
 
 begin_include

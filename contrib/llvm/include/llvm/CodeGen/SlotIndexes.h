@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/IntervalMap.h"
 end_include
 
@@ -107,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ilist.h"
 end_include
 
 begin_include

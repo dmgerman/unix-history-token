@@ -82,13 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/SmallString.h"
 end_include
 
 begin_include
@@ -112,13 +112,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Module.h"
+file|"llvm/IR/GlobalValue.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/GlobalValue.h"
+file|"llvm/IR/Module.h"
 end_include
 
 begin_include

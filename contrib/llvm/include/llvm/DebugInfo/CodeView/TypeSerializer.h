@@ -339,6 +339,15 @@ name|void
 name|reset
 argument_list|()
 block|;
+name|BumpPtrAllocator
+operator|&
+name|getAllocator
+argument_list|()
+block|{
+return|return
+name|RecordStorage
+return|;
+block|}
 name|ArrayRef
 operator|<
 name|ArrayRef

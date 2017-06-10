@@ -479,13 +479,20 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
-comment|/// Print the \LazyValueInfoCache.
+comment|/// Print the \LazyValueInfo Analysis.
+comment|/// We pass in the DTree that is required for identifying which basic blocks
+comment|/// we can solve/print for, in the LVIPrinter. The DT is optional
+comment|/// in LVI, so we need to pass it here as an argument.
 name|void
-name|printCache
+name|printLVI
 parameter_list|(
 name|Function
 modifier|&
 name|F
+parameter_list|,
+name|DominatorTree
+modifier|&
+name|DTree
 parameter_list|,
 name|raw_ostream
 modifier|&

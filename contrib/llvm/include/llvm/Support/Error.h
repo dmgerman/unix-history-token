@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===----- llvm/Support/Error.h - Recoverable error handling ----*- C++ -*-===//
+comment|//===- llvm/Support/Error.h - Recoverable error handling --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -105,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -457,30 +463,26 @@ label|:
 comment|/// Create a success value. Prefer using 'Error::success()' for readability
 name|Error
 argument_list|()
-operator|:
-name|Payload
-argument_list|(
-argument|nullptr
-argument_list|)
 block|{
 name|setPtr
 argument_list|(
 name|nullptr
 argument_list|)
-block|;
+expr_stmt|;
 name|setChecked
 argument_list|(
 name|false
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 name|public
-operator|:
+label|:
 comment|/// Create a success value.
 specifier|static
 name|ErrorSuccess
 name|success
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|// Errors are not copy-constructable.
 name|Error
 argument_list|(
@@ -497,21 +499,14 @@ comment|/// unchecked, even if the source error had been checked. The original e
 comment|/// becomes a checked Success value, regardless of its original state.
 name|Error
 argument_list|(
-name|Error
-operator|&&
-name|Other
-argument_list|)
-operator|:
-name|Payload
-argument_list|(
-argument|nullptr
+argument|Error&&Other
 argument_list|)
 block|{
 name|setChecked
 argument_list|(
 name|true
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|this
 operator|=
@@ -521,7 +516,8 @@ name|move
 argument_list|(
 name|Other
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// Create an error value. Prefer using the 'make_error' function, but
 comment|/// this constructor can be useful when "re-throwing" errors from handlers.
 name|Error
@@ -536,17 +532,18 @@ operator|.
 name|release
 argument_list|()
 argument_list|)
-block|;
+expr_stmt|;
 name|setChecked
 argument_list|(
 name|false
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|// Errors are not copy-assignable.
 name|Error
-operator|&
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|Error
@@ -555,7 +552,7 @@ name|Other
 operator|)
 operator|=
 name|delete
-expr_stmt|;
+decl_stmt|;
 comment|/// Move-assign an error value. The current error must represent success, you
 comment|/// you cannot overwrite an unhandled error. The current error is then
 comment|/// considered unchecked. The source error becomes a checked success value,
@@ -963,6 +960,8 @@ begin_decl_stmt
 name|ErrorInfoBase
 modifier|*
 name|Payload
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -3097,7 +3096,9 @@ operator|>
 operator|::
 name|value
 block|;
-typedef|typedef
+name|using
+name|wrap
+operator|=
 name|ReferenceStorage
 operator|<
 name|typename
@@ -3110,76 +3111,60 @@ operator|>
 operator|::
 name|type
 operator|>
-name|wrap
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|error_type
+operator|=
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|ErrorInfoBase
 operator|>
-name|error_type
-expr_stmt|;
-end_typedef
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_typedef
-typedef|typedef
+operator|:
+name|using
+name|storage_type
+operator|=
 name|typename
 name|std
 operator|::
 name|conditional
 operator|<
 name|isRef
-operator|,
+block|,
 name|wrap
-operator|,
+block|,
 name|T
 operator|>
 operator|::
 name|type
-name|storage_type
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|T
+block|;
+name|using
 name|value_type
-typedef|;
-end_typedef
-
-begin_label
+operator|=
+name|T
+block|;
 name|private
-label|:
-end_label
-
-begin_typedef
-typedef|typedef
-name|typename
-name|std
-operator|::
-name|remove_reference
-operator|<
-name|T
-operator|>
-operator|::
-name|type
-operator|&
+operator|:
+name|using
 name|reference
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+operator|=
+name|typename
+name|std
+operator|::
+name|remove_reference
+operator|<
+name|T
+operator|>
+operator|::
+name|type
+operator|&
+block|;
+name|using
+name|const_reference
+operator|=
 specifier|const
 name|typename
 name|std
@@ -3191,12 +3176,10 @@ operator|>
 operator|::
 name|type
 operator|&
-name|const_reference
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|pointer
+operator|=
 name|typename
 name|std
 operator|::
@@ -3207,12 +3190,10 @@ operator|>
 operator|::
 name|type
 operator|*
-name|pointer
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|const_pointer
+operator|=
 specifier|const
 name|typename
 name|std
@@ -3224,28 +3205,15 @@ operator|>
 operator|::
 name|type
 operator|*
-name|const_pointer
-expr_stmt|;
-end_typedef
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|/// Create an Expected<T> error value from the given Error.
-end_comment
-
-begin_macro
 name|Expected
 argument_list|(
 argument|Error Err
 argument_list|)
-end_macro
-
-begin_expr_stmt
-unit|:
+operator|:
 name|HasError
 argument_list|(
 name|true
@@ -3254,7 +3222,7 @@ if|#
 directive|if
 name|LLVM_ENABLE_ABI_BREAKING_CHECKS
 comment|// Expected is unchecked upon construction in Debug builds.
-operator|,
+block|,
 name|Unchecked
 argument_list|(
 argument|true
@@ -3290,18 +3258,9 @@ name|ErrorSuccess
 argument_list|)
 operator|=
 name|delete
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// Create an Expected<T> success value from the given OtherT value, which
-end_comment
-
-begin_comment
 comment|/// must be convertible to T.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3324,7 +3283,7 @@ if|#
 directive|if
 name|LLVM_ENABLE_ABI_BREAKING_CHECKS
 comment|// Expected is unchecked upon construction in Debug builds.
-operator|,
+block|,
 name|Unchecked
 argument_list|(
 argument|true
@@ -3444,13 +3403,7 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Destroy an Expected<T>.
-end_comment
-
-begin_expr_stmt
 operator|~
 name|Expected
 argument_list|()

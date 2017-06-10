@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/TailDuplicator.h ---------------------------*- C++ -*-===//
+comment|//===- llvm/CodeGen/TailDuplicator.h ----------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,31 +66,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineBranchProbabilityInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineModuleInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineSSAUpdater.h"
 end_include
 
 begin_include
@@ -102,13 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
+file|"llvm/Support/CommandLine.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
 begin_include
@@ -117,11 +117,43 @@ directive|include
 file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-extern|extern cl::opt<unsigned> TailDupIndirectBranchSize;
+name|class
+name|MachineBasicBlock
+decl_stmt|;
+name|class
+name|MachineBranchProbabilityInfo
+decl_stmt|;
+name|class
+name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineInstr
+decl_stmt|;
+name|class
+name|MachineModuleInfo
+decl_stmt|;
+name|class
+name|MachineRegisterInfo
+decl_stmt|;
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
 comment|/// Utility class to perform tail duplication.
 name|class
 name|TailDuplicator
@@ -174,7 +206,9 @@ name|SSAUpdateVRs
 expr_stmt|;
 comment|// For each virtual register in SSAUpdateVals keep a list of source virtual
 comment|// registers.
-typedef|typedef
+name|using
+name|AvailableValsTy
+init|=
 name|std
 operator|::
 name|vector
@@ -185,11 +219,10 @@ name|pair
 operator|<
 name|MachineBasicBlock
 operator|*
-operator|,
+decl_stmt|,
 name|unsigned
-operator|>>
-name|AvailableValsTy
-expr_stmt|;
+decl|>>
+decl_stmt|;
 name|DenseMap
 operator|<
 name|unsigned
@@ -296,8 +329,6 @@ name|DuplicatedPreds
 operator|=
 name|nullptr
 argument_list|,
-name|llvm
-operator|::
 name|function_ref
 operator|<
 name|void
@@ -314,12 +345,13 @@ argument_list|)
 decl_stmt|;
 name|private
 label|:
-typedef|typedef
+name|using
+name|RegSubRegPair
+init|=
 name|TargetInstrInfo
 operator|::
 name|RegSubRegPair
-name|RegSubRegPair
-expr_stmt|;
+decl_stmt|;
 name|void
 name|addSSAUpdateEntry
 parameter_list|(
@@ -552,8 +584,6 @@ name|MachineBasicBlock
 operator|*
 name|MBB
 argument_list|,
-name|llvm
-operator|::
 name|function_ref
 operator|<
 name|void
@@ -574,13 +604,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_TAILDUPLICATOR_H
+end_comment
 
 end_unit
 

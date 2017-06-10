@@ -98,13 +98,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringSwitch.h"
+file|"llvm/ADT/Optional.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
+file|"llvm/ADT/StringSwitch.h"
 end_include
 
 begin_include

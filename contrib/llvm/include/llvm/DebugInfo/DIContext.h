@@ -547,6 +547,8 @@ name|DIDT_GnuPubtypes
 block|,
 name|DIDT_Str
 block|,
+name|DIDT_StrOffsets
+block|,
 name|DIDT_StrDwo
 block|,
 name|DIDT_StrOffsetsDwo
@@ -583,6 +585,11 @@ name|false
 decl_stmt|;
 name|bool
 name|SummarizeTypes
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|Brief
 init|=
 name|false
 decl_stmt|;

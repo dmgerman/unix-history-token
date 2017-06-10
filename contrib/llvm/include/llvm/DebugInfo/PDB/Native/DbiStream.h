@@ -362,6 +362,10 @@ name|DbgStreams
 expr_stmt|;
 name|PdbRaw_DbiSecContribVer
 name|SectionContribVersion
+init|=
+name|PdbRaw_DbiSecContribVer
+operator|::
+name|DbiSecContribVer60
 decl_stmt|;
 name|FixedStreamArray
 operator|<

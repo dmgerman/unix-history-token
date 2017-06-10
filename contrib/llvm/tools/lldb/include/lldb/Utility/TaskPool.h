@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<functional>
 end_include
 
@@ -509,16 +515,16 @@ argument_list|,
 name|size_t
 name|end
 argument_list|,
-name|std
+specifier|const
+name|llvm
 operator|::
-name|function
+name|function_ref
 operator|<
 name|void
 argument_list|(
 name|size_t
 argument_list|)
 operator|>
-specifier|const
 operator|&
 name|func
 argument_list|)

@@ -15330,7 +15330,7 @@ comment|///    A pointer to a 32-byte aligned memory location that will receive 
 end_comment
 
 begin_comment
-comment|///    integer values.
+comment|///    double-precision floating-point values.
 end_comment
 
 begin_comment

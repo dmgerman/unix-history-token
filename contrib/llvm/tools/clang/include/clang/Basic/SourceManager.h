@@ -2190,6 +2190,17 @@ name|void
 name|clearIDTables
 parameter_list|()
 function_decl|;
+comment|/// Initialize this source manager suitably to replay the compilation
+comment|/// described by \p Old. Requires that \p Old outlive \p *this.
+name|void
+name|initializeForReplay
+parameter_list|(
+specifier|const
+name|SourceManager
+modifier|&
+name|Old
+parameter_list|)
+function_decl|;
 name|DiagnosticsEngine
 operator|&
 name|getDiagnostics

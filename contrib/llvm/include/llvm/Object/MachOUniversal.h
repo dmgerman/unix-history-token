@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/MachO.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/Archive.h"
 end_include
 
@@ -87,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Object/MachO.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/MachO.h"
 end_include
 
 begin_decl_stmt

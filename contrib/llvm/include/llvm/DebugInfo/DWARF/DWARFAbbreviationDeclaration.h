@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -64,13 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataExtractor.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Dwarf.h"
+file|"llvm/BinaryFormat/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataExtractor.h"
 end_include
 
 begin_include

@@ -690,8 +690,9 @@ specifier|const
 block|{
 return|return
 name|Val
-operator|==
-literal|0
+operator|.
+name|isNullValue
+argument_list|()
 return|;
 block|}
 comment|/// This is just a convenience method to make client code smaller for a
@@ -705,8 +706,9 @@ specifier|const
 block|{
 return|return
 name|Val
-operator|==
-literal|1
+operator|.
+name|isOneValue
+argument_list|()
 return|;
 block|}
 comment|/// This function will return true iff every bit in this constant is set
@@ -800,17 +802,10 @@ block|{
 return|return
 name|Val
 operator|.
-name|getActiveBits
-argument_list|()
-operator|>
-literal|64
-operator|||
-name|Val
-operator|.
-name|getZExtValue
-argument_list|()
-operator|>=
+name|uge
+argument_list|(
 name|Num
+argument_list|)
 return|;
 block|}
 comment|/// getLimitedValue - If the value is smaller than the specified limit,

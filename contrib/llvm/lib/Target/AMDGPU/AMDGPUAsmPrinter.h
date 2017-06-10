@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"AMDKernelCodeT.h"
+file|"AMDGPU.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"AMDGPU.h"
+file|"AMDKernelCodeT.h"
 end_include
 
 begin_include

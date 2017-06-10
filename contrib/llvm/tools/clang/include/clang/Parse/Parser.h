@@ -549,6 +549,14 @@ name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
+name|PCSectionHandler
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
 name|MSCommentHandler
 block|;
 name|std
@@ -5214,6 +5222,8 @@ name|ParseConstantExpressionInExprEvalContext
 parameter_list|(
 name|TypeCastState
 name|isTypeCast
+init|=
+name|NotTypeCast
 parameter_list|)
 function_decl|;
 name|ExprResult

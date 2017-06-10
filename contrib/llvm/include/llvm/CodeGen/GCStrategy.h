@@ -491,13 +491,14 @@ comment|///
 comment|/// Note that to use a custom GCMetadataPrinter w/gc.roots, you must also
 comment|/// register your GCMetadataPrinter subclass with the
 comment|/// GCMetadataPrinterRegistery as well.
-typedef|typedef
+name|using
+name|GCRegistry
+init|=
 name|Registry
 operator|<
 name|GCStrategy
 operator|>
-name|GCRegistry
-expr_stmt|;
+decl_stmt|;
 block|}
 end_decl_stmt
 
