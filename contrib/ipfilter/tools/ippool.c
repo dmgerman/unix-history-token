@@ -2215,7 +2215,36 @@ operator||=
 name|OPT_VERBOSE
 expr_stmt|;
 break|break;
+default|default :
+name|usage
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* keep compiler happy */
 block|}
+if|if
+condition|(
+name|argc
+operator|-
+literal|1
+operator|-
+name|optind
+operator|>
+literal|0
+condition|)
+name|usage
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|opts
