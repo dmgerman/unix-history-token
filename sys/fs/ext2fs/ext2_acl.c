@@ -129,6 +129,12 @@ directive|include
 file|<fs/ext2fs/ext2_mount.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UFS_ACL
+end_ifdef
+
 begin_function
 name|void
 name|ext2_sync_acl_from_inode
@@ -2290,6 +2296,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* UFS_ACL */
+end_comment
 
 end_unit
 
