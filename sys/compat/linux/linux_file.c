@@ -1456,30 +1456,6 @@ name|LINUX_DIRBLKSIZ
 value|512
 end_define
 
-begin_comment
-comment|/*  * Linux l_dirent is bigger than FreeBSD dirent, thus the buffer size  * passed to kern_getdirentries() must be smaller than the one passed  * to linux_getdents() by certain factor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LINUX_RECLEN_RATIO
-parameter_list|(
-name|X
-parameter_list|)
-value|X * offsetof(struct dirent, d_name) /	\     offsetof(struct l_dirent, d_name);
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_RECLEN64_RATIO
-parameter_list|(
-name|X
-parameter_list|)
-value|X * offsetof(struct dirent, d_name) / 	\     offsetof(struct l_dirent64, d_name);
-end_define
-
 begin_function
 name|int
 name|linux_getdents
@@ -1574,18 +1550,11 @@ endif|#
 directive|endif
 name|buflen
 operator|=
-name|LINUX_RECLEN_RATIO
+name|min
 argument_list|(
 name|args
 operator|->
 name|count
-argument_list|)
-expr_stmt|;
-name|buflen
-operator|=
-name|min
-argument_list|(
-name|buflen
 argument_list|,
 name|MAXBSIZE
 argument_list|)
@@ -1982,18 +1951,11 @@ endif|#
 directive|endif
 name|buflen
 operator|=
-name|LINUX_RECLEN64_RATIO
+name|min
 argument_list|(
 name|args
 operator|->
 name|count
-argument_list|)
-expr_stmt|;
-name|buflen
-operator|=
-name|min
-argument_list|(
-name|buflen
 argument_list|,
 name|MAXBSIZE
 argument_list|)
@@ -2387,13 +2349,6 @@ operator|=
 name|LINUX_RECLEN
 argument_list|(
 name|LINUX_NAME_MAX
-argument_list|)
-expr_stmt|;
-name|buflen
-operator|=
-name|LINUX_RECLEN_RATIO
-argument_list|(
-name|buflen
 argument_list|)
 expr_stmt|;
 name|buf
