@@ -303,6 +303,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PT_GET_SC_ARGS
+value|27
+end_define
+
+begin_comment
+comment|/* fetch syscall args */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PT_GETREGS
 value|33
 end_define
