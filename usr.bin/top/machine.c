@@ -754,7 +754,7 @@ begin_decl_stmt
 name|int
 name|carc_stats
 index|[
-literal|5
+literal|4
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -771,8 +771,6 @@ block|,
 literal|"K Uncompressed, "
 block|,
 literal|":1 Ratio, "
-block|,
-literal|"K Overhead"
 block|,
 name|NULL
 block|}
@@ -3002,6 +3000,16 @@ name|arc_stat
 operator|>>
 literal|10
 expr_stmt|;
+name|carc_stats
+index|[
+literal|2
+index|]
+operator|=
+name|arc_stat
+operator|>>
+literal|10
+expr_stmt|;
+comment|/* For ratio */
 name|GETSYSCTL
 argument_list|(
 literal|"kstat.zfs.misc.arcstats.uncompressed_size"
@@ -3012,33 +3020,6 @@ expr_stmt|;
 name|carc_stats
 index|[
 literal|1
-index|]
-operator|=
-name|arc_stat
-operator|>>
-literal|10
-expr_stmt|;
-name|carc_stats
-index|[
-literal|2
-index|]
-operator|=
-name|arc_stats
-index|[
-literal|0
-index|]
-expr_stmt|;
-comment|/* ARC Total */
-name|GETSYSCTL
-argument_list|(
-literal|"kstat.zfs.misc.arcstats.overhead_size"
-argument_list|,
-name|arc_stat
-argument_list|)
-expr_stmt|;
-name|carc_stats
-index|[
-literal|3
 index|]
 operator|=
 name|arc_stat
