@@ -821,14 +821,6 @@ name|argv
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'v'
-case|:
-name|opts
-operator||=
-name|OPT_VERBOSE
-expr_stmt|;
-break|break;
 default|default :
 name|exit
 argument_list|(
