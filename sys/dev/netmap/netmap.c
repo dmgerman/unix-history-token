@@ -8,7 +8,7 @@ comment|/*  * $FreeBSD$  *  * This module supports memory mapped access to netwo
 end_comment
 
 begin_comment
-comment|/* --- internals ----  *  * Roadmap to the code that implements the above.  *  *> 1. a process/thread issues one or more open() on /dev/netmap, to create  *>    select()able file descriptor on which events are reported.  *  *  	Internally, we allocate a netmap_priv_d structure, that will be  *  	initialized on ioctl(NIOCREGIF). There is one netmap_priv_d  *  	structure for each open().  *  *      os-specific:  *  	    FreeBSD: see netmap_open() (netmap_freebsd.c)  *  	    linux:   see linux_netmap_open() (netmap_linux.c)  *  *> 2. on each descriptor, the process issues an ioctl() to identify  *>    the interface that should report events to the file descriptor.  *  * 	Implemented by netmap_ioctl(), NIOCREGIF case, with nmr->nr_cmd==0.  * 	Most important things happen in netmap_get_na() and  * 	netmap_do_regif(), called from there. Additional details can be  * 	found in the comments above those functions.  *  * 	In all cases, this action creates/takes-a-reference-to a  * 	netmap_*_adapter describing the port, and allocates a netmap_if  * 	and all necessary netmap rings, filling them with netmap buffers.  *  *      In this phase, the sync callbacks for each ring are set (these are used  *      in steps 5 and 6 below).  The callbacks depend on the type of adapter.  *      The adapter creation/initialization code puts them in the  * 	netmap_adapter (fields na->nm_txsync and na->nm_rxsync).  Then, they  * 	are copied from there to the netmap_kring's during netmap_do_regif(), by  * 	the nm_krings_create() callback.  All the nm_krings_create callbacks  * 	actually call netmap_krings_create() to perform this and the other  * 	common stuff. netmap_krings_create() also takes care of the host rings,  * 	if needed, by setting their sync callbacks appropriately.  *  * 	Additional actions depend on the kind of netmap_adapter that has been  * 	registered:  *  * 	- netmap_hw_adapter:  	     [netmap.c]  * 	     This is a system netdev/ifp with native netmap support.  * 	     The ifp is detached from the host stack by redirecting:  * 	       - transmissions (from the network stack) to netmap_transmit()  * 	       - receive notifications to the nm_notify() callback for  * 	         this adapter. The callback is normally netmap_notify(), unless  * 	         the ifp is attached to a bridge using bwrap, in which case it  * 	         is netmap_bwrap_intr_notify().  *  * 	- netmap_generic_adapter:      [netmap_generic.c]  * 	      A system netdev/ifp without native netmap support.  *  * 	(the decision about native/non native support is taken in  * 	 netmap_get_hw_na(), called by netmap_get_na())  *  * 	- netmap_vp_adapter 		[netmap_vale.c]  * 	      Returned by netmap_get_bdg_na().  * 	      This is a persistent or ephemeral VALE port. Ephemeral ports  * 	      are created on the fly if they don't already exist, and are  * 	      always attached to a bridge.  * 	      Persistent VALE ports must must be created separately, and i  * 	      then attached like normal NICs. The NIOCREGIF we are examining  * 	      will find them only if they had previosly been created and  * 	      attached (see VALE_CTL below).  *  * 	- netmap_pipe_adapter 	      [netmap_pipe.c]  * 	      Returned by netmap_get_pipe_na().  * 	      Both pipe ends are created, if they didn't already exist.  *  * 	- netmap_monitor_adapter      [netmap_monitor.c]  * 	      Returned by netmap_get_monitor_na().  * 	      If successful, the nm_sync callbacks of the monitored adapter  * 	      will be intercepted by the returned monitor.  *  * 	- netmap_bwrap_adapter	      [netmap_vale.c]  * 	      Cannot be obtained in this way, see VALE_CTL below  *  *  * 	os-specific:  * 	    linux: we first go through linux_netmap_ioctl() to  * 	           adapt the FreeBSD interface to the linux one.  *  *  *> 3. on each descriptor, the process issues an mmap() request to  *>    map the shared memory region within the process' address space.  *>    The list of interesting queues is indicated by a location in  *>    the shared memory region.  *  *      os-specific:  *  	    FreeBSD: netmap_mmap_single (netmap_freebsd.c).  *  	    linux:   linux_netmap_mmap (netmap_linux.c).  *  *> 4. using the functions in the netmap(4) userspace API, a process  *>    can look up the occupation state of a queue, access memory buffers,  *>    and retrieve received packets or enqueue packets to transmit.  *  * 	these actions do not involve the kernel.  *  *> 5. using some ioctl()s the process can synchronize the userspace view  *>    of the queue with the actual status in the kernel. This includes both  *>    receiving the notification of new packets, and transmitting new  *>    packets on the output interface.  *  * 	These are implemented in netmap_ioctl(), NIOCTXSYNC and NIOCRXSYNC  * 	cases. They invoke the nm_sync callbacks on the netmap_kring  * 	structures, as initialized in step 2 and maybe later modified  * 	by a monitor. Monitors, however, will always call the original  * 	callback before doing anything else.  *  *  *> 6. select() or poll() can be used to wait for events on individual  *>    transmit or receive queues (or all queues for a given interface).  *  * 	Implemented in netmap_poll(). This will call the same nm_sync()  * 	callbacks as in step 5 above.  *  * 	os-specific:  * 		linux: we first go through linux_netmap_poll() to adapt  * 		       the FreeBSD interface to the linux one.  *  *  *  ----  VALE_CTL -----  *  *  VALE switches are controlled by issuing a NIOCREGIF with a non-null  *  nr_cmd in the nmreq structure. These subcommands are handled by  *  netmap_bdg_ctl() in netmap_vale.c. Persistent VALE ports are created  *  and destroyed by issuing the NETMAP_BDG_NEWIF and NETMAP_BDG_DELIF  *  subcommands, respectively.  *  *  Any network interface known to the system (including a persistent VALE  *  port) can be attached to a VALE switch by issuing the  *  NETMAP_BDG_ATTACH subcommand. After the attachment, persistent VALE ports  *  look exactly like ephemeral VALE ports (as created in step 2 above).  The  *  attachment of other interfaces, instead, requires the creation of a  *  netmap_bwrap_adapter.  Moreover, the attached interface must be put in  *  netmap mode. This may require the creation of a netmap_generic_adapter if  *  we have no native support for the interface, or if generic adapters have  *  been forced by sysctl.  *  *  Both persistent VALE ports and bwraps are handled by netmap_get_bdg_na(),  *  called by nm_bdg_ctl_attach(), and discriminated by the nm_bdg_attach()  *  callback.  In the case of the bwrap, the callback creates the  *  netmap_bwrap_adapter.  The initialization of the bwrap is then  *  completed by calling netmap_do_regif() on it, in the nm_bdg_ctl()  *  callback (netmap_bwrap_bdg_ctl in netmap_vale.c).  *  A generic adapter for the wrapped ifp will be created if needed, when  *  netmap_get_bdg_na() calls netmap_get_hw_na().  *  *  *  ---- DATAPATHS -----  *  *              -= SYSTEM DEVICE WITH NATIVE SUPPORT =-  *  *    na == NA(ifp) == netmap_hw_adapter created in DEVICE_netmap_attach()  *  *    - tx from netmap userspace:  *	 concurrently:  *           1) ioctl(NIOCTXSYNC)/netmap_poll() in process context  *                kring->nm_sync() == DEVICE_netmap_txsync()  *           2) device interrupt handler  *                na->nm_notify()  == netmap_notify()  *    - rx from netmap userspace:  *       concurrently:  *           1) ioctl(NIOCRXSYNC)/netmap_poll() in process context  *                kring->nm_sync() == DEVICE_netmap_rxsync()  *           2) device interrupt handler  *                na->nm_notify()  == netmap_notify()  *    - rx from host stack  *       concurrently:  *           1) host stack  *                netmap_transmit()  *                  na->nm_notify  == netmap_notify()  *           2) ioctl(NIOCRXSYNC)/netmap_poll() in process context  *                kring->nm_sync() == netmap_rxsync_from_host  *                  netmap_rxsync_from_host(na, NULL, NULL)  *    - tx to host stack  *           ioctl(NIOCTXSYNC)/netmap_poll() in process context  *             kring->nm_sync() == netmap_txsync_to_host  *               netmap_txsync_to_host(na)  *                 nm_os_send_up()  *                   FreeBSD: na->if_input() == ether_input()  *                   linux: netif_rx() with NM_MAGIC_PRIORITY_RX  *  *  *               -= SYSTEM DEVICE WITH GENERIC SUPPORT =-  *  *    na == NA(ifp) == generic_netmap_adapter created in generic_netmap_attach()  *  *    - tx from netmap userspace:  *       concurrently:  *           1) ioctl(NIOCTXSYNC)/netmap_poll() in process context  *               kring->nm_sync() == generic_netmap_txsync()  *                   nm_os_generic_xmit_frame()  *                       linux:   dev_queue_xmit() with NM_MAGIC_PRIORITY_TX  *                           ifp->ndo_start_xmit == generic_ndo_start_xmit()  *                               gna->save_start_xmit == orig. dev. start_xmit  *                       FreeBSD: na->if_transmit() == orig. dev if_transmit  *           2) generic_mbuf_destructor()  *                   na->nm_notify() == netmap_notify()  *    - rx from netmap userspace:  *           1) ioctl(NIOCRXSYNC)/netmap_poll() in process context  *               kring->nm_sync() == generic_netmap_rxsync()  *                   mbq_safe_dequeue()  *           2) device driver  *               generic_rx_handler()  *                   mbq_safe_enqueue()  *                   na->nm_notify() == netmap_notify()  *    - rx from host stack  *        FreeBSD: same as native  *        Linux: same as native except:  *           1) host stack  *               dev_queue_xmit() without NM_MAGIC_PRIORITY_TX  *                   ifp->ndo_start_xmit == generic_ndo_start_xmit()  *                       netmap_transmit()  *                           na->nm_notify() == netmap_notify()  *    - tx to host stack (same as native):  *  *  *                           -= VALE =-  *  *   INCOMING:  *  *      - VALE ports:  *          ioctl(NIOCTXSYNC)/netmap_poll() in process context  *              kring->nm_sync() == netmap_vp_txsync()  *  *      - system device with native support:  *         from cable:  *             interrupt  *                na->nm_notify() == netmap_bwrap_intr_notify(ring_nr != host ring)  *                     kring->nm_sync() == DEVICE_netmap_rxsync()  *                     netmap_vp_txsync()  *                     kring->nm_sync() == DEVICE_netmap_rxsync()  *         from host stack:  *             netmap_transmit()  *                na->nm_notify() == netmap_bwrap_intr_notify(ring_nr == host ring)  *                     kring->nm_sync() == netmap_rxsync_from_host()  *                     netmap_vp_txsync()  *  *      - system device with generic support:  *         from device driver:  *            generic_rx_handler()  *                na->nm_notify() == netmap_bwrap_intr_notify(ring_nr != host ring)  *                     kring->nm_sync() == generic_netmap_rxsync()  *                     netmap_vp_txsync()  *                     kring->nm_sync() == generic_netmap_rxsync()  *         from host stack:  *            netmap_transmit()  *                na->nm_notify() == netmap_bwrap_intr_notify(ring_nr == host ring)  *                     kring->nm_sync() == netmap_rxsync_from_host()  *                     netmap_vp_txsync()  *  *   (all cases) --> nm_bdg_flush()  *                      dest_na->nm_notify() == (see below)  *  *   OUTGOING:  *  *      - VALE ports:  *         concurrently:  *             1) ioctlNIOCRXSYNC)/netmap_poll() in process context  *                    kring->nm_sync() == netmap_vp_rxsync()  *             2) from nm_bdg_flush()  *                    na->nm_notify() == netmap_notify()  *  *      - system device with native support:  *          to cable:  *             na->nm_notify() == netmap_bwrap_notify()  *                 netmap_vp_rxsync()  *                 kring->nm_sync() == DEVICE_netmap_txsync()  *                 netmap_vp_rxsync()  *          to host stack:  *                 netmap_vp_rxsync()  *                 kring->nm_sync() == netmap_txsync_to_host  *                 netmap_vp_rxsync_locked()  *  *      - system device with generic adapter:  *          to device driver:  *             na->nm_notify() == netmap_bwrap_notify()  *                 netmap_vp_rxsync()  *                 kring->nm_sync() == generic_netmap_txsync()  *                 netmap_vp_rxsync()  *          to host stack:  *                 netmap_vp_rxsync()  *                 kring->nm_sync() == netmap_txsync_to_host  *                 netmap_vp_rxsync()  *  */
+comment|/* --- internals ----  *  * Roadmap to the code that implements the above.  *  *> 1. a process/thread issues one or more open() on /dev/netmap, to create  *>    select()able file descriptor on which events are reported.  *  *  	Internally, we allocate a netmap_priv_d structure, that will be  *  	initialized on ioctl(NIOCREGIF). There is one netmap_priv_d  *  	structure for each open().  *  *      os-specific:  *  	    FreeBSD: see netmap_open() (netmap_freebsd.c)  *  	    linux:   see linux_netmap_open() (netmap_linux.c)  *  *> 2. on each descriptor, the process issues an ioctl() to identify  *>    the interface that should report events to the file descriptor.  *  * 	Implemented by netmap_ioctl(), NIOCREGIF case, with nmr->nr_cmd==0.  * 	Most important things happen in netmap_get_na() and  * 	netmap_do_regif(), called from there. Additional details can be  * 	found in the comments above those functions.  *  * 	In all cases, this action creates/takes-a-reference-to a  * 	netmap_*_adapter describing the port, and allocates a netmap_if  * 	and all necessary netmap rings, filling them with netmap buffers.  *  *      In this phase, the sync callbacks for each ring are set (these are used  *      in steps 5 and 6 below).  The callbacks depend on the type of adapter.  *      The adapter creation/initialization code puts them in the  * 	netmap_adapter (fields na->nm_txsync and na->nm_rxsync).  Then, they  * 	are copied from there to the netmap_kring's during netmap_do_regif(), by  * 	the nm_krings_create() callback.  All the nm_krings_create callbacks  * 	actually call netmap_krings_create() to perform this and the other  * 	common stuff. netmap_krings_create() also takes care of the host rings,  * 	if needed, by setting their sync callbacks appropriately.  *  * 	Additional actions depend on the kind of netmap_adapter that has been  * 	registered:  *  * 	- netmap_hw_adapter:  	     [netmap.c]  * 	     This is a system netdev/ifp with native netmap support.  * 	     The ifp is detached from the host stack by redirecting:  * 	       - transmissions (from the network stack) to netmap_transmit()  * 	       - receive notifications to the nm_notify() callback for  * 	         this adapter. The callback is normally netmap_notify(), unless  * 	         the ifp is attached to a bridge using bwrap, in which case it  * 	         is netmap_bwrap_intr_notify().  *  * 	- netmap_generic_adapter:      [netmap_generic.c]  * 	      A system netdev/ifp without native netmap support.  *  * 	(the decision about native/non native support is taken in  * 	 netmap_get_hw_na(), called by netmap_get_na())  *  * 	- netmap_vp_adapter 		[netmap_vale.c]  * 	      Returned by netmap_get_bdg_na().  * 	      This is a persistent or ephemeral VALE port. Ephemeral ports  * 	      are created on the fly if they don't already exist, and are  * 	      always attached to a bridge.  * 	      Persistent VALE ports must must be created separately, and i  * 	      then attached like normal NICs. The NIOCREGIF we are examining  * 	      will find them only if they had previosly been created and  * 	      attached (see VALE_CTL below).  *  * 	- netmap_pipe_adapter 	      [netmap_pipe.c]  * 	      Returned by netmap_get_pipe_na().  * 	      Both pipe ends are created, if they didn't already exist.  *  * 	- netmap_monitor_adapter      [netmap_monitor.c]  * 	      Returned by netmap_get_monitor_na().  * 	      If successful, the nm_sync callbacks of the monitored adapter  * 	      will be intercepted by the returned monitor.  *  * 	- netmap_bwrap_adapter	      [netmap_vale.c]  * 	      Cannot be obtained in this way, see VALE_CTL below  *  *  * 	os-specific:  * 	    linux: we first go through linux_netmap_ioctl() to  * 	           adapt the FreeBSD interface to the linux one.  *  *  *> 3. on each descriptor, the process issues an mmap() request to  *>    map the shared memory region within the process' address space.  *>    The list of interesting queues is indicated by a location in  *>    the shared memory region.  *  *      os-specific:  *  	    FreeBSD: netmap_mmap_single (netmap_freebsd.c).  *  	    linux:   linux_netmap_mmap (netmap_linux.c).  *  *> 4. using the functions in the netmap(4) userspace API, a process  *>    can look up the occupation state of a queue, access memory buffers,  *>    and retrieve received packets or enqueue packets to transmit.  *  * 	these actions do not involve the kernel.  *  *> 5. using some ioctl()s the process can synchronize the userspace view  *>    of the queue with the actual status in the kernel. This includes both  *>    receiving the notification of new packets, and transmitting new  *>    packets on the output interface.  *  * 	These are implemented in netmap_ioctl(), NIOCTXSYNC and NIOCRXSYNC  * 	cases. They invoke the nm_sync callbacks on the netmap_kring  * 	structures, as initialized in step 2 and maybe later modified  * 	by a monitor. Monitors, however, will always call the original  * 	callback before doing anything else.  *  *  *> 6. select() or poll() can be used to wait for events on individual  *>    transmit or receive queues (or all queues for a given interface).  *  * 	Implemented in netmap_poll(). This will call the same nm_sync()  * 	callbacks as in step 5 above.  *  * 	os-specific:  * 		linux: we first go through linux_netmap_poll() to adapt  * 		       the FreeBSD interface to the linux one.  *  *  *  ----  VALE_CTL -----  *  *  VALE switches are controlled by issuing a NIOCREGIF with a non-null  *  nr_cmd in the nmreq structure. These subcommands are handled by  *  netmap_bdg_ctl() in netmap_vale.c. Persistent VALE ports are created  *  and destroyed by issuing the NETMAP_BDG_NEWIF and NETMAP_BDG_DELIF  *  subcommands, respectively.  *  *  Any network interface known to the system (including a persistent VALE  *  port) can be attached to a VALE switch by issuing the  *  NETMAP_BDG_ATTACH subcommand. After the attachment, persistent VALE ports  *  look exactly like ephemeral VALE ports (as created in step 2 above).  The  *  attachment of other interfaces, instead, requires the creation of a  *  netmap_bwrap_adapter.  Moreover, the attached interface must be put in  *  netmap mode. This may require the creation of a netmap_generic_adapter if  *  we have no native support for the interface, or if generic adapters have  *  been forced by sysctl.  *  *  Both persistent VALE ports and bwraps are handled by netmap_get_bdg_na(),  *  called by nm_bdg_ctl_attach(), and discriminated by the nm_bdg_attach()  *  callback.  In the case of the bwrap, the callback creates the  *  netmap_bwrap_adapter.  The initialization of the bwrap is then  *  completed by calling netmap_do_regif() on it, in the nm_bdg_ctl()  *  callback (netmap_bwrap_bdg_ctl in netmap_vale.c).  *  A generic adapter for the wrapped ifp will be created if needed, when  *  netmap_get_bdg_na() calls netmap_get_hw_na().  *  *  *  ---- DATAPATHS -----  *  *              -= SYSTEM DEVICE WITH NATIVE SUPPORT =-  *  *    na == NA(ifp) == netmap_hw_adapter created in DEVICE_netmap_attach()  *  *    - tx from netmap userspace:  *	 concurrently:  *           1) ioctl(NIOCTXSYNC)/netmap_poll() in process context  *                kring->nm_sync() == DEVICE_netmap_txsync()  *           2) device interrupt handler  *                na->nm_notify()  == netmap_notify()  *    - rx from netmap userspace:  *       concurrently:  *           1) ioctl(NIOCRXSYNC)/netmap_poll() in process context  *                kring->nm_sync() == DEVICE_netmap_rxsync()  *           2) device interrupt handler  *                na->nm_notify()  == netmap_notify()  *    - rx from host stack  *       concurrently:  *           1) host stack  *                netmap_transmit()  *                  na->nm_notify  == netmap_notify()  *           2) ioctl(NIOCRXSYNC)/netmap_poll() in process context  *                kring->nm_sync() == netmap_rxsync_from_host  *                  netmap_rxsync_from_host(na, NULL, NULL)  *    - tx to host stack  *           ioctl(NIOCTXSYNC)/netmap_poll() in process context  *             kring->nm_sync() == netmap_txsync_to_host  *               netmap_txsync_to_host(na)  *                 nm_os_send_up()  *                   FreeBSD: na->if_input() == ether_input()  *                   linux: netif_rx() with NM_MAGIC_PRIORITY_RX  *  *  *               -= SYSTEM DEVICE WITH GENERIC SUPPORT =-  *  *    na == NA(ifp) == generic_netmap_adapter created in generic_netmap_attach()  *  *    - tx from netmap userspace:  *       concurrently:  *           1) ioctl(NIOCTXSYNC)/netmap_poll() in process context  *               kring->nm_sync() == generic_netmap_txsync()  *                   nm_os_generic_xmit_frame()  *                       linux:   dev_queue_xmit() with NM_MAGIC_PRIORITY_TX  *                           ifp->ndo_start_xmit == generic_ndo_start_xmit()  *                               gna->save_start_xmit == orig. dev. start_xmit  *                       FreeBSD: na->if_transmit() == orig. dev if_transmit  *           2) generic_mbuf_destructor()  *                   na->nm_notify() == netmap_notify()  *    - rx from netmap userspace:  *           1) ioctl(NIOCRXSYNC)/netmap_poll() in process context  *               kring->nm_sync() == generic_netmap_rxsync()  *                   mbq_safe_dequeue()  *           2) device driver  *               generic_rx_handler()  *                   mbq_safe_enqueue()  *                   na->nm_notify() == netmap_notify()  *    - rx from host stack  *        FreeBSD: same as native  *        Linux: same as native except:  *           1) host stack  *               dev_queue_xmit() without NM_MAGIC_PRIORITY_TX  *                   ifp->ndo_start_xmit == generic_ndo_start_xmit()  *                       netmap_transmit()  *                           na->nm_notify() == netmap_notify()  *    - tx to host stack (same as native):  *  *  *                           -= VALE =-  *  *   INCOMING:  *  *      - VALE ports:  *          ioctl(NIOCTXSYNC)/netmap_poll() in process context  *              kring->nm_sync() == netmap_vp_txsync()  *  *      - system device with native support:  *         from cable:  *             interrupt  *                na->nm_notify() == netmap_bwrap_intr_notify(ring_nr != host ring)  *                     kring->nm_sync() == DEVICE_netmap_rxsync()  *                     netmap_vp_txsync()  *                     kring->nm_sync() == DEVICE_netmap_rxsync()  *         from host stack:  *             netmap_transmit()  *                na->nm_notify() == netmap_bwrap_intr_notify(ring_nr == host ring)  *                     kring->nm_sync() == netmap_rxsync_from_host()  *                     netmap_vp_txsync()  *  *      - system device with generic support:  *         from device driver:  *            generic_rx_handler()  *                na->nm_notify() == netmap_bwrap_intr_notify(ring_nr != host ring)  *                     kring->nm_sync() == generic_netmap_rxsync()  *                     netmap_vp_txsync()  *                     kring->nm_sync() == generic_netmap_rxsync()  *         from host stack:  *            netmap_transmit()  *                na->nm_notify() == netmap_bwrap_intr_notify(ring_nr == host ring)  *                     kring->nm_sync() == netmap_rxsync_from_host()  *                     netmap_vp_txsync()  *  *   (all cases) --> nm_bdg_flush()  *                      dest_na->nm_notify() == (see below)  *  *   OUTGOING:  *  *      - VALE ports:  *         concurrently:  *             1) ioctl(NIOCRXSYNC)/netmap_poll() in process context  *                    kring->nm_sync() == netmap_vp_rxsync()  *             2) from nm_bdg_flush()  *                    na->nm_notify() == netmap_notify()  *  *      - system device with native support:  *          to cable:  *             na->nm_notify() == netmap_bwrap_notify()  *                 netmap_vp_rxsync()  *                 kring->nm_sync() == DEVICE_netmap_txsync()  *                 netmap_vp_rxsync()  *          to host stack:  *                 netmap_vp_rxsync()  *                 kring->nm_sync() == netmap_txsync_to_host  *                 netmap_vp_rxsync_locked()  *  *      - system device with generic adapter:  *          to device driver:  *             na->nm_notify() == netmap_bwrap_notify()  *                 netmap_vp_rxsync()  *                 kring->nm_sync() == generic_netmap_txsync()  *                 netmap_vp_rxsync()  *          to host stack:  *                 netmap_vp_rxsync()  *                 kring->nm_sync() == netmap_txsync_to_host  *                 netmap_vp_rxsync()  *  */
 end_comment
 
 begin_comment
@@ -358,7 +358,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* force transparent mode */
+comment|/* force transparent forwarding */
 end_comment
 
 begin_comment
@@ -446,6 +446,18 @@ end_comment
 begin_decl_stmt
 name|int
 name|ptnet_vnet_hdr
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0 if ptnetmap should not use worker threads for TX processing */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ptnetmap_tx_workers
 init|=
 literal|1
 decl_stmt|;
@@ -754,6 +766,27 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ptnet_vnet_hdr
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_dev_netmap
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ptnetmap_tx_workers
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ptnetmap_tx_workers
 argument_list|,
 literal|0
 argument_list|,
@@ -1245,7 +1278,7 @@ name|op
 operator|&&
 name|msg
 condition|)
-name|printf
+name|nm_prinf
 argument_list|(
 literal|"%s %s to %d (was %d)\n"
 argument_list|,
@@ -1863,6 +1896,24 @@ name|enum
 name|txrx
 name|t
 decl_stmt|;
+if|if
+condition|(
+name|na
+operator|->
+name|tx_rings
+operator|!=
+name|NULL
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"warning: krings were already created"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/* account for the (possibly fake) host rings */
 name|n
 index|[
@@ -1912,18 +1963,12 @@ name|na
 operator|->
 name|tx_rings
 operator|=
-name|malloc
+name|nm_os_malloc
 argument_list|(
 operator|(
 name|size_t
 operator|)
 name|len
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2283,6 +2328,22 @@ name|enum
 name|txrx
 name|t
 decl_stmt|;
+if|if
+condition|(
+name|na
+operator|->
+name|tx_rings
+operator|==
+name|NULL
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"warning: krings were already deleted"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|for_rx_tx
 argument_list|(
 argument|t
@@ -2329,13 +2390,11 @@ name|si
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|nm_os_free
 argument_list|(
 name|na
 operator|->
 name|tx_rings
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|na
@@ -2689,19 +2748,13 @@ name|priv
 decl_stmt|;
 name|priv
 operator|=
-name|malloc
+name|nm_os_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|netmap_priv_d
 argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2803,11 +2856,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* for safety */
-name|free
+name|nm_os_free
 argument_list|(
 name|priv
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
@@ -2848,11 +2899,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handlers for synchronization of the queues from/to the host.  * Netmap has two operating modes:  * - in the default mode, the rings connected to the host stack are  *   just another ring pair managed by userspace;  * - in transparent mode (XXX to be defined) incoming packets  *   (from the host or the NIC) are marked as NS_FORWARD upon  *   arrival, and the user application has a chance to reset the  *   flag for packets that should be dropped.  *   On the RXSYNC or poll(), packets in RX rings between  *   kring->nr_kcur and ring->cur with NS_FORWARD still set are moved  *   to the other side.  * The transfer NIC --> host is relatively easy, just encapsulate  * into mbufs and we are done. The host --> NIC side is slightly  * harder because there might not be room in the tx ring so it  * might take a while before releasing the buffer.  */
+comment|/*  * Handlers for synchronization of the rings from/to the host stack.  * These are associated to a network interface and are just another  * ring pair managed by userspace.  *  * Netmap also supports transparent forwarding (NS_FORWARD and NR_FORWARD  * flags):  *  * - Before releasing buffers on hw RX rings, the application can mark  *   them with the NS_FORWARD flag. During the next RXSYNC or poll(), they  *   will be forwarded to the host stack, similarly to what happened if  *   the application moved them to the host TX ring.  *  * - Before releasing buffers on the host RX ring, the application can  *   mark them with the NS_FORWARD flag. During the next RXSYNC or poll(),  *   they will be forwarded to the hw TX rings, saving the application  *   from doing the same task in user-space.  *  * Transparent fowarding can be enabled per-ring, by setting the NR_FORWARD  * flag, or globally with the netmap_fwd sysctl.  *  * The transfer NIC --> host is relatively easy, just encapsulate  * into mbufs and we are done. The host --> NIC side is slightly  * harder because there might not be room in the tx ring so it  * might take a while before releasing the buffer.  */
 end_comment
 
 begin_comment
-comment|/*  * pass a chain of buffers to the host stack as coming from 'dst'  * We do not need to lock because the queue is private.  */
+comment|/*  * Pass a whole queue of mbufs to the host stack as coming from 'dst'  * We do not need to lock because the queue is private.  * After this call the queue is empty.  */
 end_comment
 
 begin_function
@@ -2888,7 +2939,7 @@ name|prev
 init|=
 name|NULL
 decl_stmt|;
-comment|/* send packets up, outside the lock */
+comment|/* Send packets up, outside the lock; head/prev machinery 	 * is only useful for Windows. */
 while|while
 condition|(
 operator|(
@@ -2965,7 +3016,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * put a copy of the buffers marked NS_FORWARD into an mbuf chain.  * Take packets from hwcur to ring->head marked NS_FORWARD (or forced)  * and pass them up. Drop remaining packets in the unlikely event  * of an mbuf shortage.  */
+comment|/*  * Scan the buffers from hwcur to ring->head, and put a copy of those  * marked NS_FORWARD (or all of them if forced) into a queue of mbufs.  * Drop remaining packets in the unlikely event  * of an mbuf shortage.  */
 end_comment
 
 begin_function
@@ -3244,6 +3295,9 @@ name|struct
 name|netmap_kring
 modifier|*
 name|kring
+parameter_list|,
+name|int
+name|sync_flags
 parameter_list|)
 block|{
 return|return
@@ -3251,6 +3305,12 @@ name|_nm_may_forward
 argument_list|(
 name|kring
 argument_list|)
+operator|&&
+operator|(
+name|sync_flags
+operator|&
+name|NAF_CAN_FORWARD_DOWN
+operator|)
 operator|&&
 name|kring
 operator|->
@@ -3266,7 +3326,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send to the NIC rings packets marked NS_FORWARD between  * kring->nr_hwcur and kring->rhead  * Called under kring->rx_queue.lock on the sw rx ring,  */
+comment|/*  * Send to the NIC rings packets marked NS_FORWARD between  * kring->nr_hwcur and kring->rhead.  * Called under kring->rx_queue.lock on the sw rx ring.  *  * It can only be called if the user opened all the TX hw rings,  * see NAF_CAN_FORWARD_DOWN flag.  * We can touch the TX netmap rings (slots, head and cur) since  * we are in poll/ioctl system call context, and the application  * is not supposed to touch the ring (using a different thread)  * during the execution of the system call.  */
 end_comment
 
 begin_function
@@ -3522,7 +3582,7 @@ name|dst_lim
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* if (sent) XXX txsync ? */
+comment|/* if (sent) XXX txsync ? it would be just an optimization */
 block|}
 return|return
 name|sent
@@ -3579,7 +3639,7 @@ name|struct
 name|mbq
 name|q
 decl_stmt|;
-comment|/* Take packets from hwcur to head and pass them up. 	 * force head = cur since netmap_grab_packets() stops at head 	 * In case of no buffers we give up. At the end of the loop, 	 * the queue is drained in all cases. 	 */
+comment|/* Take packets from hwcur to head and pass them up. 	 * Force hwcur = head since netmap_grab_packets() stops at head 	 */
 name|mbq_init
 argument_list|(
 operator|&
@@ -3655,7 +3715,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * rxsync backend for packets coming from the host stack.  * They have been put in kring->rx_queue by netmap_transmit().  * We protect access to the kring using kring->rx_queue.lock  *  * This routine also does the selrecord if called from the poll handler  * (we know because sr != NULL).  *  * returns the number of packets delivered to tx queues in  * transparent mode, or a negative value if error  */
+comment|/*  * rxsync backend for packets coming from the host stack.  * They have been put in kring->rx_queue by netmap_transmit().  * We protect access to the kring using kring->rx_queue.lock  *  * also moves to the nic hw rings any packet the user has marked  * for transparent-mode forwarding, then sets the NR_FORWARD  * flag in the kring to let the caller push them out  */
 end_comment
 
 begin_function
@@ -3774,7 +3834,9 @@ name|stop_i
 operator|=
 name|nm_prev
 argument_list|(
-name|nm_i
+name|kring
+operator|->
+name|nr_hwcur
 argument_list|,
 name|lim
 argument_list|)
@@ -3927,6 +3989,8 @@ condition|(
 name|nm_may_forward_down
 argument_list|(
 name|kring
+argument_list|,
+name|flags
 argument_list|)
 condition|)
 block|{
@@ -4014,6 +4078,11 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|,
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
 parameter_list|,
 name|struct
 name|netmap_adapter
@@ -4113,9 +4182,9 @@ name|na
 operator|=
 name|prev_na
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|assign_mem
+goto|;
 block|}
 block|}
 comment|/* If there isn't native support and netmap is not allowed 	 * to use generic adapters, we cannot satisfy the request. 	 */
@@ -4157,6 +4226,70 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|assign_mem
+label|:
+if|if
+condition|(
+name|nmd
+operator|!=
+name|NULL
+operator|&&
+operator|!
+operator|(
+operator|(
+operator|*
+name|na
+operator|)
+operator|->
+name|na_flags
+operator|&
+name|NAF_MEM_OWNER
+operator|)
+operator|&&
+operator|(
+operator|*
+name|na
+operator|)
+operator|->
+name|active_fds
+operator|==
+literal|0
+operator|&&
+operator|(
+operator|(
+operator|*
+name|na
+operator|)
+operator|->
+name|nm_mem
+operator|!=
+name|nmd
+operator|)
+condition|)
+block|{
+name|netmap_mem_put
+argument_list|(
+operator|(
+operator|*
+name|na
+operator|)
+operator|->
+name|nm_mem
+argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+name|na
+operator|)
+operator|->
+name|nm_mem
+operator|=
+name|netmap_mem_get
+argument_list|(
+name|nmd
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -4188,6 +4321,11 @@ modifier|*
 modifier|*
 name|ifp
 parameter_list|,
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
+parameter_list|,
 name|int
 name|create
 parameter_list|)
@@ -4204,6 +4342,11 @@ name|ret
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|nmd_ref
+init|=
+literal|0
+decl_stmt|;
 operator|*
 name|na
 operator|=
@@ -4218,6 +4361,42 @@ expr_stmt|;
 name|NMG_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
+comment|/* if the request contain a memid, try to find the 	 * corresponding memory region 	 */
+if|if
+condition|(
+name|nmd
+operator|==
+name|NULL
+operator|&&
+name|nmr
+operator|->
+name|nr_arg2
+condition|)
+block|{
+name|nmd
+operator|=
+name|netmap_mem_find
+argument_list|(
+name|nmr
+operator|->
+name|nr_arg2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nmd
+operator|==
+name|NULL
+condition|)
+return|return
+name|EINVAL
+return|;
+comment|/* keep the rereference */
+name|nmd_ref
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* We cascade through all possible types of netmap adapter. 	 * All netmap_get_*_na() functions return an error and an na, 	 * with the following combinations: 	 * 	 * error    na 	 *   0	   NULL		type doesn't match 	 *  !0	   NULL		type matches, but na creation/lookup failed 	 *   0	  !NULL		type matches and na created/found 	 *  !0    !NULL		impossible 	 */
 comment|/* try to see if this is a ptnetmap port */
 name|error
@@ -4228,6 +4407,8 @@ name|nmr
 argument_list|,
 name|na
 argument_list|,
+name|nmd
+argument_list|,
 name|create
 argument_list|)
 expr_stmt|;
@@ -4240,9 +4421,9 @@ name|na
 operator|!=
 name|NULL
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* try to see if this is a monitor port */
 name|error
 operator|=
@@ -4252,6 +4433,8 @@ name|nmr
 argument_list|,
 name|na
 argument_list|,
+name|nmd
+argument_list|,
 name|create
 argument_list|)
 expr_stmt|;
@@ -4264,9 +4447,9 @@ name|na
 operator|!=
 name|NULL
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* try to see if this is a pipe port */
 name|error
 operator|=
@@ -4276,6 +4459,8 @@ name|nmr
 argument_list|,
 name|na
 argument_list|,
+name|nmd
+argument_list|,
 name|create
 argument_list|)
 expr_stmt|;
@@ -4288,9 +4473,9 @@ name|na
 operator|!=
 name|NULL
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* try to see if this is a bridge port */
 name|error
 operator|=
@@ -4300,6 +4485,8 @@ name|nmr
 argument_list|,
 name|na
 argument_list|,
+name|nmd
+argument_list|,
 name|create
 argument_list|)
 expr_stmt|;
@@ -4307,9 +4494,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 operator|*
@@ -4340,9 +4527,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return
+name|error
+operator|=
 name|ENXIO
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|error
 operator|=
@@ -4350,6 +4541,8 @@ name|netmap_get_hw_na
 argument_list|(
 operator|*
 name|ifp
+argument_list|,
+name|nmd
 argument_list|,
 operator|&
 name|ret
@@ -4407,6 +4600,15 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|nmd_ref
+condition|)
+name|netmap_mem_put
+argument_list|(
+name|nmd
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -5439,9 +5641,19 @@ name|NR_PTNETMAP_HOST
 operator|)
 operator|&&
 operator|(
+operator|(
 name|reg
 operator|!=
 name|NR_REG_ALL_NIC
+operator|&&
+name|reg
+operator|!=
+name|NR_REG_PIPE_MASTER
+operator|&&
+name|reg
+operator|!=
+name|NR_REG_PIPE_SLAVE
+operator|)
 operator|||
 name|flags
 operator|&
@@ -5775,6 +5987,37 @@ operator|)
 operator||
 name|reg
 expr_stmt|;
+comment|/* Allow transparent forwarding mode in the host --> nic 	 * direction only if all the TX hw rings have been opened. */
+if|if
+condition|(
+name|priv
+operator|->
+name|np_qfirst
+index|[
+name|NR_TX
+index|]
+operator|==
+literal|0
+operator|&&
+name|priv
+operator|->
+name|np_qlast
+index|[
+name|NR_TX
+index|]
+operator|>=
+name|na
+operator|->
+name|num_tx_rings
+condition|)
+block|{
+name|priv
+operator|->
+name|np_sync_flags
+operator||=
+name|NAF_CAN_FORWARD_DOWN
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|netmap_verbose
@@ -6550,6 +6793,8 @@ operator|=
 name|netmap_mem_if_new
 argument_list|(
 name|na
+argument_list|,
+name|priv
 argument_list|)
 expr_stmt|;
 if|if
@@ -6828,6 +7073,47 @@ block|}
 end_function
 
 begin_comment
+comment|/* set ring timestamp */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|ring_timestamp_set
+parameter_list|(
+name|struct
+name|netmap_ring
+modifier|*
+name|ring
+parameter_list|)
+block|{
+if|if
+condition|(
+name|netmap_no_timestamp
+operator|==
+literal|0
+operator|||
+name|ring
+operator|->
+name|flags
+operator|&
+name|NR_TIMESTAMP
+condition|)
+block|{
+name|microtime
+argument_list|(
+operator|&
+name|ring
+operator|->
+name|ts
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * ioctl(2) support for the "netmap" device.  *  * Following a list of accepted commands:  * - NIOCGINFO  * - SIOCGIFADDR	just for convenience  * - NIOCREGIF  * - NIOCTXSYNC  * - NIOCRXSYNC  *  * Return 0 on success, errno otherwise.  */
 end_comment
 
@@ -6853,6 +7139,11 @@ name|td
 parameter_list|)
 block|{
 name|struct
+name|mbq
+name|q
+decl_stmt|;
+comment|/* packets from RX hw queues to host stack */
+name|struct
 name|nmreq
 modifier|*
 name|nmr
@@ -6868,6 +7159,13 @@ name|struct
 name|netmap_adapter
 modifier|*
 name|na
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
 init|=
 name|NULL
 decl_stmt|;
@@ -6899,6 +7197,9 @@ name|struct
 name|netmap_kring
 modifier|*
 name|krings
+decl_stmt|;
+name|int
+name|sync_flags
 decl_stmt|;
 name|enum
 name|txrx
@@ -7018,14 +7319,6 @@ expr_stmt|;
 do|do
 block|{
 comment|/* memsize is always valid */
-name|struct
-name|netmap_mem_d
-modifier|*
-name|nmd
-init|=
-operator|&
-name|nm_mem
-decl_stmt|;
 name|u_int
 name|memflags
 decl_stmt|;
@@ -7054,6 +7347,8 @@ argument_list|,
 operator|&
 name|ifp
 argument_list|,
+name|NULL
+argument_list|,
 literal|1
 comment|/* create */
 argument_list|)
@@ -7080,6 +7375,37 @@ operator|->
 name|nm_mem
 expr_stmt|;
 comment|/* get memory allocator */
+block|}
+else|else
+block|{
+name|nmd
+operator|=
+name|netmap_mem_find
+argument_list|(
+name|nmr
+operator|->
+name|nr_arg2
+condition|?
+name|nmr
+operator|->
+name|nr_arg2
+else|:
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nmd
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
 block|}
 name|error
 operator|=
@@ -7292,6 +7618,8 @@ argument_list|,
 operator|&
 name|ifp
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -7333,16 +7661,52 @@ name|NETMAP_POOLS_INFO_GET
 condition|)
 block|{
 comment|/* get information from the memory allocator */
+name|NMG_LOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|priv
+operator|->
+name|np_na
+operator|&&
+name|priv
+operator|->
+name|np_na
+operator|->
+name|nm_mem
+condition|)
+block|{
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
+init|=
+name|priv
+operator|->
+name|np_na
+operator|->
+name|nm_mem
+decl_stmt|;
 name|error
 operator|=
 name|netmap_mem_pools_info_get
 argument_list|(
 name|nmr
 argument_list|,
-name|priv
-operator|->
-name|np_na
+name|nmd
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+name|NMG_UNLOCK
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -7397,6 +7761,37 @@ name|EBUSY
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|nmr
+operator|->
+name|nr_arg2
+condition|)
+block|{
+comment|/* find the allocator and get a reference */
+name|nmd
+operator|=
+name|netmap_mem_find
+argument_list|(
+name|nmr
+operator|->
+name|nr_arg2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nmd
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
+block|}
 comment|/* find the interface and a reference */
 name|error
 operator|=
@@ -7409,6 +7804,8 @@ name|na
 argument_list|,
 operator|&
 name|ifp
+argument_list|,
+name|nmd
 argument_list|,
 literal|1
 comment|/* create */
@@ -7428,13 +7825,6 @@ name|na
 argument_list|)
 condition|)
 block|{
-name|netmap_unget_na
-argument_list|(
-name|na
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EBUSY
@@ -7457,13 +7847,6 @@ name|NR_ACCEPT_VNET_HDR
 operator|)
 condition|)
 block|{
-name|netmap_unget_na
-argument_list|(
-name|na
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EIO
@@ -7493,13 +7876,6 @@ name|error
 condition|)
 block|{
 comment|/* reg. failed, release priv and ref */
-name|netmap_unget_na
-argument_list|(
-name|na
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 name|nifp
@@ -7578,13 +7954,6 @@ block|{
 name|netmap_do_unregif
 argument_list|(
 name|priv
-argument_list|)
-expr_stmt|;
-name|netmap_unget_na
-argument_list|(
-name|na
-argument_list|,
-name|ifp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7736,6 +8105,29 @@ condition|(
 literal|0
 condition|)
 do|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|netmap_unget_na
+argument_list|(
+name|na
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* release the reference from netmap_mem_find() or 		 * netmap_mem_ext_create() 		 */
+if|if
+condition|(
+name|nmd
+condition|)
+name|netmap_mem_put
+argument_list|(
+name|nmd
+argument_list|)
+expr_stmt|;
 name|NMG_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -7794,6 +8186,12 @@ name|ENXIO
 expr_stmt|;
 break|break;
 block|}
+name|mbq_init
+argument_list|(
+operator|&
+name|q
+argument_list|)
+expr_stmt|;
 name|t
 operator|=
 operator|(
@@ -7832,6 +8230,12 @@ name|np_qlast
 index|[
 name|t
 index|]
+expr_stmt|;
+name|sync_flags
+operator|=
+name|priv
+operator|->
+name|np_sync_flags
 expr_stmt|;
 for|for
 control|(
@@ -7950,6 +8354,8 @@ name|nm_sync
 argument_list|(
 name|kring
 argument_list|,
+name|sync_flags
+operator||
 name|NAF_FORCE_RECLAIM
 argument_list|)
 operator|==
@@ -8006,7 +8412,26 @@ name|kring
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+if|if
+condition|(
+name|nm_may_forward_up
+argument_list|(
+name|kring
+argument_list|)
+condition|)
+block|{
+comment|/* transparent forwarding, see netmap_poll() */
+name|netmap_grab_packets
+argument_list|(
+name|kring
+argument_list|,
+operator|&
+name|q
+argument_list|,
+name|netmap_fwd
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|kring
@@ -8015,6 +8440,8 @@ name|nm_sync
 argument_list|(
 name|kring
 argument_list|,
+name|sync_flags
+operator||
 name|NAF_FORCE_READ
 argument_list|)
 operator|==
@@ -8027,18 +8454,35 @@ name|kring
 argument_list|)
 expr_stmt|;
 block|}
-name|microtime
+name|ring_timestamp_set
 argument_list|(
-operator|&
 name|ring
-operator|->
-name|ts
 argument_list|)
 expr_stmt|;
 block|}
 name|nm_kr_put
 argument_list|(
 name|kring
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|mbq_peek
+argument_list|(
+operator|&
+name|q
+argument_list|)
+condition|)
+block|{
+name|netmap_send_up
+argument_list|(
+name|na
+operator|->
+name|ifp
+argument_list|,
+operator|&
+name|q
 argument_list|)
 expr_stmt|;
 block|}
@@ -8251,7 +8695,7 @@ name|struct
 name|mbq
 name|q
 decl_stmt|;
-comment|/* packets from hw queues to host stack */
+comment|/* packets from RX hw queues to host stack */
 name|enum
 name|txrx
 name|t
@@ -8266,11 +8710,18 @@ name|retry_rx
 init|=
 literal|1
 decl_stmt|;
-comment|/* transparent mode: send_down is 1 if we have found some 	 * packets to forward during the rx scan and we have not 	 * sent them down to the nic yet 	 */
+comment|/* Transparent mode: send_down is 1 if we have found some 	 * packets to forward (host RX ring --> NIC) during the rx 	 * scan and we have not sent them down to the NIC yet. 	 * Transparent mode requires to bind all rings to a single 	 * file descriptor. 	 */
 name|int
 name|send_down
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|sync_flags
+init|=
+name|priv
+operator|->
+name|np_sync_flags
 decl_stmt|;
 name|mbq_init
 argument_list|(
@@ -8765,7 +9216,7 @@ name|nm_sync
 argument_list|(
 name|kring
 argument_list|,
-literal|0
+name|sync_flags
 argument_list|)
 condition|)
 name|revents
@@ -8968,7 +9419,7 @@ name|POLLERR
 expr_stmt|;
 block|}
 comment|/* now we can use kring->rcur, rtail */
-comment|/* 			 * transparent mode support: collect packets 			 * from the rxring(s). 			 */
+comment|/* 			 * transparent mode support: collect packets from 			 * hw rxring(s) that have been released by the user 			 */
 if|if
 condition|(
 name|nm_may_forward_up
@@ -8977,21 +9428,6 @@ name|kring
 argument_list|)
 condition|)
 block|{
-name|ND
-argument_list|(
-literal|10
-argument_list|,
-literal|"forwarding some buffers up %d to %d"
-argument_list|,
-name|kring
-operator|->
-name|nr_hwcur
-argument_list|,
-name|ring
-operator|->
-name|cur
-argument_list|)
-expr_stmt|;
 name|netmap_grab_packets
 argument_list|(
 name|kring
@@ -9003,6 +9439,7 @@ name|netmap_fwd
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Clear the NR_FORWARD flag anyway, it may be set by 			 * the nm_sync() below only on for the host RX ring (see 			 * netmap_rxsync_from_host()). */
 name|kring
 operator|->
 name|nr_kflags
@@ -9018,7 +9455,7 @@ name|nm_sync
 argument_list|(
 name|kring
 argument_list|,
-literal|0
+name|sync_flags
 argument_list|)
 condition|)
 name|revents
@@ -9041,29 +9478,11 @@ operator|&
 name|NR_FORWARD
 operator|)
 expr_stmt|;
-comment|/* host ring only */
-if|if
-condition|(
-name|netmap_no_timestamp
-operator|==
-literal|0
-operator|||
-name|ring
-operator|->
-name|flags
-operator|&
-name|NR_TIMESTAMP
-condition|)
-block|{
-name|microtime
+name|ring_timestamp_set
 argument_list|(
-operator|&
 name|ring
-operator|->
-name|ts
 argument_list|)
 expr_stmt|;
-block|}
 name|found
 operator|=
 name|kring
@@ -9144,8 +9563,6 @@ block|}
 if|if
 condition|(
 name|send_down
-operator|>
-literal|0
 operator|||
 name|retry_rx
 condition|)
@@ -9168,30 +9585,13 @@ name|do_retry_rx
 goto|;
 block|}
 block|}
-comment|/* 	 * Transparent mode: marked bufs on rx rings between 	 * kring->nr_hwcur and ring->head 	 * are passed to the other endpoint. 	 * 	 * Transparent mode requires to bind all  	 * rings to a single file descriptor. 	 */
+comment|/* 	 * Transparent mode: released bufs (i.e. between kring->nr_hwcur and 	 * ring->head) marked with NS_FORWARD on hw rx rings are passed up 	 * to the host stack. 	 */
 if|if
 condition|(
-name|q
-operator|.
-name|head
-operator|&&
-operator|!
-name|nm_kr_tryget
+name|mbq_peek
 argument_list|(
 operator|&
-name|na
-operator|->
-name|tx_rings
-index|[
-name|na
-operator|->
-name|num_tx_rings
-index|]
-argument_list|,
-literal|1
-argument_list|,
-operator|&
-name|revents
+name|q
 argument_list|)
 condition|)
 block|{
@@ -9203,19 +9603,6 @@ name|ifp
 argument_list|,
 operator|&
 name|q
-argument_list|)
-expr_stmt|;
-name|nm_kr_put
-argument_list|(
-operator|&
-name|na
-operator|->
-name|tx_rings
-index|[
-name|na
-operator|->
-name|num_tx_rings
-index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -9308,18 +9695,6 @@ name|NM_IRQ_COMPLETED
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int netmap_notify(struct netmap_adapter *na, u_int n_ring, enum txrx tx, int flags) { 	if (tx == NR_TX) { 		KeSetEvent(notes->TX_EVENT, 0, FALSE); 	} 	else 	{ 		KeSetEvent(notes->RX_EVENT, 0, FALSE); 	} 	return 0; }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* called by all routines that create netmap_adapters.  * provide some defaults and get a reference to the  * memory allocator  */
@@ -9453,21 +9828,19 @@ name|nm_mem
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* use the global allocator */
 name|na
 operator|->
 name|nm_mem
 operator|=
-operator|&
-name|nm_mem
-expr_stmt|;
 name|netmap_mem_get
 argument_list|(
-name|na
-operator|->
+operator|&
 name|nm_mem
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|WITH_VALE
@@ -9558,11 +9931,9 @@ name|na
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|free
+name|nm_os_free
 argument_list|(
 name|na
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
@@ -9704,13 +10075,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a ``netmap_adapter`` object, and initialize it from the  * 'arg' passed by the driver on attach.  * We allocate a block of memory with room for a struct netmap_adapter  * plus two sets of N+2 struct netmap_kring (where N is the number  * of hardware rings):  * krings	0..N-1	are for the hardware queues.  * kring	N	is for the host stack queue  * kring	N+1	is only used for the selinfo for all queues. // XXX still true ?  * Return 0 on success, ENOMEM otherwise.  */
+comment|/*  * Allocate a netmap_adapter object, and initialize it from the  * 'arg' passed by the driver on attach.  * We allocate a block of memory of 'size' bytes, which has room  * for struct netmap_adapter plus additional room private to  * the caller.  * Return 0 on success, ENOMEM otherwise.  */
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|_netmap_attach
+name|netmap_attach_ext
 parameter_list|(
 name|struct
 name|netmap_adapter
@@ -9737,6 +10107,31 @@ name|NULL
 decl_stmt|;
 if|if
 condition|(
+name|size
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|netmap_hw_adapter
+argument_list|)
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"Invalid netmap adapter size %d"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|size
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+if|if
+condition|(
 name|arg
 operator|==
 name|NULL
@@ -9758,15 +10153,9 @@ name|ifp
 expr_stmt|;
 name|hwna
 operator|=
-name|malloc
+name|nm_os_malloc
 argument_list|(
 name|size
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -9846,11 +10235,9 @@ name|up
 argument_list|)
 condition|)
 block|{
-name|free
+name|nm_os_free
 argument_list|(
 name|hwna
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10070,7 +10457,7 @@ name|arg
 parameter_list|)
 block|{
 return|return
-name|_netmap_attach
+name|netmap_attach_ext
 argument_list|(
 name|arg
 argument_list|,
@@ -10083,217 +10470,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITH_PTNETMAP_GUEST
-end_ifdef
-
-begin_function
-name|int
-name|netmap_pt_guest_attach
-parameter_list|(
-name|struct
-name|netmap_adapter
-modifier|*
-name|arg
-parameter_list|,
-name|void
-modifier|*
-name|csb
-parameter_list|,
-name|unsigned
-name|int
-name|nifp_offset
-parameter_list|,
-name|unsigned
-name|int
-name|memid
-parameter_list|)
-block|{
-name|struct
-name|netmap_pt_guest_adapter
-modifier|*
-name|ptna
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|arg
-condition|?
-name|arg
-operator|->
-name|ifp
-else|:
-name|NULL
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-comment|/* get allocator */
-name|arg
-operator|->
-name|nm_mem
-operator|=
-name|netmap_mem_pt_guest_new
-argument_list|(
-name|ifp
-argument_list|,
-name|nifp_offset
-argument_list|,
-name|memid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|arg
-operator|->
-name|nm_mem
-operator|==
-name|NULL
-condition|)
-return|return
-name|ENOMEM
-return|;
-name|arg
-operator|->
-name|na_flags
-operator||=
-name|NAF_MEM_OWNER
-expr_stmt|;
-name|error
-operator|=
-name|_netmap_attach
-argument_list|(
-name|arg
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|netmap_pt_guest_adapter
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-name|error
-return|;
-comment|/* get the netmap_pt_guest_adapter */
-name|ptna
-operator|=
-operator|(
-expr|struct
-name|netmap_pt_guest_adapter
-operator|*
-operator|)
-name|NA
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|ptna
-operator|->
-name|csb
-operator|=
-name|csb
-expr_stmt|;
-comment|/* Initialize a separate pass-through netmap adapter that is going to 	 * be used by the ptnet driver only, and so never exposed to netmap          * applications. We only need a subset of the available fields. */
-name|memset
-argument_list|(
-operator|&
-name|ptna
-operator|->
-name|dr
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ptna
-operator|->
-name|dr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ptna
-operator|->
-name|dr
-operator|.
-name|up
-operator|.
-name|ifp
-operator|=
-name|ifp
-expr_stmt|;
-name|ptna
-operator|->
-name|dr
-operator|.
-name|up
-operator|.
-name|nm_mem
-operator|=
-name|ptna
-operator|->
-name|hwup
-operator|.
-name|up
-operator|.
-name|nm_mem
-expr_stmt|;
-name|netmap_mem_get
-argument_list|(
-name|ptna
-operator|->
-name|dr
-operator|.
-name|up
-operator|.
-name|nm_mem
-argument_list|)
-expr_stmt|;
-name|ptna
-operator|->
-name|dr
-operator|.
-name|up
-operator|.
-name|nm_config
-operator|=
-name|ptna
-operator|->
-name|hwup
-operator|.
-name|up
-operator|.
-name|nm_config
-expr_stmt|;
-name|ptna
-operator|->
-name|backend_regifs
-operator|=
-literal|0
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* WITH_PTNETMAP_GUEST */
-end_comment
 
 begin_function
 name|void
@@ -10587,7 +10763,7 @@ modifier|*
 name|q
 decl_stmt|;
 name|int
-name|space
+name|busy
 decl_stmt|;
 name|kring
 operator|=
@@ -10737,7 +10913,7 @@ name|RD
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s drop mbuf requiring offloadings"
+literal|"%s drop mbuf that needs offloadings"
 argument_list|,
 name|na
 operator|->
@@ -10748,13 +10924,13 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* protect against rxsync_from_host(), netmap_sw_to_nic() 	 * and maybe other instances of netmap_transmit (the latter 	 * not possible on Linux). 	 * Also avoid overflowing the queue. 	 */
+comment|/* protect against netmap_rxsync_from_host(), netmap_sw_to_nic() 	 * and maybe other instances of netmap_transmit (the latter 	 * not possible on Linux). 	 * We enqueue the mbuf only if we are sure there is going to be 	 * enough room in the host RX ring, otherwise we drop it. 	 */
 name|mbq_lock
 argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
-name|space
+name|busy
 operator|=
 name|kring
 operator|->
@@ -10766,11 +10942,11 @@ name|nr_hwcur
 expr_stmt|;
 if|if
 condition|(
-name|space
+name|busy
 operator|<
 literal|0
 condition|)
-name|space
+name|busy
 operator|+=
 name|kring
 operator|->
@@ -10778,7 +10954,7 @@ name|nkr_num_slots
 expr_stmt|;
 if|if
 condition|(
-name|space
+name|busy
 operator|+
 name|mbq_len
 argument_list|(
@@ -10792,12 +10968,11 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|// XXX
 name|RD
 argument_list|(
-literal|10
+literal|2
 argument_list|,
-literal|"%s full hwcur %d hwtail %d qlen %d len %d m %p"
+literal|"%s full hwcur %d hwtail %d qlen %d"
 argument_list|,
 name|na
 operator|->
@@ -10815,10 +10990,6 @@ name|mbq_len
 argument_list|(
 name|q
 argument_list|)
-argument_list|,
-name|len
-argument_list|,
-name|m
 argument_list|)
 expr_stmt|;
 block|}
@@ -10833,9 +11004,9 @@ argument_list|)
 expr_stmt|;
 name|ND
 argument_list|(
-literal|10
+literal|2
 argument_list|,
-literal|"%s %d bufs in queue len %d m %p"
+literal|"%s %d bufs in queue"
 argument_list|,
 name|na
 operator|->
@@ -10845,10 +11016,6 @@ name|mbq_len
 argument_list|(
 name|q
 argument_list|)
-argument_list|,
-name|len
-argument_list|,
-name|m
 argument_list|)
 expr_stmt|;
 comment|/* notify outside the lock */
@@ -11462,7 +11629,7 @@ expr_stmt|;
 name|NMG_LOCK_DESTROY
 argument_list|()
 expr_stmt|;
-name|printf
+name|nm_prinf
 argument_list|(
 literal|"netmap: unloaded module.\n"
 argument_list|)
@@ -11560,7 +11727,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|printf
+name|nm_prinf
 argument_list|(
 literal|"netmap: loaded module\n"
 argument_list|)

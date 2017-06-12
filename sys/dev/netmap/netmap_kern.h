@@ -148,6 +148,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_NETMAP_SINK
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|WITH_SINK
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_elif
 elif|#
 directive|elif
@@ -1248,6 +1268,92 @@ parameter_list|()
 value|NM_MTX_ASSERT(netmap_global_lock)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|nm_prerr
+value|printf
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_prinf
+value|printf
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|nm_prerr
+value|DbgPrint
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_prinf
+value|DbgPrint
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|nm_prerr
+parameter_list|(
+name|fmt
+parameter_list|,
+name|arg
+modifier|...
+parameter_list|)
+value|printk(KERN_ERR fmt, ##arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_prinf
+parameter_list|(
+name|fmt
+parameter_list|,
+name|arg
+modifier|...
+parameter_list|)
+value|printk(KERN_INFO fmt, ##arg)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1269,7 +1375,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {							\ 		struct timeval __xxts;				\ 		microtime(&__xxts);				\ 		printf("%03d.%06d [%4d] %-25s " format "\n",	\ 		(int)__xxts.tv_sec % 1000, (int)__xxts.tv_usec,	\ 		__LINE__, __FUNCTION__, ##__VA_ARGS__);		\ 	} while (0)
+value|do {							\ 		struct timeval __xxts;				\ 		microtime(&__xxts);				\ 		nm_prerr("%03d.%06d [%4d] %-25s " format "\n",	\ 		(int)__xxts.tv_sec % 1000, (int)__xxts.tv_usec,	\ 		__LINE__, __FUNCTION__, ##__VA_ARGS__);		\ 	} while (0)
 end_define
 
 begin_comment
@@ -1465,6 +1571,47 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* os independent alloc/realloc/free */
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|nm_os_malloc
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|nm_os_realloc
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+name|new_size
+parameter_list|,
+name|size_t
+name|old_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_free
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* passes a packet up to the host stack.  * If the packet is sent (or dropped) immediately it returns NULL,  * otherwise it links the packet to prev and returns m.  * In this case, a final call with m=NULL and prev != NULL will send up  * the entire chain to the host stack.  */
 end_comment
 
@@ -1594,6 +1741,39 @@ name|t
 parameter_list|)
 value|for ((t) = 0; (t)< NR_TXRX; (t)++)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_MONITOR
+end_ifdef
+
+begin_struct
+struct|struct
+name|netmap_zmon_list
+block|{
+name|struct
+name|netmap_kring
+modifier|*
+name|next
+decl_stmt|;
+name|struct
+name|netmap_kring
+modifier|*
+name|prev
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_MONITOR */
+end_comment
 
 begin_comment
 comment|/*  * private, kernel view of a ring. Keeps track of the status of  * a ring across system calls.  *  *	nr_hwcur	index of the next buffer to refill.  *			It corresponds to ring->head  *			at the time the system call returns.  *  *	nr_hwtail	index of the first buffer owned by the kernel.  *			On RX, hwcur->hwtail are receive buffers  *			not yet released. hwcur is advanced following  *			ring->head, hwtail is advanced on incoming packets,  *			and a wakeup is generated when hwtail passes ring->cur  *			    On TX, hwcur->rcur have been filled by the sender  *			but not sent yet to the NIC; rcur->hwtail are available  *			for new transmissions, and hwtail->hwcur-1 are pending  *			transmissions not yet acknowledged.  *  * The indexes in the NIC and netmap rings are offset by nkr_hwofs slots.  * This is so that, on a reset, buffers owned by userspace are not  * modified by the kernel. In particular:  * RX rings: the next empty buffer (hwtail + hwofs) coincides with  * 	the next empty buffer as known by the hardware (next_to_check or so).  * TX rings: hwcur + hwofs coincides with next_to_send  *  * For received packets, slot->flags is set to nkr_slot_flags  * so we can provide a proper initial value (e.g. set NS_FORWARD  * when operating in 'transparent' mode).  *  * The following fields are used to implement lock-free copy of packets  * from input to output ports in VALE switch:  *	nkr_hwlease	buffer after the last one being copied.  *			A writer in nm_bdg_flush reserves N buffers  *			from nr_hwlease, advances it, then does the  *			copy outside the lock.  *			In RX rings (used for VALE ports),  *			nkr_hwtail<= nkr_hwlease< nkr_hwcur+N-1  *			In TX rings (used for NIC or host stack ports)  *			nkr_hwcur<= nkr_hwlease< nkr_hwtail  *	nkr_leases	array of nkr_num_slots where writers can report  *			completion of their block. NR_NOSLOT (~0) indicates  *			that the writer has not finished yet  *	nkr_lease_idx	index of next free slot in nr_leases, to be assigned  *  * The kring is manipulated by txsync/rxsync and generic netmap function.  *  * Concurrent rxsync or txsync on the same ring are prevented through  * by nm_kr_(try)lock() which in turn uses nr_busy. This is all we need  * for NIC rings, and for TX rings attached to the host stack.  *  * RX rings attached to the host stack use an mbq (rx_queue) on both  * rxsync_from_host() and netmap_transmit(). The mbq is protected  * by its internal lock.  *  * RX rings attached to the VALE switch are accessed by both senders  * and receiver. They are protected through the q_lock on the RX ring.  */
@@ -1843,6 +2023,25 @@ name|uint32_t
 name|n_monitors
 decl_stmt|;
 comment|/* next unused entry in the monitor array */
+name|uint32_t
+name|mon_pos
+index|[
+name|NR_TXRX
+index|]
+decl_stmt|;
+comment|/* index of this ring in the monitored ring array */
+name|uint32_t
+name|mon_tail
+decl_stmt|;
+comment|/* last seen slot on rx */
+comment|/* circular list of zero-copy monitors */
+name|struct
+name|netmap_zmon_list
+name|zmon_list
+index|[
+name|NR_TXRX
+index|]
+decl_stmt|;
 comment|/* 	 * Monitors work by intercepting the sync and notify callbacks of the 	 * monitored krings. This is implemented by replacing the pointers 	 * above and saving the previous ones in mon_* pointers below 	 */
 name|int
 function_decl|(
@@ -1874,14 +2073,6 @@ name|int
 name|flags
 parameter_list|)
 function_decl|;
-name|uint32_t
-name|mon_tail
-decl_stmt|;
-comment|/* last seen slot on rx */
-name|uint32_t
-name|mon_pos
-decl_stmt|;
-comment|/* index of this ring in the monitored ring array */
 endif|#
 directive|endif
 block|}
@@ -2349,6 +2540,10 @@ define|#
 directive|define
 name|NAF_FORCE_RECLAIM
 value|2
+define|#
+directive|define
+name|NAF_CAN_FORWARD_DOWN
+value|4
 comment|/* return configuration information */
 name|int
 function_decl|(
@@ -2729,6 +2924,10 @@ decl_stmt|;
 name|int
 name|retry
 decl_stmt|;
+name|int
+name|autodelete
+decl_stmt|;
+comment|/* remove the ifp on last reference */
 comment|/* Maximum Frame Size, used in bdg_mismatch_datapath() */
 name|u_int
 name|mfs
@@ -3003,6 +3202,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|netmap_vi_create
+parameter_list|(
+name|struct
+name|nmreq
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !WITH_VALE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|netmap_vi_create
+parameter_list|(
+name|nmr
+parameter_list|,
+name|a
+parameter_list|)
+value|(EOPNOTSUPP)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -3061,6 +3294,12 @@ name|int
 name|peer_ref
 decl_stmt|;
 comment|/* 1 iff we are holding a ref to the peer */
+name|struct
+name|ifnet
+modifier|*
+name|parent_ifp
+decl_stmt|;
+comment|/* maybe null */
 name|u_int
 name|parent_slot
 decl_stmt|;
@@ -3553,6 +3792,20 @@ parameter_list|(
 name|struct
 name|netmap_adapter
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|netmap_attach_ext
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|,
+name|size_t
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4629,6 +4882,11 @@ modifier|*
 modifier|*
 name|ifp
 parameter_list|,
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
+parameter_list|,
 name|int
 name|create
 parameter_list|)
@@ -4660,6 +4918,11 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|,
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
 parameter_list|,
 name|struct
 name|netmap_adapter
@@ -4827,6 +5090,11 @@ modifier|*
 modifier|*
 name|na
 parameter_list|,
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
+parameter_list|,
 name|int
 name|create
 parameter_list|)
@@ -4923,6 +5191,8 @@ parameter_list|,
 name|_2
 parameter_list|,
 name|_3
+parameter_list|,
+name|_4
 parameter_list|)
 value|0
 end_define
@@ -5012,6 +5282,11 @@ modifier|*
 modifier|*
 name|na
 parameter_list|,
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
+parameter_list|,
 name|int
 name|create
 parameter_list|)
@@ -5065,6 +5340,8 @@ parameter_list|,
 name|_2
 parameter_list|,
 name|_3
+parameter_list|,
+name|_4
 parameter_list|)
 define|\
 value|({ int role__ = (nmr)->nr_flags& NR_REG_MASK; \ 	   (role__ == NR_REG_PIPE_MASTER || 	       \ 	    role__ == NR_REG_PIPE_SLAVE) ? EOPNOTSUPP : 0; })
@@ -5095,6 +5372,11 @@ name|netmap_adapter
 modifier|*
 modifier|*
 name|na
+parameter_list|,
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
 parameter_list|,
 name|int
 name|create
@@ -5129,6 +5411,8 @@ parameter_list|,
 name|_2
 parameter_list|,
 name|_3
+parameter_list|,
+name|_4
 parameter_list|)
 define|\
 value|((nmr)->nr_flags& (NR_MONITOR_TX | NR_MONITOR_RX) ? EOPNOTSUPP : 0)
@@ -5560,6 +5844,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|netmap_generic_txqdisc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ptnetmap_tx_workers
 decl_stmt|;
 end_decl_stmt
 
@@ -6504,6 +6795,10 @@ name|np_txpoll
 decl_stmt|;
 comment|/* XXX and also np_rxpoll ? */
 name|int
+name|np_sync_flags
+decl_stmt|;
+comment|/* to be passed to nm_sync */
+name|int
 name|np_refs
 decl_stmt|;
 comment|/* use with NMG_LOCK held */
@@ -6646,6 +6941,51 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|WITH_PIPES
+end_ifdef
+
+begin_function_decl
+name|int
+name|netmap_pipe_txsync
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+name|txkring
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|netmap_pipe_rxsync
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+name|rxkring
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_PIPES */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|WITH_MONITOR
 end_ifdef
 
@@ -6746,6 +7086,18 @@ name|gna
 parameter_list|,
 name|int
 name|intercept
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|na_is_generic
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7071,6 +7423,16 @@ parameter_list|(
 name|ifp
 parameter_list|)
 value|(EOPNOTSUPP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|na_is_generic
+parameter_list|(
+name|na
+parameter_list|)
+value|(0)
 end_define
 
 begin_endif
@@ -7518,12 +7880,12 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|nm_kthread
+name|nm_kctx
 struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* OS-specific kthread - opaque */
+comment|/* OS-specific kernel context - opaque */
 end_comment
 
 begin_typedef
@@ -7531,7 +7893,25 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|nm_kthread_worker_fn_t
+name|nm_kctx_worker_fn_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|is_kthread
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|nm_kctx_notify_fn_t
 function_decl|)
 parameter_list|(
 name|void
@@ -7547,13 +7927,13 @@ end_comment
 
 begin_struct
 struct|struct
-name|nm_kthread_cfg
+name|nm_kctx_cfg
 block|{
 name|long
 name|type
 decl_stmt|;
 comment|/* kthread type/identifier */
-name|nm_kthread_worker_fn_t
+name|nm_kctx_worker_fn_t
 name|worker_fn
 decl_stmt|;
 comment|/* worker function */
@@ -7562,10 +7942,18 @@ modifier|*
 name|worker_private
 decl_stmt|;
 comment|/* worker parameter */
+name|nm_kctx_notify_fn_t
+name|notify_fn
+decl_stmt|;
+comment|/* notify function */
 name|int
 name|attach_user
 decl_stmt|;
 comment|/* attach kthread to user process */
+name|int
+name|use_kthread
+decl_stmt|;
+comment|/* use a kthread for the context */
 block|}
 struct|;
 end_struct
@@ -7576,12 +7964,12 @@ end_comment
 
 begin_function_decl
 name|struct
-name|nm_kthread
+name|nm_kctx
 modifier|*
-name|nm_os_kthread_create
+name|nm_os_kctx_create
 parameter_list|(
 name|struct
-name|nm_kthread_cfg
+name|nm_kctx_cfg
 modifier|*
 name|cfg
 parameter_list|,
@@ -7598,10 +7986,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nm_os_kthread_start
+name|nm_os_kctx_worker_start
 parameter_list|(
 name|struct
-name|nm_kthread
+name|nm_kctx
 modifier|*
 parameter_list|)
 function_decl|;
@@ -7609,10 +7997,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|nm_os_kthread_stop
+name|nm_os_kctx_worker_stop
 parameter_list|(
 name|struct
-name|nm_kthread
+name|nm_kctx
 modifier|*
 parameter_list|)
 function_decl|;
@@ -7620,10 +8008,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|nm_os_kthread_delete
+name|nm_os_kctx_destroy
 parameter_list|(
 name|struct
-name|nm_kthread
+name|nm_kctx
 modifier|*
 parameter_list|)
 function_decl|;
@@ -7631,10 +8019,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|nm_os_kthread_wakeup_worker
+name|nm_os_kctx_worker_wakeup
 parameter_list|(
 name|struct
-name|nm_kthread
+name|nm_kctx
 modifier|*
 name|nmk
 parameter_list|)
@@ -7643,10 +8031,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|nm_os_kthread_send_irq
+name|nm_os_kctx_send_irq
 parameter_list|(
 name|struct
-name|nm_kthread
+name|nm_kctx
 modifier|*
 parameter_list|)
 function_decl|;
@@ -7654,10 +8042,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|nm_os_kthread_set_affinity
+name|nm_os_kctx_worker_setaff
 parameter_list|(
 name|struct
-name|nm_kthread
+name|nm_kctx
 modifier|*
 parameter_list|,
 name|int
@@ -7692,10 +8080,15 @@ name|struct
 name|netmap_adapter
 name|up
 decl_stmt|;
+comment|/* the passed-through adapter */
 name|struct
 name|netmap_adapter
 modifier|*
 name|parent
+decl_stmt|;
+comment|/* parent->na_flags, saved at NETMAP_PT_HOST_CREATE time, 	 * and restored at NETMAP_PT_HOST_DELETE time */
+name|uint32_t
+name|parent_na_flags
 decl_stmt|;
 name|int
 function_decl|(
@@ -7738,6 +8131,11 @@ name|netmap_adapter
 modifier|*
 modifier|*
 name|na
+parameter_list|,
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
 parameter_list|,
 name|int
 name|create
@@ -7805,6 +8203,8 @@ parameter_list|,
 name|_2
 parameter_list|,
 name|_3
+parameter_list|,
+name|_4
 parameter_list|)
 define|\
 value|((nmr)->nr_flags& (NR_PTNETMAP_HOST) ? EOPNOTSUPP : 0)

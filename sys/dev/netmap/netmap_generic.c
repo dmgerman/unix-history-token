@@ -178,40 +178,17 @@ begin_comment
 comment|/* mbuf destructor, also need to change the type to EXT_EXTREF,  * add an M_NOFREE flag, and then clear the flag and  * chain into uma_zfree(zone_pack, mf)  * (or reinstall the buffer ?)  */
 end_comment
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|set_mbuf_destructor
+begin_define
+define|#
+directive|define
+name|SET_MBUF_DESTRUCTOR
 parameter_list|(
-name|struct
-name|mbuf
-modifier|*
 name|m
 parameter_list|,
-name|void
-modifier|*
 name|fn
 parameter_list|)
-block|{
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_free
-operator|=
-name|fn
-expr_stmt|;
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_type
-operator|=
-name|EXT_EXTREF
-expr_stmt|;
-block|}
-end_function
+value|do {		\ 	(m)->m_ext.ext_free = (void *)fn;	\ 	(m)->m_ext.ext_type = EXT_EXTREF;	\ } while (0)
+end_define
 
 begin_function
 specifier|static
@@ -440,44 +417,17 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|set_mbuf_destructor
+begin_define
+define|#
+directive|define
+name|SET_MBUF_DESTRUCTOR
 parameter_list|(
-name|struct
-name|mbuf
-modifier|*
 name|m
 parameter_list|,
-name|void
-modifier|*
 name|fn
 parameter_list|)
-block|{
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_free
-operator|=
-operator|(
-name|fn
-operator|!=
-name|NULL
-operator|)
-condition|?
-name|fn
-else|:
-operator|(
-name|void
-operator|*
-operator|)
-name|void_mbuf_dtor
-expr_stmt|;
-block|}
-end_function
+value|do {		\ 	(m)->m_ext.ext_free = (fn != NULL) ?		\ 	    (void *)fn : (void *)void_mbuf_dtor;	\ } while (0)
+end_define
 
 begin_function
 specifier|static
@@ -1167,7 +1117,7 @@ comment|/* !RATE */
 end_comment
 
 begin_comment
-comment|/* =============== GENERIC NETMAP ADAPTER SUPPORT ================= */
+comment|/* ========== GENERIC (EMULATED) NETMAP ADAPTER SUPPORT ============= */
 end_comment
 
 begin_comment
@@ -1284,13 +1234,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|D
-argument_list|(
-literal|"Generic adapter %p goes off"
-argument_list|,
-name|na
-argument_list|)
-expr_stmt|;
 name|rtnl_lock
 argument_list|()
 expr_stmt|;
@@ -1340,11 +1283,11 @@ condition|)
 block|{
 name|D
 argument_list|(
-literal|"RX ring %d of generic adapter %p goes off"
+literal|"Emulated adapter: ring '%s' deactivated"
 argument_list|,
-name|r
-argument_list|,
-name|na
+name|kring
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|kring
@@ -1380,11 +1323,11 @@ name|NKR_NETMAP_OFF
 expr_stmt|;
 name|D
 argument_list|(
-literal|"TX ring %d of generic adapter %p goes off"
+literal|"Emulated adapter: ring '%s' deactivated"
 argument_list|,
-name|r
-argument_list|,
-name|na
+name|kring
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -1445,7 +1388,7 @@ operator|->
 name|tx_event
 condition|)
 block|{
-name|set_mbuf_destructor
+name|SET_MBUF_DESTRUCTOR
 argument_list|(
 name|kring
 operator|->
@@ -1479,13 +1422,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|free
+name|nm_os_free
 argument_list|(
 name|gna
 operator|->
 name|mit
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|for_each_rx_kring
@@ -1572,13 +1513,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|free
+name|nm_os_free
 argument_list|(
 name|kring
 operator|->
 name|tx_pool
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|kring
@@ -1617,6 +1556,15 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|D
+argument_list|(
+literal|"Emulated adapter for %s deactivated"
+argument_list|,
+name|na
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 literal|0
@@ -1704,9 +1652,11 @@ condition|)
 block|{
 name|D
 argument_list|(
-literal|"Generic adapter %p goes on"
+literal|"Emulated adapter for %s activated"
 argument_list|,
 name|na
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 comment|/* Do all memory allocations when (na->active_fds == 0), to 		 * simplify error management. */
@@ -1715,7 +1665,7 @@ name|gna
 operator|->
 name|mit
 operator|=
-name|malloc
+name|nm_os_malloc
 argument_list|(
 name|na
 operator|->
@@ -1726,12 +1676,6 @@ argument_list|(
 expr|struct
 name|nm_generic_mit
 argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1820,7 +1764,7 @@ name|kring
 operator|->
 name|tx_pool
 operator|=
-name|malloc
+name|nm_os_malloc
 argument_list|(
 name|na
 operator|->
@@ -1832,12 +1776,6 @@ expr|struct
 name|mbuf
 operator|*
 argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1896,11 +1834,11 @@ condition|)
 block|{
 name|D
 argument_list|(
-literal|"RX ring %d of generic adapter %p goes on"
+literal|"Emulated adapter: ring '%s' activated"
 argument_list|,
-name|r
-argument_list|,
-name|na
+name|kring
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|kring
@@ -1930,11 +1868,11 @@ condition|)
 block|{
 name|D
 argument_list|(
-literal|"TX ring %d of generic adapter %p goes on"
+literal|"Emulated adapter: ring '%s' activated"
 argument_list|,
-name|r
-argument_list|,
-name|na
+name|kring
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|kring
@@ -2191,13 +2129,11 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|free
+name|nm_os_free
 argument_list|(
 name|kring
 operator|->
 name|tx_pool
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|kring
@@ -2225,13 +2161,11 @@ name|rx_queue
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|nm_os_free
 argument_list|(
 name|gna
 operator|->
 name|mit
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|out
@@ -2942,7 +2876,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|set_mbuf_destructor
+name|SET_MBUF_DESTRUCTOR
 argument_list|(
 name|m
 argument_list|,
@@ -4433,13 +4367,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|D
-argument_list|(
-literal|"Released generic NA %p"
-argument_list|,
-name|gna
-argument_list|)
-expr_stmt|;
 name|netmap_adapter_put
 argument_list|(
 name|prev_na
@@ -4460,6 +4387,13 @@ name|prev_na
 argument_list|)
 expr_stmt|;
 block|}
+name|D
+argument_list|(
+literal|"Native netmap adapter %p restored"
+argument_list|,
+name|prev_na
+argument_list|)
+expr_stmt|;
 block|}
 name|NM_ATTACH_NA
 argument_list|(
@@ -4477,11 +4411,33 @@ name|NULL
 expr_stmt|;
 name|D
 argument_list|(
-literal|"Restored native NA %p"
+literal|"Emulated netmap adapter for %s destroyed"
 argument_list|,
-name|prev_na
+name|na
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|na_is_generic
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+block|{
+return|return
+name|na
+operator|->
+name|nm_register
+operator|==
+name|generic_netmap_register
+return|;
 block|}
 end_function
 
@@ -4571,19 +4527,13 @@ return|;
 block|}
 name|gna
 operator|=
-name|malloc
+name|nm_os_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|gna
 argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4741,11 +4691,9 @@ condition|(
 name|retval
 condition|)
 block|{
-name|free
+name|nm_os_free
 argument_list|(
 name|gna
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -4793,9 +4741,11 @@ argument_list|)
 expr_stmt|;
 name|D
 argument_list|(
-literal|"Created generic NA %p (prev %p)"
+literal|"Emulated adapter for %s created (prev was %p)"
 argument_list|,
-name|gna
+name|na
+operator|->
+name|name
 argument_list|,
 name|gna
 operator|->

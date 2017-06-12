@@ -35,6 +35,13 @@ name|nm_mem
 decl_stmt|;
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|nm_memid_t
+typedef|;
+end_typedef
+
 begin_function_decl
 name|int
 name|netmap_mem_get_lut
@@ -45,6 +52,17 @@ modifier|*
 parameter_list|,
 name|struct
 name|netmap_lut
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|nm_memid_t
+name|netmap_mem_get_id
+parameter_list|(
+name|struct
+name|netmap_mem_d
 modifier|*
 parameter_list|)
 function_decl|;
@@ -127,6 +145,10 @@ name|netmap_mem_if_new
 parameter_list|(
 name|struct
 name|netmap_adapter
+modifier|*
+parameter_list|,
+name|struct
+name|netmap_priv_d
 modifier|*
 parameter_list|)
 function_decl|;
@@ -248,11 +270,6 @@ name|netmap_mem_d
 modifier|*
 name|netmap_mem_private_new
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
 name|u_int
 name|txr
 parameter_list|,
@@ -289,25 +306,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|//#define NM_DEBUG_MEM_PUTGET 1
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NM_DEBUG_MEM_PUTGET
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|netmap_mem_get
 parameter_list|(
-name|nmd
+name|d
 parameter_list|)
-define|\
-value|do {						\ 		__netmap_mem_get(nmd, __FUNCTION__, __LINE__);	\ 	} while (0)
+value|__netmap_mem_get(d, __FUNCTION__, __LINE__)
 end_define
 
 begin_define
@@ -315,14 +321,15 @@ define|#
 directive|define
 name|netmap_mem_put
 parameter_list|(
-name|nmd
+name|d
 parameter_list|)
-define|\
-value|do {						\ 		__netmap_mem_put(nmd, __FUNCTION__, __LINE__);	\ 	} while (0)
+value|__netmap_mem_put(d, __FUNCTION__, __LINE__)
 end_define
 
 begin_function_decl
-name|void
+name|struct
+name|netmap_mem_d
+modifier|*
 name|__netmap_mem_get
 parameter_list|(
 name|struct
@@ -355,45 +362,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !NM_DEBUG_MEM_PUTGET */
-end_comment
-
 begin_function_decl
-name|void
-name|netmap_mem_get
-parameter_list|(
 name|struct
 name|netmap_mem_d
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|netmap_mem_put
+name|netmap_mem_find
 parameter_list|(
-name|struct
-name|netmap_mem_d
-modifier|*
+name|nm_memid_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !NM_DEBUG_PUTGET */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -476,7 +454,7 @@ name|nmreq
 modifier|*
 parameter_list|,
 name|struct
-name|netmap_adapter
+name|netmap_mem_d
 modifier|*
 parameter_list|)
 function_decl|;
