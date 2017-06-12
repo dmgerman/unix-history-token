@@ -265,7 +265,7 @@ argument_list|,
 name|td_frame
 argument_list|)
 operator|==
-literal|0x410
+literal|0x460
 argument_list|,
 literal|"struct thread KBI td_frame"
 argument_list|)
@@ -283,7 +283,7 @@ argument_list|,
 name|td_emuldata
 argument_list|)
 operator|==
-literal|0x4b8
+literal|0x508
 argument_list|,
 literal|"struct thread KBI td_emuldata"
 argument_list|)
@@ -438,7 +438,7 @@ argument_list|,
 name|td_frame
 argument_list|)
 operator|==
-literal|0x2c8
+literal|0x2ec
 argument_list|,
 literal|"struct thread KBI td_frame"
 argument_list|)
@@ -456,7 +456,7 @@ argument_list|,
 name|td_emuldata
 argument_list|)
 operator|==
-literal|0x314
+literal|0x338
 argument_list|,
 literal|"struct thread KBI td_emuldata"
 argument_list|)

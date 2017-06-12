@@ -3121,11 +3121,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|struct
-name|syscall_args
-modifier|*
-name|sa
 parameter_list|)
 block|{
 name|struct
@@ -3141,6 +3136,11 @@ decl_stmt|;
 name|register_t
 modifier|*
 name|argp
+decl_stmt|;
+name|struct
+name|syscall_args
+modifier|*
+name|sa
 decl_stmt|;
 name|caddr_t
 name|params
@@ -3163,6 +3163,13 @@ operator|=
 name|td
 operator|->
 name|td_frame
+expr_stmt|;
+name|sa
+operator|=
+operator|&
+name|td
+operator|->
+name|td_sa
 expr_stmt|;
 name|reg
 operator|=
@@ -3472,10 +3479,6 @@ name|int
 name|traced
 parameter_list|)
 block|{
-name|struct
-name|syscall_args
-name|sa
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3510,9 +3513,6 @@ operator|=
 name|syscallenter
 argument_list|(
 name|td
-argument_list|,
-operator|&
-name|sa
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Traced syscall. 	 */
@@ -3592,7 +3592,9 @@ name|td
 operator|->
 name|td_proc
 argument_list|,
-name|sa
+name|td
+operator|->
+name|td_sa
 operator|.
 name|code
 argument_list|)
@@ -3621,7 +3623,9 @@ name|td
 operator|->
 name|td_proc
 argument_list|,
-name|sa
+name|td
+operator|->
+name|td_sa
 operator|.
 name|code
 argument_list|)
@@ -3649,7 +3653,9 @@ name|td
 operator|->
 name|td_proc
 argument_list|,
-name|sa
+name|td
+operator|->
+name|td_sa
 operator|.
 name|code
 argument_list|)
@@ -3669,9 +3675,6 @@ argument_list|(
 name|td
 argument_list|,
 name|error
-argument_list|,
-operator|&
-name|sa
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the user-supplied value of %rip is not a canonical 	 * address, then some CPUs will trigger a ring 0 #GP during 	 * the sysret instruction.  However, the fault handler would 	 * execute in ring 0 with the user's %gs and %rsp which would 	 * not be safe.  Instead, use the full return path which 	 * catches the problem safely. 	 */
