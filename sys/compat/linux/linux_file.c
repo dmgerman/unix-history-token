@@ -1449,13 +1449,6 @@ define|\
 value|roundup(offsetof(struct l_dirent64, d_name) + (namlen) + 1,		\     sizeof(uint64_t))
 end_define
 
-begin_define
-define|#
-directive|define
-name|LINUX_DIRBLKSIZ
-value|512
-end_define
-
 begin_function
 name|int
 name|linux_getdents
