@@ -33401,6 +33401,15 @@ name|fec
 operator||=
 name|FEC_RESERVED
 expr_stmt|;
+name|fec
+operator|&=
+name|G_FW_PORT_CAP_FEC
+argument_list|(
+name|lc
+operator|->
+name|supported
+argument_list|)
+expr_stmt|;
 name|lc
 operator|->
 name|requested_fec
