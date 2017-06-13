@@ -8190,9 +8190,6 @@ operator|<
 name|sc
 operator|->
 name|sc_spi_end
-operator|&&
-operator|!
-name|found
 condition|;
 name|irq
 operator|++
@@ -8231,8 +8228,6 @@ operator|!=
 name|irq
 operator|+
 name|count
-operator|-
-literal|1
 condition|;
 name|end_irq
 operator|++
@@ -8304,6 +8299,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|found
+condition|)
+break|break;
 block|}
 comment|/* Not enough interrupts were found */
 if|if
