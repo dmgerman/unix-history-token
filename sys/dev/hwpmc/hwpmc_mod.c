@@ -15860,6 +15860,15 @@ directive|ifdef
 name|INVARIANTS
 if|if
 condition|(
+operator|(
+name|ps
+operator|->
+name|ps_pmc
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|ps
 operator|->
 name|ps_pmc
@@ -15867,6 +15876,7 @@ operator|->
 name|pm_state
 operator|!=
 name|PMC_STATE_RUNNING
+operator|)
 condition|)
 name|nfree
 operator|++
@@ -16010,6 +16020,9 @@ operator|!=
 name|ps_end
 condition|)
 do|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|KASSERT
 argument_list|(
 name|ncallchains
@@ -16029,6 +16042,8 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|KASSERT
 argument_list|(
 name|td
