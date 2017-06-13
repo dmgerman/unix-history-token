@@ -3969,7 +3969,7 @@ name|namelen
 operator|--
 expr_stmt|;
 comment|/* interface name */
-name|strncpy
+name|strlcpy
 argument_list|(
 name|if_name
 argument_list|,
@@ -3977,13 +3977,6 @@ name|arg
 argument_list|,
 name|namelen
 argument_list|)
-expr_stmt|;
-name|if_name
-index|[
-name|namelen
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 operator|*
 name|bandwidth
@@ -4695,7 +4688,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|profile_name
 argument_list|,
@@ -4705,21 +4698,7 @@ sizeof|sizeof
 argument_list|(
 name|profile_name
 argument_list|)
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|profile_name
-index|[
-sizeof|sizeof
-argument_list|(
-name|profile_name
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|do_points
 operator|=
@@ -5164,7 +5143,7 @@ name|loss
 operator|*
 name|samples
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|p
 operator|->
@@ -7886,7 +7865,7 @@ name|flags
 operator||=
 name|DN_IS_AQM
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|aqm_extra
 operator|->
@@ -7897,6 +7876,13 @@ index|[
 operator|-
 literal|1
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|aqm_extra
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|aqm_extra
@@ -7954,7 +7940,7 @@ argument_list|,
 literal|"fq_codel/fq_pie is only for schd"
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|sch_extra
 operator|->
@@ -7965,6 +7951,13 @@ index|[
 operator|-
 literal|1
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sch_extra
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sch_extra
@@ -8415,7 +8408,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|sch
 operator|->
@@ -8425,6 +8418,13 @@ name|av
 index|[
 literal|0
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sch
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sch
@@ -8465,7 +8465,7 @@ literal|"fq_pie"
 argument_list|)
 condition|)
 block|{
-name|strcpy
+name|strlcpy
 argument_list|(
 name|sch_extra
 operator|->
@@ -8475,6 +8475,13 @@ name|av
 index|[
 literal|0
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sch_extra
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sch_extra
