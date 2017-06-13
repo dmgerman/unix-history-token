@@ -1297,7 +1297,7 @@ name|multi_chip
 operator|=
 name|true
 expr_stmt|;
-comment|/* Lock is necessary due to assertions. */
+comment|/* 	 * Create temporary lock, just to satisfy assertions, 	 * when obtaining the switch ID. Destroy immediately afterwards. 	 */
 name|sx_init
 argument_list|(
 operator|&
@@ -1305,7 +1305,7 @@ name|sc
 operator|->
 name|sx
 argument_list|,
-literal|"e6000sw"
+literal|"e6000sw_tmp"
 argument_list|)
 expr_stmt|;
 name|E6000SW_LOCK
@@ -1330,6 +1330,14 @@ expr_stmt|;
 name|E6000SW_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|sx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sx
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1422,14 +1430,6 @@ literal|7
 expr_stmt|;
 break|break;
 default|default:
-name|sx_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sx
-argument_list|)
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -2040,6 +2040,16 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"single-chip addressing mode\n"
+argument_list|)
+expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sx
+argument_list|,
+literal|"e6000sw"
 argument_list|)
 expr_stmt|;
 name|E6000SW_LOCK
