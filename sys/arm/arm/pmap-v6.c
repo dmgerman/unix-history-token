@@ -2402,10 +2402,6 @@ name|u_int
 name|i
 decl_stmt|;
 name|uint32_t
-name|actlr_mask
-decl_stmt|,
-name|actlr_set
-decl_stmt|,
 name|l1_attr
 decl_stmt|;
 comment|/* 	 * Now, we are going to make real kernel mapping. Note that we are 	 * already running on some mapping made in locore.S and we expect 	 * that it's large enough to ensure nofault access to physical memory 	 * allocated herein before switch. 	 * 	 * As kernel image and everything needed before are and will be mapped 	 * by section mappings, we align last physical address to PTE1_SIZE. 	 */
@@ -2870,22 +2866,9 @@ name|base_pt1
 operator||
 name|ttb_flags
 expr_stmt|;
-name|cpuinfo_get_actlr_modifier
-argument_list|(
-operator|&
-name|actlr_mask
-argument_list|,
-operator|&
-name|actlr_set
-argument_list|)
-expr_stmt|;
-name|reinit_mmu
+name|cpuinfo_reinit_mmu
 argument_list|(
 name|pmap_kern_ttb
-argument_list|,
-name|actlr_mask
-argument_list|,
-name|actlr_set
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the first available KVA. As kernel image is mapped by 	 * sections, we are leaving some gap behind. 	 */
