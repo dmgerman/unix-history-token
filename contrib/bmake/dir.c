@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: dir.c,v 1.68 2016/06/07 00:40:00 sjg Exp $	*/
+comment|/*	$NetBSD: dir.c,v 1.71 2017/04/16 21:14:47 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: dir.c,v 1.68 2016/06/07 00:40:00 sjg Exp $"
+literal|"$NetBSD: dir.c,v 1.71 2017/04/16 21:14:47 riastradh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: dir.c,v 1.68 2016/06/07 00:40:00 sjg Exp $"
+literal|"$NetBSD: dir.c,v 1.71 2017/04/16 21:14:47 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -784,6 +784,12 @@ modifier|*
 name|cdname
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|cdname
+condition|)
+block|{
 name|dirSearchPath
 operator|=
 name|Lst_Init
@@ -814,6 +820,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|Dir_InitCur
 argument_list|(
 name|cdname
@@ -2144,6 +2152,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|fprintf
@@ -2160,13 +2169,7 @@ name|word
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -3841,6 +3844,7 @@ operator|&&
 name|cur
 operator|&&
 operator|(
+operator|(
 name|file
 operator|=
 name|DirLookupAbs
@@ -3854,15 +3858,32 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|file
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|free
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 return|return
-operator|*
-name|file
-condition|?
-name|file
-else|:
 name|NULL
 return|;
+block|}
+return|return
+name|file
+return|;
+block|}
 operator|(
 name|void
 operator|)
@@ -3926,13 +3947,27 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|file
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|free
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 return|return
-operator|*
-name|file
-condition|?
-name|file
-else|:
 name|NULL
+return|;
+block|}
+return|return
+name|file
 return|;
 block|}
 block|}
@@ -3948,6 +3983,7 @@ operator|&&
 name|cur
 operator|&&
 operator|(
+operator|(
 name|file
 operator|=
 name|DirLookupAbs
@@ -3961,15 +3997,32 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|file
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|free
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 return|return
-operator|*
-name|file
-condition|?
-name|file
-else|:
 name|NULL
 return|;
+block|}
+return|return
+name|file
+return|;
+block|}
 block|}
 comment|/*      * Didn't find it that way, either. Sigh. Phase 3. Add its directory      * onto the search path in any case, just in case, then look for the      * thing in the hash table. If we find it, grand. We return a new      * copy of the name. Otherwise we sadly return a NULL pointer. Sigh.      * Note that if the directory holding the file doesn't exist, this will      * do an extra search of the final directory on the path. Unless something      * weird happens, this search won't succeed and life will be groovy.      *      * Sigh. We cannot add the directory onto the search path because      * of this amusing case:      * $(INSTALLDIR)/$(FILE): $(FILE)      *      * $(FILE) exists in $(INSTALLDIR) but not in the current one.      * When searching for $(FILE), we will find it in $(INSTALLDIR)      * b/c we added it here. This is not good...      */
 ifdef|#
@@ -5769,6 +5822,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|fprintf
@@ -5789,13 +5843,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function

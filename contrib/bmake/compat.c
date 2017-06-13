@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: compat.c,v 1.105 2016/05/12 20:28:34 sjg Exp $	*/
+comment|/*	$NetBSD: compat.c,v 1.106 2016/08/26 23:28:39 dholland Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: compat.c,v 1.105 2016/05/12 20:28:34 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.106 2016/08/26 23:28:39 dholland Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: compat.c,v 1.105 2016/05/12 20:28:34 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.106 2016/08/26 23:28:39 dholland Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -211,26 +211,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CompatInterrupt --  *	Interrupt the creation of the current target and remove it if  *	it ain't precious.  *  * Results:  *	None.  *  * Side Effects:  *	The target is removed and the process exits. If .INTERRUPT exists,  *	its commands are run first WITH INTERRUPTS IGNORED..  *  *-----------------------------------------------------------------------  */
+comment|/*  * CompatDeleteTarget -- delete a failed, interrupted, or otherwise  * duffed target if not inhibited by .PRECIOUS.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|CompatInterrupt
+name|CompatDeleteTarget
 parameter_list|(
-name|int
-name|signo
-parameter_list|)
-block|{
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
+parameter_list|)
+block|{
 if|if
 condition|(
 operator|(
-name|curTarg
+name|gn
 operator|!=
 name|NULL
 operator|)
@@ -238,7 +235,7 @@ operator|&&
 operator|!
 name|Targ_Precious
 argument_list|(
-name|curTarg
+name|gn
 argument_list|)
 condition|)
 block|{
@@ -254,7 +251,7 @@ name|Var_Value
 argument_list|(
 name|TARGET
 argument_list|,
-name|curTarg
+name|gn
 argument_list|,
 operator|&
 name|p1
@@ -287,6 +284,47 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*-  *-----------------------------------------------------------------------  * CompatInterrupt --  *	Interrupt the creation of the current target and remove it if  *	it ain't precious.  *  * Results:  *	None.  *  * Side Effects:  *	The target is removed and the process exits. If .INTERRUPT exists,  *	its commands are run first WITH INTERRUPTS IGNORED..  *  * XXX: is .PRECIOUS supposed to inhibit .INTERRUPT? I doubt it, but I've  * left the logic alone for now. - dholland 20160826  *  *-----------------------------------------------------------------------  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|CompatInterrupt
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
+block|{
+name|GNode
+modifier|*
+name|gn
+decl_stmt|;
+name|CompatDeleteTarget
+argument_list|(
+name|curTarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|curTarg
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|!
+name|Targ_Precious
+argument_list|(
+name|curTarg
+argument_list|)
+condition|)
+block|{
 comment|/* 	 * Run .INTERRUPT only if hit with interrupt signal 	 */
 if|if
 condition|(
@@ -1393,6 +1431,25 @@ literal|" (continuing)\n"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|deleteOnError
+condition|)
+block|{
+name|CompatDeleteTarget
+argument_list|(
+name|gn
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1953,7 +2010,7 @@ name|PrintOnError
 argument_list|(
 name|gn
 argument_list|,
-literal|"\n\nStop."
+literal|"\nStop."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2313,7 +2370,7 @@ name|PrintOnError
 argument_list|(
 name|gn
 argument_list|,
-literal|"\n\nStop."
+literal|"\nStop."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2434,7 +2491,7 @@ name|PrintOnError
 argument_list|(
 name|gn
 argument_list|,
-literal|"\n\nStop."
+literal|"\nStop."
 argument_list|)
 expr_stmt|;
 name|exit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: targ.c,v 1.61 2016/01/17 17:45:21 christos Exp $	*/
+comment|/*	$NetBSD: targ.c,v 1.62 2017/04/16 19:53:58 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: targ.c,v 1.61 2016/01/17 17:45:21 christos Exp $"
+literal|"$NetBSD: targ.c,v 1.62 2017/04/16 19:53:58 riastradh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: targ.c,v 1.61 2016/01/17 17:45:21 christos Exp $"
+literal|"$NetBSD: targ.c,v 1.62 2017/04/16 19:53:58 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1275,6 +1275,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|fprintf
@@ -1291,13 +1292,7 @@ name|cmd
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function

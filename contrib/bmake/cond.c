@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cond.c,v 1.74 2016/02/18 18:29:14 christos Exp $	*/
+comment|/*	$NetBSD: cond.c,v 1.75 2017/04/16 20:59:04 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: cond.c,v 1.74 2016/02/18 18:29:14 christos Exp $"
+literal|"$NetBSD: cond.c,v 1.75 2017/04/16 20:59:04 riastradh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: cond.c,v 1.74 2016/02/18 18:29:14 christos Exp $"
+literal|"$NetBSD: cond.c,v 1.75 2017/04/16 20:59:04 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -86,6 +86,12 @@ end_endif
 begin_comment
 comment|/*-  * cond.c --  *	Functions to handle conditionals in a makefile.  *  * Interface:  *	Cond_Eval 	Evaluate the conditional in the passed line.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
 
 begin_include
 include|#
@@ -3703,17 +3709,16 @@ operator|=
 name|info
 expr_stmt|;
 block|}
-name|if_info
-operator|=
+name|assert
+argument_list|(
 name|info
 operator|!=
 name|NULL
-condition|?
+argument_list|)
+expr_stmt|;
+name|if_info
+operator|=
 name|info
-else|:
-name|ifs
-operator|+
-literal|4
 expr_stmt|;
 name|condExpr
 operator|=

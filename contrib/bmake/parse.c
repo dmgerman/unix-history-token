@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.214 2016/04/06 09:57:00 gson Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.225 2017/04/17 13:29:07 maya Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.214 2016/04/06 09:57:00 gson Exp $"
+literal|"$NetBSD: parse.c,v 1.225 2017/04/17 13:29:07 maya Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.214 2016/04/06 09:57:00 gson Exp $"
+literal|"$NetBSD: parse.c,v 1.225 2017/04/17 13:29:07 maya Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -164,6 +164,23 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDINT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -334,6 +351,9 @@ comment|/* .BEGIN */
 name|Default
 block|,
 comment|/* .DEFAULT */
+name|DeleteOnError
+block|,
+comment|/* .DELETE_ON_ERROR */
 name|End
 block|,
 comment|/* .END */
@@ -676,6 +696,14 @@ block|{
 literal|".DEFAULT"
 block|,
 name|Default
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|".DELETE_ON_ERROR"
+block|,
+name|DeleteOnError
 block|,
 literal|0
 block|}
@@ -1895,7 +1923,7 @@ name|char
 modifier|*
 name|b
 init|=
-name|malloc
+name|bmake_malloc
 argument_list|(
 name|lf
 operator|->
@@ -2009,6 +2037,34 @@ operator|->
 name|len
 condition|)
 block|{
+if|if
+condition|(
+name|lf
+operator|->
+name|len
+operator|>
+name|SIZE_MAX
+operator|/
+literal|2
+condition|)
+block|{
+name|errno
+operator|=
+name|EFBIG
+expr_stmt|;
+name|Error
+argument_list|(
+literal|"%s: file too large"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|lf
 operator|->
 name|len
@@ -2031,6 +2087,15 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+name|assert
+argument_list|(
+name|bufpos
+operator|<
+name|lf
+operator|->
+name|len
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|read
@@ -2114,6 +2179,27 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* as for mmap case, ensure trailing \n */
+if|if
+condition|(
+name|lf
+operator|->
+name|buf
+index|[
+name|lf
+operator|->
+name|len
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\n'
+condition|)
+name|lf
+operator|->
+name|len
+operator|++
+expr_stmt|;
 name|lf
 operator|->
 name|buf
@@ -2128,6 +2214,19 @@ name|lf
 operator|->
 name|len
 argument_list|)
+expr_stmt|;
+name|lf
+operator|->
+name|buf
+index|[
+name|lf
+operator|->
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\n'
 expr_stmt|;
 block|}
 ifdef|#
@@ -3786,6 +3885,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|GNode
@@ -3821,25 +3921,13 @@ name|gn
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|1
-else|:
-literal|1
-operator|)
 return|;
 block|}
 else|else
 block|{
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 block|}
@@ -3904,6 +3992,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|Dir_ClearPath
@@ -3915,13 +4004,7 @@ name|path
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -4348,7 +4431,7 @@ index|]
 operator|.
 name|op
 expr_stmt|;
-comment|/* 		 * Certain special targets have special semantics: 		 *	.PATH		Have to set the dirSearchPath 		 *			variable too 		 *	.MAIN		Its sources are only used if 		 *			nothing has been specified to 		 *			create. 		 *	.DEFAULT    	Need to create a node to hang 		 *			commands on, but we don't want 		 *			it in the graph, nor do we want 		 *			it to be the Main Target, so we 		 *			create it, set OP_NOTMAIN and 		 *			add it to the list, setting 		 *			DEFAULT to the new node for 		 *			later use. We claim the node is 		 *	    	    	A transformation rule to make 		 *	    	    	life easier later, when we'll 		 *	    	    	use Make_HandleUse to actually 		 *	    	    	apply the .DEFAULT commands. 		 *	.PHONY		The list of targets 		 *	.NOPATH		Don't search for file in the path 		 *	.STALE 		 *	.BEGIN 		 *	.END 		 *	.ERROR 		 *	.INTERRUPT  	Are not to be considered the 		 *			main target. 		 *  	.NOTPARALLEL	Make only one target at a time. 		 *  	.SINGLESHELL	Create a shell for each command. 		 *  	.ORDER	    	Must set initial predecessor to NULL 		 */
+comment|/* 		 * Certain special targets have special semantics: 		 *	.PATH		Have to set the dirSearchPath 		 *			variable too 		 *	.MAIN		Its sources are only used if 		 *			nothing has been specified to 		 *			create. 		 *	.DEFAULT    	Need to create a node to hang 		 *			commands on, but we don't want 		 *			it in the graph, nor do we want 		 *			it to be the Main Target, so we 		 *			create it, set OP_NOTMAIN and 		 *			add it to the list, setting 		 *			DEFAULT to the new node for 		 *			later use. We claim the node is 		 *	    	    	A transformation rule to make 		 *	    	    	life easier later, when we'll 		 *	    	    	use Make_HandleUse to actually 		 *	    	    	apply the .DEFAULT commands. 		 *	.PHONY		The list of targets 		 *	.NOPATH		Don't search for file in the path 		 *	.STALE 		 *	.BEGIN 		 *	.END 		 *	.ERROR 		 *	.DELETE_ON_ERROR 		 *	.INTERRUPT  	Are not to be considered the 		 *			main target. 		 *  	.NOTPARALLEL	Make only one target at a time. 		 *  	.SINGLESHELL	Create a shell for each command. 		 *  	.ORDER	    	Must set initial predecessor to NULL 		 */
 switch|switch
 condition|(
 name|specType
@@ -4486,6 +4569,14 @@ expr_stmt|;
 name|DEFAULT
 operator|=
 name|gn
+expr_stmt|;
+break|break;
+case|case
+name|DeleteOnError
+case|:
+name|deleteOnError
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -5253,6 +5344,12 @@ name|specType
 operator|==
 name|SingleShell
 operator|)
+operator|||
+operator|(
+name|specType
+operator|==
+name|DeleteOnError
+operator|)
 condition|)
 block|{
 operator|*
@@ -5401,6 +5498,8 @@ name|ExObjdir
 case|:
 name|Main_SetObjdir
 argument_list|(
+literal|"%s"
+argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
@@ -5461,6 +5560,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|paths
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5474,6 +5577,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|assert
+argument_list|(
+name|paths
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -5689,6 +5799,13 @@ expr_stmt|;
 block|}
 name|out
 label|:
+name|assert
+argument_list|(
+name|paths
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|curTargs
@@ -5987,7 +6104,7 @@ operator|+
 literal|1
 init|;
 name|depth
-operator|!=
+operator|>
 literal|0
 operator|||
 operator|*
@@ -8384,7 +8501,9 @@ argument_list|,
 literal|"Filename missing from \"include\""
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 for|for
 control|(
@@ -8454,6 +8573,8 @@ name|silent
 argument_list|)
 expr_stmt|;
 block|}
+name|out
+label|:
 name|free
 argument_list|(
 name|all_files
@@ -8600,6 +8721,11 @@ argument_list|,
 name|value
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|value
 argument_list|)
 expr_stmt|;
 block|}

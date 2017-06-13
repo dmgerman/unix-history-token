@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: suff.c,v 1.81 2016/03/15 18:30:14 matthias Exp $	*/
+comment|/*	$NetBSD: suff.c,v 1.86 2017/04/16 20:38:18 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: suff.c,v 1.81 2016/03/15 18:30:14 matthias Exp $"
+literal|"$NetBSD: suff.c,v 1.86 2017/04/16 20:38:18 riastradh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: suff.c,v 1.81 2016/03/15 18:30:14 matthias Exp $"
+literal|"$NetBSD: suff.c,v 1.86 2017/04/16 20:38:18 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -86,6 +86,12 @@ end_endif
 begin_comment
 comment|/*-  * suff.c --  *	Functions to maintain suffix lists and find implicit dependents  *	using suffix transformation rules  *  * Interface:  *	Suff_Init 	    	Initialize all things to do with suffixes.  *  *	Suff_End 	    	Cleanup the module  *  *	Suff_DoPaths	    	This function is used to make life easier  *	    	  	    	when searching for a file according to its  *	    	  	    	suffix. It takes the global search path,  *	    	  	    	as defined using the .PATH: target, and appends  *	    	  	    	its directories to the path of each of the  *	    	  	    	defined suffixes, as specified using  *	    	  	    	.PATH<suffix>: targets. In addition, all  *	    	  	    	directories given for suffixes labeled as  *	    	  	    	include files or libraries, using the .INCLUDES  *	    	  	    	or .LIBS targets, are played with using  *	    	  	    	Dir_MakeFlags to create the .INCLUDES and  *	    	  	    	.LIBS global variables.  *  *	Suff_ClearSuffixes  	Clear out all the suffixes and defined  *	    	  	    	transformations.  *  *	Suff_IsTransform    	Return TRUE if the passed string is the lhs  *	    	  	    	of a transformation rule.  *  *	Suff_AddSuffix	    	Add the passed string as another known suffix.  *  *	Suff_GetPath	    	Return the search path for the given suffix.  *  *	Suff_AddInclude	    	Mark the given suffix as denoting an include  *	    	  	    	file.  *  *	Suff_AddLib	    	Mark the given suffix as denoting a library.  *  *	Suff_AddTransform   	Add another transformation to the suffix  *	    	  	    	graph. Returns  GNode suitable for framing, I  *	    	  	    	mean, tacking commands, attributes, etc. on.  *  *	Suff_SetNull	    	Define the suffix to consider the suffix of  *	    	  	    	any file that doesn't have a known one.  *  *	Suff_FindDeps	    	Find implicit sources for and the location of  *	    	  	    	a target based on its suffix. Returns the  *	    	  	    	bottom-most node added to the graph or NULL  *	    	  	    	if the target had no implicit sources.  *  *	Suff_FindPath	    	Return the appropriate path to search in  *				order to find the node.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
 
 begin_include
 include|#
@@ -2184,6 +2190,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|GNode
@@ -2363,13 +2370,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -3674,7 +3675,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"1 add %x %x to %x:"
+literal|"1 add %p %p to %p:"
 argument_list|,
 name|targ
 argument_list|,
@@ -3813,7 +3814,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"2 add %x %x to %x:"
+literal|"2 add %p %p to %p:"
 argument_list|,
 name|targ
 argument_list|,
@@ -4035,7 +4036,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG_SRC
 name|LstNode
-name|ln
+name|ln2
 init|=
 name|Lst_Member
 argument_list|(
@@ -4050,7 +4051,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|ln
+name|ln2
 operator|!=
 name|NULL
 condition|)
@@ -4062,7 +4063,7 @@ name|parent
 operator|->
 name|cp
 argument_list|,
-name|ln
+name|ln2
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4082,7 +4083,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"free: [l=%x] p=%x %d\n"
+literal|"free: [l=%p] p=%p %d\n"
 argument_list|,
 name|l
 argument_list|,
@@ -4138,7 +4139,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"keep: [l=%x] p=%x %d: "
+literal|"keep: [l=%p] p=%p %d: "
 argument_list|,
 name|l
 argument_list|,
@@ -4279,7 +4280,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"remove %x from %x\n"
+literal|"remove %p from %p\n"
 argument_list|,
 name|s
 argument_list|,
@@ -4327,7 +4328,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"remove %x from %x\n"
+literal|"remove %p from %p\n"
 argument_list|,
 name|s
 argument_list|,
@@ -4717,7 +4718,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"3 add %x %x\n"
+literal|"3 add %p %p\n"
 argument_list|,
 name|targ
 argument_list|,
@@ -5126,8 +5127,10 @@ name|cp
 operator|==
 literal|'\\'
 operator|&&
-operator|*
 name|cp
+index|[
+literal|1
+index|]
 operator|!=
 literal|'\0'
 condition|)
@@ -6007,6 +6010,21 @@ argument_list|(
 name|eoarch
 argument_list|,
 literal|')'
+argument_list|)
+expr_stmt|;
+comment|/*      * Caller guarantees the format `libname(member)', via      * Arch_ParseArchive.      */
+name|assert
+argument_list|(
+name|eoarch
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|eoname
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|*
@@ -8184,6 +8202,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|fprintf
@@ -8204,13 +8223,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -8227,6 +8240,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|Suff
@@ -8432,13 +8446,7 @@ name|debug_file
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -8455,6 +8463,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|GNode
@@ -8511,13 +8520,7 @@ name|debug_file
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function
