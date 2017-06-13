@@ -2396,7 +2396,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|" {T:/%*s} {T:/%*s} {T:/%*s} Capacity"
+literal|" {T:/%*s} {T:/%*s} {T:/%*s} {T:Capacity}"
 argument_list|,
 name|mwp
 operator|->
