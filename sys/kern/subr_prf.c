@@ -1608,7 +1608,6 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
