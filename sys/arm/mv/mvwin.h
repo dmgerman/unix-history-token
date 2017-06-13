@@ -1054,6 +1054,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|MV_WIN_NETA_OFFSET
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_NETA_BASE
+parameter_list|(
+name|n
+parameter_list|)
+value|MV_WIN_ETH_BASE(n) + MV_WIN_NETA_OFFSET
+end_define
+
+begin_define
+define|#
+directive|define
 name|MV_WIN_ETH_BASE
 parameter_list|(
 name|n
@@ -1723,6 +1740,13 @@ define|#
 directive|define
 name|IO_WIN_SIZE_MASK
 value|0xFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|IO_WIN_COH_ATTR_MASK
+value|(0xF<< 12)
 end_define
 
 begin_define
