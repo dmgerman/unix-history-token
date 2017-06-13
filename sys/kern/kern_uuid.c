@@ -138,7 +138,7 @@ block|{
 name|uint64_t
 name|ll
 decl_stmt|;
-comment|/* internal. */
+comment|/* internal, for uuid_last only */
 struct|struct
 block|{
 name|uint32_t
