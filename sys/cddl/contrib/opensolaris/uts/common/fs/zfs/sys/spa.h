@@ -2721,15 +2721,6 @@ modifier|*
 name|nptr
 parameter_list|)
 function_decl|;
-define|#
-directive|define
-name|strtonum
-parameter_list|(
-name|str
-parameter_list|,
-name|nptr
-parameter_list|)
-value|zfs_strtonum((str), (nptr))
 specifier|extern
 name|char
 modifier|*

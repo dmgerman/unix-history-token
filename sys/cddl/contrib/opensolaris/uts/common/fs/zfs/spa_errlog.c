@@ -133,7 +133,7 @@ name|zb
 operator|->
 name|zb_objset
 operator|=
-name|strtonum
+name|zfs_strtonum
 argument_list|(
 name|buf
 argument_list|,
@@ -153,7 +153,7 @@ name|zb
 operator|->
 name|zb_object
 operator|=
-name|strtonum
+name|zfs_strtonum
 argument_list|(
 name|buf
 operator|+
@@ -178,7 +178,7 @@ operator|=
 operator|(
 name|int
 operator|)
-name|strtonum
+name|zfs_strtonum
 argument_list|(
 name|buf
 operator|+
@@ -200,7 +200,7 @@ name|zb
 operator|->
 name|zb_blkid
 operator|=
-name|strtonum
+name|zfs_strtonum
 argument_list|(
 name|buf
 operator|+
