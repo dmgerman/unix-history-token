@@ -5374,7 +5374,7 @@ end_comment
 
 begin_function
 name|uint64_t
-name|strtonum
+name|zfs_strtonum
 parameter_list|(
 specifier|const
 name|char

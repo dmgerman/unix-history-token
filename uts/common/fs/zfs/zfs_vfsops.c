@@ -2962,7 +2962,7 @@ name|domain
 decl_stmt|;
 name|fuid
 operator|=
-name|strtonum
+name|zfs_strtonum
 argument_list|(
 name|fuidstr
 argument_list|,

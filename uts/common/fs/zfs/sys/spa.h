@@ -2687,7 +2687,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|uint64_t
-name|strtonum
+name|zfs_strtonum
 parameter_list|(
 specifier|const
 name|char

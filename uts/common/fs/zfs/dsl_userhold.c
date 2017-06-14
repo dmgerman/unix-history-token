@@ -1502,7 +1502,7 @@ name|dsl_dataset_hold_obj
 argument_list|(
 name|dp
 argument_list|,
-name|strtonum
+name|zfs_strtonum
 argument_list|(
 name|dsobj
 argument_list|,

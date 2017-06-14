@@ -6682,7 +6682,7 @@ name|dsobj
 decl_stmt|;
 name|dsobj
 operator|=
-name|strtonum
+name|zfs_strtonum
 argument_list|(
 name|za
 operator|.
