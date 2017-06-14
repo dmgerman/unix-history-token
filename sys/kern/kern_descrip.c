@@ -18021,7 +18021,7 @@ name|DTYPE_VNODE
 case|:
 return|return
 operator|(
-literal|"vnod"
+literal|"vnode"
 operator|)
 return|;
 case|case
@@ -18029,7 +18029,7 @@ name|DTYPE_SOCKET
 case|:
 return|return
 operator|(
-literal|"sock"
+literal|"socket"
 operator|)
 return|;
 case|case
@@ -18053,7 +18053,7 @@ name|DTYPE_KQUEUE
 case|:
 return|return
 operator|(
-literal|"kque"
+literal|"kqueue"
 operator|)
 return|;
 case|case
@@ -18061,7 +18061,7 @@ name|DTYPE_CRYPTO
 case|:
 return|return
 operator|(
-literal|"crpt"
+literal|"crypto"
 operator|)
 return|;
 case|case
@@ -18069,7 +18069,7 @@ name|DTYPE_MQUEUE
 case|:
 return|return
 operator|(
-literal|"mque"
+literal|"mqueue"
 operator|)
 return|;
 case|case
@@ -18086,6 +18086,46 @@ case|:
 return|return
 operator|(
 literal|"ksem"
+operator|)
+return|;
+case|case
+name|DTYPE_PTS
+case|:
+return|return
+operator|(
+literal|"pts"
+operator|)
+return|;
+case|case
+name|DTYPE_DEV
+case|:
+return|return
+operator|(
+literal|"dev"
+operator|)
+return|;
+case|case
+name|DTYPE_PROCDESC
+case|:
+return|return
+operator|(
+literal|"proc"
+operator|)
+return|;
+case|case
+name|DTYPE_LINUXEFD
+case|:
+return|return
+operator|(
+literal|"levent"
+operator|)
+return|;
+case|case
+name|DTYPE_LINUXTFD
+case|:
+return|return
+operator|(
+literal|"ltimer"
 operator|)
 return|;
 default|default:
@@ -18213,6 +18253,10 @@ name|int
 name|header
 parameter_list|)
 block|{
+define|#
+directive|define
+name|XPTRWIDTH
+value|((int)howmany(sizeof(void *) * NBBY, 4))
 name|struct
 name|proc
 modifier|*
@@ -18224,11 +18268,15 @@ name|header
 condition|)
 name|db_printf
 argument_list|(
-literal|"%8s %4s %8s %8s %4s %5s %6s %8s %5s %12s\n"
+literal|"%*s %6s %*s %8s %4s %5s %6s %*s %5s %s\n"
+argument_list|,
+name|XPTRWIDTH
 argument_list|,
 literal|"File"
 argument_list|,
 literal|"Type"
+argument_list|,
+name|XPTRWIDTH
 argument_list|,
 literal|"Data"
 argument_list|,
@@ -18239,6 +18287,8 @@ argument_list|,
 literal|"Count"
 argument_list|,
 literal|"MCount"
+argument_list|,
+name|XPTRWIDTH
 argument_list|,
 literal|"Vnode"
 argument_list|,
@@ -18256,7 +18306,9 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%8p %4s %8p %08x %04x %5d %6d %8p %5d %12s\n"
+literal|"%*p %6s %*p %08x %04x %5d %6d %*p %5d %s\n"
+argument_list|,
+name|XPTRWIDTH
 argument_list|,
 name|fp
 argument_list|,
@@ -18266,6 +18318,8 @@ name|fp
 operator|->
 name|f_type
 argument_list|)
+argument_list|,
+name|XPTRWIDTH
 argument_list|,
 name|fp
 operator|->
@@ -18282,6 +18336,8 @@ operator|->
 name|f_count
 argument_list|,
 literal|0
+argument_list|,
+name|XPTRWIDTH
 argument_list|,
 name|fp
 operator|->
@@ -18309,6 +18365,9 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|XPTRWIDTH
 block|}
 end_function
 
