@@ -1008,6 +1008,11 @@ name|rdmsr
 argument_list|(
 name|MSR_EFER
 argument_list|)
+operator|&
+operator|~
+operator|(
+name|EFER_LMA
+operator|)
 argument_list|)
 expr_stmt|;
 else|#
