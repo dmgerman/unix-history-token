@@ -693,7 +693,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aAf:FlrRsv"
+literal|"aAf:FlrRs"
 argument_list|)
 condition|)
 block|{
