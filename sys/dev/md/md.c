@@ -5305,7 +5305,7 @@ operator|==
 name|VM_PAGER_ERROR
 condition|)
 block|{
-name|vm_page_xunbusy
+name|md_swap_page_free
 argument_list|(
 name|m
 argument_list|)
@@ -5478,7 +5478,7 @@ operator|==
 name|VM_PAGER_ERROR
 condition|)
 block|{
-name|vm_page_xunbusy
+name|md_swap_page_free
 argument_list|(
 name|m
 argument_list|)
@@ -5644,7 +5644,7 @@ operator|==
 name|VM_PAGER_ERROR
 condition|)
 block|{
-name|vm_page_xunbusy
+name|md_swap_page_free
 argument_list|(
 name|m
 argument_list|)
