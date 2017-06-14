@@ -2547,7 +2547,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * If immutable or not appending then return EPERM 	 */
+comment|/* 	 * If immutable or not appending then return EPERM. 	 * Intentionally allow ZFS_READONLY through here. 	 * See zfs_zaccess_common() 	 */
 if|if
 condition|(
 operator|(
@@ -2555,11 +2555,7 @@ name|zp
 operator|->
 name|z_pflags
 operator|&
-operator|(
 name|ZFS_IMMUTABLE
-operator||
-name|ZFS_READONLY
-operator|)
 operator|)
 operator|||
 operator|(
@@ -11678,37 +11674,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|(
-name|mask
-operator|&
-name|AT_SIZE
-operator|)
-operator|&&
-operator|(
-name|zp
-operator|->
-name|z_pflags
-operator|&
-name|ZFS_READONLY
-operator|)
-condition|)
-block|{
-name|ZFS_EXIT
-argument_list|(
-name|zfsvfs
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|SET_ERROR
-argument_list|(
-name|EPERM
-argument_list|)
-operator|)
-return|;
-block|}
+comment|/* 	 * Note: ZFS_READONLY is handled in zfs_zaccess_common. 	 */
 comment|/* 	 * Verify timestamps doesn't overflow 32 bits. 	 * ZFS can handle large timestamps, but 32bit syscalls can't 	 * handle times greater than 2039.  This check should be removed 	 * once large timestamps are fully supported. 	 */
 if|if
 condition|(
@@ -20248,6 +20214,7 @@ argument_list|(
 name|zp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note: ZFS_READONLY is handled in zfs_zaccess_common. 	 */
 if|if
 condition|(
 operator|(
@@ -20263,8 +20230,6 @@ name|z_pflags
 operator|&
 operator|(
 name|ZFS_IMMUTABLE
-operator||
-name|ZFS_READONLY
 operator||
 name|ZFS_APPENDONLY
 operator|)

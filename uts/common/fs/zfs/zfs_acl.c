@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -9455,7 +9455,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * Only check for READONLY on non-directories. 	 */
+comment|/* 	 * Intentionally allow ZFS_READONLY through here. 	 * See zfs_zaccess_common(). 	 */
 if|if
 condition|(
 operator|(
@@ -9465,49 +9465,11 @@ name|WRITE_MASK_DATA
 operator|)
 operator|&&
 operator|(
-operator|(
-operator|(
-name|ZTOV
-argument_list|(
-name|zp
-argument_list|)
-operator|->
-name|v_type
-operator|!=
-name|VDIR
-operator|)
-operator|&&
-operator|(
-name|zp
-operator|->
-name|z_pflags
-operator|&
-operator|(
-name|ZFS_READONLY
-operator||
-name|ZFS_IMMUTABLE
-operator|)
-operator|)
-operator|)
-operator|||
-operator|(
-name|ZTOV
-argument_list|(
-name|zp
-argument_list|)
-operator|->
-name|v_type
-operator|==
-name|VDIR
-operator|&&
-operator|(
 name|zp
 operator|->
 name|z_pflags
 operator|&
 name|ZFS_IMMUTABLE
-operator|)
-operator|)
 operator|)
 condition|)
 block|{
@@ -10272,6 +10234,44 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * Note: ZFS_READONLY represents the "DOS R/O" attribute. 	 * When that flag is set, we should behave as if write access 	 * were not granted by anything in the ACL.  In particular: 	 * We _must_ allow writes after opening the file r/w, then 	 * setting the DOS R/O attribute, and writing some more. 	 * (Similar to how you can write after fchmod(fd, 0444).) 	 * 	 * Therefore ZFS_READONLY is ignored in the dataset check 	 * above, and checked here as if part of the ACL check. 	 * Also note: DOS R/O is ignored for directories. 	 */
+if|if
+condition|(
+operator|(
+name|v4_mode
+operator|&
+name|WRITE_MASK_DATA
+operator|)
+operator|&&
+operator|(
+name|ZTOV
+argument_list|(
+name|zp
+argument_list|)
+operator|->
+name|v_type
+operator|!=
+name|VDIR
+operator|)
+operator|&&
+operator|(
+name|zp
+operator|->
+name|z_pflags
+operator|&
+name|ZFS_READONLY
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
