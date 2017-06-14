@@ -693,7 +693,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aAf:FlnrRsv"
+literal|"aAf:FlrRsv"
 argument_list|)
 condition|)
 block|{
@@ -766,16 +766,6 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'n'
-case|:
-name|opts
-operator||=
-name|OPT_DONOTHING
-operator||
-name|OPT_DONTOPEN
 expr_stmt|;
 break|break;
 case|case
