@@ -1462,11 +1462,6 @@ operator|->
 name|pr_drain
 argument_list|)
 expr_stmt|;
-name|db_print_indent
-argument_list|(
-name|indent
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1848,6 +1843,24 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
+literal|"sb_mcnt: %u   "
+argument_list|,
+name|sb
+operator|->
+name|sb_mcnt
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"sb_ccnt: %u   "
+argument_list|,
+name|sb
+operator|->
+name|sb_ccnt
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
 literal|"sb_ctl: %u   "
 argument_list|,
 name|sb
@@ -2060,11 +2073,6 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|")   "
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
 literal|"so_pcb: %p   "
 argument_list|,
 name|so
@@ -2188,6 +2196,11 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
+literal|")   "
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
 literal|"so_listen: %p   "
 argument_list|,
 name|so
@@ -2230,7 +2243,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"so_oobmark: %lu   "
+literal|"so_oobmark: %lu\n"
 argument_list|,
 name|so
 operator|->
