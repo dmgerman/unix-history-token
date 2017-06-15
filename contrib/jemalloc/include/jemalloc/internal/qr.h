@@ -1,4 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|JEMALLOC_INTERNAL_QR_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_INTERNAL_QR_H
+end_define
+
 begin_comment
 comment|/* Ring definitions. */
 end_comment
@@ -79,8 +91,7 @@ name|a_qr
 parameter_list|,
 name|a_field
 parameter_list|)
-define|\
-value|do									\     {									\ 	(a_qr)->a_field.qre_next = (a_qrelm)->a_field.qre_next;		\ 	(a_qr)->a_field.qre_prev = (a_qrelm);				\ 	(a_qr)->a_field.qre_next->a_field.qre_prev = (a_qr);		\ 	(a_qrelm)->a_field.qre_next = (a_qr);				\     } while (0)
+value|do {			\ 	(a_qr)->a_field.qre_next = (a_qrelm)->a_field.qre_next;		\ 	(a_qr)->a_field.qre_prev = (a_qrelm);				\ 	(a_qr)->a_field.qre_next->a_field.qre_prev = (a_qr);		\ 	(a_qrelm)->a_field.qre_next = (a_qr);				\ } while (0)
 end_define
 
 begin_define
@@ -92,9 +103,11 @@ name|a_qr_a
 parameter_list|,
 name|a_qr_b
 parameter_list|,
+name|a_type
+parameter_list|,
 name|a_field
 parameter_list|)
-value|do {				\ 	void *t;							\ 	(a_qr_a)->a_field.qre_prev->a_field.qre_next = (a_qr_b);	\ 	(a_qr_b)->a_field.qre_prev->a_field.qre_next = (a_qr_a);	\ 	t = (a_qr_a)->a_field.qre_prev;					\ 	(a_qr_a)->a_field.qre_prev = (a_qr_b)->a_field.qre_prev;	\ 	(a_qr_b)->a_field.qre_prev = t;					\ } while (0)
+value|do {			\ 	a_type *t;							\ 	(a_qr_a)->a_field.qre_prev->a_field.qre_next = (a_qr_b);	\ 	(a_qr_b)->a_field.qre_prev->a_field.qre_next = (a_qr_a);	\ 	t = (a_qr_a)->a_field.qre_prev;					\ 	(a_qr_a)->a_field.qre_prev = (a_qr_b)->a_field.qre_prev;	\ 	(a_qr_b)->a_field.qre_prev = t;					\ } while (0)
 end_define
 
 begin_comment
@@ -110,10 +123,12 @@ name|a_qr_a
 parameter_list|,
 name|a_qr_b
 parameter_list|,
+name|a_type
+parameter_list|,
 name|a_field
 parameter_list|)
 define|\
-value|qr_meld((a_qr_a), (a_qr_b), a_field)
+value|qr_meld((a_qr_a), (a_qr_b), a_type, a_field)
 end_define
 
 begin_define
@@ -157,6 +172,15 @@ parameter_list|)
 define|\
 value|for ((var) = ((a_qr) != NULL) ? qr_prev(a_qr, a_field) : NULL;	\ 	    (var) != NULL;						\ 	    (var) = (((var) != (a_qr))					\ 	    ? (var)->a_field.qre_prev : NULL))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* JEMALLOC_INTERNAL_QR_H */
+end_comment
 
 end_unit
 

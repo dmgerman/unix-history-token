@@ -113,6 +113,35 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYS_open
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Android headers may define SYS_open to __NR_open even though         * __NR_open may not exist on AArch64 (superseded by __NR_openat). */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SYS_open
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -227,6 +256,24 @@ define|#
 directive|define
 name|SIZE_T_MAX
 value|SIZE_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SSIZE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SSIZE_MAX
+value|((ssize_t)(SIZE_T_MAX>> 1))
 end_define
 
 begin_endif

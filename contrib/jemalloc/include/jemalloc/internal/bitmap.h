@@ -1,47 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/******************************************************************************/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JEMALLOC_H_TYPES
-end_ifdef
-
-begin_comment
-comment|/* Maximum bitmap bit count is 2^LG_BITMAP_MAXBITS. */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|JEMALLOC_INTERNAL_BITMAP_H
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LG_BITMAP_MAXBITS
-value|LG_RUN_MAXREGS
+name|JEMALLOC_INTERNAL_BITMAP_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|BITMAP_MAXBITS
-value|(ZU(1)<< LG_BITMAP_MAXBITS)
-end_define
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/arena_types.h"
+end_include
 
-begin_typedef
-typedef|typedef
-name|struct
-name|bitmap_level_s
-name|bitmap_level_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/bit_util.h"
+end_include
 
-begin_typedef
-typedef|typedef
-name|struct
-name|bitmap_info_s
-name|bitmap_info_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/size_classes.h"
+end_include
 
 begin_typedef
 typedef|typedef
@@ -59,6 +45,57 @@ value|LG_SIZEOF_LONG
 end_define
 
 begin_comment
+comment|/* Maximum bitmap bit count is 2^LG_BITMAP_MAXBITS. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|LG_SLAB_MAXREGS
+operator|>
+name|LG_CEIL_NSIZES
+end_if
+
+begin_comment
+comment|/* Maximum bitmap bit count is determined by maximum regions per slab. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LG_BITMAP_MAXBITS
+value|LG_SLAB_MAXREGS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Maximum bitmap bit count is determined by number of extent size classes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LG_BITMAP_MAXBITS
+value|LG_CEIL_NSIZES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|BITMAP_MAXBITS
+value|(ZU(1)<< LG_BITMAP_MAXBITS)
+end_define
+
+begin_comment
 comment|/* Number of bits per group. */
 end_comment
 
@@ -73,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|BITMAP_GROUP_NBITS
-value|(ZU(1)<< LG_BITMAP_GROUP_NBITS)
+value|(1U<< LG_BITMAP_GROUP_NBITS)
 end_define
 
 begin_define
@@ -100,7 +137,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|USE_TREE
+name|BITMAP_USE_TREE
 end_define
 
 begin_endif
@@ -120,7 +157,7 @@ parameter_list|(
 name|nbits
 parameter_list|)
 define|\
-value|((nbits + BITMAP_GROUP_NBITS_MASK)>> LG_BITMAP_GROUP_NBITS)
+value|(((nbits) + BITMAP_GROUP_NBITS_MASK)>> LG_BITMAP_GROUP_NBITS)
 end_define
 
 begin_comment
@@ -171,6 +208,17 @@ define|\
 value|BITMAP_BITS2GROUPS(BITMAP_BITS2GROUPS(BITMAP_BITS2GROUPS(		\ 	BITMAP_BITS2GROUPS((nbits)))))
 end_define
 
+begin_define
+define|#
+directive|define
+name|BITMAP_GROUPS_L4
+parameter_list|(
+name|nbits
+parameter_list|)
+define|\
+value|BITMAP_BITS2GROUPS(BITMAP_BITS2GROUPS(BITMAP_BITS2GROUPS(		\ 	BITMAP_BITS2GROUPS(BITMAP_BITS2GROUPS((nbits))))))
+end_define
+
 begin_comment
 comment|/*  * Assuming the number of levels, number of groups required for a given number  * of bits.  */
 end_comment
@@ -219,6 +267,17 @@ define|\
 value|(BITMAP_GROUPS_3_LEVEL(nbits) + BITMAP_GROUPS_L3(nbits))
 end_define
 
+begin_define
+define|#
+directive|define
+name|BITMAP_GROUPS_5_LEVEL
+parameter_list|(
+name|nbits
+parameter_list|)
+define|\
+value|(BITMAP_GROUPS_4_LEVEL(nbits) + BITMAP_GROUPS_L4(nbits))
+end_define
+
 begin_comment
 comment|/*  * Maximum number of groups required to support LG_BITMAP_MAXBITS.  */
 end_comment
@@ -226,7 +285,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USE_TREE
+name|BITMAP_USE_TREE
 end_ifdef
 
 begin_if
@@ -236,6 +295,16 @@ name|LG_BITMAP_MAXBITS
 operator|<=
 name|LG_BITMAP_GROUP_NBITS
 end_if
+
+begin_define
+define|#
+directive|define
+name|BITMAP_GROUPS
+parameter_list|(
+name|nbits
+parameter_list|)
+value|BITMAP_GROUPS_1_LEVEL(nbits)
+end_define
 
 begin_define
 define|#
@@ -257,6 +326,16 @@ end_elif
 begin_define
 define|#
 directive|define
+name|BITMAP_GROUPS
+parameter_list|(
+name|nbits
+parameter_list|)
+value|BITMAP_GROUPS_2_LEVEL(nbits)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BITMAP_GROUPS_MAX
 value|BITMAP_GROUPS_2_LEVEL(BITMAP_MAXBITS)
 end_define
@@ -270,6 +349,16 @@ name|LG_BITMAP_GROUP_NBITS
 operator|*
 literal|3
 end_elif
+
+begin_define
+define|#
+directive|define
+name|BITMAP_GROUPS
+parameter_list|(
+name|nbits
+parameter_list|)
+value|BITMAP_GROUPS_3_LEVEL(nbits)
+end_define
 
 begin_define
 define|#
@@ -291,8 +380,45 @@ end_elif
 begin_define
 define|#
 directive|define
+name|BITMAP_GROUPS
+parameter_list|(
+name|nbits
+parameter_list|)
+value|BITMAP_GROUPS_4_LEVEL(nbits)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BITMAP_GROUPS_MAX
 value|BITMAP_GROUPS_4_LEVEL(BITMAP_MAXBITS)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|LG_BITMAP_MAXBITS
+operator|<=
+name|LG_BITMAP_GROUP_NBITS
+operator|*
+literal|5
+end_elif
+
+begin_define
+define|#
+directive|define
+name|BITMAP_GROUPS
+parameter_list|(
+name|nbits
+parameter_list|)
+value|BITMAP_GROUPS_5_LEVEL(nbits)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BITMAP_GROUPS_MAX
+value|BITMAP_GROUPS_5_LEVEL(BITMAP_MAXBITS)
 end_define
 
 begin_else
@@ -312,15 +438,30 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Maximum number of levels possible. */
+comment|/*  * Maximum number of levels possible.  This could be statically computed based  * on LG_BITMAP_MAXBITS:  *  * #define BITMAP_MAX_LEVELS \  *     (LG_BITMAP_MAXBITS / LG_SIZEOF_BITMAP) \  *     + !!(LG_BITMAP_MAXBITS % LG_SIZEOF_BITMAP)  *  * However, that would not allow the generic BITMAP_INFO_INITIALIZER() macro, so  * instead hardcode BITMAP_MAX_LEVELS to the largest number supported by the  * various cascading macros.  The only additional cost this incurs is some  * unused trailing entries in bitmap_info_t structures; the bitmaps themselves  * are not impacted.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BITMAP_MAX_LEVELS
-define|\
-value|(LG_BITMAP_MAXBITS / LG_SIZEOF_BITMAP)				\     + !!(LG_BITMAP_MAXBITS % LG_SIZEOF_BITMAP)
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|BITMAP_INFO_INITIALIZER
+parameter_list|(
+name|nbits
+parameter_list|)
+value|{				\
+comment|/* nbits. */
+value|\ 	nbits,								\
+comment|/* nlevels. */
+value|\ 	(BITMAP_GROUPS_L0(nbits)> BITMAP_GROUPS_L1(nbits)) +		\ 	    (BITMAP_GROUPS_L1(nbits)> BITMAP_GROUPS_L2(nbits)) +	\ 	    (BITMAP_GROUPS_L2(nbits)> BITMAP_GROUPS_L3(nbits)) +	\ 	    (BITMAP_GROUPS_L3(nbits)> BITMAP_GROUPS_L4(nbits)) + 1,	\
+comment|/* levels. */
+value|\ 	{								\ 		{0},							\ 		{BITMAP_GROUPS_L0(nbits)},				\ 		{BITMAP_GROUPS_L1(nbits) + BITMAP_GROUPS_L0(nbits)},	\ 		{BITMAP_GROUPS_L2(nbits) + BITMAP_GROUPS_L1(nbits) +	\ 		    BITMAP_GROUPS_L0(nbits)},				\ 		{BITMAP_GROUPS_L3(nbits) + BITMAP_GROUPS_L2(nbits) +	\ 		    BITMAP_GROUPS_L1(nbits) + BITMAP_GROUPS_L0(nbits)},	\ 		{BITMAP_GROUPS_L4(nbits) + BITMAP_GROUPS_L3(nbits) +	\ 		     BITMAP_GROUPS_L2(nbits) + BITMAP_GROUPS_L1(nbits)	\ 		     + BITMAP_GROUPS_L0(nbits)}				\ 	}								\ }
 end_define
 
 begin_else
@@ -329,8 +470,18 @@ directive|else
 end_else
 
 begin_comment
-comment|/* USE_TREE */
+comment|/* BITMAP_USE_TREE */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BITMAP_GROUPS
+parameter_list|(
+name|nbits
+parameter_list|)
+value|BITMAP_BITS2GROUPS(nbits)
+end_define
 
 begin_define
 define|#
@@ -339,35 +490,31 @@ name|BITMAP_GROUPS_MAX
 value|BITMAP_BITS2GROUPS(BITMAP_MAXBITS)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BITMAP_INFO_INITIALIZER
+parameter_list|(
+name|nbits
+parameter_list|)
+value|{				\
+comment|/* nbits. */
+value|\ 	nbits,								\
+comment|/* ngroups. */
+value|\ 	BITMAP_BITS2GROUPS(nbits)					\ }
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_TREE */
+comment|/* BITMAP_USE_TREE */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JEMALLOC_H_TYPES */
-end_comment
-
-begin_comment
-comment|/******************************************************************************/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JEMALLOC_H_STRUCTS
-end_ifdef
-
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|bitmap_level_s
 block|{
@@ -376,10 +523,12 @@ name|size_t
 name|group_offset
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|bitmap_level_t
+typedef|;
+end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|bitmap_info_s
 block|{
@@ -389,7 +538,7 @@ name|nbits
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|USE_TREE
+name|BITMAP_USE_TREE
 comment|/* Number of levels necessary for nbits. */
 name|unsigned
 name|nlevels
@@ -405,36 +554,18 @@ index|]
 decl_stmt|;
 else|#
 directive|else
-comment|/* USE_TREE */
+comment|/* BITMAP_USE_TREE */
 comment|/* Number of groups necessary for nbits. */
 name|size_t
 name|ngroups
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* USE_TREE */
+comment|/* BITMAP_USE_TREE */
 block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JEMALLOC_H_STRUCTS */
-end_comment
-
-begin_comment
-comment|/******************************************************************************/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JEMALLOC_H_EXTERNS
-end_ifdef
+name|bitmap_info_t
+typedef|;
+end_typedef
 
 begin_function_decl
 name|void
@@ -462,6 +593,9 @@ specifier|const
 name|bitmap_info_t
 modifier|*
 name|binfo
+parameter_list|,
+name|bool
+name|fill
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -478,143 +612,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JEMALLOC_H_EXTERNS */
-end_comment
-
-begin_comment
-comment|/******************************************************************************/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JEMALLOC_H_INLINES
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|JEMALLOC_ENABLE_INLINE
-end_ifndef
-
-begin_function_decl
-name|bool
-name|bitmap_full
-parameter_list|(
-name|bitmap_t
-modifier|*
-name|bitmap
-parameter_list|,
-specifier|const
-name|bitmap_info_t
-modifier|*
-name|binfo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
-name|bitmap_get
-parameter_list|(
-name|bitmap_t
-modifier|*
-name|bitmap
-parameter_list|,
-specifier|const
-name|bitmap_info_t
-modifier|*
-name|binfo
-parameter_list|,
-name|size_t
-name|bit
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|bitmap_set
-parameter_list|(
-name|bitmap_t
-modifier|*
-name|bitmap
-parameter_list|,
-specifier|const
-name|bitmap_info_t
-modifier|*
-name|binfo
-parameter_list|,
-name|size_t
-name|bit
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|size_t
-name|bitmap_sfu
-parameter_list|(
-name|bitmap_t
-modifier|*
-name|bitmap
-parameter_list|,
-specifier|const
-name|bitmap_info_t
-modifier|*
-name|binfo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|bitmap_unset
-parameter_list|(
-name|bitmap_t
-modifier|*
-name|bitmap
-parameter_list|,
-specifier|const
-name|bitmap_info_t
-modifier|*
-name|binfo
-parameter_list|,
-name|size_t
-name|bit
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|JEMALLOC_ENABLE_INLINE
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|JEMALLOC_BITMAP_C_
-argument_list|)
-operator|)
-end_if
-
 begin_function
-name|JEMALLOC_INLINE
+specifier|static
+specifier|inline
 name|bool
 name|bitmap_full
 parameter_list|(
@@ -630,7 +630,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|USE_TREE
+name|BITMAP_USE_TREE
 name|size_t
 name|rgoff
 init|=
@@ -693,16 +693,14 @@ index|]
 operator|!=
 literal|0
 condition|)
+block|{
 return|return
-operator|(
 name|false
-operator|)
 return|;
 block|}
+block|}
 return|return
-operator|(
 name|true
-operator|)
 return|;
 endif|#
 directive|endif
@@ -710,7 +708,8 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+specifier|static
+specifier|inline
 name|bool
 name|bitmap_get
 parameter_list|(
@@ -756,7 +755,6 @@ name|goff
 index|]
 expr_stmt|;
 return|return
-operator|(
 operator|!
 operator|(
 name|g
@@ -774,13 +772,13 @@ name|BITMAP_GROUP_NBITS_MASK
 operator|)
 operator|)
 operator|)
-operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+specifier|static
+specifier|inline
 name|void
 name|bitmap_set
 parameter_list|(
@@ -898,7 +896,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USE_TREE
+name|BITMAP_USE_TREE
 comment|/* Propagate group state transitions up the tree. */
 if|if
 condition|(
@@ -1000,9 +998,370 @@ name|g
 operator|!=
 literal|0
 condition|)
+block|{
 break|break;
 block|}
 block|}
+block|}
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/* ffu: find first unset>= bit. */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|size_t
+name|bitmap_ffu
+parameter_list|(
+specifier|const
+name|bitmap_t
+modifier|*
+name|bitmap
+parameter_list|,
+specifier|const
+name|bitmap_info_t
+modifier|*
+name|binfo
+parameter_list|,
+name|size_t
+name|min_bit
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|min_bit
+operator|<
+name|binfo
+operator|->
+name|nbits
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BITMAP_USE_TREE
+name|size_t
+name|bit
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+name|unsigned
+name|level
+init|=
+name|binfo
+operator|->
+name|nlevels
+init|;
+name|level
+operator|--
+condition|;
+control|)
+block|{
+name|size_t
+name|lg_bits_per_group
+init|=
+operator|(
+name|LG_BITMAP_GROUP_NBITS
+operator|*
+operator|(
+name|level
+operator|+
+literal|1
+operator|)
+operator|)
+decl_stmt|;
+name|bitmap_t
+name|group
+init|=
+name|bitmap
+index|[
+name|binfo
+operator|->
+name|levels
+index|[
+name|level
+index|]
+operator|.
+name|group_offset
+operator|+
+operator|(
+name|bit
+operator|>>
+name|lg_bits_per_group
+operator|)
+index|]
+decl_stmt|;
+name|unsigned
+name|group_nmask
+init|=
+call|(
+name|unsigned
+call|)
+argument_list|(
+operator|(
+operator|(
+name|min_bit
+operator|>
+name|bit
+operator|)
+condition|?
+operator|(
+name|min_bit
+operator|-
+name|bit
+operator|)
+else|:
+literal|0
+operator|)
+operator|>>
+operator|(
+name|lg_bits_per_group
+operator|-
+name|LG_BITMAP_GROUP_NBITS
+operator|)
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|group_nmask
+operator|<=
+name|BITMAP_GROUP_NBITS
+argument_list|)
+expr_stmt|;
+name|bitmap_t
+name|group_mask
+init|=
+operator|~
+operator|(
+operator|(
+literal|1LU
+operator|<<
+name|group_nmask
+operator|)
+operator|-
+literal|1
+operator|)
+decl_stmt|;
+name|bitmap_t
+name|group_masked
+init|=
+name|group
+operator|&
+name|group_mask
+decl_stmt|;
+if|if
+condition|(
+name|group_masked
+operator|==
+literal|0LU
+condition|)
+block|{
+if|if
+condition|(
+name|group
+operator|==
+literal|0LU
+condition|)
+block|{
+return|return
+name|binfo
+operator|->
+name|nbits
+return|;
+block|}
+comment|/* 			 * min_bit was preceded by one or more unset bits in 			 * this group, but there are no other unset bits in this 			 * group.  Try again starting at the first bit of the 			 * next sibling.  This will recurse at most once per 			 * non-root level. 			 */
+name|size_t
+name|sib_base
+init|=
+name|bit
+operator|+
+operator|(
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+name|lg_bits_per_group
+operator|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|sib_base
+operator|>
+name|min_bit
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|sib_base
+operator|>
+name|bit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sib_base
+operator|>=
+name|binfo
+operator|->
+name|nbits
+condition|)
+block|{
+return|return
+name|binfo
+operator|->
+name|nbits
+return|;
+block|}
+return|return
+name|bitmap_ffu
+argument_list|(
+name|bitmap
+argument_list|,
+name|binfo
+argument_list|,
+name|sib_base
+argument_list|)
+return|;
+block|}
+name|bit
+operator|+=
+operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
+name|ffs_lu
+argument_list|(
+name|group_masked
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+operator|)
+operator|<<
+operator|(
+name|lg_bits_per_group
+operator|-
+name|LG_BITMAP_GROUP_NBITS
+operator|)
+expr_stmt|;
+block|}
+name|assert
+argument_list|(
+name|bit
+operator|>=
+name|min_bit
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|bit
+operator|<
+name|binfo
+operator|->
+name|nbits
+argument_list|)
+expr_stmt|;
+return|return
+name|bit
+return|;
+else|#
+directive|else
+name|size_t
+name|i
+init|=
+name|min_bit
+operator|>>
+name|LG_BITMAP_GROUP_NBITS
+decl_stmt|;
+name|bitmap_t
+name|g
+init|=
+name|bitmap
+index|[
+name|i
+index|]
+operator|&
+operator|~
+operator|(
+operator|(
+literal|1LU
+operator|<<
+operator|(
+name|min_bit
+operator|&
+name|BITMAP_GROUP_NBITS_MASK
+operator|)
+operator|)
+operator|-
+literal|1
+operator|)
+decl_stmt|;
+name|size_t
+name|bit
+decl_stmt|;
+do|do
+block|{
+name|bit
+operator|=
+name|ffs_lu
+argument_list|(
+name|g
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bit
+operator|!=
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|i
+operator|<<
+name|LG_BITMAP_GROUP_NBITS
+operator|)
+operator|+
+operator|(
+name|bit
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+name|i
+operator|++
+expr_stmt|;
+name|g
+operator|=
+name|bitmap
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|i
+operator|<
+name|binfo
+operator|->
+name|ngroups
+condition|)
+do|;
+return|return
+name|binfo
+operator|->
+name|nbits
+return|;
 endif|#
 directive|endif
 block|}
@@ -1013,7 +1372,8 @@ comment|/* sfu: set first unset. */
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE
+specifier|static
+specifier|inline
 name|size_t
 name|bitmap_sfu
 parameter_list|(
@@ -1049,7 +1409,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USE_TREE
+name|BITMAP_USE_TREE
 name|i
 operator|=
 name|binfo
@@ -1189,15 +1549,14 @@ name|bit
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|bit
-operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+specifier|static
+specifier|inline
 name|void
 name|bitmap_unset
 parameter_list|(
@@ -1331,7 +1690,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USE_TREE
+name|BITMAP_USE_TREE
 comment|/* Propagate group state transitions up the tree. */
 if|if
 condition|(
@@ -1442,12 +1801,14 @@ condition|(
 operator|!
 name|propagate
 condition|)
+block|{
 break|break;
+block|}
 block|}
 block|}
 endif|#
 directive|endif
-comment|/* USE_TREE */
+comment|/* BITMAP_USE_TREE */
 block|}
 end_function
 
@@ -1456,17 +1817,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* JEMALLOC_H_INLINES */
-end_comment
-
-begin_comment
-comment|/******************************************************************************/
+comment|/* JEMALLOC_INTERNAL_BITMAP_H */
 end_comment
 
 end_unit

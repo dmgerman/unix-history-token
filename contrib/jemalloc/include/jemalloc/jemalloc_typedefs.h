@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_typedef
+typedef|typedef
+name|struct
+name|extent_hooks_s
+name|extent_hooks_t
+typedef|;
+end_typedef
+
 begin_comment
-comment|/*  * void *  * chunk_alloc(void *new_addr, size_t size, size_t alignment, bool *zero,  *     bool *commit, unsigned arena_ind);  */
+comment|/*  * void *  * extent_alloc(extent_hooks_t *extent_hooks, void *new_addr, size_t size,  *     size_t alignment, bool *zero, bool *commit, unsigned arena_ind);  */
 end_comment
 
 begin_typedef
@@ -8,9 +16,12 @@ typedef|typedef
 name|void
 modifier|*
 function_decl|(
-name|chunk_alloc_t
+name|extent_alloc_t
 function_decl|)
 parameter_list|(
+name|extent_hooks_t
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -30,16 +41,19 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * bool  * chunk_dalloc(void *chunk, size_t size, bool committed, unsigned arena_ind);  */
+comment|/*  * bool  * extent_dalloc(extent_hooks_t *extent_hooks, void *addr, size_t size,  *     bool committed, unsigned arena_ind);  */
 end_comment
 
 begin_typedef
 typedef|typedef
 name|bool
 function_decl|(
-name|chunk_dalloc_t
+name|extent_dalloc_t
 function_decl|)
 parameter_list|(
+name|extent_hooks_t
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -53,24 +67,25 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * bool  * chunk_commit(void *chunk, size_t size, size_t offset, size_t length,  *     unsigned arena_ind);  */
+comment|/*  * void  * extent_destroy(extent_hooks_t *extent_hooks, void *addr, size_t size,  *     bool committed, unsigned arena_ind);  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|bool
+name|void
 function_decl|(
-name|chunk_commit_t
+name|extent_destroy_t
 function_decl|)
 parameter_list|(
+name|extent_hooks_t
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
-name|size_t
-parameter_list|,
-name|size_t
+name|bool
 parameter_list|,
 name|unsigned
 parameter_list|)
@@ -78,41 +93,19 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * bool  * chunk_decommit(void *chunk, size_t size, size_t offset, size_t length,  *     unsigned arena_ind);  */
+comment|/*  * bool  * extent_commit(extent_hooks_t *extent_hooks, void *addr, size_t size,  *     size_t offset, size_t length, unsigned arena_ind);  */
 end_comment
 
 begin_typedef
 typedef|typedef
 name|bool
 function_decl|(
-name|chunk_decommit_t
+name|extent_commit_t
 function_decl|)
 parameter_list|(
-name|void
+name|extent_hooks_t
 modifier|*
 parameter_list|,
-name|size_t
-parameter_list|,
-name|size_t
-parameter_list|,
-name|size_t
-parameter_list|,
-name|unsigned
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/*  * bool  * chunk_purge(void *chunk, size_t size, size_t offset, size_t length,  *     unsigned arena_ind);  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|bool
-function_decl|(
-name|chunk_purge_t
-function_decl|)
-parameter_list|(
 name|void
 modifier|*
 parameter_list|,
@@ -128,16 +121,75 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * bool  * chunk_split(void *chunk, size_t size, size_t size_a, size_t size_b,  *     bool committed, unsigned arena_ind);  */
+comment|/*  * bool  * extent_decommit(extent_hooks_t *extent_hooks, void *addr, size_t size,  *     size_t offset, size_t length, unsigned arena_ind);  */
 end_comment
 
 begin_typedef
 typedef|typedef
 name|bool
 function_decl|(
-name|chunk_split_t
+name|extent_decommit_t
 function_decl|)
 parameter_list|(
+name|extent_hooks_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * bool  * extent_purge(extent_hooks_t *extent_hooks, void *addr, size_t size,  *     size_t offset, size_t length, unsigned arena_ind);  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|bool
+function_decl|(
+name|extent_purge_t
+function_decl|)
+parameter_list|(
+name|extent_hooks_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * bool  * extent_split(extent_hooks_t *extent_hooks, void *addr, size_t size,  *     size_t size_a, size_t size_b, bool committed, unsigned arena_ind);  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|bool
+function_decl|(
+name|extent_split_t
+function_decl|)
+parameter_list|(
+name|extent_hooks_t
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -155,16 +207,19 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * bool  * chunk_merge(void *chunk_a, size_t size_a, void *chunk_b, size_t size_b,  *     bool committed, unsigned arena_ind);  */
+comment|/*  * bool  * extent_merge(extent_hooks_t *extent_hooks, void *addr_a, size_t size_a,  *     void *addr_b, size_t size_b, bool committed, unsigned arena_ind);  */
 end_comment
 
 begin_typedef
 typedef|typedef
 name|bool
 function_decl|(
-name|chunk_merge_t
+name|extent_merge_t
 function_decl|)
 parameter_list|(
+name|extent_hooks_t
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -182,42 +237,49 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|extent_hooks_s
 block|{
-name|chunk_alloc_t
+name|extent_alloc_t
 modifier|*
 name|alloc
 decl_stmt|;
-name|chunk_dalloc_t
+name|extent_dalloc_t
 modifier|*
 name|dalloc
 decl_stmt|;
-name|chunk_commit_t
+name|extent_destroy_t
+modifier|*
+name|destroy
+decl_stmt|;
+name|extent_commit_t
 modifier|*
 name|commit
 decl_stmt|;
-name|chunk_decommit_t
+name|extent_decommit_t
 modifier|*
 name|decommit
 decl_stmt|;
-name|chunk_purge_t
+name|extent_purge_t
 modifier|*
-name|purge
+name|purge_lazy
 decl_stmt|;
-name|chunk_split_t
+name|extent_purge_t
+modifier|*
+name|purge_forced
+decl_stmt|;
+name|extent_split_t
 modifier|*
 name|split
 decl_stmt|;
-name|chunk_merge_t
+name|extent_merge_t
 modifier|*
 name|merge
 decl_stmt|;
 block|}
-name|chunk_hooks_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 end_unit
 
