@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/slab.h>
 end_include
 
@@ -392,16 +386,18 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printk
+name|pr_warn
 argument_list|(
-argument|KERN_WARNING PFX
-literal|"Unmapping FMR %p with ref count %d\n"
+name|PFX
+literal|"Unmapping FMR 0x%08x with ref count %d\n"
 argument_list|,
-argument|fmr
+name|fmr
 argument_list|,
-argument|fmr->ref_count
+name|fmr
+operator|->
+name|ref_count
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -454,14 +450,14 @@ if|if
 condition|(
 name|ret
 condition|)
-name|printk
+name|pr_warn
 argument_list|(
-argument|KERN_WARNING PFX
+name|PFX
 literal|"ib_unmap_fmr returned %d\n"
 argument_list|,
-argument|ret
+name|ret
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|spin_lock_irq
 argument_list|(
 operator|&
@@ -653,11 +649,6 @@ name|ib_fmr_pool
 modifier|*
 name|pool
 decl_stmt|;
-name|struct
-name|ib_device_attr
-modifier|*
-name|attr
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -708,14 +699,16 @@ operator|->
 name|unmap_fmr
 condition|)
 block|{
-name|printk
+name|pr_info
 argument_list|(
-argument|KERN_INFO PFX
+name|PFX
 literal|"Device %s does not support FMRs\n"
 argument_list|,
-argument|device->name
+name|device
+operator|->
+name|name
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 return|return
 name|ERR_PTR
 argument_list|(
@@ -724,76 +717,13 @@ name|ENOSYS
 argument_list|)
 return|;
 block|}
-name|attr
-operator|=
-name|kmalloc
-argument_list|(
-sizeof|sizeof
-expr|*
-name|attr
-argument_list|,
-name|GFP_KERNEL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|attr
-condition|)
-block|{
-name|printk
-argument_list|(
-argument|KERN_WARNING PFX
-literal|"couldn't allocate device attr struct\n"
-argument_list|)
-empty_stmt|;
-return|return
-name|ERR_PTR
-argument_list|(
-operator|-
-name|ENOMEM
-argument_list|)
-return|;
-block|}
-name|ret
-operator|=
-name|ib_query_device
-argument_list|(
 name|device
-argument_list|,
-name|attr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-block|{
-name|printk
-argument_list|(
-argument|KERN_WARNING PFX
-literal|"couldn't query device: %d\n"
-argument_list|,
-argument|ret
-argument_list|)
-empty_stmt|;
-name|kfree
-argument_list|(
-name|attr
-argument_list|)
-expr_stmt|;
-return|return
-name|ERR_PTR
-argument_list|(
-name|ret
-argument_list|)
-return|;
-block|}
-if|if
-condition|(
-operator|!
-name|attr
 operator|->
+name|attrs
+operator|.
 name|max_map_per_fmr
 condition|)
 name|max_remaps
@@ -803,14 +733,11 @@ expr_stmt|;
 else|else
 name|max_remaps
 operator|=
-name|attr
+name|device
 operator|->
+name|attrs
+operator|.
 name|max_map_per_fmr
-expr_stmt|;
-name|kfree
-argument_list|(
-name|attr
-argument_list|)
 expr_stmt|;
 name|pool
 operator|=
@@ -828,13 +755,6 @@ condition|(
 operator|!
 name|pool
 condition|)
-block|{
-name|printk
-argument_list|(
-argument|KERN_WARNING PFX
-literal|"couldn't allocate pool struct\n"
-argument_list|)
-empty_stmt|;
 return|return
 name|ERR_PTR
 argument_list|(
@@ -842,7 +762,6 @@ operator|-
 name|ENOMEM
 argument_list|)
 return|;
-block|}
 name|pool
 operator|->
 name|cache_bucket
@@ -913,12 +832,12 @@ operator|->
 name|cache_bucket
 condition|)
 block|{
-name|printk
+name|pr_warn
 argument_list|(
-argument|KERN_WARNING PFX
+name|PFX
 literal|"Failed to allocate cache in pool\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|ret
 operator|=
 operator|-
@@ -1048,12 +967,12 @@ name|thread
 argument_list|)
 condition|)
 block|{
-name|printk
+name|pr_warn
 argument_list|(
-argument|KERN_WARNING PFX
+name|PFX
 literal|"couldn't start cleanup thread\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|ret
 operator|=
 name|PTR_ERR
@@ -1154,20 +1073,9 @@ condition|(
 operator|!
 name|fmr
 condition|)
-block|{
-name|printk
-argument_list|(
-argument|KERN_WARNING PFX
-literal|"failed to allocate fmr "
-literal|"struct for FMR %d\n"
-argument_list|,
-argument|i
-argument_list|)
-empty_stmt|;
 goto|goto
 name|out_fail
 goto|;
-block|}
 name|fmr
 operator|->
 name|pool
@@ -1220,15 +1128,14 @@ name|fmr
 argument_list|)
 condition|)
 block|{
-name|printk
+name|pr_warn
 argument_list|(
-argument|KERN_WARNING PFX
-literal|"fmr_create failed "
-literal|"for FMR %d\n"
+name|PFX
+literal|"fmr_create failed for FMR %d\n"
 argument_list|,
-argument|i
+name|i
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|kfree
 argument_list|(
 name|fmr
@@ -1430,14 +1337,18 @@ name|pool
 operator|->
 name|pool_size
 condition|)
-name|printk
+name|pr_warn
 argument_list|(
-argument|KERN_WARNING PFX
+name|PFX
 literal|"pool still has %d regions registered\n"
 argument_list|,
-argument|pool->pool_size - i
+name|pool
+operator|->
+name|pool_size
+operator|-
+name|i
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|kfree
 argument_list|(
 name|pool
@@ -1846,14 +1757,14 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|printk
+name|pr_warn
 argument_list|(
-argument|KERN_WARNING PFX
+name|PFX
 literal|"fmr_map returns %d\n"
 argument_list|,
-argument|result
+name|result
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 return|return
 name|ERR_PTR
 argument_list|(
@@ -2098,16 +2009,18 @@ name|ref_count
 operator|<
 literal|0
 condition|)
-name|printk
+name|pr_warn
 argument_list|(
-argument|KERN_WARNING PFX
+name|PFX
 literal|"FMR %p has ref count %d< 0\n"
 argument_list|,
-argument|fmr
+name|fmr
 argument_list|,
-argument|fmr->ref_count
+name|fmr
+operator|->
+name|ref_count
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 endif|#
 directive|endif
 name|spin_unlock_irqrestore

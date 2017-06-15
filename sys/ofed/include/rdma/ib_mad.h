@@ -31,8 +31,14 @@ directive|include
 file|<rdma/ib_verbs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<rdma/ib_user_mad.h>
+end_include
+
 begin_comment
-comment|/* Management base version */
+comment|/* Management base versions */
 end_comment
 
 begin_define
@@ -40,6 +46,20 @@ define|#
 directive|define
 name|IB_MGMT_BASE_VERSION
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPA_MGMT_BASE_VERSION
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPA_SMP_CLASS_VERSION
+value|0x80
 end_define
 
 begin_comment
@@ -492,6 +512,77 @@ name|IB_DEFAULT_PKEY_FULL
 value|0xFFFF
 end_define
 
+begin_comment
+comment|/*  * Generic trap/notice types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IB_NOTICE_TYPE_FATAL
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|IB_NOTICE_TYPE_URGENT
+value|0x81
+end_define
+
+begin_define
+define|#
+directive|define
+name|IB_NOTICE_TYPE_SECURITY
+value|0x82
+end_define
+
+begin_define
+define|#
+directive|define
+name|IB_NOTICE_TYPE_SM
+value|0x83
+end_define
+
+begin_define
+define|#
+directive|define
+name|IB_NOTICE_TYPE_INFO
+value|0x84
+end_define
+
+begin_comment
+comment|/*  * Generic trap/notice producers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IB_NOTICE_PROD_CA
+value|cpu_to_be16(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IB_NOTICE_PROD_SWITCH
+value|cpu_to_be16(2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IB_NOTICE_PROD_ROUTER
+value|cpu_to_be16(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IB_NOTICE_PROD_CLASS_MGR
+value|cpu_to_be16(4)
+end_define
+
 begin_enum
 enum|enum
 block|{
@@ -534,6 +625,26 @@ block|,
 name|IB_MGMT_DEVICE_DATA
 init|=
 literal|192
+block|,
+name|IB_MGMT_MAD_SIZE
+init|=
+name|IB_MGMT_MAD_HDR
+operator|+
+name|IB_MGMT_MAD_DATA
+block|,
+name|OPA_MGMT_MAD_DATA
+init|=
+literal|2024
+block|,
+name|OPA_MGMT_RMPP_DATA
+init|=
+literal|2012
+block|,
+name|OPA_MGMT_MAD_SIZE
+init|=
+name|IB_MGMT_MAD_HDR
+operator|+
+name|OPA_MGMT_MAD_DATA
 block|, }
 enum|;
 end_enum
@@ -670,6 +781,24 @@ end_struct
 
 begin_struct
 struct|struct
+name|opa_mad
+block|{
+name|struct
+name|ib_mad_hdr
+name|mad_hdr
+decl_stmt|;
+name|u8
+name|data
+index|[
+name|OPA_MGMT_MAD_DATA
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ib_rmpp_mad
 block|{
 name|struct
@@ -684,6 +813,28 @@ name|u8
 name|data
 index|[
 name|IB_MGMT_RMPP_DATA
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|opa_rmpp_mad
+block|{
+name|struct
+name|ib_mad_hdr
+name|mad_hdr
+decl_stmt|;
+name|struct
+name|ib_rmpp_hdr
+name|rmpp_hdr
+decl_stmt|;
+name|u8
+name|data
+index|[
+name|OPA_MGMT_RMPP_DATA
 index|]
 decl_stmt|;
 block|}
@@ -753,6 +904,27 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IB_MGMT_CLASSPORTINFO_ATTR_ID
+value|cpu_to_be16(0x0001)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IB_CLASS_PORT_INFO_RESP_TIME_MASK
+value|0x1F
+end_define
+
+begin_define
+define|#
+directive|define
+name|IB_CLASS_PORT_INFO_RESP_TIME_FIELD_SIZE
+value|5
+end_define
+
 begin_struct
 struct|struct
 name|ib_class_port_info
@@ -766,14 +938,9 @@ decl_stmt|;
 name|__be16
 name|capability_mask
 decl_stmt|;
-name|u8
-name|reserved
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|u8
-name|resp_time_value
+comment|/* 27 bits for cap_mask2, 5 bits for resp_time */
+name|__be32
+name|cap_mask2_resp_time
 decl_stmt|;
 name|u8
 name|redirect_gid
@@ -822,7 +989,346 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * ib_mad_send_buf - MAD data buffer and work request for sends.  * @next: A pointer used to chain together MADs for posting.  * @mad: References an allocated MAD data buffer for MADs that do not have  *   RMPP active.  For MADs using RMPP, references the common and management  *   class specific headers.  * @mad_agent: MAD agent that allocated the buffer.  * @ah: The address handle to use when sending the MAD.  * @context: User-controlled context fields.  * @hdr_len: Indicates the size of the data header of the MAD.  This length  *   includes the common MAD, RMPP, and class specific headers.  * @data_len: Indicates the total size of user-transferred data.  * @seg_count: The number of RMPP segments allocated for this send.  * @seg_size: Size of each RMPP segment.  * @timeout_ms: Time to wait for a response.  * @retries: Number of times to retry a request for a response.  For MADs  *   using RMPP, this applies per window.  On completion, returns the number  *   of retries needed to complete the transfer.  *  * Users are responsible for initializing the MAD buffer itself, with the  * exception of any RMPP header.  Additional segment buffer space allocated  * beyond data_len is padding.  */
+comment|/**  * ib_get_cpi_resp_time - Returns the resp_time value from  * cap_mask2_resp_time in ib_class_port_info.  * @cpi: A struct ib_class_port_info mad.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|u8
+name|ib_get_cpi_resp_time
+parameter_list|(
+name|struct
+name|ib_class_port_info
+modifier|*
+name|cpi
+parameter_list|)
+block|{
+return|return
+call|(
+name|u8
+call|)
+argument_list|(
+name|be32_to_cpu
+argument_list|(
+name|cpi
+operator|->
+name|cap_mask2_resp_time
+argument_list|)
+operator|&
+name|IB_CLASS_PORT_INFO_RESP_TIME_MASK
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * ib_set_cpi_resptime - Sets the response time in an  * ib_class_port_info mad.  * @cpi: A struct ib_class_port_info.  * @rtime: The response time to set.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|ib_set_cpi_resp_time
+parameter_list|(
+name|struct
+name|ib_class_port_info
+modifier|*
+name|cpi
+parameter_list|,
+name|u8
+name|rtime
+parameter_list|)
+block|{
+name|cpi
+operator|->
+name|cap_mask2_resp_time
+operator|=
+operator|(
+name|cpi
+operator|->
+name|cap_mask2_resp_time
+operator|&
+name|cpu_to_be32
+argument_list|(
+operator|~
+name|IB_CLASS_PORT_INFO_RESP_TIME_MASK
+argument_list|)
+operator|)
+operator||
+name|cpu_to_be32
+argument_list|(
+name|rtime
+operator|&
+name|IB_CLASS_PORT_INFO_RESP_TIME_MASK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * ib_get_cpi_capmask2 - Returns the capmask2 value from  * cap_mask2_resp_time in ib_class_port_info.  * @cpi: A struct ib_class_port_info mad.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|u32
+name|ib_get_cpi_capmask2
+parameter_list|(
+name|struct
+name|ib_class_port_info
+modifier|*
+name|cpi
+parameter_list|)
+block|{
+return|return
+operator|(
+name|be32_to_cpu
+argument_list|(
+name|cpi
+operator|->
+name|cap_mask2_resp_time
+argument_list|)
+operator|>>
+name|IB_CLASS_PORT_INFO_RESP_TIME_FIELD_SIZE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * ib_set_cpi_capmask2 - Sets the capmask2 in an  * ib_class_port_info mad.  * @cpi: A struct ib_class_port_info.  * @capmask2: The capmask2 to set.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|ib_set_cpi_capmask2
+parameter_list|(
+name|struct
+name|ib_class_port_info
+modifier|*
+name|cpi
+parameter_list|,
+name|u32
+name|capmask2
+parameter_list|)
+block|{
+name|cpi
+operator|->
+name|cap_mask2_resp_time
+operator|=
+operator|(
+name|cpi
+operator|->
+name|cap_mask2_resp_time
+operator|&
+name|cpu_to_be32
+argument_list|(
+name|IB_CLASS_PORT_INFO_RESP_TIME_MASK
+argument_list|)
+operator|)
+operator||
+name|cpu_to_be32
+argument_list|(
+name|capmask2
+operator|<<
+name|IB_CLASS_PORT_INFO_RESP_TIME_FIELD_SIZE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_struct
+struct|struct
+name|ib_mad_notice_attr
+block|{
+name|u8
+name|generic_type
+decl_stmt|;
+name|u8
+name|prod_type_msb
+decl_stmt|;
+name|__be16
+name|prod_type_lsb
+decl_stmt|;
+name|__be16
+name|trap_num
+decl_stmt|;
+name|__be16
+name|issuer_lid
+decl_stmt|;
+name|__be16
+name|toggle_count
+decl_stmt|;
+union|union
+block|{
+struct|struct
+block|{
+name|u8
+name|details
+index|[
+literal|54
+index|]
+decl_stmt|;
+block|}
+name|raw_data
+struct|;
+struct|struct
+block|{
+name|__be16
+name|reserved
+decl_stmt|;
+name|__be16
+name|lid
+decl_stmt|;
+comment|/* where violation happened */
+name|u8
+name|port_num
+decl_stmt|;
+comment|/* where violation happened */
+block|}
+name|__packed
+name|ntc_129_131
+struct|;
+struct|struct
+block|{
+name|__be16
+name|reserved
+decl_stmt|;
+name|__be16
+name|lid
+decl_stmt|;
+comment|/* LID where change occurred */
+name|u8
+name|reserved2
+decl_stmt|;
+name|u8
+name|local_changes
+decl_stmt|;
+comment|/* low bit - local changes */
+name|__be32
+name|new_cap_mask
+decl_stmt|;
+comment|/* new capability mask */
+name|u8
+name|reserved3
+decl_stmt|;
+name|u8
+name|change_flags
+decl_stmt|;
+comment|/* low 3 bits only */
+block|}
+name|__packed
+name|ntc_144
+struct|;
+struct|struct
+block|{
+name|__be16
+name|reserved
+decl_stmt|;
+name|__be16
+name|lid
+decl_stmt|;
+comment|/* lid where sys guid changed */
+name|__be16
+name|reserved2
+decl_stmt|;
+name|__be64
+name|new_sys_guid
+decl_stmt|;
+block|}
+name|__packed
+name|ntc_145
+struct|;
+struct|struct
+block|{
+name|__be16
+name|reserved
+decl_stmt|;
+name|__be16
+name|lid
+decl_stmt|;
+name|__be16
+name|dr_slid
+decl_stmt|;
+name|u8
+name|method
+decl_stmt|;
+name|u8
+name|reserved2
+decl_stmt|;
+name|__be16
+name|attr_id
+decl_stmt|;
+name|__be32
+name|attr_mod
+decl_stmt|;
+name|__be64
+name|mkey
+decl_stmt|;
+name|u8
+name|reserved3
+decl_stmt|;
+name|u8
+name|dr_trunc_hop
+decl_stmt|;
+name|u8
+name|dr_rtn_path
+index|[
+literal|30
+index|]
+decl_stmt|;
+block|}
+name|__packed
+name|ntc_256
+struct|;
+struct|struct
+block|{
+name|__be16
+name|reserved
+decl_stmt|;
+name|__be16
+name|lid1
+decl_stmt|;
+name|__be16
+name|lid2
+decl_stmt|;
+name|__be32
+name|key
+decl_stmt|;
+name|__be32
+name|sl_qp1
+decl_stmt|;
+comment|/* SL: high 4 bits */
+name|__be32
+name|qp2
+decl_stmt|;
+comment|/* high 8 bits reserved */
+name|union
+name|ib_gid
+name|gid1
+decl_stmt|;
+name|union
+name|ib_gid
+name|gid2
+decl_stmt|;
+block|}
+name|__packed
+name|ntc_257_258
+struct|;
+block|}
+name|details
+union|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * ib_mad_send_buf - MAD data buffer and work request for sends.  * @next: A pointer used to chain together MADs for posting.  * @mad: References an allocated MAD data buffer for MADs that do not have  *   RMPP active.  For MADs using RMPP, references the common and management  *   class specific headers.  * @mad_agent: MAD agent that allocated the buffer.  * @ah: The address handle to use when sending the MAD.  * @context: User-controlled context fields.  * @hdr_len: Indicates the size of the data header of the MAD.  This length  *   includes the common MAD, RMPP, and class specific headers.  * @data_len: Indicates the total size of user-transferred data.  * @seg_count: The number of RMPP segments allocated for this send.  * @seg_size: Size of the data in each RMPP segment.  This does not include  *   class specific headers.  * @seg_rmpp_size: Size of each RMPP segment including the class specific  *   headers.  * @timeout_ms: Time to wait for a response.  * @retries: Number of times to retry a request for a response.  For MADs  *   using RMPP, this applies per window.  On completion, returns the number  *   of retries needed to complete the transfer.  *  * Users are responsible for initializing the MAD buffer itself, with the  * exception of any RMPP header.  Additional segment buffer space allocated  * beyond data_len is padding.  */
 end_comment
 
 begin_struct
@@ -868,6 +1374,9 @@ name|int
 name|seg_size
 decl_stmt|;
 name|int
+name|seg_rmpp_size
+decl_stmt|;
+name|int
 name|timeout_ms
 decl_stmt|;
 name|int
@@ -885,10 +1394,11 @@ begin_function_decl
 name|int
 name|ib_response_mad
 parameter_list|(
+specifier|const
 name|struct
-name|ib_mad
+name|ib_mad_hdr
 modifier|*
-name|mad
+name|hdr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -929,6 +1439,7 @@ specifier|inline
 name|u8
 name|ib_get_rmpp_flags
 parameter_list|(
+specifier|const
 name|struct
 name|ib_rmpp_hdr
 modifier|*
@@ -1066,7 +1577,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/**  * ib_mad_snoop_handler - Callback handler for snooping sent MADs.  * @mad_agent: MAD agent that snooped the MAD.  * @send_wr: Work request information on the sent MAD.  * @mad_send_wc: Work completion information on the sent MAD.  Valid  *   only for snooping that occurs on a send completion.  *  * Clients snooping MADs should not modify data referenced by the @send_wr  * or @mad_send_wc.  */
+comment|/**  * ib_mad_snoop_handler - Callback handler for snooping sent MADs.  * @mad_agent: MAD agent that snooped the MAD.  * @send_buf: send MAD data buffer.  * @mad_send_wc: Work completion information on the sent MAD.  Valid  *   only for snooping that occurs on a send completion.  *  * Clients snooping MADs should not modify data referenced by the @send_buf  * or @mad_send_wc.  */
 end_comment
 
 begin_typedef
@@ -1096,7 +1607,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/**  * ib_mad_recv_handler - callback handler for a received MAD.  * @mad_agent: MAD agent requesting the received MAD.  * @mad_recv_wc: Received work completion information on the received MAD.  *  * MADs received in response to a send request operation will be handed to  * the user before the send operation completes.  All data buffers given  * to registered agents through this routine are owned by the receiving  * client, except for snooping agents.  Clients snooping MADs should not  * modify the data referenced by @mad_recv_wc.  */
+comment|/**  * ib_mad_recv_handler - callback handler for a received MAD.  * @mad_agent: MAD agent requesting the received MAD.  * @send_buf: Send buffer if found, else NULL  * @mad_recv_wc: Received work completion information on the received MAD.  *  * MADs received in response to a send request operation will be handed to  * the user before the send operation completes.  All data buffers given  * to registered agents through this routine are owned by the receiving  * client, except for snooping agents.  Clients snooping MADs should not  * modify the data referenced by @mad_recv_wc.  */
 end_comment
 
 begin_typedef
@@ -1113,6 +1624,11 @@ modifier|*
 name|mad_agent
 parameter_list|,
 name|struct
+name|ib_mad_send_buf
+modifier|*
+name|send_buf
+parameter_list|,
+name|struct
 name|ib_mad_recv_wc
 modifier|*
 name|mad_recv_wc
@@ -1121,8 +1637,18 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/**  * ib_mad_agent - Used to track MAD registration with the access layer.  * @device: Reference to device registration is on.  * @qp: Reference to QP used for sending and receiving MADs.  * @mr: Memory region for system memory usable for DMA.  * @recv_handler: Callback handler for a received MAD.  * @send_handler: Callback handler for a sent MAD.  * @snoop_handler: Callback handler for snooped sent MADs.  * @context: User-specified context associated with this registration.  * @hi_tid: Access layer assigned transaction ID for this client.  *   Unsolicited MADs sent by this client will have the upper 32-bits  *   of their TID set to this value.  * @port_num: Port number on which QP is registered  * @rmpp_version: If set, indicates the RMPP version used by this agent.  */
+comment|/**  * ib_mad_agent - Used to track MAD registration with the access layer.  * @device: Reference to device registration is on.  * @qp: Reference to QP used for sending and receiving MADs.  * @mr: Memory region for system memory usable for DMA.  * @recv_handler: Callback handler for a received MAD.  * @send_handler: Callback handler for a sent MAD.  * @snoop_handler: Callback handler for snooped sent MADs.  * @context: User-specified context associated with this registration.  * @hi_tid: Access layer assigned transaction ID for this client.  *   Unsolicited MADs sent by this client will have the upper 32-bits  *   of their TID set to this value.  * @flags: registration flags  * @port_num: Port number on which QP is registered  * @rmpp_version: If set, indicates the RMPP version used by this agent.  */
 end_comment
+
+begin_enum
+enum|enum
+block|{
+name|IB_MAD_USER_RMPP
+init|=
+name|IB_USER_MAD_USER_RMPP
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -1137,11 +1663,6 @@ name|struct
 name|ib_qp
 modifier|*
 name|qp
-decl_stmt|;
-name|struct
-name|ib_mr
-modifier|*
-name|mr
 decl_stmt|;
 name|ib_mad_recv_handler
 name|recv_handler
@@ -1158,6 +1679,9 @@ name|context
 decl_stmt|;
 name|u32
 name|hi_tid
+decl_stmt|;
+name|u32
+name|flags
 decl_stmt|;
 name|u8
 name|port_num
@@ -1210,17 +1734,26 @@ name|ib_grh
 modifier|*
 name|grh
 decl_stmt|;
+union|union
+block|{
 name|struct
 name|ib_mad
 modifier|*
 name|mad
 decl_stmt|;
+name|struct
+name|opa_mad
+modifier|*
+name|opa_mad
+decl_stmt|;
+block|}
+union|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/**  * ib_mad_recv_wc - received MAD information.  * @wc: Completion information for the received data.  * @recv_buf: Specifies the location of the received data buffer(s).  * @rmpp_list: Specifies a list of RMPP reassembled received MAD buffers.  * @mad_len: The length of the received MAD, without duplicated headers.  *  * For received response, the wr_id contains a pointer to the ib_mad_send_buf  *   for the corresponding send request.  */
+comment|/**  * ib_mad_recv_wc - received MAD information.  * @wc: Completion information for the received data.  * @recv_buf: Specifies the location of the received data buffer(s).  * @rmpp_list: Specifies a list of RMPP reassembled received MAD buffers.  * @mad_len: The length of the received MAD, without duplicated headers.  * @mad_seg_size: The size of individual MAD segments  *  * For received response, the wr_id contains a pointer to the ib_mad_send_buf  *   for the corresponding send request.  */
 end_comment
 
 begin_struct
@@ -1243,12 +1776,15 @@ decl_stmt|;
 name|int
 name|mad_len
 decl_stmt|;
+name|size_t
+name|mad_seg_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/**  * ib_mad_reg_req - MAD registration request  * @mgmt_class: Indicates which management class of MADs should be receive  *   by the caller.  This field is only required if the user wishes to  *   receive unsolicited MADs, otherwise it should be 0.  * @mgmt_class_version: Indicates which version of MADs for the given  *   management class to receive.  * @oui: Indicates IEEE OUI when mgmt_class is a vendor class  *   in the range from 0x30 to 0x4f. Otherwise not used.  * @method_mask: The caller will receive unsolicited MADs for any method  *   where @method_mask = 1.  */
+comment|/**  * ib_mad_reg_req - MAD registration request  * @mgmt_class: Indicates which management class of MADs should be receive  *   by the caller.  This field is only required if the user wishes to  *   receive unsolicited MADs, otherwise it should be 0.  * @mgmt_class_version: Indicates which version of MADs for the given  *   management class to receive.  * @oui: Indicates IEEE OUI when mgmt_class is a vendor class  *   in the range from 0x30 to 0x4f. Otherwise not used.  * @method_mask: The caller will receive unsolicited MADs for any method  *   where @method_mask = 1.  *  */
 end_comment
 
 begin_struct
@@ -1279,7 +1815,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * ib_register_mad_agent - Register to send/receive MADs.  * @device: The device to register with.  * @port_num: The port on the specified device to use.  * @qp_type: Specifies which QP to access.  Must be either  *   IB_QPT_SMI or IB_QPT_GSI.  * @mad_reg_req: Specifies which unsolicited MADs should be received  *   by the caller.  This parameter may be NULL if the caller only  *   wishes to receive solicited responses.  * @rmpp_version: If set, indicates that the client will send  *   and receive MADs that contain the RMPP header for the given version.  *   If set to 0, indicates that RMPP is not used by this client.  * @send_handler: The completion callback routine invoked after a send  *   request has completed.  * @recv_handler: The completion callback routine invoked for a received  *   MAD.  * @context: User specified context associated with the registration.  */
+comment|/**  * ib_register_mad_agent - Register to send/receive MADs.  * @device: The device to register with.  * @port_num: The port on the specified device to use.  * @qp_type: Specifies which QP to access.  Must be either  *   IB_QPT_SMI or IB_QPT_GSI.  * @mad_reg_req: Specifies which unsolicited MADs should be received  *   by the caller.  This parameter may be NULL if the caller only  *   wishes to receive solicited responses.  * @rmpp_version: If set, indicates that the client will send  *   and receive MADs that contain the RMPP header for the given version.  *   If set to 0, indicates that RMPP is not used by this client.  * @send_handler: The completion callback routine invoked after a send  *   request has completed.  * @recv_handler: The completion callback routine invoked for a received  *   MAD.  * @context: User specified context associated with the registration.  * @registration_flags: Registration flags to set for this agent  */
 end_comment
 
 begin_function_decl
@@ -1317,6 +1853,9 @@ parameter_list|,
 name|void
 modifier|*
 name|context
+parameter_list|,
+name|u32
+name|registration_flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1539,7 +2078,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * ib_create_send_mad - Allocate and initialize a data buffer and work request  *   for sending a MAD.  * @mad_agent: Specifies the registered MAD service to associate with the MAD.  * @remote_qpn: Specifies the QPN of the receiving node.  * @pkey_index: Specifies which PKey the MAD will be sent using.  This field  *   is valid only if the remote_qpn is QP 1.  * @rmpp_active: Indicates if the send will enable RMPP.  * @hdr_len: Indicates the size of the data header of the MAD.  This length  *   should include the common MAD header, RMPP header, plus any class  *   specific header.  * @data_len: Indicates the size of any user-transferred data.  The call will  *   automatically adjust the allocated buffer size to account for any  *   additional padding that may be necessary.  * @gfp_mask: GFP mask used for the memory allocation.  *  * This routine allocates a MAD for sending.  The returned MAD send buffer  * will reference a data buffer usable for sending a MAD, along  * with an initialized work request structure.  Users may modify the returned  * MAD data buffer before posting the send.  *  * The returned MAD header, class specific headers, and any padding will be  * cleared.  Users are responsible for initializing the common MAD header,  * any class specific header, and MAD data area.  * If @rmpp_active is set, the RMPP header will be initialized for sending.  */
+comment|/**  * ib_create_send_mad - Allocate and initialize a data buffer and work request  *   for sending a MAD.  * @mad_agent: Specifies the registered MAD service to associate with the MAD.  * @remote_qpn: Specifies the QPN of the receiving node.  * @pkey_index: Specifies which PKey the MAD will be sent using.  This field  *   is valid only if the remote_qpn is QP 1.  * @rmpp_active: Indicates if the send will enable RMPP.  * @hdr_len: Indicates the size of the data header of the MAD.  This length  *   should include the common MAD header, RMPP header, plus any class  *   specific header.  * @data_len: Indicates the size of any user-transferred data.  The call will  *   automatically adjust the allocated buffer size to account for any  *   additional padding that may be necessary.  * @gfp_mask: GFP mask used for the memory allocation.  * @base_version: Base Version of this MAD  *  * This routine allocates a MAD for sending.  The returned MAD send buffer  * will reference a data buffer usable for sending a MAD, along  * with an initialized work request structure.  Users may modify the returned  * MAD data buffer before posting the send.  *  * The returned MAD header, class specific headers, and any padding will be  * cleared.  Users are responsible for initializing the common MAD header,  * any class specific header, and MAD data area.  * If @rmpp_active is set, the RMPP header will be initialized for sending.  */
 end_comment
 
 begin_function_decl
@@ -1570,6 +2109,9 @@ name|data_len
 parameter_list|,
 name|gfp_t
 name|gfp_mask
+parameter_list|,
+name|u8
+name|base_version
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1634,6 +2176,23 @@ name|struct
 name|ib_mad_send_buf
 modifier|*
 name|send_buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * ib_mad_kernel_rmpp_agent - Returns if the agent is performing RMPP.  * @agent: the agent in question  * @return: true if agent is performing rmpp, false otherwise.  */
+end_comment
+
+begin_function_decl
+name|int
+name|ib_mad_kernel_rmpp_agent
+parameter_list|(
+specifier|const
+name|struct
+name|ib_mad_agent
+modifier|*
+name|agent
 parameter_list|)
 function_decl|;
 end_function_decl

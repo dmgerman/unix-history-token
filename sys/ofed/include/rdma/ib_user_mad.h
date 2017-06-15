@@ -261,6 +261,75 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/**  * ib_user_mad_reg_req2 - MAD registration request  *  * @id                 - Set by the _kernel_; used by userspace to identify the  *                       registered agent in future requests.  * @qpn                - Queue pair number; must be 0 or 1.  * @mgmt_class         - Indicates which management class of MADs should be  *                       receive by the caller.  This field is only required if  *                       the user wishes to receive unsolicited MADs, otherwise  *                       it should be 0.  * @mgmt_class_version - Indicates which version of MADs for the given  *                       management class to receive.  * @res                - Ignored.  * @flags              - additional registration flags; Must be in the set of  *                       flags defined in IB_USER_MAD_REG_FLAGS_CAP  * @method_mask        - The caller wishes to receive unsolicited MADs for the  *                       methods whose bit(s) is(are) set.  * @oui                - Indicates IEEE OUI to use when mgmt_class is a vendor  *                       class in the range from 0x30 to 0x4f. Otherwise not  *                       used.  * @rmpp_version       - If set, indicates the RMPP version to use.  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|IB_USER_MAD_USER_RMPP
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|, }
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|IB_USER_MAD_REG_FLAGS_CAP
+value|(IB_USER_MAD_USER_RMPP)
+end_define
+
+begin_struct
+struct|struct
+name|ib_user_mad_reg_req2
+block|{
+name|__u32
+name|id
+decl_stmt|;
+name|__u32
+name|qpn
+decl_stmt|;
+name|__u8
+name|mgmt_class
+decl_stmt|;
+name|__u8
+name|mgmt_class_version
+decl_stmt|;
+name|__u16
+name|res
+decl_stmt|;
+name|__u32
+name|flags
+decl_stmt|;
+name|__u64
+name|method_mask
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|__u32
+name|oui
+decl_stmt|;
+name|__u8
+name|rmpp_version
+decl_stmt|;
+name|__u8
+name|reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -272,14 +341,14 @@ begin_define
 define|#
 directive|define
 name|IB_USER_MAD_REGISTER_AGENT
-value|_IO(IB_IOCTL_MAGIC, 1)
+value|_IOWR(IB_IOCTL_MAGIC, 1, \ 					      struct ib_user_mad_reg_req)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IB_USER_MAD_UNREGISTER_AGENT
-value|_IO(IB_IOCTL_MAGIC, 2)
+value|_IOW(IB_IOCTL_MAGIC, 2, __u32)
 end_define
 
 begin_define
@@ -287,6 +356,13 @@ define|#
 directive|define
 name|IB_USER_MAD_ENABLE_PKEY
 value|_IO(IB_IOCTL_MAGIC, 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IB_USER_MAD_REGISTER_AGENT2
+value|_IOWR(IB_IOCTL_MAGIC, 4, \ 					      struct ib_user_mad_reg_req2)
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005 Voltaire Inc.  All rights reserved.  * Copyright (c) 2005 Intel Corporation.  All rights reserved.  * Copyright (c) 2016 Chelsio Communications.  All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  */
+comment|/*  * Copyright (c) 2005 Voltaire Inc.  All rights reserved.  * Copyright (c) 2005 Intel Corporation.  All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -82,17 +82,23 @@ block|,
 name|RDMA_CM_EVENT_ADDR_CHANGE
 block|,
 name|RDMA_CM_EVENT_TIMEWAIT_EXIT
-block|,
-name|RDMA_CM_EVENT_ALT_ROUTE_RESOLVED
-block|,
-name|RDMA_CM_EVENT_ALT_ROUTE_ERROR
-block|,
-name|RDMA_CM_EVENT_LOAD_ALT_PATH
-block|,
-name|RDMA_CM_EVENT_ALT_PATH_LOADED
-block|, }
+block|}
 enum|;
 end_enum
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|__attribute_const__
+name|rdma_event_msg
+parameter_list|(
+name|enum
+name|rdma_cm_event_type
+name|event
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_enum
 enum|enum
@@ -121,20 +127,33 @@ block|, }
 enum|;
 end_enum
 
-begin_enum
-enum|enum
-name|alt_path_type
-block|{
-name|RDMA_ALT_PATH_NONE
-block|,
-name|RDMA_ALT_PATH_PORT
-block|,
-name|RDMA_ALT_PATH_LID
-block|,
-name|RDMA_ALT_PATH_BEST
-block|}
-enum|;
-end_enum
+begin_define
+define|#
+directive|define
+name|RDMA_IB_IP_PS_MASK
+value|0xFFFFFFFFFFFF0000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|RDMA_IB_IP_PS_TCP
+value|0x0000000001060000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|RDMA_IB_IP_PS_UDP
+value|0x0000000001110000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|RDMA_IB_IP_PS_IB
+value|0x00000000013F0000ULL
+end_define
 
 begin_struct
 struct|struct
@@ -211,6 +230,9 @@ decl_stmt|;
 name|u32
 name|qp_num
 decl_stmt|;
+name|u32
+name|qkey
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -236,9 +258,6 @@ name|qp_num
 decl_stmt|;
 name|u32
 name|qkey
-decl_stmt|;
-name|u8
-name|alt_path_index
 decl_stmt|;
 block|}
 struct|;
@@ -368,16 +387,12 @@ decl_stmt|;
 name|u8
 name|port_num
 decl_stmt|;
-name|void
-modifier|*
-name|ucontext
-decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/**  * rdma_create_id - Create an RDMA identifier.  *  * @event_handler: User callback invoked to report events associated with the  *   returned rdma_id.  * @context: User specified context associated with the id.  * @ps: RDMA port space.  * @qp_type: type of queue pair associated with the id.  */
+comment|/**  * rdma_create_id - Create an RDMA identifier.  *  * @net: The network namespace in which to create the new id.  * @event_handler: User callback invoked to report events associated with the  *   returned rdma_id.  * @context: User specified context associated with the id.  * @ps: RDMA port space.  * @qp_type: type of queue pair associated with the id.  *  * The id holds a reference on the network namespace until it is destroyed.  */
 end_comment
 
 begin_function_decl
@@ -386,6 +401,11 @@ name|rdma_cm_id
 modifier|*
 name|rdma_create_id
 parameter_list|(
+name|struct
+name|vnet
+modifier|*
+name|net
+parameter_list|,
 name|rdma_cm_event_handler
 name|event_handler
 parameter_list|,
@@ -485,26 +505,6 @@ name|id
 parameter_list|,
 name|int
 name|timeout_ms
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * rdma_enable_apm - Get ready to use APM for the given ID.  * Actual Alternate path discovery and load will take place only  * after a connection has been established.  *  * Calling this function only has an effect on the connection's client side.  * It should be called after rdma_resolve_route and before rdma_connect.  *  * @id: RDMA identifier.  * @alt_type: Alternate path type to resolve.  */
-end_comment
-
-begin_function_decl
-name|int
-name|rdma_enable_apm
-parameter_list|(
-name|struct
-name|rdma_cm_id
-modifier|*
-name|id
-parameter_list|,
-name|enum
-name|alt_path_type
-name|alt_type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -698,7 +698,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * rdma_join_multicast - Join the multicast group specified by the given  *   address.  * @id: Communication identifier associated with the request.  * @addr: Multicast address identifying the group to join.  * @context: User-defined context associated with the join request, returned  * to the user through the private_data pointer in multicast events.  */
+comment|/**  * rdma_join_multicast - Join the multicast group specified by the given  *   address.  * @id: Communication identifier associated with the request.  * @addr: Multicast address identifying the group to join.  * @join_state: Multicast JoinState bitmap requested by port.  *		Bitmap is based on IB_SA_MCMEMBER_REC_JOIN_STATE bits.  * @context: User-defined context associated with the join request, returned  * to the user through the private_data pointer in multicast events.  */
 end_comment
 
 begin_function_decl
@@ -714,6 +714,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|addr
+parameter_list|,
+name|u8
+name|join_state
 parameter_list|,
 name|void
 modifier|*
@@ -801,53 +804,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * rdma_set_timeout - Set the QP timeout associated with a connection  * identifier.  * @id: Communication identifier to associated with service type.  * @timeout: QP timeout  */
+comment|/**  * rdma_get_service_id - Return the IB service ID for a specified address.  * @id: Communication identifier associated with the address.  * @addr: Address for the service ID.  */
 end_comment
 
 begin_function_decl
-name|void
-name|rdma_set_timeout
+name|__be64
+name|rdma_get_service_id
 parameter_list|(
 name|struct
 name|rdma_cm_id
 modifier|*
 name|id
 parameter_list|,
-name|int
-name|timeout
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|rdma_cma_any_addr
-parameter_list|(
 name|struct
 name|sockaddr
 modifier|*
 name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|rdma_find_cmid_laddr
-parameter_list|(
-name|struct
-name|sockaddr_in
-modifier|*
-name|local_addr
-parameter_list|,
-name|unsigned
-name|short
-name|dev_type
-parameter_list|,
-name|void
-modifier|*
-modifier|*
-name|cm_id
 parameter_list|)
 function_decl|;
 end_function_decl

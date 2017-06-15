@@ -63,9 +63,6 @@ name|krping_doit
 parameter_list|(
 name|char
 modifier|*
-parameter_list|,
-name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -89,15 +86,6 @@ parameter_list|)
 parameter_list|,
 name|void
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|krping_init
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -85,6 +85,7 @@ name|ib_agent_port_private
 modifier|*
 name|__ib_get_agent_port
 parameter_list|(
+specifier|const
 name|struct
 name|ib_device
 modifier|*
@@ -149,6 +150,7 @@ name|ib_agent_port_private
 modifier|*
 name|ib_get_agent_port
 parameter_list|(
+specifier|const
 name|struct
 name|ib_device
 modifier|*
@@ -202,21 +204,25 @@ begin_function
 name|void
 name|agent_send_response
 parameter_list|(
+specifier|const
 name|struct
-name|ib_mad
+name|ib_mad_hdr
 modifier|*
-name|mad
+name|mad_hdr
 parameter_list|,
+specifier|const
 name|struct
 name|ib_grh
 modifier|*
 name|grh
 parameter_list|,
+specifier|const
 name|struct
 name|ib_wc
 modifier|*
 name|wc
 parameter_list|,
+specifier|const
 name|struct
 name|ib_device
 modifier|*
@@ -227,6 +233,12 @@ name|port_num
 parameter_list|,
 name|int
 name|qpn
+parameter_list|,
+name|size_t
+name|resp_mad_len
+parameter_list|,
+name|bool
+name|opa
 parameter_list|)
 block|{
 name|struct
@@ -256,11 +268,10 @@ name|mad_send_wr
 decl_stmt|;
 if|if
 condition|(
+name|rdma_cap_ib_switch
+argument_list|(
 name|device
-operator|->
-name|node_type
-operator|==
-name|RDMA_NODE_IB_SWITCH
+argument_list|)
 condition|)
 name|port_priv
 operator|=
@@ -287,12 +298,16 @@ operator|!
 name|port_priv
 condition|)
 block|{
-name|printk
+name|dev_err
 argument_list|(
-argument|KERN_ERR SPFX
+operator|&
+name|device
+operator|->
+name|dev
+argument_list|,
 literal|"Unable to find port agent\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 return|return;
 block|}
 name|agent
@@ -329,16 +344,37 @@ name|ah
 argument_list|)
 condition|)
 block|{
-name|printk
+name|dev_err
 argument_list|(
-argument|KERN_ERR SPFX
+operator|&
+name|device
+operator|->
+name|dev
+argument_list|,
 literal|"ib_create_ah_from_wc error %ld\n"
 argument_list|,
-argument|PTR_ERR(ah)
+name|PTR_ERR
+argument_list|(
+name|ah
 argument_list|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|opa
+operator|&&
+name|mad_hdr
+operator|->
+name|base_version
+operator|!=
+name|OPA_MGMT_BASE_VERSION
+condition|)
+name|resp_mad_len
+operator|=
+name|IB_MGMT_MAD_SIZE
+expr_stmt|;
 name|send_buf
 operator|=
 name|ib_create_send_mad
@@ -357,9 +393,15 @@ literal|0
 argument_list|,
 name|IB_MGMT_MAD_HDR
 argument_list|,
-name|IB_MGMT_MAD_DATA
+name|resp_mad_len
+operator|-
+name|IB_MGMT_MAD_HDR
 argument_list|,
 name|GFP_KERNEL
+argument_list|,
+name|mad_hdr
+operator|->
+name|base_version
 argument_list|)
 expr_stmt|;
 if|if
@@ -370,12 +412,16 @@ name|send_buf
 argument_list|)
 condition|)
 block|{
-name|printk
+name|dev_err
 argument_list|(
-argument|KERN_ERR SPFX
+operator|&
+name|device
+operator|->
+name|dev
+argument_list|,
 literal|"ib_create_send_mad error\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 goto|goto
 name|err1
 goto|;
@@ -386,11 +432,9 @@ name|send_buf
 operator|->
 name|mad
 argument_list|,
-name|mad
+name|mad_hdr
 argument_list|,
-sizeof|sizeof
-expr|*
-name|mad
+name|resp_mad_len
 argument_list|)
 expr_stmt|;
 name|send_buf
@@ -401,11 +445,10 @@ name|ah
 expr_stmt|;
 if|if
 condition|(
+name|rdma_cap_ib_switch
+argument_list|(
 name|device
-operator|->
-name|node_type
-operator|==
-name|RDMA_NODE_IB_SWITCH
+argument_list|)
 condition|)
 block|{
 name|mad_send_wr
@@ -424,10 +467,6 @@ name|mad_send_wr
 operator|->
 name|send_wr
 operator|.
-name|wr
-operator|.
-name|ud
-operator|.
 name|port_num
 operator|=
 name|port_num
@@ -443,12 +482,16 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|printk
+name|dev_err
 argument_list|(
-argument|KERN_ERR SPFX
+operator|&
+name|device
+operator|->
+name|dev
+argument_list|,
 literal|"ib_post_send_mad error\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 goto|goto
 name|err2
 goto|;
@@ -549,12 +592,16 @@ operator|!
 name|port_priv
 condition|)
 block|{
-name|printk
+name|dev_err
 argument_list|(
-argument|KERN_ERR SPFX
+operator|&
+name|device
+operator|->
+name|dev
+argument_list|,
 literal|"No memory for ib_agent_port_private\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|ret
 operator|=
 operator|-
@@ -566,14 +613,12 @@ goto|;
 block|}
 if|if
 condition|(
-name|rdma_port_get_link_layer
+name|rdma_cap_ib_smi
 argument_list|(
 name|device
 argument_list|,
 name|port_num
 argument_list|)
-operator|==
-name|IB_LINK_LAYER_INFINIBAND
 condition|)
 block|{
 comment|/* Obtain send only MAD agent for SMI QP */
@@ -602,6 +647,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -660,6 +707,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -811,14 +860,18 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|printk
+name|dev_err
 argument_list|(
-argument|KERN_ERR SPFX
+operator|&
+name|device
+operator|->
+name|dev
+argument_list|,
 literal|"Port %d not found\n"
 argument_list|,
-argument|port_num
+name|port_num
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 return|return
 operator|-
 name|ENODEV

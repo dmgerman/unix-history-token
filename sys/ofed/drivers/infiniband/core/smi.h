@@ -58,8 +58,8 @@ name|ib_smp
 modifier|*
 name|smp
 parameter_list|,
-name|u8
-name|node_type
+name|bool
+name|is_switch
 parameter_list|,
 name|int
 name|port_num
@@ -107,8 +107,8 @@ name|ib_smp
 modifier|*
 name|smp
 parameter_list|,
-name|u8
-name|node_type
+name|bool
+name|is_switch
 parameter_list|,
 name|int
 name|port_num

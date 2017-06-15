@@ -1042,6 +1042,9 @@ decl_stmt|;
 name|int
 name|gone
 decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
 name|struct
 name|mutex
 name|vlan_mutex
@@ -1119,11 +1122,6 @@ modifier|*
 name|pd
 decl_stmt|;
 name|struct
-name|ib_mr
-modifier|*
-name|mr
-decl_stmt|;
-name|struct
 name|ib_cq
 modifier|*
 name|recv_cq
@@ -1187,7 +1185,7 @@ name|IPOIB_MAX_TX_SG
 index|]
 decl_stmt|;
 name|struct
-name|ib_send_wr
+name|ib_ud_wr
 name|tx_wr
 decl_stmt|;
 name|unsigned

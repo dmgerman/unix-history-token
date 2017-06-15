@@ -92,7 +92,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|IWCM_F_CALLBACK_DESTROY
+name|IWCM_F_DROP_EVENTS
 value|1
 end_define
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005 Network Appliance, Inc. All rights reserved.  * Copyright (c) 2005 Open Grid Computing, Inc. All rights reserved.  * Copyright (c) 2016 Chelsio Communications.  All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  */
+comment|/*  * Copyright (c) 2005 Network Appliance, Inc. All rights reserved.  * Copyright (c) 2005 Open Grid Computing, Inc. All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -69,11 +69,11 @@ name|int
 name|status
 decl_stmt|;
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|local_addr
 decl_stmt|;
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|remote_addr
 decl_stmt|;
 name|void
@@ -86,11 +86,6 @@ name|provider_data
 decl_stmt|;
 name|u8
 name|private_data_len
-decl_stmt|;
-name|struct
-name|socket
-modifier|*
-name|so
 decl_stmt|;
 name|u8
 name|ord
@@ -171,13 +166,24 @@ modifier|*
 name|device
 decl_stmt|;
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|local_addr
 decl_stmt|;
+comment|/* local addr */
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|remote_addr
 decl_stmt|;
+name|struct
+name|sockaddr_storage
+name|m_local_addr
+decl_stmt|;
+comment|/* nmapped local addr */
+name|struct
+name|sockaddr_storage
+name|m_remote_addr
+decl_stmt|;
+comment|/* nmapped rem addr */
 name|void
 modifier|*
 name|provider_data
@@ -210,10 +216,8 @@ name|iw_cm_id
 modifier|*
 parameter_list|)
 function_decl|;
-name|struct
-name|socket
-modifier|*
-name|so
+name|u8
+name|tos
 decl_stmt|;
 block|}
 struct|;
@@ -346,7 +350,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|create_listen_ep
+name|create_listen
 function_decl|)
 parameter_list|(
 name|struct
@@ -358,10 +362,10 @@ name|int
 name|backlog
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
-name|destroy_listen_ep
+name|destroy_listen
 function_decl|)
 parameter_list|(
 name|struct
@@ -370,23 +374,12 @@ modifier|*
 name|cm_id
 parameter_list|)
 function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|newconn
-function_decl|)
-parameter_list|(
-name|struct
-name|iw_cm_id
-modifier|*
-name|parent_cm_id
-parameter_list|,
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|)
-function_decl|;
+name|char
+name|ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -405,11 +398,6 @@ name|struct
 name|ib_device
 modifier|*
 name|device
-parameter_list|,
-name|struct
-name|socket
-modifier|*
-name|so
 parameter_list|,
 name|iw_cm_handler
 name|cm_handler

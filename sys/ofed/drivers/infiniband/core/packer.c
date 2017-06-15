@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<linux/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/string.h>
 end_include
 
@@ -52,6 +46,10 @@ name|u8
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|structure
 operator|+
 name|offset
@@ -68,6 +66,10 @@ name|__be16
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|structure
 operator|+
 name|offset
@@ -85,6 +87,10 @@ name|__be32
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|structure
 operator|+
 name|offset
@@ -102,6 +108,10 @@ name|__be64
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|structure
 operator|+
 name|offset
@@ -109,9 +119,8 @@ operator|)
 argument_list|)
 return|;
 default|default:
-name|printk
+name|pr_warn
 argument_list|(
-name|KERN_WARNING
 literal|"Field size %d bits not handled\n"
 argument_list|,
 name|size
@@ -476,11 +485,9 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printk
+name|pr_warn
 argument_list|(
-name|KERN_WARNING
-literal|"Structure field %s of size %d "
-literal|"bits is not byte-aligned\n"
+literal|"Structure field %s of size %d bits is not byte-aligned\n"
 argument_list|,
 name|desc
 index|[
@@ -509,6 +516,10 @@ name|struct_size_bytes
 condition|)
 name|memcpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 name|desc
@@ -529,6 +540,10 @@ name|offset_bits
 operator|/
 literal|8
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|structure
 operator|+
 name|desc
@@ -551,6 +566,10 @@ expr_stmt|;
 else|else
 name|memset
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 name|desc
@@ -631,6 +650,10 @@ name|u8
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|structure
 operator|+
 name|offset
@@ -648,6 +671,10 @@ name|__be16
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|structure
 operator|+
 name|offset
@@ -668,6 +695,10 @@ name|__be32
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|structure
 operator|+
 name|offset
@@ -688,6 +719,10 @@ name|__be64
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|structure
 operator|+
 name|offset
@@ -700,9 +735,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printk
+name|pr_warn
 argument_list|(
-name|KERN_WARNING
 literal|"Field size %d bits not handled\n"
 argument_list|,
 name|size
@@ -1017,11 +1051,9 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printk
+name|pr_warn
 argument_list|(
-name|KERN_WARNING
-literal|"Structure field %s of size %d "
-literal|"bits is not byte-aligned\n"
+literal|"Structure field %s of size %d bits is not byte-aligned\n"
 argument_list|,
 name|desc
 index|[
@@ -1041,6 +1073,10 @@ expr_stmt|;
 block|}
 name|memcpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|structure
 operator|+
 name|desc
@@ -1050,6 +1086,10 @@ index|]
 operator|.
 name|struct_offset_bytes
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 name|desc
