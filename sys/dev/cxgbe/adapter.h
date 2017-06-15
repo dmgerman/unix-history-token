@@ -2319,6 +2319,13 @@ argument_list|)
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|INVALID_NM_RXQ_CNTXT_ID
+value|((uint16_t)(-1))
+end_define
+
 begin_struct
 struct|struct
 name|sge_nm_rxq
@@ -2405,6 +2412,13 @@ name|CACHE_LINE_SIZE
 argument_list|)
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|INVALID_NM_TXQ_CNTXT_ID
+value|((u_int)(-1))
+end_define
 
 begin_struct
 struct|struct
