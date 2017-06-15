@@ -43,6 +43,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -3651,6 +3657,8 @@ name|unsigned
 name|char
 modifier|*
 name|message
+init|=
+name|NULL
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -3689,6 +3697,8 @@ name|tid
 decl_stmt|;
 name|uint32_t
 name|sres
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|len
@@ -4087,17 +4097,10 @@ condition|(
 name|sres
 condition|)
 block|{
-operator|*
-operator|(
-operator|(
-name|uint32_t
-operator|*
-operator|)
-name|buf
-operator|)
-operator|=
-name|htonl
+name|be32enc
 argument_list|(
+name|buf
+argument_list|,
 name|strlen
 argument_list|(
 name|message
