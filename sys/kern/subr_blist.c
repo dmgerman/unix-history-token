@@ -97,17 +97,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|SWAPBLK_NONE
-value|((daddr_t)-1)
-end_define
-
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -159,14 +158,6 @@ name|b
 parameter_list|)
 value|free(a)
 end_define
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|u_daddr_t
-typedef|;
-end_typedef
 
 begin_include
 include|#
@@ -1233,6 +1224,9 @@ name|bmu_bitmap
 operator|&=
 operator|~
 operator|(
+operator|(
+name|u_daddr_t
+operator|)
 literal|1
 operator|<<
 name|r
@@ -2302,6 +2296,9 @@ condition|(
 name|v
 operator|&
 operator|(
+operator|(
+name|u_daddr_t
+operator|)
 literal|1
 operator|<<
 name|i
@@ -2663,6 +2660,17 @@ decl_stmt|;
 if|if
 condition|(
 name|count
+operator|>
+name|radix
+condition|)
+name|panic
+argument_list|(
+literal|"blist_meta_fill: allocation too large"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|count
 operator|==
 name|radix
 operator|||
@@ -2813,17 +2821,6 @@ operator|/=
 name|BLIST_META_RADIX
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|count
-operator|>
-name|radix
-condition|)
-name|panic
-argument_list|(
-literal|"blist_meta_fill: allocation too large"
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 operator|(
@@ -3272,7 +3269,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%*.*s(%08llx,%lld): bitmap %08llx big=%lld\n"
+literal|"%*.*s(%08llx,%lld): bitmap %016llx big=%lld\n"
 argument_list|,
 name|tab
 argument_list|,
@@ -3684,12 +3681,14 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-name|daddr_t
+name|long
+name|long
 name|da
 init|=
 literal|0
 decl_stmt|;
-name|daddr_t
+name|long
+name|long
 name|count
 init|=
 literal|0
@@ -3779,6 +3778,8 @@ argument_list|,
 name|count
 argument_list|,
 literal|1
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
@@ -3863,19 +3864,9 @@ literal|1
 argument_list|,
 literal|"%llx %lld"
 argument_list|,
-operator|(
-name|long
-name|long
-operator|*
-operator|)
 operator|&
 name|da
 argument_list|,
-operator|(
-name|long
-name|long
-operator|*
-operator|)
 operator|&
 name|count
 argument_list|)
@@ -3915,19 +3906,9 @@ literal|1
 argument_list|,
 literal|"%llx %lld"
 argument_list|,
-operator|(
-name|long
-name|long
-operator|*
-operator|)
 operator|&
 name|da
 argument_list|,
-operator|(
-name|long
-name|long
-operator|*
-operator|)
 operator|&
 name|count
 argument_list|)
