@@ -798,7 +798,7 @@ end_comment
 begin_function
 specifier|static
 specifier|inline
-name|vm_offset_t
+name|vm_ooffset_t
 name|vmoff
 parameter_list|(
 name|int
@@ -817,7 +817,7 @@ condition|)
 return|return
 operator|(
 operator|(
-name|vm_offset_t
+name|vm_ooffset_t
 operator|)
 name|off
 operator|)
