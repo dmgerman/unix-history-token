@@ -19,12 +19,23 @@ begin_comment
 comment|/* offset of configuration space in the pci core register */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|PCICFG_OFFSET
 value|0x2000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1292,6 +1303,12 @@ name|GRC_CR_VF_MSIX_CTRL_VF_MSIX_TBL_SIZE_MASK
 value|0x3F
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1309,6 +1326,11 @@ directive|define
 name|GRC_CR_PF_INIT_VF_PF_FIRST_VF_NUM_MASK
 value|0xff
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

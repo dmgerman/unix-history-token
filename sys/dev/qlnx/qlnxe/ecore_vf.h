@@ -100,7 +100,7 @@ comment|/* In case PF originates prior to the fp-hsi version comparison, 	 * thi
 name|bool
 name|b_pre_fp_hsi
 decl_stmt|;
-comment|/* Current day VFs are passing the SBs physical address on vport 	 * start, and as they lack an IGU mapping they need to store the 	 * addresses of previously registered SBs. 	 * Even if we were to change configuration flow, due to backward 	 * compatibility [with older PFs] we'd still need to store these. 	 */
+comment|/* Current day VFs are passing the SBs physical address on vport 	 * start, and as they lack an IGU mapping they need to store the 	 * addresses of previously registered SBs. 	 * Even if we were to change configuration flow, due to backward 	 * compatability [with older PFs] we'd still need to store these. 	 */
 name|struct
 name|ecore_sb_info
 modifier|*
@@ -341,6 +341,12 @@ begin_comment
 comment|/* TODO - fix all the !SRIOV prototypes */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUX_REMOVE
+end_ifndef
+
 begin_comment
 comment|/**  * @brief VF - update the RX queue by sending a message to the  *        PF  *  * @param p_hwfn  * @param pp_cid - list of queue-cids which we want to update  * @param num_rxqs  * @param comp_cqe_flg  * @param comp_event_flg  *  * @return enum _ecore_status_t  */
 end_comment
@@ -372,6 +378,11 @@ name|comp_event_flg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * @brief VF - send a vport update command  *  * @param p_hwfn  * @param params  *  * @return enum _ecore_status_t  */
@@ -578,18 +589,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief - return the link params in a given bulletin board  *  * @param p_hwfn  * @param p_params - pointer to a struct to fill with link params  * @param p_bulletin  */
+comment|/**  * @brief - return the link params in a given bulletin board  *  * @param p_params - pointer to a struct to fill with link params  * @param p_bulletin  */
 end_comment
 
 begin_function_decl
 name|void
 name|__ecore_vf_get_link_params
 parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
 name|struct
 name|ecore_mcp_link_params
 modifier|*
@@ -604,18 +610,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief - return the link state in a given bulletin board  *  * @param p_hwfn  * @param p_link - pointer to a struct to fill with link state  * @param p_bulletin  */
+comment|/**  * @brief - return the link state in a given bulletin board  *  * @param p_link - pointer to a struct to fill with link state  * @param p_bulletin  */
 end_comment
 
 begin_function_decl
 name|void
 name|__ecore_vf_get_link_state
 parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
 name|struct
 name|ecore_mcp_link_state
 modifier|*
@@ -630,18 +631,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief - return the link capabilities in a given bulletin board  *  * @param p_hwfn  * @param p_link - pointer to a struct to fill with link capabilities  * @param p_bulletin  */
+comment|/**  * @brief - return the link capabilities in a given bulletin board  *  * @param p_link - pointer to a struct to fill with link capabilities  * @param p_bulletin  */
 end_comment
 
 begin_function_decl
 name|void
 name|__ecore_vf_get_link_caps
 parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
 name|struct
 name|ecore_mcp_link_capabilities
 modifier|*
@@ -699,6 +695,7 @@ name|ecore_vf_hw_prepare
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|)
@@ -718,28 +715,35 @@ name|ecore_vf_pf_rxq_start
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_queue_cid
+name|OSAL_UNUSED
 modifier|*
 name|p_cid
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 name|bd_max_bytes
 parameter_list|,
 name|dma_addr_t
+name|OSAL_UNUSED
 name|bd_chain_phys_addr
 parameter_list|,
 name|dma_addr_t
+name|OSAL_UNUSED
 name|cqe_pbl_addr
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 name|cqe_pbl_size
 parameter_list|,
 name|void
 name|OSAL_IOMEM
+name|OSAL_UNUSED
 modifier|*
 modifier|*
 name|pp_prod
@@ -760,22 +764,27 @@ name|ecore_vf_pf_txq_start
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_queue_cid
+name|OSAL_UNUSED
 modifier|*
 name|p_cid
 parameter_list|,
 name|dma_addr_t
+name|OSAL_UNUSED
 name|pbl_addr
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 name|pbl_size
 parameter_list|,
 name|void
 name|OSAL_IOMEM
+name|OSAL_UNUSED
 modifier|*
 modifier|*
 name|pp_doorbell
@@ -796,15 +805,18 @@ name|ecore_vf_pf_rxq_stop
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_queue_cid
+name|OSAL_UNUSED
 modifier|*
 name|p_cid
 parameter_list|,
 name|bool
+name|OSAL_UNUSED
 name|cqe_completion
 parameter_list|)
 block|{
@@ -823,11 +835,13 @@ name|ecore_vf_pf_txq_stop
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_queue_cid
+name|OSAL_UNUSED
 modifier|*
 name|p_cid
 parameter_list|)
@@ -838,6 +852,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUX_REMOVE
+end_ifndef
+
 begin_function
 specifier|static
 name|OSAL_INLINE
@@ -847,22 +867,27 @@ name|ecore_vf_pf_rxqs_update
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_queue_cid
+name|OSAL_UNUSED
 modifier|*
 modifier|*
 name|pp_cid
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 name|num_rxqs
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 name|comp_cqe_flg
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 name|comp_event_flg
 parameter_list|)
 block|{
@@ -871,6 +896,11 @@ name|ECORE_INVAL
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -881,11 +911,13 @@ name|ecore_vf_pf_vport_update
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_sp_vport_update_params
+name|OSAL_UNUSED
 modifier|*
 name|p_params
 parameter_list|)
@@ -905,6 +937,7 @@ name|ecore_vf_pf_reset
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|)
@@ -924,6 +957,7 @@ name|ecore_vf_pf_release
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|)
@@ -942,10 +976,12 @@ name|ecore_vf_get_igu_sb_id
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 name|sb_id
 parameter_list|)
 block|{
@@ -963,14 +999,17 @@ name|ecore_vf_set_sb_info
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 name|sb_id
 parameter_list|,
 name|struct
 name|ecore_sb_info
+name|OSAL_UNUSED
 modifier|*
 name|p_sb
 parameter_list|)
@@ -986,26 +1025,33 @@ name|ecore_vf_pf_vport_start
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 name|vport_id
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 name|mtu
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 name|inner_vlan_removal
 parameter_list|,
 name|enum
 name|ecore_tpa_mode
+name|OSAL_UNUSED
 name|tpa_mode
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 name|max_buffers_per_cqe
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 name|only_untagged
 parameter_list|)
 block|{
@@ -1024,6 +1070,7 @@ name|ecore_vf_pf_vport_stop
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|)
@@ -1043,11 +1090,13 @@ name|ecore_vf_pf_filter_ucast
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_filter_ucast
+name|OSAL_UNUSED
 modifier|*
 name|p_param
 parameter_list|)
@@ -1066,11 +1115,13 @@ name|ecore_vf_pf_filter_mcast
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_filter_mcast
+name|OSAL_UNUSED
 modifier|*
 name|p_filter_cmd
 parameter_list|)
@@ -1086,6 +1137,7 @@ name|ecore_vf_pf_int_cleanup
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|)
@@ -1104,16 +1156,19 @@ name|__ecore_vf_get_link_params
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_mcp_link_params
+name|OSAL_UNUSED
 modifier|*
 name|p_params
 parameter_list|,
 name|struct
 name|ecore_bulletin_content
+name|OSAL_UNUSED
 modifier|*
 name|p_bulletin
 parameter_list|)
@@ -1128,16 +1183,19 @@ name|__ecore_vf_get_link_state
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_mcp_link_state
+name|OSAL_UNUSED
 modifier|*
 name|p_link
 parameter_list|,
 name|struct
 name|ecore_bulletin_content
+name|OSAL_UNUSED
 modifier|*
 name|p_bulletin
 parameter_list|)
@@ -1152,16 +1210,19 @@ name|__ecore_vf_get_link_caps
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_mcp_link_capabilities
+name|OSAL_UNUSED
 modifier|*
 name|p_link_caps
 parameter_list|,
 name|struct
 name|ecore_bulletin_content
+name|OSAL_UNUSED
 modifier|*
 name|p_bulletin
 parameter_list|)
@@ -1177,11 +1238,13 @@ name|ecore_vf_pf_tunnel_param_update
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_tunnel_info
+name|OSAL_UNUSED
 modifier|*
 name|p_tunn
 parameter_list|)
@@ -1200,6 +1263,7 @@ name|ecore_vf_set_vf_start_tunn_update_param
 parameter_list|(
 name|struct
 name|ecore_tunnel_info
+name|OSAL_UNUSED
 modifier|*
 name|p_tun
 parameter_list|)

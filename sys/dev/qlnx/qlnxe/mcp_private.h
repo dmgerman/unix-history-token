@@ -341,7 +341,7 @@ name|DRV_LOAD_TIMEOUT_MASK
 value|0x0000ffff
 define|#
 directive|define
-name|DRV_LOAD_TIMEOUT_SHIFT
+name|DRV_LOAD_TIMEOUT_OFFSET
 value|0
 define|#
 directive|define
@@ -349,7 +349,7 @@ name|DRV_LOAD_NEED_FORCE_MASK
 value|0xffff0000
 define|#
 directive|define
-name|DRV_LOAD_NEED_FORCE_SHIFT
+name|DRV_LOAD_NEED_FORCE_OFFSET
 value|16
 name|struct
 name|load_rsp_stc
@@ -401,7 +401,7 @@ name|DRV_STATE_LOADED_MASK
 value|0x0000ff00
 define|#
 directive|define
-name|DRV_STATE_LOADED_SHIFT
+name|DRV_STATE_LOADED_OFFSET
 value|8
 define|#
 directive|define
@@ -409,7 +409,7 @@ name|DRV_STATE_PF_TRANSITION_MASK
 value|0x00ff0000
 define|#
 directive|define
-name|DRV_STATE_PF_TRANSITION_SHIFT
+name|DRV_STATE_PF_TRANSITION_OFFSET
 value|16
 define|#
 directive|define
@@ -417,7 +417,7 @@ name|DRV_STATE_PF_PHY_INIT_MASK
 value|0xff000000
 define|#
 directive|define
-name|DRV_STATE_PF_PHY_INIT_SHIFT
+name|DRV_STATE_PF_PHY_INIT_OFFSET
 value|24
 block|}
 struct|;
@@ -462,7 +462,7 @@ name|LLDP_LEN_MASK
 value|(0x01ff)
 define|#
 directive|define
-name|LLDP_LEN_SHIFT
+name|LLDP_LEN_OFFSET
 value|(0)
 define|#
 directive|define
@@ -470,7 +470,7 @@ name|LLDP_TYPE_MASK
 value|(0xfe00)
 define|#
 directive|define
-name|LLDP_TYPE_SHIFT
+name|LLDP_TYPE_OFFSET
 value|(9)
 name|u8
 modifier|*
@@ -595,7 +595,7 @@ value|(1516)
 end_define
 
 begin_comment
-comment|/* So it can be divided by 4 */
+comment|/* So it can be devided by 4 */
 end_comment
 
 begin_define
@@ -734,7 +734,7 @@ name|DCBX_MODE_MASK
 value|0x00000010
 define|#
 directive|define
-name|DCBX_MODE_SHIFT
+name|DCBX_MODE_OFFSET
 value|4
 define|#
 directive|define
@@ -750,7 +750,7 @@ name|DCBX_CHANGED_MASK
 value|0x00000f00
 define|#
 directive|define
-name|DCBX_CHANGED_SHIFT
+name|DCBX_CHANGED_OFFSET
 value|8
 define|#
 directive|define
@@ -758,7 +758,7 @@ name|DCBX_CONTROL_CHANGED_MASK
 value|0x00000100
 define|#
 directive|define
-name|DCBX_CONTROL_CHANGED_SHIFT
+name|DCBX_CONTROL_CHANGED_OFFSET
 value|8
 define|#
 directive|define
@@ -766,7 +766,7 @@ name|DCBX_PFC_CHANGED_MASK
 value|0x00000200
 define|#
 directive|define
-name|DCBX_PFC_CHANGED_SHIFT
+name|DCBX_PFC_CHANGED_OFFSET
 value|9
 define|#
 directive|define
@@ -774,7 +774,7 @@ name|DCBX_ETS_CHANGED_MASK
 value|0x00000400
 define|#
 directive|define
-name|DCBX_ETS_CHANGED_SHIFT
+name|DCBX_ETS_CHANGED_OFFSET
 value|10
 define|#
 directive|define
@@ -782,7 +782,7 @@ name|DCBX_APP_CHANGED_MASK
 value|0x00000800
 define|#
 directive|define
-name|DCBX_APP_CHANGED_SHIFT
+name|DCBX_APP_CHANGED_OFFSET
 value|11
 name|u32
 name|seq_no
@@ -822,36 +822,36 @@ name|config
 decl_stmt|;
 define|#
 directive|define
-name|DCI_PORT_CFG_ENABLE_SHIFT
+name|DCI_PORT_CFG_ENABLE_OFFSET
 value|(0)
 define|#
 directive|define
 name|DCI_PORT_CFG_ENABLE_MASK
-value|(1<< DCI_PORT_CFG_ENABLE_SHIFT)
+value|(1<< DCI_PORT_CFG_ENABLE_OFFSET)
 define|#
 directive|define
-name|DCI_PORT_CFG_ENABLE_DIAG_SHIFT
+name|DCI_PORT_CFG_ENABLE_DIAG_OFFSET
 value|(1)
 define|#
 directive|define
 name|DCI_PORT_CFG_ENABLE_DIAG_MASK
-value|(1<< DCI_PORT_CFG_ENABLE_DIAG_SHIFT)
+value|(1<< DCI_PORT_CFG_ENABLE_DIAG_OFFSET)
 define|#
 directive|define
-name|DCI_PORT_CFG_DIAG_L_LOOP_SHIFT
+name|DCI_PORT_CFG_DIAG_L_LOOP_OFFSET
 value|(2)
 define|#
 directive|define
 name|DCI_PORT_CFG_DIAG_L_LOOP_MASK
-value|(1<< DCI_PORT_CFG_DIAG_L_LOOP_SHIFT)
+value|(1<< DCI_PORT_CFG_DIAG_L_LOOP_OFFSET)
 define|#
 directive|define
-name|DCI_PORT_CFG_DIAG_R_LOOP_SHIFT
+name|DCI_PORT_CFG_DIAG_R_LOOP_OFFSET
 value|(3)
 define|#
 directive|define
 name|DCI_PORT_CFG_DIAG_R_LOOP_MASK
-value|(1<< DCI_PORT_CFG_DIAG_R_LOOP_SHIFT)
+value|(1<< DCI_PORT_CFG_DIAG_R_LOOP_OFFSET)
 block|}
 struct|;
 end_struct
@@ -1061,28 +1061,28 @@ name|config
 decl_stmt|;
 define|#
 directive|define
-name|DCI_FUNC_CFG_FNIC_ENABLE_SHIFT
+name|DCI_FUNC_CFG_FNIC_ENABLE_OFFSET
 value|(0)
 define|#
 directive|define
 name|DCI_FUNC_CFG_FNIC_ENABLE_MASK
-value|(1<< DCI_FUNC_CFG_FNIC_ENABLE_SHIFT)
+value|(1<< DCI_FUNC_CFG_FNIC_ENABLE_OFFSET)
 define|#
 directive|define
-name|DCI_FUNC_CFG_OS_MTU_OVERRIDE_SHIFT
+name|DCI_FUNC_CFG_OS_MTU_OVERRIDE_OFFSET
 value|(1)
 define|#
 directive|define
 name|DCI_FUNC_CFG_OS_MTU_OVERRIDE_MASK
-value|(1<< DCI_FUNC_CFG_OS_MTU_OVERRIDE_SHIFT)
+value|(1<< DCI_FUNC_CFG_OS_MTU_OVERRIDE_OFFSET)
 define|#
 directive|define
-name|DCI_FUNC_CFG_DIAG_WOL_ENABLE_SHIFT
+name|DCI_FUNC_CFG_DIAG_WOL_ENABLE_OFFSET
 value|(2)
 define|#
 directive|define
 name|DCI_FUNC_CFG_DIAG_WOL_ENABLE_MASK
-value|(1<< DCI_FUNC_CFG_DIAG_WOL_ENABLE_SHIFT)
+value|(1<< DCI_FUNC_CFG_DIAG_WOL_ENABLE_OFFSET)
 name|u8
 name|drv_state
 decl_stmt|;

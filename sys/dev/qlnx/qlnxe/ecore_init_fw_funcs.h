@@ -26,16 +26,13 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/**  * @brief ecore_qm_pf_mem_size - Prepare QM ILT sizes  *  * Returns the required host memory size in 4KB units.  * Must be called before all QM init HSI functions.  *  * @param pf_id -	physical function ID  * @param num_pf_cids - number of connections used by this PF  * @param num_vf_cids -	number of connections used by VFs of this PF  * @param num_tids -	number of tasks used by this PF  * @param num_pf_pqs -	number of PQs used by this PF  * @param num_vf_pqs -	number of PQs used by VFs of this PF  *  * @return The required host memory size in 4KB units.  */
+comment|/**  * @brief ecore_qm_pf_mem_size - Prepare QM ILT sizes  *  * Returns the required host memory size in 4KB units.  * Must be called before all QM init HSI functions.  *  * @param num_pf_cids - number of connections used by this PF  * @param num_vf_cids -	number of connections used by VFs of this PF  * @param num_tids -	number of tasks used by this PF  * @param num_pf_pqs -	number of PQs used by this PF  * @param num_vf_pqs -	number of PQs used by VFs of this PF  *  * @return The required host memory size in 4KB units.  */
 end_comment
 
 begin_function_decl
 name|u32
 name|ecore_qm_pf_mem_size
 parameter_list|(
-name|u8
-name|pf_id
-parameter_list|,
 name|u32
 name|num_pf_cids
 parameter_list|,
@@ -96,7 +93,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_qm_pf_rt_init - Prepare QM runtime init values for the PF phase  *  * @param p_hwfn -			  HW device data  * @param p_ptt -			  ptt window used for writing the registers  * @param port_id -		  port ID  * @param pf_id -		  PF ID  * @param max_phys_tcs_per_port	- max number of physical TCs per port in HW  * @param is_first_pf -		  1 = first PF in engine, 0 = othwerwise  * @param num_pf_cids -		  number of connections used by this PF  * @param num_vf_cids -		  number of connections used by VFs of this PF  * @param num_tids -		  number of tasks used by this PF  * @param start_pq -		  first Tx PQ ID associated with this PF  * @param num_pf_pqs -		  number of Tx PQs associated with this PF  *				  (non-VF)  * @param num_vf_pqs -		  number of Tx PQs associated with a VF  * @param start_vport -		  first VPORT ID associated with this PF  * @param num_vports -		  number of VPORTs associated with this PF  * @param pf_wfq -		  WFQ weight. if PF WFQ is globally disabled,  *				  the weight must be 0. otherwise, the weight  *				  must be non-zero.  * @param pf_rl -		  rate limit in Mb/sec units. a value of 0  *				  means don't configure. ignored if PF RL is  *				  globally disabled.  * @param pq_params -		  array of size (num_pf_pqs + num_vf_pqs) with  *				  parameters for each Tx PQ associated with the  *				  specified PF.  * @param vport_params -	  array of size num_vports with parameters for  *				  each associated VPORT.  *  * @return 0 on success, -1 on error.  */
+comment|/**  * @brief ecore_qm_pf_rt_init - Prepare QM runtime init values for the PF phase  *  * @param p_hwfn -			  HW device data  * @param p_ptt -			  ptt window used for writing the registers  * @param port_id -		  port ID  * @param pf_id -		  PF ID  * @param max_phys_tcs_per_port	- max number of physical TCs per port in HW  * @param num_pf_cids -		  number of connections used by this PF  * @param num_vf_cids -		  number of connections used by VFs of this PF  * @param num_tids -		  number of tasks used by this PF  * @param start_pq -		  first Tx PQ ID associated with this PF  * @param num_pf_pqs -		  number of Tx PQs associated with this PF  *				  (non-VF)  * @param num_vf_pqs -		  number of Tx PQs associated with a VF  * @param start_vport -		  first VPORT ID associated with this PF  * @param num_vports -		  number of VPORTs associated with this PF  * @param pf_wfq -		  WFQ weight. if PF WFQ is globally disabled,  *				  the weight must be 0. otherwise, the weight  *				  must be non-zero.  * @param pf_rl -		  rate limit in Mb/sec units. a value of 0  *				  means don't configure. ignored if PF RL is  *				  globally disabled.  * @param pq_params -		  array of size (num_pf_pqs + num_vf_pqs) with  *				  parameters for each Tx PQ associated with the  *				  specified PF.  * @param vport_params -	  array of size num_vports with parameters for  *				  each associated VPORT.  *  * @return 0 on success, -1 on error.  */
 end_comment
 
 begin_function_decl
@@ -121,9 +118,6 @@ name|pf_id
 parameter_list|,
 name|u8
 name|max_phys_tcs_per_port
-parameter_list|,
-name|bool
-name|is_first_pf
 parameter_list|,
 name|u32
 name|num_pf_cids
@@ -497,7 +491,7 @@ name|UNUSED_HSI_FUNC
 end_ifndef
 
 begin_comment
-comment|/**  * @brief ecore_set_engine_mf_ovlan_eth_type - Initializes Nig,Prs,Pbf and llh  * ethType Regs to  input ethType. Should Be called once per engine if engine  * is in BD mode.  *  * @param p_hwfn -	    HW device data  * @param p_ptt -     ptt window used for writing the registers.  * @param ethType - etherType to configure  */
+comment|/**  * @brief ecore_set_engine_mf_ovlan_eth_type - Initializes Nig,Prs,Pbf and llh  * ethType Regs to  input ethType. Should Be called once per engine if engine  * is in BD mode.  *  * @param p_hwfn -	    HW device data  * @param ethType - etherType to configure  */
 end_comment
 
 begin_function_decl
@@ -509,11 +503,6 @@ name|ecore_hwfn
 modifier|*
 name|p_hwfn
 parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
-parameter_list|,
 name|u32
 name|ethType
 parameter_list|)
@@ -521,7 +510,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_set_port_mf_ovlan_eth_type - initializes DORQ ethType Regs to  * input ethType. should Be called once per port.  *  * @param p_hwfn -     HW device data  * @param p_ptt -     ptt window used for writing the registers.  * @param ethType - etherType to configure  */
+comment|/**  * @brief ecore_set_port_mf_ovlan_eth_type - initializes DORQ ethType Regs to  * input ethType. should Be called once per port.  *  * @param p_hwfn -     HW device data  * @param ethType - etherType to configure  */
 end_comment
 
 begin_function_decl
@@ -532,11 +521,6 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
 parameter_list|,
 name|u32
 name|ethType
@@ -871,18 +855,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** * @brief ecore_calc_session_ctx_validation - Calcualte validation byte for * session context. * * @param p_ctx_mem -	pointer to context memory. * @param ctx_size -	context size. * @param ctx_type -	context type. * @param cid -		context cid. */
+comment|/**  * @brief ecore_calc_session_ctx_validation - Calcualte validation byte for  * session context.  *  * @param p_ctx_mem -	pointer to context memory.  * @param ctx_size -	context size.  * @param ctx_type -	context type.  * @param cid -		context cid.  */
 end_comment
 
 begin_function_decl
 name|void
 name|ecore_calc_session_ctx_validation
 parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
 name|void
 modifier|*
 name|p_ctx_mem
@@ -900,18 +879,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** * @brief ecore_calc_task_ctx_validation - Calcualte validation byte for task * context. * * @param p_hwfn -		    HW device data * @param p_ctx_mem -	pointer to context memory. * @param ctx_size -	context size. * @param ctx_type -	context type. * @param tid -		    context tid. */
+comment|/**  * @brief ecore_calc_task_ctx_validation - Calcualte validation byte for task  * context.  *  * @param p_ctx_mem -	pointer to context memory.  * @param ctx_size -	context size.  * @param ctx_type -	context type.  * @param tid -		    context tid.  */
 end_comment
 
 begin_function_decl
 name|void
 name|ecore_calc_task_ctx_validation
 parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
 name|void
 modifier|*
 name|p_ctx_mem
@@ -929,7 +903,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** * @brief ecore_memset_session_ctx - Memset session context to 0 while * preserving validation bytes. * * @param p_hwfn -		  HW device data * @param p_ctx_mem - pointer to context memory. * @param ctx_size -  size to initialzie. * @param ctx_type -  context type. */
+comment|/**  * @brief ecore_memset_session_ctx - Memset session context to 0 while  * preserving validation bytes.  *  * @param p_hwfn -		  HW device data  * @param p_ctx_mem - pointer to context memory.  * @param ctx_size -  size to initialzie.  * @param ctx_type -  context type.  */
 end_comment
 
 begin_function_decl
@@ -950,7 +924,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** * @brief ecore_memset_task_ctx - Memset task context to 0 while preserving * validation bytes. * * @param p_ctx_mem - pointer to context memory. * @param ctx_size -  size to initialzie. * @param ctx_type -  context type. */
+comment|/**  * @brief ecore_memset_task_ctx - Memset task context to 0 while preserving  * validation bytes.  *  * @param p_ctx_mem - pointer to context memory.  * @param ctx_size -  size to initialzie.  * @param ctx_type -  context type.  */
 end_comment
 
 begin_function_decl

@@ -112,7 +112,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_sp_pf_update_tunn_cfg - PF Function Tunnel configuration  *					update  Ramrod  *  * This ramrod is sent to update a tunneling configuration  * for a physical function (PF).  *  * @param p_hwfn  * @param p_tunn - pf update tunneling parameters  * @param comp_mode - completion mode  * @param p_comp_data - callback function  *  * @return enum _ecore_status_t  */
+comment|/**  * @brief ecore_sp_pf_update_tunn_cfg - PF Function Tunnel configuration  *					update  Ramrod  *  * This ramrod is sent to update a tunneling configuration  * for a physical function (PF).  *  * @param p_hwfn  * @param p_ptt  * @param p_tunn - pf update tunneling parameters  * @param comp_mode - completion mode  * @param p_comp_data - callback function  *  * @return enum _ecore_status_t  */
 end_comment
 
 begin_function_decl
@@ -124,6 +124,11 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
 parameter_list|,
 name|struct
 name|ecore_tunnel_info

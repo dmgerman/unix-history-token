@@ -376,6 +376,11 @@ name|ecore_hwfn
 modifier|*
 name|p_hwfn
 parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
+parameter_list|,
 name|enum
 name|spq_mode
 name|comp_mode

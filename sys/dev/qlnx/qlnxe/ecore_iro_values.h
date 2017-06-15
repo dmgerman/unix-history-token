@@ -483,7 +483,7 @@ comment|/* TSTORM_SCSI_CMDQ_CONS_OFFSET(cmdq_queue_id) */
 block|{
 literal|0x200
 block|,
-literal|0x10
+literal|0x18
 block|,
 literal|0x8
 block|,
@@ -496,7 +496,7 @@ comment|/* TSTORM_SCSI_BDQ_EXT_PROD_OFFSET(func_id,bdq_id) */
 block|{
 literal|0xb78
 block|,
-literal|0x10
+literal|0x18
 block|,
 literal|0x8
 block|,

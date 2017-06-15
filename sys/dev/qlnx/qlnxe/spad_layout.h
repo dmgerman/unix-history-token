@@ -144,7 +144,7 @@ parameter_list|,
 name|_size
 parameter_list|)
 define|\
-value|(u32)((((u32)(_offset)>> 2)<< OFFSIZE_OFFSET_SHIFT) | \ 	  (((u32)(_size)>> 2)<< OFFSIZE_SIZE_SHIFT))
+value|(u32)((((u32)(_offset)>> 2)<< OFFSIZE_OFFSET_OFFSET) | \ 	  (((u32)(_size)>> 2)<< OFFSIZE_SIZE_OFFSET))
 end_define
 
 begin_enum
@@ -339,7 +339,7 @@ name|AH_PCIE_LINK_PARAMS_LINK_SPEED_MASK
 value|(0x000000ff)
 define|#
 directive|define
-name|AH_PCIE_LINK_PARAMS_LINK_SPEED_SHIFT
+name|AH_PCIE_LINK_PARAMS_LINK_SPEED_OFFSET
 value|(0)
 define|#
 directive|define
@@ -347,7 +347,7 @@ name|AH_PCIE_LINK_PARAMS_LINK_WIDTH_MASK
 value|(0x0000ff00)
 define|#
 directive|define
-name|AH_PCIE_LINK_PARAMS_LINK_WIDTH_SHIFT
+name|AH_PCIE_LINK_PARAMS_LINK_WIDTH_OFFSET
 value|(8)
 define|#
 directive|define
@@ -355,7 +355,7 @@ name|AH_PCIE_LINK_PARAMS_ASPM_MODE_MASK
 value|(0x00ff0000)
 define|#
 directive|define
-name|AH_PCIE_LINK_PARAMS_ASPM_MODE_SHIFT
+name|AH_PCIE_LINK_PARAMS_ASPM_MODE_OFFSET
 value|(16)
 define|#
 directive|define
@@ -363,7 +363,7 @@ name|AH_PCIE_LINK_PARAMS_ASPM_CAP_MASK
 value|(0xff000000)
 define|#
 directive|define
-name|AH_PCIE_LINK_PARAMS_ASPM_CAP_SHIFT
+name|AH_PCIE_LINK_PARAMS_ASPM_CAP_OFFSET
 value|(24)
 define|#
 directive|define
@@ -425,6 +425,10 @@ define|#
 directive|define
 name|FLAGS_NVM_CFG_EFUSE_FAILURE
 value|(1<< 11)
+define|#
+directive|define
+name|FLAGS_POWER_TRANSITION
+value|(1<< 12)
 define|#
 directive|define
 name|FLAGS_OS_DRV_LOADED

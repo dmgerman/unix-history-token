@@ -2169,7 +2169,7 @@ parameter_list|(
 name|flags
 parameter_list|)
 define|\
-value|((((flags)& PARSING_AND_ERR_FLAGS_L3TYPE_MASK) == e_l3Type_ipv4) || \         (((flags)& PARSING_AND_ERR_FLAGS_L3TYPE_MASK) == e_l3Type_ipv6))
+value|((((flags)& PARSING_AND_ERR_FLAGS_L3TYPE_MASK) == e_l3_type_ipv4) || \         (((flags)& PARSING_AND_ERR_FLAGS_L3TYPE_MASK) == e_l3_type_ipv6))
 end_define
 
 begin_define

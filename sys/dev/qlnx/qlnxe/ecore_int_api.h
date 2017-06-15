@@ -15,6 +15,18 @@ directive|define
 name|__ECORE_INT_API_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|"common_hsi.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -76,7 +88,7 @@ struct|struct
 name|ecore_sb_info
 block|{
 name|struct
-name|status_block
+name|status_block_e4
 modifier|*
 name|sb_virt
 decl_stmt|;
@@ -138,7 +150,7 @@ decl_stmt|;
 name|u16
 name|pi
 index|[
-name|PIS_PER_SB
+name|PIS_PER_SB_E4
 index|]
 decl_stmt|;
 block|}
@@ -208,7 +220,7 @@ operator|->
 name|prod_index
 argument_list|)
 operator|&
-name|STATUS_BLOCK_PROD_INDEX_MASK
+name|STATUS_BLOCK_E4_PROD_INDEX_MASK
 expr_stmt|;
 if|if
 condition|(
@@ -544,6 +556,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

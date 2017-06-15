@@ -198,49 +198,49 @@ begin_define
 define|#
 directive|define
 name|CAU_REG_SB_VAR_MEMORY_RT_OFFSET
-value|761
+value|1049
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAU_REG_SB_VAR_MEMORY_RT_SIZE
-value|736
+value|1024
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAU_REG_SB_VAR_MEMORY_RT_OFFSET
-value|761
+value|1049
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAU_REG_SB_VAR_MEMORY_RT_SIZE
-value|736
+value|1024
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAU_REG_SB_ADDR_MEMORY_RT_OFFSET
-value|1497
+value|2073
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAU_REG_SB_ADDR_MEMORY_RT_SIZE
-value|736
+value|1024
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAU_REG_PI_MEMORY_RT_OFFSET
-value|2233
+value|3097
 end_define
 
 begin_define
@@ -254,119 +254,119 @@ begin_define
 define|#
 directive|define
 name|PRS_REG_SEARCH_RESP_INITIATOR_TYPE_RT_OFFSET
-value|6649
+value|7513
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_TASK_ID_MAX_INITIATOR_PF_RT_OFFSET
-value|6650
+value|7514
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_TASK_ID_MAX_INITIATOR_VF_RT_OFFSET
-value|6651
+value|7515
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_TASK_ID_MAX_TARGET_PF_RT_OFFSET
-value|6652
+value|7516
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_TASK_ID_MAX_TARGET_VF_RT_OFFSET
-value|6653
+value|7517
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_SEARCH_TCP_RT_OFFSET
-value|6654
+value|7518
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_SEARCH_FCOE_RT_OFFSET
-value|6655
+value|7519
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_SEARCH_ROCE_RT_OFFSET
-value|6656
+value|7520
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_ROCE_DEST_QP_MAX_VF_RT_OFFSET
-value|6657
+value|7521
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_ROCE_DEST_QP_MAX_PF_RT_OFFSET
-value|6658
+value|7522
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_SEARCH_OPENFLOW_RT_OFFSET
-value|6659
+value|7523
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_SEARCH_NON_IP_AS_OPENFLOW_RT_OFFSET
-value|6660
+value|7524
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_OPENFLOW_SUPPORT_ONLY_KNOWN_OVER_IP_RT_OFFSET
-value|6661
+value|7525
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_OPENFLOW_SEARCH_KEY_MASK_RT_OFFSET
-value|6662
+value|7526
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_TAG_ETHERTYPE_0_RT_OFFSET
-value|6663
+value|7527
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRS_REG_LIGHT_L2_ETHERTYPE_EN_RT_OFFSET
-value|6664
+value|7528
 end_define
 
 begin_define
 define|#
 directive|define
 name|SRC_REG_FIRSTFREE_RT_OFFSET
-value|6665
+value|7529
 end_define
 
 begin_define
@@ -380,7 +380,7 @@ begin_define
 define|#
 directive|define
 name|SRC_REG_LASTFREE_RT_OFFSET
-value|6667
+value|7531
 end_define
 
 begin_define
@@ -394,238 +394,238 @@ begin_define
 define|#
 directive|define
 name|SRC_REG_COUNTFREE_RT_OFFSET
-value|6669
+value|7533
 end_define
 
 begin_define
 define|#
 directive|define
 name|SRC_REG_NUMBER_HASH_BITS_RT_OFFSET
-value|6670
+value|7534
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUT_P_SIZE_RT_OFFSET
-value|6671
+value|7535
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUC_P_SIZE_RT_OFFSET
-value|6672
+value|7536
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_TM_P_SIZE_RT_OFFSET
-value|6673
+value|7537
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_QM_P_SIZE_RT_OFFSET
-value|6674
+value|7538
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_SRC_P_SIZE_RT_OFFSET
-value|6675
+value|7539
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_TSDM_P_SIZE_RT_OFFSET
-value|6676
+value|7540
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_TM_FIRST_ILT_RT_OFFSET
-value|6677
+value|7541
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_TM_LAST_ILT_RT_OFFSET
-value|6678
+value|7542
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_QM_FIRST_ILT_RT_OFFSET
-value|6679
+value|7543
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_QM_LAST_ILT_RT_OFFSET
-value|6680
+value|7544
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_SRC_FIRST_ILT_RT_OFFSET
-value|6681
+value|7545
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_SRC_LAST_ILT_RT_OFFSET
-value|6682
+value|7546
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUC_FIRST_ILT_RT_OFFSET
-value|6683
+value|7547
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUC_LAST_ILT_RT_OFFSET
-value|6684
+value|7548
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUT_FIRST_ILT_RT_OFFSET
-value|6685
+value|7549
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUT_LAST_ILT_RT_OFFSET
-value|6686
+value|7550
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_TSDM_FIRST_ILT_RT_OFFSET
-value|6687
+value|7551
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_TSDM_LAST_ILT_RT_OFFSET
-value|6688
+value|7552
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_TM_NUMBER_OF_PF_BLOCKS_RT_OFFSET
-value|6689
+value|7553
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUT_NUMBER_OF_PF_BLOCKS_RT_OFFSET
-value|6690
+value|7554
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUC_NUMBER_OF_PF_BLOCKS_RT_OFFSET
-value|6691
+value|7555
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_TM_VF_BLOCKS_RT_OFFSET
-value|6692
+value|7556
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUT_VF_BLOCKS_RT_OFFSET
-value|6693
+value|7557
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUC_VF_BLOCKS_RT_OFFSET
-value|6694
+value|7558
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_TM_BLOCKS_FACTOR_RT_OFFSET
-value|6695
+value|7559
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUT_BLOCKS_FACTOR_RT_OFFSET
-value|6696
+value|7560
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_CDUC_BLOCKS_FACTOR_RT_OFFSET
-value|6697
+value|7561
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_VF_BASE_RT_OFFSET
-value|6698
+value|7562
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_VF_LAST_ILT_RT_OFFSET
-value|6699
+value|7563
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_DRAM_ALIGN_WR_RT_OFFSET
-value|6700
+value|7564
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_DRAM_ALIGN_RD_RT_OFFSET
-value|6701
+value|7565
 end_define
 
 begin_define
 define|#
 directive|define
 name|PSWRQ2_REG_ILT_MEMORY_RT_OFFSET
-value|6702
+value|7566
 end_define
 
 begin_define
@@ -639,91 +639,91 @@ begin_define
 define|#
 directive|define
 name|PGLUE_REG_B_VF_BASE_RT_OFFSET
-value|28702
+value|29566
 end_define
 
 begin_define
 define|#
 directive|define
 name|PGLUE_REG_B_MSDM_OFFSET_MASK_B_RT_OFFSET
-value|28703
+value|29567
 end_define
 
 begin_define
 define|#
 directive|define
 name|PGLUE_REG_B_MSDM_VF_SHIFT_B_RT_OFFSET
-value|28704
+value|29568
 end_define
 
 begin_define
 define|#
 directive|define
 name|PGLUE_REG_B_CACHE_LINE_SIZE_RT_OFFSET
-value|28705
+value|29569
 end_define
 
 begin_define
 define|#
 directive|define
 name|PGLUE_REG_B_PF_BAR0_SIZE_RT_OFFSET
-value|28706
+value|29570
 end_define
 
 begin_define
 define|#
 directive|define
 name|PGLUE_REG_B_PF_BAR1_SIZE_RT_OFFSET
-value|28707
+value|29571
 end_define
 
 begin_define
 define|#
 directive|define
 name|PGLUE_REG_B_VF_BAR1_SIZE_RT_OFFSET
-value|28708
+value|29572
 end_define
 
 begin_define
 define|#
 directive|define
 name|TM_REG_VF_ENABLE_CONN_RT_OFFSET
-value|28709
+value|29573
 end_define
 
 begin_define
 define|#
 directive|define
 name|TM_REG_PF_ENABLE_CONN_RT_OFFSET
-value|28710
+value|29574
 end_define
 
 begin_define
 define|#
 directive|define
 name|TM_REG_PF_ENABLE_TASK_RT_OFFSET
-value|28711
+value|29575
 end_define
 
 begin_define
 define|#
 directive|define
 name|TM_REG_GROUP_SIZE_RESOLUTION_CONN_RT_OFFSET
-value|28712
+value|29576
 end_define
 
 begin_define
 define|#
 directive|define
 name|TM_REG_GROUP_SIZE_RESOLUTION_TASK_RT_OFFSET
-value|28713
+value|29577
 end_define
 
 begin_define
 define|#
 directive|define
 name|TM_REG_CONFIG_CONN_MEM_RT_OFFSET
-value|28714
+value|29578
 end_define
 
 begin_define
@@ -737,7 +737,7 @@ begin_define
 define|#
 directive|define
 name|TM_REG_CONFIG_TASK_MEM_RT_OFFSET
-value|29130
+value|29994
 end_define
 
 begin_define
@@ -751,476 +751,476 @@ begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZE_0_RT_OFFSET
-value|29738
+value|30602
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZE_1_RT_OFFSET
-value|29739
+value|30603
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZE_2_RT_OFFSET
-value|29740
+value|30604
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_0_RT_OFFSET
-value|29741
+value|30605
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_1_RT_OFFSET
-value|29742
+value|30606
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_2_RT_OFFSET
-value|29743
+value|30607
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_3_RT_OFFSET
-value|29744
+value|30608
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_4_RT_OFFSET
-value|29745
+value|30609
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_5_RT_OFFSET
-value|29746
+value|30610
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_6_RT_OFFSET
-value|29747
+value|30611
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_7_RT_OFFSET
-value|29748
+value|30612
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_8_RT_OFFSET
-value|29749
+value|30613
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_9_RT_OFFSET
-value|29750
+value|30614
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_10_RT_OFFSET
-value|29751
+value|30615
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_11_RT_OFFSET
-value|29752
+value|30616
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_12_RT_OFFSET
-value|29753
+value|30617
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_13_RT_OFFSET
-value|29754
+value|30618
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_14_RT_OFFSET
-value|29755
+value|30619
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_15_RT_OFFSET
-value|29756
+value|30620
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_16_RT_OFFSET
-value|29757
+value|30621
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_17_RT_OFFSET
-value|29758
+value|30622
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_18_RT_OFFSET
-value|29759
+value|30623
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_19_RT_OFFSET
-value|29760
+value|30624
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_20_RT_OFFSET
-value|29761
+value|30625
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_21_RT_OFFSET
-value|29762
+value|30626
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_22_RT_OFFSET
-value|29763
+value|30627
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_23_RT_OFFSET
-value|29764
+value|30628
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_24_RT_OFFSET
-value|29765
+value|30629
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_25_RT_OFFSET
-value|29766
+value|30630
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_26_RT_OFFSET
-value|29767
+value|30631
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_27_RT_OFFSET
-value|29768
+value|30632
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_28_RT_OFFSET
-value|29769
+value|30633
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_29_RT_OFFSET
-value|29770
+value|30634
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_30_RT_OFFSET
-value|29771
+value|30635
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_31_RT_OFFSET
-value|29772
+value|30636
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_32_RT_OFFSET
-value|29773
+value|30637
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_33_RT_OFFSET
-value|29774
+value|30638
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_34_RT_OFFSET
-value|29775
+value|30639
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_35_RT_OFFSET
-value|29776
+value|30640
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_36_RT_OFFSET
-value|29777
+value|30641
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_37_RT_OFFSET
-value|29778
+value|30642
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_38_RT_OFFSET
-value|29779
+value|30643
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_39_RT_OFFSET
-value|29780
+value|30644
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_40_RT_OFFSET
-value|29781
+value|30645
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_41_RT_OFFSET
-value|29782
+value|30646
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_42_RT_OFFSET
-value|29783
+value|30647
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_43_RT_OFFSET
-value|29784
+value|30648
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_44_RT_OFFSET
-value|29785
+value|30649
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_45_RT_OFFSET
-value|29786
+value|30650
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_46_RT_OFFSET
-value|29787
+value|30651
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_47_RT_OFFSET
-value|29788
+value|30652
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_48_RT_OFFSET
-value|29789
+value|30653
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_49_RT_OFFSET
-value|29790
+value|30654
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_50_RT_OFFSET
-value|29791
+value|30655
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_51_RT_OFFSET
-value|29792
+value|30656
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_52_RT_OFFSET
-value|29793
+value|30657
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_53_RT_OFFSET
-value|29794
+value|30658
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_54_RT_OFFSET
-value|29795
+value|30659
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_55_RT_OFFSET
-value|29796
+value|30660
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_56_RT_OFFSET
-value|29797
+value|30661
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_57_RT_OFFSET
-value|29798
+value|30662
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_58_RT_OFFSET
-value|29799
+value|30663
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_59_RT_OFFSET
-value|29800
+value|30664
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_60_RT_OFFSET
-value|29801
+value|30665
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_61_RT_OFFSET
-value|29802
+value|30666
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_62_RT_OFFSET
-value|29803
+value|30667
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_MAXPQSIZETXSEL_63_RT_OFFSET
-value|29804
+value|30668
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_BASEADDROTHERPQ_RT_OFFSET
-value|29805
+value|30669
 end_define
 
 begin_define
@@ -1234,840 +1234,840 @@ begin_define
 define|#
 directive|define
 name|QM_REG_AFULLQMBYPTHRPFWFQ_RT_OFFSET
-value|29933
+value|30797
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_AFULLQMBYPTHRVPWFQ_RT_OFFSET
-value|29934
+value|30798
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_AFULLQMBYPTHRPFRL_RT_OFFSET
-value|29935
+value|30799
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_AFULLQMBYPTHRGLBLRL_RT_OFFSET
-value|29936
+value|30800
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_AFULLOPRTNSTCCRDMASK_RT_OFFSET
-value|29937
+value|30801
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_0_RT_OFFSET
-value|29938
+value|30802
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_1_RT_OFFSET
-value|29939
+value|30803
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_2_RT_OFFSET
-value|29940
+value|30804
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_3_RT_OFFSET
-value|29941
+value|30805
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_4_RT_OFFSET
-value|29942
+value|30806
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_5_RT_OFFSET
-value|29943
+value|30807
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_6_RT_OFFSET
-value|29944
+value|30808
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_7_RT_OFFSET
-value|29945
+value|30809
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_8_RT_OFFSET
-value|29946
+value|30810
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_9_RT_OFFSET
-value|29947
+value|30811
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_10_RT_OFFSET
-value|29948
+value|30812
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_11_RT_OFFSET
-value|29949
+value|30813
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_12_RT_OFFSET
-value|29950
+value|30814
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_13_RT_OFFSET
-value|29951
+value|30815
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_14_RT_OFFSET
-value|29952
+value|30816
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERPQGRP_15_RT_OFFSET
-value|29953
+value|30817
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERGRPWEIGHT_0_RT_OFFSET
-value|29954
+value|30818
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERGRPWEIGHT_1_RT_OFFSET
-value|29955
+value|30819
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERGRPWEIGHT_2_RT_OFFSET
-value|29956
+value|30820
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRROTHERGRPWEIGHT_3_RT_OFFSET
-value|29957
+value|30821
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRRTXGRPWEIGHT_0_RT_OFFSET
-value|29958
+value|30822
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WRRTXGRPWEIGHT_1_RT_OFFSET
-value|29959
+value|30823
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_0_RT_OFFSET
-value|29960
+value|30824
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_1_RT_OFFSET
-value|29961
+value|30825
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_2_RT_OFFSET
-value|29962
+value|30826
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_3_RT_OFFSET
-value|29963
+value|30827
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_4_RT_OFFSET
-value|29964
+value|30828
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_5_RT_OFFSET
-value|29965
+value|30829
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_6_RT_OFFSET
-value|29966
+value|30830
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_7_RT_OFFSET
-value|29967
+value|30831
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_8_RT_OFFSET
-value|29968
+value|30832
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_9_RT_OFFSET
-value|29969
+value|30833
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_10_RT_OFFSET
-value|29970
+value|30834
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_11_RT_OFFSET
-value|29971
+value|30835
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_12_RT_OFFSET
-value|29972
+value|30836
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_13_RT_OFFSET
-value|29973
+value|30837
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_14_RT_OFFSET
-value|29974
+value|30838
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_15_RT_OFFSET
-value|29975
+value|30839
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_16_RT_OFFSET
-value|29976
+value|30840
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_17_RT_OFFSET
-value|29977
+value|30841
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_18_RT_OFFSET
-value|29978
+value|30842
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_19_RT_OFFSET
-value|29979
+value|30843
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_20_RT_OFFSET
-value|29980
+value|30844
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_21_RT_OFFSET
-value|29981
+value|30845
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_22_RT_OFFSET
-value|29982
+value|30846
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_23_RT_OFFSET
-value|29983
+value|30847
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_24_RT_OFFSET
-value|29984
+value|30848
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_25_RT_OFFSET
-value|29985
+value|30849
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_26_RT_OFFSET
-value|29986
+value|30850
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_27_RT_OFFSET
-value|29987
+value|30851
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_28_RT_OFFSET
-value|29988
+value|30852
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_29_RT_OFFSET
-value|29989
+value|30853
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_30_RT_OFFSET
-value|29990
+value|30854
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_31_RT_OFFSET
-value|29991
+value|30855
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_32_RT_OFFSET
-value|29992
+value|30856
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_33_RT_OFFSET
-value|29993
+value|30857
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_34_RT_OFFSET
-value|29994
+value|30858
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_35_RT_OFFSET
-value|29995
+value|30859
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_36_RT_OFFSET
-value|29996
+value|30860
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_37_RT_OFFSET
-value|29997
+value|30861
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_38_RT_OFFSET
-value|29998
+value|30862
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_39_RT_OFFSET
-value|29999
+value|30863
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_40_RT_OFFSET
-value|30000
+value|30864
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_41_RT_OFFSET
-value|30001
+value|30865
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_42_RT_OFFSET
-value|30002
+value|30866
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_43_RT_OFFSET
-value|30003
+value|30867
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_44_RT_OFFSET
-value|30004
+value|30868
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_45_RT_OFFSET
-value|30005
+value|30869
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_46_RT_OFFSET
-value|30006
+value|30870
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_47_RT_OFFSET
-value|30007
+value|30871
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_48_RT_OFFSET
-value|30008
+value|30872
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_49_RT_OFFSET
-value|30009
+value|30873
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_50_RT_OFFSET
-value|30010
+value|30874
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_51_RT_OFFSET
-value|30011
+value|30875
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_52_RT_OFFSET
-value|30012
+value|30876
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_53_RT_OFFSET
-value|30013
+value|30877
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_54_RT_OFFSET
-value|30014
+value|30878
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_55_RT_OFFSET
-value|30015
+value|30879
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_56_RT_OFFSET
-value|30016
+value|30880
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_57_RT_OFFSET
-value|30017
+value|30881
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_58_RT_OFFSET
-value|30018
+value|30882
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_59_RT_OFFSET
-value|30019
+value|30883
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_60_RT_OFFSET
-value|30020
+value|30884
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_61_RT_OFFSET
-value|30021
+value|30885
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_62_RT_OFFSET
-value|30022
+value|30886
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQTX2PF_63_RT_OFFSET
-value|30023
+value|30887
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_0_RT_OFFSET
-value|30024
+value|30888
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_1_RT_OFFSET
-value|30025
+value|30889
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_2_RT_OFFSET
-value|30026
+value|30890
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_3_RT_OFFSET
-value|30027
+value|30891
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_4_RT_OFFSET
-value|30028
+value|30892
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_5_RT_OFFSET
-value|30029
+value|30893
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_6_RT_OFFSET
-value|30030
+value|30894
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_7_RT_OFFSET
-value|30031
+value|30895
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_8_RT_OFFSET
-value|30032
+value|30896
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_9_RT_OFFSET
-value|30033
+value|30897
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_10_RT_OFFSET
-value|30034
+value|30898
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_11_RT_OFFSET
-value|30035
+value|30899
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_12_RT_OFFSET
-value|30036
+value|30900
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_13_RT_OFFSET
-value|30037
+value|30901
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_14_RT_OFFSET
-value|30038
+value|30902
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_PQOTHER2PF_15_RT_OFFSET
-value|30039
+value|30903
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIOD_0_RT_OFFSET
-value|30040
+value|30904
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIOD_1_RT_OFFSET
-value|30041
+value|30905
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIODTIMER_0_RT_OFFSET
-value|30042
+value|30906
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIODTIMER_1_RT_OFFSET
-value|30043
+value|30907
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIODSEL_0_RT_OFFSET
-value|30044
+value|30908
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIODSEL_1_RT_OFFSET
-value|30045
+value|30909
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIODSEL_2_RT_OFFSET
-value|30046
+value|30910
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIODSEL_3_RT_OFFSET
-value|30047
+value|30911
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIODSEL_4_RT_OFFSET
-value|30048
+value|30912
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIODSEL_5_RT_OFFSET
-value|30049
+value|30913
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIODSEL_6_RT_OFFSET
-value|30050
+value|30914
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLPERIODSEL_7_RT_OFFSET
-value|30051
+value|30915
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLINCVAL_RT_OFFSET
-value|30052
+value|30916
 end_define
 
 begin_define
@@ -2081,7 +2081,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLUPPERBOUND_RT_OFFSET
-value|30308
+value|31172
 end_define
 
 begin_define
@@ -2095,7 +2095,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLCRD_RT_OFFSET
-value|30564
+value|31428
 end_define
 
 begin_define
@@ -2109,28 +2109,28 @@ begin_define
 define|#
 directive|define
 name|QM_REG_RLGLBLENABLE_RT_OFFSET
-value|30820
+value|31684
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLPFPERIOD_RT_OFFSET
-value|30821
+value|31685
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLPFPERIODTIMER_RT_OFFSET
-value|30822
+value|31686
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLPFINCVAL_RT_OFFSET
-value|30823
+value|31687
 end_define
 
 begin_define
@@ -2144,7 +2144,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_RLPFUPPERBOUND_RT_OFFSET
-value|30839
+value|31703
 end_define
 
 begin_define
@@ -2158,7 +2158,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_RLPFCRD_RT_OFFSET
-value|30855
+value|31719
 end_define
 
 begin_define
@@ -2172,21 +2172,21 @@ begin_define
 define|#
 directive|define
 name|QM_REG_RLPFENABLE_RT_OFFSET
-value|30871
+value|31735
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_RLPFVOQENABLE_RT_OFFSET
-value|30872
+value|31736
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WFQPFWEIGHT_RT_OFFSET
-value|30873
+value|31737
 end_define
 
 begin_define
@@ -2200,7 +2200,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_WFQPFUPPERBOUND_RT_OFFSET
-value|30889
+value|31753
 end_define
 
 begin_define
@@ -2214,7 +2214,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_WFQPFCRD_RT_OFFSET
-value|30905
+value|31769
 end_define
 
 begin_define
@@ -2228,21 +2228,21 @@ begin_define
 define|#
 directive|define
 name|QM_REG_WFQPFENABLE_RT_OFFSET
-value|31161
+value|32025
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_WFQVPENABLE_RT_OFFSET
-value|31162
+value|32026
 end_define
 
 begin_define
 define|#
 directive|define
 name|QM_REG_BASEADDRTXPQ_RT_OFFSET
-value|31163
+value|32027
 end_define
 
 begin_define
@@ -2256,7 +2256,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_TXPQMAP_RT_OFFSET
-value|31675
+value|32539
 end_define
 
 begin_define
@@ -2270,7 +2270,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_WFQVPWEIGHT_RT_OFFSET
-value|32187
+value|33051
 end_define
 
 begin_define
@@ -2284,7 +2284,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_WFQVPCRD_RT_OFFSET
-value|32699
+value|33563
 end_define
 
 begin_define
@@ -2298,7 +2298,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_WFQVPMAP_RT_OFFSET
-value|33211
+value|34075
 end_define
 
 begin_define
@@ -2312,7 +2312,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_WFQPFCRD_MSB_RT_OFFSET
-value|33723
+value|34587
 end_define
 
 begin_define
@@ -2326,7 +2326,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_VOQCRDLINE_RT_OFFSET
-value|34043
+value|34907
 end_define
 
 begin_define
@@ -2340,7 +2340,7 @@ begin_define
 define|#
 directive|define
 name|QM_REG_VOQINITCRDLINE_RT_OFFSET
-value|34079
+value|34943
 end_define
 
 begin_define
@@ -2354,56 +2354,56 @@ begin_define
 define|#
 directive|define
 name|NIG_REG_TAG_ETHERTYPE_0_RT_OFFSET
-value|34115
+value|34979
 end_define
 
 begin_define
 define|#
 directive|define
 name|NIG_REG_OUTER_TAG_VALUE_LIST0_RT_OFFSET
-value|34116
+value|34980
 end_define
 
 begin_define
 define|#
 directive|define
 name|NIG_REG_OUTER_TAG_VALUE_LIST1_RT_OFFSET
-value|34117
+value|34981
 end_define
 
 begin_define
 define|#
 directive|define
 name|NIG_REG_OUTER_TAG_VALUE_LIST2_RT_OFFSET
-value|34118
+value|34982
 end_define
 
 begin_define
 define|#
 directive|define
 name|NIG_REG_OUTER_TAG_VALUE_LIST3_RT_OFFSET
-value|34119
+value|34983
 end_define
 
 begin_define
 define|#
 directive|define
 name|NIG_REG_OUTER_TAG_VALUE_MASK_RT_OFFSET
-value|34120
+value|34984
 end_define
 
 begin_define
 define|#
 directive|define
 name|NIG_REG_LLH_FUNC_TAGMAC_CLS_TYPE_RT_OFFSET
-value|34121
+value|34985
 end_define
 
 begin_define
 define|#
 directive|define
 name|NIG_REG_LLH_FUNC_TAG_EN_RT_OFFSET
-value|34122
+value|34986
 end_define
 
 begin_define
@@ -2417,7 +2417,7 @@ begin_define
 define|#
 directive|define
 name|NIG_REG_LLH_FUNC_TAG_HDR_SEL_RT_OFFSET
-value|34126
+value|34990
 end_define
 
 begin_define
@@ -2431,7 +2431,7 @@ begin_define
 define|#
 directive|define
 name|NIG_REG_LLH_FUNC_TAG_VALUE_RT_OFFSET
-value|34130
+value|34994
 end_define
 
 begin_define
@@ -2445,14 +2445,14 @@ begin_define
 define|#
 directive|define
 name|NIG_REG_LLH_FUNC_NO_TAG_RT_OFFSET
-value|34134
+value|34998
 end_define
 
 begin_define
 define|#
 directive|define
 name|NIG_REG_LLH_FUNC_FILTER_VALUE_RT_OFFSET
-value|34135
+value|34999
 end_define
 
 begin_define
@@ -2466,7 +2466,7 @@ begin_define
 define|#
 directive|define
 name|NIG_REG_LLH_FUNC_FILTER_EN_RT_OFFSET
-value|34167
+value|35031
 end_define
 
 begin_define
@@ -2480,7 +2480,7 @@ begin_define
 define|#
 directive|define
 name|NIG_REG_LLH_FUNC_FILTER_MODE_RT_OFFSET
-value|34183
+value|35047
 end_define
 
 begin_define
@@ -2494,7 +2494,7 @@ begin_define
 define|#
 directive|define
 name|NIG_REG_LLH_FUNC_FILTER_PROTOCOL_TYPE_RT_OFFSET
-value|34199
+value|35063
 end_define
 
 begin_define
@@ -2508,7 +2508,7 @@ begin_define
 define|#
 directive|define
 name|NIG_REG_LLH_FUNC_FILTER_HDR_SEL_RT_OFFSET
-value|34215
+value|35079
 end_define
 
 begin_define
@@ -2522,553 +2522,553 @@ begin_define
 define|#
 directive|define
 name|NIG_REG_TX_EDPM_CTRL_RT_OFFSET
-value|34231
+value|35095
 end_define
 
 begin_define
 define|#
 directive|define
 name|NIG_REG_ROCE_DUPLICATE_TO_HOST_RT_OFFSET
-value|34232
+value|35096
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_CID_ADDR_PARAMS_RT_OFFSET
-value|34233
+value|35097
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_SEGMENT0_PARAMS_RT_OFFSET
-value|34234
+value|35098
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_SEGMENT1_PARAMS_RT_OFFSET
-value|34235
+value|35099
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_PF_SEG0_TYPE_OFFSET_RT_OFFSET
-value|34236
+value|35100
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_PF_SEG1_TYPE_OFFSET_RT_OFFSET
-value|34237
+value|35101
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_PF_SEG2_TYPE_OFFSET_RT_OFFSET
-value|34238
+value|35102
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_PF_SEG3_TYPE_OFFSET_RT_OFFSET
-value|34239
+value|35103
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_PF_FL_SEG0_TYPE_OFFSET_RT_OFFSET
-value|34240
+value|35104
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_PF_FL_SEG1_TYPE_OFFSET_RT_OFFSET
-value|34241
+value|35105
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_PF_FL_SEG2_TYPE_OFFSET_RT_OFFSET
-value|34242
+value|35106
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_PF_FL_SEG3_TYPE_OFFSET_RT_OFFSET
-value|34243
+value|35107
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_VF_SEG_TYPE_OFFSET_RT_OFFSET
-value|34244
+value|35108
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDU_REG_VF_FL_SEG_TYPE_OFFSET_RT_OFFSET
-value|34245
+value|35109
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_TAG_ETHERTYPE_0_RT_OFFSET
-value|34246
+value|35110
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SIZE_RT_OFFSET
-value|34247
+value|35111
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ0_RT_OFFSET
-value|34248
+value|35112
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ0_RT_OFFSET
-value|34249
+value|35113
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ0_RT_OFFSET
-value|34250
+value|35114
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ1_RT_OFFSET
-value|34251
+value|35115
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ1_RT_OFFSET
-value|34252
+value|35116
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ1_RT_OFFSET
-value|34253
+value|35117
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ2_RT_OFFSET
-value|34254
+value|35118
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ2_RT_OFFSET
-value|34255
+value|35119
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ2_RT_OFFSET
-value|34256
+value|35120
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ3_RT_OFFSET
-value|34257
+value|35121
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ3_RT_OFFSET
-value|34258
+value|35122
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ3_RT_OFFSET
-value|34259
+value|35123
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ4_RT_OFFSET
-value|34260
+value|35124
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ4_RT_OFFSET
-value|34261
+value|35125
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ4_RT_OFFSET
-value|34262
+value|35126
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ5_RT_OFFSET
-value|34263
+value|35127
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ5_RT_OFFSET
-value|34264
+value|35128
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ5_RT_OFFSET
-value|34265
+value|35129
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ6_RT_OFFSET
-value|34266
+value|35130
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ6_RT_OFFSET
-value|34267
+value|35131
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ6_RT_OFFSET
-value|34268
+value|35132
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ7_RT_OFFSET
-value|34269
+value|35133
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ7_RT_OFFSET
-value|34270
+value|35134
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ7_RT_OFFSET
-value|34271
+value|35135
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ8_RT_OFFSET
-value|34272
+value|35136
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ8_RT_OFFSET
-value|34273
+value|35137
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ8_RT_OFFSET
-value|34274
+value|35138
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ9_RT_OFFSET
-value|34275
+value|35139
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ9_RT_OFFSET
-value|34276
+value|35140
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ9_RT_OFFSET
-value|34277
+value|35141
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ10_RT_OFFSET
-value|34278
+value|35142
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ10_RT_OFFSET
-value|34279
+value|35143
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ10_RT_OFFSET
-value|34280
+value|35144
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ11_RT_OFFSET
-value|34281
+value|35145
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ11_RT_OFFSET
-value|34282
+value|35146
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ11_RT_OFFSET
-value|34283
+value|35147
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ12_RT_OFFSET
-value|34284
+value|35148
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ12_RT_OFFSET
-value|34285
+value|35149
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ12_RT_OFFSET
-value|34286
+value|35150
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ13_RT_OFFSET
-value|34287
+value|35151
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ13_RT_OFFSET
-value|34288
+value|35152
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ13_RT_OFFSET
-value|34289
+value|35153
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ14_RT_OFFSET
-value|34290
+value|35154
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ14_RT_OFFSET
-value|34291
+value|35155
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ14_RT_OFFSET
-value|34292
+value|35156
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ15_RT_OFFSET
-value|34293
+value|35157
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ15_RT_OFFSET
-value|34294
+value|35158
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ15_RT_OFFSET
-value|34295
+value|35159
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ16_RT_OFFSET
-value|34296
+value|35160
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ16_RT_OFFSET
-value|34297
+value|35161
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ16_RT_OFFSET
-value|34298
+value|35162
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ17_RT_OFFSET
-value|34299
+value|35163
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ17_RT_OFFSET
-value|34300
+value|35164
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ17_RT_OFFSET
-value|34301
+value|35165
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ18_RT_OFFSET
-value|34302
+value|35166
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ18_RT_OFFSET
-value|34303
+value|35167
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ18_RT_OFFSET
-value|34304
+value|35168
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_YCMD_QS_NUM_LINES_VOQ19_RT_OFFSET
-value|34305
+value|35169
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_GUARANTEED_VOQ19_RT_OFFSET
-value|34306
+value|35170
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBF_REG_BTB_SHARED_AREA_SETUP_VOQ19_RT_OFFSET
-value|34307
+value|35171
 end_define
 
 begin_define
 define|#
 directive|define
 name|XCM_REG_CON_PHY_Q3_RT_OFFSET
-value|34308
+value|35172
 end_define
 
 begin_define
 define|#
 directive|define
 name|RUNTIME_ARRAY_SIZE
-value|34309
+value|35173
 end_define
 
 begin_endif
