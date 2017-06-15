@@ -4784,7 +4784,7 @@ name|max_aggs
 operator|=
 name|htole16
 argument_list|(
-literal|2
+literal|7
 argument_list|)
 expr_stmt|;
 comment|/* 	 * TODO: max_agg_timer? 	 * req.mag_agg_timer = htole32(XXX); 	 */
