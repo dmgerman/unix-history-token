@@ -1753,6 +1753,8 @@ decl_stmt|,
 name|size
 decl_stmt|,
 name|mode
+decl_stmt|,
+name|freq
 decl_stmt|;
 specifier|const
 name|char
@@ -2081,7 +2083,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", TClock %dMHz\n"
+literal|", TClock %dMHz"
 argument_list|,
 name|get_tclk
 argument_list|()
@@ -2089,6 +2091,33 @@ operator|/
 literal|1000
 operator|/
 literal|1000
+argument_list|)
+expr_stmt|;
+name|freq
+operator|=
+name|get_cpu_freq
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|freq
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|", Frequency %dMHz"
+argument_list|,
+name|freq
+operator|/
+literal|1000
+operator|/
+literal|1000
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|mode
