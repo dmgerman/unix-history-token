@@ -900,6 +900,20 @@ comment|/// \brief Indent the wrapped braces themselves.
 name|bool
 name|IndentBraces
 decl_stmt|;
+comment|/// \brief If ``false``, empty function body can be put on a single line.
+comment|/// This option is used only if the opening brace of the function has
+comment|/// already been wrapped, i.e. the `AfterFunction` brace wrapping mode is
+comment|/// set, and the function could/should not be put on a single line (as per
+comment|/// `AllowShortFunctionsOnASingleLine` and constructor formatting options).
+comment|/// \code
+comment|///   int f()   vs.   inf f()
+comment|///   {}              {
+comment|///                   }
+comment|/// \endcode
+comment|///
+name|bool
+name|SplitEmptyFunctionBody
+decl_stmt|;
 block|}
 struct|;
 comment|/// \brief Control of individual brace wrapping cases.
@@ -1003,6 +1017,30 @@ comment|///    };
 comment|/// \endcode
 name|bool
 name|BreakBeforeInheritanceComma
+decl_stmt|;
+comment|/// \brief If ``true``, consecutive namespace declarations will be on the same
+comment|/// line. If ``false``, each namespace is declared on a new line.
+comment|/// \code
+comment|///   true:
+comment|///   namespace Foo { namespace Bar {
+comment|///   }}
+comment|///
+comment|///   false:
+comment|///   namespace Foo {
+comment|///   namespace Bar {
+comment|///   }
+comment|///   }
+comment|/// \endcode
+comment|///
+comment|/// If it does not fit on a single line, the overflowing namespaces get
+comment|/// wrapped:
+comment|/// \code
+comment|///   namespace Foo { namespace Bar {
+comment|///   namespace Extra {
+comment|///   }}}
+comment|/// \endcode
+name|bool
+name|CompactNamespaces
 decl_stmt|;
 comment|/// \brief If the constructor initializers don't fit on a line, put each
 comment|/// initializer on its own line.
@@ -1893,6 +1931,12 @@ operator|==
 name|R
 operator|.
 name|BreakConstructorInitializers
+operator|&&
+name|CompactNamespaces
+operator|==
+name|R
+operator|.
+name|CompactNamespaces
 operator|&&
 name|BreakAfterJavaFieldAnnotations
 operator|==

@@ -373,6 +373,59 @@ block|}
 end_function
 
 begin_comment
+comment|// CHECK: define void @t72() [[COLDDEF:#[0-9]+]] {
+end_comment
+
+begin_function_decl
+name|void
+name|t71
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(cold
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|t72
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(cold
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|void
+name|t72
+parameter_list|()
+block|{
+name|t71
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: call void @t71() [[COLDSITE:#[0-9]+]]
+end_comment
+
+begin_comment
+comment|// CHECK: declare void @t71() [[COLDDECL:#[0-9]+]]
+end_comment
+
+begin_comment
 comment|// CHECK: define void @t10() [[NUW]] section "SECT" {
 end_comment
 
@@ -579,6 +632,18 @@ end_comment
 
 begin_comment
 comment|// CHECK: attributes [[NR]] = { noinline noreturn nounwind{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[COLDDEF]] = { cold {{.*}}}
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[COLDDECL]] = { cold {{.*}}}
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[COLDSITE]] = { cold {{.*}}}
 end_comment
 
 end_unit

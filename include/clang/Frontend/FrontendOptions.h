@@ -1074,8 +1074,8 @@ operator|::
 name|string
 name|AuxTriple
 expr_stmt|;
-comment|/// \brief If non-empty, search the pch input file as it was a header
-comment|// included by this file.
+comment|/// \brief If non-empty, search the pch input file as if it was a header
+comment|/// included by this file.
 name|std
 operator|::
 name|string

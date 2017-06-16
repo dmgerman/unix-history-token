@@ -140,6 +140,10 @@ argument_list|)
 block|{}
 comment|/// \brief Replaces the whitespace in front of \p Tok. Only call once for
 comment|/// each \c AnnotatedToken.
+comment|///
+comment|/// \p StartOfTokenColumn is the column at which the token will start after
+comment|/// this replacement. It is needed for determining how \p Spaces is turned
+comment|/// into tabs and spaces for some format styles.
 name|void
 name|replaceWhitespace
 argument_list|(

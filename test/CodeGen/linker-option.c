@@ -4,15 +4,7 @@ comment|// RUN: %clang_cc1 %s --linker-option=/include:foo -triple i686-pc-win32
 end_comment
 
 begin_comment
-comment|// CHECK: !llvm.module.flags = !{{{.*}}}
-end_comment
-
-begin_comment
-comment|// CHECK: !{{[0-9]+}} = !{i32 6, !"Linker Options", ![[link_opts:[0-9]+]]}
-end_comment
-
-begin_comment
-comment|// CHECK: ![[link_opts]] = !{![[msvcrt:[0-9]+]]}
+comment|// CHECK: !llvm.linker.options = !{![[msvcrt:[0-9]+]]}
 end_comment
 
 begin_comment

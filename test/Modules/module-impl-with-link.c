@@ -14,10 +14,6 @@ file|"foo.h"
 end_include
 
 begin_comment
-comment|// CHECK: !{{[0-9]+}} = !{i32 6, !"Linker Options", ![[LINK_OPTIONS:[0-9]+]]}
-end_comment
-
-begin_comment
 comment|// Make sure we don't generate linker option for module Clib since this TU is
 end_comment
 
@@ -26,7 +22,7 @@ comment|// an implementation of Clib.
 end_comment
 
 begin_comment
-comment|// CHECK: ![[LINK_OPTIONS]] = !{}
+comment|// CHECK: !llvm.linker.options = !{}
 end_comment
 
 end_unit

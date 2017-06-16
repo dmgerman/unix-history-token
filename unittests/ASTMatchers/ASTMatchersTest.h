@@ -1661,6 +1661,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 name|EXPECT_EQ
 argument_list|(
 name|ExpectedCount
@@ -1668,6 +1669,7 @@ argument_list|,
 name|Count
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1676,6 +1678,7 @@ operator|.
 name|empty
 argument_list|()
 condition|)
+block|{
 name|EXPECT_EQ
 argument_list|(
 name|ExpectedName
@@ -1683,6 +1686,7 @@ argument_list|,
 name|Name
 argument_list|)
 expr_stmt|;
+block|}
 name|Count
 operator|=
 literal|0
@@ -1865,6 +1869,7 @@ operator|.
 name|end
 argument_list|()
 condition|)
+block|{
 name|EXPECT_EQ
 argument_list|(
 name|Nodes
@@ -1889,6 +1894,7 @@ operator|(
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|true
 return|;
