@@ -191,6 +191,10 @@ name|Reboothowto
 block|,
 name|Rtpriofunc
 block|,
+name|Schedpolicy
+block|,
+name|Schedparam
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
