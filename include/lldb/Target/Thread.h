@@ -2467,6 +2467,11 @@ name|num_frames_with_source
 parameter_list|,
 name|bool
 name|stop_format
+parameter_list|,
+name|bool
+name|only_stacks
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|size_t

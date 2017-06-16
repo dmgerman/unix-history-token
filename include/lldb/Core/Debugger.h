@@ -995,6 +995,15 @@ name|FormatEntity
 operator|::
 name|Entry
 operator|*
+name|GetFrameFormatUnique
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|FormatEntity
+operator|::
+name|Entry
+operator|*
 name|GetThreadFormat
 argument_list|()
 specifier|const
