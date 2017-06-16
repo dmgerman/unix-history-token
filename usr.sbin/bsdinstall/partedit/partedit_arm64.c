@@ -22,7 +22,7 @@ file|"partedit.h"
 end_include
 
 begin_comment
-comment|/* EFI partition size in KB */
+comment|/* EFI partition size in bytes */
 end_comment
 
 begin_define
