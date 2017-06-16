@@ -135,6 +135,11 @@ name|getStreamSize
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|containsIdStream
+argument_list|()
+specifier|const
+expr_stmt|;
 name|PdbRaw_ImplVer
 name|getVersion
 argument_list|()

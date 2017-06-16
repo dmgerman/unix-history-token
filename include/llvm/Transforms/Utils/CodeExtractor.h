@@ -277,23 +277,62 @@ name|Allocas
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Check if life time marker nodes can be hoisted/sunk into the outline
+comment|/// region.
+comment|///
+comment|/// Returns true if it is safe to do the code motion.
+name|bool
+name|isLegalToShrinkwrapLifetimeMarkers
+argument_list|(
+name|Instruction
+operator|*
+name|AllocaAddr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Find the set of allocas whose life ranges are contained within the
 comment|/// outlined region.
 comment|///
 comment|/// Allocas which have life_time markers contained in the outlined region
 comment|/// should be pushed to the outlined function. The address bitcasts that
 comment|/// are used by the lifetime markers are also candidates for shrink-
-comment|/// wrapping. The instructions that need to be sinked are collected in
+comment|/// wrapping. The instructions that need to be sunk are collected in
 comment|/// 'Allocas'.
 name|void
 name|findAllocas
 argument_list|(
 name|ValueSet
 operator|&
-name|Allocas
+name|SinkCands
+argument_list|,
+name|ValueSet
+operator|&
+name|HoistCands
+argument_list|,
+name|BasicBlock
+operator|*
+operator|&
+name|ExitBlock
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Find or create a block within the outline region for placing hoisted
+comment|/// code.
+comment|///
+comment|/// CommonExitBlock is block outside the outline region. It is the common
+comment|/// successor of blocks inside the region. If there exists a single block
+comment|/// inside the region that is the predecessor of CommonExitBlock, that block
+comment|/// will be returned. Otherwise CommonExitBlock will be split and the
+comment|/// original block will be added to the outline region.
+name|BasicBlock
+modifier|*
+name|findOrCreateBlockForHoisting
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|CommonExitBlock
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|void

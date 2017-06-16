@@ -976,8 +976,8 @@ block|}
 block|}
 struct|;
 comment|/// Returns true if the value \p V is a pointer into a ContantDataArray.
-comment|/// If successfull \p Index will point to a ConstantDataArray info object
-comment|/// with an apropriate offset.
+comment|/// If successful \p Index will point to a ConstantDataArray info object
+comment|/// with an appropriate offset.
 name|bool
 name|getConstantDataArrayInfo
 parameter_list|(

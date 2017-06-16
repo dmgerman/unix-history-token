@@ -305,18 +305,6 @@ literal|1
 argument_list|)
 return|;
 block|}
-name|void
-modifier|*
-name|operator
-name|new
-parameter_list|(
-name|size_t
-parameter_list|,
-name|unsigned
-parameter_list|)
-init|=
-name|delete
-function_decl|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(

@@ -310,6 +310,10 @@ name|OMFSegDescFlags
 range|:
 name|uint16_t
 block|{
+name|None
+operator|=
+literal|0
+block|,
 name|Read
 operator|=
 literal|1
@@ -357,9 +361,18 @@ operator|=
 literal|1
 operator|<<
 literal|10
+block|,
 comment|// If set, descriptor represents a group.
+name|LLVM_MARK_AS_BITMASK_ENUM
+argument_list|(
+comment|/* LargestValue = */
+argument|IsGroup
+argument_list|)
 block|}
 decl_stmt|;
+name|LLVM_ENABLE_BITMASK_ENUMS_IN_NAMESPACE
+argument_list|()
+expr_stmt|;
 block|}
 comment|// end namespace pdb
 block|}

@@ -241,6 +241,10 @@ comment|/// XXINSERT - The PPC VSX insert instruction
 comment|///
 name|XXINSERT
 block|,
+comment|/// XXREVERSE - The PPC VSX reverse instruction
+comment|///
+name|XXREVERSE
+block|,
 comment|/// VECSHL - The PPC VSX shift left instruction
 comment|///
 name|VECSHL
@@ -727,6 +731,46 @@ name|Swap
 parameter_list|,
 name|bool
 name|IsLE
+parameter_list|)
+function_decl|;
+comment|/// isXXBRHShuffleMask - Return true if this is a shuffle mask suitable
+comment|/// for a XXBRH instruction.
+name|bool
+name|isXXBRHShuffleMask
+parameter_list|(
+name|ShuffleVectorSDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// isXXBRWShuffleMask - Return true if this is a shuffle mask suitable
+comment|/// for a XXBRW instruction.
+name|bool
+name|isXXBRWShuffleMask
+parameter_list|(
+name|ShuffleVectorSDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// isXXBRDShuffleMask - Return true if this is a shuffle mask suitable
+comment|/// for a XXBRD instruction.
+name|bool
+name|isXXBRDShuffleMask
+parameter_list|(
+name|ShuffleVectorSDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// isXXBRQShuffleMask - Return true if this is a shuffle mask suitable
+comment|/// for a XXBRQ instruction.
+name|bool
+name|isXXBRQShuffleMask
+parameter_list|(
+name|ShuffleVectorSDNode
+modifier|*
+name|N
 parameter_list|)
 function_decl|;
 comment|/// isXXPERMDIShuffleMask - Return true if this is a shuffle mask suitable
@@ -2982,6 +3026,21 @@ end_decl_stmt
 begin_decl_stmt
 name|SDValue
 name|LowerINTRINSIC_VOID
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SDValue
+name|LowerREM
 argument_list|(
 name|SDValue
 name|Op

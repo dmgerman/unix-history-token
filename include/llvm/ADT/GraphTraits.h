@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/ADT/GraphTraits.h - Graph traits template ----------*- C++ -*-===//
+comment|//===- llvm/ADT/GraphTraits.h - Graph traits template -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -107,30 +107,27 @@ comment|// static ChildIteratorType child_begin(NodeRef)
 comment|// static ChildIteratorType child_end  (NodeRef)
 comment|//    Return iterators that point to the beginning and ending of the child
 comment|//    node list for the specified node.
-comment|//
 comment|// typedef  ...iterator nodes_iterator; - dereference to a NodeRef
 comment|// static nodes_iterator nodes_begin(GraphType *G)
 comment|// static nodes_iterator nodes_end  (GraphType *G)
 comment|//    nodes_iterator/begin/end - Allow iteration over all nodes in the graph
 comment|// static unsigned       size       (GraphType *G)
 comment|//    Return total number of nodes in the graph
-comment|//
 comment|// If anyone tries to use this class without having an appropriate
 comment|// specialization, make an error.  If you get this error, it's because you
 comment|// need to include the appropriate specialization of GraphTraits<> for your
 comment|// graph, or you need to define it for a new graph type. Either that or
 comment|// your argument to XXX_begin(...) is unknown or needs to have the proper .h
 comment|// file #include'd.
-comment|//
-typedef|typedef
+name|using
+name|NodeRef
+operator|=
 name|typename
 name|GraphType
 operator|::
 name|UnknownGraphTypeError
-name|NodeRef
+block|; }
 expr_stmt|;
-block|}
-empty_stmt|;
 comment|// Inverse - This class is used as a little marker class to tell the graph
 comment|// iterator to iterate over the graph in a graph defined "Inverse" ordering.
 comment|// Not all graphs define an inverse ordering, and if they do, it depends on
@@ -393,13 +390,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_GRAPHTRAITS_H
+end_comment
 
 end_unit
 

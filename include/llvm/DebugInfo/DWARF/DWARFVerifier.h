@@ -80,6 +80,9 @@ decl_stmt|;
 name|class
 name|DWARFUnit
 decl_stmt|;
+name|class
+name|DWARFAcceleratorTable
+decl_stmt|;
 comment|/// A class that verifies DWARF debug information given a DWARF Context.
 name|class
 name|DWARFVerifier
@@ -111,9 +114,18 @@ name|ReferenceToDIEOffsets
 expr_stmt|;
 name|uint32_t
 name|NumDebugInfoErrors
+init|=
+literal|0
 decl_stmt|;
 name|uint32_t
 name|NumDebugLineErrors
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|NumAppleNamesErrors
+init|=
+literal|0
 decl_stmt|;
 comment|/// Verifies the attribute's DWARF attribute and its value.
 comment|///
@@ -121,8 +133,8 @@ comment|/// This function currently checks for:
 comment|/// - DW_AT_ranges values is a valid .debug_ranges offset
 comment|/// - DW_AT_stmt_list is a valid .debug_line offset
 comment|///
-comment|/// @param Die          The DWARF DIE that owns the attribute value
-comment|/// @param AttrValue    The DWARF attribute value to check
+comment|/// \param Die          The DWARF DIE that owns the attribute value
+comment|/// \param AttrValue    The DWARF attribute value to check
 name|void
 name|verifyDebugInfoAttribute
 parameter_list|(
@@ -143,8 +155,8 @@ comment|/// - All DW_FORM_ref values that are CU relative have valid CU offsets
 comment|/// - All DW_FORM_ref_addr values have valid .debug_info offsets
 comment|/// - All DW_FORM_strp values have valid .debug_str offsets
 comment|///
-comment|/// @param Die          The DWARF DIE that owns the attribute value
-comment|/// @param AttrValue    The DWARF attribute value to check
+comment|/// \param Die          The DWARF DIE that owns the attribute value
+comment|/// \param AttrValue    The DWARF attribute value to check
 name|void
 name|verifyDebugInfoForm
 parameter_list|(
@@ -204,17 +216,7 @@ argument_list|)
 operator|,
 name|DCtx
 argument_list|(
-name|D
-argument_list|)
-operator|,
-name|NumDebugInfoErrors
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumDebugLineErrors
-argument_list|(
-literal|0
+argument|D
 argument_list|)
 block|{}
 comment|/// Verify the information in the .debug_info section.
@@ -222,7 +224,7 @@ comment|///
 comment|/// Any errors are reported to the stream that was this object was
 comment|/// constructed with.
 comment|///
-comment|/// @return True if the .debug_info verifies successfully, false otherwise.
+comment|/// \returns true if the .debug_info verifies successfully, false otherwise.
 name|bool
 name|handleDebugInfo
 argument_list|()
@@ -232,9 +234,19 @@ comment|///
 comment|/// Any errors are reported to the stream that was this object was
 comment|/// constructed with.
 comment|///
-comment|/// @return True if the .debug_line verifies successfully, false otherwise.
+comment|/// \returns true if the .debug_line verifies successfully, false otherwise.
 name|bool
 name|handleDebugLine
+parameter_list|()
+function_decl|;
+comment|/// Verify the information in the .apple_names accelerator table.
+comment|///
+comment|/// Any errors are reported to the stream that was this object was
+comment|/// constructed with.
+comment|///
+comment|/// \returns true if the .apple_names verifies successfully, false otherwise.
+name|bool
+name|handleAppleNames
 parameter_list|()
 function_decl|;
 block|}

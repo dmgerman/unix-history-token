@@ -262,13 +262,21 @@ name|Pars
 argument_list|)
 block|;   }
 expr|}
-block|; }
+block|;  }
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCSYMBOLWASM_H
+end_comment
 
 end_unit
 

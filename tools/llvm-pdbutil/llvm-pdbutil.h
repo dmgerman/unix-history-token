@@ -105,6 +105,17 @@ name|opts
 block|{
 name|enum
 name|class
+name|DumpLevel
+block|{
+name|None
+operator|,
+name|Basic
+operator|,
+name|Verbose
+block|}
+empty_stmt|;
+name|enum
+name|class
 name|ModuleSubsection
 block|{
 name|Unknown
@@ -130,52 +141,6 @@ operator|,
 name|All
 block|}
 empty_stmt|;
-name|bool
-name|checkModuleSubsection
-parameter_list|(
-name|ModuleSubsection
-name|Kind
-parameter_list|)
-function_decl|;
-name|template
-operator|<
-name|typename
-operator|...
-name|Ts
-operator|>
-name|bool
-name|checkModuleSubsection
-argument_list|(
-argument|ModuleSubsection K1
-argument_list|,
-argument|ModuleSubsection K2
-argument_list|,
-argument|Ts&&... Rest
-argument_list|)
-block|{
-return|return
-name|checkModuleSubsection
-argument_list|(
-name|K1
-argument_list|)
-operator|||
-name|checkModuleSubsection
-argument_list|(
-name|K2
-argument_list|,
-name|std
-operator|::
-name|forward
-operator|<
-name|Ts
-operator|>
-operator|(
-name|Rest
-operator|)
-operator|...
-argument_list|)
-return|;
-block|}
 name|namespace
 name|pretty
 block|{
@@ -346,26 +311,29 @@ name|Max
 expr_stmt|;
 block|}
 struct|;
+extern|extern llvm::cl::opt<bool> DumpSummary;
+extern|extern llvm::cl::opt<bool> DumpStreams;
 extern|extern llvm::Optional<BlockRange> DumpBlockRange;
 extern|extern llvm::cl::list<std::string> DumpStreamData;
-extern|extern llvm::cl::opt<bool> CompactRecords;
-extern|extern llvm::cl::opt<bool> DumpGlobals;
-extern|extern llvm::cl::opt<bool> DumpHeaders;
-extern|extern llvm::cl::opt<bool> DumpStreamBlocks;
-extern|extern llvm::cl::opt<bool> DumpStreamSummary;
-extern|extern llvm::cl::opt<bool> DumpPageStats;
-extern|extern llvm::cl::opt<bool> DumpTpiHash;
-extern|extern llvm::cl::opt<bool> DumpTpiRecordBytes;
-extern|extern llvm::cl::opt<bool> DumpTpiRecords;
-extern|extern llvm::cl::opt<bool> DumpIpiRecords;
-extern|extern llvm::cl::opt<bool> DumpIpiRecordBytes;
+extern|extern llvm::cl::opt<bool> DumpLines;
+extern|extern llvm::cl::opt<bool> DumpInlineeLines;
+extern|extern llvm::cl::opt<bool> DumpXmi;
+extern|extern llvm::cl::opt<bool> DumpXme;
+extern|extern llvm::cl::opt<bool> DumpStringTable;
+extern|extern llvm::cl::opt<bool> DumpTypes;
+extern|extern llvm::cl::opt<bool> DumpTypeData;
+extern|extern llvm::cl::opt<bool> DumpTypeExtras;
+extern|extern llvm::cl::opt<bool> DumpIds;
+extern|extern llvm::cl::opt<bool> DumpIdData;
+extern|extern llvm::cl::opt<bool> DumpIdExtras;
+extern|extern llvm::cl::opt<bool> DumpSymbols;
+extern|extern llvm::cl::opt<bool> DumpSymRecordBytes;
 extern|extern llvm::cl::opt<bool> DumpPublics;
 extern|extern llvm::cl::opt<bool> DumpSectionContribs;
 extern|extern llvm::cl::opt<bool> DumpSectionMap;
-extern|extern llvm::cl::opt<bool> DumpSymRecordBytes;
-extern|extern llvm::cl::opt<bool> DumpSectionHeaders;
-extern|extern llvm::cl::opt<bool> DumpFpo;
-extern|extern llvm::cl::opt<bool> DumpStringTable;
+extern|extern llvm::cl::opt<bool> DumpModules;
+extern|extern llvm::cl::opt<bool> DumpModuleFiles;
+extern|extern llvm::cl::opt<bool> RawAll;
 block|}
 name|namespace
 name|diff
@@ -386,16 +354,12 @@ extern|extern llvm::cl::opt<bool> DbiStream;
 extern|extern llvm::cl::opt<bool> TpiStream;
 extern|extern llvm::cl::opt<bool> IpiStream;
 extern|extern llvm::cl::list<std::string> InputFilename;
-block|}
-name|namespace
-name|shared
-block|{
 extern|extern llvm::cl::opt<bool> DumpModules;
 extern|extern llvm::cl::opt<bool> DumpModuleFiles;
 extern|extern llvm::cl::list<ModuleSubsection> DumpModuleSubsections;
 extern|extern llvm::cl::opt<bool> DumpModuleSyms;
 block|}
-comment|// namespace shared
+comment|// namespace pdb2yaml
 block|}
 end_decl_stmt
 

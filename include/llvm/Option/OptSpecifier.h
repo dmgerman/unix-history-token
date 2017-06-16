@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- OptSpecifier.h - Option Specifiers ---------------------*- C++ -*-===//
+comment|//===- OptSpecifier.h - Option Specifiers -----------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -43,12 +43,6 @@ directive|define
 name|LLVM_OPTION_OPTSPECIFIER_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -65,9 +59,16 @@ name|OptSpecifier
 block|{
 name|unsigned
 name|ID
+init|=
+literal|0
 decl_stmt|;
-name|private
+name|public
 label|:
+name|OptSpecifier
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|OptSpecifier
 parameter_list|(
@@ -76,22 +77,12 @@ parameter_list|)
 init|=
 name|delete
 function_decl|;
-name|public
-label|:
-name|OptSpecifier
-argument_list|()
-operator|:
-name|ID
-argument_list|(
-literal|0
-argument_list|)
-block|{}
 comment|/*implicit*/
 name|OptSpecifier
 argument_list|(
 argument|unsigned ID
 argument_list|)
-operator|:
+block|:
 name|ID
 argument_list|(
 argument|ID
@@ -166,13 +157,22 @@ block|}
 block|}
 empty_stmt|;
 block|}
+comment|// end namespace opt
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OPTION_OPTSPECIFIER_H
+end_comment
 
 end_unit
 

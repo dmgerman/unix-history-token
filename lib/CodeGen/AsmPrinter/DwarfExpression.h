@@ -161,6 +161,26 @@ argument_list|(
 argument|Expr.end()
 argument_list|)
 block|{}
+name|DIExpressionCursor
+argument_list|(
+specifier|const
+name|DIExpressionCursor
+operator|&
+name|C
+argument_list|)
+operator|:
+name|Start
+argument_list|(
+name|C
+operator|.
+name|Start
+argument_list|)
+operator|,
+name|End
+argument_list|(
+argument|C.End
+argument_list|)
+block|{}
 comment|/// Consume one operation.
 name|Optional
 operator|<

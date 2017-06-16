@@ -151,11 +151,11 @@ expr|default
 block|;
 comment|/// Emit Obj-C garbage collection and linker options.
 name|void
-name|emitModuleFlags
+name|emitModuleMetadata
 argument_list|(
 argument|MCStreamer&Streamer
 argument_list|,
-argument|ArrayRef<Module::ModuleFlagEntry> ModuleFlags
+argument|Module&M
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -344,11 +344,11 @@ name|override
 block|;
 comment|/// Emit the module flags that specify the garbage collection information.
 name|void
-name|emitModuleFlags
+name|emitModuleMetadata
 argument_list|(
 argument|MCStreamer&Streamer
 argument_list|,
-argument|ArrayRef<Module::ModuleFlagEntry> ModuleFlags
+argument|Module&M
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -542,11 +542,11 @@ name|override
 block|;
 comment|/// Emit Obj-C garbage collection and linker options.
 name|void
-name|emitModuleFlags
+name|emitModuleMetadata
 argument_list|(
 argument|MCStreamer&Streamer
 argument_list|,
-argument|ArrayRef<Module::ModuleFlagEntry> ModuleFlags
+argument|Module&M
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)

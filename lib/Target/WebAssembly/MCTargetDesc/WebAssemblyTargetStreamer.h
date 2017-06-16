@@ -208,12 +208,9 @@ argument|SmallVectorImpl<MVT>&Params
 argument_list|,
 argument|SmallVectorImpl<MVT>&Results
 argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"emitIndirectFunctionType not implemented"
-argument_list|)
-block|;   }
+operator|=
+literal|0
+block|;
 comment|/// .indidx
 name|virtual
 name|void

@@ -553,6 +553,20 @@ comment|// [valueid, guid]
 name|FS_VALUE_GUID
 init|=
 literal|16
+block|,
+comment|// The list of local functions with CFI jump tables. Function names are
+comment|// strings in strtab.
+comment|// [n * name]
+name|FS_CFI_FUNCTION_DEFS
+init|=
+literal|17
+block|,
+comment|// The list of external functions with CFI jump tables. Function names are
+comment|// strings in strtab.
+comment|// [n * name]
+name|FS_CFI_FUNCTION_DECLS
+init|=
+literal|18
 block|, }
 enum|;
 enum|enum

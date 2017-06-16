@@ -6155,7 +6155,7 @@ argument_list|()
 else|:
 name|Cmp
 operator|->
-name|getSwappedPredicate
+name|getInversePredicate
 argument_list|()
 block|;
 comment|// Does "(x pred y) ? x : y" represent the desired max/min operation?
@@ -6643,7 +6643,7 @@ comment|/// 'no-nans-float-math' flag) a combination of a fcmp and select has 'm
 comment|/// semantics. In the presence of 'NaN' we have to preserve the original
 comment|/// select(fcmp(olt/le, L, R), L, R) semantics matched by this predicate.
 comment|///
-comment|///                         max(L, R)  iff L and R are not NaN
+comment|///                         min(L, R)  iff L and R are not NaN
 comment|///  m_OrdFMin(L, R) =      R          iff L or R are NaN
 name|template
 operator|<
@@ -6697,7 +6697,7 @@ comment|/// semantics. In the presence of 'NaN' we have to preserve the original
 comment|/// select(fcmp(ugt/ge, L, R), L, R) semantics matched by this predicate.
 comment|///
 comment|///                         max(L, R)  iff L and R are not NaN
-comment|///  m_UnordFMin(L, R) =    L          iff L or R are NaN
+comment|///  m_UnordFMax(L, R) =    L          iff L or R are NaN
 name|template
 operator|<
 name|typename
@@ -6734,6 +6734,59 @@ operator|,
 name|RHS
 operator|,
 name|ufmax_pred_ty
+operator|>
+operator|(
+name|L
+operator|,
+name|R
+operator|)
+return|;
+block|}
+comment|/// \brief Match an 'unordered' floating point minimum function.
+comment|/// Floating point has one special value 'NaN'. Therefore, there is no total
+comment|/// order. However, if we can ignore the 'NaN' value (for example, because of a
+comment|/// 'no-nans-float-math' flag) a combination of a fcmp and select has 'minimum'
+comment|/// semantics. In the presence of 'NaN' we have to preserve the original
+comment|/// select(fcmp(ult/le, L, R), L, R) semantics matched by this predicate.
+comment|///
+comment|///                          min(L, R)  iff L and R are not NaN
+comment|///  m_UnordFMin(L, R) =     L          iff L or R are NaN
+name|template
+operator|<
+name|typename
+name|LHS
+block|,
+name|typename
+name|RHS
+operator|>
+specifier|inline
+name|MaxMin_match
+operator|<
+name|FCmpInst
+block|,
+name|LHS
+block|,
+name|RHS
+block|,
+name|ufmin_pred_ty
+operator|>
+name|m_UnordFMin
+argument_list|(
+argument|const LHS&L
+argument_list|,
+argument|const RHS&R
+argument_list|)
+block|{
+return|return
+name|MaxMin_match
+operator|<
+name|FCmpInst
+operator|,
+name|LHS
+operator|,
+name|RHS
+operator|,
+name|ufmin_pred_ty
 operator|>
 operator|(
 name|L
@@ -7026,59 +7079,6 @@ operator|,
 name|R
 operator|,
 name|S
-operator|)
-return|;
-block|}
-comment|/// \brief Match an 'unordered' floating point minimum function.
-comment|/// Floating point has one special value 'NaN'. Therefore, there is no total
-comment|/// order. However, if we can ignore the 'NaN' value (for example, because of a
-comment|/// 'no-nans-float-math' flag) a combination of a fcmp and select has 'minimum'
-comment|/// semantics. In the presence of 'NaN' we have to preserve the original
-comment|/// select(fcmp(ult/le, L, R), L, R) semantics matched by this predicate.
-comment|///
-comment|///                          max(L, R)  iff L and R are not NaN
-comment|///  m_UnordFMin(L, R) =     L          iff L or R are NaN
-name|template
-operator|<
-name|typename
-name|LHS
-block|,
-name|typename
-name|RHS
-operator|>
-specifier|inline
-name|MaxMin_match
-operator|<
-name|FCmpInst
-block|,
-name|LHS
-block|,
-name|RHS
-block|,
-name|ufmin_pred_ty
-operator|>
-name|m_UnordFMin
-argument_list|(
-argument|const LHS&L
-argument_list|,
-argument|const RHS&R
-argument_list|)
-block|{
-return|return
-name|MaxMin_match
-operator|<
-name|FCmpInst
-operator|,
-name|LHS
-operator|,
-name|RHS
-operator|,
-name|ufmin_pred_ty
-operator|>
-operator|(
-name|L
-operator|,
-name|R
 operator|)
 return|;
 block|}

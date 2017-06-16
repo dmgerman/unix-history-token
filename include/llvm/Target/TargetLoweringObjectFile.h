@@ -261,14 +261,14 @@ argument|const MCSymbol *Sym
 argument_list|)
 specifier|const
 block|;
-comment|/// Emit the module flags that the platform cares about.
+comment|/// Emit the module-level metadata that the platform cares about.
 name|virtual
 name|void
-name|emitModuleFlags
+name|emitModuleMetadata
 argument_list|(
 argument|MCStreamer&Streamer
 argument_list|,
-argument|ArrayRef<Module::ModuleFlagEntry> Flags
+argument|Module&M
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)

@@ -536,6 +536,9 @@ operator|,
 name|Arch
 argument_list|()
 operator|,
+name|SubArch
+argument_list|()
+operator|,
 name|Vendor
 argument_list|()
 operator|,

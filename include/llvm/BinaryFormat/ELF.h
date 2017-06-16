@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/BinaryFormat/ELF.h - ELF constants and structures --*- C++ -*-===//
+comment|//===- llvm/BinaryFormat/ELF.h - ELF constants and structures ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,13 +86,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cstdint>
 end_include
 
 begin_include
@@ -108,56 +102,68 @@ block|{
 name|namespace
 name|ELF
 block|{
-typedef|typedef
-name|uint32_t
+name|using
 name|Elf32_Addr
-typedef|;
+init|=
+name|uint32_t
+decl_stmt|;
 comment|// Program address
-typedef|typedef
-name|uint32_t
+name|using
 name|Elf32_Off
-typedef|;
+init|=
+name|uint32_t
+decl_stmt|;
 comment|// File offset
-typedef|typedef
-name|uint16_t
+name|using
 name|Elf32_Half
-typedef|;
-typedef|typedef
-name|uint32_t
-name|Elf32_Word
-typedef|;
-typedef|typedef
-name|int32_t
-name|Elf32_Sword
-typedef|;
-typedef|typedef
-name|uint64_t
-name|Elf64_Addr
-typedef|;
-typedef|typedef
-name|uint64_t
-name|Elf64_Off
-typedef|;
-typedef|typedef
+init|=
 name|uint16_t
-name|Elf64_Half
-typedef|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|Elf32_Word
+init|=
 name|uint32_t
-name|Elf64_Word
-typedef|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|Elf32_Sword
+init|=
 name|int32_t
-name|Elf64_Sword
-typedef|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|Elf64_Addr
+init|=
 name|uint64_t
+decl_stmt|;
+name|using
+name|Elf64_Off
+init|=
+name|uint64_t
+decl_stmt|;
+name|using
+name|Elf64_Half
+init|=
+name|uint16_t
+decl_stmt|;
+name|using
+name|Elf64_Word
+init|=
+name|uint32_t
+decl_stmt|;
+name|using
+name|Elf64_Sword
+init|=
+name|int32_t
+decl_stmt|;
+name|using
 name|Elf64_Xword
-typedef|;
-typedef|typedef
-name|int64_t
+init|=
+name|uint64_t
+decl_stmt|;
+name|using
 name|Elf64_Sxword
-typedef|;
+init|=
+name|int64_t
+decl_stmt|;
 comment|// Object file magic string.
 specifier|static
 specifier|const
@@ -2648,6 +2654,11 @@ init|=
 literal|0x60000000
 block|,
 comment|// Lowest operating system-specific type.
+name|SHT_LLVM_ODRTAB
+init|=
+literal|0x6fff4c00
+block|,
+comment|// LLVM ODR table.
 name|SHT_GNU_ATTRIBUTES
 init|=
 literal|0x6ffffff5
@@ -5079,6 +5090,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_BINARYFORMAT_ELF_H
+end_comment
 
 end_unit
 

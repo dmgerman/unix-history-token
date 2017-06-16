@@ -181,6 +181,24 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/// Basic information extracted from a bitcode module to be used for LTO.
+end_comment
+
+begin_struct
+struct|struct
+name|BitcodeLTOInfo
+block|{
+name|bool
+name|IsThinLTO
+decl_stmt|;
+name|bool
+name|HasSummary
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/// Represents a module in a bitcode file.
 end_comment
 
@@ -353,12 +371,13 @@ operator|&
 name|Context
 argument_list|)
 expr_stmt|;
-comment|/// Check if the given bitcode buffer contains a summary block.
+comment|/// Returns information about the module to be used for LTO: whether to
+comment|/// compile with ThinLTO, and whether it has a summary.
 name|Expected
 operator|<
-name|bool
+name|BitcodeLTOInfo
 operator|>
-name|hasSummary
+name|getLTOInfo
 argument_list|()
 expr_stmt|;
 comment|/// Parse the specified bitcode buffer, returning the module summary index.
@@ -382,7 +401,10 @@ name|ModuleSummaryIndex
 modifier|&
 name|CombinedIndex
 parameter_list|,
-name|unsigned
+name|StringRef
+name|ModulePath
+parameter_list|,
+name|uint64_t
 name|ModuleId
 parameter_list|)
 function_decl|;
@@ -616,15 +638,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Check if the given bitcode buffer contains a summary block.
+comment|/// Returns LTO information for the specified bitcode file.
 end_comment
 
 begin_expr_stmt
 name|Expected
 operator|<
-name|bool
+name|BitcodeLTOInfo
 operator|>
-name|hasGlobalValueSummary
+name|getBitcodeLTOInfo
 argument_list|(
 argument|MemoryBufferRef Buffer
 argument_list|)
@@ -666,7 +688,7 @@ name|ModuleSummaryIndex
 modifier|&
 name|CombinedIndex
 parameter_list|,
-name|unsigned
+name|uint64_t
 name|ModuleId
 parameter_list|)
 function_decl|;

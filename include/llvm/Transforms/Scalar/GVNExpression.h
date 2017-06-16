@@ -561,18 +561,7 @@ name|void
 name|dump
 argument_list|()
 specifier|const
-block|{
-name|print
-argument_list|(
-name|dbgs
-argument_list|()
-argument_list|)
-block|;
-name|dbgs
-argument_list|()
-operator|<<
-literal|"\n"
-block|;   }
+expr_stmt|;
 block|}
 end_decl_stmt
 

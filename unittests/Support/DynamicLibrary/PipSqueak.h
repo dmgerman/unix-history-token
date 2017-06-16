@@ -165,6 +165,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_extern
+extern|extern
+literal|"C"
+name|PIPSQUEAK_EXPORT
+specifier|const
+name|char
+modifier|*
+name|TestA
+parameter_list|()
+function_decl|;
+end_extern
+
 begin_endif
 endif|#
 directive|endif

@@ -682,16 +682,16 @@ name|MEMSET
 block|,
 name|MEMMOVE
 block|,
-comment|// ELEMENT-WISE ATOMIC MEMORY
-name|MEMCPY_ELEMENT_ATOMIC_1
+comment|// ELEMENT-WISE UNORDERED-ATOMIC MEMORY of different element sizes
+name|MEMCPY_ELEMENT_UNORDERED_ATOMIC_1
 block|,
-name|MEMCPY_ELEMENT_ATOMIC_2
+name|MEMCPY_ELEMENT_UNORDERED_ATOMIC_2
 block|,
-name|MEMCPY_ELEMENT_ATOMIC_4
+name|MEMCPY_ELEMENT_UNORDERED_ATOMIC_4
 block|,
-name|MEMCPY_ELEMENT_ATOMIC_8
+name|MEMCPY_ELEMENT_UNORDERED_ATOMIC_8
 block|,
-name|MEMCPY_ELEMENT_ATOMIC_16
+name|MEMCPY_ELEMENT_UNORDERED_ATOMIC_16
 block|,
 comment|// EXCEPTION HANDLING
 name|UNWIND_RESUME
@@ -1022,10 +1022,11 @@ name|MVT
 name|VT
 parameter_list|)
 function_decl|;
-comment|/// getMEMCPY_ELEMENT_ATOMIC - Return MEMCPY_ELEMENT_ATOMIC_* value for the
-comment|/// given element size or UNKNOW_LIBCALL if there is none.
+comment|/// getMEMCPY_ELEMENT_UNORDERED_ATOMIC - Return
+comment|/// MEMCPY_ELEMENT_UNORDERED_ATOMIC_* value for the given element size or
+comment|/// UNKNOW_LIBCALL if there is none.
 name|Libcall
-name|getMEMCPY_ELEMENT_ATOMIC
+name|getMEMCPY_ELEMENT_UNORDERED_ATOMIC
 parameter_list|(
 name|uint64_t
 name|ElementSize

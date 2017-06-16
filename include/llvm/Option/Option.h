@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- Option.h - Abstract Driver Options ---------------------*- C++ -*-===//
+comment|//===- Option.h - Abstract Driver Options -----------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Option/OptSpecifier.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Option/OptTable.h"
 end_include
 
@@ -67,10 +73,25 @@ directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 name|namespace
 name|opt
 block|{
@@ -81,17 +102,15 @@ name|class
 name|ArgList
 decl_stmt|;
 comment|/// ArgStringList - Type used for constructing argv lists for subprocesses.
-typedef|typedef
+name|using
+name|ArgStringList
+init|=
 name|SmallVector
 operator|<
 specifier|const
 name|char
 operator|*
-operator|,
-literal|16
-operator|>
-name|ArgStringList
-expr_stmt|;
+decl_stmt|, 16>;
 comment|/// Base flags for all options. Custom flags may be added after.
 enum|enum
 name|DriverFlag
@@ -697,6 +716,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OPTION_OPTION_H
+end_comment
 
 end_unit
 

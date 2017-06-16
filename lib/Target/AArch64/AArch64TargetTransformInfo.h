@@ -357,10 +357,11 @@ return|;
 block|}
 name|unsigned
 name|getRegisterBitWidth
-parameter_list|(
+argument_list|(
 name|bool
 name|Vector
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 if|if
 condition|(

@@ -1610,6 +1610,29 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Physical registers that may be modified within a function but are
+comment|/// guaranteed to be restored before any uses. This is useful for targets that
+comment|/// have call sequences where a GOT register may be updated by the caller
+comment|/// prior to a call and is guaranteed to be restored (also by the caller)
+comment|/// after the call.
+name|virtual
+name|bool
+name|isCallerPreservedPhysReg
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|,
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Prior to adding the live-out mask to a stackmap or patchpoint
 comment|/// instruction, provide the target the opportunity to adjust it (mainly to
 comment|/// remove pseudo-registers that should be ignored).

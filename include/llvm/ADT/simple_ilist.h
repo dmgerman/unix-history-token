@@ -64,6 +64,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ilist_node_options.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
 end_include
 
@@ -77,6 +89,24 @@ begin_include
 include|#
 directive|include
 file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -193,134 +223,147 @@ argument_list|,
 literal|"Unrecognized node option!"
 argument_list|)
 block|;
-typedef|typedef
+name|using
+name|OptionsT
+operator|=
 name|typename
 name|ilist_detail
 operator|::
 name|compute_node_options
 operator|<
 name|T
-operator|,
+block|,
 name|Options
 operator|...
 operator|>
 operator|::
 name|type
-name|OptionsT
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|list_base_type
+operator|=
 name|typename
 name|OptionsT
 operator|::
 name|list_base_type
-name|list_base_type
-expr_stmt|;
+block|;
 name|ilist_sentinel
 operator|<
 name|OptionsT
 operator|>
 name|Sentinel
-expr_stmt|;
+block|;
 name|public
-label|:
-typedef|typedef
+operator|:
+name|using
+name|value_type
+operator|=
 name|typename
 name|OptionsT
 operator|::
 name|value_type
-name|value_type
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|pointer
+operator|=
 name|typename
 name|OptionsT
 operator|::
 name|pointer
-name|pointer
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|reference
+operator|=
 name|typename
 name|OptionsT
 operator|::
 name|reference
-name|reference
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_pointer
+operator|=
 name|typename
 name|OptionsT
 operator|::
 name|const_pointer
-name|const_pointer
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_reference
+operator|=
 name|typename
 name|OptionsT
 operator|::
 name|const_reference
-name|const_reference
-expr_stmt|;
-typedef|typedef
-name|ilist_iterator
-operator|<
-name|OptionsT
-operator|,
-name|false
-operator|,
-name|false
-operator|>
+block|;
+name|using
 name|iterator
-expr_stmt|;
-typedef|typedef
+operator|=
 name|ilist_iterator
 operator|<
 name|OptionsT
-operator|,
+block|,
 name|false
-operator|,
-name|true
+block|,
+name|false
 operator|>
+block|;
+name|using
 name|const_iterator
-expr_stmt|;
-typedef|typedef
+operator|=
 name|ilist_iterator
 operator|<
 name|OptionsT
-operator|,
+block|,
+name|false
+block|,
 name|true
-operator|,
+operator|>
+block|;
+name|using
+name|reverse_iterator
+operator|=
+name|ilist_iterator
+operator|<
+name|OptionsT
+block|,
+name|true
+block|,
 name|false
 operator|>
-name|reverse_iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_reverse_iterator
+operator|=
 name|ilist_iterator
 operator|<
 name|OptionsT
-operator|,
+block|,
 name|true
-operator|,
+block|,
 name|true
 operator|>
-name|const_reverse_iterator
-expr_stmt|;
-typedef|typedef
-name|size_t
+block|;
+name|using
 name|size_type
-typedef|;
-typedef|typedef
-name|ptrdiff_t
+operator|=
+name|size_t
+block|;
+name|using
 name|difference_type
-typedef|;
+operator|=
+name|ptrdiff_t
+block|;
 name|simple_ilist
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 operator|~
 name|simple_ilist
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 comment|// No copy constructors.
 name|simple_ilist
 argument_list|(
@@ -330,11 +373,11 @@ operator|&
 argument_list|)
 operator|=
 name|delete
-expr_stmt|;
+block|;
 name|simple_ilist
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|simple_ilist
@@ -342,7 +385,7 @@ operator|&
 operator|)
 operator|=
 name|delete
-decl_stmt|;
+block|;
 comment|// Move constructors.
 name|simple_ilist
 argument_list|(
@@ -356,12 +399,11 @@ argument_list|()
 argument_list|,
 name|X
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 name|simple_ilist
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 name|simple_ilist
 operator|&&
@@ -386,7 +428,7 @@ return|;
 block|}
 name|iterator
 name|begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|++
@@ -411,7 +453,7 @@ return|;
 block|}
 name|iterator
 name|end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|iterator
@@ -434,7 +476,7 @@ return|;
 block|}
 name|reverse_iterator
 name|rbegin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|++
@@ -459,7 +501,7 @@ return|;
 block|}
 name|reverse_iterator
 name|rend
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|reverse_iterator
@@ -516,7 +558,7 @@ return|;
 block|}
 name|reference
 name|front
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|*
@@ -537,7 +579,7 @@ return|;
 block|}
 name|reference
 name|back
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|*
@@ -559,10 +601,9 @@ block|}
 comment|/// Insert a node at the front; never copies.
 name|void
 name|push_front
-parameter_list|(
-name|reference
-name|Node
-parameter_list|)
+argument_list|(
+argument|reference Node
+argument_list|)
 block|{
 name|insert
 argument_list|(
@@ -571,15 +612,13 @@ argument_list|()
 argument_list|,
 name|Node
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// Insert a node at the back; never copies.
 name|void
 name|push_back
-parameter_list|(
-name|reference
-name|Node
-parameter_list|)
+argument_list|(
+argument|reference Node
+argument_list|)
 block|{
 name|insert
 argument_list|(
@@ -588,24 +627,22 @@ argument_list|()
 argument_list|,
 name|Node
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// Remove the node at the front; never deletes.
 name|void
 name|pop_front
-parameter_list|()
+argument_list|()
 block|{
 name|erase
 argument_list|(
 name|begin
 argument_list|()
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// Remove the node at the back; never deletes.
 name|void
 name|pop_back
-parameter_list|()
+argument_list|()
 block|{
 name|erase
 argument_list|(
@@ -613,16 +650,13 @@ operator|--
 name|end
 argument_list|()
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// Swap with another list in place using std::swap.
 name|void
 name|swap
-parameter_list|(
-name|simple_ilist
-modifier|&
-name|X
-parameter_list|)
+argument_list|(
+argument|simple_ilist&X
+argument_list|)
 block|{
 name|std
 operator|::
@@ -633,18 +667,15 @@ name|this
 argument_list|,
 name|X
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// Insert a node by reference; never copies.
 name|iterator
 name|insert
-parameter_list|(
-name|iterator
-name|I
-parameter_list|,
-name|reference
-name|Node
-parameter_list|)
+argument_list|(
+argument|iterator I
+argument_list|,
+argument|reference Node
+argument_list|)
 block|{
 name|list_base_type
 operator|::
@@ -665,7 +696,7 @@ operator|&
 name|Node
 argument_list|)
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|iterator
 argument_list|(
@@ -714,7 +745,7 @@ name|template
 operator|<
 name|class
 name|Cloner
-operator|,
+block|,
 name|class
 name|Disposer
 operator|>
@@ -756,10 +787,9 @@ comment|/// \see \a erase() for removing by iterator.
 comment|/// \see \a removeAndDispose() if the node should be deleted.
 name|void
 name|remove
-parameter_list|(
-name|reference
-name|N
-parameter_list|)
+argument_list|(
+argument|reference N
+argument_list|)
 block|{
 name|list_base_type
 operator|::
@@ -774,8 +804,7 @@ operator|&
 name|N
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// Remove a node by reference and dispose of it.
 name|template
 operator|<
@@ -837,13 +866,11 @@ comment|///
 comment|/// \see \a eraseAndDispose() if the nodes should be deleted.
 name|iterator
 name|erase
-parameter_list|(
-name|iterator
-name|First
-parameter_list|,
-name|iterator
-name|Last
-parameter_list|)
+argument_list|(
+argument|iterator First
+argument_list|,
+argument|iterator Last
+argument_list|)
 block|{
 name|list_base_type
 operator|::
@@ -861,7 +888,7 @@ operator|.
 name|getNodePtr
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Last
 return|;
@@ -941,21 +968,9 @@ return|return
 name|Last
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Clear the list; never deletes.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \see \a clearAndDispose() if the nodes should be deleted.
-end_comment
-
-begin_function
 name|void
 name|clear
 parameter_list|()
@@ -966,13 +981,7 @@ name|reset
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Clear the list and dispose of the nodes.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1121,21 +1130,9 @@ argument_list|,
 argument|Compare comp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|///@}
-end_comment
-
-begin_comment
 comment|/// Sort the list.
-end_comment
-
-begin_comment
 comment|///@{
-end_comment
-
-begin_function
 name|void
 name|sort
 parameter_list|()
@@ -1153,9 +1150,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1167,14 +1161,15 @@ argument_list|(
 argument|Compare comp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|///@}
-end_comment
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
-unit|};
 name|template
 operator|<
 name|class

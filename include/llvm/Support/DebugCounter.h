@@ -515,27 +515,22 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-comment|// Dump or print the current counter set.
+comment|// Dump or print the current counter set into llvm::dbgs().
 name|LLVM_DUMP_METHOD
 name|void
 name|dump
-parameter_list|()
-block|{
-name|print
-argument_list|(
-name|dbgs
 argument_list|()
-argument_list|)
+specifier|const
 expr_stmt|;
-block|}
 name|void
 name|print
-parameter_list|(
+argument_list|(
 name|raw_ostream
-modifier|&
+operator|&
 name|OS
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Get the counter ID for a given named counter, or return 0 if none is found.
 name|unsigned
 name|getCounterId

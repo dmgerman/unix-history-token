@@ -1779,15 +1779,15 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// \brief Create and insert an atomic memcpy between the specified
-comment|/// pointers.
+comment|/// \brief Create and insert an element unordered-atomic memcpy between the
+comment|/// specified pointers.
 comment|///
 comment|/// If the pointers aren't i8*, they will be converted.  If a TBAA tag is
 comment|/// specified, it will be added to the instruction. Likewise with alias.scope
 comment|/// and noalias tags.
 name|CallInst
 modifier|*
-name|CreateElementAtomicMemCpy
+name|CreateElementUnorderedAtomicMemCpy
 parameter_list|(
 name|Value
 modifier|*
@@ -1798,7 +1798,7 @@ modifier|*
 name|Src
 parameter_list|,
 name|uint64_t
-name|NumElements
+name|Size
 parameter_list|,
 name|uint32_t
 name|ElementSize
@@ -1829,7 +1829,7 @@ name|nullptr
 parameter_list|)
 block|{
 return|return
-name|CreateElementAtomicMemCpy
+name|CreateElementUnorderedAtomicMemCpy
 argument_list|(
 name|Dst
 argument_list|,
@@ -1837,7 +1837,7 @@ name|Src
 argument_list|,
 name|getInt64
 argument_list|(
-name|NumElements
+name|Size
 argument_list|)
 argument_list|,
 name|ElementSize
@@ -1854,7 +1854,7 @@ return|;
 block|}
 name|CallInst
 modifier|*
-name|CreateElementAtomicMemCpy
+name|CreateElementUnorderedAtomicMemCpy
 parameter_list|(
 name|Value
 modifier|*
@@ -1866,7 +1866,7 @@ name|Src
 parameter_list|,
 name|Value
 modifier|*
-name|NumElements
+name|Size
 parameter_list|,
 name|uint32_t
 name|ElementSize

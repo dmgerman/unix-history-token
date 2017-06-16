@@ -159,30 +159,32 @@ name|C
 operator|>
 name|Set
 block|;
-typedef|typedef
+name|using
+name|VIterator
+operator|=
 name|typename
 name|SmallVector
 operator|<
 name|T
-operator|,
+block|,
 name|N
 operator|>
 operator|::
 name|const_iterator
-name|VIterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|mutable_iterator
+operator|=
 name|typename
 name|SmallVector
 operator|<
 name|T
-operator|,
+block|,
 name|N
 operator|>
 operator|::
 name|iterator
-name|mutable_iterator
-expr_stmt|;
+block|;
 comment|// In small mode SmallPtrSet uses linear search for the elements, so it is
 comment|// not a good idea to choose this value too high. You may consider using a
 comment|// DenseSet<> instead if you expect many elements in the set.
@@ -194,18 +196,19 @@ literal|32
 argument_list|,
 literal|"N should be small"
 argument_list|)
-expr_stmt|;
+block|;
 name|public
-label|:
-typedef|typedef
-name|size_t
+operator|:
+name|using
 name|size_type
-typedef|;
+operator|=
+name|size_t
+block|;
 name|SmallSet
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|LLVM_NODISCARD
 name|bool
 name|empty
@@ -248,12 +251,9 @@ comment|/// count - Return 1 if the element is in the set, 0 otherwise.
 name|size_type
 name|count
 argument_list|(
-specifier|const
-name|T
-operator|&
-name|V
+argument|const T&V
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -302,7 +302,7 @@ operator|::
 name|pair
 operator|<
 name|NoneType
-operator|,
+block|,
 name|bool
 operator|>
 name|insert
@@ -340,7 +340,7 @@ name|vfind
 argument_list|(
 name|V
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|I

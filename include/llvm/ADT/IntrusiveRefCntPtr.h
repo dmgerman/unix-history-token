@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//== llvm/ADT/IntrusiveRefCntPtr.h - Smart Refcounting Pointer ---*- C++ -*-==//
+comment|//==- llvm/ADT/IntrusiveRefCntPtr.h - Smart Refcounting Pointer --*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -278,14 +278,7 @@ expr|default
 block|;
 name|RefCountedBase
 argument_list|(
-specifier|const
-name|RefCountedBase
-operator|&
-argument_list|)
-operator|:
-name|RefCount
-argument_list|(
-literal|0
+argument|const RefCountedBase&
 argument_list|)
 block|{}
 name|void
@@ -503,15 +496,16 @@ name|nullptr
 block|;
 name|public
 operator|:
-typedef|typedef
-name|T
+name|using
 name|element_type
-typedef|;
+operator|=
+name|T
+block|;
 name|explicit
 name|IntrusiveRefCntPtr
 argument_list|()
 operator|=
-block|default
+expr|default
 block|;
 name|IntrusiveRefCntPtr
 argument_list|(
@@ -612,6 +606,13 @@ block|{
 name|retain
 argument_list|()
 block|;   }
+operator|~
+name|IntrusiveRefCntPtr
+argument_list|()
+block|{
+name|release
+argument_list|()
+block|; }
 name|IntrusiveRefCntPtr
 operator|&
 name|operator
@@ -631,13 +632,6 @@ operator|*
 name|this
 return|;
 block|}
-operator|~
-name|IntrusiveRefCntPtr
-argument_list|()
-block|{
-name|release
-argument_list|()
-block|; }
 name|T
 operator|&
 name|operator
@@ -775,12 +769,12 @@ name|friend
 name|class
 name|IntrusiveRefCntPtr
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|class
 name|T
-operator|,
+block|,
 name|class
 name|U
 operator|>
@@ -822,7 +816,7 @@ name|template
 operator|<
 name|class
 name|T
-operator|,
+block|,
 name|class
 name|U
 operator|>
@@ -864,7 +858,7 @@ name|template
 operator|<
 name|class
 name|T
-operator|,
+block|,
 name|class
 name|U
 operator|>
@@ -899,7 +893,7 @@ name|template
 operator|<
 name|class
 name|T
-operator|,
+block|,
 name|class
 name|U
 operator|>
@@ -934,7 +928,7 @@ name|template
 operator|<
 name|class
 name|T
-operator|,
+block|,
 name|class
 name|U
 operator|>
@@ -969,7 +963,7 @@ name|template
 operator|<
 name|class
 name|T
-operator|,
+block|,
 name|class
 name|U
 operator|>
@@ -1130,7 +1124,7 @@ name|From
 operator|>
 expr|struct
 name|simplify_type
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|class
@@ -1144,11 +1138,12 @@ operator|<
 name|T
 operator|>>
 block|{
-typedef|typedef
-name|T
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|T
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -1163,8 +1158,8 @@ name|get
 argument_list|()
 return|;
 block|}
-block|}
-empty_stmt|;
+expr|}
+block|;
 name|template
 operator|<
 name|class
@@ -1179,12 +1174,13 @@ operator|<
 name|T
 operator|>>
 block|{
-typedef|typedef
+name|using
+name|SimpleType
+operator|=
 comment|/*const*/
 name|T
-modifier|*
-name|SimpleType
-typedef|;
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -1199,9 +1195,8 @@ name|get
 argument_list|()
 return|;
 block|}
-block|}
-empty_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

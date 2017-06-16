@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -182,6 +188,42 @@ condition|?
 literal|"true"
 else|:
 literal|"false"
+argument_list|)
+return|;
+block|}
+comment|/// Construct a string ref from an array ref of unsigned chars.
+specifier|static
+specifier|inline
+name|StringRef
+name|toStringRef
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Input
+argument_list|)
+block|{
+return|return
+name|StringRef
+argument_list|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+operator|(
+name|Input
+operator|.
+name|begin
+argument_list|()
+operator|)
+argument_list|,
+name|Input
+operator|.
+name|size
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -356,7 +398,6 @@ comment|/// The returned string is double the size of \p Input.
 end_comment
 
 begin_expr_stmt
-specifier|static
 specifier|inline
 name|std
 operator|::
@@ -455,8 +496,30 @@ name|Output
 return|;
 end_return
 
+begin_expr_stmt
+unit|}  inline
+name|std
+operator|::
+name|string
+name|toHex
+argument_list|(
+argument|ArrayRef<uint8_t> Input
+argument_list|)
+block|{
+return|return
+name|toHex
+argument_list|(
+name|toStringRef
+argument_list|(
+name|Input
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_function
-unit|}  static
+specifier|static
 specifier|inline
 name|uint8_t
 name|hexFromNibbles

@@ -4295,6 +4295,11 @@ operator|=
 name|SCEV
 operator|::
 name|FlagAnyWrap
+argument_list|,
+name|unsigned
+name|Depth
+operator|=
+literal|0
 argument_list|)
 block|{
 name|SmallVector
@@ -4319,6 +4324,8 @@ argument_list|(
 name|Ops
 argument_list|,
 name|Flags
+argument_list|,
+name|Depth
 argument_list|)
 return|;
 block|}
@@ -4350,6 +4357,11 @@ operator|=
 name|SCEV
 operator|::
 name|FlagAnyWrap
+argument_list|,
+name|unsigned
+name|Depth
+operator|=
+literal|0
 argument_list|)
 block|{
 name|SmallVector
@@ -4376,6 +4388,8 @@ argument_list|(
 name|Ops
 argument_list|,
 name|Flags
+argument_list|,
+name|Depth
 argument_list|)
 return|;
 block|}
@@ -4401,6 +4415,11 @@ operator|=
 name|SCEV
 operator|::
 name|FlagAnyWrap
+argument_list|,
+name|unsigned
+name|Depth
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -4426,6 +4445,11 @@ operator|=
 name|SCEV
 operator|::
 name|FlagAnyWrap
+argument_list|,
+name|unsigned
+name|Depth
+operator|=
+literal|0
 argument_list|)
 block|{
 name|SmallVector
@@ -4450,6 +4474,8 @@ argument_list|(
 name|Ops
 argument_list|,
 name|Flags
+argument_list|,
+name|Depth
 argument_list|)
 return|;
 block|}
@@ -4481,6 +4507,11 @@ operator|=
 name|SCEV
 operator|::
 name|FlagAnyWrap
+argument_list|,
+name|unsigned
+name|Depth
+operator|=
+literal|0
 argument_list|)
 block|{
 name|SmallVector
@@ -4507,6 +4538,8 @@ argument_list|(
 name|Ops
 argument_list|,
 name|Flags
+argument_list|,
+name|Depth
 argument_list|)
 return|;
 block|}
@@ -4920,6 +4953,11 @@ operator|=
 name|SCEV
 operator|::
 name|FlagAnyWrap
+argument_list|,
+name|unsigned
+name|Depth
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// Return a SCEV corresponding to a conversion of the input value to the
@@ -6146,11 +6184,32 @@ name|bool
 name|NoWrap
 parameter_list|)
 function_decl|;
-comment|/// Get add expr already created or create a new one
+comment|/// Get add expr already created or create a new one.
 specifier|const
 name|SCEV
 modifier|*
 name|getOrCreateAddExpr
+argument_list|(
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Ops
+argument_list|,
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|Flags
+argument_list|)
+decl_stmt|;
+comment|/// Get mul expr already created or create a new one.
+specifier|const
+name|SCEV
+modifier|*
+name|getOrCreateMulExpr
 argument_list|(
 name|SmallVectorImpl
 operator|<

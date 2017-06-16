@@ -81,7 +81,7 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|DebugInlineeLinesSubsectionsRef
+name|DebugInlineeLinesSubsectionRef
 decl_stmt|;
 name|class
 name|DebugChecksumsSubsection
