@@ -773,7 +773,14 @@ operator|(
 name|T
 operator|*
 operator|)
+name|const_cast
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
 name|hint
+operator|)
 return|;
 block|}
 end_decl_stmt
