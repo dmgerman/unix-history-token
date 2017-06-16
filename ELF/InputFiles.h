@@ -814,9 +814,15 @@ specifier|const
 name|Elf_Shdr
 modifier|&
 name|Sec
-parameter_list|,
+parameter_list|)
+function_decl|;
 name|StringRef
-name|SectionStringTable
+name|getSectionName
+parameter_list|(
+specifier|const
+name|Elf_Shdr
+modifier|&
+name|Sec
 parameter_list|)
 function_decl|;
 name|bool
@@ -848,6 +854,10 @@ operator|*
 operator|>
 name|SymbolBodies
 expr_stmt|;
+comment|// .shstrtab contents.
+name|StringRef
+name|SectionStringTable
+decl_stmt|;
 comment|// Debugging information to retrieve source file and line for error
 comment|// reporting. Linker may find reasonable number of errors in a
 comment|// single object file, so we cache debugging information in order to

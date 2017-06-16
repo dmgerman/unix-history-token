@@ -590,6 +590,8 @@ modifier|*
 name|IS
 parameter_list|)
 function_decl|;
+extern|extern std::vector<OutputSection *> OutputSections;
+extern|extern std::vector<OutputSectionCommand *> OutputSectionCommands;
 block|}
 comment|// namespace elf
 block|}

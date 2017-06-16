@@ -111,6 +111,20 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
+name|pdb
+block|{
+name|class
+name|DbiModuleDescriptorBuilder
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|lld
 block|{
 name|namespace
@@ -521,6 +535,20 @@ name|SymbolBody
 operator|*
 operator|>
 name|SEHandlers
+block|;
+comment|// Pointer to the PDB module descriptor builder. Various debug info records
+comment|// will reference object files by "module index", which is here. Things like
+comment|// source files and section contributions are also recorded here. Will be null
+comment|// if we are not producing a PDB.
+name|llvm
+operator|::
+name|pdb
+operator|::
+name|DbiModuleDescriptorBuilder
+operator|*
+name|ModuleDBI
+operator|=
+name|nullptr
 block|;
 name|private
 operator|:
