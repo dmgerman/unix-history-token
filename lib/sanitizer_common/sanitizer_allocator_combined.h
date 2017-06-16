@@ -196,8 +196,6 @@ argument_list|,
 argument|uptr alignment
 argument_list|,
 argument|bool cleared = false
-argument_list|,
-argument|bool check_rss_limit = false
 argument_list|)
 block|{
 comment|// Returning 0 on malloc(0) may break a lot of code.
@@ -223,29 +221,12 @@ return|return
 name|ReturnNullOrDieOnBadRequest
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|check_rss_limit
-operator|&&
-name|RssLimitIsExceeded
-argument_list|()
-condition|)
-return|return
-name|ReturnNullOrDieOnOOM
-argument_list|()
-return|;
-end_if
-
-begin_decl_stmt
 name|uptr
 name|original_size
-init|=
+operator|=
 name|size
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// If alignment requirements are to be fulfilled by the frontend allocator
@@ -556,44 +537,6 @@ operator|.
 name|SetReleaseToOSIntervalMs
 argument_list|(
 name|release_to_os_interval_ms
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|bool
-name|RssLimitIsExceeded
-parameter_list|()
-block|{
-return|return
-name|atomic_load
-argument_list|(
-operator|&
-name|rss_limit_is_exceeded_
-argument_list|,
-name|memory_order_acquire
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|SetRssLimitIsExceeded
-parameter_list|(
-name|bool
-name|rss_limit_is_exceeded
-parameter_list|)
-block|{
-name|atomic_store
-argument_list|(
-operator|&
-name|rss_limit_is_exceeded_
-argument_list|,
-name|rss_limit_is_exceeded
-argument_list|,
-name|memory_order_release
 argument_list|)
 expr_stmt|;
 block|}
@@ -1231,12 +1174,6 @@ end_decl_stmt
 begin_decl_stmt
 name|atomic_uint8_t
 name|may_return_null_
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|atomic_uint8_t
-name|rss_limit_is_exceeded_
 decl_stmt|;
 end_decl_stmt
 

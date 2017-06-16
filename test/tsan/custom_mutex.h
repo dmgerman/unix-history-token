@@ -35,7 +35,9 @@ name|public
 label|:
 name|Mutex
 argument_list|(
-argument|bool prof = true
+argument|bool prof
+argument_list|,
+argument|unsigned flags
 argument_list|)
 block|:
 name|prof_
@@ -57,7 +59,7 @@ name|__tsan_mutex_create
 argument_list|(
 name|this
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 block|;   }
 operator|~
@@ -343,6 +345,8 @@ operator|::
 name|prof_mu_
 argument_list|(
 name|false
+argument_list|,
+name|__tsan_mutex_linker_init
 argument_list|)
 expr_stmt|;
 end_expr_stmt

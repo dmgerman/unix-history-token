@@ -416,6 +416,21 @@ name|uptr
 name|size
 parameter_list|)
 function_decl|;
+comment|// Behaves just like MmapOrDie, but tolerates out of memory condition, in that
+comment|// case returns nullptr.
+name|void
+modifier|*
+name|MmapOrDieOnFatalError
+parameter_list|(
+name|uptr
+name|size
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|mem_type
+parameter_list|)
+function_decl|;
 name|void
 modifier|*
 name|MmapFixedNoReserve
