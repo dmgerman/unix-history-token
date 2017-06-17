@@ -9381,16 +9381,15 @@ block|}
 block|,
 comment|/* 362 = kqueue */
 block|{
+name|compat11
+argument_list|(
 name|AS
 argument_list|(
-name|kevent_args
+name|freebsd11_kevent_args
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_kevent
+argument_list|,
+name|kevent
+argument_list|)
 block|,
 name|AUE_KEVENT
 block|,
@@ -9405,7 +9404,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 363 = kevent */
+comment|/* 363 = freebsd11 kevent */
 block|{
 literal|0
 block|,
@@ -14415,6 +14414,32 @@ name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 559 = mknodat */
+block|{
+name|AS
+argument_list|(
+name|kevent_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sys_kevent
+block|,
+name|AUE_KEVENT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|SYF_CAPENABLED
+block|,
+name|SY_THR_STATIC
+block|}
+block|,
+comment|/* 560 = kevent */
 block|}
 decl_stmt|;
 end_decl_stmt
