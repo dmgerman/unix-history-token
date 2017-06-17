@@ -844,7 +844,7 @@ comment|/* non-existent device */
 end_comment
 
 begin_comment
-comment|/*  * File system parameters and macros.  *  * MAXBSIZE -	Filesystems are made out of blocks of at most MAXBSIZE bytes  *		per block.  MAXBSIZE may be made larger without effecting  *		any existing filesystems as long as it does not exceed MAXPHYS,  *		and may be made smaller at the risk of not being able to use  *		filesystems which require a block size exceeding MAXBSIZE.  *  * MAXBCACHEBUF - Maximum size of a buffer in the buffer cache.  This must  *		be>= MAXBSIZE and can be set differently for different  *		architectures by defining it in<machine/param.h>.  *		Making this larger allows NFS to do larger reads/writes.  *  * BKVASIZE -	Nominal buffer space per buffer, in bytes.  BKVASIZE is the  *		minimum KVM memory reservation the kernel is willing to make.  *		Filesystems can of course request smaller chunks.  Actual  *		backing memory uses a chunk size of a page (PAGE_SIZE).  *		The default value here can be overridden on a per-architecture  *		basis by defining it in<machine/param.h>.  This should  *		probably be done to increase its value, when MAXBCACHEBUF is  *		defined as a larger value in<machine/param.h>.  *  *		If you make BKVASIZE too small you risk seriously fragmenting  *		the buffer KVM map which may slow things down a bit.  If you  *		make it too big the kernel will not be able to optimally use  *		the KVM memory reserved for the buffer cache and will wind  *		up with too-few buffers.  *  *		The default is 16384, roughly 2x the block size used by a  *		normal UFS filesystem.  */
+comment|/*  * File system parameters and macros.  *  * MAXBSIZE -	Filesystems are made out of blocks of at most MAXBSIZE bytes  *		per block.  MAXBSIZE may be made larger without effecting  *		any existing filesystems as long as it does not exceed MAXPHYS,  *		and may be made smaller at the risk of not being able to use  *		filesystems which require a block size exceeding MAXBSIZE.  *  * MAXBCACHEBUF - Maximum size of a buffer in the buffer cache.  This must  *		be>= MAXBSIZE and can be set differently for different  *		architectures by defining it in<machine/param.h>.  *		Making this larger allows NFS to do larger reads/writes.  *  * BKVASIZE -	Nominal buffer space per buffer, in bytes.  BKVASIZE is the  *		minimum KVM memory reservation the kernel is willing to make.  *		Filesystems can of course request smaller chunks.  Actual  *		backing memory uses a chunk size of a page (PAGE_SIZE).  *		The default value here can be overridden on a per-architecture  *		basis by defining it in<machine/param.h>.  *  *		If you make BKVASIZE too small you risk seriously fragmenting  *		the buffer KVM map which may slow things down a bit.  If you  *		make it too big the kernel will not be able to optimally use  *		the KVM memory reserved for the buffer cache and will wind  *		up with too-few buffers.  *  *		The default is 16384, roughly 2x the block size used by a  *		normal UFS filesystem.  */
 end_comment
 
 begin_define
@@ -908,6 +908,28 @@ directive|define
 name|BKVAMASK
 value|(BKVASIZE-1)
 end_define
+
+begin_comment
+comment|/*  * This variable is tuned via vfs.maxbcachebuf and is set to the value of  * MAXBCACHEBUF by default.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxbcachebuf
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * MAXPATHLEN defines the longest permissible path length after expanding  * symbolic links. It is used to allocate a temporary buffer from the buffer  * pool in which to do the name expansion, hence should be a power of two,  * and must be less than or equal to MAXBSIZE.  MAXSYMLINKS defines the  * maximum number of symbolic links that may be expanded in a path name.  * It should be set high enough to allow all legitimate uses, but halt  * infinite loops reasonably quickly.  */
