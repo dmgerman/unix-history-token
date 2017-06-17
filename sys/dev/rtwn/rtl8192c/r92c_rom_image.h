@@ -134,7 +134,7 @@ name|R92C_GROUP_2G
 index|]
 decl_stmt|;
 name|uint8_t
-name|xtal_calib
+name|channel_plan
 decl_stmt|;
 name|uint8_t
 name|tssi
@@ -166,12 +166,8 @@ name|uint8_t
 name|rf_opt4
 decl_stmt|;
 name|uint8_t
-name|channel_plan
+name|reserved5
 decl_stmt|;
-define|#
-directive|define
-name|R92C_CHANNEL_PLAN_BY_HW
-value|0x80
 name|uint8_t
 name|version
 decl_stmt|;
