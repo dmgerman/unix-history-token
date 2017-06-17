@@ -2054,10 +2054,6 @@ name|sw_fid
 operator|=
 name|ecore_concrete_to_sw_fid
 argument_list|(
-name|p_hwfn
-operator|->
-name|p_dev
-argument_list|,
 name|p_params
 operator|->
 name|concrete_fid
@@ -3147,11 +3143,6 @@ name|void
 name|ecore_sp_vport_update_sge_tpa
 parameter_list|(
 name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
-name|struct
 name|vport_update_ramrod_data
 modifier|*
 name|p_ramrod
@@ -3330,11 +3321,6 @@ specifier|static
 name|void
 name|ecore_sp_update_mcast_bin
 parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
 name|struct
 name|vport_update_ramrod_data
 modifier|*
@@ -3888,8 +3874,6 @@ block|}
 comment|/* Update mcast bins for VFs, PF doesn't use this functionality */
 name|ecore_sp_update_mcast_bin
 argument_list|(
-name|p_hwfn
-argument_list|,
 name|p_ramrod
 argument_list|,
 name|p_params
@@ -3908,8 +3892,6 @@ argument_list|)
 expr_stmt|;
 name|ecore_sp_vport_update_sge_tpa
 argument_list|(
-name|p_hwfn
-argument_list|,
 name|p_ramrod
 argument_list|,
 name|p_params
@@ -7264,9 +7246,6 @@ name|crc32_length
 parameter_list|,
 name|u32
 name|crc32_seed
-parameter_list|,
-name|u8
-name|complement
 parameter_list|)
 block|{
 name|u32
@@ -7418,9 +7397,6 @@ parameter_list|,
 name|u8
 modifier|*
 name|mac
-parameter_list|,
-name|u32
-name|len
 parameter_list|)
 block|{
 name|u32
@@ -7468,8 +7444,6 @@ argument_list|,
 literal|8
 argument_list|,
 name|seed
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -7492,8 +7466,6 @@ argument_list|(
 name|ETH_MULTICAST_BIN_FROM_MAC_SEED
 argument_list|,
 name|mac
-argument_list|,
-name|ETH_ALEN
 argument_list|)
 decl_stmt|;
 return|return
@@ -7514,9 +7486,6 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
-parameter_list|,
-name|u16
-name|opaque_fid
 parameter_list|,
 name|struct
 name|ecore_filter_mcast
@@ -7981,9 +7950,6 @@ index|[
 name|i
 index|]
 decl_stmt|;
-name|u16
-name|opaque_fid
-decl_stmt|;
 if|if
 condition|(
 name|IS_VF
@@ -8001,21 +7967,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|opaque_fid
-operator|=
-name|p_hwfn
-operator|->
-name|hw_info
-operator|.
-name|opaque_fid
-expr_stmt|;
 name|rc
 operator|=
 name|ecore_sp_eth_filter_mcast
 argument_list|(
 name|p_hwfn
-argument_list|,
-name|opaque_fid
 argument_list|,
 name|p_filter_cmd
 argument_list|,
@@ -8448,9 +8404,6 @@ name|struct
 name|ecore_eth_stats
 modifier|*
 name|p_stats
-parameter_list|,
-name|u16
-name|statistics_bin
 parameter_list|)
 block|{
 name|struct
@@ -9865,8 +9818,6 @@ argument_list|,
 name|p_ptt
 argument_list|,
 name|stats
-argument_list|,
-name|statistics_bin
 argument_list|)
 expr_stmt|;
 name|__ecore_get_vport_pstats
@@ -10587,11 +10538,6 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
 parameter_list|,
 name|struct
 name|ecore_spq_comp_cb

@@ -8,7 +8,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"jemalloc/internal/jemalloc_internal.h"
+file|"jemalloc/internal/jemalloc_preamble.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/jemalloc_internal_includes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/assert.h"
 end_include
 
 begin_comment
@@ -18,7 +30,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USE_TREE
+name|BITMAP_USE_TREE
 end_ifdef
 
 begin_function
@@ -193,7 +205,6 @@ name|binfo
 parameter_list|)
 block|{
 return|return
-operator|(
 name|binfo
 operator|->
 name|levels
@@ -204,7 +215,6 @@ name|nlevels
 index|]
 operator|.
 name|group_offset
-operator|)
 return|;
 block|}
 end_function
@@ -221,6 +231,9 @@ specifier|const
 name|bitmap_info_t
 modifier|*
 name|binfo
+parameter_list|,
+name|bool
+name|fill
 parameter_list|)
 block|{
 name|size_t
@@ -229,7 +242,28 @@ decl_stmt|;
 name|unsigned
 name|i
 decl_stmt|;
-comment|/* 	 * Bits are actually inverted with regard to the external bitmap 	 * interface, so the bitmap starts out with all 1 bits, except for 	 * trailing unused bits (if any).  Note that each group uses bit 0 to 	 * correspond to the first logical bit in the group, so extra bits 	 * are the most significant bits of the last group. 	 */
+comment|/* 	 * Bits are actually inverted with regard to the external bitmap 	 * interface. 	 */
+if|if
+condition|(
+name|fill
+condition|)
+block|{
+comment|/* The "filled" bitmap starts out with all 0 bits. */
+name|memset
+argument_list|(
+name|bitmap
+argument_list|,
+literal|0
+argument_list|,
+name|bitmap_size
+argument_list|(
+name|binfo
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * The "empty" bitmap starts out with all 1 bits, except for trailing 	 * unused bits (if any).  Note that each group uses bit 0 to correspond 	 * to the first logical bit in the group, so extra bits are the most 	 * significant bits of the last group. 	 */
 name|memset
 argument_list|(
 name|bitmap
@@ -264,6 +298,7 @@ name|extra
 operator|!=
 literal|0
 condition|)
+block|{
 name|bitmap
 index|[
 name|binfo
@@ -280,6 +315,7 @@ index|]
 operator|>>=
 name|extra
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -339,6 +375,7 @@ name|extra
 operator|!=
 literal|0
 condition|)
+block|{
 name|bitmap
 index|[
 name|binfo
@@ -359,6 +396,7 @@ name|extra
 expr_stmt|;
 block|}
 block|}
+block|}
 end_function
 
 begin_else
@@ -367,7 +405,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* USE_TREE */
+comment|/* BITMAP_USE_TREE */
 end_comment
 
 begin_function
@@ -433,11 +471,9 @@ name|binfo
 parameter_list|)
 block|{
 return|return
-operator|(
 name|binfo
 operator|->
 name|ngroups
-operator|)
 return|;
 block|}
 end_function
@@ -454,11 +490,33 @@ specifier|const
 name|bitmap_info_t
 modifier|*
 name|binfo
+parameter_list|,
+name|bool
+name|fill
 parameter_list|)
 block|{
 name|size_t
 name|extra
 decl_stmt|;
+if|if
+condition|(
+name|fill
+condition|)
+block|{
+name|memset
+argument_list|(
+name|bitmap
+argument_list|,
+literal|0
+argument_list|,
+name|bitmap_size
+argument_list|(
+name|binfo
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|memset
 argument_list|(
 name|bitmap
@@ -493,6 +551,7 @@ name|extra
 operator|!=
 literal|0
 condition|)
+block|{
 name|bitmap
 index|[
 name|binfo
@@ -505,6 +564,7 @@ operator|>>=
 name|extra
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_endif
@@ -513,7 +573,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_TREE */
+comment|/* BITMAP_USE_TREE */
 end_comment
 
 begin_function

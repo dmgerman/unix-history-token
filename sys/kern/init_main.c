@@ -1579,12 +1579,6 @@ name|thread
 modifier|*
 name|td
 name|__unused
-parameter_list|,
-name|struct
-name|syscall_args
-modifier|*
-name|sa
-name|__unused
 parameter_list|)
 block|{
 name|panic

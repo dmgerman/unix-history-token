@@ -97,14 +97,37 @@ begin_enum
 enum|enum
 name|ecore_ptp_filter_type
 block|{
-name|ECORE_PTP_FILTER_L2
+name|ECORE_PTP_FILTER_NONE
 block|,
-name|ECORE_PTP_FILTER_IPV4
+name|ECORE_PTP_FILTER_ALL
 block|,
-name|ECORE_PTP_FILTER_IPV4_IPV6
+name|ECORE_PTP_FILTER_V1_L4_EVENT
 block|,
-name|ECORE_PTP_FILTER_L2_IPV4_IPV6
+name|ECORE_PTP_FILTER_V1_L4_GEN
+block|,
+name|ECORE_PTP_FILTER_V2_L4_EVENT
+block|,
+name|ECORE_PTP_FILTER_V2_L4_GEN
+block|,
+name|ECORE_PTP_FILTER_V2_L2_EVENT
+block|,
+name|ECORE_PTP_FILTER_V2_L2_GEN
+block|,
+name|ECORE_PTP_FILTER_V2_EVENT
+block|,
+name|ECORE_PTP_FILTER_V2_GEN
 block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|ecore_ptp_hwtstamp_tx_type
+block|{
+name|ECORE_PTP_HWTSTAMP_TX_OFF
+block|,
+name|ECORE_PTP_HWTSTAMP_TX_ON
+block|, }
 enum|;
 end_enum
 
@@ -603,7 +626,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_eth_rx_queue_stop - This ramrod closes an Rx queue  *  * @param p_hwfn  * @param p_rxq			Handler of queue to close  * @param eq_completion_only	If True completion will be on  *				EQe, if False completion will be  *				on EQe if p_hwfn opaque  *				different from the RXQ opaque  *				otherwise on CQe.  * @param cqe_completion	If True completion will be  *				receive on CQe.  * @return enum _ecore_status_t  */
+comment|/**  * @brief ecore_eth_rx_queue_stop - This ramrod closes an Rx queue  *  * @param p_hwfn  * @param p_rxq			Handler of queue to close  * @param eq_completion_only	If True completion will be on  *				EQe, if False completion will be  *				on EQe if p_hwfn opaque  *				different from the RXQ opaque  *				otherwise on CQe.  * @param cqe_completion	If True completion will be  *				recieve on CQe.  * @return enum _ecore_status_t  */
 end_comment
 
 begin_function_decl
@@ -1098,6 +1121,43 @@ name|struct
 name|ecore_arfs_config_params
 modifier|*
 name|p_cfg_params
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * @brief - ecore_configure_rfs_ntuple_filter  *  * This ramrod should be used to add or remove arfs hw filter  *  * @params p_hwfn  * @params p_cb		Used for ECORE_SPQ_MODE_CB,where client would initialize  *			it with cookie and callback function address, if not  *			using this mode then client must pass NULL.  * @params p_addr	p_addr is an actual packet header that needs to be  *			filter. It has to mapped with IO to read prior to  *			calling this, [contains 4 tuples- src ip, dest ip,  *			src port, dest port].  * @params length	length of p_addr header up to past the transport header.  * @params qid		receive packet will be directed to this queue.  * @params vport_id  * @params b_is_add	flag to add or remove filter.  *  */
+end_comment
+
+begin_function_decl
+name|enum
+name|_ecore_status_t
+name|ecore_configure_rfs_ntuple_filter
+parameter_list|(
+name|struct
+name|ecore_hwfn
+modifier|*
+name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_spq_comp_cb
+modifier|*
+name|p_cb
+parameter_list|,
+name|dma_addr_t
+name|p_addr
+parameter_list|,
+name|u16
+name|length
+parameter_list|,
+name|u16
+name|qid
+parameter_list|,
+name|u8
+name|vport_id
+parameter_list|,
+name|bool
+name|b_is_add
 parameter_list|)
 function_decl|;
 end_function_decl

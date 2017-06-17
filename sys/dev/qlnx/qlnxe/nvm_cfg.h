@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2017-2018 Cavium, Inc.   * All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  * Name:        nvm_cfg.h  *  * Description: NVM config file - Generated file from nvm cfg excel.  *              DO NOT MODIFY !!!  *  * Created:     2/4/2017  *  ****************************************************************************/
+comment|/****************************************************************************  *  * Name:        nvm_cfg.h  *  * Description: NVM config file - Generated file from nvm cfg excel.  *              DO NOT MODIFY !!!  *  * Created:     3/15/2017  *  ****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -23,14 +23,14 @@ begin_define
 define|#
 directive|define
 name|NVM_CFG_version
-value|0x81812
+value|0x83000
 end_define
 
 begin_define
 define|#
 directive|define
 name|NVM_CFG_new_option_seq
-value|20
+value|22
 end_define
 
 begin_define
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|NVM_CFG_updated_value_seq
-value|3
+value|4
 end_define
 
 begin_struct
@@ -1894,6 +1894,22 @@ value|0x0
 define|#
 directive|define
 name|NVM_CFG1_GLOB_PF_MAPPING_FIXED
+value|0x1
+define|#
+directive|define
+name|NVM_CFG1_GLOB_VOLTAGE_REGULATOR_TYPE_MASK
+value|0x30000000
+define|#
+directive|define
+name|NVM_CFG1_GLOB_VOLTAGE_REGULATOR_TYPE_OFFSET
+value|28
+define|#
+directive|define
+name|NVM_CFG1_GLOB_VOLTAGE_REGULATOR_TYPE_DISABLED
+value|0x0
+define|#
+directive|define
+name|NVM_CFG1_GLOB_VOLTAGE_REGULATOR_TYPE_TI
 value|0x1
 name|u32
 name|led_global_settings
@@ -4969,6 +4985,14 @@ define|#
 directive|define
 name|NVM_CFG1_PORT_RESERVED66_OFFSET
 value|16
+define|#
+directive|define
+name|NVM_CFG1_PORT_PREBOOT_LINK_UP_DELAY_MASK
+value|0x01FE0000
+define|#
+directive|define
+name|NVM_CFG1_PORT_PREBOOT_LINK_UP_DELAY_OFFSET
+value|17
 name|u32
 name|vf_cfg
 decl_stmt|;

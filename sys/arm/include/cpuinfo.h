@@ -330,20 +330,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
+
 begin_function_decl
 name|void
-name|cpuinfo_get_actlr_modifier
+name|cpuinfo_reinit_mmu
 parameter_list|(
 name|uint32_t
-modifier|*
-name|actlr_mask
-parameter_list|,
-name|uint32_t
-modifier|*
-name|actlr_set
+name|ttb
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

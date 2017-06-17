@@ -4675,7 +4675,9 @@ name|S_SCX
 argument_list|,
 name|td
 operator|->
-name|td_dbg_sc_code
+name|td_sa
+operator|.
+name|code
 argument_list|)
 expr_stmt|;
 if|if

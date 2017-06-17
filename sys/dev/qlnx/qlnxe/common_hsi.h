@@ -311,7 +311,7 @@ value|4096
 end_define
 
 begin_comment
-comment|/*  * Usually LL2 queues are opened in pairs TX-RX.  * There is a hard restriction on number of RX queues (limited by Tstorm RAM) and TX counters (Pstorm RAM).  * Number of TX queues is almost unlimited.  * The constants are different so as to allow asymmetric LL2 connections  */
+comment|/*  * Usually LL2 queues are opened in pairs  TX-RX.  * There is a hard restriction on number of RX queues (limited by Tstorm RAM) and TX counters (Pstorm RAM).  * Number of TX queues is almost unlimited.  * The constants are different so as to allow asymmetric LL2 connections  */
 end_comment
 
 begin_define
@@ -333,7 +333,7 @@ comment|////////////////////////////////////////////////////////////////////////
 end_comment
 
 begin_comment
-comment|// Include firmware version number only- do not add constants here to avoid redundunt compilations
+comment|// Include firmware verison number only- do not add constants here to avoid redundunt compilations
 end_comment
 
 begin_comment
@@ -351,14 +351,14 @@ begin_define
 define|#
 directive|define
 name|FW_MINOR_VERSION
-value|18
+value|30
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_REVISION_VERSION
-value|14
+value|0
 end_define
 
 begin_define
@@ -387,13 +387,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_NUM_PORTS_K2
-value|(4)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAX_NUM_PORTS_BB
 value|(2)
 end_define
@@ -401,15 +394,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_NUM_PORTS
+name|MAX_NUM_PORTS_K2
+value|(4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_NUM_PORTS_E5
 value|(MAX_NUM_PORTS_K2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_NUM_PFS_K2
-value|(16)
+name|MAX_NUM_PORTS
+value|(MAX_NUM_PORTS_E5)
 end_define
 
 begin_define
@@ -422,8 +422,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_NUM_PFS
+name|MAX_NUM_PFS_K2
+value|(16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_NUM_PFS_E5
 value|(MAX_NUM_PFS_K2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_NUM_PFS
+value|(MAX_NUM_PFS_E5)
 end_define
 
 begin_define
@@ -454,14 +468,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|E4_MAX_NUM_VFS
+name|MAX_NUM_VFS_E4
 value|(MAX_NUM_VFS_K2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|E5_MAX_NUM_VFS
+name|MAX_NUM_VFS_E5
 value|(240)
 end_define
 
@@ -469,7 +483,7 @@ begin_define
 define|#
 directive|define
 name|COMMON_MAX_NUM_VFS
-value|(E5_MAX_NUM_VFS)
+value|(MAX_NUM_VFS_E5)
 end_define
 
 begin_define
@@ -490,7 +504,7 @@ begin_define
 define|#
 directive|define
 name|MAX_NUM_FUNCTIONS
-value|(MAX_NUM_PFS + E4_MAX_NUM_VFS)
+value|(MAX_NUM_PFS + MAX_NUM_VFS_E4)
 end_define
 
 begin_comment
@@ -518,8 +532,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_FUNCTION_NUMBER
-value|(MAX_NUM_PFS + E4_MAX_NUM_VFS)
+name|MAX_FUNCTION_NUMBER_E4
+value|(MAX_NUM_PFS + MAX_NUM_VFS_E4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_FUNCTION_NUMBER_E5
+value|(MAX_NUM_PFS + MAX_NUM_VFS_E5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMMON_MAX_FUNCTION_NUMBER
+value|(MAX_NUM_PFS + MAX_NUM_VFS_E5)
 end_define
 
 begin_define
@@ -539,8 +567,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_NUM_VPORTS
+name|MAX_NUM_VPORTS_E4
 value|(MAX_NUM_VPORTS_K2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_NUM_VPORTS_E5
+value|(256)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMMON_MAX_NUM_VPORTS
+value|(MAX_NUM_VPORTS_E5)
 end_define
 
 begin_define
@@ -568,15 +610,18 @@ begin_comment
 comment|/* Traffic classes in network-facing blocks (PBF, BTB, NIG, BRB, PRS and QM) */
 end_comment
 
-begin_comment
-comment|// 4-Port K2.
-end_comment
-
 begin_define
 define|#
 directive|define
 name|NUM_PHYS_TCS_4PORT_K2
 value|(4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUM_PHYS_TCS_4PORT_E5
+value|(6)
 end_define
 
 begin_define
@@ -589,6 +634,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PURE_LB_TC
+value|NUM_OF_PHYS_TCS
+end_define
+
+begin_define
+define|#
+directive|define
 name|NUM_TCS_4PORT_K2
 value|(NUM_PHYS_TCS_4PORT_K2 + 1)
 end_define
@@ -596,15 +648,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|NUM_OF_TCS
-value|(NUM_OF_PHYS_TCS + 1)
+name|NUM_TCS_4PORT_E5
+value|(NUM_PHYS_TCS_4PORT_E5 + 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LB_TC
-value|(NUM_OF_PHYS_TCS)
+name|NUM_OF_TCS
+value|(NUM_OF_PHYS_TCS + 1)
 end_define
 
 begin_comment
@@ -618,34 +670,6 @@ name|NUM_OF_PRIO
 value|(8)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_NUM_VOQS_K2
-value|(NUM_TCS_4PORT_K2 * MAX_NUM_PORTS_K2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_NUM_VOQS_BB
-value|(NUM_OF_TCS * MAX_NUM_PORTS_BB)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_NUM_VOQS
-value|(MAX_NUM_VOQS_K2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_PHYS_VOQS
-value|(NUM_OF_PHYS_TCS * MAX_NUM_PORTS_BB)
-end_define
-
 begin_comment
 comment|/* CIDs */
 end_comment
@@ -653,14 +677,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E4_NUM_OF_CONNECTION_TYPES
+name|NUM_OF_CONNECTION_TYPES_E4
 value|(8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|E5_NUM_OF_CONNECTION_TYPES
+name|NUM_OF_CONNECTION_TYPES_E5
 value|(16)
 end_define
 
@@ -1833,6 +1857,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAX_QM_TX_QUEUES_E5
+value|MAX_QM_TX_QUEUES_K2
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_QM_TX_QUEUES
 value|MAX_QM_TX_QUEUES_K2
 end_define
@@ -1853,6 +1884,13 @@ define|#
 directive|define
 name|MAX_QM_OTHER_QUEUES_K2
 value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_QM_OTHER_QUEUES_E5
+value|MAX_QM_OTHER_QUEUES_K2
 end_define
 
 begin_define
@@ -1999,8 +2037,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PIS_PER_SB
+name|PIS_PER_SB_E4
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIS_PER_SB_E5
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_PIS_PER_SB
+value|OSAL_MAX_T(u8, PIS_PER_SB_E4, PIS_PER_SB_E5)
 end_define
 
 begin_define
@@ -2065,8 +2117,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAX_SB_PER_PATH_E5
+value|(512)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_TOT_SB_PER_PATH
-value|MAX_SB_PER_PATH_K2
+value|MAX_SB_PER_PATH_E5
 end_define
 
 begin_define
@@ -2907,7 +2966,7 @@ begin_define
 define|#
 directive|define
 name|MAX_NUM_ILT_RECORDS
-value|MAX(PXP_NUM_ILT_RECORDS_BB,PXP_NUM_ILT_RECORDS_K2)
+value|OSAL_MAX_T(u16, PXP_NUM_ILT_RECORDS_BB,PXP_NUM_ILT_RECORDS_K2)
 end_define
 
 begin_comment
@@ -3119,8 +3178,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PBF_MAX_CMD_LINES
+name|PBF_MAX_CMD_LINES_E4
 value|3328
+end_define
+
+begin_define
+define|#
+directive|define
+name|PBF_MAX_CMD_LINES_E5
+value|5280
 end_define
 
 begin_comment
@@ -3383,11 +3449,11 @@ struct|struct
 name|malicious_vf_eqe_data
 block|{
 name|u8
-name|vfId
+name|vf_id
 comment|/* Malicious VF ID */
 decl_stmt|;
 name|u8
-name|errId
+name|err_id
 comment|/* Malicious VF error */
 decl_stmt|;
 name|__le16
@@ -3409,7 +3475,7 @@ struct|struct
 name|initial_cleanup_eqe_data
 block|{
 name|u8
-name|vfId
+name|vf_id
 comment|/* VF ID */
 decl_stmt|;
 name|u8
@@ -4289,7 +4355,7 @@ decl_stmt|;
 name|struct
 name|db_rdma_dpm_params
 name|params
-comment|/* parameters passed to RDMA firmware */
+comment|/* parametes passed to RDMA firmware */
 decl_stmt|;
 block|}
 struct|;
@@ -4423,18 +4489,18 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Enumeration for L3 type field of parsing_and_err_flags_union. L3Type: 0 - unknown (not ip) ,1 - Ipv4, 2 - Ipv6 (this field can be filled according to the last-ethertype)  */
+comment|/*  * Enumeration for L3 type field of parsing_and_err_flags. L3Type: 0 - unknown (not ip) ,1 - Ipv4, 2 - Ipv6 (this field can be filled according to the last-ethertype)  */
 end_comment
 
 begin_enum
 enum|enum
 name|l3_type
 block|{
-name|e_l3Type_unknown
+name|e_l3_type_unknown
 block|,
-name|e_l3Type_ipv4
+name|e_l3_type_ipv4
 block|,
-name|e_l3Type_ipv6
+name|e_l3_type_ipv6
 block|,
 name|MAX_L3_TYPE
 block|}
@@ -4442,18 +4508,18 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Enumeration for l4Protocol field of parsing_and_err_flags_union. L4-protocol 0 - none, 1 - TCP, 2- UDP. if the packet is IPv4 fragment, and its not the first fragment, the protocol-type should be set to none.  */
+comment|/*  * Enumeration for l4Protocol field of parsing_and_err_flags. L4-protocol 0 - none, 1 - TCP, 2- UDP. if the packet is IPv4 fragment, and its not the first fragment, the protocol-type should be set to none.  */
 end_comment
 
 begin_enum
 enum|enum
 name|l4_protocol
 block|{
-name|e_l4Protocol_none
+name|e_l4_protocol_none
 block|,
-name|e_l4Protocol_tcp
+name|e_l4_protocol_tcp
 block|,
-name|e_l4Protocol_udp
+name|e_l4_protocol_udp
 block|,
 name|MAX_L4_PROTOCOL
 block|}
@@ -4493,7 +4559,7 @@ define|#
 directive|define
 name|PARSING_AND_ERR_FLAGS_IPV4FRAG_MASK
 value|0x1
-comment|/* Set if the packet is IPv4 fragment. */
+comment|/* Set if the packet is IPv4/IPv6 fragment. */
 define|#
 directive|define
 name|PARSING_AND_ERR_FLAGS_IPV4FRAG_SHIFT
@@ -4502,7 +4568,7 @@ define|#
 directive|define
 name|PARSING_AND_ERR_FLAGS_TAG8021QEXIST_MASK
 value|0x1
-comment|/* Set if VLAN tag exists. Invalid if tunnel type are IP GRE or IP GENEVE. */
+comment|/* corresponds to the same 8021q tag that is selected for 8021q-tag fiel. This flag should be set if the tag appears in the packet, regardless of its value. */
 define|#
 directive|define
 name|PARSING_AND_ERR_FLAGS_TAG8021QEXIST_SHIFT
@@ -4511,7 +4577,7 @@ define|#
 directive|define
 name|PARSING_AND_ERR_FLAGS_L4CHKSMWASCALCULATED_MASK
 value|0x1
-comment|/* Set if L4 checksum was calculated. */
+comment|/* Set if L4 checksum was calculated. taken from the EOP descriptor. */
 define|#
 directive|define
 name|PARSING_AND_ERR_FLAGS_L4CHKSMWASCALCULATED_SHIFT
@@ -4565,7 +4631,7 @@ define|#
 directive|define
 name|PARSING_AND_ERR_FLAGS_TUNNEL8021QTAGEXIST_MASK
 value|0x1
-comment|/* Set if VLAN tag exists in tunnel header. */
+comment|/* This flag should be set if the tag appears in the packet tunnel header, regardless of its value.. */
 define|#
 directive|define
 name|PARSING_AND_ERR_FLAGS_TUNNEL8021QTAGEXIST_SHIFT
@@ -4583,7 +4649,7 @@ define|#
 directive|define
 name|PARSING_AND_ERR_FLAGS_TUNNELL4CHKSMWASCALCULATED_MASK
 value|0x1
-comment|/* Set if GRE or VXLAN/GENEVE UDP checksum was calculated. */
+comment|/* taken from the EOP descriptor. */
 define|#
 directive|define
 name|PARSING_AND_ERR_FLAGS_TUNNELL4CHKSMWASCALCULATED_SHIFT
@@ -5395,12 +5461,12 @@ end_comment
 
 begin_struct
 struct|struct
-name|status_block
+name|status_block_e4
 block|{
 name|__le16
 name|pi_array
 index|[
-name|PIS_PER_SB
+name|PIS_PER_SB_E4
 index|]
 decl_stmt|;
 name|__le32
@@ -5408,46 +5474,110 @@ name|sb_num
 decl_stmt|;
 define|#
 directive|define
-name|STATUS_BLOCK_SB_NUM_MASK
+name|STATUS_BLOCK_E4_SB_NUM_MASK
 value|0x1FF
 define|#
 directive|define
-name|STATUS_BLOCK_SB_NUM_SHIFT
+name|STATUS_BLOCK_E4_SB_NUM_SHIFT
 value|0
 define|#
 directive|define
-name|STATUS_BLOCK_ZERO_PAD_MASK
+name|STATUS_BLOCK_E4_ZERO_PAD_MASK
 value|0x7F
 define|#
 directive|define
-name|STATUS_BLOCK_ZERO_PAD_SHIFT
+name|STATUS_BLOCK_E4_ZERO_PAD_SHIFT
 value|9
 define|#
 directive|define
-name|STATUS_BLOCK_ZERO_PAD2_MASK
+name|STATUS_BLOCK_E4_ZERO_PAD2_MASK
 value|0xFFFF
 define|#
 directive|define
-name|STATUS_BLOCK_ZERO_PAD2_SHIFT
+name|STATUS_BLOCK_E4_ZERO_PAD2_SHIFT
 value|16
 name|__le32
 name|prod_index
 decl_stmt|;
 define|#
 directive|define
-name|STATUS_BLOCK_PROD_INDEX_MASK
+name|STATUS_BLOCK_E4_PROD_INDEX_MASK
 value|0xFFFFFF
 define|#
 directive|define
-name|STATUS_BLOCK_PROD_INDEX_SHIFT
+name|STATUS_BLOCK_E4_PROD_INDEX_SHIFT
 value|0
 define|#
 directive|define
-name|STATUS_BLOCK_ZERO_PAD3_MASK
+name|STATUS_BLOCK_E4_ZERO_PAD3_MASK
 value|0xFF
 define|#
 directive|define
-name|STATUS_BLOCK_ZERO_PAD3_SHIFT
+name|STATUS_BLOCK_E4_ZERO_PAD3_SHIFT
+value|24
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * status block structure  */
+end_comment
+
+begin_struct
+struct|struct
+name|status_block_e5
+block|{
+name|__le16
+name|pi_array
+index|[
+name|PIS_PER_SB_E5
+index|]
+decl_stmt|;
+name|__le32
+name|sb_num
+decl_stmt|;
+define|#
+directive|define
+name|STATUS_BLOCK_E5_SB_NUM_MASK
+value|0x1FF
+define|#
+directive|define
+name|STATUS_BLOCK_E5_SB_NUM_SHIFT
+value|0
+define|#
+directive|define
+name|STATUS_BLOCK_E5_ZERO_PAD_MASK
+value|0x7F
+define|#
+directive|define
+name|STATUS_BLOCK_E5_ZERO_PAD_SHIFT
+value|9
+define|#
+directive|define
+name|STATUS_BLOCK_E5_ZERO_PAD2_MASK
+value|0xFFFF
+define|#
+directive|define
+name|STATUS_BLOCK_E5_ZERO_PAD2_SHIFT
+value|16
+name|__le32
+name|prod_index
+decl_stmt|;
+define|#
+directive|define
+name|STATUS_BLOCK_E5_PROD_INDEX_MASK
+value|0xFFFFFF
+define|#
+directive|define
+name|STATUS_BLOCK_E5_PROD_INDEX_SHIFT
+value|0
+define|#
+directive|define
+name|STATUS_BLOCK_E5_ZERO_PAD3_MASK
+value|0xFF
+define|#
+directive|define
+name|STATUS_BLOCK_E5_ZERO_PAD3_SHIFT
 value|24
 block|}
 struct|;

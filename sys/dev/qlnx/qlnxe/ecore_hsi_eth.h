@@ -215,21 +215,21 @@ name|E4_XSTORM_ETH_CONN_AG_CTX_BIT11_SHIFT
 value|3
 define|#
 directive|define
-name|E4_XSTORM_ETH_CONN_AG_CTX_BIT12_MASK
+name|E4_XSTORM_ETH_CONN_AG_CTX_E5_RESERVED2_MASK
 value|0x1
 comment|/* bit12 */
 define|#
 directive|define
-name|E4_XSTORM_ETH_CONN_AG_CTX_BIT12_SHIFT
+name|E4_XSTORM_ETH_CONN_AG_CTX_E5_RESERVED2_SHIFT
 value|4
 define|#
 directive|define
-name|E4_XSTORM_ETH_CONN_AG_CTX_BIT13_MASK
+name|E4_XSTORM_ETH_CONN_AG_CTX_E5_RESERVED3_MASK
 value|0x1
 comment|/* bit13 */
 define|#
 directive|define
-name|E4_XSTORM_ETH_CONN_AG_CTX_BIT13_SHIFT
+name|E4_XSTORM_ETH_CONN_AG_CTX_E5_RESERVED3_SHIFT
 value|5
 define|#
 directive|define
@@ -2195,7 +2195,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|eth_conn_context
+name|e4_eth_conn_context
 block|{
 name|struct
 name|tstorm_eth_conn_st_ctx
@@ -2242,6 +2242,2309 @@ comment|/* tstorm aggregative context */
 decl_stmt|;
 name|struct
 name|e4_ustorm_eth_conn_ag_ctx
+name|ustorm_ag_context
+comment|/* ustorm aggregative context */
+decl_stmt|;
+name|struct
+name|ustorm_eth_conn_st_ctx
+name|ustorm_st_context
+comment|/* ustorm storm context */
+decl_stmt|;
+name|struct
+name|mstorm_eth_conn_st_ctx
+name|mstorm_st_context
+comment|/* mstorm storm context */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e5_xstorm_eth_conn_ag_ctx
+block|{
+name|u8
+name|reserved0
+comment|/* cdu_validation */
+decl_stmt|;
+name|u8
+name|state_and_core_id
+comment|/* state_and_core_id */
+decl_stmt|;
+name|u8
+name|flags0
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EXIST_IN_QM0_MASK
+value|0x1
+comment|/* exist_in_qm0 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EXIST_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED1_MASK
+value|0x1
+comment|/* exist_in_qm1 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED1_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED2_MASK
+value|0x1
+comment|/* exist_in_qm2 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED2_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EXIST_IN_QM3_MASK
+value|0x1
+comment|/* exist_in_qm3 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EXIST_IN_QM3_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED3_MASK
+value|0x1
+comment|/* bit4 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED3_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED4_MASK
+value|0x1
+comment|/* cf_array_active */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED4_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED5_MASK
+value|0x1
+comment|/* bit6 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED5_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED6_MASK
+value|0x1
+comment|/* bit7 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED6_SHIFT
+value|7
+name|u8
+name|flags1
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED7_MASK
+value|0x1
+comment|/* bit8 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED7_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED8_MASK
+value|0x1
+comment|/* bit9 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED8_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED9_MASK
+value|0x1
+comment|/* bit10 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED9_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_BIT11_MASK
+value|0x1
+comment|/* bit11 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_BIT11_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_COPY_CONDITION_LO_MASK
+value|0x1
+comment|/* bit12 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_COPY_CONDITION_LO_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_COPY_CONDITION_HI_MASK
+value|0x1
+comment|/* bit13 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_COPY_CONDITION_HI_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TX_RULE_ACTIVE_MASK
+value|0x1
+comment|/* bit14 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TX_RULE_ACTIVE_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_ACTIVE_MASK
+value|0x1
+comment|/* bit15 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_ACTIVE_SHIFT
+value|7
+name|u8
+name|flags2
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF0_MASK
+value|0x3
+comment|/* timer0cf */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF1_MASK
+value|0x3
+comment|/* timer1cf */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF1_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF2_MASK
+value|0x3
+comment|/* timer2cf */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF2_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF3_MASK
+value|0x3
+comment|/* timer_stop_all */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF3_SHIFT
+value|6
+name|u8
+name|flags3
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF4_MASK
+value|0x3
+comment|/* cf4 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF4_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF5_MASK
+value|0x3
+comment|/* cf5 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF5_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF6_MASK
+value|0x3
+comment|/* cf6 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF6_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF7_MASK
+value|0x3
+comment|/* cf7 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF7_SHIFT
+value|6
+name|u8
+name|flags4
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF8_MASK
+value|0x3
+comment|/* cf8 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF8_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF9_MASK
+value|0x3
+comment|/* cf9 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF9_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF10_MASK
+value|0x3
+comment|/* cf10 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF10_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF11_MASK
+value|0x3
+comment|/* cf11 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF11_SHIFT
+value|6
+name|u8
+name|flags5
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF12_MASK
+value|0x3
+comment|/* cf12 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF12_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF13_MASK
+value|0x3
+comment|/* cf13 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF13_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF14_MASK
+value|0x3
+comment|/* cf14 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF14_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF15_MASK
+value|0x3
+comment|/* cf15 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF15_SHIFT
+value|6
+name|u8
+name|flags6
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_GO_TO_BD_CONS_CF_MASK
+value|0x3
+comment|/* cf16 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_GO_TO_BD_CONS_CF_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_MULTI_UNICAST_CF_MASK
+value|0x3
+comment|/* cf_array_cf */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_MULTI_UNICAST_CF_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_MASK
+value|0x3
+comment|/* cf18 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TERMINATE_CF_MASK
+value|0x3
+comment|/* cf19 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TERMINATE_CF_SHIFT
+value|6
+name|u8
+name|flags7
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_FLUSH_Q0_MASK
+value|0x3
+comment|/* cf20 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_FLUSH_Q0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED10_MASK
+value|0x3
+comment|/* cf21 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED10_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_SLOW_PATH_MASK
+value|0x3
+comment|/* cf22 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_SLOW_PATH_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF0EN_MASK
+value|0x1
+comment|/* cf0en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF0EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF1EN_MASK
+value|0x1
+comment|/* cf1en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF1EN_SHIFT
+value|7
+name|u8
+name|flags8
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF2EN_MASK
+value|0x1
+comment|/* cf2en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF2EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF3EN_MASK
+value|0x1
+comment|/* cf3en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF3EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF4EN_MASK
+value|0x1
+comment|/* cf4en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF4EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF5EN_MASK
+value|0x1
+comment|/* cf5en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF5EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF6EN_MASK
+value|0x1
+comment|/* cf6en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF6EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF7EN_MASK
+value|0x1
+comment|/* cf7en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF7EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF8EN_MASK
+value|0x1
+comment|/* cf8en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF8EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF9EN_MASK
+value|0x1
+comment|/* cf9en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF9EN_SHIFT
+value|7
+name|u8
+name|flags9
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF10EN_MASK
+value|0x1
+comment|/* cf10en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF10EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF11EN_MASK
+value|0x1
+comment|/* cf11en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF11EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF12EN_MASK
+value|0x1
+comment|/* cf12en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF12EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF13EN_MASK
+value|0x1
+comment|/* cf13en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF13EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF14EN_MASK
+value|0x1
+comment|/* cf14en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF14EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF15EN_MASK
+value|0x1
+comment|/* cf15en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_CF15EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_GO_TO_BD_CONS_CF_EN_MASK
+value|0x1
+comment|/* cf16en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_GO_TO_BD_CONS_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_MULTI_UNICAST_CF_EN_MASK
+value|0x1
+comment|/* cf_array_cf_en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_MULTI_UNICAST_CF_EN_SHIFT
+value|7
+name|u8
+name|flags10
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_EN_MASK
+value|0x1
+comment|/* cf18en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TERMINATE_CF_EN_MASK
+value|0x1
+comment|/* cf19en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TERMINATE_CF_EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_FLUSH_Q0_EN_MASK
+value|0x1
+comment|/* cf20en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_FLUSH_Q0_EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED11_MASK
+value|0x1
+comment|/* cf21en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED11_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_SLOW_PATH_EN_MASK
+value|0x1
+comment|/* cf22en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_SLOW_PATH_EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TPH_ENABLE_EN_RESERVED_MASK
+value|0x1
+comment|/* cf23en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TPH_ENABLE_EN_RESERVED_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED12_MASK
+value|0x1
+comment|/* rule0en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED12_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED13_MASK
+value|0x1
+comment|/* rule1en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED13_SHIFT
+value|7
+name|u8
+name|flags11
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED14_MASK
+value|0x1
+comment|/* rule2en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED14_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED15_MASK
+value|0x1
+comment|/* rule3en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED15_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TX_DEC_RULE_EN_MASK
+value|0x1
+comment|/* rule4en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TX_DEC_RULE_EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE5EN_MASK
+value|0x1
+comment|/* rule5en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE5EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE6EN_MASK
+value|0x1
+comment|/* rule6en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE6EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE7EN_MASK
+value|0x1
+comment|/* rule7en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE7EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED1_MASK
+value|0x1
+comment|/* rule8en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED1_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE9EN_MASK
+value|0x1
+comment|/* rule9en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE9EN_SHIFT
+value|7
+name|u8
+name|flags12
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE10EN_MASK
+value|0x1
+comment|/* rule10en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE10EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE11EN_MASK
+value|0x1
+comment|/* rule11en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE11EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED2_MASK
+value|0x1
+comment|/* rule12en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED2_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED3_MASK
+value|0x1
+comment|/* rule13en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED3_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE14EN_MASK
+value|0x1
+comment|/* rule14en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE14EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE15EN_MASK
+value|0x1
+comment|/* rule15en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE15EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE16EN_MASK
+value|0x1
+comment|/* rule16en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE16EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE17EN_MASK
+value|0x1
+comment|/* rule17en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE17EN_SHIFT
+value|7
+name|u8
+name|flags13
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE18EN_MASK
+value|0x1
+comment|/* rule18en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE18EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE19EN_MASK
+value|0x1
+comment|/* rule19en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_RULE19EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED4_MASK
+value|0x1
+comment|/* rule20en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED4_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED5_MASK
+value|0x1
+comment|/* rule21en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED5_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED6_MASK
+value|0x1
+comment|/* rule22en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED6_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED7_MASK
+value|0x1
+comment|/* rule23en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED7_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED8_MASK
+value|0x1
+comment|/* rule24en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED8_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED9_MASK
+value|0x1
+comment|/* rule25en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED9_SHIFT
+value|7
+name|u8
+name|flags14
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_USE_EXT_HDR_MASK
+value|0x1
+comment|/* bit16 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_USE_EXT_HDR_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_SEND_RAW_L3L4_MASK
+value|0x1
+comment|/* bit17 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_SEND_RAW_L3L4_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_INBAND_PROP_HDR_MASK
+value|0x1
+comment|/* bit18 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_INBAND_PROP_HDR_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_SEND_EXT_TUNNEL_MASK
+value|0x1
+comment|/* bit19 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_SEND_EXT_TUNNEL_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_L2_EDPM_ENABLE_MASK
+value|0x1
+comment|/* bit20 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_L2_EDPM_ENABLE_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_ROCE_EDPM_ENABLE_MASK
+value|0x1
+comment|/* bit21 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_ROCE_EDPM_ENABLE_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TPH_ENABLE_MASK
+value|0x3
+comment|/* cf23 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_TPH_ENABLE_SHIFT
+value|6
+name|u8
+name|edpm_vport
+comment|/* byte2 */
+decl_stmt|;
+name|__le16
+name|physical_q0
+comment|/* physical_q0 */
+decl_stmt|;
+name|__le16
+name|tx_l2_edpm_usg_cnt
+comment|/* physical_q1 */
+decl_stmt|;
+name|__le16
+name|edpm_num_bds
+comment|/* physical_q2 */
+decl_stmt|;
+name|__le16
+name|tx_bd_cons
+comment|/* word3 */
+decl_stmt|;
+name|__le16
+name|tx_bd_prod
+comment|/* word4 */
+decl_stmt|;
+name|__le16
+name|tx_class
+comment|/* word5 */
+decl_stmt|;
+name|__le16
+name|conn_dpi
+comment|/* conn_dpi */
+decl_stmt|;
+name|u8
+name|byte3
+comment|/* byte3 */
+decl_stmt|;
+name|u8
+name|byte4
+comment|/* byte4 */
+decl_stmt|;
+name|u8
+name|byte5
+comment|/* byte5 */
+decl_stmt|;
+name|u8
+name|byte6
+comment|/* byte6 */
+decl_stmt|;
+name|__le32
+name|reg0
+comment|/* reg0 */
+decl_stmt|;
+name|__le32
+name|reg1
+comment|/* reg1 */
+decl_stmt|;
+name|__le32
+name|reg2
+comment|/* reg2 */
+decl_stmt|;
+name|__le32
+name|reg3
+comment|/* reg3 */
+decl_stmt|;
+name|__le32
+name|reg4
+comment|/* reg4 */
+decl_stmt|;
+name|__le32
+name|reg5
+comment|/* cf_array0 */
+decl_stmt|;
+name|__le32
+name|reg6
+comment|/* cf_array1 */
+decl_stmt|;
+name|u8
+name|flags15
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_REDIRECTION_CONDITION_LO_MASK
+value|0x1
+comment|/* bit22 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_REDIRECTION_CONDITION_LO_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_REDIRECTION_CONDITION_HI_MASK
+value|0x1
+comment|/* bit23 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_REDIRECTION_CONDITION_HI_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED3_MASK
+value|0x1
+comment|/* bit24 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED3_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED4_MASK
+value|0x3
+comment|/* cf24 */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED4_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED5_MASK
+value|0x1
+comment|/* cf24en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED5_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED6_MASK
+value|0x1
+comment|/* rule26en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED6_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED7_MASK
+value|0x1
+comment|/* rule27en */
+define|#
+directive|define
+name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED7_SHIFT
+value|7
+name|u8
+name|byte7
+comment|/* byte7 */
+decl_stmt|;
+name|__le16
+name|word7
+comment|/* word7 */
+decl_stmt|;
+name|__le16
+name|word8
+comment|/* word8 */
+decl_stmt|;
+name|__le16
+name|word9
+comment|/* word9 */
+decl_stmt|;
+name|__le16
+name|word10
+comment|/* word10 */
+decl_stmt|;
+name|__le16
+name|word11
+comment|/* word11 */
+decl_stmt|;
+name|__le32
+name|reg7
+comment|/* reg7 */
+decl_stmt|;
+name|__le32
+name|reg8
+comment|/* reg8 */
+decl_stmt|;
+name|__le32
+name|reg9
+comment|/* reg9 */
+decl_stmt|;
+name|u8
+name|byte8
+comment|/* byte8 */
+decl_stmt|;
+name|u8
+name|byte9
+comment|/* byte9 */
+decl_stmt|;
+name|u8
+name|byte10
+comment|/* byte10 */
+decl_stmt|;
+name|u8
+name|byte11
+comment|/* byte11 */
+decl_stmt|;
+name|u8
+name|byte12
+comment|/* byte12 */
+decl_stmt|;
+name|u8
+name|byte13
+comment|/* byte13 */
+decl_stmt|;
+name|u8
+name|byte14
+comment|/* byte14 */
+decl_stmt|;
+name|u8
+name|byte15
+comment|/* byte15 */
+decl_stmt|;
+name|__le32
+name|reg10
+comment|/* reg10 */
+decl_stmt|;
+name|__le32
+name|reg11
+comment|/* reg11 */
+decl_stmt|;
+name|__le32
+name|reg12
+comment|/* reg12 */
+decl_stmt|;
+name|__le32
+name|reg13
+comment|/* reg13 */
+decl_stmt|;
+name|__le32
+name|reg14
+comment|/* reg14 */
+decl_stmt|;
+name|__le32
+name|reg15
+comment|/* reg15 */
+decl_stmt|;
+name|__le32
+name|reg16
+comment|/* reg16 */
+decl_stmt|;
+name|__le32
+name|reg17
+comment|/* reg17 */
+decl_stmt|;
+name|__le32
+name|reg18
+comment|/* reg18 */
+decl_stmt|;
+name|__le32
+name|reg19
+comment|/* reg19 */
+decl_stmt|;
+name|__le16
+name|word12
+comment|/* word12 */
+decl_stmt|;
+name|__le16
+name|word13
+comment|/* word13 */
+decl_stmt|;
+name|__le16
+name|word14
+comment|/* word14 */
+decl_stmt|;
+name|__le16
+name|word15
+comment|/* word15 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e5_ystorm_eth_conn_ag_ctx
+block|{
+name|u8
+name|byte0
+comment|/* cdu_validation */
+decl_stmt|;
+name|u8
+name|state_and_core_id
+comment|/* state_and_core_id */
+decl_stmt|;
+name|u8
+name|flags0
+decl_stmt|;
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_BIT0_MASK
+value|0x1
+comment|/* exist_in_qm0 */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_BIT0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_BIT1_MASK
+value|0x1
+comment|/* exist_in_qm1 */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_BIT1_SHIFT
+value|1
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_MASK
+value|0x3
+comment|/* cf0 */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_SHIFT
+value|2
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_PMD_TERMINATE_CF_MASK
+value|0x3
+comment|/* cf1 */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_PMD_TERMINATE_CF_SHIFT
+value|4
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_CF2_MASK
+value|0x3
+comment|/* cf2 */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_CF2_SHIFT
+value|6
+name|u8
+name|flags1
+decl_stmt|;
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_EN_MASK
+value|0x1
+comment|/* cf0en */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_PMD_TERMINATE_CF_EN_MASK
+value|0x1
+comment|/* cf1en */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_PMD_TERMINATE_CF_EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_CF2EN_MASK
+value|0x1
+comment|/* cf2en */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_CF2EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_RULE0EN_MASK
+value|0x1
+comment|/* rule0en */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_RULE0EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_RULE1EN_MASK
+value|0x1
+comment|/* rule1en */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_RULE1EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_RULE2EN_MASK
+value|0x1
+comment|/* rule2en */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_RULE2EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_RULE3EN_MASK
+value|0x1
+comment|/* rule3en */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_RULE3EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_RULE4EN_MASK
+value|0x1
+comment|/* rule4en */
+define|#
+directive|define
+name|E5_YSTORM_ETH_CONN_AG_CTX_RULE4EN_SHIFT
+value|7
+name|u8
+name|tx_q0_int_coallecing_timeset
+comment|/* byte2 */
+decl_stmt|;
+name|u8
+name|byte3
+comment|/* byte3 */
+decl_stmt|;
+name|__le16
+name|word0
+comment|/* word0 */
+decl_stmt|;
+name|__le32
+name|terminate_spqe
+comment|/* reg0 */
+decl_stmt|;
+name|__le32
+name|reg1
+comment|/* reg1 */
+decl_stmt|;
+name|__le16
+name|tx_bd_cons_upd
+comment|/* word1 */
+decl_stmt|;
+name|__le16
+name|word2
+comment|/* word2 */
+decl_stmt|;
+name|__le16
+name|word3
+comment|/* word3 */
+decl_stmt|;
+name|__le16
+name|word4
+comment|/* word4 */
+decl_stmt|;
+name|__le32
+name|reg2
+comment|/* reg2 */
+decl_stmt|;
+name|__le32
+name|reg3
+comment|/* reg3 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e5_tstorm_eth_conn_ag_ctx
+block|{
+name|u8
+name|byte0
+comment|/* cdu_validation */
+decl_stmt|;
+name|u8
+name|byte1
+comment|/* state_and_core_id */
+decl_stmt|;
+name|u8
+name|flags0
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT0_MASK
+value|0x1
+comment|/* exist_in_qm0 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT1_MASK
+value|0x1
+comment|/* exist_in_qm1 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT1_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT2_MASK
+value|0x1
+comment|/* bit2 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT2_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT3_MASK
+value|0x1
+comment|/* bit3 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT3_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT4_MASK
+value|0x1
+comment|/* bit4 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT4_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT5_MASK
+value|0x1
+comment|/* bit5 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_BIT5_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF0_MASK
+value|0x3
+comment|/* timer0cf */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF0_SHIFT
+value|6
+name|u8
+name|flags1
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF1_MASK
+value|0x3
+comment|/* timer1cf */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF1_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF2_MASK
+value|0x3
+comment|/* timer2cf */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF2_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF3_MASK
+value|0x3
+comment|/* timer_stop_all */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF3_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF4_MASK
+value|0x3
+comment|/* cf4 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF4_SHIFT
+value|6
+name|u8
+name|flags2
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF5_MASK
+value|0x3
+comment|/* cf5 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF5_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF6_MASK
+value|0x3
+comment|/* cf6 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF6_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF7_MASK
+value|0x3
+comment|/* cf7 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF7_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF8_MASK
+value|0x3
+comment|/* cf8 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF8_SHIFT
+value|6
+name|u8
+name|flags3
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF9_MASK
+value|0x3
+comment|/* cf9 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF9_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF10_MASK
+value|0x3
+comment|/* cf10 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF10_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF0EN_MASK
+value|0x1
+comment|/* cf0en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF0EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF1EN_MASK
+value|0x1
+comment|/* cf1en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF1EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF2EN_MASK
+value|0x1
+comment|/* cf2en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF2EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF3EN_MASK
+value|0x1
+comment|/* cf3en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF3EN_SHIFT
+value|7
+name|u8
+name|flags4
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF4EN_MASK
+value|0x1
+comment|/* cf4en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF4EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF5EN_MASK
+value|0x1
+comment|/* cf5en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF5EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF6EN_MASK
+value|0x1
+comment|/* cf6en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF6EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF7EN_MASK
+value|0x1
+comment|/* cf7en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF7EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF8EN_MASK
+value|0x1
+comment|/* cf8en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF8EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF9EN_MASK
+value|0x1
+comment|/* cf9en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF9EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF10EN_MASK
+value|0x1
+comment|/* cf10en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_CF10EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE0EN_MASK
+value|0x1
+comment|/* rule0en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE0EN_SHIFT
+value|7
+name|u8
+name|flags5
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE1EN_MASK
+value|0x1
+comment|/* rule1en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE1EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE2EN_MASK
+value|0x1
+comment|/* rule2en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE2EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE3EN_MASK
+value|0x1
+comment|/* rule3en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE3EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE4EN_MASK
+value|0x1
+comment|/* rule4en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE4EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE5EN_MASK
+value|0x1
+comment|/* rule5en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE5EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RX_BD_EN_MASK
+value|0x1
+comment|/* rule6en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RX_BD_EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE7EN_MASK
+value|0x1
+comment|/* rule7en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE7EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE8EN_MASK
+value|0x1
+comment|/* rule8en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_RULE8EN_SHIFT
+value|7
+name|u8
+name|flags6
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED1_MASK
+value|0x1
+comment|/* bit6 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED1_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED2_MASK
+value|0x1
+comment|/* bit7 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED2_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED3_MASK
+value|0x1
+comment|/* bit8 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED3_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED4_MASK
+value|0x3
+comment|/* cf11 */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED4_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED5_MASK
+value|0x1
+comment|/* cf11en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED5_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED6_MASK
+value|0x1
+comment|/* rule9en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED6_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED7_MASK
+value|0x1
+comment|/* rule10en */
+define|#
+directive|define
+name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED7_SHIFT
+value|7
+name|u8
+name|byte2
+comment|/* byte2 */
+decl_stmt|;
+name|__le16
+name|rx_bd_cons
+comment|/* word0 */
+decl_stmt|;
+name|__le32
+name|reg0
+comment|/* reg0 */
+decl_stmt|;
+name|__le32
+name|reg1
+comment|/* reg1 */
+decl_stmt|;
+name|__le32
+name|reg2
+comment|/* reg2 */
+decl_stmt|;
+name|__le32
+name|reg3
+comment|/* reg3 */
+decl_stmt|;
+name|__le32
+name|reg4
+comment|/* reg4 */
+decl_stmt|;
+name|__le32
+name|reg5
+comment|/* reg5 */
+decl_stmt|;
+name|__le32
+name|reg6
+comment|/* reg6 */
+decl_stmt|;
+name|__le32
+name|reg7
+comment|/* reg7 */
+decl_stmt|;
+name|__le32
+name|reg8
+comment|/* reg8 */
+decl_stmt|;
+name|u8
+name|byte3
+comment|/* byte3 */
+decl_stmt|;
+name|u8
+name|byte4
+comment|/* byte4 */
+decl_stmt|;
+name|u8
+name|byte5
+comment|/* byte5 */
+decl_stmt|;
+name|u8
+name|e4_reserved8
+comment|/* byte6 */
+decl_stmt|;
+name|__le16
+name|rx_bd_prod
+comment|/* word1 */
+decl_stmt|;
+name|__le16
+name|word2
+comment|/* conn_dpi */
+decl_stmt|;
+name|__le32
+name|reg9
+comment|/* reg9 */
+decl_stmt|;
+name|__le16
+name|word3
+comment|/* word3 */
+decl_stmt|;
+name|__le16
+name|e4_reserved9
+comment|/* word4 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e5_ustorm_eth_conn_ag_ctx
+block|{
+name|u8
+name|byte0
+comment|/* cdu_validation */
+decl_stmt|;
+name|u8
+name|byte1
+comment|/* state_and_core_id */
+decl_stmt|;
+name|u8
+name|flags0
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_BIT0_MASK
+value|0x1
+comment|/* exist_in_qm0 */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_BIT0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_BIT1_MASK
+value|0x1
+comment|/* exist_in_qm1 */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_BIT1_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_PMD_TERMINATE_CF_MASK
+value|0x3
+comment|/* timer0cf */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_PMD_TERMINATE_CF_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RX_PMD_TERMINATE_CF_MASK
+value|0x3
+comment|/* timer1cf */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RX_PMD_TERMINATE_CF_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_CF2_MASK
+value|0x3
+comment|/* timer2cf */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_CF2_SHIFT
+value|6
+name|u8
+name|flags1
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_CF3_MASK
+value|0x3
+comment|/* timer_stop_all */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_CF3_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_ARM_CF_MASK
+value|0x3
+comment|/* cf4 */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_ARM_CF_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RX_ARM_CF_MASK
+value|0x3
+comment|/* cf5 */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RX_ARM_CF_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_MASK
+value|0x3
+comment|/* cf6 */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_SHIFT
+value|6
+name|u8
+name|flags2
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_PMD_TERMINATE_CF_EN_MASK
+value|0x1
+comment|/* cf0en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_PMD_TERMINATE_CF_EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RX_PMD_TERMINATE_CF_EN_MASK
+value|0x1
+comment|/* cf1en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RX_PMD_TERMINATE_CF_EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_CF2EN_MASK
+value|0x1
+comment|/* cf2en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_CF2EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_CF3EN_MASK
+value|0x1
+comment|/* cf3en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_CF3EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_ARM_CF_EN_MASK
+value|0x1
+comment|/* cf4en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_ARM_CF_EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RX_ARM_CF_EN_MASK
+value|0x1
+comment|/* cf5en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RX_ARM_CF_EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_EN_MASK
+value|0x1
+comment|/* cf6en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE0EN_MASK
+value|0x1
+comment|/* rule0en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE0EN_SHIFT
+value|7
+name|u8
+name|flags3
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE1EN_MASK
+value|0x1
+comment|/* rule1en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE1EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE2EN_MASK
+value|0x1
+comment|/* rule2en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE2EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE3EN_MASK
+value|0x1
+comment|/* rule3en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE3EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE4EN_MASK
+value|0x1
+comment|/* rule4en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE4EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE5EN_MASK
+value|0x1
+comment|/* rule5en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE5EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE6EN_MASK
+value|0x1
+comment|/* rule6en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE6EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE7EN_MASK
+value|0x1
+comment|/* rule7en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE7EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE8EN_MASK
+value|0x1
+comment|/* rule8en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_RULE8EN_SHIFT
+value|7
+name|u8
+name|flags4
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED1_MASK
+value|0x1
+comment|/* bit2 */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED1_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED2_MASK
+value|0x1
+comment|/* bit3 */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED2_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED3_MASK
+value|0x3
+comment|/* cf7 */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED3_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED4_MASK
+value|0x3
+comment|/* cf8 */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED4_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED5_MASK
+value|0x1
+comment|/* cf7en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED5_SHIFT
+value|6
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED6_MASK
+value|0x1
+comment|/* cf8en */
+define|#
+directive|define
+name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED6_SHIFT
+value|7
+name|u8
+name|byte2
+comment|/* byte2 */
+decl_stmt|;
+name|__le16
+name|word0
+comment|/* conn_dpi */
+decl_stmt|;
+name|__le16
+name|tx_bd_cons
+comment|/* word1 */
+decl_stmt|;
+name|__le32
+name|reg0
+comment|/* reg0 */
+decl_stmt|;
+name|__le32
+name|reg1
+comment|/* reg1 */
+decl_stmt|;
+name|__le32
+name|reg2
+comment|/* reg2 */
+decl_stmt|;
+name|__le32
+name|tx_int_coallecing_timeset
+comment|/* reg3 */
+decl_stmt|;
+name|__le16
+name|tx_drv_bd_cons
+comment|/* word2 */
+decl_stmt|;
+name|__le16
+name|rx_drv_cqe_cons
+comment|/* word3 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * eth connection context  */
+end_comment
+
+begin_struct
+struct|struct
+name|e5_eth_conn_context
+block|{
+name|struct
+name|tstorm_eth_conn_st_ctx
+name|tstorm_st_context
+comment|/* tstorm storm context */
+decl_stmt|;
+name|struct
+name|regpair
+name|tstorm_st_padding
+index|[
+literal|2
+index|]
+comment|/* padding */
+decl_stmt|;
+name|struct
+name|pstorm_eth_conn_st_ctx
+name|pstorm_st_context
+comment|/* pstorm storm context */
+decl_stmt|;
+name|struct
+name|xstorm_eth_conn_st_ctx
+name|xstorm_st_context
+comment|/* xstorm storm context */
+decl_stmt|;
+name|struct
+name|e5_xstorm_eth_conn_ag_ctx
+name|xstorm_ag_context
+comment|/* xstorm aggregative context */
+decl_stmt|;
+name|struct
+name|ystorm_eth_conn_st_ctx
+name|ystorm_st_context
+comment|/* ystorm storm context */
+decl_stmt|;
+name|struct
+name|e5_ystorm_eth_conn_ag_ctx
+name|ystorm_ag_context
+comment|/* ystorm aggregative context */
+decl_stmt|;
+name|struct
+name|e5_tstorm_eth_conn_ag_ctx
+name|tstorm_ag_context
+comment|/* tstorm aggregative context */
+decl_stmt|;
+name|struct
+name|e5_ustorm_eth_conn_ag_ctx
 name|ustorm_ag_context
 comment|/* ustorm aggregative context */
 decl_stmt|;
@@ -4271,21 +6574,21 @@ name|E4XSTORMETHCONNAGCTXDQEXTLDPART_BIT11_SHIFT
 value|3
 define|#
 directive|define
-name|E4XSTORMETHCONNAGCTXDQEXTLDPART_BIT12_MASK
+name|E4XSTORMETHCONNAGCTXDQEXTLDPART_E5_RESERVED2_MASK
 value|0x1
 comment|/* bit12 */
 define|#
 directive|define
-name|E4XSTORMETHCONNAGCTXDQEXTLDPART_BIT12_SHIFT
+name|E4XSTORMETHCONNAGCTXDQEXTLDPART_E5_RESERVED2_SHIFT
 value|4
 define|#
 directive|define
-name|E4XSTORMETHCONNAGCTXDQEXTLDPART_BIT13_MASK
+name|E4XSTORMETHCONNAGCTXDQEXTLDPART_E5_RESERVED3_MASK
 value|0x1
 comment|/* bit13 */
 define|#
 directive|define
-name|E4XSTORMETHCONNAGCTXDQEXTLDPART_BIT13_SHIFT
+name|E4XSTORMETHCONNAGCTXDQEXTLDPART_E5_RESERVED3_SHIFT
 value|5
 define|#
 directive|define
@@ -5419,21 +7722,21 @@ name|E4_XSTORM_ETH_HW_CONN_AG_CTX_BIT11_SHIFT
 value|3
 define|#
 directive|define
-name|E4_XSTORM_ETH_HW_CONN_AG_CTX_BIT12_MASK
+name|E4_XSTORM_ETH_HW_CONN_AG_CTX_E5_RESERVED2_MASK
 value|0x1
 comment|/* bit12 */
 define|#
 directive|define
-name|E4_XSTORM_ETH_HW_CONN_AG_CTX_BIT12_SHIFT
+name|E4_XSTORM_ETH_HW_CONN_AG_CTX_E5_RESERVED2_SHIFT
 value|4
 define|#
 directive|define
-name|E4_XSTORM_ETH_HW_CONN_AG_CTX_BIT13_MASK
+name|E4_XSTORM_ETH_HW_CONN_AG_CTX_E5_RESERVED3_MASK
 value|0x1
 comment|/* bit13 */
 define|#
 directive|define
-name|E4_XSTORM_ETH_HW_CONN_AG_CTX_BIT13_SHIFT
+name|E4_XSTORM_ETH_HW_CONN_AG_CTX_E5_RESERVED3_SHIFT
 value|5
 define|#
 directive|define
@@ -6376,21 +8679,21 @@ name|E5XSTORMETHCONNAGCTXDQEXTLDPART_BIT11_SHIFT
 value|3
 define|#
 directive|define
-name|E5XSTORMETHCONNAGCTXDQEXTLDPART_BIT12_MASK
+name|E5XSTORMETHCONNAGCTXDQEXTLDPART_EDPM_COPY_CONDITION_LO_MASK
 value|0x1
 comment|/* bit12 */
 define|#
 directive|define
-name|E5XSTORMETHCONNAGCTXDQEXTLDPART_BIT12_SHIFT
+name|E5XSTORMETHCONNAGCTXDQEXTLDPART_EDPM_COPY_CONDITION_LO_SHIFT
 value|4
 define|#
 directive|define
-name|E5XSTORMETHCONNAGCTXDQEXTLDPART_BIT13_MASK
+name|E5XSTORMETHCONNAGCTXDQEXTLDPART_EDPM_COPY_CONDITION_HI_MASK
 value|0x1
 comment|/* bit13 */
 define|#
 directive|define
-name|E5XSTORMETHCONNAGCTXDQEXTLDPART_BIT13_SHIFT
+name|E5XSTORMETHCONNAGCTXDQEXTLDPART_EDPM_COPY_CONDITION_HI_SHIFT
 value|5
 define|#
 directive|define
@@ -7170,7 +9473,7 @@ directive|define
 name|E5XSTORMETHCONNAGCTXDQEXTLDPART_TPH_ENABLE_SHIFT
 value|6
 name|u8
-name|byte2
+name|edpm_vport
 comment|/* byte2 */
 decl_stmt|;
 name|__le16
@@ -7398,2056 +9701,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|e5_tstorm_eth_conn_ag_ctx
-block|{
-name|u8
-name|byte0
-comment|/* cdu_validation */
-decl_stmt|;
-name|u8
-name|byte1
-comment|/* state_and_core_id */
-decl_stmt|;
-name|u8
-name|flags0
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT0_MASK
-value|0x1
-comment|/* exist_in_qm0 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT1_MASK
-value|0x1
-comment|/* exist_in_qm1 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT1_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT2_MASK
-value|0x1
-comment|/* bit2 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT2_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT3_MASK
-value|0x1
-comment|/* bit3 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT3_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT4_MASK
-value|0x1
-comment|/* bit4 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT4_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT5_MASK
-value|0x1
-comment|/* bit5 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_BIT5_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF0_MASK
-value|0x3
-comment|/* timer0cf */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF0_SHIFT
-value|6
-name|u8
-name|flags1
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF1_MASK
-value|0x3
-comment|/* timer1cf */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF1_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF2_MASK
-value|0x3
-comment|/* timer2cf */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF2_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF3_MASK
-value|0x3
-comment|/* timer_stop_all */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF3_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF4_MASK
-value|0x3
-comment|/* cf4 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF4_SHIFT
-value|6
-name|u8
-name|flags2
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF5_MASK
-value|0x3
-comment|/* cf5 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF5_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF6_MASK
-value|0x3
-comment|/* cf6 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF6_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF7_MASK
-value|0x3
-comment|/* cf7 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF7_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF8_MASK
-value|0x3
-comment|/* cf8 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF8_SHIFT
-value|6
-name|u8
-name|flags3
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF9_MASK
-value|0x3
-comment|/* cf9 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF9_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF10_MASK
-value|0x3
-comment|/* cf10 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF10_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF0EN_MASK
-value|0x1
-comment|/* cf0en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF0EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF1EN_MASK
-value|0x1
-comment|/* cf1en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF1EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF2EN_MASK
-value|0x1
-comment|/* cf2en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF2EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF3EN_MASK
-value|0x1
-comment|/* cf3en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF3EN_SHIFT
-value|7
-name|u8
-name|flags4
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF4EN_MASK
-value|0x1
-comment|/* cf4en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF4EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF5EN_MASK
-value|0x1
-comment|/* cf5en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF5EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF6EN_MASK
-value|0x1
-comment|/* cf6en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF6EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF7EN_MASK
-value|0x1
-comment|/* cf7en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF7EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF8EN_MASK
-value|0x1
-comment|/* cf8en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF8EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF9EN_MASK
-value|0x1
-comment|/* cf9en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF9EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF10EN_MASK
-value|0x1
-comment|/* cf10en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_CF10EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE0EN_MASK
-value|0x1
-comment|/* rule0en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE0EN_SHIFT
-value|7
-name|u8
-name|flags5
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE1EN_MASK
-value|0x1
-comment|/* rule1en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE1EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE2EN_MASK
-value|0x1
-comment|/* rule2en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE2EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE3EN_MASK
-value|0x1
-comment|/* rule3en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE3EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE4EN_MASK
-value|0x1
-comment|/* rule4en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE4EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE5EN_MASK
-value|0x1
-comment|/* rule5en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE5EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RX_BD_EN_MASK
-value|0x1
-comment|/* rule6en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RX_BD_EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE7EN_MASK
-value|0x1
-comment|/* rule7en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE7EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE8EN_MASK
-value|0x1
-comment|/* rule8en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_RULE8EN_SHIFT
-value|7
-name|u8
-name|flags6
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED1_MASK
-value|0x1
-comment|/* bit6 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED1_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED2_MASK
-value|0x1
-comment|/* bit7 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED2_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED3_MASK
-value|0x1
-comment|/* bit8 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED3_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED4_MASK
-value|0x3
-comment|/* cf11 */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED4_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED5_MASK
-value|0x1
-comment|/* cf11en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED5_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED6_MASK
-value|0x1
-comment|/* rule9en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED6_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED7_MASK
-value|0x1
-comment|/* rule10en */
-define|#
-directive|define
-name|E5_TSTORM_ETH_CONN_AG_CTX_E4_RESERVED7_SHIFT
-value|7
-name|u8
-name|byte2
-comment|/* byte2 */
-decl_stmt|;
-name|__le16
-name|rx_bd_cons
-comment|/* word0 */
-decl_stmt|;
-name|__le32
-name|reg0
-comment|/* reg0 */
-decl_stmt|;
-name|__le32
-name|reg1
-comment|/* reg1 */
-decl_stmt|;
-name|__le32
-name|reg2
-comment|/* reg2 */
-decl_stmt|;
-name|__le32
-name|reg3
-comment|/* reg3 */
-decl_stmt|;
-name|__le32
-name|reg4
-comment|/* reg4 */
-decl_stmt|;
-name|__le32
-name|reg5
-comment|/* reg5 */
-decl_stmt|;
-name|__le32
-name|reg6
-comment|/* reg6 */
-decl_stmt|;
-name|__le32
-name|reg7
-comment|/* reg7 */
-decl_stmt|;
-name|__le32
-name|reg8
-comment|/* reg8 */
-decl_stmt|;
-name|u8
-name|byte3
-comment|/* byte3 */
-decl_stmt|;
-name|u8
-name|byte4
-comment|/* byte4 */
-decl_stmt|;
-name|u8
-name|byte5
-comment|/* byte5 */
-decl_stmt|;
-name|u8
-name|e4_reserved8
-comment|/* byte6 */
-decl_stmt|;
-name|__le16
-name|rx_bd_prod
-comment|/* word1 */
-decl_stmt|;
-name|__le16
-name|word2
-comment|/* conn_dpi */
-decl_stmt|;
-name|__le32
-name|reg9
-comment|/* reg9 */
-decl_stmt|;
-name|__le16
-name|word3
-comment|/* word3 */
-decl_stmt|;
-name|__le16
-name|e4_reserved9
-comment|/* word4 */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|e5_ustorm_eth_conn_ag_ctx
-block|{
-name|u8
-name|byte0
-comment|/* cdu_validation */
-decl_stmt|;
-name|u8
-name|byte1
-comment|/* state_and_core_id */
-decl_stmt|;
-name|u8
-name|flags0
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_BIT0_MASK
-value|0x1
-comment|/* exist_in_qm0 */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_BIT0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_BIT1_MASK
-value|0x1
-comment|/* exist_in_qm1 */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_BIT1_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_PMD_TERMINATE_CF_MASK
-value|0x3
-comment|/* timer0cf */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_PMD_TERMINATE_CF_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RX_PMD_TERMINATE_CF_MASK
-value|0x3
-comment|/* timer1cf */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RX_PMD_TERMINATE_CF_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_CF2_MASK
-value|0x3
-comment|/* timer2cf */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_CF2_SHIFT
-value|6
-name|u8
-name|flags1
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_CF3_MASK
-value|0x3
-comment|/* timer_stop_all */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_CF3_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_ARM_CF_MASK
-value|0x3
-comment|/* cf4 */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_ARM_CF_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RX_ARM_CF_MASK
-value|0x3
-comment|/* cf5 */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RX_ARM_CF_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_MASK
-value|0x3
-comment|/* cf6 */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_SHIFT
-value|6
-name|u8
-name|flags2
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_PMD_TERMINATE_CF_EN_MASK
-value|0x1
-comment|/* cf0en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_PMD_TERMINATE_CF_EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RX_PMD_TERMINATE_CF_EN_MASK
-value|0x1
-comment|/* cf1en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RX_PMD_TERMINATE_CF_EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_CF2EN_MASK
-value|0x1
-comment|/* cf2en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_CF2EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_CF3EN_MASK
-value|0x1
-comment|/* cf3en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_CF3EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_ARM_CF_EN_MASK
-value|0x1
-comment|/* cf4en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_ARM_CF_EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RX_ARM_CF_EN_MASK
-value|0x1
-comment|/* cf5en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RX_ARM_CF_EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_EN_MASK
-value|0x1
-comment|/* cf6en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE0EN_MASK
-value|0x1
-comment|/* rule0en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE0EN_SHIFT
-value|7
-name|u8
-name|flags3
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE1EN_MASK
-value|0x1
-comment|/* rule1en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE1EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE2EN_MASK
-value|0x1
-comment|/* rule2en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE2EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE3EN_MASK
-value|0x1
-comment|/* rule3en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE3EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE4EN_MASK
-value|0x1
-comment|/* rule4en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE4EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE5EN_MASK
-value|0x1
-comment|/* rule5en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE5EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE6EN_MASK
-value|0x1
-comment|/* rule6en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE6EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE7EN_MASK
-value|0x1
-comment|/* rule7en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE7EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE8EN_MASK
-value|0x1
-comment|/* rule8en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_RULE8EN_SHIFT
-value|7
-name|u8
-name|flags4
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED1_MASK
-value|0x1
-comment|/* bit2 */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED1_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED2_MASK
-value|0x1
-comment|/* bit3 */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED2_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED3_MASK
-value|0x3
-comment|/* cf7 */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED3_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED4_MASK
-value|0x3
-comment|/* cf8 */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED4_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED5_MASK
-value|0x1
-comment|/* cf7en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED5_SHIFT
-value|6
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED6_MASK
-value|0x1
-comment|/* cf8en */
-define|#
-directive|define
-name|E5_USTORM_ETH_CONN_AG_CTX_E4_RESERVED6_SHIFT
-value|7
-name|u8
-name|byte2
-comment|/* byte2 */
-decl_stmt|;
-name|__le16
-name|word0
-comment|/* conn_dpi */
-decl_stmt|;
-name|__le16
-name|tx_bd_cons
-comment|/* word1 */
-decl_stmt|;
-name|__le32
-name|reg0
-comment|/* reg0 */
-decl_stmt|;
-name|__le32
-name|reg1
-comment|/* reg1 */
-decl_stmt|;
-name|__le32
-name|reg2
-comment|/* reg2 */
-decl_stmt|;
-name|__le32
-name|tx_int_coallecing_timeset
-comment|/* reg3 */
-decl_stmt|;
-name|__le16
-name|tx_drv_bd_cons
-comment|/* word2 */
-decl_stmt|;
-name|__le16
-name|rx_drv_cqe_cons
-comment|/* word3 */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|e5_xstorm_eth_conn_ag_ctx
-block|{
-name|u8
-name|reserved0
-comment|/* cdu_validation */
-decl_stmt|;
-name|u8
-name|state_and_core_id
-comment|/* state_and_core_id */
-decl_stmt|;
-name|u8
-name|flags0
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EXIST_IN_QM0_MASK
-value|0x1
-comment|/* exist_in_qm0 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EXIST_IN_QM0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED1_MASK
-value|0x1
-comment|/* exist_in_qm1 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED1_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED2_MASK
-value|0x1
-comment|/* exist_in_qm2 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED2_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EXIST_IN_QM3_MASK
-value|0x1
-comment|/* exist_in_qm3 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EXIST_IN_QM3_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED3_MASK
-value|0x1
-comment|/* bit4 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED3_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED4_MASK
-value|0x1
-comment|/* cf_array_active */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED4_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED5_MASK
-value|0x1
-comment|/* bit6 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED5_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED6_MASK
-value|0x1
-comment|/* bit7 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED6_SHIFT
-value|7
-name|u8
-name|flags1
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED7_MASK
-value|0x1
-comment|/* bit8 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED7_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED8_MASK
-value|0x1
-comment|/* bit9 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED8_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED9_MASK
-value|0x1
-comment|/* bit10 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED9_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_BIT11_MASK
-value|0x1
-comment|/* bit11 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_BIT11_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_BIT12_MASK
-value|0x1
-comment|/* bit12 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_BIT12_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_BIT13_MASK
-value|0x1
-comment|/* bit13 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_BIT13_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TX_RULE_ACTIVE_MASK
-value|0x1
-comment|/* bit14 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TX_RULE_ACTIVE_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_ACTIVE_MASK
-value|0x1
-comment|/* bit15 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_ACTIVE_SHIFT
-value|7
-name|u8
-name|flags2
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF0_MASK
-value|0x3
-comment|/* timer0cf */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF1_MASK
-value|0x3
-comment|/* timer1cf */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF1_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF2_MASK
-value|0x3
-comment|/* timer2cf */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF2_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF3_MASK
-value|0x3
-comment|/* timer_stop_all */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF3_SHIFT
-value|6
-name|u8
-name|flags3
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF4_MASK
-value|0x3
-comment|/* cf4 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF4_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF5_MASK
-value|0x3
-comment|/* cf5 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF5_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF6_MASK
-value|0x3
-comment|/* cf6 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF6_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF7_MASK
-value|0x3
-comment|/* cf7 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF7_SHIFT
-value|6
-name|u8
-name|flags4
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF8_MASK
-value|0x3
-comment|/* cf8 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF8_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF9_MASK
-value|0x3
-comment|/* cf9 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF9_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF10_MASK
-value|0x3
-comment|/* cf10 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF10_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF11_MASK
-value|0x3
-comment|/* cf11 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF11_SHIFT
-value|6
-name|u8
-name|flags5
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF12_MASK
-value|0x3
-comment|/* cf12 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF12_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF13_MASK
-value|0x3
-comment|/* cf13 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF13_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF14_MASK
-value|0x3
-comment|/* cf14 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF14_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF15_MASK
-value|0x3
-comment|/* cf15 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF15_SHIFT
-value|6
-name|u8
-name|flags6
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_GO_TO_BD_CONS_CF_MASK
-value|0x3
-comment|/* cf16 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_GO_TO_BD_CONS_CF_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_MULTI_UNICAST_CF_MASK
-value|0x3
-comment|/* cf_array_cf */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_MULTI_UNICAST_CF_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_MASK
-value|0x3
-comment|/* cf18 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TERMINATE_CF_MASK
-value|0x3
-comment|/* cf19 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TERMINATE_CF_SHIFT
-value|6
-name|u8
-name|flags7
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_FLUSH_Q0_MASK
-value|0x3
-comment|/* cf20 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_FLUSH_Q0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED10_MASK
-value|0x3
-comment|/* cf21 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED10_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_SLOW_PATH_MASK
-value|0x3
-comment|/* cf22 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_SLOW_PATH_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF0EN_MASK
-value|0x1
-comment|/* cf0en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF0EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF1EN_MASK
-value|0x1
-comment|/* cf1en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF1EN_SHIFT
-value|7
-name|u8
-name|flags8
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF2EN_MASK
-value|0x1
-comment|/* cf2en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF2EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF3EN_MASK
-value|0x1
-comment|/* cf3en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF3EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF4EN_MASK
-value|0x1
-comment|/* cf4en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF4EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF5EN_MASK
-value|0x1
-comment|/* cf5en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF5EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF6EN_MASK
-value|0x1
-comment|/* cf6en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF6EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF7EN_MASK
-value|0x1
-comment|/* cf7en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF7EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF8EN_MASK
-value|0x1
-comment|/* cf8en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF8EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF9EN_MASK
-value|0x1
-comment|/* cf9en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF9EN_SHIFT
-value|7
-name|u8
-name|flags9
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF10EN_MASK
-value|0x1
-comment|/* cf10en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF10EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF11EN_MASK
-value|0x1
-comment|/* cf11en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF11EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF12EN_MASK
-value|0x1
-comment|/* cf12en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF12EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF13EN_MASK
-value|0x1
-comment|/* cf13en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF13EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF14EN_MASK
-value|0x1
-comment|/* cf14en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF14EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF15EN_MASK
-value|0x1
-comment|/* cf15en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_CF15EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_GO_TO_BD_CONS_CF_EN_MASK
-value|0x1
-comment|/* cf16en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_GO_TO_BD_CONS_CF_EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_MULTI_UNICAST_CF_EN_MASK
-value|0x1
-comment|/* cf_array_cf_en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_MULTI_UNICAST_CF_EN_SHIFT
-value|7
-name|u8
-name|flags10
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_EN_MASK
-value|0x1
-comment|/* cf18en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_DQ_CF_EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TERMINATE_CF_EN_MASK
-value|0x1
-comment|/* cf19en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TERMINATE_CF_EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_FLUSH_Q0_EN_MASK
-value|0x1
-comment|/* cf20en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_FLUSH_Q0_EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED11_MASK
-value|0x1
-comment|/* cf21en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED11_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_SLOW_PATH_EN_MASK
-value|0x1
-comment|/* cf22en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_SLOW_PATH_EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TPH_ENABLE_EN_RESERVED_MASK
-value|0x1
-comment|/* cf23en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TPH_ENABLE_EN_RESERVED_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED12_MASK
-value|0x1
-comment|/* rule0en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED12_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED13_MASK
-value|0x1
-comment|/* rule1en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED13_SHIFT
-value|7
-name|u8
-name|flags11
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED14_MASK
-value|0x1
-comment|/* rule2en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED14_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED15_MASK
-value|0x1
-comment|/* rule3en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RESERVED15_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TX_DEC_RULE_EN_MASK
-value|0x1
-comment|/* rule4en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TX_DEC_RULE_EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE5EN_MASK
-value|0x1
-comment|/* rule5en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE5EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE6EN_MASK
-value|0x1
-comment|/* rule6en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE6EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE7EN_MASK
-value|0x1
-comment|/* rule7en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE7EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED1_MASK
-value|0x1
-comment|/* rule8en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED1_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE9EN_MASK
-value|0x1
-comment|/* rule9en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE9EN_SHIFT
-value|7
-name|u8
-name|flags12
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE10EN_MASK
-value|0x1
-comment|/* rule10en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE10EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE11EN_MASK
-value|0x1
-comment|/* rule11en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE11EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED2_MASK
-value|0x1
-comment|/* rule12en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED2_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED3_MASK
-value|0x1
-comment|/* rule13en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED3_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE14EN_MASK
-value|0x1
-comment|/* rule14en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE14EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE15EN_MASK
-value|0x1
-comment|/* rule15en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE15EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE16EN_MASK
-value|0x1
-comment|/* rule16en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE16EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE17EN_MASK
-value|0x1
-comment|/* rule17en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE17EN_SHIFT
-value|7
-name|u8
-name|flags13
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE18EN_MASK
-value|0x1
-comment|/* rule18en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE18EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE19EN_MASK
-value|0x1
-comment|/* rule19en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_RULE19EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED4_MASK
-value|0x1
-comment|/* rule20en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED4_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED5_MASK
-value|0x1
-comment|/* rule21en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED5_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED6_MASK
-value|0x1
-comment|/* rule22en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED6_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED7_MASK
-value|0x1
-comment|/* rule23en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED7_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED8_MASK
-value|0x1
-comment|/* rule24en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED8_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED9_MASK
-value|0x1
-comment|/* rule25en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_A0_RESERVED9_SHIFT
-value|7
-name|u8
-name|flags14
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_USE_EXT_HDR_MASK
-value|0x1
-comment|/* bit16 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_USE_EXT_HDR_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_SEND_RAW_L3L4_MASK
-value|0x1
-comment|/* bit17 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_SEND_RAW_L3L4_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_INBAND_PROP_HDR_MASK
-value|0x1
-comment|/* bit18 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_INBAND_PROP_HDR_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_SEND_EXT_TUNNEL_MASK
-value|0x1
-comment|/* bit19 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_EDPM_SEND_EXT_TUNNEL_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_L2_EDPM_ENABLE_MASK
-value|0x1
-comment|/* bit20 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_L2_EDPM_ENABLE_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_ROCE_EDPM_ENABLE_MASK
-value|0x1
-comment|/* bit21 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_ROCE_EDPM_ENABLE_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TPH_ENABLE_MASK
-value|0x3
-comment|/* cf23 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_TPH_ENABLE_SHIFT
-value|6
-name|u8
-name|byte2
-comment|/* byte2 */
-decl_stmt|;
-name|__le16
-name|physical_q0
-comment|/* physical_q0 */
-decl_stmt|;
-name|__le16
-name|tx_l2_edpm_usg_cnt
-comment|/* physical_q1 */
-decl_stmt|;
-name|__le16
-name|edpm_num_bds
-comment|/* physical_q2 */
-decl_stmt|;
-name|__le16
-name|tx_bd_cons
-comment|/* word3 */
-decl_stmt|;
-name|__le16
-name|tx_bd_prod
-comment|/* word4 */
-decl_stmt|;
-name|__le16
-name|tx_class
-comment|/* word5 */
-decl_stmt|;
-name|__le16
-name|conn_dpi
-comment|/* conn_dpi */
-decl_stmt|;
-name|u8
-name|byte3
-comment|/* byte3 */
-decl_stmt|;
-name|u8
-name|byte4
-comment|/* byte4 */
-decl_stmt|;
-name|u8
-name|byte5
-comment|/* byte5 */
-decl_stmt|;
-name|u8
-name|byte6
-comment|/* byte6 */
-decl_stmt|;
-name|__le32
-name|reg0
-comment|/* reg0 */
-decl_stmt|;
-name|__le32
-name|reg1
-comment|/* reg1 */
-decl_stmt|;
-name|__le32
-name|reg2
-comment|/* reg2 */
-decl_stmt|;
-name|__le32
-name|reg3
-comment|/* reg3 */
-decl_stmt|;
-name|__le32
-name|reg4
-comment|/* reg4 */
-decl_stmt|;
-name|__le32
-name|reg5
-comment|/* cf_array0 */
-decl_stmt|;
-name|__le32
-name|reg6
-comment|/* cf_array1 */
-decl_stmt|;
-name|u8
-name|flags15
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED1_MASK
-value|0x1
-comment|/* bit22 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED1_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED2_MASK
-value|0x1
-comment|/* bit23 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED2_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED3_MASK
-value|0x1
-comment|/* bit24 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED3_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED4_MASK
-value|0x3
-comment|/* cf24 */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED4_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED5_MASK
-value|0x1
-comment|/* cf24en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED5_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED6_MASK
-value|0x1
-comment|/* rule26en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED6_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED7_MASK
-value|0x1
-comment|/* rule27en */
-define|#
-directive|define
-name|E5_XSTORM_ETH_CONN_AG_CTX_E4_RESERVED7_SHIFT
-value|7
-name|u8
-name|byte7
-comment|/* byte7 */
-decl_stmt|;
-name|__le16
-name|word7
-comment|/* word7 */
-decl_stmt|;
-name|__le16
-name|word8
-comment|/* word8 */
-decl_stmt|;
-name|__le16
-name|word9
-comment|/* word9 */
-decl_stmt|;
-name|__le16
-name|word10
-comment|/* word10 */
-decl_stmt|;
-name|__le16
-name|word11
-comment|/* word11 */
-decl_stmt|;
-name|__le32
-name|reg7
-comment|/* reg7 */
-decl_stmt|;
-name|__le32
-name|reg8
-comment|/* reg8 */
-decl_stmt|;
-name|__le32
-name|reg9
-comment|/* reg9 */
-decl_stmt|;
-name|u8
-name|byte8
-comment|/* byte8 */
-decl_stmt|;
-name|u8
-name|byte9
-comment|/* byte9 */
-decl_stmt|;
-name|u8
-name|byte10
-comment|/* byte10 */
-decl_stmt|;
-name|u8
-name|byte11
-comment|/* byte11 */
-decl_stmt|;
-name|u8
-name|byte12
-comment|/* byte12 */
-decl_stmt|;
-name|u8
-name|byte13
-comment|/* byte13 */
-decl_stmt|;
-name|u8
-name|byte14
-comment|/* byte14 */
-decl_stmt|;
-name|u8
-name|byte15
-comment|/* byte15 */
-decl_stmt|;
-name|__le32
-name|reg10
-comment|/* reg10 */
-decl_stmt|;
-name|__le32
-name|reg11
-comment|/* reg11 */
-decl_stmt|;
-name|__le32
-name|reg12
-comment|/* reg12 */
-decl_stmt|;
-name|__le32
-name|reg13
-comment|/* reg13 */
-decl_stmt|;
-name|__le32
-name|reg14
-comment|/* reg14 */
-decl_stmt|;
-name|__le32
-name|reg15
-comment|/* reg15 */
-decl_stmt|;
-name|__le32
-name|reg16
-comment|/* reg16 */
-decl_stmt|;
-name|__le32
-name|reg17
-comment|/* reg17 */
-decl_stmt|;
-name|__le32
-name|reg18
-comment|/* reg18 */
-decl_stmt|;
-name|__le32
-name|reg19
-comment|/* reg19 */
-decl_stmt|;
-name|__le16
-name|word12
-comment|/* word12 */
-decl_stmt|;
-name|__le16
-name|word13
-comment|/* word13 */
-decl_stmt|;
-name|__le16
-name|word14
-comment|/* word14 */
-decl_stmt|;
-name|__le16
-name|word15
-comment|/* word15 */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|e5_xstorm_eth_hw_conn_ag_ctx
 block|{
 name|u8
@@ -9574,21 +9827,21 @@ name|E5_XSTORM_ETH_HW_CONN_AG_CTX_BIT11_SHIFT
 value|3
 define|#
 directive|define
-name|E5_XSTORM_ETH_HW_CONN_AG_CTX_BIT12_MASK
+name|E5_XSTORM_ETH_HW_CONN_AG_CTX_EDPM_COPY_CONDITION_LO_MASK
 value|0x1
 comment|/* bit12 */
 define|#
 directive|define
-name|E5_XSTORM_ETH_HW_CONN_AG_CTX_BIT12_SHIFT
+name|E5_XSTORM_ETH_HW_CONN_AG_CTX_EDPM_COPY_CONDITION_LO_SHIFT
 value|4
 define|#
 directive|define
-name|E5_XSTORM_ETH_HW_CONN_AG_CTX_BIT13_MASK
+name|E5_XSTORM_ETH_HW_CONN_AG_CTX_EDPM_COPY_CONDITION_HI_MASK
 value|0x1
 comment|/* bit13 */
 define|#
 directive|define
-name|E5_XSTORM_ETH_HW_CONN_AG_CTX_BIT13_SHIFT
+name|E5_XSTORM_ETH_HW_CONN_AG_CTX_EDPM_COPY_CONDITION_HI_SHIFT
 value|5
 define|#
 directive|define
@@ -10368,7 +10621,7 @@ directive|define
 name|E5_XSTORM_ETH_HW_CONN_AG_CTX_TPH_ENABLE_SHIFT
 value|6
 name|u8
-name|byte2
+name|edpm_vport
 comment|/* byte2 */
 decl_stmt|;
 name|__le16
@@ -10398,189 +10651,6 @@ decl_stmt|;
 name|__le16
 name|conn_dpi
 comment|/* conn_dpi */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|e5_ystorm_eth_conn_ag_ctx
-block|{
-name|u8
-name|byte0
-comment|/* cdu_validation */
-decl_stmt|;
-name|u8
-name|state_and_core_id
-comment|/* state_and_core_id */
-decl_stmt|;
-name|u8
-name|flags0
-decl_stmt|;
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_BIT0_MASK
-value|0x1
-comment|/* exist_in_qm0 */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_BIT0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_BIT1_MASK
-value|0x1
-comment|/* exist_in_qm1 */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_BIT1_SHIFT
-value|1
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_MASK
-value|0x3
-comment|/* cf0 */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_SHIFT
-value|2
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_PMD_TERMINATE_CF_MASK
-value|0x3
-comment|/* cf1 */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_PMD_TERMINATE_CF_SHIFT
-value|4
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_CF2_MASK
-value|0x3
-comment|/* cf2 */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_CF2_SHIFT
-value|6
-name|u8
-name|flags1
-decl_stmt|;
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_EN_MASK
-value|0x1
-comment|/* cf0en */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_TX_BD_CONS_UPD_CF_EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_PMD_TERMINATE_CF_EN_MASK
-value|0x1
-comment|/* cf1en */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_PMD_TERMINATE_CF_EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_CF2EN_MASK
-value|0x1
-comment|/* cf2en */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_CF2EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_RULE0EN_MASK
-value|0x1
-comment|/* rule0en */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_RULE0EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_RULE1EN_MASK
-value|0x1
-comment|/* rule1en */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_RULE1EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_RULE2EN_MASK
-value|0x1
-comment|/* rule2en */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_RULE2EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_RULE3EN_MASK
-value|0x1
-comment|/* rule3en */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_RULE3EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_RULE4EN_MASK
-value|0x1
-comment|/* rule4en */
-define|#
-directive|define
-name|E5_YSTORM_ETH_CONN_AG_CTX_RULE4EN_SHIFT
-value|7
-name|u8
-name|tx_q0_int_coallecing_timeset
-comment|/* byte2 */
-decl_stmt|;
-name|u8
-name|byte3
-comment|/* byte3 */
-decl_stmt|;
-name|__le16
-name|word0
-comment|/* word0 */
-decl_stmt|;
-name|__le32
-name|terminate_spqe
-comment|/* reg0 */
-decl_stmt|;
-name|__le32
-name|reg1
-comment|/* reg1 */
-decl_stmt|;
-name|__le16
-name|tx_bd_cons_upd
-comment|/* word1 */
-decl_stmt|;
-name|__le16
-name|word2
-comment|/* word2 */
-decl_stmt|;
-name|__le16
-name|word3
-comment|/* word3 */
-decl_stmt|;
-name|__le16
-name|word4
-comment|/* word4 */
-decl_stmt|;
-name|__le32
-name|reg2
-comment|/* reg2 */
-decl_stmt|;
-name|__le32
-name|reg3
-comment|/* reg3 */
 decl_stmt|;
 block|}
 struct|;

@@ -1801,11 +1801,8 @@ literal|"unable to restrict %s"
 argument_list|,
 name|statok
 condition|?
+operator|*
 name|_argv
-index|[
-operator|-
-literal|1
-index|]
 else|:
 literal|"stdin"
 argument_list|)
@@ -1813,8 +1810,16 @@ expr_stmt|;
 comment|/* 		 * We've opened our last input file; enter capsicum sandbox. 		 */
 if|if
 condition|(
+name|statok
+operator|==
+literal|0
+operator|||
 operator|*
+operator|(
 name|_argv
+operator|+
+literal|1
+operator|)
 operator|==
 name|NULL
 condition|)

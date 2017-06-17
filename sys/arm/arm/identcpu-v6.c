@@ -116,6 +116,15 @@ name|hw_buf_newline
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|enum
+name|cpu_class
+name|cpu_class
+init|=
+name|CPU_CLASS_NONE
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 specifier|static
 struct|struct
@@ -134,6 +143,10 @@ name|char
 modifier|*
 name|core_name
 decl_stmt|;
+name|enum
+name|cpu_class
+name|cpu_class
+decl_stmt|;
 block|}
 name|cpu_names
 index|[]
@@ -147,6 +160,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"ARM1176"
+block|,
+name|CPU_CLASS_ARM11J
 block|}
 block|,
 block|{
@@ -157,6 +172,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"Cortex-A5"
+block|,
+name|CPU_CLASS_CORTEXA
 block|}
 block|,
 block|{
@@ -167,6 +184,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"Cortex-A7"
+block|,
+name|CPU_CLASS_CORTEXA
 block|}
 block|,
 block|{
@@ -177,6 +196,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"Cortex-A8"
+block|,
+name|CPU_CLASS_CORTEXA
 block|}
 block|,
 block|{
@@ -187,6 +208,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"Cortex-A9"
+block|,
+name|CPU_CLASS_CORTEXA
 block|}
 block|,
 block|{
@@ -197,6 +220,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"Cortex-A12"
+block|,
+name|CPU_CLASS_CORTEXA
 block|}
 block|,
 block|{
@@ -207,6 +232,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"Cortex-A15"
+block|,
+name|CPU_CLASS_CORTEXA
 block|}
 block|,
 block|{
@@ -217,6 +244,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"Cortex-A17"
+block|,
+name|CPU_CLASS_CORTEXA
 block|}
 block|,
 block|{
@@ -227,6 +256,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"Cortex-A53"
+block|,
+name|CPU_CLASS_CORTEXA
 block|}
 block|,
 block|{
@@ -237,6 +268,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"Cortex-A57"
+block|,
+name|CPU_CLASS_CORTEXA
 block|}
 block|,
 block|{
@@ -247,6 +280,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"Cortex-A72"
+block|,
+name|CPU_CLASS_CORTEXA
 block|}
 block|,
 block|{
@@ -257,6 +292,8 @@ block|,
 literal|"ARM"
 block|,
 literal|"Cortex-A73"
+block|,
+name|CPU_CLASS_CORTEXA
 block|}
 block|,
 block|{
@@ -264,9 +301,11 @@ name|CPU_IMPLEMENTER_MRVL
 block|,
 name|CPU_ARCH_SHEEVA_581
 block|,
-literal|"Marwell"
+literal|"Marvell"
 block|,
 literal|"PJ4 v7"
+block|,
+name|CPU_CLASS_MARVELL
 block|}
 block|,
 block|{
@@ -274,9 +313,11 @@ name|CPU_IMPLEMENTER_MRVL
 block|,
 name|CPU_ARCH_SHEEVA_584
 block|,
-literal|"Marwell"
+literal|"Marvell"
 block|,
 literal|"PJ4MP v7"
+block|,
+name|CPU_CLASS_MARVELL
 block|}
 block|,
 block|{
@@ -287,6 +328,8 @@ block|,
 literal|"Qualcomm"
 block|,
 literal|"Krait 300"
+block|,
+name|CPU_CLASS_KRAIT
 block|}
 block|, }
 struct|;
@@ -1189,6 +1232,15 @@ operator|.
 name|part_number
 condition|)
 block|{
+name|cpu_class
+operator|=
+name|cpu_names
+index|[
+name|i
+index|]
+operator|.
+name|cpu_class
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"CPU: %s %s r%dp%d (ECO: 0x%08X)\n"

@@ -236,7 +236,7 @@ name|dle
 operator|->
 name|dle_mintxg
 operator|=
-name|strtonum
+name|zfs_strtonum
 argument_list|(
 name|za
 operator|.
@@ -2582,7 +2582,7 @@ block|{
 name|uint64_t
 name|mintxg
 init|=
-name|strtonum
+name|zfs_strtonum
 argument_list|(
 name|za
 operator|.

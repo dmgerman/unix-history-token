@@ -88,7 +88,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OFFSIZE_OFFSET_SHIFT
+name|OFFSIZE_OFFSET_OFFSET
 value|0
 end_define
 
@@ -106,7 +106,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OFFSIZE_SIZE_SHIFT
+name|OFFSIZE_SIZE_OFFSET
 value|16
 end_define
 
@@ -128,7 +128,7 @@ name|SECTION_OFFSET
 parameter_list|(
 name|_offsize
 parameter_list|)
-value|((((_offsize& OFFSIZE_OFFSET_MASK)>> OFFSIZE_OFFSET_SHIFT)<< 2))
+value|((((_offsize& OFFSIZE_OFFSET_MASK)>> OFFSIZE_OFFSET_OFFSET)<< 2))
 end_define
 
 begin_comment
@@ -142,7 +142,7 @@ name|SECTION_SIZE
 parameter_list|(
 name|_offsize
 parameter_list|)
-value|(((_offsize& OFFSIZE_SIZE_MASK)>> OFFSIZE_SIZE_SHIFT)<< 2)
+value|(((_offsize& OFFSIZE_SIZE_MASK)>> OFFSIZE_SIZE_OFFSET)<< 2)
 end_define
 
 begin_comment
@@ -300,7 +300,7 @@ name|EEE_TX_TIMER_USEC_MASK
 value|(0xfffffff0)
 define|#
 directive|define
-name|EEE_TX_TIMER_USEC_SHIFT
+name|EEE_TX_TIMER_USEC_OFFSET
 value|4
 define|#
 directive|define
@@ -322,7 +322,7 @@ define|#
 directive|define
 name|LINK_MODE_SMARTLINQ_ENABLE
 value|0x1
-comment|/* XXX deprecated */
+comment|/* XXX Deprecate */
 block|}
 struct|;
 end_struct
@@ -341,7 +341,7 @@ name|PORT_MF_CFG_OV_TAG_MASK
 value|0x0000ffff
 define|#
 directive|define
-name|PORT_MF_CFG_OV_TAG_SHIFT
+name|PORT_MF_CFG_OV_TAG_OFFSET
 value|0
 define|#
 directive|define
@@ -803,7 +803,7 @@ name|LLDP_CONFIG_TX_INTERVAL_MASK
 value|0x000000ff
 define|#
 directive|define
-name|LLDP_CONFIG_TX_INTERVAL_SHIFT
+name|LLDP_CONFIG_TX_INTERVAL_OFFSET
 value|0
 define|#
 directive|define
@@ -811,7 +811,7 @@ name|LLDP_CONFIG_HOLD_MASK
 value|0x00000f00
 define|#
 directive|define
-name|LLDP_CONFIG_HOLD_SHIFT
+name|LLDP_CONFIG_HOLD_OFFSET
 value|8
 define|#
 directive|define
@@ -819,7 +819,7 @@ name|LLDP_CONFIG_MAX_CREDIT_MASK
 value|0x0000f000
 define|#
 directive|define
-name|LLDP_CONFIG_MAX_CREDIT_SHIFT
+name|LLDP_CONFIG_MAX_CREDIT_OFFSET
 value|12
 define|#
 directive|define
@@ -827,7 +827,7 @@ name|LLDP_CONFIG_ENABLE_RX_MASK
 value|0x40000000
 define|#
 directive|define
-name|LLDP_CONFIG_ENABLE_RX_SHIFT
+name|LLDP_CONFIG_ENABLE_RX_OFFSET
 value|30
 define|#
 directive|define
@@ -835,7 +835,7 @@ name|LLDP_CONFIG_ENABLE_TX_MASK
 value|0x80000000
 define|#
 directive|define
-name|LLDP_CONFIG_ENABLE_TX_SHIFT
+name|LLDP_CONFIG_ENABLE_TX_OFFSET
 value|31
 comment|/* Holds local Chassis ID TLV header, subtype and 9B of payload. 	   If firtst byte is 0, then we will use default chassis ID */
 name|u32
@@ -900,7 +900,7 @@ name|DCBX_ETS_ENABLED_MASK
 value|0x00000001
 define|#
 directive|define
-name|DCBX_ETS_ENABLED_SHIFT
+name|DCBX_ETS_ENABLED_OFFSET
 value|0
 define|#
 directive|define
@@ -908,7 +908,7 @@ name|DCBX_ETS_WILLING_MASK
 value|0x00000002
 define|#
 directive|define
-name|DCBX_ETS_WILLING_SHIFT
+name|DCBX_ETS_WILLING_OFFSET
 value|1
 define|#
 directive|define
@@ -916,7 +916,7 @@ name|DCBX_ETS_ERROR_MASK
 value|0x00000004
 define|#
 directive|define
-name|DCBX_ETS_ERROR_SHIFT
+name|DCBX_ETS_ERROR_OFFSET
 value|2
 define|#
 directive|define
@@ -924,7 +924,7 @@ name|DCBX_ETS_CBS_MASK
 value|0x00000008
 define|#
 directive|define
-name|DCBX_ETS_CBS_SHIFT
+name|DCBX_ETS_CBS_OFFSET
 value|3
 define|#
 directive|define
@@ -932,7 +932,7 @@ name|DCBX_ETS_MAX_TCS_MASK
 value|0x000000f0
 define|#
 directive|define
-name|DCBX_ETS_MAX_TCS_SHIFT
+name|DCBX_ETS_MAX_TCS_OFFSET
 value|4
 define|#
 directive|define
@@ -940,7 +940,7 @@ name|DCBX_OOO_TC_MASK
 value|0x00000f00
 define|#
 directive|define
-name|DCBX_OOO_TC_SHIFT
+name|DCBX_OOO_TC_OFFSET
 value|8
 comment|/* Entries in tc table are orginized that the left most is pri 0, right most is prio 7 */
 name|u32
@@ -1009,7 +1009,7 @@ name|DCBX_APP_PRI_MAP_MASK
 value|0x000000ff
 define|#
 directive|define
-name|DCBX_APP_PRI_MAP_SHIFT
+name|DCBX_APP_PRI_MAP_OFFSET
 value|0
 define|#
 directive|define
@@ -1049,7 +1049,7 @@ name|DCBX_APP_SF_MASK
 value|0x00000300
 define|#
 directive|define
-name|DCBX_APP_SF_SHIFT
+name|DCBX_APP_SF_OFFSET
 value|8
 define|#
 directive|define
@@ -1065,7 +1065,7 @@ name|DCBX_APP_SF_IEEE_MASK
 value|0x0000f000
 define|#
 directive|define
-name|DCBX_APP_SF_IEEE_SHIFT
+name|DCBX_APP_SF_IEEE_OFFSET
 value|12
 define|#
 directive|define
@@ -1093,7 +1093,7 @@ name|DCBX_APP_PROTOCOL_ID_MASK
 value|0xffff0000
 define|#
 directive|define
-name|DCBX_APP_PROTOCOL_ID_SHIFT
+name|DCBX_APP_PROTOCOL_ID_OFFSET
 value|16
 block|}
 struct|;
@@ -1116,7 +1116,7 @@ name|DCBX_APP_ENABLED_MASK
 value|0x00000001
 define|#
 directive|define
-name|DCBX_APP_ENABLED_SHIFT
+name|DCBX_APP_ENABLED_OFFSET
 value|0
 define|#
 directive|define
@@ -1124,7 +1124,7 @@ name|DCBX_APP_WILLING_MASK
 value|0x00000002
 define|#
 directive|define
-name|DCBX_APP_WILLING_SHIFT
+name|DCBX_APP_WILLING_OFFSET
 value|1
 define|#
 directive|define
@@ -1132,16 +1132,16 @@ name|DCBX_APP_ERROR_MASK
 value|0x00000004
 define|#
 directive|define
-name|DCBX_APP_ERROR_SHIFT
+name|DCBX_APP_ERROR_OFFSET
 value|2
-comment|/* Not in use 	#define DCBX_APP_DEFAULT_PRI_MASK       0x00000f00 	#define DCBX_APP_DEFAULT_PRI_SHIFT      8 	*/
+comment|/* Not in use 	#define DCBX_APP_DEFAULT_PRI_MASK       0x00000f00 	#define DCBX_APP_DEFAULT_PRI_OFFSET      8 	*/
 define|#
 directive|define
 name|DCBX_APP_MAX_TCS_MASK
 value|0x0000f000
 define|#
 directive|define
-name|DCBX_APP_MAX_TCS_SHIFT
+name|DCBX_APP_MAX_TCS_OFFSET
 value|12
 define|#
 directive|define
@@ -1149,7 +1149,7 @@ name|DCBX_APP_NUM_ENTRIES_MASK
 value|0x00ff0000
 define|#
 directive|define
-name|DCBX_APP_NUM_ENTRIES_SHIFT
+name|DCBX_APP_NUM_ENTRIES_OFFSET
 value|16
 name|struct
 name|dcbx_app_priority_entry
@@ -1185,7 +1185,7 @@ name|DCBX_PFC_PRI_EN_BITMAP_MASK
 value|0x000000ff
 define|#
 directive|define
-name|DCBX_PFC_PRI_EN_BITMAP_SHIFT
+name|DCBX_PFC_PRI_EN_BITMAP_OFFSET
 value|0
 define|#
 directive|define
@@ -1225,7 +1225,7 @@ name|DCBX_PFC_FLAGS_MASK
 value|0x0000ff00
 define|#
 directive|define
-name|DCBX_PFC_FLAGS_SHIFT
+name|DCBX_PFC_FLAGS_OFFSET
 value|8
 define|#
 directive|define
@@ -1233,7 +1233,7 @@ name|DCBX_PFC_CAPS_MASK
 value|0x00000f00
 define|#
 directive|define
-name|DCBX_PFC_CAPS_SHIFT
+name|DCBX_PFC_CAPS_OFFSET
 value|8
 define|#
 directive|define
@@ -1241,7 +1241,7 @@ name|DCBX_PFC_MBC_MASK
 value|0x00004000
 define|#
 directive|define
-name|DCBX_PFC_MBC_SHIFT
+name|DCBX_PFC_MBC_OFFSET
 value|14
 define|#
 directive|define
@@ -1249,7 +1249,7 @@ name|DCBX_PFC_WILLING_MASK
 value|0x00008000
 define|#
 directive|define
-name|DCBX_PFC_WILLING_SHIFT
+name|DCBX_PFC_WILLING_OFFSET
 value|15
 define|#
 directive|define
@@ -1257,7 +1257,7 @@ name|DCBX_PFC_ENABLED_MASK
 value|0x00010000
 define|#
 directive|define
-name|DCBX_PFC_ENABLED_SHIFT
+name|DCBX_PFC_ENABLED_OFFSET
 value|16
 define|#
 directive|define
@@ -1265,7 +1265,7 @@ name|DCBX_PFC_ERROR_MASK
 value|0x00020000
 define|#
 directive|define
-name|DCBX_PFC_ERROR_SHIFT
+name|DCBX_PFC_ERROR_OFFSET
 value|17
 comment|/* APP feature */
 name|struct
@@ -1289,7 +1289,7 @@ name|DCBX_CONFIG_VERSION_MASK
 value|0x00000007
 define|#
 directive|define
-name|DCBX_CONFIG_VERSION_SHIFT
+name|DCBX_CONFIG_VERSION_OFFSET
 value|0
 define|#
 directive|define
@@ -1328,7 +1328,7 @@ decl_stmt|;
 name|u32
 name|flags
 decl_stmt|;
-comment|/* 	#define DCBX_CONFIG_VERSION_MASK            0x00000007 	#define DCBX_CONFIG_VERSION_SHIFT           0 	#define DCBX_CONFIG_VERSION_DISABLED        0 	#define DCBX_CONFIG_VERSION_IEEE            1 	#define DCBX_CONFIG_VERSION_CEE             2 	#define DCBX_CONFIG_VERSION_STATIC          4 	*/
+comment|/* 	#define DCBX_CONFIG_VERSION_MASK            0x00000007 	#define DCBX_CONFIG_VERSION_OFFSET           0 	#define DCBX_CONFIG_VERSION_DISABLED        0 	#define DCBX_CONFIG_VERSION_IEEE            1 	#define DCBX_CONFIG_VERSION_CEE             2 	#define DCBX_CONFIG_VERSION_STATIC          4 	*/
 name|struct
 name|dcbx_features
 name|features
@@ -1373,7 +1373,7 @@ name|DCB_DSCP_ENABLE_MASK
 value|0x1
 define|#
 directive|define
-name|DCB_DSCP_ENABLE_SHIFT
+name|DCB_DSCP_ENABLE_OFFSET
 value|0
 define|#
 directive|define
@@ -1486,7 +1486,7 @@ name|EXT_PHY_FW_UPGRADE_STATUS_MASK
 value|(0x0000ffff)
 define|#
 directive|define
-name|EXT_PHY_FW_UPGRADE_STATUS_SHIFT
+name|EXT_PHY_FW_UPGRADE_STATUS_OFFSET
 value|(0)
 define|#
 directive|define
@@ -1506,7 +1506,7 @@ name|EXT_PHY_FW_UPGRADE_TYPE_MASK
 value|(0xffff0000)
 define|#
 directive|define
-name|EXT_PHY_FW_UPGRADE_TYPE_SHIFT
+name|EXT_PHY_FW_UPGRADE_TYPE_OFFSET
 value|(16)
 name|u8
 name|runtime_port_swap_map
@@ -1666,7 +1666,7 @@ name|PROCESS_KILL_COUNTER_MASK
 value|0x0000ffff
 define|#
 directive|define
-name|PROCESS_KILL_COUNTER_SHIFT
+name|PROCESS_KILL_COUNTER_OFFSET
 value|0
 define|#
 directive|define
@@ -1674,7 +1674,7 @@ name|PROCESS_KILL_GLOB_AEU_BIT_MASK
 value|0xffff0000
 define|#
 directive|define
-name|PROCESS_KILL_GLOB_AEU_BIT_SHIFT
+name|PROCESS_KILL_GLOB_AEU_BIT_OFFSET
 value|16
 define|#
 directive|define
@@ -2192,7 +2192,7 @@ name|ETH_TRANSCEIVER_STATE_MASK
 value|0x000000FF
 define|#
 directive|define
-name|ETH_TRANSCEIVER_STATE_SHIFT
+name|ETH_TRANSCEIVER_STATE_OFFSET
 value|0x0
 define|#
 directive|define
@@ -2216,7 +2216,7 @@ name|ETH_TRANSCEIVER_TYPE_MASK
 value|0x0000FF00
 define|#
 directive|define
-name|ETH_TRANSCEIVER_TYPE_SHIFT
+name|ETH_TRANSCEIVER_TYPE_OFFSET
 value|0x8
 define|#
 directive|define
@@ -2422,7 +2422,7 @@ value|0x000000f0
 comment|/* Shows the Local Device EEE capabilities */
 define|#
 directive|define
-name|EEE_LD_ADV_STATUS_SHIFT
+name|EEE_LD_ADV_STATUS_OFFSET
 value|4
 define|#
 directive|define
@@ -2439,7 +2439,7 @@ value|0x00000f00
 comment|/* Same values as in EEE_LD_ADV, but for Link Parter */
 define|#
 directive|define
-name|EEE_LP_ADV_STATUS_SHIFT
+name|EEE_LP_ADV_STATUS_OFFSET
 value|8
 name|u32
 name|eee_remote
@@ -2451,7 +2451,7 @@ name|EEE_REMOTE_TW_TX_MASK
 value|0x0000ffff
 define|#
 directive|define
-name|EEE_REMOTE_TW_TX_SHIFT
+name|EEE_REMOTE_TW_TX_OFFSET
 value|0
 define|#
 directive|define
@@ -2459,7 +2459,7 @@ name|EEE_REMOTE_TW_RX_MASK
 value|0xffff0000
 define|#
 directive|define
-name|EEE_REMOTE_TW_RX_SHIFT
+name|EEE_REMOTE_TW_RX_OFFSET
 value|16
 name|u32
 name|module_info
@@ -2575,7 +2575,7 @@ name|FUNC_MF_CFG_PAUSE_ON_HOST_RING
 value|0x00000002
 define|#
 directive|define
-name|FUNC_MF_CFG_PAUSE_ON_HOST_RING_SHIFT
+name|FUNC_MF_CFG_PAUSE_ON_HOST_RING_OFFSET
 value|0x00000001
 define|#
 directive|define
@@ -2583,7 +2583,7 @@ name|FUNC_MF_CFG_PROTOCOL_MASK
 value|0x000000f0
 define|#
 directive|define
-name|FUNC_MF_CFG_PROTOCOL_SHIFT
+name|FUNC_MF_CFG_PROTOCOL_OFFSET
 value|4
 define|#
 directive|define
@@ -2613,7 +2613,7 @@ name|FUNC_MF_CFG_MIN_BW_MASK
 value|0x0000ff00
 define|#
 directive|define
-name|FUNC_MF_CFG_MIN_BW_SHIFT
+name|FUNC_MF_CFG_MIN_BW_OFFSET
 value|8
 define|#
 directive|define
@@ -2625,7 +2625,7 @@ name|FUNC_MF_CFG_MAX_BW_MASK
 value|0x00ff0000
 define|#
 directive|define
-name|FUNC_MF_CFG_MAX_BW_SHIFT
+name|FUNC_MF_CFG_MAX_BW_OFFSET
 value|16
 define|#
 directive|define
@@ -2638,7 +2638,7 @@ name|FUNC_MF_CFG_RDMA_PROTOCOL_MASK
 value|0x03000000
 define|#
 directive|define
-name|FUNC_MF_CFG_RDMA_PROTOCOL_SHIFT
+name|FUNC_MF_CFG_RDMA_PROTOCOL_OFFSET
 value|24
 define|#
 directive|define
@@ -2663,7 +2663,7 @@ name|FUNC_MF_CFG_BOOT_MODE_MASK
 value|0x0C000000
 define|#
 directive|define
-name|FUNC_MF_CFG_BOOT_MODE_SHIFT
+name|FUNC_MF_CFG_BOOT_MODE_OFFSET
 value|26
 define|#
 directive|define
@@ -2694,7 +2694,7 @@ name|FUNC_MF_CFG_UPPERMAC_MASK
 value|0x0000ffff
 define|#
 directive|define
-name|FUNC_MF_CFG_UPPERMAC_SHIFT
+name|FUNC_MF_CFG_UPPERMAC_OFFSET
 value|0
 define|#
 directive|define
@@ -2729,7 +2729,7 @@ name|FUNC_MF_CFG_OV_STAG_MASK
 value|0x0000ffff
 define|#
 directive|define
-name|FUNC_MF_CFG_OV_STAG_SHIFT
+name|FUNC_MF_CFG_OV_STAG_OFFSET
 value|0
 define|#
 directive|define
@@ -2765,7 +2765,7 @@ name|DRV_ID_PDA_COMP_VER_MASK
 value|0x0000ffff
 define|#
 directive|define
-name|DRV_ID_PDA_COMP_VER_SHIFT
+name|DRV_ID_PDA_COMP_VER_OFFSET
 value|0
 define|#
 directive|define
@@ -2777,56 +2777,56 @@ name|DRV_ID_MCP_HSI_VER_MASK
 value|0x00ff0000
 define|#
 directive|define
-name|DRV_ID_MCP_HSI_VER_SHIFT
+name|DRV_ID_MCP_HSI_VER_OFFSET
 value|16
 define|#
 directive|define
 name|DRV_ID_MCP_HSI_VER_CURRENT
-value|(LOAD_REQ_HSI_VERSION<< DRV_ID_MCP_HSI_VER_SHIFT)
+value|(LOAD_REQ_HSI_VERSION<< DRV_ID_MCP_HSI_VER_OFFSET)
 define|#
 directive|define
 name|DRV_ID_DRV_TYPE_MASK
 value|0x7f000000
 define|#
 directive|define
-name|DRV_ID_DRV_TYPE_SHIFT
+name|DRV_ID_DRV_TYPE_OFFSET
 value|24
 define|#
 directive|define
 name|DRV_ID_DRV_TYPE_UNKNOWN
-value|(0<< DRV_ID_DRV_TYPE_SHIFT)
+value|(0<< DRV_ID_DRV_TYPE_OFFSET)
 define|#
 directive|define
 name|DRV_ID_DRV_TYPE_LINUX
-value|(1<< DRV_ID_DRV_TYPE_SHIFT)
+value|(1<< DRV_ID_DRV_TYPE_OFFSET)
 define|#
 directive|define
 name|DRV_ID_DRV_TYPE_WINDOWS
-value|(2<< DRV_ID_DRV_TYPE_SHIFT)
+value|(2<< DRV_ID_DRV_TYPE_OFFSET)
 define|#
 directive|define
 name|DRV_ID_DRV_TYPE_DIAG
-value|(3<< DRV_ID_DRV_TYPE_SHIFT)
+value|(3<< DRV_ID_DRV_TYPE_OFFSET)
 define|#
 directive|define
 name|DRV_ID_DRV_TYPE_PREBOOT
-value|(4<< DRV_ID_DRV_TYPE_SHIFT)
+value|(4<< DRV_ID_DRV_TYPE_OFFSET)
 define|#
 directive|define
 name|DRV_ID_DRV_TYPE_SOLARIS
-value|(5<< DRV_ID_DRV_TYPE_SHIFT)
+value|(5<< DRV_ID_DRV_TYPE_OFFSET)
 define|#
 directive|define
 name|DRV_ID_DRV_TYPE_VMWARE
-value|(6<< DRV_ID_DRV_TYPE_SHIFT)
+value|(6<< DRV_ID_DRV_TYPE_OFFSET)
 define|#
 directive|define
 name|DRV_ID_DRV_TYPE_FREEBSD
-value|(7<< DRV_ID_DRV_TYPE_SHIFT)
+value|(7<< DRV_ID_DRV_TYPE_OFFSET)
 define|#
 directive|define
 name|DRV_ID_DRV_TYPE_AIX
-value|(8<< DRV_ID_DRV_TYPE_SHIFT)
+value|(8<< DRV_ID_DRV_TYPE_OFFSET)
 define|#
 directive|define
 name|DRV_ID_DRV_TYPE_OS
@@ -2837,12 +2837,12 @@ name|DRV_ID_DRV_INIT_HW_MASK
 value|0x80000000
 define|#
 directive|define
-name|DRV_ID_DRV_INIT_HW_SHIFT
+name|DRV_ID_DRV_INIT_HW_OFFSET
 value|31
 define|#
 directive|define
 name|DRV_ID_DRV_INIT_HW_FLAG
-value|(1<< DRV_ID_DRV_INIT_HW_SHIFT)
+value|(1<< DRV_ID_DRV_INIT_HW_OFFSET)
 block|}
 struct|;
 end_struct
@@ -3113,7 +3113,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SENSOR_LOCATION_SHIFT
+name|SENSOR_LOCATION_OFFSET
 value|0
 end_define
 
@@ -3127,7 +3127,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|THRESHOLD_HIGH_SHIFT
+name|THRESHOLD_HIGH_OFFSET
 value|8
 end_define
 
@@ -3141,7 +3141,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CRITICAL_TEMPERATURE_SHIFT
+name|CRITICAL_TEMPERATURE_OFFSET
 value|16
 end_define
 
@@ -3155,7 +3155,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CURRENT_TEMP_SHIFT
+name|CURRENT_TEMP_OFFSET
 value|24
 end_define
 
@@ -3398,7 +3398,7 @@ name|LOAD_REQ_ROLE_MASK
 value|0x000000FF
 define|#
 directive|define
-name|LOAD_REQ_ROLE_SHIFT
+name|LOAD_REQ_ROLE_OFFSET
 value|0
 define|#
 directive|define
@@ -3406,7 +3406,7 @@ name|LOAD_REQ_LOCK_TO_MASK
 value|0x0000FF00
 define|#
 directive|define
-name|LOAD_REQ_LOCK_TO_SHIFT
+name|LOAD_REQ_LOCK_TO_OFFSET
 value|8
 define|#
 directive|define
@@ -3422,7 +3422,7 @@ name|LOAD_REQ_FORCE_MASK
 value|0x000F0000
 define|#
 directive|define
-name|LOAD_REQ_FORCE_SHIFT
+name|LOAD_REQ_FORCE_OFFSET
 value|16
 define|#
 directive|define
@@ -3442,7 +3442,7 @@ name|LOAD_REQ_FLAGS0_MASK
 value|0x00F00000
 define|#
 directive|define
-name|LOAD_REQ_FLAGS0_SHIFT
+name|LOAD_REQ_FLAGS0_OFFSET
 value|20
 define|#
 directive|define
@@ -3474,7 +3474,7 @@ name|LOAD_RSP_ROLE_MASK
 value|0x000000FF
 define|#
 directive|define
-name|LOAD_RSP_ROLE_SHIFT
+name|LOAD_RSP_ROLE_OFFSET
 value|0
 define|#
 directive|define
@@ -3482,7 +3482,7 @@ name|LOAD_RSP_HSI_MASK
 value|0x0000FF00
 define|#
 directive|define
-name|LOAD_RSP_HSI_SHIFT
+name|LOAD_RSP_HSI_OFFSET
 value|8
 define|#
 directive|define
@@ -3490,7 +3490,7 @@ name|LOAD_RSP_FLAGS0_MASK
 value|0x000F0000
 define|#
 directive|define
-name|LOAD_RSP_FLAGS0_SHIFT
+name|LOAD_RSP_FLAGS0_OFFSET
 value|16
 define|#
 directive|define
@@ -3772,6 +3772,10 @@ name|DRV_MSG_CODE_CFG_VF_MSIX
 value|0xc0010000
 define|#
 directive|define
+name|DRV_MSG_CODE_CFG_PF_VFS_MSIX
+value|0xc0020000
+define|#
+directive|define
 name|DRV_MSG_CODE_NVM_PUT_FILE_BEGIN
 value|0x00010000
 comment|/* Param is either DRV_MB_PARAM_NVM_PUT_FILE_BEGIN_MFW/IMAGE */
@@ -3852,7 +3856,7 @@ value|0x00120000
 comment|/* Set virtual mac address, params [31:6] - reserved, [5:4] - type, [3:0] - func, drv_data[7:0] - MAC/WWNN/WWPN */
 define|#
 directive|define
-name|DRV_MSG_CODE_VMAC_TYPE_SHIFT
+name|DRV_MSG_CODE_VMAC_TYPE_OFFSET
 value|4
 define|#
 directive|define
@@ -3927,7 +3931,7 @@ name|BW_MAX_MASK
 value|0x000000ff
 define|#
 directive|define
-name|BW_MAX_SHIFT
+name|BW_MAX_OFFSET
 value|0
 define|#
 directive|define
@@ -3935,7 +3939,7 @@ name|BW_MIN_MASK
 value|0x0000ff00
 define|#
 directive|define
-name|BW_MIN_SHIFT
+name|BW_MIN_OFFSET
 value|8
 define|#
 directive|define
@@ -4000,7 +4004,7 @@ name|RESOURCE_CMD_REQ_RESC_MASK
 value|0x0000001F
 define|#
 directive|define
-name|RESOURCE_CMD_REQ_RESC_SHIFT
+name|RESOURCE_CMD_REQ_RESC_OFFSET
 value|0
 define|#
 directive|define
@@ -4008,7 +4012,7 @@ name|RESOURCE_CMD_REQ_OPCODE_MASK
 value|0x000000E0
 define|#
 directive|define
-name|RESOURCE_CMD_REQ_OPCODE_SHIFT
+name|RESOURCE_CMD_REQ_OPCODE_OFFSET
 value|5
 define|#
 directive|define
@@ -4041,7 +4045,7 @@ name|RESOURCE_CMD_REQ_AGE_MASK
 value|0x0000FF00
 define|#
 directive|define
-name|RESOURCE_CMD_REQ_AGE_SHIFT
+name|RESOURCE_CMD_REQ_AGE_OFFSET
 value|8
 define|#
 directive|define
@@ -4049,7 +4053,7 @@ name|RESOURCE_CMD_RSP_OWNER_MASK
 value|0x000000FF
 define|#
 directive|define
-name|RESOURCE_CMD_RSP_OWNER_SHIFT
+name|RESOURCE_CMD_RSP_OWNER_OFFSET
 value|0
 define|#
 directive|define
@@ -4057,7 +4061,7 @@ name|RESOURCE_CMD_RSP_OPCODE_MASK
 value|0x00000700
 define|#
 directive|define
-name|RESOURCE_CMD_RSP_OPCODE_SHIFT
+name|RESOURCE_CMD_RSP_OPCODE_OFFSET
 value|8
 define|#
 directive|define
@@ -4169,7 +4173,7 @@ value|0x00290000
 comment|/* Value shoud be placed in union */
 define|#
 directive|define
-name|DRV_MB_PARAM_ADDR_SHIFT
+name|DRV_MB_PARAM_ADDR_OFFSET
 value|0
 define|#
 directive|define
@@ -4177,7 +4181,7 @@ name|DRV_MB_PARAM_ADDR_MASK
 value|0x0000FFFF
 define|#
 directive|define
-name|DRV_MB_PARAM_DEVAD_SHIFT
+name|DRV_MB_PARAM_DEVAD_OFFSET
 value|16
 define|#
 directive|define
@@ -4185,7 +4189,7 @@ name|DRV_MB_PARAM_DEVAD_MASK
 value|0x001F0000
 define|#
 directive|define
-name|DRV_MB_PARAM_PORT_SHIFT
+name|DRV_MB_PARAM_PORT_OFFSET
 value|21
 define|#
 directive|define
@@ -4283,7 +4287,7 @@ name|DRV_MB_PARAM_LLDP_SEND_MASK
 value|0x00000001
 define|#
 directive|define
-name|DRV_MB_PARAM_LLDP_SEND_SHIFT
+name|DRV_MB_PARAM_LLDP_SEND_OFFSET
 value|0
 define|#
 directive|define
@@ -4291,7 +4295,7 @@ name|DRV_MB_PARAM_LLDP_AGENT_MASK
 value|0x00000006
 define|#
 directive|define
-name|DRV_MB_PARAM_LLDP_AGENT_SHIFT
+name|DRV_MB_PARAM_LLDP_AGENT_OFFSET
 value|1
 define|#
 directive|define
@@ -4299,7 +4303,7 @@ name|DRV_MB_PARAM_DCBX_NOTIFY_MASK
 value|0x00000008
 define|#
 directive|define
-name|DRV_MB_PARAM_DCBX_NOTIFY_SHIFT
+name|DRV_MB_PARAM_DCBX_NOTIFY_OFFSET
 value|3
 define|#
 directive|define
@@ -4307,7 +4311,7 @@ name|DRV_MB_PARAM_NIG_DRAIN_PERIOD_MS_MASK
 value|0x000000FF
 define|#
 directive|define
-name|DRV_MB_PARAM_NIG_DRAIN_PERIOD_MS_SHIFT
+name|DRV_MB_PARAM_NIG_DRAIN_PERIOD_MS_OFFSET
 value|0
 define|#
 directive|define
@@ -4319,7 +4323,7 @@ name|DRV_MB_PARAM_NVM_PUT_FILE_BEGIN_IMAGE
 value|0x2
 define|#
 directive|define
-name|DRV_MB_PARAM_NVM_OFFSET_SHIFT
+name|DRV_MB_PARAM_NVM_OFFSET_OFFSET
 value|0
 define|#
 directive|define
@@ -4327,7 +4331,7 @@ name|DRV_MB_PARAM_NVM_OFFSET_MASK
 value|0x00FFFFFF
 define|#
 directive|define
-name|DRV_MB_PARAM_NVM_LEN_SHIFT
+name|DRV_MB_PARAM_NVM_LEN_OFFSET
 value|24
 define|#
 directive|define
@@ -4335,7 +4339,7 @@ name|DRV_MB_PARAM_NVM_LEN_MASK
 value|0xFF000000
 define|#
 directive|define
-name|DRV_MB_PARAM_PHY_ADDR_SHIFT
+name|DRV_MB_PARAM_PHY_ADDR_OFFSET
 value|0
 define|#
 directive|define
@@ -4343,7 +4347,7 @@ name|DRV_MB_PARAM_PHY_ADDR_MASK
 value|0x1FF0FFFF
 define|#
 directive|define
-name|DRV_MB_PARAM_PHY_LANE_SHIFT
+name|DRV_MB_PARAM_PHY_LANE_OFFSET
 value|16
 define|#
 directive|define
@@ -4351,7 +4355,7 @@ name|DRV_MB_PARAM_PHY_LANE_MASK
 value|0x000F0000
 define|#
 directive|define
-name|DRV_MB_PARAM_PHY_SELECT_PORT_SHIFT
+name|DRV_MB_PARAM_PHY_SELECT_PORT_OFFSET
 value|29
 define|#
 directive|define
@@ -4359,7 +4363,7 @@ name|DRV_MB_PARAM_PHY_SELECT_PORT_MASK
 value|0x20000000
 define|#
 directive|define
-name|DRV_MB_PARAM_PHY_PORT_SHIFT
+name|DRV_MB_PARAM_PHY_PORT_OFFSET
 value|30
 define|#
 directive|define
@@ -4367,7 +4371,7 @@ name|DRV_MB_PARAM_PHY_PORT_MASK
 value|0xc0000000
 define|#
 directive|define
-name|DRV_MB_PARAM_PHYMOD_LANE_SHIFT
+name|DRV_MB_PARAM_PHYMOD_LANE_OFFSET
 value|0
 define|#
 directive|define
@@ -4375,16 +4379,16 @@ name|DRV_MB_PARAM_PHYMOD_LANE_MASK
 value|0x000000FF
 define|#
 directive|define
-name|DRV_MB_PARAM_PHYMOD_SIZE_SHIFT
+name|DRV_MB_PARAM_PHYMOD_SIZE_OFFSET
 value|8
 define|#
 directive|define
 name|DRV_MB_PARAM_PHYMOD_SIZE_MASK
 value|0x000FFF00
-comment|/* configure vf MSIX params*/
+comment|/* configure vf MSIX params BB */
 define|#
 directive|define
-name|DRV_MB_PARAM_CFG_VF_MSIX_VF_ID_SHIFT
+name|DRV_MB_PARAM_CFG_VF_MSIX_VF_ID_OFFSET
 value|0
 define|#
 directive|define
@@ -4392,16 +4396,25 @@ name|DRV_MB_PARAM_CFG_VF_MSIX_VF_ID_MASK
 value|0x000000FF
 define|#
 directive|define
-name|DRV_MB_PARAM_CFG_VF_MSIX_SB_NUM_SHIFT
+name|DRV_MB_PARAM_CFG_VF_MSIX_SB_NUM_OFFSET
 value|8
 define|#
 directive|define
 name|DRV_MB_PARAM_CFG_VF_MSIX_SB_NUM_MASK
 value|0x0000FF00
+comment|/* configure vf MSIX for PF params AH*/
+define|#
+directive|define
+name|DRV_MB_PARAM_CFG_PF_VFS_MSIX_SB_NUM_OFFSET
+value|0
+define|#
+directive|define
+name|DRV_MB_PARAM_CFG_PF_VFS_MSIX_SB_NUM_MASK
+value|0x000000FF
 comment|/* OneView configuration parametres */
 define|#
 directive|define
-name|DRV_MB_PARAM_OV_CURR_CFG_SHIFT
+name|DRV_MB_PARAM_OV_CURR_CFG_OFFSET
 value|0
 define|#
 directive|define
@@ -4441,7 +4454,7 @@ name|DRV_MB_PARAM_OV_CURR_CFG_HII
 value|7
 define|#
 directive|define
-name|DRV_MB_PARAM_OV_UPDATE_BOOT_PROG_SHIFT
+name|DRV_MB_PARAM_OV_UPDATE_BOOT_PROG_OFFSET
 value|0
 define|#
 directive|define
@@ -4489,7 +4502,7 @@ name|DRV_MB_PARAM_OV_UPDATE_BOOT_COMPLETED
 value|0
 define|#
 directive|define
-name|DRV_MB_PARAM_OV_PCI_BUS_NUM_SHIFT
+name|DRV_MB_PARAM_OV_PCI_BUS_NUM_OFFSET
 value|0
 define|#
 directive|define
@@ -4497,7 +4510,7 @@ name|DRV_MB_PARAM_OV_PCI_BUS_NUM_MASK
 value|0x000000FF
 define|#
 directive|define
-name|DRV_MB_PARAM_OV_STORM_FW_VER_SHIFT
+name|DRV_MB_PARAM_OV_STORM_FW_VER_OFFSET
 value|0
 define|#
 directive|define
@@ -4521,7 +4534,7 @@ name|DRV_MB_PARAM_OV_STORM_FW_VER_DROP_MASK
 value|0x000000FF
 define|#
 directive|define
-name|DRV_MSG_CODE_OV_UPDATE_DRIVER_STATE_SHIFT
+name|DRV_MSG_CODE_OV_UPDATE_DRIVER_STATE_OFFSET
 value|0
 define|#
 directive|define
@@ -4552,7 +4565,7 @@ value|0x5
 comment|/* installed and active */
 define|#
 directive|define
-name|DRV_MB_PARAM_OV_MTU_SIZE_SHIFT
+name|DRV_MB_PARAM_OV_MTU_SIZE_OFFSET
 value|0
 define|#
 directive|define
@@ -4596,7 +4609,7 @@ name|DRV_MB_PARAM_FCOE_CVID_MASK
 value|0xFFF
 define|#
 directive|define
-name|DRV_MB_PARAM_FCOE_CVID_SHIFT
+name|DRV_MB_PARAM_FCOE_CVID_OFFSET
 value|0
 define|#
 directive|define
@@ -4612,7 +4625,7 @@ name|DRV_MB_PARAM_SET_LED_MODE_OFF
 value|0x2
 define|#
 directive|define
-name|DRV_MB_PARAM_TRANSCEIVER_PORT_SHIFT
+name|DRV_MB_PARAM_TRANSCEIVER_PORT_OFFSET
 value|0
 define|#
 directive|define
@@ -4620,7 +4633,7 @@ name|DRV_MB_PARAM_TRANSCEIVER_PORT_MASK
 value|0x00000003
 define|#
 directive|define
-name|DRV_MB_PARAM_TRANSCEIVER_SIZE_SHIFT
+name|DRV_MB_PARAM_TRANSCEIVER_SIZE_OFFSET
 value|2
 define|#
 directive|define
@@ -4628,7 +4641,7 @@ name|DRV_MB_PARAM_TRANSCEIVER_SIZE_MASK
 value|0x000000FC
 define|#
 directive|define
-name|DRV_MB_PARAM_TRANSCEIVER_I2C_ADDRESS_SHIFT
+name|DRV_MB_PARAM_TRANSCEIVER_I2C_ADDRESS_OFFSET
 value|8
 define|#
 directive|define
@@ -4636,7 +4649,7 @@ name|DRV_MB_PARAM_TRANSCEIVER_I2C_ADDRESS_MASK
 value|0x0000FF00
 define|#
 directive|define
-name|DRV_MB_PARAM_TRANSCEIVER_OFFSET_SHIFT
+name|DRV_MB_PARAM_TRANSCEIVER_OFFSET_OFFSET
 value|16
 define|#
 directive|define
@@ -4644,7 +4657,7 @@ name|DRV_MB_PARAM_TRANSCEIVER_OFFSET_MASK
 value|0xFFFF0000
 define|#
 directive|define
-name|DRV_MB_PARAM_GPIO_NUMBER_SHIFT
+name|DRV_MB_PARAM_GPIO_NUMBER_OFFSET
 value|0
 define|#
 directive|define
@@ -4652,7 +4665,7 @@ name|DRV_MB_PARAM_GPIO_NUMBER_MASK
 value|0x0000FFFF
 define|#
 directive|define
-name|DRV_MB_PARAM_GPIO_VALUE_SHIFT
+name|DRV_MB_PARAM_GPIO_VALUE_OFFSET
 value|16
 define|#
 directive|define
@@ -4660,7 +4673,7 @@ name|DRV_MB_PARAM_GPIO_VALUE_MASK
 value|0xFFFF0000
 define|#
 directive|define
-name|DRV_MB_PARAM_GPIO_DIRECTION_SHIFT
+name|DRV_MB_PARAM_GPIO_DIRECTION_OFFSET
 value|16
 define|#
 directive|define
@@ -4668,7 +4681,7 @@ name|DRV_MB_PARAM_GPIO_DIRECTION_MASK
 value|0x00FF0000
 define|#
 directive|define
-name|DRV_MB_PARAM_GPIO_CTRL_SHIFT
+name|DRV_MB_PARAM_GPIO_CTRL_OFFSET
 value|24
 define|#
 directive|define
@@ -4681,7 +4694,7 @@ name|DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_MASK
 value|0xFFFF0000
 define|#
 directive|define
-name|DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_SHIFT
+name|DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_OFFSET
 value|16
 define|#
 directive|define
@@ -4689,7 +4702,7 @@ name|DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_MASK
 value|0x0000FFFF
 define|#
 directive|define
-name|DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_SHIFT
+name|DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_OFFSET
 value|0
 define|#
 directive|define
@@ -4729,7 +4742,7 @@ name|DRV_MB_PARAM_BIST_RC_INVALID_PARAMETER
 value|3
 define|#
 directive|define
-name|DRV_MB_PARAM_BIST_TEST_INDEX_SHIFT
+name|DRV_MB_PARAM_BIST_TEST_INDEX_OFFSET
 value|0
 define|#
 directive|define
@@ -4737,7 +4750,7 @@ name|DRV_MB_PARAM_BIST_TEST_INDEX_MASK
 value|0x000000FF
 define|#
 directive|define
-name|DRV_MB_PARAM_BIST_TEST_IMAGE_INDEX_SHIFT
+name|DRV_MB_PARAM_BIST_TEST_IMAGE_INDEX_OFFSET
 value|8
 define|#
 directive|define
@@ -4749,7 +4762,7 @@ name|DRV_MB_PARAM_FEATURE_SUPPORT_PORT_MASK
 value|0x0000FFFF
 define|#
 directive|define
-name|DRV_MB_PARAM_FEATURE_SUPPORT_PORT_SHIFT
+name|DRV_MB_PARAM_FEATURE_SUPPORT_PORT_OFFSET
 value|0
 define|#
 directive|define
@@ -4767,7 +4780,7 @@ name|DRV_MB_PARAM_FEATURE_SUPPORT_FUNC_MASK
 value|0xFFFF0000
 define|#
 directive|define
-name|DRV_MB_PARAM_FEATURE_SUPPORT_FUNC_SHIFT
+name|DRV_MB_PARAM_FEATURE_SUPPORT_FUNC_OFFSET
 value|16
 name|u32
 name|fw_mb_header
@@ -5240,6 +5253,14 @@ name|FW_MSG_CODE_WOL_READ_BUFFER_INVALID_VAL
 value|0x00860000
 define|#
 directive|define
+name|FW_MSG_CODE_DRV_CFG_PF_VFS_MSIX_DONE
+value|0x00870000
+define|#
+directive|define
+name|FW_MSG_CODE_DRV_CFG_PF_VFS_MSIX_BAD_ASIC
+value|0x00880000
+define|#
+directive|define
 name|FW_MSG_SEQ_NUMBER_MASK
 value|0x0000ffff
 name|u32
@@ -5252,7 +5273,7 @@ name|FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_MASK
 value|0xFFFF0000
 define|#
 directive|define
-name|FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_SHIFT
+name|FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_OFFSET
 value|16
 define|#
 directive|define
@@ -5260,7 +5281,7 @@ name|FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_MASK
 value|0x0000FFFF
 define|#
 directive|define
-name|FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_SHIFT
+name|FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_OFFSET
 value|0
 comment|/* get pf rdma protocol command response */
 define|#

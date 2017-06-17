@@ -28,6 +28,40 @@ comment|/* #undef JEMALLOC_CPREFIX */
 end_comment
 
 begin_comment
+comment|/*  * Define overrides for non-standard allocator-related functions if they are  * present on the system.  */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_OVERRIDE___LIBC_CALLOC */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_OVERRIDE___LIBC_FREE */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_OVERRIDE___LIBC_MALLOC */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_OVERRIDE___LIBC_MEMALIGN */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_OVERRIDE___LIBC_REALLOC */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_OVERRIDE___LIBC_VALLOC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_OVERRIDE___POSIX_MEMALIGN
+end_define
+
+begin_comment
 comment|/*  * JEMALLOC_PRIVATE_NAMESPACE is used as a prefix for all library-private APIs.  * For shared libraries, symbol visibility mechanisms prevent these symbols  * from being exported, but for static libraries, naming collisions are a real  * possibility.  */
 end_comment
 
@@ -50,47 +84,62 @@ value|__asm__ volatile("pause")
 end_define
 
 begin_comment
-comment|/* Defined if C11 atomics are available. */
-end_comment
-
-begin_comment
-comment|/* #undef JEMALLOC_C11ATOMICS */
-end_comment
-
-begin_comment
-comment|/* Defined if the equivalent of FreeBSD's atomic(9) functions are available. */
+comment|/*  * Number of significant bits in virtual addresses.  This may be less than the  * total number of bits in a pointer, e.g. on x64, for which the uppermost 16  * bits are the same as bit 47.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|JEMALLOC_ATOMIC9
-value|1
+name|LG_VADDR
+value|48
 end_define
 
 begin_comment
-comment|/*  * Defined if OSAtomic*() functions are available, as provided by Darwin, and  * documented in the atomic(3) manual page.  */
+comment|/* Defined if C11 atomics are available. */
 end_comment
 
 begin_comment
-comment|/* #undef JEMALLOC_OSATOMIC */
+comment|/* #undef JEMALLOC_C11_ATOMICS */
 end_comment
+
+begin_comment
+comment|/* Defined if GCC __atomic atomics are available. */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_GCC_ATOMIC_ATOMICS */
+end_comment
+
+begin_comment
+comment|/* Defined if GCC __sync atomics are available. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_GCC_SYNC_ATOMICS
+value|1
+end_define
 
 begin_comment
 comment|/*  * Defined if __sync_add_and_fetch(uint32_t *, uint32_t) and  * __sync_sub_and_fetch(uint32_t *, uint32_t) are available, despite  * __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 not being defined (which means the  * functions are defined in libgcc instead of being inlines).  */
 end_comment
 
-begin_comment
-comment|/* #undef JE_FORCE_SYNC_COMPARE_AND_SWAP_4 */
-end_comment
+begin_define
+define|#
+directive|define
+name|JE_FORCE_SYNC_COMPARE_AND_SWAP_4
+end_define
 
 begin_comment
 comment|/*  * Defined if __sync_add_and_fetch(uint64_t *, uint64_t) and  * __sync_sub_and_fetch(uint64_t *, uint64_t) are available, despite  * __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 not being defined (which means the  * functions are defined in libgcc instead of being inlines).  */
 end_comment
 
-begin_comment
-comment|/* #undef JE_FORCE_SYNC_COMPARE_AND_SWAP_8 */
-end_comment
+begin_define
+define|#
+directive|define
+name|JE_FORCE_SYNC_COMPARE_AND_SWAP_8
+end_define
 
 begin_comment
 comment|/*  * Defined if __builtin_clz() and __builtin_clzl() are available.  */
@@ -224,24 +273,6 @@ value|__attribute__((tls_model("initial-exec")))
 end_define
 
 begin_comment
-comment|/* JEMALLOC_CC_SILENCE enables code that silences unuseful compiler warnings. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JEMALLOC_CC_SILENCE
-end_define
-
-begin_comment
-comment|/* JEMALLOC_CODE_COVERAGE enables test code coverage analysis. */
-end_comment
-
-begin_comment
-comment|/* #undef JEMALLOC_CODE_COVERAGE */
-end_comment
-
-begin_comment
 comment|/*  * JEMALLOC_DEBUG enables assertions and other sanity checks, and disables  * inline functions.  */
 end_comment
 
@@ -292,17 +323,7 @@ comment|/* #undef JEMALLOC_PROF_GCC */
 end_comment
 
 begin_comment
-comment|/*  * JEMALLOC_TCACHE enables a thread-specific caching layer for small objects.  * This makes it possible to allocate/deallocate objects without any locking  * when the cache is in the steady state.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JEMALLOC_TCACHE
-end_define
-
-begin_comment
-comment|/*  * JEMALLOC_DSS enables use of sbrk(2) to allocate chunks from the data storage  * segment (DSS).  */
+comment|/*  * JEMALLOC_DSS enables use of sbrk(2) to allocate extents from the data storage  * segment (DSS).  */
 end_comment
 
 begin_define
@@ -312,7 +333,7 @@ name|JEMALLOC_DSS
 end_define
 
 begin_comment
-comment|/* Support memory filling (junk/zero/quarantine/redzone). */
+comment|/* Support memory filling (junk/zero). */
 end_comment
 
 begin_define
@@ -330,14 +351,6 @@ define|#
 directive|define
 name|JEMALLOC_UTRACE
 end_define
-
-begin_comment
-comment|/* Support Valgrind. */
-end_comment
-
-begin_comment
-comment|/* #undef JEMALLOC_VALGRIND */
-end_comment
 
 begin_comment
 comment|/* Support optional abort() on OOM. */
@@ -360,17 +373,6 @@ name|JEMALLOC_LAZY_LOCK
 end_define
 
 begin_comment
-comment|/* Minimum size class to support is 2^LG_TINY_MIN bytes. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LG_TINY_MIN
-value|3
-end_define
-
-begin_comment
 comment|/*  * Minimum allocation alignment is 2^LG_QUANTUM bytes (ignoring tiny size  * classes).  */
 end_comment
 
@@ -390,6 +392,17 @@ value|12
 end_define
 
 begin_comment
+comment|/*  * One huge page is 2^LG_HUGEPAGE bytes.  Note that this is defined even if the  * system does not explicitly support huge pages; system calls that require  * explicit huge page support are separately configured.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LG_HUGEPAGE
+value|21
+end_define
+
+begin_comment
 comment|/*  * If defined, adjacent virtual memory mappings with identical attributes  * automatically coalesce, and they fragment when changes are made to subranges.  * This is the normal order of things for mmap()/munmap(), but on Windows  * VirtualAlloc()/VirtualFree() operations must be precisely matched, i.e.  * mappings do *not* coalesce/fragment.  */
 end_comment
 
@@ -400,14 +413,12 @@ name|JEMALLOC_MAPS_COALESCE
 end_define
 
 begin_comment
-comment|/*  * If defined, use munmap() to unmap freed chunks, rather than storing them for  * later reuse.  This is disabled by default on Linux because common sequences  * of mmap()/munmap() calls will cause virtual memory map holes.  */
+comment|/*  * If defined, retain memory for later reuse by default rather than using e.g.  * munmap() to unmap freed extents.  This is enabled on 64-bit Linux because  * common sequences of mmap()/munmap() calls will cause virtual memory map  * holes.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|JEMALLOC_MUNMAP
-end_define
+begin_comment
+comment|/* #undef JEMALLOC_RETAIN */
+end_comment
 
 begin_comment
 comment|/* TLS is used to map arenas and magazine caches to threads. */
@@ -456,14 +467,6 @@ value|__builtin_ffs
 end_define
 
 begin_comment
-comment|/*  * JEMALLOC_IVSALLOC enables ivsalloc(), which verifies that pointers reside  * within jemalloc-owned chunks before dereferencing them.  */
-end_comment
-
-begin_comment
-comment|/* #undef JEMALLOC_IVSALLOC */
-end_comment
-
-begin_comment
 comment|/*  * If defined, explicitly attempt to more uniformly distribute large allocation  * pointer alignments across all cache indices.  */
 end_comment
 
@@ -506,15 +509,7 @@ name|JEMALLOC_HAVE_MADVISE
 end_define
 
 begin_comment
-comment|/*  * Defined if transparent huge pages are supported via the MADV_[NO]HUGEPAGE  * arguments to madvise(2).  */
-end_comment
-
-begin_comment
-comment|/* #undef JEMALLOC_HAVE_MADVISE_HUGE */
-end_comment
-
-begin_comment
-comment|/*  * Methods for purging unused pages differ between operating systems.  *  *   madvise(..., MADV_FREE) : This marks pages as being unused, such that they  *                             will be discarded rather than swapped out.  *   madvise(..., MADV_DONTNEED) : This immediately discards pages, such that  *                                 new pages will be demand-zeroed if the  *                                 address region is later touched.  */
+comment|/*  * Methods for purging unused pages differ between operating systems.  *  *   madvise(..., MADV_FREE) : This marks pages as being unused, such that they  *                             will be discarded rather than swapped out.  *   madvise(..., MADV_DONTNEED) : If JEMALLOC_PURGE_MADVISE_DONTNEED_ZEROS is  *                                 defined, this immediately discards pages,  *                                 such that new pages will be demand-zeroed if  *                                 the address region is later touched;  *                                 otherwise this behaves similarly to  *                                 MADV_FREE, though typically with higher  *                                 system overhead.  */
 end_comment
 
 begin_define
@@ -530,7 +525,11 @@ name|JEMALLOC_PURGE_MADVISE_DONTNEED
 end_define
 
 begin_comment
-comment|/* Defined if transparent huge page support is enabled. */
+comment|/* #undef JEMALLOC_PURGE_MADVISE_DONTNEED_ZEROS */
+end_comment
+
+begin_comment
+comment|/*  * Defined if transparent huge pages (THPs) are supported via the  * MADV_[NO]HUGEPAGE arguments to madvise(2), and THP support is enabled.  */
 end_comment
 
 begin_comment
@@ -625,6 +624,26 @@ comment|/* #undef JEMALLOC_GLIBC_MEMALIGN_HOOK */
 end_comment
 
 begin_comment
+comment|/* pthread support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_HAVE_PTHREAD
+end_define
+
+begin_comment
+comment|/* dlsym() support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_HAVE_DLSYM
+end_define
+
+begin_comment
 comment|/* Adaptive mutex support in pthreads. */
 end_comment
 
@@ -632,6 +651,33 @@ begin_define
 define|#
 directive|define
 name|JEMALLOC_HAVE_PTHREAD_MUTEX_ADAPTIVE_NP
+end_define
+
+begin_comment
+comment|/* GNU specific sched_getcpu support */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_HAVE_SCHED_GETCPU */
+end_comment
+
+begin_comment
+comment|/* GNU specific sched_setaffinity support */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_HAVE_SCHED_SETAFFINITY */
+end_comment
+
+begin_comment
+comment|/*  * If defined, all the features necessary for background threads are present.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_BACKGROUND_THREAD
+value|1
 end_define
 
 begin_comment
@@ -651,6 +697,17 @@ define|#
 directive|define
 name|JEMALLOC_CONFIG_MALLOC_CONF
 value|""
+end_define
+
+begin_comment
+comment|/* If defined, jemalloc takes the malloc/free/etc. symbol names. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_IS_MALLOC
+value|1
 end_define
 
 begin_endif

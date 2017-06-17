@@ -138,7 +138,7 @@ block|{
 name|uint64_t
 name|ll
 decl_stmt|;
-comment|/* internal. */
+comment|/* internal, for uuid_last only */
 struct|struct
 block|{
 name|uint32_t
@@ -2159,6 +2159,42 @@ literal|0
 operator|)
 return|;
 comment|/* variant 2? */
+block|}
+end_function
+
+begin_function
+name|int
+name|uuidcmp
+parameter_list|(
+specifier|const
+name|struct
+name|uuid
+modifier|*
+name|uuid1
+parameter_list|,
+specifier|const
+name|struct
+name|uuid
+modifier|*
+name|uuid2
+parameter_list|)
+block|{
+return|return
+operator|(
+name|memcmp
+argument_list|(
+name|uuid1
+argument_list|,
+name|uuid2
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|uuid
+argument_list|)
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

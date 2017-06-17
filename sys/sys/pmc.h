@@ -1483,6 +1483,10 @@ name|pmc_state
 name|pm_state
 decl_stmt|;
 comment|/* current PMC state */
+name|uint32_t
+name|pm_overflowcnt
+decl_stmt|;
+comment|/* count overflow interrupts */
 comment|/* 	 * The PMC ID field encodes the row-index for the PMC, its 	 * mode, class and the CPU# associated with the PMC. 	 */
 name|pmc_id_t
 name|pm_id

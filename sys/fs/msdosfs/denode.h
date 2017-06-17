@@ -15,6 +15,18 @@ begin_comment
 comment|/*-  * Written by Paul Popelka (paulp@uts.amdahl.com)  *  * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *  * This software is provided "as is".  *  * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *  * October 1992  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_FS_MSDOSFS_DENODE_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_FS_MSDOSFS_DENODE_H_
+end_define
+
 begin_comment
 comment|/*  * This is the pc filesystem specific portion of the vnode structure.  *  * To describe a file uniquely the de_dirclust, de_diroffset, and  * de_StartCluster fields are used.  *  * de_dirclust contains the cluster number of the directory cluster  *	containing the entry for a file or directory.  * de_diroffset is the index into the cluster for the entry describing  *	a file or directory.  * de_StartCluster is the number of the first cluster of the file or directory.  *  * Now to describe the quirks of the pc filesystem.  * - Clusters 0 and 1 are reserved.  * - The first allocatable cluster is 2.  * - The root directory is of fixed size and all blocks that make it up  *   are contiguous.  * - Cluster 0 refers to the root directory when it is found in the  *   startcluster field of a directory entry that points to another directory.  * - Cluster 0 implies a 0 length file when found in the start cluster field  *   of a directory entry that points to a file.  * - You can't use the cluster number 0 to derive the address of the root  *   directory.  * - Multiple directory entries can point to a directory. The entry in the  *   parent directory points to a child directory.  Any directories in the  *   child directory contain a ".." entry that points back to the parent.  *   The child directory itself contains a "." entry that points to itself.  * - The root directory does not contain a "." or ".." entry.  * - Directory entries for directories are never changed once they are created  *   (except when removed).  The size stays 0, and the last modification time  *   is never changed.  This is because so many directory entries can point to  *   the physical clusters that make up a directory.  It would lead to an  *   update nightmare.  * - The length field in a directory entry pointing to a directory contains 0  *   (always).  The only way to find the end of a directory is to follow the  *   cluster chain until the "last cluster" marker is found.  *  * My extensions to make this house of cards work.  These apply only to the in  * memory copy of the directory entry.  * - A reference count for each denode will be kept since dos doesn't keep such  *   things.  */
 end_comment
@@ -343,11 +355,19 @@ define|\
 value|(memcpy((dp)->deName, (dep)->de_Name, 11),	\ 	 (dp)->deAttributes = (dep)->de_Attributes,	\ 	 (dp)->deLowerCase = (dep)->de_LowerCase,	\ 	 (dp)->deCHundredth = (dep)->de_CHun,		\ 	 putushort((dp)->deCTime, (dep)->de_CTime),	\ 	 putushort((dp)->deCDate, (dep)->de_CDate),	\ 	 putushort((dp)->deADate, (dep)->de_ADate),	\ 	 putushort((dp)->deMTime, (dep)->de_MTime),	\ 	 putushort((dp)->deMDate, (dep)->de_MDate),	\ 	 putushort((dp)->deStartCluster, (dep)->de_StartCluster), \ 	 putulong((dp)->deFileSize,			\ 	     ((dep)->de_Attributes& ATTR_DIRECTORY) ? 0 : (dep)->de_FileSize), \ 	 putushort((dp)->deHighClust, (dep)->de_StartCluster>> 16))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MAKEFS
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -719,7 +739,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* _KERNEL || MAKEFS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_FS_MSDOSFS_DENODE_H_ */
 end_comment
 
 end_unit

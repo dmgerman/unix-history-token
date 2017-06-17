@@ -222,6 +222,11 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
 parameter_list|)
 function_decl|;
 end_function_decl

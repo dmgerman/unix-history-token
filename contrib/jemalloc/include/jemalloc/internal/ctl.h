@@ -1,74 +1,65 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/******************************************************************************/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|JEMALLOC_INTERNAL_CTL_H
+end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JEMALLOC_H_TYPES
-end_ifdef
+begin_define
+define|#
+directive|define
+name|JEMALLOC_INTERNAL_CTL_H
+end_define
 
-begin_typedef
-typedef|typedef
-name|struct
-name|ctl_node_s
-name|ctl_node_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/jemalloc_internal_types.h"
+end_include
 
-begin_typedef
-typedef|typedef
-name|struct
-name|ctl_named_node_s
-name|ctl_named_node_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/malloc_io.h"
+end_include
 
-begin_typedef
-typedef|typedef
-name|struct
-name|ctl_indexed_node_s
-name|ctl_indexed_node_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/mutex_prof.h"
+end_include
 
-begin_typedef
-typedef|typedef
-name|struct
-name|ctl_arena_stats_s
-name|ctl_arena_stats_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/ql.h"
+end_include
 
-begin_typedef
-typedef|typedef
-name|struct
-name|ctl_stats_s
-name|ctl_stats_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/size_classes.h"
+end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/stats.h"
+end_include
 
 begin_comment
-comment|/* JEMALLOC_H_TYPES */
+comment|/* Maximum ctl tree depth. */
 end_comment
 
-begin_comment
-comment|/******************************************************************************/
-end_comment
+begin_define
+define|#
+directive|define
+name|CTL_MAX_DEPTH
+value|7
+end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JEMALLOC_H_STRUCTS
-end_ifdef
-
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|ctl_node_s
 block|{
@@ -76,15 +67,16 @@ name|bool
 name|named
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|ctl_node_t
+typedef|;
+end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|ctl_named_node_s
 block|{
-name|struct
-name|ctl_node_s
+name|ctl_node_t
 name|node
 decl_stmt|;
 specifier|const
@@ -93,7 +85,7 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* If (nchildren == 0), this is a terminal node. */
-name|unsigned
+name|size_t
 name|nchildren
 decl_stmt|;
 specifier|const
@@ -129,10 +121,12 @@ name|size_t
 parameter_list|)
 function_decl|;
 block|}
-struct|;
-end_struct
+name|ctl_named_node_t
+typedef|;
+end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|ctl_indexed_node_s
 block|{
@@ -161,37 +155,15 @@ name|size_t
 parameter_list|)
 function_decl|;
 block|}
-struct|;
-end_struct
+name|ctl_indexed_node_t
+typedef|;
+end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|ctl_arena_stats_s
 block|{
-name|bool
-name|initialized
-decl_stmt|;
-name|unsigned
-name|nthreads
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|dss
-decl_stmt|;
-name|ssize_t
-name|lg_dirty_mult
-decl_stmt|;
-name|ssize_t
-name|decay_time
-decl_stmt|;
-name|size_t
-name|pactive
-decl_stmt|;
-name|size_t
-name|pdirty
-decl_stmt|;
-comment|/* The remainder are only populated if config_stats is true. */
 name|arena_stats_t
 name|astats
 decl_stmt|;
@@ -215,20 +187,20 @@ name|NBINS
 index|]
 decl_stmt|;
 name|malloc_large_stats_t
-modifier|*
 name|lstats
+index|[
+name|NSIZES
+operator|-
+name|NBINS
+index|]
 decl_stmt|;
-comment|/* nlclasses elements. */
-name|malloc_huge_stats_t
-modifier|*
-name|hstats
-decl_stmt|;
-comment|/* nhclasses elements. */
 block|}
-struct|;
-end_struct
+name|ctl_arena_stats_t
+typedef|;
+end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|ctl_stats_s
 block|{
@@ -250,36 +222,108 @@ decl_stmt|;
 name|size_t
 name|retained
 decl_stmt|;
-name|unsigned
-name|narenas
+name|background_thread_stats_t
+name|background_thread
 decl_stmt|;
+name|mutex_prof_data_t
+name|mutex_prof_data
+index|[
+name|mutex_prof_num_global_mutexes
+index|]
+decl_stmt|;
+block|}
+name|ctl_stats_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ctl_arena_s
+name|ctl_arena_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|ctl_arena_s
+block|{
+name|unsigned
+name|arena_ind
+decl_stmt|;
+name|bool
+name|initialized
+decl_stmt|;
+name|ql_elm
+argument_list|(
+argument|ctl_arena_t
+argument_list|)
+name|destroyed_link
+expr_stmt|;
+comment|/* Basic stats, supported even if !config_stats. */
+name|unsigned
+name|nthreads
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|dss
+decl_stmt|;
+name|ssize_t
+name|dirty_decay_ms
+decl_stmt|;
+name|ssize_t
+name|muzzy_decay_ms
+decl_stmt|;
+name|size_t
+name|pactive
+decl_stmt|;
+name|size_t
+name|pdirty
+decl_stmt|;
+name|size_t
+name|pmuzzy
+decl_stmt|;
+comment|/* NULL if !config_stats. */
 name|ctl_arena_stats_t
 modifier|*
-name|arenas
+name|astats
 decl_stmt|;
-comment|/* (narenas + 1) elements. */
 block|}
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JEMALLOC_H_STRUCTS */
-end_comment
-
-begin_comment
-comment|/******************************************************************************/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JEMALLOC_H_EXTERNS
-end_ifdef
+begin_typedef
+typedef|typedef
+struct|struct
+name|ctl_arenas_s
+block|{
+name|uint64_t
+name|epoch
+decl_stmt|;
+name|unsigned
+name|narenas
+decl_stmt|;
+name|ql_head
+argument_list|(
+argument|ctl_arena_t
+argument_list|)
+name|destroyed
+expr_stmt|;
+comment|/* 	 * Element 0 corresponds to merged stats for extant arenas (accessed via 	 * MALLCTL_ARENAS_ALL), element 1 corresponds to merged stats for 	 * destroyed arenas (accessed via MALLCTL_ARENAS_DESTROYED), and the 	 * remaining MALLOCX_ARENA_LIMIT elements correspond to arenas. 	 */
+name|ctl_arena_t
+modifier|*
+name|arenas
+index|[
+literal|2
+operator|+
+name|MALLOCX_ARENA_LIMIT
+index|]
+decl_stmt|;
+block|}
+name|ctl_arenas_t
+typedef|;
+end_typedef
 
 begin_function_decl
 name|int
@@ -470,30 +514,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* JEMALLOC_H_EXTERNS */
-end_comment
-
-begin_comment
-comment|/******************************************************************************/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JEMALLOC_H_INLINES
-end_ifdef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JEMALLOC_H_INLINES */
-end_comment
-
-begin_comment
-comment|/******************************************************************************/
+comment|/* JEMALLOC_INTERNAL_CTL_H */
 end_comment
 
 end_unit

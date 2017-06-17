@@ -165,7 +165,7 @@ return|return
 operator|!
 operator|!
 operator|(
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|app_info_bitmap
 argument_list|,
@@ -190,7 +190,7 @@ block|{
 name|u8
 name|mfw_val
 init|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|app_info_bitmap
 argument_list|,
@@ -235,7 +235,7 @@ return|return
 operator|!
 operator|!
 operator|(
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|app_info_bitmap
 argument_list|,
@@ -263,7 +263,7 @@ block|{
 name|u8
 name|mfw_val
 init|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|app_info_bitmap
 argument_list|,
@@ -1049,10 +1049,6 @@ name|enum
 name|dcbx_protocol_type
 name|id
 decl_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1097,15 +1093,6 @@ name|i
 index|]
 operator|.
 name|personality
-expr_stmt|;
-name|name
-operator|=
-name|ecore_dcbx_app_update
-index|[
-name|i
-index|]
-operator|.
-name|name
 expr_stmt|;
 name|ecore_dcbx_set_params
 argument_list|(
@@ -1508,7 +1495,7 @@ control|)
 block|{
 name|protocol_id
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_tbl
 index|[
@@ -1522,7 +1509,7 @@ argument_list|)
 expr_stmt|;
 name|priority_map
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_tbl
 index|[
@@ -1739,11 +1726,10 @@ name|dcbx_app_priority_feature
 modifier|*
 name|p_app
 decl_stmt|;
-name|enum
-name|_ecore_status_t
-name|rc
-init|=
-name|ECORE_SUCCESS
+name|struct
+name|dcbx_app_priority_entry
+modifier|*
+name|p_tbl
 decl_stmt|;
 name|struct
 name|ecore_dcbx_results
@@ -1752,11 +1738,6 @@ init|=
 block|{
 literal|0
 block|}
-decl_stmt|;
-name|struct
-name|dcbx_app_priority_entry
-modifier|*
-name|p_tbl
 decl_stmt|;
 name|struct
 name|dcbx_ets_feature
@@ -1779,6 +1760,12 @@ decl_stmt|;
 name|int
 name|num_entries
 decl_stmt|;
+name|enum
+name|_ecore_status_t
+name|rc
+init|=
+name|ECORE_SUCCESS
+decl_stmt|;
 name|flags
 operator|=
 name|p_hwfn
@@ -1791,7 +1778,7 @@ name|flags
 expr_stmt|;
 name|dcbx_version
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|flags
 argument_list|,
@@ -1848,7 +1835,7 @@ name|hw_info
 expr_stmt|;
 name|num_entries
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_app
 operator|->
@@ -1888,7 +1875,7 @@ name|p_info
 operator|->
 name|num_active_tc
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_ets
 operator|->
@@ -1903,7 +1890,7 @@ name|qm_info
 operator|.
 name|ooo_tc
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_ets
 operator|->
@@ -1987,12 +1974,6 @@ name|ecore_mib_read_type
 name|type
 parameter_list|)
 block|{
-name|enum
-name|_ecore_status_t
-name|rc
-init|=
-name|ECORE_SUCCESS
-decl_stmt|;
 name|u32
 name|prefix_seq_num
 decl_stmt|,
@@ -2002,6 +1983,12 @@ name|int
 name|read_count
 init|=
 literal|0
+decl_stmt|;
+name|enum
+name|_ecore_status_t
+name|rc
+init|=
+name|ECORE_SUCCESS
 decl_stmt|;
 comment|/* The data is considered to be valid only if both sequence numbers are 	 * the same. 	 */
 do|do
@@ -2451,7 +2438,7 @@ name|p_params
 operator|->
 name|app_willing
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_app
 operator|->
@@ -2464,7 +2451,7 @@ name|p_params
 operator|->
 name|app_valid
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_app
 operator|->
@@ -2477,7 +2464,7 @@ name|p_params
 operator|->
 name|app_error
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_app
 operator|->
@@ -2490,7 +2477,7 @@ name|p_params
 operator|->
 name|num_app_entries
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_app
 operator|->
@@ -2536,7 +2523,7 @@ name|val
 decl_stmt|;
 name|sf_ieee
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_tbl
 index|[
@@ -2559,7 +2546,7 @@ case|:
 comment|/* Old MFW */
 name|val
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_tbl
 index|[
@@ -2632,7 +2619,7 @@ name|ethtype
 operator|=
 operator|!
 operator|(
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_tbl
 index|[
@@ -2648,7 +2635,7 @@ expr_stmt|;
 block|}
 name|pri_map
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_tbl
 index|[
@@ -2674,7 +2661,7 @@ name|entry
 operator|->
 name|proto_id
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_tbl
 index|[
@@ -2762,7 +2749,7 @@ name|pfc
 operator|.
 name|willing
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|pfc
 argument_list|,
@@ -2775,7 +2762,7 @@ name|pfc
 operator|.
 name|max_tc
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|pfc
 argument_list|,
@@ -2788,7 +2775,7 @@ name|pfc
 operator|.
 name|enabled
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|pfc
 argument_list|,
@@ -2797,7 +2784,7 @@ argument_list|)
 expr_stmt|;
 name|pfc_map
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|pfc
 argument_list|,
@@ -3013,7 +3000,7 @@ name|p_params
 operator|->
 name|ets_willing
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_ets
 operator|->
@@ -3026,7 +3013,7 @@ name|p_params
 operator|->
 name|ets_enabled
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_ets
 operator|->
@@ -3039,7 +3026,7 @@ name|p_params
 operator|->
 name|ets_cbs
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_ets
 operator|->
@@ -3052,7 +3039,7 @@ name|p_params
 operator|->
 name|max_ets_tc
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_ets
 operator|->
@@ -3370,11 +3357,6 @@ modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
-parameter_list|,
-name|struct
 name|ecore_dcbx_get
 modifier|*
 name|params
@@ -3450,11 +3432,6 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
 parameter_list|,
 name|struct
 name|ecore_dcbx_get
@@ -3535,11 +3512,6 @@ modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
-parameter_list|,
-name|struct
 name|ecore_dcbx_get
 modifier|*
 name|params
@@ -3594,7 +3566,7 @@ operator|=
 operator|!
 operator|!
 operator|(
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|flags
 argument_list|,
@@ -3660,7 +3632,7 @@ operator|=
 operator|!
 operator|!
 operator|(
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|flags
 argument_list|,
@@ -3681,7 +3653,7 @@ operator|=
 operator|!
 operator|!
 operator|(
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|flags
 argument_list|,
@@ -3702,7 +3674,7 @@ operator|=
 operator|!
 operator|!
 operator|(
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|flags
 argument_list|,
@@ -3789,7 +3761,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_feat
 operator|->
@@ -3833,11 +3805,6 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
 parameter_list|,
 name|struct
 name|ecore_dcbx_get
@@ -3885,7 +3852,7 @@ name|p_dscp
 operator|->
 name|enabled
 operator|=
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 argument_list|(
 name|p_dscp_map
 operator|->
@@ -3995,11 +3962,6 @@ modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
-parameter_list|,
-name|struct
 name|ecore_dcbx_get
 modifier|*
 name|params
@@ -4074,11 +4036,6 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
 parameter_list|,
 name|struct
 name|ecore_dcbx_get
@@ -4158,11 +4115,6 @@ modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
-parameter_list|,
-name|struct
 name|ecore_dcbx_get
 modifier|*
 name|p_params
@@ -4172,12 +4124,6 @@ name|ecore_mib_read_type
 name|type
 parameter_list|)
 block|{
-name|enum
-name|_ecore_status_t
-name|rc
-init|=
-name|ECORE_SUCCESS
-decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -4190,8 +4136,6 @@ name|ecore_dcbx_get_remote_params
 argument_list|(
 name|p_hwfn
 argument_list|,
-name|p_ptt
-argument_list|,
 name|p_params
 argument_list|)
 expr_stmt|;
@@ -4202,8 +4146,6 @@ case|:
 name|ecore_dcbx_get_local_params
 argument_list|(
 name|p_hwfn
-argument_list|,
-name|p_ptt
 argument_list|,
 name|p_params
 argument_list|)
@@ -4216,8 +4158,6 @@ name|ecore_dcbx_get_operational_params
 argument_list|(
 name|p_hwfn
 argument_list|,
-name|p_ptt
-argument_list|,
 name|p_params
 argument_list|)
 expr_stmt|;
@@ -4229,8 +4169,6 @@ name|ecore_dcbx_get_remote_lldp_params
 argument_list|(
 name|p_hwfn
 argument_list|,
-name|p_ptt
-argument_list|,
 name|p_params
 argument_list|)
 expr_stmt|;
@@ -4241,8 +4179,6 @@ case|:
 name|ecore_dcbx_get_local_lldp_params
 argument_list|(
 name|p_hwfn
-argument_list|,
-name|p_ptt
 argument_list|,
 name|p_params
 argument_list|)
@@ -4263,7 +4199,7 @@ name|ECORE_INVAL
 return|;
 block|}
 return|return
-name|rc
+name|ECORE_SUCCESS
 return|;
 block|}
 end_function
@@ -5040,8 +4976,6 @@ name|ecore_dcbx_get_dscp_params
 argument_list|(
 name|p_hwfn
 argument_list|,
-name|p_ptt
-argument_list|,
 operator|&
 name|p_hwfn
 operator|->
@@ -5063,9 +4997,6 @@ operator|!
 name|rc
 condition|)
 block|{
-name|bool
-name|enabled
-decl_stmt|;
 comment|/* reconfigure tcs of QM queues according 			 * to negotiation results 			 */
 name|ecore_qm_reconf
 argument_list|(
@@ -5075,21 +5006,10 @@ name|p_ptt
 argument_list|)
 expr_stmt|;
 comment|/* update storm FW with negotiation results */
-name|ecore_sp_pf_update
+name|ecore_sp_pf_update_dcbx
 argument_list|(
 name|p_hwfn
 argument_list|)
-expr_stmt|;
-comment|/* set eagle enigne 1 flow control workaround 			 * according to negotiation results 			 */
-name|enabled
-operator|=
-name|p_hwfn
-operator|->
-name|p_dcbx_info
-operator|->
-name|results
-operator|.
-name|dcbx_enabled
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5116,8 +5036,6 @@ block|}
 name|ecore_dcbx_get_params
 argument_list|(
 name|p_hwfn
-argument_list|,
-name|p_ptt
 argument_list|,
 operator|&
 name|p_hwfn
@@ -5790,8 +5708,6 @@ name|ecore_dcbx_get_params
 argument_list|(
 name|p_hwfn
 argument_list|,
-name|p_ptt
-argument_list|,
 name|p_get
 argument_list|,
 name|type
@@ -5904,7 +5820,7 @@ name|pfc
 operator|.
 name|max_tc
 operator|<<
-name|DCBX_PFC_CAPS_SHIFT
+name|DCBX_PFC_CAPS_OFFSET
 expr_stmt|;
 for|for
 control|(
@@ -5950,7 +5866,7 @@ operator||=
 operator|(
 name|pfc_map
 operator|<<
-name|DCBX_PFC_PRI_EN_BITMAP_SHIFT
+name|DCBX_PFC_PRI_EN_BITMAP_OFFSET
 operator|)
 expr_stmt|;
 name|DP_VERBOSE
@@ -6080,7 +5996,7 @@ name|p_params
 operator|->
 name|max_ets_tc
 operator|<<
-name|DCBX_ETS_MAX_TCS_SHIFT
+name|DCBX_ETS_MAX_TCS_OFFSET
 expr_stmt|;
 name|bw_map
 operator|=
@@ -6383,7 +6299,7 @@ name|p_params
 operator|->
 name|num_app_entries
 operator|<<
-name|DCBX_APP_NUM_ENTRIES_SHIFT
+name|DCBX_APP_NUM_ENTRIES_OFFSET
 expr_stmt|;
 for|for
 control|(
@@ -6455,7 +6371,7 @@ name|u32
 operator|)
 name|DCBX_APP_SF_IEEE_ETHTYPE
 operator|<<
-name|DCBX_APP_SF_IEEE_SHIFT
+name|DCBX_APP_SF_IEEE_OFFSET
 operator|)
 expr_stmt|;
 operator|*
@@ -6467,7 +6383,7 @@ name|u32
 operator|)
 name|DCBX_APP_SF_ETHTYPE
 operator|<<
-name|DCBX_APP_SF_SHIFT
+name|DCBX_APP_SF_OFFSET
 operator|)
 expr_stmt|;
 break|break;
@@ -6483,7 +6399,7 @@ name|u32
 operator|)
 name|DCBX_APP_SF_IEEE_TCP_PORT
 operator|<<
-name|DCBX_APP_SF_IEEE_SHIFT
+name|DCBX_APP_SF_IEEE_OFFSET
 operator|)
 expr_stmt|;
 operator|*
@@ -6495,7 +6411,7 @@ name|u32
 operator|)
 name|DCBX_APP_SF_PORT
 operator|<<
-name|DCBX_APP_SF_SHIFT
+name|DCBX_APP_SF_OFFSET
 operator|)
 expr_stmt|;
 break|break;
@@ -6511,7 +6427,7 @@ name|u32
 operator|)
 name|DCBX_APP_SF_IEEE_UDP_PORT
 operator|<<
-name|DCBX_APP_SF_IEEE_SHIFT
+name|DCBX_APP_SF_IEEE_OFFSET
 operator|)
 expr_stmt|;
 operator|*
@@ -6523,7 +6439,7 @@ name|u32
 operator|)
 name|DCBX_APP_SF_PORT
 operator|<<
-name|DCBX_APP_SF_SHIFT
+name|DCBX_APP_SF_OFFSET
 operator|)
 expr_stmt|;
 break|break;
@@ -6538,7 +6454,7 @@ name|u32
 operator|)
 name|DCBX_APP_SF_IEEE_TCP_UDP_PORT
 operator|<<
-name|DCBX_APP_SF_IEEE_SHIFT
+name|DCBX_APP_SF_IEEE_OFFSET
 expr_stmt|;
 operator|*
 name|entry
@@ -6549,7 +6465,7 @@ name|u32
 operator|)
 name|DCBX_APP_SF_PORT
 operator|<<
-name|DCBX_APP_SF_SHIFT
+name|DCBX_APP_SF_OFFSET
 operator|)
 expr_stmt|;
 break|break;
@@ -6583,7 +6499,7 @@ name|u32
 operator|)
 name|DCBX_APP_SF_ETHTYPE
 operator|<<
-name|DCBX_APP_SF_SHIFT
+name|DCBX_APP_SF_OFFSET
 operator|)
 expr_stmt|;
 else|else
@@ -6596,7 +6512,7 @@ name|u32
 operator|)
 name|DCBX_APP_SF_PORT
 operator|<<
-name|DCBX_APP_SF_SHIFT
+name|DCBX_APP_SF_OFFSET
 operator|)
 expr_stmt|;
 block|}
@@ -6622,7 +6538,7 @@ index|]
 operator|.
 name|proto_id
 operator|<<
-name|DCBX_APP_PROTOCOL_ID_SHIFT
+name|DCBX_APP_PROTOCOL_ID_OFFSET
 operator|)
 expr_stmt|;
 operator|*
@@ -6649,7 +6565,7 @@ operator|.
 name|prio
 argument_list|)
 operator|<<
-name|DCBX_APP_PRI_MAP_SHIFT
+name|DCBX_APP_PRI_MAP_OFFSET
 operator|)
 expr_stmt|;
 block|}
@@ -7300,7 +7216,7 @@ name|DRV_MSG_CODE_SET_DCBX
 argument_list|,
 literal|1
 operator|<<
-name|DRV_MB_PARAM_LLDP_SEND_SHIFT
+name|DRV_MB_PARAM_LLDP_SEND_OFFSET
 argument_list|,
 operator|&
 name|resp
@@ -7315,7 +7231,6 @@ name|rc
 operator|!=
 name|ECORE_SUCCESS
 condition|)
-block|{
 name|DP_NOTICE
 argument_list|(
 name|p_hwfn
@@ -7325,10 +7240,6 @@ argument_list|,
 literal|"Failed to send DCBX update request\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|rc
-return|;
-block|}
 return|return
 name|rc
 return|;

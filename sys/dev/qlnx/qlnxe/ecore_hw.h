@@ -235,7 +235,7 @@ value|32
 end_define
 
 begin_comment
-comment|/** * @brief ecore_gtt_init - Initialize GTT windows * * @param p_hwfn */
+comment|/** * @brief ecore_gtt_init - Initialize GTT windows * * @param p_hwfn * @param p_ptt */
 end_comment
 
 begin_function_decl
@@ -246,6 +246,11 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -300,18 +305,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_ptt_get_hw_addr - Get PTT's GRC/HW address  *  * @param p_hwfn  * @param p_ptt  *  * @return u32  */
+comment|/**  * @brief ecore_ptt_get_hw_addr - Get PTT's GRC/HW address  *  * @param p_ptt  *  * @return u32  */
 end_comment
 
 begin_function_decl
 name|u32
 name|ecore_ptt_get_hw_addr
 parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
 name|struct
 name|ecore_ptt
 modifier|*
@@ -612,85 +612,6 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_union
-union|union
-name|ecore_qm_pq_params
-block|{
-struct|struct
-block|{
-name|u8
-name|q_idx
-decl_stmt|;
-block|}
-name|iscsi
-struct|;
-struct|struct
-block|{
-name|u8
-name|tc
-decl_stmt|;
-block|}
-name|core
-struct|;
-struct|struct
-block|{
-name|u8
-name|is_vf
-decl_stmt|;
-name|u8
-name|vf_id
-decl_stmt|;
-name|u8
-name|tc
-decl_stmt|;
-block|}
-name|eth
-struct|;
-struct|struct
-block|{
-name|u8
-name|dcqcn
-decl_stmt|;
-name|u8
-name|qpid
-decl_stmt|;
-comment|/* roce relative */
-block|}
-name|roce
-struct|;
-struct|struct
-block|{
-name|u8
-name|qidx
-decl_stmt|;
-block|}
-name|iwarp
-struct|;
-block|}
-union|;
-end_union
-
-begin_function_decl
-name|u16
-name|ecore_get_qm_pq
-parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
-name|enum
-name|protocol_type
-name|proto
-parameter_list|,
-name|union
-name|ecore_qm_pq_params
-modifier|*
-name|params
 parameter_list|)
 function_decl|;
 end_function_decl

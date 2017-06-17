@@ -97,6 +97,10 @@ name|NFS_MAXNAMLEN
 value|255
 end_define
 
+begin_comment
+comment|/*  * Calculating the maximum XDR overhead for an NFS RPC isn't easy.  * NFS_MAXPKTHDR is antiquated and assumes AUTH_SYS over UDP.  * NFS_MAXXDR should be sufficient for all NFS versions over TCP.  * It includes:  * - Maximum RPC message header. It can include 2 400byte authenticators plus  *   a machine name of unlimited length, although it is usually relatively  *   small.  * - XDR overheads for the NFSv4 compound. This can include Owner and  *   Owner_group strings, which are usually fairly small, but are allowed  *   to be up to 1024 bytes each.  * 4096 is overkill, but should always be sufficient.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -107,8 +111,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|NFS_MAXXDR
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
 name|NFS_MAXPACKET
-value|(NFS_SRVMAXIO + 2048)
+value|(NFS_SRVMAXIO + NFS_MAXXDR)
 end_define
 
 begin_define

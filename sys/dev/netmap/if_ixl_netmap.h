@@ -312,7 +312,7 @@ operator|=
 name|NAF_BDG_MAYSLEEP
 expr_stmt|;
 comment|// XXX check that queues is set.
-name|printf
+name|nm_prinf
 argument_list|(
 literal|"queues is %p\n"
 argument_list|,

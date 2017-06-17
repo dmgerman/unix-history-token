@@ -2151,7 +2151,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|iscsi_conn_context
+name|e4_iscsi_conn_context
 block|{
 name|struct
 name|ystorm_iscsi_conn_st_ctx
@@ -2257,1189 +2257,6 @@ name|struct
 name|ustorm_iscsi_conn_st_ctx
 name|ustorm_st_context
 comment|/* ustorm storm context */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * iSCSI init params passed by driver to FW in iSCSI init ramrod   */
-end_comment
-
-begin_struct
-struct|struct
-name|iscsi_init_ramrod_params
-block|{
-name|struct
-name|iscsi_spe_func_init
-name|iscsi_init_spe
-comment|/* parameters initialized by the miniport and handed to bus-driver */
-decl_stmt|;
-name|struct
-name|tcp_init_params
-name|tcp_init
-comment|/* TCP parameters initialized by the bus-driver */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|e4_ystorm_iscsi_conn_ag_ctx
-block|{
-name|u8
-name|byte0
-comment|/* cdu_validation */
-decl_stmt|;
-name|u8
-name|byte1
-comment|/* state */
-decl_stmt|;
-name|u8
-name|flags0
-decl_stmt|;
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_BIT0_MASK
-value|0x1
-comment|/* exist_in_qm0 */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_BIT0_SHIFT
-value|0
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_BIT1_MASK
-value|0x1
-comment|/* exist_in_qm1 */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_BIT1_SHIFT
-value|1
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF0_MASK
-value|0x3
-comment|/* cf0 */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF0_SHIFT
-value|2
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF1_MASK
-value|0x3
-comment|/* cf1 */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF1_SHIFT
-value|4
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF2_MASK
-value|0x3
-comment|/* cf2 */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF2_SHIFT
-value|6
-name|u8
-name|flags1
-decl_stmt|;
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF0EN_MASK
-value|0x1
-comment|/* cf0en */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF0EN_SHIFT
-value|0
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF1EN_MASK
-value|0x1
-comment|/* cf1en */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF1EN_SHIFT
-value|1
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF2EN_MASK
-value|0x1
-comment|/* cf2en */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF2EN_SHIFT
-value|2
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE0EN_MASK
-value|0x1
-comment|/* rule0en */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE0EN_SHIFT
-value|3
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE1EN_MASK
-value|0x1
-comment|/* rule1en */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE1EN_SHIFT
-value|4
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE2EN_MASK
-value|0x1
-comment|/* rule2en */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE2EN_SHIFT
-value|5
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE3EN_MASK
-value|0x1
-comment|/* rule3en */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE3EN_SHIFT
-value|6
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE4EN_MASK
-value|0x1
-comment|/* rule4en */
-define|#
-directive|define
-name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE4EN_SHIFT
-value|7
-name|u8
-name|byte2
-comment|/* byte2 */
-decl_stmt|;
-name|u8
-name|byte3
-comment|/* byte3 */
-decl_stmt|;
-name|__le16
-name|word0
-comment|/* word0 */
-decl_stmt|;
-name|__le32
-name|reg0
-comment|/* reg0 */
-decl_stmt|;
-name|__le32
-name|reg1
-comment|/* reg1 */
-decl_stmt|;
-name|__le16
-name|word1
-comment|/* word1 */
-decl_stmt|;
-name|__le16
-name|word2
-comment|/* word2 */
-decl_stmt|;
-name|__le16
-name|word3
-comment|/* word3 */
-decl_stmt|;
-name|__le16
-name|word4
-comment|/* word4 */
-decl_stmt|;
-name|__le32
-name|reg2
-comment|/* reg2 */
-decl_stmt|;
-name|__le32
-name|reg3
-comment|/* reg3 */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|e5_mstorm_iscsi_conn_ag_ctx
-block|{
-name|u8
-name|reserved
-comment|/* cdu_validation */
-decl_stmt|;
-name|u8
-name|state_and_core_id
-comment|/* state_and_core_id */
-decl_stmt|;
-name|u8
-name|flags0
-decl_stmt|;
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_BIT0_MASK
-value|0x1
-comment|/* exist_in_qm0 */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_BIT0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_BIT1_MASK
-value|0x1
-comment|/* exist_in_qm1 */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_BIT1_SHIFT
-value|1
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF0_MASK
-value|0x3
-comment|/* cf0 */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF0_SHIFT
-value|2
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF1_MASK
-value|0x3
-comment|/* cf1 */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF1_SHIFT
-value|4
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF2_MASK
-value|0x3
-comment|/* cf2 */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF2_SHIFT
-value|6
-name|u8
-name|flags1
-decl_stmt|;
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF0EN_MASK
-value|0x1
-comment|/* cf0en */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF0EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF1EN_MASK
-value|0x1
-comment|/* cf1en */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF1EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF2EN_MASK
-value|0x1
-comment|/* cf2en */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF2EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE0EN_MASK
-value|0x1
-comment|/* rule0en */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE0EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE1EN_MASK
-value|0x1
-comment|/* rule1en */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE1EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE2EN_MASK
-value|0x1
-comment|/* rule2en */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE2EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE3EN_MASK
-value|0x1
-comment|/* rule3en */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE3EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE4EN_MASK
-value|0x1
-comment|/* rule4en */
-define|#
-directive|define
-name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE4EN_SHIFT
-value|7
-name|__le16
-name|word0
-comment|/* word0 */
-decl_stmt|;
-name|__le16
-name|word1
-comment|/* word1 */
-decl_stmt|;
-name|__le32
-name|reg0
-comment|/* reg0 */
-decl_stmt|;
-name|__le32
-name|reg1
-comment|/* reg1 */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|e5_tstorm_iscsi_conn_ag_ctx
-block|{
-name|u8
-name|reserved0
-comment|/* cdu_validation */
-decl_stmt|;
-name|u8
-name|state_and_core_id
-comment|/* state_and_core_id */
-decl_stmt|;
-name|u8
-name|flags0
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_EXIST_IN_QM0_MASK
-value|0x1
-comment|/* exist_in_qm0 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_EXIST_IN_QM0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT1_MASK
-value|0x1
-comment|/* exist_in_qm1 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT1_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT2_MASK
-value|0x1
-comment|/* bit2 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT2_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT3_MASK
-value|0x1
-comment|/* bit3 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT3_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT4_MASK
-value|0x1
-comment|/* bit4 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT4_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT5_MASK
-value|0x1
-comment|/* bit5 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT5_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF0_MASK
-value|0x3
-comment|/* timer0cf */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF0_SHIFT
-value|6
-name|u8
-name|flags1
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_P2T_FLUSH_CF_MASK
-value|0x3
-comment|/* timer1cf */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_P2T_FLUSH_CF_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_M2T_FLUSH_CF_MASK
-value|0x3
-comment|/* timer2cf */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_M2T_FLUSH_CF_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_TIMER_STOP_ALL_MASK
-value|0x3
-comment|/* timer_stop_all */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_TIMER_STOP_ALL_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF4_MASK
-value|0x3
-comment|/* cf4 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF4_SHIFT
-value|6
-name|u8
-name|flags2
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF5_MASK
-value|0x3
-comment|/* cf5 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF5_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF6_MASK
-value|0x3
-comment|/* cf6 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF6_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF7_MASK
-value|0x3
-comment|/* cf7 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF7_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF8_MASK
-value|0x3
-comment|/* cf8 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF8_SHIFT
-value|6
-name|u8
-name|flags3
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_FLUSH_Q0_MASK
-value|0x3
-comment|/* cf9 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_FLUSH_Q0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF10_MASK
-value|0x3
-comment|/* cf10 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF10_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF0EN_MASK
-value|0x1
-comment|/* cf0en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF0EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_P2T_FLUSH_CF_EN_MASK
-value|0x1
-comment|/* cf1en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_P2T_FLUSH_CF_EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_M2T_FLUSH_CF_EN_MASK
-value|0x1
-comment|/* cf2en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_M2T_FLUSH_CF_EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_TIMER_STOP_ALL_EN_MASK
-value|0x1
-comment|/* cf3en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_TIMER_STOP_ALL_EN_SHIFT
-value|7
-name|u8
-name|flags4
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF4EN_MASK
-value|0x1
-comment|/* cf4en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF4EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF5EN_MASK
-value|0x1
-comment|/* cf5en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF5EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF6EN_MASK
-value|0x1
-comment|/* cf6en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF6EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF7EN_MASK
-value|0x1
-comment|/* cf7en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF7EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF8EN_MASK
-value|0x1
-comment|/* cf8en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF8EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_FLUSH_Q0_EN_MASK
-value|0x1
-comment|/* cf9en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_FLUSH_Q0_EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF10EN_MASK
-value|0x1
-comment|/* cf10en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF10EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE0EN_MASK
-value|0x1
-comment|/* rule0en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE0EN_SHIFT
-value|7
-name|u8
-name|flags5
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE1EN_MASK
-value|0x1
-comment|/* rule1en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE1EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE2EN_MASK
-value|0x1
-comment|/* rule2en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE2EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE3EN_MASK
-value|0x1
-comment|/* rule3en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE3EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE4EN_MASK
-value|0x1
-comment|/* rule4en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE4EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE5EN_MASK
-value|0x1
-comment|/* rule5en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE5EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE6EN_MASK
-value|0x1
-comment|/* rule6en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE6EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE7EN_MASK
-value|0x1
-comment|/* rule7en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE7EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE8EN_MASK
-value|0x1
-comment|/* rule8en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE8EN_SHIFT
-value|7
-name|u8
-name|flags6
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED1_MASK
-value|0x1
-comment|/* bit6 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED1_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED2_MASK
-value|0x1
-comment|/* bit7 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED2_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED3_MASK
-value|0x1
-comment|/* bit8 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED3_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED4_MASK
-value|0x3
-comment|/* cf11 */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED4_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED5_MASK
-value|0x1
-comment|/* cf11en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED5_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED6_MASK
-value|0x1
-comment|/* rule9en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED6_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED7_MASK
-value|0x1
-comment|/* rule10en */
-define|#
-directive|define
-name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED7_SHIFT
-value|7
-name|u8
-name|cid_offload_cnt
-comment|/* byte2 */
-decl_stmt|;
-name|__le16
-name|word0
-comment|/* word0 */
-decl_stmt|;
-name|__le32
-name|reg0
-comment|/* reg0 */
-decl_stmt|;
-name|__le32
-name|reg1
-comment|/* reg1 */
-decl_stmt|;
-name|__le32
-name|reg2
-comment|/* reg2 */
-decl_stmt|;
-name|__le32
-name|reg3
-comment|/* reg3 */
-decl_stmt|;
-name|__le32
-name|reg4
-comment|/* reg4 */
-decl_stmt|;
-name|__le32
-name|reg5
-comment|/* reg5 */
-decl_stmt|;
-name|__le32
-name|reg6
-comment|/* reg6 */
-decl_stmt|;
-name|__le32
-name|reg7
-comment|/* reg7 */
-decl_stmt|;
-name|__le32
-name|reg8
-comment|/* reg8 */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|e5_ustorm_iscsi_conn_ag_ctx
-block|{
-name|u8
-name|byte0
-comment|/* cdu_validation */
-decl_stmt|;
-name|u8
-name|byte1
-comment|/* state_and_core_id */
-decl_stmt|;
-name|u8
-name|flags0
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_BIT0_MASK
-value|0x1
-comment|/* exist_in_qm0 */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_BIT0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_BIT1_MASK
-value|0x1
-comment|/* exist_in_qm1 */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_BIT1_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF0_MASK
-value|0x3
-comment|/* timer0cf */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF0_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF1_MASK
-value|0x3
-comment|/* timer1cf */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF1_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF2_MASK
-value|0x3
-comment|/* timer2cf */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF2_SHIFT
-value|6
-name|u8
-name|flags1
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF3_MASK
-value|0x3
-comment|/* timer_stop_all */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF3_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF4_MASK
-value|0x3
-comment|/* cf4 */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF4_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF5_MASK
-value|0x3
-comment|/* cf5 */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF5_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF6_MASK
-value|0x3
-comment|/* cf6 */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF6_SHIFT
-value|6
-name|u8
-name|flags2
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF0EN_MASK
-value|0x1
-comment|/* cf0en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF0EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF1EN_MASK
-value|0x1
-comment|/* cf1en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF1EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF2EN_MASK
-value|0x1
-comment|/* cf2en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF2EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF3EN_MASK
-value|0x1
-comment|/* cf3en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF3EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF4EN_MASK
-value|0x1
-comment|/* cf4en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF4EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF5EN_MASK
-value|0x1
-comment|/* cf5en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF5EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF6EN_MASK
-value|0x1
-comment|/* cf6en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_CF6EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE0EN_MASK
-value|0x1
-comment|/* rule0en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE0EN_SHIFT
-value|7
-name|u8
-name|flags3
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE1EN_MASK
-value|0x1
-comment|/* rule1en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE1EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE2EN_MASK
-value|0x1
-comment|/* rule2en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE2EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE3EN_MASK
-value|0x1
-comment|/* rule3en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE3EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE4EN_MASK
-value|0x1
-comment|/* rule4en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE4EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE5EN_MASK
-value|0x1
-comment|/* rule5en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE5EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE6EN_MASK
-value|0x1
-comment|/* rule6en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE6EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE7EN_MASK
-value|0x1
-comment|/* rule7en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE7EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE8EN_MASK
-value|0x1
-comment|/* rule8en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE8EN_SHIFT
-value|7
-name|u8
-name|flags4
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED1_MASK
-value|0x1
-comment|/* bit2 */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED1_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED2_MASK
-value|0x1
-comment|/* bit3 */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED2_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED3_MASK
-value|0x3
-comment|/* cf7 */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED3_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED4_MASK
-value|0x3
-comment|/* cf8 */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED4_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED5_MASK
-value|0x1
-comment|/* cf7en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED5_SHIFT
-value|6
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED6_MASK
-value|0x1
-comment|/* cf8en */
-define|#
-directive|define
-name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED6_SHIFT
-value|7
-name|u8
-name|byte2
-comment|/* byte2 */
-decl_stmt|;
-name|__le16
-name|word0
-comment|/* conn_dpi */
-decl_stmt|;
-name|__le16
-name|word1
-comment|/* word1 */
-decl_stmt|;
-name|__le32
-name|reg0
-comment|/* reg0 */
-decl_stmt|;
-name|__le32
-name|reg1
-comment|/* reg1 */
-decl_stmt|;
-name|__le32
-name|reg2
-comment|/* reg2 */
-decl_stmt|;
-name|__le32
-name|reg3
-comment|/* reg3 */
-decl_stmt|;
-name|__le16
-name|word2
-comment|/* word2 */
-decl_stmt|;
-name|__le16
-name|word3
-comment|/* word3 */
 decl_stmt|;
 block|}
 struct|;
@@ -4607,6 +3424,1306 @@ decl_stmt|;
 name|__le32
 name|reg17
 comment|/* reg17 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e5_tstorm_iscsi_conn_ag_ctx
+block|{
+name|u8
+name|reserved0
+comment|/* cdu_validation */
+decl_stmt|;
+name|u8
+name|state_and_core_id
+comment|/* state_and_core_id */
+decl_stmt|;
+name|u8
+name|flags0
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_EXIST_IN_QM0_MASK
+value|0x1
+comment|/* exist_in_qm0 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_EXIST_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT1_MASK
+value|0x1
+comment|/* exist_in_qm1 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT1_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT2_MASK
+value|0x1
+comment|/* bit2 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT2_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT3_MASK
+value|0x1
+comment|/* bit3 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT3_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT4_MASK
+value|0x1
+comment|/* bit4 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT4_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT5_MASK
+value|0x1
+comment|/* bit5 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_BIT5_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF0_MASK
+value|0x3
+comment|/* timer0cf */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF0_SHIFT
+value|6
+name|u8
+name|flags1
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_P2T_FLUSH_CF_MASK
+value|0x3
+comment|/* timer1cf */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_P2T_FLUSH_CF_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_M2T_FLUSH_CF_MASK
+value|0x3
+comment|/* timer2cf */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_M2T_FLUSH_CF_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_TIMER_STOP_ALL_MASK
+value|0x3
+comment|/* timer_stop_all */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_TIMER_STOP_ALL_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF4_MASK
+value|0x3
+comment|/* cf4 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF4_SHIFT
+value|6
+name|u8
+name|flags2
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF5_MASK
+value|0x3
+comment|/* cf5 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF5_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF6_MASK
+value|0x3
+comment|/* cf6 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF6_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF7_MASK
+value|0x3
+comment|/* cf7 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF7_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF8_MASK
+value|0x3
+comment|/* cf8 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF8_SHIFT
+value|6
+name|u8
+name|flags3
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_FLUSH_Q0_MASK
+value|0x3
+comment|/* cf9 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_FLUSH_Q0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF10_MASK
+value|0x3
+comment|/* cf10 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF10_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF0EN_MASK
+value|0x1
+comment|/* cf0en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF0EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_P2T_FLUSH_CF_EN_MASK
+value|0x1
+comment|/* cf1en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_P2T_FLUSH_CF_EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_M2T_FLUSH_CF_EN_MASK
+value|0x1
+comment|/* cf2en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_M2T_FLUSH_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_TIMER_STOP_ALL_EN_MASK
+value|0x1
+comment|/* cf3en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_TIMER_STOP_ALL_EN_SHIFT
+value|7
+name|u8
+name|flags4
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF4EN_MASK
+value|0x1
+comment|/* cf4en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF4EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF5EN_MASK
+value|0x1
+comment|/* cf5en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF5EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF6EN_MASK
+value|0x1
+comment|/* cf6en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF6EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF7EN_MASK
+value|0x1
+comment|/* cf7en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF7EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF8EN_MASK
+value|0x1
+comment|/* cf8en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF8EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_FLUSH_Q0_EN_MASK
+value|0x1
+comment|/* cf9en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_FLUSH_Q0_EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF10EN_MASK
+value|0x1
+comment|/* cf10en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_CF10EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE0EN_MASK
+value|0x1
+comment|/* rule0en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE0EN_SHIFT
+value|7
+name|u8
+name|flags5
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE1EN_MASK
+value|0x1
+comment|/* rule1en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE1EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE2EN_MASK
+value|0x1
+comment|/* rule2en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE2EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE3EN_MASK
+value|0x1
+comment|/* rule3en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE3EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE4EN_MASK
+value|0x1
+comment|/* rule4en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE4EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE5EN_MASK
+value|0x1
+comment|/* rule5en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE5EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE6EN_MASK
+value|0x1
+comment|/* rule6en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE6EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE7EN_MASK
+value|0x1
+comment|/* rule7en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE7EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE8EN_MASK
+value|0x1
+comment|/* rule8en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_RULE8EN_SHIFT
+value|7
+name|u8
+name|flags6
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED1_MASK
+value|0x1
+comment|/* bit6 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED1_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED2_MASK
+value|0x1
+comment|/* bit7 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED2_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED3_MASK
+value|0x1
+comment|/* bit8 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED3_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED4_MASK
+value|0x3
+comment|/* cf11 */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED4_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED5_MASK
+value|0x1
+comment|/* cf11en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED5_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED6_MASK
+value|0x1
+comment|/* rule9en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED6_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED7_MASK
+value|0x1
+comment|/* rule10en */
+define|#
+directive|define
+name|E5_TSTORM_ISCSI_CONN_AG_CTX_E4_RESERVED7_SHIFT
+value|7
+name|u8
+name|cid_offload_cnt
+comment|/* byte2 */
+decl_stmt|;
+name|__le16
+name|word0
+comment|/* word0 */
+decl_stmt|;
+name|__le32
+name|reg0
+comment|/* reg0 */
+decl_stmt|;
+name|__le32
+name|reg1
+comment|/* reg1 */
+decl_stmt|;
+name|__le32
+name|reg2
+comment|/* reg2 */
+decl_stmt|;
+name|__le32
+name|reg3
+comment|/* reg3 */
+decl_stmt|;
+name|__le32
+name|reg4
+comment|/* reg4 */
+decl_stmt|;
+name|__le32
+name|reg5
+comment|/* reg5 */
+decl_stmt|;
+name|__le32
+name|reg6
+comment|/* reg6 */
+decl_stmt|;
+name|__le32
+name|reg7
+comment|/* reg7 */
+decl_stmt|;
+name|__le32
+name|reg8
+comment|/* reg8 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e5_ustorm_iscsi_conn_ag_ctx
+block|{
+name|u8
+name|byte0
+comment|/* cdu_validation */
+decl_stmt|;
+name|u8
+name|byte1
+comment|/* state_and_core_id */
+decl_stmt|;
+name|u8
+name|flags0
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_BIT0_MASK
+value|0x1
+comment|/* exist_in_qm0 */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_BIT0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_BIT1_MASK
+value|0x1
+comment|/* exist_in_qm1 */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_BIT1_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF0_MASK
+value|0x3
+comment|/* timer0cf */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF0_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF1_MASK
+value|0x3
+comment|/* timer1cf */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF1_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF2_MASK
+value|0x3
+comment|/* timer2cf */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF2_SHIFT
+value|6
+name|u8
+name|flags1
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF3_MASK
+value|0x3
+comment|/* timer_stop_all */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF3_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF4_MASK
+value|0x3
+comment|/* cf4 */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF4_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF5_MASK
+value|0x3
+comment|/* cf5 */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF5_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF6_MASK
+value|0x3
+comment|/* cf6 */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF6_SHIFT
+value|6
+name|u8
+name|flags2
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF0EN_MASK
+value|0x1
+comment|/* cf0en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF0EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF1EN_MASK
+value|0x1
+comment|/* cf1en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF1EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF2EN_MASK
+value|0x1
+comment|/* cf2en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF2EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF3EN_MASK
+value|0x1
+comment|/* cf3en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF3EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF4EN_MASK
+value|0x1
+comment|/* cf4en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF4EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF5EN_MASK
+value|0x1
+comment|/* cf5en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF5EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF6EN_MASK
+value|0x1
+comment|/* cf6en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_CF6EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE0EN_MASK
+value|0x1
+comment|/* rule0en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE0EN_SHIFT
+value|7
+name|u8
+name|flags3
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE1EN_MASK
+value|0x1
+comment|/* rule1en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE1EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE2EN_MASK
+value|0x1
+comment|/* rule2en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE2EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE3EN_MASK
+value|0x1
+comment|/* rule3en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE3EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE4EN_MASK
+value|0x1
+comment|/* rule4en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE4EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE5EN_MASK
+value|0x1
+comment|/* rule5en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE5EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE6EN_MASK
+value|0x1
+comment|/* rule6en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE6EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE7EN_MASK
+value|0x1
+comment|/* rule7en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE7EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE8EN_MASK
+value|0x1
+comment|/* rule8en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_RULE8EN_SHIFT
+value|7
+name|u8
+name|flags4
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED1_MASK
+value|0x1
+comment|/* bit2 */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED1_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED2_MASK
+value|0x1
+comment|/* bit3 */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED2_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED3_MASK
+value|0x3
+comment|/* cf7 */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED3_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED4_MASK
+value|0x3
+comment|/* cf8 */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED4_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED5_MASK
+value|0x1
+comment|/* cf7en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED5_SHIFT
+value|6
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED6_MASK
+value|0x1
+comment|/* cf8en */
+define|#
+directive|define
+name|E5_USTORM_ISCSI_CONN_AG_CTX_E4_RESERVED6_SHIFT
+value|7
+name|u8
+name|byte2
+comment|/* byte2 */
+decl_stmt|;
+name|__le16
+name|word0
+comment|/* conn_dpi */
+decl_stmt|;
+name|__le16
+name|word1
+comment|/* word1 */
+decl_stmt|;
+name|__le32
+name|reg0
+comment|/* reg0 */
+decl_stmt|;
+name|__le32
+name|reg1
+comment|/* reg1 */
+decl_stmt|;
+name|__le32
+name|reg2
+comment|/* reg2 */
+decl_stmt|;
+name|__le32
+name|reg3
+comment|/* reg3 */
+decl_stmt|;
+name|__le16
+name|word2
+comment|/* word2 */
+decl_stmt|;
+name|__le16
+name|word3
+comment|/* word3 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e5_mstorm_iscsi_conn_ag_ctx
+block|{
+name|u8
+name|reserved
+comment|/* cdu_validation */
+decl_stmt|;
+name|u8
+name|state_and_core_id
+comment|/* state_and_core_id */
+decl_stmt|;
+name|u8
+name|flags0
+decl_stmt|;
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_BIT0_MASK
+value|0x1
+comment|/* exist_in_qm0 */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_BIT0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_BIT1_MASK
+value|0x1
+comment|/* exist_in_qm1 */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_BIT1_SHIFT
+value|1
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF0_MASK
+value|0x3
+comment|/* cf0 */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF0_SHIFT
+value|2
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF1_MASK
+value|0x3
+comment|/* cf1 */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF1_SHIFT
+value|4
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF2_MASK
+value|0x3
+comment|/* cf2 */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF2_SHIFT
+value|6
+name|u8
+name|flags1
+decl_stmt|;
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF0EN_MASK
+value|0x1
+comment|/* cf0en */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF0EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF1EN_MASK
+value|0x1
+comment|/* cf1en */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF1EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF2EN_MASK
+value|0x1
+comment|/* cf2en */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_CF2EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE0EN_MASK
+value|0x1
+comment|/* rule0en */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE0EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE1EN_MASK
+value|0x1
+comment|/* rule1en */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE1EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE2EN_MASK
+value|0x1
+comment|/* rule2en */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE2EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE3EN_MASK
+value|0x1
+comment|/* rule3en */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE3EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE4EN_MASK
+value|0x1
+comment|/* rule4en */
+define|#
+directive|define
+name|E5_MSTORM_ISCSI_CONN_AG_CTX_RULE4EN_SHIFT
+value|7
+name|__le16
+name|word0
+comment|/* word0 */
+decl_stmt|;
+name|__le16
+name|word1
+comment|/* word1 */
+decl_stmt|;
+name|__le32
+name|reg0
+comment|/* reg0 */
+decl_stmt|;
+name|__le32
+name|reg1
+comment|/* reg1 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iscsi connection context  */
+end_comment
+
+begin_struct
+struct|struct
+name|e5_iscsi_conn_context
+block|{
+name|struct
+name|ystorm_iscsi_conn_st_ctx
+name|ystorm_st_context
+comment|/* ystorm storm context */
+decl_stmt|;
+name|struct
+name|regpair
+name|ystorm_st_padding
+index|[
+literal|2
+index|]
+comment|/* padding */
+decl_stmt|;
+name|struct
+name|pstorm_iscsi_tcp_conn_st_ctx
+name|pstorm_st_context
+comment|/* pstorm storm context */
+decl_stmt|;
+name|struct
+name|regpair
+name|pstorm_st_padding
+index|[
+literal|2
+index|]
+comment|/* padding */
+decl_stmt|;
+name|struct
+name|pb_context
+name|xpb2_context
+comment|/* xpb2 context */
+decl_stmt|;
+name|struct
+name|xstorm_iscsi_tcp_conn_st_ctx
+name|xstorm_st_context
+comment|/* xstorm storm context */
+decl_stmt|;
+name|struct
+name|regpair
+name|xstorm_st_padding
+index|[
+literal|2
+index|]
+comment|/* padding */
+decl_stmt|;
+name|struct
+name|e5_xstorm_iscsi_conn_ag_ctx
+name|xstorm_ag_context
+comment|/* xstorm aggregative context */
+decl_stmt|;
+name|struct
+name|e5_tstorm_iscsi_conn_ag_ctx
+name|tstorm_ag_context
+comment|/* tstorm aggregative context */
+decl_stmt|;
+name|struct
+name|regpair
+name|tstorm_ag_padding
+index|[
+literal|2
+index|]
+comment|/* padding */
+decl_stmt|;
+name|struct
+name|timers_context
+name|timer_context
+comment|/* timer context */
+decl_stmt|;
+name|struct
+name|e5_ustorm_iscsi_conn_ag_ctx
+name|ustorm_ag_context
+comment|/* ustorm aggregative context */
+decl_stmt|;
+name|struct
+name|pb_context
+name|upb_context
+comment|/* upb context */
+decl_stmt|;
+name|struct
+name|tstorm_iscsi_conn_st_ctx
+name|tstorm_st_context
+comment|/* tstorm storm context */
+decl_stmt|;
+name|struct
+name|regpair
+name|tstorm_st_padding
+index|[
+literal|2
+index|]
+comment|/* padding */
+decl_stmt|;
+name|struct
+name|e5_mstorm_iscsi_conn_ag_ctx
+name|mstorm_ag_context
+comment|/* mstorm aggregative context */
+decl_stmt|;
+name|struct
+name|mstorm_iscsi_tcp_conn_st_ctx
+name|mstorm_st_context
+comment|/* mstorm storm context */
+decl_stmt|;
+name|struct
+name|ustorm_iscsi_conn_st_ctx
+name|ustorm_st_context
+comment|/* ustorm storm context */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI init params passed by driver to FW in iSCSI init ramrod   */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_init_ramrod_params
+block|{
+name|struct
+name|iscsi_spe_func_init
+name|iscsi_init_spe
+comment|/* parameters initialized by the miniport and handed to bus-driver */
+decl_stmt|;
+name|struct
+name|tcp_init_params
+name|tcp_init
+comment|/* TCP parameters initialized by the bus-driver */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e4_ystorm_iscsi_conn_ag_ctx
+block|{
+name|u8
+name|byte0
+comment|/* cdu_validation */
+decl_stmt|;
+name|u8
+name|byte1
+comment|/* state */
+decl_stmt|;
+name|u8
+name|flags0
+decl_stmt|;
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_BIT0_MASK
+value|0x1
+comment|/* exist_in_qm0 */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_BIT0_SHIFT
+value|0
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_BIT1_MASK
+value|0x1
+comment|/* exist_in_qm1 */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_BIT1_SHIFT
+value|1
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF0_MASK
+value|0x3
+comment|/* cf0 */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF0_SHIFT
+value|2
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF1_MASK
+value|0x3
+comment|/* cf1 */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF1_SHIFT
+value|4
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF2_MASK
+value|0x3
+comment|/* cf2 */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF2_SHIFT
+value|6
+name|u8
+name|flags1
+decl_stmt|;
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF0EN_MASK
+value|0x1
+comment|/* cf0en */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF0EN_SHIFT
+value|0
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF1EN_MASK
+value|0x1
+comment|/* cf1en */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF1EN_SHIFT
+value|1
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF2EN_MASK
+value|0x1
+comment|/* cf2en */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_CF2EN_SHIFT
+value|2
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE0EN_MASK
+value|0x1
+comment|/* rule0en */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE0EN_SHIFT
+value|3
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE1EN_MASK
+value|0x1
+comment|/* rule1en */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE1EN_SHIFT
+value|4
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE2EN_MASK
+value|0x1
+comment|/* rule2en */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE2EN_SHIFT
+value|5
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE3EN_MASK
+value|0x1
+comment|/* rule3en */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE3EN_SHIFT
+value|6
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE4EN_MASK
+value|0x1
+comment|/* rule4en */
+define|#
+directive|define
+name|E4_YSTORM_ISCSI_CONN_AG_CTX_RULE4EN_SHIFT
+value|7
+name|u8
+name|byte2
+comment|/* byte2 */
+decl_stmt|;
+name|u8
+name|byte3
+comment|/* byte3 */
+decl_stmt|;
+name|__le16
+name|word0
+comment|/* word0 */
+decl_stmt|;
+name|__le32
+name|reg0
+comment|/* reg0 */
+decl_stmt|;
+name|__le32
+name|reg1
+comment|/* reg1 */
+decl_stmt|;
+name|__le16
+name|word1
+comment|/* word1 */
+decl_stmt|;
+name|__le16
+name|word2
+comment|/* word2 */
+decl_stmt|;
+name|__le16
+name|word3
+comment|/* word3 */
+decl_stmt|;
+name|__le16
+name|word4
+comment|/* word4 */
+decl_stmt|;
+name|__le32
+name|reg2
+comment|/* reg2 */
+decl_stmt|;
+name|__le32
+name|reg3
+comment|/* reg3 */
 decl_stmt|;
 block|}
 struct|;

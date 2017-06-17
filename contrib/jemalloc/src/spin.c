@@ -8,7 +8,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"jemalloc/internal/jemalloc_internal.h"
+file|"jemalloc/internal/jemalloc_preamble.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/spin.h"
 end_include
 
 end_unit

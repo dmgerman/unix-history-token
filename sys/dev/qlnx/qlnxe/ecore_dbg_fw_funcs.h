@@ -182,7 +182,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_dbg_bus_enable_block - Enables recording of the specified block  *  * Each recording cycle contains 4 "units". If the recorded HW data requires up  * to 4 dwords per cycle, each unit is one dword (32 bits). Otherwise, each  * unit is 2 dwords (64 bits).  *  * @param p_hwfn -		HW device data  * @param p_ptt -		Ptt window used for writing the registers.  * @param block -	block to be enabled.  * @param line_num -	debug line number to select.  * @param cycle_en -	4-bit value. If bit i is set, unit i is enabled.  * @param right_shift -	number of units to  right the debug data (0-3).  * @param force_valid - 4-bit value. If bit i is set, unit i is forced valid.  * @param force_frame - 4-bit value. If bit i is set, the frame bit of unit i  *			is forced.  *  * @return error if one of the following holds:  *	- the Debug block wasn't reset since last recording  *	- the version wasn't set  *	- block is not valid  *	- block was already enabled  *	- cycle_en, force_valid or force_frame are wider than 4 bits  *	- right_shift is larger than 3  *	- cycle unit 0 is enabled, but GRC or timestamp were also enabled.  *	- Too many inputs were enabled.  * Otherwise, returns ok.  */
+comment|/**  * @brief ecore_dbg_bus_enable_block - Enables recording of the specified block  *  * Each recording cycle contains 4 "units". If the recorded HW data requires up  * to 4 dwords per cycle, each unit is one dword (32 bits). Otherwise, each  * unit is 2 dwords (64 bits).  *  * @param p_hwfn -		HW device data  * @param block -	block to be enabled.  * @param line_num -	debug line number to select.  * @param cycle_en -	4-bit value. If bit i is set, unit i is enabled.  * @param right_shift -	number of units to  right the debug data (0-3).  * @param force_valid - 4-bit value. If bit i is set, unit i is forced valid.  * @param force_frame - 4-bit value. If bit i is set, the frame bit of unit i  *			is forced.  *  * @return error if one of the following holds:  *	- the Debug block wasn't reset since last recording  *	- the version wasn't set  *	- block is not valid  *	- block was already enabled  *	- cycle_en, force_valid or force_frame are wider than 4 bits  *	- right_shift is larger than 3  *	- cycle unit 0 is enabled, but GRC or timestamp were also enabled.  *	- Too many inputs were enabled.  * Otherwise, returns ok.  */
 end_comment
 
 begin_function_decl
@@ -194,11 +194,6 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
 parameter_list|,
 name|enum
 name|block_id

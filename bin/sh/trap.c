@@ -1975,6 +1975,8 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+name|FORCEINTON
+expr_stmt|;
 name|evalstring
 argument_list|(
 name|p
@@ -2001,6 +2003,8 @@ operator|&
 name|loc2
 expr_stmt|;
 comment|/* probably unnecessary */
+name|FORCEINTON
+expr_stmt|;
 name|flushall
 argument_list|()
 expr_stmt|;

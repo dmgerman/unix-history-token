@@ -266,7 +266,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
 return|return
 operator|(
 name|NULL

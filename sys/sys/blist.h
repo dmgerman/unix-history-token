@@ -104,10 +104,6 @@ name|daddr_t
 name|bl_skip
 decl_stmt|;
 comment|/* starting skip		*/
-name|daddr_t
-name|bl_free
-decl_stmt|;
-comment|/* number of free blocks	*/
 name|blmeta_t
 modifier|*
 name|bl_root
@@ -149,6 +145,16 @@ name|blist
 parameter_list|,
 name|daddr_t
 name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|daddr_t
+name|blist_avail
+parameter_list|(
+name|blist_t
+name|blist
 parameter_list|)
 function_decl|;
 end_function_decl

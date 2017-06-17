@@ -357,11 +357,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|struct
-name|syscall_args
-modifier|*
-name|sa
 parameter_list|)
 block|{
 name|struct
@@ -373,6 +368,11 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
+decl_stmt|;
+name|struct
+name|syscall_args
+modifier|*
+name|sa
 decl_stmt|;
 name|caddr_t
 name|params
@@ -401,6 +401,13 @@ operator|=
 name|td
 operator|->
 name|td_frame
+expr_stmt|;
+name|sa
+operator|=
+operator|&
+name|td
+operator|->
+name|td_sa
 expr_stmt|;
 name|params
 operator|=
@@ -716,10 +723,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|struct
-name|syscall_args
-name|sa
-decl_stmt|;
 name|register_t
 name|orig_tf_rflags
 decl_stmt|;
@@ -750,9 +753,6 @@ operator|=
 name|syscallenter
 argument_list|(
 name|td
-argument_list|,
-operator|&
-name|sa
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Traced syscall. 	 */
@@ -814,9 +814,6 @@ argument_list|(
 name|td
 argument_list|,
 name|error
-argument_list|,
-operator|&
-name|sa
 argument_list|)
 expr_stmt|;
 block|}

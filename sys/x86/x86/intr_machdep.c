@@ -1354,8 +1354,13 @@ operator|||
 name|smp_started
 argument_list|)
 expr_stmt|;
+comment|/* Nothing to do if there is only a single CPU. */
 if|if
 condition|(
+name|mp_ncpus
+operator|>
+literal|1
+operator|&&
 name|cpu
 operator|!=
 name|NOCPU
@@ -2156,6 +2161,20 @@ operator|||
 name|smp_started
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mp_ncpus
+operator|==
+literal|1
+condition|)
+return|return
+operator|(
+name|PCPU_GET
+argument_list|(
+name|apic_id
+argument_list|)
+operator|)
+return|;
 else|#
 directive|else
 comment|/* Leave all interrupts on the BSP during boot. */

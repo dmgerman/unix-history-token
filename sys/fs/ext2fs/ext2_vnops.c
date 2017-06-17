@@ -746,6 +746,9 @@ name|vop_setextattr
 operator|=
 name|ext2_setextattr
 block|,
+ifdef|#
+directive|ifdef
+name|UFS_ACL
 operator|.
 name|vop_getacl
 operator|=
@@ -761,6 +764,9 @@ name|vop_aclcheck
 operator|=
 name|ext2_aclcheck
 block|,
+endif|#
+directive|endif
+comment|/* UFS_ACL */
 operator|.
 name|vop_vptofh
 operator|=
@@ -5062,6 +5068,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UFS_ACL
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -5490,6 +5502,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* UFS_ACL */
+end_comment
 
 begin_comment
 comment|/*  * Mkdir system call  */
@@ -5974,6 +5995,9 @@ operator||=
 name|IN_CHANGE
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|UFS_ACL
 if|if
 condition|(
 name|dvp
@@ -6012,6 +6036,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+endif|#
+directive|endif
+comment|/* UFS_ACL */
 comment|/* Directory set up, now install its entry in the parent directory. */
 name|error
 operator|=
@@ -7119,6 +7146,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|UFS_ACL
 case|case
 name|_PC_ACL_EXTENDED
 case|:
@@ -7181,6 +7211,9 @@ operator|=
 literal|3
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* UFS_ACL */
 case|case
 name|_PC_MIN_HOLE_SIZE
 case|:
@@ -8685,6 +8718,9 @@ condition|)
 goto|goto
 name|bad
 goto|;
+ifdef|#
+directive|ifdef
+name|UFS_ACL
 if|if
 condition|(
 name|dvp
@@ -8723,6 +8759,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+endif|#
+directive|endif
+comment|/* UFS_ACL */
 name|error
 operator|=
 name|ext2_direnter

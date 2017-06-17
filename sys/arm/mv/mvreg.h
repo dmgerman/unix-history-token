@@ -2031,6 +2031,20 @@ name|TCLK_667MHZ
 value|667000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|A38X_CPU_DDR_CLK_MASK
+value|0x00007c00
+end_define
+
+begin_define
+define|#
+directive|define
+name|A38X_CPU_DDR_CLK_SHIFT
+value|10
+end_define
+
 begin_comment
 comment|/*  * CPU Cache Configuration  */
 end_comment

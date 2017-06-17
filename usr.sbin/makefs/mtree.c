@@ -2157,13 +2157,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Assign global options/defaults. */
-name|bcopy
+name|memcpy
 argument_list|(
-name|global
+name|n
 operator|->
 name|inode
 argument_list|,
-name|n
+name|global
 operator|->
 name|inode
 argument_list|,
@@ -4746,10 +4746,12 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|mtree_global
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4757,10 +4759,12 @@ name|mtree_global
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|mtree_global_inode
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

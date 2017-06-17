@@ -70,6 +70,12 @@ block|}
 enum|;
 end_enum
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
+
 begin_struct
 struct|struct
 name|ecore_link_eee_params
@@ -101,6 +107,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -301,95 +312,11 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|ecore_mcp_nvm_common
-block|{
-name|u32
-name|offset
-decl_stmt|;
-name|u32
-name|param
-decl_stmt|;
-name|u32
-name|resp
-decl_stmt|;
-name|u32
-name|cmd
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ecore_mcp_nvm_rd
-block|{
-name|u32
-modifier|*
-name|buf_size
-decl_stmt|;
-name|u32
-modifier|*
-name|buf
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ecore_mcp_nvm_wr
-block|{
-name|u32
-name|buf_size
-decl_stmt|;
-name|u32
-modifier|*
-name|buf
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ecore_mcp_nvm_params
-block|{
-define|#
-directive|define
-name|ECORE_MCP_CMD
-value|(1<< 0)
-define|#
-directive|define
-name|ECORE_MCP_NVM_RD
-value|(1<< 1)
-define|#
-directive|define
-name|ECORE_MCP_NVM_WR
-value|(1<< 2)
-name|u8
-name|type
-decl_stmt|;
-name|struct
-name|ecore_mcp_nvm_common
-name|nvm_common
-decl_stmt|;
-union|union
-block|{
-name|struct
-name|ecore_mcp_nvm_rd
-name|nvm_rd
-decl_stmt|;
-name|struct
-name|ecore_mcp_nvm_wr
-name|nvm_wr
-decl_stmt|;
-block|}
-union|;
-block|}
-struct|;
-end_struct
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
 
 begin_enum
 enum|enum
@@ -403,6 +330,11 @@ name|ECORE_NVM_IMAGE_MDUMP
 block|, }
 enum|;
 end_enum
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -595,6 +527,12 @@ block|}
 enum|;
 end_enum
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -653,6 +591,11 @@ name|ECORE_LED_MODE_RESTORE
 block|}
 enum|;
 end_enum
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -834,6 +777,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
 
 begin_struct
 struct|struct
@@ -1736,6 +1685,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_union
 union|union
 name|ecore_mfw_tlv_data
@@ -1981,6 +1935,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUX_REMOVE
+end_ifndef
+
 begin_comment
 comment|/**  * @brief - return the mcp function info of the hw function  *  * @param p_hwfn  *  * @returns pointer to mcp function info  */
 end_comment
@@ -2000,32 +1960,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/**  * @brief - Function for reading/manipulating the nvram. Following are supported  *          functionalities.  *          1. Read: Read the specified nvram offset.  *             input values:  *               type   - ECORE_MCP_NVM_RD  *               cmd    - command code (e.g. DRV_MSG_CODE_NVM_READ_NVRAM)  *               offset - nvm offset  *  *             output values:  *               buf      - buffer  *               buf_size - buffer size  *  *          2. Write: Write the data at the specified nvram offset  *             input values:  *               type     - ECORE_MCP_NVM_WR  *               cmd      - command code (e.g. DRV_MSG_CODE_NVM_WRITE_NVRAM)  *               offset   - nvm offset  *               buf      - buffer  *               buf_size - buffer size  *  *          3. Command: Send the NVM command to MCP.  *             input values:  *               type   - ECORE_MCP_CMD  *               cmd    - command code (e.g. DRV_MSG_CODE_NVM_DEL_FILE)  *               offset - nvm offset  *  *  * @param p_hwfn  * @param p_ptt  * @param params  *  * @return ECORE_SUCCESS - operation was successful.  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_function_decl
-name|enum
-name|_ecore_status_t
-name|ecore_mcp_nvm_command
-parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
-parameter_list|,
-name|struct
-name|ecore_mcp_nvm_params
-modifier|*
-name|params
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUX_REMOVE
+end_ifndef
 
 begin_comment
 comment|/**  * @brief - count number of function with a matching personality on engine.  *  * @param p_hwfn  * @param p_ptt  * @param personalities - a bitmask of ecore_pci_personality values  *  * @returns the count of all devices on engine whose personality match one of  *          the bitsmasks.  */
@@ -2050,6 +1994,11 @@ name|personalities
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * @brief Get the flash size value  *  * @param p_hwfn  * @param p_ptt  * @param p_flash_size  - flash size in bytes to be filled.  *  * @return enum _ecore_status_t - ECORE_SUCCESS - operation was successful.  */
@@ -2606,6 +2555,93 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * @brief - Sends an NVM write command request to the MFW with  *          payload.  *  * @param p_hwfn  * @param p_ptt  * @param cmd - Command: Either DRV_MSG_CODE_NVM_WRITE_NVRAM or  *            DRV_MSG_CODE_NVM_PUT_FILE_DATA  * @param param - [0:23] - Offset [24:31] - Size  * @param o_mcp_resp - MCP response  * @param o_mcp_param - MCP response param  * @param i_txn_size -  Buffer size  * @param i_buf - Pointer to the buffer  *  * @param return ECORE_SUCCESS upon success.  */
+end_comment
+
+begin_function_decl
+name|enum
+name|_ecore_status_t
+name|ecore_mcp_nvm_wr_cmd
+parameter_list|(
+name|struct
+name|ecore_hwfn
+modifier|*
+name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
+parameter_list|,
+name|u32
+name|cmd
+parameter_list|,
+name|u32
+name|param
+parameter_list|,
+name|u32
+modifier|*
+name|o_mcp_resp
+parameter_list|,
+name|u32
+modifier|*
+name|o_mcp_param
+parameter_list|,
+name|u32
+name|i_txn_size
+parameter_list|,
+name|u32
+modifier|*
+name|i_buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * @brief - Sends an NVM read command request to the MFW to get  *        a buffer.  *  * @param p_hwfn  * @param p_ptt  * @param cmd - Command: DRV_MSG_CODE_NVM_GET_FILE_DATA or  *            DRV_MSG_CODE_NVM_READ_NVRAM commands  * @param param - [0:23] - Offset [24:31] - Size  * @param o_mcp_resp - MCP response  * @param o_mcp_param - MCP response param  * @param o_txn_size -  Buffer size output  * @param o_buf - Pointer to the buffer returned by the MFW.  *  * @param return ECORE_SUCCESS upon success.  */
+end_comment
+
+begin_function_decl
+name|enum
+name|_ecore_status_t
+name|ecore_mcp_nvm_rd_cmd
+parameter_list|(
+name|struct
+name|ecore_hwfn
+modifier|*
+name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
+parameter_list|,
+name|u32
+name|cmd
+parameter_list|,
+name|u32
+name|param
+parameter_list|,
+name|u32
+modifier|*
+name|o_mcp_resp
+parameter_list|,
+name|u32
+modifier|*
+name|o_mcp_param
+parameter_list|,
+name|u32
+modifier|*
+name|o_txn_size
+parameter_list|,
+name|u32
+modifier|*
+name|o_buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * @brief Read from sfp  *  *  @param p_hwfn - hw function  *  @param p_ptt  - PTT required for register access  *  @param port   - transceiver port  *  @param addr   - I2C address  *  @param offset - offset in sfp  *  @param len    - buffer length  *  @param p_buf  - buffer to read into  *  * @return enum _ecore_status_t - ECORE_SUCCESS - operation was successful.  */
 end_comment
 
@@ -3012,6 +3048,28 @@ begin_function_decl
 name|enum
 name|_ecore_status_t
 name|ecore_mcp_mdump_clear_logs
+parameter_list|(
+name|struct
+name|ecore_hwfn
+modifier|*
+name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * @brief - Clear the mdump retained data.  *  * @param p_hwfn  * @param p_ptt  *  * @param return ECORE_SUCCESS upon success.  */
+end_comment
+
+begin_function_decl
+name|enum
+name|_ecore_status_t
+name|ecore_mcp_mdump_clr_retain
 parameter_list|(
 name|struct
 name|ecore_hwfn

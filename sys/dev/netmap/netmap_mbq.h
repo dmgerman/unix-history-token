@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__NETMAP_MBQ_H__
+name|_NET_NETMAP_MBQ_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__NETMAP_MBQ_H__
+name|_NET_NETMAP_MBQ_H__
 end_define
 
 begin_comment
@@ -190,12 +190,6 @@ return|return
 name|q
 operator|->
 name|head
-condition|?
-name|q
-operator|->
-name|head
-else|:
-name|NULL
 return|;
 block|}
 end_function
@@ -340,7 +334,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __NETMAP_MBQ_H_ */
+comment|/* _NET_NETMAP_MBQ_H_ */
 end_comment
 
 end_unit

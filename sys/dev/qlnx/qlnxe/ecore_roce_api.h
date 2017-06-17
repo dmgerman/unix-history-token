@@ -15,12 +15,29 @@ directive|define
 name|__ECORE_RDMA_API_H__
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUX_REMOVE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ETH_ALEN
 value|6
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
 
 begin_enum
 enum|enum
@@ -819,6 +836,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|ecore_rdma_resize_cq_in_params
@@ -846,6 +868,12 @@ comment|/* for the pages that contain the 		       * pointers to the CQ pages 		
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
 
 begin_enum
 enum|enum
@@ -1486,6 +1514,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|ecore_rdma_resize_cq_out_params
@@ -1521,6 +1554,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
 
 begin_struct
 struct|struct
@@ -1606,6 +1645,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|enum
@@ -2051,8 +2095,6 @@ name|u32
 name|ecore_rdma_query_cau_timer_res
 parameter_list|(
 name|void
-modifier|*
-name|p_hwfn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2086,6 +2128,62 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|enum
+name|_ecore_status_t
+name|ecore_rdma_create_srq
+parameter_list|(
+name|void
+modifier|*
+name|rdma_cxt
+parameter_list|,
+name|struct
+name|ecore_rdma_create_srq_in_params
+modifier|*
+name|in_params
+parameter_list|,
+name|struct
+name|ecore_rdma_create_srq_out_params
+modifier|*
+name|out_params
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|enum
+name|_ecore_status_t
+name|ecore_rdma_destroy_srq
+parameter_list|(
+name|void
+modifier|*
+name|rdma_cxt
+parameter_list|,
+name|struct
+name|ecore_rdma_destroy_srq_in_params
+modifier|*
+name|in_params
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|enum
+name|_ecore_status_t
+name|ecore_rdma_modify_srq
+parameter_list|(
+name|void
+modifier|*
+name|rdma_cxt
+parameter_list|,
+name|struct
+name|ecore_rdma_modify_srq_in_params
+modifier|*
+name|in_params
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2095,6 +2193,12 @@ end_ifdef
 begin_comment
 comment|/* iWARP API */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
 
 begin_enum
 enum|enum
@@ -2435,6 +2539,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|enum

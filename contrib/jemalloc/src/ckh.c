@@ -12,7 +12,49 @@ end_define
 begin_include
 include|#
 directive|include
-file|"jemalloc/internal/jemalloc_internal.h"
+file|"jemalloc/internal/jemalloc_preamble.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/ckh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/jemalloc_internal_includes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/assert.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/hash.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/malloc_io.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/prng.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/util.h"
 end_include
 
 begin_comment
@@ -64,7 +106,7 @@ comment|/*  * Search bucket for key and return the cell number if found; SIZE_T_
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE_C
+specifier|static
 name|size_t
 name|ckh_bucket_search
 parameter_list|(
@@ -144,8 +186,8 @@ operator|->
 name|key
 argument_list|)
 condition|)
+block|{
 return|return
-operator|(
 operator|(
 name|bucket
 operator|<<
@@ -153,13 +195,11 @@ name|LG_CKH_BUCKET_CELLS
 operator|)
 operator|+
 name|i
-operator|)
 return|;
 block|}
+block|}
 return|return
-operator|(
 name|SIZE_T_MAX
-operator|)
 return|;
 block|}
 end_function
@@ -169,7 +209,7 @@ comment|/*  * Search table for key and return cell number if found; SIZE_T_MAX o
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE_C
+specifier|static
 name|size_t
 name|ckh_isearch
 parameter_list|(
@@ -249,11 +289,11 @@ name|cell
 operator|!=
 name|SIZE_T_MAX
 condition|)
+block|{
 return|return
-operator|(
 name|cell
-operator|)
 return|;
+block|}
 comment|/* Search secondary bucket. */
 name|bucket
 operator|=
@@ -289,15 +329,13 @@ name|key
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|cell
-operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE_C
+specifier|static
 name|bool
 name|ckh_try_bucket_insert
 parameter_list|(
@@ -427,16 +465,12 @@ name|count
 operator|++
 expr_stmt|;
 return|return
-operator|(
 name|false
-operator|)
 return|;
 block|}
 block|}
 return|return
-operator|(
 name|true
-operator|)
 return|;
 block|}
 end_function
@@ -446,7 +480,7 @@ comment|/*  * No space is available in bucket.  Randomly evict an item, then try
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE_C
+specifier|static
 name|bool
 name|ckh_evict_reloc_insert
 parameter_list|(
@@ -686,9 +720,7 @@ operator|=
 name|data
 expr_stmt|;
 return|return
-operator|(
 name|true
-operator|)
 return|;
 block|}
 name|bucket
@@ -709,17 +741,17 @@ argument_list|,
 name|data
 argument_list|)
 condition|)
+block|{
 return|return
-operator|(
 name|false
-operator|)
 return|;
+block|}
 block|}
 block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE_C
+specifier|static
 name|bool
 name|ckh_try_insert
 parameter_list|(
@@ -810,11 +842,11 @@ argument_list|,
 name|data
 argument_list|)
 condition|)
+block|{
 return|return
-operator|(
 name|false
-operator|)
 return|;
+block|}
 comment|/* Try to insert in secondary bucket. */
 name|bucket
 operator|=
@@ -852,14 +884,13 @@ argument_list|,
 name|data
 argument_list|)
 condition|)
+block|{
 return|return
-operator|(
 name|false
-operator|)
 return|;
+block|}
 comment|/* 	 * Try to find a place for this item via iterative eviction/relocation. 	 */
 return|return
-operator|(
 name|ckh_evict_reloc_insert
 argument_list|(
 name|ckh
@@ -870,7 +901,6 @@ name|argkey
 argument_list|,
 name|argdata
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -880,7 +910,7 @@ comment|/*  * Try to rebuild the hash table from scratch by inserting all items 
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE_C
+specifier|static
 name|bool
 name|ckh_rebuild
 parameter_list|(
@@ -987,9 +1017,7 @@ operator|=
 name|count
 expr_stmt|;
 return|return
-operator|(
 name|true
-operator|)
 return|;
 block|}
 name|nins
@@ -998,9 +1026,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-operator|(
 name|false
-operator|)
 return|;
 block|}
 end_function
@@ -1072,7 +1098,7 @@ operator|++
 expr_stmt|;
 name|usize
 operator|=
-name|sa2u
+name|sz_sa2u
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1094,7 +1120,7 @@ literal|0
 operator|||
 name|usize
 operator|>
-name|HUGE_MAXCLASS
+name|LARGE_MAXCLASS
 argument_list|)
 condition|)
 block|{
@@ -1199,6 +1225,8 @@ name|tab
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|true
 argument_list|,
 name|true
@@ -1217,6 +1245,8 @@ argument_list|,
 name|ckh
 operator|->
 name|tab
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -1245,9 +1275,7 @@ expr_stmt|;
 name|label_return
 label|:
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 end_function
@@ -1300,7 +1328,7 @@ literal|1
 expr_stmt|;
 name|usize
 operator|=
-name|sa2u
+name|sz_sa2u
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1322,10 +1350,12 @@ literal|0
 operator|||
 name|usize
 operator|>
-name|HUGE_MAXCLASS
+name|LARGE_MAXCLASS
 argument_list|)
 condition|)
+block|{
 return|return;
+block|}
 name|tab
 operator|=
 operator|(
@@ -1414,6 +1444,8 @@ name|tab
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|true
 argument_list|,
 name|true
@@ -1442,6 +1474,8 @@ argument_list|,
 name|ckh
 operator|->
 name|tab
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -1629,8 +1663,9 @@ condition|;
 name|lg_mincells
 operator|++
 control|)
-empty_stmt|;
+block|{
 comment|/* Do nothing. */
+block|}
 name|ckh
 operator|->
 name|lg_minbuckets
@@ -1661,7 +1696,7 @@ name|keycomp
 expr_stmt|;
 name|usize
 operator|=
-name|sa2u
+name|sz_sa2u
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1683,7 +1718,7 @@ literal|0
 operator|||
 name|usize
 operator|>
-name|HUGE_MAXCLASS
+name|LARGE_MAXCLASS
 argument_list|)
 condition|)
 block|{
@@ -1752,9 +1787,7 @@ expr_stmt|;
 name|label_return
 label|:
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 end_function
@@ -1863,6 +1896,8 @@ name|tab
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|true
 argument_list|,
 name|true
@@ -1872,6 +1907,7 @@ if|if
 condition|(
 name|config_debug
 condition|)
+block|{
 name|memset
 argument_list|(
 name|ckh
@@ -1884,6 +1920,7 @@ name|ckh_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1904,11 +1941,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ckh
 operator|->
 name|count
-operator|)
 return|;
 block|}
 end_function
@@ -1993,6 +2028,7 @@ name|key
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|key
 operator|=
@@ -2009,12 +2045,14 @@ index|]
 operator|.
 name|key
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|data
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|data
 operator|=
@@ -2031,6 +2069,7 @@ index|]
 operator|.
 name|data
 expr_stmt|;
+block|}
 operator|*
 name|tabind
 operator|=
@@ -2039,16 +2078,12 @@ operator|+
 literal|1
 expr_stmt|;
 return|return
-operator|(
 name|false
-operator|)
 return|;
 block|}
 block|}
 return|return
-operator|(
 name|true
-operator|)
 return|;
 block|}
 end_function
@@ -2150,9 +2185,7 @@ expr_stmt|;
 name|label_return
 label|:
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 end_function
@@ -2217,6 +2250,7 @@ name|key
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|key
 operator|=
@@ -2233,12 +2267,14 @@ index|]
 operator|.
 name|key
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|data
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|data
 operator|=
@@ -2255,6 +2291,7 @@ index|]
 operator|.
 name|data
 expr_stmt|;
+block|}
 name|ckh
 operator|->
 name|tab
@@ -2326,15 +2363,11 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|false
-operator|)
 return|;
 block|}
 return|return
-operator|(
 name|true
-operator|)
 return|;
 block|}
 end_function
@@ -2395,6 +2428,7 @@ name|key
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|key
 operator|=
@@ -2411,12 +2445,14 @@ index|]
 operator|.
 name|key
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|data
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|data
 operator|=
@@ -2433,16 +2469,13 @@ index|]
 operator|.
 name|data
 expr_stmt|;
+block|}
 return|return
-operator|(
 name|false
-operator|)
 return|;
 block|}
 return|return
-operator|(
 name|true
-operator|)
 return|;
 block|}
 end_function
@@ -2515,7 +2548,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
+operator|!
 name|strcmp
 argument_list|(
 operator|(
@@ -2530,11 +2563,6 @@ operator|*
 operator|)
 name|k2
 argument_list|)
-condition|?
-name|false
-else|:
-name|true
-operator|)
 return|;
 block|}
 end_function
@@ -2630,15 +2658,9 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
 name|k1
 operator|==
 name|k2
-operator|)
-condition|?
-name|true
-else|:
-name|false
 operator|)
 return|;
 block|}

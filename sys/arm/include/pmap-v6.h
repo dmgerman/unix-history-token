@@ -549,22 +549,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|reinit_mmu
-parameter_list|(
-name|ttb_entry_t
-name|ttb
-parameter_list|,
-name|u_int
-name|aux_clr
-parameter_list|,
-name|u_int
-name|aux_set
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Pre-bootstrap epoch functions set.  */
 end_comment

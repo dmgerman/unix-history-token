@@ -232,5 +232,20 @@ block|}
 block|}
 end_function
 
+begin_function
+name|uint32_t
+name|get_cpu_freq
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

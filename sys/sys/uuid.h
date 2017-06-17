@@ -179,6 +179,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|uuidcmp
+parameter_list|(
+specifier|const
+name|struct
+name|uuid
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|uuid
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|be_uuid_dec
 parameter_list|(

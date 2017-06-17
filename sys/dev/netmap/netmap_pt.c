@@ -823,10 +823,10 @@ name|ptnetmap_state
 block|{
 comment|/* Kthreads. */
 name|struct
-name|nm_kthread
+name|nm_kctx
 modifier|*
 modifier|*
-name|kthreads
+name|kctxs
 decl_stmt|;
 comment|/* Shared memory with the guest (TX/RX) */
 name|struct
@@ -870,11 +870,10 @@ modifier|*
 name|kring
 parameter_list|)
 block|{
-name|RD
+name|D
 argument_list|(
-literal|1
-argument_list|,
-literal|"%s - name: %s hwcur: %d hwtail: %d rhead: %d rcur: %d \     		    rtail: %d head: %d cur: %d tail: %d"
+literal|"%s - name: %s hwcur: %d hwtail: %d rhead: %d rcur: %d"
+literal|" rtail: %d head: %d cur: %d tail: %d"
 argument_list|,
 name|title
 argument_list|,
@@ -1039,6 +1038,9 @@ parameter_list|(
 name|void
 modifier|*
 name|data
+parameter_list|,
+name|int
+name|is_kthread
 parameter_list|)
 block|{
 name|struct
@@ -1090,7 +1092,7 @@ init|=
 name|false
 decl_stmt|;
 name|struct
-name|nm_kthread
+name|nm_kctx
 modifier|*
 name|kth
 decl_stmt|;
@@ -1190,7 +1192,7 @@ name|kth
 operator|=
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|kring
 operator|->
@@ -1544,6 +1546,8 @@ name|ptring_intr_enabled
 argument_list|(
 name|ptring
 argument_list|)
+operator|&&
+name|is_kthread
 condition|)
 block|{
 comment|/* Disable guest kick to avoid sending unnecessary kicks */
@@ -1554,7 +1558,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|nm_os_kthread_send_irq
+name|nm_os_kctx_send_irq
 argument_list|(
 name|kth
 argument_list|)
@@ -1604,6 +1608,11 @@ name|rhead
 condition|)
 block|{
 comment|/*              * No more packets to transmit. We enable notifications and              * go to sleep, waiting for a kick from the guest when new              * new slots are ready for transmission.              */
+if|if
+condition|(
+name|is_kthread
+condition|)
+block|{
 name|usleep_range
 argument_list|(
 literal|1
@@ -1611,6 +1620,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Reenable notifications. */
 name|ptring_kick_enable
 argument_list|(
@@ -1704,6 +1714,8 @@ name|ptring_intr_enabled
 argument_list|(
 name|ptring
 argument_list|)
+operator|&&
+name|is_kthread
 condition|)
 block|{
 name|ptring_intr_enable
@@ -1713,7 +1725,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|nm_os_kthread_send_irq
+name|nm_os_kctx_send_irq
 argument_list|(
 name|kth
 argument_list|)
@@ -1731,6 +1743,124 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Called on backend nm_notify when there is no worker thread. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ptnetmap_tx_nothread_notify
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|struct
+name|netmap_kring
+modifier|*
+name|kring
+init|=
+name|data
+decl_stmt|;
+name|struct
+name|netmap_pt_host_adapter
+modifier|*
+name|pth_na
+init|=
+operator|(
+expr|struct
+name|netmap_pt_host_adapter
+operator|*
+operator|)
+name|kring
+operator|->
+name|na
+operator|->
+name|na_private
+decl_stmt|;
+name|struct
+name|ptnetmap_state
+modifier|*
+name|ptns
+init|=
+name|pth_na
+operator|->
+name|ptns
+decl_stmt|;
+if|if
+condition|(
+name|unlikely
+argument_list|(
+operator|!
+name|ptns
+argument_list|)
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"ERROR ptnetmap state is NULL"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|unlikely
+argument_list|(
+name|ptns
+operator|->
+name|stopped
+argument_list|)
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"backend netmap is being stopped"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* We cannot access the CSB here (to check ptring->guest_need_kick), 	 * unless we switch address space to the one of the guest. For now 	 * we unconditionally inject an interrupt. */
+name|nm_os_kctx_send_irq
+argument_list|(
+name|ptns
+operator|->
+name|kctxs
+index|[
+name|kring
+operator|->
+name|ring_id
+index|]
+argument_list|)
+expr_stmt|;
+name|IFRATE
+argument_list|(
+name|ptns
+operator|->
+name|rate_ctx
+operator|.
+name|new
+operator|.
+name|htxk
+operator|++
+argument_list|)
+expr_stmt|;
+name|ND
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s interrupt"
+argument_list|,
+name|kring
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1804,6 +1934,9 @@ parameter_list|(
 name|void
 modifier|*
 name|data
+parameter_list|,
+name|int
+name|is_kthread
 parameter_list|)
 block|{
 name|struct
@@ -1850,7 +1983,7 @@ name|shadow_ring
 decl_stmt|;
 comment|/* shadow copy of the netmap_ring */
 name|struct
-name|nm_kthread
+name|nm_kctx
 modifier|*
 name|kth
 decl_stmt|;
@@ -1980,7 +2113,7 @@ name|kth
 operator|=
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|pth_na
 operator|->
@@ -2256,7 +2389,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|nm_os_kthread_send_irq
+name|nm_os_kctx_send_irq
 argument_list|(
 name|kth
 argument_list|)
@@ -2444,7 +2577,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|nm_os_kthread_send_irq
+name|nm_os_kctx_send_irq
 argument_list|(
 name|kth
 argument_list|)
@@ -2921,13 +3054,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Functions to create, start and stop the kthreads  */
+comment|/*  * Functions to create kernel contexts, and start/stop the workers.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|ptnetmap_create_kthreads
+name|ptnetmap_create_kctxs
 parameter_list|(
 name|struct
 name|netmap_pt_host_adapter
@@ -2938,6 +3071,9 @@ name|struct
 name|ptnetmap_cfg
 modifier|*
 name|cfg
+parameter_list|,
+name|int
+name|use_tx_kthreads
 parameter_list|)
 block|{
 name|struct
@@ -2950,7 +3086,7 @@ operator|->
 name|ptns
 decl_stmt|;
 name|struct
-name|nm_kthread_cfg
+name|nm_kctx_cfg
 name|nmk_cfg
 decl_stmt|;
 name|unsigned
@@ -3043,6 +3179,18 @@ name|worker_fn
 operator|=
 name|ptnetmap_tx_handler
 expr_stmt|;
+name|nmk_cfg
+operator|.
+name|use_kthread
+operator|=
+name|use_tx_kthreads
+expr_stmt|;
+name|nmk_cfg
+operator|.
+name|notify_fn
+operator|=
+name|ptnetmap_tx_nothread_notify
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3052,15 +3200,21 @@ name|worker_fn
 operator|=
 name|ptnetmap_rx_handler
 expr_stmt|;
+name|nmk_cfg
+operator|.
+name|use_kthread
+operator|=
+literal|1
+expr_stmt|;
 block|}
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|k
 index|]
 operator|=
-name|nm_os_kthread_create
+name|nm_os_kctx_create
 argument_list|(
 operator|&
 name|nmk_cfg
@@ -3082,7 +3236,7 @@ if|if
 condition|(
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|k
 index|]
@@ -3118,17 +3272,17 @@ if|if
 condition|(
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|k
 index|]
 condition|)
 block|{
-name|nm_os_kthread_delete
+name|nm_os_kctx_destroy
 argument_list|(
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|k
 index|]
@@ -3136,7 +3290,7 @@ argument_list|)
 expr_stmt|;
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|k
 index|]
@@ -3154,7 +3308,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ptnetmap_start_kthreads
+name|ptnetmap_start_kctx_workers
 parameter_list|(
 name|struct
 name|netmap_pt_host_adapter
@@ -3233,14 +3387,14 @@ name|k
 operator|++
 control|)
 block|{
-comment|//nm_os_kthread_set_affinity(ptns->kthreads[k], xxx);
+comment|//nm_os_kctx_worker_setaff(ptns->kctxs[k], xxx);
 name|error
 operator|=
-name|nm_os_kthread_start
+name|nm_os_kctx_worker_start
 argument_list|(
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|k
 index|]
@@ -3265,7 +3419,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ptnetmap_stop_kthreads
+name|ptnetmap_stop_kctx_workers
 parameter_list|(
 name|struct
 name|netmap_pt_host_adapter
@@ -3335,11 +3489,11 @@ name|k
 operator|++
 control|)
 block|{
-name|nm_os_kthread_stop
+name|nm_os_kctx_worker_stop
 argument_list|(
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|k
 index|]
@@ -3435,15 +3589,9 @@ name|entry_size
 expr_stmt|;
 name|cfg
 operator|=
-name|malloc
+name|nm_os_malloc
 argument_list|(
 name|cfglen
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3479,11 +3627,9 @@ argument_list|(
 literal|"Full copyin() failed"
 argument_list|)
 expr_stmt|;
-name|free
+name|nm_os_free
 argument_list|(
 name|cfg
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -3544,6 +3690,12 @@ modifier|*
 name|cfg
 parameter_list|)
 block|{
+name|int
+name|use_tx_kthreads
+init|=
+name|ptnetmap_tx_workers
+decl_stmt|;
+comment|/* snapshot */
 name|struct
 name|ptnetmap_state
 modifier|*
@@ -3617,9 +3769,32 @@ return|return
 name|EINVAL
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|use_tx_kthreads
+operator|&&
+name|na_is_generic
+argument_list|(
+name|pth_na
+operator|->
+name|parent
+argument_list|)
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"ERROR ptnetmap direct transmission not supported with "
+literal|"passed-through emulated adapters"
+argument_list|)
+expr_stmt|;
+return|return
+name|EOPNOTSUPP
+return|;
+block|}
 name|ptns
 operator|=
-name|malloc
+name|nm_os_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3634,14 +3809,8 @@ argument_list|(
 operator|*
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3656,11 +3825,11 @@ return|;
 block|}
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 operator|=
 operator|(
 expr|struct
-name|nm_kthread
+name|nm_kctx
 operator|*
 operator|*
 operator|)
@@ -3706,24 +3875,26 @@ name|cfg
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Create kthreads */
+comment|/* Create kernel contexts. */
 if|if
 condition|(
 operator|(
 name|ret
 operator|=
-name|ptnetmap_create_kthreads
+name|ptnetmap_create_kctxs
 argument_list|(
 name|pth_na
 argument_list|,
 name|cfg
+argument_list|,
+name|use_tx_kthreads
 argument_list|)
 operator|)
 condition|)
 block|{
 name|D
 argument_list|(
-literal|"ERROR ptnetmap_create_kthreads()"
+literal|"ERROR ptnetmap_create_kctxs()"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3752,7 +3923,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Overwrite parent nm_notify krings callback. */
+comment|/* Overwrite parent nm_notify krings callback, and      * clear NAF_BDG_MAYSLEEP if needed. */
 name|pth_na
 operator|->
 name|parent
@@ -3779,6 +3950,33 @@ name|nm_notify
 operator|=
 name|nm_unused_notify
 expr_stmt|;
+name|pth_na
+operator|->
+name|parent_na_flags
+operator|=
+name|pth_na
+operator|->
+name|parent
+operator|->
+name|na_flags
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|use_tx_kthreads
+condition|)
+block|{
+comment|/* VALE port txsync is executed under spinlock on Linux, so          * we need to make sure the bridge cannot sleep. */
+name|pth_na
+operator|->
+name|parent
+operator|->
+name|na_flags
+operator|&=
+operator|~
+name|NAF_BDG_MAYSLEEP
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -3980,11 +4178,9 @@ name|ptns
 operator|=
 name|NULL
 expr_stmt|;
-name|free
+name|nm_os_free
 argument_list|(
 name|ptns
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -4051,6 +4247,16 @@ name|na_private
 operator|=
 name|NULL
 expr_stmt|;
+name|pth_na
+operator|->
+name|parent
+operator|->
+name|na_flags
+operator|=
+name|pth_na
+operator|->
+name|parent_na_flags
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4159,7 +4365,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Delete kthreads. */
+comment|/* Destroy kernel contexts. */
 name|num_rings
 operator|=
 name|ptns
@@ -4192,11 +4398,11 @@ name|i
 operator|++
 control|)
 block|{
-name|nm_os_kthread_delete
+name|nm_os_kctx_destroy
 argument_list|(
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|i
 index|]
@@ -4204,7 +4410,7 @@ argument_list|)
 expr_stmt|;
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|i
 index|]
@@ -4225,11 +4431,9 @@ name|timer
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|free
+name|nm_os_free
 argument_list|(
 name|ptns
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|pth_na
@@ -4375,7 +4579,7 @@ operator|!
 name|cfg
 condition|)
 break|break;
-comment|/* Create ptnetmap state (kthreads, ...) and switch parent 	 * adapter to ptnetmap mode. */
+comment|/* Create ptnetmap state (kctxs, ...) and switch parent 	 * adapter to ptnetmap mode. */
 name|error
 operator|=
 name|ptnetmap_create
@@ -4385,11 +4589,9 @@ argument_list|,
 name|cfg
 argument_list|)
 expr_stmt|;
-name|free
+name|nm_os_free
 argument_list|(
 name|cfg
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 if|if
@@ -4400,7 +4602,7 @@ break|break;
 comment|/* Start kthreads. */
 name|error
 operator|=
-name|ptnetmap_start_kthreads
+name|ptnetmap_start_kctx_workers
 argument_list|(
 name|pth_na
 argument_list|)
@@ -4419,7 +4621,7 @@ case|case
 name|NETMAP_PT_HOST_DELETE
 case|:
 comment|/* Stop kthreads. */
-name|ptnetmap_stop_kthreads
+name|ptnetmap_stop_kctx_workers
 argument_list|(
 name|pth_na
 argument_list|)
@@ -4608,11 +4810,11 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
-name|nm_os_kthread_wakeup_worker
+name|nm_os_kctx_worker_wakeup
 argument_list|(
 name|ptns
 operator|->
-name|kthreads
+name|kctxs
 index|[
 name|k
 index|]
@@ -5194,7 +5396,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* The equivalent of NETMAP_PT_HOST_DELETE if the hypervisor      * didn't do it. */
-name|ptnetmap_stop_kthreads
+name|ptnetmap_stop_kctx_workers
 argument_list|(
 name|pth_na
 argument_list|)
@@ -5245,6 +5447,11 @@ name|netmap_adapter
 modifier|*
 modifier|*
 name|na
+parameter_list|,
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
 parameter_list|,
 name|int
 name|create
@@ -5302,19 +5509,13 @@ argument_list|)
 expr_stmt|;
 name|pth_na
 operator|=
-name|malloc
+name|nm_os_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|pth_na
 argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -5368,6 +5569,8 @@ name|parent
 argument_list|,
 operator|&
 name|ifp
+argument_list|,
+name|nmd
 argument_list|,
 name|create
 argument_list|)
@@ -5550,9 +5753,12 @@ name|up
 operator|.
 name|nm_mem
 operator|=
+name|netmap_mem_get
+argument_list|(
 name|parent
 operator|->
 name|nm_mem
+argument_list|)
 expr_stmt|;
 name|pth_na
 operator|->
@@ -5685,11 +5891,9 @@ argument_list|)
 expr_stmt|;
 name|put_out_noputparent
 label|:
-name|free
+name|nm_os_free
 argument_list|(
 name|pth_na
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -5777,6 +5981,7 @@ comment|/* Ask for a kick from a guest to the host if needed. */
 if|if
 condition|(
 operator|(
+operator|(
 name|kring
 operator|->
 name|rhead
@@ -5784,6 +5989,12 @@ operator|!=
 name|kring
 operator|->
 name|nr_hwcur
+operator|||
+name|nm_kr_txempty
+argument_list|(
+name|kring
+argument_list|)
+operator|)
 operator|&&
 name|NM_ACCESS_ONCE
 argument_list|(
@@ -5883,7 +6094,11 @@ name|ND
 argument_list|(
 literal|1
 argument_list|,
-literal|"TX - CSB: head:%u cur:%u hwtail:%u - KRING: head:%u cur:%u tail: %u"
+literal|"%s CSB(head:%u cur:%u hwtail:%u) KRING(head:%u cur:%u tail:%u)"
+argument_list|,
+name|kring
+operator|->
+name|name
 argument_list|,
 name|ptring
 operator|->
@@ -6059,7 +6274,11 @@ name|ND
 argument_list|(
 literal|1
 argument_list|,
-literal|"RX - CSB: head:%u cur:%u hwtail:%u - KRING: head:%u cur:%u"
+literal|"%s CSB(head:%u cur:%u hwtail:%u) KRING(head:%u cur:%u tail:%u)"
+argument_list|,
+name|kring
+operator|->
+name|name
 argument_list|,
 name|ptring
 operator|->
@@ -6080,6 +6299,10 @@ argument_list|,
 name|kring
 operator|->
 name|rcur
+argument_list|,
+name|kring
+operator|->
+name|nr_hwtail
 argument_list|)
 expr_stmt|;
 return|return
@@ -6302,6 +6525,7 @@ operator|.
 name|nm_mem
 argument_list|)
 expr_stmt|;
+comment|// XXX is this needed?
 name|memset
 argument_list|(
 operator|&
@@ -6330,6 +6554,194 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|netmap_pt_guest_attach
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|arg
+parameter_list|,
+name|void
+modifier|*
+name|csb
+parameter_list|,
+name|unsigned
+name|int
+name|nifp_offset
+parameter_list|,
+name|unsigned
+name|int
+name|memid
+parameter_list|)
+block|{
+name|struct
+name|netmap_pt_guest_adapter
+modifier|*
+name|ptna
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|arg
+condition|?
+name|arg
+operator|->
+name|ifp
+else|:
+name|NULL
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+comment|/* get allocator */
+name|arg
+operator|->
+name|nm_mem
+operator|=
+name|netmap_mem_pt_guest_new
+argument_list|(
+name|ifp
+argument_list|,
+name|nifp_offset
+argument_list|,
+name|memid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|->
+name|nm_mem
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
+name|arg
+operator|->
+name|na_flags
+operator||=
+name|NAF_MEM_OWNER
+expr_stmt|;
+name|error
+operator|=
+name|netmap_attach_ext
+argument_list|(
+name|arg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|netmap_pt_guest_adapter
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+name|error
+return|;
+comment|/* get the netmap_pt_guest_adapter */
+name|ptna
+operator|=
+operator|(
+expr|struct
+name|netmap_pt_guest_adapter
+operator|*
+operator|)
+name|NA
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|ptna
+operator|->
+name|csb
+operator|=
+name|csb
+expr_stmt|;
+comment|/* Initialize a separate pass-through netmap adapter that is going to 	 * be used by the ptnet driver only, and so never exposed to netmap          * applications. We only need a subset of the available fields. */
+name|memset
+argument_list|(
+operator|&
+name|ptna
+operator|->
+name|dr
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ptna
+operator|->
+name|dr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ptna
+operator|->
+name|dr
+operator|.
+name|up
+operator|.
+name|ifp
+operator|=
+name|ifp
+expr_stmt|;
+name|ptna
+operator|->
+name|dr
+operator|.
+name|up
+operator|.
+name|nm_mem
+operator|=
+name|netmap_mem_get
+argument_list|(
+name|ptna
+operator|->
+name|hwup
+operator|.
+name|up
+operator|.
+name|nm_mem
+argument_list|)
+expr_stmt|;
+name|ptna
+operator|->
+name|dr
+operator|.
+name|up
+operator|.
+name|nm_config
+operator|=
+name|ptna
+operator|->
+name|hwup
+operator|.
+name|up
+operator|.
+name|nm_config
+expr_stmt|;
+name|ptna
+operator|->
+name|backend_regifs
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

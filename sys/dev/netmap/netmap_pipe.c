@@ -312,6 +312,8 @@ name|npipes
 parameter_list|)
 block|{
 name|size_t
+name|old_len
+decl_stmt|,
 name|len
 decl_stmt|;
 name|struct
@@ -347,6 +349,19 @@ condition|)
 return|return
 name|EINVAL
 return|;
+name|old_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|netmap_pipe_adapter
+operator|*
+argument_list|)
+operator|*
+name|na
+operator|->
+name|na_max_pipes
+expr_stmt|;
 name|len
 operator|=
 sizeof|sizeof
@@ -358,12 +373,9 @@ argument_list|)
 operator|*
 name|npipes
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|_WIN32
 name|npa
 operator|=
-name|realloc
+name|nm_os_realloc
 argument_list|(
 name|na
 operator|->
@@ -371,39 +383,9 @@ name|na_pipes
 argument_list|,
 name|len
 argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
+name|old_len
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|npa
-operator|=
-name|realloc
-argument_list|(
-name|na
-operator|->
-name|na_pipes
-argument_list|,
-name|len
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|netmap_pipe_adapter
-operator|*
-argument_list|)
-operator|*
-name|na
-operator|->
-name|na_max_pipes
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|npa
@@ -475,13 +457,11 @@ name|na_next_pipe
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|nm_os_free
 argument_list|(
 name|na
 operator|->
 name|na_pipes
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|na
@@ -763,7 +743,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|netmap_pipe_txsync
 parameter_list|(
@@ -1131,7 +1110,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|netmap_pipe_rxsync
 parameter_list|(
@@ -1250,7 +1228,7 @@ comment|/* Pipe endpoints are created and destroyed together, so that endopoints
 end_comment
 
 begin_comment
-comment|/* netmap_pipe_krings_delete.  *  * There are two cases:  *  * 1) state is  *  *        usr1 --> e1 --> e2  *  *    and we are e1. We have to create both sets  *    of krings.  *  * 2) state is  *  *        usr1 --> e1 --> e2  *  *    and we are e2. e1 is certainly registered and our  *    krings already exist. Nothing to do.  */
+comment|/* netmap_pipe_krings_create.  *  * There are two cases:  *  * 1) state is  *  *        usr1 --> e1 --> e2  *  *    and we are e1. We have to create both sets  *    of krings.  *  * 2) state is  *  *        usr1 --> e1 --> e2  *  *    and we are e2. e1 is certainly registered and our  *    krings already exist. Nothing to do.  */
 end_comment
 
 begin_function
@@ -1308,7 +1286,7 @@ name|int
 name|i
 decl_stmt|;
 comment|/* case 1) above */
-name|D
+name|ND
 argument_list|(
 literal|"%p: case 1, create both ends"
 argument_list|,
@@ -1397,12 +1375,7 @@ name|pipe
 operator|=
 name|NMR
 argument_list|(
-operator|&
-name|pna
-operator|->
-name|peer
-operator|->
-name|up
+name|ona
 argument_list|,
 name|r
 argument_list|)
@@ -1411,12 +1384,7 @@ name|i
 expr_stmt|;
 name|NMR
 argument_list|(
-operator|&
-name|pna
-operator|->
-name|peer
-operator|->
-name|up
+name|ona
 argument_list|,
 name|r
 argument_list|)
@@ -1542,8 +1510,6 @@ name|na
 argument_list|,
 name|t
 argument_list|)
-operator|+
-literal|1
 condition|;
 name|i
 operator|++
@@ -1573,7 +1539,7 @@ name|kring
 argument_list|)
 condition|)
 block|{
-comment|/* mark the partner ring as needed */
+comment|/* mark the peer ring as needed */
 name|kring
 operator|->
 name|pipe
@@ -1749,6 +1715,13 @@ operator|=
 name|NKR_NETMAP_OFF
 expr_stmt|;
 comment|/* mark the peer ring as no longer needed by us 					 * (it may still be kept if sombody else is using it) 					 */
+if|if
+condition|(
+name|kring
+operator|->
+name|pipe
+condition|)
+block|{
 name|kring
 operator|->
 name|pipe
@@ -1758,6 +1731,7 @@ operator|&=
 operator|~
 name|NKR_NEEDRING
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1775,7 +1749,7 @@ operator|->
 name|active_fds
 condition|)
 block|{
-name|D
+name|ND
 argument_list|(
 literal|"active_fds %d"
 argument_list|,
@@ -1914,7 +1888,7 @@ block|}
 comment|/* case 1) above */
 name|ND
 argument_list|(
-literal|"%p: case 1, deleting everyhing"
+literal|"%p: case 1, deleting everything"
 argument_list|,
 name|na
 argument_list|)
@@ -1979,9 +1953,13 @@ name|na
 decl_stmt|;
 name|ND
 argument_list|(
-literal|"%p"
+literal|"%p %p"
 argument_list|,
 name|na
+argument_list|,
+name|pna
+operator|->
+name|parent_ifp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2032,6 +2010,19 @@ argument_list|,
 name|pna
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pna
+operator|->
+name|parent_ifp
+condition|)
+name|if_rele
+argument_list|(
+name|pna
+operator|->
+name|parent_ifp
+argument_list|)
+expr_stmt|;
 name|netmap_adapter_put
 argument_list|(
 name|pna
@@ -2062,6 +2053,11 @@ name|netmap_adapter
 modifier|*
 modifier|*
 name|na
+parameter_list|,
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nmd
 parameter_list|,
 name|int
 name|create
@@ -2109,6 +2105,10 @@ name|NR_REG_MASK
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|retries
+init|=
+literal|0
 decl_stmt|;
 name|ND
 argument_list|(
@@ -2182,6 +2182,15 @@ name|nmr
 operator|->
 name|nr_arg1
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|int
+name|create_error
+decl_stmt|;
 name|error
 operator|=
 name|netmap_get_na
@@ -2195,12 +2204,25 @@ argument_list|,
 operator|&
 name|ifp
 argument_list|,
+name|nmd
+argument_list|,
 name|create
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|error
+condition|)
+break|break;
+if|if
+condition|(
+name|error
+operator|!=
+name|ENXIO
+operator|||
+name|retries
+operator|++
 condition|)
 block|{
 name|ND
@@ -2216,13 +2238,56 @@ return|;
 block|}
 name|ND
 argument_list|(
-literal|"found parent: %s"
-argument_list|,
-name|na
-operator|->
-name|name
+literal|"try to create a persistent vale port"
 argument_list|)
 expr_stmt|;
+comment|/* create a persistent vale port and try again */
+name|NMG_UNLOCK
+argument_list|()
+expr_stmt|;
+name|create_error
+operator|=
+name|netmap_vi_create
+argument_list|(
+operator|&
+name|pnmr
+argument_list|,
+literal|1
+comment|/* autodelete */
+argument_list|)
+expr_stmt|;
+name|NMG_LOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|create_error
+operator|&&
+name|create_error
+operator|!=
+name|EEXIST
+condition|)
+block|{
+if|if
+condition|(
+name|create_error
+operator|!=
+name|EOPNOTSUPP
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"failed to create a persistent vale port: %d"
+argument_list|,
+name|create_error
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|error
+return|;
+block|}
+block|}
 if|if
 condition|(
 name|NETMAP_OWNED_BY_KERN
@@ -2317,9 +2382,11 @@ name|peer
 expr_stmt|;
 block|}
 comment|/* the pipe we have found already holds a ref to the parent,                  * so we need to drop the one we got from netmap_get_na()                  */
-name|netmap_adapter_put
+name|netmap_unget_na
 argument_list|(
 name|pna
+argument_list|,
+name|ifp
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2352,19 +2419,13 @@ block|}
 comment|/* we create both master and slave.          * The endpoint we were asked for holds a reference to          * the other one.          */
 name|mna
 operator|=
-name|malloc
+name|nm_os_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|mna
 argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2428,6 +2489,12 @@ name|pna
 expr_stmt|;
 name|mna
 operator|->
+name|parent_ifp
+operator|=
+name|ifp
+expr_stmt|;
+name|mna
+operator|->
 name|up
 operator|.
 name|nm_txsync
@@ -2480,9 +2547,20 @@ name|up
 operator|.
 name|nm_mem
 operator|=
+name|netmap_mem_get
+argument_list|(
 name|pna
 operator|->
 name|nm_mem
+argument_list|)
+expr_stmt|;
+name|mna
+operator|->
+name|up
+operator|.
+name|na_flags
+operator||=
+name|NAF_MEM_OWNER
 expr_stmt|;
 name|mna
 operator|->
@@ -2607,19 +2685,13 @@ goto|;
 comment|/* create the slave */
 name|sna
 operator|=
-name|malloc
+name|nm_os_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|mna
 argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2643,6 +2715,21 @@ name|sna
 operator|=
 operator|*
 name|mna
+expr_stmt|;
+name|sna
+operator|->
+name|up
+operator|.
+name|nm_mem
+operator|=
+name|netmap_mem_get
+argument_list|(
+name|mna
+operator|->
+name|up
+operator|.
+name|nm_mem
+argument_list|)
 expr_stmt|;
 name|snprintf
 argument_list|(
@@ -2710,6 +2797,16 @@ comment|/* we already have a reference to the parent, but we          * need ano
 name|netmap_adapter_get
 argument_list|(
 name|pna
+argument_list|)
+expr_stmt|;
+comment|/* likewise for the ifp, if any */
+if|if
+condition|(
+name|ifp
+condition|)
+name|if_ref
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2806,28 +2903,14 @@ name|na
 argument_list|)
 expr_stmt|;
 comment|/* keep the reference to the parent.          * It will be released by the req destructor          */
-comment|/* drop the ifp reference, if any */
-if|if
-condition|(
-name|ifp
-condition|)
-block|{
-name|if_rele
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
 name|free_sna
 label|:
-name|free
+name|nm_os_free
 argument_list|(
 name|sna
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|unregister_mna
@@ -2841,11 +2924,9 @@ argument_list|)
 expr_stmt|;
 name|free_mna
 label|:
-name|free
+name|nm_os_free
 argument_list|(
 name|mna
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|put_out
