@@ -12495,16 +12495,21 @@ name|struct
 name|kaiocb
 modifier|*
 name|job
-init|=
+decl_stmt|;
+name|job
+operator|=
 operator|(
 expr|struct
 name|kaiocb
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|kn
 operator|->
 name|kn_sdata
-decl_stmt|;
+expr_stmt|;
 comment|/* 	 * The job pointer must be validated before using it, so 	 * registration is restricted to the kernel; the user cannot 	 * set EV_FLAG1. 	 */
 if|if
 condition|(
@@ -12721,16 +12726,21 @@ name|struct
 name|aioliojob
 modifier|*
 name|lj
-init|=
+decl_stmt|;
+name|lj
+operator|=
 operator|(
 expr|struct
 name|aioliojob
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|kn
 operator|->
 name|kn_sdata
-decl_stmt|;
+expr_stmt|;
 comment|/* 	 * The aioliojob pointer must be validated before using it, so 	 * registration is restricted to the kernel; the user cannot 	 * set EV_FLAG1. 	 */
 if|if
 condition|(

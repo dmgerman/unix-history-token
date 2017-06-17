@@ -188,7 +188,7 @@ name|e
 parameter_list|,
 name|f
 parameter_list|)
-value|do {	\ 	struct kevent *kevp = (kevp_);		\ 	(kevp)->ident = (a);			\ 	(kevp)->filter = (b);			\ 	(kevp)->flags = (c);			\ 	(kevp)->fflags = (d);			\ 	(kevp)->data = (e);			\ 	(kevp)->udata = (f);			\ } while(0)
+value|do {	\ 	struct kevent *kevp = (kevp_);		\ 	(kevp)->ident = (a);			\ 	(kevp)->filter = (b);			\ 	(kevp)->flags = (c);			\ 	(kevp)->fflags = (d);			\ 	(kevp)->data = (e);			\ 	(kevp)->udata = (f);			\ 	(kevp)->ext[0] = 0;			\ 	(kevp)->ext[1] = 0;			\ 	(kevp)->ext[2] = 0;			\ 	(kevp)->ext[3] = 0;			\ } while(0)
 end_define
 
 begin_struct
@@ -211,7 +211,7 @@ name|unsigned
 name|int
 name|fflags
 decl_stmt|;
-name|__intptr_t
+name|__int64_t
 name|data
 decl_stmt|;
 name|void
@@ -219,6 +219,12 @@ modifier|*
 name|udata
 decl_stmt|;
 comment|/* opaque user data identifier */
+name|__uint64_t
+name|ext
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -772,6 +778,17 @@ begin_comment
 comment|/* data is nanoseconds */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NOTE_ABSTIME
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* timeout is absolute */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|knote
@@ -1147,7 +1164,7 @@ name|int
 name|kn_sfflags
 decl_stmt|;
 comment|/* saved filter flags */
-name|intptr_t
+name|int64_t
 name|kn_sdata
 decl_stmt|;
 comment|/* saved data field */
@@ -1264,6 +1281,9 @@ name|int
 name|count
 parameter_list|)
 function_decl|;
+name|size_t
+name|kevent_size
+decl_stmt|;
 block|}
 struct|;
 end_struct

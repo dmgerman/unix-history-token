@@ -292,6 +292,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|__sym_compat
+argument_list|(
+name|kevent
+argument_list|,
+name|freebsd11_kevent
+argument_list|,
+name|FBSD_1
+literal|.0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_undef
 undef|#
 directive|undef

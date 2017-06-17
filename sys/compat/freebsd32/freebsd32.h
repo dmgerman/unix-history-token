@@ -414,7 +414,7 @@ begin_struct
 struct|struct
 name|kevent32
 block|{
-name|u_int32_t
+name|uint32_t
 name|ident
 decl_stmt|;
 comment|/* identifier for this event */
@@ -429,12 +429,20 @@ name|u_int
 name|fflags
 decl_stmt|;
 name|int32_t
-name|data
+name|data1
+decl_stmt|,
+name|data2
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|udata
 decl_stmt|;
 comment|/* opaque user data identifier */
+name|uint32_t
+name|ext64
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
