@@ -298,27 +298,10 @@ block|}
 name|public
 operator|:
 name|ConstantData
-argument_list|()
-operator|=
-name|delete
-block|;
-name|ConstantData
 argument_list|(
 specifier|const
 name|ConstantData
 operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
 argument_list|)
 operator|=
 name|delete
@@ -2343,18 +2326,6 @@ argument_list|)
 operator|=
 name|delete
 block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// get() constructors - Return a constant with array type with an element
 comment|/// count and element type matching the ArrayRef passed in.  Note that this
 comment|/// can return a ConstantAggregateZero object.
@@ -2632,18 +2603,6 @@ argument_list|(
 specifier|const
 name|ConstantDataVector
 operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
 argument_list|)
 operator|=
 name|delete
@@ -2999,18 +2958,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Return a BlockAddress for the specified function and basic block.
 specifier|static
 name|BlockAddress

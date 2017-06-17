@@ -972,6 +972,40 @@ name|IRMover
 operator|>
 name|Mover
 expr_stmt|;
+comment|// This stores the information about a regular LTO module that we have added
+comment|// to the link. It will either be linked immediately (for modules without
+comment|// summaries) or after summary-based dead stripping (for modules with
+comment|// summaries).
+struct|struct
+name|AddedModule
+block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|M
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|GlobalValue
+operator|*
+operator|>
+name|Keep
+expr_stmt|;
+block|}
+struct|;
+name|std
+operator|::
+name|vector
+operator|<
+name|AddedModule
+operator|>
+name|ModsWithSummaries
+expr_stmt|;
 block|}
 name|RegularLTO
 struct|;
@@ -1026,10 +1060,11 @@ operator|::
 name|string
 name|IRName
 expr_stmt|;
-comment|/// Keep track if the symbol is visible outside of ThinLTO (i.e. in
-comment|/// either a regular object or the regular LTO partition).
+comment|/// Keep track if the symbol is visible outside of a module with a summary
+comment|/// (i.e. in either a regular object or a regular LTO module without a
+comment|/// summary).
 name|bool
-name|VisibleOutsideThinLTO
+name|VisibleOutsideSummary
 init|=
 name|false
 decl_stmt|;
@@ -1087,20 +1122,27 @@ operator|>
 name|GlobalResolutions
 expr_stmt|;
 name|void
-name|addSymbolToGlobalRes
+name|addModuleToGlobalRes
 argument_list|(
-specifier|const
+name|ArrayRef
+operator|<
 name|InputFile
 operator|::
 name|Symbol
-operator|&
-name|Sym
+operator|>
+name|Syms
 argument_list|,
+name|ArrayRef
+operator|<
 name|SymbolResolution
+operator|>
 name|Res
 argument_list|,
 name|unsigned
 name|Partition
+argument_list|,
+name|bool
+name|InSummary
 argument_list|)
 decl_stmt|;
 comment|// These functions take a range of symbol resolutions [ResI, ResE) and consume
@@ -1129,30 +1171,33 @@ modifier|*
 name|ResE
 parameter_list|)
 function_decl|;
-name|Error
+name|Expected
+operator|<
+name|RegularLTOState
+operator|::
+name|AddedModule
+operator|>
 name|addRegularLTO
 argument_list|(
-name|BitcodeModule
-name|BM
+argument|BitcodeModule BM
 argument_list|,
-name|ArrayRef
-operator|<
-name|InputFile
+argument|ArrayRef<InputFile::Symbol> Syms
+argument_list|,
+argument|const SymbolResolution *&ResI
+argument_list|,
+argument|const SymbolResolution *ResE
+argument_list|)
+expr_stmt|;
+name|Error
+name|linkRegularLTO
+argument_list|(
+name|RegularLTOState
 operator|::
-name|Symbol
-operator|>
-name|Syms
+name|AddedModule
+name|Mod
 argument_list|,
-specifier|const
-name|SymbolResolution
-operator|*
-operator|&
-name|ResI
-argument_list|,
-specifier|const
-name|SymbolResolution
-operator|*
-name|ResE
+name|bool
+name|LivenessFromIndex
 argument_list|)
 decl_stmt|;
 name|Error

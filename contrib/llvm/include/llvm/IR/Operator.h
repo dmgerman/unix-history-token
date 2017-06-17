@@ -143,18 +143,6 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
 argument|size_t s
 argument_list|)
 operator|=

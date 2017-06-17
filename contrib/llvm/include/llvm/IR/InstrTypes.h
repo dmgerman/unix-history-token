@@ -1371,18 +1371,6 @@ literal|1
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1588,18 +1576,6 @@ literal|2
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -3750,11 +3726,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-name|CmpInst
-argument_list|()
-operator|=
-name|delete
-block|;
 comment|// allocate space for exactly two operands
 name|void
 operator|*
@@ -3776,18 +3747,6 @@ literal|2
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Construct a compare instruction, given the opcode, the predicate and
 comment|/// the two operands.  Optionally (if InstBefore is specified) insert the
 comment|/// instruction into a BasicBlock right before the specified instruction.

@@ -701,6 +701,40 @@ operator|&&
 literal|"Expected an MMI entry"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|FrameIndexExprs
+operator|.
+name|size
+argument_list|()
+condition|)
+block|{
+name|auto
+operator|*
+name|Expr
+operator|=
+name|FrameIndexExprs
+operator|.
+name|back
+argument_list|()
+operator|.
+name|Expr
+expr_stmt|;
+comment|// Get rid of duplicate non-fragment entries. More than one non-fragment
+comment|// dbg.declare makes no sense so ignore all but the first.
+if|if
+condition|(
+operator|!
+name|Expr
+operator|||
+operator|!
+name|Expr
+operator|->
+name|isFragment
+argument_list|()
+condition|)
+return|return;
+block|}
 name|FrameIndexExprs
 operator|.
 name|append

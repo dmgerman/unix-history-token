@@ -565,15 +565,17 @@ block|{
 name|BitVectorTy
 name|Bits
 block|;
-typedef|typedef
+name|using
+name|base
+operator|=
 name|PackedVectorBase
 operator|<
 name|T
-operator|,
+block|,
 name|BitNum
-operator|,
+block|,
 name|BitVectorTy
-operator|,
+block|,
 name|std
 operator|::
 name|numeric_limits
@@ -583,8 +585,7 @@ operator|>
 operator|::
 name|is_signed
 operator|>
-name|base
-expr_stmt|;
+block|;
 name|public
 operator|:
 name|class
@@ -700,7 +701,7 @@ argument_list|)
 end_macro
 
 begin_block
-block|{ }
+block|{}
 end_block
 
 begin_expr_stmt

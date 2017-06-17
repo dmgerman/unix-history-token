@@ -190,7 +190,7 @@ operator|<
 name|uptr
 operator|>
 operator|(
-name|MmapOrDie
+name|MmapOrDieOnFatalError
 argument_list|(
 name|map_size
 argument_list|,
@@ -199,6 +199,18 @@ argument_list|)
 operator|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+operator|!
+name|map_beg
+condition|)
+return|return
+name|ReturnNullOrDieOnOOM
+argument_list|()
+return|;
+end_if
 
 begin_expr_stmt
 name|CHECK

@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/DebugChecksumsSubsection.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/PDB/Native/DbiModuleDescriptor.h"
 end_include
 
@@ -101,6 +107,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|codeview
+block|{}
 name|namespace
 name|pdb
 block|{

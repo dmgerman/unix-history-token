@@ -389,6 +389,14 @@ operator|>
 name|OutputSections
 argument_list|)
 block|;
+comment|// The number of completed passes of createThunks this permits us
+comment|// to do one time initialization on Pass 0 and put a limit on the
+comment|// number of times it can be called to prevent infinite loops.
+name|uint32_t
+name|Pass
+operator|=
+literal|0
+block|;
 name|private
 operator|:
 name|void
@@ -478,6 +486,17 @@ argument_list|,
 argument|uint32_t Type
 argument_list|)
 block|;
+name|ThunkSection
+operator|*
+name|addThunkSection
+argument_list|(
+argument|OutputSection *OS
+argument_list|,
+argument|std::vector<InputSection *> *
+argument_list|,
+argument|uint64_t Off
+argument_list|)
+block|;
 comment|// Track Symbols that already have a Thunk
 name|llvm
 operator|::
@@ -490,6 +509,20 @@ name|Thunk
 operator|*
 operator|>
 name|ThunkedSymbols
+block|;
+comment|// Find a Thunk from the Thunks symbol definition, we can use this to find
+comment|// the Thunk from a relocation to the Thunks symbol definition.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|SymbolBody
+operator|*
+block|,
+name|Thunk
+operator|*
+operator|>
+name|Thunks
 block|;
 comment|// Track InputSections that have a ThunkSection placed in front
 name|llvm
@@ -504,7 +537,10 @@ operator|*
 operator|>
 name|ThunkedSections
 block|;
-comment|// Track the ThunksSections that need to be inserted into an OutputSection
+comment|// All the ThunkSections that we have created, organised by OutputSection
+comment|// will contain a mix of ThunkSections that have been created this pass, and
+comment|// ThunkSections that have been merged into the OutputSection on previous
+comment|// passes
 name|std
 operator|::
 name|map

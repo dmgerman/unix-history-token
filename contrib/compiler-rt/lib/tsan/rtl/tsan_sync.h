@@ -375,6 +375,8 @@ argument_list|(
 operator|&
 name|flags
 argument_list|)
+operator|&
+name|f
 return|;
 block|}
 name|void

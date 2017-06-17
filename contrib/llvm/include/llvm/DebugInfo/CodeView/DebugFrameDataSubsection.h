@@ -234,6 +234,16 @@ operator|&
 name|Frame
 argument_list|)
 block|;
+name|void
+name|setFrames
+argument_list|(
+name|ArrayRef
+operator|<
+name|FrameData
+operator|>
+name|Frames
+argument_list|)
+block|;
 name|private
 operator|:
 name|std

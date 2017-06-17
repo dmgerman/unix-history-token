@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- LLVMOutputStyle.h -------------------------------------- *- C++ --*-===//
+comment|//===- RawOutputStyle.h -------------------------------------- *- C++ --*-===//
 end_comment
 
 begin_comment
@@ -34,14 +34,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TOOLS_LLVMPDBDUMP_LLVMOUTPUTSTYLE_H
+name|LLVM_TOOLS_LLVMPDBDUMP_RAWOUTPUTSTYLE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TOOLS_LLVMPDBDUMP_LLVMOUTPUTSTYLE_H
+name|LLVM_TOOLS_LLVMPDBDUMP_RAWOUTPUTSTYLE_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"LinePrinter.h"
+end_include
 
 begin_include
 include|#
@@ -70,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ScopedPrinter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -97,14 +97,14 @@ name|namespace
 name|pdb
 block|{
 name|class
-name|LLVMOutputStyle
+name|RawOutputStyle
 range|:
 name|public
 name|OutputStyle
 block|{
 name|public
 operator|:
-name|LLVMOutputStyle
+name|RawOutputStyle
 argument_list|(
 name|PDBFile
 operator|&
@@ -131,7 +131,7 @@ argument|uint32_t SN
 argument_list|)
 block|;
 name|Error
-name|dumpFileHeaders
+name|dumpFileSummary
 argument_list|()
 block|;
 name|Error
@@ -139,15 +139,7 @@ name|dumpStreamSummary
 argument_list|()
 block|;
 name|Error
-name|dumpFreePageMap
-argument_list|()
-block|;
-name|Error
 name|dumpBlockRanges
-argument_list|()
-block|;
-name|Error
-name|dumpGlobalsStream
 argument_list|()
 block|;
 name|Error
@@ -155,15 +147,23 @@ name|dumpStreamBytes
 argument_list|()
 block|;
 name|Error
-name|dumpStreamBlocks
-argument_list|()
-block|;
-name|Error
 name|dumpStringTable
 argument_list|()
 block|;
 name|Error
-name|dumpInfoStream
+name|dumpLines
+argument_list|()
+block|;
+name|Error
+name|dumpInlineeLines
+argument_list|()
+block|;
+name|Error
+name|dumpXmi
+argument_list|()
+block|;
+name|Error
+name|dumpXme
 argument_list|()
 block|;
 name|Error
@@ -173,7 +173,19 @@ argument|uint32_t StreamIdx
 argument_list|)
 block|;
 name|Error
-name|dumpDbiStream
+name|dumpModules
+argument_list|()
+block|;
+name|Error
+name|dumpModuleFiles
+argument_list|()
+block|;
+name|Error
+name|dumpModuleSyms
+argument_list|()
+block|;
+name|Error
+name|dumpPublics
 argument_list|()
 block|;
 name|Error
@@ -184,35 +196,11 @@ name|Error
 name|dumpSectionMap
 argument_list|()
 block|;
-name|Error
-name|dumpPublicsStream
-argument_list|()
-block|;
-name|Error
-name|dumpSectionHeaders
-argument_list|()
-block|;
-name|Error
-name|dumpFpoStream
-argument_list|()
-block|;
-name|void
-name|dumpBitVector
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|const BitVector&V
-argument_list|)
-block|;
-name|void
-name|flush
-argument_list|()
-block|;
 name|PDBFile
 operator|&
 name|File
 block|;
-name|ScopedPrinter
+name|LinePrinter
 name|P
 block|;
 name|std
@@ -247,8 +235,13 @@ name|StreamPurposes
 block|; }
 decl_stmt|;
 block|}
+comment|// namespace pdb
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

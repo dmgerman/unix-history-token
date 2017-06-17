@@ -6851,6 +6851,21 @@ name|unsigned
 name|Num
 parameter_list|)
 function_decl|;
+comment|/// If an existing load has uses of its chain, create a token factor node with
+comment|/// that chain and the new memory node's chain and update users of the old
+comment|/// chain to the token factor. This ensures that the new memory node will have
+comment|/// the same relative memory dependency position as the old load.
+name|void
+name|makeEquivalentMemoryOrdering
+parameter_list|(
+name|LoadSDNode
+modifier|*
+name|Old
+parameter_list|,
+name|SDValue
+name|New
+parameter_list|)
+function_decl|;
 comment|/// Topological-sort the AllNodes list and a
 comment|/// assign a unique node id for each node in the DAG based on their
 comment|/// topological order. Returns the number of nodes.

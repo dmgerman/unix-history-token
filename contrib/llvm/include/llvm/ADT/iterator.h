@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstddef>
 end_include
 
@@ -65,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -952,29 +964,30 @@ operator|,
 name|ReferenceT
 operator|>
 block|{
-typedef|typedef
+name|using
+name|BaseT
+operator|=
 name|typename
 name|iterator_adaptor_base
 operator|::
 name|iterator_facade_base
-name|BaseT
-expr_stmt|;
+block|;
 name|protected
 operator|:
 name|WrappedIteratorT
 name|I
-expr_stmt|;
+block|;
 name|iterator_adaptor_base
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|explicit
 name|iterator_adaptor_base
 argument_list|(
 argument|WrappedIteratorT u
 argument_list|)
-block|:
+operator|:
 name|I
 argument_list|(
 argument|std::move(u)
@@ -995,8 +1008,7 @@ name|value
 argument_list|,
 literal|"Must pass the derived type to this template!"
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 specifier|const
 name|WrappedIteratorT
 operator|&
@@ -1009,11 +1021,12 @@ name|I
 return|;
 block|}
 name|public
-label|:
-typedef|typedef
-name|DifferenceTypeT
+operator|:
+name|using
 name|difference_type
-typedef|;
+operator|=
+name|DifferenceTypeT
+block|;
 name|DerivedT
 operator|&
 name|operator
@@ -1087,7 +1100,7 @@ name|BaseT
 operator|::
 name|operator
 operator|-
-expr_stmt|;
+block|;
 name|difference_type
 name|operator
 operator|-
@@ -1123,7 +1136,7 @@ name|BaseT
 operator|::
 name|operator
 operator|++
-expr_stmt|;
+block|;
 name|DerivedT
 operator|&
 name|operator
@@ -1151,7 +1164,7 @@ name|BaseT
 operator|::
 name|operator
 operator|--
-expr_stmt|;
+block|;
 name|DerivedT
 operator|&
 name|operator
@@ -1242,55 +1255,22 @@ operator|*
 name|I
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|/// \brief An iterator type that allows iterating over the pointees via some
-end_comment
-
-begin_comment
 comment|/// other iterator.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The typical usage of this is to expose a type that iterates over Ts, but
-end_comment
-
-begin_comment
 comment|/// which is implemented with some iterator over T*s:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \code
-end_comment
-
-begin_comment
-comment|///   typedef pointee_iterator<SmallVectorImpl<T *>::iterator> iterator;
-end_comment
-
-begin_comment
+comment|///   using iterator = pointee_iterator<SmallVectorImpl<T *>::iterator>;
 comment|/// \endcode
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|WrappedIteratorT
-operator|,
+block|,
 name|typename
 name|T
 operator|=
@@ -1325,9 +1305,9 @@ name|pointee_iterator
 operator|<
 name|WrappedIteratorT
 operator|>
-operator|,
+block|,
 name|WrappedIteratorT
-operator|,
+block|,
 name|typename
 name|std
 operator|::
@@ -1337,7 +1317,7 @@ name|WrappedIteratorT
 operator|>
 operator|::
 name|iterator_category
-operator|,
+block|,
 name|T
 operator|>
 block|{
@@ -1381,15 +1361,13 @@ operator|->
 name|I
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|template
 operator|<
 name|typename
 name|RangeT
-operator|,
+block|,
 name|typename
 name|WrappedIteratorT
 operator|=
@@ -1470,14 +1448,11 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|WrappedIteratorT
-operator|,
+block|,
 name|typename
 name|T
 operator|=
@@ -1505,9 +1480,9 @@ name|pointer_iterator
 operator|<
 name|WrappedIteratorT
 operator|>
-operator|,
+block|,
 name|WrappedIteratorT
-operator|,
+block|,
 name|T
 operator|>
 block|{
@@ -1571,15 +1546,13 @@ operator|->
 name|I
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|template
 operator|<
 name|typename
 name|RangeT
-operator|,
+block|,
 name|typename
 name|WrappedIteratorT
 operator|=
@@ -1660,10 +1633,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+expr|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

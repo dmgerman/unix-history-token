@@ -239,7 +239,7 @@ comment|// IsNan2008 - IEEE 754-2008 NaN encoding.
 name|bool
 name|IsNaN2008bit
 block|;
-comment|// IsFP64bit - General-purpose registers are 64 bits wide
+comment|// IsGP64bit - General-purpose registers are 64 bits wide
 name|bool
 name|IsGP64bit
 block|;

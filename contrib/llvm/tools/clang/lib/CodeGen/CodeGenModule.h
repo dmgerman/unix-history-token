@@ -1677,7 +1677,7 @@ name|SmallVector
 operator|<
 name|llvm
 operator|::
-name|Metadata
+name|MDNode
 operator|*
 operator|,
 literal|16
@@ -4715,7 +4715,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Appends Opts to the "Linker Options" metadata value.
+comment|/// \brief Appends Opts to the "llvm.linker.options" metadata value.
 end_comment
 
 begin_function_decl
@@ -4746,7 +4746,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Appends a dependent lib to the "Linker Options" metadata value.
+comment|/// \brief Appends a dependent lib to the "llvm.linker.options" metadata
+end_comment
+
+begin_comment
+comment|/// value.
 end_comment
 
 begin_function_decl

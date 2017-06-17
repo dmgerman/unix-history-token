@@ -12951,6 +12951,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|LValue
+name|EmitCoawaitLValue
+parameter_list|(
+specifier|const
+name|CoawaitExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|RValue
 name|EmitCoyieldExpr
 parameter_list|(
@@ -12971,6 +12983,18 @@ name|bool
 name|ignoreResult
 init|=
 name|false
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|LValue
+name|EmitCoyieldLValue
+parameter_list|(
+specifier|const
+name|CoyieldExpr
+modifier|*
+name|E
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -19728,6 +19752,10 @@ begin_comment
 comment|/// detect undefined behavior when the pointer overflow sanitizer is enabled.
 end_comment
 
+begin_comment
+comment|/// \p SignedIndices indicates whether any of the GEP indices are signed.
+end_comment
+
 begin_expr_stmt
 name|llvm
 operator|::
@@ -19738,6 +19766,8 @@ argument_list|(
 argument|llvm::Value *Ptr
 argument_list|,
 argument|ArrayRef<llvm::Value *> IdxList
+argument_list|,
+argument|bool SignedIndices
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,

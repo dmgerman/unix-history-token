@@ -68,7 +68,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMapInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/type_traits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<initializer_list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -206,25 +242,28 @@ name|type
 block|;
 name|public
 operator|:
-typedef|typedef
-name|ValueT
+name|using
 name|key_type
-typedef|;
-typedef|typedef
+operator|=
 name|ValueT
+block|;
+name|using
 name|value_type
-typedef|;
-typedef|typedef
-name|unsigned
+operator|=
+name|ValueT
+block|;
+name|using
 name|size_type
-typedef|;
+operator|=
+name|unsigned
+block|;
 name|explicit
 name|DenseSetImpl
 argument_list|(
 argument|unsigned InitialReserve =
 literal|0
 argument_list|)
-block|:
+operator|:
 name|TheMap
 argument_list|(
 argument|InitialReserve
@@ -299,10 +338,9 @@ comment|/// Grow the DenseSet so that it has at least Size buckets. Will not shr
 comment|/// the Size of the set.
 name|void
 name|resize
-parameter_list|(
-name|size_t
-name|Size
-parameter_list|)
+argument_list|(
+argument|size_t Size
+argument_list|)
 block|{
 name|TheMap
 operator|.
@@ -310,16 +348,14 @@ name|resize
 argument_list|(
 name|Size
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// Grow the DenseSet so that it can contain at least \p NumEntries items
 comment|/// before resizing again.
 name|void
 name|reserve
-parameter_list|(
-name|size_t
-name|Size
-parameter_list|)
+argument_list|(
+argument|size_t Size
+argument_list|)
 block|{
 name|TheMap
 operator|.
@@ -327,29 +363,23 @@ name|reserve
 argument_list|(
 name|Size
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|clear
-parameter_list|()
+argument_list|()
 block|{
 name|TheMap
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Return 1 if the specified key is in the set, 0 otherwise.
 name|size_type
 name|count
 argument_list|(
-name|const_arg_type_t
-operator|<
-name|ValueT
-operator|>
-name|V
+argument|const_arg_type_t<ValueT> V
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|TheMap
@@ -362,12 +392,9 @@ return|;
 block|}
 name|bool
 name|erase
-parameter_list|(
-specifier|const
-name|ValueT
-modifier|&
-name|V
-parameter_list|)
+argument_list|(
+argument|const ValueT&V
+argument_list|)
 block|{
 return|return
 name|TheMap
@@ -380,11 +407,9 @@ return|;
 block|}
 name|void
 name|swap
-parameter_list|(
-name|DenseSetImpl
-modifier|&
-name|RHS
-parameter_list|)
+argument_list|(
+argument|DenseSetImpl&RHS
+argument_list|)
 block|{
 name|TheMap
 operator|.
@@ -394,12 +419,11 @@ name|RHS
 operator|.
 name|TheMap
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|// Iterators.
 name|class
 name|ConstIterator
-decl_stmt|;
+block|;
 name|class
 name|Iterator
 block|{
@@ -408,66 +432,72 @@ name|MapTy
 operator|::
 name|iterator
 name|I
-expr_stmt|;
+block|;
 name|friend
 name|class
 name|DenseSetImpl
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ConstIterator
-decl_stmt|;
+block|;
 name|public
-label|:
-typedef|typedef
+operator|:
+name|using
+name|difference_type
+operator|=
 name|typename
 name|MapTy
 operator|::
 name|iterator
 operator|::
 name|difference_type
-name|difference_type
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|value_type
+operator|=
 name|ValueT
-name|value_type
-typedef|;
-typedef|typedef
-name|value_type
-modifier|*
+block|;
+name|using
 name|pointer
-typedef|;
-typedef|typedef
+operator|=
 name|value_type
-modifier|&
+operator|*
+block|;
+name|using
 name|reference
-typedef|;
-typedef|typedef
+operator|=
+name|value_type
+operator|&
+block|;
+name|using
+name|iterator_category
+operator|=
 name|std
 operator|::
 name|forward_iterator_tag
-name|iterator_category
-expr_stmt|;
+block|;
 name|Iterator
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|Iterator
 argument_list|(
 argument|const typename MapTy::iterator&i
 argument_list|)
-block|:
+operator|:
 name|I
 argument_list|(
 argument|i
 argument_list|)
 block|{}
 name|ValueT
-modifier|&
+operator|&
 name|operator
-modifier|*
-parameter_list|()
+operator|*
+operator|(
+operator|)
 block|{
 return|return
 name|I
@@ -514,7 +544,7 @@ name|operator
 operator|->
 expr|(
 block|)
-decl|const
+specifier|const
 block|{
 return|return
 operator|&
@@ -597,14 +627,8 @@ operator|.
 name|I
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
+expr|}
+block|;
 name|class
 name|ConstIterator
 block|{
@@ -613,46 +637,56 @@ name|MapTy
 operator|::
 name|const_iterator
 name|I
-expr_stmt|;
+block|;
 name|friend
 name|class
 name|DenseSet
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|Iterator
-decl_stmt|;
+block|;
 name|public
-label|:
-typedef|typedef
+operator|:
+name|using
+name|difference_type
+operator|=
 name|typename
 name|MapTy
 operator|::
 name|const_iterator
 operator|::
 name|difference_type
-name|difference_type
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|value_type
+operator|=
 name|ValueT
-name|value_type
-typedef|;
-typedef|typedef
-name|value_type
-modifier|*
+block|;
+name|using
 name|pointer
-typedef|;
-typedef|typedef
+operator|=
 name|value_type
-modifier|&
+operator|*
+block|;
+name|using
 name|reference
-typedef|;
-typedef|typedef
+operator|=
+name|value_type
+operator|&
+block|;
+name|using
+name|iterator_category
+operator|=
 name|std
 operator|::
 name|forward_iterator_tag
-name|iterator_category
-expr_stmt|;
+block|;
+name|ConstIterator
+argument_list|()
+operator|=
+expr|default
+block|;
 name|ConstIterator
 argument_list|(
 specifier|const
@@ -667,15 +701,10 @@ argument|B.I
 argument_list|)
 block|{}
 name|ConstIterator
-argument_list|()
-operator|=
-expr|default
-expr_stmt|;
-name|ConstIterator
 argument_list|(
 argument|const typename MapTy::const_iterator&i
 argument_list|)
-block|:
+operator|:
 name|I
 argument_list|(
 argument|i
@@ -704,7 +733,7 @@ name|operator
 operator|->
 expr|(
 block|)
-decl|const
+specifier|const
 block|{
 return|return
 operator|&
@@ -714,9 +743,6 @@ name|getFirst
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|ConstIterator
 operator|&
 name|operator
@@ -732,9 +758,6 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|ConstIterator
 name|operator
 operator|++
@@ -755,9 +778,6 @@ return|return
 name|T
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|operator
 operator|==
@@ -777,9 +797,6 @@ operator|.
 name|I
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|operator
 operator|!=
@@ -799,27 +816,21 @@ operator|.
 name|I
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
-unit|};
-typedef|typedef
-name|Iterator
+expr|}
+block|;
+name|using
 name|iterator
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|ConstIterator
+operator|=
+name|Iterator
+block|;
+name|using
 name|const_iterator
-typedef|;
-end_typedef
-
-begin_function
+operator|=
+name|ConstIterator
+block|;
 name|iterator
 name|begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Iterator
@@ -831,12 +842,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|iterator
 name|end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Iterator
@@ -848,9 +856,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_iterator
 name|begin
 argument_list|()
@@ -866,9 +871,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|const_iterator
 name|end
 argument_list|()
@@ -884,17 +886,10 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|iterator
 name|find
 argument_list|(
-name|const_arg_type_t
-operator|<
-name|ValueT
-operator|>
-name|V
+argument|const_arg_type_t<ValueT> V
 argument_list|)
 block|{
 return|return
@@ -909,19 +904,12 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|const_iterator
 name|find
 argument_list|(
-name|const_arg_type_t
-operator|<
-name|ValueT
-operator|>
-name|V
+argument|const_arg_type_t<ValueT> V
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|ConstIterator
@@ -935,29 +923,11 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Alternative version of find() which allows a different, and possibly less
-end_comment
-
-begin_comment
 comment|/// expensive, key type.
-end_comment
-
-begin_comment
 comment|/// The DenseMapInfo is responsible for supplying methods
-end_comment
-
-begin_comment
 comment|/// getHashValue(LookupKeyT) and isEqual(LookupKeyT, KeyT) for each key type
-end_comment
-
-begin_comment
 comment|/// used.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -981,9 +951,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1008,15 +975,11 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|erase
-parameter_list|(
-name|Iterator
-name|I
-parameter_list|)
+argument_list|(
+argument|Iterator I
+argument_list|)
 block|{
 return|return
 name|TheMap
@@ -1029,15 +992,11 @@ name|I
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|erase
-parameter_list|(
-name|ConstIterator
-name|CI
-parameter_list|)
+argument_list|(
+argument|ConstIterator CI
+argument_list|)
 block|{
 return|return
 name|TheMap
@@ -1050,15 +1009,12 @@ name|I
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
 operator|<
 name|iterator
-operator|,
+block|,
 name|bool
 operator|>
 name|insert
@@ -1082,15 +1038,12 @@ name|Empty
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
 operator|<
 name|iterator
-operator|,
+block|,
 name|bool
 operator|>
 name|insert
@@ -1119,17 +1072,8 @@ name|Empty
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Alternative version of insert that uses a different (and possibly less
-end_comment
-
-begin_comment
 comment|/// expensive) key type.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1140,7 +1084,7 @@ operator|::
 name|pair
 operator|<
 name|iterator
-operator|,
+block|,
 name|bool
 operator|>
 name|insert_as
@@ -1168,9 +1112,6 @@ name|LookupKey
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1181,7 +1122,7 @@ operator|::
 name|pair
 operator|<
 name|iterator
-operator|,
+block|,
 name|bool
 operator|>
 name|insert_as
@@ -1214,13 +1155,7 @@ name|LookupKey
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Range insertion of values.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1251,19 +1186,11 @@ name|I
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_comment
-unit|};  }
-comment|// namespace detail
-end_comment
-
-begin_comment
+expr|}
+block|;  }
+comment|// end namespace detail
 comment|/// Implements a dense probed hash-table based set.
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|ValueT
@@ -1342,17 +1269,8 @@ operator|::
 name|BaseT
 block|; }
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Implements a dense probed hash-table based set with some number of buckets
-end_comment
-
-begin_comment
 comment|/// stored inline.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1441,10 +1359,10 @@ operator|::
 name|BaseT
 block|; }
 expr_stmt|;
-end_expr_stmt
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 
@@ -1452,6 +1370,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_DENSESET_H
+end_comment
 
 end_unit
 

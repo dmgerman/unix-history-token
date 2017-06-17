@@ -1249,6 +1249,14 @@ name|toArrayIndex
 argument_list|()
 return|;
 block|}
+specifier|static
+name|StringRef
+name|simpleTypeName
+parameter_list|(
+name|TypeIndex
+name|TI
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|support

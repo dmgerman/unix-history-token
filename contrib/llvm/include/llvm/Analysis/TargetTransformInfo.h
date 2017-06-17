@@ -615,6 +615,19 @@ name|V
 argument_list|)
 decl|const
 decl_stmt|;
+comment|// \brief Returns true for the target specific
+comment|// set of operations which produce uniform result
+comment|// even taking non-unform arguments
+name|bool
+name|isAlwaysUniform
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Returns the address space ID for a target's 'flat' address space. Note
 comment|/// this is not necessarily the same as addrspace(0), which LLVM sometimes
 comment|/// refers to as the generic address space. The flat address space is a
@@ -2351,6 +2364,18 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|bool
+name|isAlwaysUniform
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
 name|unsigned
 name|getFlatAddressSpace
 argument_list|()
@@ -2783,6 +2808,7 @@ name|getRegisterBitWidth
 argument_list|(
 argument|bool Vector
 argument_list|)
+specifier|const
 operator|=
 literal|0
 block|;
@@ -3560,6 +3586,22 @@ name|V
 argument_list|)
 return|;
 block|}
+name|bool
+name|isAlwaysUniform
+argument_list|(
+argument|const Value *V
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isAlwaysUniform
+argument_list|(
+name|V
+argument_list|)
+return|;
+block|}
 name|unsigned
 name|getFlatAddressSpace
 argument_list|()
@@ -4253,6 +4295,7 @@ name|getRegisterBitWidth
 argument_list|(
 argument|bool Vector
 argument_list|)
+specifier|const
 name|override
 block|{
 return|return

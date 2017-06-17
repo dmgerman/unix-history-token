@@ -133,8 +133,7 @@ name|TargetInstrInfo
 modifier|*
 name|TII
 decl_stmt|;
-comment|/// Information used to verify types are consistent.
-specifier|const
+comment|/// Information used to verify types are consistent and to create virtual registers.
 name|MachineRegisterInfo
 modifier|*
 name|MRI
@@ -599,6 +598,37 @@ name|unsigned
 name|Op1
 parameter_list|)
 function_decl|;
+comment|/// Materialize and insert \p Res<def> = G_GEP \p Op0, (G_CONSTANT \p Value)
+comment|///
+comment|/// G_GEP adds \p Value bytes to the pointer specified by \p Op0,
+comment|/// storing the resulting pointer in \p Res. If \p Value is zero then no
+comment|/// G_GEP or G_CONSTANT will be created and \pre Op0 will be assigned to
+comment|/// \p Res.
+comment|///
+comment|/// \pre setBasicBlock or setMI must have been called.
+comment|/// \pre \p Op0 must be a generic virtual register with pointer type.
+comment|/// \pre \p ValueTy must be a scalar type.
+comment|/// \pre \p Res must be 0. This is to detect confusion between
+comment|///      materializeGEP() and buildGEP().
+comment|/// \post \p Res will either be a new generic virtual register of the same
+comment|///       type as \p Op0 or \p Op0 itself.
+comment|///
+comment|/// \return a MachineInstrBuilder for the newly created instruction.
+name|Optional
+operator|<
+name|MachineInstrBuilder
+operator|>
+name|materializeGEP
+argument_list|(
+argument|unsigned&Res
+argument_list|,
+argument|unsigned Op0
+argument_list|,
+argument|const LLT&ValueTy
+argument_list|,
+argument|uint64_t Value
+argument_list|)
+expr_stmt|;
 comment|/// Build and insert \p Res<def> = G_PTR_MASK \p Op0, \p NumBits
 comment|///
 comment|/// G_PTR_MASK clears the low bits of a pointer operand without destroying its

@@ -296,6 +296,27 @@ name|unsigned
 operator|>
 name|SwiftErrorVRegUpwardsUse
 expr_stmt|;
+comment|/// A map from instructions that define/use a swifterror value to the virtual
+comment|/// register that represents that def/use.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|PointerIntPair
+operator|<
+specifier|const
+name|Instruction
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+operator|,
+name|unsigned
+operator|>
+name|SwiftErrorVRegDefUses
+expr_stmt|;
 comment|/// The swifterror argument of the current function.
 specifier|const
 name|Value
@@ -348,6 +369,46 @@ parameter_list|,
 name|unsigned
 parameter_list|)
 function_decl|;
+comment|/// Get or create the swifterror value virtual register for a def of a
+comment|/// swifterror by an instruction.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|bool
+operator|>
+name|getOrCreateSwiftErrorVRegDefAt
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|bool
+operator|>
+name|getOrCreateSwiftErrorVRegUseAt
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|*
+argument_list|,
+specifier|const
+name|Value
+operator|*
+argument_list|)
+expr_stmt|;
 comment|/// ValueMap - Since we emit code for the function a basic block at a time,
 comment|/// we must remember which virtual registers hold the values for
 comment|/// cross-basic-block values.

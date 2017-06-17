@@ -1479,18 +1479,6 @@ literal|2
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Return true if this is a store to a volatile memory location.
 name|bool
 name|isVolatile
@@ -1987,18 +1975,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Returns the ordering effect of this fence.
 name|AtomicOrdering
 name|getOrdering
@@ -2246,18 +2222,6 @@ literal|3
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Return true if this is a cmpxchg from a volatile memory
 comment|/// location.
 comment|///
@@ -2894,18 +2858,6 @@ literal|2
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|BinOp
 name|getOperation
 argument_list|()
@@ -9521,18 +9473,6 @@ literal|3
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Return true if a shufflevector instruction can be
 comment|/// formed with the specified operands.
 specifier|static
@@ -10454,18 +10394,6 @@ literal|2
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 specifier|static
 name|InsertValueInst
 operator|*
@@ -10987,25 +10915,6 @@ argument_list|(
 name|ReservedSpace
 argument_list|)
 block|;   }
-comment|// allocate space for exactly zero operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|)
-return|;
-block|}
 name|protected
 operator|:
 comment|// Note: Instruction needs to be a friend here to call cloneImpl.
@@ -11040,18 +10949,6 @@ argument_list|)
 block|;   }
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Constructors - NumReservedValues is a hint for the number of incoming
 comment|/// edges that this phi node will have (use 0 if you really have no idea).
 specifier|static
@@ -11864,18 +11761,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Constructors - NumReservedClauses is a hint for the number of incoming
 comment|/// clauses that this landingpad will have (use 0 if you really have no idea).
 specifier|static
@@ -13030,18 +12915,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|// -2
 specifier|static
 specifier|const
@@ -14524,18 +14397,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 specifier|static
 name|IndirectBrInst
 operator|*
@@ -17413,18 +17274,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 specifier|static
 name|CatchSwitchInst
 operator|*
@@ -19399,18 +19248,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|unsigned
 name|getNumSuccessors
 argument_list|()

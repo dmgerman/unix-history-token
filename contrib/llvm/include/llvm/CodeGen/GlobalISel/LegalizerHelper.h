@@ -90,6 +90,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/GlobalISel/CallLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/GlobalISel/MachineIRBuilder.h"
 end_include
 
@@ -103,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/RuntimeLibcalls.h"
 end_include
 
 begin_decl_stmt
@@ -292,6 +304,23 @@ name|LI
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|/// Helper function that replaces \p MI with a libcall.
+name|LegalizerHelper
+operator|::
+name|LegalizeResult
+name|replaceWithLibcall
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|,
+argument|RTLIB::Libcall Libcall
+argument_list|,
+argument|const CallLowering::ArgInfo&Result
+argument_list|,
+argument|ArrayRef<CallLowering::ArgInfo> Args
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

@@ -1603,7 +1603,7 @@ argument_list|(
 argument|RecordOffset
 argument_list|)
 block|{}
-name|uint32_t
+name|TypeIndex
 name|Index
 block|;
 name|uint32_t
@@ -1662,7 +1662,7 @@ argument_list|(
 argument|RecordOffset
 argument_list|)
 block|{}
-name|uint32_t
+name|TypeIndex
 name|Index
 block|;
 name|RegisterId
@@ -2800,7 +2800,7 @@ argument_list|(
 argument|RecordOffset
 argument_list|)
 block|{}
-name|uint32_t
+name|TypeIndex
 name|Index
 block|;
 name|uint32_t
@@ -3324,7 +3324,7 @@ block|;
 name|uint16_t
 name|Register
 block|;
-name|uint8_t
+name|FrameCookieKind
 name|CookieKind
 block|;
 name|uint8_t
@@ -3538,7 +3538,7 @@ block|;
 name|TypeIndex
 name|Type
 block|;
-name|uint16_t
+name|RegisterId
 name|Register
 block|;
 name|StringRef

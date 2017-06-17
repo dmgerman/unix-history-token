@@ -39293,6 +39293,23 @@ comment|//
 end_comment
 
 begin_function_decl
+name|bool
+name|ActOnCoroutineBodyStart
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|SourceLocation
+name|KwLoc
+parameter_list|,
+name|StringRef
+name|Keyword
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ExprResult
 name|ActOnCoawaitExpr
 parameter_list|(

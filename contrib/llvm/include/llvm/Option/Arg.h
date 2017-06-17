@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- Arg.h - Parsed Argument Classes ------------------------*- C++ -*-===//
+comment|//===- Arg.h - Parsed Argument Classes --------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -91,6 +91,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 name|namespace
 name|opt
 block|{
@@ -104,26 +107,6 @@ comment|/// derive the argument values efficiently.
 name|class
 name|Arg
 block|{
-name|Arg
-argument_list|(
-specifier|const
-name|Arg
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|Arg
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|private
 label|:
 comment|/// \brief The option this argument is an instance of.
@@ -215,6 +198,27 @@ argument_list|,
 argument|const Arg *BaseArg = nullptr
 argument_list|)
 empty_stmt|;
+name|Arg
+argument_list|(
+specifier|const
+name|Arg
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|Arg
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|Arg
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 operator|~
 name|Arg
 argument_list|()
@@ -510,6 +514,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OPTION_ARG_H
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- OptTable.h - Option Table ------------------------------*- C++ -*-===//
+comment|//===- OptTable.h - Option Table --------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringSet.h"
 end_include
 
@@ -59,6 +65,24 @@ begin_include
 include|#
 directive|include
 file|"llvm/Option/OptSpecifier.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -167,14 +191,20 @@ name|IgnoreCase
 decl_stmt|;
 name|unsigned
 name|TheInputOptionID
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|TheUnknownOptionID
+init|=
+literal|0
 decl_stmt|;
 comment|/// The index of the first option which can be parsed (i.e., is not a
 comment|/// special option like 'input' or 'unknown', and is not an option group).
 name|unsigned
 name|FirstSearchableIndex
+init|=
+literal|0
 decl_stmt|;
 comment|/// The union of all option prefixes. If an argument does not begin with
 comment|/// one of these, it is an input.
@@ -551,6 +581,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OPTION_OPTTABLE_H
+end_comment
 
 end_unit
 

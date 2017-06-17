@@ -194,7 +194,7 @@ name|addDebugSubsection
 argument_list|(
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|codeview
 operator|::
@@ -224,6 +224,17 @@ specifier|const
 block|{
 return|return
 name|ObjFileName
+return|;
+block|}
+name|unsigned
+name|getModuleIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Layout
+operator|.
+name|Mod
 return|;
 block|}
 name|ArrayRef

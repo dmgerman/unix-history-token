@@ -174,7 +174,7 @@ name|public
 label|:
 name|DebugSubsectionRecordBuilder
 argument_list|(
-argument|std::unique_ptr<DebugSubsection> Subsection
+argument|std::shared_ptr<DebugSubsection> Subsection
 argument_list|,
 argument|CodeViewContainer Container
 argument_list|)
@@ -196,7 +196,7 @@ name|private
 label|:
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|DebugSubsection
 operator|>
@@ -238,6 +238,9 @@ operator|&
 name|Info
 operator|)
 block|{
+comment|// FIXME: We need to pass the container type through to this function.  In
+comment|// practice this isn't super important since the subsection header describes
+comment|// its length and we can just skip it.  It's more important when writing.
 if|if
 condition|(
 name|auto

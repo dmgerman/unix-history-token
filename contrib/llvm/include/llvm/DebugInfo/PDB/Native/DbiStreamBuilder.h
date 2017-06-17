@@ -219,16 +219,6 @@ name|M
 parameter_list|)
 function_decl|;
 name|void
-name|setSectionContribs
-argument_list|(
-name|ArrayRef
-operator|<
-name|SectionContrib
-operator|>
-name|SecMap
-argument_list|)
-decl_stmt|;
-name|void
 name|setSectionMap
 argument_list|(
 name|ArrayRef
@@ -306,28 +296,23 @@ name|WritableBinaryStreamRef
 name|MsfBuffer
 argument_list|)
 decl_stmt|;
-comment|// A helper function to create Section Contributions from COFF input
-comment|// section headers.
-specifier|static
-name|std
-operator|::
-name|vector
-operator|<
-name|SectionContrib
-operator|>
-name|createSectionContribs
+name|void
+name|addSectionContrib
 argument_list|(
-name|ArrayRef
-operator|<
+name|DbiModuleDescriptorBuilder
+operator|*
+name|ModuleDbi
+argument_list|,
+specifier|const
 name|llvm
 operator|::
 name|object
 operator|::
 name|coff_section
-operator|>
-name|SecHdrs
+operator|*
+name|SecHdr
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|// A helper function to create a Section Map from a COFF section header.
 specifier|static
 name|std
@@ -484,7 +469,9 @@ decl_stmt|;
 name|MutableBinaryByteStream
 name|FileInfoBuffer
 decl_stmt|;
-name|ArrayRef
+name|std
+operator|::
+name|vector
 operator|<
 name|SectionContrib
 operator|>

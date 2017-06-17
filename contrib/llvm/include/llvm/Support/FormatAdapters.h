@@ -133,6 +133,9 @@ block|;
 name|size_t
 name|Amount
 block|;
+name|char
+name|Fill
+block|;
 name|public
 operator|:
 name|AlignAdapter
@@ -142,6 +145,8 @@ argument_list|,
 argument|AlignStyle Where
 argument_list|,
 argument|size_t Amount
+argument_list|,
+argument|char Fill
 argument_list|)
 operator|:
 name|FormatAdapter
@@ -167,7 +172,12 @@ argument_list|)
 block|,
 name|Amount
 argument_list|(
-argument|Amount
+name|Amount
+argument_list|)
+block|,
+name|Fill
+argument_list|(
+argument|Fill
 argument_list|)
 block|{}
 name|void
@@ -205,6 +215,8 @@ argument_list|,
 name|Where
 argument_list|,
 name|Amount
+argument_list|,
+name|Fill
 argument_list|)
 operator|.
 name|format
@@ -450,6 +462,9 @@ argument_list|,
 argument|AlignStyle Where
 argument_list|,
 argument|size_t Amount
+argument_list|,
+argument|char Fill =
+literal|' '
 argument_list|)
 block|{
 return|return
@@ -473,6 +488,8 @@ operator|,
 name|Where
 operator|,
 name|Amount
+operator|,
+name|Fill
 operator|)
 return|;
 block|}

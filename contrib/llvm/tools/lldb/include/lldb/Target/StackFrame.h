@@ -636,6 +636,9 @@ comment|///
 comment|/// @param [in] strm
 comment|///   The Stream to print the description to.
 comment|///
+comment|/// @param [in] show_unique
+comment|///   Whether to print the function arguments or not for backtrace unique.
+comment|///
 comment|/// @param [in] frame_marker
 comment|///   Optional string that will be prepended to the frame output description.
 comment|//------------------------------------------------------------------
@@ -645,6 +648,11 @@ parameter_list|(
 name|Stream
 modifier|*
 name|strm
+parameter_list|,
+name|bool
+name|show_unique
+init|=
+name|false
 parameter_list|,
 specifier|const
 name|char
@@ -693,6 +701,10 @@ comment|///
 comment|/// @param[in] show_source
 comment|///   If true, print source or disassembly as per the user's settings.
 comment|///
+comment|/// @param[in] show_unique
+comment|///   If true, print using backtrace unique style, without function
+comment|///            arguments as per the user's settings.
+comment|///
 comment|/// @param[in] frame_marker
 comment|///   Passed to DumpUsingSettingsFormat() for the frame info printing.
 comment|///
@@ -711,6 +723,11 @@ name|show_frame_info
 parameter_list|,
 name|bool
 name|show_source
+parameter_list|,
+name|bool
+name|show_unique
+init|=
+name|false
 parameter_list|,
 specifier|const
 name|char

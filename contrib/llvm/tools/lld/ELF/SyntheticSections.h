@@ -3037,11 +3037,6 @@ name|void
 name|finalizeNoTailMerge
 argument_list|()
 block|;
-name|bool
-name|Finalized
-operator|=
-name|false
-block|;
 name|llvm
 operator|::
 name|StringTableBuilder
@@ -3523,6 +3518,10 @@ operator|>
 name|MergeInputSection
 operator|*
 name|createCommentSection
+argument_list|()
+block|;
+name|void
+name|decompressAndMergeSections
 argument_list|()
 block|;
 name|SymbolBody

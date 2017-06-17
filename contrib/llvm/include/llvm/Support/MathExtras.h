@@ -1640,7 +1640,7 @@ comment|// ambiguity.
 end_comment
 
 begin_comment
-comment|/// Hi_32 - This function returns the high 32 bits of a 64 bit value.
+comment|/// Return the high 32 bits of a 64 bit value.
 end_comment
 
 begin_function
@@ -1668,7 +1668,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// Lo_32 - This function returns the low 32 bits of a 64 bit value.
+comment|/// Return the low 32 bits of a 64 bit value.
 end_comment
 
 begin_function
@@ -1694,11 +1694,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// Make_64 - This functions makes a 64-bit integer from a high / low pair of
-end_comment
-
-begin_comment
-comment|///           32-bit integers.
+comment|/// Make a 64-bit integer from a high / low pair of 32-bit integers.
 end_comment
 
 begin_function
@@ -1733,7 +1729,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// isInt - Checks if an integer fits into the given bit width.
+comment|/// Checks if an integer fits into the given bit width.
 end_comment
 
 begin_expr_stmt
@@ -1886,11 +1882,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isShiftedInt<N,S> - Checks if a signed integer is an N bit number shifted
-end_comment
-
-begin_comment
-comment|///                     left by S.
+comment|/// Checks if a signed integer is an N bit number shifted left by S.
 end_comment
 
 begin_expr_stmt
@@ -1960,7 +1952,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isUInt - Checks if an unsigned integer fits into the given bit width.
+comment|/// Checks if an unsigned integer fits into the given bit width.
 end_comment
 
 begin_comment
@@ -2377,11 +2369,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// isUIntN - Checks if an unsigned integer fits into the given (dynamic)
-end_comment
-
-begin_comment
-comment|/// bit width.
+comment|/// Checks if an unsigned integer fits into the given (dynamic) bit width.
 end_comment
 
 begin_function
@@ -2412,11 +2400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// isIntN - Checks if an signed integer fits into the given (dynamic)
-end_comment
-
-begin_comment
-comment|/// bit width.
+comment|/// Checks if an signed integer fits into the given (dynamic) bit width.
 end_comment
 
 begin_function
@@ -2456,15 +2440,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// isMask_32 - This function returns true if the argument is a non-empty
+comment|/// Return true if the argument is a non-empty sequence of ones starting at the
 end_comment
 
 begin_comment
-comment|/// sequence of ones starting at the least significant bit with the remainder
+comment|/// least significant bit with the remainder zero (32 bit version).
 end_comment
 
 begin_comment
-comment|/// zero (32 bit version).  Ex. isMask_32(0x0000FFFFU) == true.
+comment|/// Ex. isMask_32(0x0000FFFFU) == true.
 end_comment
 
 begin_function
@@ -2496,15 +2480,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// isMask_64 - This function returns true if the argument is a non-empty
+comment|/// Return true if the argument is a non-empty sequence of ones starting at the
 end_comment
 
 begin_comment
-comment|/// sequence of ones starting at the least significant bit with the remainder
-end_comment
-
-begin_comment
-comment|/// zero (64 bit version).
+comment|/// least significant bit with the remainder zero (64 bit version).
 end_comment
 
 begin_function
@@ -2536,15 +2516,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// isShiftedMask_32 - This function returns true if the argument contains a
+comment|/// Return true if the argument contains a non-empty sequence of ones with the
 end_comment
 
 begin_comment
-comment|/// non-empty sequence of ones with the remainder zero (32 bit version.)
-end_comment
-
-begin_comment
-comment|/// Ex. isShiftedMask_32(0x0000FF00U) == true.
+comment|/// remainder zero (32 bit version.) Ex. isShiftedMask_32(0x0000FF00U) == true.
 end_comment
 
 begin_function
@@ -2575,11 +2551,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// isShiftedMask_64 - This function returns true if the argument contains a
+comment|/// Return true if the argument contains a non-empty sequence of ones with the
 end_comment
 
 begin_comment
-comment|/// non-empty sequence of ones with the remainder zero (64 bit version.)
+comment|/// remainder zero (64 bit version.)
 end_comment
 
 begin_function
@@ -2610,11 +2586,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// isPowerOf2_32 - This function returns true if the argument is a power of
+comment|/// Return true if the argument is a power of two> 0.
 end_comment
 
 begin_comment
-comment|/// two> 0. Ex. isPowerOf2_32(0x00100000U) == true (32 bit edition.)
+comment|/// Ex. isPowerOf2_32(0x00100000U) == true (32 bit edition.)
 end_comment
 
 begin_function
@@ -2645,11 +2621,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// isPowerOf2_64 - This function returns true if the argument is a power of two
-end_comment
-
-begin_comment
-comment|///> 0 (64 bit edition.)
+comment|/// Return true if the argument is a power of two> 0 (64 bit edition.)
 end_comment
 
 begin_function
@@ -2683,11 +2655,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// ByteSwap_16 - This function returns a byte-swapped representation of the
-end_comment
-
-begin_comment
-comment|/// 16-bit argument, Value.
+comment|/// Return a byte-swapped representation of the 16-bit argument.
 end_comment
 
 begin_function
@@ -2711,11 +2679,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// ByteSwap_32 - This function returns a byte-swapped representation of the
-end_comment
-
-begin_comment
-comment|/// 32-bit argument, Value.
+comment|/// Return a byte-swapped representation of the 32-bit argument.
 end_comment
 
 begin_function
@@ -2739,11 +2703,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// ByteSwap_64 - This function returns a byte-swapped representation of the
-end_comment
-
-begin_comment
-comment|/// 64-bit argument, Value.
+comment|/// Return a byte-swapped representation of the 64-bit argument.
 end_comment
 
 begin_function
@@ -2779,7 +2739,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Ex. CountLeadingOnes(0xFF0FFF00) == 8.
+comment|/// Ex. countLeadingOnes(0xFF0FFF00) == 8.
 end_comment
 
 begin_comment
@@ -3228,7 +3188,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Log2 - This function returns the log base 2 of the specified value
+comment|/// Return the log base 2 of the specified value.
 end_comment
 
 begin_function
@@ -3275,11 +3235,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// Log2_32 - This function returns the floor log base 2 of the specified value,
+comment|/// Return the floor log base 2 of the specified value, -1 if the value is zero.
 end_comment
 
 begin_comment
-comment|/// -1 if the value is zero. (32 bit edition.)
+comment|/// (32 bit edition.)
 end_comment
 
 begin_comment
@@ -3307,11 +3267,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// Log2_64 - This function returns the floor log base 2 of the specified value,
+comment|/// Return the floor log base 2 of the specified value, -1 if the value is zero.
 end_comment
 
 begin_comment
-comment|/// -1 if the value is zero. (64 bit edition.)
+comment|/// (64 bit edition.)
 end_comment
 
 begin_function
@@ -3335,11 +3295,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// Log2_32_Ceil - This function returns the ceil log base 2 of the specified
+comment|/// Return the ceil log base 2 of the specified value, 32 if the value is zero.
 end_comment
 
 begin_comment
-comment|/// value, 32 if the value is zero. (32 bit edition).
+comment|/// (32 bit edition).
 end_comment
 
 begin_comment
@@ -3369,11 +3329,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// Log2_64_Ceil - This function returns the ceil log base 2 of the specified
+comment|/// Return the ceil log base 2 of the specified value, 64 if the value is zero.
 end_comment
 
 begin_comment
-comment|/// value, 64 if the value is zero. (64 bit edition.)
+comment|/// (64 bit edition.)
 end_comment
 
 begin_function
@@ -3399,11 +3359,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// GreatestCommonDivisor64 - Return the greatest common divisor of the two
-end_comment
-
-begin_comment
-comment|/// values using Euclid's algorithm.
+comment|/// Return the greatest common divisor of the values using Euclid's algorithm.
 end_comment
 
 begin_function
@@ -3446,11 +3402,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// BitsToDouble - This function takes a 64-bit integer and returns the bit
-end_comment
-
-begin_comment
-comment|/// equivalent double.
+comment|/// This function takes a 64-bit integer and returns the bit equivalent double.
 end_comment
 
 begin_function
@@ -3501,11 +3453,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// BitsToFloat - This function takes a 32-bit integer and returns the bit
-end_comment
-
-begin_comment
-comment|/// equivalent float.
+comment|/// This function takes a 32-bit integer and returns the bit equivalent float.
 end_comment
 
 begin_function
@@ -3556,19 +3504,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// DoubleToBits - This function takes a double and returns the bit
+comment|/// This function takes a double and returns the bit equivalent 64-bit integer.
 end_comment
 
 begin_comment
-comment|/// equivalent 64-bit integer.  Note that copying doubles around
+comment|/// Note that copying doubles around changes the bits of NaNs on some hosts,
 end_comment
 
 begin_comment
-comment|/// changes the bits of NaNs on some hosts, notably x86, so this
-end_comment
-
-begin_comment
-comment|/// routine cannot be used if these bits are needed.
+comment|/// notably x86, so this routine cannot be used if these bits are needed.
 end_comment
 
 begin_function
@@ -3619,19 +3563,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// FloatToBits - This function takes a float and returns the bit
+comment|/// This function takes a float and returns the bit equivalent 32-bit integer.
 end_comment
 
 begin_comment
-comment|/// equivalent 32-bit integer.  Note that copying floats around
+comment|/// Note that copying floats around changes the bits of NaNs on some hosts,
 end_comment
 
 begin_comment
-comment|/// changes the bits of NaNs on some hosts, notably x86, so this
-end_comment
-
-begin_comment
-comment|/// routine cannot be used if these bits are needed.
+comment|/// notably x86, so this routine cannot be used if these bits are needed.
 end_comment
 
 begin_function
@@ -3682,11 +3622,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// MinAlign - A and B are either alignments or offsets.  Return the minimum
+comment|/// A and B are either alignments or offsets. Return the minimum alignment that
 end_comment
 
 begin_comment
-comment|/// alignment that may be assumed after adding the two together.
+comment|/// may be assumed after adding the two together.
 end_comment
 
 begin_function
@@ -3856,11 +3796,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// NextPowerOf2 - Returns the next power of two (in 64-bits)
+comment|/// Returns the next power of two (in 64-bits) that is strictly greater than A.
 end_comment
 
 begin_comment
-comment|/// that is strictly greater than A.  Returns zero on overflow.
+comment|/// Returns zero on overflow.
 end_comment
 
 begin_function

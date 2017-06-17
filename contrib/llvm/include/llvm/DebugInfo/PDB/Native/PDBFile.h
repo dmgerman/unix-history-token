@@ -471,6 +471,10 @@ name|bool
 name|hasPDBStringTable
 argument_list|()
 block|;
+name|uint32_t
+name|getPointerSize
+argument_list|()
+block|;
 name|private
 operator|:
 name|Expected

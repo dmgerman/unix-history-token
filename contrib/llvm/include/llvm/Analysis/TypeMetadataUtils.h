@@ -79,6 +79,23 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// The type of CFI jumptable needed for a function.
+enum|enum
+name|CfiFunctionLinkage
+block|{
+name|CFL_Definition
+init|=
+literal|0
+block|,
+name|CFL_Declaration
+init|=
+literal|1
+block|,
+name|CFL_WeakDeclaration
+init|=
+literal|2
+block|}
+enum|;
 comment|/// A call site that could be devirtualized.
 struct|struct
 name|DevirtCallSite
