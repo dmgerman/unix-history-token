@@ -1582,7 +1582,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|long
+name|uint64_t
 modifier|*
 name|retp
 parameter_list|)

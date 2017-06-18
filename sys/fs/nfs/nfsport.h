@@ -2073,7 +2073,7 @@ decl_stmt|;
 name|nfsattrbit_t
 name|na_suppattr
 decl_stmt|;
-name|u_int32_t
+name|u_int64_t
 name|na_mntonfileno
 decl_stmt|;
 name|u_int64_t

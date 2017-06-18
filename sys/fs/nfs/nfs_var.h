@@ -3513,7 +3513,7 @@ name|nfsrv_atroot
 parameter_list|(
 name|vnode_t
 parameter_list|,
-name|long
+name|uint64_t
 modifier|*
 parameter_list|)
 function_decl|;

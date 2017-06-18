@@ -1253,7 +1253,7 @@ name|vnode_t
 name|nfr_vp
 decl_stmt|;
 comment|/* vnode for referral */
-name|u_int32_t
+name|uint64_t
 name|nfr_dfileno
 decl_stmt|;
 comment|/* assigned dir inode# */
