@@ -21,12 +21,6 @@ directive|include
 file|<linux/errno.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<linux/wait.h>
-end_include
-
 begin_struct
 struct|struct
 name|completion

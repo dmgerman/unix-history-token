@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mthca_provider.h"
 end_include
 
