@@ -1612,6 +1612,13 @@ block|}
 ifdef|#
 directive|ifdef
 name|MULTIDELAY
+comment|/* 	 * We can register as the DELAY() implementation only if we successfully 	 * set up the global timer. 	 */
+if|if
+condition|(
+name|tc_err
+operator|==
+literal|0
+condition|)
 name|arm_set_delay
 argument_list|(
 name|arm_tmr_delay
