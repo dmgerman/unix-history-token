@@ -104,6 +104,10 @@ name|daddr_t
 name|bl_skip
 decl_stmt|;
 comment|/* starting skip		*/
+name|daddr_t
+name|bl_cursor
+decl_stmt|;
+comment|/* next-fit search starts at	*/
 name|blmeta_t
 modifier|*
 name|bl_root
