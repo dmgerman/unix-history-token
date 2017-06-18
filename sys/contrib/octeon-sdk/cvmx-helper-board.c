@@ -2372,6 +2372,9 @@ argument_list|)
 case|case
 name|CVMX_BOARD_TYPE_CUST_UBIQUITI_E100
 case|:
+case|case
+name|CVMX_BOARD_TYPE_CUST_UBIQUITI_USG
+case|:
 if|if
 condition|(
 name|ipd_port
@@ -6209,6 +6212,13 @@ operator|->
 name|board_type
 operator|==
 name|CVMX_BOARD_TYPE_CUST_UBIQUITI_E100
+operator|||
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|board_type
+operator|==
+name|CVMX_BOARD_TYPE_CUST_UBIQUITI_USG
 condition|)
 block|{
 comment|/* Configure ASX cloks for all ports on interface 0.  */
@@ -6598,6 +6608,9 @@ name|OCTEON_VENDOR_UBIQUITI
 argument_list|)
 case|case
 name|CVMX_BOARD_TYPE_CUST_UBIQUITI_E100
+case|:
+case|case
+name|CVMX_BOARD_TYPE_CUST_UBIQUITI_USG
 case|:
 endif|#
 directive|endif
