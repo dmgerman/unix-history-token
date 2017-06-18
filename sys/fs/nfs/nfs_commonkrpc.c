@@ -319,6 +319,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|maxbcachebuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|SVCPOOL
 modifier|*
 name|nfscbd_pool

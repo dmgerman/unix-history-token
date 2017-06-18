@@ -285,6 +285,13 @@ name|ncl_iod_mutex
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxbcachebuf
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|NFSCLSTATEMUTEX
 expr_stmt|;
