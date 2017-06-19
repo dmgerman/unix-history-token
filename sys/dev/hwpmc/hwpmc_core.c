@@ -2973,8 +2973,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IAP_F_FM
+name|IAP_F_BW
 value|(1<< 13)
+end_define
+
+begin_comment
+comment|/* CPU: Broadwell */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IAP_F_FM
+value|(1<< 14)
 end_define
 
 begin_comment
@@ -16806,6 +16817,9 @@ operator|)
 return|;
 break|break;
 case|case
+name|PMC_CPU_INTEL_BROADWELL
+case|:
+case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE
 case|:
 case|case
@@ -16902,6 +16916,14 @@ case|:
 name|cpuflag
 operator|=
 name|IAP_F_CAS
+expr_stmt|;
+break|break;
+case|case
+name|PMC_CPU_INTEL_BROADWELL
+case|:
+name|cpuflag
+operator|=
+name|IAP_F_BW
 expr_stmt|;
 break|break;
 case|case

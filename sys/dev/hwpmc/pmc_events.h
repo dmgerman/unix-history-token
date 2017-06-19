@@ -262,6 +262,19 @@ value|__PMC_EV_ALIAS_INTEL_ARCHITECTURAL()					\ __PMC_EV_ALIAS("REHABQ.LD_BLOCK
 end_define
 
 begin_comment
+comment|/*  * Aliases for Broadwell PMC events.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PMC_EV_ALIAS_BROADWELL
+parameter_list|()
+define|\
+value|__PMC_EV_ALIAS_INTEL_ARCHITECTURAL()
+end_define
+
+begin_comment
 comment|/*  * Aliases for Core PMC events.  */
 end_comment
 
@@ -492,6 +505,17 @@ define|#
 directive|define
 name|PMC_EV_UCP_LAST
 value|PMC_EV_UCP_EVENT_86H_01H
+end_define
+
+begin_comment
+comment|/*  * Aliases for Broadwell uncore PMC events  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PMC_EV_ALIAS_BROADWELLUC
+parameter_list|()
 end_define
 
 begin_define
