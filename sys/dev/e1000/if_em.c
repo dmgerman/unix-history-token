@@ -24139,9 +24139,7 @@ argument_list|)
 expr_stmt|;
 name|ims_mask
 operator||=
-name|adapter
-operator|->
-name|ims
+name|EM_MSIX_MASK
 expr_stmt|;
 block|}
 name|E1000_WRITE_REG
