@@ -8677,11 +8677,11 @@ argument_list|)
 block|,
 name|IAPDESCR
 argument_list|(
-literal|79H_3CH
+literal|79H_18H
 argument_list|,
 literal|0x79
 argument_list|,
-literal|0x3C
+literal|0x18
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -11548,9 +11548,9 @@ name|IAP_F_IBX
 operator||
 name|IAP_F_HW
 operator||
-name|IAP_F_HWX
-operator||
 name|IAP_F_CAS
+operator||
+name|IAP_F_HWX
 argument_list|)
 block|,
 name|IAPDESCR
