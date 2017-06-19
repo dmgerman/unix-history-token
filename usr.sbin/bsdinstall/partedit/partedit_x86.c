@@ -27,6 +27,24 @@ directive|include
 file|"partedit.h"
 end_include
 
+begin_comment
+comment|/* EFI partition size in bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EFI_BOOTPART_SIZE
+value|(200 * 1024 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_BOOTPART_PATH
+value|"/boot/boot1.efifat"
+end_define
+
 begin_function
 specifier|static
 specifier|const
@@ -342,11 +360,7 @@ return|;
 else|else
 return|return
 operator|(
-literal|200
-operator|*
-literal|1024
-operator|*
-literal|1024
+name|EFI_BOOTPART_SIZE
 operator|)
 return|;
 return|return
@@ -522,7 +536,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|"/boot/boot1.efifat"
+name|EFI_BOOTPART_PATH
 operator|)
 return|;
 elseif|else
