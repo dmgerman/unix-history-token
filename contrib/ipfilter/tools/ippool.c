@@ -1449,7 +1449,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dm:no:RSv"
+literal|"dm:no:RS:v"
 argument_list|)
 operator|)
 operator|!=
