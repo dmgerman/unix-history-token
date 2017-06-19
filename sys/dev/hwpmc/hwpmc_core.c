@@ -16423,7 +16423,7 @@ name|PMC_EV_IAP_EVENT_C0H_01H
 case|:
 name|mask
 operator|=
-literal|0x1
+literal|0x2
 expr_stmt|;
 break|break;
 comment|/* Events valid only on counter 2. */
@@ -16433,15 +16433,15 @@ case|:
 case|case
 name|PMC_EV_IAP_EVENT_A2H_02H
 case|:
+case|case
+name|PMC_EV_IAP_EVENT_A3H_08H
+case|:
 name|mask
 operator|=
 literal|0x4
 expr_stmt|;
 break|break;
 comment|/* Events valid only on counter 3. */
-case|case
-name|PMC_EV_IAP_EVENT_A3H_08H
-case|:
 case|case
 name|PMC_EV_IAP_EVENT_BBH_01H
 case|:
