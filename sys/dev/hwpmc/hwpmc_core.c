@@ -3427,6 +3427,8 @@ literal|0x03
 argument_list|,
 literal|0x40
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -3438,6 +3440,8 @@ literal|0x03
 argument_list|,
 literal|0x80
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -3500,6 +3504,8 @@ literal|0x04
 argument_list|,
 literal|0x04
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -3543,6 +3549,8 @@ literal|0x04
 argument_list|,
 literal|0x10
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -3554,6 +3562,8 @@ literal|0x04
 argument_list|,
 literal|0x20
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -3565,6 +3575,8 @@ literal|0x04
 argument_list|,
 literal|0x40
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -3576,6 +3588,8 @@ literal|0x04
 argument_list|,
 literal|0x80
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -4044,7 +4058,7 @@ literal|08H_10H
 argument_list|,
 literal|0x08
 argument_list|,
-literal|0x01
+literal|0x10
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -4194,6 +4208,8 @@ literal|0x08
 argument_list|,
 literal|0x88
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_IB
 operator||
 name|IAP_F_IBX
@@ -4397,7 +4413,7 @@ literal|0DH_80H
 argument_list|,
 literal|0x0D
 argument_list|,
-literal|0x00
+literal|0x80
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -5649,7 +5665,7 @@ literal|24H_38H
 argument_list|,
 literal|0x24
 argument_list|,
-literal|0x00
+literal|0x38
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -5662,7 +5678,7 @@ literal|24H_3FH
 argument_list|,
 literal|0x24
 argument_list|,
-literal|0x00
+literal|0x3F
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -5837,7 +5853,7 @@ literal|24H_D8H
 argument_list|,
 literal|0x24
 argument_list|,
-literal|0x00
+literal|0xD8
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -5930,7 +5946,7 @@ literal|24H_EFH
 argument_list|,
 literal|0x24
 argument_list|,
-literal|0x00
+literal|0xEF
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -6718,6 +6734,8 @@ literal|0x30
 argument_list|,
 literal|0x00
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -6729,6 +6747,8 @@ literal|0x31
 argument_list|,
 literal|0x00
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -7435,7 +7455,7 @@ literal|49H_10H
 argument_list|,
 literal|0x49
 argument_list|,
-literal|0x1
+literal|0x10
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -8040,8 +8060,10 @@ literal|59H_20H
 argument_list|,
 literal|0x59
 argument_list|,
-literal|0x1
+literal|0x20
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_SB
 operator||
 name|IAP_F_SBX
@@ -8242,6 +8264,8 @@ literal|0x5F
 argument_list|,
 literal|0x04
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_IBX
 operator||
 name|IAP_F_IB
@@ -8299,7 +8323,7 @@ literal|60H_02H
 argument_list|,
 literal|0x60
 argument_list|,
-literal|0x01
+literal|0x02
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -8328,7 +8352,7 @@ literal|60H_04H
 argument_list|,
 literal|0x60
 argument_list|,
-literal|0x01
+literal|0x04
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -8359,7 +8383,7 @@ literal|60H_08H
 argument_list|,
 literal|0x60
 argument_list|,
-literal|0x01
+literal|0x08
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -8388,10 +8412,12 @@ name|IAPDESCR
 argument_list|(
 literal|60H_10H
 argument_list|,
-literal|0x7
+literal|0x60
 argument_list|,
-literal|0x00
+literal|0x10
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_SL
 argument_list|)
 block|,
@@ -8895,7 +8921,7 @@ literal|79H_04H
 argument_list|,
 literal|0x79
 argument_list|,
-literal|0x01
+literal|0x04
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -8924,7 +8950,7 @@ literal|79H_08H
 argument_list|,
 literal|0x79
 argument_list|,
-literal|0x01
+literal|0x08
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -8953,7 +8979,7 @@ literal|79H_10H
 argument_list|,
 literal|0x79
 argument_list|,
-literal|0x1
+literal|0x10
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -8982,7 +9008,7 @@ literal|79H_18H
 argument_list|,
 literal|0x79
 argument_list|,
-literal|0x01
+literal|0x18
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -9007,7 +9033,7 @@ literal|79H_20H
 argument_list|,
 literal|0x79
 argument_list|,
-literal|0x1
+literal|0x20
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -9036,7 +9062,7 @@ literal|79H_24H
 argument_list|,
 literal|0x79
 argument_list|,
-literal|0x01
+literal|0x24
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -9061,7 +9087,7 @@ literal|79H_30H
 argument_list|,
 literal|0x79
 argument_list|,
-literal|0x1
+literal|0x30
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -10019,7 +10045,7 @@ literal|88H_80H
 argument_list|,
 literal|0x88
 argument_list|,
-literal|0x0
+literal|0x80
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -10409,7 +10435,7 @@ literal|89H_80H
 argument_list|,
 literal|0x89
 argument_list|,
-literal|0x0
+literal|0x80
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -11321,8 +11347,10 @@ name|A3H_01H
 argument_list|,
 literal|0xA3
 argument_list|,
-literal|0x02
+literal|0x01
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_SBX
 operator||
 name|IAP_F_IBX
@@ -11344,6 +11372,8 @@ literal|0xA3
 argument_list|,
 literal|0x02
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_SBX
 operator||
 name|IAP_F_IBX
@@ -11414,6 +11444,8 @@ literal|0xA3
 argument_list|,
 literal|0x08
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_IBX
 operator||
 name|IAP_F_HW
@@ -11491,7 +11523,7 @@ name|A6H_02H
 argument_list|,
 literal|0xA3
 argument_list|,
-literal|0x0
+literal|0x02
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -11504,7 +11536,7 @@ name|A6H_04H
 argument_list|,
 literal|0xA3
 argument_list|,
-literal|0x0
+literal|0x04
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -11517,7 +11549,7 @@ name|A6H_08H
 argument_list|,
 literal|0xA3
 argument_list|,
-literal|0x0
+literal|0x08
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -11530,7 +11562,7 @@ name|A6H_10H
 argument_list|,
 literal|0xA3
 argument_list|,
-literal|0x0
+literal|0x10
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -11543,7 +11575,7 @@ name|A6H_40H
 argument_list|,
 literal|0xA3
 argument_list|,
-literal|0x0
+literal|0x40
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -12435,6 +12467,8 @@ literal|0xB6
 argument_list|,
 literal|0x04
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -12841,8 +12875,10 @@ name|C0H_01H
 argument_list|,
 literal|0xC0
 argument_list|,
-literal|0x0a
+literal|0x01
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CA
 operator||
 name|IAP_F_CC2
@@ -13049,7 +13085,7 @@ name|C1H_3FH
 argument_list|,
 literal|0xC1
 argument_list|,
-literal|0x00
+literal|0x3F
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -13083,6 +13119,8 @@ literal|0xC1
 argument_list|,
 literal|0x80
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_IB
 operator||
 name|IAP_F_IBX
@@ -13391,6 +13429,8 @@ literal|0xC3
 argument_list|,
 literal|0x08
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -13738,6 +13778,8 @@ literal|0xC4
 argument_list|,
 literal|0x7E
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -13749,6 +13791,8 @@ literal|0xC4
 argument_list|,
 literal|0xBF
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -13760,6 +13804,8 @@ literal|0xC4
 argument_list|,
 literal|0xEB
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -13771,6 +13817,8 @@ literal|0xC4
 argument_list|,
 literal|0xF7
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -13782,6 +13830,8 @@ literal|0xC4
 argument_list|,
 literal|0xF9
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -13793,6 +13843,8 @@ literal|0xC4
 argument_list|,
 literal|0xFB
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -13804,6 +13856,8 @@ literal|0xC4
 argument_list|,
 literal|0xFD
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -13815,6 +13869,8 @@ literal|0xC4
 argument_list|,
 literal|0xFE
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -13992,6 +14048,8 @@ literal|0xC5
 argument_list|,
 literal|0x7E
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -14003,6 +14061,8 @@ literal|0xC5
 argument_list|,
 literal|0xBF
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -14014,6 +14074,8 @@ literal|0xC5
 argument_list|,
 literal|0xEB
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -14025,6 +14087,8 @@ literal|0xC5
 argument_list|,
 literal|0xF7
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -14036,6 +14100,8 @@ literal|0xC5
 argument_list|,
 literal|0xF9
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -14047,6 +14113,8 @@ literal|0xC5
 argument_list|,
 literal|0xFB
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -14058,6 +14126,8 @@ literal|0xC5
 argument_list|,
 literal|0xFD
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -14069,6 +14139,8 @@ literal|0xC5
 argument_list|,
 literal|0xFE
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -14257,7 +14329,7 @@ name|C7H_20H
 argument_list|,
 literal|0xC7
 argument_list|,
-literal|0x0
+literal|0x20
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -14461,7 +14533,7 @@ name|CAH_1EH
 argument_list|,
 literal|0xCA
 argument_list|,
-literal|0x1
+literal|0x1E
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -14490,7 +14562,7 @@ name|CAH_20H
 argument_list|,
 literal|0xCA
 argument_list|,
-literal|0x0
+literal|0x20
 argument_list|,
 name|IAP_F_FM
 operator||
@@ -14509,6 +14581,8 @@ literal|0xCA
 argument_list|,
 literal|0x3F
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -14520,6 +14594,8 @@ literal|0xCA
 argument_list|,
 literal|0x50
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -14628,6 +14704,8 @@ literal|0xCB
 argument_list|,
 literal|0x1F
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -15497,6 +15575,8 @@ literal|0xD3
 argument_list|,
 literal|0x03
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_IBX
 argument_list|)
 block|,
@@ -15524,6 +15604,8 @@ literal|0xD3
 argument_list|,
 literal|0x0C
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_IBX
 argument_list|)
 block|,
@@ -15535,6 +15617,8 @@ literal|0xD3
 argument_list|,
 literal|0x10
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_IBX
 argument_list|)
 block|,
@@ -15546,6 +15630,8 @@ literal|0xD3
 argument_list|,
 literal|0x20
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_IBX
 argument_list|)
 block|,
@@ -16145,6 +16231,8 @@ literal|0xE6
 argument_list|,
 literal|0x08
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -16156,6 +16244,8 @@ literal|0xE6
 argument_list|,
 literal|0x10
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
@@ -16186,6 +16276,8 @@ literal|0xE7
 argument_list|,
 literal|0x01
 argument_list|,
+name|IAP_F_FM
+operator||
 name|IAP_F_CAS
 argument_list|)
 block|,
