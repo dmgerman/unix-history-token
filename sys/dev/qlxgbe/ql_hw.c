@@ -8022,6 +8022,21 @@ operator|->
 name|pkts_droped_unknown
 argument_list|)
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"%s: pkts_cnt_oversized\t\t%"
+name|PRIu64
+literal|"\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|rstat
+operator|->
+name|pkts_cnt_oversized
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
