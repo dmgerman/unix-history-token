@@ -120,6 +120,12 @@ directive|include
 file|<machine/cpu-v6.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/pte-v6.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -991,6 +997,14 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADA38X
 argument_list|)
+comment|/* 	 * Workaround for Marvell Armada38X family HW issue 	 * between Cortex-A9 CPUs and on-chip devices that may 	 * cause hang on heavy load. 	 * To avoid that, map all registers including PCIe IO 	 * as strongly ordered instead of device memory. 	 */
+name|pmap_remap_vm_attr
+argument_list|(
+name|PTE2_ATTR_DEVICE
+argument_list|,
+name|PTE2_ATTR_SO
+argument_list|)
+expr_stmt|;
 comment|/* Set IO Sync Barrier bit for all Mbus devices */
 if|if
 condition|(
