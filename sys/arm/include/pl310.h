@@ -785,6 +785,9 @@ name|intr_config_hook
 modifier|*
 name|sc_ich
 decl_stmt|;
+name|boolean_t
+name|sc_io_coherent
+decl_stmt|;
 block|}
 struct|;
 end_struct
