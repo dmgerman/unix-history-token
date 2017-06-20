@@ -889,7 +889,7 @@ begin_define
 define|#
 directive|define
 name|EXT2F_ROCOMPAT_SUPP
-value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT2F_ROCOMPAT_HUGE_FILE | \ 					 EXT2F_ROCOMPAT_EXTRA_ISIZE)
+value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT2F_ROCOMPAT_GDT_CSUM | \ 					 EXT2F_ROCOMPAT_HUGE_FILE | \ 					 EXT2F_ROCOMPAT_EXTRA_ISIZE)
 end_define
 
 begin_define
@@ -1006,6 +1006,39 @@ directive|define
 name|E2FS_UNSIGNED_HASH
 value|0x0002
 end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_BG_INODE_UNINIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Inode table/bitmap not in use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_BG_BLOCK_UNINIT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Block bitmap not in use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_BG_INODE_ZEROED
+value|0x0004
+end_define
+
+begin_comment
+comment|/* On-disk itable initialized to zero */
+end_comment
 
 begin_comment
 comment|/* ext2 file system block group descriptor */
