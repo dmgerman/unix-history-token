@@ -304,6 +304,9 @@ name|p_ptt_pool
 operator|=
 name|p_pool
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_ECORE_LOCK_ALLOC
 name|OSAL_SPIN_LOCK_ALLOC
 argument_list|(
 name|p_hwfn
@@ -314,6 +317,8 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|OSAL_SPIN_LOCK_INIT
 argument_list|(
 operator|&
@@ -394,6 +399,9 @@ modifier|*
 name|p_hwfn
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CONFIG_ECORE_LOCK_ALLOC
 if|if
 condition|(
 name|p_hwfn
@@ -410,6 +418,8 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|OSAL_FREE
 argument_list|(
 name|p_hwfn
@@ -640,11 +650,6 @@ name|u32
 name|ecore_ptt_get_hw_addr
 parameter_list|(
 name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
-name|struct
 name|ecore_ptt
 modifier|*
 name|p_ptt
@@ -740,8 +745,6 @@ name|prev_hw_addr
 operator|=
 name|ecore_ptt_get_hw_addr
 argument_list|(
-name|p_hwfn
-argument_list|,
 name|p_ptt
 argument_list|)
 expr_stmt|;
@@ -836,8 +839,6 @@ name|win_hw_addr
 init|=
 name|ecore_ptt_get_hw_addr
 argument_list|(
-name|p_hwfn
-argument_list|,
 name|p_ptt
 argument_list|)
 decl_stmt|;
@@ -2002,7 +2003,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/* Ecore HW lock  * =============  * Although the implementation is ready, today we don't have any flow that  * utliizes said locks - and we want to keep it this way.  * If this changes, this needs to be revisted.  */
+comment|/* Ecore HW lock  * =============  * Although the implemention is ready, today we don't have any flow that  * utliizes said locks - and we want to keep it this way.  * If this changes, this needs to be revisted.  */
 end_comment
 
 begin_define

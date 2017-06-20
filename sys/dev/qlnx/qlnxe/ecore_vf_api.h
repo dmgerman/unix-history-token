@@ -55,7 +55,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief Get link parameters for VF from ecore  *  * @param p_hwfn  * @param params - the link params structure to be filled for the VF  */
+comment|/**  * @brief Get link paramters for VF from ecore  *  * @param p_hwfn  * @param params - the link params structure to be filled for the VF  */
 end_comment
 
 begin_function_decl
@@ -237,6 +237,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUX_REMOVE
+end_ifndef
+
 begin_comment
 comment|/**  * @brief Copy forced MAC address from bulletin board  *  * @param hwfn  * @param dst_mac  * @param p_is_forced - out param which indicate in case mac  *      	        exist if it forced or not.  *    * @return bool       - return true if mac exist and false if  *                      not.  */
 end_comment
@@ -296,6 +302,11 @@ name|p_hwfn
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * @brief Set firmware version information in dev_info from VFs acquire response tlv  *  * @param p_hwfn  * @param fw_major  * @param fw_minor  * @param fw_rev  * @param fw_eng  */
@@ -363,10 +374,12 @@ name|ecore_vf_read_bulletin
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 modifier|*
 name|p_change
 parameter_list|)
@@ -385,11 +398,13 @@ name|ecore_vf_get_link_params
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_mcp_link_params
+name|OSAL_UNUSED
 modifier|*
 name|params
 parameter_list|)
@@ -404,11 +419,13 @@ name|ecore_vf_get_link_state
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_mcp_link_state
+name|OSAL_UNUSED
 modifier|*
 name|link
 parameter_list|)
@@ -423,11 +440,13 @@ name|ecore_vf_get_link_caps
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|struct
 name|ecore_mcp_link_capabilities
+name|OSAL_UNUSED
 modifier|*
 name|p_link_caps
 parameter_list|)
@@ -442,10 +461,12 @@ name|ecore_vf_get_num_rxqs
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 modifier|*
 name|num_rxqs
 parameter_list|)
@@ -460,10 +481,12 @@ name|ecore_vf_get_num_txqs
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 modifier|*
 name|num_txqs
 parameter_list|)
@@ -478,10 +501,12 @@ name|ecore_vf_get_port_mac
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 modifier|*
 name|port_mac
 parameter_list|)
@@ -496,10 +521,12 @@ name|ecore_vf_get_num_vlan_filters
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 modifier|*
 name|num_vlan_filters
 parameter_list|)
@@ -514,10 +541,12 @@ name|ecore_vf_get_num_mac_filters
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 modifier|*
 name|num_mac_filters
 parameter_list|)
@@ -532,10 +561,12 @@ name|ecore_vf_check_mac
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 modifier|*
 name|mac
 parameter_list|)
@@ -546,6 +577,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUX_REMOVE
+end_ifndef
+
 begin_function
 specifier|static
 name|OSAL_INLINE
@@ -554,14 +591,17 @@ name|ecore_vf_bulletin_get_forced_mac
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|hwfn
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 modifier|*
 name|dst_mac
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 modifier|*
 name|p_is_forced
 parameter_list|)
@@ -580,6 +620,7 @@ name|ecore_vf_get_pre_fp_hsi
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|)
@@ -590,6 +631,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|OSAL_INLINE
@@ -598,22 +644,27 @@ name|ecore_vf_get_fw_version
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 modifier|*
 name|fw_major
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 modifier|*
 name|fw_minor
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 modifier|*
 name|fw_rev
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 modifier|*
 name|fw_eng
 parameter_list|)
@@ -628,14 +679,17 @@ name|ecore_vf_bulletin_get_udp_ports
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 modifier|*
 name|p_vxlan_port
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 modifier|*
 name|p_geneve_port
 parameter_list|)

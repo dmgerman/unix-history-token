@@ -62,14 +62,14 @@ begin_define
 define|#
 directive|define
 name|ECORE_MINOR_VERSION
-value|18
+value|30
 end_define
 
 begin_define
 define|#
 directive|define
 name|ECORE_REVISION_VERSION
-value|13
+value|0
 end_define
 
 begin_define
@@ -352,20 +352,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|ECORE_MFW_GET_FIELD
+name|GET_MFW_FIELD
 parameter_list|(
 name|name
 parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|(((name)& (field ## _MASK))>> (field ## _SHIFT))
+value|(((name)& (field ## _MASK))>> (field ## _OFFSET))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ECORE_MFW_SET_FIELD
+name|SET_MFW_FIELD
 parameter_list|(
 name|name
 parameter_list|,
@@ -374,7 +374,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|do {									\ 	(name)&= ~((field ## _MASK)<< (field ## _SHIFT));		\ 	(name) |= (((value)<< (field ## _SHIFT))& (field ## _MASK));	\ } while (0)
+value|do {									\ 	(name)&= ~((field ## _MASK)<< (field ## _OFFSET));		\ 	(name) |= (((value)<< (field ## _OFFSET))& (field ## _MASK));	\ } while (0)
 end_define
 
 begin_function
@@ -1188,6 +1188,17 @@ block|, }
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|ecore_db_rec_exec
+block|{
+name|DB_REC_DRY_RUN
+block|,
+name|DB_REC_REAL_DEAL
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|ecore_hw_info
@@ -1344,14 +1355,6 @@ index|[
 name|ETH_ALEN
 index|]
 decl_stmt|;
-name|u64
-name|node_wwn
-decl_stmt|;
-comment|/* For FCoE only */
-name|u64
-name|port_wwn
-decl_stmt|;
-comment|/* For FCoE only */
 name|u16
 name|num_iscsi_conns
 decl_stmt|;
@@ -1557,6 +1560,23 @@ end_struct
 
 begin_struct
 struct|struct
+name|ecore_db_recovery_info
+block|{
+name|osal_list_t
+name|list
+decl_stmt|;
+name|osal_spinlock_t
+name|lock
+decl_stmt|;
+name|u32
+name|db_recovery_counter
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|storm_stats
 block|{
 name|u32
@@ -1743,6 +1763,12 @@ name|ecore_ptt
 modifier|*
 name|p_dpc_ptt
 decl_stmt|;
+comment|/* PTP will be used only by the leading funtion. 	 * Usage of all PTP-apis should be synchronized as result. 	 */
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptp_ptt
+decl_stmt|;
 name|struct
 name|ecore_sb_sp_info
 modifier|*
@@ -1878,6 +1904,11 @@ name|ecore_l2_info
 modifier|*
 name|p_l2_info
 decl_stmt|;
+comment|/* Mechanism for recovering from doorbell drop */
+name|struct
+name|ecore_db_recovery_info
+name|db_recovery_info
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1988,7 +2019,7 @@ name|ECORE_IS_E5
 parameter_list|(
 name|dev
 parameter_list|)
-value|false
+value|((dev)->type == ECORE_DEV_TYPE_E5)
 define|#
 directive|define
 name|ECORE_E5_MISSING_CODE
@@ -2011,6 +2042,10 @@ define|#
 directive|define
 name|ECORE_DEV_ID_MASK_AH
 value|0x8000
+define|#
+directive|define
+name|ECORE_DEV_ID_MASK_E5
+value|0x8100
 name|u16
 name|chip_num
 decl_stmt|;
@@ -2160,7 +2195,7 @@ name|u8
 name|num_engines
 decl_stmt|;
 name|u8
-name|num_ports_in_engines
+name|num_ports_in_engine
 decl_stmt|;
 name|u8
 name|num_funcs_in_port
@@ -2407,6 +2442,13 @@ parameter_list|)
 value|(ECORE_IS_BB(dev) ? MAX_NUM_PFS_BB \ 						  : MAX_NUM_PFS_K2)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CRC8_TABLE_SIZE
+value|256
+end_define
+
 begin_comment
 comment|/**  * @brief ecore_concrete_to_sw_fid - get the sw function id from  *        the concrete value.  *  * @param concrete_fid  *  * @return OSAL_INLINE u8  */
 end_comment
@@ -2417,11 +2459,6 @@ name|OSAL_INLINE
 name|u8
 name|ecore_concrete_to_sw_fid
 parameter_list|(
-name|struct
-name|ecore_dev
-modifier|*
-name|p_dev
-parameter_list|,
 name|u32
 name|concrete_fid
 parameter_list|)
@@ -2483,15 +2520,15 @@ end_function
 begin_define
 define|#
 directive|define
-name|PURE_LB_TC
-value|8
+name|PKT_LB_TC
+value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|PKT_LB_TC
-value|9
+name|MAX_NUM_VOQS_E4
+value|20
 end_define
 
 begin_function_decl
@@ -2594,6 +2631,18 @@ end_function_decl
 begin_function_decl
 name|int
 name|ecore_device_num_ports
+parameter_list|(
+name|struct
+name|ecore_dev
+modifier|*
+name|p_dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ecore_device_get_port_id
 parameter_list|(
 name|struct
 name|ecore_dev
@@ -2750,6 +2799,50 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|ecore_hw_get_resc_name
+parameter_list|(
+name|enum
+name|ecore_resources
+name|res_id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* doorbell recovery mechanism */
+end_comment
+
+begin_function_decl
+name|void
+name|ecore_db_recovery_dp
+parameter_list|(
+name|struct
+name|ecore_hwfn
+modifier|*
+name|p_hwfn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ecore_db_recovery_execute
+parameter_list|(
+name|struct
+name|ecore_hwfn
+modifier|*
+name|p_hwfn
+parameter_list|,
+name|enum
+name|ecore_db_rec_exec
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* amount of resources used in qm init */
 end_comment
@@ -2823,19 +2916,6 @@ name|dev
 parameter_list|)
 value|(&dev->hwfns[0])
 end_define
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|ecore_hw_get_resc_name
-parameter_list|(
-name|enum
-name|ecore_resources
-name|res_id
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

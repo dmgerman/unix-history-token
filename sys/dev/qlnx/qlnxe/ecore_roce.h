@@ -307,6 +307,13 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|ECORE_IWARP_PREALLOC_CNT
+value|(256)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ECORE_IWARP_LL2_SYN_TX_SIZE
 value|(128)
 end_define
@@ -330,6 +337,13 @@ define|#
 directive|define
 name|ECORE_IWARP_LL2_OOO_DEF_RX_SIZE
 value|(4096)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECORE_IWARP_LL2_OOO_MAX_RX_SIZE
+value|(16384)
 end_define
 
 begin_define
@@ -970,6 +984,37 @@ block|}
 union|;
 end_union
 
+begin_define
+define|#
+directive|define
+name|ECORE_MAX_PRIV_DATA_LEN
+value|(512)
+end_define
+
+begin_struct
+struct|struct
+name|ecore_iwarp_ep_memory
+block|{
+name|u8
+name|in_pdata
+index|[
+name|ECORE_MAX_PRIV_DATA_LEN
+index|]
+decl_stmt|;
+name|u8
+name|out_pdata
+index|[
+name|ECORE_MAX_PRIV_DATA_LEN
+index|]
+decl_stmt|;
+name|union
+name|async_output
+name|async_output
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Endpoint structure represents a TCP connection. This connection can be  * associated with a QP or not (in which case QP==NULL)  */
 end_comment
@@ -994,21 +1039,13 @@ name|ecore_iwarp_ep_state
 name|state
 decl_stmt|;
 comment|/* This contains entire buffer required for ep memories. This is the 	 * only one actually allocated and freed. The rest are pointers into 	 * this buffer 	 */
-name|void
+name|struct
+name|ecore_iwarp_ep_memory
 modifier|*
 name|ep_buffer_virt
 decl_stmt|;
 name|dma_addr_t
 name|ep_buffer_phys
-decl_stmt|;
-comment|/* Asynce EQE events contain only the ep pointer on the completion. The 	 * rest of the data is written to an output buffer pre-allocated by 	 * the driver. This buffer points to a location in the ep_buffer. 	 */
-name|union
-name|async_output
-modifier|*
-name|async_output_virt
-decl_stmt|;
-name|dma_addr_t
-name|async_output_phys
 decl_stmt|;
 name|struct
 name|ecore_iwarp_cm_info

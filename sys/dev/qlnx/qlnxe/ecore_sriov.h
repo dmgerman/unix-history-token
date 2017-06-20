@@ -50,7 +50,7 @@ define|#
 directive|define
 name|ECORE_ETH_MAX_VF_NUM_VLAN_FILTERS
 define|\
-value|(E4_MAX_NUM_VFS * ECORE_ETH_VF_NUM_VLAN_FILTERS)
+value|(MAX_NUM_VFS_E4 * ECORE_ETH_VF_NUM_VLAN_FILTERS)
 end_define
 
 begin_comment
@@ -218,7 +218,7 @@ name|VF_ACQUIRED
 init|=
 literal|1
 block|,
-comment|/* VF, acquired, but not initalized */
+comment|/* VF, aquired, but not initalized */
 name|VF_ENABLED
 init|=
 literal|2
@@ -439,7 +439,7 @@ name|struct
 name|ecore_vf_info
 name|vfs_array
 index|[
-name|E4_MAX_NUM_VFS
+name|MAX_NUM_VFS_E4
 index|]
 decl_stmt|;
 name|u64
@@ -519,7 +519,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_add_tlv - place a given tlv on the tlv buffer at next offset  *  * @param p_hwfn  * @param p_iov  * @param type  * @param length  *  * @return pointer to the newly placed tlv  */
+comment|/**  * @brief ecore_add_tlv - place a given tlv on the tlv buffer at next offset  *  * @param offset  * @param type  * @param length  *  * @return pointer to the newly placed tlv  */
 end_comment
 
 begin_function_decl
@@ -527,11 +527,6 @@ name|void
 modifier|*
 name|ecore_add_tlv
 parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
 name|u8
 modifier|*
 modifier|*
@@ -584,7 +579,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_iov_setup - setup sriov related resources  *  * @param p_hwfn  * @param p_ptt  */
+comment|/**  * @brief ecore_iov_setup - setup sriov related resources  *  * @param p_hwfn  */
 end_comment
 
 begin_function_decl
@@ -595,11 +590,6 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -665,7 +655,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief Mark structs of vfs that have been FLR-ed.  *  * @param p_hwfn  * @param disabled_vfs - bitmask of all VFs on path that were FLRed  *  * @return 1 iff one of the PF's vfs got FLRed. 0 otherwise.  */
+comment|/**  * @brief Mark structs of vfs that have been FLR-ed.  *  * @param p_hwfn  * @param disabled_vfs - bitmask of all VFs on path that were FLRed  *  * @return true iff one of the PF's vfs got FLRed. false otherwise.  */
 end_comment
 
 begin_function_decl
@@ -746,6 +736,7 @@ name|ecore_iov_hw_info
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|)
@@ -765,17 +756,21 @@ name|ecore_add_tlv
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 modifier|*
 modifier|*
 name|offset
 parameter_list|,
+name|OSAL_UNUSED
 name|u16
 name|type
 parameter_list|,
+name|OSAL_UNUSED
 name|u16
 name|length
 parameter_list|)
@@ -794,10 +789,12 @@ name|ecore_dp_tlv_list
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|void
+name|OSAL_UNUSED
 modifier|*
 name|tlvs_list
 parameter_list|)
@@ -813,6 +810,7 @@ name|ecore_iov_alloc
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|)
@@ -831,13 +829,9 @@ name|ecore_iov_setup
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
 parameter_list|)
 block|{}
 end_function
@@ -850,6 +844,7 @@ name|ecore_iov_free
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|)
@@ -864,6 +859,7 @@ name|ecore_iov_free_hw_info
 parameter_list|(
 name|struct
 name|ecore_dev
+name|OSAL_UNUSED
 modifier|*
 name|p_dev
 parameter_list|)
@@ -879,17 +875,21 @@ name|ecore_sriov_eqe_event
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 name|opcode
 parameter_list|,
 name|__le16
+name|OSAL_UNUSED
 name|echo
 parameter_list|,
 name|union
 name|event_ring_data
+name|OSAL_UNUSED
 modifier|*
 name|data
 parameter_list|)
@@ -907,13 +907,16 @@ name|u32
 name|ecore_crc32
 parameter_list|(
 name|u32
+name|OSAL_UNUSED
 name|crc
 parameter_list|,
 name|u8
+name|OSAL_UNUSED
 modifier|*
 name|ptr
 parameter_list|,
 name|u32
+name|OSAL_UNUSED
 name|length
 parameter_list|)
 block|{
@@ -931,16 +934,18 @@ name|ecore_iov_mark_vf_flr
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|u32
+name|OSAL_UNUSED
 modifier|*
 name|disabled_vfs
 parameter_list|)
 block|{
 return|return
-literal|0
+name|false
 return|;
 block|}
 end_function
@@ -954,14 +959,17 @@ name|ecore_iov_search_list_tlvs
 parameter_list|(
 name|struct
 name|ecore_hwfn
+name|OSAL_UNUSED
 modifier|*
 name|p_hwfn
 parameter_list|,
 name|void
+name|OSAL_UNUSED
 modifier|*
 name|p_tlvs_list
 parameter_list|,
 name|u16
+name|OSAL_UNUSED
 name|req_type
 parameter_list|)
 block|{
@@ -979,11 +987,11 @@ name|ecore_vf_info
 operator|*
 name|ecore_iov_get_vf_info
 argument_list|(
-argument|struct ecore_hwfn *p_hwfn
+argument|struct ecore_hwfn OSAL_UNUSED *p_hwfn
 argument_list|,
-argument|u16 relative_vf_id
+argument|u16 OSAL_UNUSED relative_vf_id
 argument_list|,
-argument|bool b_enabled_only
+argument|bool OSAL_UNUSED b_enabled_only
 argument_list|)
 block|{
 return|return

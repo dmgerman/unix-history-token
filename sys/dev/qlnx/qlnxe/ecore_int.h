@@ -63,7 +63,7 @@ parameter_list|(
 name|p_hwfn
 parameter_list|)
 define|\
-value|ALIGNED_TYPE_SIZE(struct status_block, p_hwfn)
+value|ALIGNED_TYPE_SIZE(struct status_block_e4, p_hwfn)
 end_define
 
 begin_define

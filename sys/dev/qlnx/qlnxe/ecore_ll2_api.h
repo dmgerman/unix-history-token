@@ -342,6 +342,30 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|ecore_ll2_slowpath_cb
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|cxt
+parameter_list|,
+name|u8
+name|connection_handle
+parameter_list|,
+name|u32
+name|opaque_data_0
+parameter_list|,
+name|u32
+name|opaque_data_1
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ecore_ll2_cbs
@@ -358,6 +382,9 @@ decl_stmt|;
 name|ecore_ll2_release_tx_packet_cb
 name|tx_release_cb
 decl_stmt|;
+name|ecore_ll2_slowpath_cb
+name|slowpath_cb
+decl_stmt|;
 name|void
 modifier|*
 name|cookie
@@ -368,7 +395,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|ecore_ll2_acquire_data
+name|ecore_ll2_acquire_data_inputs
 block|{
 name|enum
 name|ecore_ll2_conn_type
@@ -419,16 +446,28 @@ decl_stmt|;
 name|u8
 name|gsi_enable
 decl_stmt|;
-comment|/* Output container for LL2 connection's handle */
-name|u8
-modifier|*
-name|p_connection_handle
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ecore_ll2_acquire_data
+block|{
+name|struct
+name|ecore_ll2_acquire_data_inputs
+name|input
 decl_stmt|;
 specifier|const
 name|struct
 name|ecore_ll2_cbs
 modifier|*
 name|cbs
+decl_stmt|;
+comment|/* Output container for LL2 connection's handle */
+name|u8
+modifier|*
+name|p_connection_handle
 decl_stmt|;
 block|}
 struct|;

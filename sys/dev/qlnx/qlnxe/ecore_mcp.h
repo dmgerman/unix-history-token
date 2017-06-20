@@ -78,24 +78,28 @@ name|MFW_PORT
 parameter_list|(
 name|_p_hwfn
 parameter_list|)
-value|((_p_hwfn)->abs_pf_id % \ 				 ((_p_hwfn)->p_dev->num_ports_in_engines * \ 				  ecore_device_num_engines((_p_hwfn)->p_dev)))
+value|((_p_hwfn)->abs_pf_id % \ 				 ((_p_hwfn)->p_dev->num_ports_in_engine * \ 				  ecore_device_num_engines((_p_hwfn)->p_dev)))
 end_define
 
 begin_struct
 struct|struct
 name|ecore_mcp_info
 block|{
-comment|/* Spinlock used for protecting the access to the MFW mailbox */
-name|osal_spinlock_t
-name|lock
+comment|/* List for mailbox commands which were sent and wait for a response */
+name|osal_list_t
+name|cmd_list
 decl_stmt|;
-comment|/* Spinglock used for syncing SW link-changes and link-changes 	 * originating from attention context. 	 */
+comment|/* Spinlock used for protecting the access to the mailbox commands list 	 * and the sending of the commands. 	 */
+name|osal_spinlock_t
+name|cmd_lock
+decl_stmt|;
+comment|/* Flag to indicate whether sending a MFW mailbox command is blocked */
+name|bool
+name|b_block_cmd
+decl_stmt|;
+comment|/* Spinlock used for syncing SW link-changes and link-changes 	 * originating from attention context. 	 */
 name|osal_spinlock_t
 name|link_lock
-decl_stmt|;
-comment|/* Flag to indicate whether sending a MFW mailbox is forbidden */
-name|bool
-name|block_mb_sending
 decl_stmt|;
 comment|/* Address of the MCP public area */
 name|u32
@@ -148,7 +152,7 @@ decl_stmt|;
 name|u16
 name|mfw_mb_length
 decl_stmt|;
-name|u16
+name|u32
 name|mcp_hist
 decl_stmt|;
 comment|/* Capabilties negotiated with the MFW */
@@ -255,7 +259,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief Intialize the port interface with the MCP  *  * @param p_hwfn  * @param p_ptt  * Can only be called after `num_ports_in_engines' is set  */
+comment|/**  * @brief Intialize the port interface with the MCP  *  * @param p_hwfn  * @param p_ptt  * Can only be called after `num_ports_in_engine' is set  */
 end_comment
 
 begin_function_decl
@@ -538,93 +542,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief - Sends an NVM write command request to the MFW with  *          payload.  *  * @param p_hwfn  * @param p_ptt  * @param cmd - Command: Either DRV_MSG_CODE_NVM_WRITE_NVRAM or  *            DRV_MSG_CODE_NVM_PUT_FILE_DATA  * @param param - [0:23] - Offset [24:31] - Size  * @param o_mcp_resp - MCP response  * @param o_mcp_param - MCP response param  * @param i_txn_size -  Buffer size  * @param i_buf - Pointer to the buffer  *  * @param return ECORE_SUCCESS upon success.  */
-end_comment
-
-begin_function_decl
-name|enum
-name|_ecore_status_t
-name|ecore_mcp_nvm_wr_cmd
-parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
-parameter_list|,
-name|u32
-name|cmd
-parameter_list|,
-name|u32
-name|param
-parameter_list|,
-name|u32
-modifier|*
-name|o_mcp_resp
-parameter_list|,
-name|u32
-modifier|*
-name|o_mcp_param
-parameter_list|,
-name|u32
-name|i_txn_size
-parameter_list|,
-name|u32
-modifier|*
-name|i_buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * @brief - Sends an NVM read command request to the MFW to get  *        a buffer.  *  * @param p_hwfn  * @param p_ptt  * @param cmd - Command: DRV_MSG_CODE_NVM_GET_FILE_DATA or  *            DRV_MSG_CODE_NVM_READ_NVRAM commands  * @param param - [0:23] - Offset [24:31] - Size  * @param o_mcp_resp - MCP response  * @param o_mcp_param - MCP response param  * @param o_txn_size -  Buffer size output  * @param o_buf - Pointer to the buffer returned by the MFW.  *  * @param return ECORE_SUCCESS upon success.  */
-end_comment
-
-begin_function_decl
-name|enum
-name|_ecore_status_t
-name|ecore_mcp_nvm_rd_cmd
-parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
-parameter_list|,
-name|u32
-name|cmd
-parameter_list|,
-name|u32
-name|param
-parameter_list|,
-name|u32
-modifier|*
-name|o_mcp_resp
-parameter_list|,
-name|u32
-modifier|*
-name|o_mcp_param
-parameter_list|,
-name|u32
-modifier|*
-name|o_txn_size
-parameter_list|,
-name|u32
-modifier|*
-name|o_buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/**  * @brief indicates whether the MFW objects [under mcp_info] are accessible  *  * @param p_hwfn  *  * @return true iff MFW is running and mcp_info is initialized  */
 end_comment
 
@@ -890,28 +807,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief - Clear the mdump retained data.  *  * @param p_hwfn  * @param p_ptt  *  * @param return ECORE_SUCCESS upon success.  */
-end_comment
-
-begin_function_decl
-name|enum
-name|_ecore_status_t
-name|ecore_mcp_mdump_clr_retain
-parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/**  * @brief - Sets the MFW's max value for the given resource  *  *  @param p_hwfn  *  @param p_ptt  *  @param res_id  *  @param resc_max_val  *  @param p_mcp_resp  *  * @return enum _ecore_status_t - ECORE_SUCCESS - operation was successful.  */
 end_comment
 
@@ -1069,7 +964,10 @@ block|,
 name|ECORE_RESC_LOCK_RESC_ALLOC
 init|=
 name|ECORE_MCP_RESC_LOCK_MAX_VAL
-block|}
+block|,
+comment|/* A dummy value to be used for auxillary functions in need of 	 * returning an 'error' value. 	 */
+name|ECORE_RESC_LOCK_RESC_INVALID
+block|, }
 enum|;
 end_enum
 
@@ -1097,10 +995,18 @@ comment|/* Number of times to retry locking */
 name|u8
 name|retry_num
 decl_stmt|;
+define|#
+directive|define
+name|ECORE_MCP_RESC_LOCK_RETRY_CNT_DFLT
+value|10
 comment|/* The interval in usec between retries */
 name|u16
 name|retry_interval
 decl_stmt|;
+define|#
+directive|define
+name|ECORE_MCP_RESC_LOCK_RETRY_VAL_DFLT
+value|10000
 comment|/* Use sleep or delay between retries */
 name|bool
 name|sleep_b4_retry
@@ -1187,6 +1093,34 @@ name|struct
 name|ecore_resc_unlock_params
 modifier|*
 name|p_params
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * @brief - default initialization for lock/unlock resource structs  *  * @param p_lock - lock params struct to be initialized; Can be OSAL_NULL  * @param p_unlock - unlock params struct to be initialized; Can be OSAL_NULL  * @param resource - the requested resource  * @paral b_is_permanent - disable retries& aging when set  */
+end_comment
+
+begin_function_decl
+name|void
+name|ecore_mcp_resc_lock_default_init
+parameter_list|(
+name|struct
+name|ecore_resc_lock_params
+modifier|*
+name|p_lock
+parameter_list|,
+name|struct
+name|ecore_resc_unlock_params
+modifier|*
+name|p_unlock
+parameter_list|,
+name|enum
+name|ecore_resc_lock
+name|resource
+parameter_list|,
+name|bool
+name|b_is_permanent
 parameter_list|)
 function_decl|;
 end_function_decl

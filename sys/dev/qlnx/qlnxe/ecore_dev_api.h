@@ -287,11 +287,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_hw_stop_fastpath -should be called incase  *        slowpath is still required for the device,  *        but fastpath is not.  *  * @param p_dev  *  */
+comment|/**  * @brief ecore_hw_stop_fastpath -should be called incase  *        slowpath is still required for the device,  *        but fastpath is not.  *  * @param p_dev  *  * @return enum _ecore_status_t  */
 end_comment
 
 begin_function_decl
-name|void
+name|enum
+name|_ecore_status_t
 name|ecore_hw_stop_fastpath
 parameter_list|(
 name|struct
@@ -335,11 +336,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_hw_start_fastpath -restart fastpath traffic,  *        only if hw_stop_fastpath was called   * @param p_dev  *  */
+comment|/**  * @brief ecore_hw_start_fastpath -restart fastpath traffic,  *        only if hw_stop_fastpath was called   * @param p_hwfn  *  * @return enum _ecore_status_t  */
 end_comment
 
 begin_function_decl
-name|void
+name|enum
+name|_ecore_status_t
 name|ecore_hw_start_fastpath
 parameter_list|(
 name|struct
@@ -456,7 +458,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** * @brief ecore_set_nwuf_reg - * * @param p_dev * @param wol_flag - wol_capability * @param reg_idx - Index of the pattern register * @param pattern_size - size of pattern * @param crc - CRC value of patter& mask * * @return enum _ecore_status_t */
+comment|/** * @brief ecore_set_nwuf_reg - * * @param p_dev * @param reg_idx - Index of the pattern register * @param pattern_size - size of pattern * @param crc - CRC value of patter& mask * * @return enum _ecore_status_t */
 end_comment
 
 begin_function_decl
@@ -468,10 +470,6 @@ name|struct
 name|ecore_dev
 modifier|*
 name|p_dev
-parameter_list|,
-specifier|const
-name|bool
-name|b_enable
 parameter_list|,
 name|u32
 name|reg_idx
@@ -486,7 +484,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** * @brief ecore_get_wake_info - get magic packet buffer * * @param p_dev * @param wake_info - pointer to ecore_wake_info buffer * * @return enum _ecore_status_t */
+comment|/** * @brief ecore_get_wake_info - get magic packet buffer * * @param p_hwfn * @param p_ppt * @param wake_info - pointer to ecore_wake_info buffer * * @return enum _ecore_status_t */
 end_comment
 
 begin_function_decl
@@ -495,9 +493,14 @@ name|_ecore_status_t
 name|ecore_get_wake_info
 parameter_list|(
 name|struct
-name|ecore_dev
+name|ecore_hwfn
 modifier|*
-name|p_dev
+name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
 parameter_list|,
 name|struct
 name|ecore_wake_info
@@ -508,7 +511,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** * @brief ecore_wol_buffer_clear - Clear magic package buffer * * @param p_dev * * @return void */
+comment|/** * @brief ecore_wol_buffer_clear - Clear magic package buffer * * @param p_hwfn * @param p_ptt * * @return void */
 end_comment
 
 begin_function_decl
@@ -516,9 +519,14 @@ name|void
 name|ecore_wol_buffer_clear
 parameter_list|(
 name|struct
-name|ecore_dev
+name|ecore_hwfn
 modifier|*
-name|p_dev
+name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -561,6 +569,12 @@ name|p_ptt
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
 
 begin_struct
 struct|struct
@@ -827,6 +841,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_enum
 enum|enum
 name|ecore_dmae_address_type_t
@@ -959,7 +978,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_dmae_host2host - copy data from to source address  * to a destination address (for SRIOV) using the given ptt  *  * @param p_hwfn  * @param p_ptt  * @param source_addr  * @param dest_addr  * @param size_in_dwords  * @param params  */
+comment|/**  * @brief ecore_dmae_host2host - copy data from to source address  * to a destination adress (for SRIOV) using the given ptt  *  * @param p_hwfn  * @param p_ptt  * @param source_addr  * @param dest_addr  * @param size_in_dwords  * @param params  */
 end_comment
 
 begin_function_decl
@@ -1402,6 +1421,99 @@ name|p_ptt
 parameter_list|,
 name|u8
 name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTRACT__LINUX__
+end_ifndef
+
+begin_enum
+enum|enum
+name|ecore_db_rec_width
+block|{
+name|DB_REC_WIDTH_32B
+block|,
+name|DB_REC_WIDTH_64B
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|ecore_db_rec_space
+block|{
+name|DB_REC_KERNEL
+block|,
+name|DB_REC_USER
+block|, }
+enum|;
+end_enum
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/**  * @brief db_recovery_add - add doorbell information to the doorbell  * recovery mechanism.  *  * @param p_dev  * @param db_addr - doorbell address  * @param db_data - address of where db_data is stored  * @param db_width - doorbell is 32b pr 64b  * @param db_space - doorbell recovery addresses are user or kernel space  */
+end_comment
+
+begin_function_decl
+name|enum
+name|_ecore_status_t
+name|ecore_db_recovery_add
+parameter_list|(
+name|struct
+name|ecore_dev
+modifier|*
+name|p_dev
+parameter_list|,
+name|void
+name|OSAL_IOMEM
+modifier|*
+name|db_addr
+parameter_list|,
+name|void
+modifier|*
+name|db_data
+parameter_list|,
+name|enum
+name|ecore_db_rec_width
+name|db_width
+parameter_list|,
+name|enum
+name|ecore_db_rec_space
+name|db_space
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * @brief db_recovery_del - remove doorbell information from the doorbell  * recovery mechanism. db_data serves as key (db_addr is not unique).  *  * @param cdev  * @param db_addr - doorbell address  * @param db_data - address where db_data is stored. Serves as key for the  *                  entry to delete.  */
+end_comment
+
+begin_function_decl
+name|enum
+name|_ecore_status_t
+name|ecore_db_recovery_del
+parameter_list|(
+name|struct
+name|ecore_dev
+modifier|*
+name|p_dev
+parameter_list|,
+name|void
+name|OSAL_IOMEM
+modifier|*
+name|db_addr
+parameter_list|,
+name|void
+modifier|*
+name|db_data
 parameter_list|)
 function_decl|;
 end_function_decl

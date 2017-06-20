@@ -245,11 +245,11 @@ literal|0x4c0000
 block|,
 name|GRCBASE_PTLD
 init|=
-literal|0x590000
+literal|0x5a0000
 block|,
 name|GRCBASE_YPLD
 init|=
-literal|0x5b0000
+literal|0x5c0000
 block|,
 name|GRCBASE_PRM
 init|=

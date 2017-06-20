@@ -103,6 +103,995 @@ enum|;
 end_enum
 
 begin_comment
+comment|/*  * How ll2 should deal with packet upon errors  */
+end_comment
+
+begin_enum
+enum|enum
+name|core_error_handle
+block|{
+name|LL2_DROP_PACKET
+comment|/* If error occurs drop packet */
+block|,
+name|LL2_DO_NOTHING
+comment|/* If error occurs do nothing */
+block|,
+name|LL2_ASSERT
+comment|/* If error occurs assert */
+block|,
+name|MAX_CORE_ERROR_HANDLE
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * opcodes for the event ring  */
+end_comment
+
+begin_enum
+enum|enum
+name|core_event_opcode
+block|{
+name|CORE_EVENT_TX_QUEUE_START
+block|,
+name|CORE_EVENT_TX_QUEUE_STOP
+block|,
+name|CORE_EVENT_RX_QUEUE_START
+block|,
+name|CORE_EVENT_RX_QUEUE_STOP
+block|,
+name|CORE_EVENT_RX_QUEUE_FLUSH
+block|,
+name|MAX_CORE_EVENT_OPCODE
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * The L4 pseudo checksum mode for Core  */
+end_comment
+
+begin_enum
+enum|enum
+name|core_l4_pseudo_checksum_mode
+block|{
+name|CORE_L4_PSEUDO_CSUM_CORRECT_LENGTH
+comment|/* Pseudo Checksum on packet is calculated with the correct packet length. */
+block|,
+name|CORE_L4_PSEUDO_CSUM_ZERO_LENGTH
+comment|/* Pseudo Checksum on packet is calculated with zero length. */
+block|,
+name|MAX_CORE_L4_PSEUDO_CHECKSUM_MODE
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Light-L2 RX Producers in Tstorm RAM  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_ll2_port_stats
+block|{
+name|struct
+name|regpair
+name|gsi_invalid_hdr
+decl_stmt|;
+name|struct
+name|regpair
+name|gsi_invalid_pkt_length
+decl_stmt|;
+name|struct
+name|regpair
+name|gsi_unsupported_pkt_typ
+decl_stmt|;
+name|struct
+name|regpair
+name|gsi_crcchksm_error
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ethernet TX Per Queue Stats  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_ll2_pstorm_per_queue_stat
+block|{
+name|struct
+name|regpair
+name|sent_ucast_bytes
+comment|/* number of total bytes sent without errors */
+decl_stmt|;
+name|struct
+name|regpair
+name|sent_mcast_bytes
+comment|/* number of total bytes sent without errors */
+decl_stmt|;
+name|struct
+name|regpair
+name|sent_bcast_bytes
+comment|/* number of total bytes sent without errors */
+decl_stmt|;
+name|struct
+name|regpair
+name|sent_ucast_pkts
+comment|/* number of total packets sent without errors */
+decl_stmt|;
+name|struct
+name|regpair
+name|sent_mcast_pkts
+comment|/* number of total packets sent without errors */
+decl_stmt|;
+name|struct
+name|regpair
+name|sent_bcast_pkts
+comment|/* number of total packets sent without errors */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Light-L2 RX Producers in Tstorm RAM  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_ll2_rx_prod
+block|{
+name|__le16
+name|bd_prod
+comment|/* BD Producer */
+decl_stmt|;
+name|__le16
+name|cqe_prod
+comment|/* CQE Producer */
+decl_stmt|;
+name|__le32
+name|reserved
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|core_ll2_tstorm_per_queue_stat
+block|{
+name|struct
+name|regpair
+name|packet_too_big_discard
+comment|/* Number of packets discarded because they are bigger than MTU */
+decl_stmt|;
+name|struct
+name|regpair
+name|no_buff_discard
+comment|/* Number of packets discarded due to lack of host buffers */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|core_ll2_ustorm_per_queue_stat
+block|{
+name|struct
+name|regpair
+name|rcv_ucast_bytes
+decl_stmt|;
+name|struct
+name|regpair
+name|rcv_mcast_bytes
+decl_stmt|;
+name|struct
+name|regpair
+name|rcv_bcast_bytes
+decl_stmt|;
+name|struct
+name|regpair
+name|rcv_ucast_pkts
+decl_stmt|;
+name|struct
+name|regpair
+name|rcv_mcast_pkts
+decl_stmt|;
+name|struct
+name|regpair
+name|rcv_bcast_pkts
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Core Ramrod Command IDs (light L2)  */
+end_comment
+
+begin_enum
+enum|enum
+name|core_ramrod_cmd_id
+block|{
+name|CORE_RAMROD_UNUSED
+block|,
+name|CORE_RAMROD_RX_QUEUE_START
+comment|/* RX Queue Start Ramrod */
+block|,
+name|CORE_RAMROD_TX_QUEUE_START
+comment|/* TX Queue Start Ramrod */
+block|,
+name|CORE_RAMROD_RX_QUEUE_STOP
+comment|/* RX Queue Stop Ramrod */
+block|,
+name|CORE_RAMROD_TX_QUEUE_STOP
+comment|/* TX Queue Stop Ramrod */
+block|,
+name|CORE_RAMROD_RX_QUEUE_FLUSH
+comment|/* RX Flush queue Ramrod */
+block|,
+name|MAX_CORE_RAMROD_CMD_ID
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Core RX CQE Type for Light L2  */
+end_comment
+
+begin_enum
+enum|enum
+name|core_roce_flavor_type
+block|{
+name|CORE_ROCE
+block|,
+name|CORE_RROCE
+block|,
+name|MAX_CORE_ROCE_FLAVOR_TYPE
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Specifies how ll2 should deal with packets errors: packet_too_big and no_buff  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_rx_action_on_error
+block|{
+name|u8
+name|error_type
+decl_stmt|;
+define|#
+directive|define
+name|CORE_RX_ACTION_ON_ERROR_PACKET_TOO_BIG_MASK
+value|0x3
+comment|/* ll2 how to handle error packet_too_big (use enum core_error_handle) */
+define|#
+directive|define
+name|CORE_RX_ACTION_ON_ERROR_PACKET_TOO_BIG_SHIFT
+value|0
+define|#
+directive|define
+name|CORE_RX_ACTION_ON_ERROR_NO_BUFF_MASK
+value|0x3
+comment|/* ll2 how to handle error with no_buff  (use enum core_error_handle) */
+define|#
+directive|define
+name|CORE_RX_ACTION_ON_ERROR_NO_BUFF_SHIFT
+value|2
+define|#
+directive|define
+name|CORE_RX_ACTION_ON_ERROR_RESERVED_MASK
+value|0xF
+define|#
+directive|define
+name|CORE_RX_ACTION_ON_ERROR_RESERVED_SHIFT
+value|4
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Core RX BD for Light L2  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_rx_bd
+block|{
+name|struct
+name|regpair
+name|addr
+decl_stmt|;
+name|__le16
+name|reserved
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Core RX CM offload BD for Light L2  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_rx_bd_with_buff_len
+block|{
+name|struct
+name|regpair
+name|addr
+decl_stmt|;
+name|__le16
+name|buff_length
+decl_stmt|;
+name|__le16
+name|reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Core RX CM offload BD for Light L2  */
+end_comment
+
+begin_union
+union|union
+name|core_rx_bd_union
+block|{
+name|struct
+name|core_rx_bd
+name|rx_bd
+comment|/* Core Rx Bd static buffer size */
+decl_stmt|;
+name|struct
+name|core_rx_bd_with_buff_len
+name|rx_bd_with_len
+comment|/* Core Rx Bd with dynamic buffer length */
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * Opaque Data for Light L2 RX CQE .   */
+end_comment
+
+begin_struct
+struct|struct
+name|core_rx_cqe_opaque_data
+block|{
+name|__le32
+name|data
+index|[
+literal|2
+index|]
+comment|/* Opaque CQE Data */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Core RX CQE Type for Light L2  */
+end_comment
+
+begin_enum
+enum|enum
+name|core_rx_cqe_type
+block|{
+name|CORE_RX_CQE_ILLIGAL_TYPE
+comment|/* Bad RX Cqe type */
+block|,
+name|CORE_RX_CQE_TYPE_REGULAR
+comment|/* Regular Core RX CQE */
+block|,
+name|CORE_RX_CQE_TYPE_GSI_OFFLOAD
+comment|/* Fp Gsi offload RX CQE */
+block|,
+name|CORE_RX_CQE_TYPE_SLOW_PATH
+comment|/* Slow path Core RX CQE */
+block|,
+name|MAX_CORE_RX_CQE_TYPE
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Core RX CQE for Light L2 .   */
+end_comment
+
+begin_struct
+struct|struct
+name|core_rx_fast_path_cqe
+block|{
+name|u8
+name|type
+comment|/* CQE type */
+decl_stmt|;
+name|u8
+name|placement_offset
+comment|/* Offset (in bytes) of the packet from start of the buffer */
+decl_stmt|;
+name|struct
+name|parsing_and_err_flags
+name|parse_flags
+comment|/* Parsing and error flags from the parser */
+decl_stmt|;
+name|__le16
+name|packet_length
+comment|/* Total packet length (from the parser) */
+decl_stmt|;
+name|__le16
+name|vlan
+comment|/* 802.1q VLAN tag */
+decl_stmt|;
+name|struct
+name|core_rx_cqe_opaque_data
+name|opaque_data
+comment|/* Opaque Data */
+decl_stmt|;
+name|struct
+name|parsing_err_flags
+name|err_flags
+comment|/* bit- map: each bit represents a specific error. errors indications are provided by the cracker. see spec for detailed description */
+decl_stmt|;
+name|__le16
+name|reserved0
+decl_stmt|;
+name|__le32
+name|reserved1
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Core Rx CM offload CQE .   */
+end_comment
+
+begin_struct
+struct|struct
+name|core_rx_gsi_offload_cqe
+block|{
+name|u8
+name|type
+comment|/* CQE type */
+decl_stmt|;
+name|u8
+name|data_length_error
+comment|/* set if gsi data is bigger than buff */
+decl_stmt|;
+name|struct
+name|parsing_and_err_flags
+name|parse_flags
+comment|/* Parsing and error flags from the parser */
+decl_stmt|;
+name|__le16
+name|data_length
+comment|/* Total packet length (from the parser) */
+decl_stmt|;
+name|__le16
+name|vlan
+comment|/* 802.1q VLAN tag */
+decl_stmt|;
+name|__le32
+name|src_mac_addrhi
+comment|/* hi 4 bytes source mac address */
+decl_stmt|;
+name|__le16
+name|src_mac_addrlo
+comment|/* lo 2 bytes of source mac address */
+decl_stmt|;
+name|__le16
+name|qp_id
+comment|/* These are the lower 16 bit of QP id in RoCE BTH header */
+decl_stmt|;
+name|__le32
+name|gid_dst
+index|[
+literal|4
+index|]
+comment|/* Gid destination address */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Core RX CQE for Light L2 .   */
+end_comment
+
+begin_struct
+struct|struct
+name|core_rx_slow_path_cqe
+block|{
+name|u8
+name|type
+comment|/* CQE type */
+decl_stmt|;
+name|u8
+name|ramrod_cmd_id
+decl_stmt|;
+name|__le16
+name|echo
+decl_stmt|;
+name|struct
+name|core_rx_cqe_opaque_data
+name|opaque_data
+comment|/* Opaque Data */
+decl_stmt|;
+name|__le32
+name|reserved1
+index|[
+literal|5
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Core RX CM offload BD for Light L2  */
+end_comment
+
+begin_union
+union|union
+name|core_rx_cqe_union
+block|{
+name|struct
+name|core_rx_fast_path_cqe
+name|rx_cqe_fp
+comment|/* Fast path CQE */
+decl_stmt|;
+name|struct
+name|core_rx_gsi_offload_cqe
+name|rx_cqe_gsi
+comment|/* GSI offload CQE */
+decl_stmt|;
+name|struct
+name|core_rx_slow_path_cqe
+name|rx_cqe_sp
+comment|/* Slow path CQE */
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * Ramrod data for rx queue start ramrod  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_rx_start_ramrod_data
+block|{
+name|struct
+name|regpair
+name|bd_base
+comment|/* bd address of the first bd page */
+decl_stmt|;
+name|struct
+name|regpair
+name|cqe_pbl_addr
+comment|/* Base address on host of CQE PBL */
+decl_stmt|;
+name|__le16
+name|mtu
+comment|/* Maximum transmission unit */
+decl_stmt|;
+name|__le16
+name|sb_id
+comment|/* Status block ID */
+decl_stmt|;
+name|u8
+name|sb_index
+comment|/* index of the protocol index */
+decl_stmt|;
+name|u8
+name|complete_cqe_flg
+comment|/* post completion to the CQE ring if set */
+decl_stmt|;
+name|u8
+name|complete_event_flg
+comment|/* post completion to the event ring if set */
+decl_stmt|;
+name|u8
+name|drop_ttl0_flg
+comment|/* drop packet with ttl0 if set */
+decl_stmt|;
+name|__le16
+name|num_of_pbl_pages
+comment|/* Num of pages in CQE PBL */
+decl_stmt|;
+name|u8
+name|inner_vlan_removal_en
+comment|/* if set, 802.1q tags will be removed and copied to CQE */
+decl_stmt|;
+name|u8
+name|queue_id
+comment|/* Light L2 RX Queue ID */
+decl_stmt|;
+name|u8
+name|main_func_queue
+comment|/* Is this the main queue for the PF */
+decl_stmt|;
+name|u8
+name|mf_si_bcast_accept_all
+comment|/* Duplicate broadcast packets to LL2 main queue in mf_si mode. Valid if main_func_queue is set. */
+decl_stmt|;
+name|u8
+name|mf_si_mcast_accept_all
+comment|/* Duplicate multicast packets to LL2 main queue in mf_si mode. Valid if main_func_queue is set. */
+decl_stmt|;
+name|struct
+name|core_rx_action_on_error
+name|action_on_error
+comment|/* Specifies how ll2 should deal with packets errors: packet_too_big and no_buff */
+decl_stmt|;
+name|u8
+name|gsi_offload_flag
+comment|/* set when in GSI offload mode on ROCE connection */
+decl_stmt|;
+name|u8
+name|reserved
+index|[
+literal|7
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ramrod data for rx queue stop ramrod  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_rx_stop_ramrod_data
+block|{
+name|u8
+name|complete_cqe_flg
+comment|/* post completion to the CQE ring if set */
+decl_stmt|;
+name|u8
+name|complete_event_flg
+comment|/* post completion to the event ring if set */
+decl_stmt|;
+name|u8
+name|queue_id
+comment|/* Light L2 RX Queue ID */
+decl_stmt|;
+name|u8
+name|reserved1
+decl_stmt|;
+name|__le16
+name|reserved2
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Flags for Core TX BD  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_tx_bd_data
+block|{
+name|__le16
+name|as_bitfield
+decl_stmt|;
+define|#
+directive|define
+name|CORE_TX_BD_DATA_FORCE_VLAN_MODE_MASK
+value|0x1
+comment|/* Do not allow additional VLAN manipulations on this packet (DCB) */
+define|#
+directive|define
+name|CORE_TX_BD_DATA_FORCE_VLAN_MODE_SHIFT
+value|0
+define|#
+directive|define
+name|CORE_TX_BD_DATA_VLAN_INSERTION_MASK
+value|0x1
+comment|/* Insert VLAN into packet */
+define|#
+directive|define
+name|CORE_TX_BD_DATA_VLAN_INSERTION_SHIFT
+value|1
+define|#
+directive|define
+name|CORE_TX_BD_DATA_START_BD_MASK
+value|0x1
+comment|/* This is the first BD of the packet (for debug) */
+define|#
+directive|define
+name|CORE_TX_BD_DATA_START_BD_SHIFT
+value|2
+define|#
+directive|define
+name|CORE_TX_BD_DATA_IP_CSUM_MASK
+value|0x1
+comment|/* Calculate the IP checksum for the packet */
+define|#
+directive|define
+name|CORE_TX_BD_DATA_IP_CSUM_SHIFT
+value|3
+define|#
+directive|define
+name|CORE_TX_BD_DATA_L4_CSUM_MASK
+value|0x1
+comment|/* Calculate the L4 checksum for the packet */
+define|#
+directive|define
+name|CORE_TX_BD_DATA_L4_CSUM_SHIFT
+value|4
+define|#
+directive|define
+name|CORE_TX_BD_DATA_IPV6_EXT_MASK
+value|0x1
+comment|/* Packet is IPv6 with extensions */
+define|#
+directive|define
+name|CORE_TX_BD_DATA_IPV6_EXT_SHIFT
+value|5
+define|#
+directive|define
+name|CORE_TX_BD_DATA_L4_PROTOCOL_MASK
+value|0x1
+comment|/* If IPv6+ext, and if l4_csum is 1, than this field indicates L4 protocol: 0-TCP, 1-UDP */
+define|#
+directive|define
+name|CORE_TX_BD_DATA_L4_PROTOCOL_SHIFT
+value|6
+define|#
+directive|define
+name|CORE_TX_BD_DATA_L4_PSEUDO_CSUM_MODE_MASK
+value|0x1
+comment|/* The pseudo checksum mode to place in the L4 checksum field. Required only when IPv6+ext and l4_csum is set. (use enum core_l4_pseudo_checksum_mode) */
+define|#
+directive|define
+name|CORE_TX_BD_DATA_L4_PSEUDO_CSUM_MODE_SHIFT
+value|7
+define|#
+directive|define
+name|CORE_TX_BD_DATA_NBDS_MASK
+value|0xF
+comment|/* Number of BDs that make up one packet - width wide enough to present CORE_LL2_TX_MAX_BDS_PER_PACKET */
+define|#
+directive|define
+name|CORE_TX_BD_DATA_NBDS_SHIFT
+value|8
+define|#
+directive|define
+name|CORE_TX_BD_DATA_ROCE_FLAV_MASK
+value|0x1
+comment|/* Use roce_flavor enum - Differentiate between Roce flavors is valid when connType is ROCE (use enum core_roce_flavor_type) */
+define|#
+directive|define
+name|CORE_TX_BD_DATA_ROCE_FLAV_SHIFT
+value|12
+define|#
+directive|define
+name|CORE_TX_BD_DATA_IP_LEN_MASK
+value|0x1
+comment|/* Calculate ip length */
+define|#
+directive|define
+name|CORE_TX_BD_DATA_IP_LEN_SHIFT
+value|13
+define|#
+directive|define
+name|CORE_TX_BD_DATA_RESERVED0_MASK
+value|0x3
+define|#
+directive|define
+name|CORE_TX_BD_DATA_RESERVED0_SHIFT
+value|14
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Core TX BD for Light L2  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_tx_bd
+block|{
+name|struct
+name|regpair
+name|addr
+comment|/* Buffer Address */
+decl_stmt|;
+name|__le16
+name|nbytes
+comment|/* Number of Bytes in Buffer */
+decl_stmt|;
+name|__le16
+name|nw_vlan_or_lb_echo
+comment|/* Network packets: VLAN to insert to packet (if insertion flag set) LoopBack packets: echo data to pass to Rx */
+decl_stmt|;
+name|struct
+name|core_tx_bd_data
+name|bd_data
+comment|/* BD flags */
+decl_stmt|;
+name|__le16
+name|bitfield1
+decl_stmt|;
+define|#
+directive|define
+name|CORE_TX_BD_L4_HDR_OFFSET_W_MASK
+value|0x3FFF
+comment|/* L4 Header Offset from start of packet (in Words). This is needed if both l4_csum and ipv6_ext are set */
+define|#
+directive|define
+name|CORE_TX_BD_L4_HDR_OFFSET_W_SHIFT
+value|0
+define|#
+directive|define
+name|CORE_TX_BD_TX_DST_MASK
+value|0x3
+comment|/* Packet destination - Network, Loopback or Drop (use enum core_tx_dest) */
+define|#
+directive|define
+name|CORE_TX_BD_TX_DST_SHIFT
+value|14
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Light L2 TX Destination  */
+end_comment
+
+begin_enum
+enum|enum
+name|core_tx_dest
+block|{
+name|CORE_TX_DEST_NW
+comment|/* TX Destination to the Network */
+block|,
+name|CORE_TX_DEST_LB
+comment|/* TX Destination to the Loopback */
+block|,
+name|CORE_TX_DEST_RESERVED
+block|,
+name|CORE_TX_DEST_DROP
+comment|/* TX Drop */
+block|,
+name|MAX_CORE_TX_DEST
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Ramrod data for tx queue start ramrod  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_tx_start_ramrod_data
+block|{
+name|struct
+name|regpair
+name|pbl_base_addr
+comment|/* Address of the pbl page */
+decl_stmt|;
+name|__le16
+name|mtu
+comment|/* Maximum transmission unit */
+decl_stmt|;
+name|__le16
+name|sb_id
+comment|/* Status block ID */
+decl_stmt|;
+name|u8
+name|sb_index
+comment|/* Status block protocol index */
+decl_stmt|;
+name|u8
+name|stats_en
+comment|/* Statistics Enable */
+decl_stmt|;
+name|u8
+name|stats_id
+comment|/* Statistics Counter ID */
+decl_stmt|;
+name|u8
+name|conn_type
+comment|/* connection type that loaded ll2 */
+decl_stmt|;
+name|__le16
+name|pbl_size
+comment|/* Number of BD pages pointed by PBL */
+decl_stmt|;
+name|__le16
+name|qm_pq_id
+comment|/* QM PQ ID */
+decl_stmt|;
+name|u8
+name|gsi_offload_flag
+comment|/* set when in GSI offload mode on ROCE connection */
+decl_stmt|;
+name|u8
+name|resrved
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ramrod data for tx queue stop ramrod  */
+end_comment
+
+begin_struct
+struct|struct
+name|core_tx_stop_ramrod_data
+block|{
+name|__le32
+name|reserved0
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Enum flag for what type of dcb data to update  */
+end_comment
+
+begin_enum
+enum|enum
+name|dcb_dscp_update_mode
+block|{
+name|DONT_UPDATE_DCB_DSCP
+comment|/* use when no change should be done to dcb data */
+block|,
+name|UPDATE_DCB
+comment|/* use to update only l2 (vlan) priority */
+block|,
+name|UPDATE_DSCP
+comment|/* use to update only l3 dscp */
+block|,
+name|UPDATE_DCB_DSCP
+comment|/* update vlan pri and dscp */
+block|,
+name|MAX_DCB_DSCP_UPDATE_MODE
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * The core storm context for the Ystorm  */
 end_comment
 
@@ -2085,7 +3074,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|core_conn_context
+name|e4_core_conn_context
 block|{
 name|struct
 name|ystorm_core_conn_st_ctx
@@ -2155,994 +3144,2131 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * How ll2 should deal with packet upon errors  */
-end_comment
-
-begin_enum
-enum|enum
-name|core_error_handle
-block|{
-name|LL2_DROP_PACKET
-comment|/* If error occurs drop packet */
-block|,
-name|LL2_DO_NOTHING
-comment|/* If error occurs do nothing */
-block|,
-name|LL2_ASSERT
-comment|/* If error occurs assert */
-block|,
-name|MAX_CORE_ERROR_HANDLE
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * opcodes for the event ring  */
-end_comment
-
-begin_enum
-enum|enum
-name|core_event_opcode
-block|{
-name|CORE_EVENT_TX_QUEUE_START
-block|,
-name|CORE_EVENT_TX_QUEUE_STOP
-block|,
-name|CORE_EVENT_RX_QUEUE_START
-block|,
-name|CORE_EVENT_RX_QUEUE_STOP
-block|,
-name|CORE_EVENT_RX_QUEUE_FLUSH
-block|,
-name|MAX_CORE_EVENT_OPCODE
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * The L4 pseudo checksum mode for Core  */
-end_comment
-
-begin_enum
-enum|enum
-name|core_l4_pseudo_checksum_mode
-block|{
-name|CORE_L4_PSEUDO_CSUM_CORRECT_LENGTH
-comment|/* Pseudo Checksum on packet is calculated with the correct packet length. */
-block|,
-name|CORE_L4_PSEUDO_CSUM_ZERO_LENGTH
-comment|/* Pseudo Checksum on packet is calculated with zero length. */
-block|,
-name|MAX_CORE_L4_PSEUDO_CHECKSUM_MODE
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * Light-L2 RX Producers in Tstorm RAM  */
-end_comment
-
 begin_struct
 struct|struct
-name|core_ll2_port_stats
-block|{
-name|struct
-name|regpair
-name|gsi_invalid_hdr
-decl_stmt|;
-name|struct
-name|regpair
-name|gsi_invalid_pkt_length
-decl_stmt|;
-name|struct
-name|regpair
-name|gsi_unsupported_pkt_typ
-decl_stmt|;
-name|struct
-name|regpair
-name|gsi_crcchksm_error
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Ethernet TX Per Queue Stats  */
-end_comment
-
-begin_struct
-struct|struct
-name|core_ll2_pstorm_per_queue_stat
-block|{
-name|struct
-name|regpair
-name|sent_ucast_bytes
-comment|/* number of total bytes sent without errors */
-decl_stmt|;
-name|struct
-name|regpair
-name|sent_mcast_bytes
-comment|/* number of total bytes sent without errors */
-decl_stmt|;
-name|struct
-name|regpair
-name|sent_bcast_bytes
-comment|/* number of total bytes sent without errors */
-decl_stmt|;
-name|struct
-name|regpair
-name|sent_ucast_pkts
-comment|/* number of total packets sent without errors */
-decl_stmt|;
-name|struct
-name|regpair
-name|sent_mcast_pkts
-comment|/* number of total packets sent without errors */
-decl_stmt|;
-name|struct
-name|regpair
-name|sent_bcast_pkts
-comment|/* number of total packets sent without errors */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Light-L2 RX Producers in Tstorm RAM  */
-end_comment
-
-begin_struct
-struct|struct
-name|core_ll2_rx_prod
-block|{
-name|__le16
-name|bd_prod
-comment|/* BD Producer */
-decl_stmt|;
-name|__le16
-name|cqe_prod
-comment|/* CQE Producer */
-decl_stmt|;
-name|__le32
-name|reserved
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|core_ll2_tstorm_per_queue_stat
-block|{
-name|struct
-name|regpair
-name|packet_too_big_discard
-comment|/* Number of packets discarded because they are bigger than MTU */
-decl_stmt|;
-name|struct
-name|regpair
-name|no_buff_discard
-comment|/* Number of packets discarded due to lack of host buffers */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|core_ll2_ustorm_per_queue_stat
-block|{
-name|struct
-name|regpair
-name|rcv_ucast_bytes
-decl_stmt|;
-name|struct
-name|regpair
-name|rcv_mcast_bytes
-decl_stmt|;
-name|struct
-name|regpair
-name|rcv_bcast_bytes
-decl_stmt|;
-name|struct
-name|regpair
-name|rcv_ucast_pkts
-decl_stmt|;
-name|struct
-name|regpair
-name|rcv_mcast_pkts
-decl_stmt|;
-name|struct
-name|regpair
-name|rcv_bcast_pkts
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Core Ramrod Command IDs (light L2)  */
-end_comment
-
-begin_enum
-enum|enum
-name|core_ramrod_cmd_id
-block|{
-name|CORE_RAMROD_UNUSED
-block|,
-name|CORE_RAMROD_RX_QUEUE_START
-comment|/* RX Queue Start Ramrod */
-block|,
-name|CORE_RAMROD_TX_QUEUE_START
-comment|/* TX Queue Start Ramrod */
-block|,
-name|CORE_RAMROD_RX_QUEUE_STOP
-comment|/* RX Queue Stop Ramrod */
-block|,
-name|CORE_RAMROD_TX_QUEUE_STOP
-comment|/* TX Queue Stop Ramrod */
-block|,
-name|CORE_RAMROD_RX_QUEUE_FLUSH
-comment|/* RX Flush queue Ramrod */
-block|,
-name|MAX_CORE_RAMROD_CMD_ID
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * Core RX CQE Type for Light L2  */
-end_comment
-
-begin_enum
-enum|enum
-name|core_roce_flavor_type
-block|{
-name|CORE_ROCE
-block|,
-name|CORE_RROCE
-block|,
-name|MAX_CORE_ROCE_FLAVOR_TYPE
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * Specifies how ll2 should deal with packets errors: packet_too_big and no_buff  */
-end_comment
-
-begin_struct
-struct|struct
-name|core_rx_action_on_error
+name|e5_xstorm_core_conn_ag_ctx
 block|{
 name|u8
-name|error_type
-decl_stmt|;
-define|#
-directive|define
-name|CORE_RX_ACTION_ON_ERROR_PACKET_TOO_BIG_MASK
-value|0x3
-comment|/* ll2 how to handle error packet_too_big (use enum core_error_handle) */
-define|#
-directive|define
-name|CORE_RX_ACTION_ON_ERROR_PACKET_TOO_BIG_SHIFT
-value|0
-define|#
-directive|define
-name|CORE_RX_ACTION_ON_ERROR_NO_BUFF_MASK
-value|0x3
-comment|/* ll2 how to handle error with no_buff  (use enum core_error_handle) */
-define|#
-directive|define
-name|CORE_RX_ACTION_ON_ERROR_NO_BUFF_SHIFT
-value|2
-define|#
-directive|define
-name|CORE_RX_ACTION_ON_ERROR_RESERVED_MASK
-value|0xF
-define|#
-directive|define
-name|CORE_RX_ACTION_ON_ERROR_RESERVED_SHIFT
-value|4
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Core RX BD for Light L2  */
-end_comment
-
-begin_struct
-struct|struct
-name|core_rx_bd
-block|{
-name|struct
-name|regpair
-name|addr
-decl_stmt|;
-name|__le16
-name|reserved
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Core RX CM offload BD for Light L2  */
-end_comment
-
-begin_struct
-struct|struct
-name|core_rx_bd_with_buff_len
-block|{
-name|struct
-name|regpair
-name|addr
-decl_stmt|;
-name|__le16
-name|buff_length
-decl_stmt|;
-name|__le16
-name|reserved
-index|[
-literal|3
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Core RX CM offload BD for Light L2  */
-end_comment
-
-begin_union
-union|union
-name|core_rx_bd_union
-block|{
-name|struct
-name|core_rx_bd
-name|rx_bd
-comment|/* Core Rx Bd static buffer size */
-decl_stmt|;
-name|struct
-name|core_rx_bd_with_buff_len
-name|rx_bd_with_len
-comment|/* Core Rx Bd with dynamic buffer length */
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_comment
-comment|/*  * Opaque Data for Light L2 RX CQE .   */
-end_comment
-
-begin_struct
-struct|struct
-name|core_rx_cqe_opaque_data
-block|{
-name|__le32
-name|data
-index|[
-literal|2
-index|]
-comment|/* Opaque CQE Data */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Core RX CQE Type for Light L2  */
-end_comment
-
-begin_enum
-enum|enum
-name|core_rx_cqe_type
-block|{
-name|CORE_RX_CQE_ILLIGAL_TYPE
-comment|/* Bad RX Cqe type */
-block|,
-name|CORE_RX_CQE_TYPE_REGULAR
-comment|/* Regular Core RX CQE */
-block|,
-name|CORE_RX_CQE_TYPE_GSI_OFFLOAD
-comment|/* Fp Gsi offload RX CQE */
-block|,
-name|CORE_RX_CQE_TYPE_SLOW_PATH
-comment|/* Slow path Core RX CQE */
-block|,
-name|MAX_CORE_RX_CQE_TYPE
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * Core RX CQE for Light L2 .   */
-end_comment
-
-begin_struct
-struct|struct
-name|core_rx_fast_path_cqe
-block|{
-name|u8
-name|type
-comment|/* CQE type */
-decl_stmt|;
-name|u8
-name|placement_offset
-comment|/* Offset (in bytes) of the packet from start of the buffer */
-decl_stmt|;
-name|struct
-name|parsing_and_err_flags
-name|parse_flags
-comment|/* Parsing and error flags from the parser */
-decl_stmt|;
-name|__le16
-name|packet_length
-comment|/* Total packet length (from the parser) */
-decl_stmt|;
-name|__le16
-name|vlan
-comment|/* 802.1q VLAN tag */
-decl_stmt|;
-name|struct
-name|core_rx_cqe_opaque_data
-name|opaque_data
-comment|/* Opaque Data */
-decl_stmt|;
-name|struct
-name|parsing_err_flags
-name|err_flags
-comment|/* bit- map: each bit represents a specific error. errors indications are provided by the cracker. see spec for detailed description */
-decl_stmt|;
-name|__le16
 name|reserved0
-decl_stmt|;
-name|__le32
-name|reserved1
-index|[
-literal|3
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Core Rx CM offload CQE .   */
-end_comment
-
-begin_struct
-struct|struct
-name|core_rx_gsi_offload_cqe
-block|{
-name|u8
-name|type
-comment|/* CQE type */
+comment|/* cdu_validation */
 decl_stmt|;
 name|u8
-name|data_length_error
-comment|/* set if gsi data is bigger than buff */
-decl_stmt|;
-name|struct
-name|parsing_and_err_flags
-name|parse_flags
-comment|/* Parsing and error flags from the parser */
-decl_stmt|;
-name|__le16
-name|data_length
-comment|/* Total packet length (from the parser) */
-decl_stmt|;
-name|__le16
-name|vlan
-comment|/* 802.1q VLAN tag */
-decl_stmt|;
-name|__le32
-name|src_mac_addrhi
-comment|/* hi 4 bytes source mac address */
-decl_stmt|;
-name|__le16
-name|src_mac_addrlo
-comment|/* lo 2 bytes of source mac address */
-decl_stmt|;
-name|__le16
-name|qp_id
-comment|/* These are the lower 16 bit of QP id in RoCE BTH header */
-decl_stmt|;
-name|__le32
-name|gid_dst
-index|[
-literal|4
-index|]
-comment|/* Gid destination address */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Core RX CQE for Light L2 .   */
-end_comment
-
-begin_struct
-struct|struct
-name|core_rx_slow_path_cqe
-block|{
-name|u8
-name|type
-comment|/* CQE type */
+name|state_and_core_id
+comment|/* state_and_core_id */
 decl_stmt|;
 name|u8
-name|ramrod_cmd_id
-decl_stmt|;
-name|__le16
-name|echo
-decl_stmt|;
-name|struct
-name|core_rx_cqe_opaque_data
-name|opaque_data
-comment|/* Opaque Data */
-decl_stmt|;
-name|__le32
-name|reserved1
-index|[
-literal|5
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Core RX CM offload BD for Light L2  */
-end_comment
-
-begin_union
-union|union
-name|core_rx_cqe_union
-block|{
-name|struct
-name|core_rx_fast_path_cqe
-name|rx_cqe_fp
-comment|/* Fast path CQE */
-decl_stmt|;
-name|struct
-name|core_rx_gsi_offload_cqe
-name|rx_cqe_gsi
-comment|/* GSI offload CQE */
-decl_stmt|;
-name|struct
-name|core_rx_slow_path_cqe
-name|rx_cqe_sp
-comment|/* Slow path CQE */
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_comment
-comment|/*  * Ramrod data for rx queue start ramrod  */
-end_comment
-
-begin_struct
-struct|struct
-name|core_rx_start_ramrod_data
-block|{
-name|struct
-name|regpair
-name|bd_base
-comment|/* bd address of the first bd page */
-decl_stmt|;
-name|struct
-name|regpair
-name|cqe_pbl_addr
-comment|/* Base address on host of CQE PBL */
-decl_stmt|;
-name|__le16
-name|mtu
-comment|/* Maximum transmission unit */
-decl_stmt|;
-name|__le16
-name|sb_id
-comment|/* Status block ID */
-decl_stmt|;
-name|u8
-name|sb_index
-comment|/* index of the protocol index */
-decl_stmt|;
-name|u8
-name|complete_cqe_flg
-comment|/* post completion to the CQE ring if set */
-decl_stmt|;
-name|u8
-name|complete_event_flg
-comment|/* post completion to the event ring if set */
-decl_stmt|;
-name|u8
-name|drop_ttl0_flg
-comment|/* drop packet with ttl0 if set */
-decl_stmt|;
-name|__le16
-name|num_of_pbl_pages
-comment|/* Num of pages in CQE PBL */
-decl_stmt|;
-name|u8
-name|inner_vlan_removal_en
-comment|/* if set, 802.1q tags will be removed and copied to CQE */
-decl_stmt|;
-name|u8
-name|queue_id
-comment|/* Light L2 RX Queue ID */
-decl_stmt|;
-name|u8
-name|main_func_queue
-comment|/* Is this the main queue for the PF */
-decl_stmt|;
-name|u8
-name|mf_si_bcast_accept_all
-comment|/* Duplicate broadcast packets to LL2 main queue in mf_si mode. Valid if main_func_queue is set. */
-decl_stmt|;
-name|u8
-name|mf_si_mcast_accept_all
-comment|/* Duplicate multicast packets to LL2 main queue in mf_si mode. Valid if main_func_queue is set. */
-decl_stmt|;
-name|struct
-name|core_rx_action_on_error
-name|action_on_error
-comment|/* Specifies how ll2 should deal with packets errors: packet_too_big and no_buff */
-decl_stmt|;
-name|u8
-name|gsi_offload_flag
-comment|/* set when in GSI offload mode on ROCE connection */
-decl_stmt|;
-name|u8
-name|reserved
-index|[
-literal|7
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Ramrod data for rx queue stop ramrod  */
-end_comment
-
-begin_struct
-struct|struct
-name|core_rx_stop_ramrod_data
-block|{
-name|u8
-name|complete_cqe_flg
-comment|/* post completion to the CQE ring if set */
-decl_stmt|;
-name|u8
-name|complete_event_flg
-comment|/* post completion to the event ring if set */
-decl_stmt|;
-name|u8
-name|queue_id
-comment|/* Light L2 RX Queue ID */
-decl_stmt|;
-name|u8
-name|reserved1
-decl_stmt|;
-name|__le16
-name|reserved2
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Flags for Core TX BD  */
-end_comment
-
-begin_struct
-struct|struct
-name|core_tx_bd_data
-block|{
-name|__le16
-name|as_bitfield
+name|flags0
 decl_stmt|;
 define|#
 directive|define
-name|CORE_TX_BD_DATA_FORCE_VLAN_MODE_MASK
+name|E5_XSTORM_CORE_CONN_AG_CTX_EXIST_IN_QM0_MASK
 value|0x1
-comment|/* Do not allow additional VLAN manipulations on this packet (DCB) */
+comment|/* exist_in_qm0 */
 define|#
 directive|define
-name|CORE_TX_BD_DATA_FORCE_VLAN_MODE_SHIFT
+name|E5_XSTORM_CORE_CONN_AG_CTX_EXIST_IN_QM0_SHIFT
 value|0
 define|#
 directive|define
-name|CORE_TX_BD_DATA_VLAN_INSERTION_MASK
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED1_MASK
 value|0x1
-comment|/* Insert VLAN into packet */
+comment|/* exist_in_qm1 */
 define|#
 directive|define
-name|CORE_TX_BD_DATA_VLAN_INSERTION_SHIFT
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED1_SHIFT
 value|1
 define|#
 directive|define
-name|CORE_TX_BD_DATA_START_BD_MASK
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED2_MASK
 value|0x1
-comment|/* This is the first BD of the packet (for debug) */
+comment|/* exist_in_qm2 */
 define|#
 directive|define
-name|CORE_TX_BD_DATA_START_BD_SHIFT
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED2_SHIFT
 value|2
 define|#
 directive|define
-name|CORE_TX_BD_DATA_IP_CSUM_MASK
+name|E5_XSTORM_CORE_CONN_AG_CTX_EXIST_IN_QM3_MASK
 value|0x1
-comment|/* Calculate the IP checksum for the packet */
+comment|/* exist_in_qm3 */
 define|#
 directive|define
-name|CORE_TX_BD_DATA_IP_CSUM_SHIFT
+name|E5_XSTORM_CORE_CONN_AG_CTX_EXIST_IN_QM3_SHIFT
 value|3
 define|#
 directive|define
-name|CORE_TX_BD_DATA_L4_CSUM_MASK
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED3_MASK
 value|0x1
-comment|/* Calculate the L4 checksum for the packet */
+comment|/* bit4 */
 define|#
 directive|define
-name|CORE_TX_BD_DATA_L4_CSUM_SHIFT
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED3_SHIFT
 value|4
 define|#
 directive|define
-name|CORE_TX_BD_DATA_IPV6_EXT_MASK
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED4_MASK
 value|0x1
-comment|/* Packet is IPv6 with extensions */
+comment|/* cf_array_active */
 define|#
 directive|define
-name|CORE_TX_BD_DATA_IPV6_EXT_SHIFT
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED4_SHIFT
 value|5
 define|#
 directive|define
-name|CORE_TX_BD_DATA_L4_PROTOCOL_MASK
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED5_MASK
 value|0x1
-comment|/* If IPv6+ext, and if l4_csum is 1, than this field indicates L4 protocol: 0-TCP, 1-UDP */
+comment|/* bit6 */
 define|#
 directive|define
-name|CORE_TX_BD_DATA_L4_PROTOCOL_SHIFT
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED5_SHIFT
 value|6
 define|#
 directive|define
-name|CORE_TX_BD_DATA_L4_PSEUDO_CSUM_MODE_MASK
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED6_MASK
 value|0x1
-comment|/* The pseudo checksum mode to place in the L4 checksum field. Required only when IPv6+ext and l4_csum is set. (use enum core_l4_pseudo_checksum_mode) */
+comment|/* bit7 */
 define|#
 directive|define
-name|CORE_TX_BD_DATA_L4_PSEUDO_CSUM_MODE_SHIFT
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED6_SHIFT
 value|7
+name|u8
+name|flags1
+decl_stmt|;
 define|#
 directive|define
-name|CORE_TX_BD_DATA_NBDS_MASK
-value|0xF
-comment|/* Number of BDs that make up one packet - width wide enough to present CORE_LL2_TX_MAX_BDS_PER_PACKET */
-define|#
-directive|define
-name|CORE_TX_BD_DATA_NBDS_SHIFT
-value|8
-define|#
-directive|define
-name|CORE_TX_BD_DATA_ROCE_FLAV_MASK
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED7_MASK
 value|0x1
-comment|/* Use roce_flavor enum - Differentiate between Roce flavors is valid when connType is ROCE (use enum core_roce_flavor_type) */
+comment|/* bit8 */
 define|#
 directive|define
-name|CORE_TX_BD_DATA_ROCE_FLAV_SHIFT
-value|12
-define|#
-directive|define
-name|CORE_TX_BD_DATA_IP_LEN_MASK
-value|0x1
-comment|/* Calculate ip length */
-define|#
-directive|define
-name|CORE_TX_BD_DATA_IP_LEN_SHIFT
-value|13
-define|#
-directive|define
-name|CORE_TX_BD_DATA_RESERVED0_MASK
-value|0x3
-define|#
-directive|define
-name|CORE_TX_BD_DATA_RESERVED0_SHIFT
-value|14
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Core TX BD for Light L2  */
-end_comment
-
-begin_struct
-struct|struct
-name|core_tx_bd
-block|{
-name|struct
-name|regpair
-name|addr
-comment|/* Buffer Address */
-decl_stmt|;
-name|__le16
-name|nbytes
-comment|/* Number of Bytes in Buffer */
-decl_stmt|;
-name|__le16
-name|nw_vlan_or_lb_echo
-comment|/* Network packets: VLAN to insert to packet (if insertion flag set) LoopBack packets: echo data to pass to Rx */
-decl_stmt|;
-name|struct
-name|core_tx_bd_data
-name|bd_data
-comment|/* BD Flags */
-decl_stmt|;
-name|__le16
-name|bitfield1
-decl_stmt|;
-define|#
-directive|define
-name|CORE_TX_BD_L4_HDR_OFFSET_W_MASK
-value|0x3FFF
-comment|/* L4 Header Offset from start of packet (in Words). This is needed if both l4_csum and ipv6_ext are set */
-define|#
-directive|define
-name|CORE_TX_BD_L4_HDR_OFFSET_W_SHIFT
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED7_SHIFT
 value|0
 define|#
 directive|define
-name|CORE_TX_BD_TX_DST_MASK
-value|0x3
-comment|/* Packet destination - Network, Loopback or Drop (use enum core_tx_dest) */
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED8_MASK
+value|0x1
+comment|/* bit9 */
 define|#
 directive|define
-name|CORE_TX_BD_TX_DST_SHIFT
-value|14
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED8_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED9_MASK
+value|0x1
+comment|/* bit10 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED9_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT11_MASK
+value|0x1
+comment|/* bit11 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT11_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT12_MASK
+value|0x1
+comment|/* bit12 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT12_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT13_MASK
+value|0x1
+comment|/* bit13 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT13_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_TX_RULE_ACTIVE_MASK
+value|0x1
+comment|/* bit14 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_TX_RULE_ACTIVE_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_ACTIVE_MASK
+value|0x1
+comment|/* bit15 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_ACTIVE_SHIFT
+value|7
+name|u8
+name|flags2
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF0_MASK
+value|0x3
+comment|/* timer0cf */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF1_MASK
+value|0x3
+comment|/* timer1cf */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF1_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF2_MASK
+value|0x3
+comment|/* timer2cf */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF2_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF3_MASK
+value|0x3
+comment|/* timer_stop_all */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF3_SHIFT
+value|6
+name|u8
+name|flags3
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF4_MASK
+value|0x3
+comment|/* cf4 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF4_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF5_MASK
+value|0x3
+comment|/* cf5 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF5_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF6_MASK
+value|0x3
+comment|/* cf6 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF6_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF7_MASK
+value|0x3
+comment|/* cf7 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF7_SHIFT
+value|6
+name|u8
+name|flags4
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF8_MASK
+value|0x3
+comment|/* cf8 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF8_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF9_MASK
+value|0x3
+comment|/* cf9 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF9_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF10_MASK
+value|0x3
+comment|/* cf10 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF10_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF11_MASK
+value|0x3
+comment|/* cf11 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF11_SHIFT
+value|6
+name|u8
+name|flags5
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF12_MASK
+value|0x3
+comment|/* cf12 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF12_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF13_MASK
+value|0x3
+comment|/* cf13 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF13_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF14_MASK
+value|0x3
+comment|/* cf14 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF14_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF15_MASK
+value|0x3
+comment|/* cf15 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF15_SHIFT
+value|6
+name|u8
+name|flags6
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CONSOLID_PROD_CF_MASK
+value|0x3
+comment|/* cf16 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CONSOLID_PROD_CF_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF17_MASK
+value|0x3
+comment|/* cf_array_cf */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF17_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_MASK
+value|0x3
+comment|/* cf18 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_TERMINATE_CF_MASK
+value|0x3
+comment|/* cf19 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_TERMINATE_CF_SHIFT
+value|6
+name|u8
+name|flags7
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_FLUSH_Q0_MASK
+value|0x3
+comment|/* cf20 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_FLUSH_Q0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED10_MASK
+value|0x3
+comment|/* cf21 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED10_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_SLOW_PATH_MASK
+value|0x3
+comment|/* cf22 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_SLOW_PATH_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF0EN_MASK
+value|0x1
+comment|/* cf0en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF0EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF1EN_MASK
+value|0x1
+comment|/* cf1en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF1EN_SHIFT
+value|7
+name|u8
+name|flags8
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF2EN_MASK
+value|0x1
+comment|/* cf2en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF2EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF3EN_MASK
+value|0x1
+comment|/* cf3en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF3EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF4EN_MASK
+value|0x1
+comment|/* cf4en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF4EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF5EN_MASK
+value|0x1
+comment|/* cf5en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF5EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF6EN_MASK
+value|0x1
+comment|/* cf6en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF6EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF7EN_MASK
+value|0x1
+comment|/* cf7en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF7EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF8EN_MASK
+value|0x1
+comment|/* cf8en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF8EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF9EN_MASK
+value|0x1
+comment|/* cf9en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF9EN_SHIFT
+value|7
+name|u8
+name|flags9
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF10EN_MASK
+value|0x1
+comment|/* cf10en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF10EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF11EN_MASK
+value|0x1
+comment|/* cf11en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF11EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF12EN_MASK
+value|0x1
+comment|/* cf12en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF12EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF13EN_MASK
+value|0x1
+comment|/* cf13en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF13EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF14EN_MASK
+value|0x1
+comment|/* cf14en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF14EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF15EN_MASK
+value|0x1
+comment|/* cf15en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF15EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CONSOLID_PROD_CF_EN_MASK
+value|0x1
+comment|/* cf16en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CONSOLID_PROD_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF17EN_MASK
+value|0x1
+comment|/* cf_array_cf_en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF17EN_SHIFT
+value|7
+name|u8
+name|flags10
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_EN_MASK
+value|0x1
+comment|/* cf18en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_TERMINATE_CF_EN_MASK
+value|0x1
+comment|/* cf19en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_TERMINATE_CF_EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_FLUSH_Q0_EN_MASK
+value|0x1
+comment|/* cf20en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_FLUSH_Q0_EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED11_MASK
+value|0x1
+comment|/* cf21en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED11_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_SLOW_PATH_EN_MASK
+value|0x1
+comment|/* cf22en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_SLOW_PATH_EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF23EN_MASK
+value|0x1
+comment|/* cf23en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF23EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED12_MASK
+value|0x1
+comment|/* rule0en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED12_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED13_MASK
+value|0x1
+comment|/* rule1en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED13_SHIFT
+value|7
+name|u8
+name|flags11
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED14_MASK
+value|0x1
+comment|/* rule2en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED14_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED15_MASK
+value|0x1
+comment|/* rule3en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED15_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_TX_DEC_RULE_EN_MASK
+value|0x1
+comment|/* rule4en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_TX_DEC_RULE_EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE5EN_MASK
+value|0x1
+comment|/* rule5en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE5EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE6EN_MASK
+value|0x1
+comment|/* rule6en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE6EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE7EN_MASK
+value|0x1
+comment|/* rule7en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE7EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED1_MASK
+value|0x1
+comment|/* rule8en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED1_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE9EN_MASK
+value|0x1
+comment|/* rule9en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE9EN_SHIFT
+value|7
+name|u8
+name|flags12
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE10EN_MASK
+value|0x1
+comment|/* rule10en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE10EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE11EN_MASK
+value|0x1
+comment|/* rule11en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE11EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED2_MASK
+value|0x1
+comment|/* rule12en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED2_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED3_MASK
+value|0x1
+comment|/* rule13en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED3_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE14EN_MASK
+value|0x1
+comment|/* rule14en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE14EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE15EN_MASK
+value|0x1
+comment|/* rule15en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE15EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE16EN_MASK
+value|0x1
+comment|/* rule16en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE16EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE17EN_MASK
+value|0x1
+comment|/* rule17en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE17EN_SHIFT
+value|7
+name|u8
+name|flags13
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE18EN_MASK
+value|0x1
+comment|/* rule18en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE18EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE19EN_MASK
+value|0x1
+comment|/* rule19en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_RULE19EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED4_MASK
+value|0x1
+comment|/* rule20en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED4_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED5_MASK
+value|0x1
+comment|/* rule21en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED5_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED6_MASK
+value|0x1
+comment|/* rule22en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED6_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED7_MASK
+value|0x1
+comment|/* rule23en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED7_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED8_MASK
+value|0x1
+comment|/* rule24en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED8_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED9_MASK
+value|0x1
+comment|/* rule25en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED9_SHIFT
+value|7
+name|u8
+name|flags14
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT16_MASK
+value|0x1
+comment|/* bit16 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT16_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT17_MASK
+value|0x1
+comment|/* bit17 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT17_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT18_MASK
+value|0x1
+comment|/* bit18 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT18_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT19_MASK
+value|0x1
+comment|/* bit19 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT19_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT20_MASK
+value|0x1
+comment|/* bit20 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT20_SHIFT
+value|4
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT21_MASK
+value|0x1
+comment|/* bit21 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_BIT21_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF23_MASK
+value|0x3
+comment|/* cf23 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_CF23_SHIFT
+value|6
+name|u8
+name|byte2
+comment|/* byte2 */
+decl_stmt|;
+name|__le16
+name|physical_q0
+comment|/* physical_q0 */
+decl_stmt|;
+name|__le16
+name|consolid_prod
+comment|/* physical_q1 */
+decl_stmt|;
+name|__le16
+name|reserved16
+comment|/* physical_q2 */
+decl_stmt|;
+name|__le16
+name|tx_bd_cons
+comment|/* word3 */
+decl_stmt|;
+name|__le16
+name|tx_bd_or_spq_prod
+comment|/* word4 */
+decl_stmt|;
+name|__le16
+name|word5
+comment|/* word5 */
+decl_stmt|;
+name|__le16
+name|conn_dpi
+comment|/* conn_dpi */
+decl_stmt|;
+name|u8
+name|byte3
+comment|/* byte3 */
+decl_stmt|;
+name|u8
+name|byte4
+comment|/* byte4 */
+decl_stmt|;
+name|u8
+name|byte5
+comment|/* byte5 */
+decl_stmt|;
+name|u8
+name|byte6
+comment|/* byte6 */
+decl_stmt|;
+name|__le32
+name|reg0
+comment|/* reg0 */
+decl_stmt|;
+name|__le32
+name|reg1
+comment|/* reg1 */
+decl_stmt|;
+name|__le32
+name|reg2
+comment|/* reg2 */
+decl_stmt|;
+name|__le32
+name|reg3
+comment|/* reg3 */
+decl_stmt|;
+name|__le32
+name|reg4
+comment|/* reg4 */
+decl_stmt|;
+name|__le32
+name|reg5
+comment|/* cf_array0 */
+decl_stmt|;
+name|__le32
+name|reg6
+comment|/* cf_array1 */
+decl_stmt|;
+name|u8
+name|flags15
+decl_stmt|;
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED1_MASK
+value|0x1
+comment|/* bit22 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED1_SHIFT
+value|0
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED2_MASK
+value|0x1
+comment|/* bit23 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED2_SHIFT
+value|1
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED3_MASK
+value|0x1
+comment|/* bit24 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED3_SHIFT
+value|2
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED4_MASK
+value|0x3
+comment|/* cf24 */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED4_SHIFT
+value|3
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED5_MASK
+value|0x1
+comment|/* cf24en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED5_SHIFT
+value|5
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED6_MASK
+value|0x1
+comment|/* rule26en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED6_SHIFT
+value|6
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED7_MASK
+value|0x1
+comment|/* rule27en */
+define|#
+directive|define
+name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED7_SHIFT
+value|7
+name|u8
+name|byte7
+comment|/* byte7 */
+decl_stmt|;
+name|__le16
+name|word7
+comment|/* word7 */
+decl_stmt|;
+name|__le16
+name|word8
+comment|/* word8 */
+decl_stmt|;
+name|__le16
+name|word9
+comment|/* word9 */
+decl_stmt|;
+name|__le16
+name|word10
+comment|/* word10 */
+decl_stmt|;
+name|__le16
+name|word11
+comment|/* word11 */
+decl_stmt|;
+name|__le32
+name|reg7
+comment|/* reg7 */
+decl_stmt|;
+name|__le32
+name|reg8
+comment|/* reg8 */
+decl_stmt|;
+name|__le32
+name|reg9
+comment|/* reg9 */
+decl_stmt|;
+name|u8
+name|byte8
+comment|/* byte8 */
+decl_stmt|;
+name|u8
+name|byte9
+comment|/* byte9 */
+decl_stmt|;
+name|u8
+name|byte10
+comment|/* byte10 */
+decl_stmt|;
+name|u8
+name|byte11
+comment|/* byte11 */
+decl_stmt|;
+name|u8
+name|byte12
+comment|/* byte12 */
+decl_stmt|;
+name|u8
+name|byte13
+comment|/* byte13 */
+decl_stmt|;
+name|u8
+name|byte14
+comment|/* byte14 */
+decl_stmt|;
+name|u8
+name|byte15
+comment|/* byte15 */
+decl_stmt|;
+name|__le32
+name|reg10
+comment|/* reg10 */
+decl_stmt|;
+name|__le32
+name|reg11
+comment|/* reg11 */
+decl_stmt|;
+name|__le32
+name|reg12
+comment|/* reg12 */
+decl_stmt|;
+name|__le32
+name|reg13
+comment|/* reg13 */
+decl_stmt|;
+name|__le32
+name|reg14
+comment|/* reg14 */
+decl_stmt|;
+name|__le32
+name|reg15
+comment|/* reg15 */
+decl_stmt|;
+name|__le32
+name|reg16
+comment|/* reg16 */
+decl_stmt|;
+name|__le32
+name|reg17
+comment|/* reg17 */
+decl_stmt|;
+name|__le32
+name|reg18
+comment|/* reg18 */
+decl_stmt|;
+name|__le32
+name|reg19
+comment|/* reg19 */
+decl_stmt|;
+name|__le16
+name|word12
+comment|/* word12 */
+decl_stmt|;
+name|__le16
+name|word13
+comment|/* word13 */
+decl_stmt|;
+name|__le16
+name|word14
+comment|/* word14 */
+decl_stmt|;
+name|__le16
+name|word15
+comment|/* word15 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e5_tstorm_core_conn_ag_ctx
+block|{
+name|u8
+name|byte0
+comment|/* cdu_validation */
+decl_stmt|;
+name|u8
+name|byte1
+comment|/* state_and_core_id */
+decl_stmt|;
+name|u8
+name|flags0
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT0_MASK
+value|0x1
+comment|/* exist_in_qm0 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT1_MASK
+value|0x1
+comment|/* exist_in_qm1 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT1_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT2_MASK
+value|0x1
+comment|/* bit2 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT2_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT3_MASK
+value|0x1
+comment|/* bit3 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT3_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT4_MASK
+value|0x1
+comment|/* bit4 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT4_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT5_MASK
+value|0x1
+comment|/* bit5 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_BIT5_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF0_MASK
+value|0x3
+comment|/* timer0cf */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF0_SHIFT
+value|6
+name|u8
+name|flags1
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF1_MASK
+value|0x3
+comment|/* timer1cf */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF1_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF2_MASK
+value|0x3
+comment|/* timer2cf */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF2_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF3_MASK
+value|0x3
+comment|/* timer_stop_all */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF3_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF4_MASK
+value|0x3
+comment|/* cf4 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF4_SHIFT
+value|6
+name|u8
+name|flags2
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF5_MASK
+value|0x3
+comment|/* cf5 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF5_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF6_MASK
+value|0x3
+comment|/* cf6 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF6_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF7_MASK
+value|0x3
+comment|/* cf7 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF7_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF8_MASK
+value|0x3
+comment|/* cf8 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF8_SHIFT
+value|6
+name|u8
+name|flags3
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF9_MASK
+value|0x3
+comment|/* cf9 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF9_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF10_MASK
+value|0x3
+comment|/* cf10 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF10_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF0EN_MASK
+value|0x1
+comment|/* cf0en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF0EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF1EN_MASK
+value|0x1
+comment|/* cf1en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF1EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF2EN_MASK
+value|0x1
+comment|/* cf2en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF2EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF3EN_MASK
+value|0x1
+comment|/* cf3en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF3EN_SHIFT
+value|7
+name|u8
+name|flags4
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF4EN_MASK
+value|0x1
+comment|/* cf4en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF4EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF5EN_MASK
+value|0x1
+comment|/* cf5en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF5EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF6EN_MASK
+value|0x1
+comment|/* cf6en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF6EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF7EN_MASK
+value|0x1
+comment|/* cf7en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF7EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF8EN_MASK
+value|0x1
+comment|/* cf8en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF8EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF9EN_MASK
+value|0x1
+comment|/* cf9en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF9EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF10EN_MASK
+value|0x1
+comment|/* cf10en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_CF10EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE0EN_MASK
+value|0x1
+comment|/* rule0en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE0EN_SHIFT
+value|7
+name|u8
+name|flags5
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE1EN_MASK
+value|0x1
+comment|/* rule1en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE1EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE2EN_MASK
+value|0x1
+comment|/* rule2en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE2EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE3EN_MASK
+value|0x1
+comment|/* rule3en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE3EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE4EN_MASK
+value|0x1
+comment|/* rule4en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE4EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE5EN_MASK
+value|0x1
+comment|/* rule5en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE5EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE6EN_MASK
+value|0x1
+comment|/* rule6en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE6EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE7EN_MASK
+value|0x1
+comment|/* rule7en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE7EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE8EN_MASK
+value|0x1
+comment|/* rule8en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_RULE8EN_SHIFT
+value|7
+name|u8
+name|flags6
+decl_stmt|;
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED1_MASK
+value|0x1
+comment|/* bit6 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED1_SHIFT
+value|0
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED2_MASK
+value|0x1
+comment|/* bit7 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED2_SHIFT
+value|1
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED3_MASK
+value|0x1
+comment|/* bit8 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED3_SHIFT
+value|2
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED4_MASK
+value|0x3
+comment|/* cf11 */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED4_SHIFT
+value|3
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED5_MASK
+value|0x1
+comment|/* cf11en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED5_SHIFT
+value|5
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED6_MASK
+value|0x1
+comment|/* rule9en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED6_SHIFT
+value|6
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED7_MASK
+value|0x1
+comment|/* rule10en */
+define|#
+directive|define
+name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED7_SHIFT
+value|7
+name|u8
+name|byte2
+comment|/* byte2 */
+decl_stmt|;
+name|__le16
+name|word0
+comment|/* word0 */
+decl_stmt|;
+name|__le32
+name|reg0
+comment|/* reg0 */
+decl_stmt|;
+name|__le32
+name|reg1
+comment|/* reg1 */
+decl_stmt|;
+name|__le32
+name|reg2
+comment|/* reg2 */
+decl_stmt|;
+name|__le32
+name|reg3
+comment|/* reg3 */
+decl_stmt|;
+name|__le32
+name|reg4
+comment|/* reg4 */
+decl_stmt|;
+name|__le32
+name|reg5
+comment|/* reg5 */
+decl_stmt|;
+name|__le32
+name|reg6
+comment|/* reg6 */
+decl_stmt|;
+name|__le32
+name|reg7
+comment|/* reg7 */
+decl_stmt|;
+name|__le32
+name|reg8
+comment|/* reg8 */
+decl_stmt|;
+name|u8
+name|byte3
+comment|/* byte3 */
+decl_stmt|;
+name|u8
+name|byte4
+comment|/* byte4 */
+decl_stmt|;
+name|u8
+name|byte5
+comment|/* byte5 */
+decl_stmt|;
+name|u8
+name|e4_reserved8
+comment|/* byte6 */
+decl_stmt|;
+name|__le16
+name|word1
+comment|/* word1 */
+decl_stmt|;
+name|__le16
+name|word2
+comment|/* conn_dpi */
+decl_stmt|;
+name|__le32
+name|reg9
+comment|/* reg9 */
+decl_stmt|;
+name|__le16
+name|word3
+comment|/* word3 */
+decl_stmt|;
+name|__le16
+name|e4_reserved9
+comment|/* word4 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e5_ustorm_core_conn_ag_ctx
+block|{
+name|u8
+name|reserved
+comment|/* cdu_validation */
+decl_stmt|;
+name|u8
+name|byte1
+comment|/* state_and_core_id */
+decl_stmt|;
+name|u8
+name|flags0
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_BIT0_MASK
+value|0x1
+comment|/* exist_in_qm0 */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_BIT0_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_BIT1_MASK
+value|0x1
+comment|/* exist_in_qm1 */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_BIT1_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF0_MASK
+value|0x3
+comment|/* timer0cf */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF0_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF1_MASK
+value|0x3
+comment|/* timer1cf */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF1_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF2_MASK
+value|0x3
+comment|/* timer2cf */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF2_SHIFT
+value|6
+name|u8
+name|flags1
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF3_MASK
+value|0x3
+comment|/* timer_stop_all */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF3_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF4_MASK
+value|0x3
+comment|/* cf4 */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF4_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF5_MASK
+value|0x3
+comment|/* cf5 */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF5_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF6_MASK
+value|0x3
+comment|/* cf6 */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF6_SHIFT
+value|6
+name|u8
+name|flags2
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF0EN_MASK
+value|0x1
+comment|/* cf0en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF0EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF1EN_MASK
+value|0x1
+comment|/* cf1en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF1EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF2EN_MASK
+value|0x1
+comment|/* cf2en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF2EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF3EN_MASK
+value|0x1
+comment|/* cf3en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF3EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF4EN_MASK
+value|0x1
+comment|/* cf4en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF4EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF5EN_MASK
+value|0x1
+comment|/* cf5en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF5EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF6EN_MASK
+value|0x1
+comment|/* cf6en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_CF6EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE0EN_MASK
+value|0x1
+comment|/* rule0en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE0EN_SHIFT
+value|7
+name|u8
+name|flags3
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE1EN_MASK
+value|0x1
+comment|/* rule1en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE1EN_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE2EN_MASK
+value|0x1
+comment|/* rule2en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE2EN_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE3EN_MASK
+value|0x1
+comment|/* rule3en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE3EN_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE4EN_MASK
+value|0x1
+comment|/* rule4en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE4EN_SHIFT
+value|3
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE5EN_MASK
+value|0x1
+comment|/* rule5en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE5EN_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE6EN_MASK
+value|0x1
+comment|/* rule6en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE6EN_SHIFT
+value|5
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE7EN_MASK
+value|0x1
+comment|/* rule7en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE7EN_SHIFT
+value|6
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE8EN_MASK
+value|0x1
+comment|/* rule8en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_RULE8EN_SHIFT
+value|7
+name|u8
+name|flags4
+decl_stmt|;
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED1_MASK
+value|0x1
+comment|/* bit2 */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED1_SHIFT
+value|0
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED2_MASK
+value|0x1
+comment|/* bit3 */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED2_SHIFT
+value|1
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED3_MASK
+value|0x3
+comment|/* cf7 */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED3_SHIFT
+value|2
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED4_MASK
+value|0x3
+comment|/* cf8 */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED4_SHIFT
+value|4
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED5_MASK
+value|0x1
+comment|/* cf7en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED5_SHIFT
+value|6
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED6_MASK
+value|0x1
+comment|/* cf8en */
+define|#
+directive|define
+name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED6_SHIFT
+value|7
+name|u8
+name|byte2
+comment|/* byte2 */
+decl_stmt|;
+name|__le16
+name|word0
+comment|/* conn_dpi */
+decl_stmt|;
+name|__le16
+name|word1
+comment|/* word1 */
+decl_stmt|;
+name|__le32
+name|rx_producers
+comment|/* reg0 */
+decl_stmt|;
+name|__le32
+name|reg1
+comment|/* reg1 */
+decl_stmt|;
+name|__le32
+name|reg2
+comment|/* reg2 */
+decl_stmt|;
+name|__le32
+name|reg3
+comment|/* reg3 */
+decl_stmt|;
+name|__le16
+name|word2
+comment|/* word2 */
+decl_stmt|;
+name|__le16
+name|word3
+comment|/* word3 */
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Light L2 TX Destination  */
-end_comment
-
-begin_enum
-enum|enum
-name|core_tx_dest
-block|{
-name|CORE_TX_DEST_NW
-comment|/* TX Destination to the Network */
-block|,
-name|CORE_TX_DEST_LB
-comment|/* TX Destination to the Loopback */
-block|,
-name|CORE_TX_DEST_RESERVED
-block|,
-name|CORE_TX_DEST_DROP
-comment|/* TX Drop */
-block|,
-name|MAX_CORE_TX_DEST
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * Ramrod data for tx queue start ramrod  */
+comment|/*  * core connection context  */
 end_comment
 
 begin_struct
 struct|struct
-name|core_tx_start_ramrod_data
+name|e5_core_conn_context
 block|{
 name|struct
+name|ystorm_core_conn_st_ctx
+name|ystorm_st_context
+comment|/* ystorm storm context */
+decl_stmt|;
+name|struct
 name|regpair
-name|pbl_base_addr
-comment|/* Address of the pbl page */
-decl_stmt|;
-name|__le16
-name|mtu
-comment|/* Maximum transmission unit */
-decl_stmt|;
-name|__le16
-name|sb_id
-comment|/* Status block ID */
-decl_stmt|;
-name|u8
-name|sb_index
-comment|/* Status block protocol index */
-decl_stmt|;
-name|u8
-name|stats_en
-comment|/* Statistics Enable */
-decl_stmt|;
-name|u8
-name|stats_id
-comment|/* Statistics Counter ID */
-decl_stmt|;
-name|u8
-name|conn_type
-comment|/* connection type that loaded ll2 */
-decl_stmt|;
-name|__le16
-name|pbl_size
-comment|/* Number of BD pages pointed by PBL */
-decl_stmt|;
-name|__le16
-name|qm_pq_id
-comment|/* QM PQ ID */
-decl_stmt|;
-name|u8
-name|gsi_offload_flag
-comment|/* set when in GSI offload mode on ROCE connection */
-decl_stmt|;
-name|u8
-name|resrved
-index|[
-literal|3
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Ramrod data for tx queue stop ramrod  */
-end_comment
-
-begin_struct
-struct|struct
-name|core_tx_stop_ramrod_data
-block|{
-name|__le32
-name|reserved0
+name|ystorm_st_padding
 index|[
 literal|2
 index|]
+comment|/* padding */
+decl_stmt|;
+name|struct
+name|pstorm_core_conn_st_ctx
+name|pstorm_st_context
+comment|/* pstorm storm context */
+decl_stmt|;
+name|struct
+name|regpair
+name|pstorm_st_padding
+index|[
+literal|2
+index|]
+comment|/* padding */
+decl_stmt|;
+name|struct
+name|xstorm_core_conn_st_ctx
+name|xstorm_st_context
+comment|/* xstorm storm context */
+decl_stmt|;
+name|struct
+name|e5_xstorm_core_conn_ag_ctx
+name|xstorm_ag_context
+comment|/* xstorm aggregative context */
+decl_stmt|;
+name|struct
+name|e5_tstorm_core_conn_ag_ctx
+name|tstorm_ag_context
+comment|/* tstorm aggregative context */
+decl_stmt|;
+name|struct
+name|e5_ustorm_core_conn_ag_ctx
+name|ustorm_ag_context
+comment|/* ustorm aggregative context */
+decl_stmt|;
+name|struct
+name|mstorm_core_conn_st_ctx
+name|mstorm_st_context
+comment|/* mstorm storm context */
+decl_stmt|;
+name|struct
+name|ustorm_core_conn_st_ctx
+name|ustorm_st_context
+comment|/* ustorm storm context */
+decl_stmt|;
+name|struct
+name|regpair
+name|ustorm_st_padding
+index|[
+literal|2
+index|]
+comment|/* padding */
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Enum flag for what type of dcb data to update  */
-end_comment
-
-begin_enum
-enum|enum
-name|dcb_dscp_update_mode
-block|{
-name|DONT_UPDATE_DCB_DSCP
-comment|/* use when no change should be done to dcb data */
-block|,
-name|UPDATE_DCB
-comment|/* use to update only l2 (vlan) priority */
-block|,
-name|UPDATE_DSCP
-comment|/* use to update only l3 dscp */
-block|,
-name|UPDATE_DCB_DSCP
-comment|/* update vlan pri and dscp */
-block|,
-name|MAX_DCB_DSCP_UPDATE_MODE
-block|}
-enum|;
-end_enum
 
 begin_struct
 struct|struct
@@ -5637,2056 +7763,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|e5_tstorm_core_conn_ag_ctx
-block|{
-name|u8
-name|byte0
-comment|/* cdu_validation */
-decl_stmt|;
-name|u8
-name|byte1
-comment|/* state_and_core_id */
-decl_stmt|;
-name|u8
-name|flags0
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT0_MASK
-value|0x1
-comment|/* exist_in_qm0 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT1_MASK
-value|0x1
-comment|/* exist_in_qm1 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT1_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT2_MASK
-value|0x1
-comment|/* bit2 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT2_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT3_MASK
-value|0x1
-comment|/* bit3 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT3_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT4_MASK
-value|0x1
-comment|/* bit4 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT4_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT5_MASK
-value|0x1
-comment|/* bit5 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_BIT5_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF0_MASK
-value|0x3
-comment|/* timer0cf */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF0_SHIFT
-value|6
-name|u8
-name|flags1
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF1_MASK
-value|0x3
-comment|/* timer1cf */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF1_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF2_MASK
-value|0x3
-comment|/* timer2cf */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF2_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF3_MASK
-value|0x3
-comment|/* timer_stop_all */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF3_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF4_MASK
-value|0x3
-comment|/* cf4 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF4_SHIFT
-value|6
-name|u8
-name|flags2
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF5_MASK
-value|0x3
-comment|/* cf5 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF5_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF6_MASK
-value|0x3
-comment|/* cf6 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF6_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF7_MASK
-value|0x3
-comment|/* cf7 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF7_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF8_MASK
-value|0x3
-comment|/* cf8 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF8_SHIFT
-value|6
-name|u8
-name|flags3
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF9_MASK
-value|0x3
-comment|/* cf9 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF9_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF10_MASK
-value|0x3
-comment|/* cf10 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF10_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF0EN_MASK
-value|0x1
-comment|/* cf0en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF0EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF1EN_MASK
-value|0x1
-comment|/* cf1en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF1EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF2EN_MASK
-value|0x1
-comment|/* cf2en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF2EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF3EN_MASK
-value|0x1
-comment|/* cf3en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF3EN_SHIFT
-value|7
-name|u8
-name|flags4
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF4EN_MASK
-value|0x1
-comment|/* cf4en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF4EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF5EN_MASK
-value|0x1
-comment|/* cf5en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF5EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF6EN_MASK
-value|0x1
-comment|/* cf6en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF6EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF7EN_MASK
-value|0x1
-comment|/* cf7en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF7EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF8EN_MASK
-value|0x1
-comment|/* cf8en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF8EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF9EN_MASK
-value|0x1
-comment|/* cf9en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF9EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF10EN_MASK
-value|0x1
-comment|/* cf10en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_CF10EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE0EN_MASK
-value|0x1
-comment|/* rule0en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE0EN_SHIFT
-value|7
-name|u8
-name|flags5
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE1EN_MASK
-value|0x1
-comment|/* rule1en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE1EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE2EN_MASK
-value|0x1
-comment|/* rule2en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE2EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE3EN_MASK
-value|0x1
-comment|/* rule3en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE3EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE4EN_MASK
-value|0x1
-comment|/* rule4en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE4EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE5EN_MASK
-value|0x1
-comment|/* rule5en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE5EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE6EN_MASK
-value|0x1
-comment|/* rule6en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE6EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE7EN_MASK
-value|0x1
-comment|/* rule7en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE7EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE8EN_MASK
-value|0x1
-comment|/* rule8en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_RULE8EN_SHIFT
-value|7
-name|u8
-name|flags6
-decl_stmt|;
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED1_MASK
-value|0x1
-comment|/* bit6 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED1_SHIFT
-value|0
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED2_MASK
-value|0x1
-comment|/* bit7 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED2_SHIFT
-value|1
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED3_MASK
-value|0x1
-comment|/* bit8 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED3_SHIFT
-value|2
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED4_MASK
-value|0x3
-comment|/* cf11 */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED4_SHIFT
-value|3
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED5_MASK
-value|0x1
-comment|/* cf11en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED5_SHIFT
-value|5
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED6_MASK
-value|0x1
-comment|/* rule9en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED6_SHIFT
-value|6
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED7_MASK
-value|0x1
-comment|/* rule10en */
-define|#
-directive|define
-name|E5_TSTORM_CORE_CONN_AG_CTX_E4_RESERVED7_SHIFT
-value|7
-name|u8
-name|byte2
-comment|/* byte2 */
-decl_stmt|;
-name|__le16
-name|word0
-comment|/* word0 */
-decl_stmt|;
-name|__le32
-name|reg0
-comment|/* reg0 */
-decl_stmt|;
-name|__le32
-name|reg1
-comment|/* reg1 */
-decl_stmt|;
-name|__le32
-name|reg2
-comment|/* reg2 */
-decl_stmt|;
-name|__le32
-name|reg3
-comment|/* reg3 */
-decl_stmt|;
-name|__le32
-name|reg4
-comment|/* reg4 */
-decl_stmt|;
-name|__le32
-name|reg5
-comment|/* reg5 */
-decl_stmt|;
-name|__le32
-name|reg6
-comment|/* reg6 */
-decl_stmt|;
-name|__le32
-name|reg7
-comment|/* reg7 */
-decl_stmt|;
-name|__le32
-name|reg8
-comment|/* reg8 */
-decl_stmt|;
-name|u8
-name|byte3
-comment|/* byte3 */
-decl_stmt|;
-name|u8
-name|byte4
-comment|/* byte4 */
-decl_stmt|;
-name|u8
-name|byte5
-comment|/* byte5 */
-decl_stmt|;
-name|u8
-name|e4_reserved8
-comment|/* byte6 */
-decl_stmt|;
-name|__le16
-name|word1
-comment|/* word1 */
-decl_stmt|;
-name|__le16
-name|word2
-comment|/* conn_dpi */
-decl_stmt|;
-name|__le32
-name|reg9
-comment|/* reg9 */
-decl_stmt|;
-name|__le16
-name|word3
-comment|/* word3 */
-decl_stmt|;
-name|__le16
-name|e4_reserved9
-comment|/* word4 */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|e5_ustorm_core_conn_ag_ctx
-block|{
-name|u8
-name|reserved
-comment|/* cdu_validation */
-decl_stmt|;
-name|u8
-name|byte1
-comment|/* state_and_core_id */
-decl_stmt|;
-name|u8
-name|flags0
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_BIT0_MASK
-value|0x1
-comment|/* exist_in_qm0 */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_BIT0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_BIT1_MASK
-value|0x1
-comment|/* exist_in_qm1 */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_BIT1_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF0_MASK
-value|0x3
-comment|/* timer0cf */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF0_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF1_MASK
-value|0x3
-comment|/* timer1cf */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF1_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF2_MASK
-value|0x3
-comment|/* timer2cf */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF2_SHIFT
-value|6
-name|u8
-name|flags1
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF3_MASK
-value|0x3
-comment|/* timer_stop_all */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF3_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF4_MASK
-value|0x3
-comment|/* cf4 */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF4_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF5_MASK
-value|0x3
-comment|/* cf5 */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF5_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF6_MASK
-value|0x3
-comment|/* cf6 */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF6_SHIFT
-value|6
-name|u8
-name|flags2
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF0EN_MASK
-value|0x1
-comment|/* cf0en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF0EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF1EN_MASK
-value|0x1
-comment|/* cf1en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF1EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF2EN_MASK
-value|0x1
-comment|/* cf2en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF2EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF3EN_MASK
-value|0x1
-comment|/* cf3en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF3EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF4EN_MASK
-value|0x1
-comment|/* cf4en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF4EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF5EN_MASK
-value|0x1
-comment|/* cf5en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF5EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF6EN_MASK
-value|0x1
-comment|/* cf6en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_CF6EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE0EN_MASK
-value|0x1
-comment|/* rule0en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE0EN_SHIFT
-value|7
-name|u8
-name|flags3
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE1EN_MASK
-value|0x1
-comment|/* rule1en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE1EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE2EN_MASK
-value|0x1
-comment|/* rule2en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE2EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE3EN_MASK
-value|0x1
-comment|/* rule3en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE3EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE4EN_MASK
-value|0x1
-comment|/* rule4en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE4EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE5EN_MASK
-value|0x1
-comment|/* rule5en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE5EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE6EN_MASK
-value|0x1
-comment|/* rule6en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE6EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE7EN_MASK
-value|0x1
-comment|/* rule7en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE7EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE8EN_MASK
-value|0x1
-comment|/* rule8en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_RULE8EN_SHIFT
-value|7
-name|u8
-name|flags4
-decl_stmt|;
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED1_MASK
-value|0x1
-comment|/* bit2 */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED1_SHIFT
-value|0
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED2_MASK
-value|0x1
-comment|/* bit3 */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED2_SHIFT
-value|1
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED3_MASK
-value|0x3
-comment|/* cf7 */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED3_SHIFT
-value|2
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED4_MASK
-value|0x3
-comment|/* cf8 */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED4_SHIFT
-value|4
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED5_MASK
-value|0x1
-comment|/* cf7en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED5_SHIFT
-value|6
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED6_MASK
-value|0x1
-comment|/* cf8en */
-define|#
-directive|define
-name|E5_USTORM_CORE_CONN_AG_CTX_E4_RESERVED6_SHIFT
-value|7
-name|u8
-name|byte2
-comment|/* byte2 */
-decl_stmt|;
-name|__le16
-name|word0
-comment|/* conn_dpi */
-decl_stmt|;
-name|__le16
-name|word1
-comment|/* word1 */
-decl_stmt|;
-name|__le32
-name|rx_producers
-comment|/* reg0 */
-decl_stmt|;
-name|__le32
-name|reg1
-comment|/* reg1 */
-decl_stmt|;
-name|__le32
-name|reg2
-comment|/* reg2 */
-decl_stmt|;
-name|__le32
-name|reg3
-comment|/* reg3 */
-decl_stmt|;
-name|__le16
-name|word2
-comment|/* word2 */
-decl_stmt|;
-name|__le16
-name|word3
-comment|/* word3 */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|e5_xstorm_core_conn_ag_ctx
-block|{
-name|u8
-name|reserved0
-comment|/* cdu_validation */
-decl_stmt|;
-name|u8
-name|state_and_core_id
-comment|/* state_and_core_id */
-decl_stmt|;
-name|u8
-name|flags0
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_EXIST_IN_QM0_MASK
-value|0x1
-comment|/* exist_in_qm0 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_EXIST_IN_QM0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED1_MASK
-value|0x1
-comment|/* exist_in_qm1 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED1_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED2_MASK
-value|0x1
-comment|/* exist_in_qm2 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED2_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_EXIST_IN_QM3_MASK
-value|0x1
-comment|/* exist_in_qm3 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_EXIST_IN_QM3_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED3_MASK
-value|0x1
-comment|/* bit4 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED3_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED4_MASK
-value|0x1
-comment|/* cf_array_active */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED4_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED5_MASK
-value|0x1
-comment|/* bit6 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED5_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED6_MASK
-value|0x1
-comment|/* bit7 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED6_SHIFT
-value|7
-name|u8
-name|flags1
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED7_MASK
-value|0x1
-comment|/* bit8 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED7_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED8_MASK
-value|0x1
-comment|/* bit9 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED8_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED9_MASK
-value|0x1
-comment|/* bit10 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED9_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT11_MASK
-value|0x1
-comment|/* bit11 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT11_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT12_MASK
-value|0x1
-comment|/* bit12 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT12_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT13_MASK
-value|0x1
-comment|/* bit13 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT13_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_TX_RULE_ACTIVE_MASK
-value|0x1
-comment|/* bit14 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_TX_RULE_ACTIVE_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_ACTIVE_MASK
-value|0x1
-comment|/* bit15 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_ACTIVE_SHIFT
-value|7
-name|u8
-name|flags2
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF0_MASK
-value|0x3
-comment|/* timer0cf */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF1_MASK
-value|0x3
-comment|/* timer1cf */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF1_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF2_MASK
-value|0x3
-comment|/* timer2cf */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF2_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF3_MASK
-value|0x3
-comment|/* timer_stop_all */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF3_SHIFT
-value|6
-name|u8
-name|flags3
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF4_MASK
-value|0x3
-comment|/* cf4 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF4_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF5_MASK
-value|0x3
-comment|/* cf5 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF5_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF6_MASK
-value|0x3
-comment|/* cf6 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF6_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF7_MASK
-value|0x3
-comment|/* cf7 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF7_SHIFT
-value|6
-name|u8
-name|flags4
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF8_MASK
-value|0x3
-comment|/* cf8 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF8_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF9_MASK
-value|0x3
-comment|/* cf9 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF9_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF10_MASK
-value|0x3
-comment|/* cf10 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF10_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF11_MASK
-value|0x3
-comment|/* cf11 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF11_SHIFT
-value|6
-name|u8
-name|flags5
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF12_MASK
-value|0x3
-comment|/* cf12 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF12_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF13_MASK
-value|0x3
-comment|/* cf13 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF13_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF14_MASK
-value|0x3
-comment|/* cf14 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF14_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF15_MASK
-value|0x3
-comment|/* cf15 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF15_SHIFT
-value|6
-name|u8
-name|flags6
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CONSOLID_PROD_CF_MASK
-value|0x3
-comment|/* cf16 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CONSOLID_PROD_CF_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF17_MASK
-value|0x3
-comment|/* cf_array_cf */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF17_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_MASK
-value|0x3
-comment|/* cf18 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_TERMINATE_CF_MASK
-value|0x3
-comment|/* cf19 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_TERMINATE_CF_SHIFT
-value|6
-name|u8
-name|flags7
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_FLUSH_Q0_MASK
-value|0x3
-comment|/* cf20 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_FLUSH_Q0_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED10_MASK
-value|0x3
-comment|/* cf21 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED10_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_SLOW_PATH_MASK
-value|0x3
-comment|/* cf22 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_SLOW_PATH_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF0EN_MASK
-value|0x1
-comment|/* cf0en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF0EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF1EN_MASK
-value|0x1
-comment|/* cf1en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF1EN_SHIFT
-value|7
-name|u8
-name|flags8
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF2EN_MASK
-value|0x1
-comment|/* cf2en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF2EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF3EN_MASK
-value|0x1
-comment|/* cf3en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF3EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF4EN_MASK
-value|0x1
-comment|/* cf4en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF4EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF5EN_MASK
-value|0x1
-comment|/* cf5en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF5EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF6EN_MASK
-value|0x1
-comment|/* cf6en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF6EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF7EN_MASK
-value|0x1
-comment|/* cf7en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF7EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF8EN_MASK
-value|0x1
-comment|/* cf8en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF8EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF9EN_MASK
-value|0x1
-comment|/* cf9en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF9EN_SHIFT
-value|7
-name|u8
-name|flags9
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF10EN_MASK
-value|0x1
-comment|/* cf10en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF10EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF11EN_MASK
-value|0x1
-comment|/* cf11en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF11EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF12EN_MASK
-value|0x1
-comment|/* cf12en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF12EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF13EN_MASK
-value|0x1
-comment|/* cf13en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF13EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF14EN_MASK
-value|0x1
-comment|/* cf14en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF14EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF15EN_MASK
-value|0x1
-comment|/* cf15en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF15EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CONSOLID_PROD_CF_EN_MASK
-value|0x1
-comment|/* cf16en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CONSOLID_PROD_CF_EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF17EN_MASK
-value|0x1
-comment|/* cf_array_cf_en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF17EN_SHIFT
-value|7
-name|u8
-name|flags10
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_EN_MASK
-value|0x1
-comment|/* cf18en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_DQ_CF_EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_TERMINATE_CF_EN_MASK
-value|0x1
-comment|/* cf19en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_TERMINATE_CF_EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_FLUSH_Q0_EN_MASK
-value|0x1
-comment|/* cf20en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_FLUSH_Q0_EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED11_MASK
-value|0x1
-comment|/* cf21en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED11_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_SLOW_PATH_EN_MASK
-value|0x1
-comment|/* cf22en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_SLOW_PATH_EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF23EN_MASK
-value|0x1
-comment|/* cf23en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF23EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED12_MASK
-value|0x1
-comment|/* rule0en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED12_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED13_MASK
-value|0x1
-comment|/* rule1en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED13_SHIFT
-value|7
-name|u8
-name|flags11
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED14_MASK
-value|0x1
-comment|/* rule2en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED14_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED15_MASK
-value|0x1
-comment|/* rule3en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RESERVED15_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_TX_DEC_RULE_EN_MASK
-value|0x1
-comment|/* rule4en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_TX_DEC_RULE_EN_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE5EN_MASK
-value|0x1
-comment|/* rule5en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE5EN_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE6EN_MASK
-value|0x1
-comment|/* rule6en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE6EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE7EN_MASK
-value|0x1
-comment|/* rule7en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE7EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED1_MASK
-value|0x1
-comment|/* rule8en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED1_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE9EN_MASK
-value|0x1
-comment|/* rule9en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE9EN_SHIFT
-value|7
-name|u8
-name|flags12
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE10EN_MASK
-value|0x1
-comment|/* rule10en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE10EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE11EN_MASK
-value|0x1
-comment|/* rule11en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE11EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED2_MASK
-value|0x1
-comment|/* rule12en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED2_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED3_MASK
-value|0x1
-comment|/* rule13en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED3_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE14EN_MASK
-value|0x1
-comment|/* rule14en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE14EN_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE15EN_MASK
-value|0x1
-comment|/* rule15en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE15EN_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE16EN_MASK
-value|0x1
-comment|/* rule16en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE16EN_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE17EN_MASK
-value|0x1
-comment|/* rule17en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE17EN_SHIFT
-value|7
-name|u8
-name|flags13
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE18EN_MASK
-value|0x1
-comment|/* rule18en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE18EN_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE19EN_MASK
-value|0x1
-comment|/* rule19en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_RULE19EN_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED4_MASK
-value|0x1
-comment|/* rule20en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED4_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED5_MASK
-value|0x1
-comment|/* rule21en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED5_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED6_MASK
-value|0x1
-comment|/* rule22en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED6_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED7_MASK
-value|0x1
-comment|/* rule23en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED7_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED8_MASK
-value|0x1
-comment|/* rule24en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED8_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED9_MASK
-value|0x1
-comment|/* rule25en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_A0_RESERVED9_SHIFT
-value|7
-name|u8
-name|flags14
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT16_MASK
-value|0x1
-comment|/* bit16 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT16_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT17_MASK
-value|0x1
-comment|/* bit17 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT17_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT18_MASK
-value|0x1
-comment|/* bit18 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT18_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT19_MASK
-value|0x1
-comment|/* bit19 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT19_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT20_MASK
-value|0x1
-comment|/* bit20 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT20_SHIFT
-value|4
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT21_MASK
-value|0x1
-comment|/* bit21 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_BIT21_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF23_MASK
-value|0x3
-comment|/* cf23 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_CF23_SHIFT
-value|6
-name|u8
-name|byte2
-comment|/* byte2 */
-decl_stmt|;
-name|__le16
-name|physical_q0
-comment|/* physical_q0 */
-decl_stmt|;
-name|__le16
-name|consolid_prod
-comment|/* physical_q1 */
-decl_stmt|;
-name|__le16
-name|reserved16
-comment|/* physical_q2 */
-decl_stmt|;
-name|__le16
-name|tx_bd_cons
-comment|/* word3 */
-decl_stmt|;
-name|__le16
-name|tx_bd_or_spq_prod
-comment|/* word4 */
-decl_stmt|;
-name|__le16
-name|word5
-comment|/* word5 */
-decl_stmt|;
-name|__le16
-name|conn_dpi
-comment|/* conn_dpi */
-decl_stmt|;
-name|u8
-name|byte3
-comment|/* byte3 */
-decl_stmt|;
-name|u8
-name|byte4
-comment|/* byte4 */
-decl_stmt|;
-name|u8
-name|byte5
-comment|/* byte5 */
-decl_stmt|;
-name|u8
-name|byte6
-comment|/* byte6 */
-decl_stmt|;
-name|__le32
-name|reg0
-comment|/* reg0 */
-decl_stmt|;
-name|__le32
-name|reg1
-comment|/* reg1 */
-decl_stmt|;
-name|__le32
-name|reg2
-comment|/* reg2 */
-decl_stmt|;
-name|__le32
-name|reg3
-comment|/* reg3 */
-decl_stmt|;
-name|__le32
-name|reg4
-comment|/* reg4 */
-decl_stmt|;
-name|__le32
-name|reg5
-comment|/* cf_array0 */
-decl_stmt|;
-name|__le32
-name|reg6
-comment|/* cf_array1 */
-decl_stmt|;
-name|u8
-name|flags15
-decl_stmt|;
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED1_MASK
-value|0x1
-comment|/* bit22 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED1_SHIFT
-value|0
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED2_MASK
-value|0x1
-comment|/* bit23 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED2_SHIFT
-value|1
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED3_MASK
-value|0x1
-comment|/* bit24 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED3_SHIFT
-value|2
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED4_MASK
-value|0x3
-comment|/* cf24 */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED4_SHIFT
-value|3
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED5_MASK
-value|0x1
-comment|/* cf24en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED5_SHIFT
-value|5
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED6_MASK
-value|0x1
-comment|/* rule26en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED6_SHIFT
-value|6
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED7_MASK
-value|0x1
-comment|/* rule27en */
-define|#
-directive|define
-name|E5_XSTORM_CORE_CONN_AG_CTX_E4_RESERVED7_SHIFT
-value|7
-name|u8
-name|byte7
-comment|/* byte7 */
-decl_stmt|;
-name|__le16
-name|word7
-comment|/* word7 */
-decl_stmt|;
-name|__le16
-name|word8
-comment|/* word8 */
-decl_stmt|;
-name|__le16
-name|word9
-comment|/* word9 */
-decl_stmt|;
-name|__le16
-name|word10
-comment|/* word10 */
-decl_stmt|;
-name|__le16
-name|word11
-comment|/* word11 */
-decl_stmt|;
-name|__le32
-name|reg7
-comment|/* reg7 */
-decl_stmt|;
-name|__le32
-name|reg8
-comment|/* reg8 */
-decl_stmt|;
-name|__le32
-name|reg9
-comment|/* reg9 */
-decl_stmt|;
-name|u8
-name|byte8
-comment|/* byte8 */
-decl_stmt|;
-name|u8
-name|byte9
-comment|/* byte9 */
-decl_stmt|;
-name|u8
-name|byte10
-comment|/* byte10 */
-decl_stmt|;
-name|u8
-name|byte11
-comment|/* byte11 */
-decl_stmt|;
-name|u8
-name|byte12
-comment|/* byte12 */
-decl_stmt|;
-name|u8
-name|byte13
-comment|/* byte13 */
-decl_stmt|;
-name|u8
-name|byte14
-comment|/* byte14 */
-decl_stmt|;
-name|u8
-name|byte15
-comment|/* byte15 */
-decl_stmt|;
-name|__le32
-name|reg10
-comment|/* reg10 */
-decl_stmt|;
-name|__le32
-name|reg11
-comment|/* reg11 */
-decl_stmt|;
-name|__le32
-name|reg12
-comment|/* reg12 */
-decl_stmt|;
-name|__le32
-name|reg13
-comment|/* reg13 */
-decl_stmt|;
-name|__le32
-name|reg14
-comment|/* reg14 */
-decl_stmt|;
-name|__le32
-name|reg15
-comment|/* reg15 */
-decl_stmt|;
-name|__le32
-name|reg16
-comment|/* reg16 */
-decl_stmt|;
-name|__le32
-name|reg17
-comment|/* reg17 */
-decl_stmt|;
-name|__le32
-name|reg18
-comment|/* reg18 */
-decl_stmt|;
-name|__le32
-name|reg19
-comment|/* reg19 */
-decl_stmt|;
-name|__le16
-name|word12
-comment|/* word12 */
-decl_stmt|;
-name|__le16
-name|word13
-comment|/* word13 */
-decl_stmt|;
-name|__le16
-name|word14
-comment|/* word14 */
-decl_stmt|;
-name|__le16
-name|word15
-comment|/* word15 */
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|e5_ystorm_core_conn_ag_ctx
 block|{
 name|u8
@@ -8375,78 +8451,155 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * QM hardware structure of QM map memory  */
+comment|/*  * E4 QM hardware structure of QM map memory  */
 end_comment
 
 begin_struct
 struct|struct
-name|qm_rf_pq_map
+name|qm_rf_pq_map_e4
 block|{
 name|__le32
 name|reg
 decl_stmt|;
 define|#
 directive|define
-name|QM_RF_PQ_MAP_PQ_VALID_MASK
+name|QM_RF_PQ_MAP_E4_PQ_VALID_MASK
 value|0x1
 comment|/* PQ active */
 define|#
 directive|define
-name|QM_RF_PQ_MAP_PQ_VALID_SHIFT
+name|QM_RF_PQ_MAP_E4_PQ_VALID_SHIFT
 value|0
 define|#
 directive|define
-name|QM_RF_PQ_MAP_RL_ID_MASK
+name|QM_RF_PQ_MAP_E4_RL_ID_MASK
 value|0xFF
 comment|/* RL ID */
 define|#
 directive|define
-name|QM_RF_PQ_MAP_RL_ID_SHIFT
+name|QM_RF_PQ_MAP_E4_RL_ID_SHIFT
 value|1
 define|#
 directive|define
-name|QM_RF_PQ_MAP_VP_PQ_ID_MASK
+name|QM_RF_PQ_MAP_E4_VP_PQ_ID_MASK
 value|0x1FF
 comment|/* the first PQ associated with the VPORT and VOQ of this PQ */
 define|#
 directive|define
-name|QM_RF_PQ_MAP_VP_PQ_ID_SHIFT
+name|QM_RF_PQ_MAP_E4_VP_PQ_ID_SHIFT
 value|9
 define|#
 directive|define
-name|QM_RF_PQ_MAP_VOQ_MASK
+name|QM_RF_PQ_MAP_E4_VOQ_MASK
 value|0x1F
 comment|/* VOQ */
 define|#
 directive|define
-name|QM_RF_PQ_MAP_VOQ_SHIFT
+name|QM_RF_PQ_MAP_E4_VOQ_SHIFT
 value|18
 define|#
 directive|define
-name|QM_RF_PQ_MAP_WRR_WEIGHT_GROUP_MASK
+name|QM_RF_PQ_MAP_E4_WRR_WEIGHT_GROUP_MASK
 value|0x3
 comment|/* WRR weight */
 define|#
 directive|define
-name|QM_RF_PQ_MAP_WRR_WEIGHT_GROUP_SHIFT
+name|QM_RF_PQ_MAP_E4_WRR_WEIGHT_GROUP_SHIFT
 value|23
 define|#
 directive|define
-name|QM_RF_PQ_MAP_RL_VALID_MASK
+name|QM_RF_PQ_MAP_E4_RL_VALID_MASK
 value|0x1
 comment|/* RL active */
 define|#
 directive|define
-name|QM_RF_PQ_MAP_RL_VALID_SHIFT
+name|QM_RF_PQ_MAP_E4_RL_VALID_SHIFT
 value|25
 define|#
 directive|define
-name|QM_RF_PQ_MAP_RESERVED_MASK
+name|QM_RF_PQ_MAP_E4_RESERVED_MASK
 value|0x3F
 define|#
 directive|define
-name|QM_RF_PQ_MAP_RESERVED_SHIFT
+name|QM_RF_PQ_MAP_E4_RESERVED_SHIFT
 value|26
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * E5 QM hardware structure of QM map memory  */
+end_comment
+
+begin_struct
+struct|struct
+name|qm_rf_pq_map_e5
+block|{
+name|__le32
+name|reg
+decl_stmt|;
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_PQ_VALID_MASK
+value|0x1
+comment|/* PQ active */
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_PQ_VALID_SHIFT
+value|0
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_RL_ID_MASK
+value|0xFF
+comment|/* RL ID */
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_RL_ID_SHIFT
+value|1
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_VP_PQ_ID_MASK
+value|0x1FF
+comment|/* the first PQ associated with the VPORT and VOQ of this PQ */
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_VP_PQ_ID_SHIFT
+value|9
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_VOQ_MASK
+value|0x3F
+comment|/* VOQ */
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_VOQ_SHIFT
+value|18
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_WRR_WEIGHT_GROUP_MASK
+value|0x3
+comment|/* WRR weight */
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_WRR_WEIGHT_GROUP_SHIFT
+value|24
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_RL_VALID_MASK
+value|0x1
+comment|/* RL active */
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_RL_VALID_SHIFT
+value|26
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_RESERVED_MASK
+value|0x1F
+define|#
+directive|define
+name|QM_RF_PQ_MAP_E5_RESERVED_SHIFT
+value|27
 block|}
 struct|;
 end_struct

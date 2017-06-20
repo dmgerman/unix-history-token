@@ -46,7 +46,7 @@ value|(4)
 end_define
 
 begin_comment
-comment|// ID 0 : RQ, ID 1 : IMMEDIATE_DATA:
+comment|// ID 0 : RQ, ID 1 : IMMEDIATE_DATA, ID 2 : TQ
 end_comment
 
 begin_define
@@ -66,8 +66,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|BDQ_NUM_IDS
+name|BDQ_ID_TQ
 value|(2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BDQ_NUM_IDS
+value|(3)
 end_define
 
 begin_define
@@ -85,6 +92,109 @@ value|(1<<15)
 end_define
 
 begin_comment
+comment|/* SCSI op codes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_OPCODE_COMPARE_AND_WRITE
+value|(0x89)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_OPCODE_WRITE_6
+value|(0x0A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_OPCODE_WRITE_10
+value|(0x2A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_OPCODE_WRITE_12
+value|(0xAA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_OPCODE_WRITE_16
+value|(0x8A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_OPCODE_WRITE_AND_VERIFY_10
+value|(0x2E)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_OPCODE_WRITE_AND_VERIFY_12
+value|(0xAE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_OPCODE_WRITE_AND_VERIFY_16
+value|(0x8E)
+end_define
+
+begin_comment
+comment|/*  * iSCSI Drv opaque  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_drv_opaque
+block|{
+name|__le16
+name|reserved_zero
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|__le16
+name|opaque
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Scsi 2B/8B opaque union  */
+end_comment
+
+begin_union
+union|union
+name|scsi_opaque
+block|{
+name|struct
+name|regpair
+name|fcoe_opaque
+comment|/* 8 Bytes opaque */
+decl_stmt|;
+name|struct
+name|iscsi_drv_opaque
+name|iscsi_opaque
+comment|/* 2 Bytes opaque */
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
 comment|/*  * SCSI buffer descriptor  */
 end_comment
 
@@ -97,8 +207,8 @@ name|regpair
 name|address
 comment|/* Physical Address of buffer */
 decl_stmt|;
-name|struct
-name|regpair
+name|union
+name|scsi_opaque
 name|opaque
 comment|/* Driver Metadata (preferably Virtual Address of buffer) */
 decl_stmt|;
@@ -282,12 +392,36 @@ name|SCSI_INIT_FUNC_QUEUES_CMD_VALID_SHIFT
 value|2
 define|#
 directive|define
+name|SCSI_INIT_FUNC_QUEUES_TQ_VALID_MASK
+value|0x1
+define|#
+directive|define
+name|SCSI_INIT_FUNC_QUEUES_TQ_VALID_SHIFT
+value|3
+define|#
+directive|define
+name|SCSI_INIT_FUNC_QUEUES_TMWO_EN_MASK
+value|0x1
+comment|/* This bit is valid if TQ is enabled for this function, tmwo option enabled/disabled */
+define|#
+directive|define
+name|SCSI_INIT_FUNC_QUEUES_TMWO_EN_SHIFT
+value|4
+define|#
+directive|define
 name|SCSI_INIT_FUNC_QUEUES_RESERVED_VALID_MASK
-value|0x1F
+value|0x7
 define|#
 directive|define
 name|SCSI_INIT_FUNC_QUEUES_RESERVED_VALID_SHIFT
-value|3
+value|5
+name|__le16
+name|cq_cmdq_sb_num_arr
+index|[
+name|NUM_OF_CMDQS_CQS
+index|]
+comment|/* CQ/CMDQ status block number array */
+decl_stmt|;
 name|u8
 name|num_queues
 comment|/* Number of continuous global queues used */
@@ -304,23 +438,16 @@ name|u8
 name|cmdq_sb_pi
 comment|/* Protocol Index of CMDQ in status block (CMDQ consumer) */
 decl_stmt|;
-name|__le16
-name|cq_cmdq_sb_num_arr
-index|[
-name|NUM_OF_CMDQS_CQS
-index|]
-comment|/* CQ/CMDQ status block number array */
-decl_stmt|;
-name|__le16
-name|reserved0
-comment|/* reserved */
-decl_stmt|;
 name|u8
 name|bdq_pbl_num_entries
 index|[
 name|BDQ_NUM_IDS
 index|]
 comment|/* Per BDQ ID, the PBL page size (number of entries in PBL) */
+decl_stmt|;
+name|u8
+name|reserved1
+comment|/* reserved */
 decl_stmt|;
 name|struct
 name|regpair
@@ -338,6 +465,10 @@ index|]
 comment|/* BDQ XOFF threshold - when number of entries will be below that TH, it will send XOFF */
 decl_stmt|;
 name|__le16
+name|cmdq_xoff_threshold
+comment|/* CMDQ XOFF threshold - when number of entries will be below that TH, it will send XOFF */
+decl_stmt|;
+name|__le16
 name|bdq_xon_threshold
 index|[
 name|BDQ_NUM_IDS
@@ -345,16 +476,8 @@ index|]
 comment|/* BDQ XON threshold - when number of entries will be above that TH, it will send XON */
 decl_stmt|;
 name|__le16
-name|cmdq_xoff_threshold
-comment|/* CMDQ XOFF threshold - when number of entries will be below that TH, it will send XOFF */
-decl_stmt|;
-name|__le16
 name|cmdq_xon_threshold
 comment|/* CMDQ XON threshold - when number of entries will be above that TH, it will send XON */
-decl_stmt|;
-name|__le32
-name|reserved1
-comment|/* reserved */
 decl_stmt|;
 block|}
 struct|;
@@ -456,6 +579,22 @@ name|reserved
 index|[
 literal|4
 index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * SCSI Task Queue Element  */
+end_comment
+
+begin_struct
+struct|struct
+name|scsi_tqe
+block|{
+name|__le16
+name|itid
+comment|/* Physical Address of buffer */
 decl_stmt|;
 block|}
 struct|;

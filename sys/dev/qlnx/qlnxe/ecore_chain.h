@@ -506,6 +506,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* FIXME:  * Should create OSALs for the below definitions.  * For Linux, replace them with the existing U16_MAX and U32_MAX, and handle  * kernel versions that lack them.  */
+end_comment
+
 begin_define
 define|#
 directive|define
