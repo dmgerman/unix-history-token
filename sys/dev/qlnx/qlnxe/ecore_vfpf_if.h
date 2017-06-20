@@ -37,6 +37,12 @@ begin_comment
 comment|/* @@@ TBD this should be HSI? */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUX_REMOVE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -47,6 +53,11 @@ end_define
 begin_comment
 comment|/* @@@ TBD MichalK - should this be defined here?*/
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/***********************************************  *  * Common definitions for all HVs  *  **/
@@ -240,7 +251,12 @@ decl_stmt|;
 struct|struct
 name|vf_pf_vfdev_info
 block|{
+ifndef|#
+directive|ifndef
+name|LINUX_REMOVE
 comment|/* First bit was used on 8.7.x and 8.8.x versions, which had different 	 * FWs used but with the same faspath HSI. As this was prior to the 	 * fastpath versioning, wanted to have ability to override fw matching 	 * and allow them to interact. 	 */
+endif|#
+directive|endif
 define|#
 directive|define
 name|VFPF_ACQUIRE_CAP_PRE_FP_HSI
@@ -455,6 +471,12 @@ name|PFVF_ACQUIRE_CAP_100G
 value|(1<< 1)
 comment|/* If set, 100g PF */
 comment|/* There are old PF versions where the PF might mistakenly override the sanity  * mechanism [version-based] and allow a VF that can't be supported to pass  * the acquisition phase.  * To overcome this, PFs now indicate that they're past that point and the new  * VFs would fail probe on the older PFs that fail to do so.  */
+ifndef|#
+directive|ifndef
+name|LINUX_REMOVE
+comment|/* Said bug was in quest/serpens; Can't be certain no official release included  * the bug since the fix arrived very late in the programs.  */
+endif|#
+directive|endif
 define|#
 directive|define
 name|PFVF_ACQUIRE_CAP_POST_FW_OVERRIDE

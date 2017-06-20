@@ -107,7 +107,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_sp_pf_start - PF Function Start Ramrod  *  * This ramrod is sent to initialize a physical function (PF). It will  * configure the function related parameters and write its completion to the  * event ring specified in the parameters.  *  * Ramrods complete on the common event ring for the PF. This ring is  * allocated by the driver on host memory and its parameters are written  * to the internal RAM of the UStorm by the Function Start Ramrod.  *  * @param p_hwfn  * @param p_tunn - pf start tunneling configuration  * @param mode  * @param allow_npar_tx_switch - npar tx switching to be used  *	  for vports configured for tx-switching.  *  * @return enum _ecore_status_t  */
+comment|/**  * @brief ecore_sp_pf_start - PF Function Start Ramrod  *  * This ramrod is sent to initialize a physical function (PF). It will  * configure the function related parameters and write its completion to the  * event ring specified in the parameters.  *  * Ramrods complete on the common event ring for the PF. This ring is  * allocated by the driver on host memory and its parameters are written  * to the internal RAM of the UStorm by the Function Start Ramrod.  *  * @param p_hwfn  * @param p_ptt  * @param p_tunn - pf start tunneling configuration  * @param mode  * @param allow_npar_tx_switch - npar tx switching to be used  *	  for vports configured for tx-switching.  *  * @return enum _ecore_status_t  */
 end_comment
 
 begin_function_decl
@@ -119,6 +119,11 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
 parameter_list|,
 name|struct
 name|ecore_tunnel_info
@@ -142,7 +147,7 @@ end_comment
 begin_function_decl
 name|enum
 name|_ecore_status_t
-name|ecore_sp_pf_update
+name|ecore_sp_pf_update_dcbx
 parameter_list|(
 name|struct
 name|ecore_hwfn
@@ -267,6 +272,23 @@ name|struct
 name|ecore_rl_update_params
 modifier|*
 name|params
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * @brief ecore_sp_pf_update_stag - PF STAG value update Ramrod  *  * @param p_hwfn  *  * @return enum _ecore_status_t  */
+end_comment
+
+begin_function_decl
+name|enum
+name|_ecore_status_t
+name|ecore_sp_pf_update_stag
+parameter_list|(
+name|struct
+name|ecore_hwfn
+modifier|*
+name|p_hwfn
 parameter_list|)
 function_decl|;
 end_function_decl

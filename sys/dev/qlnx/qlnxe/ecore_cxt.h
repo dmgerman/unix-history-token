@@ -290,7 +290,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_cxt_hw_init_pf - Initailze ILT and DQ, PF phase, per path.  *  * @param p_hwfn  */
+comment|/**  * @brief ecore_cxt_hw_init_pf - Initailze ILT and DQ, PF phase, per path.  *  * @param p_hwfn  * @param p_ptt  */
 end_comment
 
 begin_function_decl
@@ -301,12 +301,17 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief ecore_qm_init_pf - Initailze the QM PF phase, per path  *  * @param p_hwfn  */
+comment|/**  * @brief ecore_qm_init_pf - Initailze the QM PF phase, per path  *  * @param p_hwfn  * @param p_ptt  */
 end_comment
 
 begin_function_decl
@@ -317,6 +322,11 @@ name|struct
 name|ecore_hwfn
 modifier|*
 name|p_hwfn
+parameter_list|,
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
 parameter_list|)
 function_decl|;
 end_function_decl

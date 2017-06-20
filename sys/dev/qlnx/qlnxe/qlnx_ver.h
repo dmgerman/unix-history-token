@@ -22,14 +22,14 @@ begin_define
 define|#
 directive|define
 name|QLNX_VERSION_MINOR
-value|3
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|QLNX_VERSION_BUILD
-value|0
+value|5
 end_define
 
 end_unit

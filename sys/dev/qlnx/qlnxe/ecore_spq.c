@@ -390,6 +390,7 @@ name|cookie
 parameter_list|,
 name|union
 name|event_ring_data
+name|OSAL_UNUSED
 modifier|*
 name|data
 parameter_list|,
@@ -584,6 +585,11 @@ name|ecore_spq_comp_done
 modifier|*
 name|comp_done
 decl_stmt|;
+name|struct
+name|ecore_ptt
+modifier|*
+name|p_ptt
+decl_stmt|;
 name|enum
 name|_ecore_status_t
 name|rc
@@ -641,6 +647,32 @@ condition|)
 return|return
 name|ECORE_SUCCESS
 return|;
+name|p_ptt
+operator|=
+name|ecore_ptt_acquire
+argument_list|(
+name|p_hwfn
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|p_ptt
+condition|)
+block|{
+name|DP_NOTICE
+argument_list|(
+name|p_hwfn
+argument_list|,
+name|true
+argument_list|,
+literal|"ptt, failed to acquire\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ECORE_AGAIN
+return|;
+block|}
 name|DP_INFO
 argument_list|(
 name|p_hwfn
@@ -654,9 +686,7 @@ name|ecore_mcp_drain
 argument_list|(
 name|p_hwfn
 argument_list|,
-name|p_hwfn
-operator|->
-name|p_main_ptt
+name|p_ptt
 argument_list|)
 expr_stmt|;
 if|if
@@ -699,9 +729,9 @@ name|rc
 operator|==
 name|ECORE_SUCCESS
 condition|)
-return|return
-name|ECORE_SUCCESS
-return|;
+goto|goto
+name|out
+goto|;
 name|comp_done
 operator|=
 operator|(
@@ -735,12 +765,28 @@ name|comp_done
 operator|->
 name|fw_return_code
 expr_stmt|;
+block|}
+name|out
+label|:
+name|ecore_ptt_release
+argument_list|(
+name|p_hwfn
+argument_list|,
+name|p_ptt
+argument_list|)
+expr_stmt|;
 return|return
 name|ECORE_SUCCESS
 return|;
-block|}
 name|err
 label|:
+name|ecore_ptt_release
+argument_list|(
+name|p_hwfn
+argument_list|,
+name|p_ptt
+argument_list|)
+expr_stmt|;
 name|DP_NOTICE
 argument_list|(
 name|p_hwfn
@@ -965,20 +1011,20 @@ name|p_spq
 parameter_list|)
 block|{
 name|struct
+name|e4_core_conn_context
+modifier|*
+name|p_cxt
+decl_stmt|;
+name|struct
 name|ecore_cxt_info
 name|cxt_info
 decl_stmt|;
-name|struct
-name|core_conn_context
-modifier|*
-name|p_cxt
+name|u16
+name|physical_q
 decl_stmt|;
 name|enum
 name|_ecore_status_t
 name|rc
-decl_stmt|;
-name|u16
-name|physical_q
 decl_stmt|;
 name|cxt_info
 operator|.
@@ -2144,7 +2190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*************************************************************************** * CQE API - manipulate EQ functionality ***************************************************************************/
+comment|/*************************************************************************** * CQE API - manipulate EQ functionallity ***************************************************************************/
 end_comment
 
 begin_function
@@ -2669,6 +2715,9 @@ name|p_phys
 operator|=
 name|p_phys
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_ECORE_LOCK_ALLOC
 name|OSAL_SPIN_LOCK_ALLOC
 argument_list|(
 name|p_hwfn
@@ -2679,6 +2728,8 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|p_hwfn
 operator|->
 name|p_spq
@@ -2798,6 +2849,9 @@ operator|->
 name|chain
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_ECORE_LOCK_ALLOC
 name|OSAL_SPIN_LOCK_DEALLOC
 argument_list|(
 operator|&
@@ -2806,6 +2860,8 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|OSAL_FREE
 argument_list|(
 name|p_hwfn
@@ -3077,7 +3133,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief ecore_spq_add_entry - adds a new entry to the pending  *        list. Should be used while lock is being held.  *  * Addes an entry to the pending list is there is room (en empty  * element is available in the free_pool), or else places the  * entry in the unlimited_pending pool.  *  * @param p_hwfn  * @param p_ent  * @param priority  *  * @return enum _ecore_status_t  */
+comment|/**  * @brief ecore_spq_add_entry - adds a new entry to the pending  *        list. Should be used while lock is being held.  *  * Addes an entry to the pending list is there is room (en empty  * element is avaliable in the free_pool), or else places the  * entry in the unlimited_pending pool.  *  * @param p_hwfn  * @param p_ent  * @param priority  *  * @return enum _ecore_status_t  */
 end_comment
 
 begin_function
@@ -3828,7 +3884,7 @@ operator|==
 name|ECORE_SPQ_MODE_EBLOCK
 condition|)
 block|{
-comment|/* For entries in ECORE BLOCK mode, the completion code cannot 		 * perform the necessary cleanup - if it did, we couldn't 		 * access p_ent here to see whether it's successful or not. 		 * Thus, after gaining the answer - perform the cleanup here. 		 */
+comment|/* For entries in ECORE BLOCK mode, the completion code cannot 		 * perform the necessary cleanup - if it did, we couldn't 		 * access p_ent here to see whether it's successful or not. 		 * Thus, after gaining the answer perform the cleanup here. 		 */
 name|rc
 operator|=
 name|ecore_spq_block

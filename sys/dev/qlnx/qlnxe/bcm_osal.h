@@ -38,6 +38,25 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
+literal|1200000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<compat/linuxkpi/common/include/linux/bitops.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
 literal|1100090
 end_if
 
@@ -62,6 +81,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|OSAL_NUM_CPUS
+parameter_list|()
+value|mp_ncpus
+end_define
 
 begin_comment
 comment|/*  * prototypes of freebsd specific functions required by ecore  */
@@ -238,6 +270,25 @@ modifier|*
 name|reg_addr
 parameter_list|,
 name|uint32_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|qlnx_direct_reg_wr64
+parameter_list|(
+name|void
+modifier|*
+name|p_hwfn
+parameter_list|,
+name|void
+modifier|*
+name|reg_addr
+parameter_list|,
+name|uint64_t
 name|value
 parameter_list|)
 function_decl|;
@@ -652,6 +703,12 @@ end_endif
 begin_comment
 comment|/* #ifndef QLNX_RDMA */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|OSAL_UNUSED
+end_define
 
 begin_define
 define|#
@@ -1073,6 +1130,21 @@ parameter_list|,
 name|value
 parameter_list|)
 value|qlnx_direct_reg_wr32(p_hwfn, addr, value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIRECT_REG_WR64
+parameter_list|(
+name|p_hwfn
+parameter_list|,
+name|addr
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|qlnx_direct_reg_wr64(p_hwfn, addr, value)
 end_define
 
 begin_define

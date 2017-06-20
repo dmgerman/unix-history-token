@@ -52,18 +52,18 @@ file|"roce_common.h"
 end_include
 
 begin_comment
-comment|/*  * The roce storm context of Mstorm  */
+comment|/*  * The roce storm context of Ystorm  */
 end_comment
 
 begin_struct
 struct|struct
-name|mstorm_roce_conn_st_ctx
+name|ystorm_roce_conn_st_ctx
 block|{
 name|struct
 name|regpair
 name|temp
 index|[
-literal|6
+literal|2
 index|]
 decl_stmt|;
 block|}
@@ -83,25 +83,6 @@ name|regpair
 name|temp
 index|[
 literal|16
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The roce storm context of Ystorm  */
-end_comment
-
-begin_struct
-struct|struct
-name|ystorm_roce_conn_st_ctx
-block|{
-name|struct
-name|regpair
-name|temp
-index|[
-literal|2
 index|]
 decl_stmt|;
 block|}
@@ -147,6 +128,25 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * The roce storm context of Mstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|mstorm_roce_conn_st_ctx
+block|{
+name|struct
+name|regpair
+name|temp
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * The roce storm context of Ystorm  */
 end_comment
 
@@ -171,7 +171,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|roce_conn_context
+name|e4_roce_conn_context
 block|{
 name|struct
 name|ystorm_roce_conn_st_ctx
@@ -221,6 +221,92 @@ comment|/* timer context */
 decl_stmt|;
 name|struct
 name|e4_ustorm_rdma_conn_ag_ctx
+name|ustorm_ag_context
+comment|/* ustorm aggregative context */
+decl_stmt|;
+name|struct
+name|tstorm_roce_conn_st_ctx
+name|tstorm_st_context
+comment|/* tstorm storm context */
+decl_stmt|;
+name|struct
+name|mstorm_roce_conn_st_ctx
+name|mstorm_st_context
+comment|/* mstorm storm context */
+decl_stmt|;
+name|struct
+name|ustorm_roce_conn_st_ctx
+name|ustorm_st_context
+comment|/* ustorm storm context */
+decl_stmt|;
+name|struct
+name|regpair
+name|ustorm_st_padding
+index|[
+literal|2
+index|]
+comment|/* padding */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * roce connection context  */
+end_comment
+
+begin_struct
+struct|struct
+name|e5_roce_conn_context
+block|{
+name|struct
+name|ystorm_roce_conn_st_ctx
+name|ystorm_st_context
+comment|/* ystorm storm context */
+decl_stmt|;
+name|struct
+name|regpair
+name|ystorm_st_padding
+index|[
+literal|2
+index|]
+comment|/* padding */
+decl_stmt|;
+name|struct
+name|pstorm_roce_conn_st_ctx
+name|pstorm_st_context
+comment|/* pstorm storm context */
+decl_stmt|;
+name|struct
+name|xstorm_roce_conn_st_ctx
+name|xstorm_st_context
+comment|/* xstorm storm context */
+decl_stmt|;
+name|struct
+name|regpair
+name|xstorm_st_padding
+index|[
+literal|2
+index|]
+comment|/* padding */
+decl_stmt|;
+name|struct
+name|e5_xstorm_rdma_conn_ag_ctx
+name|xstorm_ag_context
+comment|/* xstorm aggregative context */
+decl_stmt|;
+name|struct
+name|e5_tstorm_rdma_conn_ag_ctx
+name|tstorm_ag_context
+comment|/* tstorm aggregative context */
+decl_stmt|;
+name|struct
+name|timers_context
+name|timer_context
+comment|/* timer context */
+decl_stmt|;
+name|struct
+name|e5_ustorm_rdma_conn_ag_ctx
 name|ustorm_ag_context
 comment|/* ustorm aggregative context */
 decl_stmt|;
