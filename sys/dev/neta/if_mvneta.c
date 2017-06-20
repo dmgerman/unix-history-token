@@ -10504,6 +10504,9 @@ case|case
 name|SIOCGIFMEDIA
 case|:
 comment|/* FALLTHROUGH */
+case|case
+name|SIOCGIFXMEDIA
+case|:
 if|if
 condition|(
 operator|!
