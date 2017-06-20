@@ -106,6 +106,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|STM32F4_RCC_AHB1_BKPSRAM
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|STM32F4_RCC_AHB1_CCMDATARAM
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
 name|STM32F4_RCC_AHB1_DMA1
 value|21
 end_define
@@ -134,8 +148,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|STM32F4_RCC_AHB1_ETHMACTX
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|STM32F4_RCC_AHB1_ETHMACRX
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|STM32F4_RCC_AHB1_ETHMACPTP
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
 name|STM32F4_RCC_AHB1_OTGHS
 value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|STM32F4_RCC_AHB1_OTGHSULPI
+value|30
 end_define
 
 begin_define
@@ -155,7 +197,7 @@ name|STM32F4_AHB1_CLOCK
 parameter_list|(
 name|bit
 parameter_list|)
-value|(STM32F4_RCC_AHB1_##bit + (0x30 * 8))
+value|(STM32F4_RCC_AHB1_##bit)
 end_define
 
 begin_comment
@@ -214,7 +256,7 @@ name|STM32F4_AHB2_CLOCK
 parameter_list|(
 name|bit
 parameter_list|)
-value|(STM32F4_RCC_AHB2_##bit + (0x34 * 8))
+value|(STM32F4_RCC_AHB2_##bit + 0x20)
 end_define
 
 begin_comment
@@ -226,6 +268,13 @@ define|#
 directive|define
 name|STM32F4_RCC_AHB3_FMC
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|STM32F4_RCC_AHB3_QSPI
+value|1
 end_define
 
 begin_define
@@ -245,7 +294,7 @@ name|STM32F4_AHB3_CLOCK
 parameter_list|(
 name|bit
 parameter_list|)
-value|(STM32F4_RCC_AHB3_##bit + (0x38 * 8))
+value|(STM32F4_RCC_AHB3_##bit + 0x40)
 end_define
 
 begin_comment
@@ -444,7 +493,7 @@ name|STM32F4_APB1_CLOCK
 parameter_list|(
 name|bit
 parameter_list|)
-value|(STM32F4_RCC_APB1_##bit + (0x40 * 8))
+value|(STM32F4_RCC_APB1_##bit + 0x80)
 end_define
 
 begin_comment
@@ -482,8 +531,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|STM32F4_RCC_APB2_ADC
+name|STM32F4_RCC_APB2_ADC1
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|STM32F4_RCC_APB2_ADC2
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|STM32F4_RCC_APB2_ADC3
+value|10
 end_define
 
 begin_define
@@ -566,6 +629,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|STM32F4_RCC_APB2_DSI
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
 name|STM32F4_APB2_RESET
 parameter_list|(
 name|bit
@@ -580,7 +650,7 @@ name|STM32F4_APB2_CLOCK
 parameter_list|(
 name|bit
 parameter_list|)
-value|(STM32F4_RCC_APB2_##bit + (0x44 * 8))
+value|(STM32F4_RCC_APB2_##bit + 0xA0)
 end_define
 
 begin_endif

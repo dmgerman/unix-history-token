@@ -22,385 +22,385 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO00__GPIO1_IO0
+name|MX7D_PAD_LPSR_GPIO1_IO00__GPIO1_IO0
 value|0x0000 0x0030 0x0000 0x0 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO00__PWM4_OUT
+name|MX7D_PAD_LPSR_GPIO1_IO00__PWM4_OUT
 value|0x0000 0x0030 0x0000 0x1 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_ANY
+name|MX7D_PAD_LPSR_GPIO1_IO00__WDOD1_WDOG_ANY
 value|0x0000 0x0030 0x0000 0x2 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_B
+name|MX7D_PAD_LPSR_GPIO1_IO00__WDOD1_WDOG_B
 value|0x0000 0x0030 0x0000 0x3 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO00__WDOD1_WDOG__RST_B_DEB
+name|MX7D_PAD_LPSR_GPIO1_IO00__WDOD1_WDOG__RST_B_DEB
 value|0x0000 0x0030 0x0000 0x4 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO01__GPIO1_IO1
+name|MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1
 value|0x0004 0x0034 0x0000 0x0 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO01__PWM1_OUT
+name|MX7D_PAD_LPSR_GPIO1_IO01__PWM1_OUT
 value|0x0004 0x0034 0x0000 0x1 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO01__CCM_ENET_REF_CLK3
+name|MX7D_PAD_LPSR_GPIO1_IO01__CCM_ENET_REF_CLK3
 value|0x0004 0x0034 0x0000 0x2 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO01__SAI1_MCLK
+name|MX7D_PAD_LPSR_GPIO1_IO01__SAI1_MCLK
 value|0x0004 0x0034 0x0000 0x3 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO01__ANATOP_24M_OUT
+name|MX7D_PAD_LPSR_GPIO1_IO01__ANATOP_24M_OUT
 value|0x0004 0x0034 0x0000 0x4 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO01__OBSERVE0_OUT
+name|MX7D_PAD_LPSR_GPIO1_IO01__OBSERVE0_OUT
 value|0x0004 0x0034 0x0000 0x6 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO02__GPIO1_IO2
+name|MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2
 value|0x0008 0x0038 0x0000 0x0 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO02__PWM2_OUT
+name|MX7D_PAD_LPSR_GPIO1_IO02__PWM2_OUT
 value|0x0008 0x0038 0x0000 0x1 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO02__CCM_ENET_REF_CLK1
+name|MX7D_PAD_LPSR_GPIO1_IO02__CCM_ENET_REF_CLK1
 value|0x0008 0x0038 0x0564 0x2 0x3
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO02__SAI2_MCLK
+name|MX7D_PAD_LPSR_GPIO1_IO02__SAI2_MCLK
 value|0x0008 0x0038 0x0000 0x3 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO02__CCM_CLKO1
+name|MX7D_PAD_LPSR_GPIO1_IO02__CCM_CLKO1
 value|0x0008 0x0038 0x0000 0x5 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO02__OBSERVE1_OUT
+name|MX7D_PAD_LPSR_GPIO1_IO02__OBSERVE1_OUT
 value|0x0008 0x0038 0x0000 0x6 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO02__USB_OTG1_ID
+name|MX7D_PAD_LPSR_GPIO1_IO02__USB_OTG1_ID
 value|0x0008 0x0038 0x0734 0x7 0x3
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO03__GPIO1_IO3
+name|MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3
 value|0x000C 0x003C 0x0000 0x0 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO03__PWM3_OUT
+name|MX7D_PAD_LPSR_GPIO1_IO03__PWM3_OUT
 value|0x000C 0x003C 0x0000 0x1 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO03__CCM_ENET_REF_CLK2
+name|MX7D_PAD_LPSR_GPIO1_IO03__CCM_ENET_REF_CLK2
 value|0x000C 0x003C 0x0570 0x2 0x3
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO03__SAI3_MCLK
+name|MX7D_PAD_LPSR_GPIO1_IO03__SAI3_MCLK
 value|0x000C 0x003C 0x0000 0x3 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO03__CCM_CLKO2
+name|MX7D_PAD_LPSR_GPIO1_IO03__CCM_CLKO2
 value|0x000C 0x003C 0x0000 0x5 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO03__OBSERVE2_OUT
+name|MX7D_PAD_LPSR_GPIO1_IO03__OBSERVE2_OUT
 value|0x000C 0x003C 0x0000 0x6 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO03__USB_OTG2_ID
+name|MX7D_PAD_LPSR_GPIO1_IO03__USB_OTG2_ID
 value|0x000C 0x003C 0x0730 0x7 0x3
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO04__GPIO1_IO4
+name|MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4
 value|0x0010 0x0040 0x0000 0x0 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO04__USB_OTG1_OC
+name|MX7D_PAD_LPSR_GPIO1_IO04__USB_OTG1_OC
 value|0x0010 0x0040 0x072C 0x1 0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO04__FLEXTIMER1_CH4
+name|MX7D_PAD_LPSR_GPIO1_IO04__FLEXTIMER1_CH4
 value|0x0010 0x0040 0x0594 0x2 0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO04__UART5_DCE_CTS
+name|MX7D_PAD_LPSR_GPIO1_IO04__UART5_DCE_CTS
 value|0x0010 0x0040 0x0000 0x3 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO04__UART5_DTE_RTS
+name|MX7D_PAD_LPSR_GPIO1_IO04__UART5_DTE_RTS
 value|0x0010 0x0040 0x0710 0x3 0x4
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO04__I2C1_SCL
+name|MX7D_PAD_LPSR_GPIO1_IO04__I2C1_SCL
 value|0x0010 0x0040 0x05D4 0x4 0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO04__OBSERVE3_OUT
+name|MX7D_PAD_LPSR_GPIO1_IO04__OBSERVE3_OUT
 value|0x0010 0x0040 0x0000 0x6 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO05__GPIO1_IO5
+name|MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5
 value|0x0014 0x0044 0x0000 0x0 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO05__USB_OTG1_PWR
+name|MX7D_PAD_LPSR_GPIO1_IO05__USB_OTG1_PWR
 value|0x0014 0x0044 0x0000 0x1 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO05__FLEXTIMER1_CH5
+name|MX7D_PAD_LPSR_GPIO1_IO05__FLEXTIMER1_CH5
 value|0x0014 0x0044 0x0598 0x2 0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO05__UART5_DCE_RTS
+name|MX7D_PAD_LPSR_GPIO1_IO05__UART5_DCE_RTS
 value|0x0014 0x0044 0x0710 0x3 0x5
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO05__UART5_DTE_CTS
+name|MX7D_PAD_LPSR_GPIO1_IO05__UART5_DTE_CTS
 value|0x0014 0x0044 0x0000 0x3 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO05__I2C1_SDA
+name|MX7D_PAD_LPSR_GPIO1_IO05__I2C1_SDA
 value|0x0014 0x0044 0x05D8 0x4 0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO05__OBSERVE4_OUT
+name|MX7D_PAD_LPSR_GPIO1_IO05__OBSERVE4_OUT
 value|0x0014 0x0044 0x0000 0x6 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO06__GPIO1_IO6
+name|MX7D_PAD_LPSR_GPIO1_IO06__GPIO1_IO6
 value|0x0018 0x0048 0x0000 0x0 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO06__USB_OTG2_OC
+name|MX7D_PAD_LPSR_GPIO1_IO06__USB_OTG2_OC
 value|0x0018 0x0048 0x0728 0x1 0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO06__FLEXTIMER1_CH6
+name|MX7D_PAD_LPSR_GPIO1_IO06__FLEXTIMER1_CH6
 value|0x0018 0x0048 0x059C 0x2 0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO06__UART5_DCE_RX
+name|MX7D_PAD_LPSR_GPIO1_IO06__UART5_DCE_RX
 value|0x0018 0x0048 0x0714 0x3 0x4
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO06__UART5_DTE_TX
+name|MX7D_PAD_LPSR_GPIO1_IO06__UART5_DTE_TX
 value|0x0018 0x0048 0x0000 0x3 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO06__I2C2_SCL
+name|MX7D_PAD_LPSR_GPIO1_IO06__I2C2_SCL
 value|0x0018 0x0048 0x05DC 0x4 0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO06__CCM_WAIT
+name|MX7D_PAD_LPSR_GPIO1_IO06__CCM_WAIT
 value|0x0018 0x0048 0x0000 0x5 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO06__KPP_ROW4
+name|MX7D_PAD_LPSR_GPIO1_IO06__KPP_ROW4
 value|0x0018 0x0048 0x0624 0x6 0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO07__GPIO1_IO7
+name|MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7
 value|0x001C 0x004C 0x0000 0x0 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO07__USB_OTG2_PWR
+name|MX7D_PAD_LPSR_GPIO1_IO07__USB_OTG2_PWR
 value|0x001C 0x004C 0x0000 0x1 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO07__FLEXTIMER1_CH7
+name|MX7D_PAD_LPSR_GPIO1_IO07__FLEXTIMER1_CH7
 value|0x001C 0x004C 0x05A0 0x2 0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO07__UART5_DCE_TX
+name|MX7D_PAD_LPSR_GPIO1_IO07__UART5_DCE_TX
 value|0x001C 0x004C 0x0000 0x3 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO07__UART5_DTE_RX
+name|MX7D_PAD_LPSR_GPIO1_IO07__UART5_DTE_RX
 value|0x001C 0x004C 0x0714 0x3 0x5
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO07__I2C2_SDA
+name|MX7D_PAD_LPSR_GPIO1_IO07__I2C2_SDA
 value|0x001C 0x004C 0x05E0 0x4 0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO07__CCM_STOP
+name|MX7D_PAD_LPSR_GPIO1_IO07__CCM_STOP
 value|0x001C 0x004C 0x0000 0x5 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO07__KPP_COL4
+name|MX7D_PAD_LPSR_GPIO1_IO07__KPP_COL4
 value|0x001C 0x004C 0x0604 0x6 0x1
 end_define
 

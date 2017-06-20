@@ -94,6 +94,24 @@ value|0
 end_define
 
 begin_comment
+comment|/* MSTP5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R7S72100_CLK_OSTM0
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|R7S72100_CLK_OSTM1
+value|0
+end_define
+
+begin_comment
 comment|/* MSTP7 */
 end_comment
 
