@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/slicer.h>
 end_include
 
@@ -1114,6 +1120,9 @@ name|bool
 name|force
 parameter_list|)
 block|{
+name|DROP_GIANT
+argument_list|()
+expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -1142,6 +1151,9 @@ operator|=
 name|slicer
 expr_stmt|;
 name|g_topology_unlock
+argument_list|()
+expr_stmt|;
+name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 block|}
