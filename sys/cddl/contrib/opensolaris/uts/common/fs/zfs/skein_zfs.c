@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2013 Saso Kiselkov.  All rights reserved.  */
+comment|/*  * Copyright 2013 Saso Kiselkov.  All rights reserved.  * Copyright (c) 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -47,8 +47,57 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/abd.h>
+end_include
+
+begin_function
+specifier|static
+name|int
+name|skein_incremental
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|Skein_512_Ctxt_t
+modifier|*
+name|ctx
+init|=
+name|arg
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|Skein_512_Update
+argument_list|(
+name|ctx
+argument_list|,
+name|buf
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * Computes a native 256-bit skein MAC checksum. Please note that this  * function requires the presence of a ctx_template that should be allocated  * using zio_checksum_skein_tmpl_init.  */
+comment|/*  * Computes a native 256-bit skein MAC checksum. Please note that this  * function requires the presence of a ctx_template that should be allocated  * using abd_checksum_skein_tmpl_init.  */
 end_comment
 
 begin_comment
@@ -57,12 +106,11 @@ end_comment
 
 begin_function
 name|void
-name|zio_checksum_skein_native
+name|abd_checksum_skein_native
 parameter_list|(
-specifier|const
-name|void
+name|abd_t
 modifier|*
-name|buf
+name|abd
 parameter_list|,
 name|uint64_t
 name|size
@@ -103,14 +151,18 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|Skein_512_Update
+name|abd_iterate_func
 argument_list|(
-operator|&
-name|ctx
+name|abd
 argument_list|,
-name|buf
+literal|0
 argument_list|,
 name|size
+argument_list|,
+name|skein_incremental
+argument_list|,
+operator|&
+name|ctx
 argument_list|)
 expr_stmt|;
 operator|(
@@ -143,17 +195,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Byteswapped version of zio_checksum_skein_native. This just invokes  * the native checksum function and byteswaps the resulting checksum (since  * skein is internally endian-insensitive).  */
+comment|/*  * Byteswapped version of abd_checksum_skein_native. This just invokes  * the native checksum function and byteswaps the resulting checksum (since  * skein is internally endian-insensitive).  */
 end_comment
 
 begin_function
 name|void
-name|zio_checksum_skein_byteswap
+name|abd_checksum_skein_byteswap
 parameter_list|(
-specifier|const
-name|void
+name|abd_t
 modifier|*
-name|buf
+name|abd
 parameter_list|,
 name|uint64_t
 name|size
@@ -171,9 +222,9 @@ block|{
 name|zio_cksum_t
 name|tmp
 decl_stmt|;
-name|zio_checksum_skein_native
+name|abd_checksum_skein_native
 argument_list|(
-name|buf
+name|abd
 argument_list|,
 name|size
 argument_list|,
@@ -261,7 +312,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|zio_checksum_skein_tmpl_init
+name|abd_checksum_skein_tmpl_init
 parameter_list|(
 specifier|const
 name|zio_cksum_salt_t
@@ -323,12 +374,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Frees a skein context template previously allocated using  * zio_checksum_skein_tmpl_init.  */
+comment|/*  * Frees a skein context template previously allocated using  * abd_checksum_skein_tmpl_init.  */
 end_comment
 
 begin_function
 name|void
-name|zio_checksum_skein_tmpl_free
+name|abd_checksum_skein_tmpl_free
 parameter_list|(
 name|void
 modifier|*

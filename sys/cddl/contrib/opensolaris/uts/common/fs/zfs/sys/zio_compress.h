@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2015, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -22,6 +22,12 @@ define|#
 directive|define
 name|_SYS_ZIO_COMPRESS_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/abd.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -119,30 +125,48 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+comment|/*  * Common signature for all zio decompress functions using an ABD as input.  * This is helpful if you have both compressed ARC and scatter ABDs enabled,  * but is not a requirement for all compression algorithms.  */
+typedef|typedef
+name|int
+name|zio_decompress_abd_func_t
+parameter_list|(
+name|abd_t
+modifier|*
+name|src
+parameter_list|,
+name|void
+modifier|*
+name|dst
+parameter_list|,
+name|size_t
+name|s_len
+parameter_list|,
+name|size_t
+name|d_len
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 comment|/*  * Information about each compression function.  */
 typedef|typedef
 struct|struct
 name|zio_compress_info
 block|{
-name|zio_compress_func_t
-modifier|*
-name|ci_compress
-decl_stmt|;
-comment|/* compression function */
-name|zio_decompress_func_t
-modifier|*
-name|ci_decompress
-decl_stmt|;
-comment|/* decompression function */
-name|int
-name|ci_level
-decl_stmt|;
-comment|/* level parameter */
 name|char
 modifier|*
 name|ci_name
 decl_stmt|;
-comment|/* algorithm name */
+name|int
+name|ci_level
+decl_stmt|;
+name|zio_compress_func_t
+modifier|*
+name|ci_compress
+decl_stmt|;
+name|zio_decompress_func_t
+modifier|*
+name|ci_decompress
+decl_stmt|;
 block|}
 name|zio_compress_info_t
 typedef|;
@@ -353,7 +377,7 @@ name|enum
 name|zio_compress
 name|c
 parameter_list|,
-name|void
+name|abd_t
 modifier|*
 name|src
 parameter_list|,
@@ -368,6 +392,29 @@ function_decl|;
 specifier|extern
 name|int
 name|zio_decompress_data
+parameter_list|(
+name|enum
+name|zio_compress
+name|c
+parameter_list|,
+name|abd_t
+modifier|*
+name|src
+parameter_list|,
+name|void
+modifier|*
+name|dst
+parameter_list|,
+name|size_t
+name|s_len
+parameter_list|,
+name|size_t
+name|d_len
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zio_decompress_data_buf
 parameter_list|(
 name|enum
 name|zio_compress

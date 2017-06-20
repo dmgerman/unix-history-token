@@ -616,6 +616,9 @@ name|zio_cksum_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fletcher_4_incremental_native
 argument_list|(
 name|dsp
@@ -709,6 +712,9 @@ operator|=
 name|B_TRUE
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fletcher_4_incremental_native
 argument_list|(
 operator|&
@@ -766,6 +772,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fletcher_4_incremental_native
 argument_list|(
 name|payload
@@ -9150,6 +9159,9 @@ name|drc_byteswap
 operator|=
 name|B_TRUE
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fletcher_4_incremental_byteswap
 argument_list|(
 name|drr_begin
@@ -9183,6 +9195,9 @@ operator|==
 name|DMU_BACKUP_MAGIC
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fletcher_4_incremental_native
 argument_list|(
 name|drr_begin
@@ -12633,6 +12648,9 @@ operator|->
 name|byteswap
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fletcher_4_incremental_byteswap
 argument_list|(
 name|buf
@@ -12648,6 +12666,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|fletcher_4_incremental_native
 argument_list|(
 name|buf
