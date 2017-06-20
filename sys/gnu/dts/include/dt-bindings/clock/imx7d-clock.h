@@ -3091,8 +3091,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IMX7D_CLK_END
+name|IMX7D_OCOTP_CLK
 value|439
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX7D_CLK_END
+value|440
 end_define
 
 begin_endif

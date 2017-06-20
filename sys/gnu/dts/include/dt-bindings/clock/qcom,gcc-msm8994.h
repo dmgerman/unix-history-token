@@ -841,6 +841,13 @@ name|GCC_USB_HS_SYSTEM_CLK
 value|117
 end_define
 
+begin_define
+define|#
+directive|define
+name|GCC_SDCC1_AHB_CLK
+value|118
+end_define
+
 begin_endif
 endif|#
 directive|endif

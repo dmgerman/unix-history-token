@@ -2164,6 +2164,20 @@ name|USB_HS1_SYSTEM_CLK
 value|307
 end_define
 
+begin_define
+define|#
+directive|define
+name|EBI2_CLK
+value|308
+end_define
+
+begin_define
+define|#
+directive|define
+name|EBI2_AON_CLK
+value|309
+end_define
+
 begin_endif
 endif|#
 directive|endif

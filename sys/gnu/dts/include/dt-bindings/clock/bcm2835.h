@@ -346,5 +346,19 @@ name|BCM2835_CLOCK_DSI1E
 value|48
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCM2835_CLOCK_DSI0P
+value|49
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM2835_CLOCK_DSI1P
+value|50
+end_define
+
 end_unit
 
