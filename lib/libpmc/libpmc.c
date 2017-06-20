@@ -1818,7 +1818,7 @@ name|haswell_xeon
 argument_list|,
 name|IAP
 argument_list|,
-name|haswell
+name|haswell_xeon
 argument_list|,
 name|iap
 argument_list|)
