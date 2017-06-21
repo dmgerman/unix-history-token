@@ -1032,6 +1032,8 @@ operator|->
 name|index
 operator|<<
 name|PAGE_SHIFT
+argument_list|,
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 return|return
