@@ -757,6 +757,206 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x19b08086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19b18086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19b28086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19b38086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19b48086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19b58086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19b68086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19b78086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19be8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19bf8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19c08086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19c18086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19c28086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19c38086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19c48086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19c58086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19c68086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19c78086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19ce8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x19cf8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Denverton"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x1c028086
 block|,
 literal|0x00
