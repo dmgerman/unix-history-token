@@ -3536,11 +3536,9 @@ goto|goto
 name|retry
 goto|;
 block|}
-name|zio_buf_free
+name|abd_free
 argument_list|(
 name|pad2
-argument_list|,
-name|VDEV_PAD_SIZE
 argument_list|)
 expr_stmt|;
 return|return
