@@ -314,16 +314,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SWCORRECT
-parameter_list|(
-name|n
-parameter_list|)
-value|(sizeof(void *) * (n) / sizeof(daddr_t))
-end_define
-
-begin_define
-define|#
-directive|define
 name|SWAP_META_PAGES
 value|(SWB_NPAGES * 2)
 end_define
