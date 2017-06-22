@@ -4113,7 +4113,7 @@ name|int
 name|l2rcb_flags
 decl_stmt|;
 comment|/* original flags */
-name|void
+name|abd_t
 modifier|*
 name|l2rcb_abd
 decl_stmt|;
@@ -28604,7 +28604,7 @@ argument_list|,
 name|hdr
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Normally the L2ARC can use the hdr's data, but if 			 * we're sharing data between the hdr and one of its 			 * bufs, L2ARC needs its own copy of the data so that 			 * the ZIO below can't race with the buf consumer. To 			 * ensure that this copy will be available for the 			 * lifetime of the ZIO and be cleaned up afterwards, we 			 * add it to the l2arc_free_on_write queue. 			 */
+comment|/* 			 * Normally the L2ARC can use the hdr's data, but if 			 * we're sharing data between the hdr and one of its 			 * bufs, L2ARC needs its own copy of the data so that 			 * the ZIO below can't race with the buf consumer. 			 * Another case where we need to create a copy of the 			 * data is when the buffer size is not device-aligned 			 * and we need to pad the block to make it such. 			 * That also keeps the clock hand suitably aligned. 			 * 			 * To ensure that the copy will be available for the 			 * lifetime of the ZIO and be cleaned up afterwards, we 			 * add it to the l2arc_free_on_write queue. 			 */
 name|abd_t
 modifier|*
 name|to_write
