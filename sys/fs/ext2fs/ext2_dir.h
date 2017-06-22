@@ -140,6 +140,13 @@ name|EXT2_LINK_MAX
 value|32000
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXT4_LINK_MAX
+value|65000
+end_define
+
 begin_comment
 comment|/*  * Ext2 directory file types.  Only the low 3 bits are used.  The  * other bits are reserved for now.  */
 end_comment
