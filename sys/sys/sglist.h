@@ -48,7 +48,7 @@ name|sglist_seg
 modifier|*
 name|sg_segs
 decl_stmt|;
-name|int
+name|u_int
 name|sg_refs
 decl_stmt|;
 name|u_short
