@@ -8136,6 +8136,17 @@ break|break;
 case|case
 name|SIOCSIFMTU
 case|:
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_mtu
+operator|==
+name|ifr
+operator|->
+name|ifr_mtu
+condition|)
+break|break;
 name|ifp
 operator|->
 name|if_mtu
