@@ -570,6 +570,9 @@ name|UINT32
 name|Type
 decl_stmt|;
 comment|// Field size is 32 bits followed by 32 bit pad
+name|UINT32
+name|Pad
+decl_stmt|;
 name|EFI_PHYSICAL_ADDRESS
 name|PhysicalStart
 decl_stmt|;
