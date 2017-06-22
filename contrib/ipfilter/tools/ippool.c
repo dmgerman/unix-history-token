@@ -2895,8 +2895,6 @@ if|if
 condition|(
 name|argc
 operator|-
-literal|1
-operator|-
 name|optind
 operator|>
 literal|0
