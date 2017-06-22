@@ -4488,7 +4488,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 		 * Allocate a new cluster chain and cat onto the end of the 		 * file. 		 * If the file is empty we make de_StartCluster point 		 * to the new block.  Note that de_StartCluster being 		 * 0 is sufficient to be sure the file is empty since 		 * we exclude attempts to extend the root directory 		 * above, and the root dir is the only file with a 		 * startcluster of 0 that has blocks allocated (sort 		 * of). 		 */
+comment|/* 		 * Allocate a new cluster chain and cat onto the end of the 		 * file.  If the file is empty we make de_StartCluster point 		 * to the new block.  Note that de_StartCluster being 0 is 		 * sufficient to be sure the file is empty since we exclude 		 * attempts to extend the root directory above, and the root 		 * dir is the only file with a startcluster of 0 that has 		 * blocks allocated (sort of). 		 */
 if|if
 condition|(
 name|dep
