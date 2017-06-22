@@ -211,12 +211,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Limit SLOG write size per commit executed with synchronous priority.  * Any writes above that executed with lower (asynchronous) priority to  * limit potential SLOG device abuse by single active ZIL writer.  */
+comment|/*  * Limit SLOG write size per commit executed with synchronous priority.  * Any writes above that will be executed with lower (asynchronous) priority  * to limit potential SLOG device abuse by single active ZIL writer.  */
 end_comment
 
 begin_decl_stmt
 name|uint64_t
-name|zil_slog_limit
+name|zil_slog_bulk
 init|=
 literal|768
 operator|*
@@ -231,12 +231,12 @@ name|_vfs_zfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|zil_slog_limit
+name|zil_slog_bulk
 argument_list|,
 name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
-name|zil_slog_limit
+name|zil_slog_bulk
 argument_list|,
 literal|0
 argument_list|,
@@ -4327,16 +4327,16 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|zilog
-operator|->
-name|zl_cur_used
-operator|<=
-name|zil_slog_limit
-operator|||
 operator|!
 name|lwb
 operator|->
 name|lwb_slog
+operator|||
+name|zilog
+operator|->
+name|zl_cur_used
+operator|<=
+name|zil_slog_bulk
 condition|)
 name|prio
 operator|=
@@ -4954,53 +4954,28 @@ name|lrcb
 decl_stmt|,
 modifier|*
 name|lrc
-init|=
-operator|&
-name|itx
-operator|->
-name|itx_lr
 decl_stmt|;
-comment|/* common log record */
 name|lr_write_t
 modifier|*
 name|lrwb
 decl_stmt|,
 modifier|*
 name|lrw
-init|=
-operator|(
-name|lr_write_t
-operator|*
-operator|)
-name|lrc
 decl_stmt|;
 name|char
 modifier|*
 name|lr_buf
 decl_stmt|;
 name|uint64_t
-name|txg
-init|=
-name|lrc
-operator|->
-name|lrc_txg
-decl_stmt|;
-name|uint64_t
-name|reclen
-init|=
-name|lrc
-operator|->
-name|lrc_reclen
-decl_stmt|;
-name|uint64_t
 name|dlen
-init|=
-literal|0
-decl_stmt|;
-name|uint64_t
+decl_stmt|,
 name|dnow
 decl_stmt|,
 name|lwb_sp
+decl_stmt|,
+name|reclen
+decl_stmt|,
+name|txg
 decl_stmt|;
 if|if
 condition|(
@@ -5022,6 +4997,23 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|lrc
+operator|=
+operator|&
+name|itx
+operator|->
+name|itx_lr
+expr_stmt|;
+comment|/* Common log record inside itx. */
+name|lrw
+operator|=
+operator|(
+name|lr_write_t
+operator|*
+operator|)
+name|lrc
+expr_stmt|;
+comment|/* Write log record inside itx. */
 if|if
 condition|(
 name|lrc
@@ -5036,6 +5028,7 @@ name|itx_wr_state
 operator|==
 name|WR_NEED_COPY
 condition|)
+block|{
 name|dlen
 operator|=
 name|P2ROUNDUP_TYPED
@@ -5052,6 +5045,20 @@ argument_list|,
 name|uint64_t
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|dlen
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|reclen
+operator|=
+name|lrc
+operator|->
+name|lrc_reclen
+expr_stmt|;
 name|zilog
 operator|->
 name|zl_cur_used
@@ -5062,6 +5069,12 @@ operator|+
 name|dlen
 operator|)
 expr_stmt|;
+name|txg
+operator|=
+name|lrc
+operator|->
+name|lrc_txg
+expr_stmt|;
 name|zil_lwb_write_init
 argument_list|(
 name|zilog
@@ -5071,7 +5084,7 @@ argument_list|)
 expr_stmt|;
 name|cont
 label|:
-comment|/* 	 * If this record won't fit in the current log block, start a new one. 	 * For WR_NEED_COPY optimize layout for minimal number of chunks, but 	 * try to keep wasted space withing reasonable range (12%). 	 */
+comment|/* 	 * If this record won't fit in the current log block, start a new one. 	 * For WR_NEED_COPY optimize layout for minimal number of chunks. 	 */
 name|lwb_sp
 operator|=
 name|lwb
@@ -5097,9 +5110,7 @@ name|lwb_sp
 operator|&&
 name|lwb_sp
 operator|<
-name|ZIL_MAX_LOG_DATA
-operator|/
-literal|8
+name|ZIL_MAX_WASTE_SPACE
 operator|&&
 operator|(
 name|dlen
@@ -5224,6 +5235,7 @@ operator|*
 operator|)
 name|lr_buf
 expr_stmt|;
+comment|/* Like lrc, but inside lwb. */
 name|lrwb
 operator|=
 operator|(
@@ -5232,6 +5244,7 @@ operator|*
 operator|)
 name|lrcb
 expr_stmt|;
+comment|/* Like lrw, but inside lwb. */
 comment|/* 	 * If it's a write, fetch the data or get its blkptr as appropriate. 	 */
 if|if
 condition|(
@@ -6284,6 +6297,16 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * The zil_clean callback hasn't got around to cleaning 			 * this itxg. Save the itxs for release below. 			 * This should be rare. 			 */
+name|zfs_dbgmsg
+argument_list|(
+literal|"zil_itx_assign: missed itx cleanup for "
+literal|"txg %llu"
+argument_list|,
+name|itxg
+operator|->
+name|itxg_txg
+argument_list|)
+expr_stmt|;
 name|clean
 operator|=
 name|itxg
