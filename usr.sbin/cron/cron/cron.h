@@ -1014,6 +1014,7 @@ argument_list|,
 name|char
 operator|*
 argument_list|,
+specifier|const
 name|char
 operator|*
 argument_list|)
