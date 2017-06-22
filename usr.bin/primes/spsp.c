@@ -42,7 +42,7 @@ file|"primes.h"
 end_include
 
 begin_comment
-comment|/* Return a * b % n, where 0<= a, b< 2^63, 0< n< 2^63. */
+comment|/* Return a * b % n, where 0< n. */
 end_comment
 
 begin_function
@@ -65,6 +65,13 @@ name|x
 init|=
 literal|0
 decl_stmt|;
+name|uint64_t
+name|an
+init|=
+name|a
+operator|%
+name|n
+decl_stmt|;
 while|while
 condition|(
 name|b
@@ -78,25 +85,69 @@ name|b
 operator|&
 literal|1
 condition|)
+block|{
 name|x
-operator|=
+operator|+=
+name|an
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|x
-operator|+
-name|a
+operator|<
+name|an
 operator|)
-operator|%
+operator|||
+operator|(
+name|x
+operator|>=
+name|n
+operator|)
+condition|)
+name|x
+operator|-=
 name|n
 expr_stmt|;
-name|a
-operator|=
-operator|(
-name|a
+block|}
+if|if
+condition|(
+name|an
 operator|+
-name|a
-operator|)
-operator|%
+name|an
+operator|<
+name|an
+condition|)
+name|an
+operator|=
+name|an
+operator|+
+name|an
+operator|-
 name|n
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|an
+operator|+
+name|an
+operator|>=
+name|n
+condition|)
+name|an
+operator|=
+name|an
+operator|+
+name|an
+operator|-
+name|n
+expr_stmt|;
+else|else
+name|an
+operator|=
+name|an
+operator|+
+name|an
 expr_stmt|;
 name|b
 operator|>>=
@@ -112,7 +163,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return a^r % n, where 0<= a< 2^63, 0< n< 2^63. */
+comment|/* Return a^r % n, where 0< n. */
 end_comment
 
 begin_function
@@ -565,18 +616,57 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* We can't handle values larger than this. */
-name|assert
+comment|/* 	 * Value from: 	 * J. Sorenson and J. Webster, Strong pseudoprimes to twelve prime 	 * bases, Math. Comp. 86(304):985-1003, 2017. 	 */
+comment|/* No SPSPs to bases 2..37 less than 318665857834031151167461. */
+if|if
+condition|(
+operator|!
+name|spsp
 argument_list|(
 name|n
-operator|<=
-name|SPSPMAX
+argument_list|,
+literal|29
 argument_list|)
-expr_stmt|;
-comment|/* UNREACHABLE */
+condition|)
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|spsp
+argument_list|(
+name|n
+argument_list|,
+literal|31
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|spsp
+argument_list|(
+name|n
+argument_list|,
+literal|37
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* All 64-bit values are less than 318665857834031151167461. */
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 block|}
