@@ -37403,20 +37403,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-end_if
-
 begin_comment
 comment|/*  * sctp_min_mtu ()returns the minimum of all non-zero arguments.  * If all arguments are zero, zero is returned.  */
 end_comment
@@ -37785,11 +37771,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
