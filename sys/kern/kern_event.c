@@ -2721,7 +2721,8 @@ begin_define
 define|#
 directive|define
 name|NOTE_TIMER_PRECMASK
-value|(NOTE_SECONDS|NOTE_MSECONDS|NOTE_USECONDS| \ 				NOTE_NSECONDS)
+define|\
+value|(NOTE_SECONDS | NOTE_MSECONDS | NOTE_USECONDS | NOTE_NSECONDS)
 end_define
 
 begin_function
@@ -2736,6 +2737,9 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|int64_t
+name|secs
+decl_stmt|;
 comment|/*          * Macros for converting to the fractional second portion of an          * sbintime_t using 64bit multiplication to improve precision.          */
 define|#
 directive|define
@@ -2812,13 +2816,12 @@ operator|>=
 literal|1000
 condition|)
 block|{
-name|int64_t
 name|secs
-init|=
+operator|=
 name|data
 operator|/
 literal|1000
-decl_stmt|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__LP64__
@@ -2855,10 +2858,12 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 name|MS_TO_SBT
 argument_list|(
 name|data
 argument_list|)
+operator|)
 return|;
 case|case
 name|NOTE_USECONDS
@@ -2870,13 +2875,12 @@ operator|>=
 literal|1000000
 condition|)
 block|{
-name|int64_t
 name|secs
-init|=
+operator|=
 name|data
 operator|/
 literal|1000000
-decl_stmt|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__LP64__
@@ -2913,10 +2917,12 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 name|US_TO_SBT
 argument_list|(
 name|data
 argument_list|)
+operator|)
 return|;
 case|case
 name|NOTE_NSECONDS
@@ -2928,13 +2934,12 @@ operator|>=
 literal|1000000000
 condition|)
 block|{
-name|int64_t
 name|secs
-init|=
+operator|=
 name|data
 operator|/
 literal|1000000000
-decl_stmt|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__LP64__
