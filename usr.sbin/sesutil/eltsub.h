@@ -8,6 +8,7 @@ comment|/*  * Copyright (c) 2000 by Matthew Jacob  * All rights reserved.  *  * 
 end_comment
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|geteltnm
@@ -18,6 +19,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|scode2ascii
