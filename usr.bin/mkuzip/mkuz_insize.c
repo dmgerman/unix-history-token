@@ -203,11 +203,6 @@ operator|.
 name|f_mntfromname
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|ffd
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
