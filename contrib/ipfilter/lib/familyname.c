@@ -26,7 +26,7 @@ literal|"inet"
 return|;
 ifdef|#
 directive|ifdef
-name|AF_INET6
+name|USE_INET6
 if|if
 condition|(
 name|family

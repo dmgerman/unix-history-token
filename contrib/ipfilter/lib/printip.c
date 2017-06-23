@@ -87,7 +87,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|AF_INET6
+name|USE_INET6
 elseif|else
 if|if
 condition|(
