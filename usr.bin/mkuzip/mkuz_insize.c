@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mkuz_cfg.h"
 end_include
 
@@ -197,6 +203,11 @@ operator|.
 name|f_mntfromname
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|ffd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -224,6 +235,11 @@ argument_list|(
 literal|"ioctl(DIOCGMEDIASIZE)"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|ffd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -231,6 +247,11 @@ literal|1
 operator|)
 return|;
 block|}
+name|close
+argument_list|(
+name|ffd
+argument_list|)
+expr_stmt|;
 name|sb
 operator|.
 name|st_size
