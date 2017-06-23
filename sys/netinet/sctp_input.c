@@ -18018,7 +18018,7 @@ name|uint16_t
 name|type
 decl_stmt|;
 name|int
-name|lparm_len
+name|lparam_len
 decl_stmt|;
 name|struct
 name|sctp_association
@@ -18117,7 +18117,7 @@ operator|.
 name|param_type
 argument_list|)
 expr_stmt|;
-name|lparm_len
+name|lparam_len
 operator|=
 name|ntohs
 argument_list|(
@@ -18152,7 +18152,7 @@ expr_stmt|;
 name|number_entries
 operator|=
 operator|(
-name|lparm_len
+name|lparam_len
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -18317,7 +18317,7 @@ expr_stmt|;
 name|number_entries
 operator|=
 operator|(
-name|lparm_len
+name|lparam_len
 operator|-
 sizeof|sizeof
 argument_list|(
