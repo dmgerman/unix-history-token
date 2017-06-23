@@ -29,19 +29,5 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|struct
-name|sbuf
-modifier|*
-name|stat2sbuf
-parameter_list|(
-name|int
-parameter_list|,
-name|u_char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 end_unit
 
