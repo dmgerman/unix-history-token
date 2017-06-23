@@ -16420,6 +16420,14 @@ name|range_seg_cache
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|kmem_cache_t
+modifier|*
+name|abd_chunk_cache
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|__noinline
@@ -16443,11 +16451,6 @@ modifier|*
 name|prev_data_cache
 init|=
 name|NULL
-decl_stmt|;
-specifier|extern
-name|kmem_cache_t
-modifier|*
-name|abd_chunk_cache
 decl_stmt|;
 name|DTRACE_PROBE
 argument_list|(

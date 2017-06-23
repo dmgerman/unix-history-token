@@ -3457,11 +3457,13 @@ name|abd_copy_from_buf
 argument_list|(
 name|pad2
 argument_list|,
-operator|(
+name|__DECONST
+argument_list|(
 name|void
 operator|*
-operator|)
+argument_list|,
 name|buf
+argument_list|)
 argument_list|,
 name|size
 argument_list|)
