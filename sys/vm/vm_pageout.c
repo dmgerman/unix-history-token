@@ -1083,18 +1083,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|VM_PAGEOUT_PAGE_COUNT
-value|16
-end_define
-
 begin_decl_stmt
 name|int
 name|vm_pageout_page_count
 init|=
-name|VM_PAGEOUT_PAGE_COUNT
+literal|32
 decl_stmt|;
 end_decl_stmt
 
