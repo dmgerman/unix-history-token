@@ -224,6 +224,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|statfs11
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rv
