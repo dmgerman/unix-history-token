@@ -10959,22 +10959,7 @@ operator|->
 name|next
 control|)
 block|{
-if|if
-condition|(
-operator|(
-name|entry
-operator|->
-name|eflags
-operator|&
-name|MAP_ENTRY_WIRE_SKIPPED
-operator|)
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|next_entry_done
-goto|;
-comment|/* 		 * If VM_MAP_WIRE_HOLESOK was specified, an empty 		 * space in the unwired region could have been mapped 		 * while the map lock was dropped for faulting in the 		 * pages or draining MAP_ENTRY_IN_TRANSITION. 		 * Moreover, another thread could be simultaneously 		 * wiring this new mapping entry.  Detect these cases 		 * and skip any entries marked as in transition by us. 		 */
+comment|/* 		 * If VM_MAP_WIRE_HOLESOK was specified, an empty 		 * space in the unwired region could have been mapped 		 * while the map lock was dropped for faulting in the 		 * pages or draining MAP_ENTRY_IN_TRANSITION. 		 * Moreover, another thread could be simultaneously 		 * wiring this new mapping entry.  Detect these cases 		 * and skip any entries marked as in transition not by us. 		 */
 if|if
 condition|(
 operator|(
@@ -11011,6 +10996,21 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+operator|(
+name|entry
+operator|->
+name|eflags
+operator|&
+name|MAP_ENTRY_WIRE_SKIPPED
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|next_entry_done
+goto|;
 if|if
 condition|(
 name|rv
