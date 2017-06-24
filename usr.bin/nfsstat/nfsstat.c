@@ -5260,6 +5260,44 @@ name|printtitle
 condition|)
 name|printf
 argument_list|(
+literal|"%12.12s %12.12s\n"
+argument_list|,
+literal|"OpenLayout"
+argument_list|,
+literal|"CreateLayout"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%12ju %12ju\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|ext_nfsstats
+operator|.
+name|rpccnt
+index|[
+name|NFSPROC_OPENLAYGET
+index|]
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|ext_nfsstats
+operator|.
+name|rpccnt
+index|[
+name|NFSPROC_CREATELAYGET
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|printtitle
+condition|)
+name|printf
+argument_list|(
 literal|"%12.12s %12.12s %12.12s %12.12s %12.12s %12.12s\n"
 argument_list|,
 literal|"OpenOwner"
