@@ -4015,6 +4015,8 @@ operator|(
 literal|3
 operator|<<
 name|i
+operator|*
+literal|2
 operator|)
 expr_stmt|;
 block|}
@@ -4156,7 +4158,7 @@ name|penv_87
 operator|->
 name|en_fos
 expr_stmt|;
-comment|/* FPU registers and tags */
+comment|/* 	 * FPU registers and tags. 	 * Abridged  /  Full translation (values in binary), see FXSAVE spec. 	 * 0		11 	 * 1		00, 01, 10 	 */
 name|penv_xmm
 operator|->
 name|en_tw
@@ -4199,11 +4201,13 @@ operator|(
 name|penv_87
 operator|->
 name|en_tw
-operator|&&
+operator|&
 operator|(
 literal|3
 operator|<<
 name|i
+operator|*
+literal|2
 operator|)
 operator|)
 operator|!=
@@ -4211,6 +4215,8 @@ operator|(
 literal|3
 operator|<<
 name|i
+operator|*
+literal|2
 operator|)
 condition|)
 name|penv_xmm
