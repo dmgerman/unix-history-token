@@ -248,6 +248,14 @@ name|CLOCK_SYSCTRL
 block|}
 block|,
 block|{
+literal|"allwinner,sun8i-h2-plus"
+block|,
+name|CLOCK_CCU
+operator||
+name|CLOCK_PRCM
+block|}
+block|,
+block|{
 literal|"allwinner,sun8i-h3"
 block|,
 name|CLOCK_CCU
