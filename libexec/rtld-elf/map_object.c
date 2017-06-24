@@ -97,6 +97,15 @@ begin_comment
 comment|/* Elf flags -> mmap flags */
 end_comment
 
+begin_function_decl
+name|int
+name|__getosreldate
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Map a shared object into memory.  The "fd" argument is a file descriptor,  * which must be open on the object and positioned at its beginning.  * The "path" argument is a pathname that is used only for error messages.  *  * The return value is a pointer to a newly-allocated Obj_Entry structure  * for the shared object.  Returns NULL on failure.  */
 end_comment
@@ -714,6 +723,13 @@ name|base_vaddr
 expr_stmt|;
 name|base_flags
 operator|=
+name|__getosreldate
+argument_list|()
+operator|>=
+name|P_OSREL_MAP_GUARD
+condition|?
+name|MAP_GUARD
+else|:
 name|MAP_PRIVATE
 operator||
 name|MAP_ANON
