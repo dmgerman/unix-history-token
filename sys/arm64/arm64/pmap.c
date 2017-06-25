@@ -2109,6 +2109,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -2118,6 +2124,26 @@ name|pte
 parameter_list|)
 value|cpu_dcache_wb_range((vm_offset_t)pte, sizeof(*pte))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PTE_SYNC
+parameter_list|(
+name|pte
+parameter_list|)
+value|(void)0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Checks if the page is dirty. We currently lack proper tracking of this on  * arm64 so for now assume is a page mapped as rw was accessed it is.  */
