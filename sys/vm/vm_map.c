@@ -14794,7 +14794,7 @@ operator|(
 name|KERN_NO_SPACE
 operator|)
 return|;
-comment|/* 	 * If we can't accommodate max_ssize in the current mapping, no go. 	 * However, we need to be aware that subsequent user mappings might 	 * map into the space we have reserved for stack, and currently this 	 * space is not protected. 	 * 	 * Hopefully we will at least detect this condition when we try to 	 * grow the stack. 	 */
+comment|/* 	 * If we can't accommodate max_ssize in the current mapping, no go. 	 */
 if|if
 condition|(
 operator|(
