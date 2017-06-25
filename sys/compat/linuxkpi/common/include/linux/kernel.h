@@ -1022,6 +1022,16 @@ parameter_list|)
 value|(sizeof(x) / sizeof((x)[0]))
 end_define
 
+begin_define
+define|#
+directive|define
+name|u64_to_user_ptr
+parameter_list|(
+name|val
+parameter_list|)
+value|((void *)(uintptr_t)(val))
+end_define
+
 begin_function
 specifier|static
 specifier|inline
