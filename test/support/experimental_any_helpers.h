@@ -303,6 +303,7 @@ operator|<
 name|class
 name|Type
 operator|>
+name|_LIBCPP_AVAILABILITY_THROW_BAD_ANY_CAST
 name|void
 name|assertContains
 argument_list|(
@@ -362,6 +363,7 @@ operator|<
 name|class
 name|Type
 operator|>
+name|_LIBCPP_AVAILABILITY_THROW_BAD_ANY_CAST
 name|void
 name|modifyValue
 argument_list|(
