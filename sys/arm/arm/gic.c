@@ -6950,7 +6950,7 @@ name|psc
 operator|->
 name|gic_irqs
 index|[
-name|irq
+name|end_irq
 index|]
 operator|.
 name|gi_flags
@@ -6975,7 +6975,7 @@ name|psc
 operator|->
 name|gic_irqs
 index|[
-name|irq
+name|end_irq
 index|]
 operator|.
 name|gi_flags
