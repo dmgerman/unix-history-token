@@ -1,26 +1,106 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -### -c -integrated-as -Wa,-compress-debug-sections %s 2>&1 | FileCheck --check-prefix=COMPRESS_DEBUG %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -c -integrated-as -Wa,--compress-debug-sections %s 2>&1 | FileCheck --check-prefix=COMPRESS_DEBUG %s
-end_comment
-
-begin_comment
 comment|// REQUIRES: zlib
 end_comment
 
 begin_comment
-comment|// COMPRESS_DEBUG: "-compress-debug-sections"
+comment|// RUN: %clang -### -fintegrated-as -Wa,-compress-debug-sections -c %s 2>&1 | FileCheck -check-prefix CHECK-_COMPRESS_DEBUG_SECTIONS %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -integrated-as -Wa,--compress-debug-sections -Wa,--nocompress-debug-sections %s 2>&1 | FileCheck --check-prefix=NOCOMPRESS_DEBUG %s
+comment|// CHECK-_COMPRESS_DEBUG_SECTIONS: "-compress-debug-sections"
 end_comment
 
 begin_comment
-comment|// NOCOMPRESS_DEBUG-NOT: "-compress-debug-sections"
+comment|// RUN: %clang -### -fintegrated-as -Wa,--compress-debug-sections -c %s 2>&1 | FileCheck -check-prefix CHECK-__COMPRESS_DEBUG_SECTIONS %s
+end_comment
+
+begin_comment
+comment|// CHECK-__COMPRESS_DEBUG_SECTIONS: "--compress-debug-sections"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -Wa,--compress-debug-sections -Wa,--nocompress-debug-sections -c %s 2>&1 | FileCheck -check-prefix CHECK-POSNEG %s
+end_comment
+
+begin_comment
+comment|// CHECK-POSNEG: "--compress-debug-sections"
+end_comment
+
+begin_comment
+comment|// CHECK-POSNEG: "--nocompress-debug-sections"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -Wa,-compress-debug-sections -Wa,--compress-debug-sections -c %s 2>&1 | FileCheck -check-prefix CHECK-MULTIPLE %s
+end_comment
+
+begin_comment
+comment|// CHECK-MULTIPLE: "-compress-debug-sections"
+end_comment
+
+begin_comment
+comment|// CHECK-MULTIPLE: "--compress-debug-sections"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -gz -x assembler -c %s 2>&1 | FileCheck -check-prefix CHECK-OPT_GZ %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -gz -c %s 2>&1 | FileCheck -check-prefix CHECK-OPT_GZ %s
+end_comment
+
+begin_comment
+comment|// CHECK-OPT_GZ: "-compress-debug-sections"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -gz=none -x assembler -c %s 2>&1 | FileCheck -check-prefix CHECK-OPT_GZ_EQ_NONE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -gz=none -c %s 2>&1 | FileCheck -check-prefix CHECK-OPT_GZ_EQ_NONE %s
+end_comment
+
+begin_comment
+comment|// CHECK-OPT_GZ_EQ_NONE: "-compress-debug-sections=none"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -gz=zlib -x assembler -c %s 2>&1 | FileCheck -check-prefix CHECK-OPT_GZ_EQ_ZLIB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -gz=zlib -c %s 2>&1 | FileCheck -check-prefix CHECK-OPT_GZ_EQ_ZLIB %s
+end_comment
+
+begin_comment
+comment|// CHECK-OPT_GZ_EQ_ZLIB: "-compress-debug-sections=zlib"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -gz=zlib-gnu -x assembler -c %s 2>&1 | FileCheck -check-prefix CHECK-OPT_GZ_EQ_ZLIB_GNU %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -gz=zlib-gnu -c %s 2>&1 | FileCheck -check-prefix CHECK-OPT_GZ_EQ_ZLIB_GNU %s
+end_comment
+
+begin_comment
+comment|// CHECK-OPT_GZ_EQ_ZLIB_GNU: "-compress-debug-sections=zlib-gnu"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -gz=invalid -x assembler -c %s 2>&1 | FileCheck -check-prefix CHECK-OPT_GZ_EQ_INVALID %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fintegrated-as -gz=invalid -c %s 2>&1 | FileCheck -check-prefix CHECK-OPT_GZ_EQ_INVALID %s
+end_comment
+
+begin_comment
+comment|// CHECK-OPT_GZ_EQ_INVALID: error: unsupported argument 'invalid' to option 'gz='
 end_comment
 
 end_unit

@@ -1225,6 +1225,19 @@ end_function
 
 begin_function
 name|void
+name|dot_operator
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: define void @dot_operator
+asm|__asm {
+asm|mov eax, 3[ebx]A.b
+asm|}
+comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$3[ebx].4", "~{eax},~{dirflag},~{fpsr},~{flags}"
+block|}
+end_function
+
+begin_function
+name|void
 name|call_clobber
 parameter_list|()
 block|{

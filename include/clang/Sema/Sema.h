@@ -9341,6 +9341,9 @@ parameter_list|,
 name|bool
 name|IsTypeSpecifier
 parameter_list|,
+name|bool
+name|IsTemplateParamOrArg
+parameter_list|,
 name|SkipBodyInfo
 modifier|*
 name|SkipBody

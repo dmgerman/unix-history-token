@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -ast-dump %s | FileCheck -check-prefix CHECK-TU -strict-whitespace %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -fmodules -fmodules-local-submodule-visibility -fmodule-name=X -triple x86_64-unknown-unknown -fmodule-map-file=%S/Inputs/module.modulemap -ast-dump -ast-dump-filter Test %s -DMODULES | FileCheck -check-prefix CHECK -check-prefix CHECK-MODULES -strict-whitespace %s
+end_comment
+
 begin_decl_stmt
 name|int
 name|TestLocation
@@ -14,8 +18,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: VarDecl 0x{{[^ ]*}}<{{.*}}:4:1, col:5> col:5 TestLocation
+comment|// CHECK: VarDecl 0x{{[^ ]*}}<{{.*}}:[[@LINE-1]]:1, col:5> col:5 TestLocation
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MODULES
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|clang
+name|module
+name|begin
+name|X
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -118,7 +142,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK:      TypedefDecl{{.*}} TestTypedefDeclPrivate 'int' __module_private__
+comment|// CHECK-MODULE:      TypedefDecl{{.*}} TestTypedefDeclPrivate 'int' __module_private__
 end_comment
 
 begin_enum
@@ -178,7 +202,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:      EnumDecl{{.*}} TestEnumDeclPrivate __module_private__
+comment|// CHECK-MODULE:      EnumDecl{{.*}} TestEnumDeclPrivate __module_private__
 end_comment
 
 begin_struct
@@ -271,7 +295,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|// CHECK:      RecordDecl{{.*}} struct TestRecordDeclPrivate __module_private__
+comment|// CHECK-MODULE:      RecordDecl{{.*}} struct TestRecordDeclPrivate __module_private__
 end_comment
 
 begin_enum
@@ -475,7 +499,7 @@ comment|// CHECK-NEXT:   IntegerLiteral
 end_comment
 
 begin_comment
-comment|// CHECK:      FieldDecl{{.*}} TestFieldDeclPrivate 'int' __module_private__
+comment|// CHECK-MODULE:      FieldDecl{{.*}} TestFieldDeclPrivate 'int' __module_private__
 end_comment
 
 begin_decl_stmt
@@ -518,7 +542,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:      VarDecl{{.*}} TestVarDeclPrivate 'int' __module_private__
+comment|// CHECK-MODULE:      VarDecl{{.*}} TestVarDeclPrivate 'int' __module_private__
 end_comment
 
 begin_decl_stmt
@@ -550,6 +574,25 @@ end_function_decl
 begin_comment
 comment|// CHECK: ParmVarDecl{{.*}} TestParmVarDecl 'int'
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MODULES
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|clang
+name|module
+name|end
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

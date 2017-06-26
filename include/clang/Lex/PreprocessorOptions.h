@@ -268,10 +268,20 @@ name|string
 name|TokenCache
 expr_stmt|;
 comment|/// When enabled, preprocessor is in a mode for parsing a single file only.
+comment|///
+comment|/// Disables #includes of other files and if there are unresolved identifiers
+comment|/// in preprocessor directive conditions it causes all blocks to be parsed so
+comment|/// that the client can get the maximum amount of information from the parser.
 name|bool
 name|SingleFileParseMode
 init|=
 name|false
+decl_stmt|;
+comment|/// When enabled, the preprocessor will construct editor placeholder tokens.
+name|bool
+name|LexEditorPlaceholders
+init|=
+name|true
 decl_stmt|;
 comment|/// \brief True if the SourceManager should report the original file name for
 comment|/// contents of files that were remapped to other files. Defaults to true.
@@ -577,6 +587,10 @@ block|;
 name|SingleFileParseMode
 operator|=
 name|false
+block|;
+name|LexEditorPlaceholders
+operator|=
+name|true
 block|;
 name|RetainRemappedFileBuffers
 operator|=

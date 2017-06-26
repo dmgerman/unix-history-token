@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -target-cpu core2 -emit
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -target-cpu core2 -emit-llvm -o - %s | FileCheck %s --check-prefix=X86-64
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple arm64-apple-ios9 -target-cpu cyclone -emit-llvm -o - %s | FileCheck %s
 end_comment
 
@@ -3985,6 +3989,76 @@ end_comment
 
 begin_comment
 comment|// ARM64-LABEL: define swiftcc void @take_struct_v1f3(<2 x float>, float)
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int3
+name|vect
+decl_stmt|;
+name|unsigned
+name|long
+name|long
+name|val
+decl_stmt|;
+block|}
+name|__attribute__
+typedef|((
+name|packed
+typedef|))
+name|padded_alloc_size_vector
+typedef|;
+end_typedef
+
+begin_macro
+name|TEST
+argument_list|(
+argument|padded_alloc_size_vector
+argument_list|)
+end_macro
+
+begin_comment
+comment|// X86-64-LABEL: take_padded_alloc_size_vector(<3 x i32>, i64)
+end_comment
+
+begin_comment
+comment|// X86-64-NOT: [4 x i8]
+end_comment
+
+begin_comment
+comment|// x86-64: ret void
+end_comment
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|float
+name|f1
+decl_stmt|;
+name|float3
+name|fv2
+decl_stmt|;
+block|}
+name|union_hom_fp_partial2
+typedef|;
+end_typedef
+
+begin_macro
+name|TEST
+argument_list|(
+argument|union_hom_fp_partial2
+argument_list|)
+end_macro
+
+begin_comment
+comment|// X86-64-LABEL: take_union_hom_fp_partial2(i64, float)
+end_comment
+
+begin_comment
+comment|// ARM64-LABEL: take_union_hom_fp_partial2(i64, float)
 end_comment
 
 end_unit

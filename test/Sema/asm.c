@@ -489,6 +489,81 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|iOutputConstraint
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+asm|__asm ("nop" : "=ir" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=ri" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=ig" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=im" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=imr" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=i" (x) : :);
+comment|// expected-error{{invalid output constraint '=i' in asm}}
+asm|__asm ("nop" : "+i" (x) : :);
+comment|// expected-error{{invalid output constraint '+i' in asm}}
+asm|__asm ("nop" : "=ii" (x) : :);
+comment|// expected-error{{invalid output constraint '=ii' in asm}}
+asm|__asm ("nop" : "=nr" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=rn" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=ng" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=nm" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=nmr" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=n" (x) : :);
+comment|// expected-error{{invalid output constraint '=n' in asm}}
+asm|__asm ("nop" : "+n" (x) : :);
+comment|// expected-error{{invalid output constraint '+n' in asm}}
+asm|__asm ("nop" : "=nn" (x) : :);
+comment|// expected-error{{invalid output constraint '=nn' in asm}}
+asm|__asm ("nop" : "=Fr" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=rF" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=Fg" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=Fm" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=Fmr" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=F" (x) : :);
+comment|// expected-error{{invalid output constraint '=F' in asm}}
+asm|__asm ("nop" : "+F" (x) : :);
+comment|// expected-error{{invalid output constraint '+F' in asm}}
+asm|__asm ("nop" : "=FF" (x) : :);
+comment|// expected-error{{invalid output constraint '=FF' in asm}}
+asm|__asm ("nop" : "=Er" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=rE" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=Eg" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=Em" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=Emr" (x) : :);
+comment|// no-error
+asm|__asm ("nop" : "=E" (x) : :);
+comment|// expected-error{{invalid output constraint '=E' in asm}}
+asm|__asm ("nop" : "+E" (x) : :);
+comment|// expected-error{{invalid output constraint '+E' in asm}}
+asm|__asm ("nop" : "=EE" (x) : :);
+comment|// expected-error{{invalid output constraint '=EE' in asm}}
+block|}
+end_function
+
 begin_comment
 comment|// PR19837
 end_comment

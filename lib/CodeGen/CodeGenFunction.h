@@ -374,7 +374,7 @@ define|#
 directive|define
 name|LIST_SANITIZER_CHECKS
 define|\
-value|SANITIZER_CHECK(AddOverflow, add_overflow, 0)                                \   SANITIZER_CHECK(BuiltinUnreachable, builtin_unreachable, 0)                  \   SANITIZER_CHECK(CFICheckFail, cfi_check_fail, 0)                             \   SANITIZER_CHECK(DivremOverflow, divrem_overflow, 0)                          \   SANITIZER_CHECK(DynamicTypeCacheMiss, dynamic_type_cache_miss, 0)            \   SANITIZER_CHECK(FloatCastOverflow, float_cast_overflow, 0)                   \   SANITIZER_CHECK(FunctionTypeMismatch, function_type_mismatch, 0)             \   SANITIZER_CHECK(LoadInvalidValue, load_invalid_value, 0)                     \   SANITIZER_CHECK(MissingReturn, missing_return, 0)                            \   SANITIZER_CHECK(MulOverflow, mul_overflow, 0)                                \   SANITIZER_CHECK(NegateOverflow, negate_overflow, 0)                          \   SANITIZER_CHECK(NullabilityArg, nullability_arg, 0)                          \   SANITIZER_CHECK(NullabilityReturn, nullability_return, 0)                    \   SANITIZER_CHECK(NonnullArg, nonnull_arg, 0)                                  \   SANITIZER_CHECK(NonnullReturn, nonnull_return, 0)                            \   SANITIZER_CHECK(OutOfBounds, out_of_bounds, 0)                               \   SANITIZER_CHECK(PointerOverflow, pointer_overflow, 0)                        \   SANITIZER_CHECK(ShiftOutOfBounds, shift_out_of_bounds, 0)                    \   SANITIZER_CHECK(SubOverflow, sub_overflow, 0)                                \   SANITIZER_CHECK(TypeMismatch, type_mismatch, 1)                              \   SANITIZER_CHECK(VLABoundNotPositive, vla_bound_not_positive, 0)
+value|SANITIZER_CHECK(AddOverflow, add_overflow, 0)                                \   SANITIZER_CHECK(BuiltinUnreachable, builtin_unreachable, 0)                  \   SANITIZER_CHECK(CFICheckFail, cfi_check_fail, 0)                             \   SANITIZER_CHECK(DivremOverflow, divrem_overflow, 0)                          \   SANITIZER_CHECK(DynamicTypeCacheMiss, dynamic_type_cache_miss, 0)            \   SANITIZER_CHECK(FloatCastOverflow, float_cast_overflow, 0)                   \   SANITIZER_CHECK(FunctionTypeMismatch, function_type_mismatch, 0)             \   SANITIZER_CHECK(LoadInvalidValue, load_invalid_value, 0)                     \   SANITIZER_CHECK(MissingReturn, missing_return, 0)                            \   SANITIZER_CHECK(MulOverflow, mul_overflow, 0)                                \   SANITIZER_CHECK(NegateOverflow, negate_overflow, 0)                          \   SANITIZER_CHECK(NullabilityArg, nullability_arg, 0)                          \   SANITIZER_CHECK(NullabilityReturn, nullability_return, 1)                    \   SANITIZER_CHECK(NonnullArg, nonnull_arg, 0)                                  \   SANITIZER_CHECK(NonnullReturn, nonnull_return, 1)                            \   SANITIZER_CHECK(OutOfBounds, out_of_bounds, 0)                               \   SANITIZER_CHECK(PointerOverflow, pointer_overflow, 0)                        \   SANITIZER_CHECK(ShiftOutOfBounds, shift_out_of_bounds, 0)                    \   SANITIZER_CHECK(SubOverflow, sub_overflow, 0)                                \   SANITIZER_CHECK(TypeMismatch, type_mismatch, 1)                              \   SANITIZER_CHECK(VLABoundNotPositive, vla_bound_not_positive, 0)
 enum|enum
 name|SanitizerHandler
 block|{
@@ -6459,6 +6459,64 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Used to store precise source locations for return statements by the
+end_comment
+
+begin_comment
+comment|/// runtime return value checks.
+end_comment
+
+begin_decl_stmt
+name|Address
+name|ReturnLocation
+init|=
+name|Address
+operator|::
+name|invalid
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Check if the return value of this function requires sanitization.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|requiresReturnValueCheck
+argument_list|()
+specifier|const
+block|{
+return|return
+name|requiresReturnValueNullabilityCheck
+argument_list|()
+operator|||
+operator|(
+name|SanOpts
+operator|.
+name|has
+argument_list|(
+name|SanitizerKind
+operator|::
+name|ReturnsNonnullAttribute
+argument_list|)
+operator|&&
+name|CurCodeDecl
+operator|&&
+name|CurCodeDecl
+operator|->
+name|getAttr
+operator|<
+name|ReturnsNonNullAttr
+operator|>
+operator|(
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 begin_expr_stmt
 name|llvm
 operator|::
@@ -8648,9 +8706,6 @@ operator|::
 name|Value
 operator|*
 name|RV
-argument_list|,
-name|SourceLocation
-name|EndLoc
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -9436,15 +9491,99 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// CreateTempAlloca - This creates a alloca and inserts it into the entry
+comment|/// CreateTempAlloca - This creates an alloca and inserts it into the entry
 end_comment
 
 begin_comment
-comment|/// block. The caller is responsible for setting an appropriate alignment on
+comment|/// block if \p ArraySize is nullptr, otherwise inserts it at the current
+end_comment
+
+begin_comment
+comment|/// insertion point of the builder. The caller is responsible for setting an
+end_comment
+
+begin_comment
+comment|/// appropriate alignment on
 end_comment
 
 begin_comment
 comment|/// the alloca.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \p ArraySize is the number of array elements to be allocated if it
+end_comment
+
+begin_comment
+comment|///    is not nullptr.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// LangAS::Default is the address space of pointers to local variables and
+end_comment
+
+begin_comment
+comment|/// temporaries, as exposed in the source language. In certain
+end_comment
+
+begin_comment
+comment|/// configurations, this is not the same as the alloca address space, and a
+end_comment
+
+begin_comment
+comment|/// cast is needed to lift the pointer from the alloca AS into
+end_comment
+
+begin_comment
+comment|/// LangAS::Default. This can happen when the target uses a restricted
+end_comment
+
+begin_comment
+comment|/// address space for the stack but the source language requires
+end_comment
+
+begin_comment
+comment|/// LangAS::Default to be a generic address space. The latter condition is
+end_comment
+
+begin_comment
+comment|/// common for most programming languages; OpenCL is an exception in that
+end_comment
+
+begin_comment
+comment|/// LangAS::Default is the private address space, which naturally maps
+end_comment
+
+begin_comment
+comment|/// to the stack.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Because the address of a temporary is often exposed to the program in
+end_comment
+
+begin_comment
+comment|/// various ways, this function will perform the cast by default. The cast
+end_comment
+
+begin_comment
+comment|/// may be avoided by passing false as \p CastToDefaultAddrSpace; this is
+end_comment
+
+begin_comment
+comment|/// more efficient if the caller knows that the address will not be exposed.
 end_comment
 
 begin_expr_stmt
@@ -9466,6 +9605,14 @@ operator|&
 name|Name
 operator|=
 literal|"tmp"
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ArraySize
+operator|=
+name|nullptr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -9489,6 +9636,19 @@ operator|&
 name|Name
 operator|=
 literal|"tmp"
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ArraySize
+operator|=
+name|nullptr
+argument_list|,
+name|bool
+name|CastToDefaultAddrSpace
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -9651,7 +9811,11 @@ comment|/// CreateMemTemp - Create a temporary memory object of the given type, 
 end_comment
 
 begin_comment
-comment|/// appropriate alignment.
+comment|/// appropriate alignment. Cast it to the default address space if
+end_comment
+
+begin_comment
+comment|/// \p CastToDefaultAddrSpace is true.
 end_comment
 
 begin_function_decl
@@ -9667,6 +9831,11 @@ modifier|&
 name|Name
 init|=
 literal|"tmp"
+parameter_list|,
+name|bool
+name|CastToDefaultAddrSpace
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9687,6 +9856,11 @@ modifier|&
 name|Name
 init|=
 literal|"tmp"
+parameter_list|,
+name|bool
+name|CastToDefaultAddrSpace
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl

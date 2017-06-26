@@ -96,7 +96,11 @@ comment|// COM-LABEL: define i32 @test2(i32 %i)
 end_comment
 
 begin_comment
-comment|// PIZ: load i32, i32 addrspace(4)*
+comment|// COM: %[[addr:.*]] = getelementptr
+end_comment
+
+begin_comment
+comment|// PIZ: load i32, i32 addrspace(4)* %[[addr]]
 end_comment
 
 begin_comment
@@ -104,7 +108,7 @@ comment|// PIZ-NEXT: ret i32
 end_comment
 
 begin_comment
-comment|// CHECK: load i32, i32*
+comment|// CHECK: load i32, i32* %[[addr]]
 end_comment
 
 begin_comment
@@ -183,15 +187,19 @@ comment|// PIZ-LABEL: define void @test4(i32 addrspace(4)* %a)
 end_comment
 
 begin_comment
-comment|// PIZ: %[[a_addr:.*]] = alloca i32 addrspace(4)*
+comment|// PIZ: %[[alloca:.*]] = alloca i32 addrspace(4)*
 end_comment
 
 begin_comment
-comment|// PIZ: store i32 addrspace(4)* %a, i32 addrspace(4)** %[[a_addr]]
+comment|// PIZ: %[[a_addr:.*]] = addrspacecast{{.*}} %[[alloca]] to i32 addrspace(4)* addrspace(4)*
 end_comment
 
 begin_comment
-comment|// PIZ: %[[r0:.*]] = load i32 addrspace(4)*, i32 addrspace(4)** %[[a_addr]]
+comment|// PIZ: store i32 addrspace(4)* %a, i32 addrspace(4)* addrspace(4)* %[[a_addr]]
+end_comment
+
+begin_comment
+comment|// PIZ: %[[r0:.*]] = load i32 addrspace(4)*, i32 addrspace(4)* addrspace(4)* %[[a_addr]]
 end_comment
 
 begin_comment
@@ -207,15 +215,19 @@ comment|// CHECK-LABEL: define void @test4(i32* %a)
 end_comment
 
 begin_comment
-comment|// CHECK: %[[a_addr:.*]] = alloca i32*, align 4, addrspace(5)
+comment|// CHECK: %[[alloca:.*]] = alloca i32*, align 4, addrspace(5)
 end_comment
 
 begin_comment
-comment|// CHECK: store i32* %a, i32* addrspace(5)* %[[a_addr]]
+comment|// CHECK: %[[a_addr:.*]] = addrspacecast{{.*}} %[[alloca]] to i32**
 end_comment
 
 begin_comment
-comment|// CHECK: %[[r0:.*]] = load i32*, i32* addrspace(5)* %[[a_addr]]
+comment|// CHECK: store i32* %a, i32** %[[a_addr]]
+end_comment
+
+begin_comment
+comment|// CHECK: %[[r0:.*]] = load i32*, i32** %[[a_addr]]
 end_comment
 
 begin_comment

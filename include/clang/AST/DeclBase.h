@@ -472,31 +472,41 @@ init|=
 literal|0x40
 block|}
 enum|;
+comment|/// The kind of ownership a declaration has, for visibility purposes.
+comment|/// This enumeration is designed such that higher values represent higher
+comment|/// levels of name hiding.
+name|enum
+name|class
+name|ModuleOwnershipKind
+range|:
+name|unsigned
+block|{
+comment|/// This declaration is not owned by a module.
+name|Unowned
+block|,
+comment|/// This declaration has an owning module, but is globally visible
+comment|/// (typically because its owning module is visible and we know that
+comment|/// modules cannot later become hidden in this compilation).
+comment|/// After serialization and deserialization, this will be converted
+comment|/// to VisibleWhenImported.
+name|Visible
+block|,
+comment|/// This declaration has an owning module, and is visible when that
+comment|/// module is imported.
+name|VisibleWhenImported
+block|,
+comment|/// This declaration has an owning module, but is only visible to
+comment|/// lookups that occur within that module.
+name|ModulePrivate
+block|}
+decl_stmt|;
 name|protected
 label|:
-comment|// Enumeration values used in the bits stored in NextInContextAndBits.
-enum|enum
-block|{
-comment|/// \brief Whether this declaration is a top-level declaration (function,
-comment|/// global variable, etc.) that is lexically inside an objc container
-comment|/// definition.
-name|TopLevelDeclInObjCContainerFlag
-init|=
-literal|0x01
-block|,
-comment|/// \brief Whether this declaration is private to the module in which it was
-comment|/// defined.
-name|ModulePrivateFlag
-init|=
-literal|0x02
-block|}
-enum|;
 comment|/// \brief The next declaration within the same lexical
 comment|/// DeclContext. These pointers form the linked list that is
 comment|/// traversed via DeclContext's decls_begin()/decls_end().
 comment|///
-comment|/// The extra two bits are used for the TopLevelDeclInObjCContainer and
-comment|/// ModulePrivate bits.
+comment|/// The extra two bits are used for the ModuleOwnershipKind.
 name|llvm
 operator|::
 name|PointerIntPair
@@ -506,7 +516,7 @@ operator|*
 operator|,
 literal|2
 operator|,
-name|unsigned
+name|ModuleOwnershipKind
 operator|>
 name|NextInContextAndBits
 expr_stmt|;
@@ -673,6 +683,14 @@ name|Referenced
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether this declaration is a top-level declaration (function,
+comment|/// global variable, etc.) that is lexically inside an objc container
+comment|/// definition.
+name|unsigned
+name|TopLevelDeclInObjCContainer
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief Whether statistic collection is enabled.
 specifier|static
 name|bool
@@ -694,14 +712,6 @@ decl_stmt|;
 comment|/// \brief Whether this declaration was loaded from an AST file.
 name|unsigned
 name|FromASTFile
-range|:
-literal|1
-decl_stmt|;
-comment|/// \brief Whether this declaration is hidden from normal name lookup, e.g.,
-comment|/// because it is was loaded from an AST file is either module-private or
-comment|/// because its submodule has not been made visible.
-name|unsigned
-name|Hidden
 range|:
 literal|1
 decl_stmt|;
@@ -814,6 +824,75 @@ name|AccessDeclContextSanity
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Get the module ownership kind to use for a local lexical child of \p DC,
+comment|/// which may be either a local or (rarely) an imported declaration.
+specifier|static
+name|ModuleOwnershipKind
+name|getModuleOwnershipKindForChildOf
+parameter_list|(
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
+block|{
+if|if
+condition|(
+name|DC
+condition|)
+block|{
+name|auto
+operator|*
+name|D
+operator|=
+name|cast
+operator|<
+name|Decl
+operator|>
+operator|(
+name|DC
+operator|)
+expr_stmt|;
+name|auto
+name|MOK
+init|=
+name|D
+operator|->
+name|getModuleOwnershipKind
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|MOK
+operator|!=
+name|ModuleOwnershipKind
+operator|::
+name|Unowned
+operator|&&
+operator|(
+operator|!
+name|D
+operator|->
+name|isFromASTFile
+argument_list|()
+operator|||
+name|D
+operator|->
+name|hasLocalOwningModuleStorage
+argument_list|()
+operator|)
+condition|)
+return|return
+name|MOK
+return|;
+comment|// If D is not local and we have no local module storage, then we don't
+comment|// need to track module ownership at all.
+block|}
+return|return
+name|ModuleOwnershipKind
+operator|::
+name|Unowned
+return|;
+block|}
 name|protected
 label|:
 name|Decl
@@ -826,7 +905,14 @@ argument|SourceLocation L
 argument_list|)
 block|:
 name|NextInContextAndBits
-argument_list|()
+argument_list|(
+name|nullptr
+argument_list|,
+name|getModuleOwnershipKindForChildOf
+argument_list|(
+name|DC
+argument_list|)
+argument_list|)
 operator|,
 name|DeclCtx
 argument_list|(
@@ -868,6 +954,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|TopLevelDeclInObjCContainer
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Access
 argument_list|(
 name|AS_none
@@ -876,38 +967,6 @@ operator|,
 name|FromASTFile
 argument_list|(
 literal|0
-argument_list|)
-operator|,
-name|Hidden
-argument_list|(
-name|DC
-operator|&&
-name|cast
-operator|<
-name|Decl
-operator|>
-operator|(
-name|DC
-operator|)
-operator|->
-name|Hidden
-operator|&&
-operator|(
-operator|!
-name|cast
-operator|<
-name|Decl
-operator|>
-operator|(
-name|DC
-operator|)
-operator|->
-name|isFromASTFile
-argument_list|()
-operator|||
-name|hasLocalOwningModuleStorage
-argument_list|()
-operator|)
 argument_list|)
 operator|,
 name|IdentifierNamespace
@@ -973,17 +1032,17 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|TopLevelDeclInObjCContainer
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Access
 argument_list|(
 name|AS_none
 argument_list|)
 operator|,
 name|FromASTFile
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Hidden
 argument_list|(
 literal|0
 argument_list|)
@@ -1858,12 +1917,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NextInContextAndBits
-operator|.
-name|getInt
-argument_list|()
-operator|&
-name|TopLevelDeclInObjCContainerFlag
+name|TopLevelDeclInObjCContainer
 return|;
 block|}
 name|void
@@ -1875,34 +1929,9 @@ init|=
 name|true
 parameter_list|)
 block|{
-name|unsigned
-name|Bits
-init|=
-name|NextInContextAndBits
-operator|.
-name|getInt
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
+name|TopLevelDeclInObjCContainer
+operator|=
 name|V
-condition|)
-name|Bits
-operator||=
-name|TopLevelDeclInObjCContainerFlag
-expr_stmt|;
-else|else
-name|Bits
-operator|&=
-operator|~
-name|TopLevelDeclInObjCContainerFlag
-expr_stmt|;
-name|NextInContextAndBits
-operator|.
-name|setInt
-argument_list|(
-name|Bits
-argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Looks on this and related declarations for an applicable
@@ -1921,12 +1950,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NextInContextAndBits
-operator|.
-name|getInt
+name|getModuleOwnershipKind
 argument_list|()
-operator|&
-name|ModulePrivateFlag
+operator|==
+name|ModuleOwnershipKind
+operator|::
+name|ModulePrivate
 return|;
 block|}
 comment|/// \brief Whether this declaration is exported (by virtue of being lexically
@@ -1953,44 +1982,29 @@ specifier|const
 expr_stmt|;
 name|protected
 label|:
-comment|/// \brief Specify whether this declaration was marked as being private
+comment|/// \brief Specify that this declaration was marked as being private
 comment|/// to the module in which it was defined.
 name|void
 name|setModulePrivate
-parameter_list|(
-name|bool
-name|MP
-init|=
-name|true
-parameter_list|)
+parameter_list|()
 block|{
-name|unsigned
-name|Bits
-init|=
-name|NextInContextAndBits
-operator|.
-name|getInt
-argument_list|()
-decl_stmt|;
+comment|// The module-private specifier has no effect on unowned declarations.
+comment|// FIXME: We should track this in some way for source fidelity.
 if|if
 condition|(
-name|MP
+name|getModuleOwnershipKind
+argument_list|()
+operator|==
+name|ModuleOwnershipKind
+operator|::
+name|Unowned
 condition|)
-name|Bits
-operator||=
-name|ModulePrivateFlag
-expr_stmt|;
-else|else
-name|Bits
-operator|&=
-operator|~
-name|ModulePrivateFlag
-expr_stmt|;
-name|NextInContextAndBits
-operator|.
-name|setInt
+return|return;
+name|setModuleOwnershipKind
 argument_list|(
-name|Bits
+name|ModuleOwnershipKind
+operator|::
+name|ModulePrivate
 argument_list|)
 expr_stmt|;
 block|}
@@ -2279,6 +2293,10 @@ condition|(
 operator|!
 name|isFromASTFile
 argument_list|()
+operator|||
+operator|!
+name|hasOwningModule
+argument_list|()
 condition|)
 return|return
 name|nullptr
@@ -2314,7 +2332,8 @@ name|isFromASTFile
 argument_list|()
 operator|||
 operator|!
-name|Hidden
+name|hasOwningModule
+argument_list|()
 condition|)
 return|return
 name|nullptr
@@ -2324,7 +2343,7 @@ argument_list|(
 name|hasLocalOwningModuleStorage
 argument_list|()
 operator|&&
-literal|"hidden local decl but no local module storage"
+literal|"owned local decl but no local module storage"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2364,7 +2383,8 @@ operator|!
 name|isFromASTFile
 argument_list|()
 operator|&&
-name|Hidden
+name|hasOwningModule
+argument_list|()
 operator|&&
 name|hasLocalOwningModuleStorage
 argument_list|()
@@ -2391,6 +2411,31 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/// Is this declaration owned by some module?
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasOwningModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getModuleOwnershipKind
+argument_list|()
+operator|!=
+name|ModuleOwnershipKind
+operator|::
+name|Unowned
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Get the module that owns this declaration.
+end_comment
+
 begin_expr_stmt
 name|Module
 operator|*
@@ -2412,7 +2457,19 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether this declaration is hidden from name lookup.
+comment|/// \brief Determine whether this declaration might be hidden from name
+end_comment
+
+begin_comment
+comment|/// lookup. Note that the declaration might be visible even if this returns
+end_comment
+
+begin_comment
+comment|/// \c false, if the owning module is visible within the query context.
+end_comment
+
+begin_comment
+comment|// FIXME: Rename this to make it clearer what it does.
 end_comment
 
 begin_expr_stmt
@@ -2422,7 +2479,65 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Hidden
+operator|(
+name|int
+operator|)
+name|getModuleOwnershipKind
+argument_list|()
+operator|>
+operator|(
+name|int
+operator|)
+name|ModuleOwnershipKind
+operator|::
+name|Visible
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Set that this declaration is globally visible, even if it came from a
+end_comment
+
+begin_comment
+comment|/// module that is not visible.
+end_comment
+
+begin_function
+name|void
+name|setVisibleDespiteOwningModule
+parameter_list|()
+block|{
+if|if
+condition|(
+name|hasOwningModule
+argument_list|()
+condition|)
+name|setModuleOwnershipKind
+argument_list|(
+name|ModuleOwnershipKind
+operator|::
+name|Visible
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Get the kind of module ownership for this declaration.
+end_comment
+
+begin_expr_stmt
+name|ModuleOwnershipKind
+name|getModuleOwnershipKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextInContextAndBits
+operator|.
+name|getInt
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -2433,31 +2548,47 @@ end_comment
 
 begin_function
 name|void
-name|setHidden
+name|setModuleOwnershipKind
 parameter_list|(
-name|bool
-name|Hide
+name|ModuleOwnershipKind
+name|MOK
 parameter_list|)
 block|{
 name|assert
 argument_list|(
-operator|(
 operator|!
-name|Hide
-operator|||
+operator|(
+name|getModuleOwnershipKind
+argument_list|()
+operator|==
+name|ModuleOwnershipKind
+operator|::
+name|Unowned
+operator|&&
+name|MOK
+operator|!=
+name|ModuleOwnershipKind
+operator|::
+name|Unowned
+operator|&&
+operator|!
 name|isFromASTFile
 argument_list|()
-operator|||
+operator|&&
+operator|!
 name|hasLocalOwningModuleStorage
 argument_list|()
 operator|)
 operator|&&
-literal|"declaration with no owning module can't be hidden"
+literal|"no storage available for owning module for this declaration"
 argument_list|)
 expr_stmt|;
-name|Hidden
-operator|=
-name|Hide
+name|NextInContextAndBits
+operator|.
+name|setInt
+argument_list|(
+name|MOK
+argument_list|)
 expr_stmt|;
 block|}
 end_function

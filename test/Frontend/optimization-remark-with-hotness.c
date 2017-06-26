@@ -1,14 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// Generate instrumentation and sampling profile data.
+end_comment
+
+begin_comment
 comment|// RUN: llvm-profdata merge \
 end_comment
 
 begin_comment
-comment|// RUN:     %S/Inputs/optimization-remark-with-hotness.proftext   \
+comment|// RUN:     %S/Inputs/optimization-remark-with-hotness.proftext \
 end_comment
 
 begin_comment
 comment|// RUN:     -o %t.profdata
+end_comment
+
+begin_comment
+comment|// RUN: llvm-profdata merge -sample \
+end_comment
+
+begin_comment
+comment|// RUN:     %S/Inputs/optimization-remark-with-hotness-sample.proftext \
+end_comment
+
+begin_comment
+comment|// RUN:     -o %t-sample.profdata
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment
@@ -21,6 +41,26 @@ end_comment
 
 begin_comment
 comment|// RUN:     -fprofile-instrument-use-path=%t.profdata -Rpass=inline \
+end_comment
+
+begin_comment
+comment|// RUN:     -Rpass-analysis=inline -Rpass-missed=inline \
+end_comment
+
+begin_comment
+comment|// RUN:     -fdiagnostics-show-hotness -verify
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name \
+end_comment
+
+begin_comment
+comment|// RUN:     optimization-remark-with-hotness.c %s -emit-llvm-only \
+end_comment
+
+begin_comment
+comment|// RUN:     -fprofile-sample-use=%t-sample.profdata -Rpass=inline \
 end_comment
 
 begin_comment

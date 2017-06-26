@@ -336,9 +336,24 @@ block|{
 comment|/// \brief Never merge functions into a single line.
 name|SFS_None
 block|,
+comment|/// \brief Only merge functions defined inside a class. Same as "inline",
+comment|/// except it does not implies "empty": i.e. top level empty functions
+comment|/// are not merged either.
+comment|/// \code
+comment|///   class Foo {
+comment|///     void f() { foo(); }
+comment|///   };
+comment|///   void f() {
+comment|///     foo();
+comment|///   }
+comment|///   void f() {
+comment|///   }
+comment|/// \endcode
+name|SFS_InlineOnly
+block|,
 comment|/// \brief Only merge empty functions.
 comment|/// \code
-comment|///   void f() { bar(); }
+comment|///   void f() {}
 comment|///   void f2() {
 comment|///     bar2();
 comment|///   }
@@ -350,6 +365,10 @@ comment|/// \code
 comment|///   class Foo {
 comment|///     void f() { foo(); }
 comment|///   };
+comment|///   void f() {
+comment|///     foo();
+comment|///   }
+comment|///   void f() {}
 comment|/// \endcode
 name|SFS_Inline
 block|,
@@ -836,12 +855,12 @@ comment|///   true:
 comment|///   struct foo
 comment|///   {
 comment|///     int x;
-comment|///   }
+comment|///   };
 comment|///
 comment|///   false:
 comment|///   struct foo {
 comment|///     int x;
-comment|///   }
+comment|///   };
 comment|/// \endcode
 name|bool
 name|AfterStruct
@@ -930,7 +949,7 @@ comment|///    veryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongDescription
 comment|///        ? firstValue
 comment|///        : SecondValueVeryVeryVeryVeryLong;
 comment|///
-comment|///    true:
+comment|///    false:
 comment|///    veryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongDescription ?
 comment|///        firstValue :
 comment|///        SecondValueVeryVeryVeryVeryLong;
@@ -968,7 +987,7 @@ comment|/// \endcode
 name|BCIS_AfterColon
 block|}
 enum|;
-comment|/// \brief The constructor initializers style to use..
+comment|/// \brief The constructor initializers style to use.
 name|BreakConstructorInitializersStyle
 name|BreakConstructorInitializers
 decl_stmt|;
@@ -1597,6 +1616,15 @@ comment|///    #include "a.h"                         #include "b.h"
 comment|/// \endcode
 name|bool
 name|SortIncludes
+decl_stmt|;
+comment|/// \brief If ``true``, clang-format will sort using declarations.
+comment|/// \code
+comment|///    false:                                 true:
+comment|///    using std::cout;               vs.     using std::cin;
+comment|///    using std::cin;                        using std::cout;
+comment|/// \endcode
+name|bool
+name|SortUsingDeclarations
 decl_stmt|;
 comment|/// \brief If ``true``, a space is inserted after C style casts.
 comment|/// \code
@@ -2518,6 +2546,26 @@ name|tooling
 operator|::
 name|Replacements
 name|fixNamespaceEndComments
+argument_list|(
+argument|const FormatStyle&Style
+argument_list|,
+argument|StringRef Code
+argument_list|,
+argument|ArrayRef<tooling::Range> Ranges
+argument_list|,
+argument|StringRef FileName =
+literal|"<stdin>"
+argument_list|)
+expr_stmt|;
+comment|/// \brief Sort consecutive using declarations in the given \p Ranges in
+comment|/// \p Code.
+comment|///
+comment|/// Returns the ``Replacements`` that sort the using declarations in all
+comment|/// \p Ranges in \p Code.
+name|tooling
+operator|::
+name|Replacements
+name|sortUsingDeclarations
 argument_list|(
 argument|const FormatStyle&Style
 argument_list|,

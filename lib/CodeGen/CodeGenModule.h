@@ -6127,6 +6127,17 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Emits OpenCL specific Metadata e.g. OpenCL version.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitOpenCLMetadata
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Emit the llvm.gcov metadata used to tell LLVM where to emit the .gcno and
 end_comment
 

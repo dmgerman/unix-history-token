@@ -56,8 +56,54 @@ comment|// RUN:         -triple x86_64--linux -emit-llvm %s -o - \
 end_comment
 
 begin_comment
-comment|// RUN:         | FileCheck %s --check-prefixes CHECK,CHECK-64BIT-LONG
+comment|// RUN:         | FileCheck %s --check-prefixes CHECK,CHECK-32BIT-LONG
 end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -ffreestanding -fms-extensions \
+end_comment
+
+begin_comment
+comment|// RUN:         -triple x86_64--darwin -emit-llvm %s -o - \
+end_comment
+
+begin_comment
+comment|// RUN:         | FileCheck %s --check-prefixes CHECK,CHECK-32BIT-LONG
+end_comment
+
+begin_comment
+comment|// LP64 targets use 'long' as 'int' for MS intrinsics (-fms-extensions)
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LONG
+value|int
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LONG
+value|long
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// rotate left
@@ -259,11 +305,11 @@ end_comment
 
 begin_function
 name|unsigned
-name|long
+name|LONG
 name|test_lrotl
 parameter_list|(
 name|unsigned
-name|long
+name|LONG
 name|value
 parameter_list|,
 name|int
@@ -319,46 +365,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-32BIT-LONG  }
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG: i64 @test_lrotl
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[SHIFT:%[0-9]+]] = and i64 %{{[0-9]+}}, 63
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[NEGSHIFT:%[0-9]+]] = sub i64 64, [[SHIFT]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[HIGH:%[0-9]+]] = shl i64 [[VALUE:%[0-9]+]], [[SHIFT]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[LOW:%[0-9]+]] = lshr i64 [[VALUE]], [[NEGSHIFT]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[ROTATED:%[0-9]+]] = or i64 [[HIGH]], [[LOW]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[ISZERO:%[0-9]+]] = icmp eq i64 [[SHIFT]], 0
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[RESULT:%[0-9]+]] = select i1 [[ISZERO]], i64 [[VALUE]], i64 [[ROTATED]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   ret i64 [[RESULT]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG  }
 end_comment
 
 begin_function
@@ -625,11 +631,11 @@ end_comment
 
 begin_function
 name|unsigned
-name|long
+name|LONG
 name|test_lrotr
 parameter_list|(
 name|unsigned
-name|long
+name|LONG
 name|value
 parameter_list|,
 name|int
@@ -685,46 +691,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-32BIT-LONG  }
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG: i64 @test_lrotr
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[SHIFT:%[0-9]+]] = and i64 %{{[0-9]+}}, 63
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[NEGSHIFT:%[0-9]+]] = sub i64 64, [[SHIFT]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[LOW:%[0-9]+]] = lshr i64 [[VALUE:%[0-9]+]], [[SHIFT]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[HIGH:%[0-9]+]] = shl i64 [[VALUE]], [[NEGSHIFT]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[ROTATED:%[0-9]+]] = or i64 [[HIGH]], [[LOW]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[ISZERO:%[0-9]+]] = icmp eq i64 [[SHIFT]], 0
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   [[RESULT:%[0-9]+]] = select i1 [[ISZERO]], i64 [[VALUE]], i64 [[ROTATED]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG:   ret i64 [[RESULT]]
-end_comment
-
-begin_comment
-comment|// CHECK-64BIT-LONG  }
 end_comment
 
 begin_function

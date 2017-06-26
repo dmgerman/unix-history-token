@@ -80,7 +80,7 @@ comment|// LINK: clang{{.*}}" "-cc1" {{.*}} "-o" "[[temp:[^"]*]]"
 end_comment
 
 begin_comment
-comment|// LINK: lld{{.*}}" "-flavor" "wasm" "-L/foo/lib32" "crt1.o" "crti.o" "[[temp]]" "-lc" "-lcompiler_rt" "crtn.o" "-o" "a.out"
+comment|// LINK: lld{{.*}}" "-flavor" "wasm" "-L/foo/lib" "crt1.o" "crti.o" "[[temp]]" "-allow-undefined-file" "wasm.syms" "-lc" "-lcompiler_rt" "crtn.o" "-o" "a.out"
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|// LINK_OPT: clang{{.*}}" "-cc1" {{.*}} "-o" "[[temp:[^"]*]]"
 end_comment
 
 begin_comment
-comment|// LINK_OPT: lld{{.*}}" "-flavor" "wasm" "--gc-sections" "-L/foo/lib32" "crt1.o" "crti.o" "[[temp]]" "-lc" "-lcompiler_rt" "crtn.o" "-o" "a.out"
+comment|// LINK_OPT: lld{{.*}}" "-flavor" "wasm" "--gc-sections" "-L/foo/lib" "crt1.o" "crti.o" "[[temp]]" "-allow-undefined-file" "wasm.syms" "-lc" "-lcompiler_rt" "crtn.o" "-o" "a.out"
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ comment|// NO_GC_SECTIONS: clang{{.*}}" "-cc1" {{.*}} "-o" "[[temp:[^"]*]]"
 end_comment
 
 begin_comment
-comment|// NO_GC_SECTIONS: lld{{.*}}" "-flavor" "wasm" "--gc-sections" "-L/foo/lib32" "crt1.o" "crti.o" "--no-gc-sections" "[[temp]]" "-lc" "-lcompiler_rt" "crtn.o" "-o" "a.out"
+comment|// NO_GC_SECTIONS: lld{{.*}}" "-flavor" "wasm" "--gc-sections" "-L/foo/lib" "crt1.o" "crti.o" "--no-gc-sections" "[[temp]]" "-allow-undefined-file" "wasm.syms" "-lc" "-lcompiler_rt" "crtn.o" "-o" "a.out"
 end_comment
 
 end_unit

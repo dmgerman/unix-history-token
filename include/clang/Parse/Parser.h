@@ -2058,6 +2058,7 @@ specifier|static
 name|ParsedType
 name|getTypeAnnotation
 parameter_list|(
+specifier|const
 name|Token
 modifier|&
 name|Tok
@@ -2106,6 +2107,7 @@ specifier|static
 name|ExprResult
 name|getExprAnnotation
 parameter_list|(
+specifier|const
 name|Token
 modifier|&
 name|Tok
@@ -6678,6 +6680,9 @@ comment|// C++11 type-specifier-seq in an alias-declaration
 name|DSC_top_level
 block|,
 comment|// top-level/namespace declaration context
+name|DSC_template_param
+block|,
+comment|// template parameter context
 name|DSC_template_type_arg
 block|,
 comment|// template type argument context
@@ -6705,6 +6710,9 @@ condition|)
 block|{
 case|case
 name|DSC_normal
+case|:
+case|case
+name|DSC_template_param
 case|:
 case|case
 name|DSC_class
@@ -6760,6 +6768,9 @@ condition|)
 block|{
 case|case
 name|DSC_normal
+case|:
+case|case
+name|DSC_template_param
 case|:
 case|case
 name|DSC_class

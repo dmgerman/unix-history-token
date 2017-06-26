@@ -42404,19 +42404,15 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast i8* [[TMP0]] to<8 x i16>*
+comment|// CHECK:   [[TMP1:%.*]] = bitcast i8* [[TMP0]] to<8 x half>*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = load<8 x i16>,<8 x i16>* [[TMP1]]
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x half>,<8 x half>* [[TMP1]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast<8 x i16> [[TMP2]] to<8 x half>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x half> [[TMP3]]
+comment|// CHECK:   ret<8 x half> [[TMP2]]
 end_comment
 
 begin_function
@@ -42903,19 +42899,15 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast i8* [[TMP0]] to<4 x i16>*
+comment|// CHECK:   [[TMP1:%.*]] = bitcast i8* [[TMP0]] to<4 x half>*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = load<4 x i16>,<4 x i16>* [[TMP1]]
+comment|// CHECK:   [[TMP2:%.*]] = load<4 x half>,<4 x half>* [[TMP1]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast<4 x i16> [[TMP2]] to<4 x half>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x half> [[TMP3]]
+comment|// CHECK:   ret<4 x half> [[TMP2]]
 end_comment
 
 begin_function
@@ -43702,19 +43694,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<8 x i16>*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<8 x half>*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD2:%.*]] = call {<8 x i16>,<8 x i16> } @llvm.aarch64.neon.ld2.v8i16.p0v8i16(<8 x i16>* [[TMP2]])
+comment|// CHECK:   [[VLD2:%.*]] = call {<8 x half>,<8 x half> } @llvm.aarch64.neon.ld2.v8f16.p0v8f16(<8 x half>* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x i16>,<8 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x half>,<8 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<8 x i16>,<8 x i16> } [[VLD2]], {<8 x i16>,<8 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<8 x half>,<8 x half> } [[VLD2]], {<8 x half>,<8 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -44665,19 +44657,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<4 x i16>*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<4 x half>*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD2:%.*]] = call {<4 x i16>,<4 x i16> } @llvm.aarch64.neon.ld2.v4i16.p0v4i16(<4 x i16>* [[TMP2]])
+comment|// CHECK:   [[VLD2:%.*]] = call {<4 x half>,<4 x half> } @llvm.aarch64.neon.ld2.v4f16.p0v4f16(<4 x half>* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x i16>,<4 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x half>,<4 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<4 x i16>,<4 x i16> } [[VLD2]], {<4 x i16>,<4 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<4 x half>,<4 x half> } [[VLD2]], {<4 x half>,<4 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -45628,19 +45620,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<8 x i16>*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<8 x half>*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD3:%.*]] = call {<8 x i16>,<8 x i16>,<8 x i16> } @llvm.aarch64.neon.ld3.v8i16.p0v8i16(<8 x i16>* [[TMP2]])
+comment|// CHECK:   [[VLD3:%.*]] = call {<8 x half>,<8 x half>,<8 x half> } @llvm.aarch64.neon.ld3.v8f16.p0v8f16(<8 x half>* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x i16>,<8 x i16>,<8 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x half>,<8 x half>,<8 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<8 x i16>,<8 x i16>,<8 x i16> } [[VLD3]], {<8 x i16>,<8 x i16>,<8 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<8 x half>,<8 x half>,<8 x half> } [[VLD3]], {<8 x half>,<8 x half>,<8 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -46591,19 +46583,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<4 x i16>*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<4 x half>*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD3:%.*]] = call {<4 x i16>,<4 x i16>,<4 x i16> } @llvm.aarch64.neon.ld3.v4i16.p0v4i16(<4 x i16>* [[TMP2]])
+comment|// CHECK:   [[VLD3:%.*]] = call {<4 x half>,<4 x half>,<4 x half> } @llvm.aarch64.neon.ld3.v4f16.p0v4f16(<4 x half>* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x i16>,<4 x i16>,<4 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x half>,<4 x half>,<4 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<4 x i16>,<4 x i16>,<4 x i16> } [[VLD3]], {<4 x i16>,<4 x i16>,<4 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<4 x half>,<4 x half>,<4 x half> } [[VLD3]], {<4 x half>,<4 x half>,<4 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -47554,19 +47546,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<8 x i16>*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<8 x half>*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD4:%.*]] = call {<8 x i16>,<8 x i16>,<8 x i16>,<8 x i16> } @llvm.aarch64.neon.ld4.v8i16.p0v8i16(<8 x i16>* [[TMP2]])
+comment|// CHECK:   [[VLD4:%.*]] = call {<8 x half>,<8 x half>,<8 x half>,<8 x half> } @llvm.aarch64.neon.ld4.v8f16.p0v8f16(<8 x half>* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x i16>,<8 x i16>,<8 x i16>,<8 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x half>,<8 x half>,<8 x half>,<8 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<8 x i16>,<8 x i16>,<8 x i16>,<8 x i16> } [[VLD4]], {<8 x i16>,<8 x i16>,<8 x i16>,<8 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<8 x half>,<8 x half>,<8 x half>,<8 x half> } [[VLD4]], {<8 x half>,<8 x half>,<8 x half>,<8 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -48517,19 +48509,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<4 x i16>*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to<4 x half>*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD4:%.*]] = call {<4 x i16>,<4 x i16>,<4 x i16>,<4 x i16> } @llvm.aarch64.neon.ld4.v4i16.p0v4i16(<4 x i16>* [[TMP2]])
+comment|// CHECK:   [[VLD4:%.*]] = call {<4 x half>,<4 x half>,<4 x half>,<4 x half> } @llvm.aarch64.neon.ld4.v4f16.p0v4f16(<4 x half>* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x i16>,<4 x i16>,<4 x i16>,<4 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x half>,<4 x half>,<4 x half>,<4 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<4 x i16>,<4 x i16>,<4 x i16>,<4 x i16> } [[VLD4]], {<4 x i16>,<4 x i16>,<4 x i16>,<4 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<4 x half>,<4 x half>,<4 x half>,<4 x half> } [[VLD4]], {<4 x half>,<4 x half>,<4 x half>,<4 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -49256,15 +49248,15 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x half> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP0]] to<8 x i16>*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP0]] to<8 x half>*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
+comment|// CHECK:   [[TMP3:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   store<8 x i16> [[TMP3]],<8 x i16>* [[TMP2]]
+comment|// CHECK:   store<8 x half> [[TMP3]],<8 x half>* [[TMP2]]
 end_comment
 
 begin_comment
@@ -49870,15 +49862,15 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x half> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP0]] to<4 x i16>*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP0]] to<4 x half>*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[TMP3:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   store<4 x i16> [[TMP3]],<4 x i16>* [[TMP2]]
+comment|// CHECK:   store<4 x half> [[TMP3]],<4 x half>* [[TMP2]]
 end_comment
 
 begin_comment
@@ -50972,15 +50964,15 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast<8 x half> [[TMP5]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x i16>
+comment|// CHECK:   [[TMP7:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x i16>
+comment|// CHECK:   [[TMP8:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st2.v8i16.p0i8(<8 x i16> [[TMP7]],<8 x i16> [[TMP8]], i8* [[TMP2]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st2.v8f16.p0i8(<8 x half> [[TMP7]],<8 x half> [[TMP8]], i8* [[TMP2]])
 end_comment
 
 begin_comment
@@ -52290,15 +52282,15 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast<4 x half> [[TMP5]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x i16>
+comment|// CHECK:   [[TMP7:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x i16>
+comment|// CHECK:   [[TMP8:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st2.v4i16.p0i8(<4 x i16> [[TMP7]],<4 x i16> [[TMP8]], i8* [[TMP2]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st2.v4f16.p0i8(<4 x half> [[TMP7]],<4 x half> [[TMP8]], i8* [[TMP2]])
 end_comment
 
 begin_comment
@@ -53768,19 +53760,19 @@ comment|// CHECK:   [[TMP8:%.*]] = bitcast<8 x half> [[TMP7]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x i16>
+comment|// CHECK:   [[TMP9:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x i16>
+comment|// CHECK:   [[TMP10:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = bitcast<16 x i8> [[TMP8]] to<8 x i16>
+comment|// CHECK:   [[TMP11:%.*]] = bitcast<16 x i8> [[TMP8]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st3.v8i16.p0i8(<8 x i16> [[TMP9]],<8 x i16> [[TMP10]],<8 x i16> [[TMP11]], i8* [[TMP2]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st3.v8f16.p0i8(<8 x half> [[TMP9]],<8 x half> [[TMP10]],<8 x half> [[TMP11]], i8* [[TMP2]])
 end_comment
 
 begin_comment
@@ -55322,19 +55314,19 @@ comment|// CHECK:   [[TMP8:%.*]] = bitcast<4 x half> [[TMP7]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x i16>
+comment|// CHECK:   [[TMP9:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x i16>
+comment|// CHECK:   [[TMP10:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = bitcast<8 x i8> [[TMP8]] to<4 x i16>
+comment|// CHECK:   [[TMP11:%.*]] = bitcast<8 x i8> [[TMP8]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st3.v4i16.p0i8(<4 x i16> [[TMP9]],<4 x i16> [[TMP10]],<4 x i16> [[TMP11]], i8* [[TMP2]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st3.v4f16.p0i8(<4 x half> [[TMP9]],<4 x half> [[TMP10]],<4 x half> [[TMP11]], i8* [[TMP2]])
 end_comment
 
 begin_comment
@@ -57036,23 +57028,23 @@ comment|// CHECK:   [[TMP10:%.*]] = bitcast<8 x half> [[TMP9]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x i16>
+comment|// CHECK:   [[TMP11:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP12:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x i16>
+comment|// CHECK:   [[TMP12:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP13:%.*]] = bitcast<16 x i8> [[TMP8]] to<8 x i16>
+comment|// CHECK:   [[TMP13:%.*]] = bitcast<16 x i8> [[TMP8]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP14:%.*]] = bitcast<16 x i8> [[TMP10]] to<8 x i16>
+comment|// CHECK:   [[TMP14:%.*]] = bitcast<16 x i8> [[TMP10]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st4.v8i16.p0i8(<8 x i16> [[TMP11]],<8 x i16> [[TMP12]],<8 x i16> [[TMP13]],<8 x i16> [[TMP14]], i8* [[TMP2]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st4.v8f16.p0i8(<8 x half> [[TMP11]],<8 x half> [[TMP12]],<8 x half> [[TMP13]],<8 x half> [[TMP14]], i8* [[TMP2]])
 end_comment
 
 begin_comment
@@ -58826,23 +58818,23 @@ comment|// CHECK:   [[TMP10:%.*]] = bitcast<4 x half> [[TMP9]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x i16>
+comment|// CHECK:   [[TMP11:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP12:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x i16>
+comment|// CHECK:   [[TMP12:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP13:%.*]] = bitcast<8 x i8> [[TMP8]] to<4 x i16>
+comment|// CHECK:   [[TMP13:%.*]] = bitcast<8 x i8> [[TMP8]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP14:%.*]] = bitcast<8 x i8> [[TMP10]] to<4 x i16>
+comment|// CHECK:   [[TMP14:%.*]] = bitcast<8 x i8> [[TMP10]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st4.v4i16.p0i8(<4 x i16> [[TMP11]],<4 x i16> [[TMP12]],<4 x i16> [[TMP13]],<4 x i16> [[TMP14]], i8* [[TMP2]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st4.v4f16.p0i8(<4 x half> [[TMP11]],<4 x half> [[TMP12]],<4 x half> [[TMP13]],<4 x half> [[TMP14]], i8* [[TMP2]])
 end_comment
 
 begin_comment
@@ -60024,19 +60016,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to i16*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD1XN:%.*]] = call {<8 x i16>,<8 x i16> } @llvm.aarch64.neon.ld1x2.v8i16.p0i16(i16* [[TMP2]])
+comment|// CHECK:   [[VLD1XN:%.*]] = call {<8 x half>,<8 x half> } @llvm.aarch64.neon.ld1x2.v8f16.p0f16(half* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x i16>,<8 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x half>,<8 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<8 x i16>,<8 x i16> } [[VLD1XN]], {<8 x i16>,<8 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<8 x half>,<8 x half> } [[VLD1XN]], {<8 x half>,<8 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -61050,19 +61042,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to i16*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD1XN:%.*]] = call {<4 x i16>,<4 x i16> } @llvm.aarch64.neon.ld1x2.v4i16.p0i16(i16* [[TMP2]])
+comment|// CHECK:   [[VLD1XN:%.*]] = call {<4 x half>,<4 x half> } @llvm.aarch64.neon.ld1x2.v4f16.p0f16(half* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x i16>,<4 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x half>,<4 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<4 x i16>,<4 x i16> } [[VLD1XN]], {<4 x i16>,<4 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<4 x half>,<4 x half> } [[VLD1XN]], {<4 x half>,<4 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -62076,19 +62068,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to i16*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD1XN:%.*]] = call {<8 x i16>,<8 x i16>,<8 x i16> } @llvm.aarch64.neon.ld1x3.v8i16.p0i16(i16* [[TMP2]])
+comment|// CHECK:   [[VLD1XN:%.*]] = call {<8 x half>,<8 x half>,<8 x half> } @llvm.aarch64.neon.ld1x3.v8f16.p0f16(half* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x i16>,<8 x i16>,<8 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x half>,<8 x half>,<8 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<8 x i16>,<8 x i16>,<8 x i16> } [[VLD1XN]], {<8 x i16>,<8 x i16>,<8 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<8 x half>,<8 x half>,<8 x half> } [[VLD1XN]], {<8 x half>,<8 x half>,<8 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -63102,19 +63094,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to i16*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD1XN:%.*]] = call {<4 x i16>,<4 x i16>,<4 x i16> } @llvm.aarch64.neon.ld1x3.v4i16.p0i16(i16* [[TMP2]])
+comment|// CHECK:   [[VLD1XN:%.*]] = call {<4 x half>,<4 x half>,<4 x half> } @llvm.aarch64.neon.ld1x3.v4f16.p0f16(half* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x i16>,<4 x i16>,<4 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x half>,<4 x half>,<4 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<4 x i16>,<4 x i16>,<4 x i16> } [[VLD1XN]], {<4 x i16>,<4 x i16>,<4 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<4 x half>,<4 x half>,<4 x half> } [[VLD1XN]], {<4 x half>,<4 x half>,<4 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -64128,19 +64120,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to i16*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD1XN:%.*]] = call {<8 x i16>,<8 x i16>,<8 x i16>,<8 x i16> } @llvm.aarch64.neon.ld1x4.v8i16.p0i16(i16* [[TMP2]])
+comment|// CHECK:   [[VLD1XN:%.*]] = call {<8 x half>,<8 x half>,<8 x half>,<8 x half> } @llvm.aarch64.neon.ld1x4.v8f16.p0f16(half* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x i16>,<8 x i16>,<8 x i16>,<8 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<8 x half>,<8 x half>,<8 x half>,<8 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<8 x i16>,<8 x i16>,<8 x i16>,<8 x i16> } [[VLD1XN]], {<8 x i16>,<8 x i16>,<8 x i16>,<8 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<8 x half>,<8 x half>,<8 x half>,<8 x half> } [[VLD1XN]], {<8 x half>,<8 x half>,<8 x half>,<8 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -65154,19 +65146,19 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast half* %a to i8*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to i16*
+comment|// CHECK:   [[TMP2:%.*]] = bitcast i8* [[TMP1]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VLD1XN:%.*]] = call {<4 x i16>,<4 x i16>,<4 x i16>,<4 x i16> } @llvm.aarch64.neon.ld1x4.v4i16.p0i16(i16* [[TMP2]])
+comment|// CHECK:   [[VLD1XN:%.*]] = call {<4 x half>,<4 x half>,<4 x half>,<4 x half> } @llvm.aarch64.neon.ld1x4.v4f16.p0f16(half* [[TMP2]])
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x i16>,<4 x i16>,<4 x i16>,<4 x i16> }*
+comment|// CHECK:   [[TMP3:%.*]] = bitcast i8* [[TMP0]] to {<4 x half>,<4 x half>,<4 x half>,<4 x half> }*
 end_comment
 
 begin_comment
-comment|// CHECK:   store {<4 x i16>,<4 x i16>,<4 x i16>,<4 x i16> } [[VLD1XN]], {<4 x i16>,<4 x i16>,<4 x i16>,<4 x i16> }* [[TMP3]]
+comment|// CHECK:   store {<4 x half>,<4 x half>,<4 x half>,<4 x half> } [[VLD1XN]], {<4 x half>,<4 x half>,<4 x half>,<4 x half> }* [[TMP3]]
 end_comment
 
 begin_comment
@@ -66476,19 +66468,19 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast<8 x half> [[TMP5]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x i16>
+comment|// CHECK:   [[TMP7:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x i16>
+comment|// CHECK:   [[TMP8:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = bitcast i8* [[TMP2]] to i16*
+comment|// CHECK:   [[TMP9:%.*]] = bitcast i8* [[TMP2]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st1x2.v8i16.p0i16(<8 x i16> [[TMP7]],<8 x i16> [[TMP8]], i16* [[TMP9]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st1x2.v8f16.p0f16(<8 x half> [[TMP7]],<8 x half> [[TMP8]], half* [[TMP9]])
 end_comment
 
 begin_comment
@@ -67944,19 +67936,19 @@ comment|// CHECK:   [[TMP6:%.*]] = bitcast<4 x half> [[TMP5]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP7:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x i16>
+comment|// CHECK:   [[TMP7:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP8:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x i16>
+comment|// CHECK:   [[TMP8:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = bitcast i8* [[TMP2]] to i16*
+comment|// CHECK:   [[TMP9:%.*]] = bitcast i8* [[TMP2]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st1x2.v4i16.p0i16(<4 x i16> [[TMP7]],<4 x i16> [[TMP8]], i16* [[TMP9]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st1x2.v4f16.p0f16(<4 x half> [[TMP7]],<4 x half> [[TMP8]], half* [[TMP9]])
 end_comment
 
 begin_comment
@@ -69572,23 +69564,23 @@ comment|// CHECK:   [[TMP8:%.*]] = bitcast<8 x half> [[TMP7]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x i16>
+comment|// CHECK:   [[TMP9:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x i16>
+comment|// CHECK:   [[TMP10:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = bitcast<16 x i8> [[TMP8]] to<8 x i16>
+comment|// CHECK:   [[TMP11:%.*]] = bitcast<16 x i8> [[TMP8]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP12:%.*]] = bitcast i8* [[TMP2]] to i16*
+comment|// CHECK:   [[TMP12:%.*]] = bitcast i8* [[TMP2]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st1x3.v8i16.p0i16(<8 x i16> [[TMP9]],<8 x i16> [[TMP10]],<8 x i16> [[TMP11]], i16* [[TMP12]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st1x3.v8f16.p0f16(<8 x half> [[TMP9]],<8 x half> [[TMP10]],<8 x half> [[TMP11]], half* [[TMP12]])
 end_comment
 
 begin_comment
@@ -71296,23 +71288,23 @@ comment|// CHECK:   [[TMP8:%.*]] = bitcast<4 x half> [[TMP7]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP9:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x i16>
+comment|// CHECK:   [[TMP9:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP10:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x i16>
+comment|// CHECK:   [[TMP10:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = bitcast<8 x i8> [[TMP8]] to<4 x i16>
+comment|// CHECK:   [[TMP11:%.*]] = bitcast<8 x i8> [[TMP8]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP12:%.*]] = bitcast i8* [[TMP2]] to i16*
+comment|// CHECK:   [[TMP12:%.*]] = bitcast i8* [[TMP2]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st1x3.v4i16.p0i16(<4 x i16> [[TMP9]],<4 x i16> [[TMP10]],<4 x i16> [[TMP11]], i16* [[TMP12]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st1x3.v4f16.p0f16(<4 x half> [[TMP9]],<4 x half> [[TMP10]],<4 x half> [[TMP11]], half* [[TMP12]])
 end_comment
 
 begin_comment
@@ -73180,27 +73172,27 @@ comment|// CHECK:   [[TMP10:%.*]] = bitcast<8 x half> [[TMP9]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x i16>
+comment|// CHECK:   [[TMP11:%.*]] = bitcast<16 x i8> [[TMP4]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP12:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x i16>
+comment|// CHECK:   [[TMP12:%.*]] = bitcast<16 x i8> [[TMP6]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP13:%.*]] = bitcast<16 x i8> [[TMP8]] to<8 x i16>
+comment|// CHECK:   [[TMP13:%.*]] = bitcast<16 x i8> [[TMP8]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP14:%.*]] = bitcast<16 x i8> [[TMP10]] to<8 x i16>
+comment|// CHECK:   [[TMP14:%.*]] = bitcast<16 x i8> [[TMP10]] to<8 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP15:%.*]] = bitcast i8* [[TMP2]] to i16*
+comment|// CHECK:   [[TMP15:%.*]] = bitcast i8* [[TMP2]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st1x4.v8i16.p0i16(<8 x i16> [[TMP11]],<8 x i16> [[TMP12]],<8 x i16> [[TMP13]],<8 x i16> [[TMP14]], i16* [[TMP15]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st1x4.v8f16.p0f16(<8 x half> [[TMP11]],<8 x half> [[TMP12]],<8 x half> [[TMP13]],<8 x half> [[TMP14]], half* [[TMP15]])
 end_comment
 
 begin_comment
@@ -75160,27 +75152,27 @@ comment|// CHECK:   [[TMP10:%.*]] = bitcast<4 x half> [[TMP9]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP11:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x i16>
+comment|// CHECK:   [[TMP11:%.*]] = bitcast<8 x i8> [[TMP4]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP12:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x i16>
+comment|// CHECK:   [[TMP12:%.*]] = bitcast<8 x i8> [[TMP6]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP13:%.*]] = bitcast<8 x i8> [[TMP8]] to<4 x i16>
+comment|// CHECK:   [[TMP13:%.*]] = bitcast<8 x i8> [[TMP8]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP14:%.*]] = bitcast<8 x i8> [[TMP10]] to<4 x i16>
+comment|// CHECK:   [[TMP14:%.*]] = bitcast<8 x i8> [[TMP10]] to<4 x half>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP15:%.*]] = bitcast i8* [[TMP2]] to i16*
+comment|// CHECK:   [[TMP15:%.*]] = bitcast i8* [[TMP2]] to half*
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @llvm.aarch64.neon.st1x4.v4i16.p0i16(<4 x i16> [[TMP11]],<4 x i16> [[TMP12]],<4 x i16> [[TMP13]],<4 x i16> [[TMP14]], i16* [[TMP15]])
+comment|// CHECK:   call void @llvm.aarch64.neon.st1x4.v4f16.p0f16(<4 x half> [[TMP11]],<4 x half> [[TMP12]],<4 x half> [[TMP13]],<4 x half> [[TMP14]], half* [[TMP15]])
 end_comment
 
 begin_comment

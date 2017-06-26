@@ -80,11 +80,11 @@ comment|// CHECK-NEXT: leak-diagnostics-reference-allocation = false
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: max-inlinable-size = 50
+comment|// CHECK-NEXT: max-inlinable-size = 100
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: max-nodes = 150000
+comment|// CHECK-NEXT: max-nodes = 225000
 end_comment
 
 begin_comment

@@ -2423,7 +2423,7 @@ comment|// AVX: @test54_helper(<8 x float> {{%[a-zA-Z0-9]+}},<8 x float> {{%[a-z
 end_comment
 
 begin_comment
-comment|// AVX: @test54_helper(<8 x float> {{%[a-zA-Z0-9]+}},<8 x float> {{%[a-zA-Z0-9]+}}, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, { double, double }* byval align 8 {{%[a-zA-Z0-9]+}})
+comment|// AVX: @test54_helper(<8 x float> {{%[a-zA-Z0-9]+}},<8 x float> {{%[a-zA-Z0-9]+}}, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, { double, double }* byval align 8 {{%[^)]+}})
 end_comment
 
 begin_typedef
@@ -2757,7 +2757,7 @@ comment|// AVX512: @f64_helper(<16 x float> {{%[a-zA-Z0-9]+}},<16 x float> {{%[a
 end_comment
 
 begin_comment
-comment|// AVX512: @f64_helper(<16 x float> {{%[a-zA-Z0-9]+}},<16 x float> {{%[a-zA-Z0-9]+}}, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, { double, double }* byval align 8 {{%[a-zA-Z0-9]+}})
+comment|// AVX512: @f64_helper(<16 x float> {{%[a-zA-Z0-9]+}},<16 x float> {{%[a-zA-Z0-9]+}}, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, { double, double }* byval align 8 {{%[^)]+}})
 end_comment
 
 begin_function_decl

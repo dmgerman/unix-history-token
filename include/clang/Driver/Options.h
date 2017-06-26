@@ -188,11 +188,14 @@ parameter_list|,
 name|FLAGS
 parameter_list|,
 name|PARAM
-parameter_list|, \
+parameter_list|,  \
 name|HELPTEXT
 parameter_list|,
 name|METAVAR
+parameter_list|,
+name|VALUES
 parameter_list|)
+define|\
 value|OPT_##ID,
 include|#
 directive|include

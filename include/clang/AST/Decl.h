@@ -7038,6 +7038,11 @@ name|IsConstexpr
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|InstantiationIsPending
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief Indicates if the function uses __try.
 name|unsigned
 name|UsesSEHTry
@@ -7328,6 +7333,11 @@ operator|,
 name|IsConstexpr
 argument_list|(
 name|isConstexprSpecified
+argument_list|)
+operator|,
+name|InstantiationIsPending
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|UsesSEHTry
@@ -7823,6 +7833,8 @@ name|Body
 operator|||
 name|IsLateTemplateParsed
 operator|||
+name|WillHaveBody
+operator|||
 name|hasDefiningAttr
 argument_list|()
 return|;
@@ -8099,6 +8111,33 @@ name|IC
 parameter_list|)
 block|{
 name|IsConstexpr
+operator|=
+name|IC
+expr_stmt|;
+block|}
+comment|/// \brief Whether the instantiation of this function is pending.
+comment|/// This bit is set when the decision to instantiate this function is made
+comment|/// and unset if and when the function body is created. That leaves out
+comment|/// cases where instantiation did not happen because the template definition
+comment|/// was not seen in this TU. This bit remains set in those cases, under the
+comment|/// assumption that the instantiation will happen in some other TU.
+name|bool
+name|instantiationIsPending
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InstantiationIsPending
+return|;
+block|}
+name|void
+name|setInstantiationIsPending
+parameter_list|(
+name|bool
+name|IC
+parameter_list|)
+block|{
+name|InstantiationIsPending
 operator|=
 name|IC
 expr_stmt|;

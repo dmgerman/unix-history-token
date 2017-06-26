@@ -992,7 +992,7 @@ init|=
 operator|&
 name|foo
 function_decl|;
-comment|// expected-error{{initializing 'void (*)(int *)' with an expression of incompatible type '<overloaded function type>'}} expected-note@105{{candidate function}} expected-note@106{{candidate function}}
+comment|// expected-error{{initializing 'void (*)(int *)' with an expression of incompatible type '<overloaded function type>'}} expected-note@-4{{candidate function}} expected-note@-3{{candidate function}}
 name|void
 modifier|*
 name|vp_ambiguous
@@ -1000,7 +1000,7 @@ init|=
 operator|&
 name|foo
 decl_stmt|;
-comment|// expected-error{{initializing 'void *' with an expression of incompatible type '<overloaded function type>'}} expected-note@105{{candidate function}} expected-note@106{{candidate function}}
+comment|// expected-error{{initializing 'void *' with an expression of incompatible type '<overloaded function type>'}} expected-note@-5{{candidate function}} expected-note@-4{{candidate function}}
 name|void
 function_decl|(
 modifier|*
@@ -1134,7 +1134,7 @@ init|=
 operator|&
 name|disabled
 function_decl|;
-comment|// expected-warning{{incompatible pointer types initializing 'void (*)(void *)' with an expression of type '<overloaded function type>'}} expected-note@115{{candidate function made ineligible by enable_if}} expected-note@116{{candidate function made ineligible by enable_if}} expected-note@117{{candidate function has type mismatch at 1st parameter (expected 'void *' but has 'char *')}}
+comment|// expected-warning{{incompatible pointer types initializing 'void (*)(void *)' with an expression of type '<overloaded function type>'}} expected-note@-5{{candidate function made ineligible by enable_if}} expected-note@-4{{candidate function made ineligible by enable_if}} expected-note@-3{{candidate function has type mismatch at 1st parameter (expected 'void *' but has 'char *')}}
 name|void
 function_decl|(
 modifier|*
@@ -1149,7 +1149,7 @@ init|=
 operator|&
 name|disabled
 function_decl|;
-comment|// expected-warning{{incompatible pointer types initializing 'void (*)(int *)' with an expression of type '<overloaded function type>'}} expected-note@115{{candidate function made ineligible by enable_if}} expected-note@116{{candidate function made ineligible by enable_if}} expected-note@117{{candidate function has type mismatch at 1st parameter (expected 'int *' but has 'char *')}}
+comment|// expected-warning{{incompatible pointer types initializing 'void (*)(int *)' with an expression of type '<overloaded function type>'}} expected-note@-6{{candidate function made ineligible by enable_if}} expected-note@-5{{candidate function made ineligible by enable_if}} expected-note@-4{{candidate function has type mismatch at 1st parameter (expected 'int *' but has 'char *')}}
 name|void
 modifier|*
 name|specific_disabled
@@ -1222,13 +1222,13 @@ argument_list|(
 name|ucharbuf
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{call to 'foo' is ambiguous}} expected-note@131{{candidate function}} expected-note@132{{candidate function}}
+comment|// expected-error{{call to 'foo' is ambiguous}} expected-note@-3{{candidate function}} expected-note@-2{{candidate function}}
 name|foo
 argument_list|(
 name|intbuf
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{call to 'foo' is ambiguous}} expected-note@131{{candidate function}} expected-note@132{{candidate function}}
+comment|// expected-error{{call to 'foo' is ambiguous}} expected-note@-4{{candidate function}} expected-note@-3{{candidate function}}
 name|void
 name|bar
 argument_list|(
@@ -1264,7 +1264,7 @@ argument_list|(
 name|charbuf
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{call to 'bar' is ambiguous}} expected-note@137{{candidate function}} expected-note@138{{candidate function}}
+comment|// expected-error{{call to 'bar' is ambiguous}} expected-note@-2{{candidate function}} expected-note@-1{{candidate function}}
 name|bar
 argument_list|(
 name|ucharbuf
@@ -1275,7 +1275,7 @@ argument_list|(
 name|intbuf
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{call to 'bar' is ambiguous}} expected-note@137{{candidate function}} expected-note@138{{candidate function}}
+comment|// expected-error{{call to 'bar' is ambiguous}} expected-note@-4{{candidate function}} expected-note@-3{{candidate function}}
 block|}
 end_function
 
@@ -1334,13 +1334,13 @@ argument_list|(
 name|ccharbuf
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{call to 'foo' is ambiguous}} expected-note@148{{candidate function}} expected-note@149{{candidate function}}
+comment|// expected-error{{call to 'foo' is ambiguous}} expected-note@-3{{candidate function}} expected-note@-2{{candidate function}}
 name|foo
 argument_list|(
 name|vcharbuf
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{call to 'foo' is ambiguous}} expected-note@148{{candidate function}} expected-note@149{{candidate function}}
+comment|// expected-error{{call to 'foo' is ambiguous}} expected-note@-4{{candidate function}} expected-note@-3{{candidate function}}
 block|}
 end_function
 

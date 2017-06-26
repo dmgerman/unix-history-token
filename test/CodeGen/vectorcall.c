@@ -758,11 +758,15 @@ comment|// X64: define x86_vectorcallcc void @"\01odd_size_hva@@32"(%struct.OddS
 end_comment
 
 begin_comment
-comment|// The Vectorcall ABI only allows passing the first 6 items in registers, so this shouldn't
+comment|// The Vectorcall ABI only allows passing the first 6 items in registers in x64, so this shouldn't
 end_comment
 
 begin_comment
 comment|// consider 'p7' as a register.  Instead p5 gets put into the register on the second pass.
+end_comment
+
+begin_comment
+comment|// x86 should pass p2, p6 and p7 in registers, then p1 in the second pass.
 end_comment
 
 begin_function
@@ -794,6 +798,9 @@ name|p6
 parameter_list|,
 name|float
 name|p7
+parameter_list|,
+name|int
+name|p8
 parameter_list|)
 block|{
 return|return
@@ -803,11 +810,77 @@ block|}
 end_function
 
 begin_comment
-comment|// X32: define x86_vectorcallcc %struct.HFA2 @"\01AddParticles@@80"(%struct.HFA2 inreg %p1.coerce, float %p2, %struct.HFA4* inreg %p3, i32 inreg %p4, %struct.HFA2 inreg %p5.coerce, float %p6, float %p7)
+comment|// X32: define x86_vectorcallcc %struct.HFA2 @"\01AddParticles@@84"(%struct.HFA2 inreg %p1.coerce, float %p2, %struct.HFA4* inreg %p3, i32 inreg %p4, %struct.HFA2* %p5, float %p6, float %p7, i32 %p8)
 end_comment
 
 begin_comment
-comment|// X64: define x86_vectorcallcc %struct.HFA2 @"\01AddParticles@@96"(%struct.HFA2 inreg %p1.coerce, float %p2, %struct.HFA4* %p3, i32 %p4, %struct.HFA2 inreg %p5.coerce, float %p6, float %p7)
+comment|// X64: define x86_vectorcallcc %struct.HFA2 @"\01AddParticles@@104"(%struct.HFA2 inreg %p1.coerce, float %p2, %struct.HFA4* %p3, i32 %p4, %struct.HFA2 inreg %p5.coerce, float %p6, float %p7, i32 %p8)
+end_comment
+
+begin_comment
+comment|// Vectorcall in both architectures allows passing of an HVA as long as there is room,
+end_comment
+
+begin_comment
+comment|// even if it is not one of the first 6 arguments.  First pass puts p4 into a
+end_comment
+
+begin_comment
+comment|// register on both.  p9 ends up in a register in x86 only.  Second pass puts p1
+end_comment
+
+begin_comment
+comment|// in a register, does NOT put p7 in a register (since theres no room), then puts
+end_comment
+
+begin_comment
+comment|// p8 in a register.
+end_comment
+
+begin_function
+name|void
+name|__vectorcall
+name|HVAAnywhere
+parameter_list|(
+name|struct
+name|HFA2
+name|p1
+parameter_list|,
+name|int
+name|p2
+parameter_list|,
+name|int
+name|p3
+parameter_list|,
+name|float
+name|p4
+parameter_list|,
+name|int
+name|p5
+parameter_list|,
+name|int
+name|p6
+parameter_list|,
+name|struct
+name|HFA4
+name|p7
+parameter_list|,
+name|struct
+name|HFA2
+name|p8
+parameter_list|,
+name|float
+name|p9
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
+comment|// X32: define x86_vectorcallcc void @"\01HVAAnywhere@@88"(%struct.HFA2 inreg %p1.coerce, i32 inreg %p2, i32 inreg %p3, float %p4, i32 %p5, i32 %p6, %struct.HFA4* %p7, %struct.HFA2 inreg %p8.coerce, float %p9)
+end_comment
+
+begin_comment
+comment|// X64: define x86_vectorcallcc void @"\01HVAAnywhere@@112"(%struct.HFA2 inreg %p1.coerce, i32 %p2, i32 %p3, float %p4, i32 %p5, i32 %p6, %struct.HFA4* %p7, %struct.HFA2 inreg %p8.coerce, float %p9)
 end_comment
 
 end_unit
