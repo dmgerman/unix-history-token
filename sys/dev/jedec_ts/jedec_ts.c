@@ -378,7 +378,7 @@ name|ts_readw_be
 argument_list|(
 name|dev
 argument_list|,
-literal|6
+literal|7
 argument_list|,
 operator|&
 name|devid
