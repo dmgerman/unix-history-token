@@ -305,7 +305,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Disable echo */
+comment|/* Disable echo, drain the input, and flush the output */
 if|if
 condition|(
 name|tcgetattr
@@ -359,7 +359,7 @@ name|tcsetattr
 argument_list|(
 name|fd
 argument_list|,
-name|TCSANOW
+name|TCSAFLUSH
 argument_list|,
 operator|&
 name|new
@@ -371,27 +371,6 @@ condition|)
 name|exit
 argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Discard input received so far */
-name|error
-operator|=
-name|tcflush
-argument_list|(
-name|fd
-argument_list|,
-name|TCIOFLUSH
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-name|warn
-argument_list|(
-literal|"tcflush"
 argument_list|)
 expr_stmt|;
 if|if
