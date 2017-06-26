@@ -702,12 +702,6 @@ name|AppContainer
 init|=
 name|false
 decl_stmt|;
-comment|// This is for debugging.
-name|bool
-name|DumpPdb
-init|=
-name|false
-decl_stmt|;
 block|}
 struct|;
 specifier|extern

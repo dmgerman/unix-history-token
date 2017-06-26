@@ -255,18 +255,6 @@ operator|=
 name|V
 expr_stmt|;
 block|}
-name|void
-name|setOutputSectionOff
-parameter_list|(
-name|uint64_t
-name|V
-parameter_list|)
-block|{
-name|OutputSectionOff
-operator|=
-name|V
-expr_stmt|;
-block|}
 comment|// Returns true if this has non-zero data. BSS chunks return
 comment|// false. If false is returned, the space occupied by this chunk
 comment|// will be filled with zeros.
@@ -368,30 +356,34 @@ specifier|const
 name|Kind
 name|ChunkKind
 decl_stmt|;
+comment|// The alignment of this chunk. The writer uses the value.
+name|uint32_t
+name|Align
+init|=
+literal|1
+decl_stmt|;
 comment|// The RVA of this chunk in the output. The writer sets a value.
 name|uint64_t
 name|RVA
 init|=
 literal|0
 decl_stmt|;
+name|public
+label|:
 comment|// The offset from beginning of the output section. The writer sets a value.
 name|uint64_t
 name|OutputSectionOff
 init|=
 literal|0
 decl_stmt|;
+name|protected
+label|:
 comment|// The output section for this chunk.
 name|OutputSection
 modifier|*
 name|Out
 init|=
 name|nullptr
-decl_stmt|;
-comment|// The alignment of this chunk. The writer uses the value.
-name|uint32_t
-name|Align
-init|=
-literal|1
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -657,24 +649,32 @@ operator|=
 name|S
 expr_stmt|;
 block|}
-comment|// Used by the garbage collector.
+comment|// Returns true if the chunk was not dropped by GC or COMDAT deduplication.
 name|bool
 name|isLive
 argument_list|()
 block|{
 return|return
-operator|!
-name|Config
-operator|->
-name|DoGC
-operator|||
 name|Live
+operator|&&
+operator|!
+name|Discarded
 return|;
 block|}
+comment|// Used by the garbage collector.
 name|void
 name|markLive
 argument_list|()
 block|{
+name|assert
+argument_list|(
+name|Config
+operator|->
+name|DoGC
+operator|&&
+literal|"should only mark things live from GC"
+argument_list|)
+block|;
 name|assert
 argument_list|(
 operator|!
@@ -688,6 +688,46 @@ name|Live
 operator|=
 name|true
 block|;   }
+comment|// Returns true if this chunk was dropped by COMDAT deduplication.
+name|bool
+name|isDiscarded
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Discarded
+return|;
+block|}
+comment|// Used by the SymbolTable when discarding unused comdat sections. This is
+comment|// redundant when GC is enabled, as all comdat sections will start out dead.
+name|void
+name|markDiscarded
+argument_list|()
+block|{
+name|Discarded
+operator|=
+name|true
+block|; }
+comment|// True if this is a codeview debug info chunk. These will not be laid out in
+comment|// the image. Instead they will end up in the PDB, if one is requested.
+name|bool
+name|isCodeView
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SectionName
+operator|==
+literal|".debug"
+operator|||
+name|SectionName
+operator|.
+name|startswith
+argument_list|(
+literal|".debug$"
+argument_list|)
+return|;
+block|}
 comment|// Allow iteration over the bodies of this chunk's relocated symbols.
 name|llvm
 operator|::
@@ -791,6 +831,10 @@ name|Relocs
 block|;
 name|size_t
 name|NumRelocs
+block|;
+comment|// True if this chunk was discarded because it was a duplicate comdat section.
+name|bool
+name|Discarded
 block|;
 comment|// Used by the garbage collector.
 name|bool

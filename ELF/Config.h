@@ -262,7 +262,7 @@ modifier|*
 name|Target
 decl_stmt|;
 name|uint8_t
-name|OrigBinding
+name|OriginalBinding
 decl_stmt|;
 block|}
 struct|;

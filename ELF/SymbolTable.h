@@ -342,7 +342,8 @@ operator|*
 name|Verdef
 argument_list|)
 decl_stmt|;
-name|void
+name|Symbol
+modifier|*
 name|addLazyArchive
 argument_list|(
 name|ArchiveFile

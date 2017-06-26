@@ -1073,6 +1073,18 @@ name|void
 name|parse
 argument_list|()
 block|;
+name|ArrayRef
+operator|<
+name|Symbol
+operator|*
+operator|>
+name|getSymbols
+argument_list|()
+block|{
+return|return
+name|Symbols
+return|;
+block|}
 comment|// Returns a memory buffer for a given symbol and the offset in the archive
 comment|// for the member. An empty memory buffer and an offset of zero
 comment|// is returned if we have already returned the same memory buffer.
@@ -1112,6 +1124,15 @@ operator|<
 name|uint64_t
 operator|>
 name|Seen
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|Symbol
+operator|*
+operator|>
+name|Symbols
 block|; }
 decl_stmt|;
 end_decl_stmt
