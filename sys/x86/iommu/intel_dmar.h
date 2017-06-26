@@ -1505,7 +1505,10 @@ parameter_list|,
 name|struct
 name|dmar_qi_genseq
 modifier|*
-name|pseq
+name|psec
+parameter_list|,
+name|bool
+name|emit_wait
 parameter_list|)
 function_decl|;
 end_function_decl
