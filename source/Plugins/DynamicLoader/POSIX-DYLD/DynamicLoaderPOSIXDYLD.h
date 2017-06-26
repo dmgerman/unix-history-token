@@ -74,19 +74,25 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"DYLDRendezvous.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Breakpoint/StoppointCallbackContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/DynamicLoader.h"
+file|"lldb/Core/ModuleList.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DYLDRendezvous.h"
+file|"lldb/Target/DynamicLoader.h"
 end_include
 
 begin_decl_stmt
@@ -367,6 +373,16 @@ name|virtual
 name|void
 name|LoadAllCurrentModules
 argument_list|()
+block|;
+name|void
+name|LoadVDSO
+argument_list|(
+name|lldb_private
+operator|::
+name|ModuleList
+operator|&
+name|modules
+argument_list|)
 block|;
 comment|/// Computes a value for m_load_offset returning the computed address on
 comment|/// success and LLDB_INVALID_ADDRESS on failure.

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/Host.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/MainLoop.h"
 end_include
 
@@ -550,35 +556,20 @@ comment|//----------------------------------------------------------------------
 comment|// Exit Status
 comment|//----------------------------------------------------------------------
 name|virtual
-name|bool
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|WaitStatus
+operator|>
 name|GetExitStatus
-argument_list|(
-name|lldb_private
-operator|::
-name|ExitType
-operator|*
-name|exit_type
-argument_list|,
-name|int
-operator|*
-name|status
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|exit_description
-argument_list|)
+argument_list|()
 block|;
 name|virtual
 name|bool
 name|SetExitStatus
 argument_list|(
-argument|lldb_private::ExitType exit_type
-argument_list|,
-argument|int status
-argument_list|,
-argument|const char *exit_description
+argument|WaitStatus status
 argument_list|,
 argument|bool bNotifyStateChange
 argument_list|)
@@ -1076,18 +1067,13 @@ operator|::
 name|recursive_mutex
 name|m_state_mutex
 block|;
-name|lldb_private
+name|llvm
 operator|::
-name|ExitType
-name|m_exit_type
-block|;
-name|int
+name|Optional
+operator|<
+name|WaitStatus
+operator|>
 name|m_exit_status
-block|;
-name|std
-operator|::
-name|string
-name|m_exit_description
 block|;
 name|std
 operator|::

@@ -534,9 +534,7 @@ argument|lldb::pid_t pid
 argument_list|,
 argument|bool exited
 argument_list|,
-argument|int signal
-argument_list|,
-argument|int status
+argument|WaitStatus status
 argument_list|)
 block|;
 name|void

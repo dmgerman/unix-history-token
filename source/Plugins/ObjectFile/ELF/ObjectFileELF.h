@@ -60,12 +60,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<functional>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -685,34 +679,6 @@ name|FileAddressToAddressClassMap
 expr_stmt|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|function
-operator|<
-name|lldb
-operator|::
-name|offset_t
-argument_list|(
-name|lldb_private
-operator|::
-name|DataExtractor
-operator|&
-argument_list|,
-name|lldb
-operator|::
-name|offset_t
-argument_list|,
-name|lldb
-operator|::
-name|offset_t
-argument_list|)
-operator|>
-name|SetDataFunction
-expr_stmt|;
-end_typedef
-
 begin_comment
 comment|/// Version of this reader common to all plugins based on this class.
 end_comment
@@ -909,10 +875,11 @@ name|ProgramHeaderColl
 operator|&
 name|program_headers
 argument_list|,
-specifier|const
-name|SetDataFunction
+name|lldb_private
+operator|::
+name|DataExtractor
 operator|&
-name|set_data
+name|object_data
 argument_list|,
 specifier|const
 name|elf
@@ -1025,10 +992,11 @@ name|SectionHeaderColl
 operator|&
 name|section_headers
 argument_list|,
-specifier|const
-name|SetDataFunction
+name|lldb_private
+operator|::
+name|DataExtractor
 operator|&
-name|set_data
+name|object_data
 argument_list|,
 specifier|const
 name|elf
@@ -1704,39 +1672,6 @@ operator|::
 name|UUID
 operator|&
 name|uuid
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|offset_t
-name|SetData
-argument_list|(
-argument|const lldb_private::DataExtractor&src
-argument_list|,
-argument|lldb_private::DataExtractor&dst
-argument_list|,
-argument|lldb::offset_t offset
-argument_list|,
-argument|lldb::offset_t length
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lldb
-operator|::
-name|offset_t
-name|SetDataWithReadMemoryFallback
-argument_list|(
-argument|lldb_private::DataExtractor&dst
-argument_list|,
-argument|lldb::offset_t offset
-argument_list|,
-argument|lldb::offset_t length
 argument_list|)
 expr_stmt|;
 end_expr_stmt

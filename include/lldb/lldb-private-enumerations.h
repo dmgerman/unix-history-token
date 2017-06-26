@@ -477,30 +477,6 @@ comment|// Lines are complete
 block|}
 empty_stmt|;
 comment|//----------------------------------------------------------------------
-comment|// Exit Type for inferior processes
-comment|//----------------------------------------------------------------------
-typedef|typedef
-enum|enum
-name|ExitType
-block|{
-name|eExitTypeInvalid
-block|,
-name|eExitTypeExit
-block|,
-comment|// The exit status represents the return code from normal
-comment|// program exit (i.e. WIFEXITED() was true)
-name|eExitTypeSignal
-block|,
-comment|// The exit status represents the signal number that caused
-comment|// the program to exit (i.e. WIFSIGNALED() was true)
-name|eExitTypeStop
-block|,
-comment|// The exit status represents the stop signal that caused the
-comment|// program to exit (i.e. WIFSTOPPED() was true)
-block|}
-name|ExitType
-typedef|;
-comment|//----------------------------------------------------------------------
 comment|// Boolean result of running a Type Validator
 comment|//----------------------------------------------------------------------
 name|enum
