@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ExecutionUtils.h - Utilities for executing code in Orc --*- C++ -*-===//
+comment|//===- ExecutionUtils.h - Utilities for executing code in Orc ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -80,13 +80,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -281,7 +299,7 @@ name|CtorDtorRunner
 argument_list|(
 argument|std::vector<std::string> CtorDtorNames
 argument_list|,
-argument|typename JITLayerT::ModuleSetHandleT H
+argument|typename JITLayerT::ModuleHandleT H
 argument_list|)
 operator|:
 name|CtorDtorNames
@@ -308,14 +326,15 @@ argument|JITLayerT&JITLayer
 argument_list|)
 specifier|const
 block|{
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|CtorDtorTy
-function_decl|)
-parameter_list|()
-function_decl|;
+operator|=
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+block|;
 name|bool
 name|Error
 operator|=
@@ -396,77 +415,26 @@ expr_stmt|;
 name|typename
 name|JITLayerT
 operator|::
-name|ModuleSetHandleT
+name|ModuleHandleT
 name|H
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// @brief Support class for static dtor execution. For hosted (in-process) JITs
-end_comment
-
-begin_comment
 comment|///        only!
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///   If a __cxa_atexit function isn't found C++ programs that use static
-end_comment
-
-begin_comment
 comment|/// destructors will fail to link. However, we don't want to use the host
-end_comment
-
-begin_comment
 comment|/// process's __cxa_atexit, because it will schedule JIT'd destructors to run
-end_comment
-
-begin_comment
 comment|/// after the JIT has been torn down, which is no good. This class makes it easy
-end_comment
-
-begin_comment
 comment|/// to override __cxa_atexit (and the related __dso_handle).
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///   To use, clients should manually call searchOverrides from their symbol
-end_comment
-
-begin_comment
 comment|/// resolver. This should generally be done after attempting symbol resolution
-end_comment
-
-begin_comment
 comment|/// inside the JIT, but before searching the host process's symbol table. When
-end_comment
-
-begin_comment
 comment|/// the client determines that destructors should be run (generally at JIT
-end_comment
-
-begin_comment
 comment|/// teardown or after a return from main), the runDestructors method should be
-end_comment
-
-begin_comment
 comment|/// called.
-end_comment
-
-begin_decl_stmt
 name|class
 name|LocalCXXRuntimeOverrides
 block|{
@@ -553,29 +521,14 @@ return|return
 name|nullptr
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Run any destructors recorded by the overriden __cxa_atexit function
-end_comment
-
-begin_comment
 comment|/// (CXAAtExitOverride).
-end_comment
-
-begin_function_decl
 name|void
 name|runDestructors
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -603,9 +556,6 @@ operator|)
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|addOverride
 argument_list|(
@@ -635,65 +585,50 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|StringMap
 operator|<
 name|JITTargetAddress
 operator|>
 name|CXXRuntimeOverrides
 expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|DestructorPtr
-function_decl|)
-parameter_list|(
+init|=
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+decl_stmt|;
+name|using
+name|CXXDestructorDataPair
+init|=
 name|std
 operator|::
 name|pair
 operator|<
 name|DestructorPtr
-operator|,
+decl_stmt|,
 name|void
-operator|*
-operator|>
-name|CXXDestructorDataPair
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+modifier|*
+decl|>
+decl_stmt|;
+name|using
+name|CXXDestructorDataPairList
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|CXXDestructorDataPair
 operator|>
-name|CXXDestructorDataPairList
-expr_stmt|;
-end_typedef
-
-begin_decl_stmt
+decl_stmt|;
 name|CXXDestructorDataPairList
 name|DSOHandleOverride
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 specifier|static
 name|int
 name|CXAAtExitOverride
@@ -710,16 +645,21 @@ modifier|*
 name|DSOHandle
 parameter_list|)
 function_decl|;
-end_function_decl
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};  }
-comment|// End namespace orc.
+unit|}
+comment|// end namespace orc
 end_comment
 
 begin_comment
 unit|}
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif

@@ -918,6 +918,22 @@ modifier|*
 name|TRI
 parameter_list|)
 function_decl|;
+comment|/// \brief Is there any intersection between registers
+name|bool
+name|isRegIntersect
+parameter_list|(
+name|unsigned
+name|Reg0
+parameter_list|,
+name|unsigned
+name|Reg1
+parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|*
+name|TRI
+parameter_list|)
+function_decl|;
 comment|/// If \p Reg is a pseudo reg, return the correct hardware register given
 comment|/// \p STI otherwise return \p Reg.
 name|unsigned

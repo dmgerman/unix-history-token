@@ -1257,7 +1257,9 @@ name|InstrProfSymtab
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|AddrHashMap
+init|=
 name|std
 operator|::
 name|vector
@@ -1267,11 +1269,10 @@ operator|::
 name|pair
 operator|<
 name|uint64_t
-operator|,
+decl_stmt|,
 name|uint64_t
-operator|>>
-name|AddrHashMap
-expr_stmt|;
+decl|>>
+decl_stmt|;
 name|private
 label|:
 name|StringRef
@@ -1376,7 +1377,7 @@ comment|/// A wrapper interface to populate the PGO symtab with functions
 comment|/// decls from module \c M. This interface is used by transformation
 comment|/// passes such as indirect function call promotion. Variable \c InLTO
 comment|/// indicates if this is called from LTO optimization passes.
-name|void
+name|Error
 name|create
 parameter_list|(
 name|Module
@@ -1396,7 +1397,7 @@ operator|<
 name|typename
 name|NameIterRange
 operator|>
-name|void
+name|Error
 name|create
 argument_list|(
 specifier|const
@@ -1416,13 +1417,31 @@ parameter_list|()
 function_decl|;
 comment|/// Update the symtab by adding \p FuncName to the table. This interface
 comment|/// is used by the raw and text profile readers.
-name|void
+name|Error
 name|addFuncName
 parameter_list|(
 name|StringRef
 name|FuncName
 parameter_list|)
 block|{
+if|if
+condition|(
+name|FuncName
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|make_error
+operator|<
+name|InstrProfError
+operator|>
+operator|(
+name|instrprof_error
+operator|::
+name|malformed
+operator|)
+return|;
 name|auto
 name|Ins
 init|=
@@ -1463,6 +1482,12 @@ argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+name|Error
+operator|::
+name|success
+argument_list|()
+return|;
 block|}
 comment|/// Map a function address to its name's MD5 hash. This interface
 comment|/// is only used by the raw profiler reader.
@@ -1605,7 +1630,7 @@ operator|<
 name|typename
 name|NameIterRange
 operator|>
-name|void
+name|Error
 name|InstrProfSymtab
 operator|::
 name|create
@@ -1620,14 +1645,28 @@ name|Name
 range|:
 name|IterRange
 control|)
+if|if
+condition|(
+name|Error
+name|E
+init|=
 name|addFuncName
 argument_list|(
 name|Name
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|E
+return|;
 name|finalizeSymtab
 argument_list|()
 expr_stmt|;
+return|return
+name|Error
+operator|::
+name|success
+argument_list|()
+return|;
 block|}
 end_decl_stmt
 
@@ -2160,7 +2199,9 @@ argument_list|(
 argument|std::move(Counts)
 argument_list|)
 block|{}
-typedef|typedef
+name|using
+name|ValueMapType
+operator|=
 name|std
 operator|::
 name|vector
@@ -2173,7 +2214,6 @@ name|uint64_t
 operator|,
 name|uint64_t
 operator|>>
-name|ValueMapType
 expr_stmt|;
 comment|/// Return the number of value profile kinds with non-zero number
 comment|/// of profile sites.
@@ -3305,6 +3345,43 @@ comment|// The number of Cutoff Entries (Summary::Entry) following summary field
 name|uint64_t
 name|NumCutoffEntries
 decl_stmt|;
+name|Summary
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
+name|Summary
+argument_list|(
+argument|uint32_t Size
+argument_list|)
+block|{
+name|memset
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|,
+name|Size
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|operator
+name|delete
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|)
+block|{
+operator|::
+name|operator
+name|delete
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
+block|}
 specifier|static
 name|uint32_t
 name|getSize
@@ -3521,43 +3598,6 @@ operator|.
 name|NumCounts
 expr_stmt|;
 block|}
-name|Summary
-argument_list|(
-argument|uint32_t Size
-argument_list|)
-block|{
-name|memset
-argument_list|(
-name|this
-argument_list|,
-literal|0
-argument_list|,
-name|Size
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|operator
-name|delete
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-operator|::
-name|operator
-name|delete
-argument_list|(
-name|ptr
-argument_list|)
-expr_stmt|;
-block|}
-name|Summary
-argument_list|()
-operator|=
-name|delete
-expr_stmt|;
 block|}
 struct|;
 specifier|inline

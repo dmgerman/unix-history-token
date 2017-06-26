@@ -282,7 +282,7 @@ name|StackPtrOffsetReg
 block|;
 comment|// Input registers for non-HSA ABI
 name|unsigned
-name|PrivateMemoryPtrUserSGPR
+name|ImplicitBufferPtrUserSGPR
 block|;
 comment|// Input registers setup for the HSA ABI.
 comment|// User SGPRs in allocation order.
@@ -516,7 +516,7 @@ comment|// Private memory buffer
 comment|// Compute directly in sgpr[0:1]
 comment|// Other shaders indirect 64-bits at sgpr[0:1]
 name|bool
-name|PrivateMemoryInputPtr
+name|ImplicitBufferPtr
 operator|:
 literal|1
 block|;
@@ -824,7 +824,7 @@ name|TRI
 argument_list|)
 block|;
 name|unsigned
-name|addPrivateMemoryPtr
+name|addImplicitBufferPtr
 argument_list|(
 specifier|const
 name|SIRegisterInfo
@@ -1082,12 +1082,12 @@ name|WorkItemIDZ
 return|;
 block|}
 name|bool
-name|hasPrivateMemoryInputPtr
+name|hasImplicitBufferPtr
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PrivateMemoryInputPtr
+name|ImplicitBufferPtr
 return|;
 block|}
 name|unsigned
@@ -1240,12 +1240,12 @@ name|QueuePtrUserSGPR
 return|;
 block|}
 name|unsigned
-name|getPrivateMemoryPtrUserSGPR
+name|getImplicitBufferPtrUserSGPR
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PrivateMemoryPtrUserSGPR
+name|ImplicitBufferPtrUserSGPR
 return|;
 block|}
 name|bool

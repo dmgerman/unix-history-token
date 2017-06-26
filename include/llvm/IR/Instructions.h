@@ -4931,6 +4931,60 @@ operator|:
 name|public
 name|CmpInst
 block|{
+name|void
+name|AssertOK
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|getPredicate
+argument_list|()
+operator|<=
+name|FCmpInst
+operator|::
+name|LAST_FCMP_PREDICATE
+operator|&&
+literal|"Invalid FCmp predicate value"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|==
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|&&
+literal|"Both operands to FCmp instruction are not of the same type!"
+argument_list|)
+block|;
+comment|// Check that the operands are the right type
+name|assert
+argument_list|(
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isFPOrFPVectorTy
+argument_list|()
+operator|&&
+literal|"Invalid operand types for FCmp instruction"
+argument_list|)
+block|;   }
 name|protected
 operator|:
 comment|// Note: Instruction needs to be a friend here to call cloneImpl.
@@ -4984,54 +5038,8 @@ argument_list|,
 argument|InsertBefore
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|pred
-operator|<=
-name|FCmpInst
-operator|::
-name|LAST_FCMP_PREDICATE
-operator|&&
-literal|"Invalid FCmp predicate value"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
+name|AssertOK
 argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to FCmp instruction are not of the same type!"
-argument_list|)
-block|;
-comment|// Check that the operands are the right type
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isFPOrFPVectorTy
-argument_list|()
-operator|&&
-literal|"Invalid operand types for FCmp instruction"
-argument_list|)
 block|;   }
 comment|/// Constructor with insert-at-end semantics.
 name|FCmpInst
@@ -5070,54 +5078,8 @@ argument_list|,
 argument|&InsertAtEnd
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|pred
-operator|<=
-name|FCmpInst
-operator|::
-name|LAST_FCMP_PREDICATE
-operator|&&
-literal|"Invalid FCmp predicate value"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
+name|AssertOK
 argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to FCmp instruction are not of the same type!"
-argument_list|)
-block|;
-comment|// Check that the operands are the right type
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isFPOrFPVectorTy
-argument_list|()
-operator|&&
-literal|"Invalid operand types for FCmp instruction"
-argument_list|)
 block|;   }
 comment|/// Constructor with no-insertion semantics
 name|FCmpInst
@@ -5151,54 +5113,8 @@ argument_list|,
 argument|NameStr
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|pred
-operator|<=
-name|FCmpInst
-operator|::
-name|LAST_FCMP_PREDICATE
-operator|&&
-literal|"Invalid FCmp predicate value"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
+name|AssertOK
 argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to FCmp instruction are not of the same type!"
-argument_list|)
-block|;
-comment|// Check that the operands are the right type
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isFPOrFPVectorTy
-argument_list|()
-operator|&&
-literal|"Invalid operand types for FCmp instruction"
-argument_list|)
 block|;   }
 comment|/// @returns true if the predicate of this instruction is EQ or NE.
 comment|/// Determine if this is an equality predicate.

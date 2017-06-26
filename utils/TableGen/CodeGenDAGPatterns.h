@@ -3124,7 +3124,7 @@ argument|TreePatternNode *src
 argument_list|,
 argument|TreePatternNode *dst
 argument_list|,
-argument|const std::vector<Record*>&dstregs
+argument|std::vector<Record *> dstregs
 argument_list|,
 argument|int complexity
 argument_list|,
@@ -3153,7 +3153,12 @@ argument_list|)
 operator|,
 name|Dstregs
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|dstregs
+argument_list|)
 argument_list|)
 operator|,
 name|AddedComplexity
@@ -4246,17 +4251,16 @@ parameter_list|()
 function_decl|;
 name|void
 name|AddPatternToMatch
-parameter_list|(
+argument_list|(
 name|TreePattern
-modifier|*
+operator|*
 name|Pattern
-parameter_list|,
-specifier|const
+argument_list|,
 name|PatternToMatch
-modifier|&
+operator|&&
 name|PTM
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|FindPatternInputsAndOutputs
 argument_list|(

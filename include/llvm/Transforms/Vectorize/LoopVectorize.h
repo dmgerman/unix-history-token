@@ -371,9 +371,6 @@ name|OptimizationRemarkEmitter
 operator|*
 name|ORE
 block|;
-name|BlockFrequency
-name|ColdEntryFreq
-block|;
 name|PreservedAnalyses
 name|run
 argument_list|(

@@ -3540,6 +3540,14 @@ parameter_list|)
 function_decl|;
 name|LLVM_READONLY
 name|int
+name|getBasicFromSDWAOp
+parameter_list|(
+name|uint16_t
+name|Opcode
+parameter_list|)
+function_decl|;
+name|LLVM_READONLY
+name|int
 name|getCommuteRev
 parameter_list|(
 name|uint16_t

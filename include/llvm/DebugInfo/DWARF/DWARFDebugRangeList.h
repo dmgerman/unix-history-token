@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utility>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -101,15 +95,16 @@ decl_stmt|;
 block|}
 struct|;
 comment|/// DWARFAddressRangesVector - represents a set of absolute address ranges.
-typedef|typedef
+name|using
+name|DWARFAddressRangesVector
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|DWARFAddressRange
 operator|>
-name|DWARFAddressRangesVector
-expr_stmt|;
+decl_stmt|;
 name|class
 name|DWARFDebugRangeList
 block|{

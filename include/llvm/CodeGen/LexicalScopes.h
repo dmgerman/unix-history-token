@@ -890,8 +890,9 @@ block|}
 comment|/// dump - Print data structures to dbgs().
 name|void
 name|dump
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getOrCreateAbstractScope - Find or create an abstract lexical scope.
 name|LexicalScope
 modifier|*

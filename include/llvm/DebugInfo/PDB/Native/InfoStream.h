@@ -185,6 +185,11 @@ name|getNamedStreams
 argument_list|()
 specifier|const
 expr_stmt|;
+name|BinarySubstreamRef
+name|getNamedStreamsBuffer
+argument_list|()
+specifier|const
+expr_stmt|;
 name|uint32_t
 name|getNamedStreamIndex
 argument_list|(
@@ -238,6 +243,9 @@ comment|// signature present on VC70 and higher PDBs which is guaranteed to be
 comment|// universally unique.
 name|PDB_UniqueId
 name|Guid
+decl_stmt|;
+name|BinarySubstreamRef
+name|SubNamedStreams
 decl_stmt|;
 name|std
 operator|::

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DerivedUser.h - Base for non-IR Users -------------------*- C++ -*-===//
+comment|//===- DerivedUser.h - Base for non-IR Users --------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -53,6 +53,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Type
+decl_stmt|;
+name|class
+name|Use
+decl_stmt|;
 comment|/// Extension point for the Value hierarchy. All classes outside of lib/IR
 comment|/// that wish to inherit from User should instead inherit from DerivedUser
 comment|/// instead. Inheriting from this class is discouraged.
@@ -69,27 +75,29 @@ name|User
 block|{
 name|protected
 operator|:
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|DeleteValueTy
-function_decl|)
-parameter_list|(
+operator|=
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
 name|DerivedUser
-modifier|*
-parameter_list|)
-function_decl|;
+operator|*
+argument_list|)
+block|;
 name|private
 operator|:
 name|friend
+name|class
 name|Value
-decl_stmt|;
+block|;
 name|DeleteValueTy
 name|DeleteValue
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|DerivedUser
 argument_list|(
 argument|Type *Ty
@@ -102,7 +110,7 @@ argument|unsigned NumOps
 argument_list|,
 argument|DeleteValueTy DeleteValue
 argument_list|)
-block|:
+operator|:
 name|User
 argument_list|(
 name|Ty
@@ -113,22 +121,19 @@ name|U
 argument_list|,
 name|NumOps
 argument_list|)
-operator|,
+block|,
 name|DeleteValue
 argument_list|(
 argument|DeleteValue
 argument_list|)
 block|{}
 block|}
+decl_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

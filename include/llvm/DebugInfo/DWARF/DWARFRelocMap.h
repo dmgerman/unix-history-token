@@ -55,12 +55,6 @@ directive|include
 file|<cstdint>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<utility>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -83,15 +77,16 @@ comment|/// a separate mapping table to the side and checking that at locations 
 comment|/// dwarf where we expect relocated values. This adds a bit of complexity to the
 comment|/// dwarf parsing/extraction at the benefit of not allocating memory for the
 comment|/// entire size of the debug info sections.
-typedef|typedef
+name|using
+name|RelocAddrMap
+init|=
 name|DenseMap
 operator|<
 name|uint64_t
-operator|,
+decl_stmt|,
 name|RelocAddrEntry
-operator|>
-name|RelocAddrMap
-expr_stmt|;
+decl|>
+decl_stmt|;
 block|}
 end_decl_stmt
 

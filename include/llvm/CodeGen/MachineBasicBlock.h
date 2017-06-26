@@ -1805,6 +1805,12 @@ operator|=
 name|V
 expr_stmt|;
 block|}
+comment|/// Returns true if it is legal to hoist instructions into this block.
+name|bool
+name|isLegalToHoistInto
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Code Layout methods.
 comment|/// Move 'this' block before or after the specified block.  This only moves
 comment|/// the block, it does not modify the CFG or adjust potential fall-throughs at

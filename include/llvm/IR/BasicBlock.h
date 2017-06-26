@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/BasicBlock.h - Represent a basic block in the VM ---*- C++ -*-===//
+comment|//===- llvm/BasicBlock.h - Represent a basic block in the VM ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,6 +86,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Instruction.h"
 end_include
 
@@ -110,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -123,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_decl_stmt
@@ -1239,24 +1263,26 @@ return|;
 block|}
 expr|}
 block|;
-typedef|typedef
+name|using
+name|phi_iterator
+operator|=
 name|phi_iterator_impl
 operator|<
 operator|>
-name|phi_iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_phi_iterator
+operator|=
 name|phi_iterator_impl
 operator|<
 specifier|const
 name|PHINode
-operator|,
+block|,
 name|BasicBlock
 operator|::
 name|const_iterator
 operator|>
-name|const_phi_iterator
-expr_stmt|;
+block|;
 comment|/// Returns a range that iterates over the phis in the basic block.
 comment|///
 comment|/// Note that this cannot be used with basic blocks that have no terminator.
@@ -1288,7 +1314,7 @@ name|phi_iterator
 operator|>
 name|phis
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// \brief Return the underlying instruction list container.
 comment|///
 comment|/// Currently you need to access the underlying instruction list container
@@ -1305,9 +1331,9 @@ name|InstList
 return|;
 block|}
 name|InstListType
-modifier|&
+operator|&
 name|getInstList
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|InstList
@@ -1333,21 +1359,18 @@ return|;
 block|}
 comment|/// \brief Returns a pointer to the symbol table if one exists.
 name|ValueSymbolTable
-modifier|*
+operator|*
 name|getValueSymbolTable
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// \brief Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
 specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|const Value *V
+argument_list|)
 block|{
 return|return
 name|V
@@ -1370,8 +1393,8 @@ comment|/// operations are valid on an object that has "dropped all references",
 comment|/// except operator delete.
 name|void
 name|dropAllReferences
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// \brief Notify the BasicBlock that the predecessor \p Pred is no longer
 comment|/// able to reach it.
 comment|///
@@ -1380,22 +1403,17 @@ comment|/// used to update the PHI nodes that reside in the block.  Note that th
 comment|/// should be called while the predecessor still refers to this block.
 name|void
 name|removePredecessor
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|Pred
-parameter_list|,
-name|bool
-name|DontDeleteUselessPHIs
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|BasicBlock *Pred
+argument_list|,
+argument|bool DontDeleteUselessPHIs = false
+argument_list|)
+block|;
 name|bool
 name|canSplitPredecessors
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Split the basic block into two basic blocks at the specified
 comment|/// instruction.
 comment|///
@@ -1413,35 +1431,24 @@ comment|///
 comment|/// Also note that this doesn't preserve any passes. To split blocks while
 comment|/// keeping loop information consistent, use the SplitBlock utility function.
 name|BasicBlock
-modifier|*
+operator|*
 name|splitBasicBlock
-parameter_list|(
-name|iterator
-name|I
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|BBName
-init|=
+argument_list|(
+argument|iterator I
+argument_list|,
+argument|const Twine&BBName =
 literal|""
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|BasicBlock
-modifier|*
+operator|*
 name|splitBasicBlock
-parameter_list|(
-name|Instruction
-modifier|*
-name|I
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|BBName
-init|=
+argument_list|(
+argument|Instruction *I
+argument_list|,
+argument|const Twine&BBName =
 literal|""
-parameter_list|)
+argument_list|)
 block|{
 return|return
 name|splitBasicBlock
@@ -1473,12 +1480,12 @@ comment|/// \brief Update all phi nodes in this basic block's successors to refe
 comment|/// basic block \p New instead of to it.
 name|void
 name|replaceSuccessorsPhiUsesWith
-parameter_list|(
+argument_list|(
 name|BasicBlock
-modifier|*
+operator|*
 name|New
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Return true if this basic block is an exception handling block.
 name|bool
 name|isEHPad
@@ -1501,7 +1508,7 @@ name|bool
 name|isLandingPad
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Return the landingpad instruction associated with the landing pad.
 specifier|const
 name|LandingPadInst
@@ -1509,11 +1516,11 @@ operator|*
 name|getLandingPadInst
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|LandingPadInst
-modifier|*
+operator|*
 name|getLandingPadInst
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|const_cast
@@ -1537,8 +1544,14 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|/// \brief Return true if it is legal to hoist instructions into this block.
+name|bool
+name|isLegalToHoistInto
+argument_list|()
+specifier|const
+block|;
 name|private
-label|:
+operator|:
 comment|/// \brief Increment the internal refcount of the number of BlockAddresses
 comment|/// referencing this BasicBlock by \p Amt.
 comment|///
@@ -1546,10 +1559,9 @@ comment|/// This is almost always 0, sometimes one possibly, but almost never 2,
 comment|/// inconceivably 3 or more.
 name|void
 name|AdjustBlockAddressRefCount
-parameter_list|(
-name|int
-name|Amt
-parameter_list|)
+argument_list|(
+argument|int Amt
+argument_list|)
 block|{
 name|setValueSubclassData
 argument_list|(
@@ -1558,7 +1570,7 @@ argument_list|()
 operator|+
 name|Amt
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 operator|(
@@ -1575,17 +1587,14 @@ literal|0
 operator|&&
 literal|"Refcount wrap-around"
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Shadow Value::setValueSubclassData with a private forwarding method
 comment|/// so that any future subclasses cannot accidentally use it.
 name|void
 name|setValueSubclassData
-parameter_list|(
-name|unsigned
-name|short
-name|D
-parameter_list|)
+argument_list|(
+argument|unsigned short D
+argument_list|)
 block|{
 name|Value
 operator|::
@@ -1593,10 +1602,9 @@ name|setValueSubclassData
 argument_list|(
 name|D
 argument_list|)
+block|;   }
+block|}
 expr_stmt|;
-block|}
-block|}
-empty_stmt|;
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
 name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
 argument_list|(

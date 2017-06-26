@@ -1065,7 +1065,7 @@ name|LLVM_YAML_IS_SEQUENCE_VECTOR
 argument_list|(
 argument|FunctionSummaryYaml
 argument_list|)
-name|LLVM_YAML_IS_SEQUENCE_VECTOR
+name|LLVM_YAML_IS_FLOW_SEQUENCE_VECTOR
 argument_list|(
 argument|std::string
 argument_list|)

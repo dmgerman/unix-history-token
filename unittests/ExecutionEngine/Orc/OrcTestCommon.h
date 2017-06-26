@@ -440,10 +440,10 @@ name|typename
 name|HandleT
 block|,
 name|typename
-name|AddModuleSetFtor
+name|AddModuleFtor
 block|,
 name|typename
-name|RemoveModuleSetFtor
+name|RemoveModuleFtor
 block|,
 name|typename
 name|FindSymbolFtor
@@ -458,17 +458,17 @@ name|public
 operator|:
 typedef|typedef
 name|HandleT
-name|ModuleSetHandleT
+name|ModuleHandleT
 typedef|;
 name|MockBaseLayer
 argument_list|(
-name|AddModuleSetFtor
+name|AddModuleFtor
 operator|&&
-name|AddModuleSet
+name|AddModule
 argument_list|,
-name|RemoveModuleSetFtor
+name|RemoveModuleFtor
 operator|&&
-name|RemoveModuleSet
+name|RemoveModule
 argument_list|,
 name|FindSymbolFtor
 operator|&&
@@ -479,14 +479,14 @@ operator|&&
 name|FindSymbolIn
 argument_list|)
 operator|:
-name|AddModuleSet
+name|AddModule
 argument_list|(
-name|AddModuleSet
+name|AddModule
 argument_list|)
 operator|,
-name|RemoveModuleSet
+name|RemoveModule
 argument_list|(
-name|RemoveModuleSet
+name|RemoveModule
 argument_list|)
 operator|,
 name|FindSymbol
@@ -502,7 +502,7 @@ block|{}
 name|template
 operator|<
 name|typename
-name|ModuleSetT
+name|ModuleT
 block|,
 name|typename
 name|MemoryManagerPtrT
@@ -510,10 +510,10 @@ block|,
 name|typename
 name|SymbolResolverPtrT
 operator|>
-name|ModuleSetHandleT
-name|addModuleSet
+name|ModuleHandleT
+name|addModule
 argument_list|(
-argument|ModuleSetT Ms
+argument|ModuleT Ms
 argument_list|,
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
@@ -521,7 +521,7 @@ argument|SymbolResolverPtrT Resolver
 argument_list|)
 block|{
 return|return
-name|AddModuleSet
+name|AddModule
 argument_list|(
 name|std
 operator|::
@@ -547,12 +547,12 @@ argument_list|)
 return|;
 block|}
 name|void
-name|removeModuleSet
+name|removeModule
 argument_list|(
-argument|ModuleSetHandleT H
+argument|ModuleHandleT H
 argument_list|)
 block|{
-name|RemoveModuleSet
+name|RemoveModule
 argument_list|(
 name|H
 argument_list|)
@@ -577,7 +577,7 @@ block|}
 name|JITSymbol
 name|findSymbolIn
 argument_list|(
-argument|ModuleSetHandleT H
+argument|ModuleHandleT H
 argument_list|,
 argument|const std::string&Name
 argument_list|,
@@ -597,11 +597,11 @@ return|;
 block|}
 name|private
 operator|:
-name|AddModuleSetFtor
-name|AddModuleSet
+name|AddModuleFtor
+name|AddModule
 block|;
-name|RemoveModuleSetFtor
-name|RemoveModuleSet
+name|RemoveModuleFtor
+name|RemoveModule
 block|;
 name|FindSymbolFtor
 name|FindSymbol
@@ -613,13 +613,13 @@ expr_stmt|;
 name|template
 operator|<
 name|typename
-name|ModuleSetHandleT
+name|ModuleHandleT
 operator|,
 name|typename
-name|AddModuleSetFtor
+name|AddModuleFtor
 operator|,
 name|typename
-name|RemoveModuleSetFtor
+name|RemoveModuleFtor
 operator|,
 name|typename
 name|FindSymbolFtor
@@ -629,11 +629,11 @@ name|FindSymbolInFtor
 operator|>
 name|MockBaseLayer
 operator|<
-name|ModuleSetHandleT
+name|ModuleHandleT
 operator|,
-name|AddModuleSetFtor
+name|AddModuleFtor
 operator|,
-name|RemoveModuleSetFtor
+name|RemoveModuleFtor
 operator|,
 name|FindSymbolFtor
 operator|,
@@ -641,9 +641,9 @@ name|FindSymbolInFtor
 operator|>
 name|createMockBaseLayer
 argument_list|(
-argument|AddModuleSetFtor&&AddModuleSet
+argument|AddModuleFtor&&AddModule
 argument_list|,
-argument|RemoveModuleSetFtor&&RemoveModuleSet
+argument|RemoveModuleFtor&&RemoveModule
 argument_list|,
 argument|FindSymbolFtor&&FindSymbol
 argument_list|,
@@ -653,11 +653,11 @@ block|{
 return|return
 name|MockBaseLayer
 operator|<
-name|ModuleSetHandleT
+name|ModuleHandleT
 operator|,
-name|AddModuleSetFtor
+name|AddModuleFtor
 operator|,
-name|RemoveModuleSetFtor
+name|RemoveModuleFtor
 operator|,
 name|FindSymbolFtor
 operator|,
@@ -668,20 +668,20 @@ name|std
 operator|::
 name|forward
 operator|<
-name|AddModuleSetFtor
+name|AddModuleFtor
 operator|>
 operator|(
-name|AddModuleSet
+name|AddModule
 operator|)
 operator|,
 name|std
 operator|::
 name|forward
 operator|<
-name|RemoveModuleSetFtor
+name|RemoveModuleFtor
 operator|>
 operator|(
-name|RemoveModuleSet
+name|RemoveModule
 operator|)
 operator|,
 name|std

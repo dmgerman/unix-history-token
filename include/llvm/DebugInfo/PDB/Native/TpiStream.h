@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/BinaryStreamRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
@@ -248,6 +254,11 @@ operator|*
 name|Types
 return|;
 block|}
+name|BinarySubstreamRef
+name|getTypeRecordsSubstream
+argument_list|()
+specifier|const
+expr_stmt|;
 name|Error
 name|commit
 parameter_list|()
@@ -278,6 +289,9 @@ name|LazyRandomTypeCollection
 operator|>
 name|Types
 expr_stmt|;
+name|BinarySubstreamRef
+name|TypeRecordsSubstream
+decl_stmt|;
 name|codeview
 operator|::
 name|CVTypeArray

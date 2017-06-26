@@ -114,6 +114,11 @@ argument_list|(
 argument|Writer
 argument_list|)
 block|{}
+name|using
+name|TypeVisitorCallbacks
+operator|::
+name|visitTypeBegin
+block|;
 name|Error
 name|visitTypeBegin
 argument_list|(

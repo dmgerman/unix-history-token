@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/DebugSubsectionRecord.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/SymbolRecord.h"
 end_include
 
@@ -201,6 +207,17 @@ operator|::
 name|DebugSubsection
 operator|>
 name|Subsection
+argument_list|)
+decl_stmt|;
+name|void
+name|addDebugSubsection
+argument_list|(
+specifier|const
+name|codeview
+operator|::
+name|DebugSubsectionRecord
+operator|&
+name|SubsectionContents
 argument_list|)
 decl_stmt|;
 name|uint16_t

@@ -93,9 +93,6 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
-name|ImmutablePass
-decl_stmt|;
-name|class
 name|MachineInstr
 decl_stmt|;
 name|class

@@ -580,6 +580,33 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|performAddCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performAddCarrySubCarryCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performSubCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|performFAddCombine
 argument_list|(
 argument|SDNode *N
@@ -1037,20 +1064,6 @@ argument_list|(
 argument|MachineInstr&MI
 argument_list|,
 argument|SDNode *Node
-argument_list|)
-specifier|const
-name|override
-block|;
-name|SDValue
-name|CreateLiveInRegister
-argument_list|(
-argument|SelectionDAG&DAG
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|unsigned Reg
-argument_list|,
-argument|EVT VT
 argument_list|)
 specifier|const
 name|override

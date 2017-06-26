@@ -2118,12 +2118,13 @@ block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// AttributeList Introspection
 comment|//===--------------------------------------------------------------------===//
-typedef|typedef
+name|using
+name|iterator
+operator|=
 specifier|const
 name|AttributeSet
-modifier|*
-name|iterator
-typedef|;
+operator|*
+block|;
 name|iterator
 name|begin
 argument_list|()
@@ -2230,7 +2231,7 @@ name|dump
 argument_list|()
 specifier|const
 block|; }
-expr_stmt|;
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// \class
 comment|/// \brief Provide DenseMapInfo for AttributeList.
@@ -2975,12 +2976,12 @@ operator|&
 name|Callee
 argument_list|)
 block|;  }
-comment|// end AttributeFuncs namespace
+comment|// end namespace AttributeFuncs
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif

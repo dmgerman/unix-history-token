@@ -91,6 +91,7 @@ comment|/// Common code between 32-bit and 64-bit PowerPC targets.
 comment|///
 name|class
 name|PPCTargetMachine
+name|final
 range|:
 name|public
 name|LLVMTargetMachine
@@ -253,77 +254,7 @@ name|false
 return|;
 block|}
 expr|}
-block|;
-comment|/// PowerPC 32-bit target machine.
-comment|///
-name|class
-name|PPC32TargetMachine
-operator|:
-name|public
-name|PPCTargetMachine
-block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
-name|public
-operator|:
-name|PPC32TargetMachine
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|const Triple&TT
-argument_list|,
-argument|StringRef CPU
-argument_list|,
-argument|StringRef FS
-argument_list|,
-argument|const TargetOptions&Options
-argument_list|,
-argument|Optional<Reloc::Model> RM
-argument_list|,
-argument|CodeModel::Model CM
-argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|)
 block|; }
-block|;
-comment|/// PowerPC 64-bit target machine.
-comment|///
-name|class
-name|PPC64TargetMachine
-operator|:
-name|public
-name|PPCTargetMachine
-block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
-name|public
-operator|:
-name|PPC64TargetMachine
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|const Triple&TT
-argument_list|,
-argument|StringRef CPU
-argument_list|,
-argument|StringRef FS
-argument_list|,
-argument|const TargetOptions&Options
-argument_list|,
-argument|Optional<Reloc::Model> RM
-argument_list|,
-argument|CodeModel::Model CM
-argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|)
-block|; }
-block|;  }
 end_decl_stmt
 
 begin_comment

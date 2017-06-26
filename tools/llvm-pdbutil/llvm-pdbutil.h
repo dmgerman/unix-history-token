@@ -293,28 +293,49 @@ extern|extern llvm::cl::opt<ClassDefinitionFormat> ClassFormat;
 extern|extern llvm::cl::opt<uint32_t> ClassRecursionDepth;
 block|}
 name|namespace
-name|raw
+name|bytes
 block|{
 struct|struct
-name|BlockRange
+name|NumberRange
 block|{
-name|uint32_t
+name|uint64_t
 name|Min
 decl_stmt|;
 name|llvm
 operator|::
 name|Optional
 operator|<
-name|uint32_t
+name|uint64_t
 operator|>
 name|Max
 expr_stmt|;
 block|}
 struct|;
+extern|extern llvm::Optional<NumberRange> DumpBlockRange;
+extern|extern llvm::Optional<NumberRange> DumpByteRange;
+extern|extern llvm::cl::list<std::string> DumpStreamData;
+extern|extern llvm::cl::opt<bool> NameMap;
+extern|extern llvm::cl::opt<bool> SectionContributions;
+extern|extern llvm::cl::opt<bool> SectionMap;
+extern|extern llvm::cl::opt<bool> ModuleInfos;
+extern|extern llvm::cl::opt<bool> FileInfo;
+extern|extern llvm::cl::opt<bool> TypeServerMap;
+extern|extern llvm::cl::opt<bool> ECData;
+extern|extern llvm::cl::list<uint32_t> TypeIndex;
+extern|extern llvm::cl::list<uint32_t> IdIndex;
+extern|extern llvm::cl::opt<uint32_t> ModuleIndex;
+extern|extern llvm::cl::opt<bool> ModuleSyms;
+extern|extern llvm::cl::opt<bool> ModuleC11;
+extern|extern llvm::cl::opt<bool> ModuleC13;
+extern|extern llvm::cl::opt<bool> SplitChunks;
+block|}
+comment|// namespace bytes
+name|namespace
+name|dump
+block|{
 extern|extern llvm::cl::opt<bool> DumpSummary;
 extern|extern llvm::cl::opt<bool> DumpStreams;
-extern|extern llvm::Optional<BlockRange> DumpBlockRange;
-extern|extern llvm::cl::list<std::string> DumpStreamData;
+extern|extern llvm::cl::opt<bool> DumpStreamBlocks;
 extern|extern llvm::cl::opt<bool> DumpLines;
 extern|extern llvm::cl::opt<bool> DumpInlineeLines;
 extern|extern llvm::cl::opt<bool> DumpXmi;
@@ -323,9 +344,11 @@ extern|extern llvm::cl::opt<bool> DumpStringTable;
 extern|extern llvm::cl::opt<bool> DumpTypes;
 extern|extern llvm::cl::opt<bool> DumpTypeData;
 extern|extern llvm::cl::opt<bool> DumpTypeExtras;
+extern|extern llvm::cl::list<uint32_t> DumpTypeIndex;
 extern|extern llvm::cl::opt<bool> DumpIds;
 extern|extern llvm::cl::opt<bool> DumpIdData;
 extern|extern llvm::cl::opt<bool> DumpIdExtras;
+extern|extern llvm::cl::list<uint32_t> DumpIdIndex;
 extern|extern llvm::cl::opt<bool> DumpSymbols;
 extern|extern llvm::cl::opt<bool> DumpSymRecordBytes;
 extern|extern llvm::cl::opt<bool> DumpPublics;
@@ -334,11 +357,6 @@ extern|extern llvm::cl::opt<bool> DumpSectionMap;
 extern|extern llvm::cl::opt<bool> DumpModules;
 extern|extern llvm::cl::opt<bool> DumpModuleFiles;
 extern|extern llvm::cl::opt<bool> RawAll;
-block|}
-name|namespace
-name|diff
-block|{
-extern|extern llvm::cl::opt<bool> Pedantic;
 block|}
 name|namespace
 name|pdb2yaml

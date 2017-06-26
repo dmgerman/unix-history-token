@@ -284,9 +284,6 @@ name|bool
 name|RerollLoops
 decl_stmt|;
 name|bool
-name|LoadCombine
-decl_stmt|;
-name|bool
 name|NewGVN
 decl_stmt|;
 name|bool

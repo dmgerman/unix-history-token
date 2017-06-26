@@ -69,8 +69,8 @@ decl_stmt|;
 name|class
 name|RecordKeeper
 decl_stmt|;
-comment|/// \brief Perform the action using Records, and write output to OS.
-comment|/// \returns true on error, false otherwise
+comment|/// Perform the action using Records, and write output to OS.
+comment|/// Returns true on error, false otherwise.
 name|using
 name|TableGenMainFn
 init|=

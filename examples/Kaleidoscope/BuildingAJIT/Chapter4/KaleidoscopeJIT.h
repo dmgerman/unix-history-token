@@ -383,16 +383,16 @@ name|DataLayout
 name|DL
 decl_stmt|;
 name|RTDyldObjectLinkingLayer
-operator|<
-operator|>
 name|ObjectLayer
-expr_stmt|;
+decl_stmt|;
 name|IRCompileLayer
 operator|<
 name|decltype
 argument_list|(
 name|ObjectLayer
 argument_list|)
+operator|,
+name|SimpleCompiler
 operator|>
 name|CompileLayer
 expr_stmt|;
@@ -405,14 +405,14 @@ name|function
 operator|<
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|Module
 operator|>
 operator|(
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|Module
 operator|>
@@ -456,7 +456,7 @@ argument_list|(
 name|OptimizeLayer
 argument_list|)
 operator|::
-name|ModuleSetHandleT
+name|ModuleHandleT
 decl_stmt|;
 name|KaleidoscopeJIT
 argument_list|()
@@ -499,7 +499,7 @@ index|]
 operator|(
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|Module
 operator|>
@@ -694,40 +694,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Build a singleton module set to hold our module.
-end_comment
-
-begin_expr_stmt
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|Module
-operator|>>
-name|Ms
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|Ms
-operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|M
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Add the set to the JIT with the resolver we created above and a newly
 end_comment
 
@@ -739,13 +705,13 @@ begin_return
 return|return
 name|OptimizeLayer
 operator|.
-name|addModuleSet
+name|addModule
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
-name|Ms
+name|M
 argument_list|)
 argument_list|,
 name|make_unique
@@ -1017,7 +983,7 @@ parameter_list|)
 block|{
 name|OptimizeLayer
 operator|.
-name|removeModuleSet
+name|removeModule
 argument_list|(
 name|H
 argument_list|)
@@ -1073,13 +1039,13 @@ end_expr_stmt
 begin_expr_stmt
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|Module
 operator|>
 name|optimizeModule
 argument_list|(
-argument|std::unique_ptr<Module> M
+argument|std::shared_ptr<Module> M
 argument_list|)
 block|{
 comment|// Create a function pass manager.

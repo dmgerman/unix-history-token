@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- IndirectionUtils.h - Utilities for adding indirections --*- C++ -*-===//
+comment|//===- IndirectionUtils.h - Utilities for adding indirections ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,24 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/IRBuilder.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Mangler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Module.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Error.h"
 end_include
 
@@ -183,6 +165,33 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Constant
+decl_stmt|;
+name|class
+name|Function
+decl_stmt|;
+name|class
+name|FunctionType
+decl_stmt|;
+name|class
+name|GlobalAlias
+decl_stmt|;
+name|class
+name|GlobalVariable
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
+name|class
+name|PointerType
+decl_stmt|;
+name|class
+name|Triple
+decl_stmt|;
+name|class
+name|Value
+decl_stmt|;
 name|namespace
 name|orc
 block|{
@@ -192,7 +201,9 @@ name|JITCompileCallbackManager
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|CompileFtor
+init|=
 name|std
 operator|::
 name|function
@@ -200,8 +211,7 @@ operator|<
 name|JITTargetAddress
 argument_list|()
 operator|>
-name|CompileFtor
-expr_stmt|;
+decl_stmt|;
 comment|/// @brief Handle to a newly created compile callback. Can be used to get an
 comment|///        IR constant representing the address of the trampoline, and to set
 comment|///        the compile action for the callback.
@@ -496,17 +506,18 @@ label|:
 name|JITTargetAddress
 name|ErrorHandlerAddress
 decl_stmt|;
-typedef|typedef
+name|using
+name|TrampolineMapT
+init|=
 name|std
 operator|::
 name|map
 operator|<
 name|JITTargetAddress
-operator|,
+decl_stmt|,
 name|CompileFtor
-operator|>
-name|TrampolineMapT
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|TrampolineMapT
 name|ActiveTrampolines
 decl_stmt|;
@@ -992,7 +1003,9 @@ block|{
 name|public
 label|:
 comment|/// @brief Map type for initializing the manager. See init.
-typedef|typedef
+name|using
+name|StubInitsMap
+init|=
 name|StringMap
 operator|<
 name|std
@@ -1000,11 +1013,10 @@ operator|::
 name|pair
 operator|<
 name|JITTargetAddress
-operator|,
+decl_stmt|,
 name|JITSymbolFlags
-operator|>>
-name|StubInitsMap
-expr_stmt|;
+decl|>>
+decl_stmt|;
 name|virtual
 operator|~
 name|IndirectStubsManager
@@ -1699,17 +1711,18 @@ name|IndirectStubsInfo
 operator|>
 name|IndirectStubsInfos
 expr_stmt|;
-typedef|typedef
+name|using
+name|StubKey
+init|=
 name|std
 operator|::
 name|pair
 operator|<
 name|uint16_t
-operator|,
+decl_stmt|,
 name|uint16_t
-operator|>
-name|StubKey
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|std
 operator|::
 name|vector

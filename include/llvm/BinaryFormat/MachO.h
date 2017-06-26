@@ -280,6 +280,10 @@ block|,
 name|MH_APP_EXTENSION_SAFE
 init|=
 literal|0x02000000u
+block|,
+name|MH_NLIST_OUTOFSYNC_WITH_DYLDINFO
+init|=
+literal|0x04000000u
 block|}
 enum|;
 enum_decl|enum :

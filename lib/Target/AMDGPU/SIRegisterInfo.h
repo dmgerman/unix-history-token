@@ -707,10 +707,14 @@ name|PRIVATE_SEGMENT_WAVE_BYTE_OFFSET
 init|=
 literal|14
 block|,
+name|IMPLICIT_BUFFER_PTR
+init|=
+literal|15
+block|,
 comment|// VGPRS:
 name|FIRST_VGPR_VALUE
 init|=
-literal|15
+literal|16
 block|,
 name|WORKITEM_ID_X
 init|=
@@ -718,11 +722,11 @@ name|FIRST_VGPR_VALUE
 block|,
 name|WORKITEM_ID_Y
 init|=
-literal|16
+literal|17
 block|,
 name|WORKITEM_ID_Z
 init|=
-literal|17
+literal|18
 block|}
 enum|;
 comment|/// \brief Returns the physical register that \p Value is stored in.

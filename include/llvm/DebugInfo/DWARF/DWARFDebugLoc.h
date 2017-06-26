@@ -121,15 +121,13 @@ name|Entries
 expr_stmt|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|LocationLists
+init|=
 name|SmallVector
 operator|<
 name|LocationList
-operator|,
-literal|4
-operator|>
-name|LocationLists
-expr_stmt|;
+decl_stmt|, 4>;
 comment|/// A list of all the variables in the debug_loc section, each one describing
 comment|/// the locations in which the variable is stored.
 name|LocationLists
@@ -217,15 +215,13 @@ name|Entries
 expr_stmt|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|LocationLists
+init|=
 name|SmallVector
 operator|<
 name|LocationList
-operator|,
-literal|4
-operator|>
-name|LocationLists
-expr_stmt|;
+decl_stmt|, 4>;
 name|LocationLists
 name|Locations
 decl_stmt|;

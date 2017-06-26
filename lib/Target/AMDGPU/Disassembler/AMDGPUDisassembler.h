@@ -256,6 +256,13 @@ argument|uint64_t Address
 argument_list|)
 specifier|const
 block|;
+name|DecodeStatus
+name|convertSDWAInst
+argument_list|(
+argument|MCInst&MI
+argument_list|)
+specifier|const
+block|;
 name|MCOperand
 name|decodeOperand_VGPR_32
 argument_list|(
@@ -446,7 +453,7 @@ argument_list|)
 specifier|const
 block|;
 name|MCOperand
-name|decodeSDWA9Src
+name|decodeSDWASrc
 argument_list|(
 argument|const OpWidthTy Width
 argument_list|,
@@ -455,21 +462,21 @@ argument_list|)
 specifier|const
 block|;
 name|MCOperand
-name|decodeSDWA9Src16
+name|decodeSDWASrc16
 argument_list|(
 argument|unsigned Val
 argument_list|)
 specifier|const
 block|;
 name|MCOperand
-name|decodeSDWA9Src32
+name|decodeSDWASrc32
 argument_list|(
 argument|unsigned Val
 argument_list|)
 specifier|const
 block|;
 name|MCOperand
-name|decodeSDWA9VopcDst
+name|decodeSDWAVopcDst
 argument_list|(
 argument|unsigned Val
 argument_list|)

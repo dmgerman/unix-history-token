@@ -70,13 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Endian.h"
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Error.h"
+file|<cstdint>
 end_include
 
 begin_include
@@ -329,15 +329,16 @@ name|computeDirectoryByteSize
 argument_list|()
 specifier|const
 expr_stmt|;
-typedef|typedef
+name|using
+name|BlockList
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|uint32_t
 operator|>
-name|BlockList
-expr_stmt|;
+decl_stmt|;
 name|BumpPtrAllocator
 modifier|&
 name|Allocator
@@ -390,12 +391,12 @@ expr_stmt|;
 block|}
 empty_stmt|;
 block|}
-comment|// namespace msf
+comment|// end namespace msf
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

@@ -559,6 +559,8 @@ comment|/// Make a register of the specific register class
 comment|/// available and do the appropriate bookkeeping. SPAdj is the stack
 comment|/// adjustment due to call frame, it's passed along to eliminateFrameIndex().
 comment|/// Returns the scavenged register.
+comment|/// This is deprecated as it depends on the quality of the kill flags being
+comment|/// present; Use scavengeRegisterBackwards() instead!
 name|unsigned
 name|scavengeRegister
 argument_list|(
@@ -599,6 +601,32 @@ name|SPAdj
 argument_list|)
 return|;
 block|}
+comment|/// Make a register of the specific register class available from the current
+comment|/// position backwards to the place before \p To. If \p RestoreAfter is true
+comment|/// this includes the instruction following the current position.
+comment|/// SPAdj is the stack adjustment due to call frame, it's passed along to
+comment|/// eliminateFrameIndex().
+comment|/// Returns the scavenged register.
+name|unsigned
+name|scavengeRegisterBackwards
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|&
+name|RC
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|To
+argument_list|,
+name|bool
+name|RestoreAfter
+argument_list|,
+name|int
+name|SPAdj
+argument_list|)
+decl_stmt|;
 comment|/// Tell the scavenger a register is used.
 name|void
 name|setRegUsed
@@ -746,6 +774,35 @@ modifier|&
 name|MBB
 parameter_list|)
 function_decl|;
+comment|/// Spill a register after position \p After and reload it before position
+comment|/// \p UseMI.
+name|ScavengedInfo
+modifier|&
+name|spill
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|&
+name|RC
+argument_list|,
+name|int
+name|SPAdj
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|After
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+operator|&
+name|UseMI
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// Replaces all frame index virtual registers with physical registers. Uses the

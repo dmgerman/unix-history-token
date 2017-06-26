@@ -1603,8 +1603,8 @@ argument_list|(
 argument|RecordOffset
 argument_list|)
 block|{}
-name|TypeIndex
-name|Index
+name|PublicSymFlags
+name|Flags
 block|;
 name|uint32_t
 name|Offset

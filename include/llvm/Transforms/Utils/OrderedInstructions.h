@@ -161,6 +161,9 @@ argument_list|)
 specifier|const
 expr_stmt|;
 comment|/// Invalidate the OrderedBasicBlock cache when its basic block changes.
+comment|/// i.e. If an instruction is deleted or added to the basic block, the user
+comment|/// should call this function to invalidate the OrderedBasicBlock cache for
+comment|/// this basic block.
 name|void
 name|invalidateBlock
 parameter_list|(

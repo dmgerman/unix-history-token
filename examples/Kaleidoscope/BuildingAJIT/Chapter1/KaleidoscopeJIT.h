@@ -192,16 +192,16 @@ name|DataLayout
 name|DL
 decl_stmt|;
 name|RTDyldObjectLinkingLayer
-operator|<
-operator|>
 name|ObjectLayer
-expr_stmt|;
+decl_stmt|;
 name|IRCompileLayer
 operator|<
 name|decltype
 argument_list|(
 name|ObjectLayer
 argument_list|)
+operator|,
+name|SimpleCompiler
 operator|>
 name|CompileLayer
 expr_stmt|;
@@ -215,7 +215,7 @@ argument_list|(
 name|CompileLayer
 argument_list|)
 operator|::
-name|ModuleSetHandleT
+name|ModuleHandleT
 decl_stmt|;
 name|KaleidoscopeJIT
 argument_list|()
@@ -364,43 +364,18 @@ return|;
 block|}
 block|)
 decl_stmt|;
-comment|// Build a singleton module set to hold our module.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|Module
-operator|>>
-name|Ms
-expr_stmt|;
-name|Ms
+comment|// Add the set to the JIT with the resolver we created above and a newly
+comment|// created SectionMemoryManager.
+return|return
+name|CompileLayer
 operator|.
-name|push_back
+name|addModule
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
 name|M
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|// Add the set to the JIT with the resolver we created above and a newly
-comment|// created SectionMemoryManager.
-return|return
-name|CompileLayer
-operator|.
-name|addModuleSet
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Ms
 argument_list|)
 argument_list|,
 name|make_unique
@@ -480,7 +455,7 @@ parameter_list|)
 block|{
 name|CompileLayer
 operator|.
-name|removeModuleSet
+name|removeModule
 argument_list|(
 name|H
 argument_list|)

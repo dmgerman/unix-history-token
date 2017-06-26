@@ -1418,7 +1418,9 @@ name|GCOVFunction
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|BlockIterator
+init|=
 name|pointee_iterator
 operator|<
 name|SmallVectorImpl
@@ -1432,8 +1434,7 @@ operator|>>
 operator|::
 name|const_iterator
 operator|>
-name|BlockIterator
-expr_stmt|;
+decl_stmt|;
 name|GCOVFunction
 argument_list|(
 name|GCOVFile
@@ -1700,7 +1701,9 @@ block|}
 struct|;
 name|public
 label|:
-typedef|typedef
+name|using
+name|EdgeIterator
+init|=
 name|SmallVectorImpl
 operator|<
 name|GCOVEdge
@@ -1708,8 +1711,7 @@ operator|*
 operator|>
 operator|::
 name|const_iterator
-name|EdgeIterator
-expr_stmt|;
+decl_stmt|;
 name|GCOVBlock
 argument_list|(
 argument|GCOVFunction&P
@@ -2066,46 +2068,44 @@ comment|// line.
 comment|// Therefore this typedef allows LineData.Functions to store multiple
 comment|// functions
 comment|// per instance. This is rare, however, so optimize for the common case.
-typedef|typedef
+name|using
+name|FunctionVector
+init|=
 name|SmallVector
 operator|<
 specifier|const
 name|GCOVFunction
 operator|*
-operator|,
-literal|1
-operator|>
-name|FunctionVector
-expr_stmt|;
-typedef|typedef
+decl_stmt|, 1>;
+name|using
+name|FunctionLines
+init|=
 name|DenseMap
 operator|<
 name|uint32_t
-operator|,
+decl_stmt|,
 name|FunctionVector
-operator|>
-name|FunctionLines
-expr_stmt|;
-typedef|typedef
+decl|>
+decl_stmt|;
+name|using
+name|BlockVector
+init|=
 name|SmallVector
 operator|<
 specifier|const
 name|GCOVBlock
 operator|*
-operator|,
-literal|4
-operator|>
-name|BlockVector
-expr_stmt|;
-typedef|typedef
+decl_stmt|, 4>;
+name|using
+name|BlockLines
+init|=
 name|DenseMap
 operator|<
 name|uint32_t
-operator|,
+decl_stmt|,
 name|BlockVector
-operator|>
-name|BlockLines
-expr_stmt|;
+decl|>
+decl_stmt|;
 struct|struct
 name|LineData
 block|{
@@ -2535,8 +2535,10 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|FileCoverageList
+init|=
 name|SmallVector
 operator|<
 name|std
@@ -2546,29 +2548,26 @@ operator|<
 name|std
 operator|::
 name|string
-operator|,
+decl_stmt|,
 name|GCOVCoverage
-operator|>
-operator|,
-literal|4
-operator|>
-name|FileCoverageList
-expr_stmt|;
-end_typedef
+decl|>
+decl_stmt|, 4>;
+end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|FuncCoverageMap
+init|=
 name|MapVector
 operator|<
 specifier|const
 name|GCOVFunction
 operator|*
-operator|,
+decl_stmt|,
 name|GCOVCoverage
-operator|>
-name|FuncCoverageMap
-expr_stmt|;
-end_typedef
+decl|>
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|FileCoverageList

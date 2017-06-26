@@ -219,6 +219,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printS16ImmDecOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printU32ImmOperand
 argument_list|(
 argument|const MCInst *MI
@@ -284,6 +294,18 @@ argument_list|)
 block|;
 name|void
 name|printOffset
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printOffsetS13
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -476,6 +498,30 @@ argument_list|)
 block|;
 name|void
 name|printExpVM
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printDFMT
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printNFMT
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

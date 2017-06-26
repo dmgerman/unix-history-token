@@ -1059,12 +1059,13 @@ operator|<<
 name|Kind
 return|;
 block|}
-typedef|typedef
+name|using
+name|iterator
+operator|=
 specifier|const
 name|AttributeSet
-modifier|*
-name|iterator
-typedef|;
+operator|*
+block|;
 name|iterator
 name|begin
 argument_list|()

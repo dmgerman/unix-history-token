@@ -225,6 +225,10 @@ specifier|const
 name|TargetInstrInfo
 operator|&
 name|TII
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
 argument_list|)
 block|;
 name|bool

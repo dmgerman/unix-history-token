@@ -1029,10 +1029,12 @@ name|unsigned
 name|Dst
 parameter_list|)
 function_decl|;
-comment|/// Build and insert \p Res<def> = G_SEQUENCE \p Op0, \p Idx0...
+comment|/// Build and insert instructions to put \p Ops together at the specified p
+comment|/// Indices to form a larger register.
 comment|///
-comment|/// G_SEQUENCE inserts each element of Ops into an IMPLICIT_DEF register,
-comment|/// where each entry starts at the bit-index specified by \p Indices.
+comment|/// If the types of the input registers are uniform and cover the entirity of
+comment|/// \p Res then a G_MERGE_VALUES will be produced. Otherwise an IMPLICIT_DEF
+comment|/// followed by a sequence of G_INSERT instructions.
 comment|///
 comment|/// \pre setBasicBlock or setMI must have been called.
 comment|/// \pre The final element of the sequence must not extend past the end of the
@@ -1040,9 +1042,7 @@ comment|///      destination register.
 comment|/// \pre The bits defined by each Op (derived from index and scalar size) must
 comment|///      not overlap.
 comment|/// \pre \p Indices must be in ascending order of bit position.
-comment|///
-comment|/// \return a MachineInstrBuilder for the newly created instruction.
-name|MachineInstrBuilder
+name|void
 name|buildSequence
 argument_list|(
 name|unsigned
@@ -1108,100 +1108,6 @@ name|unsigned
 name|Op
 argument_list|)
 decl_stmt|;
-name|void
-name|addUsesWithIndices
-parameter_list|(
-name|MachineInstrBuilder
-name|MIB
-parameter_list|)
-block|{}
-name|template
-operator|<
-name|typename
-operator|...
-name|ArgTys
-operator|>
-name|void
-name|addUsesWithIndices
-argument_list|(
-argument|MachineInstrBuilder MIB
-argument_list|,
-argument|unsigned Reg
-argument_list|,
-argument|unsigned BitIndex
-argument_list|,
-argument|ArgTys... Args
-argument_list|)
-block|{
-name|MIB
-operator|.
-name|addUse
-argument_list|(
-name|Reg
-argument_list|)
-operator|.
-name|addImm
-argument_list|(
-name|BitIndex
-argument_list|)
-block|;
-name|addUsesWithIndices
-argument_list|(
-name|MIB
-argument_list|,
-name|Args
-operator|...
-argument_list|)
-block|;   }
-name|template
-operator|<
-name|typename
-operator|...
-name|ArgTys
-operator|>
-name|MachineInstrBuilder
-name|buildSequence
-argument_list|(
-argument|unsigned Res
-argument_list|,
-argument|unsigned Op
-argument_list|,
-argument|unsigned Index
-argument_list|,
-argument|ArgTys... Args
-argument_list|)
-block|{
-name|MachineInstrBuilder
-name|MIB
-operator|=
-name|buildInstr
-argument_list|(
-name|TargetOpcode
-operator|::
-name|G_SEQUENCE
-argument_list|)
-operator|.
-name|addDef
-argument_list|(
-name|Res
-argument_list|)
-block|;
-name|addUsesWithIndices
-argument_list|(
-name|MIB
-argument_list|,
-name|Op
-argument_list|,
-name|Index
-argument_list|,
-name|Args
-operator|...
-argument_list|)
-block|;
-return|return
-name|MIB
-return|;
-block|}
 name|MachineInstrBuilder
 name|buildInsert
 parameter_list|(

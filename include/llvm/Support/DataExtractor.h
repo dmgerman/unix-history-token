@@ -59,6 +59,168 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// An auxiliary type to facilitate extraction of 3-byte entities.
+struct|struct
+name|Uint24
+block|{
+name|uint8_t
+name|Bytes
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|Uint24
+argument_list|(
+argument|uint8_t U
+argument_list|)
+block|{
+name|Bytes
+index|[
+literal|0
+index|]
+operator|=
+name|Bytes
+index|[
+literal|1
+index|]
+operator|=
+name|Bytes
+index|[
+literal|2
+index|]
+operator|=
+name|U
+expr_stmt|;
+block|}
+name|Uint24
+argument_list|(
+argument|uint8_t U0
+argument_list|,
+argument|uint8_t U1
+argument_list|,
+argument|uint8_t U2
+argument_list|)
+block|{
+name|Bytes
+index|[
+literal|0
+index|]
+operator|=
+name|U0
+expr_stmt|;
+name|Bytes
+index|[
+literal|1
+index|]
+operator|=
+name|U1
+expr_stmt|;
+name|Bytes
+index|[
+literal|2
+index|]
+operator|=
+name|U2
+expr_stmt|;
+block|}
+name|uint32_t
+name|getAsUint32
+argument_list|(
+name|bool
+name|IsLittleEndian
+argument_list|)
+decl|const
+block|{
+name|int
+name|LoIx
+init|=
+name|IsLittleEndian
+condition|?
+literal|0
+else|:
+literal|2
+decl_stmt|;
+return|return
+name|Bytes
+index|[
+name|LoIx
+index|]
+operator|+
+operator|(
+name|Bytes
+index|[
+literal|1
+index|]
+operator|<<
+literal|8
+operator|)
+operator|+
+operator|(
+name|Bytes
+index|[
+literal|2
+operator|-
+name|LoIx
+index|]
+operator|<<
+literal|16
+operator|)
+return|;
+block|}
+block|}
+struct|;
+name|using
+name|uint24_t
+init|=
+name|Uint24
+decl_stmt|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|uint24_t
+argument_list|)
+operator|==
+literal|3
+argument_list|,
+literal|"sizeof(uint24_t) != 3"
+argument_list|)
+expr_stmt|;
+comment|/// Needed by swapByteOrder().
+specifier|inline
+name|uint24_t
+name|getSwappedBytes
+parameter_list|(
+name|uint24_t
+name|C
+parameter_list|)
+block|{
+return|return
+name|uint24_t
+argument_list|(
+name|C
+operator|.
+name|Bytes
+index|[
+literal|2
+index|]
+argument_list|,
+name|C
+operator|.
+name|Bytes
+index|[
+literal|1
+index|]
+argument_list|,
+name|C
+operator|.
+name|Bytes
+index|[
+literal|0
+index|]
+argument_list|)
+return|;
+block|}
 name|class
 name|DataExtractor
 block|{
@@ -436,6 +598,30 @@ name|dst
 argument_list|,
 name|uint32_t
 name|count
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Extract a 24-bit unsigned value from \a *offset_ptr and return it
+comment|/// in a uint32_t.
+comment|///
+comment|/// Extract 3 bytes from the binary data at the offset pointed to by
+comment|/// \a offset_ptr, construct a uint32_t from them and update the offset
+comment|/// on success.
+comment|///
+comment|/// @param[in,out] offset_ptr
+comment|///     A pointer to an offset within the data that will be advanced
+comment|///     by the 3 bytes if the value is extracted correctly. If the offset
+comment|///     is out of bounds or there are not enough bytes to extract this value,
+comment|///     the offset will be left unmodified.
+comment|///
+comment|/// @return
+comment|///     The extracted 24-bit value represented in a uint32_t.
+name|uint32_t
+name|getU24
+argument_list|(
+name|uint32_t
+operator|*
+name|offset_ptr
 argument_list|)
 decl|const
 decl_stmt|;

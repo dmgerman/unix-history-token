@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RuntimeDyld.h - Run-time dynamic linker for MC-JIT ------*- C++ -*-===//
+comment|//===- RuntimeDyld.h - Run-time dynamic linker for MC-JIT -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -225,10 +225,10 @@ name|ErrMsg
 block|; }
 decl_stmt|;
 name|class
-name|RuntimeDyldImpl
+name|RuntimeDyldCheckerImpl
 decl_stmt|;
 name|class
-name|RuntimeDyldCheckerImpl
+name|RuntimeDyldImpl
 decl_stmt|;
 name|class
 name|RuntimeDyld
@@ -268,7 +268,9 @@ name|RuntimeDyldImpl
 block|;
 name|public
 operator|:
-typedef|typedef
+name|using
+name|ObjSectionToIDMap
+operator|=
 name|std
 operator|::
 name|map
@@ -276,11 +278,10 @@ operator|<
 name|object
 operator|::
 name|SectionRef
-operator|,
+block|,
 name|unsigned
 operator|>
-name|ObjSectionToIDMap
-expr_stmt|;
+block|;
 name|LoadedObjectInfo
 argument_list|(
 argument|RuntimeDyldImpl&RTDyld
@@ -314,36 +315,30 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-decl_stmt|;
+block|;
 name|uint64_t
 name|getSectionLoadAddress
 argument_list|(
-specifier|const
-name|object
-operator|::
-name|SectionRef
-operator|&
-name|Sec
+argument|const object::SectionRef&Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|protected
-label|:
+operator|:
 name|virtual
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|RuntimeDyldImpl
-modifier|&
+operator|&
 name|RTDyld
-decl_stmt|;
+block|;
 name|ObjSectionToIDMap
 name|ObjSecToIDMap
+block|;   }
 decl_stmt|;
-block|}
-empty_stmt|;
 name|template
 operator|<
 name|typename
@@ -624,7 +619,8 @@ argument_list|)
 operator|=
 name|delete
 block|;
-name|void
+name|RuntimeDyld
+operator|&
 name|operator
 operator|=
 operator|(

@@ -46,31 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"OrcError.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"RPCSerialization.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/Orc/RPCSerialization.h"
 end_include
 
 begin_include
@@ -83,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cstddef>
 end_include
 
 begin_include
@@ -112,19 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tuple>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<type_traits>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
 end_include
 
 begin_decl_stmt
@@ -147,19 +111,24 @@ name|virtual
 operator|~
 name|RawByteChannel
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Read Size bytes from the stream into *Dst.
 name|virtual
 name|Error
 name|readBytes
-argument_list|(
-argument|char *Dst
-argument_list|,
-argument|unsigned Size
-argument_list|)
-operator|=
+parameter_list|(
+name|char
+modifier|*
+name|Dst
+parameter_list|,
+name|unsigned
+name|Size
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 comment|/// Read size bytes from *Src and append them to the stream.
 name|virtual
 name|Error

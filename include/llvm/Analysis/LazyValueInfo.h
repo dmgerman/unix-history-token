@@ -452,6 +452,31 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+comment|/// Return the ConstantRage constraint that is known to hold for the
+comment|/// specified value on the specified edge. This may be only be called
+comment|/// on integer-typed Values.
+name|ConstantRange
+name|getConstantRangeOnEdge
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|FromBB
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|ToBB
+parameter_list|,
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 comment|/// Inform the analysis cache that we have threaded an edge from
 comment|/// PredBB to OldSucc to be from PredBB to NewSucc instead.
 name|void

@@ -480,7 +480,7 @@ name|CacheOptions
 operator|.
 name|Policy
 operator|.
-name|PercentageOfAvailableSpace
+name|MaxSizePercentageOfAvailableSpace
 operator|=
 name|Percentage
 expr_stmt|;

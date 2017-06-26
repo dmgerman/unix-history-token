@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MappedBlockStream.h - Discontiguous stream data in an MSF -*- C++
-end_comment
-
-begin_comment
-comment|//-*-===//
+comment|//==- MappedBlockStream.h - Discontiguous stream data in an MSF --*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -62,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/MSF/MSFStreamLayout.h"
 end_include
 
@@ -105,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -213,8 +209,6 @@ argument_list|,
 argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
-name|llvm
-operator|::
 name|support
 operator|::
 name|endianness
@@ -224,8 +218,6 @@ specifier|const
 name|override
 block|{
 return|return
-name|llvm
-operator|::
 name|support
 operator|::
 name|little
@@ -256,8 +248,6 @@ name|getLength
 argument_list|()
 name|override
 block|;
-name|llvm
-operator|::
 name|BumpPtrAllocator
 operator|&
 name|getAllocator
@@ -369,13 +359,14 @@ block|;
 name|BinaryStreamRef
 name|MsfData
 block|;
-typedef|typedef
+name|using
+name|CacheEntry
+operator|=
 name|MutableArrayRef
 operator|<
 name|uint8_t
 operator|>
-name|CacheEntry
-expr_stmt|;
+block|;
 comment|// We just store the allocator by reference.  We use this to allocate
 comment|// contiguous memory for things like arrays or strings that cross a block
 comment|// boundary, and this memory is expected to outlive the stream.  For example,
@@ -386,11 +377,11 @@ comment|// allocator to allocate broken records from.
 name|BumpPtrAllocator
 operator|&
 name|Allocator
-decl_stmt|;
+block|;
 name|DenseMap
 operator|<
 name|uint32_t
-operator|,
+block|,
 name|std
 operator|::
 name|vector
@@ -398,9 +389,8 @@ operator|<
 name|CacheEntry
 operator|>>
 name|CacheMap
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 name|class
 name|WritableMappedBlockStream
 range|:
@@ -477,8 +467,6 @@ argument_list|,
 argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
-name|llvm
-operator|::
 name|support
 operator|::
 name|endianness
@@ -488,8 +476,6 @@ specifier|const
 name|override
 block|{
 return|return
-name|llvm
-operator|::
 name|support
 operator|::
 name|little
@@ -607,14 +593,11 @@ name|WriteInterface
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace pdb
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace pdb
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

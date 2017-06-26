@@ -103,6 +103,10 @@ name|virtual
 name|unsigned
 name|getRelocType
 argument_list|(
+name|MCContext
+operator|&
+name|Ctx
+argument_list|,
 specifier|const
 name|MCValue
 operator|&

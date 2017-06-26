@@ -947,6 +947,9 @@ comment|// Vector truncating masked store with unsigned/signed saturation
 name|VMTRUNCSTOREUS
 block|,
 name|VMTRUNCSTORES
+block|,
+comment|// X86 specific gather
+name|MGATHER
 comment|// WARNING: Do not add anything in the end unless you want the node to
 comment|// have memop! In fact, starting from FIRST_TARGET_MEMORY_OPCODE all
 comment|// opcodes will be thought as target memory ops!
@@ -2423,6 +2426,16 @@ argument_list|()
 specifier|const
 name|override
 expr_stmt|;
+name|StringRef
+name|getStackProbeSymbolName
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|unsigned
 name|getMaxSupportedInterleaveFactor
 argument_list|()
@@ -2454,6 +2467,25 @@ operator|<
 name|unsigned
 operator|>
 name|Indices
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+comment|/// \brief Lower interleaved store(s) into target specific
+comment|/// instructions/intrinsics.
+name|bool
+name|lowerInterleavedStore
+argument_list|(
+name|StoreInst
+operator|*
+name|SI
+argument_list|,
+name|ShuffleVectorInst
+operator|*
+name|SVI
 argument_list|,
 name|unsigned
 name|Factor
@@ -4439,6 +4471,63 @@ operator|==
 name|X86ISD
 operator|::
 name|VMTRUNCSTOREUS
+return|;
+block|}
+expr|}
+block|;
+comment|// X86 specific Gather node.
+name|class
+name|X86MaskedGatherSDNode
+operator|:
+name|public
+name|MaskedGatherScatterSDNode
+block|{
+name|public
+operator|:
+name|X86MaskedGatherSDNode
+argument_list|(
+argument|unsigned Order
+argument_list|,
+argument|const DebugLoc&dl
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|)
+operator|:
+name|MaskedGatherScatterSDNode
+argument_list|(
+argument|X86ISD::MGATHER
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTs
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|X86ISD
+operator|::
+name|MGATHER
 return|;
 block|}
 expr|}

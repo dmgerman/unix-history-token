@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- GenericValue.h - Represent any type of LLVM value -------*- C++ -*-===//
+comment|//===- GenericValue.h - Represent any type of LLVM value --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -81,13 +75,11 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-typedef|typedef
-name|void
-modifier|*
+name|using
 name|PointerTy
-typedef|;
-name|class
-name|APInt
+init|=
+name|void
+operator|*
 decl_stmt|;
 struct|struct
 name|GenericValue
@@ -166,7 +158,7 @@ operator|.
 name|second
 operator|=
 literal|0
-block|;}
+block|;   }
 name|explicit
 name|GenericValue
 argument_list|(
@@ -186,7 +178,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-block|{ }
+block|{}
 block|}
 struct|;
 specifier|inline
@@ -226,13 +218,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_EXECUTIONENGINE_GENERICVALUE_H
+end_comment
 
 end_unit
 

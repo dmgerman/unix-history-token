@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- HexagonSubtarget.h - Define Subtarget for the Hexagon ---*- C++ -*-===//
+comment|//===- HexagonSubtarget.h - Define Subtarget for the Hexagon ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"HexagonISelLowering.h"
+file|"HexagonInstrInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"HexagonInstrInfo.h"
+file|"HexagonISelLowering.h"
 end_include
 
 begin_include
@@ -86,7 +86,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/ADT/SmallSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ScheduleDAGMutation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCInstrItineraries.h"
 end_include
 
 begin_include
@@ -98,7 +116,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_define
@@ -131,6 +161,21 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MachineInstr
+decl_stmt|;
+name|class
+name|SDep
+decl_stmt|;
+name|class
+name|SUnit
+decl_stmt|;
+name|class
+name|TargetMachine
+decl_stmt|;
+name|class
+name|Triple
+decl_stmt|;
 name|class
 name|HexagonSubtarget
 range|:
@@ -680,6 +725,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_HEXAGON_HEXAGONSUBTARGET_H
+end_comment
 
 end_unit
 

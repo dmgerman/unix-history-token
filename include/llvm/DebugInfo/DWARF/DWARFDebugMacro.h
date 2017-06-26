@@ -113,15 +113,13 @@ block|}
 union|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|MacroList
+init|=
 name|SmallVector
 operator|<
 name|Entry
-operator|,
-literal|4
-operator|>
-name|MacroList
-expr_stmt|;
+decl_stmt|, 4>;
 comment|/// A list of all the macro entries in the debug_macinfo section.
 name|MacroList
 name|Macros

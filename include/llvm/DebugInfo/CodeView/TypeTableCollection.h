@@ -52,7 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeDatabase.h"
+file|"llvm/Support/StringSaver.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -133,18 +139,19 @@ name|override
 block|;
 name|private
 operator|:
-name|bool
-name|hasCapacityFor
-argument_list|(
-argument|TypeIndex Index
-argument_list|)
-specifier|const
+name|BumpPtrAllocator
+name|Allocator
 block|;
-name|void
-name|ensureTypeExists
-argument_list|(
-argument|TypeIndex Index
-argument_list|)
+name|StringSaver
+name|NameStorage
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|StringRef
+operator|>
+name|Names
 block|;
 name|ArrayRef
 operator|<
@@ -153,9 +160,6 @@ operator|<
 name|uint8_t
 operator|>>
 name|Records
-block|;
-name|TypeDatabase
-name|Database
 block|; }
 decl_stmt|;
 block|}

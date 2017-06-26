@@ -2562,8 +2562,12 @@ name|second
 return|;
 block|}
 comment|/// Determine the range for a particular SCEV.
+comment|/// NOTE: This returns a reference to an entry in a cache. It must be
+comment|/// copied if its needed for longer.
+specifier|const
 name|ConstantRange
-name|getRange
+modifier|&
+name|getRangeRef
 parameter_list|(
 specifier|const
 name|SCEV
@@ -5445,7 +5449,7 @@ name|S
 parameter_list|)
 function_decl|;
 comment|/// Determine the unsigned range for a particular SCEV.
-comment|///
+comment|/// NOTE: This returns a copy of the reference returned by getRangeRef.
 name|ConstantRange
 name|getUnsignedRange
 parameter_list|(
@@ -5456,7 +5460,7 @@ name|S
 parameter_list|)
 block|{
 return|return
-name|getRange
+name|getRangeRef
 argument_list|(
 name|S
 argument_list|,
@@ -5464,8 +5468,52 @@ name|HINT_RANGE_UNSIGNED
 argument_list|)
 return|;
 block|}
+comment|/// Determine the min of the unsigned range for a particular SCEV.
+name|APInt
+name|getUnsignedRangeMin
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|S
+parameter_list|)
+block|{
+return|return
+name|getRangeRef
+argument_list|(
+name|S
+argument_list|,
+name|HINT_RANGE_UNSIGNED
+argument_list|)
+operator|.
+name|getUnsignedMin
+argument_list|()
+return|;
+block|}
+comment|/// Determine the max of the unsigned range for a particular SCEV.
+name|APInt
+name|getUnsignedRangeMax
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|S
+parameter_list|)
+block|{
+return|return
+name|getRangeRef
+argument_list|(
+name|S
+argument_list|,
+name|HINT_RANGE_UNSIGNED
+argument_list|)
+operator|.
+name|getUnsignedMax
+argument_list|()
+return|;
+block|}
 comment|/// Determine the signed range for a particular SCEV.
-comment|///
+comment|/// NOTE: This returns a copy of the reference returned by getRangeRef.
 name|ConstantRange
 name|getSignedRange
 parameter_list|(
@@ -5476,12 +5524,56 @@ name|S
 parameter_list|)
 block|{
 return|return
-name|getRange
+name|getRangeRef
 argument_list|(
 name|S
 argument_list|,
 name|HINT_RANGE_SIGNED
 argument_list|)
+return|;
+block|}
+comment|/// Determine the min of the signed range for a particular SCEV.
+name|APInt
+name|getSignedRangeMin
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|S
+parameter_list|)
+block|{
+return|return
+name|getRangeRef
+argument_list|(
+name|S
+argument_list|,
+name|HINT_RANGE_SIGNED
+argument_list|)
+operator|.
+name|getSignedMin
+argument_list|()
+return|;
+block|}
+comment|/// Determine the max of the signed range for a particular SCEV.
+name|APInt
+name|getSignedRangeMax
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|S
+parameter_list|)
+block|{
+return|return
+name|getRangeRef
+argument_list|(
+name|S
+argument_list|,
+name|HINT_RANGE_SIGNED
+argument_list|)
+operator|.
+name|getSignedMax
+argument_list|()
 return|;
 block|}
 comment|/// Test if the given expression is known to be negative.

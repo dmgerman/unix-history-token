@@ -382,6 +382,12 @@ name|NoRedZone
 init|=
 name|false
 decl_stmt|;
+comment|// Do counter register promotion
+name|bool
+name|DoCounterPromotion
+init|=
+name|false
+decl_stmt|;
 comment|// Name of the profile file to use as output
 name|std
 operator|::

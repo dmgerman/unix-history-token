@@ -16,7 +16,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// \fileThis file is distributed under the University of Illinois Open Source
+comment|// This file is distributed under the University of Illinois Open Source
 end_comment
 
 begin_comment
@@ -36,11 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file contains the AArch64 definition of the DAG scheduling mutation
+comment|/// \file This file contains the AArch64 definition of the DAG scheduling
 end_comment
 
 begin_comment
-comment|// to pair instructions back to back.
+comment|/// mutation to pair instructions back to back.
 end_comment
 
 begin_comment
@@ -54,26 +54,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"AArch64InstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineScheduler.h"
 end_include
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|// AArch64MacroFusion - DAG post-processing to encourage fusion of macro ops.
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
 
 begin_decl_stmt
 name|namespace

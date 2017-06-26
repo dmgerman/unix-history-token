@@ -148,7 +148,6 @@ name|PDBSymbolExe
 operator|>
 name|getGlobalScope
 argument_list|()
-specifier|const
 name|override
 block|;
 name|std

@@ -213,19 +213,9 @@ return|return
 name|true
 return|;
 block|}
-block|;
-name|bool
-name|isMachineVerifierClean
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|false
-return|;
+block|; }
+decl_stmt|;
 block|}
-expr|}
-block|;  }
 end_decl_stmt
 
 begin_comment

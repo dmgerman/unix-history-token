@@ -1374,24 +1374,9 @@ argument_list|)
 operator|:
 name|SampleProfileReader
 argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|B
-argument_list|)
+argument|std::move(B)
 argument_list|,
-name|C
-argument_list|)
-block|,
-name|Data
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|End
-argument_list|(
-argument|nullptr
+argument|C
 argument_list|)
 block|{}
 comment|/// \brief Read and validate the file header.
@@ -1490,12 +1475,16 @@ specifier|const
 name|uint8_t
 operator|*
 name|Data
+operator|=
+name|nullptr
 block|;
 comment|/// \brief Points to the end of the buffer.
 specifier|const
 name|uint8_t
 operator|*
 name|End
+operator|=
+name|nullptr
 block|;
 comment|/// Function name table.
 name|std
@@ -1531,16 +1520,14 @@ name|readSummary
 argument_list|()
 block|; }
 decl_stmt|;
-typedef|typedef
+name|using
+name|InlineCallStack
+init|=
 name|SmallVector
 operator|<
 name|FunctionSamples
 operator|*
-operator|,
-literal|10
-operator|>
-name|InlineCallStack
-expr_stmt|;
+decl_stmt|, 10>;
 comment|// Supported histogram types in GCC.  Currently, we only need support for
 comment|// call target histograms.
 enum|enum

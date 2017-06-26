@@ -905,15 +905,6 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// LoadCombine - Combine loads into bigger loads.
-comment|//
-name|BasicBlockPass
-modifier|*
-name|createLoadCombinePass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// StraightLineStrengthReduce - This pass strength-reduces some certain
 comment|// instruction patterns in straight-line code.
 comment|//

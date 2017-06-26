@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===----------- JITSymbol.h - JIT symbol abstraction -----------*- C++ -*-===//
+comment|//===- JITSymbol.h - JIT symbol abstraction ---------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -111,20 +111,22 @@ decl_stmt|;
 block|}
 comment|// end namespace object
 comment|/// @brief Represents an address in the target process's address space.
-typedef|typedef
-name|uint64_t
+name|using
 name|JITTargetAddress
-typedef|;
+init|=
+name|uint64_t
+decl_stmt|;
 comment|/// @brief Flags for symbols in the JIT.
 name|class
 name|JITSymbolFlags
 block|{
 name|public
 label|:
-typedef|typedef
-name|uint8_t
+name|using
 name|UnderlyingType
-typedef|;
+init|=
+name|uint8_t
+decl_stmt|;
 enum|enum
 name|FlagNames
 enum|:
@@ -162,18 +164,15 @@ enum|;
 comment|/// @brief Default-construct a JITSymbolFlags instance.
 name|JITSymbolFlags
 argument_list|()
-operator|:
-name|Flags
-argument_list|(
-argument|None
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// @brief Construct a JITSymbolFlags instance from the given flags.
 name|JITSymbolFlags
 argument_list|(
 argument|FlagNames Flags
 argument_list|)
-operator|:
+block|:
 name|Flags
 argument_list|(
 argument|Flags
@@ -280,6 +279,8 @@ name|private
 label|:
 name|UnderlyingType
 name|Flags
+init|=
+name|None
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -292,14 +293,7 @@ label|:
 comment|/// @brief Create a 'null' symbol.
 name|JITEvaluatedSymbol
 argument_list|(
-name|std
-operator|::
-name|nullptr_t
-argument_list|)
-operator|:
-name|Address
-argument_list|(
-literal|0
+argument|std::nullptr_t
 argument_list|)
 block|{}
 comment|/// @brief Create a symbol for the given address and flags.
@@ -309,7 +303,7 @@ argument|JITTargetAddress Address
 argument_list|,
 argument|JITSymbolFlags Flags
 argument_list|)
-operator|:
+block|:
 name|Address
 argument_list|(
 name|Address
@@ -357,6 +351,8 @@ name|private
 label|:
 name|JITTargetAddress
 name|Address
+init|=
+literal|0
 decl_stmt|;
 name|JITSymbolFlags
 name|Flags
@@ -369,7 +365,9 @@ name|JITSymbol
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|GetAddressFtor
+init|=
 name|std
 operator|::
 name|function
@@ -377,20 +375,12 @@ operator|<
 name|JITTargetAddress
 argument_list|()
 operator|>
-name|GetAddressFtor
-expr_stmt|;
+decl_stmt|;
 comment|/// @brief Create a 'null' symbol that represents failure to find a symbol
 comment|///        definition.
 name|JITSymbol
 argument_list|(
-name|std
-operator|::
-name|nullptr_t
-argument_list|)
-operator|:
-name|CachedAddr
-argument_list|(
-literal|0
+argument|std::nullptr_t
 argument_list|)
 block|{}
 comment|/// @brief Create a symbol for a definition with a known address.
@@ -400,7 +390,7 @@ argument|JITTargetAddress Addr
 argument_list|,
 argument|JITSymbolFlags Flags
 argument_list|)
-operator|:
+block|:
 name|CachedAddr
 argument_list|(
 name|Addr
@@ -454,11 +444,6 @@ name|move
 argument_list|(
 name|GetAddress
 argument_list|)
-argument_list|)
-operator|,
-name|CachedAddr
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|Flags
@@ -527,6 +512,8 @@ name|GetAddress
 decl_stmt|;
 name|JITTargetAddress
 name|CachedAddr
+init|=
+literal|0
 decl_stmt|;
 name|JITSymbolFlags
 name|Flags

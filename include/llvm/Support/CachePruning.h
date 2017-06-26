@@ -137,11 +137,19 @@ comment|/// The maximum size for the cache directory, in terms of percentage of 
 comment|/// available space on the the disk. Set to 100 to indicate no limit, 50 to
 comment|/// indicate that the cache size will not be left over half the available disk
 comment|/// space. A value over 100 will be reduced to 100. A value of 0 disables the
-comment|/// size-based pruning.
+comment|/// percentage size-based pruning.
 name|unsigned
-name|PercentageOfAvailableSpace
+name|MaxSizePercentageOfAvailableSpace
 init|=
 literal|75
+decl_stmt|;
+comment|/// The maximum size for the cache directory in bytes. A value over the amount
+comment|/// of available space on the disk will be reduced to the amount of available
+comment|/// space. A value of 0 disables the absolute size-based pruning.
+name|uint64_t
+name|MaxSizeBytes
+init|=
+literal|0
 decl_stmt|;
 block|}
 struct|;

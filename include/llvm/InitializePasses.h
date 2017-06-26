@@ -1113,13 +1113,6 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
-name|initializeLoadCombinePass
-parameter_list|(
-name|PassRegistry
-modifier|&
-parameter_list|)
-function_decl|;
-name|void
 name|initializeLoadStoreVectorizerPass
 parameter_list|(
 name|PassRegistry

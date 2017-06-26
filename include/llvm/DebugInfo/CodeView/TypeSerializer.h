@@ -389,6 +389,11 @@ operator|&
 name|Record
 argument_list|)
 block|;
+name|using
+name|TypeVisitorCallbacks
+operator|::
+name|visitTypeBegin
+block|;
 name|Error
 name|visitTypeBegin
 argument_list|(
