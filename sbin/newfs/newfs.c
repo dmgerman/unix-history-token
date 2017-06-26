@@ -791,6 +791,13 @@ operator|++
 name|i
 index|]
 argument_list|)
+operator|||
+name|volumelabel
+index|[
+name|i
+index|]
+operator|==
+literal|'_'
 condition|)
 empty_stmt|;
 if|if
