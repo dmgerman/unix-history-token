@@ -235,6 +235,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|nfsd_enable_uidtostring
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|NFSNAMEIDMUTEX
 expr_stmt|;
@@ -13846,6 +13854,9 @@ condition|(
 name|nfsrv_dnsnamelen
 operator|>
 literal|0
+operator|&&
+operator|!
+name|nfsd_enable_uidtostring
 condition|)
 block|{
 comment|/* 		 * Always map nfsrv_defaultuid to "nobody". 		 */
@@ -14360,6 +14371,9 @@ condition|(
 name|nfsrv_dnsnamelen
 operator|>
 literal|0
+operator|&&
+operator|!
+name|nfsd_enable_uidtostring
 condition|)
 block|{
 name|hp
@@ -15077,6 +15091,9 @@ condition|(
 name|nfsrv_dnsnamelen
 operator|>
 literal|0
+operator|&&
+operator|!
+name|nfsd_enable_uidtostring
 condition|)
 block|{
 comment|/* 		 * Always map nfsrv_defaultgid to "nogroup". 		 */
