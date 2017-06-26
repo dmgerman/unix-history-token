@@ -101,11 +101,19 @@ begin_comment
 comment|/*  * Being a newer port, 32-bit FreeBSD/MIPS uses 64-bit time_t.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__mips__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
