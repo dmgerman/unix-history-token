@@ -2655,6 +2655,9 @@ decl_stmt|;
 name|uint64_t
 name|pkts_droped_unknown
 decl_stmt|;
+name|uint64_t
+name|pkts_cnt_oversized
+decl_stmt|;
 block|}
 name|__packed
 name|q80_rcv_stats_t
