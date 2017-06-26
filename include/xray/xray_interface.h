@@ -159,6 +159,7 @@ parameter_list|(
 name|void
 function_decl|(
 modifier|*
+name|entry
 function_decl|)
 parameter_list|(
 name|int32_t

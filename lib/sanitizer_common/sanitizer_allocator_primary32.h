@@ -108,7 +108,11 @@ comment|// Region:
 end_comment
 
 begin_comment
-comment|//   a result of a single call to MmapAlignedOrDie(kRegionSize, kRegionSize).
+comment|//   a result of a single call to MmapAlignedOrDieOnFatalError(kRegionSize,
+end_comment
+
+begin_comment
+comment|//                                                             kRegionSize).
 end_comment
 
 begin_comment
@@ -884,7 +888,10 @@ name|free_list
 operator|.
 name|empty
 argument_list|()
-condition|)
+operator|&&
+name|UNLIKELY
+argument_list|(
+operator|!
 name|PopulateFreeList
 argument_list|(
 name|stat
@@ -895,7 +902,11 @@ name|sci
 argument_list|,
 name|class_id
 argument_list|)
-expr_stmt|;
+argument_list|)
+condition|)
+return|return
+name|nullptr
+return|;
 name|CHECK
 argument_list|(
 operator|!
@@ -1682,7 +1693,7 @@ operator|<
 name|uptr
 operator|>
 operator|(
-name|MmapAlignedOrDie
+name|MmapAlignedOrDieOnFatalError
 argument_list|(
 name|kRegionSize
 argument_list|,
@@ -1692,6 +1703,17 @@ literal|"SizeClassAllocator32"
 argument_list|)
 operator|)
 decl_stmt|;
+if|if
+condition|(
+name|UNLIKELY
+argument_list|(
+operator|!
+name|res
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 name|MapUnmapCallback
 argument_list|()
 operator|.
@@ -1777,7 +1799,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|bool
 name|PopulateFreeList
 parameter_list|(
 name|AllocatorStats
@@ -1814,6 +1836,17 @@ argument_list|,
 name|class_id
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|UNLIKELY
+argument_list|(
+operator|!
+name|reg
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
 name|uptr
 name|n_chunks
 init|=
@@ -1884,6 +1917,14 @@ operator|)
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|b
+condition|)
+return|return
+name|false
+return|;
 name|b
 operator|->
 name|Clear
@@ -1961,6 +2002,9 @@ name|b
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|true
+return|;
 block|}
 end_function
 

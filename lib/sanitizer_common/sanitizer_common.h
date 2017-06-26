@@ -500,9 +500,10 @@ name|size
 parameter_list|)
 function_decl|;
 comment|// Map aligned chunk of address space; size and alignment are powers of two.
+comment|// Dies on all but out of memory errors, in the latter case returns nullptr.
 name|void
 modifier|*
-name|MmapAlignedOrDie
+name|MmapAlignedOrDieOnFatalError
 parameter_list|(
 name|uptr
 name|size
@@ -4268,6 +4269,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|SetAbortMessage
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -4278,6 +4290,22 @@ name|INLINE
 name|void
 name|AndroidLogInit
 parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// FIXME: MacOS implementation could use CRSetCrashLogMessage.
+end_comment
+
+begin_function
+name|INLINE
+name|void
+name|SetAbortMessage
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
 block|{}
 end_function
 
@@ -4796,6 +4824,28 @@ name|filename
 parameter_list|,
 name|int
 name|flag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// Returns the requested amount of random data (up to 256 bytes) that can then
+end_comment
+
+begin_comment
+comment|// be used to seed a PRNG.
+end_comment
+
+begin_function_decl
+name|bool
+name|GetRandom
+parameter_list|(
+name|void
+modifier|*
+name|buffer
+parameter_list|,
+name|uptr
+name|length
 parameter_list|)
 function_decl|;
 end_function_decl

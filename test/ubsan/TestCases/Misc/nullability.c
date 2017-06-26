@@ -12,7 +12,7 @@ comment|// RUN: %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: nullability.c:[[@LINE+2]]:51: runtime error: null pointer returned from function declared to never return null
+comment|// CHECK: nullability.c:[[@LINE+2]]:41: runtime error: null pointer returned from function declared to never return null
 end_comment
 
 begin_comment
