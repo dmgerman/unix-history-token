@@ -11070,6 +11070,12 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|sbuf_delete
+argument_list|(
+operator|&
+name|sb
+argument_list|)
+expr_stmt|;
 name|cam_periph_lock
 argument_list|(
 name|enc
