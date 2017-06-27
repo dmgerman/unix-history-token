@@ -98,26 +98,18 @@ value|do { (dst).fld = PTROUT((src).fld); } while (0)
 end_define
 
 begin_comment
-comment|/*  * Being a newer port, 32-bit FreeBSD/MIPS uses 64-bit time_t.  */
+comment|/*  * i386 is the only arch with a 32-bit time_t  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
 
 begin_typedef
 typedef|typedef
-name|int64_t
+name|int32_t
 name|time32_t
 typedef|;
 end_typedef
@@ -129,7 +121,7 @@ end_else
 
 begin_typedef
 typedef|typedef
-name|int32_t
+name|int64_t
 name|time32_t
 typedef|;
 end_typedef
