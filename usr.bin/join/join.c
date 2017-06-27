@@ -2521,6 +2521,19 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+comment|/* 		 * Output the join field, then the remaining fields. 		 */
+name|outfield
+argument_list|(
+name|lp
+argument_list|,
+name|F
+operator|->
+name|joinf
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|cnt
@@ -2536,6 +2549,14 @@ condition|;
 operator|++
 name|cnt
 control|)
+if|if
+condition|(
+name|F
+operator|->
+name|joinf
+operator|!=
+name|cnt
+condition|)
 name|outfield
 argument_list|(
 name|lp
@@ -2545,6 +2566,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)

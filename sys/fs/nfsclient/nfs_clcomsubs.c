@@ -684,6 +684,26 @@ literal|"CommitDS"
 block|,
 literal|8
 block|, }
+block|,
+block|{
+name|NFSV4OP_OPEN
+block|,
+literal|3
+block|,
+literal|"OpenLayoutGet"
+block|,
+literal|13
+block|, }
+block|,
+block|{
+name|NFSV4OP_OPEN
+block|,
+literal|8
+block|,
+literal|"CreateLayGet"
+block|,
+literal|12
+block|, }
 block|, }
 struct|;
 end_struct
@@ -804,6 +824,10 @@ block|,
 literal|0
 block|,
 literal|1
+block|,
+literal|0
+block|,
+literal|0
 block|,
 literal|0
 block|,

@@ -295,6 +295,18 @@ end_endif
 
 begin_function_decl
 specifier|static
+name|phandle_t
+name|mv_twsi_get_node
+parameter_list|(
+name|device_t
+parameter_list|,
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|mv_twsi_probe
 parameter_list|(
@@ -364,11 +376,15 @@ argument_list|,
 name|mv_twsi_attach
 argument_list|)
 block|,
-block|{
-literal|0
+comment|/* ofw_bus interface */
+name|DEVMETHOD
+argument_list|(
+name|ofw_bus_get_node
+argument_list|,
+name|mv_twsi_get_node
+argument_list|)
 block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -451,6 +467,30 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+specifier|static
+name|phandle_t
+name|mv_twsi_get_node
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+block|{
+comment|/* Used by ofw_iicbus. */
+return|return
+operator|(
+name|ofw_bus_get_node
+argument_list|(
+name|bus
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static

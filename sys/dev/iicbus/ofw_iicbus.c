@@ -321,6 +321,26 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|EARLY_DRIVER_MODULE
+argument_list|(
+name|ofw_iicbus
+argument_list|,
+name|twsi
+argument_list|,
+name|ofw_iicbus_driver
+argument_list|,
+name|ofwiicbus_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|BUS_PASS_BUS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|ofw_iicbus

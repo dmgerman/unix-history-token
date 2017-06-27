@@ -1396,11 +1396,6 @@ comment|/* Logical ID */
 name|uint16_t
 name|phys_id
 decl_stmt|;
-name|struct
-name|bnxt_full_tpa_start
-modifier|*
-name|tpa_start
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1832,6 +1827,11 @@ name|struct
 name|sysctl_oid
 modifier|*
 name|hw_stats_oid
+decl_stmt|;
+name|struct
+name|bnxt_full_tpa_start
+modifier|*
+name|tpa_start
 decl_stmt|;
 name|struct
 name|bnxt_ver_info

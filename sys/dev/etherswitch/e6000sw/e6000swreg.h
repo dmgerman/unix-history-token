@@ -40,6 +40,57 @@ comment|/*  * Definitions for the Marvell 88E6000 series Ethernet Switch.  */
 end_comment
 
 begin_comment
+comment|/* Switch IDs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MV88E6141
+value|0x3400
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV88E6341
+value|0x3410
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV88E6352
+value|0x3520
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV88E6172
+value|0x1720
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV88E6176
+value|0x1760
+end_define
+
+begin_define
+define|#
+directive|define
+name|MVSWITCH
+parameter_list|(
+name|_sc
+parameter_list|,
+name|id
+parameter_list|)
+value|((_sc)->swid == (id))
+end_define
+
+begin_comment
 comment|/*  * Switch Registers  */
 end_comment
 
@@ -139,6 +190,83 @@ define|#
 directive|define
 name|PSC_CONTROL
 value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSC_CONTROL_FORCED_SPD
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSC_CONTROL_EEE_ON
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSC_CONTROL_FORCED_EEE
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSC_CONTROL_FC_ON
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSC_CONTROL_FORCED_FC
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSC_CONTROL_LINK_UP
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSC_CONTROL_FORCED_LINK
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSC_CONTROL_FULLDPX
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSC_CONTROL_FORCED_DPX
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSC_CONTROL_SPD2500
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSC_CONTROL_SPD1000
+value|0x2
 end_define
 
 begin_define

@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/log2.h>
 end_include
 
@@ -1026,6 +1020,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(sizeof(x) / sizeof((x)[0]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|u64_to_user_ptr
+parameter_list|(
+name|val
+parameter_list|)
+value|((void *)(uintptr_t)(val))
 end_define
 
 begin_function

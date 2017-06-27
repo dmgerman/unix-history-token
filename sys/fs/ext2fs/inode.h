@@ -171,7 +171,7 @@ name|uint16_t
 name|i_mode
 decl_stmt|;
 comment|/* IFMT, permissions; see below. */
-name|int16_t
+name|int32_t
 name|i_nlink
 decl_stmt|;
 comment|/* File link count. */

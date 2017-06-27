@@ -62,9 +62,10 @@ name|size_t
 name|nbytes
 parameter_list|)
 block|{
+comment|/* 	 * _getdirentries knows how to call the right thing and 	 * return it in the new format. It assumes that the entire 	 * libc expecting the new format. 	 */
 return|return
 operator|(
-name|__sys_getdirentries
+name|_getdirentries
 argument_list|(
 name|fd
 argument_list|,

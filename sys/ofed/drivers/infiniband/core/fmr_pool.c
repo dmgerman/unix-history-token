@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rdma/ib_fmr_pool.h>
 end_include
 

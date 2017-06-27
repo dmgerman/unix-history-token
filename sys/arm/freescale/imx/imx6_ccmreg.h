@@ -368,8 +368,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCGR1_EPIT1
+value|(0x3<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR1_EPIT2
+value|(0x3<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCGR1_GPT
 value|(0x3<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR1_GPT_SERIAL
+value|(0x3<< 22)
 end_define
 
 begin_define

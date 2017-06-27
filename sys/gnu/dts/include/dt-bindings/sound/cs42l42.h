@@ -34,7 +34,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* HPOUT Clamp to GND Overide */
+comment|/* HPOUT Clamp to GND Override */
 end_comment
 
 begin_define

@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -219,6 +225,23 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * Prematurely fetch CPU quirks. Standard fetch for tunable 	 * sysctls is handled using SYSINIT, thus too late for boot CPU. 	 * Keep names in sync with sysctls. 	 */
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.cpu.quirks.actlr_mask"
+argument_list|,
+operator|&
+name|cpu_quirks_actlr_mask
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.cpu.quirks.actlr_set"
+argument_list|,
+operator|&
+name|cpu_quirks_actlr_set
+argument_list|)
+expr_stmt|;
 name|cpuinfo
 operator|.
 name|midr

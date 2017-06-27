@@ -1902,7 +1902,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_kevent
+name|SYS_freebsd11_kevent
 value|363
 end_define
 
@@ -3103,8 +3103,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_MAXSYSCALL
+name|SYS_kevent
 value|560
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_MAXSYSCALL
+value|561
 end_define
 
 end_unit

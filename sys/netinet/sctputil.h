@@ -1846,20 +1846,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-end_if
-
 begin_function_decl
 name|uint32_t
 name|sctp_min_mtu
@@ -1900,11 +1886,6 @@ name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

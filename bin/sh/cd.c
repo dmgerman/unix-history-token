@@ -818,6 +818,7 @@ name|iflag
 operator|&&
 name|curdir
 condition|)
+block|{
 name|out1fmt
 argument_list|(
 literal|"%s\n"
@@ -825,6 +826,18 @@ argument_list|,
 name|curdir
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Ignore write errors to preserve the invariant that the 		 * current directory is changed iff the exit status is 0 		 * (or 1 if -e was given and the full pathname could not be 		 * determined). 		 */
+name|flushout
+argument_list|(
+name|out1
+argument_list|)
+expr_stmt|;
+name|outclearerror
+argument_list|(
+name|out1
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|rc

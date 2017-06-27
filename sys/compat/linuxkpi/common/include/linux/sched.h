@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/list.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/compat.h>
 end_include
 
@@ -139,6 +133,13 @@ define|#
 directive|define
 name|TASK_WAKING
 value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|TASK_PARKED
+value|0x0200
 end_define
 
 begin_struct

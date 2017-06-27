@@ -378,7 +378,7 @@ name|ts_readw_be
 argument_list|(
 name|dev
 argument_list|,
-literal|6
+literal|7
 argument_list|,
 operator|&
 name|devid
@@ -426,6 +426,24 @@ literal|0x104a
 condition|)
 block|{
 comment|/* 		 * STMicroelectronics datasheets say that 		 * device ID and revision can vary. 		 * E.g. STT424E02, Doc ID 13448 Rev 8, 		 * section 4.6, page 26. 		 */
+block|}
+elseif|else
+if|if
+condition|(
+name|vendorid
+operator|==
+literal|0xb3
+operator|&&
+operator|(
+name|devid
+operator|&
+literal|0xff00
+operator|)
+operator|==
+literal|0x2900
+condition|)
+block|{
+comment|/* 		 * IDT TS3000B3A and TSE2002B3C chips and their variants. 		 * Revision IDs (the lower byte) can vary. 		 * http://www.idt.com/sites/default/files/documents/IDT_TSE2002B3C_DST_20100512_120303152056.pdf 		 * http://www.idt.com/sites/default/files/documents/IDT_TS3000B3A_DST_20101129_120303152013.pdf 		 */
 block|}
 else|else
 block|{

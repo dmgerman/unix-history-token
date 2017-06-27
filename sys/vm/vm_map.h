@@ -120,10 +120,6 @@ name|end
 decl_stmt|;
 comment|/* end address */
 name|vm_offset_t
-name|avail_ssize
-decl_stmt|;
-comment|/* amt can grow if this is a stack */
-name|vm_offset_t
 name|next_read
 decl_stmt|;
 comment|/* vaddr of the next sequential read */
@@ -348,6 +344,27 @@ end_define
 begin_comment
 comment|/* writeable vnode mapping */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_GUARD
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_STACK_GAP_DN
+value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_STACK_GAP_UP
+value|0x40000
+end_define
 
 begin_ifdef
 ifdef|#
@@ -1156,6 +1173,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAP_CREATE_GUARD
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAP_DISABLE_COREDUMP
 value|0x0100
 end_define
@@ -1204,6 +1228,20 @@ define|#
 directive|define
 name|MAP_ACC_NO_CHARGE
 value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_CREATE_STACK_GAP_UP
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_CREATE_STACK_GAP_DN
+value|0x20000
 end_define
 
 begin_comment
@@ -1753,21 +1791,6 @@ parameter_list|,
 name|vm_prot_t
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vm_map_growstack
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|vm_offset_t
-name|addr
 parameter_list|)
 function_decl|;
 end_function_decl

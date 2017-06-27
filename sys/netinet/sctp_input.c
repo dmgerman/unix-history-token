@@ -12348,6 +12348,38 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cookie_len
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_cookie_echo_chunk
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_init_chunk
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_init_ack_chunk
+argument_list|)
+operator|+
+name|SCTP_SIGNATURE_SIZE
+condition|)
+block|{
+comment|/* cookie too small */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|cookie
 operator|->
@@ -12380,38 +12412,6 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * invalid ports or bad tag.  Note that we always leave the 		 * v_tag in the header in network order and when we stored 		 * it in the my_vtag slot we also left it in network order. 		 * This maintains the match even though it may be in the 		 * opposite byte order of the machine :-> 		 */
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|cookie_len
-operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sctp_cookie_echo_chunk
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sctp_init_chunk
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sctp_init_ack_chunk
-argument_list|)
-operator|+
-name|SCTP_SIGNATURE_SIZE
-condition|)
-block|{
-comment|/* cookie too small */
 return|return
 operator|(
 name|NULL
@@ -18018,7 +18018,7 @@ name|uint16_t
 name|type
 decl_stmt|;
 name|int
-name|lparm_len
+name|lparam_len
 decl_stmt|;
 name|struct
 name|sctp_association
@@ -18117,7 +18117,7 @@ operator|.
 name|param_type
 argument_list|)
 expr_stmt|;
-name|lparm_len
+name|lparam_len
 operator|=
 name|ntohs
 argument_list|(
@@ -18152,7 +18152,7 @@ expr_stmt|;
 name|number_entries
 operator|=
 operator|(
-name|lparm_len
+name|lparam_len
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -18317,7 +18317,7 @@ expr_stmt|;
 name|number_entries
 operator|=
 operator|(
-name|lparm_len
+name|lparam_len
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -26778,7 +26778,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 			 * First are we accepting? We do this again here 			 * since it is possible that a previous endpoint WAS 			 * listening responded to a INIT-ACK and then 			 * closed. We opened and bound.. and are now no 			 * longer listening. 			 * 			 * XXXGL: notes on checking listen queue length. 			 * 1) SCTP_IS_LISTENING() doesn't necessarily mean 			 *    SOLISTENING(), because a listening "UDP type" 			 *    socket isn't listening in terms of the socket 			 *    layer.  It is a normal data flow socket, that 			 *    can fork off new connections.  Thus, we should 			 *    look into sol_qlen only in case we are !UDP. 			 * 2) Checking sol_qlen in general requires locking 			 *    the socket, and this code lacks that. 			 */
+comment|/*- 			 * First are we accepting? We do this again here 			 * since it is possible that a previous endpoint WAS 			 * listening responded to a INIT-ACK and then 			 * closed. We opened and bound.. and are now no 			 * longer listening. 			 * 			 * XXXGL: notes on checking listen queue length. 			 * 1) SCTP_IS_LISTENING() doesn't necessarily mean 			 *    SOLISTENING(), because a listening "UDP type" 			 *    socket isn't listening in terms of the socket 			 *    layer.  It is a normal data flow socket, that 			 *    can fork off new connections.  Thus, we should 			 *    look into sol_qlen only in case we are !UDP. 			 * 2) Checking sol_qlen in general requires locking 			 *    the socket, and this code lacks that. 			 */
 if|if
 condition|(
 operator|(

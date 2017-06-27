@@ -619,6 +619,20 @@ name|PCLK_PERI
 value|351
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCLK_DDRUPCTL
+value|352
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCLK_PUBL
+value|353
+end_define
+
 begin_comment
 comment|/* hclk gates */
 end_comment

@@ -889,7 +889,7 @@ begin_define
 define|#
 directive|define
 name|EXT2F_ROCOMPAT_SUPP
-value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT2F_ROCOMPAT_EXTRA_ISIZE)
+value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT2F_ROCOMPAT_GDT_CSUM | \ 					 EXT2F_ROCOMPAT_DIR_NLINK | \ 					 EXT2F_ROCOMPAT_HUGE_FILE | \ 					 EXT2F_ROCOMPAT_EXTRA_ISIZE)
 end_define
 
 begin_define
@@ -1007,6 +1007,39 @@ name|E2FS_UNSIGNED_HASH
 value|0x0002
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXT2_BG_INODE_UNINIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Inode table/bitmap not in use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_BG_BLOCK_UNINIT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Block bitmap not in use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_BG_INODE_ZEROED
+value|0x0004
+end_define
+
+begin_comment
+comment|/* On-disk itable initialized to zero */
+end_comment
+
 begin_comment
 comment|/* ext2 file system block group descriptor */
 end_comment
@@ -1068,7 +1101,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* EXT2FS metadatas are stored in little-endian byte order. These macros  * helps reading these metadatas  */
+comment|/* EXT2FS metadata is stored in little-endian byte order. These macros  * help reading it.  */
 end_comment
 
 begin_define

@@ -35,6 +35,14 @@ name|int
 name|blksz
 decl_stmt|;
 specifier|const
+name|char
+modifier|*
+name|iname
+decl_stmt|;
+name|off_t
+name|isize
+decl_stmt|;
+specifier|const
 name|struct
 name|mkuz_format
 modifier|*

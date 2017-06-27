@@ -371,6 +371,13 @@ name|nfsd_enable_stringtouid
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nfsd_enable_uidtostring
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -532,6 +539,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable nfsd to accept numeric owner_names"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfsd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_uidtostring
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfsd_enable_uidtostring
+argument_list|,
+literal|0
+argument_list|,
+literal|"Make nfsd always send numeric owner_names"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

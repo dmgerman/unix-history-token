@@ -509,6 +509,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCLK_VIP_OUT
+value|127
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCLK_MAC
 value|151
 end_define
@@ -1030,6 +1037,13 @@ define|#
 directive|define
 name|PCLK_EFUSE1024
 value|370
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCLK_ISP_IN
+value|371
 end_define
 
 begin_comment

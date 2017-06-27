@@ -1830,7 +1830,7 @@ name|free
 argument_list|(
 name|lbuf
 argument_list|,
-name|M_LINUX
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 name|out1
@@ -1839,7 +1839,7 @@ name|free
 argument_list|(
 name|buf
 argument_list|,
-name|M_LINUX
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
@@ -2533,7 +2533,7 @@ name|free
 argument_list|(
 name|lbuf
 argument_list|,
-name|M_LINUX
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 name|out
@@ -2542,7 +2542,7 @@ name|free
 argument_list|(
 name|buf
 argument_list|,
-name|M_LINUX
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return

@@ -1808,6 +1808,12 @@ name|atomic_subtract_acq_ptr
 value|atomic_subtract_acq_64
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|ATOMIC_ACQ_REL
+end_undef
+
 begin_function
 specifier|static
 name|__inline

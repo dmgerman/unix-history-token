@@ -853,6 +853,14 @@ operator|->
 name|sc_enabled
 condition|)
 return|return;
+comment|/* Do not sync outer cache on IO coherent platform */
+if|if
+condition|(
+name|pl310_softc
+operator|->
+name|sc_io_coherent
+condition|)
+return|return;
 ifdef|#
 directive|ifdef
 name|PL310_ERRATA_753970
@@ -1784,6 +1792,9 @@ name|cache_id
 decl_stmt|,
 name|debug_ctrl
 decl_stmt|;
+name|phandle_t
+name|node
+decl_stmt|;
 name|sc
 operator|->
 name|sc_dev
@@ -1929,6 +1940,29 @@ operator|)
 operator|&
 name|CACHE_ID_RELEASE_MASK
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Test for "arm,io-coherent" property and disable sync operation if 	 * platform is I/O coherent. Outer sync operations are not needed 	 * on coherent platform and may be harmful in certain situations. 	 */
+name|node
+operator|=
+name|ofw_bus_get_node
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OF_hasprop
+argument_list|(
+name|node
+argument_list|,
+literal|"arm,io-coherent"
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|sc_io_coherent
+operator|=
+name|true
 expr_stmt|;
 comment|/* 	 * If L2 cache is already enabled then something has violated the rules, 	 * because caches are supposed to be off at kernel entry.  The cache 	 * must be disabled to write the configuration registers without 	 * triggering an access error (SLVERR), but there's no documented safe 	 * procedure for disabling the L2 cache in the manual.  So we'll try to 	 * invent one: 	 *  - Use the debug register to force write-through mode and prevent 	 *    linefills (allocation of new lines on read); now anything we do 	 *    will not cause new data to come into the L2 cache. 	 *  - Writeback and invalidate the current contents. 	 *  - Disable the controller. 	 *  - Restore the original debug settings. 	 */
 if|if

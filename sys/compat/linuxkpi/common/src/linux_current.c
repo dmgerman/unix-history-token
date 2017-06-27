@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/completion.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/mm.h>
 end_include
 
@@ -238,6 +244,22 @@ operator|->
 name|state
 operator|=
 name|TASK_RUNNING
+expr_stmt|;
+name|init_completion
+argument_list|(
+operator|&
+name|ts
+operator|->
+name|parked
+argument_list|)
+expr_stmt|;
+name|init_completion
+argument_list|(
+operator|&
+name|ts
+operator|->
+name|exited
+argument_list|)
 expr_stmt|;
 name|proc
 operator|=

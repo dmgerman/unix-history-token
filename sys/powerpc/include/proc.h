@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_PROC32_SIZE
-value|768
+value|816
 end_define
 
 begin_else
@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|768
+value|816
 end_define
 
 begin_endif

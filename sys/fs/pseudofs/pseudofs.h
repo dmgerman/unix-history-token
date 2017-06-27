@@ -111,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|PFS_DELEN
-value|(8 + PFS_NAMELEN)
+value|(offsetof(struct dirent, d_name) + PFS_NAMELEN)
 end_define
 
 begin_typedef

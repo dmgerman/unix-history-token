@@ -1124,9 +1124,9 @@ comment|/* 361 = getresgid */
 literal|"kqueue"
 block|,
 comment|/* 362 = kqueue */
-literal|"freebsd32_kevent"
+literal|"compat11.freebsd32_kevent"
 block|,
-comment|/* 363 = freebsd32_kevent */
+comment|/* 363 = freebsd11 freebsd32_kevent */
 literal|"#364"
 block|,
 comment|/* 364 = __cap_get_proc */
@@ -1776,6 +1776,9 @@ comment|/* 558 = fhstatfs */
 literal|"mknodat"
 block|,
 comment|/* 559 = mknodat */
+literal|"freebsd32_kevent"
+block|,
+comment|/* 560 = freebsd32_kevent */
 block|}
 decl_stmt|;
 end_decl_stmt

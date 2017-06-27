@@ -277,7 +277,7 @@ begin_define
 define|#
 directive|define
 name|MAX_PAGEOUT_CLUSTER
-value|16
+value|32
 end_define
 
 begin_endif
@@ -314,18 +314,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SWCORRECT
-parameter_list|(
-name|n
-parameter_list|)
-value|(sizeof(void *) * (n) / sizeof(daddr_t))
-end_define
-
-begin_define
-define|#
-directive|define
 name|SWAP_META_PAGES
-value|(SWB_NPAGES * 2)
+value|32
 end_define
 
 begin_define
@@ -5164,9 +5154,13 @@ operator|+
 name|j
 argument_list|)
 expr_stmt|;
-name|vm_page_dirty
+name|MPASS
 argument_list|(
 name|mreq
+operator|->
+name|dirty
+operator|==
+name|VM_PAGE_BITS_ALL
 argument_list|)
 expr_stmt|;
 name|mreq
