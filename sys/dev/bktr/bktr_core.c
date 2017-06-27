@@ -6862,6 +6862,8 @@ name|bktr
 argument_list|,
 name|BKTR_BRIGHT
 argument_list|)
+operator|+
+literal|128
 expr_stmt|;
 break|break;
 case|case
