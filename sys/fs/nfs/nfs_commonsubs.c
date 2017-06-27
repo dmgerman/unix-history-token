@@ -14371,9 +14371,6 @@ condition|(
 name|nfsrv_dnsnamelen
 operator|>
 literal|0
-operator|&&
-operator|!
-name|nfsd_enable_uidtostring
 condition|)
 block|{
 name|hp
