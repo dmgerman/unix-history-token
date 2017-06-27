@@ -1994,6 +1994,14 @@ expr|struct
 name|tcphdr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|V_tcp_do_rfc1323
+condition|)
+name|n
+operator|+=
+name|TCPOLEN_TSTAMP_APPA
+expr_stmt|;
 name|tp
 operator|->
 name|t_maxseg
