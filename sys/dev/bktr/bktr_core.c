@@ -4115,7 +4115,7 @@ directive|ifdef
 name|BT848_DUMP
 name|dump_bt848
 argument_list|(
-name|bt848
+name|bktr
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7636,7 +7636,7 @@ directive|ifdef
 name|BT848_DUMP
 name|dump_bt848
 argument_list|(
-name|bt848
+name|bktr
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11703,9 +11703,17 @@ return|;
 block|}
 comment|/******************************************************************************  * bt848 RISC programming routines:  */
 comment|/*  *   */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|BT848_DEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BT848_DUMP
+argument_list|)
 specifier|static
 name|int
 name|dump_bt848
@@ -11907,7 +11915,6 @@ name|i
 operator|+
 literal|3
 index|]
-expr|]
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -19005,7 +19012,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *   */
+comment|/*  * Set the temporal decimation register to get the desired frame rate.  * We use the 'skip frame' modus always and always start dropping on an  * odd field.  */
 specifier|static
 name|void
 name|set_fps
@@ -19021,9 +19028,6 @@ name|struct
 name|format_params
 modifier|*
 name|fp
-decl_stmt|;
-name|int
-name|i_flag
 decl_stmt|;
 name|fp
 operator|=
@@ -19053,10 +19057,6 @@ name|flags
 operator||=
 name|METEOR_WANT_EVEN
 expr_stmt|;
-name|i_flag
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|METEOR_ONLY_ODD_FIELDS
@@ -19067,10 +19067,6 @@ name|flags
 operator||=
 name|METEOR_WANT_ODD
 expr_stmt|;
-name|i_flag
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 default|default:
 name|bktr
@@ -19078,10 +19074,6 @@ operator|->
 name|flags
 operator||=
 name|METEOR_WANT_MASK
-expr_stmt|;
-name|i_flag
-operator|=
-literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -19132,8 +19124,6 @@ name|bktr
 argument_list|,
 name|BKTR_TDEC
 argument_list|,
-name|i_flag
-operator|*
 operator|(
 name|fp
 operator|->
