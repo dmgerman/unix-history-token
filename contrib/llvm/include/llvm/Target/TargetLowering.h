@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Target/TargetLowering.h - Target Lowering Info -----*- C++ -*-===//
+comment|//===- llvm/Target/TargetLowering.h - Target Lowering Info ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -94,6 +94,12 @@ define|#
 directive|define
 name|LLVM_TARGET_TARGETLOWERING_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/APInt.h"
+end_include
 
 begin_include
 include|#
@@ -195,6 +201,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/DerivedTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
@@ -331,10 +343,16 @@ name|class
 name|CCValAssign
 decl_stmt|;
 name|class
+name|Constant
+decl_stmt|;
+name|class
 name|FastISel
 decl_stmt|;
 name|class
 name|FunctionLoweringInfo
+decl_stmt|;
+name|class
+name|GlobalValue
 decl_stmt|;
 name|class
 name|IntrinsicInst
@@ -342,6 +360,9 @@ decl_stmt|;
 struct_decl|struct
 name|KnownBits
 struct_decl|;
+name|class
+name|LLVMContext
+decl_stmt|;
 name|class
 name|MachineBasicBlock
 decl_stmt|;
@@ -365,6 +386,9 @@ name|MCContext
 decl_stmt|;
 name|class
 name|MCExpr
+decl_stmt|;
+name|class
+name|Module
 decl_stmt|;
 name|class
 name|TargetRegisterClass
@@ -473,17 +497,18 @@ block|}
 enum|;
 comment|/// LegalizeKind holds the legalization kind that needs to happen to EVT
 comment|/// in order to type-legalize it.
-typedef|typedef
+name|using
+name|LegalizeKind
+init|=
 name|std
 operator|::
 name|pair
 operator|<
 name|LegalizeTypeAction
-operator|,
+decl_stmt|,
 name|EVT
-operator|>
-name|LegalizeKind
-expr_stmt|;
+decl|>
+decl_stmt|;
 comment|/// Enum that describes how the target represents true/false values.
 enum|enum
 name|BooleanContent
@@ -693,15 +718,16 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
+name|using
+name|ArgListTy
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|ArgListEntry
 operator|>
-name|ArgListTy
-expr_stmt|;
+decl_stmt|;
 name|virtual
 name|void
 name|markLibCallAttributes
@@ -787,7 +813,8 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-name|void
+name|TargetLoweringBase
+modifier|&
 name|operator
 init|=
 operator|(
@@ -1371,6 +1398,18 @@ name|unsigned
 name|AddrSpace
 argument_list|)
 decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Should we merge stores after Legalization (generally
+comment|/// better quality) or before (simpler)
+name|virtual
+name|bool
+name|mergeStoresAfterLegalization
+argument_list|()
+specifier|const
 block|{
 return|return
 name|false
@@ -5075,6 +5114,22 @@ name|IRB
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Returns the name of the symbol used to emit stack probes or the empty
+comment|/// string if not applicable.
+name|virtual
+name|StringRef
+name|getStackProbeSymbolName
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+literal|""
+return|;
+block|}
 comment|/// Returns true if a cast between SrcAS and DestAS is a noop.
 name|virtual
 name|bool
@@ -8208,7 +8263,8 @@ argument_list|)
 operator|=
 name|delete
 block|;
-name|void
+name|TargetLowering
+operator|&
 name|operator
 operator|=
 operator|(
@@ -9081,7 +9137,6 @@ comment|/// This hook must be implemented to lower the incoming (formal) argumen
 comment|/// described by the Ins array, into the specified DAG. The implementation
 comment|/// should fill in the InVals array with legal-type argument values, and
 comment|/// return the resulting token chain value.
-comment|///
 name|virtual
 name|SDValue
 name|LowerFormalArguments
@@ -9127,6 +9182,8 @@ block|;
 name|Type
 operator|*
 name|RetTy
+operator|=
+name|nullptr
 block|;
 name|bool
 name|RetSExt
@@ -9163,18 +9220,32 @@ name|IsConvergent
 operator|:
 literal|1
 block|;
+name|bool
+name|IsPatchPoint
+operator|:
+literal|1
+block|;
 comment|// IsTailCall should be modified by implementations of
 comment|// TargetLowering::LowerCall that perform tail call conversions.
 name|bool
 name|IsTailCall
+operator|=
+name|false
 block|;
 name|unsigned
 name|NumFixedArgs
+operator|=
+operator|-
+literal|1
 block|;
 name|CallingConv
 operator|::
 name|ID
 name|CallConv
+operator|=
+name|CallingConv
+operator|::
+name|C
 block|;
 name|SDValue
 name|Callee
@@ -9192,9 +9263,8 @@ block|;
 name|ImmutableCallSite
 operator|*
 name|CS
-block|;
-name|bool
-name|IsPatchPoint
+operator|=
+name|nullptr
 block|;
 name|SmallVector
 operator|<
@@ -9239,11 +9309,6 @@ operator|&
 name|DAG
 argument_list|)
 operator|:
-name|RetTy
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
 name|RetSExt
 argument_list|(
 name|false
@@ -9279,39 +9344,16 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|IsTailCall
+name|IsPatchPoint
 argument_list|(
 name|false
 argument_list|)
 block|,
-name|NumFixedArgs
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-block|,
-name|CallConv
-argument_list|(
-name|CallingConv
-operator|::
-name|C
-argument_list|)
-block|,
 name|DAG
 argument_list|(
-name|DAG
+argument|DAG
 argument_list|)
-block|,
-name|CS
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|IsPatchPoint
-argument_list|(
-argument|false
-argument_list|)
-block|{     }
+block|{}
 name|CallLoweringInfo
 operator|&
 name|setDebugLoc
@@ -10260,6 +10302,10 @@ name|TargetLowering
 operator|::
 name|ConstraintType
 name|ConstraintType
+operator|=
+name|TargetLowering
+operator|::
+name|C_Unknown
 block|;
 comment|/// If this is the result output operand or a clobber, this is null,
 comment|/// otherwise it is the incoming operand to the CallInst.  This gets
@@ -10267,11 +10313,30 @@ comment|/// modified as the asm is processed.
 name|Value
 operator|*
 name|CallOperandVal
+operator|=
+name|nullptr
 block|;
 comment|/// The ValueType for the operand value.
 name|MVT
 name|ConstraintVT
+operator|=
+name|MVT
+operator|::
+name|Other
 block|;
+comment|/// Copy constructor for copying from a ConstraintInfo.
+name|AsmOperandInfo
+argument_list|(
+argument|InlineAsm::ConstraintInfo Info
+argument_list|)
+operator|:
+name|InlineAsm
+operator|::
+name|ConstraintInfo
+argument_list|(
+argument|std::move(Info)
+argument_list|)
+block|{}
 comment|/// Return true of this is an input operand that is a matching constraint
 comment|/// like "4".
 name|bool
@@ -10285,53 +10350,18 @@ name|unsigned
 name|getMatchedOperand
 argument_list|()
 specifier|const
+block|;   }
 block|;
-comment|/// Copy constructor for copying from a ConstraintInfo.
-name|AsmOperandInfo
-argument_list|(
-argument|InlineAsm::ConstraintInfo Info
-argument_list|)
-operator|:
-name|InlineAsm
-operator|::
-name|ConstraintInfo
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Info
-argument_list|)
-argument_list|)
-block|,
-name|ConstraintType
-argument_list|(
-name|TargetLowering
-operator|::
-name|C_Unknown
-argument_list|)
-block|,
-name|CallOperandVal
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|ConstraintVT
-argument_list|(
-argument|MVT::Other
-argument_list|)
-block|{}
-block|}
-block|;
-typedef|typedef
+name|using
+name|AsmOperandInfoVector
+operator|=
 name|std
 operator|::
 name|vector
 operator|<
 name|AsmOperandInfo
 operator|>
-name|AsmOperandInfoVector
-expr_stmt|;
+block|;
 comment|/// Split up the constraint string from the inline assembly value into the
 comment|/// specific constraints and their prefixes, and also tie in the associated
 comment|/// operand values.  If this returns an empty vector, and if the constraint
@@ -10905,56 +10935,27 @@ argument|const SDLoc&DL
 argument_list|)
 specifier|const
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// Given an LLVM IR type and return type attributes, compute the return value
-end_comment
-
-begin_comment
 comment|/// EVTs and flags, and optionally also the offsets, if the return value is
-end_comment
-
-begin_comment
 comment|/// being lowered to memory.
-end_comment
-
-begin_decl_stmt
 name|void
 name|GetReturnInfo
 argument_list|(
-name|Type
-operator|*
-name|ReturnType
+argument|Type *ReturnType
 argument_list|,
-name|AttributeList
-name|attr
+argument|AttributeList attr
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|ISD
-operator|::
-name|OutputArg
-operator|>
-operator|&
-name|Outs
+argument|SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
-specifier|const
-name|TargetLowering
-operator|&
-name|TLI
+argument|const TargetLowering&TLI
 argument_list|,
-specifier|const
-name|DataLayout
-operator|&
-name|DL
+argument|const DataLayout&DL
 argument_list|)
-decl_stmt|;
+block|;  }
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

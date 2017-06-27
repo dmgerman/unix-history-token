@@ -243,13 +243,21 @@ comment|// members.
 struct|struct
 name|APFloatBase
 block|{
-comment|// TODO remove this and use APInt typedef directly.
 typedef|typedef
 name|APInt
 operator|::
 name|WordType
 name|integerPart
 expr_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|integerPartWidth
+init|=
+name|APInt
+operator|::
+name|APINT_BITS_PER_WORD
+decl_stmt|;
 comment|/// A signed type to represent a floating point numbers unbiased exponent.
 typedef|typedef
 name|signed

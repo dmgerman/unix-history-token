@@ -205,6 +205,9 @@ name|InternalAllocatorCache
 operator|,
 name|LargeMmapAllocator
 operator|<
+name|NoOpMapUnmapCallback
+operator|,
+name|DieOnFailure
 operator|>
 expr|>
 name|InternalAllocator

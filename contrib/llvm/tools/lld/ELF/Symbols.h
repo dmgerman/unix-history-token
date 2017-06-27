@@ -312,6 +312,18 @@ return|return
 name|Name
 return|;
 block|}
+name|void
+name|setName
+parameter_list|(
+name|StringRef
+name|S
+parameter_list|)
+block|{
+name|Name
+operator|=
+name|S
+expr_stmt|;
+block|}
 name|uint8_t
 name|getVisibility
 argument_list|()
@@ -1298,6 +1310,14 @@ specifier|static
 name|DefinedRegular
 operator|*
 name|End2
+block|;
+comment|// The _GLOBAL_OFFSET_TABLE_ symbol is defined by target convention to
+comment|// be at some offset from the base of the .got section, usually 0 or
+comment|// the end of the .got.
+specifier|static
+name|DefinedRegular
+operator|*
+name|GlobalOffsetTable
 block|;
 comment|// _gp, _gp_disp and __gnu_local_gp symbols. Only for MIPS.
 specifier|static

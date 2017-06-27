@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/MSF/MSFStreamLayout.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -353,6 +359,15 @@ name|ulittle32_t
 operator|>
 name|getDirectoryBlockArray
 argument_list|()
+specifier|const
+block|;
+name|msf
+operator|::
+name|MSFStreamLayout
+name|getStreamLayout
+argument_list|(
+argument|uint32_t StreamIdx
+argument_list|)
 specifier|const
 block|;
 name|Error

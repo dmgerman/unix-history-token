@@ -267,6 +267,61 @@ name|uint32_t
 operator|>
 name|expressionNumbering
 block|;
+comment|// Expressions is the vector of Expression. ExprIdx is the mapping from
+comment|// value number to the index of Expression in Expressions. We use it
+comment|// instead of a DenseMap because filling such mapping is faster than
+comment|// filling a DenseMap and the compile time is a little better.
+name|uint32_t
+name|nextExprNumber
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|Expression
+operator|>
+name|Expressions
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|uint32_t
+operator|>
+name|ExprIdx
+block|;
+comment|// Value number to PHINode mapping. Used for phi-translate in scalarpre.
+name|DenseMap
+operator|<
+name|uint32_t
+block|,
+name|PHINode
+operator|*
+operator|>
+name|NumberingPhi
+block|;
+comment|// Cache for phi-translate in scalarpre.
+typedef|typedef
+name|DenseMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|uint32_t
+operator|,
+specifier|const
+name|BasicBlock
+operator|*
+operator|>
+operator|,
+name|uint32_t
+operator|>
+name|PhiTranslateMap
+expr_stmt|;
+name|PhiTranslateMap
+name|PhiTranslateTable
+block|;
 name|AliasAnalysis
 operator|*
 name|AA
@@ -318,6 +373,43 @@ operator|*
 name|C
 argument_list|)
 block|;
+name|uint32_t
+name|phiTranslateImpl
+argument_list|(
+argument|const BasicBlock *BB
+argument_list|,
+argument|const BasicBlock *PhiBlock
+argument_list|,
+argument|uint32_t Num
+argument_list|,
+argument|GVN&Gvn
+argument_list|)
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|uint32_t
+block|,
+name|bool
+operator|>
+name|assignExpNewValueNum
+argument_list|(
+name|Expression
+operator|&
+name|exp
+argument_list|)
+block|;
+name|bool
+name|areAllValsInBB
+argument_list|(
+argument|uint32_t num
+argument_list|,
+argument|const BasicBlock *BB
+argument_list|,
+argument|GVN&Gvn
+argument_list|)
+block|;
 name|public
 operator|:
 name|ValueTable
@@ -354,6 +446,8 @@ name|uint32_t
 name|lookup
 argument_list|(
 argument|Value *V
+argument_list|,
+argument|bool Verify = true
 argument_list|)
 specifier|const
 block|;
@@ -367,6 +461,18 @@ argument_list|,
 argument|Value *LHS
 argument_list|,
 argument|Value *RHS
+argument_list|)
+block|;
+name|uint32_t
+name|phiTranslate
+argument_list|(
+argument|const BasicBlock *BB
+argument_list|,
+argument|const BasicBlock *PhiBlock
+argument_list|,
+argument|uint32_t Num
+argument_list|,
+argument|GVN&Gvn
 argument_list|)
 block|;
 name|bool
@@ -451,83 +557,84 @@ argument|const Value *
 argument_list|)
 specifier|const
 block|;   }
-block|;
+decl_stmt|;
 name|private
-operator|:
+label|:
 name|friend
 name|class
 name|gvn
 operator|::
 name|GVNLegacyPass
-block|;
+expr_stmt|;
 name|friend
-expr|struct
+block|struct
 name|DenseMapInfo
 operator|<
 name|Expression
 operator|>
-block|;
+expr_stmt|;
 name|MemoryDependenceResults
-operator|*
+modifier|*
 name|MD
-block|;
+decl_stmt|;
 name|DominatorTree
-operator|*
+modifier|*
 name|DT
-block|;
+decl_stmt|;
 specifier|const
 name|TargetLibraryInfo
-operator|*
+modifier|*
 name|TLI
-block|;
+decl_stmt|;
 name|AssumptionCache
-operator|*
+modifier|*
 name|AC
-block|;
+decl_stmt|;
 name|SetVector
 operator|<
 name|BasicBlock
 operator|*
 operator|>
 name|DeadBlocks
-block|;
+expr_stmt|;
 name|OptimizationRemarkEmitter
-operator|*
+modifier|*
 name|ORE
-block|;
+decl_stmt|;
 name|ValueTable
 name|VN
-block|;
+decl_stmt|;
 comment|/// A mapping from value numbers to lists of Value*'s that
 comment|/// have that value number.  Use findLeader to query it.
-block|struct
+struct|struct
 name|LeaderTableEntry
 block|{
 name|Value
-operator|*
+modifier|*
 name|Val
-block|;
+decl_stmt|;
 specifier|const
 name|BasicBlock
-operator|*
+modifier|*
 name|BB
-block|;
+decl_stmt|;
 name|LeaderTableEntry
-operator|*
+modifier|*
 name|Next
-block|;   }
-block|;
+decl_stmt|;
+block|}
+struct|;
 name|DenseMap
 operator|<
 name|uint32_t
-block|,
+operator|,
 name|LeaderTableEntry
 operator|>
 name|LeaderTable
-block|;
+expr_stmt|;
 name|BumpPtrAllocator
 name|TableAllocator
-block|;
+decl_stmt|;
 comment|// Block-local map of equivalent values to their leader, does not
 comment|// propagate to any successors. Entries added mid-block are applied
 comment|// to the remaining instructions in the block.
@@ -537,25 +644,37 @@ name|llvm
 operator|::
 name|Value
 operator|*
-block|,
+operator|,
 name|llvm
 operator|::
 name|Constant
 operator|*
-block|,
+operator|,
 literal|4
 operator|>
 name|ReplaceWithConstMap
-block|;
+expr_stmt|;
 name|SmallVector
 operator|<
 name|Instruction
 operator|*
-block|,
+operator|,
 literal|8
 operator|>
 name|InstrsToErase
-block|;
+expr_stmt|;
+comment|// Map the block to reversed postorder traversal number. It is used to
+comment|// find back edge easily.
+name|DenseMap
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+operator|,
+name|uint32_t
+operator|>
+name|BlockRPONumber
+expr_stmt|;
 typedef|typedef
 name|SmallVector
 operator|<
@@ -989,6 +1108,7 @@ operator|>
 operator|&
 name|d
 argument_list|)
+decl|const
 decl_stmt|;
 name|bool
 name|iterateOnFunction
@@ -1024,6 +1144,10 @@ parameter_list|,
 name|BasicBlock
 modifier|*
 name|Pred
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|Curr
 parameter_list|,
 name|unsigned
 name|int
@@ -1122,6 +1246,14 @@ function_decl|;
 name|void
 name|assignValNumForDeadCode
 parameter_list|()
+function_decl|;
+name|void
+name|assignBlockRPONumber
+parameter_list|(
+name|Function
+modifier|&
+name|F
+parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

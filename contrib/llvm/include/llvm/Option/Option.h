@@ -179,6 +179,8 @@ name|FlagClass
 block|,
 name|JoinedClass
 block|,
+name|ValuesClass
+block|,
 name|SeparateClass
 block|,
 name|RemainingArgsClass
@@ -547,6 +549,9 @@ name|RenderCommaJoinedStyle
 return|;
 case|case
 name|FlagClass
+case|:
+case|case
+name|ValuesClass
 case|:
 case|case
 name|SeparateClass

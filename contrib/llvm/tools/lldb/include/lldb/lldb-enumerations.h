@@ -1371,6 +1371,14 @@ name|eInstrumentationRuntimeTypeThreadSanitizer
 init|=
 literal|0x0001
 block|,
+name|eInstrumentationRuntimeTypeUndefinedBehaviorSanitizer
+init|=
+literal|0x0002
+block|,
+name|eInstrumentationRuntimeTypeMainThreadChecker
+init|=
+literal|0x0003
+block|,
 name|eNumInstrumentationRuntimeTypes
 block|}
 enum|;

@@ -117,6 +117,9 @@ name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
+name|TargetRegisterClass
+decl_stmt|;
+name|class
 name|TargetRegisterInfo
 decl_stmt|;
 comment|/// Container class for CodeGen predicate results.
@@ -254,6 +257,27 @@ name|ComplexRendererFn
 expr_stmt|;
 name|InstructionSelector
 argument_list|()
+block|;
+comment|/// Constrain a register operand of an instruction \p I to a specified
+comment|/// register class. This could involve inserting COPYs before (for uses) or
+comment|/// after (for defs) and may replace the operand of \p I.
+comment|/// \returns whether operand regclass constraining succeeded.
+name|bool
+name|constrainOperandRegToRegClass
+argument_list|(
+argument|MachineInstr&I
+argument_list|,
+argument|unsigned OpIdx
+argument_list|,
+argument|const TargetRegisterClass&RC
+argument_list|,
+argument|const TargetInstrInfo&TII
+argument_list|,
+argument|const TargetRegisterInfo&TRI
+argument_list|,
+argument|const RegisterBankInfo&RBI
+argument_list|)
+specifier|const
 block|;
 comment|/// Mutate the newly-selected instruction \p I to constrain its (possibly
 comment|/// generic) virtual register operands to the instruction's register class.

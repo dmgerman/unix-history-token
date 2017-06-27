@@ -125,7 +125,6 @@ name|PDBSymbolExe
 operator|>
 name|getGlobalScope
 argument_list|()
-specifier|const
 operator|=
 literal|0
 expr_stmt|;

@@ -380,9 +380,6 @@ struct|struct
 name|NonNullReturnData
 block|{
 name|SourceLocation
-name|Loc
-decl_stmt|;
-name|SourceLocation
 name|AttrLoc
 decl_stmt|;
 block|}
@@ -391,15 +388,19 @@ comment|/// \brief Handle returning null from function with the returns_nonnull
 comment|/// attribute, or a return type annotated with _Nonnull.
 name|RECOVERABLE
 argument_list|(
-argument|nonnull_return
+argument|nonnull_return_v1
 argument_list|,
 argument|NonNullReturnData *Data
+argument_list|,
+argument|SourceLocation *Loc
 argument_list|)
 name|RECOVERABLE
 argument_list|(
-argument|nullability_return
+argument|nullability_return_v1
 argument_list|,
 argument|NonNullReturnData *Data
+argument_list|,
+argument|SourceLocation *Loc
 argument_list|)
 struct|struct
 name|NonNullArgData

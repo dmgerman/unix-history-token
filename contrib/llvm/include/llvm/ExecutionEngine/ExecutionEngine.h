@@ -66,13 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"RuntimeDyld.h"
+file|"llvm-c/ExecutionEngine.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm-c/ExecutionEngine.h"
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
 end_include
 
 begin_include
@@ -84,7 +90,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/JITSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -96,19 +120,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/ValueHandle.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/ValueMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Object/Binary.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CBindingWrapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_include
@@ -138,6 +162,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<functional>
 end_include
 
@@ -145,6 +181,12 @@ begin_include
 include|#
 directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -163,38 +205,26 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-struct_decl|struct
-name|GenericValue
-struct_decl|;
 name|class
 name|Constant
 decl_stmt|;
 name|class
-name|DataLayout
-decl_stmt|;
-name|class
-name|ExecutionEngine
-decl_stmt|;
-name|class
 name|Function
+decl_stmt|;
+struct_decl|struct
+name|GenericValue
+struct_decl|;
+name|class
+name|GlobalValue
 decl_stmt|;
 name|class
 name|GlobalVariable
 decl_stmt|;
 name|class
-name|GlobalValue
-decl_stmt|;
-name|class
 name|JITEventListener
 decl_stmt|;
 name|class
-name|MachineCodeInfo
-decl_stmt|;
-name|class
 name|MCJITMemoryManager
-decl_stmt|;
-name|class
-name|MutexGuard
 decl_stmt|;
 name|class
 name|ObjectCache
@@ -218,6 +248,7 @@ name|class
 name|ObjectFile
 decl_stmt|;
 block|}
+comment|// end namespace object
 comment|/// \brief Helper class for helping synchronize access to the global address map
 comment|/// table.  Access to this class should be serialized under a mutex.
 name|class
@@ -225,13 +256,14 @@ name|ExecutionEngineState
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|GlobalAddressMapTy
+init|=
 name|StringMap
 operator|<
 name|uint64_t
 operator|>
-name|GlobalAddressMapTy
-expr_stmt|;
+decl_stmt|;
 name|private
 label|:
 comment|/// GlobalAddressMap - A mapping between LLVM global symbol names values and
@@ -1456,6 +1488,7 @@ name|Interpreter
 argument_list|)
 decl_stmt|;
 block|}
+comment|// end namespace EngineKind
 comment|/// Builder class for ExecutionEngines. Use this by stack-allocating a builder,
 comment|/// chaining the various set* methods, and terminating it with a .create()
 comment|/// call.
@@ -1940,13 +1973,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_EXECUTIONENGINE_EXECUTIONENGINE_H
+end_comment
 
 end_unit
 

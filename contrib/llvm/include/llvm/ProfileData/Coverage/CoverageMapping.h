@@ -2633,22 +2633,17 @@ operator|>
 expr|struct
 name|CovMapTraits
 block|{
-typedef|typedef
-name|CovMapFunctionRecord
+name|using
 name|CovMapFuncRecordType
-typedef|;
-typedef|typedef
-name|uint64_t
+operator|=
+name|CovMapFunctionRecord
+block|;
+name|using
 name|NameRefType
-typedef|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+operator|=
+name|uint64_t
+block|; }
+expr_stmt|;
 name|template
 operator|<
 name|class
@@ -2664,24 +2659,24 @@ operator|,
 name|IntPtrT
 operator|>
 block|{
-typedef|typedef
+name|using
+name|CovMapFuncRecordType
+operator|=
 name|CovMapFunctionRecordV1
 operator|<
 name|IntPtrT
 operator|>
-name|CovMapFuncRecordType
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|IntPtrT
+block|;
+name|using
 name|NameRefType
-typedef|;
-end_typedef
+operator|=
+name|IntPtrT
+block|; }
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_comment
-unit|};  }
 comment|// end namespace coverage
 end_comment
 
@@ -2690,7 +2685,7 @@ comment|/// \brief Provide DenseMapInfo for CounterExpression
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 operator|>
 expr|struct

@@ -176,7 +176,7 @@ return|;
 block|}
 name|virtual
 name|unsigned
-name|getSDWA9SrcEncoding
+name|getSDWASrcEncoding
 argument_list|(
 argument|const MCInst&MI
 argument_list|,
@@ -194,7 +194,7 @@ return|;
 block|}
 name|virtual
 name|unsigned
-name|getSDWA9VopcDstEncoding
+name|getSDWAVopcDstEncoding
 argument_list|(
 argument|const MCInst&MI
 argument_list|,

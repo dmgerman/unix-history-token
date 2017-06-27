@@ -297,7 +297,9 @@ return|;
 block|}
 block|}
 struct|;
-typedef|typedef
+name|using
+name|DILineInfoTable
+init|=
 name|SmallVector
 operator|<
 name|std
@@ -305,14 +307,10 @@ operator|::
 name|pair
 operator|<
 name|uint64_t
-operator|,
+decl_stmt|,
 name|DILineInfo
-operator|>
-operator|,
-literal|16
-operator|>
-name|DILineInfoTable
-expr_stmt|;
+decl|>
+decl_stmt|, 16>;
 comment|/// DIInliningInfo - a format-neutral container for inlined code description.
 name|class
 name|DIInliningInfo
@@ -472,10 +470,11 @@ operator|,
 name|AbsoluteFilePath
 block|}
 empty_stmt|;
-typedef|typedef
-name|DINameKind
+name|using
 name|FunctionNameKind
-typedef|;
+init|=
+name|DINameKind
+decl_stmt|;
 name|FileLineInfoKind
 name|FLIKind
 decl_stmt|;

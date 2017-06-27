@@ -224,6 +224,47 @@ block|,
 literal|'\xc2'
 block|, }
 decl_stmt|;
+comment|// The signature bytes that start a .res file.
+specifier|static
+specifier|const
+name|char
+name|WinResMagic
+index|[]
+init|=
+block|{
+literal|'\x00'
+block|,
+literal|'\x00'
+block|,
+literal|'\x00'
+block|,
+literal|'\x00'
+block|,
+literal|'\x20'
+block|,
+literal|'\x00'
+block|,
+literal|'\x00'
+block|,
+literal|'\x00'
+block|,
+literal|'\xff'
+block|,
+literal|'\xff'
+block|,
+literal|'\x00'
+block|,
+literal|'\x00'
+block|,
+literal|'\xff'
+block|,
+literal|'\xff'
+block|,
+literal|'\x00'
+block|,
+literal|'\x00'
+block|, }
+decl_stmt|;
 comment|// Sizes in bytes of various things in the COFF format.
 enum|enum
 block|{

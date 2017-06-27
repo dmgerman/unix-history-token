@@ -123,21 +123,22 @@ name|class
 name|ProfOStream
 decl_stmt|;
 name|class
+name|raw_fd_ostream
+decl_stmt|;
+name|class
 name|InstrProfWriter
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|ProfilingData
+init|=
 name|SmallDenseMap
 operator|<
 name|uint64_t
-operator|,
+decl_stmt|,
 name|InstrProfRecord
-operator|,
-literal|1
-operator|>
-name|ProfilingData
-expr_stmt|;
+decl_stmt|, 1>;
 enum|enum
 name|ProfKind
 block|{
@@ -217,7 +218,7 @@ name|OS
 parameter_list|)
 function_decl|;
 comment|/// Write the profile in text format to \c OS
-name|void
+name|Error
 name|writeText
 parameter_list|(
 name|raw_fd_ostream

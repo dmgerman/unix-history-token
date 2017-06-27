@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=== Target/TargetRegisterInfo.h - Target Register Information -*- C++ -*-===//
+comment|//==- Target/TargetRegisterInfo.h - Target Register Information --*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -76,6 +76,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator_range.h"
 end_include
 
@@ -100,7 +112,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/LaneBitmask.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
 end_include
 
 begin_include
@@ -118,6 +148,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<functional>
 end_include
 
@@ -129,53 +165,48 @@ name|class
 name|BitVector
 decl_stmt|;
 name|class
+name|LiveRegMatrix
+decl_stmt|;
+name|class
 name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineInstr
 decl_stmt|;
 name|class
 name|RegScavenger
 decl_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
 name|class
 name|VirtRegMap
-decl_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
-name|LiveRegMatrix
 decl_stmt|;
 name|class
 name|TargetRegisterClass
 block|{
 name|public
 label|:
-typedef|typedef
-specifier|const
-name|MCPhysReg
-modifier|*
+name|using
 name|iterator
-typedef|;
-typedef|typedef
+init|=
 specifier|const
 name|MCPhysReg
-modifier|*
+operator|*
+decl_stmt|;
+name|using
 name|const_iterator
-typedef|;
-typedef|typedef
+init|=
+specifier|const
+name|MCPhysReg
+operator|*
+decl_stmt|;
+name|using
+name|sc_iterator
+init|=
 specifier|const
 name|TargetRegisterClass
-modifier|*
+operator|*
 specifier|const
-modifier|*
-name|sc_iterator
-typedef|;
+operator|*
+decl_stmt|;
 comment|// Instance variables filled by tablegen, do not use!
 specifier|const
 name|MCRegisterClass
@@ -548,7 +579,6 @@ comment|///
 comment|///   There exists SuperRC where:
 comment|///     For all Reg in SuperRC:
 comment|///       this->contains(Reg:Idx)
-comment|///
 specifier|const
 name|uint16_t
 operator|*
@@ -601,7 +631,6 @@ comment|/// registers based on the characteristics of the function, subtarget, o
 comment|/// other criteria.
 comment|///
 comment|/// By default, this method returns all registers in the class.
-comment|///
 name|ArrayRef
 operator|<
 name|MCPhysReg
@@ -686,55 +715,57 @@ name|MCRegisterInfo
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|regclass_iterator
+operator|=
 specifier|const
 name|TargetRegisterClass
-modifier|*
+operator|*
 specifier|const
-modifier|*
-name|regclass_iterator
-typedef|;
-typedef|typedef
+operator|*
+block|;
+name|using
+name|vt_iterator
+operator|=
 specifier|const
 name|MVT
 operator|::
 name|SimpleValueType
 operator|*
-name|vt_iterator
-expr_stmt|;
+block|;
 name|private
-label|:
+operator|:
 specifier|const
 name|TargetRegisterInfoDesc
-modifier|*
+operator|*
 name|InfoDesc
-decl_stmt|;
+block|;
 comment|// Extra desc array for codegen
 specifier|const
 name|char
-modifier|*
+operator|*
 specifier|const
-modifier|*
+operator|*
 name|SubRegIndexNames
-decl_stmt|;
+block|;
 comment|// Names of subreg indexes.
 comment|// Pointer to array of lane masks, one per sub-reg index.
 specifier|const
 name|LaneBitmask
-modifier|*
+operator|*
 name|SubRegIndexLaneMasks
-decl_stmt|;
+block|;
 name|regclass_iterator
 name|RegClassBegin
-decl_stmt|,
+block|,
 name|RegClassEnd
-decl_stmt|;
+block|;
 comment|// List of regclasses
 name|LaneBitmask
 name|CoveringLanes
-decl_stmt|;
+block|;
 name|protected
-label|:
+operator|:
 name|TargetRegisterInfo
 argument_list|(
 argument|const TargetRegisterInfoDesc *ID
@@ -749,14 +780,14 @@ argument|const LaneBitmask *SRILaneMasks
 argument_list|,
 argument|LaneBitmask CoveringLanes
 argument_list|)
-empty_stmt|;
+block|;
 name|virtual
 operator|~
 name|TargetRegisterInfo
 argument_list|()
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 comment|// Register numbers can represent physical registers, virtual registers, and
 comment|// sometimes stack slots. The unsigned values are divided into these ranges:
 comment|//
@@ -778,10 +809,9 @@ comment|///
 specifier|static
 name|bool
 name|isStackSlot
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 return|return
 name|int
@@ -800,10 +830,9 @@ comment|/// Compute the frame index from a register value representing a stack s
 specifier|static
 name|int
 name|stackSlot2Index
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -814,7 +843,7 @@ argument_list|)
 operator|&&
 literal|"Not a stack slot"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|int
 argument_list|(
@@ -832,10 +861,9 @@ comment|/// Convert a non-negative frame index to a stack slot register value.
 specifier|static
 name|unsigned
 name|index2StackSlot
-parameter_list|(
-name|int
-name|FI
-parameter_list|)
+argument_list|(
+argument|int FI
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -845,7 +873,7 @@ literal|0
 operator|&&
 literal|"Cannot hold a negative frame index."
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|FI
 operator|+
@@ -861,10 +889,9 @@ comment|/// the physical register namespace.
 specifier|static
 name|bool
 name|isPhysicalRegister
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -876,7 +903,7 @@ argument_list|)
 operator|&&
 literal|"Not a register! Check isStackSlot() first."
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|int
 argument_list|(
@@ -891,10 +918,9 @@ comment|/// the virtual register namespace.
 specifier|static
 name|bool
 name|isVirtualRegister
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -906,7 +932,7 @@ argument_list|)
 operator|&&
 literal|"Not a register! Check isStackSlot() first."
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|int
 argument_list|(
@@ -921,10 +947,9 @@ comment|/// The first virtual register in a function will get the index 0.
 specifier|static
 name|unsigned
 name|virtReg2Index
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -935,7 +960,7 @@ argument_list|)
 operator|&&
 literal|"Not a virtual register"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Reg
 operator|&
@@ -952,10 +977,9 @@ comment|/// This is the inverse operation of VirtReg2IndexFunctor below.
 specifier|static
 name|unsigned
 name|index2VirtReg
-parameter_list|(
-name|unsigned
-name|Index
-parameter_list|)
+argument_list|(
+argument|unsigned Index
+argument_list|)
 block|{
 return|return
 name|Index
@@ -971,12 +995,9 @@ comment|/// Return the size in bits of a register from class RC.
 name|unsigned
 name|getRegSizeInBits
 argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|&
-name|RC
+argument|const TargetRegisterClass&RC
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|RC
@@ -991,12 +1012,9 @@ comment|/// copy of a register from class RC.
 name|unsigned
 name|getSpillSize
 argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|&
-name|RC
+argument|const TargetRegisterClass&RC
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|RC
@@ -1009,12 +1027,9 @@ comment|/// of this class.
 name|unsigned
 name|getSpillAlignment
 argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|&
-name|RC
+argument|const TargetRegisterClass&RC
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|RC
@@ -1026,15 +1041,11 @@ comment|/// Return true if the given TargetRegisterClass has the ValueType T.
 name|bool
 name|isTypeLegalForClass
 argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|&
-name|RC
+argument|const TargetRegisterClass&RC
 argument_list|,
-name|MVT
-name|T
+argument|MVT T
 argument_list|)
-decl|const
+specifier|const
 block|{
 for|for
 control|(
@@ -1645,7 +1656,7 @@ operator|*
 name|Mask
 argument_list|)
 decl|const
-block|{ }
+block|{}
 comment|/// Return a super-register of the specified register
 comment|/// Reg so its sub-register of index SubIdx is Reg.
 name|unsigned
@@ -1785,7 +1796,6 @@ comment|///
 comment|/// The ARM register Q0 has two D subregs dsub_0:D0 and dsub_1:D1. It also has
 comment|/// ssub_0:S0 - ssub_3:S3 subregs.
 comment|/// If you compose subreg indices dsub_1, ssub_0 you get ssub_2.
-comment|///
 name|unsigned
 name|composeSubRegIndices
 argument_list|(
@@ -1985,7 +1995,6 @@ comment|/// that case, the returned register class will be a sub-class of the
 comment|/// corresponding argument register class.
 comment|///
 comment|/// The function returns NULL if no register class can be found.
-comment|///
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -2021,7 +2030,6 @@ comment|//===-------------------------------------------------------------------
 comment|// Register Class Information
 comment|//
 comment|/// Register class iterators
-comment|///
 name|regclass_iterator
 name|regclass_begin
 argument_list|()
@@ -2773,7 +2781,6 @@ comment|/// Spill the register so it can be used by the register scavenger.
 comment|/// Return true if the register was spilled, false otherwise.
 comment|/// If this function does not spill the register, the scavenger
 comment|/// will instead spill it to the emergency spill slot.
-comment|///
 name|virtual
 name|bool
 name|saveScavengerRegister
@@ -3039,6 +3046,8 @@ name|RCMaskWords
 decl_stmt|;
 name|unsigned
 name|SubReg
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|uint16_t
@@ -3075,11 +3084,6 @@ literal|31
 operator|)
 operator|/
 literal|32
-argument_list|)
-operator|,
-name|SubReg
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|Idx
@@ -3223,15 +3227,21 @@ comment|/// In other words, the number of bit we read to get at the
 comment|/// beginning of that chunck.
 name|unsigned
 name|Base
+init|=
+literal|0
 decl_stmt|;
 comment|/// Adjust base index of CurrentChunk.
 comment|/// Base index + how many bit we read within CurrentChunk.
 name|unsigned
 name|Idx
+init|=
+literal|0
 decl_stmt|;
 comment|/// Current register class ID.
 name|unsigned
 name|ID
+init|=
+literal|0
 decl_stmt|;
 comment|/// Mask we are iterating over.
 specifier|const
@@ -3375,21 +3385,6 @@ name|TRI
 operator|.
 name|getNumRegClasses
 argument_list|()
-argument_list|)
-operator|,
-name|Base
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Idx
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ID
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|Mask
@@ -3631,13 +3626,17 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TARGET_TARGETREGISTERINFO_H
+end_comment
 
 end_unit
 

@@ -903,13 +903,24 @@ operator|==
 literal|0
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|UNLIKELY
+argument_list|(
+operator|!
 name|Refill
 argument_list|(
 name|allocator
 argument_list|,
 name|class_id
 argument_list|)
-expr_stmt|;
+argument_list|)
+condition|)
+return|return
+name|nullptr
+return|;
+block|}
 name|stats_
 operator|.
 name|Add
@@ -1394,7 +1405,7 @@ end_function
 
 begin_function
 name|NOINLINE
-name|void
+name|bool
 name|Refill
 parameter_list|(
 name|SizeClassAllocator
@@ -1434,6 +1445,17 @@ argument_list|,
 name|class_id
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|UNLIKELY
+argument_list|(
+operator|!
+name|b
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
 name|CHECK_GT
 argument_list|(
 name|b
@@ -1471,6 +1493,9 @@ argument_list|,
 name|b
 argument_list|)
 expr_stmt|;
+return|return
+name|true
+return|;
 block|}
 end_function
 
@@ -1547,6 +1572,21 @@ name|first_idx_to_drain
 index|]
 argument_list|)
 decl_stmt|;
+comment|// Failure to allocate a batch while releasing memory is non recoverable.
+comment|// TODO(alekseys): Figure out how to do it without allocating a new batch.
+if|if
+condition|(
+name|UNLIKELY
+argument_list|(
+operator|!
+name|b
+argument_list|)
+condition|)
+name|DieOnFailure
+operator|::
+name|OnOOM
+argument_list|()
+expr_stmt|;
 name|b
 operator|->
 name|SetFromArray

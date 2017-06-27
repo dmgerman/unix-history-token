@@ -188,6 +188,9 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
+name|class
+name|User
+decl_stmt|;
 name|using
 name|ValueName
 init|=
@@ -759,7 +762,8 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-name|void
+name|Value
+modifier|&
 name|operator
 init|=
 operator|(
@@ -2245,19 +2249,20 @@ begin_comment
 comment|/// aren't virtual, and won't destroy the complete object.
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|unique_value
+init|=
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|Value
-operator|,
+decl_stmt|,
 name|ValueDeleter
-operator|>
-name|unique_value
-expr_stmt|;
-end_typedef
+decl|>
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 specifier|inline

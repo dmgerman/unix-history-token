@@ -231,9 +231,6 @@ block|,
 comment|// Store the CC value in bits 29 and 28 of an integer.
 name|IPM
 block|,
-comment|// Perform a serialization operation.  (BCR 15,0 or BCR 14,0.)
-name|SERIALIZE
-block|,
 comment|// Compiler barrier only; generate a no-op.
 name|MEMBARRIER
 block|,
@@ -1137,24 +1134,6 @@ decl|const
 name|override
 decl_stmt|;
 name|SDValue
-name|prepareVolatileOrAtomicLoad
-argument_list|(
-name|SDValue
-name|Chain
-argument_list|,
-specifier|const
-name|SDLoc
-operator|&
-name|DL
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|SDValue
 name|PerformDAGCombine
 argument_list|(
 name|SDNode
@@ -1555,18 +1534,6 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|lowerATOMIC_CMP_SWAP
-argument_list|(
-name|SDValue
-name|Op
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|)
-decl|const
-decl_stmt|;
-name|SDValue
-name|lowerLOAD_SEQUENCE_POINT
 argument_list|(
 name|SDValue
 name|Op

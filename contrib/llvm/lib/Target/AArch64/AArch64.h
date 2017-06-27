@@ -121,6 +121,11 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createAArch64CondBrTuning
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createAArch64ConditionalCompares
 parameter_list|()
 function_decl|;
@@ -231,6 +236,13 @@ parameter_list|)
 function_decl|;
 name|void
 name|initializeAArch64CollectLOHPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
+name|initializeAArch64CondBrTuningPass
 parameter_list|(
 name|PassRegistry
 modifier|&

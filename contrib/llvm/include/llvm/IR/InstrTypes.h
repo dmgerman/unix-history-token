@@ -1504,6 +1504,10 @@ operator|:
 name|public
 name|Instruction
 block|{
+name|void
+name|AssertOK
+argument_list|()
+block|;
 name|protected
 operator|:
 name|BinaryOperator
@@ -1534,12 +1538,6 @@ argument_list|,
 argument|const Twine&Name
 argument_list|,
 argument|BasicBlock *InsertAtEnd
-argument_list|)
-block|;
-name|void
-name|init
-argument_list|(
-argument|BinaryOps iType
 argument_list|)
 block|;
 comment|// Note: Instruction needs to be a friend here to call cloneImpl.

@@ -536,6 +536,18 @@ block|{
 name|WASM_STACK_POINTER
 init|=
 literal|0x1
+block|,
+name|WASM_SYMBOL_INFO
+init|=
+literal|0x2
+block|, }
+enum_decl|;
+enum_decl|enum :
+name|unsigned
+block|{
+name|WASM_SYMBOL_FLAG_WEAK
+init|=
+literal|0x1
 block|, }
 enum_decl|;
 define|#

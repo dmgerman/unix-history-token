@@ -67,13 +67,25 @@ name|IPDBRawSymbol
 block|{
 name|public
 operator|:
-name|explicit
 name|NativeRawSymbol
 argument_list|(
-name|NativeSession
-operator|&
-name|PDBSession
+argument|NativeSession&PDBSession
+argument_list|,
+argument|uint32_t SymbolId
 argument_list|)
+block|;
+name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|NativeRawSymbol
+operator|>
+name|clone
+argument_list|()
+specifier|const
+operator|=
+literal|0
 block|;
 name|void
 name|dump
@@ -1166,6 +1178,9 @@ operator|:
 name|NativeSession
 operator|&
 name|Session
+block|;
+name|uint32_t
+name|SymbolId
 block|; }
 decl_stmt|;
 block|}

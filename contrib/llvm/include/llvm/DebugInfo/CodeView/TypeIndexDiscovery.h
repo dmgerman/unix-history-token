@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/SymbolRecord.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/TypeRecord.h"
 end_include
 
@@ -115,6 +121,24 @@ specifier|const
 name|CVType
 operator|&
 name|Type
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|TiReference
+operator|>
+operator|&
+name|Refs
+argument_list|)
+decl_stmt|;
+comment|/// Discover type indices in symbol records. Returns false if this is an unknown
+comment|/// record.
+name|bool
+name|discoverTypeIndices
+argument_list|(
+specifier|const
+name|CVSymbol
+operator|&
+name|Symbol
 argument_list|,
 name|SmallVectorImpl
 operator|<

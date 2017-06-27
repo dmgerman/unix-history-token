@@ -63,6 +63,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to enable reverse iteration of unordered llvm containers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_ENABLE_REVERSE_ITERATION
+value|0
+end_define
+
+begin_comment
 comment|/* Allow selectively disabling link-time mismatch checking so that header-only    ADT content from LLVM can be used without linking libSupport. */
 end_comment
 

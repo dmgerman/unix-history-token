@@ -9612,7 +9612,7 @@ name|SelectionDAG
 block|;
 name|MaskedGatherScatterSDNode
 argument_list|(
-argument|ISD::NodeType NodeTy
+argument|unsigned NodeTy
 argument_list|,
 argument|unsigned Order
 argument_list|,

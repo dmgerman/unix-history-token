@@ -491,14 +491,14 @@ block|;
 name|void
 name|print
 argument_list|(
-name|raw_ostream
-operator|&
-name|O
+argument|raw_ostream&O
 argument_list|)
+specifier|const
 block|;
 name|void
 name|dump
 argument_list|()
+specifier|const
 block|; }
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
@@ -3312,6 +3312,7 @@ block|;
 name|void
 name|dump
 argument_list|()
+specifier|const
 block|; }
 block|;
 comment|//===--------------------------------------------------------------------===//

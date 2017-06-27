@@ -146,7 +146,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -155,6 +167,9 @@ name|llvm
 block|{
 name|class
 name|MDNode
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 comment|/// This class represents a range of values.
 name|class
@@ -1301,13 +1316,17 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_CONSTANTRANGE_H
+end_comment
 
 end_unit
 

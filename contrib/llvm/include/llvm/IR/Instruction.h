@@ -640,6 +640,30 @@ operator|==
 name|AShr
 return|;
 block|}
+comment|/// Determine if the Opcode is and/or/xor.
+specifier|static
+specifier|inline
+name|bool
+name|isBitwiseLogicOp
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|)
+block|{
+return|return
+name|Opcode
+operator|==
+name|And
+operator|||
+name|Opcode
+operator|==
+name|Or
+operator|||
+name|Opcode
+operator|==
+name|Xor
+return|;
+block|}
 comment|/// Return true if this is and/or/xor.
 specifier|inline
 name|bool
@@ -648,20 +672,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|isBitwiseLogicOp
+argument_list|(
 name|getOpcode
 argument_list|()
-operator|==
-name|And
-operator|||
-name|getOpcode
-argument_list|()
-operator|==
-name|Or
-operator|||
-name|getOpcode
-argument_list|()
-operator|==
-name|Xor
+argument_list|)
 return|;
 block|}
 comment|/// Determine if the OpCode is one of the CastInst instructions.

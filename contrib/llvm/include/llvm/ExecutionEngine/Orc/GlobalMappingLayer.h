@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===---- GlobalMappingLayer.h - Run all IR through a functor ---*- C++ -*-===//
+comment|//===- GlobalMappingLayer.h - Run all IR through a functor ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -75,6 +75,12 @@ directive|include
 file|<map>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -100,13 +106,14 @@ block|{
 name|public
 operator|:
 comment|/// @brief Handle to a set of added modules.
-typedef|typedef
+name|using
+name|ModuleSetHandleT
+operator|=
 name|typename
 name|BaseLayerT
 operator|::
 name|ModuleSetHandleT
-name|ModuleSetHandleT
-expr_stmt|;
+block|;
 comment|/// @brief Construct an GlobalMappingLayer with the given BaseLayer
 name|GlobalMappingLayer
 argument_list|(
@@ -126,10 +133,10 @@ name|template
 operator|<
 name|typename
 name|ModuleSetT
-operator|,
+block|,
 name|typename
 name|MemoryManagerPtrT
-operator|,
+block|,
 name|typename
 name|SymbolResolverPtrT
 operator|>
@@ -174,10 +181,9 @@ block|}
 comment|/// @brief Remove the module set associated with the handle H.
 name|void
 name|removeModuleSet
-parameter_list|(
-name|ModuleSetHandleT
-name|H
-parameter_list|)
+argument_list|(
+argument|ModuleSetHandleT H
+argument_list|)
 block|{
 name|BaseLayer
 operator|.
@@ -185,21 +191,14 @@ name|removeModuleSet
 argument_list|(
 name|H
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// @brief Manually set the address to return for the given symbol.
 name|void
 name|setGlobalMapping
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|JITTargetAddress
-name|Addr
+argument|JITTargetAddress Addr
 argument_list|)
 block|{
 name|SymbolTable
@@ -208,18 +207,12 @@ name|Name
 index|]
 operator|=
 name|Addr
-expr_stmt|;
-block|}
+block|;   }
 comment|/// @brief Remove the given symbol from the global mapping.
 name|void
 name|eraseGlobalMapping
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|)
 block|{
 name|SymbolTable
@@ -228,8 +221,7 @@ name|erase
 argument_list|(
 name|Name
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// @brief Search for the given named symbol.
 comment|///
 comment|///          This method will first search the local symbol table, returning
@@ -242,27 +234,21 @@ comment|/// @return A handle for the given named symbol, if it exists.
 name|JITSymbol
 name|findSymbol
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|bool
-name|ExportedSymbolsOnly
+argument|bool ExportedSymbolsOnly
 argument_list|)
 block|{
 name|auto
 name|I
-init|=
+operator|=
 name|SymbolTable
 operator|.
 name|find
 argument_list|(
 name|Name
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|I
@@ -375,12 +361,12 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End namespace orc.
+comment|// end namespace orc
 end_comment
 
 begin_comment
 unit|}
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif

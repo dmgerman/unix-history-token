@@ -1072,11 +1072,15 @@ return|;
 block|}
 comment|/// \brief Retrieve the full name of this module, including the path from
 comment|/// its top-level module.
+comment|/// \param AllowStringLiterals If \c true, components that might not be
+comment|///        lexically valid as identifiers will be emitted as string literals.
 name|std
 operator|::
 name|string
 name|getFullModuleName
-argument_list|()
+argument_list|(
+argument|bool AllowStringLiterals = false
+argument_list|)
 specifier|const
 expr_stmt|;
 comment|/// \brief Whether the full name of this module is equal to joining

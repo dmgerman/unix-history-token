@@ -8475,13 +8475,19 @@ begin_comment
 comment|/// current context.
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|bool
+end_macro
+
+begin_macro
 name|needModuleMacros
 argument_list|()
+end_macro
+
+begin_decl_stmt
 specifier|const
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Update the set of active module macros and ambiguity flag for a module
@@ -8706,11 +8712,35 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Information about the result for evaluating an expression for a
+end_comment
+
+begin_comment
+comment|/// preprocessor directive.
+end_comment
+
+begin_struct
+struct|struct
+name|DirectiveEvalResult
+block|{
+comment|/// Whether the expression was evaluated as true or not.
+name|bool
+name|Conditional
+decl_stmt|;
+comment|/// True if the expression contained identifiers that were undefined.
+name|bool
+name|IncludedUndefinedIds
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/// \brief Evaluate an integer constant expression that may occur after a
 end_comment
 
 begin_comment
-comment|/// \#if or \#elif directive and return it as a bool.
+comment|/// \#if or \#elif directive and return a \p DirectiveEvalResult object.
 end_comment
 
 begin_comment
@@ -8722,7 +8752,7 @@ comment|/// If the expression is equivalent to "!defined(X)" return X in IfNDefM
 end_comment
 
 begin_function_decl
-name|bool
+name|DirectiveEvalResult
 name|EvaluateDirectiveExpression
 parameter_list|(
 name|IdentifierInfo

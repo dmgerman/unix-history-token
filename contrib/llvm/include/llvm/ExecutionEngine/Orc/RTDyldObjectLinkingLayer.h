@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RTDyldObjectLinkingLayer.h - RTDyld-based jit linking  --*- C++ -*-===//
+comment|//===- RTDyldObjectLinkingLayer.h - RTDyld-based jit linking  ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/ExecutionEngine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
@@ -93,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ExecutionEngine/RuntimeDyld.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/SectionMemoryManager.h"
 end_include
 
 begin_include
@@ -171,29 +159,47 @@ block|{
 name|class
 name|RTDyldObjectLinkingLayerBase
 block|{
+name|public
+label|:
+name|using
+name|ObjectPtr
+init|=
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|object
+operator|::
+name|OwningBinary
+operator|<
+name|object
+operator|::
+name|ObjectFile
+operator|>>
+decl_stmt|;
 name|protected
 label|:
 comment|/// @brief Holds a set of objects to be allocated/linked as a unit in the JIT.
 comment|///
 comment|/// An instance of this class will be created for each set of objects added
-comment|/// via JITObjectLayer::addObjectSet. Deleting the instance (via
-comment|/// removeObjectSet) frees its memory, removing all symbol definitions that
+comment|/// via JITObjectLayer::addObject. Deleting the instance (via
+comment|/// removeObject) frees its memory, removing all symbol definitions that
 comment|/// had been provided by this instance. Higher level layers are responsible
 comment|/// for taking any action required to handle the missing symbols.
 name|class
-name|LinkedObjectSet
+name|LinkedObject
 block|{
 name|public
 label|:
-name|LinkedObjectSet
+name|LinkedObject
 argument_list|()
 operator|=
 expr|default
 expr_stmt|;
-name|LinkedObjectSet
+name|LinkedObject
 argument_list|(
 specifier|const
-name|LinkedObjectSet
+name|LinkedObject
 operator|&
 argument_list|)
 operator|=
@@ -204,7 +210,7 @@ name|operator
 init|=
 operator|(
 specifier|const
-name|LinkedObjectSet
+name|LinkedObject
 operator|&
 operator|)
 operator|=
@@ -212,7 +218,7 @@ name|delete
 decl_stmt|;
 name|virtual
 operator|~
-name|LinkedObjectSet
+name|LinkedObject
 argument_list|()
 operator|=
 expr|default
@@ -346,7 +352,9 @@ name|false
 decl_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
+name|using
+name|LinkedObjectListT
+init|=
 name|std
 operator|::
 name|list
@@ -355,52 +363,19 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|LinkedObjectSet
+name|LinkedObject
 operator|>>
-name|LinkedObjectSetListT
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 comment|/// @brief Handle to a set of loaded objects.
-typedef|typedef
-name|LinkedObjectSetListT
+name|using
+name|ObjHandleT
+init|=
+name|LinkedObjectListT
 operator|::
 name|iterator
-name|ObjSetHandleT
-expr_stmt|;
-block|}
-empty_stmt|;
-comment|/// @brief Default (no-op) action to perform when loading objects.
-name|class
-name|DoNothingOnNotifyLoaded
-block|{
-name|public
-label|:
-name|template
-operator|<
-name|typename
-name|ObjSetT
-operator|,
-name|typename
-name|LoadResult
-operator|>
-name|void
-name|operator
-argument_list|()
-operator|(
-name|RTDyldObjectLinkingLayerBase
-operator|::
-name|ObjSetHandleT
-operator|,
-specifier|const
-name|ObjSetT
-operator|&
-operator|,
-specifier|const
-name|LoadResult
-operator|&
-operator|)
-block|{}
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// @brief Bare bones object linking layer.
@@ -409,61 +384,80 @@ comment|///   This class is intended to be used as the base layer for a JIT. It 
 comment|/// object files to be loaded into memory, linked, and the addresses of their
 comment|/// symbols queried. All objects added to this layer can see each other's
 comment|/// symbols.
-name|template
-operator|<
-name|typename
-name|NotifyLoadedFtor
-operator|=
-name|DoNothingOnNotifyLoaded
-operator|>
 name|class
 name|RTDyldObjectLinkingLayer
-operator|:
+range|:
 name|public
 name|RTDyldObjectLinkingLayerBase
 block|{
 name|public
 operator|:
-comment|/// @brief Functor for receiving finalization notifications.
-typedef|typedef
+name|using
+name|RTDyldObjectLinkingLayerBase
+operator|::
+name|ObjectPtr
+block|;
+comment|/// @brief Functor for receiving object-loaded notifications.
+name|using
+name|NotifyLoadedFtor
+operator|=
 name|std
 operator|::
 name|function
 operator|<
 name|void
 argument_list|(
-name|ObjSetHandleT
+name|ObjHandleT
+argument_list|,
+specifier|const
+name|ObjectPtr
+operator|&
+name|Obj
+argument_list|,
+specifier|const
+name|LoadedObjectInfo
+operator|&
 argument_list|)
 operator|>
+block|;
+comment|/// @brief Functor for receiving finalization notifications.
+name|using
 name|NotifyFinalizedFtor
-expr_stmt|;
+operator|=
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|ObjHandleT
+argument_list|)
+operator|>
+block|;
 name|private
 operator|:
 name|template
 operator|<
 name|typename
-name|ObjSetT
-operator|,
-name|typename
 name|MemoryManagerPtrT
-operator|,
+block|,
 name|typename
 name|SymbolResolverPtrT
-operator|,
+block|,
 name|typename
 name|FinalizerFtor
 operator|>
 name|class
-name|ConcreteLinkedObjectSet
+name|ConcreteLinkedObject
 operator|:
 name|public
-name|LinkedObjectSet
+name|LinkedObject
 block|{
 name|public
 operator|:
-name|ConcreteLinkedObjectSet
+name|ConcreteLinkedObject
 argument_list|(
-argument|ObjSetT Objects
+argument|ObjectPtr Obj
 argument_list|,
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
@@ -486,18 +480,18 @@ argument_list|)
 block|,
 name|PFC
 argument_list|(
-argument|llvm::make_unique<PreFinalizeContents>(std::move(Objects),                                                    std::move(Resolver),                                                    std::move(Finalizer),                                                    ProcessAllSections)
+argument|llvm::make_unique<PreFinalizeContents>(std::move(Obj),                                                    std::move(Resolver),                                                    std::move(Finalizer),                                                    ProcessAllSections)
 argument_list|)
 block|{
 name|buildInitialSymbolTable
 argument_list|(
 name|PFC
 operator|->
-name|Objects
+name|Obj
 argument_list|)
 block|;     }
 operator|~
-name|ConcreteLinkedObjectSet
+name|ConcreteLinkedObject
 argument_list|()
 name|override
 block|{
@@ -509,7 +503,7 @@ block|;     }
 name|void
 name|setHandle
 argument_list|(
-argument|ObjSetHandleT H
+argument|ObjHandleT H
 argument_list|)
 block|{
 name|PFC
@@ -527,7 +521,7 @@ name|assert
 argument_list|(
 name|PFC
 operator|&&
-literal|"mapSectionAddress called on finalized LinkedObjectSet"
+literal|"mapSectionAddress called on finalized LinkedObject"
 argument_list|)
 block|;
 name|RuntimeDyld
@@ -580,7 +574,7 @@ name|move
 argument_list|(
 name|PFC
 operator|->
-name|Objects
+name|Obj
 argument_list|)
 argument_list|,
 index|[
@@ -664,7 +658,7 @@ name|assert
 argument_list|(
 name|PFC
 operator|&&
-literal|"mapSectionAddress called on finalized LinkedObjectSet"
+literal|"mapSectionAddress called on finalized LinkedObject"
 argument_list|)
 block|;
 name|assert
@@ -673,7 +667,7 @@ name|PFC
 operator|->
 name|RTDyld
 operator|&&
-literal|"mapSectionAddress called on raw LinkedObjectSet"
+literal|"mapSectionAddress called on raw LinkedObject"
 argument_list|)
 block|;
 name|PFC
@@ -692,30 +686,20 @@ operator|:
 name|void
 name|buildInitialSymbolTable
 argument_list|(
-argument|const ObjSetT&Objects
+argument|const ObjectPtr&Obj
 argument_list|)
 block|{
-for|for
-control|(
-specifier|const
-specifier|auto
-modifier|&
-name|Obj
-range|:
-name|Objects
-control|)
 for|for
 control|(
 name|auto
 operator|&
 name|Symbol
 operator|:
-name|getObject
-argument_list|(
-operator|*
 name|Obj
-argument_list|)
-operator|.
+operator|->
+name|getBinary
+argument_list|()
+operator|->
 name|symbols
 argument_list|()
 control|)
@@ -825,12 +809,12 @@ expr_stmt|;
 block|}
 comment|// Contains the information needed prior to finalization: the object files,
 comment|// memory manager, resolver, and flags needed for RuntimeDyld.
-struct|struct
+expr|struct
 name|PreFinalizeContents
 block|{
 name|PreFinalizeContents
 argument_list|(
-argument|ObjSetT Objects
+argument|ObjectPtr Obj
 argument_list|,
 argument|SymbolResolverPtrT Resolver
 argument_list|,
@@ -838,17 +822,17 @@ argument|FinalizerFtor Finalizer
 argument_list|,
 argument|bool ProcessAllSections
 argument_list|)
-block|:
-name|Objects
+operator|:
+name|Obj
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
-name|Objects
+name|Obj
 argument_list|)
 argument_list|)
-operator|,
+block|,
 name|Resolver
 argument_list|(
 name|std
@@ -858,7 +842,7 @@ argument_list|(
 name|Resolver
 argument_list|)
 argument_list|)
-operator|,
+block|,
 name|Finalizer
 argument_list|(
 name|std
@@ -868,36 +852,35 @@ argument_list|(
 name|Finalizer
 argument_list|)
 argument_list|)
-operator|,
+block|,
 name|ProcessAllSections
 argument_list|(
 argument|ProcessAllSections
 argument_list|)
 block|{}
-name|ObjSetT
-name|Objects
-expr_stmt|;
+name|ObjectPtr
+name|Obj
+block|;
 name|SymbolResolverPtrT
 name|Resolver
-decl_stmt|;
+block|;
 name|FinalizerFtor
 name|Finalizer
-decl_stmt|;
+block|;
 name|bool
 name|ProcessAllSections
-decl_stmt|;
-name|ObjSetHandleT
+block|;
+name|ObjHandleT
 name|Handle
-decl_stmt|;
+block|;
 name|RuntimeDyld
-modifier|*
+operator|*
 name|RTDyld
-decl_stmt|;
-block|}
-struct|;
+block|;     }
+block|;
 name|MemoryManagerPtrT
 name|MemMgr
-decl_stmt|;
+block|;
 name|std
 operator|::
 name|unique_ptr
@@ -905,14 +888,10 @@ operator|<
 name|PreFinalizeContents
 operator|>
 name|PFC
-expr_stmt|;
-block|}
-empty_stmt|;
+block|;   }
+decl_stmt|;
 name|template
 operator|<
-name|typename
-name|ObjSetT
-operator|,
 name|typename
 name|MemoryManagerPtrT
 operator|,
@@ -926,19 +905,17 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|ConcreteLinkedObjectSet
+name|ConcreteLinkedObject
 operator|<
-name|ObjSetT
-operator|,
 name|MemoryManagerPtrT
 operator|,
 name|SymbolResolverPtrT
 operator|,
 name|FinalizerFtor
 operator|>>
-name|createLinkedObjectSet
+name|createLinkedObject
 argument_list|(
-argument|ObjSetT Objects
+argument|ObjectPtr Obj
 argument_list|,
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
@@ -949,19 +926,18 @@ argument_list|,
 argument|bool ProcessAllSections
 argument_list|)
 block|{
-typedef|typedef
-name|ConcreteLinkedObjectSet
+name|using
+name|LOS
+operator|=
+name|ConcreteLinkedObject
 operator|<
-name|ObjSetT
-operator|,
 name|MemoryManagerPtrT
-operator|,
+block|,
 name|SymbolResolverPtrT
-operator|,
+block|,
 name|FinalizerFtor
 operator|>
-name|LOS
-expr_stmt|;
+block|;
 return|return
 name|llvm
 operator|::
@@ -974,7 +950,7 @@ name|std
 operator|::
 name|move
 argument_list|(
-name|Objects
+name|Obj
 argument_list|)
 operator|,
 name|std
@@ -1002,58 +978,17 @@ name|ProcessAllSections
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_comment
-comment|/// @brief LoadedObjectInfo list. Contains a list of owning pointers to
-end_comment
-
-begin_comment
-comment|///        RuntimeDyld::LoadedObjectInfo instances.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|RuntimeDyld
-operator|::
-name|LoadedObjectInfo
-operator|>>
-name|LoadedObjInfoList
-expr_stmt|;
-end_typedef
-
-begin_comment
 comment|/// @brief Construct an ObjectLinkingLayer with the given NotifyLoaded,
-end_comment
-
-begin_comment
 comment|///        and NotifyFinalized functors.
-end_comment
-
-begin_macro
 name|RTDyldObjectLinkingLayer
 argument_list|(
 argument|NotifyLoadedFtor NotifyLoaded = NotifyLoadedFtor()
 argument_list|,
 argument|NotifyFinalizedFtor NotifyFinalized = NotifyFinalizedFtor()
 argument_list|)
-end_macro
-
-begin_expr_stmt
-unit|:
+block|:
 name|NotifyLoaded
 argument_list|(
 name|std
@@ -1066,17 +1001,7 @@ argument_list|)
 operator|,
 name|NotifyFinalized
 argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|NotifyFinalized
-argument_list|)
-argument_list|)
-operator|,
-name|ProcessAllSections
-argument_list|(
-argument|false
+argument|std::move(NotifyFinalized)
 argument_list|)
 block|{}
 comment|/// @brief Set the 'ProcessAllSections' flag.
@@ -1105,18 +1030,15 @@ comment|///         symbol searching, finalization, freeing memory, etc.).
 name|template
 operator|<
 name|typename
-name|ObjSetT
-operator|,
-name|typename
 name|MemoryManagerPtrT
 operator|,
 name|typename
 name|SymbolResolverPtrT
 operator|>
-name|ObjSetHandleT
-name|addObjectSet
+name|ObjHandleT
+name|addObject
 argument_list|(
-argument|ObjSetT Objects
+argument|ObjectPtr Obj
 argument_list|,
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
@@ -1130,7 +1052,7 @@ index|[
 operator|&
 index|]
 operator|(
-name|ObjSetHandleT
+name|ObjHandleT
 name|H
 operator|,
 name|RuntimeDyld
@@ -1138,9 +1060,9 @@ operator|&
 name|RTDyld
 operator|,
 specifier|const
-name|ObjSetT
+name|ObjectPtr
 operator|&
-name|Objs
+name|ObjToLoad
 operator|,
 name|std
 operator|::
@@ -1152,49 +1074,48 @@ operator|>
 name|LOSHandleLoad
 operator|)
 block|{
-name|LoadedObjInfoList
-name|LoadedObjInfos
-block|;
-for|for
-control|(
-name|auto
-operator|&
-name|Obj
-operator|:
-name|Objs
-control|)
-name|LoadedObjInfos
-operator|.
-name|push_back
-argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|RuntimeDyld
+operator|::
+name|LoadedObjectInfo
+operator|>
+name|Info
+operator|=
 name|RTDyld
 operator|.
 name|loadObject
 argument_list|(
-name|this
-operator|->
-name|getObject
-argument_list|(
 operator|*
-name|Obj
+name|ObjToLoad
+operator|->
+name|getBinary
+argument_list|()
 argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
+block|;
 name|LOSHandleLoad
 argument_list|()
 block|;
+if|if
+condition|(
+name|this
+operator|->
+name|NotifyLoaded
+condition|)
 name|this
 operator|->
 name|NotifyLoaded
 argument_list|(
 name|H
 argument_list|,
-name|Objs
+name|ObjToLoad
 argument_list|,
-name|LoadedObjInfos
+operator|*
+name|Info
 argument_list|)
-block|;
+expr_stmt|;
 name|RTDyld
 operator|.
 name|finalizeWithMemoryManagerLocking
@@ -1214,23 +1135,17 @@ name|H
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|auto
-name|LOS
+name|LO
 init|=
-name|createLinkedObjectSet
+name|createLinkedObject
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
-name|Objects
+name|Obj
 argument_list|)
 argument_list|,
 name|std
@@ -1257,37 +1172,25 @@ argument_list|,
 name|ProcessAllSections
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// LOS is an owning-ptr. Keep a non-owning one so that we can set the handle
-end_comment
-
-begin_comment
 comment|// below.
-end_comment
-
-begin_expr_stmt
 name|auto
 operator|*
-name|LOSPtr
+name|LOPtr
 operator|=
-name|LOS
+name|LO
 operator|.
 name|get
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|ObjSetHandleT
+name|ObjHandleT
 name|Handle
 init|=
-name|LinkedObjSetList
+name|LinkedObjList
 operator|.
 name|insert
 argument_list|(
-name|LinkedObjSetList
+name|LinkedObjList
 operator|.
 name|end
 argument_list|()
@@ -1296,73 +1199,38 @@ name|std
 operator|::
 name|move
 argument_list|(
-name|LOS
+name|LO
 argument_list|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|LOSPtr
+name|LOPtr
 operator|->
 name|setHandle
 argument_list|(
 name|Handle
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|Handle
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// @brief Remove the set of objects associated with handle H.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///   All memory allocated for the objects will be freed, and the sections and
-end_comment
-
-begin_comment
 comment|/// symbols they provided will no longer be available. No attempt is made to
-end_comment
-
-begin_comment
 comment|/// re-emit the missing symbols, and any use of these symbols (directly or
-end_comment
-
-begin_comment
 comment|/// indirectly) will result in undefined behavior. If dependence tracking is
-end_comment
-
-begin_comment
 comment|/// required to detect or resolve such issues it should be added at a higher
-end_comment
-
-begin_comment
 comment|/// layer.
-end_comment
-
-begin_macro
-unit|void
-name|removeObjectSet
-argument_list|(
-argument|ObjSetHandleT H
-argument_list|)
-end_macro
-
-begin_block
+name|void
+name|removeObject
+parameter_list|(
+name|ObjHandleT
+name|H
+parameter_list|)
 block|{
 comment|// How do we invalidate the symbols in H?
-name|LinkedObjSetList
+name|LinkedObjList
 operator|.
 name|erase
 argument_list|(
@@ -1370,25 +1238,10 @@ name|H
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/// @brief Search for the given named symbol.
-end_comment
-
-begin_comment
 comment|/// @param Name The name of the symbol to search for.
-end_comment
-
-begin_comment
 comment|/// @param ExportedSymbolsOnly If true, search only for exported symbols.
-end_comment
-
-begin_comment
 comment|/// @return A handle for the given named symbol, if it exists.
-end_comment
-
-begin_function
 name|JITSymbol
 name|findSymbol
 parameter_list|(
@@ -1404,14 +1257,14 @@ control|(
 name|auto
 name|I
 init|=
-name|LinkedObjSetList
+name|LinkedObjList
 operator|.
 name|begin
 argument_list|()
 init|,
 name|E
 init|=
-name|LinkedObjSetList
+name|LinkedObjList
 operator|.
 name|end
 argument_list|()
@@ -1444,41 +1297,17 @@ return|return
 name|nullptr
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// @brief Search for the given named symbol in the context of the set of
-end_comment
-
-begin_comment
 comment|///        loaded objects represented by the handle H.
-end_comment
-
-begin_comment
 comment|/// @param H The handle for the object set to search in.
-end_comment
-
-begin_comment
 comment|/// @param Name The name of the symbol to search for.
-end_comment
-
-begin_comment
 comment|/// @param ExportedSymbolsOnly If true, search only for exported symbols.
-end_comment
-
-begin_comment
 comment|/// @return A handle for the given named symbol, if it is found in the
-end_comment
-
-begin_comment
 comment|///         given object set.
-end_comment
-
-begin_function
 name|JITSymbol
 name|findSymbolIn
 parameter_list|(
-name|ObjSetHandleT
+name|ObjHandleT
 name|H
 parameter_list|,
 name|StringRef
@@ -1502,17 +1331,11 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// @brief Map section addresses for the objects associated with the handle H.
-end_comment
-
-begin_function
 name|void
 name|mapSectionAddress
 parameter_list|(
-name|ObjSetHandleT
+name|ObjHandleT
 name|H
 parameter_list|,
 specifier|const
@@ -1537,25 +1360,13 @@ name|TargetAddr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// @brief Immediately emit and finalize the object set represented by the
-end_comment
-
-begin_comment
 comment|///        given handle.
-end_comment
-
-begin_comment
 comment|/// @param H Handle for object set to emit/finalize.
-end_comment
-
-begin_function
 name|void
 name|emitAndFinalize
 parameter_list|(
-name|ObjSetHandleT
+name|ObjHandleT
 name|H
 parameter_list|)
 block|{
@@ -1568,84 +1379,31 @@ name|finalize
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_expr_stmt
-specifier|static
-specifier|const
-name|object
-operator|::
-name|ObjectFile
-operator|&
-name|getObject
-argument_list|(
-argument|const object::ObjectFile&Obj
-argument_list|)
-block|{
-return|return
-name|Obj
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|ObjT
-operator|>
-specifier|static
-specifier|const
-name|object
-operator|::
-name|ObjectFile
-operator|&
-name|getObject
-argument_list|(
-argument|const object::OwningBinary<ObjT>&Obj
-argument_list|)
-block|{
-return|return
-operator|*
-name|Obj
-operator|.
-name|getBinary
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_decl_stmt
-name|LinkedObjectSetListT
-name|LinkedObjSetList
+name|LinkedObjectListT
+name|LinkedObjList
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|NotifyLoadedFtor
 name|NotifyLoaded
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|NotifyFinalizedFtor
 name|NotifyFinalized
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|ProcessAllSections
+init|=
+name|false
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};  }
+unit|}
 comment|// end namespace orc
 end_comment
 

@@ -74,8 +74,21 @@ name|NativeCompilandSymbol
 argument_list|(
 argument|NativeSession&Session
 argument_list|,
+argument|uint32_t SymbolId
+argument_list|,
 argument|DbiModuleDescriptor MI
 argument_list|)
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|NativeRawSymbol
+operator|>
+name|clone
+argument_list|()
+specifier|const
+name|override
 block|;
 name|PDB_SymType
 name|getSymTag

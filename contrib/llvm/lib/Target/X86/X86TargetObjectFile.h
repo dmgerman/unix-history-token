@@ -205,6 +205,23 @@ argument_list|)
 name|override
 block|;   }
 decl_stmt|;
+comment|/// \brief This implementation is used for Solaris on x86/x86-64.
+name|class
+name|X86SolarisTargetObjectFile
+range|:
+name|public
+name|X86ELFTargetObjectFile
+block|{
+name|void
+name|Initialize
+argument_list|(
+argument|MCContext&Ctx
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+name|override
+block|;   }
+decl_stmt|;
 comment|/// \brief This implementation is used for Windows targets on x86 and x86-64.
 name|class
 name|X86WindowsTargetObjectFile

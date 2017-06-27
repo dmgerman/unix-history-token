@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- LLVMContextImpl.h - The LLVMContextImpl opaque class ----*- C++ -*-===//
+comment|//===- LLVMContextImpl.h - The LLVMContextImpl opaque class -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMapInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
@@ -120,13 +126,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -174,13 +204,67 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/ValueHandle.h"
+file|"llvm/IR/TrackingMDRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/YAMLTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -194,31 +278,19 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|ConstantInt
-decl_stmt|;
-name|class
 name|ConstantFP
 decl_stmt|;
 name|class
-name|DiagnosticInfoOptimizationRemark
-decl_stmt|;
-name|class
-name|DiagnosticInfoOptimizationRemarkMissed
-decl_stmt|;
-name|class
-name|DiagnosticInfoOptimizationRemarkAnalysis
-decl_stmt|;
-name|class
-name|GCStrategy
-decl_stmt|;
-name|class
-name|LLVMContext
+name|ConstantInt
 decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
 name|class
 name|Value
+decl_stmt|;
+name|class
+name|ValueHandleBase
 decl_stmt|;
 struct|struct
 name|DenseMapAPIntKeyInfo
@@ -1296,17 +1368,6 @@ name|MDNodeKeyImpl
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|NodeTy
-operator|>
-expr|struct
-name|MDNodeInfo
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/// Configuration point for MDNodeInfo::isEqual().
 end_comment
@@ -1320,13 +1381,14 @@ operator|>
 expr|struct
 name|MDNodeSubsetEqualImpl
 block|{
-typedef|typedef
+name|using
+name|KeyTy
+operator|=
 name|MDNodeKeyImpl
 operator|<
 name|NodeTy
 operator|>
-name|KeyTy
-expr_stmt|;
+block|;
 specifier|static
 name|bool
 name|isSubsetEqual
@@ -1353,14 +1415,10 @@ return|return
 name|false
 return|;
 block|}
-block|}
 end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// \brief DenseMapInfo for MDTuple.
 end_comment
 
@@ -2567,13 +2625,14 @@ operator|<
 name|DIDerivedType
 operator|>
 block|{
-typedef|typedef
+name|using
+name|KeyTy
+operator|=
 name|MDNodeKeyImpl
 operator|<
 name|DIDerivedType
 operator|>
-name|KeyTy
-expr_stmt|;
+block|;
 specifier|static
 name|bool
 name|isSubsetEqual
@@ -2633,20 +2692,39 @@ name|RHS
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Subprograms compare equal if they declare the same function in an ODR
+end_comment
+
+begin_comment
 comment|/// type.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|isODRMember
-argument_list|(
-argument|unsigned Tag
-argument_list|,
-argument|const Metadata *Scope
-argument_list|,
-argument|const MDString *Name
-argument_list|,
-argument|const DIDerivedType *RHS
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Tag
+parameter_list|,
+specifier|const
+name|Metadata
+modifier|*
+name|Scope
+parameter_list|,
+specifier|const
+name|MDString
+modifier|*
+name|Name
+parameter_list|,
+specifier|const
+name|DIDerivedType
+modifier|*
+name|RHS
+parameter_list|)
 block|{
 comment|// Check whether the LHS is eligible.
 if|if
@@ -2675,9 +2753,6 @@ operator|(
 name|Scope
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -2692,13 +2767,7 @@ condition|)
 return|return
 name|false
 return|;
-end_if
-
-begin_comment
 comment|// Compare to the RHS.
-end_comment
-
-begin_return
 return|return
 name|Tag
 operator|==
@@ -2721,14 +2790,11 @@ operator|->
 name|getRawScope
 argument_list|()
 return|;
-end_return
-
-begin_empty_stmt
-unit|} }
-empty_stmt|;
-end_empty_stmt
+block|}
+end_function
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -4076,13 +4142,14 @@ operator|<
 name|DISubprogram
 operator|>
 block|{
-typedef|typedef
+name|using
+name|KeyTy
+operator|=
 name|MDNodeKeyImpl
 operator|<
 name|DISubprogram
 operator|>
-name|KeyTy
-expr_stmt|;
+block|;
 specifier|static
 name|bool
 name|isSubsetEqual
@@ -4151,22 +4218,44 @@ name|RHS
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Subprograms compare equal if they declare the same function in an ODR
+end_comment
+
+begin_comment
 comment|/// type.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|isDeclarationOfODRMember
-argument_list|(
-argument|bool IsDefinition
-argument_list|,
-argument|const Metadata *Scope
-argument_list|,
-argument|const MDString *LinkageName
-argument_list|,
-argument|const Metadata *TemplateParams
-argument_list|,
-argument|const DISubprogram *RHS
-argument_list|)
+parameter_list|(
+name|bool
+name|IsDefinition
+parameter_list|,
+specifier|const
+name|Metadata
+modifier|*
+name|Scope
+parameter_list|,
+specifier|const
+name|MDString
+modifier|*
+name|LinkageName
+parameter_list|,
+specifier|const
+name|Metadata
+modifier|*
+name|TemplateParams
+parameter_list|,
+specifier|const
+name|DISubprogram
+modifier|*
+name|RHS
+parameter_list|)
 block|{
 comment|// Check whether the LHS is eligible.
 if|if
@@ -4194,9 +4283,6 @@ operator|(
 name|Scope
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -4211,33 +4297,12 @@ condition|)
 return|return
 name|false
 return|;
-end_if
-
-begin_comment
 comment|// Compare to the RHS.
-end_comment
-
-begin_comment
 comment|// FIXME: We need to compare template parameters here to avoid incorrect
-end_comment
-
-begin_comment
 comment|// collisions in mapMetadata when RF_MoveDistinctMDs and a ODR-DISubprogram
-end_comment
-
-begin_comment
 comment|// has a non-ODR template parameter (i.e., a DICompositeType that does not
-end_comment
-
-begin_comment
 comment|// have an identifier). Eventually we should decouple ODR logic from
-end_comment
-
-begin_comment
 comment|// uniquing logic.
-end_comment
-
-begin_return
 return|return
 name|IsDefinition
 operator|==
@@ -4267,14 +4332,11 @@ operator|->
 name|getRawTemplateParams
 argument_list|()
 return|;
-end_return
-
-begin_empty_stmt
-unit|} }
-empty_stmt|;
-end_empty_stmt
+block|}
+end_function
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -6603,32 +6665,28 @@ operator|>
 expr|struct
 name|MDNodeInfo
 block|{
-typedef|typedef
+name|using
+name|KeyTy
+operator|=
 name|MDNodeKeyImpl
 operator|<
 name|NodeTy
 operator|>
-name|KeyTy
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|SubsetEqualTy
+operator|=
 name|MDNodeSubsetEqualImpl
 operator|<
 name|NodeTy
 operator|>
-name|SubsetEqualTy
-expr_stmt|;
-end_typedef
-
-begin_function
+block|;
 specifier|static
 specifier|inline
 name|NodeTy
-modifier|*
+operator|*
 name|getEmptyKey
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|DenseMapInfo
@@ -6641,15 +6699,12 @@ name|getEmptyKey
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|NodeTy
-modifier|*
+operator|*
 name|getTombstoneKey
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|DenseMapInfo
@@ -6662,7 +6717,7 @@ name|getTombstoneKey
 argument_list|()
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -6819,7 +6874,7 @@ name|HANDLE_MDNODE_LEAF
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|typedef MDNodeInfo<CLASS> CLASS##Info;
+value|using CLASS##Info = MDNodeInfo<CLASS>;
 end_define
 
 begin_include
@@ -7110,25 +7165,37 @@ name|LLVMContext
 operator|::
 name|InlineAsmDiagHandlerTy
 name|InlineAsmDiagHandler
+operator|=
+name|nullptr
 expr_stmt|;
 name|void
 modifier|*
 name|InlineAsmDiagContext
+init|=
+name|nullptr
 decl_stmt|;
 name|LLVMContext
 operator|::
 name|DiagnosticHandlerTy
 name|DiagnosticHandler
+operator|=
+name|nullptr
 expr_stmt|;
 name|void
 modifier|*
 name|DiagnosticContext
+init|=
+name|nullptr
 decl_stmt|;
 name|bool
 name|RespectDiagnosticFilters
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|DiagnosticHotnessRequested
+init|=
+name|false
 decl_stmt|;
 name|std
 operator|::
@@ -7144,46 +7211,52 @@ name|LLVMContext
 operator|::
 name|YieldCallbackTy
 name|YieldCallback
+operator|=
+name|nullptr
 expr_stmt|;
 name|void
 modifier|*
 name|YieldOpaqueHandle
+init|=
+name|nullptr
 decl_stmt|;
-typedef|typedef
+name|using
+name|IntMapTy
+init|=
 name|DenseMap
 operator|<
 name|APInt
-operator|,
+decl_stmt|,
 name|std
-operator|::
+decl|::
 name|unique_ptr
-operator|<
+decl|<
 name|ConstantInt
-operator|>
-operator|,
+decl|>
+decl_stmt|,
 name|DenseMapAPIntKeyInfo
-operator|>
-name|IntMapTy
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|IntMapTy
 name|IntConstants
 decl_stmt|;
-typedef|typedef
+name|using
+name|FPMapTy
+init|=
 name|DenseMap
 operator|<
 name|APFloat
-operator|,
+decl_stmt|,
 name|std
-operator|::
+decl|::
 name|unique_ptr
-operator|<
+decl|<
 name|ConstantFP
-operator|>
-operator|,
+decl|>
+decl_stmt|,
 name|DenseMapAPFloatKeyInfo
-operator|>
-name|FPMapTy
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|FPMapTy
 name|FPConstants
 decl_stmt|;
@@ -7295,33 +7368,36 @@ name|ConstantAggregateZero
 operator|>>
 name|CAZConstants
 expr_stmt|;
-typedef|typedef
+name|using
+name|ArrayConstantsTy
+init|=
 name|ConstantUniqueMap
 operator|<
 name|ConstantArray
 operator|>
-name|ArrayConstantsTy
-expr_stmt|;
+decl_stmt|;
 name|ArrayConstantsTy
 name|ArrayConstants
 decl_stmt|;
-typedef|typedef
+name|using
+name|StructConstantsTy
+init|=
 name|ConstantUniqueMap
 operator|<
 name|ConstantStruct
 operator|>
-name|StructConstantsTy
-expr_stmt|;
+decl_stmt|;
 name|StructConstantsTy
 name|StructConstants
 decl_stmt|;
-typedef|typedef
+name|using
+name|VectorConstantsTy
+init|=
 name|ConstantUniqueMap
 operator|<
 name|ConstantVector
 operator|>
-name|VectorConstantsTy
-expr_stmt|;
+decl_stmt|;
 name|VectorConstantsTy
 name|VectorConstants
 decl_stmt|;
@@ -7393,10 +7469,14 @@ expr_stmt|;
 name|ConstantInt
 modifier|*
 name|TheTrueVal
+init|=
+name|nullptr
 decl_stmt|;
 name|ConstantInt
 modifier|*
 name|TheFalseVal
+init|=
+name|nullptr
 decl_stmt|;
 name|std
 operator|::
@@ -7458,29 +7538,31 @@ operator|*
 operator|>
 name|IntegerTypes
 expr_stmt|;
-typedef|typedef
+name|using
+name|FunctionTypeSet
+init|=
 name|DenseSet
 operator|<
 name|FunctionType
 operator|*
-operator|,
+decl_stmt|,
 name|FunctionTypeKeyInfo
-operator|>
-name|FunctionTypeSet
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|FunctionTypeSet
 name|FunctionTypes
 decl_stmt|;
-typedef|typedef
+name|using
+name|StructTypeSet
+init|=
 name|DenseSet
 operator|<
 name|StructType
 operator|*
-operator|,
+decl_stmt|,
 name|AnonStructTypeKeyInfo
-operator|>
-name|StructTypeSet
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|StructTypeSet
 name|AnonStructTypes
 decl_stmt|;
@@ -7493,6 +7575,8 @@ name|NamedStructTypes
 expr_stmt|;
 name|unsigned
 name|NamedStructTypesUniqueID
+init|=
+literal|0
 decl_stmt|;
 name|DenseMap
 operator|<
@@ -7559,17 +7643,18 @@ expr_stmt|;
 comment|/// ValueHandles - This map keeps track of all of the value handles that are
 comment|/// watching a Value*.  The Value::HasValueHandle bit is used to know
 comment|/// whether or not a value has an entry in this map.
-typedef|typedef
+name|using
+name|ValueHandlesTy
+init|=
 name|DenseMap
 operator|<
 name|Value
 operator|*
-operator|,
+decl_stmt|,
 name|ValueHandleBase
-operator|*
-operator|>
-name|ValueHandlesTy
-expr_stmt|;
+modifier|*
+decl|>
+decl_stmt|;
 name|ValueHandlesTy
 name|ValueHandles
 decl_stmt|;
@@ -7759,11 +7844,19 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_IR_LLVMCONTEXTIMPL_H
+end_comment
 
 end_unit
 

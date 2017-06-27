@@ -250,13 +250,14 @@ parameter_list|)
 function_decl|;
 name|Symbol
 modifier|*
-name|addRelative
+name|addSynthetic
 parameter_list|(
 name|StringRef
 name|N
 parameter_list|,
-name|uint64_t
-name|VA
+name|Chunk
+modifier|*
+name|C
 parameter_list|)
 function_decl|;
 name|Symbol

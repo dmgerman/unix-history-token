@@ -260,6 +260,11 @@ parameter_list|()
 block|{}
 name|virtual
 name|void
+name|printCOFFLoadConfig
+parameter_list|()
+block|{ }
+name|virtual
+name|void
 name|printCodeViewDebugInfo
 parameter_list|()
 block|{ }

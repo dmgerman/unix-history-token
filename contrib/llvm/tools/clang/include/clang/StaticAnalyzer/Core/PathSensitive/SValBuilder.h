@@ -1515,6 +1515,30 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|/// Create NULL pointer, with proper pointer bit-width for given address
+comment|/// space.
+comment|/// \param type pointer type.
+name|Loc
+name|makeNullWithType
+parameter_list|(
+name|QualType
+name|type
+parameter_list|)
+block|{
+return|return
+name|loc
+operator|::
+name|ConcreteInt
+argument_list|(
+name|BasicVals
+operator|.
+name|getZeroWithTypeSize
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+return|;
+block|}
 name|Loc
 name|makeNull
 parameter_list|()

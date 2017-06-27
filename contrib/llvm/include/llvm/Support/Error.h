@@ -5099,6 +5099,88 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// Report a fatal error if ValOrErr is a failure value, otherwise unwraps and
+end_comment
+
+begin_comment
+comment|/// returns the contained reference.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This function can be used to wrap calls to fallible functions ONLY when it
+end_comment
+
+begin_comment
+comment|/// is known that the Error will always be a success value. E.g.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   @code{.cpp}
+end_comment
+
+begin_comment
+comment|///   // foo only attempts the fallible operation if DoFallibleOperation is
+end_comment
+
+begin_comment
+comment|///   // true. If DoFallibleOperation is false then foo always returns a Bar&.
+end_comment
+
+begin_comment
+comment|///   Expected<Bar&> foo(bool DoFallibleOperation);
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   Bar&X = cantFail(foo(false));
+end_comment
+
+begin_comment
+comment|///   @endcode
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+operator|&
+name|cantFail
+argument_list|(
+argument|Expected<T&> ValOrErr
+argument_list|)
+block|{
+if|if
+condition|(
+name|ValOrErr
+condition|)
+return|return
+operator|*
+name|ValOrErr
+return|;
+else|else
+name|llvm_unreachable
+argument_list|(
+literal|"Failure value returned from cantFail wrapped call"
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_comment
 unit|}
 comment|// end namespace llvm
 end_comment

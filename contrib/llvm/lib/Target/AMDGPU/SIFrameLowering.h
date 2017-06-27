@@ -214,6 +214,23 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+block|;
+name|public
+operator|:
+name|bool
+name|hasFP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|hasSP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

@@ -52,18 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeDatabase.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo/CodeView/TypeDatabaseVisitor.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/CodeView/TypeIndex.h"
 end_include
 
@@ -76,7 +64,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/StringSaver.h"
 end_include
 
 begin_decl_stmt
@@ -86,12 +86,6 @@ block|{
 name|namespace
 name|codeview
 block|{
-name|class
-name|TypeDatabase
-decl_stmt|;
-name|class
-name|TypeVisitorCallbacks
-decl_stmt|;
 comment|/// \brief Provides amortized O(1) random access to a CodeView type stream.
 comment|/// Normally to access a type from a type stream, you must know its byte
 comment|/// offset into the type stream, because type records are variable-lengthed.
@@ -127,14 +121,28 @@ name|TypeIndexOffset
 operator|>
 name|PartialOffsetArray
 expr_stmt|;
+block|struct
+name|CacheEntry
+block|{
+name|CVType
+name|Type
+block|;
+name|uint32_t
+name|Offset
+block|;
+name|StringRef
+name|Name
+block|;   }
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|explicit
 name|LazyRandomTypeCollection
-argument_list|(
-argument|uint32_t RecordCountHint
-argument_list|)
-decl_stmt|;
+parameter_list|(
+name|uint32_t
+name|RecordCountHint
+parameter_list|)
+function_decl|;
 name|LazyRandomTypeCollection
 argument_list|(
 argument|StringRef Data
@@ -173,6 +181,9 @@ operator|<
 name|uint8_t
 operator|>
 name|Data
+argument_list|,
+name|uint32_t
+name|RecordCountHint
 argument_list|)
 decl_stmt|;
 name|void
@@ -180,6 +191,16 @@ name|reset
 parameter_list|(
 name|StringRef
 name|Data
+parameter_list|,
+name|uint32_t
+name|RecordCountHint
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|getOffsetOfType
+parameter_list|(
+name|TypeIndex
+name|Index
 parameter_list|)
 function_decl|;
 name|CVType
@@ -236,19 +257,15 @@ name|override
 expr_stmt|;
 name|private
 label|:
-specifier|const
-name|TypeDatabase
-operator|&
-name|database
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Database
-return|;
-block|}
 name|Error
 name|ensureTypeExists
+parameter_list|(
+name|TypeIndex
+name|Index
+parameter_list|)
+function_decl|;
+name|void
+name|ensureCapacityFor
 parameter_list|(
 name|TypeIndex
 name|Index
@@ -268,7 +285,7 @@ name|TypeIndex
 name|TI
 parameter_list|)
 function_decl|;
-name|Error
+name|void
 name|visitRange
 parameter_list|(
 name|TypeIndex
@@ -281,42 +298,38 @@ name|TypeIndex
 name|End
 parameter_list|)
 function_decl|;
-name|Error
-name|visitOneRecord
-parameter_list|(
-name|TypeIndex
-name|TI
-parameter_list|,
+comment|/// Number of actual records.
 name|uint32_t
-name|Offset
-parameter_list|,
-name|CVType
-modifier|&
-name|Record
-parameter_list|)
-function_decl|;
-comment|/// Visited records get automatically added to the type database.
-name|TypeDatabase
-name|Database
+name|Count
+init|=
+literal|0
+decl_stmt|;
+comment|/// The largest type index which we've visited.
+name|TypeIndex
+name|LargestTypeIndex
+init|=
+name|TypeIndex
+operator|::
+name|None
+argument_list|()
+decl_stmt|;
+name|BumpPtrAllocator
+name|Allocator
+decl_stmt|;
+name|StringSaver
+name|NameStorage
 decl_stmt|;
 comment|/// The type array to allow random access visitation of.
 name|CVTypeArray
 name|Types
 decl_stmt|;
-comment|/// The database visitor which adds new records to the database.
-name|TypeDatabaseVisitor
-name|DatabaseVisitor
-decl_stmt|;
-comment|/// A vector mapping type indices to type offset.  For every record that has
-comment|/// been visited, contains the absolute offset of that record in the record
-comment|/// array.
 name|std
 operator|::
 name|vector
 operator|<
-name|uint32_t
+name|CacheEntry
 operator|>
-name|KnownOffsets
+name|Records
 expr_stmt|;
 comment|/// An array of index offsets for the given type stream, allowing log(N)
 comment|/// lookups of a type record by index.  Similar to KnownOffsets but only

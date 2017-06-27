@@ -152,10 +152,10 @@ name|orc
 block|{
 comment|/// @brief Lazy-emitting IR layer.
 comment|///
-comment|///   This layer accepts sets of LLVM IR Modules (via addModuleSet), but does
-comment|/// not immediately emit them the layer below. Instead, emissing to the base
-comment|/// layer is deferred until the first time the client requests the address
-comment|/// (via JITSymbol::getAddress) for a symbol contained in this layer.
+comment|///   This layer accepts LLVM IR Modules (via addModule), but does not
+comment|/// immediately emit them the layer below. Instead, emissing to the base layer
+comment|/// is deferred until the first time the client requests the address (via
+comment|/// JITSymbol::getAddress) for a symbol contained in this layer.
 name|template
 operator|<
 name|typename
@@ -166,28 +166,29 @@ name|LazyEmittingLayer
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|BaseLayerHandleT
+operator|=
 name|typename
 name|BaseLayerT
 operator|::
-name|ModuleSetHandleT
-name|BaseLayerHandleT
-expr_stmt|;
+name|ModuleHandleT
+block|;
 name|private
 operator|:
 name|class
-name|EmissionDeferredSet
+name|EmissionDeferredModule
 block|{
 name|public
 operator|:
-name|EmissionDeferredSet
+name|EmissionDeferredModule
 argument_list|()
 operator|=
 expr|default
 block|;
 name|virtual
 operator|~
-name|EmissionDeferredSet
+name|EmissionDeferredModule
 argument_list|()
 operator|=
 expr|default
@@ -375,15 +376,12 @@ name|llvm_unreachable
 argument_list|(
 literal|"Invalid emit-state."
 argument_list|)
-expr_stmt|;
-block|}
+block|;     }
 name|void
-name|removeModulesFromBaseLayer
-parameter_list|(
-name|BaseLayerT
-modifier|&
-name|BaseLayer
-parameter_list|)
+name|removeModuleFromBaseLayer
+argument_list|(
+argument|BaseLayerT&BaseLayer
+argument_list|)
 block|{
 if|if
 condition|(
@@ -393,7 +391,7 @@ name|NotEmitted
 condition|)
 name|BaseLayer
 operator|.
-name|removeModuleSet
+name|removeModule
 argument_list|(
 name|Handle
 argument_list|)
@@ -450,9 +448,6 @@ block|}
 name|template
 operator|<
 name|typename
-name|ModuleSetT
-operator|,
-name|typename
 name|MemoryManagerPtrT
 operator|,
 name|typename
@@ -463,13 +458,13 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|EmissionDeferredSet
+name|EmissionDeferredModule
 operator|>
 name|create
 argument_list|(
 argument|BaseLayerT&B
 argument_list|,
-argument|ModuleSetT Ms
+argument|std::shared_ptr<Module> M
 argument_list|,
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
@@ -523,18 +518,9 @@ name|BaseLayerHandleT
 name|Handle
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 name|template
 operator|<
-name|typename
-name|ModuleSetT
-operator|,
 name|typename
 name|MemoryManagerPtrT
 operator|,
@@ -542,29 +528,29 @@ name|typename
 name|SymbolResolverPtrT
 operator|>
 name|class
-name|EmissionDeferredSetImpl
+name|EmissionDeferredModuleImpl
 operator|:
 name|public
-name|EmissionDeferredSet
+name|EmissionDeferredModule
 block|{
 name|public
 operator|:
-name|EmissionDeferredSetImpl
+name|EmissionDeferredModuleImpl
 argument_list|(
-argument|ModuleSetT Ms
+argument|std::shared_ptr<Module> M
 argument_list|,
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
 argument|SymbolResolverPtrT Resolver
 argument_list|)
 operator|:
-name|Ms
+name|M
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
-name|Ms
+name|M
 argument_list|)
 argument_list|)
 block|,
@@ -664,17 +650,12 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|BaseLayerHandleT
 name|emitToBaseLayer
-parameter_list|(
-name|BaseLayerT
-modifier|&
-name|BaseLayer
-parameter_list|)
-function|override
+argument_list|(
+argument|BaseLayerT&BaseLayer
+argument_list|)
+name|override
 block|{
 comment|// We don't need the mangled names set any more: Once we've emitted this
 comment|// to the base layer we'll just look for symbols there.
@@ -682,17 +663,17 @@ name|MangledSymbols
 operator|.
 name|reset
 argument_list|()
-expr_stmt|;
+block|;
 return|return
 name|BaseLayer
 operator|.
-name|addModuleSet
+name|addModule
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
-name|Ms
+name|M
 argument_list|)
 argument_list|,
 name|std
@@ -711,61 +692,28 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_label
 name|private
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|// If the mangled name of the given GlobalValue matches the given search
-end_comment
-
-begin_comment
 comment|// name (and its visibility conforms to the ExportedSymbolsOnly flag) then
-end_comment
-
-begin_comment
 comment|// return the symbol. Otherwise, add the mangled name to the Names map and
-end_comment
-
-begin_comment
 comment|// return nullptr.
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|GlobalValue
-modifier|*
-name|addGlobalValue
-argument_list|(
-name|StringMap
-operator|<
 specifier|const
 name|GlobalValue
 operator|*
-operator|>
-operator|&
-name|Names
+name|addGlobalValue
+argument_list|(
+argument|StringMap<const GlobalValue*>&Names
 argument_list|,
-specifier|const
-name|GlobalValue
-operator|&
-name|GV
+argument|const GlobalValue&GV
 argument_list|,
-specifier|const
-name|Mangler
-operator|&
-name|Mang
+argument|const Mangler&Mang
 argument_list|,
-name|StringRef
-name|SearchName
+argument|StringRef SearchName
 argument_list|,
-name|bool
-name|ExportedSymbolsOnly
+argument|bool ExportedSymbolsOnly
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|// Modules don't "provide" decls or common symbols.
 if|if
@@ -788,14 +736,14 @@ name|std
 operator|::
 name|string
 name|MangledName
-expr_stmt|;
+block|;
 block|{
 name|raw_string_ostream
 name|MangledNameStream
-parameter_list|(
+argument_list|(
 name|MangledName
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|Mang
 operator|.
 name|getNameWithPrefix
@@ -807,8 +755,7 @@ name|GV
 argument_list|,
 name|false
 argument_list|)
-expr_stmt|;
-block|}
+block|;       }
 comment|// Check whether this is the name we were searching for, and if it is then
 comment|// bail out early.
 if|if
@@ -892,16 +839,6 @@ operator|>>
 operator|(
 operator|)
 decl_stmt|;
-for|for
-control|(
-specifier|const
-specifier|auto
-modifier|&
-name|M
-range|:
-name|Ms
-control|)
-block|{
 name|Mangler
 name|Mang
 decl_stmt|;
@@ -939,7 +876,6 @@ condition|)
 return|return
 name|GV
 return|;
-block|}
 name|MangledSymbols
 operator|=
 name|std
@@ -955,11 +891,16 @@ return|;
 block|}
 end_decl_stmt
 
-begin_decl_stmt
-name|ModuleSetT
-name|Ms
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|Module
+operator|>
+name|M
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|MemoryManagerPtrT
@@ -989,9 +930,11 @@ name|MangledSymbols
 expr_stmt|;
 end_expr_stmt
 
-begin_typedef
+begin_decl_stmt
 unit|};
-typedef|typedef
+name|using
+name|ModuleListT
+init|=
 name|std
 operator|::
 name|list
@@ -1000,11 +943,10 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|EmissionDeferredSet
+name|EmissionDeferredModule
 operator|>>
-name|ModuleSetListT
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|BaseLayerT
@@ -1014,8 +956,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ModuleSetListT
-name|ModuleSetList
+name|ModuleListT
+name|ModuleList
 decl_stmt|;
 end_decl_stmt
 
@@ -1025,18 +967,19 @@ label|:
 end_label
 
 begin_comment
-comment|/// @brief Handle to a set of loaded modules.
+comment|/// @brief Handle to a loaded module.
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|ModuleHandleT
+init|=
 name|typename
-name|ModuleSetListT
+name|ModuleListT
 operator|::
 name|iterator
-name|ModuleSetHandleT
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// @brief Construct a lazy emitting layer.
@@ -1055,22 +998,19 @@ argument_list|(
 argument|BaseLayer
 argument_list|)
 block|{}
-comment|/// @brief Add the given set of modules to the lazy emitting layer.
+comment|/// @brief Add the given module to the lazy emitting layer.
 name|template
 operator|<
-name|typename
-name|ModuleSetT
-operator|,
 name|typename
 name|MemoryManagerPtrT
 operator|,
 name|typename
 name|SymbolResolverPtrT
 operator|>
-name|ModuleSetHandleT
-name|addModuleSet
+name|ModuleHandleT
+name|addModule
 argument_list|(
-argument|ModuleSetT Ms
+argument|std::shared_ptr<Module> M
 argument_list|,
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
@@ -1078,16 +1018,16 @@ argument|SymbolResolverPtrT Resolver
 argument_list|)
 block|{
 return|return
-name|ModuleSetList
+name|ModuleList
 operator|.
 name|insert
 argument_list|(
-name|ModuleSetList
+name|ModuleList
 operator|.
 name|end
 argument_list|()
 argument_list|,
-name|EmissionDeferredSet
+name|EmissionDeferredModule
 operator|::
 name|create
 argument_list|(
@@ -1097,7 +1037,7 @@ name|std
 operator|::
 name|move
 argument_list|(
-name|Ms
+name|M
 argument_list|)
 argument_list|,
 name|std
@@ -1120,7 +1060,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// @brief Remove the module set represented by the given handle.
+comment|/// @brief Remove the module represented by the given handle.
 end_comment
 
 begin_comment
@@ -1128,18 +1068,18 @@ comment|///
 end_comment
 
 begin_comment
-comment|///   This method will free the memory associated with the given module set,
+comment|///   This method will free the memory associated with the given module, both
 end_comment
 
 begin_comment
-comment|/// both in this layer, and the base layer.
+comment|/// in this layer, and the base layer.
 end_comment
 
 begin_function
 name|void
-name|removeModuleSet
+name|removeModule
 parameter_list|(
-name|ModuleSetHandleT
+name|ModuleHandleT
 name|H
 parameter_list|)
 block|{
@@ -1148,12 +1088,12 @@ operator|*
 name|H
 operator|)
 operator|->
-name|removeModulesFromBaseLayer
+name|removeModuleFromBaseLayer
 argument_list|(
 name|BaseLayer
 argument_list|)
 expr_stmt|;
-name|ModuleSetList
+name|ModuleList
 operator|.
 name|erase
 argument_list|(
@@ -1212,23 +1152,23 @@ condition|)
 return|return
 name|Symbol
 return|;
-comment|// If not found then search the deferred sets. If any of these contain a
+comment|// If not found then search the deferred modules. If any of these contain a
 comment|// definition of 'Name' then they will return a JITSymbol that will emit
 comment|// the corresponding module when the symbol address is requested.
 for|for
 control|(
 name|auto
 operator|&
-name|DeferredSet
+name|DeferredMod
 operator|:
-name|ModuleSetList
+name|ModuleList
 control|)
 if|if
 condition|(
 name|auto
 name|Symbol
 init|=
-name|DeferredSet
+name|DeferredMod
 operator|->
 name|find
 argument_list|(
@@ -1250,7 +1190,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Get the address of the given symbol in the context of the set of
+comment|/// @brief Get the address of the given symbol in the context of the of
 end_comment
 
 begin_comment
@@ -1261,7 +1201,7 @@ begin_decl_stmt
 name|JITSymbol
 name|findSymbolIn
 argument_list|(
-name|ModuleSetHandleT
+name|ModuleHandleT
 name|H
 argument_list|,
 specifier|const
@@ -1294,22 +1234,22 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Immediately emit and finalize the moduleOB set represented by the
+comment|/// @brief Immediately emit and finalize the module represented by the given
 end_comment
 
 begin_comment
-comment|///        given handle.
+comment|///        handle.
 end_comment
 
 begin_comment
-comment|/// @param H Handle for module set to emit/finalize.
+comment|/// @param H Handle for module to emit/finalize.
 end_comment
 
 begin_function
 name|void
 name|emitAndFinalize
 parameter_list|(
-name|ModuleSetHandleT
+name|ModuleHandleT
 name|H
 parameter_list|)
 block|{
@@ -1336,9 +1276,6 @@ operator|>
 name|template
 operator|<
 name|typename
-name|ModuleSetT
-operator|,
-name|typename
 name|MemoryManagerPtrT
 operator|,
 name|typename
@@ -1354,40 +1291,36 @@ operator|<
 name|BaseLayerT
 operator|>
 operator|::
-name|EmissionDeferredSet
+name|EmissionDeferredModule
 operator|>
 name|LazyEmittingLayer
 operator|<
 name|BaseLayerT
 operator|>
 operator|::
-name|EmissionDeferredSet
+name|EmissionDeferredModule
 operator|::
 name|create
 argument_list|(
 argument|BaseLayerT&B
 argument_list|,
-argument|ModuleSetT Ms
+argument|std::shared_ptr<Module> M
 argument_list|,
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
 argument|SymbolResolverPtrT Resolver
 argument_list|)
 block|{
-typedef|typedef
-name|EmissionDeferredSetImpl
+name|using
+name|EDS
+operator|=
+name|EmissionDeferredModuleImpl
 operator|<
-name|ModuleSetT
-operator|,
 name|MemoryManagerPtrT
-operator|,
+block|,
 name|SymbolResolverPtrT
 operator|>
-name|EDS
-expr_stmt|;
-end_expr_stmt
-
-begin_return
+block|;
 return|return
 name|llvm
 operator|::
@@ -1400,7 +1333,7 @@ name|std
 operator|::
 name|move
 argument_list|(
-name|Ms
+name|M
 argument_list|)
 operator|,
 name|std
@@ -1418,10 +1351,11 @@ name|Resolver
 argument_list|)
 operator|)
 return|;
-end_return
+block|}
+end_expr_stmt
 
 begin_comment
-unit|}  }
+unit|}
 comment|// end namespace orc
 end_comment
 

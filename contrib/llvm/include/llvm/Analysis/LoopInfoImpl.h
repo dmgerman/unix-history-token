@@ -463,11 +463,15 @@ comment|/// loop has a preheader if there is only one edge to the header of the 
 end_comment
 
 begin_comment
-comment|/// from outside of the loop.  If this is the case, the block branching to the
+comment|/// from outside of the loop and it is legal to hoist instructions into the
 end_comment
 
 begin_comment
-comment|/// header of the loop is the preheader node.
+comment|/// predecessor. If this is the case, the block branching to the header of the
+end_comment
+
+begin_comment
+comment|/// loop is the preheader node.
 end_comment
 
 begin_comment
@@ -521,6 +525,24 @@ return|return
 name|nullptr
 return|;
 end_expr_stmt
+
+begin_comment
+comment|// Make sure we are allowed to hoist instructions into the predecessor.
+end_comment
+
+begin_if
+if|if
+condition|(
+operator|!
+name|Out
+operator|->
+name|isLegalToHoistInto
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+end_if
 
 begin_comment
 comment|// Make sure there is only one exit out of the preheader.

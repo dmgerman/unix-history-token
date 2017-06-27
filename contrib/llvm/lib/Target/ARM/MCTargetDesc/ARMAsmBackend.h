@@ -196,15 +196,9 @@ name|processFixupValue
 argument_list|(
 argument|const MCAssembler&Asm
 argument_list|,
-argument|const MCAsmLayout&Layout
-argument_list|,
 argument|const MCFixup&Fixup
 argument_list|,
-argument|const MCFragment *DF
-argument_list|,
 argument|const MCValue&Target
-argument_list|,
-argument|uint64_t&Value
 argument_list|,
 argument|bool&IsResolved
 argument_list|)
@@ -213,7 +207,11 @@ block|;
 name|unsigned
 name|adjustFixupValue
 argument_list|(
+argument|const MCAssembler&Asm
+argument_list|,
 argument|const MCFixup&Fixup
+argument_list|,
+argument|const MCValue&Target
 argument_list|,
 argument|uint64_t Value
 argument_list|,
@@ -230,17 +228,17 @@ block|;
 name|void
 name|applyFixup
 argument_list|(
+argument|const MCAssembler&Asm
+argument_list|,
 argument|const MCFixup&Fixup
 argument_list|,
-argument|char *Data
+argument|const MCValue&Target
 argument_list|,
-argument|unsigned DataSize
+argument|MutableArrayRef<char> Data
 argument_list|,
 argument|uint64_t Value
 argument_list|,
 argument|bool IsPCRel
-argument_list|,
-argument|MCContext&Ctx
 argument_list|)
 specifier|const
 name|override

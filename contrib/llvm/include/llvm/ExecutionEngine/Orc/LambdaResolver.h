@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- LambdaResolverMM - Redirect symbol lookup via a functor -*- C++ -*-===//
+comment|//===- LambdaResolverMM - Redirect symbol lookup via a functor --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include
@@ -183,15 +183,16 @@ argument_list|,
 argument|ExternalLookupFtorT ExternalLookupFtor
 argument_list|)
 block|{
-typedef|typedef
+name|using
+name|LR
+operator|=
 name|LambdaResolver
 operator|<
 name|DylibLookupFtorT
-operator|,
+block|,
 name|ExternalLookupFtorT
 operator|>
-name|LR
-expr_stmt|;
+block|;
 return|return
 name|make_unique
 operator|<
@@ -215,15 +216,12 @@ operator|)
 return|;
 block|}
 block|}
+comment|// end namespace orc
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// End namespace orc.
-end_comment
-
-begin_comment
-unit|}
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif

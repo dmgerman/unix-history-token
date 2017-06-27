@@ -89,6 +89,91 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+comment|/// A helper struct for DWARFFormValue methods, providing information that
+comment|/// allows it to know the byte size of DW_FORM values that vary in size
+comment|/// depending on the DWARF version, address byte size, or DWARF32/DWARF64.
+struct|struct
+name|DWARFFormParams
+block|{
+name|uint16_t
+name|Version
+decl_stmt|;
+name|uint8_t
+name|AddrSize
+decl_stmt|;
+name|dwarf
+operator|::
+name|DwarfFormat
+name|Format
+expr_stmt|;
+comment|/// The definition of the size of form DW_FORM_ref_addr depends on the
+comment|/// version. In DWARF v2 it's the size of an address; after that, it's the
+comment|/// size of a reference.
+name|uint8_t
+name|getRefAddrByteSize
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|Version
+operator|==
+literal|2
+condition|)
+return|return
+name|AddrSize
+return|;
+return|return
+name|getDwarfOffsetByteSize
+argument_list|()
+return|;
+block|}
+comment|/// The size of a reference is determined by the DWARF 32/64-bit format.
+name|uint8_t
+name|getDwarfOffsetByteSize
+argument_list|()
+decl|const
+block|{
+switch|switch
+condition|(
+name|Format
+condition|)
+block|{
+case|case
+name|dwarf
+operator|::
+name|DwarfFormat
+operator|::
+name|DWARF32
+case|:
+return|return
+literal|4
+return|;
+case|case
+name|dwarf
+operator|::
+name|DwarfFormat
+operator|::
+name|DWARF64
+case|:
+return|return
+literal|8
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Invalid Format value"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|class
 name|DWARFFormValue
 block|{
@@ -473,43 +558,12 @@ specifier|const
 expr_stmt|;
 comment|/// Get the fixed byte size for a given form.
 comment|///
-comment|/// If the form always has a fixed valid byte size that doesn't depend on a
-comment|/// DWARFUnit, then an Optional with a value will be returned. If the form
-comment|/// can vary in size depending on the DWARFUnit (DWARF version, address byte
-comment|/// size, or DWARF 32/64) and the DWARFUnit is valid, then an Optional with a
-comment|/// valid value is returned. If the form is always encoded using a variable
-comment|/// length storage format (ULEB or SLEB numbers or blocks) or the size
-comment|/// depends on a DWARFUnit and the DWARFUnit is NULL, then None will be
-comment|/// returned.
-comment|/// \param Form The DWARF form to get the fixed byte size for
-comment|/// \param U The DWARFUnit that can be used to help determine the byte size.
+comment|/// If the form has a fixed byte size, then an Optional with a value will be
+comment|/// returned. If the form is always encoded using a variable length storage
+comment|/// format (ULEB or SLEB numbers or blocks) then None will be returned.
 comment|///
-comment|/// \returns Optional<uint8_t> value with the fixed byte size or None if
-comment|/// \p Form doesn't have a fixed byte size or a DWARFUnit wasn't supplied
-comment|/// and was needed to calculate the byte size.
-specifier|static
-name|Optional
-operator|<
-name|uint8_t
-operator|>
-name|getFixedByteSize
-argument_list|(
-argument|dwarf::Form Form
-argument_list|,
-argument|const DWARFUnit *U = nullptr
-argument_list|)
-expr_stmt|;
-comment|/// Get the fixed byte size for a given form.
-comment|///
-comment|/// If the form has a fixed byte size given a valid DWARF version and address
-comment|/// byte size, then an Optional with a valid value is returned. If the form
-comment|/// is always encoded using a variable length storage format (ULEB or SLEB
-comment|/// numbers or blocks) then None will be returned.
-comment|///
-comment|/// \param Form DWARF form to get the fixed byte size for
-comment|/// \param Version DWARF version number.
-comment|/// \param AddrSize size of an address in bytes.
-comment|/// \param Format enum value from llvm::dwarf::DwarfFormat.
+comment|/// \param Form DWARF form to get the fixed byte size for.
+comment|/// \param FormParams DWARF parameters to help interpret forms.
 comment|/// \returns Optional<uint8_t> value with the fixed byte size or None if
 comment|/// \p Form doesn't have a fixed byte size.
 specifier|static
@@ -521,21 +575,17 @@ name|getFixedByteSize
 argument_list|(
 argument|dwarf::Form Form
 argument_list|,
-argument|uint16_t Version
-argument_list|,
-argument|uint8_t AddrSize
-argument_list|,
-argument|llvm::dwarf::DwarfFormat Format
+argument|const DWARFFormParams FormParams
 argument_list|)
 expr_stmt|;
-comment|/// Skip a form in \p DebugInfoData at offset specified by \p OffsetPtr.
+comment|/// Skip a form's value in \p DebugInfoData at the offset specified by
+comment|/// \p OffsetPtr.
 comment|///
-comment|/// Skips the bytes for this form in the debug info and updates the offset.
+comment|/// Skips the bytes for the current form and updates the offset.
 comment|///
-comment|/// \param DebugInfoData the .debug_info data to use to skip the value.
-comment|/// \param OffsetPtr a reference to the offset that will be updated.
-comment|/// \param U the DWARFUnit to use when skipping the form in case the form
-comment|/// size differs according to data in the DWARFUnit.
+comment|/// \param DebugInfoData The data where we want to skip the value.
+comment|/// \param OffsetPtr A reference to the offset that will be updated.
+comment|/// \param Params DWARF parameters to help interpret forms.
 comment|/// \returns true on success, false if the form was not skipped.
 name|bool
 name|skipValue
@@ -548,21 +598,35 @@ operator|*
 name|OffsetPtr
 argument_list|,
 specifier|const
-name|DWARFUnit
-operator|*
-name|U
+name|DWARFFormParams
+name|Params
 argument_list|)
 decl|const
-decl_stmt|;
-comment|/// Skip a form in \p DebugInfoData at offset specified by \p OffsetPtr.
+block|{
+return|return
+name|DWARFFormValue
+operator|::
+name|skipValue
+argument_list|(
+name|Form
+argument_list|,
+name|DebugInfoData
+argument_list|,
+name|OffsetPtr
+argument_list|,
+name|Params
+argument_list|)
+return|;
+block|}
+comment|/// Skip a form's value in \p DebugInfoData at the offset specified by
+comment|/// \p OffsetPtr.
 comment|///
-comment|/// Skips the bytes for this form in the debug info and updates the offset.
+comment|/// Skips the bytes for the specified form and updates the offset.
 comment|///
-comment|/// \param Form the DW_FORM enumeration that indicates the form to skip.
-comment|/// \param DebugInfoData the .debug_info data to use to skip the value.
-comment|/// \param OffsetPtr a reference to the offset that will be updated.
-comment|/// \param U the DWARFUnit to use when skipping the form in case the form
-comment|/// size differs according to data in the DWARFUnit.
+comment|/// \param Form The DW_FORM enumeration that indicates the form to skip.
+comment|/// \param DebugInfoData The data where we want to skip the value.
+comment|/// \param OffsetPtr A reference to the offset that will be updated.
+comment|/// \param FormParams DWARF parameters to help interpret forms.
 comment|/// \returns true on success, false if the form was not skipped.
 specifier|static
 name|bool
@@ -581,50 +645,8 @@ operator|*
 name|OffsetPtr
 argument_list|,
 specifier|const
-name|DWARFUnit
-operator|*
-name|U
-argument_list|)
-decl_stmt|;
-comment|/// Skip a form in \p DebugInfoData at offset specified by \p OffsetPtr.
-comment|///
-comment|/// Skips the bytes for this form in the debug info and updates the offset.
-comment|///
-comment|/// \param Form the DW_FORM enumeration that indicates the form to skip.
-comment|/// \param DebugInfoData the .debug_info data to use to skip the value.
-comment|/// \param OffsetPtr a reference to the offset that will be updated.
-comment|/// \param Version DWARF version number.
-comment|/// \param AddrSize size of an address in bytes.
-comment|/// \param Format enum value from llvm::dwarf::DwarfFormat.
-comment|/// \returns true on success, false if the form was not skipped.
-specifier|static
-name|bool
-name|skipValue
-argument_list|(
-name|dwarf
-operator|::
-name|Form
-name|Form
-argument_list|,
-name|DataExtractor
-name|DebugInfoData
-argument_list|,
-name|uint32_t
-operator|*
-name|OffsetPtr
-argument_list|,
-name|uint16_t
-name|Version
-argument_list|,
-name|uint8_t
-name|AddrSize
-argument_list|,
-name|llvm
-operator|::
-name|dwarf
-operator|::
-name|DwarfFormat
-name|Format
+name|DWARFFormParams
+name|FormParams
 argument_list|)
 decl_stmt|;
 name|private
@@ -639,7 +661,13 @@ argument_list|)
 decl|const
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|namespace
 name|dwarf
 block|{
@@ -674,12 +702,33 @@ return|return
 name|None
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Take an optional DWARFFormValue and extract a string value from it.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
 comment|/// \param Default the default value to return in case of failure.
+end_comment
+
+begin_comment
 comment|/// \returns the string value or Default if the V doesn't have a value or the
+end_comment
+
+begin_comment
 comment|/// form value's encoding wasn't a string.
+end_comment
+
+begin_decl_stmt
 specifier|inline
 specifier|const
 name|char
@@ -712,11 +761,29 @@ name|Default
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Take an optional DWARFFormValue and try to extract an unsigned constant.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param V and optional DWARFFormValue to attempt to extract the value from.
+end_comment
+
+begin_comment
 comment|/// \returns an optional value that contains a value if the form value
+end_comment
+
+begin_comment
 comment|/// was valid and has a unsigned constant form.
+end_comment
+
+begin_expr_stmt
 specifier|inline
 name|Optional
 operator|<
@@ -737,13 +804,16 @@ operator|->
 name|getAsUnsignedConstant
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|None
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// Take an optional DWARFFormValue and extract a unsigned constant.
 end_comment
 
@@ -768,7 +838,7 @@ comment|/// value or the form value's encoding wasn't an unsigned constant form.
 end_comment
 
 begin_decl_stmt
-specifier|inline
+unit|inline
 name|uint64_t
 name|toUnsigned
 argument_list|(

@@ -104,15 +104,54 @@ name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
+name|TargetRegisterClass
+decl_stmt|;
+name|class
 name|Twine
 decl_stmt|;
 name|class
 name|ConstantFP
 decl_stmt|;
+comment|/// Try to constrain Reg to the specified register class. If this fails,
+comment|/// create a new virtual register in the correct class and insert a COPY before
+comment|/// \p InsertPt. The debug location of \p InsertPt is used for the new copy.
+comment|///
+comment|/// \return The virtual register constrained to the right register class.
+name|unsigned
+name|constrainRegToClass
+parameter_list|(
+name|MachineRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
+specifier|const
+name|TargetInstrInfo
+modifier|&
+name|TII
+parameter_list|,
+specifier|const
+name|RegisterBankInfo
+modifier|&
+name|RBI
+parameter_list|,
+name|MachineInstr
+modifier|&
+name|InsertPt
+parameter_list|,
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|&
+name|RegClass
+parameter_list|)
+function_decl|;
 comment|/// Try to constrain Reg so that it is usable by argument OpIdx of the
 comment|/// provided MCInstrDesc \p II. If this fails, create a new virtual
 comment|/// register in the correct class and insert a COPY before \p InsertPt.
-comment|/// The debug location of \p InsertPt is used for the new copy.
+comment|/// This is equivalent to constrainRegToClass() with RegClass obtained from the
+comment|/// MCInstrDesc. The debug location of \p InsertPt is used for the new copy.
 comment|///
 comment|/// \return The virtual register constrained to the right register class.
 name|unsigned

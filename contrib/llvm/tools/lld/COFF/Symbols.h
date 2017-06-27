@@ -181,7 +181,7 @@ name|DefinedImportDataKind
 block|,
 name|DefinedAbsoluteKind
 block|,
-name|DefinedRelativeKind
+name|DefinedSyntheticKind
 block|,
 name|UndefinedKind
 block|,
@@ -193,7 +193,7 @@ name|DefinedCommonKind
 block|,
 name|LastDefinedKind
 init|=
-name|DefinedRelativeKind
+name|DefinedSyntheticKind
 block|,   }
 enum|;
 name|Kind
@@ -377,13 +377,13 @@ argument_list|()
 block|;
 comment|// Returns the RVA relative to the beginning of the output section.
 comment|// Used to implement SECREL relocation type.
-name|uint64_t
+name|uint32_t
 name|getSecrel
 argument_list|()
 block|;
 comment|// Returns the output section index.
 comment|// Used to implement SECTION relocation type.
-name|uint64_t
+name|uint16_t
 name|getSectionIndex
 argument_list|()
 block|;
@@ -592,6 +592,10 @@ operator|->
 name|Value
 return|;
 block|}
+name|uint32_t
+name|getSecrel
+argument_list|()
+block|;
 name|private
 operator|:
 name|SectionChunk
@@ -675,6 +679,20 @@ name|getRVA
 argument_list|()
 return|;
 block|}
+name|uint32_t
+name|getSecrel
+argument_list|()
+block|{
+return|return
+name|Data
+operator|->
+name|OutputSectionOff
+return|;
+block|}
+name|uint16_t
+name|getSectionIndex
+argument_list|()
+block|;
 name|private
 operator|:
 name|friend
@@ -789,18 +807,23 @@ name|VA
 operator|=
 name|V
 block|; }
+comment|// The sentinel absolute symbol section index. Section index relocations
+comment|// against absolute symbols resolve to this 16 bit number, and it is the
+comment|// largest valid section index plus one. This is written by the Writer.
+specifier|static
+name|uint16_t
+name|OutputSectionIndex
+block|;
 name|private
 operator|:
 name|uint64_t
 name|VA
 block|; }
 decl_stmt|;
-comment|// This is a kind of absolute symbol but relative to the image base.
-comment|// Unlike absolute symbols, relocations referring this kind of symbols
-comment|// are subject of the base relocation. This type is used rarely --
-comment|// mainly for __ImageBase.
+comment|// This symbol is used for linker-synthesized symbols like __ImageBase and
+comment|// __safe_se_handler_table.
 name|class
-name|DefinedRelative
+name|DefinedSynthetic
 range|:
 name|public
 name|Defined
@@ -808,24 +831,23 @@ block|{
 name|public
 operator|:
 name|explicit
-name|DefinedRelative
+name|DefinedSynthetic
 argument_list|(
 argument|StringRef Name
 argument_list|,
-argument|uint64_t V =
-literal|0
+argument|Chunk *C
 argument_list|)
 operator|:
 name|Defined
 argument_list|(
-name|DefinedRelativeKind
+name|DefinedSyntheticKind
 argument_list|,
 name|Name
 argument_list|)
 block|,
-name|RVA
+name|C
 argument_list|(
-argument|V
+argument|C
 argument_list|)
 block|{}
 specifier|static
@@ -841,31 +863,57 @@ operator|->
 name|kind
 argument_list|()
 operator|==
-name|DefinedRelativeKind
+name|DefinedSyntheticKind
 return|;
 block|}
-name|uint64_t
+comment|// A null chunk indicates that this is __ImageBase. Otherwise, this is some
+comment|// other synthesized chunk, like SEHTableChunk.
+name|uint32_t
 name|getRVA
 argument_list|()
+specifier|const
 block|{
 return|return
-name|RVA
+name|C
+operator|?
+name|C
+operator|->
+name|getRVA
+argument_list|()
+operator|:
+literal|0
 return|;
 block|}
-name|void
-name|setRVA
-argument_list|(
-argument|uint64_t V
-argument_list|)
+name|uint32_t
+name|getSecrel
+argument_list|()
+specifier|const
 block|{
-name|RVA
-operator|=
-name|V
-block|; }
+return|return
+name|C
+condition|?
+name|C
+operator|->
+name|OutputSectionOff
+else|:
+literal|0
+return|;
+block|}
+name|Chunk
+operator|*
+name|getChunk
+argument_list|()
+specifier|const
+block|{
+return|return
+name|C
+return|;
+block|}
 name|private
 operator|:
-name|uint64_t
-name|RVA
+name|Chunk
+operator|*
+name|C
 block|; }
 decl_stmt|;
 comment|// This class represents a symbol defined in an archive file. It is
@@ -1282,12 +1330,12 @@ name|getRVA
 argument_list|()
 return|;
 case|case
-name|DefinedRelativeKind
+name|DefinedSyntheticKind
 case|:
 return|return
 name|cast
 operator|<
-name|DefinedRelative
+name|DefinedSynthetic
 operator|>
 operator|(
 name|this
@@ -1423,7 +1471,7 @@ name|DefinedCommon
 block|,
 name|DefinedAbsolute
 block|,
-name|DefinedRelative
+name|DefinedSynthetic
 block|,
 name|Lazy
 block|,

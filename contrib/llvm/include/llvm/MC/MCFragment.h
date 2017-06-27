@@ -416,8 +416,9 @@ return|;
 block|}
 name|void
 name|dump
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 name|class

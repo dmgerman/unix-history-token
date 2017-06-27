@@ -271,12 +271,31 @@ name|O
 argument_list|)
 return|;
 block|}
+comment|/// Return true if memory region [V, V+Offset+Size) is known to be
+comment|/// dereferenceable.
+name|bool
+name|isDereferenceable
+argument_list|(
+name|unsigned
+name|Size
+argument_list|,
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+struct|;
 comment|/// Return the LLVM IR address space number that this pointer points into.
 name|unsigned
 name|getAddrSpace
 argument_list|()
-decl|const
-struct|;
+specifier|const
+expr_stmt|;
 comment|/// Return a MachinePointerInfo record that refers to the constant pool.
 specifier|static
 name|MachinePointerInfo

@@ -732,6 +732,7 @@ name|virtual
 name|void
 name|dumpPolicy
 argument_list|()
+specifier|const
 block|{}
 comment|/// Check if pressure tracking is needed before building the DAG and
 comment|/// initializing this strategy. Called after initPolicy.
@@ -1925,6 +1926,7 @@ block|}
 name|void
 name|dump
 argument_list|()
+specifier|const
 block|; }
 block|;
 comment|/// Summarize the unscheduled region.
@@ -2471,6 +2473,7 @@ name|NDEBUG
 name|void
 name|dumpScheduledState
 argument_list|()
+specifier|const
 block|;
 endif|#
 directive|endif
@@ -2959,6 +2962,7 @@ block|;
 name|void
 name|dumpPolicy
 argument_list|()
+specifier|const
 name|override
 block|;
 name|bool

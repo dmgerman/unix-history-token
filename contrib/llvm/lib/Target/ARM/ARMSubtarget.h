@@ -671,6 +671,13 @@ name|HasFPAO
 operator|=
 name|false
 block|;
+comment|/// HasFuseAES - if true, processor executes back to back AES instruction
+comment|/// pairs faster.
+name|bool
+name|HasFuseAES
+operator|=
+name|false
+block|;
 comment|/// If true, if conversion may decide to leave some instructions unpredicated.
 name|bool
 name|IsProfitableToUnpredicate
@@ -1858,6 +1865,26 @@ specifier|const
 block|{
 return|return
 name|HasFullFP16
+return|;
+block|}
+name|bool
+name|hasFuseAES
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFuseAES
+return|;
+block|}
+comment|/// \brief Return true if the CPU supports any kind of instruction fusion.
+name|bool
+name|hasFusion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasFuseAES
+argument_list|()
 return|;
 block|}
 specifier|const

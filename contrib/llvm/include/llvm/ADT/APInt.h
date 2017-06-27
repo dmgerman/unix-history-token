@@ -593,6 +593,20 @@ argument_list|()
 specifier|const
 name|LLVM_READONLY
 expr_stmt|;
+comment|/// out-of-line slow case for countLeadingOnes.
+name|unsigned
+name|countLeadingOnesSlowCase
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+expr_stmt|;
+comment|/// out-of-line slow case for countTrailingZeros.
+name|unsigned
+name|countTrailingZerosSlowCase
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+expr_stmt|;
 comment|/// out-of-line slow case for countTrailingOnes
 name|unsigned
 name|countTrailingOnesSlowCase
@@ -1071,7 +1085,7 @@ name|BitWidth
 operator|)
 return|;
 return|return
-name|countPopulationSlowCase
+name|countTrailingOnesSlowCase
 argument_list|()
 operator|==
 name|BitWidth
@@ -1130,12 +1144,39 @@ name|isMaxSignedValue
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+return|return
+name|U
+operator|.
+name|VAL
+operator|==
+operator|(
+operator|(
+name|WordType
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+operator|(
+name|BitWidth
+operator|-
+literal|1
+operator|)
+operator|)
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|!
 name|isNegative
 argument_list|()
 operator|&&
-name|countPopulation
+name|countTrailingOnesSlowCase
 argument_list|()
 operator|==
 name|BitWidth
@@ -1143,10 +1184,25 @@ operator|-
 literal|1
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine if this is the smallest unsigned value.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This checks to see if the value of this APInt is the minimum unsigned
+end_comment
+
+begin_comment
 comment|/// value for the APInt's bit width.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isMinValue
 argument_list|()
@@ -1157,31 +1213,84 @@ name|isNullValue
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determine if this is the smallest signed value.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This checks to see if the value of this APInt is the minimum signed
+end_comment
+
+begin_comment
 comment|/// value for the APInt's bit width.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isMinSignedValue
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+return|return
+name|U
+operator|.
+name|VAL
+operator|==
+operator|(
+name|WordType
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+operator|(
+name|BitWidth
+operator|-
+literal|1
+operator|)
+operator|)
+return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|isNegative
 argument_list|()
 operator|&&
-name|isPowerOf2
+name|countTrailingZerosSlowCase
 argument_list|()
+operator|==
+name|BitWidth
+operator|-
+literal|1
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// \brief Check if this APInt has an N-bits unsigned integer value.
-name|bool
+end_comment
+
+begin_macro
+unit|bool
 name|isIntN
 argument_list|(
-name|unsigned
-name|N
+argument|unsigned N
 argument_list|)
-decl|const
+end_macro
+
+begin_expr_stmt
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -1189,7 +1298,7 @@ name|N
 operator|&&
 literal|"N == 0 ???"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|getActiveBits
 argument_list|()
@@ -1197,7 +1306,13 @@ operator|<=
 name|N
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Check if this APInt has an N-bits signed integer value.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isSignedIntN
 argument_list|(
@@ -1220,9 +1335,21 @@ operator|<=
 name|N
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Check if this APInt's value is a power of two greater than zero.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \returns true if the argument APInt value is a power of two> 0.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isPowerOf2
 argument_list|()
@@ -1241,16 +1368,19 @@ operator|.
 name|VAL
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|countPopulationSlowCase
 argument_list|()
 operator|==
 literal|1
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief Check if the APInt's value is returned by getSignMask.
 end_comment
 
@@ -1262,10 +1392,13 @@ begin_comment
 comment|/// \returns true if this is the value returned by getSignMask.
 end_comment
 
-begin_expr_stmt
-name|bool
+begin_macro
+unit|bool
 name|isSignMask
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -7148,11 +7281,39 @@ end_macro
 
 begin_expr_stmt
 specifier|const
-name|LLVM_READONLY
-expr_stmt|;
+block|{
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+return|return
+name|llvm
+operator|::
+name|countLeadingOnes
+argument_list|(
+name|U
+operator|.
+name|VAL
+operator|<<
+operator|(
+name|APINT_BITS_PER_WORD
+operator|-
+name|BitWidth
+operator|)
+argument_list|)
+return|;
 end_expr_stmt
 
+begin_return
+return|return
+name|countLeadingOnesSlowCase
+argument_list|()
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/// Computes the number of leading bits of this APInt that are equal to its
 end_comment
 
@@ -7160,10 +7321,13 @@ begin_comment
 comment|/// sign bit.
 end_comment
 
-begin_expr_stmt
-name|unsigned
+begin_macro
+unit|unsigned
 name|getNumSignBits
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -7216,11 +7380,43 @@ name|unsigned
 name|countTrailingZeros
 argument_list|()
 specifier|const
-name|LLVM_READONLY
-expr_stmt|;
+block|{
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+return|return
+name|std
+operator|::
+name|min
+argument_list|(
+name|unsigned
+argument_list|(
+name|llvm
+operator|::
+name|countTrailingZeros
+argument_list|(
+name|U
+operator|.
+name|VAL
+argument_list|)
+argument_list|)
+argument_list|,
+name|BitWidth
+argument_list|)
+return|;
 end_expr_stmt
 
+begin_return
+return|return
+name|countTrailingZerosSlowCase
+argument_list|()
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/// \brief Count the number of trailing one bits.
 end_comment
 
@@ -7252,10 +7448,13 @@ begin_comment
 comment|/// of ones from the least significant bit to the first zero bit.
 end_comment
 
-begin_expr_stmt
-name|unsigned
+begin_macro
+unit|unsigned
 name|countTrailingOnes
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 if|if

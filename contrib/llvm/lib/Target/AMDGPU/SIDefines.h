@@ -459,10 +459,10 @@ block|,
 comment|// Operand for source modifiers for VOP instructions
 name|OPERAND_INPUT_MODS
 block|,
-comment|// Operand for GFX9 SDWA instructions
-name|OPERAND_SDWA9_SRC
+comment|// Operand for SDWA instructions
+name|OPERAND_SDWA_SRC
 block|,
-name|OPERAND_SDWA9_VOPC_DST
+name|OPERAND_SDWA_VOPC_DST
 block|,
 comment|/// Operand with 32-bit immediate that uses the constant bus.
 name|OPERAND_KIMM32

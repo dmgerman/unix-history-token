@@ -312,7 +312,7 @@ argument_list|)
 block|,
 name|IsPostDominators
 argument_list|(
-argument|std::move(Arg.IsPostDominators)
+argument|Arg.IsPostDominators
 argument_list|)
 block|{
 name|Arg
@@ -345,14 +345,9 @@ argument_list|)
 block|;
 name|IsPostDominators
 operator|=
-name|std
-operator|::
-name|move
-argument_list|(
 name|RHS
 operator|.
 name|IsPostDominators
-argument_list|)
 block|;
 name|RHS
 operator|.
@@ -429,9 +424,6 @@ operator|*
 name|TheBB
 block|;
 name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
 operator|*
 name|IDom
 block|;
@@ -440,26 +432,23 @@ operator|::
 name|vector
 operator|<
 name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
 operator|*
 operator|>
 name|Children
 block|;
 name|mutable
-name|int
+name|unsigned
 name|DFSNumIn
 operator|=
-operator|-
-literal|1
+operator|~
+literal|0
 block|;
 name|mutable
-name|int
+name|unsigned
 name|DFSNumOut
 operator|=
-operator|-
-literal|1
+operator|~
+literal|0
 block|;
 name|public
 operator|:
@@ -470,9 +459,6 @@ operator|*
 name|BB
 argument_list|,
 name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
 operator|*
 name|iDom
 argument_list|)
@@ -487,38 +473,34 @@ argument_list|(
 argument|iDom
 argument_list|)
 block|{}
-typedef|typedef
+name|using
+name|iterator
+operator|=
 name|typename
 name|std
 operator|::
 name|vector
 operator|<
 name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
 operator|*
 operator|>
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_iterator
+operator|=
 name|typename
 name|std
 operator|::
 name|vector
 operator|<
 name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
 operator|*
 operator|>
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
+block|;
 name|iterator
 name|begin
 argument_list|()
@@ -576,9 +558,6 @@ name|TheBB
 return|;
 block|}
 name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
 operator|*
 name|getIDom
 argument_list|()
@@ -594,9 +573,6 @@ operator|::
 name|vector
 operator|<
 name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
 operator|*
 operator|>
 operator|&
@@ -613,12 +589,10 @@ operator|::
 name|unique_ptr
 operator|<
 name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>>
+operator|>
 name|addChild
 argument_list|(
-argument|std::unique_ptr<DomTreeNodeBase<NodeT>> C
+argument|std::unique_ptr<DomTreeNodeBase> C
 argument_list|)
 block|{
 name|Children
@@ -659,7 +633,7 @@ block|; }
 name|bool
 name|compare
 argument_list|(
-argument|const DomTreeNodeBase<NodeT> *Other
+argument|const DomTreeNodeBase *Other
 argument_list|)
 specifier|const
 block|{
@@ -685,7 +659,7 @@ operator|,
 literal|4
 operator|>
 name|OtherChildren
-expr_stmt|;
+block|;
 for|for
 control|(
 specifier|const
@@ -755,18 +729,10 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|setIDom
 argument_list|(
-name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
-operator|*
-name|NewIDom
+argument|DomTreeNodeBase *NewIDom
 argument_list|)
 block|{
 name|assert
@@ -775,7 +741,7 @@ name|IDom
 operator|&&
 literal|"No immediate dominator?"
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|IDom
@@ -789,9 +755,6 @@ operator|::
 name|vector
 operator|<
 name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
 operator|*
 operator|>
 operator|::
@@ -847,21 +810,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getDFSNumIn/getDFSNumOut - These return the DFS visitation order for nodes
-end_comment
-
-begin_comment
 comment|/// in the dominator tree. They are only guaranteed valid if
-end_comment
-
-begin_comment
 comment|/// updateDFSNumbers() has been called.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getDFSNumIn
 argument_list|()
@@ -871,9 +822,6 @@ return|return
 name|DFSNumIn
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|getDFSNumOut
 argument_list|()
@@ -883,34 +831,16 @@ return|return
 name|DFSNumOut
 return|;
 block|}
-end_expr_stmt
-
-begin_label
 name|private
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|// Return true if this node is dominated by other. Use this only if DFS info
-end_comment
-
-begin_comment
 comment|// is valid.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|DominatedBy
 argument_list|(
-specifier|const
-name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
-operator|*
-name|other
+argument|const DomTreeNodeBase *other
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|this
@@ -930,10 +860,8 @@ operator|->
 name|DFSNumOut
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|template
 operator|<
 name|class
@@ -946,7 +874,7 @@ operator|<<
 operator|(
 name|raw_ostream
 operator|&
-name|o
+name|O
 operator|,
 specifier|const
 name|DomTreeNodeBase
@@ -971,17 +899,17 @@ argument_list|()
 operator|->
 name|printAsOperand
 argument_list|(
-name|o
+name|O
 argument_list|,
 name|false
 argument_list|)
 expr_stmt|;
 else|else
-name|o
+name|O
 operator|<<
 literal|"<<exit node>>"
 expr_stmt|;
-name|o
+name|O
 operator|<<
 literal|" {"
 operator|<<
@@ -998,19 +926,14 @@ name|getDFSNumOut
 argument_list|()
 operator|<<
 literal|"}"
-expr_stmt|;
-end_expr_stmt
-
-begin_return
+block|;
 return|return
-name|o
+name|O
 operator|<<
 literal|"\n"
 return|;
-end_return
-
-begin_expr_stmt
-unit|}  template
+block|}
+name|template
 operator|<
 name|class
 name|NodeT
@@ -1020,12 +943,12 @@ name|PrintDomTree
 argument_list|(
 argument|const DomTreeNodeBase<NodeT> *N
 argument_list|,
-argument|raw_ostream&o
+argument|raw_ostream&O
 argument_list|,
 argument|unsigned Lev
 argument_list|)
 block|{
-name|o
+name|O
 operator|.
 name|indent
 argument_list|(
@@ -1080,7 +1003,7 @@ operator|(
 operator|*
 name|I
 operator|,
-name|o
+name|O
 operator|,
 name|Lev
 operator|+
@@ -1088,13 +1011,7 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// The calculate routine is provided in a separate header but referenced here.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1120,25 +1037,10 @@ operator|&
 name|F
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Core dominator tree base class.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This class is a generic template over graph nodes. It is instantiated for
-end_comment
-
-begin_comment
 comment|/// various graphs in the LLVM IR or in the code generator.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1225,25 +1127,10 @@ operator|!=
 name|nullptr
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Wipe this tree's state without releasing any resources.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is essentially a post-move helper only. It leaves the object in an
-end_comment
-
-begin_comment
 comment|/// assignable and destroyable state, but otherwise invalid.
-end_comment
-
-begin_function
 name|void
 name|wipe
 parameter_list|()
@@ -1273,39 +1160,28 @@ operator|=
 name|nullptr
 expr_stmt|;
 block|}
-end_function
-
-begin_label
 name|protected
 label|:
-end_label
-
-begin_typedef
-typedef|typedef
+name|using
+name|DomTreeNodeMapType
+init|=
 name|DenseMap
 operator|<
 name|NodeT
 operator|*
-operator|,
+decl_stmt|,
 name|std
-operator|::
+decl|::
 name|unique_ptr
-operator|<
+decl|<
 name|DomTreeNodeBase
-operator|<
+decl|<
 name|NodeT
-operator|>>>
-name|DomTreeNodeMapType
-expr_stmt|;
-end_typedef
-
-begin_decl_stmt
+decl|>>>
+decl_stmt|;
 name|DomTreeNodeMapType
 name|DomTreeNodes
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|DomTreeNodeBase
 operator|<
 name|NodeT
@@ -1313,18 +1189,12 @@ operator|>
 operator|*
 name|RootNode
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|mutable
 name|bool
 name|DFSInfoValid
 init|=
 name|false
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|mutable
 name|unsigned
 name|int
@@ -1332,13 +1202,7 @@ name|SlowQueries
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Information record used during immediate dominators computation.
-end_comment
-
-begin_struct
 struct|struct
 name|InfoRec
 block|{
@@ -1370,9 +1234,6 @@ expr|default
 expr_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_expr_stmt
 name|DenseMap
 operator|<
 name|NodeT
@@ -1383,13 +1244,7 @@ operator|*
 operator|>
 name|IDoms
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Vertex - Map the DFS number to the NodeT*
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -1399,13 +1254,7 @@ operator|*
 operator|>
 name|Vertex
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Info - Collection of information used during the computation of idoms.
-end_comment
-
-begin_expr_stmt
 name|DenseMap
 operator|<
 name|NodeT
@@ -1415,9 +1264,6 @@ name|InfoRec
 operator|>
 name|Info
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 name|void
 name|reset
 parameter_list|()
@@ -1457,17 +1303,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|// NewBB is split and now it has one successor. Update dominator tree to
-end_comment
-
-begin_comment
 comment|// reflect this change.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1575,17 +1412,11 @@ operator|&&
 literal|"No predblocks?"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|bool
 name|NewBBDominatesNewBBSucc
 init|=
 name|true
 decl_stmt|;
-end_decl_stmt
-
-begin_for
 for|for
 control|(
 specifier|const
@@ -1631,34 +1462,19 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_for
-
-begin_comment
 comment|// Find NewBB's immediate dominator and create new dominator tree node for
-end_comment
-
-begin_comment
 comment|// NewBB.
-end_comment
-
-begin_decl_stmt
 name|NodeT
 modifier|*
 name|NewBBIDom
 init|=
 name|nullptr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|i
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_for
 for|for
 control|(
 name|i
@@ -1695,30 +1511,15 @@ index|]
 expr_stmt|;
 break|break;
 block|}
-end_for
-
-begin_comment
 comment|// It's possible that none of the predecessors of NewBB are reachable;
-end_comment
-
-begin_comment
 comment|// in that case, NewBB itself is unreachable, so nothing needs to be
-end_comment
-
-begin_comment
 comment|// changed.
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
 name|NewBBIDom
 condition|)
 return|return;
-end_if
-
-begin_for
 for|for
 control|(
 name|i
@@ -1761,13 +1562,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_comment
 comment|// Create the new dominator tree node... and set the idom of NewBB.
-end_comment
-
-begin_expr_stmt
 name|DomTreeNodeBase
 operator|<
 name|NodeT
@@ -1782,17 +1577,8 @@ argument_list|,
 name|NewBBIDom
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// If NewBB strictly dominates other blocks, then it is now the immediate
-end_comment
-
-begin_comment
 comment|// dominator of NewBBSucc.  Update the dominator tree as appropriate.
-end_comment
-
-begin_if
 if|if
 condition|(
 name|NewBBDominatesNewBBSucc
@@ -1818,10 +1604,15 @@ name|NewBBNode
 argument_list|)
 expr_stmt|;
 block|}
-end_if
+block|}
+end_decl_stmt
+
+begin_label
+name|public
+label|:
+end_label
 
 begin_macro
-unit|}  public:
 name|explicit
 end_macro
 
@@ -3766,11 +3557,11 @@ name|print
 argument_list|(
 name|raw_ostream
 operator|&
-name|o
+name|O
 argument_list|)
 decl|const
 block|{
-name|o
+name|O
 operator|<<
 literal|"=============================--------------------------------\n"
 expr_stmt|;
@@ -3781,12 +3572,12 @@ operator|->
 name|isPostDominator
 argument_list|()
 condition|)
-name|o
+name|O
 operator|<<
 literal|"Inorder PostDominator Tree: "
 expr_stmt|;
 else|else
-name|o
+name|O
 operator|<<
 literal|"Inorder Dominator Tree: "
 expr_stmt|;
@@ -3795,7 +3586,7 @@ condition|(
 operator|!
 name|DFSInfoValid
 condition|)
-name|o
+name|O
 operator|<<
 literal|"DFSNumbers invalid: "
 operator|<<
@@ -3803,7 +3594,7 @@ name|SlowQueries
 operator|<<
 literal|" slow queries."
 expr_stmt|;
-name|o
+name|O
 operator|<<
 literal|"\n"
 expr_stmt|;
@@ -3821,7 +3612,7 @@ operator|(
 name|getRootNode
 argument_list|()
 operator|,
-name|o
+name|O
 operator|,
 literal|1
 operator|)
@@ -4356,30 +4147,25 @@ argument_list|(
 argument|FT&F
 argument_list|)
 block|{
-typedef|typedef
+name|using
+name|TraitsTy
+operator|=
 name|GraphTraits
 operator|<
 name|FT
 operator|*
 operator|>
-name|TraitsTy
-expr_stmt|;
+block|;
 name|reset
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|Vertex
 operator|.
 name|push_back
 argument_list|(
 name|nullptr
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_if
+block|;
 if|if
 condition|(
 operator|!
@@ -4421,6 +4207,9 @@ name|F
 operator|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_else
 else|else
 block|{
 comment|// Initialize the roots list
@@ -4474,7 +4263,7 @@ name|F
 operator|)
 expr_stmt|;
 block|}
-end_if
+end_else
 
 begin_empty_stmt
 unit|} }

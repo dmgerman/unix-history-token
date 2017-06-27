@@ -1185,83 +1185,6 @@ comment|/* #undef LLVM_HOST_TRIPLE */
 end_comment
 
 begin_comment
-comment|/* LLVM architecture name for the native architecture, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_ARCH
-value|X86
-end_define
-
-begin_comment
-comment|/* LLVM name for the native AsmParser init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_ASMPARSER
-value|LLVMInitializeX86AsmParser
-end_define
-
-begin_comment
-comment|/* LLVM name for the native AsmPrinter init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_ASMPRINTER
-value|LLVMInitializeX86AsmPrinter
-end_define
-
-begin_comment
-comment|/* LLVM name for the native Disassembler init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_DISASSEMBLER
-value|LLVMInitializeX86Disassembler
-end_define
-
-begin_comment
-comment|/* LLVM name for the native Target init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_TARGET
-value|LLVMInitializeX86Target
-end_define
-
-begin_comment
-comment|/* LLVM name for the native TargetInfo init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_TARGETINFO
-value|LLVMInitializeX86TargetInfo
-end_define
-
-begin_comment
-comment|/* LLVM name for the native target MC init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_TARGETMC
-value|LLVMInitializeX86TargetMC
-end_define
-
-begin_comment
 comment|/* Define if this is Unixish platform */
 end_comment
 
@@ -1278,6 +1201,14 @@ end_comment
 
 begin_comment
 comment|/* #undef LLVM_ON_WIN32 */
+end_comment
+
+begin_comment
+comment|/* Define if overriding target triple is enabled */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_TARGET_TRIPLE_ENV */
 end_comment
 
 begin_comment

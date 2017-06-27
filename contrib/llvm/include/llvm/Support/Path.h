@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -131,14 +137,14 @@ name|class
 name|const_iterator
 range|:
 name|public
-name|std
-operator|::
-name|iterator
+name|iterator_facade_base
 operator|<
+name|const_iterator
+decl_stmt|,
 name|std
-operator|::
+decl|::
 name|input_iterator_tag
-decl_stmt|, const
+decl_stmt|,                                   const
 name|StringRef
 decl|>
 block|{
@@ -191,18 +197,6 @@ return|return
 name|Component
 return|;
 block|}
-name|pointer
-name|operator
-operator|->
-expr|(
-block|)
-decl|const
-block|{
-return|return
-operator|&
-name|Component
-return|;
-block|}
 name|const_iterator
 operator|&
 name|operator
@@ -222,27 +216,6 @@ name|RHS
 operator|)
 specifier|const
 expr_stmt|;
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|const_iterator
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-operator|(
-operator|*
-name|this
-operator|==
-name|RHS
-operator|)
-return|;
-block|}
 comment|/// @brief Difference in bytes between this and RHS.
 name|ptrdiff_t
 name|operator
@@ -266,14 +239,14 @@ name|class
 name|reverse_iterator
 range|:
 name|public
-name|std
-operator|::
-name|iterator
+name|iterator_facade_base
 operator|<
+name|reverse_iterator
+decl_stmt|,
 name|std
-operator|::
+decl|::
 name|input_iterator_tag
-decl_stmt|, const
+decl_stmt|,                                   const
 name|StringRef
 decl|>
 block|{
@@ -325,18 +298,6 @@ return|return
 name|Component
 return|;
 block|}
-name|pointer
-name|operator
-operator|->
-expr|(
-block|)
-decl|const
-block|{
-return|return
-operator|&
-name|Component
-return|;
-block|}
 name|reverse_iterator
 operator|&
 name|operator
@@ -356,27 +317,6 @@ name|RHS
 operator|)
 specifier|const
 expr_stmt|;
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|reverse_iterator
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-operator|(
-operator|*
-name|this
-operator|==
-name|RHS
-operator|)
-return|;
-block|}
 comment|/// @brief Difference in bytes between this and RHS.
 name|ptrdiff_t
 name|operator
@@ -1326,19 +1266,13 @@ name|native
 argument_list|)
 decl_stmt|;
 block|}
+comment|// end namespace path
+block|}
+comment|// end namespace sys
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace path
-end_comment
-
-begin_comment
-unit|}
-comment|// end namespace sys
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

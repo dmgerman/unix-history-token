@@ -488,6 +488,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|isReallyTriviallyReMaterializable
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|AliasAnalysis *AA
+argument_list|)
+specifier|const
+name|override
+block|;
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(

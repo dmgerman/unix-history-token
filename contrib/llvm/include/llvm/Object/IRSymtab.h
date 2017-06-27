@@ -166,6 +166,9 @@ block|{
 struct_decl|struct
 name|BitcodeFileContents
 struct_decl|;
+name|class
+name|StringTableBuilder
+decl_stmt|;
 name|namespace
 name|irsymtab
 block|{
@@ -393,7 +396,8 @@ name|COFFLinkerOpts
 block|; }
 block|;  }
 comment|// end namespace storage
-comment|/// Fills in Symtab and Strtab with a valid symbol and string table for Mods.
+comment|/// Fills in Symtab and StrtabBuilder with a valid symbol and string table for
+comment|/// Mods.
 name|Error
 name|build
 argument_list|(
@@ -413,14 +417,13 @@ operator|>
 operator|&
 name|Symtab
 argument_list|,
-name|SmallVector
-operator|<
-name|char
-argument_list|,
-literal|0
-operator|>
+name|StringTableBuilder
 operator|&
-name|Strtab
+name|StrtabBuilder
+argument_list|,
+name|BumpPtrAllocator
+operator|&
+name|Alloc
 argument_list|)
 expr_stmt|;
 comment|/// This represents a symbol that has been read from a storage::Symbol and

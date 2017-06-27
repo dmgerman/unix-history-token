@@ -1391,6 +1391,46 @@ name|CV_DEFINE_ENUM_CLASS_FLAGS_OPERATORS
 argument_list|(
 name|LocalSymFlags
 argument_list|)
+comment|/// Corresponds to the CV_PUBSYMFLAGS bitfield.
+expr|enum
+name|class
+name|PublicSymFlags
+operator|:
+name|uint32_t
+block|{
+name|None
+operator|=
+literal|0
+block|,
+name|Code
+operator|=
+literal|1
+operator|<<
+literal|0
+block|,
+name|Function
+operator|=
+literal|1
+operator|<<
+literal|1
+block|,
+name|Managed
+operator|=
+literal|1
+operator|<<
+literal|2
+block|,
+name|MSIL
+operator|=
+literal|1
+operator|<<
+literal|3
+block|, }
+expr_stmt|;
+name|CV_DEFINE_ENUM_CLASS_FLAGS_OPERATORS
+argument_list|(
+name|PublicSymFlags
+argument_list|)
 comment|/// Corresponds to the CV_PROCFLAGS bitfield.
 expr|enum
 name|class

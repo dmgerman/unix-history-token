@@ -41,6 +41,18 @@ endif|#
 directive|endif
 typedef|typedef
 name|struct
+name|LLVMOpaqueSharedModule
+modifier|*
+name|LLVMSharedModuleRef
+typedef|;
+typedef|typedef
+name|struct
+name|LLVMOpaqueSharedObjectBuffer
+modifier|*
+name|LLVMSharedObjectBufferRef
+typedef|;
+typedef|typedef
+name|struct
 name|LLVMOrcOpaqueJITStack
 modifier|*
 name|LLVMOrcJITStackRef
@@ -96,6 +108,38 @@ name|LLVMOrcErrGeneric
 block|}
 name|LLVMOrcErrorCode
 typedef|;
+comment|/**  * Turn an LLVMModuleRef into an LLVMSharedModuleRef.  *  * The JIT uses shared ownership for LLVM modules, since it is generally  * difficult to know when the JIT will be finished with a module (and the JIT  * has no way of knowing when a user may be finished with one).  *  * Calling this method with an LLVMModuleRef creates a shared-pointer to the  * module, and returns a reference to this shared pointer.  *  * The shared module should be disposed when finished with by calling  * LLVMOrcDisposeSharedModule (not LLVMDisposeModule). The Module will be  * deleted when the last shared pointer owner relinquishes it.  */
+name|LLVMSharedModuleRef
+name|LLVMOrcMakeSharedModule
+parameter_list|(
+name|LLVMModuleRef
+name|Mod
+parameter_list|)
+function_decl|;
+comment|/**  * Dispose of a shared module.  *  * The module should not be accessed after this call. The module will be  * deleted once all clients (including the JIT itself) have released their  * shared pointers.  */
+name|void
+name|LLVMOrcDisposeSharedModuleRef
+parameter_list|(
+name|LLVMSharedModuleRef
+name|SharedMod
+parameter_list|)
+function_decl|;
+comment|/**  * Get an LLVMSharedObjectBufferRef from an LLVMMemoryBufferRef.  */
+name|LLVMSharedObjectBufferRef
+name|LLVMOrcMakeSharedObjectBuffer
+parameter_list|(
+name|LLVMMemoryBufferRef
+name|ObjBuffer
+parameter_list|)
+function_decl|;
+comment|/**  * Dispose of a shared object buffer.  */
+name|void
+name|LLVMOrcDisposeSharedObjectBufferRef
+parameter_list|(
+name|LLVMSharedObjectBufferRef
+name|SharedObjBuffer
+parameter_list|)
+function_decl|;
 comment|/**  * Create an ORC JIT stack.  *  * The client owns the resulting stack, and must call OrcDisposeInstance(...)  * to destroy it and free its memory. The JIT stack will take ownership of the  * TargetMachine, which will be destroyed when the stack is destroyed. The  * client should not attempt to dispose of the Target Machine, or it will result  * in a double-free.  */
 name|LLVMOrcJITStackRef
 name|LLVMOrcCreateInstance
@@ -195,7 +239,7 @@ parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
 parameter_list|,
-name|LLVMModuleRef
+name|LLVMSharedModuleRef
 name|Mod
 parameter_list|,
 name|LLVMOrcSymbolResolverFn
@@ -213,7 +257,7 @@ parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
 parameter_list|,
-name|LLVMModuleRef
+name|LLVMSharedModuleRef
 name|Mod
 parameter_list|,
 name|LLVMOrcSymbolResolverFn
@@ -231,7 +275,7 @@ parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
 parameter_list|,
-name|LLVMObjectFileRef
+name|LLVMSharedObjectBufferRef
 name|Obj
 parameter_list|,
 name|LLVMOrcSymbolResolverFn

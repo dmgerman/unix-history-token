@@ -1281,6 +1281,30 @@ name|bool
 name|PreserveLCSSA
 parameter_list|)
 function_decl|;
+comment|/// Ensure that all exit blocks of the loop are dedicated exits.
+comment|///
+comment|/// For any loop exit block with non-loop predecessors, we split the loop
+comment|/// predecessors to use a dedicated loop exit block. We update the dominator
+comment|/// tree and loop info if provided, and will preserve LCSSA if requested.
+name|bool
+name|formDedicatedExitBlocks
+parameter_list|(
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+name|DominatorTree
+modifier|*
+name|DT
+parameter_list|,
+name|LoopInfo
+modifier|*
+name|LI
+parameter_list|,
+name|bool
+name|PreserveLCSSA
+parameter_list|)
+function_decl|;
 comment|/// Ensures LCSSA form for every instruction from the Worklist in the scope of
 comment|/// innermost containing loop.
 comment|///

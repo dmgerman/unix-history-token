@@ -691,8 +691,10 @@ parameter_list|)
 function_decl|;
 name|std
 operator|::
-name|pair
+name|tuple
 operator|<
+name|MCValue
+operator|,
 name|uint64_t
 operator|,
 name|bool
@@ -1585,8 +1587,9 @@ decl_stmt|;
 comment|/// @}
 name|void
 name|dump
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Compute the amount of padding required before the fragment \p F to

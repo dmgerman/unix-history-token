@@ -111,6 +111,15 @@ name|ArrayRef
 operator|<
 name|EnumEntry
 operator|<
+name|uint32_t
+operator|>>
+name|getPublicSymFlagNames
+argument_list|()
+expr_stmt|;
+name|ArrayRef
+operator|<
+name|EnumEntry
+operator|<
 name|uint8_t
 operator|>>
 name|getProcSymFlagNames

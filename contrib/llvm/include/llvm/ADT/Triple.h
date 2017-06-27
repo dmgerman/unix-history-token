@@ -357,6 +357,8 @@ name|OSType
 block|{
 name|UnknownOS
 block|,
+name|Ananas
+block|,
 name|CloudABI
 block|,
 name|Darwin

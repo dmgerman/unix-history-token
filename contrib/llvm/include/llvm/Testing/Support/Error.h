@@ -169,23 +169,13 @@ name|T
 operator|>
 name|TakeExpected
 argument_list|(
-argument|const Expected<T>&Exp
+argument|Expected<T>&&Exp
 argument_list|)
 block|{
 return|return
 name|TakeExpected
 argument_list|(
-name|const_cast
-operator|<
-name|Expected
-operator|<
-name|T
-operator|>
-operator|&
-operator|>
-operator|(
 name|Exp
-operator|)
 argument_list|)
 return|;
 block|}

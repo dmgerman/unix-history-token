@@ -179,6 +179,16 @@ argument_list|,
 argument|CodeViewContainer Container
 argument_list|)
 empty_stmt|;
+comment|/// Use this to copy existing subsections directly from source to destination.
+comment|/// For example, line table subsections in an object file only need to be
+comment|/// relocated before being copied into the PDB.
+name|DebugSubsectionRecordBuilder
+argument_list|(
+argument|const DebugSubsectionRecord&Contents
+argument_list|,
+argument|CodeViewContainer Container
+argument_list|)
+empty_stmt|;
 name|uint32_t
 name|calculateSerializedLength
 parameter_list|()
@@ -194,6 +204,7 @@ decl|const
 decl_stmt|;
 name|private
 label|:
+comment|/// The subsection to build. Will be null if Contents is non-empty.
 name|std
 operator|::
 name|shared_ptr
@@ -202,6 +213,10 @@ name|DebugSubsection
 operator|>
 name|Subsection
 expr_stmt|;
+comment|/// The bytes of the subsection. Only non-empty if Subsection is null.
+name|DebugSubsectionRecord
+name|Contents
+decl_stmt|;
 name|CodeViewContainer
 name|Container
 decl_stmt|;

@@ -269,6 +269,17 @@ name|StringRef
 name|File
 parameter_list|)
 function_decl|;
+name|Error
+name|addModuleSourceFile
+parameter_list|(
+name|DbiModuleDescriptorBuilder
+modifier|&
+name|Module
+parameter_list|,
+name|StringRef
+name|File
+parameter_list|)
+function_decl|;
 name|Expected
 operator|<
 name|uint32_t

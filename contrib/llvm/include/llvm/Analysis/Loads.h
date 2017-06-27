@@ -153,6 +153,46 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+comment|/// Returns true if V is always dereferenceable for Size byte with alignment
+comment|/// greater or equal than requested. If the context instruction is specified
+comment|/// performs context-sensitive analysis and returns true if the pointer is
+comment|/// dereferenceable at the specified instruction.
+name|bool
+name|isDereferenceableAndAlignedPointer
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|unsigned
+name|Align
+parameter_list|,
+specifier|const
+name|APInt
+modifier|&
+name|Size
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CtxI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 comment|/// Return true if we know that executing a load from this value cannot trap.
 comment|///
 comment|/// If DT and ScanFrom are specified this method performs context-sensitive

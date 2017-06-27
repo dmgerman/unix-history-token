@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Constant.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Constants.h"
 end_include
 
@@ -156,6 +162,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Mangler.h"
 end_include
 
@@ -168,6 +180,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
@@ -175,6 +193,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Utils/ValueMapper.h"
 end_include
 
 begin_include
@@ -241,6 +265,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Value
+decl_stmt|;
 name|namespace
 name|orc
 block|{
@@ -345,13 +372,14 @@ argument_list|)
 operator|)
 return|;
 block|}
-typedef|typedef
+name|using
+name|BaseLayerModuleHandleT
+operator|=
 name|typename
 name|BaseLayerT
 operator|::
-name|ModuleSetHandleT
-name|BaseLayerModuleSetHandleT
-expr_stmt|;
+name|ModuleHandleT
+block|;
 comment|// Provide type-erasure for the Modules and MemoryManagers.
 name|template
 operator|<
@@ -405,12 +433,12 @@ specifier|const
 operator|=
 literal|0
 block|;   }
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|typename
 name|ResourceT
-operator|,
+block|,
 name|typename
 name|ResourcePtrT
 operator|>
@@ -452,12 +480,12 @@ operator|:
 name|ResourcePtrT
 name|ResourcePtr
 block|;   }
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|typename
 name|ResourceT
-operator|,
+block|,
 name|typename
 name|ResourcePtrT
 operator|>
@@ -474,15 +502,16 @@ argument_list|(
 argument|ResourcePtrT ResourcePtr
 argument_list|)
 block|{
-typedef|typedef
+name|using
+name|RO
+operator|=
 name|ResourceOwnerImpl
 operator|<
 name|ResourceT
-operator|,
+block|,
 name|ResourcePtrT
 operator|>
-name|RO
-expr_stmt|;
+block|;
 return|return
 name|llvm
 operator|::
@@ -504,12 +533,12 @@ name|class
 name|StaticGlobalRenamer
 block|{
 name|public
-label|:
+operator|:
 name|StaticGlobalRenamer
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|StaticGlobalRenamer
 argument_list|(
 name|StaticGlobalRenamer
@@ -517,25 +546,23 @@ operator|&&
 argument_list|)
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|StaticGlobalRenamer
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 name|StaticGlobalRenamer
 operator|&&
 operator|)
 operator|=
 expr|default
-decl_stmt|;
+block|;
 name|void
 name|rename
-parameter_list|(
-name|Module
-modifier|&
-name|M
-parameter_list|)
+argument_list|(
+argument|Module&M
+argument_list|)
 block|{
 for|for
 control|(
@@ -598,18 +625,19 @@ argument_list|)
 expr_stmt|;
 block|}
 name|private
-label|:
+operator|:
 name|unsigned
 name|NextId
-init|=
+operator|=
 literal|0
-decl_stmt|;
-block|}
-empty_stmt|;
+block|;   }
+expr_stmt|;
 struct|struct
 name|LogicalDylib
 block|{
-typedef|typedef
+name|using
+name|SymbolResolverFtor
+init|=
 name|std
 operator|::
 name|function
@@ -623,9 +651,10 @@ name|string
 operator|&
 argument_list|)
 operator|>
-name|SymbolResolverFtor
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|ModuleAdderFtor
+init|=
 name|std
 operator|::
 name|function
@@ -633,7 +662,7 @@ operator|<
 name|typename
 name|BaseLayerT
 operator|::
-name|ModuleSetHandleT
+name|ModuleHandleT
 argument_list|(
 name|BaseLayerT
 operator|&
@@ -653,8 +682,7 @@ name|JITSymbolResolver
 operator|>
 argument_list|)
 operator|>
-name|ModuleAdderFtor
-expr_stmt|;
+decl_stmt|;
 struct|struct
 name|SourceModuleEntry
 block|{
@@ -679,22 +707,24 @@ name|StubsToClone
 expr_stmt|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|SourceModulesList
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|SourceModuleEntry
 operator|>
-name|SourceModulesList
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|SourceModuleHandle
+init|=
 name|typename
 name|SourceModulesList
 operator|::
 name|size_type
-name|SourceModuleHandle
-expr_stmt|;
+decl_stmt|;
 name|SourceModuleHandle
 name|addSourceModule
 argument_list|(
@@ -868,7 +898,7 @@ name|BaseLayerHandles
 control|)
 name|BaseLayer
 operator|.
-name|removeModuleSet
+name|removeModule
 argument_list|(
 name|BLH
 argument_list|)
@@ -915,33 +945,37 @@ name|std
 operator|::
 name|vector
 operator|<
-name|BaseLayerModuleSetHandleT
+name|BaseLayerModuleHandleT
 operator|>
 name|BaseLayerHandles
 expr_stmt|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|LogicalDylibList
+init|=
 name|std
 operator|::
 name|list
 operator|<
 name|LogicalDylib
 operator|>
-name|LogicalDylibList
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
-comment|/// @brief Handle to a set of loaded modules.
-typedef|typedef
+comment|/// @brief Handle to loaded module.
+name|using
+name|ModuleHandleT
+init|=
 name|typename
 name|LogicalDylibList
 operator|::
 name|iterator
-name|ModuleSetHandleT
-expr_stmt|;
+decl_stmt|;
 comment|/// @brief Module partitioning functor.
-typedef|typedef
+name|using
+name|PartitioningFtor
+init|=
 name|std
 operator|::
 name|function
@@ -958,10 +992,11 @@ name|Function
 operator|&
 operator|)
 operator|>
-name|PartitioningFtor
-expr_stmt|;
+decl_stmt|;
 comment|/// @brief Builder for IndirectStubsManagers.
-typedef|typedef
+name|using
+name|IndirectStubsManagerBuilderT
+init|=
 name|std
 operator|::
 name|function
@@ -975,8 +1010,7 @@ operator|>
 operator|(
 operator|)
 operator|>
-name|IndirectStubsManagerBuilderT
-expr_stmt|;
+decl_stmt|;
 comment|/// @brief Construct a compile-on-demand layer instance.
 name|CompileOnDemandLayer
 argument_list|(
@@ -1038,7 +1072,7 @@ operator|.
 name|empty
 argument_list|()
 condition|)
-name|removeModuleSet
+name|removeModule
 argument_list|(
 name|LogicalDylibs
 operator|.
@@ -1051,18 +1085,15 @@ comment|/// @brief Add a module to the compile-on-demand layer.
 name|template
 operator|<
 name|typename
-name|ModuleSetT
-operator|,
-name|typename
 name|MemoryManagerPtrT
 operator|,
 name|typename
 name|SymbolResolverPtrT
 operator|>
-name|ModuleSetHandleT
-name|addModuleSet
+name|ModuleHandleT
+name|addModule
 argument_list|(
-argument|ModuleSetT Ms
+argument|std::shared_ptr<Module> M
 argument_list|,
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
@@ -1160,40 +1191,16 @@ operator|>
 name|R
 operator|)
 block|{
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|Module
-operator|>>
-name|Ms
-block|;
-name|Ms
+return|return
+name|B
 operator|.
-name|push_back
+name|addModule
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
 name|M
-argument_list|)
-argument_list|)
-block|;
-return|return
-name|B
-operator|.
-name|addModuleSet
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Ms
 argument_list|)
 argument_list|,
 operator|&
@@ -1210,14 +1217,6 @@ return|;
 block|}
 block|;
 comment|// Process each of the modules in this module set.
-for|for
-control|(
-name|auto
-operator|&
-name|M
-operator|:
-name|Ms
-control|)
 name|addLogicalModule
 argument_list|(
 name|LogicalDylibs
@@ -1232,7 +1231,7 @@ argument_list|(
 name|M
 argument_list|)
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|std
 operator|::
@@ -1245,29 +1244,44 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
-comment|/// @brief Remove the module represented by the given handle.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|///   This will remove all modules in the layers below that were derived from
-end_comment
-
-begin_comment
-comment|/// the module represented by H.
-end_comment
-
-begin_function
+comment|/// @brief Add extra modules to an existing logical module.
 name|void
-name|removeModuleSet
+name|addExtraModule
+argument_list|(
+name|ModuleHandleT
+name|H
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|Module
+operator|>
+name|M
+argument_list|)
+block|{
+name|addLogicalModule
+argument_list|(
+operator|*
+name|H
+argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|M
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// @brief Remove the module represented by the given handle.
+comment|///
+comment|///   This will remove all modules in the layers below that were derived from
+comment|/// the module represented by H.
+name|void
+name|removeModule
 parameter_list|(
-name|ModuleSetHandleT
+name|ModuleHandleT
 name|H
 parameter_list|)
 block|{
@@ -1286,25 +1300,10 @@ name|H
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// @brief Search for the given named symbol.
-end_comment
-
-begin_comment
 comment|/// @param Name The name of the symbol to search for.
-end_comment
-
-begin_comment
 comment|/// @param ExportedSymbolsOnly If true, search only for exported symbols.
-end_comment
-
-begin_comment
 comment|/// @return A handle for the given named symbol, if it exists.
-end_comment
-
-begin_function
 name|JITSymbol
 name|findSymbol
 parameter_list|(
@@ -1388,21 +1387,12 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// @brief Get the address of a symbol provided by this layer, or some layer
-end_comment
-
-begin_comment
 comment|///        below this one.
-end_comment
-
-begin_decl_stmt
 name|JITSymbol
 name|findSymbolIn
 argument_list|(
-name|ModuleSetHandleT
+name|ModuleHandleT
 name|H
 argument_list|,
 specifier|const
@@ -1429,45 +1419,15 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// @brief Update the stub for the given function to point at FnBodyAddr.
-end_comment
-
-begin_comment
 comment|/// This can be used to support re-optimization.
-end_comment
-
-begin_comment
 comment|/// @return true if the function exists and the stub is updated, false
-end_comment
-
-begin_comment
 comment|///         otherwise.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// FIXME: We should track and free associated resources (unused compile
-end_comment
-
-begin_comment
 comment|//        callbacks, uncompiled IR, and no-longer-needed/reachable function
-end_comment
-
-begin_comment
 comment|//        implementations).
-end_comment
-
-begin_comment
 comment|// FIXME: Return Error once the JIT APIs are Errorized.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|updatePointer
 argument_list|(
@@ -1577,14 +1537,8 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1809,14 +1763,12 @@ name|F
 argument_list|)
 return|;
 block|}
-block|)
+argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|}        auto
+block|}
+name|auto
 name|EC
-operator|=
+init|=
 name|LD
 operator|.
 name|StubsMgr
@@ -1825,26 +1777,14 @@ name|createStubs
 argument_list|(
 name|StubInits
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+decl_stmt|;
 operator|(
 name|void
 operator|)
 name|EC
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|// FIXME: This should be propagated back to the user. Stub creation may
-end_comment
-
-begin_comment
 comment|//        fail for remote JITs.
-end_comment
-
-begin_expr_stmt
 name|assert
 argument_list|(
 operator|!
@@ -1852,25 +1792,12 @@ name|EC
 operator|&&
 literal|"Error generating stubs"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
+block|;     }
 comment|// If this module doesn't contain any globals, aliases, or module flags then
-end_comment
-
-begin_comment
 comment|// we can bail out early and avoid the overhead of creating and managing an
-end_comment
-
-begin_comment
 comment|// empty globals module.
-end_comment
-
-begin_expr_stmt
-unit|if
-operator|(
+if|if
+condition|(
 name|SrcM
 operator|.
 name|global_empty
@@ -1886,18 +1813,9 @@ name|SrcM
 operator|.
 name|getModuleFlagsMetadata
 argument_list|()
-operator|)
-end_expr_stmt
-
-begin_return
+condition|)
 return|return;
-end_return
-
-begin_comment
 comment|// Create the GlobalValues module.
-end_comment
-
-begin_decl_stmt
 name|auto
 name|GVsM
 init|=
@@ -1926,9 +1844,6 @@ name|getContext
 argument_list|()
 operator|)
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|GVsM
 operator|->
 name|setDataLayout
@@ -1936,19 +1851,10 @@ argument_list|(
 name|DL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|ValueToValueMapTy
 name|VMap
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Clone global variable decls.
-end_comment
-
-begin_for
 for|for
 control|(
 name|auto
@@ -1988,13 +1894,7 @@ operator|&
 name|VMap
 argument_list|)
 expr_stmt|;
-end_for
-
-begin_comment
 comment|// And the aliases.
-end_comment
-
-begin_for
 for|for
 control|(
 name|auto
@@ -2027,13 +1927,7 @@ argument_list|,
 name|VMap
 argument_list|)
 expr_stmt|;
-end_for
-
-begin_comment
 comment|// Clone the module flags.
-end_comment
-
-begin_expr_stmt
 name|cloneModuleFlagsMetadata
 argument_list|(
 operator|*
@@ -2044,21 +1938,9 @@ argument_list|,
 name|VMap
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Now we need to clone the GV and alias initializers.
-end_comment
-
-begin_comment
 comment|// Initializers may refer to functions declared (but not defined) in this
-end_comment
-
-begin_comment
 comment|// module. Build a materializer to clone decls on demand.
-end_comment
-
-begin_decl_stmt
 name|auto
 name|Materializer
 init|=
@@ -2077,13 +1959,7 @@ comment|// else....
 argument|return nullptr;       }
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Clone the global variable initializers.
-end_comment
-
-begin_for
 for|for
 control|(
 name|auto
@@ -2113,13 +1989,7 @@ operator|&
 name|Materializer
 argument_list|)
 expr_stmt|;
-end_for
-
-begin_comment
 comment|// Clone the global alias initializers.
-end_comment
-
-begin_for
 for|for
 control|(
 name|auto
@@ -2190,13 +2060,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_comment
 comment|// Build a resolver for the globals module and add it to the base layer.
-end_comment
-
-begin_decl_stmt
 name|auto
 name|GVsResolver
 init|=
@@ -2255,9 +2119,6 @@ condition|)
 return|return
 name|Sym
 return|;
-end_decl_stmt
-
-begin_return
 return|return
 name|LD
 operator|.
@@ -2268,10 +2129,8 @@ argument_list|(
 name|Name
 argument_list|)
 return|;
-end_return
-
-begin_expr_stmt
-unit|},
+block|}
+operator|,
 index|[
 operator|&
 name|LD
@@ -2296,12 +2155,9 @@ name|Name
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+block|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|auto
@@ -2579,7 +2435,7 @@ operator|<
 name|typename
 name|PartitionT
 operator|>
-name|BaseLayerModuleSetHandleT
+name|BaseLayerModuleHandleT
 name|emitPartition
 argument_list|(
 argument|LogicalDylib&LD

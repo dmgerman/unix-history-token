@@ -175,6 +175,11 @@ name|char
 modifier|*
 name|AliasArgs
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|Values
+decl_stmt|;
 block|}
 struct|;
 name|private
@@ -401,6 +406,32 @@ operator|.
 name|MetaVar
 return|;
 block|}
+comment|/// Find possible value for given flags. This is used for shell
+comment|/// autocompletion.
+comment|///
+comment|/// \param [in] Option - Key flag like "-stdlib=" when "-stdlib=l"
+comment|/// was passed to clang.
+comment|///
+comment|/// \param [in] Arg - Value which we want to autocomplete like "l"
+comment|/// when "-stdlib=l" was passed to clang.
+comment|///
+comment|/// \return The vector of possible values.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|suggestValueCompletions
+argument_list|(
+argument|StringRef Option
+argument_list|,
+argument|StringRef Arg
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// Find flags from OptTable which starts with Cur.
 comment|///
 comment|/// \param [in] Cur - String prefix that all returned flags need

@@ -72,6 +72,11 @@ name|IsFunction
 operator|=
 name|false
 block|;
+name|bool
+name|IsWeak
+operator|=
+name|false
+block|;
 name|std
 operator|::
 name|string
@@ -184,6 +189,25 @@ block|{
 name|IsFunction
 operator|=
 name|isFunc
+block|; }
+name|bool
+name|isWeak
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsWeak
+return|;
+block|}
+name|void
+name|setWeak
+argument_list|(
+argument|bool isWeak
+argument_list|)
+block|{
+name|IsWeak
+operator|=
+name|isWeak
 block|; }
 specifier|const
 name|StringRef

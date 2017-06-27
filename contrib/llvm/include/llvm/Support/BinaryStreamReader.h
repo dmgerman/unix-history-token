@@ -606,6 +606,48 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Read \p Length bytes from the underlying stream into \p Stream.  This is
+end_comment
+
+begin_comment
+comment|/// equivalent to calling getUnderlyingStream().slice(Offset, Length).
+end_comment
+
+begin_comment
+comment|/// Updates the stream's offset to point after the newly read object.  Never
+end_comment
+
+begin_comment
+comment|/// causes a copy.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns a success error code if the data was successfully read, otherwise
+end_comment
+
+begin_comment
+comment|/// returns an appropriate error code.
+end_comment
+
+begin_function_decl
+name|Error
+name|readSubstream
+parameter_list|(
+name|BinarySubstreamRef
+modifier|&
+name|Stream
+parameter_list|,
+name|uint32_t
+name|Size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Get a pointer to an object of type T from the underlying stream, as if by
 end_comment
 

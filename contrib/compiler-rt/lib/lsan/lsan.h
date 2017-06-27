@@ -94,6 +94,13 @@ define|\
 value|GET_STACK_TRACE(__sanitizer::common_flags()->malloc_context_size, \                   common_flags()->fast_unwind_on_malloc)
 end_define
 
+begin_define
+define|#
+directive|define
+name|GET_STACK_TRACE_THREAD
+value|GET_STACK_TRACE(kStackTraceMax, true)
+end_define
+
 begin_decl_stmt
 name|namespace
 name|__lsan

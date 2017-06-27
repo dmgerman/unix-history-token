@@ -1397,6 +1397,53 @@ name|ImmutableCallSite
 name|CS
 parameter_list|)
 function_decl|;
+comment|/// Copy a nonnull metadata node to a new load instruction.
+comment|///
+comment|/// This handles mapping it to range metadata if the new load is an integer
+comment|/// load instead of a pointer load.
+name|void
+name|copyNonnullMetadata
+parameter_list|(
+specifier|const
+name|LoadInst
+modifier|&
+name|OldLI
+parameter_list|,
+name|MDNode
+modifier|*
+name|N
+parameter_list|,
+name|LoadInst
+modifier|&
+name|NewLI
+parameter_list|)
+function_decl|;
+comment|/// Copy a range metadata node to a new load instruction.
+comment|///
+comment|/// This handles mapping it to nonnull metadata if the new load is a pointer
+comment|/// load instead of an integer load and the range doesn't cover null.
+name|void
+name|copyRangeMetadata
+parameter_list|(
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+specifier|const
+name|LoadInst
+modifier|&
+name|OldLI
+parameter_list|,
+name|MDNode
+modifier|*
+name|N
+parameter_list|,
+name|LoadInst
+modifier|&
+name|NewLI
+parameter_list|)
+function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Intrinsic pattern matching
 comment|//

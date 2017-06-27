@@ -305,12 +305,13 @@ directive|ifndef
 name|NDEBUG
 name|void
 name|dump
-parameter_list|(
+argument_list|(
 name|SystemZHazardRecognizer
-modifier|&
+operator|&
 name|HazardRec
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 endif|#
 directive|endif
 block|}

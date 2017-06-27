@@ -133,10 +133,6 @@ specifier|const
 name|MCInstrInfo
 modifier|&
 name|MCII
-parameter_list|,
-name|MCContext
-modifier|&
-name|Ctx
 parameter_list|)
 function_decl|;
 name|MCAsmBackend

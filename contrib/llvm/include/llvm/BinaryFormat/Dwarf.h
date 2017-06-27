@@ -1597,6 +1597,8 @@ struct|;
 comment|/// Constants that define the DWARF format as 32 or 64 bit.
 enum|enum
 name|DwarfFormat
+enum|:
+name|uint8_t
 block|{
 name|DWARF32
 block|,
