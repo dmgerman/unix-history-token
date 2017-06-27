@@ -17132,6 +17132,9 @@ name|int
 name|slot
 parameter_list|)
 block|{
+name|register_t
+name|msr
+decl_stmt|;
 name|uint32_t
 name|mas0
 decl_stmt|;
@@ -17148,6 +17151,19 @@ literal|"%s(): Entry is NULL!"
 operator|,
 name|__func__
 operator|)
+argument_list|)
+expr_stmt|;
+name|msr
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msr
+operator|&
+operator|~
+name|PSL_EE
 argument_list|)
 expr_stmt|;
 name|mas0
@@ -17240,6 +17256,11 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+name|mtmsr
+argument_list|(
+name|msr
+argument_list|)
+expr_stmt|;
 name|entry
 operator|->
 name|virt
@@ -17315,6 +17336,9 @@ name|int
 name|idx
 parameter_list|)
 block|{
+name|register_t
+name|msr
+decl_stmt|;
 name|uint32_t
 name|mas0
 decl_stmt|;
@@ -17333,6 +17357,19 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|//debugf("tlb1_write_entry: mas0 = 0x%08x\n", mas0);
+name|msr
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msr
+operator|&
+operator|~
+name|PSL_EE
+argument_list|)
+expr_stmt|;
 name|mtspr
 argument_list|(
 name|SPR_MAS0
@@ -17419,6 +17456,11 @@ default|default:
 break|break;
 block|}
 asm|__asm __volatile("tlbwe; isync; msync");
+name|mtmsr
+argument_list|(
+name|msr
+argument_list|)
+expr_stmt|;
 comment|//debugf("tlb1_write_entry: e\n");
 block|}
 end_function
