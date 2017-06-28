@@ -3477,7 +3477,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_DIAG_INFO_LEN
-value|64
+value|128
 end_define
 
 begin_comment
