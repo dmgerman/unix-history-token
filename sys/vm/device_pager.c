@@ -1398,9 +1398,6 @@ modifier|*
 name|mres
 parameter_list|)
 block|{
-name|vm_pindex_t
-name|pidx
-decl_stmt|;
 name|vm_paddr_t
 name|paddr
 decl_stmt|;
@@ -1439,13 +1436,6 @@ name|ref
 decl_stmt|,
 name|ret
 decl_stmt|;
-name|pidx
-operator|=
-name|OFF_TO_IDX
-argument_list|(
-name|offset
-argument_list|)
-expr_stmt|;
 name|memattr
 operator|=
 name|object
