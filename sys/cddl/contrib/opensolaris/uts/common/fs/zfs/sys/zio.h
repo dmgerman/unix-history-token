@@ -1114,6 +1114,16 @@ decl_stmt|;
 name|zio_alloc_list_t
 name|io_alloc_list
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|struct
+name|bio
+modifier|*
+name|io_bio
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Internal pipeline state */
 name|enum
 name|zio_flag
