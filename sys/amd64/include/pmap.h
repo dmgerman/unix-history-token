@@ -473,6 +473,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|PG_PROMOTED
+value|X86_PG_AVAIL(54)
+end_define
+
+begin_comment
+comment|/* PDE only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PG_FRAME
 value|(0x000ffffffffff000ul)
 end_define
