@@ -1695,7 +1695,7 @@ operator|==
 name|PAM_SUCCESS
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|luser
 argument_list|,
@@ -1706,18 +1706,6 @@ argument_list|(
 name|luser
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|luser
-index|[
-sizeof|sizeof
-argument_list|(
-name|luser
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* XXX truncation! */
 block|}
@@ -1957,7 +1945,7 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|remote_ip
 argument_list|,
@@ -1967,21 +1955,7 @@ sizeof|sizeof
 argument_list|(
 name|remote_ip
 argument_list|)
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|remote_ip
-index|[
-sizeof|sizeof
-argument_list|(
-name|remote_ip
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 comment|/* XXX truncation! */
 if|if
