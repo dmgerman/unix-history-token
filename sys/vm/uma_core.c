@@ -1568,15 +1568,8 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
-operator|,
 name|ubz
 operator|=
 operator|&
