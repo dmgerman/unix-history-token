@@ -4610,6 +4610,26 @@ literal|"vm_map_insert: paradoxical MAP_NOFAULT request"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|prot
+operator|&
+operator|~
+name|max
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"prot %#x is not subset of max_prot %#x"
+operator|,
+name|prot
+operator|,
+name|max
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check that the start and end points are not bogus. 	 */
 if|if
 condition|(
