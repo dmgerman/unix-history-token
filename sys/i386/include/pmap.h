@@ -229,6 +229,17 @@ name|PG_MANAGED
 value|PG_AVAIL2
 end_define
 
+begin_define
+define|#
+directive|define
+name|PG_PROMOTED
+value|PG_AVAIL3
+end_define
+
+begin_comment
+comment|/* PDE only */
+end_comment
+
 begin_if
 if|#
 directive|if
