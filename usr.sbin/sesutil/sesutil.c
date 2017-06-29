@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/scsi/scsi_enc.h>
 end_include
 
@@ -124,6 +130,13 @@ include|#
 directive|include
 file|"eltsub.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|SESUTIL_XO_VERSION
+value|"1"
+end_define
 
 begin_function_decl
 specifier|static
@@ -541,7 +554,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -636,7 +649,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -866,7 +879,7 @@ operator|==
 literal|'*'
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"Must specifying a SES device (-u) to use a SES "
 literal|"id# to identify a disk"
@@ -1004,7 +1017,7 @@ operator|&
 name|g
 argument_list|)
 expr_stmt|;
-name|errx
+name|xo_errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -1099,7 +1112,7 @@ operator|>
 literal|1
 condition|)
 block|{
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -1107,7 +1120,7 @@ literal|"unable to access SES device"
 argument_list|)
 expr_stmt|;
 block|}
-name|warn
+name|xo_warn
 argument_list|(
 literal|"unable to access SES device: %s"
 argument_list|,
@@ -1144,7 +1157,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -1176,7 +1189,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -1206,7 +1219,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -1231,7 +1244,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|errx
+name|xo_errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -1355,7 +1368,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -1454,7 +1467,7 @@ operator|==
 name|false
 condition|)
 block|{
-name|errx
+name|xo_errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -1564,7 +1577,12 @@ operator|*
 name|title
 condition|)
 block|{
-name|printf
+name|xo_open_container
+argument_list|(
+literal|"extra_status"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\t\tExtra status:\n"
 argument_list|)
@@ -1582,8 +1600,10 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|vprintf
+name|xo_emit_hv
 argument_list|(
+name|NULL
+argument_list|,
 name|fmt
 argument_list|,
 name|args
@@ -1630,7 +1650,7 @@ argument_list|(
 operator|&
 name|title
 argument_list|,
-literal|"\t\t- Predicted Failure\n"
+literal|"\t\t-{e:predicted_failure/true} Predicted Failure\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1649,7 +1669,7 @@ argument_list|(
 operator|&
 name|title
 argument_list|,
-literal|"\t\t- Disabled\n"
+literal|"\t\t-{e:disabled/true} Disabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1668,7 +1688,7 @@ argument_list|(
 operator|&
 name|title
 argument_list|,
-literal|"\t\t- Swapped\n"
+literal|"\t\t-{e:swapped/true} Swapped\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1680,45 +1700,6 @@ block|{
 case|case
 name|ELMTYP_DEVICE
 case|:
-if|if
-condition|(
-name|cstat
-index|[
-literal|2
-index|]
-operator|&
-literal|0x02
-condition|)
-block|{
-name|sesutil_print
-argument_list|(
-operator|&
-name|title
-argument_list|,
-literal|"\t\t- LED=locate\n"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|cstat
-index|[
-literal|2
-index|]
-operator|&
-literal|0x20
-condition|)
-block|{
-name|sesutil_print
-argument_list|(
-operator|&
-name|title
-argument_list|,
-literal|"\t\t- LED=fault\n"
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
 case|case
 name|ELMTYP_ARRAY_DEV
 case|:
@@ -1737,7 +1718,7 @@ argument_list|(
 operator|&
 name|title
 argument_list|,
-literal|"\t\t- LED=locate\n"
+literal|"\t\t- LED={q:led/locate}\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1756,7 +1737,7 @@ argument_list|(
 operator|&
 name|title
 argument_list|,
-literal|"\t\t- LED=fault\n"
+literal|"\t\t- LED={q:led/fault}\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1769,7 +1750,7 @@ argument_list|(
 operator|&
 name|title
 argument_list|,
-literal|"\t\t- Speed: %d rpm\n"
+literal|"\t\t- Speed: {:speed/%d}{Uw:rpm}\n"
 argument_list|,
 operator|(
 operator|(
@@ -1811,7 +1792,7 @@ argument_list|(
 operator|&
 name|title
 argument_list|,
-literal|"\t\t- Temperature: %d C\n"
+literal|"\t\t- Temperature: {:temperature/%d}{Uw:C}\n"
 argument_list|,
 name|cstat
 index|[
@@ -1829,7 +1810,7 @@ argument_list|(
 operator|&
 name|title
 argument_list|,
-literal|"\t\t- Temperature: -reserved-\n"
+literal|"\t\t- Temperature: -{q:temperature/reserved}-\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1842,7 +1823,7 @@ argument_list|(
 operator|&
 name|title
 argument_list|,
-literal|"\t\t- Voltage: %.2f V\n"
+literal|"\t\t- Voltage: {:voltage/%.2f}{Uw:V}\n"
 argument_list|,
 name|be16dec
 argument_list|(
@@ -1855,6 +1836,17 @@ literal|100.0
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|title
+condition|)
+block|{
+name|xo_close_container
+argument_list|(
+literal|"extra_status"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -1950,7 +1942,7 @@ operator|&
 name|g
 argument_list|)
 expr_stmt|;
-name|errx
+name|xo_errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -1958,6 +1950,21 @@ literal|"No SES devices found"
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_set_version
+argument_list|(
+name|SESUTIL_XO_VERSION
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"sesutil"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"enclosures"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2041,7 +2048,7 @@ operator|>
 literal|1
 condition|)
 block|{
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -2049,7 +2056,7 @@ literal|"unable to access SES device"
 argument_list|)
 expr_stmt|;
 block|}
-name|warn
+name|xo_warn
 argument_list|(
 literal|"unable to access SES device: %s"
 argument_list|,
@@ -2086,7 +2093,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -2118,7 +2125,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -2148,7 +2155,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -2156,9 +2163,14 @@ literal|"ENCIOC_GETELMMAP"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"%s:\n"
+literal|"enclosures"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{t:enc/%s}:\n"
 argument_list|,
 name|g
 operator|.
@@ -2206,9 +2218,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\tEnclosure Name: %s\n"
+literal|"\tEnclosure Name: {t:name/%s}\n"
 argument_list|,
 name|stri
 operator|.
@@ -2251,13 +2263,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\tEnclosure ID: %s\n"
+literal|"\tEnclosure ID: {t:id/%s}\n"
 argument_list|,
 name|stri
 operator|.
 name|buf
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"elements"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2322,7 +2339,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -2389,7 +2406,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -2420,7 +2437,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -2487,7 +2504,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -2524,9 +2541,14 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"\tElement %u, Type: %s\n"
+literal|"elements"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\tElement {:id/%u}, Type: {:type/%s}\n"
 argument_list|,
 name|e_ptr
 index|[
@@ -2546,9 +2568,9 @@ name|elm_type
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t\tStatus: %s (0x%02x 0x%02x 0x%02x 0x%02x)\n"
+literal|"\t\tStatus: {:status/%s} ({q:status_code/0x%02x 0x%02x 0x%02x 0x%02x})\n"
 argument_list|,
 name|scode2ascii
 argument_list|(
@@ -2598,9 +2620,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t\tDescription: %s\n"
+literal|"\t\tDescription: {:description/%s}\n"
 argument_list|,
 name|e_desc
 operator|.
@@ -2617,9 +2639,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t\tDevice Names: %s\n"
+literal|"\t\tDevice Names: {:device_names/%s}\n"
 argument_list|,
 name|e_devname
 operator|.
@@ -2641,6 +2663,11 @@ operator|.
 name|cstat
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"elements"
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|e_devname
@@ -2649,6 +2676,11 @@ name|elm_devnames
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"elements"
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|e_ptr
@@ -2665,6 +2697,19 @@ argument_list|(
 operator|&
 name|g
 argument_list|)
+expr_stmt|;
+name|xo_close_list
+argument_list|(
+literal|"enclosures"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"sesutil"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -2748,7 +2793,7 @@ operator|&
 name|g
 argument_list|)
 expr_stmt|;
-name|errx
+name|xo_errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -2756,6 +2801,21 @@ literal|"No SES devices found"
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_set_version
+argument_list|(
+name|SESUTIL_XO_VERSION
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"sesutil"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"enclosures"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2839,7 +2899,7 @@ operator|>
 literal|1
 condition|)
 block|{
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -2847,7 +2907,7 @@ literal|"unable to access SES device"
 argument_list|)
 expr_stmt|;
 block|}
-name|warn
+name|xo_warn
 argument_list|(
 literal|"unable to access SES device: %s"
 argument_list|,
@@ -2879,22 +2939,27 @@ operator|<
 literal|0
 condition|)
 block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|err
+name|xo_err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
 literal|"ENCIOC_GETENCSTAT"
 argument_list|)
 expr_stmt|;
-block|}
-name|printf
+name|close
 argument_list|(
-literal|"%s: "
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+name|xo_open_instance
+argument_list|(
+literal|"enclosures"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:enc/%s}: "
 argument_list|,
 name|g
 operator|.
@@ -2929,9 +2994,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"OK"
+literal|"{q:status/OK}"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2944,9 +3009,9 @@ operator|&
 name|SES_ENCSTAT_INFO
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"INFO"
+literal|"{lq:status/INFO}"
 argument_list|)
 expr_stmt|;
 name|e
@@ -2964,14 +3029,14 @@ if|if
 condition|(
 name|e
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|","
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"NONCRITICAL"
+literal|"{lq:status/NONCRITICAL}"
 argument_list|)
 expr_stmt|;
 name|e
@@ -2989,14 +3054,14 @@ if|if
 condition|(
 name|e
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|","
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"CRITICAL"
+literal|"{lq:status/CRITICAL}"
 argument_list|)
 expr_stmt|;
 name|e
@@ -3019,14 +3084,14 @@ if|if
 condition|(
 name|e
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|","
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"UNRECOV"
+literal|"{lq:status/UNRECOV}"
 argument_list|)
 expr_stmt|;
 name|e
@@ -3039,7 +3104,12 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-name|printf
+name|xo_close_instance
+argument_list|(
+literal|"enclosures"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -3055,6 +3125,19 @@ argument_list|(
 operator|&
 name|g
 argument_list|)
+expr_stmt|;
+name|xo_close_list
+argument_list|(
+literal|"enclosures"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"sesutil"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3105,6 +3188,26 @@ name|cmd
 init|=
 name|NULL
 decl_stmt|;
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|uflag
 operator|=
 literal|"/dev/ses[0-9]*"
