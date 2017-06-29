@@ -101,7 +101,7 @@ argument_list|(
 name|locale
 argument_list|)
 expr_stmt|;
-name|FLOCKFILE
+name|FLOCKFILE_CANCELSAFE
 argument_list|(
 name|fp
 argument_list|)
@@ -122,10 +122,8 @@ argument_list|,
 name|locale
 argument_list|)
 expr_stmt|;
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
+name|FUNLOCKFILE_CANCELSAFE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

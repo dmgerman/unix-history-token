@@ -243,7 +243,7 @@ name|iov_len
 operator|=
 literal|1
 expr_stmt|;
-name|FLOCKFILE
+name|FLOCKFILE_CANCELSAFE
 argument_list|(
 name|stderr
 argument_list|)
@@ -280,10 +280,8 @@ operator|&=
 operator|~
 name|__SOFF
 expr_stmt|;
-name|FUNLOCKFILE
-argument_list|(
-name|stderr
-argument_list|)
+name|FUNLOCKFILE_CANCELSAFE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
