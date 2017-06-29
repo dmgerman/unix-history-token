@@ -104,10 +104,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * The relocater_data[] is fixed size array allocated in relocater_tramp.S  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
-name|uint32_t
+name|struct
+name|relocate_data
 name|relocater_data
+index|[]
 decl_stmt|;
 end_decl_stmt
 
