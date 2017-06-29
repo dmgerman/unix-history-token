@@ -1655,6 +1655,11 @@ operator|)
 name|AcpiOsTerminate
 argument_list|()
 expr_stmt|;
+name|AcDeleteTableList
+argument_list|(
+name|ListHead
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ExitCode

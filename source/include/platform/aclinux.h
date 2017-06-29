@@ -589,6 +589,22 @@ name|ACPI_MSG_BIOS_WARNING
 value|KERN_WARNING "ACPI BIOS Warning (bug): "
 end_define
 
+begin_comment
+comment|/*  * Linux wants to use designated initializers for function pointer structs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_STRUCT_INIT
+parameter_list|(
+name|field
+parameter_list|,
+name|value
+parameter_list|)
+value|.field = value
+end_define
+
 begin_else
 else|#
 directive|else

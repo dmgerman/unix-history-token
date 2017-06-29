@@ -147,6 +147,19 @@ name|Object
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Ensure that the target node is valid */
+if|if
+condition|(
+operator|!
+name|TargetNode
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NULL_OBJECT
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * For objects that can never change (i.e., the NS node will      * permanently point to the same object), we can simply attach      * the object to the new NS node. For other objects (such as      * Integers, buffers, etc.), we have to point the Alias node      * to the original Node.      */
 switch|switch
 condition|(

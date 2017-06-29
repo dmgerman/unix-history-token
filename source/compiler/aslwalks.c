@@ -102,7 +102,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_METHOD_TYPED
+name|OP_METHOD_TYPED
 expr_stmt|;
 break|break;
 case|case

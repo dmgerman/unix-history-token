@@ -37,6 +37,10 @@ directive|include
 file|"acconvert.h"
 end_include
 
+begin_comment
+comment|/* Local prototypes */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -145,7 +149,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvListIsSingleton  *  * PARAMETERS:  CommentList -- check to see if this is a single item list.  *  * RETURN:      BOOLEAN  *  * DESCRIPTION: Returns TRUE if CommentList only contains 1 node.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvListIsSingleton  *  * PARAMETERS:  CommentList     - check to see if this is a single item list.  *  * RETURN:      BOOLEAN  *  * DESCRIPTION: Returns TRUE if CommentList only contains 1 node.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -165,7 +169,9 @@ name|CommentList
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 elseif|else
@@ -177,11 +183,15 @@ name|Next
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -417,7 +427,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvCloseBraceWriteComment  *  * PARAMETERS:  Op  *              Level  *  * RETURN:      none  *  * DESCRIPTION: Print a close brace } and any open brace comments associated  *              with this parse object.  *              This is referred as ASL_CV_CLOSE_BRACE.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvCloseBraceWriteComment  *  * PARAMETERS:  Op  *              Level  *  * RETURN:      None  *  * DESCRIPTION: Print a close brace } and any open brace comments associated  *              with this parse object.  *              This is referred as ASL_CV_CLOSE_BRACE.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -476,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvCloseParenWriteComment  *  * PARAMETERS:  Op  *              Level  *  * RETURN:      none  *  * DESCRIPTION: Print a closing paren ) and any end node comments associated  *              with this parse object.  *              This is referred as ASL_CV_CLOSE_PAREN.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvCloseParenWriteComment  *  * PARAMETERS:  Op  *              Level  *  * RETURN:      None  *  * DESCRIPTION: Print a closing paren ) and any end node comments associated  *              with this parse object.  *              This is referred as ASL_CV_CLOSE_PAREN.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -636,11 +646,15 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 end_function
@@ -740,7 +754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvSwitchFiles  *  * PARAMETERS:  Level - indentation level  *              Op  *  * RETURN:      None  *  * DESCRIPTION: Switch the outputfile and write ASL Include statement. Note,  *              this function emits actual ASL code rather than comments.  *              This is referred as ASL_CV_SWITCH_FILES.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvSwitchFiles  *  * PARAMETERS:  Level                   - indentation level  *              Op  *  * RETURN:      None  *  * DESCRIPTION: Switch the outputfile and write ASL Include statement. Note,  *              this function emits actual ASL code rather than comments.  *              This is referred as ASL_CV_SWITCH_FILES.  *  ******************************************************************************/
 end_comment
 
 begin_function

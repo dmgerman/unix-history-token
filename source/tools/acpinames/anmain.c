@@ -620,6 +620,11 @@ argument_list|,
 name|Status
 argument_list|)
 expr_stmt|;
+name|AcDeleteTableList
+argument_list|(
+name|ListHead
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

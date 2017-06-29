@@ -233,7 +233,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_COMPILE_TIME_CONST
+name|OP_COMPILE_TIME_CONST
 operator|)
 operator|)
 operator|||
@@ -244,7 +244,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_TARGET
+name|OP_IS_TARGET
 operator|)
 condition|)
 block|{
@@ -655,7 +655,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_TARGET
+name|OP_IS_TARGET
 condition|)
 block|{
 name|AslError
@@ -685,7 +685,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_COULD_NOT_REDUCE
+name|OP_COULD_NOT_REDUCE
 operator|)
 condition|)
 block|{
@@ -696,7 +696,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_COULD_NOT_REDUCE
+name|OP_COULD_NOT_REDUCE
 expr_stmt|;
 name|DbgPrint
 argument_list|(
@@ -743,7 +743,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_TARGET
+name|OP_IS_TARGET
 condition|)
 block|{
 name|DbgPrint
@@ -840,7 +840,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_TARGET
+name|OP_IS_TARGET
 condition|)
 block|{
 if|if
@@ -885,7 +885,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_TERM_ARG
+name|OP_IS_TERM_ARG
 condition|)
 block|{
 name|DbgPrint
@@ -901,13 +901,15 @@ block|}
 name|CleanupAndExit
 label|:
 comment|/* Dump the node compile flags also */
-name|TrPrintNodeCompileFlags
+name|TrPrintOpFlags
 argument_list|(
 name|Op
 operator|->
 name|Asl
 operator|.
 name|CompileFlags
+argument_list|,
+name|ASL_PARSE_OUTPUT
 argument_list|)
 expr_stmt|;
 name|DbgPrint
@@ -968,7 +970,7 @@ expr_stmt|;
 comment|/* Allocate a new temporary root for this subtree */
 name|RootOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_INTEGER
 argument_list|)
@@ -1266,7 +1268,7 @@ expr_stmt|;
 comment|/*      * Create a NULL (zero) target so that we can use the      * interpreter to evaluate the expression.      */
 name|NewTarget
 operator|=
-name|TrCreateNullTarget
+name|TrCreateNullTargetOp
 argument_list|()
 expr_stmt|;
 name|NewTarget
@@ -1324,7 +1326,7 @@ name|Parent
 expr_stmt|;
 name|NewParent
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_INTEGER
 argument_list|)
@@ -1709,7 +1711,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|=
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 expr_stmt|;
 name|UtSetParseOpName
 argument_list|(
@@ -1719,7 +1721,7 @@ expr_stmt|;
 comment|/* Child node is the buffer length */
 name|LengthOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_INTEGER
 argument_list|)
@@ -1773,7 +1775,7 @@ expr_stmt|;
 comment|/* Next child is the raw buffer data */
 name|DataOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_RAW_DATA
 argument_list|)
@@ -1892,7 +1894,7 @@ block|{
 case|case
 literal|1
 case|:
-name|TrUpdateNode
+name|TrSetOpIntegerValue
 argument_list|(
 name|PARSEOP_BYTECONST
 argument_list|,
@@ -1911,7 +1913,7 @@ break|break;
 case|case
 literal|2
 case|:
-name|TrUpdateNode
+name|TrSetOpIntegerValue
 argument_list|(
 name|PARSEOP_WORDCONST
 argument_list|,
@@ -1930,7 +1932,7 @@ break|break;
 case|case
 literal|4
 case|:
-name|TrUpdateNode
+name|TrSetOpIntegerValue
 argument_list|(
 name|PARSEOP_DWORDCONST
 argument_list|,
@@ -1949,7 +1951,7 @@ break|break;
 case|case
 literal|8
 case|:
-name|TrUpdateNode
+name|TrSetOpIntegerValue
 argument_list|(
 name|PARSEOP_QWORDCONST
 argument_list|,
@@ -1974,7 +1976,7 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
-name|TrUpdateNode
+name|TrSetOpIntegerValue
 argument_list|(
 name|PARSEOP_INTEGER
 argument_list|,

@@ -383,7 +383,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_RESOURCE_DATA
+name|OP_IS_RESOURCE_DATA
 condition|)
 block|{
 comment|/* Buffer is a resource template, don't dump the data all at once */
@@ -750,13 +750,15 @@ operator|.
 name|EndLogicalLine
 argument_list|)
 expr_stmt|;
-name|TrPrintNodeCompileFlags
+name|TrPrintOpFlags
 argument_list|(
 name|Op
 operator|->
 name|Asl
 operator|.
 name|CompileFlags
+argument_list|,
+name|ASL_TREE_OUTPUT
 argument_list|)
 expr_stmt|;
 name|DbgPrint
@@ -1117,7 +1119,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_RESOURCE_DESC
+name|OP_IS_RESOURCE_DESC
 condition|)
 block|{
 name|LsWriteSourceLines
@@ -1208,7 +1210,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_RESOURCE_DESC
+name|OP_IS_RESOURCE_DESC
 condition|)
 block|{
 name|LsWriteSourceLines
@@ -1510,7 +1512,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_RESOURCE_DESC
+name|OP_IS_RESOURCE_DESC
 operator|)
 condition|)
 block|{

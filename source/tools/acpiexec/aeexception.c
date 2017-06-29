@@ -355,42 +355,17 @@ expr_stmt|;
 block|}
 name|Cleanup
 label|:
-comment|/* Global overrides */
 if|if
 condition|(
 name|AcpiGbl_IgnoreErrors
 condition|)
 block|{
+comment|/* Global option to ignore all method errors, just return OK */
 name|NewAmlStatus
 operator|=
 name|AE_OK
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|AmlStatus
-operator|==
-name|AE_AML_INTERNAL
-condition|)
-block|{
-name|NewAmlStatus
-operator|=
-name|AE_AML_INTERNAL
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-name|AE_PREFIX
-literal|"Cannot override status %s\n\n"
-argument_list|,
-name|AcpiFormatException
-argument_list|(
-name|NewAmlStatus
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|NewAmlStatus
@@ -398,6 +373,7 @@ operator|!=
 name|AmlStatus
 condition|)
 block|{
+comment|/* Request to override actual status with a different status */
 name|AcpiOsPrintf
 argument_list|(
 name|AE_PREFIX

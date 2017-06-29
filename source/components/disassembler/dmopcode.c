@@ -922,11 +922,18 @@ if|if
 condition|(
 operator|!
 name|Tag
+operator|||
+operator|(
+operator|*
+name|Tag
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 return|return;
 block|}
-comment|/* Match the name in the info table */
+comment|/* Is the tag a predefined name? */
 name|Info
 operator|=
 name|AcpiAhMatchPredefinedName
@@ -936,9 +943,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|Info
 condition|)
 block|{
+comment|/* Not a predefined name (does not start with underscore) */
+return|return;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"  // %4.4s: %s"
@@ -955,8 +966,7 @@ name|Description
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* AML buffer (String) was allocated in AcpiGetTagPathname */
+comment|/* String contains the prefix path, free it */
 name|ACPI_FREE
 argument_list|(
 name|IndexOp
@@ -967,6 +977,16 @@ name|Value
 operator|.
 name|String
 argument_list|)
+expr_stmt|;
+name|IndexOp
+operator|->
+name|Common
+operator|.
+name|Value
+operator|.
+name|String
+operator|=
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif

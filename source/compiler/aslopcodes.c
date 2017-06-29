@@ -949,9 +949,9 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|=
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 operator||
-name|NODE_IS_RESOURCE_DESC
+name|OP_IS_RESOURCE_DESC
 expr_stmt|;
 name|UtSetParseOpName
 argument_list|(
@@ -1094,7 +1094,7 @@ operator|.
 name|CompileFlags
 operator|&=
 operator|~
-name|NODE_COMPILE_TIME_CONST
+name|OP_COMPILE_TIME_CONST
 expr_stmt|;
 name|Op
 operator|->
@@ -1589,7 +1589,7 @@ operator|.
 name|CompileFlags
 operator|&=
 operator|~
-name|NODE_COMPILE_TIME_CONST
+name|OP_COMPILE_TIME_CONST
 expr_stmt|;
 name|Op
 operator|->
@@ -1737,7 +1737,7 @@ operator|.
 name|CompileFlags
 operator|&=
 operator|~
-name|NODE_COMPILE_TIME_CONST
+name|OP_COMPILE_TIME_CONST
 expr_stmt|;
 name|UtSetParseOpName
 argument_list|(
@@ -1747,7 +1747,7 @@ expr_stmt|;
 comment|/* Child node is the buffer length */
 name|NewOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_INTEGER
 argument_list|)
@@ -1793,7 +1793,7 @@ expr_stmt|;
 comment|/* Peer to the child is the raw buffer data */
 name|NewOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_RAW_DATA
 argument_list|)
