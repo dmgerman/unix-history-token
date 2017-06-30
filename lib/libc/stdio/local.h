@@ -684,7 +684,7 @@ parameter_list|(
 name|fp
 parameter_list|)
 define|\
-value|{								\ 		struct _pthread_cleanup_info __cleanup_info__;		\ 		if (__isthreaded) {					\ 			_FLOCKFILE(fp);					\ 			__pthread_cleanup_push_imp(			\ 			    __stdio_cancel_cleanup, (fp), 		\&__cleanup_info__);				\ 		} else {						\ 			__pthread_cleanup_push_imp(			\ 			    __stdio_cancel_cleanup, NULL, 		\&__cleanup_info__);				\ 		}							\ 		{
+value|{								\ 		struct _pthread_cleanup_info __cleanup_info__;		\ 		if (__isthreaded) {					\ 			_FLOCKFILE(fp);					\ 			___pthread_cleanup_push_imp(			\ 			    __stdio_cancel_cleanup, (fp), 		\&__cleanup_info__);				\ 		} else {						\ 			___pthread_cleanup_push_imp(			\ 			    __stdio_cancel_cleanup, NULL, 		\&__cleanup_info__);				\ 		}							\ 		{
 end_define
 
 begin_define
@@ -693,7 +693,7 @@ directive|define
 name|FUNLOCKFILE_CANCELSAFE
 parameter_list|()
 define|\
-value|(void)0;					\ 		}							\ 		__pthread_cleanup_pop_imp(1);				\ 	}
+value|(void)0;					\ 		}							\ 		___pthread_cleanup_pop_imp(1);				\ 	}
 end_define
 
 begin_endif
