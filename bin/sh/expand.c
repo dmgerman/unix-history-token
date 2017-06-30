@@ -3683,7 +3683,13 @@ condition|(
 operator|!
 name|set
 condition|)
+block|{
+name|set
+operator|=
+literal|1
+expr_stmt|;
 break|break;
+block|}
 comment|/* 		 * Terminate the string and start recording the pattern 		 * right after it 		 */
 name|STPUTC
 argument_list|(
