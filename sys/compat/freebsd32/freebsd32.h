@@ -428,6 +428,14 @@ decl_stmt|;
 name|u_int
 name|fflags
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc__
+name|uint32_t
+name|pad0
+decl_stmt|;
+endif|#
+directive|endif
 name|int32_t
 name|data1
 decl_stmt|,
@@ -437,6 +445,14 @@ name|uint32_t
 name|udata
 decl_stmt|;
 comment|/* opaque user data identifier */
+ifdef|#
+directive|ifdef
+name|__powerpc__
+name|uint32_t
+name|pad1
+decl_stmt|;
+endif|#
+directive|endif
 name|uint32_t
 name|ext64
 index|[
