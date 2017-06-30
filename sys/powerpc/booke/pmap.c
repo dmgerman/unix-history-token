@@ -17158,14 +17158,7 @@ operator|=
 name|mfmsr
 argument_list|()
 expr_stmt|;
-name|mtmsr
-argument_list|(
-name|msr
-operator|&
-operator|~
-name|PSL_EE
-argument_list|)
-expr_stmt|;
+asm|__asm __volatile("wrteei 0");
 name|mas0
 operator|=
 name|MAS0_TLBSEL
@@ -17362,14 +17355,7 @@ operator|=
 name|mfmsr
 argument_list|()
 expr_stmt|;
-name|mtmsr
-argument_list|(
-name|msr
-operator|&
-operator|~
-name|PSL_EE
-argument_list|)
-expr_stmt|;
+asm|__asm __volatile("wrteei 0");
 name|mtspr
 argument_list|(
 name|SPR_MAS0
