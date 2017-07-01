@@ -579,7 +579,9 @@ argument|uint8_t *Off
 argument_list|,
 argument|uint16_t Type
 argument_list|,
-argument|Defined *Sym
+argument|OutputSection *OS
+argument_list|,
+argument|uint64_t S
 argument_list|,
 argument|uint64_t P
 argument_list|)
@@ -592,7 +594,9 @@ argument|uint8_t *Off
 argument_list|,
 argument|uint16_t Type
 argument_list|,
-argument|Defined *Sym
+argument|OutputSection *OS
+argument_list|,
+argument|uint64_t S
 argument_list|,
 argument|uint64_t P
 argument_list|)
@@ -605,7 +609,9 @@ argument|uint8_t *Off
 argument_list|,
 argument|uint16_t Type
 argument_list|,
-argument|Defined *Sym
+argument|OutputSection *OS
+argument_list|,
+argument|uint64_t S
 argument_list|,
 argument|uint64_t P
 argument_list|)

@@ -161,9 +161,6 @@ name|llvm
 operator|::
 name|Optional
 expr_stmt|;
-name|class
-name|InputFile
-decl_stmt|;
 comment|// Implemented in MarkLive.cpp.
 name|void
 name|markLive

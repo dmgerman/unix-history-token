@@ -535,6 +535,11 @@ parameter_list|()
 function_decl|;
 name|TargetInfo
 modifier|*
+name|getSPARCV9TargetInfo
+parameter_list|()
+function_decl|;
+name|TargetInfo
+modifier|*
 name|getX32TargetInfo
 parameter_list|()
 function_decl|;
