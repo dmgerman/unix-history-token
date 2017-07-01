@@ -82,18 +82,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Connection.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/IOObject.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/Pipe.h"
 end_include
 
@@ -101,6 +89,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/Predicate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Connection.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/IOObject.h"
 end_include
 
 begin_decl_stmt

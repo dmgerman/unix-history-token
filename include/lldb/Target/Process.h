@@ -164,19 +164,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ThreadSafeValue.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/TraceOptions.h"
 end_include
 
 begin_include
@@ -255,6 +243,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Utility/Status.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/TraceOptions.h"
 end_include
 
 begin_include

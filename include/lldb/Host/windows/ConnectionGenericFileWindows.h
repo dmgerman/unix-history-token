@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Connection.h"
+file|"lldb/Host/windows/windows.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/windows/windows.h"
+file|"lldb/Utility/Connection.h"
 end_include
 
 begin_include

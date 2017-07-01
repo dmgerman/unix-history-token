@@ -74,12 +74,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Utility/Baton.h"
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Utility/StringList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StructuredData.h"
 end_include
 
 begin_include

@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/DynamicLoader.h"
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Utility/SafeMachO.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StructuredData.h"
 end_include
 
 begin_include

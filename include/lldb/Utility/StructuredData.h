@@ -78,6 +78,36 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_comment
+comment|// for assert
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_comment
+comment|// for uint64_t
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<functional>
 end_include
 
@@ -121,36 +151,6 @@ directive|include
 file|<vector>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
-
-begin_comment
-comment|// for assert
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
-begin_comment
-comment|// for size_t
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
-
-begin_comment
-comment|// for uint64_t
-end_comment
-
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -176,7 +176,7 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class StructuredData StructuredData.h "lldb/Core/StructuredData.h"
+comment|/// @class StructuredData StructuredData.h "lldb/Utility/StructuredData.h"
 comment|/// @brief A class which can hold structured data
 comment|///
 comment|/// The StructuredData class is designed to hold the data from a JSON

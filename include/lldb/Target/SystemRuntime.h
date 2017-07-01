@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/QueueItem.h"
 end_include
 
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StructuredData.h"
 end_include
 
 begin_include

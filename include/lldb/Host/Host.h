@@ -926,6 +926,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Connection
+operator|>
+name|CreateDefaultConnection
+argument_list|(
+argument|llvm::StringRef url
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 unit|};  }
 comment|// namespace lldb_private

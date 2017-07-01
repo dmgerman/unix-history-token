@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Host/IOObject.h"
+file|"lldb/Host/PosixApi.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/PosixApi.h"
+file|"lldb/Utility/IOObject.h"
 end_include
 
 begin_include

@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ProcessorTrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/common/NativeProcessProtocol.h"
 end_include
 
@@ -378,6 +384,63 @@ literal|"auxv"
 argument_list|)
 return|;
 block|}
+name|lldb
+operator|::
+name|user_id_t
+name|StartTrace
+argument_list|(
+argument|const TraceOptions&config
+argument_list|,
+argument|Status&error
+argument_list|)
+name|override
+block|;
+name|Status
+name|StopTrace
+argument_list|(
+argument|lldb::user_id_t traceid
+argument_list|,
+argument|lldb::tid_t thread
+argument_list|)
+name|override
+block|;
+name|Status
+name|GetData
+argument_list|(
+argument|lldb::user_id_t traceid
+argument_list|,
+argument|lldb::tid_t thread
+argument_list|,
+argument|llvm::MutableArrayRef<uint8_t>&buffer
+argument_list|,
+argument|size_t offset =
+literal|0
+argument_list|)
+name|override
+block|;
+name|Status
+name|GetMetaData
+argument_list|(
+argument|lldb::user_id_t traceid
+argument_list|,
+argument|lldb::tid_t thread
+argument_list|,
+argument|llvm::MutableArrayRef<uint8_t>&buffer
+argument_list|,
+argument|size_t offset =
+literal|0
+argument_list|)
+name|override
+block|;
+name|Status
+name|GetTraceConfig
+argument_list|(
+argument|lldb::user_id_t traceid
+argument_list|,
+argument|TraceOptions&config
+argument_list|)
+name|override
+block|;
 comment|// ---------------------------------------------------------------------
 comment|// Interface used by NativeRegisterContext-derived classes.
 comment|// ---------------------------------------------------------------------
@@ -715,6 +778,99 @@ block|;
 name|Status
 name|PopulateMemoryRegionCache
 argument_list|()
+block|;
+name|lldb
+operator|::
+name|user_id_t
+name|StartTraceGroup
+argument_list|(
+specifier|const
+name|TraceOptions
+operator|&
+name|config
+argument_list|,
+name|Status
+operator|&
+name|error
+argument_list|)
+block|;
+comment|// This function is intended to be used to stop tracing
+comment|// on a thread that exited.
+name|Status
+name|StopTracingForThread
+argument_list|(
+argument|lldb::tid_t thread
+argument_list|)
+block|;
+comment|// The below function as the name suggests, looks up a ProcessorTrace
+comment|// instance from the m_processor_trace_monitor map. In the case of
+comment|// process tracing where the traceid passed would map to the complete
+comment|// process, it is mandatory to provide a threadid to obtain a trace
+comment|// instance (since ProcessorTrace is tied to a thread). In the other
+comment|// scenario that an individual thread is being traced, just the traceid
+comment|// is sufficient to obtain the actual ProcessorTrace instance.
+name|llvm
+operator|::
+name|Expected
+operator|<
+name|ProcessorTraceMonitor
+operator|&
+operator|>
+name|LookupProcessorTraceInstance
+argument_list|(
+argument|lldb::user_id_t traceid
+argument_list|,
+argument|lldb::tid_t thread
+argument_list|)
+block|;
+comment|// Stops tracing on individual threads being traced. Not intended
+comment|// to be used to stop tracing on complete process.
+name|Status
+name|StopProcessorTracingOnThread
+argument_list|(
+argument|lldb::user_id_t traceid
+argument_list|,
+argument|lldb::tid_t thread
+argument_list|)
+block|;
+comment|// Intended to stop tracing on complete process.
+comment|// Should not be used for stopping trace on
+comment|// individual threads.
+name|void
+name|StopProcessorTracingOnProcess
+argument_list|()
+block|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|lldb
+operator|::
+name|tid_t
+block|,
+name|ProcessorTraceMonitorUP
+operator|>
+name|m_processor_trace_monitor
+block|;
+comment|// Set for tracking threads being traced under
+comment|// same process user id.
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|lldb
+operator|::
+name|tid_t
+operator|>
+name|m_pt_traced_thread_group
+block|;
+name|lldb
+operator|::
+name|user_id_t
+name|m_pt_proces_trace_id
+block|;
+name|TraceOptions
+name|m_pt_process_trace_config
 block|; }
 decl_stmt|;
 block|}

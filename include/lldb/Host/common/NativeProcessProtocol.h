@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/TraceOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/Host.h"
 end_include
 
@@ -65,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Utility/Status.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/TraceOptions.h"
 end_include
 
 begin_include
@@ -901,7 +901,7 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// StopTracing API as the name suggests stops a tracing instance.
 comment|///
-comment|/// @param[in] uid
+comment|/// @param[in] traceid
 comment|///     The user id of the trace intended to be stopped. Now a
 comment|///     user_id may map to multiple threads in which case this API
 comment|///     could be used to stop the tracing for a specific thread by
@@ -918,7 +918,7 @@ name|virtual
 name|Status
 name|StopTrace
 argument_list|(
-argument|lldb::user_id_t uid
+argument|lldb::user_id_t traceid
 argument_list|,
 argument|lldb::tid_t thread = LLDB_INVALID_THREAD_ID
 argument_list|)
@@ -934,8 +934,8 @@ comment|//------------------------------------------------------------------
 comment|/// This API provides the trace data collected in the form of raw
 comment|/// data.
 comment|///
-comment|/// @param[in] uid thread
-comment|///     The uid and thread provide the context for the trace
+comment|/// @param[in] traceid thread
+comment|///     The traceid and thread provide the context for the trace
 comment|///     instance.
 comment|///
 comment|/// @param[in] buffer
@@ -955,7 +955,7 @@ name|virtual
 name|Status
 name|GetData
 argument_list|(
-argument|lldb::user_id_t uid
+argument|lldb::user_id_t traceid
 argument_list|,
 argument|lldb::tid_t thread
 argument_list|,
@@ -980,7 +980,7 @@ name|virtual
 name|Status
 name|GetMetaData
 argument_list|(
-argument|lldb::user_id_t uid
+argument|lldb::user_id_t traceid
 argument_list|,
 argument|lldb::tid_t thread
 argument_list|,
@@ -1000,7 +1000,7 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// API to query the TraceOptions for a given user id
 comment|///
-comment|/// @param[in] uid
+comment|/// @param[in] traceid
 comment|///     The user id of the tracing instance.
 comment|///
 comment|/// @param[in] config
@@ -1018,7 +1018,7 @@ name|virtual
 name|Status
 name|GetTraceConfig
 argument_list|(
-argument|lldb::user_id_t uid
+argument|lldb::user_id_t traceid
 argument_list|,
 argument|TraceOptions&config
 argument_list|)

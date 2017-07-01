@@ -139,7 +139,7 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class Connection Connection.h "lldb/Core/Connection.h"
+comment|/// @class Connection Connection.h "lldb/Utility/Connection.h"
 comment|/// @brief A communication connection class.
 comment|///
 comment|/// A class that implements that actual communication functions for
@@ -161,6 +161,8 @@ comment|/// Default constructor
 comment|//------------------------------------------------------------------
 name|Connection
 argument_list|()
+operator|=
+expr|default
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Virtual destructor since this class gets subclassed and handed
@@ -171,17 +173,6 @@ operator|~
 name|Connection
 argument_list|()
 expr_stmt|;
-specifier|static
-name|Connection
-modifier|*
-name|CreateDefaultConnection
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|url
-parameter_list|)
-function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Connect using the connect string \a url.
 comment|///

@@ -307,6 +307,28 @@ argument|llvm::Type&ir_type
 argument_list|)
 specifier|const
 block|;
+comment|//------------------------------------------------------------------
+comment|/// Request to get a Process shared pointer.
+comment|///
+comment|/// This ABI object may not have been created with a Process object,
+comment|/// or the Process object may no longer be alive.  Be sure to handle
+comment|/// the case where the shared pointer returned does not have an
+comment|/// object inside it.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|ProcessSP
+name|GetProcessSP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_process_wp
+operator|.
+name|lock
+argument_list|()
+return|;
+block|}
 name|public
 operator|:
 name|virtual
@@ -456,10 +478,9 @@ operator|::
 name|ABISP
 name|FindPlugin
 argument_list|(
-specifier|const
-name|ArchSpec
-operator|&
-name|arch
+argument|lldb::ProcessSP process_sp
+argument_list|,
+argument|const ArchSpec&arch
 argument_list|)
 block|;
 name|protected
@@ -468,7 +489,26 @@ comment|//------------------------------------------------------------------
 comment|// Classes that inherit from ABI can see and modify these
 comment|//------------------------------------------------------------------
 name|ABI
+argument_list|(
+argument|lldb::ProcessSP process_sp
+argument_list|)
+block|{
+if|if
+condition|(
+name|process_sp
+operator|.
+name|get
 argument_list|()
+condition|)
+name|m_process_wp
+operator|=
+name|process_sp
+expr_stmt|;
+block|}
+name|lldb
+operator|::
+name|ProcessWP
+name|m_process_wp
 block|;
 name|private
 operator|:

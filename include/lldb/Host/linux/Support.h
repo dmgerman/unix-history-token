@@ -105,6 +105,28 @@ argument_list|,
 argument|const llvm::Twine&file
 argument_list|)
 expr_stmt|;
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|>>
+name|getProcFile
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Twine
+operator|&
+name|file
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

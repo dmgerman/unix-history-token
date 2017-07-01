@@ -46,7 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<functional>
+file|"lldb/Utility/IOObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -58,13 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/IOObject.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Utility/Status.h"
+file|<functional>
 end_include
 
 begin_decl_stmt

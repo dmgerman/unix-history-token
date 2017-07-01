@@ -82,23 +82,9 @@ block|{
 name|class
 name|Stream
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
-name|lldb_private
-block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class Timer Timer.h "lldb/Core/Timer.h"
+comment|/// @class Timer Timer.h "lldb/Utility/Timer.h"
 comment|/// @brief A timer class that simplifies common timing metrics.
-comment|///
-comment|/// A scoped timer class that allows a variety of pthread mutex
-comment|/// objects to have a mutex locked when a Timer::Locker
-comment|/// object is created, and unlocked when it goes out of scope or
-comment|/// when the Timer::Locker::Reset(pthread_mutex_t *)
-comment|/// is called. This provides an exception safe way to lock a mutex
-comment|/// in a scope.
 comment|//----------------------------------------------------------------------
 name|class
 name|Timer

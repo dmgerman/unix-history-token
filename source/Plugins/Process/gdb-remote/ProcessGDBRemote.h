@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ThreadSafeValue.h"
 end_include
 
@@ -177,6 +171,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Utility/StringList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StructuredData.h"
 end_include
 
 begin_include

@@ -326,6 +326,14 @@ name|amount
 parameter_list|)
 function_decl|;
 name|bool
+name|lea_rbp_rsp_pattern_p
+parameter_list|(
+name|int
+modifier|&
+name|amount
+parameter_list|)
+function_decl|;
+name|bool
 name|push_reg_p
 parameter_list|(
 name|int
