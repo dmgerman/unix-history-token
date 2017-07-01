@@ -580,7 +580,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__powerpc__
+name|__amd64__
 end_ifdef
 
 begin_expr_stmt
@@ -592,7 +592,7 @@ expr|struct
 name|kevent32
 argument_list|)
 operator|==
-literal|64
+literal|56
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -611,7 +611,7 @@ expr|struct
 name|kevent32
 argument_list|)
 operator|==
-literal|56
+literal|64
 argument_list|)
 expr_stmt|;
 end_expr_stmt
